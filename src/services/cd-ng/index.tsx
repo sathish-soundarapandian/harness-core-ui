@@ -829,8 +829,7 @@ export interface ArtifactSource {
     | 'AmazonS3'
     | 'GoogleArtifactRegistry'
     | 'GithubPackageRegistry'
-    | 'AzureArtifacts'
-    | 'AmazonMachineImage'
+    | 'AzureArtifactsRegistry'
 }
 
 export interface ArtifactSourceConfig {
@@ -848,8 +847,7 @@ export interface ArtifactSourceConfig {
     | 'AmazonS3'
     | 'GoogleArtifactRegistry'
     | 'GithubPackageRegistry'
-    | 'AzureArtifacts'
-    | 'AmazonMachineImage'
+    | 'AzureArtifactsRegistry'
 }
 
 export interface ArtifactSourcesResponseDTO {
@@ -2331,7 +2329,7 @@ export type CustomDeploymentInfrastructure = Infrastructure & {
 
 export type CustomDeploymentInstanceInfoDTO = InstanceInfoDTO & {
   hostname: string
-  infrastructureKey: string
+  instanceFetchScriptHash: number
   properties?: {
     [key: string]: { [key: string]: any }
   }
@@ -2972,7 +2970,6 @@ export type EcsBlueGreenRollbackStepInfo = StepSpecType & {
 
 export type EcsBlueGreenSwapTargetGroupsStepInfo = StepSpecType & {
   delegateSelectors?: string[]
-  doNotDownsizeOldService?: boolean
 }
 
 export type EcsCanaryDeleteStepInfo = StepSpecType & {
@@ -3177,7 +3174,6 @@ export interface EntityDetail {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
-    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -4619,7 +4615,7 @@ export interface FailureStrategyActionConfig {
     | 'StepGroupRollback'
     | 'PipelineRollback'
     | 'ManualIntervention'
-    | 'ProceedWithDefaultValues'
+    | 'ProceedWithDefaultValue'
 }
 
 export interface FailureStrategyConfig {
@@ -5354,7 +5350,6 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
-    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -5472,7 +5467,6 @@ export interface GitEntityFilterProperties {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
-    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -5623,7 +5617,6 @@ export interface GitFullSyncEntityInfoDTO {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
-    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -5749,7 +5742,6 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
-    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -5983,7 +5975,6 @@ export interface GitSyncEntityDTO {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
-    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -6103,7 +6094,6 @@ export interface GitSyncEntityListDTO {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
-    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -6240,7 +6230,6 @@ export interface GitSyncErrorDTO {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
-    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -7473,7 +7462,7 @@ export type KustomizePatchesManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
-export type LDAPSettings = NGAuthSettings & {
+export interface LDAPSettings {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -7481,6 +7470,7 @@ export type LDAPSettings = NGAuthSettings & {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -8223,7 +8213,7 @@ export interface OnFailureConfig {
     | 'Verification'
     | 'DelegateProvisioning'
     | 'PolicyEvaluationFailure'
-    | 'InputTimeoutError'
+    | 'ExecutionInputTimeoutError'
   )[]
 }
 
@@ -8971,8 +8961,7 @@ export interface PrimaryArtifact {
     | 'AmazonS3'
     | 'GoogleArtifactRegistry'
     | 'GithubPackageRegistry'
-    | 'AzureArtifacts'
-    | 'AmazonMachineImage'
+    | 'AzureArtifactsRegistry'
 }
 
 export interface Principal {
@@ -8984,7 +8973,7 @@ export interface Principal {
 }
 
 export type ProceedWithDefaultValuesFailureActionConfig = FailureStrategyActionConfig & {
-  type: 'ProceedWithDefaultValues'
+  type: 'ProceedWithDefaultValue'
 }
 
 export interface Project {
@@ -9148,7 +9137,6 @@ export interface ReferencedByDTO {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
-    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -9200,10 +9188,6 @@ export interface ReferencedByDTO {
 
 export interface RefreshRequest {
   yaml: string
-}
-
-export interface RefreshResponse {
-  refreshedYaml?: string
 }
 
 export interface RegionGar {
@@ -10160,7 +10144,6 @@ export interface ResponseListEntityType {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
-    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -10394,13 +10377,6 @@ export interface ResponseListServiceDefinitionType {
 export interface ResponseListServiceNowFieldNG {
   correlationId?: string
   data?: ServiceNowFieldNG[]
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponseListServiceNowStagingTable {
-  correlationId?: string
-  data?: ServiceNowStagingTable[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -10867,7 +10843,7 @@ export interface ResponseMessage {
     | 'AUTHORIZATION_ERROR'
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
-    | 'INPUT_TIMEOUT_FAILURE'
+    | 'EXECUTION_INPUT_TIMEOUT_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -11275,13 +11251,6 @@ export interface ResponseProjectResponse {
 export interface ResponseProjectsDashboardInfo {
   correlationId?: string
   data?: ProjectsDashboardInfo
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponseRefreshResponse {
-  correlationId?: string
-  data?: RefreshResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -12619,11 +12588,6 @@ export interface ServiceNowFieldValueNG {
   value?: string
 }
 
-export interface ServiceNowStagingTable {
-  label: string
-  name: string
-}
-
 export interface ServiceNowTemplate {
   fields: {
     [key: string]: ServiceNowFieldValueNG
@@ -12859,8 +12823,7 @@ export interface SidecarArtifact {
     | 'AmazonS3'
     | 'GoogleArtifactRegistry'
     | 'GithubPackageRegistry'
-    | 'AzureArtifacts'
-    | 'AmazonMachineImage'
+    | 'AzureArtifactsRegistry'
 }
 
 export interface SidecarArtifactWrapper {
@@ -14069,8 +14032,6 @@ export type PatchRequestRequestBody = PatchRequest
 
 export type ProjectRequestRequestBody = ProjectRequest
 
-export type RefreshRequestRequestBody = RefreshRequest
-
 export type RoleAssignmentFilterRequestBody = RoleAssignmentFilter
 
 export type ScimGroupRequestBody = ScimGroup
@@ -14655,7 +14616,6 @@ export interface ListActivitiesQueryParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
-    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -14767,7 +14727,6 @@ export interface ListActivitiesQueryParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
-    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -14983,7 +14942,6 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
-    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -15095,7 +15053,6 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
-    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -20805,13 +20762,11 @@ export const cFStatesForAwsPromise = (
   )
 
 export interface ClustersQueryParams {
-  awsConnectorRef?: string
+  awsConnectorRef: string
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
-  region?: string
-  envId?: string
-  infraDefinitionId?: string
+  region: string
 }
 
 export type ClustersProps = Omit<GetProps<ResponseListString, Failure | Error, ClustersQueryParams, void>, 'path'>
@@ -26935,7 +26890,6 @@ export interface ListReferredByEntitiesQueryParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
-    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -27107,7 +27061,6 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
-    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -30122,7 +30075,6 @@ export interface GetReferencedByQueryParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
-    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -32015,7 +31967,6 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
-    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -32195,7 +32146,6 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'ServiceNowApproval'
       | 'ServiceNowCreate'
       | 'ServiceNowUpdate'
-      | 'ServiceNowImportSet'
       | 'GovernancePolicies'
       | 'POLICY_STEP'
       | 'Run'
@@ -37709,7 +37659,6 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
-    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -37949,7 +37898,6 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
-    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -38890,71 +38838,6 @@ export const putProjectPromise = (
     PutProjectPathParams
   >('PUT', getConfig('ng/api'), `/projects/${identifier}`, props, signal)
 
-export interface GetRefreshedYamlQueryParams {
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-}
-
-export type GetRefreshedYamlProps = Omit<
-  MutateProps<ResponseRefreshResponse, Failure | Error, GetRefreshedYamlQueryParams, RefreshRequestRequestBody, void>,
-  'path' | 'verb'
->
-
-/**
- * This refreshes and update inputs of entities in given yaml
- */
-export const GetRefreshedYaml = (props: GetRefreshedYamlProps) => (
-  <Mutate<ResponseRefreshResponse, Failure | Error, GetRefreshedYamlQueryParams, RefreshRequestRequestBody, void>
-    verb="POST"
-    path={`/refresh-inputs/refreshed-yaml`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetRefreshedYamlProps = Omit<
-  UseMutateProps<
-    ResponseRefreshResponse,
-    Failure | Error,
-    GetRefreshedYamlQueryParams,
-    RefreshRequestRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * This refreshes and update inputs of entities in given yaml
- */
-export const useGetRefreshedYaml = (props: UseGetRefreshedYamlProps) =>
-  useMutate<ResponseRefreshResponse, Failure | Error, GetRefreshedYamlQueryParams, RefreshRequestRequestBody, void>(
-    'POST',
-    `/refresh-inputs/refreshed-yaml`,
-    { base: getConfig('ng/api'), ...props }
-  )
-
-/**
- * This refreshes and update inputs of entities in given yaml
- */
-export const getRefreshedYamlPromise = (
-  props: MutateUsingFetchProps<
-    ResponseRefreshResponse,
-    Failure | Error,
-    GetRefreshedYamlQueryParams,
-    RefreshRequestRequestBody,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    ResponseRefreshResponse,
-    Failure | Error,
-    GetRefreshedYamlQueryParams,
-    RefreshRequestRequestBody,
-    void
-  >('POST', getConfig('ng/api'), `/refresh-inputs/refreshed-yaml`, props, signal)
-
 export interface ValidateInputsForYamlQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -38962,28 +38845,15 @@ export interface ValidateInputsForYamlQueryParams {
 }
 
 export type ValidateInputsForYamlProps = Omit<
-  MutateProps<
-    ResponseInputsValidationResponse,
-    Failure | Error,
-    ValidateInputsForYamlQueryParams,
-    RefreshRequestRequestBody,
-    void
-  >,
-  'path' | 'verb'
+  GetProps<ResponseInputsValidationResponse, Failure | Error, ValidateInputsForYamlQueryParams, void>,
+  'path'
 >
 
 /**
  * This validates whether inputs provided to different references in yaml is valid or not
  */
 export const ValidateInputsForYaml = (props: ValidateInputsForYamlProps) => (
-  <Mutate<
-    ResponseInputsValidationResponse,
-    Failure | Error,
-    ValidateInputsForYamlQueryParams,
-    RefreshRequestRequestBody,
-    void
-  >
-    verb="POST"
+  <Get<ResponseInputsValidationResponse, Failure | Error, ValidateInputsForYamlQueryParams, void>
     path={`/refresh-inputs/validate-inputs-yaml`}
     base={getConfig('ng/api')}
     {...props}
@@ -38991,48 +38861,32 @@ export const ValidateInputsForYaml = (props: ValidateInputsForYamlProps) => (
 )
 
 export type UseValidateInputsForYamlProps = Omit<
-  UseMutateProps<
-    ResponseInputsValidationResponse,
-    Failure | Error,
-    ValidateInputsForYamlQueryParams,
-    RefreshRequestRequestBody,
-    void
-  >,
-  'path' | 'verb'
+  UseGetProps<ResponseInputsValidationResponse, Failure | Error, ValidateInputsForYamlQueryParams, void>,
+  'path'
 >
 
 /**
  * This validates whether inputs provided to different references in yaml is valid or not
  */
 export const useValidateInputsForYaml = (props: UseValidateInputsForYamlProps) =>
-  useMutate<
-    ResponseInputsValidationResponse,
-    Failure | Error,
-    ValidateInputsForYamlQueryParams,
-    RefreshRequestRequestBody,
-    void
-  >('POST', `/refresh-inputs/validate-inputs-yaml`, { base: getConfig('ng/api'), ...props })
+  useGet<ResponseInputsValidationResponse, Failure | Error, ValidateInputsForYamlQueryParams, void>(
+    `/refresh-inputs/validate-inputs-yaml`,
+    { base: getConfig('ng/api'), ...props }
+  )
 
 /**
  * This validates whether inputs provided to different references in yaml is valid or not
  */
 export const validateInputsForYamlPromise = (
-  props: MutateUsingFetchProps<
-    ResponseInputsValidationResponse,
-    Failure | Error,
-    ValidateInputsForYamlQueryParams,
-    RefreshRequestRequestBody,
-    void
-  >,
+  props: GetUsingFetchProps<ResponseInputsValidationResponse, Failure | Error, ValidateInputsForYamlQueryParams, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<
-    ResponseInputsValidationResponse,
-    Failure | Error,
-    ValidateInputsForYamlQueryParams,
-    RefreshRequestRequestBody,
-    void
-  >('POST', getConfig('ng/api'), `/refresh-inputs/validate-inputs-yaml`, props, signal)
+  getUsingFetch<ResponseInputsValidationResponse, Failure | Error, ValidateInputsForYamlQueryParams, void>(
+    getConfig('ng/api'),
+    `/refresh-inputs/validate-inputs-yaml`,
+    props,
+    signal
+  )
 
 export interface CreateRoleAssignmentQueryParams {
   accountIdentifier: string
@@ -41318,70 +41172,6 @@ export const getServiceNowIssueMetadataPromise = (
   getUsingFetch<ResponseListServiceNowFieldNG, Failure | Error, GetServiceNowIssueMetadataQueryParams, void>(
     getConfig('ng/api'),
     `/servicenow/metadata`,
-    props,
-    signal
-  )
-
-export interface GetServiceNowStagingTablesQueryParams {
-  connectorRef: string
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  branch?: string
-  repoIdentifier?: string
-  getDefaultFromOtherRepo?: boolean
-  parentEntityConnectorRef?: string
-  parentEntityRepoName?: string
-  parentEntityAccountIdentifier?: string
-  parentEntityOrgIdentifier?: string
-  parentEntityProjectIdentifier?: string
-}
-
-export type GetServiceNowStagingTablesProps = Omit<
-  GetProps<ResponseListServiceNowStagingTable, Failure | Error, GetServiceNowStagingTablesQueryParams, void>,
-  'path'
->
-
-/**
- * Get serviceNow staging tables
- */
-export const GetServiceNowStagingTables = (props: GetServiceNowStagingTablesProps) => (
-  <Get<ResponseListServiceNowStagingTable, Failure | Error, GetServiceNowStagingTablesQueryParams, void>
-    path={`/servicenow/stagingTable`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetServiceNowStagingTablesProps = Omit<
-  UseGetProps<ResponseListServiceNowStagingTable, Failure | Error, GetServiceNowStagingTablesQueryParams, void>,
-  'path'
->
-
-/**
- * Get serviceNow staging tables
- */
-export const useGetServiceNowStagingTables = (props: UseGetServiceNowStagingTablesProps) =>
-  useGet<ResponseListServiceNowStagingTable, Failure | Error, GetServiceNowStagingTablesQueryParams, void>(
-    `/servicenow/stagingTable`,
-    { base: getConfig('ng/api'), ...props }
-  )
-
-/**
- * Get serviceNow staging tables
- */
-export const getServiceNowStagingTablesPromise = (
-  props: GetUsingFetchProps<
-    ResponseListServiceNowStagingTable,
-    Failure | Error,
-    GetServiceNowStagingTablesQueryParams,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<ResponseListServiceNowStagingTable, Failure | Error, GetServiceNowStagingTablesQueryParams, void>(
-    getConfig('ng/api'),
-    `/servicenow/stagingTable`,
     props,
     signal
   )
@@ -49973,7 +49763,6 @@ export interface GetYamlSchemaQueryParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
-    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'

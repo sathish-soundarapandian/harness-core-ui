@@ -99,6 +99,7 @@ export const Connectors: ConnectorType = {
   CE_KUBERNETES: 'CEK8sCluster',
   DATADOG: 'Datadog',
   AZURE_KEY_VAULT: 'AzureKeyVault',
+  AZURE_BLOB: 'AzureBlob',
   DYNATRACE: 'Dynatrace',
   SUMOLOGIC: 'SumoLogic',
   CE_GCP: 'GcpCloudCost',

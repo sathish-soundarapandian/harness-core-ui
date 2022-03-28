@@ -1863,6 +1863,7 @@ export interface StringsMap {
   'connectors.awsKms.validation.selectDelegate': string
   'connectors.awsKms.validation.selectRegion': string
   'connectors.awsSecretManager.secretNamePrefix': string
+<<<<<<< HEAD
   'connectors.azure.applicationId': string
   'connectors.azure.auth.certificate': string
   'connectors.azure.clientId': string
@@ -1872,6 +1873,16 @@ export interface StringsMap {
   'connectors.azure.managedIdentities.systemAssigned': string
   'connectors.azure.managedIdentities.userAssigned': string
   'connectors.azure.managedIdentity': string
+=======
+  'connectors.azureBlob.labels.connectionString': string
+  'connectors.azureBlob.labels.containerName': string
+  'connectors.azureBlob.labels.keyId': string
+  'connectors.azureBlob.labels.keyName': string
+  'connectors.azureBlob.validation.connectionStringIsRequired': string
+  'connectors.azureBlob.validation.containerNameIsRequired': string
+  'connectors.azureBlob.validation.keyIdIsRequired': string
+  'connectors.azureBlob.validation.keyNameIsRequired': string
+>>>>>>> 793e5fa4a9dd (feat: [PL-23547]: Added UI for Azure Blob connector CRUD)
   'connectors.azureKeyVault.labels.fetchVault': string
   'connectors.azureKeyVault.labels.setupVault': string
   'connectors.azureKeyVault.labels.subscription': string

@@ -142,6 +142,8 @@ export const getConnectorTitleIdByType = (type: string): StringKeys => {
       return 'connectors.title.datadog'
     case Connectors.SUMOLOGIC:
       return 'connectors.title.sumologic'
+    case Connectors.AZURE_BLOB:
+      return 'connectors.title.azureKeyVault'
     case Connectors.AZURE_KEY_VAULT:
       return 'connectors.title.azureKeyVault'
     case Connectors.ERROR_TRACKING:

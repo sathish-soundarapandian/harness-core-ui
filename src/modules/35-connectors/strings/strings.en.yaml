@@ -939,3 +939,14 @@ gcpSecretManager:
   gcpSMSecretFile: Google Secrets Manager Credentials File
   validation:
     credFileRequired: Credentials File is required
+azureBlob:
+  labels:
+    connectionString: Azure Storage Connection String
+    containerName: Azure Storage Container Name
+    keyName: Azure Key Name
+    keyId: Azure Key ID
+  validation:
+    connectionStringIsRequired: Azure Storage Connection String is required
+    containerNameIsRequired: Azure Storage Container Name is required
+    keyNameIsRequired: Azure Key Name is required
+    keyIdIsRequired: Azure Key ID is required

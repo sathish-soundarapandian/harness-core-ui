@@ -47,6 +47,7 @@ import CreatePagerDutyConnector from '../CreateConnector/PagerDutyConnector/Crea
 import CreateCeAzureConnector from '../CreateConnector/CEAzureConnector/CreateCeAzureConnector'
 import CreateCEK8sConnector from '../CreateConnector/CEK8sConnector/CreateCEK8sConnector'
 import CreateAzureKeyVaultConnector from '../CreateConnector/CreateAzureKeyConnector/CreateAzureKeyVaultConnector'
+import CreateAzureBlobConnector from '../CreateConnector/CreateAzureBlobConnector/CreateAzureBlobConnector'
 import CreateDynatraceConnector from '../CreateConnector/DynatraceConnector/CreateDynatraceConnector'
 import CreateSumoLogicConnector from '../CreateConnector/SumoLogicConnector/CreateSumoLogicConnector'
 import CENGAwsConnector from '../CreateConnector/CENGAwsConnector/CreateCeAwsConnector'
@@ -177,6 +178,8 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
       return <CreateDataDogConnector {...commonProps} />
     case Connectors.AZURE_KEY_VAULT:
       return <CreateAzureKeyVaultConnector {...commonProps} />
+    case Connectors.AZURE_BLOB:
+      return <CreateAzureBlobConnector {...commonProps} />
     case Connectors.DYNATRACE:
       return <CreateDynatraceConnector {...commonProps} />
     case Connectors.SUMOLOGIC:

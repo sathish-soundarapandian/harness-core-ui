@@ -24,6 +24,7 @@ import type {
   AwsSMCredentialSpecAssumeSTS,
   VaultConnectorDTO,
   AzureKeyVaultConnectorDTO,
+  AzureBlobConnectorDTO,
   GcpKmsConnectorDTO,
   ErrorTrackingConnectorDTO,
   ELKConnectorDTO
@@ -1511,6 +1512,36 @@ interface BuildAzureKeyVaultPayloadReturnType {
   }
 }
 
+interface BuildAzureBlobPayloadReturnType {
+  connector: Omit<ConnectorInfoDTO, 'spec'> & {
+    spec: AzureBlobConnectorDTO
+  }
+}
+
+export const buildAzureBlobPayload = (formData: FormData): BuildAzureBlobPayloadReturnType => {
+  const savedData = {
+    ...pick(formData, ['name', 'description', 'projectIdentifier', 'identifier', 'orgIdentifier', 'tags']),
+    type: Connectors.AZURE_BLOB,
+    spec: {
+      ...pick(formData, [
+        'clientId',
+        'tenantId',
+        'default',
+        'subscription',
+        'connectionString',
+        'containerName',
+        'vaultName',
+        'keyName',
+        'keyId',
+        'delegateSelectors'
+      ]),
+      secretKey: formData.secretKey?.referenceString
+    }
+  }
+
+  return { connector: savedData }
+}
+
 export const buildAzureKeyVaultPayload = (formData: FormData): BuildAzureKeyVaultPayloadReturnType => {
   const savedData = {
     ...pick(formData, ['name', 'description', 'projectIdentifier', 'identifier', 'orgIdentifier', 'tags']),
@@ -1985,6 +2016,25 @@ export const setupAzureKeyVaultFormData = async (
   }
 }
 
+export const setupAzureBlobFormData = async (connectorInfo: ConnectorInfoDTO, accountId: string): Promise<FormData> => {
+  const connectorInfoSpec = connectorInfo?.spec
+  const scopeQueryParams: GetSecretV2QueryParams = {
+    accountIdentifier: accountId,
+    projectIdentifier: connectorInfo.projectIdentifier,
+    orgIdentifier: connectorInfo.orgIdentifier
+  }
+  const secretKey = await setSecretField(connectorInfoSpec?.secretKey, scopeQueryParams)
+  return {
+    clientId: connectorInfoSpec?.clientId || undefined,
+    secretKey: secretKey || undefined,
+    tenantId: connectorInfoSpec?.tenantId || undefined,
+    subscription: connectorInfoSpec?.subscription || undefined,
+    connectionString: connectorInfoSpec?.connectionString || undefined,
+    containerName: connectorInfoSpec?.containerName || undefined,
+    default: connectorInfoSpec?.default || false
+  }
+}
+
 export const setupAzureKeyVaultNameFormData = async (connectorInfo: ConnectorInfoDTO): Promise<FormData> => {
   return {
     vaultName: connectorInfo?.spec?.vaultName
@@ -2092,6 +2142,8 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
       return 'service-datadog'
     case Connectors.SUMOLOGIC:
       return 'service-sumologic'
+    case Connectors.AZURE_BLOB:
+      return 'azure-key-vault'
     case Connectors.AZURE_KEY_VAULT:
       return 'azure-key-vault'
     case Connectors.DYNATRACE:
@@ -2175,6 +2227,8 @@ export const getConnectorDisplayName = (type: string): string => {
       return 'AWS Secret Manager'
     case Connectors.AWS_KMS:
       return 'AWS KMS'
+    case Connectors.AZURE_BLOB:
+      return 'Azure Blob Storage'
     case Connectors.AZURE_KEY_VAULT:
       return 'Azure Key Vault'
     case Connectors.DYNATRACE:
