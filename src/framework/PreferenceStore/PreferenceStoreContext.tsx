@@ -108,7 +108,6 @@ export const getStringKeyFromObjectValues = (
       // do nothing
       break
   }
-  // return scopeArr.concat([entity]).concat(keys.map(key => getFromLodash(contextObj, key)).filter(value => value)).join(glue)
   return scopeArr.concat([entity]).join(glue)
 }
 
@@ -138,6 +137,7 @@ export const PreferenceStoreProvider: React.FC = (props: React.PropsWithChildren
   const getPreference = (key: string, options?: PreferenceStoreOptions): any => {
     if (options?.fromBackend) {
       // TODO: ENHANCEMENT: call backend to get and return
+      return
     } else {
       return currentPreferences[key]
     }

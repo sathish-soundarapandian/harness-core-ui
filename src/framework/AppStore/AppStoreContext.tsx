@@ -8,7 +8,7 @@
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { fromPairs } from 'lodash-es'
+import { fromPairs, defaultTo } from 'lodash-es'
 import { PageSpinner } from '@harness/uicore'
 import { useQueryParams } from '@common/hooks'
 import {
@@ -82,8 +82,8 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
     isGitSyncEnabled: false,
     connectivityMode: undefined
   })
-  const projectIdentifier = projectIdentifierFromParams || savedProject?.projectIdentifier
-  const orgIdentifier = orgIdentifierFromParams || savedProject?.orgIdentifier
+  const projectIdentifier = defaultTo(projectIdentifierFromParams, savedProject?.projectIdentifier)
+  const orgIdentifier = defaultTo(orgIdentifierFromParams, savedProject?.orgIdentifier)
 
   const { data: featureFlags, loading: featureFlagsLoading } = useGetFeatureFlags({
     accountId,
@@ -236,9 +236,9 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
       ...prevState,
       selectedOrg: data.selectedOrg,
       selectedProject: data.selectedProject,
-      isGitSyncEnabled: data.isGitSyncEnabled || prevState?.isGitSyncEnabled,
-      connectivityMode: data.connectivityMode || prevState?.connectivityMode,
-      currentUserInfo: data.currentUserInfo || prevState?.currentUserInfo
+      isGitSyncEnabled: defaultTo(data.isGitSyncEnabled, prevState?.isGitSyncEnabled),
+      connectivityMode: defaultTo(data.connectivityMode, prevState?.connectivityMode),
+      currentUserInfo: defaultTo(data.currentUserInfo, prevState?.currentUserInfo)
     }))
   }
 
