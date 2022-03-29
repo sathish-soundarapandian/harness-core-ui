@@ -98,6 +98,7 @@ interface ConnectorsListProps {
 }
 
 const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, statisticsMockData, filtersMockData }) => {
+  const isAzureBlobEnabled = useFeatureFlag(FeatureFlag.AZURE_BLOB_SM)
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
