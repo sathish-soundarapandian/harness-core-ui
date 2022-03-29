@@ -50,7 +50,7 @@ const ProjectsListPage: React.FC = () => {
   const { getString } = useStrings()
   useDocumentTitle(getString('projectsText'))
 
-  const [savedProjectView, setSavedProjectView] = usePreferenceStore(PreferenceScope.USER, 'ProjectsListView')
+  const [savedProjectView, setSavedProjectView] = usePreferenceStore(PreferenceScope.USER, 'ProjectsViewType')
   const initialSelectedView = savedProjectView || Views.GRID
   const [view, setView] = useState(initialSelectedView)
   const [searchParam, setSearchParam] = useState<string>()
