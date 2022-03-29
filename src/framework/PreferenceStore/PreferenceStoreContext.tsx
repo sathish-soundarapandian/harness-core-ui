@@ -53,7 +53,7 @@ export interface ScopeContext {
 
 const TOP_LEVEL_KEY = 'preferences'
 
-export const PreferenceStore = React.createContext<PreferenceStoreProps>({
+export const PreferenceStoreContext = React.createContext<PreferenceStoreProps>({
   set: () => void 0,
   get: () => void 0,
   updatePreferenceStore: () => void 0
@@ -64,7 +64,7 @@ export function usePreferenceStore(
   entity: string,
   options: PreferenceStoreOptions = {}
 ): [any, (value: any) => void, (data: PreferenceStoreStateProps) => void] {
-  const { get, set, updatePreferenceStore } = React.useContext(PreferenceStore)
+  const { get, set, updatePreferenceStore } = React.useContext(PreferenceStoreContext)
 
   const value = get(scope, entity, options)
   const setPreference = set.bind(null, scope, entity, options)
@@ -166,7 +166,7 @@ export const PreferenceStoreProvider: React.FC = (props: React.PropsWithChildren
   }
 
   return (
-    <PreferenceStore.Provider
+    <PreferenceStoreContext.Provider
       value={{
         set,
         get,
@@ -174,6 +174,6 @@ export const PreferenceStoreProvider: React.FC = (props: React.PropsWithChildren
       }}
     >
       {props.children}
-    </PreferenceStore.Provider>
+    </PreferenceStoreContext.Provider>
   )
 }
