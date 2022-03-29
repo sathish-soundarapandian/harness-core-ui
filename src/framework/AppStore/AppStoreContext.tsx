@@ -25,6 +25,7 @@ import { useGetFeatureFlags } from 'services/portal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { FeatureFlag } from '@common/featureFlags'
 import { useTelemetryInstance } from '@common/hooks/useTelemetryInstance'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 
 export type FeatureFlagMap = Partial<Record<FeatureFlag, boolean>>
 
@@ -65,13 +66,24 @@ export function useAppStore(): AppStoreContextProps {
 }
 
 export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React.ReactElement {
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const {
+    accountId,
+    projectIdentifier: projectIdentifierFromParams,
+    orgIdentifier: orgIdentifierFromParams
+  } = useParams<ProjectPathProps>()
+  const [savedProject, setSavedProject, updatePreferenceStore] = usePreferenceStore(
+    PreferenceScope.USER,
+    'savedProject'
+  )
+
   const [state, setState] = React.useState<Omit<AppStoreContextProps, 'updateAppStore' | 'strings'>>({
     featureFlags: {},
     currentUserInfo: { uuid: '' },
     isGitSyncEnabled: false,
     connectivityMode: undefined
   })
+  const projectIdentifier = projectIdentifierFromParams || savedProject?.projectIdentifier
+  const orgIdentifier = orgIdentifierFromParams || savedProject?.orgIdentifier
 
   const { data: featureFlags, loading: featureFlagsLoading } = useGetFeatureFlags({
     accountId,
@@ -119,6 +131,7 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
     if (userInfo?.data?.email && telemetry.initialized) {
       telemetry.identify(userInfo?.data?.email)
     }
+    updatePreferenceStore({ currentUserInfo: userInfo?.data })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userInfo?.data?.email, telemetry])
 
@@ -180,6 +193,7 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
   useEffect(() => {
     if (projectIdentifier && orgIdentifier) {
       refetch()
+      setSavedProject({ projectIdentifier, orgIdentifier })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectIdentifier, orgIdentifier])

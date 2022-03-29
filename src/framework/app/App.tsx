@@ -16,6 +16,8 @@ import { setAutoFreeze, enableMapSet } from 'immer'
 import SessionToken from 'framework/utils/SessionToken'
 
 import { AppStoreProvider } from 'framework/AppStore/AppStoreContext'
+import { PreferenceStoreProvider } from 'framework/PreferenceStore/PreferenceStoreContext'
+
 import { LicenseStoreProvider } from 'framework/LicenseStore/LicenseStoreContext'
 // eslint-disable-next-line aliased-module-imports
 import RouteDestinationsWithoutAuth from 'modules/RouteDestinationsWithoutAuth'
@@ -186,25 +188,27 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
     >
       <StringsContextProvider initialStrings={props.strings}>
         <TooltipContextProvider initialTooltipDictionary={tooltipDictionaryContext}>
-          <AppStoreProvider>
-            <AppErrorBoundary>
-              <FeaturesProvider>
-                <LicenseStoreProvider>
-                  <PermissionsProvider>
-                    <Suspense fallback={<PageSpinner />}>
-                      <RouteDestinations />
-                    </Suspense>
-                    <NGTooltipEditorPortal
-                      showTooltipEditor={showTooltipEditor}
-                      onEditorClose={onEditorClose}
-                      setPreviewDatasetFromLocalStorage={onPreviewDatasetFromLocalStorage}
-                    />
-                  </PermissionsProvider>
-                  <ThirdPartyIntegrations />
-                </LicenseStoreProvider>
-              </FeaturesProvider>
-            </AppErrorBoundary>
-          </AppStoreProvider>
+          <PreferenceStoreProvider>
+            <AppStoreProvider>
+              <AppErrorBoundary>
+                <FeaturesProvider>
+                  <LicenseStoreProvider>
+                    <PermissionsProvider>
+                      <Suspense fallback={<PageSpinner />}>
+                        <RouteDestinations />
+                      </Suspense>
+                      <NGTooltipEditorPortal
+                        showTooltipEditor={showTooltipEditor}
+                        onEditorClose={onEditorClose}
+                        setPreviewDatasetFromLocalStorage={onPreviewDatasetFromLocalStorage}
+                      />
+                    </PermissionsProvider>
+                    <ThirdPartyIntegrations />
+                  </LicenseStoreProvider>
+                </FeaturesProvider>
+              </AppErrorBoundary>
+            </AppStoreProvider>
+          </PreferenceStoreProvider>
         </TooltipContextProvider>
       </StringsContextProvider>
     </RestfulProvider>
