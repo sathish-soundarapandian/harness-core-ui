@@ -137,7 +137,7 @@ export const PreferenceStoreProvider: React.FC = (props: React.PropsWithChildren
   const getPreference = (key: string, options?: PreferenceStoreOptions): any => {
     if (options?.fromBackend) {
       // TODO: ENHANCEMENT: call backend to get and return
-      return
+      return null
     } else {
       return currentPreferences[key]
     }
