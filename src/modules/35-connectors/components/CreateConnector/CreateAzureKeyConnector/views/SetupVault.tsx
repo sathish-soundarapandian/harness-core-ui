@@ -37,6 +37,7 @@ import {
 import type { StepDetailsProps, ConnectorDetailsProps } from '@connectors/interfaces/ConnectorInterface'
 import { PageSpinner } from '@common/components'
 import {
+  buildAzureBlobPayload,
   buildAzureKeyVaultPayload,
   setupAzureKeyVaultNameFormData
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
@@ -46,17 +47,23 @@ import { connectorGovernanceModalProps } from '@connectors/utils/utils'
 import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
+import { Connectors } from '@connectors/constants'
 
 export interface SetupVaultFormData {
   vaultName?: string
+  keyName?: string
+  keyId?: string
 }
 
 const defaultInitialFormData: SetupVaultFormData = {
-  vaultName: undefined
+  vaultName: undefined,
+  keyName: undefined,
+  keyId: undefined
 }
 
 const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> = ({
   isEditMode,
+  type,
   accountId,
   connectorInfo,
   prevStepData,
@@ -98,7 +105,7 @@ const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> 
     try {
       const { data } = await getMetadata({
         identifier: formData.identifier,
-        encryptionType: 'AZURE_VAULT',
+        encryptionType: type === Connectors.AZURE_BLOB ? 'AZURE_BLOB' : 'AZURE_VAULT',
         orgIdentifier: formData.orgIdentifier,
         projectIdentifier: formData.projectIdentifier,
         spec: {
@@ -140,7 +147,10 @@ const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> 
   const handleCreateOrEdit = async (formData: SetupVaultFormData): Promise<void> => {
     modalErrorHandler?.hide()
     if (prevStepData) {
-      const data: ConnectorRequestBody = buildAzureKeyVaultPayload({ ...prevStepData, ...formData })
+      const data: ConnectorRequestBody =
+        type === Connectors.AZURE_BLOB
+          ? buildAzureBlobPayload({ ...prevStepData, ...formData })
+          : buildAzureKeyVaultPayload({ ...prevStepData, ...formData })
 
       try {
         const response = isEditMode ? await updateConnector(data) : await createConnector(data)
@@ -181,9 +191,7 @@ const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> 
         formName="azureKeyVaultForm"
         enableReinitialize
         initialValues={initialValues}
-        validationSchema={Yup.object().shape({
-          vaultName: Yup.string().required(getString('connectors.azureKeyVault.validation.vaultName'))
-        })}
+        validationSchema={Yup.object().shape(getValidations())}
         onSubmit={formData => {
           trackEvent(ConnectorActions.SetupVaultSubmit, {
             category: Category.CONNECTOR
@@ -209,6 +217,12 @@ const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> 
                 loading={loading}
               />
             </Layout.Horizontal>
+            {type === Connectors.AZURE_BLOB ? (
+              <>
+                <FormInput.Text name="keyName" label={getString('connectors.azureBlob.labels.keyName')} />
+                <FormInput.Text name="keyId" label={getString('connectors.azureBlob.labels.keyId')} />
+              </>
+            ) : null}
           </Container>
           <Layout.Horizontal spacing="medium">
             <Button

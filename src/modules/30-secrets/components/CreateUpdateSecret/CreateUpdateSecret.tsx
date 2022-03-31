@@ -124,6 +124,7 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
   const secretManagerTypes: ConnectorInfoDTO['type'][] = [
     'AwsKms',
     'AzureKeyVault',
+    'AzureBlob',
     'Vault',
     'AwsSecretManager',
     'GcpKms'
@@ -459,7 +460,8 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
               ) : null}
               {typeOfSelectedSecretManager === 'Vault' ||
               typeOfSelectedSecretManager === 'AzureKeyVault' ||
-              typeOfSelectedSecretManager === 'AwsSecretManager' ? (
+              typeOfSelectedSecretManager === 'AwsSecretManager' ||
+              typeOfSelectedSecretManager === 'AzureBlob' ? (
                 <VaultFormFields formik={formikProps} type={type} editing={editing} readonly={readOnlySecretManager} />
               ) : null}
               <Button

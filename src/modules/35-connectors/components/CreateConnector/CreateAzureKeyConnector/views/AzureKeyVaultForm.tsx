@@ -9,6 +9,7 @@ import React, { useState } from 'react'
 import * as Yup from 'yup'
 import { StepProps, Container, Text, Formik, FormikForm, Layout, Button, ButtonVariation } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
+import { Connectors } from '@connectors/constants'
 import { useStrings } from 'framework/strings'
 import type { AzureKeyVaultConnectorDTO } from 'services/cd-ng'
 import { PageSpinner } from '@common/components'
@@ -19,6 +20,7 @@ import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import AzureKeyVaultFormFields from './AzureKeyVaultFormFields'
+import AzureBlobFormFields from '../../CreateAzureBlobConnector/views/AzureBlobFormFields'
 import css from '../CreateAzureKeyVaultConnector.module.scss'
 
 export interface AzureKeyVaultFormData {
@@ -26,26 +28,56 @@ export interface AzureKeyVaultFormData {
   secretKey?: SecretReference
   tenantId?: string
   subscription?: string
+  connectionString?: string
+  containerName?: string
   default?: boolean
 }
 
 const AzureKeyVaultForm: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> = props => {
-  const { prevStepData, previousStep, isEditMode, nextStep, connectorInfo, accountId } = props
+  const { prevStepData, previousStep, isEditMode, nextStep, connectorInfo, accountId, type } = props
   const { getString } = useStrings()
 
   const defaultInitialFormData: AzureKeyVaultFormData = {
     clientId: undefined,
     tenantId: undefined,
     subscription: undefined,
+    connectionString: undefined,
+    containerName: undefined,
     secretKey: undefined,
     default: false
   }
 
   const [initialValues, setInitialValues] = useState(defaultInitialFormData)
   const [loadingFormData, setLoadingFormData] = useState(isEditMode)
+<<<<<<< HEAD
   useConnectorWizard({
     helpPanel: { referenceId: 'AzureKeyVaultDetails', contentWidth: 900 }
   })
+=======
+
+  const getValidations = () => {
+    const azureValidations = {
+      clientId: Yup.string().required(getString('common.validation.clientIdIsRequired')),
+      tenantId: Yup.string().required(getString('connectors.azureKeyVault.validation.tenantId')),
+      subscription: Yup.string().required(getString('connectors.azureKeyVault.validation.subscription')),
+      secretKey: Yup.string().when('vaultName', {
+        is: () => !(prevStepData?.spec as AzureKeyVaultConnectorDTO)?.vaultName,
+        then: Yup.string().trim().required(getString('common.validation.keyIsRequired'))
+      })
+    }
+    let azureBlobValidations
+    if (type === Connectors.AZURE_BLOB) {
+      azureBlobValidations = {
+        connectionString: Yup.string().required(
+          getString('connectors.azureBlob.validation.connectionStringIsRequired')
+        ),
+        containerName: Yup.string().required(getString('connectors.azureBlob.validation.containerNameIsRequired'))
+      }
+    }
+    return { ...azureValidations, ...azureBlobValidations }
+  }
+
+>>>>>>> c3ec2681adb0 ([PL-22385]: Added secret creation wizard)
   React.useEffect(() => {
     if (isEditMode && connectorInfo) {
       setupAzureKeyVaultFormData(connectorInfo, accountId).then(data => {
@@ -70,15 +102,7 @@ const AzureKeyVaultForm: React.FC<StepProps<StepDetailsProps> & ConnectorDetails
         formName="azureKeyVaultForm"
         enableReinitialize
         initialValues={{ ...initialValues, ...prevStepData }}
-        validationSchema={Yup.object().shape({
-          clientId: Yup.string().required(getString('common.validation.clientIdIsRequired')),
-          tenantId: Yup.string().required(getString('connectors.azureKeyVault.validation.tenantId')),
-          subscription: Yup.string().required(getString('connectors.azureKeyVault.validation.subscription')),
-          secretKey: Yup.string().when('vaultName', {
-            is: () => !(prevStepData?.spec as AzureKeyVaultConnectorDTO)?.vaultName,
-            then: Yup.string().trim().required(getString('common.validation.keyIsRequired'))
-          })
-        })}
+        validationSchema={Yup.object().shape(getValidations())}
         onSubmit={formData => {
           trackEvent(ConnectorActions.AzureKeyValueFormSubmit, {
             category: Category.CONNECTOR
@@ -88,6 +112,7 @@ const AzureKeyVaultForm: React.FC<StepProps<StepDetailsProps> & ConnectorDetails
       >
         <FormikForm>
           <Container className={css.formHeight} margin={{ top: 'medium', bottom: 'xxlarge' }}>
+            {type === Connectors.AZURE_BLOB ? <AzureBlobFormFields /> : null}
             <AzureKeyVaultFormFields />
           </Container>
           <Layout.Horizontal spacing="medium">

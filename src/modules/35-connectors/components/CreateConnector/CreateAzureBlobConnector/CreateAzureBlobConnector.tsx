@@ -20,8 +20,8 @@ import { buildAzureKeyVaultPayload } from '@connectors/pages/connectors/utils/Co
 import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
 import DelegateSelectorStep from '../commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import ConnectorDetailsStep from '../commonSteps/ConnectorDetailsStep'
-import AzureBlobForm from './views/AzureBlobForm'
-import SetupVault from './views/SetupVault'
+import AzureKeyVaultForm from '../CreateAzureKeyConnector/views/AzureKeyVaultForm'
+import SetupVault from '../CreateAzureKeyConnector/views/SetupVault'
 import css from './CreateAzureBlobConnector.module.scss'
 
 const CreateAzureBlobConnector: React.FC<CreateConnectorModalProps> = props => {
@@ -35,14 +35,15 @@ const CreateAzureBlobConnector: React.FC<CreateConnectorModalProps> = props => {
       className={css.wizardNav}
     >
       <ConnectorDetailsStep
-        type={Connectors.AZURE_KEY_VAULT}
+        type={Connectors.AZURE_BLOB}
         name={getString('overview')}
         isEditMode={props.isEditMode}
         connectorInfo={props.connectorInfo}
         mock={props.mock}
         disableGitSync={true}
       />
-      <AzureBlobForm
+      <AzureKeyVaultForm
+        type={Connectors.AZURE_BLOB}
         name={getString('details')}
         identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
         connectorInfo={props.connectorInfo}
@@ -64,6 +65,7 @@ const CreateAzureBlobConnector: React.FC<CreateConnectorModalProps> = props => {
         submitOnNextStep
       />
       <SetupVault
+        type={Connectors.AZURE_BLOB}
         name={getString('connectors.azureKeyVault.labels.setupVault')}
         onConnectorCreated={onSuccess}
         connectorInfo={props.connectorInfo}

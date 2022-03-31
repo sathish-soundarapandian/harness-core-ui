@@ -2012,6 +2012,8 @@ export const setupAzureKeyVaultFormData = async (
     secretKey: secretKey || undefined,
     tenantId: connectorInfoSpec?.tenantId || undefined,
     subscription: connectorInfoSpec?.subscription || undefined,
+    connectionString: connectorInfoSpec?.connectionString || undefined,
+    containerName: connectorInfoSpec?.containerName || undefined,
     default: connectorInfoSpec?.default || false
   }
 }
@@ -2037,7 +2039,9 @@ export const setupAzureBlobFormData = async (connectorInfo: ConnectorInfoDTO, ac
 
 export const setupAzureKeyVaultNameFormData = async (connectorInfo: ConnectorInfoDTO): Promise<FormData> => {
   return {
-    vaultName: connectorInfo?.spec?.vaultName
+    vaultName: connectorInfo?.spec?.vaultName,
+    keyName: connectorInfo?.spec?.keyName,
+    keyId: connectorInfo?.spec?.keyId
   }
 }
 

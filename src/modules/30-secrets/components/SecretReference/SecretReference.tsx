@@ -78,6 +78,7 @@ const fetchRecords = (
   const secretManagerTypes: ConnectorInfoDTO['type'][] = [
     'AwsKms',
     'AzureKeyVault',
+    'AzureBlob',
     'Vault',
     'AwsSecretManager',
     'GcpKms'
