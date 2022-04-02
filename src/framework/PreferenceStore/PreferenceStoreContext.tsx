@@ -38,6 +38,7 @@ export interface PreferenceStoreStateProps {
 export interface PreferenceStoreProps<T> {
   set(scope: PreferenceScope, entityToPersist: string, value: T, options?: PreferenceStoreOptions): void
   get(scope: PreferenceScope, entityToRetrieve: string, options?: PreferenceStoreOptions): T
+  clear(scope: PreferenceScope, entityToRetrieve: string, options?: PreferenceStoreOptions): void
   updatePreferenceStore(data: PreferenceStoreStateProps): void
 }
 
@@ -53,6 +54,7 @@ export const PREFERENCES_TOP_LEVEL_KEY = 'preferences'
 export const PreferenceStoreContext = React.createContext<PreferenceStoreProps<any>>({
   set: () => void 0,
   get: () => void 0,
+  clear: () => void 0,
   updatePreferenceStore: () => void 0
 })
 
@@ -60,13 +62,14 @@ export function usePreferenceStore<T>(
   scope: PreferenceScope,
   entity: string,
   options: PreferenceStoreOptions = {}
-): [T, (value: T) => void, (data: PreferenceStoreStateProps) => void] {
-  const { get, set, updatePreferenceStore } = React.useContext(PreferenceStoreContext)
+): [T, (value: T) => void, () => void, (data: PreferenceStoreStateProps) => void] {
+  const { get, set, clear, updatePreferenceStore } = React.useContext(PreferenceStoreContext)
 
   const value = get(scope, entity, options)
   const setPreference = set.bind(null, scope, entity, options)
+  const clearPreference = clear.bind(null, scope, entity, options)
 
-  return [value, setPreference, updatePreferenceStore]
+  return [value, setPreference, clearPreference, updatePreferenceStore]
 }
 
 const checkAccess = (scope: PreferenceScope, contextArr: (string | undefined)[]): void => {
@@ -75,7 +78,7 @@ const checkAccess = (scope: PreferenceScope, contextArr: (string | undefined)[])
   }
 }
 
-const getKey = (arr: (string | undefined)[], entity: string): string => {
+export const getKey = (arr: (string | undefined)[], entity: string): string => {
   return [...arr, entity].join('/')
 }
 
@@ -122,6 +125,16 @@ export const PreferenceStoreProvider: React.FC = (props: React.PropsWithChildren
     }
   }
 
+  const clearPreference = (key: string, options?: PreferenceStoreOptions): void => {
+    if (options?.fromBackend) {
+      // TODO: ENHANCEMENT: call backend to clear or delete
+    } else {
+      const newPreferences = { ...currentPreferences }
+      delete newPreferences[key]
+      setPreferences(newPreferences)
+    }
+  }
+
   const set = (
     scope: PreferenceScope,
     entityToPersist: string,
@@ -138,6 +151,11 @@ export const PreferenceStoreProvider: React.FC = (props: React.PropsWithChildren
     return getPreference(key, options)
   }
 
+  const clear = (scope: PreferenceScope, entityToRetrieve: string, options?: PreferenceStoreOptions): void => {
+    const key = getKey(scopeToKeyMap[scope], entityToRetrieve)
+    clearPreference(key, options)
+  }
+
   function updatePreferenceStore(data: PreferenceStoreStateProps): void {
     setState(prevState => ({
       ...prevState,
@@ -150,6 +168,7 @@ export const PreferenceStoreProvider: React.FC = (props: React.PropsWithChildren
       value={{
         set,
         get,
+        clear,
         updatePreferenceStore
       }}
     >
