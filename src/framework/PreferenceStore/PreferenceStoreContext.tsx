@@ -9,11 +9,8 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import type { FeatureFlag } from '@common/featureFlags'
 import { useLocalStorage } from '@common/hooks'
 import type { UserInfo } from 'services/cd-ng'
-
-export type FeatureFlagMap = Partial<Record<FeatureFlag, boolean>>
 
 export interface PreferencePeripheralProps extends ProjectPathProps {
   userId: string
