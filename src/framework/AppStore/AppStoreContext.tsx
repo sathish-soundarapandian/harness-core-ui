@@ -76,10 +76,13 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
     projectIdentifier: projectIdentifierFromParams,
     orgIdentifier: orgIdentifierFromParams
   } = useParams<ProjectPathProps>()
-  const [savedProject, setSavedProject, updatePreferenceStore] = usePreferenceStore<SavedProjectDetails>(
-    PreferenceScope.USER,
-    'savedProject'
-  )
+
+  const [
+    savedProject,
+    setSavedProject, // /** clearSavedProject SKIPPED HERE using empty comma */
+    ,
+    updatePreferenceStore
+  ] = usePreferenceStore<SavedProjectDetails>(PreferenceScope.USER, 'savedProject')
 
   const [state, setState] = React.useState<Omit<AppStoreContextProps, 'updateAppStore' | 'strings'>>({
     featureFlags: {},
