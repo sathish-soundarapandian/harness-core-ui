@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -35,9 +35,9 @@ export interface PreferenceStoreStateProps {
 /**
  * Preference Store - helps to save ANY user-personalisation info
  */
-export interface PreferenceStoreProps {
-  set(scope: PreferenceScope, entityToPersist: string, value: unknown, options?: PreferenceStoreOptions): void
-  get(scope: PreferenceScope, entityToRetrieve: string, options?: PreferenceStoreOptions): any
+export interface PreferenceStoreProps<T> {
+  set(scope: PreferenceScope, entityToPersist: string, value: T, options?: PreferenceStoreOptions): void
+  get(scope: PreferenceScope, entityToRetrieve: string, options?: PreferenceStoreOptions): T
   updatePreferenceStore(data: PreferenceStoreStateProps): void
 }
 
@@ -48,19 +48,19 @@ export interface ScopeContext {
   userId?: string
 }
 
-const TOP_LEVEL_KEY = 'preferences'
+export const PREFERENCES_TOP_LEVEL_KEY = 'preferences'
 
-export const PreferenceStoreContext = React.createContext<PreferenceStoreProps>({
+export const PreferenceStoreContext = React.createContext<PreferenceStoreProps<any>>({
   set: () => void 0,
   get: () => void 0,
   updatePreferenceStore: () => void 0
 })
 
-export function usePreferenceStore(
+export function usePreferenceStore<T>(
   scope: PreferenceScope,
   entity: string,
   options: PreferenceStoreOptions = {}
-): [any, (value: any) => void, (data: PreferenceStoreStateProps) => void] {
+): [T, (value: T) => void, (data: PreferenceStoreStateProps) => void] {
   const { get, set, updatePreferenceStore } = React.useContext(PreferenceStoreContext)
 
   const value = get(scope, entity, options)
@@ -69,43 +69,14 @@ export function usePreferenceStore(
   return [value, setPreference, updatePreferenceStore]
 }
 
-const checkAccess = (scope: PreferenceScope, contextToCheck: string | undefined): void => {
-  if (!contextToCheck) {
+const checkAccess = (scope: PreferenceScope, contextArr: (string | undefined)[]): void => {
+  if (!contextArr || contextArr?.some(val => val === undefined)) {
     throw new Error(`Access to "${scope}" scope is not available in the current context.`)
   }
 }
 
-export const getStringKeyFromObjectValues = (
-  scope: PreferenceScope,
-  contextObj: ScopeContext,
-  entity: string,
-  shouldCheckAccess = true,
-  glue = '/'
-): string => {
-  // pick specific keys, get their values, and join with a `/`
-  const scopeArr = []
-  switch (scope) {
-    case PreferenceScope.USER:
-      shouldCheckAccess && checkAccess(scope, contextObj?.userId)
-      scopeArr.push(contextObj.userId)
-      break
-    case PreferenceScope.ACCOUNT:
-      shouldCheckAccess && checkAccess(scope, contextObj?.accountId)
-      scopeArr.push(contextObj.accountId)
-      break
-    case PreferenceScope.ORG:
-      shouldCheckAccess && checkAccess(scope, contextObj?.orgIdentifier)
-      scopeArr.push(contextObj.accountId, contextObj.orgIdentifier)
-      break
-    case PreferenceScope.PROJECT:
-      shouldCheckAccess && checkAccess(scope, contextObj?.projectIdentifier)
-      scopeArr.push(contextObj.accountId, contextObj.orgIdentifier, contextObj.projectIdentifier)
-      break
-    default:
-      // do nothing
-      break
-  }
-  return scopeArr.concat([entity]).join(glue)
+const getKey = (arr: (string | undefined)[], entity: string): string => {
+  return [...arr, entity].join('/')
 }
 
 export const PreferenceStoreProvider: React.FC = (props: React.PropsWithChildren<unknown>) => {
@@ -113,14 +84,25 @@ export const PreferenceStoreProvider: React.FC = (props: React.PropsWithChildren
   const [state, setState] = React.useState<PreferenceStoreStateProps>({
     currentUserInfo: {}
   })
-  const [currentPreferences, setPreferences] = useLocalStorage<Record<string, unknown>>(TOP_LEVEL_KEY, {})
+  const [currentPreferences, setPreferences] = useLocalStorage<Record<string, unknown>>(PREFERENCES_TOP_LEVEL_KEY, {})
   const userId = state.currentUserInfo?.email
-  const contextObj = {
-    accountId,
-    projectIdentifier,
-    orgIdentifier,
-    userId
-  }
+  const [scopeToKeyMap, setScopeToKeyMap] = React.useState({
+    [PreferenceScope.USER]: [userId],
+    [PreferenceScope.ACCOUNT]: [accountId],
+    [PreferenceScope.ORG]: [accountId, orgIdentifier],
+    [PreferenceScope.PROJECT]: [accountId, orgIdentifier, projectIdentifier],
+    [PreferenceScope.MACHINE]: []
+  })
+
+  useEffect(() => {
+    setScopeToKeyMap({
+      [PreferenceScope.USER]: [userId],
+      [PreferenceScope.ACCOUNT]: [accountId],
+      [PreferenceScope.ORG]: [accountId, orgIdentifier],
+      [PreferenceScope.PROJECT]: [accountId, orgIdentifier, projectIdentifier],
+      [PreferenceScope.MACHINE]: []
+    })
+  }, [accountId, orgIdentifier, projectIdentifier, userId])
 
   const setPreference = (key: string, value: unknown, options?: PreferenceStoreOptions): void => {
     if (options?.fromBackend) {
@@ -146,12 +128,13 @@ export const PreferenceStoreProvider: React.FC = (props: React.PropsWithChildren
     options: PreferenceStoreOptions,
     value: unknown
   ): void => {
-    const key = getStringKeyFromObjectValues(scope, contextObj, entityToPersist)
+    checkAccess(scope, scopeToKeyMap[scope])
+    const key = getKey(scopeToKeyMap[scope], entityToPersist)
     setPreference(key, value, options)
   }
 
   const get = (scope: PreferenceScope, entityToRetrieve: string, options?: PreferenceStoreOptions): unknown => {
-    const key = getStringKeyFromObjectValues(scope, contextObj, entityToRetrieve, false)
+    const key = getKey(scopeToKeyMap[scope], entityToRetrieve)
     return getPreference(key, options)
   }
 

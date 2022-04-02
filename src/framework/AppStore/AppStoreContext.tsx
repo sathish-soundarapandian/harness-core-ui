@@ -53,6 +53,11 @@ export interface AppStoreContextProps {
   ): void
 }
 
+export interface SavedProjectDetails {
+  projectIdentifier: string
+  orgIdentifier: string
+}
+
 export const AppStoreContext = React.createContext<AppStoreContextProps>({
   featureFlags: {},
   currentUserInfo: { uuid: '' },
@@ -71,7 +76,7 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
     projectIdentifier: projectIdentifierFromParams,
     orgIdentifier: orgIdentifierFromParams
   } = useParams<ProjectPathProps>()
-  const [savedProject, setSavedProject, updatePreferenceStore] = usePreferenceStore(
+  const [savedProject, setSavedProject, updatePreferenceStore] = usePreferenceStore<SavedProjectDetails>(
     PreferenceScope.USER,
     'savedProject'
   )
@@ -82,8 +87,8 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
     isGitSyncEnabled: false,
     connectivityMode: undefined
   })
-  const projectIdentifier = defaultTo(projectIdentifierFromParams, savedProject?.projectIdentifier)
-  const orgIdentifier = defaultTo(orgIdentifierFromParams, savedProject?.orgIdentifier)
+  const projectIdentifier = defaultTo(projectIdentifierFromParams, defaultTo(savedProject?.projectIdentifier, ''))
+  const orgIdentifier = defaultTo(orgIdentifierFromParams, defaultTo(savedProject?.orgIdentifier, ''))
 
   const { data: featureFlags, loading: featureFlagsLoading } = useGetFeatureFlags({
     accountId,
@@ -226,8 +231,8 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
   useEffect(() => {
     if (userInfo?.data?.email && project?.data?.project)
       setSavedProject({
-        projectIdentifier: project?.data?.project?.identifier,
-        orgIdentifier: project?.data?.project?.orgIdentifier
+        projectIdentifier: defaultTo(project?.data?.project?.identifier, ''),
+        orgIdentifier: defaultTo(project?.data?.project?.orgIdentifier, '')
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project?.data?.project, userInfo?.data?.email])
