@@ -193,7 +193,6 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
   useEffect(() => {
     if (projectIdentifier && orgIdentifier) {
       refetch()
-      setSavedProject({ projectIdentifier, orgIdentifier })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectIdentifier, orgIdentifier])
@@ -223,6 +222,15 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
     }
     //TODO: Logout if we don't have userInfo???
   }, [userInfo?.data])
+
+  useEffect(() => {
+    if (userInfo?.data?.email && project?.data?.project)
+      setSavedProject({
+        projectIdentifier: project?.data?.project?.identifier,
+        orgIdentifier: project?.data?.project?.orgIdentifier
+      })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [project?.data?.project, userInfo?.data?.email])
 
   function updateAppStore(
     data: Partial<
