@@ -2575,7 +2575,11 @@ export interface StringsMap {
   'connectors.title.awsCodeCommit': string
   'connectors.title.awsKms': string
   'connectors.title.awsSecretManager': string
+<<<<<<< HEAD
   'connectors.title.azure': string
+=======
+  'connectors.title.azureBlob': string
+>>>>>>> a397c2d99125 ([PL-22385]: Corrected the title)
   'connectors.title.azureKeyVault': string
   'connectors.title.azureRepoConnector': string
   'connectors.title.bitbucketConnector': string
