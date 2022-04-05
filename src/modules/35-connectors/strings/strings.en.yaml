@@ -110,7 +110,7 @@ title:
   ceAzureConnector: '{{$.common.azureConnector}}'
   datadog: 'Datadog'
   azureKeyVault: 'Azure Key Vault'
-  azureBlob: 'Azure Blob'
+  azureBlob: 'Azure Blob Key Vault'
   sumologic: 'SumoLogic'
   ceAws: 'AWS Connector '
   gcpKms: GCP Key Management Service

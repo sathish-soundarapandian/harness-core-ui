@@ -2147,7 +2147,7 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
     case Connectors.SUMOLOGIC:
       return 'service-sumologic'
     case Connectors.AZURE_BLOB:
-      return 'azure-key-vault'
+      return 'azure-blob'
     case Connectors.AZURE_KEY_VAULT:
       return 'azure-key-vault'
     case Connectors.DYNATRACE:
