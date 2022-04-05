@@ -70,12 +70,15 @@ export function useAppStore(): AppStoreContextProps {
   return React.useContext(AppStoreContext)
 }
 
+const getIdentifiersFromSavedProj = (savedProject: SavedProjectDetails): SavedProjectDetails => {
+  return {
+    projectIdentifier: defaultTo(savedProject?.projectIdentifier, ''),
+    orgIdentifier: defaultTo(savedProject?.orgIdentifier, '')
+  }
+}
+
 export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React.ReactElement {
-  const {
-    accountId,
-    projectIdentifier: projectIdentifierFromParams,
-    orgIdentifier: orgIdentifierFromParams
-  } = useParams<ProjectPathProps>()
+  let { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
   const [
     savedProject,
@@ -90,8 +93,14 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
     isGitSyncEnabled: false,
     connectivityMode: undefined
   })
-  const projectIdentifier = defaultTo(projectIdentifierFromParams, defaultTo(savedProject?.projectIdentifier, ''))
-  const orgIdentifier = defaultTo(orgIdentifierFromParams, defaultTo(savedProject?.orgIdentifier, ''))
+
+  // let projectIdentifier: string = projectIdentifierFromParams
+  // let orgIdentifier: string = orgIdentifierFromParams
+  if (!projectIdentifier && !orgIdentifier) {
+    const identifiersFromSavedProj = getIdentifiersFromSavedProj(savedProject)
+    projectIdentifier = identifiersFromSavedProj.projectIdentifier
+    orgIdentifier = identifiersFromSavedProj.orgIdentifier
+  }
 
   const { data: featureFlags, loading: featureFlagsLoading } = useGetFeatureFlags({
     accountId,
@@ -201,6 +210,7 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
   useEffect(() => {
     if (projectIdentifier && orgIdentifier) {
       refetch()
+      setSavedProject({ projectIdentifier, orgIdentifier })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectIdentifier, orgIdentifier])
@@ -230,15 +240,6 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
     }
     //TODO: Logout if we don't have userInfo???
   }, [userInfo?.data])
-
-  useEffect(() => {
-    if (userInfo?.data?.email && project?.data?.project)
-      setSavedProject({
-        projectIdentifier: defaultTo(project?.data?.project?.identifier, ''),
-        orgIdentifier: defaultTo(project?.data?.project?.orgIdentifier, '')
-      })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [project?.data?.project, userInfo?.data?.email])
 
   function updateAppStore(
     data: Partial<

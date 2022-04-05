@@ -55,8 +55,8 @@ const useDeleteProjectDialog = (data: Project, onSuccess: () => void): UseDelete
             )
           if (savedProject.projectIdentifier === data.identifier) {
             clearSavedProject()
+            updateAppStore({ selectedProject: undefined, selectedOrg: undefined })
           }
-          updateAppStore({ selectedProject: undefined, selectedOrg: undefined })
           onSuccess()
         } catch (err) {
           /* istanbul ignore next */
