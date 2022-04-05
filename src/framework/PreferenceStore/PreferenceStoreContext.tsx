@@ -49,6 +49,13 @@ export interface ScopeContext {
   userId?: string
 }
 
+export interface PreferenceStoreContextProps<T> {
+  preference: T
+  setPreference: (value: T) => void
+  clearPreference: () => void
+  updatePreferenceStore: (data: PreferenceStoreStateProps) => void
+}
+
 export const PREFERENCES_TOP_LEVEL_KEY = 'preferences'
 
 export const PreferenceStoreContext = React.createContext<PreferenceStoreProps<any>>({
@@ -62,14 +69,14 @@ export function usePreferenceStore<T>(
   scope: PreferenceScope,
   entity: string,
   options: PreferenceStoreOptions = {}
-): [T, (value: T) => void, () => void, (data: PreferenceStoreStateProps) => void] {
+): PreferenceStoreContextProps<T> {
   const { get, set, clear, updatePreferenceStore } = React.useContext(PreferenceStoreContext)
 
-  const value = get(scope, entity, options)
+  const preference = get(scope, entity, options)
   const setPreference = set.bind(null, scope, entity, options)
   const clearPreference = clear.bind(null, scope, entity, options)
 
-  return [value, setPreference, clearPreference, updatePreferenceStore]
+  return { preference, setPreference, clearPreference, updatePreferenceStore }
 }
 
 const checkAccess = (scope: PreferenceScope, contextArr: (string | undefined)[]): void => {

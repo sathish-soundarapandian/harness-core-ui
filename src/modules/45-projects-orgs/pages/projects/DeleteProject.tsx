@@ -23,11 +23,10 @@ const useDeleteProjectDialog = (data: Project, onSuccess: () => void): UseDelete
   const { accountId } = useParams<AccountPathProps>()
   const { updateAppStore } = useAppStore()
   const { getRBACErrorMessage } = useRBACError()
-  const [
-    savedProject, // /** setSavedProject SKIPPED HERE using empty comma */
-    ,
-    clearSavedProject
-  ] = usePreferenceStore<SavedProjectDetails>(PreferenceScope.USER, 'savedProject')
+  const { preference: savedProject, clearPreference: clearSavedProject } = usePreferenceStore<SavedProjectDetails>(
+    PreferenceScope.USER,
+    'savedProject'
+  )
   const { mutate: deleteProject } = useDeleteProject({
     queryParams: {
       accountIdentifier: accountId,

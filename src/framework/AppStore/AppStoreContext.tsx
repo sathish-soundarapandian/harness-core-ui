@@ -80,12 +80,11 @@ const getIdentifiersFromSavedProj = (savedProject: SavedProjectDetails): SavedPr
 export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React.ReactElement {
   let { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
-  const [
-    savedProject,
-    setSavedProject, // /** clearSavedProject SKIPPED HERE using empty comma */
-    ,
+  const {
+    preference: savedProject,
+    setPreference: setSavedProject,
     updatePreferenceStore
-  ] = usePreferenceStore<SavedProjectDetails>(PreferenceScope.USER, 'savedProject')
+  } = usePreferenceStore<SavedProjectDetails>(PreferenceScope.USER, 'savedProject')
 
   const [state, setState] = React.useState<Omit<AppStoreContextProps, 'updateAppStore' | 'strings'>>({
     featureFlags: {},
