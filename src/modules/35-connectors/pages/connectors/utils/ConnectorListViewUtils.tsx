@@ -40,7 +40,15 @@ const getAWSDisplaySummary = (connector: ConnectorInfoDTO): JSX.Element | string
   )
 }
 
+<<<<<<< HEAD
 const linkAsTextRenderer = (value: string): JSX.Element => {
+=======
+const getAzureBlobConnectorDisplaySummary = (connector: ConnectorInfoDTO): JSX.Element | string => {
+  return getConnectorDisplaySummaryLabel('common.containerName', textRenderer(connector?.spec?.containerName))
+}
+
+const linkRenderer = (value: string): JSX.Element => {
+>>>>>>> b43c801edc94 ([PL-23547]: Connector details and list page for blob)
   if (!value) {
     return <></>
   }
@@ -144,12 +152,18 @@ export const getConnectorDisplaySummary = (connector: ConnectorInfoDTO): JSX.Ele
     case Connectors.AWS_SECRET_MANAGER:
       return getAWSSecretManagerSummary(connector)
     case Connectors.DYNATRACE:
+<<<<<<< HEAD
       return getConnectorDisplaySummaryLabel('UrlLabel', linkAsTextRenderer(connector?.spec?.url))
     case Connectors.CUSTOM_SECRET_MANAGER:
       return getConnectorDisplaySummaryLabel(
         'common.template.label',
         textRenderer(`${connector?.spec?.template?.templateRef}(${connector?.spec?.template?.versionLabel})`)
       )
+=======
+      return getConnectorDisplaySummaryLabel('UrlLabel', linkRenderer(connector?.spec?.url))
+    case Connectors.AZURE_BLOB:
+      return getAzureBlobConnectorDisplaySummary(connector)
+>>>>>>> b43c801edc94 ([PL-23547]: Connector details and list page for blob)
     default:
       return ''
   }

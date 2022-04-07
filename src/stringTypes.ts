@@ -174,7 +174,11 @@ export interface StringsMap {
   'common.connectThroughPlatformInfo': string
   'common.connectivityErrors': string
   'common.contactSupport': string
+<<<<<<< HEAD
   'common.contentRequired': string
+=======
+  'common.containerName': string
+>>>>>>> fbb6fda8160a ([PL-23547]: Connector details and list page for blob)
   'common.copy': string
   'common.copyFqn': string
   'common.copyVariableName': string

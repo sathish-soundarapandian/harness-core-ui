@@ -35,7 +35,7 @@ const CreateAzureKeyVaultConnector: React.FC<CreateConnectorModalProps> = props 
       className={css.wizardNav}
     >
       <ConnectorDetailsStep
-        type={Connectors.AZURE_BLOB}
+        type={Connectors.AZURE_KEY_VAULT}
         name={getString('overview')}
         isEditMode={props.isEditMode}
         connectorInfo={props.connectorInfo}

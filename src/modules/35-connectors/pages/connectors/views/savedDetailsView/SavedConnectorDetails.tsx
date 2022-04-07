@@ -16,6 +16,7 @@ import type {
   AwsKmsConnectorDTO,
   AwsSecretManagerDTO,
   AzureKeyVaultConnectorDTO,
+  AzureBlobConnectorDTO,
   GcpKmsConnectorDTO
 } from 'services/cd-ng'
 import { StringUtils } from '@common/exports'
@@ -626,6 +627,25 @@ const getAzureKeyVaultSchema = (connector: ConnectorInfoDTO): Array<ActivityDeta
   ]
 }
 
+const getAzureBlobSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
+  const data = connector.spec as AzureBlobConnectorDTO
+  return [
+    ...getAzureKeyVaultSchema(connector),
+    {
+      label: 'connectors.azureBlob.labels.containerName',
+      value: data.containerName
+    },
+    {
+      label: 'connectors.azureKeyVault.labels.vaultName',
+      value: data.vaultName
+    },
+    {
+      label: 'connectors.azureBlob.labels.keyName',
+      value: data.keyName
+    }
+  ]
+}
+
 const getGCPSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
   return [
     {
@@ -865,6 +885,8 @@ const getSchemaByType = (
       return getDataDogSchema(connector)
     case Connectors.AZURE_KEY_VAULT:
       return getAzureKeyVaultSchema(connector)
+    case Connectors.AZURE_BLOB:
+      return getAzureBlobSchema(connector)
     case Connectors.SUMOLOGIC:
       return getSumologicSchema(connector)
     case Connectors.SERVICE_NOW:
