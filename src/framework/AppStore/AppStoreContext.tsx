@@ -13,7 +13,7 @@ import { PageSpinner } from '@harness/uicore'
 import { useQueryParams } from '@common/hooks'
 import {
   Project,
-  useGetProject,
+  getProjectPromise,
   useGetCurrentUserInfo,
   UserInfo,
   isGitSyncEnabledPromise,
@@ -78,11 +78,13 @@ const getIdentifiersFromSavedProj = (savedProject: SavedProjectDetails): SavedPr
 }
 
 export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React.ReactElement {
+  // eslint-disable-next-line prefer-const
   let { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
   const {
     preference: savedProject,
     setPreference: setSavedProject,
+    clearPreference: clearSavedProject,
     updatePreferenceStore
   } = usePreferenceStore<SavedProjectDetails>(PreferenceScope.USER, 'savedProject')
 
@@ -106,14 +108,6 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
     pathParams: { accountId }
   })
 
-  const { refetch, data: project } = useGetProject({
-    identifier: projectIdentifier,
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier
-    },
-    lazy: true
-  })
   const { refetch: refetchOrg, data: orgDetails } = useGetOrganization({
     identifier: orgIdentifier,
     queryParams: {
@@ -191,13 +185,6 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.selectedProject, projectIdentifier, orgIdentifier, state.isGitSyncEnabled])
 
-  // set selectedProject when projectDetails are fetched
-  useEffect(() => {
-    setState(prevState => ({
-      ...prevState,
-      selectedProject: project?.data?.project
-    }))
-  }, [project?.data?.project])
   // set selectedOrg when orgDetails are fetched
   useEffect(() => {
     setState(prevState => ({
@@ -205,11 +192,28 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
       selectedOrg: orgDetails?.data?.organization
     }))
   }, [orgDetails?.data?.organization])
-  // update selectedProject when projectIdentifier in URL changes
+  // When projectIdentifier in URL changes, fetch projectDetails, and update selectedProject & savedProject-preference
   useEffect(() => {
     if (projectIdentifier && orgIdentifier) {
-      refetch()
-      setSavedProject({ projectIdentifier, orgIdentifier })
+      getProjectPromise({
+        identifier: projectIdentifier,
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier
+        }
+      }).then(response => {
+        const project = response?.data?.project
+        if (project) {
+          setState(prevState => ({
+            ...prevState,
+            selectedProject: project
+          }))
+          setSavedProject({ projectIdentifier, orgIdentifier })
+        } else {
+          // if no project was fetched, clear preference
+          clearSavedProject()
+        }
+      })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectIdentifier, orgIdentifier])
