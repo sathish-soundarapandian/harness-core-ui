@@ -52,7 +52,7 @@ const ProjectsListPage: React.FC = () => {
 
   const { preference: savedProjectView, setPreference: setSavedProjectView } = usePreferenceStore<Views | undefined>(
     PreferenceScope.USER,
-    'ProjectsViewType'
+    'projectsViewType'
   )
   const initialSelectedView = savedProjectView || Views.GRID
   const [view, setView] = useState(initialSelectedView)
