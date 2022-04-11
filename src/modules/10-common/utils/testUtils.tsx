@@ -16,7 +16,6 @@ import qs from 'qs'
 
 import { enableMapSet } from 'immer'
 import { AppStoreContext, AppStoreContextProps } from 'framework/AppStore/AppStoreContext'
-import { PreferenceStoreContext } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { LicenseStoreContext, LicenseStoreContextProps } from 'framework/LicenseStore/LicenseStoreContext'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import { withAccountId, accountPathProps } from '@common/utils/routeUtils'
@@ -30,6 +29,7 @@ import './testUtils.scss'
 import { PermissionsContext, PermissionsContextProps } from 'framework/rbac/PermissionsContext'
 import { Editions } from '@common/constants/SubscriptionTypes'
 import type { FeatureFlag } from '@common/featureFlags'
+import { PreferenceStoreContext } from 'framework/PreferenceStore/PreferenceStoreContext'
 
 export type UseGetMockData<TData, TError = undefined, TQueryParams = undefined, TPathParams = undefined> = Required<
   UseGetProps<TData, TError, TQueryParams, TPathParams>
