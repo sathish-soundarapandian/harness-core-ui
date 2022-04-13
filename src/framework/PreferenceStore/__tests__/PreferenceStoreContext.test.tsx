@@ -5,83 +5,74 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import React from 'react'
-import { useParams } from 'react-router-dom'
-import { waitFor } from '@testing-library/react'
-import { renderHook, act as actReactHooks } from '@testing-library/react-hooks'
+import { render, fireEvent, act } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
-import * as commonHooks from '@common/hooks/useLocalStorage'
-import { getKey, PreferenceScope, usePreferenceStore } from '../PreferenceStoreContext'
+import { PreferenceScope, usePreferenceStore } from '../PreferenceStoreContext'
 const ENTITY_TO_SAVE = 'MySavedValue'
 
 // eslint-disable-next-line jest-no-mock
 jest.mock('react-router-dom', () => ({
   ...(jest.requireActual('react-router-dom') as any),
-  useParams: jest.fn()
+  useParams: jest.fn().mockImplementation(() => {
+    return { accountId: 'accountId', projectIdentifier: 'projectIdentifier', orgIdentifier: 'orgIdentifier' }
+  })
 }))
 
 const defaultUuid = '1234'
 
-describe('PreferenceStoreContext tests', () => {
-  beforeEach(() => {
-    // eslint-disable-next-line
-    // @ts-ignore
-    useParams.mockImplementation(() => {
-      return { accountId: 'accountId', projectIdentifier: 'projectIdentifier', orgIdentifier: 'orgIdentifier' }
-    })
-  })
+const MyComponent: React.FC = () => {
+  const {
+    preference: savedVal,
+    setPreference: setSavedVal,
+    clearPreference
+  } = usePreferenceStore<string>(PreferenceScope.MACHINE, ENTITY_TO_SAVE)
 
-  test('if renderhook works for usePreferenceStore', async () => {
-    const mockedSetVal = jest.fn()
-    // jest.spyOn(commonHooks, 'useLocalStorage').mockReturnValue([val, mockedSetVal])
-    jest
-      .spyOn(commonHooks, 'useLocalStorage')
-      .mockImplementationOnce(() => {
-        return ['ONE', mockedSetVal]
-      })
-      .mockImplementationOnce(() => {
-        return ['TWO', mockedSetVal]
-      })
-      .mockImplementationOnce(() => {
-        return [null, mockedSetVal]
-      })
+  return (
+    <div>
+      <button
+        data-testid="btnToChangeSavedVal"
+        onClick={() => {
+          setSavedVal('test')
+        }}
+      ></button>
+      <button
+        data-testid="clearPreferentBtn"
+        onClick={() => {
+          clearPreference()
+        }}
+      ></button>
+      <span data-testid="valFromPrefStore">{savedVal}</span>
+    </div>
+  )
+}
 
-    const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
+describe('Preference Store context tests', () => {
+  test('test if the values are being set', async () => {
+    const { getByTestId } = render(
       <TestWrapper path={routes.toProjects({ accountId: defaultUuid })} pathParams={{ accountId: defaultUuid }}>
-        {children}
+        <MyComponent />
       </TestWrapper>
     )
-    const { result } = renderHook(() => usePreferenceStore<number>(PreferenceScope.MACHINE, ENTITY_TO_SAVE), {
-      wrapper
+    const btn = getByTestId('btnToChangeSavedVal')
+    await act(async () => {
+      fireEvent.click(btn!)
     })
-
-    const { preference, setPreference, clearPreference, updatePreferenceStore } = result.current
-    actReactHooks(() => {
-      updatePreferenceStore({ currentUserInfo: { email: 'abc@gmail.com' } })
-    })
-    await waitFor(() => expect(preference).toBe(undefined))
-    actReactHooks(() => {
-      setPreference(55)
-    })
-    await waitFor(() => expect(mockedSetVal).toHaveBeenCalledTimes(1))
-    // rerender()
-    // jest.spyOn(commonHooks, 'useLocalStorage').mockReturnValue([55, mockedSetVal])
-    // await waitFor(() => expect(preference).toBe('TWO'))
-    actReactHooks(() => {
-      clearPreference()
-    })
-    await waitFor(() => expect(mockedSetVal).toHaveBeenCalledTimes(2))
-    // await waitFor(() => expect(savedVal).toBe('TWO'))
+    const textElement = getByTestId('valFromPrefStore')
+    expect(textElement.textContent).toBe('test')
   })
 
-  test('if getKey works correctly', () => {
-    let key = getKey(['abc@gmail.com'], 'MY_SAVED_ENTITY')
-    expect(key).toBe('abc@gmail.com/MY_SAVED_ENTITY')
-
-    key = getKey(['abcXYZ', 'theOrgId'], 'MY_SAVED_ENTITY')
-    expect(key).toBe('abcXYZ/theOrgId/MY_SAVED_ENTITY')
-
-    key = getKey(['abcXYZ', undefined], 'MY_SAVED_ENTITY')
-    expect(key).toBe('abcXYZ//MY_SAVED_ENTITY')
+  test('clear preference', async () => {
+    const { getByTestId } = render(
+      <TestWrapper path={routes.toProjects({ accountId: defaultUuid })} pathParams={{ accountId: defaultUuid }}>
+        <MyComponent />
+      </TestWrapper>
+    )
+    const btn = getByTestId('clearPreferentBtn')
+    await act(async () => {
+      fireEvent.click(btn!)
+    })
+    const textElement = getByTestId('valFromPrefStore')
+    expect(textElement.textContent).toBe('')
   })
 })

@@ -85,7 +85,7 @@ const checkAccess = (scope: PreferenceScope, contextArr: (string | undefined)[])
   }
 }
 
-export const getKey = (arr: (string | undefined)[], entity: string): string => {
+const getKey = (arr: (string | undefined)[], entity: string): string => {
   return [...arr, entity].join('/')
 }
 
