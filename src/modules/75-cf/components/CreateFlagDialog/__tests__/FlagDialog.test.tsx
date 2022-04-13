@@ -12,7 +12,8 @@ import FlagDialog from '../FlagDialog'
 
 jest.mock('@common/hooks', () => ({
   useQueryParams: () => jest.fn(),
-  useDeepCompareEffect: () => jest.fn()
+  useDeepCompareEffect: () => jest.fn(),
+  useLocalStorage: jest.fn().mockImplementation(() => [5, jest.fn()])
 }))
 
 const trackEventMock = jest.fn()
