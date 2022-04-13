@@ -68,9 +68,13 @@ describe('Preference Store context tests', () => {
         <MyComponent />
       </TestWrapper>
     )
-    const btn = getByTestId('clearPreferentBtn')
+    const btnToChangeVal = getByTestId('btnToChangeSavedVal')
     await act(async () => {
-      fireEvent.click(btn!)
+      fireEvent.click(btnToChangeVal!)
+    })
+    const btnToClearVal = getByTestId('clearPreferentBtn')
+    await act(async () => {
+      fireEvent.click(btnToClearVal!)
     })
     const textElement = getByTestId('valFromPrefStore')
     expect(textElement.textContent).toBe('')
