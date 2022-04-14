@@ -145,71 +145,71 @@ export const TestWrapper: React.FC<TestWrapperProps> = props => {
   // }, [path, pathParams, queryParams])
 
   return (
-    <StringsContext.Provider value={{ data: stringsData as any, getString }}>
-      <PreferenceStoreContext.Provider
-        value={{
-          set: jest.fn(),
-          get: jest.fn(),
-          clear: jest.fn(),
-          updatePreferenceStore: jest.fn()
-        }}
-      >
-        <AppStoreContext.Provider
+    <Router history={history}>
+      <StringsContext.Provider value={{ data: stringsData as any, getString }}>
+        <PreferenceStoreContext.Provider
           value={{
-            featureFlags: {
-              FEATURE_ENFORCEMENT_ENABLED: true
-            },
-            updateAppStore: () => void 0,
-            currentUserInfo: { uuid: '' },
-            ...defaultAppStoreValues
+            set: jest.fn(),
+            get: jest.fn(),
+            clear: jest.fn(),
+            updatePreferenceStore: jest.fn()
           }}
         >
-          <LicenseStoreContext.Provider
+          <AppStoreContext.Provider
             value={{
-              versionMap: {},
-              licenseInformation: {},
-              CI_LICENSE_STATE: LICENSE_STATE_VALUES.ACTIVE,
-              FF_LICENSE_STATE: LICENSE_STATE_VALUES.ACTIVE,
-              CCM_LICENSE_STATE: LICENSE_STATE_VALUES.ACTIVE,
-              CD_LICENSE_STATE: LICENSE_STATE_VALUES.ACTIVE,
-              updateLicenseStore: () => void 0,
-              ...defaultLicenseStoreValues
+              featureFlags: {
+                FEATURE_ENFORCEMENT_ENABLED: true
+              },
+              updateAppStore: () => void 0,
+              currentUserInfo: { uuid: '' },
+              ...defaultAppStoreValues
             }}
           >
-            <PermissionsContext.Provider
+            <LicenseStoreContext.Provider
               value={{
-                permissions: new Map<string, boolean>(),
-                requestPermission: () => void 0,
-                checkPermission: () => true,
-                cancelRequest: () => void 0,
-                ...defaultPermissionValues
+                versionMap: {},
+                licenseInformation: {},
+                CI_LICENSE_STATE: LICENSE_STATE_VALUES.ACTIVE,
+                FF_LICENSE_STATE: LICENSE_STATE_VALUES.ACTIVE,
+                CCM_LICENSE_STATE: LICENSE_STATE_VALUES.ACTIVE,
+                CD_LICENSE_STATE: LICENSE_STATE_VALUES.ACTIVE,
+                updateLicenseStore: () => void 0,
+                ...defaultLicenseStoreValues
               }}
             >
-              <FeaturesContext.Provider
+              <PermissionsContext.Provider
                 value={{
-                  features: new Map<FeatureIdentifier, FeatureDetail>(),
-                  featureMap: new Map<FeatureIdentifier, FeatureMetaData>(),
-                  getEdition: () => {
-                    return undefined
-                  },
-                  requestFeatures: () => void 0,
-                  requestLimitFeature: () => void 0,
-                  checkFeature: () => {
-                    return defaultReturn
-                  },
-                  checkLimitFeature: () => {
-                    return defaultReturn
-                  },
-                  getRestrictionType: () => {
-                    return undefined
-                  },
-                  getHighestEdition: () => {
-                    return Editions.FREE
-                  },
-                  ...defaultFeaturesValues
+                  permissions: new Map<string, boolean>(),
+                  requestPermission: () => void 0,
+                  checkPermission: () => true,
+                  cancelRequest: () => void 0,
+                  ...defaultPermissionValues
                 }}
               >
-                <Router history={history}>
+                <FeaturesContext.Provider
+                  value={{
+                    features: new Map<FeatureIdentifier, FeatureDetail>(),
+                    featureMap: new Map<FeatureIdentifier, FeatureMetaData>(),
+                    getEdition: () => {
+                      return undefined
+                    },
+                    requestFeatures: () => void 0,
+                    requestLimitFeature: () => void 0,
+                    checkFeature: () => {
+                      return defaultReturn
+                    },
+                    checkLimitFeature: () => {
+                      return defaultReturn
+                    },
+                    getRestrictionType: () => {
+                      return undefined
+                    },
+                    getHighestEdition: () => {
+                      return Editions.FREE
+                    },
+                    ...defaultFeaturesValues
+                  }}
+                >
                   <ModalProvider>
                     <RestfulProvider base="/">
                       <BrowserView enable={props.enableBrowserView}>
@@ -224,13 +224,13 @@ export const TestWrapper: React.FC<TestWrapperProps> = props => {
                       </BrowserView>
                     </RestfulProvider>
                   </ModalProvider>
-                </Router>
-              </FeaturesContext.Provider>
-            </PermissionsContext.Provider>
-          </LicenseStoreContext.Provider>
-        </AppStoreContext.Provider>
-      </PreferenceStoreContext.Provider>
-    </StringsContext.Provider>
+                </FeaturesContext.Provider>
+              </PermissionsContext.Provider>
+            </LicenseStoreContext.Provider>
+          </AppStoreContext.Provider>
+        </PreferenceStoreContext.Provider>
+      </StringsContext.Provider>
+    </Router>
   )
 }
 
