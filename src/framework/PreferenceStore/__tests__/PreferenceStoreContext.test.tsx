@@ -5,19 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import React from 'react'
+import qs from 'qs'
+import { compile } from 'path-to-regexp'
+import { Router } from 'react-router-dom'
+import { createMemoryHistory } from 'history'
 import { render, fireEvent, act } from '@testing-library/react'
-import { TestWrapper } from '@common/utils/testUtils'
-import routes from '@common/RouteDefinitions'
-import { PreferenceScope, usePreferenceStore } from '../PreferenceStoreContext'
-const ENTITY_TO_SAVE = 'MySavedValue'
 
-// eslint-disable-next-line jest-no-mock
-jest.mock('react-router-dom', () => ({
-  ...(jest.requireActual('react-router-dom') as any),
-  useParams: jest.fn().mockImplementation(() => {
-    return { accountId: 'accountId', projectIdentifier: 'projectIdentifier', orgIdentifier: 'orgIdentifier' }
-  })
-}))
+import routes from '@common/RouteDefinitions'
+import { PreferenceStoreProvider, PreferenceScope, usePreferenceStore } from '../PreferenceStoreContext'
+const ENTITY_TO_SAVE = 'MySavedValue'
 
 const defaultUuid = '1234'
 
@@ -47,12 +43,28 @@ const MyComponent: React.FC = () => {
   )
 }
 
+const ProvidersWrapper: React.FC = ({ children }) => {
+  const queryParams = {}
+  const path = routes.toProjects({ accountId: defaultUuid })
+  const pathParams = { accountId: defaultUuid }
+  const search = qs.stringify(queryParams, { addQueryPrefix: true })
+  const routePath = compile(path)(pathParams) + search
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const history = React.useMemo(() => createMemoryHistory({ initialEntries: [routePath] }), [])
+
+  return (
+    <Router history={history}>
+      <PreferenceStoreProvider>{children}</PreferenceStoreProvider>
+    </Router>
+  )
+}
+
 describe('Preference Store context tests', () => {
   test('test if the values are being set', async () => {
     const { getByTestId } = render(
-      <TestWrapper path={routes.toProjects({ accountId: defaultUuid })} pathParams={{ accountId: defaultUuid }}>
+      <ProvidersWrapper>
         <MyComponent />
-      </TestWrapper>
+      </ProvidersWrapper>
     )
     const btn = getByTestId('btnToChangeSavedVal')
     await act(async () => {
@@ -64,9 +76,9 @@ describe('Preference Store context tests', () => {
 
   test('clear preference', async () => {
     const { getByTestId } = render(
-      <TestWrapper path={routes.toProjects({ accountId: defaultUuid })} pathParams={{ accountId: defaultUuid }}>
+      <ProvidersWrapper>
         <MyComponent />
-      </TestWrapper>
+      </ProvidersWrapper>
     )
     const btnToChangeVal = getByTestId('btnToChangeSavedVal')
     await act(async () => {
