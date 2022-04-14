@@ -4,7 +4,7 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-import React from 'react'
+import React, { useEffect } from 'react'
 import qs from 'qs'
 import { compile } from 'path-to-regexp'
 import { Router } from 'react-router-dom'
@@ -21,8 +21,13 @@ const MyComponent: React.FC = () => {
   const {
     preference: savedVal,
     setPreference: setSavedVal,
-    clearPreference
+    clearPreference,
+    updatePreferenceStore
   } = usePreferenceStore<string>(PreferenceScope.MACHINE, ENTITY_TO_SAVE)
+
+  useEffect(() => {
+    updatePreferenceStore({ currentUserInfo: { email: 'abc@email.com' } })
+  }, [])
 
   return (
     <div>
@@ -31,13 +36,17 @@ const MyComponent: React.FC = () => {
         onClick={() => {
           setSavedVal('test')
         }}
-      ></button>
+      >
+        btnToChangeSavedVal
+      </button>
       <button
         data-testid="clearPreferentBtn"
         onClick={() => {
           clearPreference()
         }}
-      ></button>
+      >
+        clearPreferentBtn
+      </button>
       <span data-testid="valFromPrefStore">{savedVal}</span>
     </div>
   )
