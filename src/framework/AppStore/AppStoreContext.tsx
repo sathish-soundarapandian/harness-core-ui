@@ -9,7 +9,10 @@ import React, { useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 
 import { fromPairs, defaultTo } from 'lodash-es'
-import { PageSpinner } from '@harness/uicore'
+
+// useToaster not imported from '@common/exports' to prevent circular dependency
+import { PageSpinner, useToaster } from '@harness/uicore'
+
 import { useQueryParams } from '@common/hooks'
 import {
   Project,
@@ -26,7 +29,6 @@ import type { ProjectPathProps, ModulePathParams } from '@common/interfaces/Rout
 import type { FeatureFlag } from '@common/featureFlags'
 import { useTelemetryInstance } from '@common/hooks/useTelemetryInstance'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
-import { useToaster } from '@common/exports'
 import routes from '@common/RouteDefinitions'
 
 export type FeatureFlagMap = Partial<Record<FeatureFlag, boolean>>
