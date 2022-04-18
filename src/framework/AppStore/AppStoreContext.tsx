@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 
 import { fromPairs, defaultTo } from 'lodash-es'
 import { PageSpinner } from '@harness/uicore'
@@ -22,10 +22,12 @@ import {
   useGetOrganization
 } from 'services/cd-ng'
 import { useGetFeatureFlags } from 'services/portal'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ProjectPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import type { FeatureFlag } from '@common/featureFlags'
 import { useTelemetryInstance } from '@common/hooks/useTelemetryInstance'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { useToaster } from '@common/exports'
+import routes from '@common/RouteDefinitions'
 
 export type FeatureFlagMap = Partial<Record<FeatureFlag, boolean>>
 
@@ -78,8 +80,17 @@ const getIdentifiersFromSavedProj = (savedProject: SavedProjectDetails): SavedPr
 }
 
 export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React.ReactElement {
-  // eslint-disable-next-line prefer-const
-  let { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { showError } = useToaster()
+  const history = useHistory()
+
+  const {
+    accountId,
+    projectIdentifier: projectIdentifierFromPath,
+    orgIdentifier: orgIdentifierFromPath,
+    module
+  } = useParams<ProjectPathProps & ModulePathParams>()
+  let projectIdentifier = projectIdentifierFromPath
+  let orgIdentifier = orgIdentifierFromPath
 
   const {
     preference: savedProject,
@@ -212,6 +223,19 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
         } else {
           // if no project was fetched, clear preference
           clearSavedProject()
+          setState(prevState => ({
+            ...prevState,
+            selectedOrg: undefined,
+            selectedProject: undefined
+          }))
+          // if user is on a URL with projectId and orgId in path, show toast error
+          if (projectIdentifierFromPath && orgIdentifierFromPath) {
+            showError(`Project with orgIdentifier [${orgIdentifier}] and identifier [${projectIdentifier}] not found`)
+          }
+          // if user is on a sub-route of a specific module, send the user to Module-Home
+          if (module) {
+            history.push(routes.toModuleHome({ accountId, module }))
+          }
         }
       })
     }
