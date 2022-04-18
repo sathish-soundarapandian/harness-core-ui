@@ -36,9 +36,9 @@ export interface PreferenceStoreStateProps {
  * Preference Store - helps to save ANY user-personalisation info
  */
 export interface PreferenceStoreProps<T> {
-  set(scope: PreferenceScope, entityToPersist: string, value: T, options?: PreferenceStoreOptions): void
-  get(scope: PreferenceScope, entityToRetrieve: string, options?: PreferenceStoreOptions): T
-  clear(scope: PreferenceScope, entityToRetrieve: string, options?: PreferenceStoreOptions): void
+  set(scope: PreferenceScope, entityToPersist: string, value: T /*options?: PreferenceStoreOptions*/): void
+  get(scope: PreferenceScope, entityToRetrieve: string /*options?: PreferenceStoreOptions*/): T
+  clear(scope: PreferenceScope, entityToRetrieve: string /*options?: PreferenceStoreOptions*/): void
   updatePreferenceStore(data: PreferenceStoreStateProps): void
 }
 
@@ -67,14 +67,14 @@ export const PreferenceStoreContext = React.createContext<PreferenceStoreProps<a
 
 export function usePreferenceStore<T>(
   scope: PreferenceScope,
-  entity: string,
-  options: PreferenceStoreOptions = {}
+  entity: string
+  // options: PreferenceStoreOptions = {}
 ): PreferenceStoreContextProps<T> {
   const { get, set, clear, updatePreferenceStore } = React.useContext(PreferenceStoreContext)
 
-  const preference = get(scope, entity, options)
-  const setPreference = set.bind(null, scope, entity, options)
-  const clearPreference = clear.bind(null, scope, entity, options)
+  const preference = get(scope, entity /*options*/)
+  const setPreference = set.bind(null, scope, entity /*options*/)
+  const clearPreference = clear.bind(null, scope, entity /*options*/)
 
   return { preference, setPreference, clearPreference, updatePreferenceStore }
 }
@@ -114,53 +114,53 @@ export const PreferenceStoreProvider: React.FC = (props: React.PropsWithChildren
     })
   }, [accountId, orgIdentifier, projectIdentifier, userId])
 
-  const setPreference = (key: string, value: unknown, options?: PreferenceStoreOptions): void => {
-    if (options?.fromBackend) {
-      // TODO: ENHANCEMENT: call backend to set
-    } else {
-      const newPreferences = { ...currentPreferences, [key]: value }
-      setPreferences(newPreferences)
-    }
+  const setPreference = (key: string, value: unknown /* options?: PreferenceStoreOptions */): void => {
+    // if (options?.fromBackend) {
+    //   // TODO: ENHANCEMENT: call backend to set
+    // } else {
+    const newPreferences = { ...currentPreferences, [key]: value }
+    setPreferences(newPreferences)
+    // }
   }
 
-  const getPreference = (key: string, options?: PreferenceStoreOptions): any => {
-    if (options?.fromBackend) {
-      // TODO: ENHANCEMENT: call backend to get and return
-      return null
-    } else {
-      return currentPreferences[key]
-    }
+  const getPreference = (key: string /*options?: PreferenceStoreOptions*/): any => {
+    // if (options?.fromBackend) {
+    //   // TODO: ENHANCEMENT: call backend to get and return
+    //   return null
+    // } else {
+    return currentPreferences[key]
+    // }
   }
 
-  const clearPreference = (key: string, options?: PreferenceStoreOptions): void => {
-    if (options?.fromBackend) {
-      // TODO: ENHANCEMENT: call backend to clear or delete
-    } else {
-      const newPreferences = { ...currentPreferences }
-      delete newPreferences[key]
-      setPreferences(newPreferences)
-    }
+  const clearPreference = (key: string /*options?: PreferenceStoreOptions*/): void => {
+    // if (options?.fromBackend) {
+    //   // TODO: ENHANCEMENT: call backend to clear or delete
+    // } else {
+    const newPreferences = { ...currentPreferences }
+    delete newPreferences[key]
+    setPreferences(newPreferences)
+    // }
   }
 
   const set = (
     scope: PreferenceScope,
     entityToPersist: string,
-    options: PreferenceStoreOptions,
+    // options: PreferenceStoreOptions,
     value: unknown
   ): void => {
     checkAccess(scope, scopeToKeyMap[scope])
     const key = getKey(scopeToKeyMap[scope], entityToPersist)
-    setPreference(key, value, options)
+    setPreference(key, value /*options*/)
   }
 
-  const get = (scope: PreferenceScope, entityToRetrieve: string, options?: PreferenceStoreOptions): unknown => {
+  const get = (scope: PreferenceScope, entityToRetrieve: string /*options?: PreferenceStoreOptions*/): unknown => {
     const key = getKey(scopeToKeyMap[scope], entityToRetrieve)
-    return getPreference(key, options)
+    return getPreference(key /*options*/)
   }
 
-  const clear = (scope: PreferenceScope, entityToRetrieve: string, options?: PreferenceStoreOptions): void => {
+  const clear = (scope: PreferenceScope, entityToRetrieve: string /*options?: PreferenceStoreOptions*/): void => {
     const key = getKey(scopeToKeyMap[scope], entityToRetrieve)
-    clearPreference(key, options)
+    clearPreference(key /*options*/)
   }
 
   function updatePreferenceStore(data: PreferenceStoreStateProps): void {
