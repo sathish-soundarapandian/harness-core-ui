@@ -60,10 +60,10 @@ export interface PreferenceStoreContextProps<T> {
 export const PREFERENCES_TOP_LEVEL_KEY = 'preferences'
 
 export const PreferenceStoreContext = React.createContext<PreferenceStoreProps<any>>({
-  set: () => void 0,
-  get: () => void 0,
-  clear: () => void 0,
-  updatePreferenceStore: () => void 0
+  set: /* istanbul ignore next */ () => void 0,
+  get: /* istanbul ignore next */ () => void 0,
+  clear: /* istanbul ignore next */ () => void 0,
+  updatePreferenceStore: /* istanbul ignore next */ () => void 0
 })
 
 export function usePreferenceStore<T>(
