@@ -7,7 +7,7 @@
 
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, get as lodashGet } from 'lodash-es'
 
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useLocalStorage } from '@common/hooks'
@@ -96,7 +96,7 @@ export const PreferenceStoreProvider: React.FC = (props: React.PropsWithChildren
     currentUserInfo: {}
   })
   const [currentPreferences, setPreferences] = useLocalStorage<Record<string, unknown>>(PREFERENCES_TOP_LEVEL_KEY, {})
-  const userId = state.currentUserInfo?.email
+  const userId = lodashGet(state.currentUserInfo, 'email')
   const [scopeToKeyMap, setScopeToKeyMap] = React.useState({
     [PreferenceScope.USER]: [userId],
     [PreferenceScope.ACCOUNT]: [accountId],
