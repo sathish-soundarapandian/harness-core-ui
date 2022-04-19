@@ -82,6 +82,13 @@ const getIdentifiersFromSavedProj = (savedProject: SavedProjectDetails): SavedPr
   }
 }
 
+const getRedirectionUrl = (accountId: string, source: string | undefined): string => {
+  const baseUrl = window.location.pathname.replace(/\/ng\//, '/')
+  const dashboardUrl = `${baseUrl}#/account/${accountId}/dashboard`
+  const onboardingUrl = `${baseUrl}#/account/${accountId}/onboarding`
+  return source === 'signup' ? onboardingUrl : dashboardUrl
+}
+
 export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React.ReactElement {
   const { showError } = useToaster()
   const history = useHistory()
@@ -108,8 +115,6 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
     connectivityMode: undefined
   })
 
-  // let projectIdentifier: string = projectIdentifierFromParams
-  // let orgIdentifier: string = orgIdentifierFromParams
   if (!projectIdentifier && !orgIdentifier) {
     const identifiersFromSavedProj = getIdentifiersFromSavedProj(savedProject)
     projectIdentifier = identifiersFromSavedProj.projectIdentifier
@@ -139,11 +144,7 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
     // because there may be no current gen to go to
     const currentAccount = userInfo?.data?.accounts?.find(account => account.uuid === accountId)
     if (!__DEV__ && currentAccount && !currentAccount.nextGenEnabled) {
-      const baseUrl = window.location.pathname.replace(/\/ng\//, '/')
-      const dashboardUrl = `${baseUrl}#/account/${accountId}/dashboard`
-      const onboardingUrl = `${baseUrl}#/account/${accountId}/onboarding`
-
-      window.location.href = source === 'signup' ? onboardingUrl : dashboardUrl
+      window.location.href = getRedirectionUrl(accountId, source)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userInfo?.data?.accounts])
