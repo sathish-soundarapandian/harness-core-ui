@@ -10,6 +10,7 @@ import { compile } from 'path-to-regexp'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import { render, fireEvent, act } from '@testing-library/react'
+import { defaultTo } from 'lodash-es'
 
 import routes from '@common/RouteDefinitions'
 import { PreferenceStoreProvider, PreferenceScope, usePreferenceStore } from '../PreferenceStoreContext'
@@ -17,17 +18,30 @@ const ENTITY_TO_SAVE = 'MySavedValue'
 
 const defaultUuid = '1234'
 
-const MyComponent: React.FC = () => {
+const MyComponent: React.FC<{ children?: React.ReactNode; scope?: PreferenceScope; shouldUpdateUser?: boolean }> = ({
+  scope = PreferenceScope.MACHINE,
+  shouldUpdateUser = true
+}) => {
   const {
     preference: savedVal,
     setPreference: setSavedVal,
     clearPreference,
     updatePreferenceStore
-  } = usePreferenceStore<string>(PreferenceScope.MACHINE, ENTITY_TO_SAVE)
+  } = usePreferenceStore<string>(defaultTo(scope, PreferenceScope.MACHINE), ENTITY_TO_SAVE)
 
   useEffect(() => {
-    updatePreferenceStore({ currentUserInfo: { email: 'abc@email.com' } })
-  }, [])
+    if (shouldUpdateUser) {
+      updatePreferenceStore({ currentUserInfo: { email: 'abc@email.com' } })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shouldUpdateUser])
+
+  useEffect(() => {
+    if (shouldUpdateUser) {
+      updatePreferenceStore({ currentUserInfo: undefined })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shouldUpdateUser])
 
   return (
     <div>
