@@ -7,6 +7,7 @@
 
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import { defaultTo } from 'lodash-es'
 
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useLocalStorage } from '@common/hooks'
@@ -166,7 +167,7 @@ export const PreferenceStoreProvider: React.FC = (props: React.PropsWithChildren
   function updatePreferenceStore(data: PreferenceStoreStateProps): void {
     setState(prevState => ({
       ...prevState,
-      currentUserInfo: data.currentUserInfo || prevState?.currentUserInfo
+      currentUserInfo: defaultTo(data?.currentUserInfo, prevState?.currentUserInfo)
     }))
   }
 
