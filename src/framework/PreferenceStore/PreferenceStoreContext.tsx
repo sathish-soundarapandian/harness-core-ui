@@ -81,7 +81,7 @@ export function usePreferenceStore<T>(
 }
 
 const checkAccess = (scope: PreferenceScope, contextArr: (string | undefined)[]): void => {
-  if (!contextArr || contextArr?.some(val => val === undefined)) {
+  if (!contextArr || /* istanbul ignore next */ contextArr?.some(val => val === undefined)) {
     throw new Error(`Access to "${scope}" scope is not available in the current context.`)
   }
 }
