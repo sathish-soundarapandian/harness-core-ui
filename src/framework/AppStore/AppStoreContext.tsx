@@ -217,6 +217,7 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
         }
       }).then(response => {
         const project = response?.data?.project
+        const showErrorAndRedirect = projectIdentifierFromPath && orgIdentifierFromPath
         if (project) {
           setState(prevState => ({
             ...prevState,
@@ -232,13 +233,8 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
             selectedProject: undefined
           }))
           // if user is on a URL with projectId and orgId in path, show toast error
-          if (projectIdentifierFromPath && orgIdentifierFromPath) {
-            showError(
-              defaultTo(
-                (response as Error)?.message,
-                `Project with orgIdentifier [${orgIdentifier}] and identifier [${projectIdentifier}] not found`
-              )
-            )
+          if (showErrorAndRedirect) {
+            showError((response as Error)?.message)
             // send the user to Projects Listing
             history.push(routes.toProjects({ accountId }))
           }
