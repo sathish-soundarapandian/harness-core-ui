@@ -167,7 +167,7 @@ export const PreferenceStoreProvider: React.FC = (props: React.PropsWithChildren
   function updatePreferenceStore(data: PreferenceStoreStateProps): void {
     setState(prevState => ({
       ...prevState,
-      currentUserInfo: defaultTo(data?.currentUserInfo, prevState?.currentUserInfo)
+      currentUserInfo: defaultTo(data.currentUserInfo, prevState.currentUserInfo)
     }))
   }
 
