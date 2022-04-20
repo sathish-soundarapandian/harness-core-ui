@@ -139,6 +139,15 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
 
   const { source } = useQueryParams<{ source?: string }>()
 
+  const showErrorAndRedirect = (getProjectResponse: Error): void => {
+    if (projectIdentifierFromPath && orgIdentifierFromPath) {
+      showError(getProjectResponse?.message)
+
+      // send the user to Projects Listing
+      history.push(routes.toProjects({ accountId }))
+    }
+  }
+
   useEffect(() => {
     // don't redirect on local because it goes into infinite loop
     // because there may be no current gen to go to
@@ -217,7 +226,7 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
         }
       }).then(response => {
         const project = response?.data?.project
-        const showErrorAndRedirect = projectIdentifierFromPath && orgIdentifierFromPath
+
         if (project) {
           setState(prevState => ({
             ...prevState,
@@ -232,12 +241,8 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
             selectedOrg: undefined,
             selectedProject: undefined
           }))
-          // if user is on a URL with projectId and orgId in path, show toast error
-          if (showErrorAndRedirect) {
-            showError((response as Error)?.message)
-            // send the user to Projects Listing
-            history.push(routes.toProjects({ accountId }))
-          }
+          // if user is on a URL with projectId and orgId in path, show toast error & redirect
+          showErrorAndRedirect(response as Error)
         }
       })
     }
