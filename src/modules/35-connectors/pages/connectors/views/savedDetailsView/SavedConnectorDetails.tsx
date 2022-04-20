@@ -630,18 +630,17 @@ const getAzureKeyVaultSchema = (connector: ConnectorInfoDTO): Array<ActivityDeta
 const getAzureBlobSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
   const data = connector.spec as AzureBlobConnectorDTO
   return [
-    ...getAzureKeyVaultSchema(connector),
     {
-      label: 'connectors.azureBlob.labels.containerName',
-      value: data.containerName
+      label: 'common.clientId',
+      value: data.clientId
     },
     {
-      label: 'connectors.azureKeyVault.labels.vaultName',
-      value: data.vaultName
+      label: 'connectors.azureKeyVault.labels.tenantId',
+      value: data.tenantId
     },
     {
-      label: 'connectors.azureBlob.labels.keyName',
-      value: data.keyName
+      label: 'connectors.azureBlob.labels.containerURL',
+      value: data.containerURL
     }
   ]
 }

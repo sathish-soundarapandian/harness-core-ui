@@ -91,7 +91,6 @@ export interface ConnectorDetailsProps {
   isEditMode: boolean
   setIsEditMode: (val: boolean) => void
   setFormData?: (formData: ConnectorConfigDTO) => void
-  type: string
   connectorInfo: ConnectorInfoDTO | void
   accountId: string
   orgIdentifier: string

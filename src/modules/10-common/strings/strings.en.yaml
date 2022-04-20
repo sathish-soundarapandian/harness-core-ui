@@ -915,7 +915,6 @@ deleteEnvironment:
 90days: 90 Days
 180days: 180 Days
 noexpiration: No Expiration
-<<<<<<< HEAD
 subscriptionPlaceholder: 'Select or specify Subscription Id'
 azureConnector: Azure Connector
 environmentList: Environment List
@@ -1023,3 +1022,4 @@ environmentInputs: Environment inputs
 infrastructures: Infrastructures
 infrastructureInputs: Infrastructure inputs
 containerName: Container Name
+containerURL: Container URL

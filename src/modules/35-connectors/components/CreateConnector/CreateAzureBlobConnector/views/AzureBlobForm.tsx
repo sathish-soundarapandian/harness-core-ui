@@ -31,9 +31,7 @@ export interface AzureBlobFormData {
   clientId?: string
   secretKey?: SecretReference
   tenantId?: string
-  subscription?: string
-  connectionString?: string
-  containerName?: string
+  containerURL?: string
   default?: boolean
 }
 
@@ -44,9 +42,7 @@ const AzureBlobForm: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProp
   const defaultInitialFormData: AzureBlobFormData = {
     clientId: undefined,
     tenantId: undefined,
-    subscription: undefined,
-    connectionString: undefined,
-    containerName: undefined,
+    containerURL: undefined,
     secretKey: undefined,
     default: false
   }
@@ -73,13 +69,9 @@ const AzureBlobForm: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProp
         enableReinitialize
         initialValues={{ ...initialValues, ...prevStepData }}
         validationSchema={Yup.object().shape({
-          connectionString: Yup.string().required(
-            getString('connectors.azureBlob.validation.connectionStringIsRequired')
-          ),
-          containerName: Yup.string().required(getString('connectors.azureBlob.validation.containerNameIsRequired')),
+          containerURL: Yup.string().required(getString('connectors.azureBlob.validation.containerURLIsRequired')),
           clientId: Yup.string().required(getString('common.validation.clientIdIsRequired')),
           tenantId: Yup.string().required(getString('connectors.azureKeyVault.validation.tenantId')),
-          subscription: Yup.string().required(getString('connectors.azureKeyVault.validation.subscription')),
           secretKey: Yup.string().when('vaultName', {
             is: () => !(prevStepData?.spec as AzureBlobConnectorDTO)?.vaultName,
             then: Yup.string().trim().required(getString('common.validation.keyIsRequired'))

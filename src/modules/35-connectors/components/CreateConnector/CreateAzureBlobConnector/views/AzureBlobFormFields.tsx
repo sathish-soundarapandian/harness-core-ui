@@ -8,14 +8,21 @@
 import React from 'react'
 import { FormInput } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
+import SecretInput from '@secrets/components/SecretInput/SecretInput'
 
 const AzureBlobFormFields: React.FC = () => {
   const { getString } = useStrings()
-
   return (
     <>
-      <FormInput.Text name="connectionString" label={getString('connectors.azureBlob.labels.connectionString')} />
-      <FormInput.Text name="containerName" label={getString('connectors.azureBlob.labels.containerName')} />
+      <FormInput.Text name="clientId" label={getString('common.clientId')} />
+      <FormInput.Text name="tenantId" label={getString('connectors.azureKeyVault.labels.tenantId')} />
+      <SecretInput name="secretKey" label={getString('keyLabel')} connectorTypeContext={'AzureKeyVault'} />
+      <FormInput.Text name="containerURL" label={getString('connectors.azureBlob.labels.containerURL')} />
+      <FormInput.CheckBox
+        name="default"
+        label={getString('connectors.hashiCorpVault.defaultVault')}
+        padding={{ left: 'xxlarge' }}
+      />
     </>
   )
 }

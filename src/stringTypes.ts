@@ -178,7 +178,11 @@ export interface StringsMap {
   'common.contentRequired': string
 =======
   'common.containerName': string
+<<<<<<< HEAD
 >>>>>>> fbb6fda8160a ([PL-23547]: Connector details and list page for blob)
+=======
+  'common.containerURL': string
+>>>>>>> c7ffec39c132 ([PL-23547]: Update UI for changed details)
   'common.copy': string
   'common.copyFqn': string
   'common.copyVariableName': string
@@ -1879,11 +1883,11 @@ export interface StringsMap {
   'connectors.azure.managedIdentity': string
 =======
   'connectors.azureBlob.labels.connectionString': string
-  'connectors.azureBlob.labels.containerName': string
+  'connectors.azureBlob.labels.containerURL': string
   'connectors.azureBlob.labels.keyId': string
   'connectors.azureBlob.labels.keyName': string
   'connectors.azureBlob.validation.connectionStringIsRequired': string
-  'connectors.azureBlob.validation.containerNameIsRequired': string
+  'connectors.azureBlob.validation.containerURLIsRequired': string
   'connectors.azureBlob.validation.keyIdIsRequired': string
   'connectors.azureBlob.validation.keyNameIsRequired': string
 >>>>>>> 793e5fa4a9dd (feat: [PL-23547]: Added UI for Azure Blob connector CRUD)

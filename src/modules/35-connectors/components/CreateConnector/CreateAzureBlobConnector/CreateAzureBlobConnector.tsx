@@ -16,12 +16,11 @@ import {
   GIT_TESTCONNECTION_STEP_INDEX
 } from '@connectors/constants'
 import { useStrings } from 'framework/strings'
-import { buildAzureKeyVaultPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { buildAzureBlobPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
 import DelegateSelectorStep from '../commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import ConnectorDetailsStep from '../commonSteps/ConnectorDetailsStep'
-import AzureKeyVaultForm from '../CreateAzureKeyConnector/views/AzureKeyVaultForm'
-import SetupVault from '../CreateAzureKeyConnector/views/SetupVault'
+import AzureBlobForm from '../CreateAzureBlobConnector/views/AzureBlobForm'
 import css from './CreateAzureBlobConnector.module.scss'
 
 const CreateAzureBlobConnector: React.FC<CreateConnectorModalProps> = props => {
@@ -42,8 +41,7 @@ const CreateAzureBlobConnector: React.FC<CreateConnectorModalProps> = props => {
         mock={props.mock}
         disableGitSync={true}
       />
-      <AzureKeyVaultForm
-        type={Connectors.AZURE_BLOB}
+      <AzureBlobForm
         name={getString('details')}
         identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
         connectorInfo={props.connectorInfo}
@@ -57,23 +55,11 @@ const CreateAzureBlobConnector: React.FC<CreateConnectorModalProps> = props => {
         name={getString('delegate.DelegateselectionLabel')}
         isEditMode={props.isEditMode}
         setIsEditMode={props.setIsEditMode}
-        buildPayload={buildAzureKeyVaultPayload}
+        buildPayload={buildAzureBlobPayload}
         hideModal={onClose}
         connectorInfo={props.connectorInfo}
         gitDetails={props.gitDetails}
         disableGitSync={true}
-        submitOnNextStep
-      />
-      <SetupVault
-        type={Connectors.AZURE_BLOB}
-        name={getString('connectors.azureKeyVault.labels.setupVault')}
-        onConnectorCreated={onSuccess}
-        connectorInfo={props.connectorInfo}
-        isEditMode={props.isEditMode}
-        setIsEditMode={props.setIsEditMode}
-        accountId={props.accountId}
-        orgIdentifier={props.orgIdentifier}
-        projectIdentifier={props.projectIdentifier}
       />
       <VerifyOutOfClusterDelegate
         name={getString('connectors.stepThreeName')}
