@@ -849,3 +849,290 @@ exports[`Create Secret Manager Wizard should be able to render first step form 2
   </div>
 </div>
 `;
+
+exports[`Create Secret Manager Wizard should be able to render first step form 3`] = `
+<div>
+  <div
+    class="StepWizard--main wizardNav StepWizard--navBar"
+  >
+    <div
+      class="StepWizard--navBarList"
+    >
+      <span
+        class="StepWizard--header"
+      >
+        <span
+          class="bp3-icon StyledProps--main"
+          data-icon="azure-blob"
+        >
+          <svg
+            height="37"
+            viewBox="0 0 48 48"
+            width="37"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M32.66 7H15.34c-.715 0-1.375.381-1.732 1l-8.66 15a2.001 2.001 0 000 2l8.66 15a2 2 0 001.732 1h17.32c.715 0 1.375-.381 1.732-1l8.66-15a2.001 2.001 0 000-2l-8.66-15a1.999 1.999 0 00-1.732-1z"
+              fill="#2979ff"
+            />
+            <path
+              d="M32 35H16a1 1 0 01-1-1V14a1 1 0 011-1h13l4 4v17a1 1 0 01-1 1z"
+              fill="#fff"
+            />
+            <path
+              d="M29 13v3a1 1 0 001 1h3l-4-4z"
+              fill="#b1cfff"
+            />
+            <path
+              d="M22.265 23.831H20.93V19.58l-1.312.383v-1.011l2.524-.873h.122v5.752zm6.437-2.351c0 .416-.049.776-.146 1.081a2.084 2.084 0 01-.411.756c-.176.2-.387.349-.632.446a2.182 2.182 0 01-.81.146c-.298 0-.57-.049-.816-.146a1.628 1.628 0 01-.633-.446 2.117 2.117 0 01-.413-.756 3.515 3.515 0 01-.147-1.081v-1.051c0-.413.049-.773.146-1.078.097-.305.234-.558.411-.758.176-.2.387-.349.632-.446.243-.098.514-.147.812-.147.295 0 .565.049.811.146.246.097.458.246.635.446.176.2.313.453.412.758.099.305.149.665.149 1.078v1.052zm-1.332-1.22c0-.229-.016-.421-.047-.579a1.251 1.251 0 00-.134-.381.53.53 0 00-.494-.272.62.62 0 00-.283.063.512.512 0 00-.209.209 1.21 1.21 0 00-.13.381c-.03.158-.045.35-.045.579v1.383c0 .234.014.431.045.589.03.158.075.286.133.381a.523.523 0 00.213.208.627.627 0 00.284.063.527.527 0 00.49-.271c.058-.095.101-.223.132-.381.03-.158.046-.354.046-.589V20.26zm-4.062 9.311c0 .416-.049.776-.146 1.081a2.084 2.084 0 01-.411.756c-.176.2-.387.349-.632.446a2.182 2.182 0 01-.81.146c-.298 0-.57-.049-.816-.146a1.628 1.628 0 01-.633-.446 2.117 2.117 0 01-.413-.756 3.515 3.515 0 01-.147-1.081V28.52c0-.413.049-.773.146-1.078.097-.305.234-.558.411-.758.176-.2.387-.349.632-.446.245-.097.516-.146.814-.146.295 0 .565.049.811.146.246.097.458.246.635.446.176.2.313.453.412.758s.149.665.149 1.078v1.051zm-1.331-1.221c0-.229-.016-.421-.047-.579a1.251 1.251 0 00-.134-.381.53.53 0 00-.494-.272c-.106 0-.2.021-.283.063a.512.512 0 00-.209.209 1.21 1.21 0 00-.13.381c-.03.158-.045.35-.045.579v1.383c0 .234.014.431.045.589.03.158.075.286.133.381.058.097.129.166.213.208s.179.063.284.063a.527.527 0 00.49-.271c.058-.095.101-.223.132-.381.03-.158.046-.354.046-.589V28.35zm5.682 3.571h-1.335V27.67l-1.312.383v-1.011l2.524-.873h.122v5.752z"
+              fill="#03a9f4"
+            />
+          </svg>
+        </span>
+      </span>
+      <span
+        class="StepWizard--title StepWizard--header"
+      >
+        connectors.title.azureBlob
+      </span>
+      <div
+        class="StepWizard--navStep StepWizard--completedStep"
+      >
+        <span
+          class="StepWizard--completedIcon"
+        >
+          <span
+            class="bp3-icon bp3-icon-small-tick StyledProps--main StyledProps--color StyledProps--color-primary7"
+            icon="small-tick"
+          >
+            <svg
+              data-icon="small-tick"
+              height="20"
+              viewBox="0 0 20 20"
+              width="20"
+            >
+              <desc>
+                small-tick
+              </desc>
+              <path
+                d="M15 5c-.28 0-.53.11-.71.29L8 11.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29s.53-.11.71-.29l7-7A1.003 1.003 0 0015 5z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </span>
+        <p
+          class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+          style="--text-line-clamp: 2; width: 200px;"
+        >
+          overview
+        </p>
+        <p
+          class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+          style="--text-line-clamp: 2; width: 200px;"
+        >
+          
+        </p>
+      </div>
+      <div
+        class="StepWizard--navStep StepWizard--completedStep"
+      >
+        <span
+          class="StepWizard--completedIcon"
+        >
+          <span
+            class="bp3-icon bp3-icon-small-tick StyledProps--main StyledProps--color StyledProps--color-primary7"
+            icon="small-tick"
+          >
+            <svg
+              data-icon="small-tick"
+              height="20"
+              viewBox="0 0 20 20"
+              width="20"
+            >
+              <desc>
+                small-tick
+              </desc>
+              <path
+                d="M15 5c-.28 0-.53.11-.71.29L8 11.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29s.53-.11.71-.29l7-7A1.003 1.003 0 0015 5z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </span>
+        <p
+          class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+          style="--text-line-clamp: 2; width: 200px;"
+        >
+          details
+        </p>
+      </div>
+      <div
+        class="StepWizard--navStep StepWizard--completedStep"
+      >
+        <span
+          class="StepWizard--completedIcon"
+        >
+          <span
+            class="bp3-icon bp3-icon-small-tick StyledProps--main StyledProps--color StyledProps--color-primary7"
+            icon="small-tick"
+          >
+            <svg
+              data-icon="small-tick"
+              height="20"
+              viewBox="0 0 20 20"
+              width="20"
+            >
+              <desc>
+                small-tick
+              </desc>
+              <path
+                d="M15 5c-.28 0-.53.11-.71.29L8 11.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29s.53-.11.71-.29l7-7A1.003 1.003 0 0015 5z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </span>
+        <p
+          class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+          style="--text-line-clamp: 2; width: 200px;"
+        >
+          delegate.DelegateselectionLabel
+        </p>
+      </div>
+      <div
+        class="StepWizard--navStep StepWizard--activeStep"
+      >
+        <span
+          class="StepWizard--number"
+        >
+          4
+        </span>
+        <p
+          class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+          style="--text-line-clamp: 2; width: 200px;"
+        >
+          connectors.stepThreeName
+        </p>
+      </div>
+    </div>
+    <div
+      class="StepWizard--stepDetails"
+    >
+       
+      <div
+        class="Layout--vertical StyledProps--main"
+      >
+        <div
+          class="Layout--vertical StyledProps--main"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--color StyledProps--color-grey800"
+          >
+            connectors.stepThreeName
+          </p>
+          <div
+            class="StyledProps--font StyledProps--main content contentMinHeight StyledProps--padding-top-xxlarge"
+          >
+            <div
+              class="Layout--vertical Layout--layout-spacing-large StyledProps--main StepsProgress--stepsProgress"
+              id="steps-progress"
+            >
+              <div
+                class="StepsProgress--progressBar"
+              >
+                <div
+                  class="bp3-progress-bar bp3-intent-danger bp3-no-stripes StepsProgress--progressHeight"
+                >
+                  <div
+                    class="bp3-progress-meter"
+                    style="width: 100%;"
+                  />
+                </div>
+              </div>
+              <div
+                class="Layout--vertical Layout--layout-spacing-large StyledProps--main"
+              >
+                <div
+                  class="StepsProgress--stepWrap"
+                >
+                  <span
+                    class="bp3-icon bp3-icon-error StyledProps--main StyledProps--color StyledProps--color-red500 StyledProps--margin-right-small"
+                    icon="error"
+                  >
+                    <svg
+                      data-icon="error"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      width="16"
+                    >
+                      <desc>
+                        error
+                      </desc>
+                      <path
+                        d="M7.99-.01c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm1 13h-2v-2h2v2zm0-3h-2v-7h2v7z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                  <div
+                    class="StyledProps--font StyledProps--main StepsProgress--stepLabelContainer"
+                    style=""
+                  >
+                    <div
+                      class="Layout--vertical StyledProps--main"
+                      style="width: 100%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600"
+                      >
+                        
+                      </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--padding-top-small"
+                      >
+                        connectors.testConnectionStep.placeholderError
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-large StyledProps--main btnWrapper"
+        >
+          <button
+            class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--variation Button--variation-secondary"
+            type="button"
+          >
+            <span
+              class="bp3-button-text"
+            >
+              finish
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <span
+      class="bp3-icon StyledProps--main StepWizard--harnessWatermark StyledProps--color StyledProps--color-grey50"
+      data-icon="harness-with-color"
+    >
+      <svg
+        height="346"
+        viewBox="0 0 25 25"
+        width="346"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M22.974 8.186L16.708 1.88a7.023 7.023 0 00-2.59-1.572C11.98-.409 9.858.154 8.135 1.88L1.868 8.186a7.081 7.081 0 00-1.562 2.606c-.713 2.153-.153 4.289 1.562 6.023l6.266 6.306a7.113 7.113 0 002.589 1.58 5.663 5.663 0 001.808.308c1.503 0 2.946-.64 4.177-1.88l6.266-6.305a7.08 7.08 0 001.562-2.606c.713-2.162.153-4.298-1.562-6.032zm-10.07-4.477c.706.213 1.232.7 1.274.735l1.851 1.862-3.608 3.631-3.608-3.63 1.859-1.872c.5-.496 1.197-1.034 2.233-.726zm-9.219 8.305c.212-.71.696-1.24.73-1.282l1.85-1.863 3.609 3.632-3.608 3.63-1.86-1.87c-.492-.504-1.027-1.214-.721-2.247zm8.252 9.279c-.705-.214-1.231-.701-1.273-.735l-1.851-1.863 3.608-3.631 3.608 3.631-1.86 1.871c-.5.496-1.205 1.034-2.232.726zm9.22-8.305c-.212.709-.696 1.239-.73 1.281l-1.851 1.863-3.608-3.631 3.608-3.632 1.86 1.872c.492.504 1.027 1.204.72 2.247z"
+          fill="currentColor"
+          fill-rule="evenodd"
+        />
+      </svg>
+    </span>
+  </div>
+</div>
+`;

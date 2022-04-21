@@ -72,10 +72,7 @@ const AzureBlobForm: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProp
           containerURL: Yup.string().required(getString('connectors.azureBlob.validation.containerURLIsRequired')),
           clientId: Yup.string().required(getString('common.validation.clientIdIsRequired')),
           tenantId: Yup.string().required(getString('connectors.azureKeyVault.validation.tenantId')),
-          secretKey: Yup.string().when('vaultName', {
-            is: () => !(prevStepData?.spec as AzureBlobConnectorDTO)?.vaultName,
-            then: Yup.string().trim().required(getString('common.validation.keyIsRequired'))
-          })
+          secretKey: Yup.string().trim().required(getString('common.validation.keyIsRequired'))
         })}
         onSubmit={formData => {
           nextStep?.({ ...connectorInfo, ...prevStepData, ...formData } as StepDetailsProps)

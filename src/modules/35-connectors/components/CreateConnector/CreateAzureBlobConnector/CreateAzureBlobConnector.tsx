@@ -67,7 +67,7 @@ const CreateAzureBlobConnector: React.FC<CreateConnectorModalProps> = props => {
         isStep
         onClose={onClose}
         isLastStep={true}
-        type={Connectors.AZURE_KEY_VAULT}
+        type={Connectors.AZURE_BLOB}
         stepIndex={GIT_TESTCONNECTION_STEP_INDEX}
       />
     </StepWizard>

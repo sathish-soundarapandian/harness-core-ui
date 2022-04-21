@@ -163,5 +163,12 @@ describe('Create Secret Manager Wizard', () => {
 
     // Step 3
     expect(getAllByText('delegate.DelegateselectionLabel')[1]).toBeTruthy()
+
+    await act(async () => {
+      clickSubmit(container)
+    })
+    //Step 4
+    expect(getAllByText('connectors.createdSuccessfully')[0]).toBeTruthy()
+    expect(container).toMatchSnapshot()
   })
 })
