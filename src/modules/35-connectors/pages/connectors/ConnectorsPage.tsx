@@ -58,11 +58,6 @@ import type { FilterInterface, FilterDataInterface } from '@common/components/Fi
 import type { CrudOperation } from '@common/components/Filter/FilterCRUD/FilterCRUD'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelector'
-<<<<<<< HEAD
-=======
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
->>>>>>> 40f4c174a54f ([PL-22385]: PR review issues resolved)
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -138,15 +133,6 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
   }
   const history = useHistory()
   useDocumentTitle(getString('connectorsLabel'))
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-  const isCustomHealthEnabled = useFeatureFlag(FeatureFlag.CHI_CUSTOM_HEALTH)
-  const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.ERROR_TRACKING_ENABLED)
-  const isAzureEnabled = useFeatureFlag(FeatureFlag.NG_AZURE)
-=======
->>>>>>> 558154dbd9d3 ([PL-22385]: PR review issues resolved)
->>>>>>> 40f4c174a54f ([PL-22385]: PR review issues resolved)
   const { trackEvent } = useTelemetry()
 
   /* #region Connector CRUD section */
@@ -281,159 +267,12 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
 
   /* #region Create Connector Catalogue section */
 
-<<<<<<< HEAD
   const {
     connectorsList: catalogueData,
     loading: loadingCatalogue,
     categoriesMap,
     connectorCatalogueOrder
   } = useGetConnectorsListHook(catalogueMockData)
-=======
-  const computeDrawerMap = (
-    catalogueData: ResponseConnectorCatalogueResponse | null,
-    featureInfo: CheckFeatureReturn
-  ): AddDrawerMapInterface => {
-    const originalData = catalogueData?.data?.catalogue || []
-    originalData.forEach(value => {
-      if (value.category === 'SECRET_MANAGER') {
-        value.connectors = ['Vault', 'AwsKms', 'AzureKeyVault', 'AwsSecretManager', 'GcpKms']
-        if (AZURE_BLOB_SM) {
-          value.connectors.push('AzureBlob')
-        }
-      }
-    })
-    const orderedCatalogue: ConnectorCatalogueItem[] | { category: string; connectors: string[] } = []
-    connectorCatalogueOrder.forEach(catalogueItem => {
-      const catalogueEntry = originalData.find(item => item['category'] === catalogueItem)
-      if (catalogueEntry && !(projectIdentifier != undefined && catalogueEntry.category == 'CLOUD_COST')) {
-        // CLOUD_COST should not be displayed at project level drawer
-        orderedCatalogue.push(catalogueEntry)
-      }
-    })
-
-    const k8sLimitWarningRenderer = () => {
-      const { featureDetail: { count, limit } = {} } = featureInfo
-      return (
-        <section className={css.limitWarningTooltipCtn}>
-          <FeatureWarningTooltip
-            featureName={FeatureIdentifier.CCM_K8S_CLUSTERS}
-            warningMessage={getString('connectors.ceK8.featureWarning', { count, limit })}
-          />
-        </section>
-      )
-    }
-
-    const RestrictionLimitWarningRenderers: Record<string, (item: ItemInterface) => React.ReactNode> = {
-      CEK8sCluster: k8sLimitWarningRenderer
-    }
-
-    const isRestrictedConnector = (item: ConnectorCatalogueItem, connector: string): boolean => {
-      const { category } = item
-      if (!category) {
-        return false
-      }
-
-      if (connectorCatalogueOrder.includes(category)) {
-        const permissionRequest = {
-          resourceScope: {
-            accountIdentifier: accountId,
-            orgIdentifier,
-            projectIdentifier
-          },
-          resourceAttributes: {
-            category
-          },
-          resourceType: ResourceType.CONNECTOR,
-          permission: PermissionIdentifier.UPDATE_CONNECTOR
-        }
-        return !checkPermission(permissionRequest) // Invert the boolean resultas restricted is inversion of permitted
-      }
-
-      // TODO: make it generic
-      return connector === 'CEK8sCluster' && !featureInfo.enabled
-    }
-
-    const filterConnectors = (connector: string): boolean => {
-      switch (connector) {
-        case Connectors.ERROR_TRACKING:
-          return isErrorTrackingEnabled
-        case Connectors.AZURE:
-          return isAzureEnabled
-        default:
-          return true
-      }
-    }
-
-    const getAccessWarningMessage = (category: ResourceType, resourceTypeLabel: string): ReactElement => {
-      return (
-        <RBACTooltip
-          permission={PermissionIdentifier.UPDATE_CONNECTOR}
-          resourceType={category as ResourceType}
-          resourceTypeLabel={resourceTypeLabel}
-          resourceScope={{
-            accountIdentifier: accountId,
-            projectIdentifier,
-            orgIdentifier
-          }}
-        />
-      )
-    }
-
-    return Object.assign(
-      {},
-      {
-        drawerLabel: 'Connectors',
-        categories:
-          orderedCatalogue.map((item: ConnectorCatalogueItem) => {
-            const categoryLabel = ConnectorCatalogueNames.get(item['category']) || ''
-            return {
-              categoryLabel,
-              warningTooltipRenderer: i => {
-                if (connectorCatalogueOrder.includes(item['category'])) {
-                  return getAccessWarningMessage(item['category'] as ResourceType, categoryLabel)
-                }
-                const renderer = RestrictionLimitWarningRenderers[i.value]
-                return renderer && renderer(i)
-              },
-              items:
-                item.connectors
-<<<<<<< HEAD
-                  ?.filter(connector => filterConnectors(connector))
-=======
-                  ?.filter(connector => (connector === 'ErrorTracking' ? ERROR_TRACKING_ENABLED : true))
->>>>>>> 558154dbd9d3 ([PL-22385]: PR review issues resolved)
-                  .sort((a, b) => (getConnectorDisplayName(a) < getConnectorDisplayName(b) ? -1 : 1))
-                  .filter(entry => {
-                    const name = entry.valueOf() || ''
-                    if (name !== 'CustomHealth') return true
-                    return CHI_CUSTOM_HEALTH !== false
-                  })
-                  .map(entry => {
-                    const name = entry.valueOf() || ''
-                    return {
-                      itemLabel: getConnectorDisplayName(entry) || name,
-                      iconName: getIconByType(entry),
-                      value: name,
-                      disabled: isRestrictedConnector(item, entry)
-                    }
-                  }) || []
-            } as CategoryInterface
-          }) || []
-      }
-    )
-  }
-
-  const featureInfo = useFeature({
-    featureRequest: {
-      featureName: FeatureIdentifier.CCM_K8S_CLUSTERS
-    }
-  })
-
-  const { data: catalogueData, loading: loadingCatalogue } = useGetConnectorCatalogue({
-    queryParams: { accountIdentifier: accountId },
-    mock: catalogueMockData
-  })
->>>>>>> 40f4c174a54f ([PL-22385]: PR review issues resolved)
 
   const {
     loading: isFetchingConnectorStats,

@@ -20,11 +20,11 @@ import { buildAzureBlobPayload } from '@connectors/pages/connectors/utils/Connec
 import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
 import DelegateSelectorStep from '../commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import ConnectorDetailsStep from '../commonSteps/ConnectorDetailsStep'
-import AzureBlobForm from '../CreateAzureBlobConnector/views/AzureBlobForm'
+import AzureBlobForm from './views/AzureBlobForm'
 import css from './CreateAzureBlobConnector.module.scss'
 
 const CreateAzureBlobConnector: React.FC<CreateConnectorModalProps> = props => {
-  const { onClose, onSuccess } = props
+  const { onClose } = props
   const { getString } = useStrings()
   return (
     <StepWizard
