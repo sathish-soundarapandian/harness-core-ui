@@ -2329,6 +2329,8 @@ export function GetTestConnectionValidationTextByType(type: ConnectorConfigDTO['
       return getString('connectors.testConnectionStep.validationText.sumologic')
     case Connectors.AZURE_KEY_VAULT:
       return getString('connectors.testConnectionStep.validationText.azureKeyVault')
+    case Connectors.AZURE_BLOB:
+      return getString('connectors.testConnectionStep.validationText.azureBlob')
     case Connectors.PAGER_DUTY:
       return getString('connectors.testConnectionStep.validationText.pagerduty')
     case Connectors.SERVICE_NOW:

@@ -13,11 +13,12 @@ import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { clickSubmit, fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps } from '@common/utils/routeUtils'
-import type { ResponseBoolean } from 'services/cd-ng'
+import type { ConnectorInfoDTO, ResponseBoolean } from 'services/cd-ng'
 import CreateAzureBlobConnector from '../CreateAzureBlobConnector'
 import mockSecretList from '../../CreateAzureKeyConnector/__tests__/secretsListMockData.json'
 import connectorMockData from './connectorsListMockData.json'
 import connectorDetailsMockData from '../../CreateAzureKeyConnector/__tests__/connectorDetailsMockData.json'
+import { backButtonTest } from '../../commonTest'
 
 const commonProps = {
   accountId: 'dummy',
@@ -26,6 +27,22 @@ const commonProps = {
   setIsEditMode: noop,
   onClose: noop,
   onSuccess: noop
+}
+
+const connectorInfo: ConnectorInfoDTO = {
+  name: 'devConnector',
+  identifier: 'devConnector',
+  description: 'devConnector description',
+  orgIdentifier: undefined,
+  projectIdentifier: undefined,
+  tags: {},
+  type: 'AzureBlob',
+  spec: {
+    clientId: 'dummy',
+    tenantId: 'dummy',
+    secret: 'dummy',
+    containerURL: 'dummy'
+  }
 }
 
 export const mockResponse: ResponseBoolean = {
@@ -94,7 +111,7 @@ jest.mock('services/cd-ng', () => ({
 }))
 
 describe('Create Secret Manager Wizard', () => {
-  test('should be able to render first step form', async () => {
+  test('should be able to render create form', async () => {
     const { container, getByText, getAllByText } = render(
       <TestWrapper path={routes.toConnectors({ ...accountPathProps })} pathParams={{ accountId: 'dummy' }}>
         <CreateAzureBlobConnector {...commonProps} isEditMode={false} connectorInfo={undefined} />
@@ -169,6 +186,92 @@ describe('Create Secret Manager Wizard', () => {
     })
     //Step 4
     expect(getAllByText('connectors.createdSuccessfully')[0]).toBeTruthy()
+    expect(container).toMatchSnapshot()
+  })
+
+  backButtonTest({
+    Element: (
+      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+        <CreateAzureBlobConnector
+          {...commonProps}
+          isEditMode={true}
+          connectorInfo={connectorInfo}
+          mock={mockResponse}
+        />
+      </TestWrapper>
+    ),
+    backButtonSelector: '[data-name="azureBlobBackButton"]',
+    mock: connectorInfo
+  })
+
+  test('should be able to render edit form', async () => {
+    const { container, getByText, getAllByText } = render(
+      <TestWrapper path={routes.toConnectors({ ...accountPathProps })} pathParams={{ accountId: 'dummy' }}>
+        <CreateAzureBlobConnector {...commonProps} isEditMode={true} connectorInfo={connectorInfo} />
+      </TestWrapper>
+    )
+
+    // Step 1
+    const updatedName = 'new value'
+    await act(async () => {
+      fireEvent.change(container.querySelector('input[name="name"]')!, {
+        target: { value: updatedName }
+      })
+    })
+
+    expect(container).toMatchSnapshot()
+
+    await act(async () => {
+      clickSubmit(container)
+    })
+
+    // Step 2
+    await waitFor(() => expect(getAllByText('common.clientId')[0]).toBeTruthy())
+
+    await act(async () => {
+      fireEvent.change(container.querySelector('input[name="clientId"]')!, {
+        target: { value: updatedName }
+      })
+    })
+    await act(async () => {
+      fireEvent.change(container.querySelector('input[name="tenantId"]')!, {
+        target: { value: updatedName }
+      })
+    })
+    await act(async () => {
+      fireEvent.change(container.querySelector('input[name="containerURL"]')!, {
+        target: { value: updatedName }
+      })
+    })
+
+    await act(async () => {
+      fireEvent.click(getByText('createOrSelectSecret'))
+    })
+
+    const modal = findDialogContainer()
+    const secret = await findByText(modal!, 'mockSecret')
+    await act(async () => {
+      fireEvent.click(secret)
+    })
+    const applyBtn = await waitFor(() => findByText(modal!, 'entityReference.apply'))
+    await act(async () => {
+      fireEvent.click(applyBtn)
+    })
+
+    expect(container).toMatchSnapshot()
+
+    await act(async () => {
+      clickSubmit(container)
+    })
+
+    // Step 3
+    expect(getAllByText('delegate.DelegateselectionLabel')[1]).toBeTruthy()
+
+    await act(async () => {
+      clickSubmit(container)
+    })
+    //Step 4
+    expect(getAllByText('connectors.updatedSuccessfully')[0]).toBeTruthy()
     expect(container).toMatchSnapshot()
   })
 })

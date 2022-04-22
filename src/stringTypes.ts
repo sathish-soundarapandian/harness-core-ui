@@ -2556,6 +2556,7 @@ export interface StringsMap {
   'connectors.testConnectionStep.validationText.aws': string
   'connectors.testConnectionStep.validationText.awsSecretManager': string
   'connectors.testConnectionStep.validationText.azure': string
+  'connectors.testConnectionStep.validationText.azureBlob': string
   'connectors.testConnectionStep.validationText.azureKeyVault': string
   'connectors.testConnectionStep.validationText.azureRepos': string
   'connectors.testConnectionStep.validationText.bitbucket': string

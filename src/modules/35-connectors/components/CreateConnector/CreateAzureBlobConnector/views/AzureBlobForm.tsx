@@ -7,19 +7,9 @@
 
 import React, { useState } from 'react'
 import * as Yup from 'yup'
-import {
-  StepProps,
-  Container,
-  Text,
-  Formik,
-  FormikForm,
-  Layout,
-  Button,
-  FontVariation,
-  ButtonVariation
-} from '@wings-software/uicore'
+import { StepProps, Container, Text, Formik, FormikForm, Layout, Button, ButtonVariation } from '@wings-software/uicore'
+import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import type { AzureBlobConnectorDTO } from 'services/cd-ng'
 import { PageSpinner } from '@common/components'
 import { setupAzureBlobFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import type { SecretReference } from '@secrets/components/CreateOrSelectSecret/CreateOrSelectSecret'
@@ -87,6 +77,7 @@ const AzureBlobForm: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProp
               variation={ButtonVariation.SECONDARY}
               icon="chevron-left"
               text={getString('back')}
+              data-name="azureBlobBackButton"
               onClick={() => previousStep?.(prevStepData)}
             />
             <Button

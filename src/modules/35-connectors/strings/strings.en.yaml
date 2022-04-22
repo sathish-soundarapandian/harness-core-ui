@@ -177,6 +177,7 @@ testConnectionStep:
     datadog: Validating Datadog authentication and permissions
     pagerduty: Validating PagerDuty authentication and permissions
     azureKeyVault: Validating Azure key vault authentication and permissions
+    azureBlob: Validating Azure Blob authentication and permissions
     jira: Validating Jira authentication and permissions
     serviceNow: Validating ServiceNow authentication and permissions
     sumologic: Validating Sumologic authentication and permissions
