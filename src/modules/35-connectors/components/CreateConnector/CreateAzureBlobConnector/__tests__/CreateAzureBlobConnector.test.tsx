@@ -112,12 +112,12 @@ jest.mock('services/cd-ng', () => ({
 
 describe('Create Secret Manager Wizard', () => {
   test('should be able to render create form', async () => {
-    const { container, getByText, getAllByText } = render(
+    const { container, getByText } = render(
       <TestWrapper path={routes.toConnectors({ ...accountPathProps })} pathParams={{ accountId: 'dummy' }}>
         <CreateAzureBlobConnector {...commonProps} isEditMode={false} connectorInfo={undefined} />
       </TestWrapper>
     )
-
+    waitFor(() => expect(getByText('name')).not.toBeNull())
     // Step 1
     fillAtForm([
       {
@@ -128,14 +128,12 @@ describe('Create Secret Manager Wizard', () => {
       }
     ])
 
-    expect(container).toMatchSnapshot()
-
-    await act(async () => {
+    act(() => {
       clickSubmit(container)
     })
 
     // Step 2
-    expect(getAllByText('common.clientId')[0]).toBeTruthy()
+    await waitFor(() => getByText('common.clientId'))
 
     fillAtForm([
       {
@@ -158,35 +156,34 @@ describe('Create Secret Manager Wizard', () => {
       }
     ])
 
-    await act(async () => {
+    act(() => {
       fireEvent.click(getByText('createOrSelectSecret'))
     })
 
     const modal = findDialogContainer()
     const secret = await findByText(modal!, 'mockSecret')
-    await act(async () => {
+    act(() => {
       fireEvent.click(secret)
     })
     const applyBtn = await waitFor(() => findByText(modal!, 'entityReference.apply'))
-    await act(async () => {
+    act(() => {
       fireEvent.click(applyBtn)
     })
-
+    await waitFor(() => getByText('secrets.secret.configureSecret'))
     expect(container).toMatchSnapshot()
 
-    await act(async () => {
+    act(() => {
       clickSubmit(container)
     })
 
     // Step 3
-    expect(getAllByText('delegate.DelegateselectionLabel')[1]).toBeTruthy()
+    await waitFor(() => getByText('delegate.DelegateselectionLabel'))
 
-    await act(async () => {
+    act(() => {
       clickSubmit(container)
     })
     //Step 4
-    expect(getAllByText('connectors.createdSuccessfully')[0]).toBeTruthy()
-    expect(container).toMatchSnapshot()
+    await waitFor(() => getByText('connectors.createdSuccessfully'))
   })
 
   backButtonTest({
@@ -212,66 +209,65 @@ describe('Create Secret Manager Wizard', () => {
     )
 
     // Step 1
+    waitFor(() => expect(getByText('name')).not.toBeNull())
     const updatedName = 'new value'
-    await act(async () => {
+    act(() => {
       fireEvent.change(container.querySelector('input[name="name"]')!, {
         target: { value: updatedName }
       })
     })
 
-    expect(container).toMatchSnapshot()
-
-    await act(async () => {
+    act(() => {
       clickSubmit(container)
     })
 
     // Step 2
     await waitFor(() => expect(getAllByText('common.clientId')[0]).toBeTruthy())
 
-    await act(async () => {
+    act(() => {
       fireEvent.change(container.querySelector('input[name="clientId"]')!, {
         target: { value: updatedName }
       })
     })
-    await act(async () => {
+    act(() => {
       fireEvent.change(container.querySelector('input[name="tenantId"]')!, {
         target: { value: updatedName }
       })
     })
-    await act(async () => {
+    act(() => {
       fireEvent.change(container.querySelector('input[name="containerURL"]')!, {
         target: { value: updatedName }
       })
     })
 
-    await act(async () => {
+    act(() => {
       fireEvent.click(getByText('createOrSelectSecret'))
     })
 
     const modal = findDialogContainer()
     const secret = await findByText(modal!, 'mockSecret')
-    await act(async () => {
+    act(() => {
       fireEvent.click(secret)
     })
     const applyBtn = await waitFor(() => findByText(modal!, 'entityReference.apply'))
-    await act(async () => {
+    act(() => {
       fireEvent.click(applyBtn)
     })
 
+    await waitFor(() => getByText('secrets.secret.configureSecret'))
     expect(container).toMatchSnapshot()
 
-    await act(async () => {
+    act(() => {
       clickSubmit(container)
     })
 
     // Step 3
-    expect(getAllByText('delegate.DelegateselectionLabel')[1]).toBeTruthy()
+    await waitFor(() => getByText('delegate.DelegateselectionLabel'))
 
-    await act(async () => {
+    act(() => {
       clickSubmit(container)
     })
     //Step 4
-    expect(getAllByText('connectors.updatedSuccessfully')[0]).toBeTruthy()
-    expect(container).toMatchSnapshot()
+    await waitFor(() => getByText('connectors.createdSuccessfully'))
   })
 })

@@ -18,10 +18,10 @@ import AzureBlobFormFields from './AzureBlobFormFields'
 import css from '../CreateAzureBlobConnector.module.scss'
 
 export interface AzureBlobFormData {
-  clientId?: string
-  secretKey?: SecretReference
-  tenantId?: string
-  containerURL?: string
+  clientId: string
+  secretKey: SecretReference | void
+  tenantId: string
+  containerURL: string
   default?: boolean
 }
 
@@ -30,9 +30,9 @@ const AzureBlobForm: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProp
   const { getString } = useStrings()
 
   const defaultInitialFormData: AzureBlobFormData = {
-    clientId: undefined,
-    tenantId: undefined,
-    containerURL: undefined,
+    clientId: '',
+    tenantId: '',
+    containerURL: '',
     secretKey: undefined,
     default: false
   }
