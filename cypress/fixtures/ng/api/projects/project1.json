@@ -1,0 +1,18 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "project": {
+      "orgIdentifier": "default",
+      "identifier": "project1",
+      "name": "ProjectName1",
+      "color": "#0063f7",
+      "modules": ["CD", "CI", "CV", "CF", "CE", "CORE", "PMS", "TEMPLATESERVICE"],
+      "description": "",
+      "tags": {}
+    },
+    "createdAt": 1641284231905,
+    "lastModifiedAt": 1641284231905
+  },
+  "metaData": null,
+  "correlationId": "correlationId"
+}
