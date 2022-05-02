@@ -27,7 +27,7 @@ import { FontVariation, Color } from '@harness/design-system'
 import { Classes } from '@blueprintjs/core'
 import { debounce, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { Scope } from '@common/interfaces/SecretsInterface'
+import { Scope, PrincipalScope } from '@common/interfaces/SecretsInterface'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import type { StringKeys } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -71,6 +71,16 @@ export function getScopeFromValue(value: string): Scope {
   }
   return Scope.PROJECT
 }
+
+export function getPrincipalScopeFromValue(value: string): PrincipalScope {
+  if (typeof value === 'string' && value.startsWith(`${Scope.ACCOUNT}.`)) {
+    return PrincipalScope.ACCOUNT
+  } else if (typeof value === 'string' && value.startsWith(`${Scope.ORG}.`)) {
+    return PrincipalScope.ORG
+  }
+  return PrincipalScope.PROJECT
+}
+
 export function getScopeLabelfromScope(scope: Scope, getString: UseStringsReturn['getString']): string {
   let label = ''
   switch (scope) {

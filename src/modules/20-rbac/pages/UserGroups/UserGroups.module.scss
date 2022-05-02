@@ -8,3 +8,8 @@
 .userGroupsEmptyState {
   width: 262px;
 }
+.assignRolesButton {
+  --layout-spacing: var(--spacing-xsmall) !important;
+  margin-left: var(--spacing-main) !important;
+  // second line is when no usergroups are present, else this will get ignored
+}

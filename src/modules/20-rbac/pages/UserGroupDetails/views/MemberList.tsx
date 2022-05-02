@@ -107,7 +107,7 @@ const RenderColumnMenu: Renderer<CellProps<UserInfo>> = ({ row, column }) => {
     openDialog()
   }
 
-  return (column as any).ssoLinked ? null : (
+  return (column as any).ssoLinked || (column as any).userGroupIdentifier ? null : (
     <Layout.Horizontal flex={{ justifyContent: 'flex-end' }}>
       <Popover
         isOpen={menuOpen}
@@ -174,7 +174,10 @@ const RenderColumnMenu: Renderer<CellProps<UserInfo>> = ({ row, column }) => {
   )
 }
 
-const MemberList: React.FC<{ ssoLinked?: boolean }> = ({ ssoLinked }) => {
+const MemberList: React.FC<{ ssoLinked?: boolean; userGroupInherited?: boolean }> = ({
+  ssoLinked,
+  userGroupInherited
+}) => {
   const { getString } = useStrings()
   const [page, setPage] = useState<number>(0)
   const { accountId, orgIdentifier, projectIdentifier, userGroupIdentifier } = useParams<

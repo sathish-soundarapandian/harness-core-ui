@@ -37,6 +37,7 @@ import css from './NotificationList.module.scss'
 
 interface NotificationListProps {
   userGroup: UserGroupDTO
+  inherited?: boolean
   onSubmit: () => void
 }
 
@@ -60,13 +61,22 @@ interface FieldDetails {
 interface ChannelRow {
   data: NotificationSettingConfigDTO | null
   userGroup: UserGroupDTO
+  inherited?: boolean
   onSubmit: () => void
   options: SelectOption[]
   onRowDelete?: () => void
   notificationItems: SelectOption[]
 }
 
-const ChannelRow: React.FC<ChannelRow> = ({ data, userGroup, onSubmit, notificationItems, options, onRowDelete }) => {
+const ChannelRow: React.FC<ChannelRow> = ({
+  data,
+  userGroup,
+  inherited,
+  onSubmit,
+  notificationItems,
+  options,
+  onRowDelete
+}) => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getRBACErrorMessage } = useRBACError()
   const [isCreate, setIsCreate] = useState<boolean>(data ? false : true)
@@ -196,7 +206,7 @@ const ChannelRow: React.FC<ChannelRow> = ({ data, userGroup, onSubmit, notificat
           return (
             <Form>
               <Layout.Horizontal spacing="small" className={cx(css.card, { [css.centerAlign]: !enableEdit })}>
-                {enableEdit ? (
+                {enableEdit && !inherited ? (
                   <>
                     <Container width="35%">
                       <FormInput.Select
@@ -266,7 +276,7 @@ const ChannelRow: React.FC<ChannelRow> = ({ data, userGroup, onSubmit, notificat
                         onClick={() => handleTest(formikProps)}
                       />
                     ) : null}
-                    {enableEdit ? (
+                    {enableEdit && !inherited ? (
                       <Button text={getString('save')} minimal type="submit" disabled={loading} />
                     ) : (
                       <>
@@ -279,7 +289,7 @@ const ChannelRow: React.FC<ChannelRow> = ({ data, userGroup, onSubmit, notificat
                         />
                       </>
                     )}
-                    {isCreate ? (
+                    {isCreate && !inherited ? (
                       <Button icon="trash" minimal onClick={() => onRowDelete?.()} className={css.button} />
                     ) : null}
                   </Layout.Horizontal>
@@ -293,7 +303,7 @@ const ChannelRow: React.FC<ChannelRow> = ({ data, userGroup, onSubmit, notificat
   )
 }
 
-const NotificationList: React.FC<NotificationListProps> = ({ userGroup, onSubmit }) => {
+const NotificationList: React.FC<NotificationListProps> = ({ userGroup, inherited, onSubmit }) => {
   const notifications = userGroup.notificationConfigs
   const [values, setValues] = useState<(NotificationSettingConfigDTO | null)[]>(notifications || [])
   const { getString } = useStrings()
@@ -359,11 +369,12 @@ const NotificationList: React.FC<NotificationListProps> = ({ userGroup, onSubmit
             notificationItems={getNotificationItems()}
             options={options}
             userGroup={userGroup}
+            inherited={inherited}
           />
         </div>
       ))}
       <Layout.Horizontal padding={{ top: 'small' }}>
-        {values.length < 4 && !values.includes(null) ? (
+        {values.length < 4 && !values.includes(null) && !inherited ? (
           <Button
             text={getString('plusNumber', { number: getString('common.channel') })}
             data-testid="addChannel"
