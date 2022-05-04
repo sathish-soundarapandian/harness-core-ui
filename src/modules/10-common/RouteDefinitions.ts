@@ -1522,9 +1522,28 @@ const routes = {
       `/dashboards/folder/${folderId ? folderId : 'shared'}/view/${viewId}`
   ),
   toCustomFolderHome: withAccountId(() => '/dashboards/folders'),
-  toViewCustomFolder: withAccountId(({ folderId }: { folderId: string }) => `/dashboards/folder/${folderId}`)
+  toViewCustomFolder: withAccountId(({ folderId }: { folderId: string }) => `/dashboards/folder/${folderId}`),
 
   /****************** Secret Usage************************************************************************************/
+
+  /****************** Chaos Module ************************************************************************************/
+  toChaos: withAccountId(() => `/chaos`),
+  toChaosHome: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) =>
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/`
+  ),
+  toChaosWorkflows: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) =>
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/workflows`
+  ),
+  toChaosHubs: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) =>
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-hubs`
+  ),
+  toChaosAgents: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) =>
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/agents`
+  )
 }
 
 export default routes

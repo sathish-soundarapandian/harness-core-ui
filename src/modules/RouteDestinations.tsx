@@ -27,6 +27,7 @@ import CFRoutes from '@cf/RouteDestinations'
 import CERoutes from '@ce/RouteDestinations'
 import STORoutes from '@sto-steps/RouteDestinations'
 import GovernanceRoutes from '@governance/RouteDestinations'
+import ChaosRoutes from '@chaos/RouteDestinations'
 import DASHBOARDRoutes from '@dashboards/RouteDestinations'
 import AccountSideNav from '@common/components/AccountSideNav/AccountSideNav'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
@@ -87,6 +88,7 @@ export default function RouteDestinations(): React.ReactElement {
       {connectorRoutes.props.children}
       {tempatesRoutes.props.children}
       {userProfileRoutes.props.children}
+      {ChaosRoutes.props.children}
       {CING_ENABLED ? CIRoutes.props.children : null}
       {CDNG_ENABLED ? CDRoutes.props.children : null}
       {CVNG_ENABLED ? CVRoutes.props.children : null}

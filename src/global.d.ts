@@ -83,8 +83,14 @@ declare module 'event-source-polyfill'
 
 declare module 'refiner-js'
 
+import type { ChildAppComponent } from './microfrontends'
 declare module 'gitopsui/MicroFrontendApp' {
-  import type { ChildAppComponent } from './microfrontends'
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'chaos/MicroFrontendApp' {
+  // import type { ChildAppComponent } from './microfrontends'
   const ChildApp: ChildAppComponent
   export default ChildApp
 }

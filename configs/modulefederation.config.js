@@ -39,6 +39,8 @@ module.exports = ({ enableGitOpsUI, enableSTO }) => {
     remotes.sto = "sto@[window.getApiBaseUrl('sto/remoteEntry.js')]"
   }
 
+  remotes.chaos = "chaos@[window.getApiBaseUrl('chaos/remoteEntry.js')]"
+
   if (process.env.TARGET_LOCALHOST) {
     remotes.errortracking = 'errortracking@http://localhost:3091/remoteEntry.js'
   } else {
