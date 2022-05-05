@@ -31,7 +31,7 @@ const MyComponent: React.FC<{ children?: React.ReactNode; scope?: PreferenceScop
 
   useEffect(() => {
     if (shouldUpdateUser) {
-      updatePreferenceStore({ currentUserInfo: { email: 'abc@email.com' } })
+      updatePreferenceStore({ currentUserInfo: { email: 'abc@email.com', uuid: '123' } })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shouldUpdateUser])

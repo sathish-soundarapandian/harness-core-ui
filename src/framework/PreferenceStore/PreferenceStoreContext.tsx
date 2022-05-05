@@ -89,7 +89,7 @@ const getKey = (arr: (string | undefined)[], entity: string): string => {
 export const PreferenceStoreProvider: React.FC = (props: React.PropsWithChildren<unknown>) => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [state, setState] = React.useState<PreferenceStoreStateProps>({
-    currentUserInfo: {}
+    currentUserInfo: { uuid: '' }
   })
   const [currentPreferences, setPreferences] = useLocalStorage<Record<string, unknown>>(PREFERENCES_TOP_LEVEL_KEY, {})
   const userId = lodashGet(state.currentUserInfo, 'email')
