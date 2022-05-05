@@ -158,7 +158,8 @@ export const TestWrapper: React.FC<TestWrapperProps> = props => {
           <AppStoreContext.Provider
             value={{
               featureFlags: {
-                FEATURE_ENFORCEMENT_ENABLED: true
+                FEATURE_ENFORCEMENT_ENABLED: true,
+                ...defaultFeatureFlagValues
               },
               updateAppStore: () => void 0,
               currentUserInfo: { uuid: '' },
