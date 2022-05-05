@@ -11,6 +11,7 @@ import { StepProps, SelectOption, ModalErrorHandlerBinding, useToaster } from '@
 import { useGetOrganization, useGetProject, usePutProject } from 'services/cd-ng'
 import type { Project } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { PageSpinner } from '@common/components'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -30,6 +31,7 @@ const EditProject: React.FC<StepProps<Project> & EditModalData> = props => {
   const { getRBACErrorMessage } = useRBACError()
   const { showSuccess } = useToaster()
   const { getString } = useStrings()
+  const { updateAppStore, selectedProject } = useAppStore()
   const projectIdentifier = isStep ? prevStepData?.identifier : identifier
   const organizationIdentifier = isStep ? prevStepData?.orgIdentifier : orgIdentifier
 
@@ -79,7 +81,7 @@ const EditProject: React.FC<StepProps<Project> & EditModalData> = props => {
 
   const onComplete = async (values: Project): Promise<void> => {
     try {
-      await updateProject(
+      const updateProjectResponse = await updateProject(
         { project: values },
         {
           pathParams: { identifier: values.identifier },
@@ -89,6 +91,10 @@ const EditProject: React.FC<StepProps<Project> & EditModalData> = props => {
           }
         }
       )
+      const updatedProject = updateProjectResponse?.data?.project
+      if (updatedProject?.identifier === selectedProject?.identifier) {
+        updateAppStore({ selectedProject: updatedProject })
+      }
       showSuccess(getString('projectsOrgs.projectEditSuccess'))
       isStep ? nextStep?.({ ...values }) : closeModal?.()
     } catch (e) {
