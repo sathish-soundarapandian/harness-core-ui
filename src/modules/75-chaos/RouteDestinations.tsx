@@ -6,6 +6,7 @@ import { RouteWithLayout } from '@common/router'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import ChaosSideNav from './components/ChaosSideNav/ChaosSideNav'
+import ChaosHomePage from './pages/home/ChaosHomePage'
 
 // eslint-disable-next-line import/no-unresolved
 const ChaosMicroFrontend = React.lazy(() => import('chaos/MicroFrontendApp'))
@@ -30,7 +31,7 @@ export default (
       exact
       // pageName={PAGE_NAME.ChaosHomePage}
     >
-      <div>project onboarding</div>
+      <ChaosHomePage />
     </RouteWithLayout>
     <RouteWithLayout
       // licenseRedirectData={licenseRedirectData}

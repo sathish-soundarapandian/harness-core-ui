@@ -5003,6 +5003,9 @@ export interface StringsMap {
   'cf.testTheFlag.testFlagTargetHeading': string
   'cf.testTheFlag.verify': string
   'cf.testTheFlag.verifyText': string
+  'chaos.homepage.chaosHomePageTitle': string
+  'chaos.homepage.learnMore': string
+  'chaos.homepage.slogan': string
   'ci.advancedLabel': string
   'ci.annotations': string
   'ci.artifactoryConnectorLabel': string
