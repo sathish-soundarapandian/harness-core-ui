@@ -26,7 +26,8 @@ import type {
   artifactTableItem,
   ManifestInterface,
   TriggerConfigDTO,
-  TriggerTypeSourceInterface
+  TriggerTypeSourceInterface,
+  FlatOnEditValuesInterface
 } from '../interface/TriggersWizardInterface'
 export const CUSTOM = 'Custom'
 export const AWS_CODECOMMIT = 'AWS_CODECOMMIT'
@@ -1832,4 +1833,18 @@ export const clearUndefinedArtifactId = (newPipelineObj = {}): any => {
   })
 
   return clearedNewPipeline
+}
+
+export const getModifiedTemplateValues = (
+  initialValuesForEdit: FlatOnEditValuesInterface
+): FlatOnEditValuesInterface => {
+  const returnInitialValuesForEdit = { ...initialValuesForEdit }
+  if (
+    returnInitialValuesForEdit?.pipeline?.template?.templateInputs?.properties?.ci?.codebase?.repoName === '' &&
+    !!returnInitialValuesForEdit.pipeline.template.templateInputs.properties.ci.codebase.connectorRef
+  ) {
+    // for CI Codebase, remove repoName: "" onEdit since connector is repo url type
+    delete returnInitialValuesForEdit.pipeline.template.templateInputs.properties.ci.codebase.repoName
+  }
+  return returnInitialValuesForEdit
 }
