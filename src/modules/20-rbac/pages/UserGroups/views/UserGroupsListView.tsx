@@ -23,7 +23,7 @@ import { useModalHook } from '@harness/use-modal'
 import type { CellProps, Renderer, Column } from 'react-table'
 import { Classes, Position, Menu, Intent, PopoverInteractionKind, IconName, MenuItem } from '@blueprintjs/core'
 import { useHistory, useParams } from 'react-router-dom'
-import { noop } from 'lodash-es'
+import { noop, defaultTo } from 'lodash-es'
 import {
   UserGroupAggregateDTO,
   useDeleteUserGroup,
@@ -34,7 +34,14 @@ import {
 } from 'services/cd-ng'
 import { useStrings, String } from 'framework/strings'
 import RoleBindingsList from '@rbac/components/RoleBindingsList/RoleBindingsList'
-import { getUserGroupActionTooltipText, PrincipalType } from '@rbac/utils/utils'
+import {
+  getUserGroupActionTooltipText,
+  PrincipalType,
+  isUserGroupInherited,
+  mapfromScopetoPrincipalScope,
+  getScopeFromUserGroupDTO
+} from '@rbac/utils/utils'
+import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -59,6 +66,17 @@ interface UserGroupsListViewProps {
 }
 
 export const UserGroupColumn = (data: UserGroupDTO): React.ReactElement => {
+  const {
+    accountId: p_accountId,
+    orgIdentifier: p_orgIdentifier,
+    projectIdentifier: p_projectIdentifier
+  } = useParams<ProjectPathProps>()
+  const Scope = getScopeFromDTO({
+    accountIdentifier: p_accountId,
+    orgIdentifier: p_orgIdentifier,
+    projectIdentifier: p_projectIdentifier
+  })
+  const userGroupInherited = isUserGroupInherited(Scope, data)
   const { getString } = useStrings()
   return (
     <Layout.Vertical>
@@ -90,6 +108,13 @@ export const UserGroupColumn = (data: UserGroupDTO): React.ReactElement => {
         <Text color={Color.GREY_600} lineClamp={1} font={{ variation: FontVariation.SMALL }}>
           {getString('idLabel', { id: data.identifier })}
         </Text>
+        {userGroupInherited ? (
+          <Text color={Color.PURPLE_500} lineClamp={1} font={{ variation: FontVariation.SMALL }}>
+            {getString('rbac.unableToEditInheritedMembership', {
+              parentScope: mapfromScopetoPrincipalScope(getScopeFromUserGroupDTO(data))
+            })}
+          </Text>
+        ) : null}
       </Layout.Vertical>
     </Layout.Vertical>
   )
@@ -151,6 +176,11 @@ const RenderColumnMembers: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, 
         resourceIdentifier={identifier}
         disabled={disabled}
         tooltip={disableTooltipText}
+        resourceScope={{
+          accountIdentifier,
+          orgIdentifier,
+          projectIdentifier
+        }}
       />
     </Layout.Horizontal>
   )
@@ -158,6 +188,7 @@ const RenderColumnMembers: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, 
 
 const RenderColumnRoleAssignments: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, column }) => {
   const data = row.original.roleAssignmentsMetadataDTO
+  const { accountIdentifier, orgIdentifier, projectIdentifier, identifier } = row.original.userGroupDTO
   const { getString } = useStrings()
 
   return (
@@ -166,7 +197,7 @@ const RenderColumnRoleAssignments: Renderer<CellProps<UserGroupAggregateDTO>> = 
       <ManagePrincipalButton
         text={getString('common.plusNumber', { number: getString('common.role') })}
         variation={ButtonVariation.LINK}
-        data-testid={`addRole-${row.original.userGroupDTO.identifier}`}
+        data-testid={`addRole-${identifier}`}
         className={css.roleButton}
         onClick={event => {
           event.stopPropagation()
@@ -177,7 +208,12 @@ const RenderColumnRoleAssignments: Renderer<CellProps<UserGroupAggregateDTO>> = 
           )
         }}
         resourceType={ResourceType.USERGROUP}
-        resourceIdentifier={row.original.userGroupDTO.identifier}
+        resourceIdentifier={identifier}
+        resourceScope={{
+          accountIdentifier,
+          orgIdentifier,
+          projectIdentifier
+        }}
       />
     </Layout.Horizontal>
   )
@@ -335,6 +371,11 @@ const RenderColumnMenu: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, col
               target: getString('rbac.group').toLowerCase()
             })
           )}
+          {/* 
+          ToDo
+          1) whether appear for org level grps?
+          2) copy ug to org scope, or inherir ug from org scope, now what should be bejhaviour in org scope
+          */}
           {data.externallyManaged ? (
             <MenuItem icon="duplicate" text={getString('common.copy')} onClick={handleCopyUserGroup} />
           ) : undefined}
@@ -350,6 +391,11 @@ const UserGroupsListView: React.FC<UserGroupsListViewProps> = props => {
   const { getString } = useStrings()
   const isCommunity = isCommunityPlan()
   const history = useHistory()
+  const Scope = getScopeFromDTO({
+    accountIdentifier: accountId,
+    orgIdentifier,
+    projectIdentifier
+  })
   const columns: Column<UserGroupAggregateDTO>[] = useMemo(
     () => [
       {
@@ -396,13 +442,20 @@ const UserGroupsListView: React.FC<UserGroupsListViewProps> = props => {
       data={data?.data?.content || []}
       onRowClick={userGroup => {
         history.push(
-          routes.toUserGroupDetails({
-            accountId,
-            orgIdentifier,
-            projectIdentifier,
-            module,
-            userGroupIdentifier: userGroup.userGroupDTO.identifier
-          })
+          isUserGroupInherited(Scope, userGroup.userGroupDTO)
+            ? routes.toUserGroupDetails({
+                accountId: defaultTo(userGroup.userGroupDTO.accountIdentifier, accountId),
+                orgIdentifier: defaultTo(userGroup.userGroupDTO.orgIdentifier, orgIdentifier),
+                projectIdentifier: defaultTo(userGroup.userGroupDTO.projectIdentifier, projectIdentifier),
+                userGroupIdentifier: userGroup.userGroupDTO.identifier
+              })
+            : routes.toUserGroupDetails({
+                accountId,
+                orgIdentifier,
+                projectIdentifier,
+                module,
+                userGroupIdentifier: userGroup.userGroupDTO.identifier
+              })
         )
       }}
       pagination={{

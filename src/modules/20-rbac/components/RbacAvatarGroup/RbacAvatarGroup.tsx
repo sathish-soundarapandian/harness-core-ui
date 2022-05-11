@@ -40,7 +40,7 @@ const RbacAvatarGroup: React.FC<RbacAvatarGroupProps> = ({
   return (
     <AvatarGroup
       {...restProps}
-      onAddTooltip={enabled ? disabledTooltip : tooltip}
+      onAddTooltip={disabledTooltip ? disabledTooltip : enabled ? disabledTooltip : tooltip}
       onAdd={event => {
         if (enabled && !restProps.disabled) {
           restProps.onAdd?.(event)
