@@ -6,18 +6,17 @@
  */
 
 import React, { useMemo, useCallback } from 'react'
-import { Text, Container, Icon, Layout, Button, ButtonVariation } from '@wings-software/uicore'
+import { Text, Container, Layout, Button, ButtonVariation } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ChangeTitleData } from '../../ChangeEventCard.types'
 import css from '../ChangeTitle/ChangeTitle.module.scss'
-import { getIconByChangeType } from '../ChangeTitle/ChangeTitle.utils'
-import { Divider } from '@blueprintjs/core'
+
 import { IconWithText } from '../IconWithText/IconWithText'
 
 export default function ChangeTitleForHarness({ changeTitleData }: { changeTitleData: ChangeTitleData }): JSX.Element {
   const { getString } = useStrings()
-  const { name, executionId, type, url } = changeTitleData
+  const { name, executionId, url, serviceIdentifier, envIdentifier, status } = changeTitleData
   const titleOptions = useMemo(
     () =>
       url
@@ -38,20 +37,34 @@ export default function ChangeTitleForHarness({ changeTitleData }: { changeTitle
 
   return (
     <Container padding={{ top: 'medium', bottom: 'medium' }} className={css.main}>
-      <Icon {...getIconByChangeType(type)} />
-      <Layout.Horizontal>
-        <Text {...titleOptions} font={{ size: 'medium', weight: 'semi-bold' }} color={Color.GREY_800}>
-          {name}
-        </Text>
-        <Text font={{ size: 'xsmall' }} color={Color.GREY_800}>
-          {getString('cd.serviceDashboard.executionId')}
-          <span>{executionId}</span>
-        </Text>
-      </Layout.Horizontal>
+      <Layout.Vertical>
+        <Layout.Horizontal>
+          <Text
+            {...titleOptions}
+            font={{ size: 'medium', weight: 'semi-bold' }}
+            width="max-content"
+            margin={{ right: 'medium' }}
+            color={Color.GREY_800}
+          >
+            {name}
+          </Text>
+          <Text font={{ size: 'xsmall' }} color={Color.GREY_800} flex={{ align: 'center-center' }}>
+            ({getString('cd.serviceDashboard.executionId')}
+            <span>{executionId})</span>
+          </Text>
+        </Layout.Horizontal>
+        <Container height={7}></Container>
+        <Layout.Horizontal>
+          <IconWithText icon={'cd-solid'} />
+          <IconWithText icon={'main-setup'} text={serviceIdentifier} />
+          <IconWithText icon={'environments'} text={envIdentifier} />
+          <IconWithText text={status} />
+        </Layout.Horizontal>
+      </Layout.Vertical>
       {url ? (
         <Button
           onClick={openPipelineInNewTab}
-          className={css.redirectButton}
+          className={css.redirectButtonPipeline}
           text={getString('cv.changeSource.changeSourceCard.viewDeployment')}
           icon="share"
           iconProps={{ size: 12 }}

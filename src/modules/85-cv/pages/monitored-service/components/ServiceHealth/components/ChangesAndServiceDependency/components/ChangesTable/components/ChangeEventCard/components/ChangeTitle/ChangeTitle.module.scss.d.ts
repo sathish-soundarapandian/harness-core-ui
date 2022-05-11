@@ -8,7 +8,9 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly addEllipsis: string
+  readonly horizontalMargin: string
   readonly main: string
   readonly redirectButton: string
+  readonly redirectButtonPipeline: string
 }
 export default styles

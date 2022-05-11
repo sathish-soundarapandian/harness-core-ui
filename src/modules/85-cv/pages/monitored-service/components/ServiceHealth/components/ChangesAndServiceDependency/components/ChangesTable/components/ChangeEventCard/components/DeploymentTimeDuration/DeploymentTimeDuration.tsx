@@ -26,26 +26,27 @@ export default function DeploymentTimeDuration({
   const { getString } = useStrings()
   const durationString = durationAsString(startTime, endTime)
   const timePassed = durationAsString(endTime, moment().valueOf())
+  const marginals = type === ChangeSourceTypes.HarnessCDNextGen ? { right: 'medium' } : undefined
 
   return (
     <Container className={css.main}>
       <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
         {type === ChangeSourceTypes.HarnessCDNextGen && (
-          <Text icon={'time'} iconProps={{ size: 12 }} font={{ size: 'small' }}>
+          <Text icon={'time'} iconProps={{ size: 12 }} font={{ size: 'small' }} margin={marginals}>
             {'start '}
             {moment(startTime).format(TIME_FORMAT)}
           </Text>
         )}
-        <Text icon={'time'} iconProps={{ size: 12 }} font={{ size: 'small' }}>
+        <Text icon={'time'} iconProps={{ size: 12 }} font={{ size: 'small' }} margin={marginals}>
           {getString('cv.changeSource.changeSourceCard.finished')}
           {moment(endTime).format(TIME_FORMAT)}
         </Text>
-        <Text icon={'time'} iconProps={{ size: 12 }} font={{ size: 'small' }}>
+        <Text icon={'time'} iconProps={{ size: 12 }} font={{ size: 'small' }} margin={marginals}>
           {getString('common.durationPrefix')}
           {durationString}
         </Text>
         {type !== ChangeSourceTypes.HarnessCDNextGen && (
-          <Text icon={'calendar'} iconProps={{ size: 12 }} font={{ size: 'small' }}>
+          <Text icon={'calendar'} iconProps={{ size: 12 }} font={{ size: 'small' }} margin={marginals}>
             {timePassed || 0}
             {getString('cv.changeSource.changeSourceCard.ago')}
           </Text>

@@ -8,7 +8,7 @@
 import React, { useMemo, useState } from 'react'
 import { defaultTo } from 'lodash-es'
 import { Divider } from '@blueprintjs/core'
-import { Card, Container, Text } from '@wings-software/uicore'
+import { Card, Container, Layout, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import type { ChangeEventDTO, HarnessCDEventMetadata, VerifyStepSummary } from 'services/cv'
 import { useStrings } from 'framework/strings'
@@ -20,21 +20,41 @@ import SLOAndErrorBudget from '@cv/pages/monitored-service/components/ServiceHea
 import type { ChangeTitleData, ChangeDetailsDataInterface } from '../../../ChangeEventCard.types'
 import { createChangeTitleData, createChangeDetailsData } from '../../../ChangeEventCard.utils'
 import ChangeDetails from '../../ChangeDetails/ChangeDetails'
-import ChangeTitle from '../../ChangeTitle/ChangeTitle'
 import DeploymentTimeDuration from '../../DeploymentTimeDuration/DeploymentTimeDuration'
 import { TWO_HOURS_IN_MILLISECONDS } from '../../../ChangeEventCard.constant'
 import css from '../../../ChangeEventCard.module.scss'
 import ChangeTitleForHarness from '../../ChangeTitleForHarnessCD/ChangePipelineForHarnessCD'
+import { useGetExecutionDetailV2 } from 'services/pipeline-ng'
+import type { PipelineType, ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
+import { useParams } from 'react-router'
+import { IconWithText } from '../../IconWithText/IconWithText'
+import { UserLabel } from '@common/exports'
+import { durationAsString } from '../../DeploymentTimeDuration/DeploymentTimeDuration.utils'
+import moment from 'moment'
 
 export default function HarnessNextGenEventCard({ data }: { data: ChangeEventDTO }): JSX.Element {
   const { getString } = useStrings()
   const [timeStamps, setTimestamps] = useState<[number, number]>([0, 0])
   const changeTitleData: ChangeTitleData = useMemo(() => createChangeTitleData(data), [])
   const changeDetailsData: ChangeDetailsDataInterface = useMemo(() => createChangeDetailsData(data), [])
-
+  console.log('pppppppp', data)
   const metadata: HarnessCDEventMetadata = defaultTo(data.metadata, {})
   const { artifactType = '', artifactTag = '', verifyStepSummaries } = metadata
   const changeInfoData = { artifactType, artifactTag }
+  const { orgIdentifier, projectIdentifier, accountId } = useParams<PipelineType<ExecutionPathProps>>()
+
+  const { data: executionDetails } = useGetExecutionDetailV2({
+    planExecutionId: metadata?.planExecutionId || '',
+    queryParams: {
+      orgIdentifier,
+      projectIdentifier,
+      accountIdentifier: accountId,
+      stageNodeId: metadata?.stageStepId
+    },
+    debounce: 500
+  })
+
+  console.log('tttttttt', executionDetails)
 
   const summary: {
     name: string
@@ -43,16 +63,57 @@ export default function HarnessNextGenEventCard({ data }: { data: ChangeEventDTO
 
   const { type } = data || {}
 
+  const { pipelineExecutionSummary } = executionDetails?.data || {}
+  const timePassed = useMemo(() => {
+    if (!metadata?.deploymentStartTime && !metadata?.deploymentEndTime) {
+      return
+    }
+    return durationAsString(metadata?.deploymentEndTime!, moment().valueOf())
+  }, [metadata?.deploymentStartTime, metadata?.deploymentEndTime])
   return (
     <Card className={css.main}>
       <ChangeTitleForHarness changeTitleData={changeTitleData} />
       <Divider className={css.divider} />
 
-      <ChangeDetails ChangeDetailsData={{ ...changeDetailsData, details: changeInfoData }} />
-      <DeploymentTimeDuration
-        startTime={data?.metadata?.deploymentStartTime}
-        endTime={data?.metadata?.deploymentEndTime}
-        type={type}
+      <ChangeDetails
+        ChangeDetailsData={{
+          ...changeDetailsData,
+          details: changeInfoData,
+          executedBy: (
+            <>
+              <Layout.Vertical width="max-content">
+                <Layout.Horizontal flex margin={{ bottom: 'medium' }}>
+                  <UserLabel
+                    name={
+                      pipelineExecutionSummary?.executionTriggerInfo?.triggeredBy?.identifier ||
+                      pipelineExecutionSummary?.executionTriggerInfo?.triggeredBy?.extraInfo?.email ||
+                      ''
+                    }
+                    email={pipelineExecutionSummary?.executionTriggerInfo?.triggeredBy?.extraInfo?.email}
+                    iconProps={{ size: 16 }}
+                  />
+                  <Text
+                    font={{ size: 'small' }}
+                    margin={{ left: 'medium', right: 'medium' }}
+                    flex={{ align: 'center-center' }}
+                  >
+                    {pipelineExecutionSummary?.executionTriggerInfo?.triggerType}
+                  </Text>
+
+                  <Text icon={'calendar'} iconProps={{ size: 12 }} font={{ size: 'small' }}>
+                    {timePassed || 0}
+                    {getString('cv.changeSource.changeSourceCard.ago')}
+                  </Text>
+                </Layout.Horizontal>
+                <DeploymentTimeDuration
+                  startTime={data?.metadata?.deploymentStartTime}
+                  endTime={data?.metadata?.deploymentEndTime}
+                  type={type}
+                />
+              </Layout.Vertical>
+            </>
+          )
+        }}
       />
 
       <Divider className={css.divider} />
