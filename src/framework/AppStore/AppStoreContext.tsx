@@ -89,7 +89,7 @@ const getRedirectionUrl = (accountId: string, source: string | undefined): strin
   return source === 'signup' ? onboardingUrl : dashboardUrl
 }
 
-const LOCAL_FF_PREFERENCE_STORE_ENABLED = true
+const LOCAL_FF_PREFERENCE_STORE_ENABLED = false
 
 export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React.ReactElement {
   const { showError } = useToaster()
