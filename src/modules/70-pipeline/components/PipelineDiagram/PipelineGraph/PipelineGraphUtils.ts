@@ -27,15 +27,13 @@ const ZOOM_INC_DEC_LEVEL = 0.1
 const toFixed = (num: number): number => Number(num.toFixed(2))
 const getScaledValue = (value: number, scalingFactor: number): number => {
   let finalValue
-  const mulFactor = 1 / scalingFactor
-  const valueMultiplied = value * mulFactor
 
   if (scalingFactor === 1.0) {
     finalValue = value
   } else if (scalingFactor > 1) {
     finalValue = value / scalingFactor
   } else {
-    finalValue = valueMultiplied + mulFactor
+    finalValue = value * (1 / scalingFactor)
   }
   return toFixed(finalValue)
 }
@@ -362,8 +360,10 @@ const transformStageData = (
       const hasErrors =
         errorMap && [...errorMap.keys()].some(key => updatedStagetPath && key.startsWith(updatedStagetPath))
       const templateRef = getIdentifierFromValue(stage.stage?.template?.templateRef as string)
+
       const type = templateRef ? (templateTypes?.[templateRef] as string) : (stage.stage.type as string)
       const { nodeType, iconName } = getNodeInfo(defaultTo(type, ''), graphType)
+
       finalData.push({
         id: uuid() as string,
         identifier: stage.stage.identifier as string,
@@ -427,6 +427,7 @@ const transformStepsData = (
   offsetIndex = 0
 ): PipelineGraphState[] => {
   const finalData: PipelineGraphState[] = []
+
   steps.forEach((step: ExecutionWrapperConfig, index: number) => {
     if (step?.step) {
       const updatedStagetPath = `${parentPath}.${index + offsetIndex}`
@@ -437,6 +438,7 @@ const transformStepsData = (
       const templateRef = getIdentifierFromValue(
         (step?.step as unknown as TemplateStepNode)?.template?.templateRef as string
       )
+      const stepIcon = get(step, 'step.icon')
       const type = templateRef ? (templateTypes?.[templateRef] as string) : (step?.step?.type as string)
       const { nodeType, iconName } = getNodeInfo(defaultTo(type, ''), graphType)
       const isExecutionView = get(step, 'step.status', false)
@@ -446,7 +448,7 @@ const transformStepsData = (
         name: step.step.name as string,
         type,
         nodeType: nodeType as string,
-        icon: iconName,
+        icon: stepIcon ? stepIcon : iconName,
         data: {
           graphType,
           ...step,
