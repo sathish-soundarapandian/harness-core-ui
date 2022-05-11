@@ -5,63 +5,60 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.checkbox {
-  width: 100%;
-  padding-top: var(--spacing-xsmall) !important;
-  padding-left: var(--spacing-xlarge) !important;
-  padding-right: var(--spacing-small) !important;
-
-  ~ :global(span .bp3-popover-target > button::before) {
-    background-color: var(--grey-100) !important;
-  }
-}
-
-.popoverContainer {
-  max-height: 340px;
-  overflow: scroll;
-
-  .menuItem {
-    padding: var(--spacing-small);
-    &:hover,
-    &:active {
-      background: var(--primary-1) !important;
-      color: var(--black) !important;
-    }
-  }
-
-  .costInput {
-    margin-top: var(--spacing-small);
-  }
-}
-
-.costInputContainer {
-  position: relative;
-  padding: var(--spacing-small) !important;
-  overflow: hidden;
-
-  .costText {
+.filterDrawer {
+  .exitIcon {
+    position: absolute;
+    top: var(--spacing-xlarge);
+    right: var(--spacing-xlarge);
     cursor: pointer;
   }
 
-  .costInput {
-    position: absolute;
-    width: 120px;
-    right: -100%;
-    top: 0px;
-    transition: all 0.2s ease-in;
+  .drawerContent {
+    height: 100%;
 
-    &.visible {
-      right: 0;
+    .formContainer {
+      .formHeader {
+        padding-bottom: var(--spacing-small);
+        border-bottom: 1px solid var(--grey-200);
+      }
+
+      .multiSelect {
+        padding-top: var(--spacing-xsmall);
+        padding-bottom: var(--spacing-medium);
+      }
+    }
+
+    .saveFilterContainer {
+      height: 100%;
+
+      .newFilterBtn {
+        background-color: rgba(26, 26, 26, 0.4);
+        padding: var(--spacing-medium) var(--spacing-xlarge);
+        cursor: pointer;
+      }
+
+      .radioBtnLabel {
+        color: var(--white) !important;
+      }
+
+      input[class*='bp3-input'] {
+        color: var(--white) !important;
+      }
+
+      .savedFilter {
+        padding: var(--spacing-medium) var(--spacing-xlarge);
+        cursor: pointer;
+
+        &:hover,
+        &.selected {
+          background-color: rgba(26, 26, 26, 0.4);
+        }
+      }
     }
   }
 }
 
-.filterPillContainer {
-  .filterValue {
-    max-width: 100px;
-  }
-
-  & > span {
-    line-height: 13px !important;
-  }
+.popoverOption {
+  cursor: pointer;
+  padding: var(--spacing-medium) var(--spacing-large) !important;
 }

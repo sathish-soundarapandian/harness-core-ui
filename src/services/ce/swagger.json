@@ -123,7 +123,7 @@
             "name": "body",
             "required": false,
             "schema": {
-              "$ref": "#/definitions/AnomalyQueryDTO"
+              "$ref": "#/definitions/AnomalyFilterProperties"
             }
           }
         ],
@@ -197,7 +197,7 @@
             "name": "body",
             "required": false,
             "schema": {
-              "$ref": "#/definitions/AnomalyQueryDTO"
+              "$ref": "#/definitions/AnomalyFilterProperties"
             }
           }
         ],
@@ -231,7 +231,7 @@
             "name": "body",
             "required": false,
             "schema": {
-              "$ref": "#/definitions/AnomalyQueryDTO"
+              "$ref": "#/definitions/AnomalyFilterProperties"
             }
           }
         ],
@@ -2224,7 +2224,7 @@
             "name": "body",
             "required": false,
             "schema": {
-              "$ref": "#/definitions/K8sRecommendationFilterDTO"
+              "$ref": "#/definitions/CCMRecommendationFilterProperties"
             }
           }
         ],
@@ -2258,7 +2258,7 @@
             "name": "body",
             "required": false,
             "schema": {
-              "$ref": "#/definitions/K8sRecommendationFilterDTO"
+              "$ref": "#/definitions/CCMRecommendationFilterProperties"
             }
           }
         ],
@@ -2292,7 +2292,7 @@
             "name": "body",
             "required": false,
             "schema": {
-              "$ref": "#/definitions/K8sRecommendationFilterDTO"
+              "$ref": "#/definitions/CCMRecommendationFilterProperties"
             }
           }
         ],
@@ -2335,6 +2335,330 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponseListFilterStatsDTO"
+            }
+          }
+        }
+      }
+    },
+    "/filters/{identifier}": {
+      "get": {
+        "tags": ["filters"],
+        "summary": "Get Filter",
+        "description": "",
+        "operationId": "getFilter",
+        "consumes": ["application/json", "text/yaml", "text/html", "text/plain"],
+        "produces": ["application/json", "text/yaml", "text/html"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "Connector",
+              "DelegateProfile",
+              "Delegate",
+              "PipelineSetup",
+              "PipelineExecution",
+              "Deployment",
+              "Audit",
+              "Template",
+              "EnvironmentGroup",
+              "FileStore",
+              "CCMRecommendation",
+              "Anomaly"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseFilterDTO"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["filters"],
+        "summary": "Delete a filter",
+        "description": "",
+        "operationId": "deleteFilter",
+        "consumes": ["application/json", "text/yaml", "text/html", "text/plain"],
+        "produces": ["application/json", "text/yaml", "text/html"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "Connector",
+              "DelegateProfile",
+              "Delegate",
+              "PipelineSetup",
+              "PipelineExecution",
+              "Deployment",
+              "Audit",
+              "Template",
+              "EnvironmentGroup",
+              "FileStore",
+              "CCMRecommendation",
+              "Anomaly"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseBoolean"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/filters": {
+      "get": {
+        "tags": ["filters"],
+        "summary": "Get Filter",
+        "description": "",
+        "operationId": "getFilterList",
+        "consumes": ["application/json", "text/yaml", "text/html", "text/plain"],
+        "produces": ["application/json", "text/yaml", "text/html"],
+        "parameters": [
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 100,
+            "format": "int32"
+          },
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "Connector",
+              "DelegateProfile",
+              "Delegate",
+              "PipelineSetup",
+              "PipelineExecution",
+              "Deployment",
+              "Audit",
+              "Template",
+              "EnvironmentGroup",
+              "FileStore",
+              "CCMRecommendation",
+              "Anomaly"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponsePageFilterDTO"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["filters"],
+        "summary": "Create a Filter",
+        "description": "",
+        "operationId": "postFilter",
+        "consumes": ["application/json", "text/yaml", "text/html", "text/plain"],
+        "produces": ["application/json", "text/yaml", "text/html"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/FilterDTO"
+            }
+          },
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseFilterDTO"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["filters"],
+        "summary": "Update a Filter",
+        "description": "",
+        "operationId": "updateFilter",
+        "consumes": ["application/json", "text/yaml", "text/html", "text/plain"],
+        "produces": ["application/json", "text/yaml", "text/html"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/FilterDTO"
+            }
+          },
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseFilterDTO"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
             }
           }
         }
@@ -2741,28 +3065,93 @@
         }
       }
     },
-    "AnomalyQueryDTO": {
+    "AnomalyFilterProperties": {
       "type": "object",
       "properties": {
-        "filter": {
-          "$ref": "#/definitions/CCMFilter"
-        },
-        "orderBy": {
+        "k8sClusterNames": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CCMSort"
+            "type": "string"
           }
         },
-        "groupBy": {
+        "k8sNamespaces": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CCMGroupBy"
+            "type": "string"
           }
         },
-        "aggregations": {
+        "k8sWorkloadNames": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CCMAggregation"
+            "type": "string"
+          }
+        },
+        "gcpProjects": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "gcpProducts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "gcpSKUDescriptions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "awsAccounts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "awsServices": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "awsUsageTypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "azureSubscriptions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "azureServiceNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "azureResources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "minActualAmount": {
+          "type": "number",
+          "format": "double"
+        },
+        "minAnomalousSpend": {
+          "type": "number",
+          "format": "double"
+        },
+        "timeFilters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CCMTimeFilter"
           }
         },
         "offset": {
@@ -2772,6 +3161,29 @@
         "limit": {
           "type": "integer",
           "format": "int32"
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "filterType": {
+          "type": "string",
+          "enum": [
+            "Connector",
+            "DelegateProfile",
+            "Delegate",
+            "PipelineSetup",
+            "PipelineExecution",
+            "Deployment",
+            "Audit",
+            "Template",
+            "EnvironmentGroup",
+            "FileStore",
+            "CCMRecommendation",
+            "Anomaly"
+          ]
         }
       }
     },
@@ -9769,7 +10181,7 @@
         },
         "resourceType": {
           "type": "string",
-          "enum": ["WORKLOAD", "NODE_POOL"]
+          "enum": ["WORKLOAD", "NODE_POOL", "ECS_SERVICE"]
         }
       }
     },
@@ -9845,6 +10257,95 @@
         }
       }
     },
+    "CCMRecommendationFilterProperties": {
+      "type": "object",
+      "properties": {
+        "k8sRecommendationFilterPropertiesDTO": {
+          "$ref": "#/definitions/K8sRecommendationFilterPropertiesDTO"
+        },
+        "perspectiveFilters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/QLCEViewFilterWrapper"
+          }
+        },
+        "minSaving": {
+          "type": "number",
+          "format": "double"
+        },
+        "minCost": {
+          "type": "number",
+          "format": "double"
+        },
+        "offset": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "limit": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "filterType": {
+          "type": "string",
+          "enum": [
+            "Connector",
+            "DelegateProfile",
+            "Delegate",
+            "PipelineSetup",
+            "PipelineExecution",
+            "Deployment",
+            "Audit",
+            "Template",
+            "EnvironmentGroup",
+            "FileStore",
+            "CCMRecommendation",
+            "Anomaly"
+          ]
+        }
+      }
+    },
+    "K8sRecommendationFilterPropertiesDTO": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "names": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "namespaces": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "clusterNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "resourceTypes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["WORKLOAD", "NODE_POOL", "ECS_SERVICE"]
+          }
+        }
+      }
+    },
     "FilterValuesDTO": {
       "type": "object",
       "properties": {
@@ -9855,7 +10356,164 @@
           }
         },
         "filter": {
-          "$ref": "#/definitions/K8sRecommendationFilterDTO"
+          "$ref": "#/definitions/CCMRecommendationFilterProperties"
+        }
+      }
+    },
+    "FilterDTO": {
+      "type": "object",
+      "required": ["filterProperties", "identifier", "name"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "identifier": {
+          "type": "string"
+        },
+        "orgIdentifier": {
+          "type": "string"
+        },
+        "projectIdentifier": {
+          "type": "string"
+        },
+        "filterProperties": {
+          "$ref": "#/definitions/FilterProperties"
+        },
+        "filterVisibility": {
+          "type": "string",
+          "enum": ["EveryOne", "OnlyCreator"]
+        }
+      }
+    },
+    "FilterProperties": {
+      "type": "object",
+      "properties": {
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "filterType": {
+          "type": "string",
+          "enum": [
+            "Connector",
+            "DelegateProfile",
+            "Delegate",
+            "PipelineSetup",
+            "PipelineExecution",
+            "Deployment",
+            "Audit",
+            "Template",
+            "EnvironmentGroup",
+            "FileStore",
+            "CCMRecommendation",
+            "Anomaly"
+          ]
+        }
+      }
+    },
+    "ResponseFilterDTO": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/FilterDTO"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "Page": {
+      "type": "object",
+      "properties": {
+        "totalPages": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "totalItems": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "pageItemCount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "content": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "pageIndex": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "empty": {
+          "type": "boolean"
+        }
+      }
+    },
+    "PageFilterDTO": {
+      "type": "object",
+      "properties": {
+        "totalPages": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "totalItems": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "pageItemCount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "content": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FilterDTO"
+          }
+        },
+        "pageIndex": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "empty": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ResponsePageFilterDTO": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/PageFilterDTO"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
         }
       }
     },

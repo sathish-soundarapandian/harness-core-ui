@@ -6,29 +6,30 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { Card, Text, Layout, Container, Icon, Button, ButtonVariation, TableV2, IconName } from '@wings-software/uicore'
+import {
+  Card,
+  Text,
+  Layout,
+  Container,
+  Icon,
+  Button,
+  ButtonVariation,
+  TableV2,
+  IconName,
+  getErrorInfoFromErrorObject
+} from '@wings-software/uicore'
 import { useHistory, useParams, Link } from 'react-router-dom'
 import type { CellProps, Renderer } from 'react-table'
 import qs from 'qs'
 import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo, get } from 'lodash-es'
 import { String, useStrings } from 'framework/strings'
-import {
-  RecommendationItemDto,
-  useRecommendationsQuery,
-  useRecommendationsSummaryQuery,
-  K8sRecommendationFilterDtoInput,
-  ResourceType,
-  useFetchCcmMetaDataQuery,
-  CcmMetaData,
-  Maybe
-} from 'services/ce/services'
-
+import { RecommendationItemDto, ResourceType, useFetchCcmMetaDataQuery, CcmMetaData, Maybe } from 'services/ce/services'
 import routes from '@common/RouteDefinitions'
-import { Page } from '@common/exports'
+import { Page, useToaster } from '@common/exports'
 import { useQueryParams } from '@common/hooks'
 import formatCost from '@ce/utils/formatCost'
-import { getViewFilterForId, GROUP_BY_CLUSTER_NAME } from '@ce/utils/perspectiveUtils'
+import { GROUP_BY_CLUSTER_NAME } from '@ce/utils/perspectiveUtils'
 import EmptyView from '@ce/images/empty-state.svg'
 import OverviewAddCluster from '@ce/components/OverviewPage/OverviewAddCluster'
 import { PAGE_NAMES, USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
@@ -37,6 +38,17 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { CCM_PAGE_TYPE, CloudProvider } from '@ce/types'
 import { calculateSavingsPercentage, getProviderIcon } from '@ce/utils/recommendationUtils'
 import { generateFilters } from '@ce/utils/anomaliesUtils'
+import {
+  K8sRecommendationFilterPropertiesDTO,
+  ResponseInteger,
+  ResponseListFilterStatsDTO,
+  ResponseRecommendationOverviewStats,
+  ResponseRecommendationsDTO,
+  useListRecommendations,
+  useRecommendationFilterValues,
+  useRecommendationsCount,
+  useRecommendationStats
+} from 'services/ce'
 import { getEmissionsValue } from '@ce/utils/formatResourceValue'
 import greenLeafImg from '@ce/common/images/green-leaf.svg'
 import grayLeafImg from '@ce/common/images/gray-leaf.svg'
@@ -211,7 +223,7 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
     }
 
     return (
-      <Layout.Horizontal>
+      <Layout.Horizontal style={{ alignItems: 'center' }}>
         <Icon name={iconName} size={28} padding={{ right: 'medium' }} />
         <Layout.Vertical>
           <Container>
@@ -351,8 +363,9 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
 }
 
 const RecommendationList: React.FC = () => {
-  const [costFilters, setCostFilters] = useState<Record<string, number>>({})
   const [page, setPage] = useState(0)
+
+  const { showError } = useToaster()
 
   const { trackPage } = useTelemetry()
   const history = useHistory()
@@ -366,76 +379,75 @@ const RecommendationList: React.FC = () => {
   } = useQueryParams<{
     perspectiveId: string
     perspectiveName: string
-    filters: Record<string, any>
+    filters: K8sRecommendationFilterPropertiesDTO
     origin: string
   }>()
 
-  const [filters, setFilters] = useState<Record<string, string[]>>(filterQuery)
+  const [filters, setFilters] = useState<K8sRecommendationFilterPropertiesDTO>(filterQuery)
+  const [filterList, setFilterList] = useState<ResponseListFilterStatsDTO>()
+  const [recommendationStats, setRecommendationStats] = useState<ResponseRecommendationOverviewStats>()
+  const [recommendationCount, setRecommendationCount] = useState<ResponseInteger>()
+  const [recommendationList, setRecommendationList] = useState<ResponseRecommendationsDTO>()
 
   useEffect(() => {
     trackPage(PAGE_NAMES.RECOMMENDATIONS_PAGE, {})
+    getRecommendationFilters()
   }, [])
-
-  const modifiedCostFilters = costFilters['minSaving'] ? costFilters : { ...costFilters, minSaving: 0 }
 
   const [ccmMetaResult, refetchCCMMetaData] = useFetchCcmMetaDataQuery()
   const { data: ccmData, fetching: fetchingCCMMetaData } = ccmMetaResult
 
-  const perspectiveFilters = (
-    perspectiveId ? { perspectiveFilters: getViewFilterForId(perspectiveId) } : ({} as any)
-  ) as K8sRecommendationFilterDtoInput
-
-  const [result] = useRecommendationsQuery({
-    variables: {
-      filter: {
-        ...filters,
-        ...perspectiveFilters,
-        ...modifiedCostFilters,
-        offset: page * 10,
-        limit: 10
-      } as K8sRecommendationFilterDtoInput
-    },
-    pause: fetchingCCMMetaData
-  })
-
-  const [summaryResult] = useRecommendationsSummaryQuery({
-    variables: {
-      filter: {
-        ...filters,
-        ...perspectiveFilters,
-        ...modifiedCostFilters
-      } as unknown as K8sRecommendationFilterDtoInput
+  const { loading: statsLoading, mutate: fetchRecommendationStats } = useRecommendationStats({
+    queryParams: {
+      accountIdentifier: accountId
     }
   })
 
-  const { data, fetching } = result
-  const { data: summaryData } = summaryResult
+  const { loading: countLoading, mutate: fetchRecommendationCount } = useRecommendationsCount({
+    queryParams: {
+      accountIdentifier: accountId
+    }
+  })
+
+  const { loading: filtersLoading, mutate: fetchFilterValues } = useRecommendationFilterValues({
+    queryParams: {
+      accountIdentifier: accountId
+    }
+  })
+
+  const { loading: listLoading, mutate: fetchRecommendationList } = useListRecommendations({
+    queryParams: {
+      accountIdentifier: accountId
+    }
+  })
 
   const { getString } = useStrings()
 
-  const totalMonthlyCost = summaryData?.recommendationStatsV2?.totalMonthlyCost || 0
-  const totalSavings = summaryData?.recommendationStatsV2?.totalMonthlySaving || 0
+  const totalMonthlyCost = recommendationStats?.data?.totalMonthlyCost || 0
+  const totalSavings = recommendationStats?.data?.totalMonthlySaving || 0
 
-  const recommendationItems = data?.recommendationsV2?.items || []
+  const recommendationItems = recommendationList?.data?.items || []
 
   const gotoPage = (pageNumber: number) => setPage(pageNumber)
 
   const goBackToPerspective: () => void = () => {
     if (origin === CCM_PAGE_TYPE.Workload) {
-      const clusterName = filterQuery.clusterNames[0],
-        namespace = filterQuery.namespaces[0],
-        workloadName = filterQuery.names[0]
+      const clusterName = filterQuery?.clusterNames?.[0],
+        namespace = filterQuery?.namespaces?.[0],
+        workloadName = filterQuery?.names?.[0]
 
-      history.push(
-        routes.toCEPerspectiveWorkloadDetails({
-          accountId,
-          perspectiveId,
-          perspectiveName,
-          clusterName,
-          namespace,
-          workloadName
-        })
-      )
+      if (clusterName && namespace && workloadName) {
+        history.push(
+          routes.toCEPerspectiveWorkloadDetails({
+            accountId,
+            perspectiveId,
+            perspectiveName,
+            clusterName,
+            namespace,
+            workloadName
+          })
+        )
+      }
     } else {
       history.push(
         routes.toPerspectiveDetails({
@@ -448,16 +460,55 @@ const RecommendationList: React.FC = () => {
   }
 
   const pagination = {
-    itemCount: summaryData?.recommendationStatsV2?.count || 0,
+    itemCount: (recommendationCount?.data || 0) as number,
     pageSize: 10,
-    pageCount: summaryData?.recommendationStatsV2?.count
-      ? Math.ceil(summaryData?.recommendationStatsV2?.count / 10)
-      : 0,
+    pageCount: recommendationCount?.data ? Math.ceil(recommendationCount.data / 10) : 0,
     pageIndex: page,
     gotoPage: gotoPage
   }
 
-  const isEmptyView = !fetching && !recommendationItems?.length
+  const isEmptyView = !listLoading && !recommendationItems?.length
+
+  const getRecommendationData = async () => {
+    try {
+      const [stats, count] = await Promise.all([
+        fetchRecommendationStats({ filterType: 'CCMRecommendation', k8sRecommendationFilterPropertiesDTO: filters }),
+        fetchRecommendationCount({ filterType: 'CCMRecommendation', k8sRecommendationFilterPropertiesDTO: filters })
+      ])
+
+      setRecommendationStats(stats)
+      setRecommendationCount(count)
+    } catch (error: any) {
+      showError(getErrorInfoFromErrorObject(error))
+    }
+  }
+
+  const getRecommendationList = async () => {
+    const list = await fetchRecommendationList({
+      filterType: 'CCMRecommendation',
+      k8sRecommendationFilterPropertiesDTO: filters,
+      offset: page * 10,
+      limit: 10
+    })
+
+    setRecommendationList(list)
+  }
+
+  const getRecommendationFilters = async () => {
+    const filterValues = await fetchFilterValues({ columns: ['name', 'resourceType', 'namespace', 'clusterName'] })
+
+    setFilterList(filterValues)
+  }
+
+  useEffect(() => {
+    getRecommendationData()
+  }, [JSON.stringify(filters)])
+
+  useEffect(() => {
+    getRecommendationList()
+  }, [JSON.stringify(filters), page])
+
+  const isPageLoading = listLoading || countLoading || statsLoading
 
   return (
     <>
@@ -485,14 +536,14 @@ const RecommendationList: React.FC = () => {
           ) : null
         }
       />
-      <Page.Body loading={fetching || fetchingCCMMetaData}>
-        <Card style={{ width: '100%' }}>
+      <Page.Body loading={isPageLoading || fetchingCCMMetaData}>
+        <Card style={{ width: '100%' }} className={css.filtersCard}>
           <Layout.Horizontal flex={{ justifyContent: 'flex-end' }}>
             <RecommendationFilters
-              costFilters={costFilters}
-              setCostFilters={setCostFilters}
+              fetching={filtersLoading}
               setFilters={setFilters}
               filters={filters}
+              filterList={(filterList || []) as ResponseListFilterStatsDTO}
             />
           </Layout.Horizontal>
         </Card>
@@ -504,7 +555,7 @@ const RecommendationList: React.FC = () => {
                 amount={isEmptyView ? '$-' : formatCost(totalSavings)}
                 iconName="money-icon"
                 subTitle={getString('ce.recommendation.listPage.recommendationCount', {
-                  count: summaryData?.recommendationStatsV2?.count
+                  count: recommendationCount?.data
                 })}
               />
               {sustainabilityEnabled && (
@@ -524,7 +575,7 @@ const RecommendationList: React.FC = () => {
                   }
                   cardCssName={css.potentialReducedEmissionCard}
                   subTitle={getString('ce.recommendation.listPage.potentialReducedEmissionSubtitle', {
-                    count: summaryData?.recommendationStatsV2?.count
+                    count: recommendationCount?.data || 0
                   })}
                 />
               )}
@@ -561,7 +612,7 @@ const RecommendationList: React.FC = () => {
               }}
               ccmData={ccmData?.ccmMetaData}
               pagination={pagination}
-              fetching={fetching || fetchingCCMMetaData}
+              fetching={listLoading || fetchingCCMMetaData}
               data={recommendationItems as Array<RecommendationItemDto>}
             />
           </Layout.Vertical>

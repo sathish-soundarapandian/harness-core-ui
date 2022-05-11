@@ -46,13 +46,40 @@ export interface AnomalyFeedbackDTO {
   feedback?: 'TRUE_ANOMALY' | 'FALSE_ANOMALY' | 'NOT_RESPONDED'
 }
 
-export interface AnomalyQueryDTO {
-  aggregations?: CCMAggregation[]
-  filter?: CCMFilter
-  groupBy?: CCMGroupBy[]
+export interface AnomalyFilterProperties {
+  awsAccounts?: string[]
+  awsServices?: string[]
+  awsUsageTypes?: string[]
+  azureResources?: string[]
+  azureServiceNames?: string[]
+  azureSubscriptions?: string[]
+  filterType?:
+    | 'Connector'
+    | 'DelegateProfile'
+    | 'Delegate'
+    | 'PipelineSetup'
+    | 'PipelineExecution'
+    | 'Deployment'
+    | 'Audit'
+    | 'Template'
+    | 'EnvironmentGroup'
+    | 'FileStore'
+    | 'CCMRecommendation'
+    | 'Anomaly'
+  gcpProducts?: string[]
+  gcpProjects?: string[]
+  gcpSKUDescriptions?: string[]
+  k8sClusterNames?: string[]
+  k8sNamespaces?: string[]
+  k8sWorkloadNames?: string[]
   limit?: number
+  minActualAmount?: number
+  minAnomalousSpend?: number
   offset?: number
-  orderBy?: CCMSort[]
+  tags?: {
+    [key: string]: string
+  }
+  timeFilters?: CCMTimeFilter[]
 }
 
 export interface AnomalySummary {
@@ -634,6 +661,31 @@ export interface CCMPerspectiveNotificationChannelsDTO {
   channels?: CCMNotificationChannel[]
   perspectiveId?: string
   perspectiveName?: string
+}
+
+export interface CCMRecommendationFilterProperties {
+  filterType?:
+    | 'Connector'
+    | 'DelegateProfile'
+    | 'Delegate'
+    | 'PipelineSetup'
+    | 'PipelineExecution'
+    | 'Deployment'
+    | 'Audit'
+    | 'Template'
+    | 'EnvironmentGroup'
+    | 'FileStore'
+    | 'CCMRecommendation'
+    | 'Anomaly'
+  k8sRecommendationFilterPropertiesDTO?: K8sRecommendationFilterPropertiesDTO
+  limit?: number
+  minCost?: number
+  minSaving?: number
+  offset?: number
+  perspectiveFilters?: QLCEViewFilterWrapper[]
+  tags?: {
+    [key: string]: string
+  }
 }
 
 export interface CCMSort {
@@ -1865,6 +1917,34 @@ export interface Failure {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface FilterDTO {
+  filterProperties: FilterProperties
+  filterVisibility?: 'EveryOne' | 'OnlyCreator'
+  identifier: string
+  name: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface FilterProperties {
+  filterType?:
+    | 'Connector'
+    | 'DelegateProfile'
+    | 'Delegate'
+    | 'PipelineSetup'
+    | 'PipelineExecution'
+    | 'Deployment'
+    | 'Audit'
+    | 'Template'
+    | 'EnvironmentGroup'
+    | 'FileStore'
+    | 'CCMRecommendation'
+    | 'Anomaly'
+  tags?: {
+    [key: string]: string
+  }
+}
+
 export interface FilterStatsDTO {
   key?: string
   values?: string[]
@@ -1872,7 +1952,7 @@ export interface FilterStatsDTO {
 
 export interface FilterValuesDTO {
   columns?: string[]
-  filter?: K8sRecommendationFilterDTO
+  filter?: CCMRecommendationFilterProperties
 }
 
 export interface GcpBillingExportSpec {
@@ -2180,6 +2260,14 @@ export interface K8sRecommendationFilterDTO {
   resourceTypes?: ('WORKLOAD' | 'NODE_POOL')[]
 }
 
+export interface K8sRecommendationFilterPropertiesDTO {
+  clusterNames?: string[]
+  ids?: string[]
+  names?: string[]
+  namespaces?: string[]
+  resourceTypes?: ('WORKLOAD' | 'NODE_POOL' | 'ECS_SERVICE')[]
+}
+
 export interface KubernetesAuthCredentialDTO {
   [key: string]: any
 }
@@ -2303,6 +2391,26 @@ export interface NodeRecommendationDTO {
 
 export interface Number {
   [key: string]: any
+}
+
+export interface Page {
+  content?: { [key: string]: any }[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
+export interface PageFilterDTO {
+  content?: FilterDTO[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
 }
 
 export type PagerDutyConnectorDTO = ConnectorConfigDTO & {
@@ -2465,7 +2573,7 @@ export interface RecommendationItemDTO {
   monthlySaving?: number
   namespace?: string
   resourceName?: string
-  resourceType: 'WORKLOAD' | 'NODE_POOL'
+  resourceType: 'WORKLOAD' | 'NODE_POOL' | 'ECS_SERVICE'
 }
 
 export interface RecommendationOverviewStats {
@@ -2586,6 +2694,13 @@ export interface ResponseConnectorValidationResult {
 export interface ResponseDouble {
   correlationId?: string
   data?: number
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseFilterDTO {
+  correlationId?: string
+  data?: FilterDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -3008,6 +3123,13 @@ export interface ResponseNodeRecommendationDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponsePageFilterDTO {
+  correlationId?: string
+  data?: PageFilterDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponsePerspectiveEntityStatsData {
   correlationId?: string
   data?: PerspectiveEntityStatsData
@@ -3341,7 +3463,7 @@ export interface WorkloadRecommendationDTO {
   lastDayCost?: Cost
 }
 
-export type AnomalyQueryDTORequestBody = AnomalyQueryDTO
+export type AnomalyFilterPropertiesRequestBody = AnomalyFilterProperties
 
 export type BudgetRequestBody = Budget
 
@@ -3349,15 +3471,17 @@ export type BusinessMappingRequestBody = BusinessMapping
 
 export type CCMNotificationSettingRequestBody = CCMNotificationSetting
 
+export type CCMRecommendationFilterPropertiesRequestBody = CCMRecommendationFilterProperties
+
 export type CEReportScheduleRequestBody = CEReportSchedule
 
 export type CEViewRequestBody = CEView
 
 export type CostDetailsQueryParamsDTORequestBody = CostDetailsQueryParamsDTO
 
-export type K8sClusterSetupRequestRequestBody = K8sClusterSetupRequest
+export type FilterDTORequestBody = FilterDTO
 
-export type K8sRecommendationFilterDTORequestBody = K8sRecommendationFilterDTO
+export type K8sClusterSetupRequestRequestBody = K8sClusterSetupRequest
 
 export type ViewCustomFieldRequestBody = ViewCustomField
 
@@ -3366,7 +3490,7 @@ export interface ListAnomaliesQueryParams {
 }
 
 export type ListAnomaliesProps = Omit<
-  MutateProps<ResponseListAnomalyData, unknown, ListAnomaliesQueryParams, AnomalyQueryDTORequestBody, void>,
+  MutateProps<ResponseListAnomalyData, unknown, ListAnomaliesQueryParams, AnomalyFilterPropertiesRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -3374,7 +3498,7 @@ export type ListAnomaliesProps = Omit<
  * List Anomalies
  */
 export const ListAnomalies = (props: ListAnomaliesProps) => (
-  <Mutate<ResponseListAnomalyData, unknown, ListAnomaliesQueryParams, AnomalyQueryDTORequestBody, void>
+  <Mutate<ResponseListAnomalyData, unknown, ListAnomaliesQueryParams, AnomalyFilterPropertiesRequestBody, void>
     verb="POST"
     path={`/anomaly`}
     base={getConfig('ccm/api')}
@@ -3383,7 +3507,7 @@ export const ListAnomalies = (props: ListAnomaliesProps) => (
 )
 
 export type UseListAnomaliesProps = Omit<
-  UseMutateProps<ResponseListAnomalyData, unknown, ListAnomaliesQueryParams, AnomalyQueryDTORequestBody, void>,
+  UseMutateProps<ResponseListAnomalyData, unknown, ListAnomaliesQueryParams, AnomalyFilterPropertiesRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -3391,7 +3515,7 @@ export type UseListAnomaliesProps = Omit<
  * List Anomalies
  */
 export const useListAnomalies = (props: UseListAnomaliesProps) =>
-  useMutate<ResponseListAnomalyData, unknown, ListAnomaliesQueryParams, AnomalyQueryDTORequestBody, void>(
+  useMutate<ResponseListAnomalyData, unknown, ListAnomaliesQueryParams, AnomalyFilterPropertiesRequestBody, void>(
     'POST',
     `/anomaly`,
     { base: getConfig('ccm/api'), ...props }
@@ -3505,7 +3629,13 @@ export interface GetAnomaliesSummaryQueryParams {
 }
 
 export type GetAnomaliesSummaryProps = Omit<
-  MutateProps<ResponseListAnomalySummary, unknown, GetAnomaliesSummaryQueryParams, AnomalyQueryDTORequestBody, void>,
+  MutateProps<
+    ResponseListAnomalySummary,
+    unknown,
+    GetAnomaliesSummaryQueryParams,
+    AnomalyFilterPropertiesRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -3513,7 +3643,7 @@ export type GetAnomaliesSummaryProps = Omit<
  * Get Anomalies Summary
  */
 export const GetAnomaliesSummary = (props: GetAnomaliesSummaryProps) => (
-  <Mutate<ResponseListAnomalySummary, unknown, GetAnomaliesSummaryQueryParams, AnomalyQueryDTORequestBody, void>
+  <Mutate<ResponseListAnomalySummary, unknown, GetAnomaliesSummaryQueryParams, AnomalyFilterPropertiesRequestBody, void>
     verb="POST"
     path={`/anomaly/summary`}
     base={getConfig('ccm/api')}
@@ -3522,7 +3652,13 @@ export const GetAnomaliesSummary = (props: GetAnomaliesSummaryProps) => (
 )
 
 export type UseGetAnomaliesSummaryProps = Omit<
-  UseMutateProps<ResponseListAnomalySummary, unknown, GetAnomaliesSummaryQueryParams, AnomalyQueryDTORequestBody, void>,
+  UseMutateProps<
+    ResponseListAnomalySummary,
+    unknown,
+    GetAnomaliesSummaryQueryParams,
+    AnomalyFilterPropertiesRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -3530,11 +3666,13 @@ export type UseGetAnomaliesSummaryProps = Omit<
  * Get Anomalies Summary
  */
 export const useGetAnomaliesSummary = (props: UseGetAnomaliesSummaryProps) =>
-  useMutate<ResponseListAnomalySummary, unknown, GetAnomaliesSummaryQueryParams, AnomalyQueryDTORequestBody, void>(
-    'POST',
-    `/anomaly/summary`,
-    { base: getConfig('ccm/api'), ...props }
-  )
+  useMutate<
+    ResponseListAnomalySummary,
+    unknown,
+    GetAnomaliesSummaryQueryParams,
+    AnomalyFilterPropertiesRequestBody,
+    void
+  >('POST', `/anomaly/summary`, { base: getConfig('ccm/api'), ...props })
 
 export interface GetAnomalyWidgetsDataQueryParams {
   accountIdentifier: string
@@ -3545,7 +3683,7 @@ export type GetAnomalyWidgetsDataProps = Omit<
     ResponseListAnomalyWidgetData,
     unknown,
     GetAnomalyWidgetsDataQueryParams,
-    AnomalyQueryDTORequestBody,
+    AnomalyFilterPropertiesRequestBody,
     void
   >,
   'path' | 'verb'
@@ -3555,7 +3693,13 @@ export type GetAnomalyWidgetsDataProps = Omit<
  * Get Anomaly Widgets
  */
 export const GetAnomalyWidgetsData = (props: GetAnomalyWidgetsDataProps) => (
-  <Mutate<ResponseListAnomalyWidgetData, unknown, GetAnomalyWidgetsDataQueryParams, AnomalyQueryDTORequestBody, void>
+  <Mutate<
+    ResponseListAnomalyWidgetData,
+    unknown,
+    GetAnomalyWidgetsDataQueryParams,
+    AnomalyFilterPropertiesRequestBody,
+    void
+  >
     verb="POST"
     path={`/anomaly/widgets`}
     base={getConfig('ccm/api')}
@@ -3568,7 +3712,7 @@ export type UseGetAnomalyWidgetsDataProps = Omit<
     ResponseListAnomalyWidgetData,
     unknown,
     GetAnomalyWidgetsDataQueryParams,
-    AnomalyQueryDTORequestBody,
+    AnomalyFilterPropertiesRequestBody,
     void
   >,
   'path' | 'verb'
@@ -3578,11 +3722,13 @@ export type UseGetAnomalyWidgetsDataProps = Omit<
  * Get Anomaly Widgets
  */
 export const useGetAnomalyWidgetsData = (props: UseGetAnomalyWidgetsDataProps) =>
-  useMutate<ResponseListAnomalyWidgetData, unknown, GetAnomalyWidgetsDataQueryParams, AnomalyQueryDTORequestBody, void>(
-    'POST',
-    `/anomaly/widgets`,
-    { base: getConfig('ccm/api'), ...props }
-  )
+  useMutate<
+    ResponseListAnomalyWidgetData,
+    unknown,
+    GetAnomalyWidgetsDataQueryParams,
+    AnomalyFilterPropertiesRequestBody,
+    void
+  >('POST', `/anomaly/widgets`, { base: getConfig('ccm/api'), ...props })
 
 export interface ListBudgetsForAccountQueryParams {
   accountIdentifier: string
@@ -4382,6 +4528,233 @@ export const useCostdetailttimeseries = (props: UseCostdetailttimeseriesProps) =
     CostDetailsQueryParamsDTORequestBody,
     void
   >('POST', `/costdetails/timeseriesformat`, { base: getConfig('ccm/api'), ...props })
+
+export interface GetFilterListQueryParams {
+  pageIndex?: number
+  pageSize?: number
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  type:
+    | 'Connector'
+    | 'DelegateProfile'
+    | 'Delegate'
+    | 'PipelineSetup'
+    | 'PipelineExecution'
+    | 'Deployment'
+    | 'Audit'
+    | 'Template'
+    | 'EnvironmentGroup'
+    | 'FileStore'
+    | 'CCMRecommendation'
+    | 'Anomaly'
+}
+
+export type GetFilterListProps = Omit<
+  GetProps<ResponsePageFilterDTO, Failure | Error, GetFilterListQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Filter
+ */
+export const GetFilterList = (props: GetFilterListProps) => (
+  <Get<ResponsePageFilterDTO, Failure | Error, GetFilterListQueryParams, void>
+    path={`/filters`}
+    base={getConfig('ccm/api')}
+    {...props}
+  />
+)
+
+export type UseGetFilterListProps = Omit<
+  UseGetProps<ResponsePageFilterDTO, Failure | Error, GetFilterListQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Filter
+ */
+export const useGetFilterList = (props: UseGetFilterListProps) =>
+  useGet<ResponsePageFilterDTO, Failure | Error, GetFilterListQueryParams, void>(`/filters`, {
+    base: getConfig('ccm/api'),
+    ...props
+  })
+
+export interface PostFilterQueryParams {
+  accountIdentifier: string
+}
+
+export type PostFilterProps = Omit<
+  MutateProps<ResponseFilterDTO, Failure | Error, PostFilterQueryParams, FilterDTORequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Create a Filter
+ */
+export const PostFilter = (props: PostFilterProps) => (
+  <Mutate<ResponseFilterDTO, Failure | Error, PostFilterQueryParams, FilterDTORequestBody, void>
+    verb="POST"
+    path={`/filters`}
+    base={getConfig('ccm/api')}
+    {...props}
+  />
+)
+
+export type UsePostFilterProps = Omit<
+  UseMutateProps<ResponseFilterDTO, Failure | Error, PostFilterQueryParams, FilterDTORequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Create a Filter
+ */
+export const usePostFilter = (props: UsePostFilterProps) =>
+  useMutate<ResponseFilterDTO, Failure | Error, PostFilterQueryParams, FilterDTORequestBody, void>('POST', `/filters`, {
+    base: getConfig('ccm/api'),
+    ...props
+  })
+
+export interface UpdateFilterQueryParams {
+  accountIdentifier: string
+}
+
+export type UpdateFilterProps = Omit<
+  MutateProps<ResponseFilterDTO, Failure | Error, UpdateFilterQueryParams, FilterDTORequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Update a Filter
+ */
+export const UpdateFilter = (props: UpdateFilterProps) => (
+  <Mutate<ResponseFilterDTO, Failure | Error, UpdateFilterQueryParams, FilterDTORequestBody, void>
+    verb="PUT"
+    path={`/filters`}
+    base={getConfig('ccm/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateFilterProps = Omit<
+  UseMutateProps<ResponseFilterDTO, Failure | Error, UpdateFilterQueryParams, FilterDTORequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Update a Filter
+ */
+export const useUpdateFilter = (props: UseUpdateFilterProps) =>
+  useMutate<ResponseFilterDTO, Failure | Error, UpdateFilterQueryParams, FilterDTORequestBody, void>(
+    'PUT',
+    `/filters`,
+    { base: getConfig('ccm/api'), ...props }
+  )
+
+export interface DeleteFilterQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  type:
+    | 'Connector'
+    | 'DelegateProfile'
+    | 'Delegate'
+    | 'PipelineSetup'
+    | 'PipelineExecution'
+    | 'Deployment'
+    | 'Audit'
+    | 'Template'
+    | 'EnvironmentGroup'
+    | 'FileStore'
+    | 'CCMRecommendation'
+    | 'Anomaly'
+}
+
+export type DeleteFilterProps = Omit<
+  MutateProps<ResponseBoolean, Failure | Error, DeleteFilterQueryParams, string, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Delete a filter
+ */
+export const DeleteFilter = (props: DeleteFilterProps) => (
+  <Mutate<ResponseBoolean, Failure | Error, DeleteFilterQueryParams, string, void>
+    verb="DELETE"
+    path={`/filters`}
+    base={getConfig('ccm/api')}
+    {...props}
+  />
+)
+
+export type UseDeleteFilterProps = Omit<
+  UseMutateProps<ResponseBoolean, Failure | Error, DeleteFilterQueryParams, string, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Delete a filter
+ */
+export const useDeleteFilter = (props: UseDeleteFilterProps) =>
+  useMutate<ResponseBoolean, Failure | Error, DeleteFilterQueryParams, string, void>('DELETE', `/filters`, {
+    base: getConfig('ccm/api'),
+    ...props
+  })
+
+export interface GetFilterQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  type:
+    | 'Connector'
+    | 'DelegateProfile'
+    | 'Delegate'
+    | 'PipelineSetup'
+    | 'PipelineExecution'
+    | 'Deployment'
+    | 'Audit'
+    | 'Template'
+    | 'EnvironmentGroup'
+    | 'FileStore'
+    | 'CCMRecommendation'
+    | 'Anomaly'
+}
+
+export interface GetFilterPathParams {
+  identifier: string
+}
+
+export type GetFilterProps = Omit<
+  GetProps<ResponseFilterDTO, Failure | Error, GetFilterQueryParams, GetFilterPathParams>,
+  'path'
+> &
+  GetFilterPathParams
+
+/**
+ * Get Filter
+ */
+export const GetFilter = ({ identifier, ...props }: GetFilterProps) => (
+  <Get<ResponseFilterDTO, Failure | Error, GetFilterQueryParams, GetFilterPathParams>
+    path={`/filters/${identifier}`}
+    base={getConfig('ccm/api')}
+    {...props}
+  />
+)
+
+export type UseGetFilterProps = Omit<
+  UseGetProps<ResponseFilterDTO, Failure | Error, GetFilterQueryParams, GetFilterPathParams>,
+  'path'
+> &
+  GetFilterPathParams
+
+/**
+ * Get Filter
+ */
+export const useGetFilter = ({ identifier, ...props }: UseGetFilterProps) =>
+  useGet<ResponseFilterDTO, Failure | Error, GetFilterQueryParams, GetFilterPathParams>(
+    (paramsInPath: GetFilterPathParams) => `/filters/${paramsInPath.identifier}`,
+    { base: getConfig('ccm/api'), pathParams: { identifier }, ...props }
+  )
 
 export interface Execute1Response {
   [key: string]: { [key: string]: any }
@@ -5529,7 +5902,13 @@ export interface RecommendationsCountQueryParams {
 }
 
 export type RecommendationsCountProps = Omit<
-  MutateProps<ResponseInteger, unknown, RecommendationsCountQueryParams, K8sRecommendationFilterDTORequestBody, void>,
+  MutateProps<
+    ResponseInteger,
+    unknown,
+    RecommendationsCountQueryParams,
+    CCMRecommendationFilterPropertiesRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -5537,7 +5916,7 @@ export type RecommendationsCountProps = Omit<
  * Recommendations count
  */
 export const RecommendationsCount = (props: RecommendationsCountProps) => (
-  <Mutate<ResponseInteger, unknown, RecommendationsCountQueryParams, K8sRecommendationFilterDTORequestBody, void>
+  <Mutate<ResponseInteger, unknown, RecommendationsCountQueryParams, CCMRecommendationFilterPropertiesRequestBody, void>
     verb="POST"
     path={`/recommendation/overview/count`}
     base={getConfig('ccm/api')}
@@ -5550,7 +5929,7 @@ export type UseRecommendationsCountProps = Omit<
     ResponseInteger,
     unknown,
     RecommendationsCountQueryParams,
-    K8sRecommendationFilterDTORequestBody,
+    CCMRecommendationFilterPropertiesRequestBody,
     void
   >,
   'path' | 'verb'
@@ -5560,11 +5939,13 @@ export type UseRecommendationsCountProps = Omit<
  * Recommendations count
  */
 export const useRecommendationsCount = (props: UseRecommendationsCountProps) =>
-  useMutate<ResponseInteger, unknown, RecommendationsCountQueryParams, K8sRecommendationFilterDTORequestBody, void>(
-    'POST',
-    `/recommendation/overview/count`,
-    { base: getConfig('ccm/api'), ...props }
-  )
+  useMutate<
+    ResponseInteger,
+    unknown,
+    RecommendationsCountQueryParams,
+    CCMRecommendationFilterPropertiesRequestBody,
+    void
+  >('POST', `/recommendation/overview/count`, { base: getConfig('ccm/api'), ...props })
 
 export interface RecommendationFilterValuesQueryParams {
   accountIdentifier: string
@@ -5611,7 +5992,7 @@ export type ListRecommendationsProps = Omit<
     ResponseRecommendationsDTO,
     unknown,
     ListRecommendationsQueryParams,
-    K8sRecommendationFilterDTORequestBody,
+    CCMRecommendationFilterPropertiesRequestBody,
     void
   >,
   'path' | 'verb'
@@ -5625,7 +6006,7 @@ export const ListRecommendations = (props: ListRecommendationsProps) => (
     ResponseRecommendationsDTO,
     unknown,
     ListRecommendationsQueryParams,
-    K8sRecommendationFilterDTORequestBody,
+    CCMRecommendationFilterPropertiesRequestBody,
     void
   >
     verb="POST"
@@ -5640,7 +6021,7 @@ export type UseListRecommendationsProps = Omit<
     ResponseRecommendationsDTO,
     unknown,
     ListRecommendationsQueryParams,
-    K8sRecommendationFilterDTORequestBody,
+    CCMRecommendationFilterPropertiesRequestBody,
     void
   >,
   'path' | 'verb'
@@ -5654,7 +6035,7 @@ export const useListRecommendations = (props: UseListRecommendationsProps) =>
     ResponseRecommendationsDTO,
     unknown,
     ListRecommendationsQueryParams,
-    K8sRecommendationFilterDTORequestBody,
+    CCMRecommendationFilterPropertiesRequestBody,
     void
   >('POST', `/recommendation/overview/list`, { base: getConfig('ccm/api'), ...props })
 
@@ -5667,7 +6048,7 @@ export type RecommendationStatsProps = Omit<
     ResponseRecommendationOverviewStats,
     unknown,
     RecommendationStatsQueryParams,
-    K8sRecommendationFilterDTORequestBody,
+    CCMRecommendationFilterPropertiesRequestBody,
     void
   >,
   'path' | 'verb'
@@ -5681,7 +6062,7 @@ export const RecommendationStats = (props: RecommendationStatsProps) => (
     ResponseRecommendationOverviewStats,
     unknown,
     RecommendationStatsQueryParams,
-    K8sRecommendationFilterDTORequestBody,
+    CCMRecommendationFilterPropertiesRequestBody,
     void
   >
     verb="POST"
@@ -5696,7 +6077,7 @@ export type UseRecommendationStatsProps = Omit<
     ResponseRecommendationOverviewStats,
     unknown,
     RecommendationStatsQueryParams,
-    K8sRecommendationFilterDTORequestBody,
+    CCMRecommendationFilterPropertiesRequestBody,
     void
   >,
   'path' | 'verb'
@@ -5710,7 +6091,7 @@ export const useRecommendationStats = (props: UseRecommendationStatsProps) =>
     ResponseRecommendationOverviewStats,
     unknown,
     RecommendationStatsQueryParams,
-    K8sRecommendationFilterDTORequestBody,
+    CCMRecommendationFilterPropertiesRequestBody,
     void
   >('POST', `/recommendation/overview/stats`, { base: getConfig('ccm/api'), ...props })
 

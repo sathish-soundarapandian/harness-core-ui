@@ -9,6 +9,7 @@
 declare const styles: {
   readonly errorContainer: string
   readonly errorText: string
+  readonly filtersCard: string
   readonly listContainer: string
   readonly potentialEmissionCard: string
   readonly potentialReducedEmissionCard: string
