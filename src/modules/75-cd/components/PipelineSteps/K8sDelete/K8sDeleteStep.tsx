@@ -16,10 +16,8 @@ import {
   IconName,
   Layout,
   MultiTypeInputType,
-  Text,
-  Icon
+  Text
 } from '@wings-software/uicore'
-import { Intent, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { FieldArray, FormikErrors, FormikProps, yupToFormErrors } from 'formik'
 import { v4 as uuid } from 'uuid'
@@ -136,7 +134,7 @@ function K8sDeleteDeployWidget(props: K8sDeleteProps, formikRef: StepFormikFowar
     // eslint-disable-next-line @typescript-eslint/no-shadow
     const options: IOptionProps[] = [
       {
-        label: getString('auditTrail.resourceNameLabel'),
+        label: getString('pipelineSteps.resourceNameLabel'),
         value: getString('pipelineSteps.resourceNameValue')
       },
       {
@@ -258,10 +256,7 @@ function K8sDeleteDeployWidget(props: K8sDeleteProps, formikRef: StepFormikFowar
                   <FormInput.InputWithIdentifier
                     inputLabel={getString('name')}
                     isIdentifierEditable={isNewStep}
-                    inputGroupProps={{
-                      placeholder: getString('pipeline.stepNamePlaceholder'),
-                      disabled: isDisabled
-                    }}
+                    inputGroupProps={{ disabled: isDisabled }}
                   />
                 </div>
               )}
@@ -317,7 +312,7 @@ function K8sDeleteDeployWidget(props: K8sDeleteProps, formikRef: StepFormikFowar
                   <MultiTypeFieldSelector
                     defaultValueToReset={[{ value: '', id: uuid() }]}
                     name={'spec.deleteResources.spec.resourceNames'}
-                    label={getString('auditTrail.resourceNameLabel')}
+                    label={getString('pipelineSteps.resourceNameLabel')}
                     allowedTypes={allowableTypes}
                   >
                     <FieldArray
@@ -328,7 +323,11 @@ function K8sDeleteDeployWidget(props: K8sDeleteProps, formikRef: StepFormikFowar
                             (formikProps.values?.spec?.deleteResources?.spec?.resourceNames ||
                               []) as K8sDeleteConfigHeader[]
                           )?.map((_path: K8sDeleteConfigHeader, index: number) => (
-                            <Layout.Horizontal key={_path.id}>
+                            <Layout.Horizontal
+                              key={_path.id}
+                              flex={{ distribution: 'space-between' }}
+                              style={{ alignItems: 'end' }}
+                            >
                               <FormInput.MultiTextInput
                                 label=""
                                 placeholder={getString('pipelineSteps.deleteResourcesPlaceHolder')}
@@ -403,7 +402,11 @@ function K8sDeleteDeployWidget(props: K8sDeleteProps, formikRef: StepFormikFowar
                             (formikProps.values?.spec?.deleteResources?.spec?.manifestPaths ||
                               []) as K8sDeleteConfigHeader[]
                           )?.map((_path: K8sDeleteConfigHeader, index: number) => (
-                            <Layout.Horizontal key={_path.id}>
+                            <Layout.Horizontal
+                              key={_path.id}
+                              flex={{ distribution: 'space-between' }}
+                              style={{ alignItems: 'end' }}
+                            >
                               <FormInput.MultiTextInput
                                 label=""
                                 placeholder={getString('pipelineSteps.manifestPathsPlaceHolder')}
@@ -449,16 +452,17 @@ function K8sDeleteDeployWidget(props: K8sDeleteProps, formikRef: StepFormikFowar
                   <Container
                     id="warning-deletenamespace"
                     intent="warning"
-                    padding={{ left: 'small' }}
+                    padding="medium"
                     font={{
                       align: 'center'
                     }}
-                    flex={{ justifyContent: 'flex-start' }}
+                    background="red200"
+                    flex
+                    border={{
+                      color: 'red500'
+                    }}
                   >
-                    <Icon name="warning-icon" intent={Intent.DANGER} margin={{ right: 'small' }} />
-                    <Text font={{ variation: FontVariation.FORM_MESSAGE_WARNING }}>
-                      {getString('pipelineSteps.deleteNamespaceWarning')}
-                    </Text>
+                    <Text>{getString('pipelineSteps.deleteNamespaceWarning')}</Text>
                   </Container>
                 )}
             </>
@@ -772,7 +776,7 @@ export class K8sDeleteStep extends PipelineStep<K8sDeleteFormData> {
               MultiTypeInputType.RUNTIME
                 ? initialValues.spec?.deleteResources?.spec?.resourceNames
                 : initialValues.spec?.deleteResources?.spec?.resourceNames?.length
-                ? (initialValues.spec?.deleteResources?.spec?.resourceNames).map((item: string) => ({
+                ? initialValues.spec?.deleteResources?.spec?.resourceNames?.map((item: string) => ({
                     value: item,
                     id: uuid()
                   }))

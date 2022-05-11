@@ -6,7 +6,7 @@
  */
 
 import React, { useContext, useMemo } from 'react'
-import { omit } from 'lodash-es'
+import { defaultTo, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useToaster } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
@@ -28,12 +28,10 @@ type ExcludedSourceDataKeys = 'isEdit' | 'serviceRef' | 'environmentRef' | 'moni
 
 export default function CustomiseHealthSource({
   onSuccess,
-  shouldRenderAtVerifyStep,
-  isTemplate
+  shouldRenderAtVerifyStep
 }: {
   onSuccess: (data: MonitoredServiceResponse | UpdatedHealthSource) => void
   shouldRenderAtVerifyStep?: boolean
-  isTemplate?: boolean
 }): JSX.Element {
   const params = useParams<ProjectPathProps & { identifier: string }>()
   const { getString } = useStrings()
@@ -61,14 +59,14 @@ export default function CustomiseHealthSource({
   const submitData = async (formdata: any, healthSourcePayload: UpdatedHealthSource): Promise<void> => {
     if (shouldRenderAtVerifyStep) {
       const healthSourceList = createHealthsourceList(formdata, healthSourcePayload)
-      const { identifier, name, description = '', tags = {} } = formdata?.monitoredServiceRef
+      const { identifier, name, description = '', tags = {} } = defaultTo(formdata?.monitoredServiceRef, {})
       try {
         const payload: MonitoredServiceDTO = {
           orgIdentifier: params.orgIdentifier,
           projectIdentifier: params.projectIdentifier,
           serviceRef: sourceData.serviceRef,
           environmentRef: sourceData.environmentRef,
-          identifier: identifier?.trim(),
+          identifier: identifier.trim(),
           name,
           description,
           tags,
@@ -97,12 +95,7 @@ export default function CustomiseHealthSource({
 
   return (
     <BGColorWrapper>
-      <LoadSourceByType
-        isTemplate={isTemplate}
-        type={sourceData?.sourceType}
-        data={filteredSourceData}
-        onSubmit={submitData}
-      />
+      <LoadSourceByType type={sourceData?.sourceType} data={filteredSourceData} onSubmit={submitData} />
     </BGColorWrapper>
   )
 }

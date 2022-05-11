@@ -5,55 +5,55 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState, useCallback, MouseEvent } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { v4 as uuid } from 'uuid'
-import type { FormikHelpers } from 'formik'
-import { cloneDeep, get, isEqual } from 'lodash-es'
+import type { FormikActions } from 'formik'
+import { cloneDeep, defaultTo, get, isEqual } from 'lodash-es'
 import {
-  Button,
-  ButtonVariation,
+  Layout,
   Container,
+  Text,
+  Tabs,
+  Tab,
+  Button,
   FlexExpander,
   Formik,
   FormikForm,
-  Layout,
-  PageError,
-  Tab,
-  Tabs,
-  Text
+  PageError
 } from '@wings-software/uicore'
-import * as yup from 'yup'
+import { useModalHook } from '@harness/use-modal'
+import { Dialog } from '@blueprintjs/core'
 import cx from 'classnames'
+import * as yup from 'yup'
 import {
-  Clause,
   Feature,
   FeatureState,
-  GitDetails,
-  GitSyncErrorResponse,
-  PatchFeatureQueryParams,
-  Serve,
-  ServingRule,
-  TargetMap,
   usePatchFeature,
-  VariationMap
+  ServingRule,
+  Clause,
+  Serve,
+  VariationMap,
+  TargetMap,
+  PatchFeatureQueryParams,
+  GitDetails,
+  GitSyncErrorResponse
 } from 'services/cf'
 import { useStrings } from 'framework/strings'
 import { extraOperatorReference } from '@cf/constants'
 import { useToaster } from '@common/exports'
 import { useQueryParams } from '@common/hooks'
 import { useEnvironmentSelectV2 } from '@cf/hooks/useEnvironmentSelectV2'
-import { useGovernance } from '@cf/hooks/useGovernance'
 import { FFDetailPageTab, getErrorMessage, rewriteCurrentLocationWithActiveEnvironment } from '@cf/utils/CFUtils'
 import routes from '@common/RouteDefinitions'
+import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import type { FeatureFlagPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+
 import { AUTO_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
-import { GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
-import TargetingRulesTab from '@cf/pages/feature-flags-detail/targeting-rules-tab/TargetingRulesTab'
-import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
+import { GitSyncFormMeta, GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
+import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
+import FlagElemTest from '../CreateFlagWizard/FlagElemTest'
 import TabTargeting from '../EditFlagTabs/TabTargeting'
 import TabActivity from '../EditFlagTabs/TabActivity'
 import { CFEnvironmentSelect } from '../CFEnvironmentSelect/CFEnvironmentSelect'
@@ -61,6 +61,7 @@ import patch, { ClauseData, getDiff } from '../../utils/instructions'
 import { MetricsView } from './views/MetricsView'
 import { NoEnvironment } from '../NoEnvironment/NoEnvironment'
 import SaveFlagToGitSubFormModal from '../SaveFlagToGitSubFormModal/SaveFlagToGitSubFormModal'
+import UsageLimitBanner from '../UsageLimitBanner/UsageLimitBanner'
 import css from './FlagActivation.module.scss'
 
 // Show loading and wait 3s when the first environment is created before reloading
@@ -72,7 +73,6 @@ interface FlagActivationProps {
   flagData: Feature
   gitSync: UseGitSync
   refetchFlag: () => Promise<unknown>
-  refetchFlagLoading: boolean
 }
 
 export interface FlagActivationFormValues {
@@ -98,9 +98,10 @@ const fromVariationMapToObj = (variationMap: VariationMap[]) =>
   }, {})
 
 const FlagActivation: React.FC<FlagActivationProps> = props => {
-  const { flagData, projectIdentifier, refetchFlag, refetchFlagLoading, gitSync } = props
+  const { flagData, projectIdentifier, refetchFlag, gitSync } = props
   const { showError } = useToaster()
   const [editing, setEditing] = useState(false)
+  const [loadingFlags, setLoadingFlags] = useState(false)
   const { orgIdentifier, accountId: accountIdentifier } = useParams<Record<string, string>>()
   const { activeEnvironment: environmentIdentifier, withActiveEnvironment } = useActiveEnvironment()
   const { mutate: patchFeature } = usePatchFeature({
@@ -124,16 +125,15 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
       rewriteCurrentLocationWithActiveEnvironment(_environment)
 
       if (_userEvent) {
-        refetchFlag()
+        setLoadingFlags(true)
+        refetchFlag().finally(() => setLoadingFlags(false))
       }
     }
   })
-  const { handleError: handleGovernanceError, isGovernanceError } = useGovernance()
 
-  const FFM_1513 = useFeatureFlag(FeatureFlag.FFM_1513)
-
-  const { gitSyncValidationSchema, gitSyncInitialValues } = gitSync?.getGitSyncFormMeta(
-    AUTO_COMMIT_MESSAGES.UPDATED_FLAG_RULES
+  const { gitSyncValidationSchema, gitSyncInitialValues } = defaultTo(
+    gitSync?.getGitSyncFormMeta(AUTO_COMMIT_MESSAGES.UPDATED_FLAG_RULES),
+    {} as GitSyncFormMeta
   )
 
   const initialValues = useMemo(
@@ -168,7 +168,7 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
   const [isGitSyncOpenModal, setIsGitSyncModalOpen] = useState(false)
 
   const onSaveChanges = useCallback(
-    (values: FlagActivationFormValues, formikActions: FormikHelpers<FlagActivationFormValues>): void => {
+    (values: FlagActivationFormValues, formikActions: FormikActions<FlagActivationFormValues>): void => {
       // handle flag state changed - e.g. toggled from off to on
       if (values.state !== initialValues.state) {
         patch.feature.addInstruction(patch.creators.setFeatureFlagState(values?.state as FeatureState))
@@ -202,7 +202,7 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
         patch.feature.addAllInstructions(
           initialValues.customRules
             .filter(rule => !values.customRules.find(r => r.ruleId === rule.ruleId))
-            .map(r => patch.creators.removeRule(r.ruleId as string))
+            .map(r => patch.creators.removeRule(r.ruleId))
         )
 
         const newRuleIds: string[] = []
@@ -214,12 +214,12 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
           }
           return rule
         })
-        const isNewRule = (id: string): boolean => newRuleIds.includes(id)
+        const isNewRule = (id: string) => newRuleIds.includes(id)
 
         // handle newly added custom rules
         patch.feature.addAllInstructions(
           values.customRules
-            .filter(rule => isNewRule(rule.ruleId as string))
+            .filter(rule => isNewRule(rule.ruleId))
             .map(rule =>
               patch.creators.addRule({
                 uuid: rule.ruleId,
@@ -232,23 +232,19 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
 
         // handle updates to existing rules
         values.customRules
-          .filter(rule => !isNewRule(rule.ruleId as string))
+          .filter(rule => !isNewRule(rule.ruleId))
           .map(rule => [initialValues.customRules.find(r => r.ruleId === rule.ruleId), rule])
           .filter(([initial, current]) => !isEqual(initial, current))
           .forEach(([initial, current]) => {
             // handle clause added to existing rule
             current?.clauses
               .filter(c => !c.id)
-              .forEach(c =>
-                patch.feature.addInstruction(patch.creators.addClause(current.ruleId as string, toClauseData(c)))
-              )
+              .forEach(c => patch.feature.addInstruction(patch.creators.addClause(current.ruleId, toClauseData(c))))
 
             // handle clause removed from existing rule
             initial?.clauses
               .filter(c => !current?.clauses.find(cl => cl.id === c.id))
-              .forEach(c =>
-                patch.feature.addInstruction(patch.creators.removeClause(initial.ruleId as string, c.id as string))
-              )
+              .forEach(c => patch.feature.addInstruction(patch.creators.removeClause(initial.ruleId, c.id)))
 
             // handle clause changed on existing rule
             initial?.clauses
@@ -260,21 +256,17 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
                 return acc
               }, [])
               .forEach(([c, updated]: [Clause, Clause]) =>
-                patch.feature.addInstruction(
-                  patch.creators.updateClause(initial.ruleId as string, c.id as string, toClauseData(updated))
-                )
+                patch.feature.addInstruction(patch.creators.updateClause(initial.ruleId, c.id, toClauseData(updated)))
               )
 
             // handle update to existing rule serve value (true/false)
             if (current?.serve?.variation && !isEqual(initial?.serve?.variation, current?.serve?.variation)) {
-              patch.feature.addInstruction(
-                patch.creators.updateRuleVariation(current?.ruleId as string, current.serve.variation)
-              )
+              patch.feature.addInstruction(patch.creators.updateRuleVariation(current?.ruleId, current.serve.variation))
             }
 
             if (current?.serve?.distribution && !isEqual(initial?.serve?.distribution, current.serve.distribution)) {
               patch.feature.addInstruction(
-                patch.creators.updateRuleVariation(current?.ruleId as string, current.serve.distribution)
+                patch.creators.updateRuleVariation(current?.ruleId, current.serve.distribution)
               )
             }
           })
@@ -317,7 +309,7 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
       const newOrder = values.customRules.map(x => x.ruleId)
       // handle reordered custom rules
       if (!isEqual(prevOrder, newOrder)) {
-        patch.feature.addInstruction(patch.creators.reorderRules(newOrder as string[]))
+        patch.feature.addInstruction(patch.creators.reorderRules(newOrder))
       }
 
       patch.feature
@@ -330,11 +322,7 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
                 }
               : data
           )
-            .then(async response => {
-              if (isGovernanceError(response)) {
-                handleGovernanceError(response)
-              }
-
+            .then(async () => {
               if (!gitSync?.isAutoCommitEnabled && values.autoCommit) {
                 await gitSync?.handleAutoCommit(values.autoCommit)
               }
@@ -349,11 +337,7 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
               if (err.status === GIT_SYNC_ERROR_CODE) {
                 gitSync.handleError(err.data as GitSyncErrorResponse)
               } else {
-                if (isGovernanceError(err?.data)) {
-                  handleGovernanceError(err.data)
-                } else {
-                  showError(get(err, 'data.message', err?.message), 0)
-                }
+                showError(get(err, 'data.message', err?.message), 0)
               }
             })
             .finally(() => {
@@ -362,7 +346,7 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
         })
         .onEmptyPatch(() => setEditing(false))
     },
-    [initialValues, patchFeature, showError]
+    [initialValues, patchFeature, refetchFlag, showError]
   )
 
   type RuleErrors = { [K: number]: { [P: number]: 'required' } }
@@ -424,6 +408,20 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
 
     return errors
   }
+  const [openModalTestFlag, hideModalTestFlag] = useModalHook(() => (
+    <Dialog enforceFocus={false} onClose={hideModalTestFlag} isOpen={true} className={css.testFlagDialog}>
+      <Container className={css.testFlagDialogContainer}>
+        <FlagElemTest name="" fromWizard={false} />
+        <Button
+          minimal
+          icon="small-cross"
+          iconProps={{ size: 20 }}
+          onClick={hideModalTestFlag}
+          style={{ top: 0, right: '15px', position: 'absolute' }}
+        />
+      </Container>
+    </Dialog>
+  ))
   const { tab = FFDetailPageTab.TARGETING } = useQueryParams<{ tab?: string }>()
   const [activeTabId, setActiveTabId] = useState(tab)
   const [newEnvironmentCreateLoading, setNewEnvironmentCreateLoading] = useState(false)
@@ -431,18 +429,33 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
   const history = useHistory()
   const pathParams = useParams<ProjectPathProps & FeatureFlagPathProps>()
 
+  const { isPlanEnforcementEnabled } = usePlanEnforcement()
+
   useEffect(() => {
     if (tab !== activeTabId) {
       history.replace(withActiveEnvironment(routes.toCFFeatureFlagsDetail(pathParams) + `?tab=${activeTabId}`))
     }
   }, [activeTabId, history, pathParams, tab, withActiveEnvironment])
 
-  if (envsError) {
-    return <PageError message={getErrorMessage(envsError)} onClick={() => refetchEnvironments()} />
+  if (envsLoading || newEnvironmentCreateLoading || loadingFlags) {
+    return (
+      <Container
+        style={{
+          position: 'fixed',
+          top: '64px',
+          left: 0,
+          bottom: 0,
+          right: 0,
+          zIndex: 1
+        }}
+      >
+        <ContainerSpinner />
+      </Container>
+    )
   }
 
-  if (envsLoading || newEnvironmentCreateLoading || (refetchFlagLoading && !FFM_1513)) {
-    return <ContainerSpinner height="100%" flex={{ justifyContent: 'center', alignItems: 'center' }} />
+  if (envsError) {
+    return <PageError message={getErrorMessage(envsError)} onClick={() => refetchEnvironments()} />
   }
 
   if (noEnvironmentExists) {
@@ -476,7 +489,7 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
   }
 
   return (
-    <Formik<FlagActivationFormValues>
+    <Formik
       enableReinitialize={true}
       validateOnChange={false}
       validateOnBlur={false}
@@ -490,14 +503,26 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
     >
       {formikProps => {
         return (
-          <FormikForm>
+          <FormikForm {...formikProps}>
             <Container className={css.formContainer}>
-              <Layout.Horizontal className={css.environmentHeaderContainer} flex={{ alignItems: 'center' }}>
+              <Layout.Horizontal
+                flex
+                padding="large"
+                style={{
+                  backgroundColor: '#F4F6FF',
+                  mixBlendMode: 'normal',
+                  boxShadow: '0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16)',
+                  paddingLeft: 'var(--spacing-huge)'
+                }}
+              >
                 <FlexExpander />
                 <CFEnvironmentSelect component={<EnvironmentSelect />} />
               </Layout.Horizontal>
+              {isPlanEnforcementEnabled && <UsageLimitBanner />}
 
-              <Container className={FFM_1513 ? css.tabContainer : cx(css.tabContainer, css.tabContainerHeight)}>
+              <Container
+                className={cx(css.tabContainer, (!editing || activeTabId !== FFDetailPageTab.TARGETING) && css.noEdit)}
+              >
                 {flagData && (
                   <>
                     <Tabs
@@ -509,26 +534,16 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
                         id={FFDetailPageTab.TARGETING}
                         title={<Text className={css.tabTitle}>{getString('cf.featureFlags.targeting')}</Text>}
                         panel={
-                          <>
-                            {FFM_1513 ? (
-                              <TargetingRulesTab
-                                featureFlagData={flagData}
-                                refetchFlag={refetchFlag}
-                                refetchFlagLoading={refetchFlagLoading}
-                              />
-                            ) : (
-                              <TabTargeting
-                                formikProps={formikProps}
-                                editing={editing}
-                                projectIdentifier={projectIdentifier}
-                                environmentIdentifier={environmentIdentifier}
-                                setEditing={setEditing}
-                                feature={flagData}
-                                orgIdentifier={orgIdentifier}
-                                accountIdentifier={accountIdentifier}
-                              />
-                            )}
-                          </>
+                          <TabTargeting
+                            formikProps={formikProps}
+                            editing={editing}
+                            projectIdentifier={projectIdentifier}
+                            environmentIdentifier={environmentIdentifier}
+                            setEditing={setEditing}
+                            feature={flagData}
+                            orgIdentifier={orgIdentifier}
+                            accountIdentifier={accountIdentifier}
+                          />
                         }
                       />
                       <Tab
@@ -543,6 +558,15 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
                         panel={<TabActivity flagData={flagData} />}
                       />
                     </Tabs>
+                    <Button
+                      icon="code"
+                      disabled
+                      minimal
+                      intent="primary"
+                      onClick={openModalTestFlag}
+                      className={css.btnCode}
+                      title={getString('cf.featureNotReady')}
+                    />
                   </>
                 )}
               </Container>
@@ -553,7 +577,6 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
                       type="submit"
                       intent="primary"
                       text={getString('save')}
-                      variation={ButtonVariation.PRIMARY}
                       onClick={event => {
                         if (gitSync?.isGitSyncEnabled && !gitSync?.isAutoCommitEnabled) {
                           event.preventDefault()
@@ -564,7 +587,6 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
                     <Button
                       minimal
                       text={getString('cancel')}
-                      variation={ButtonVariation.SECONDARY}
                       onClick={(e: MouseEvent) => {
                         e.preventDefault()
                         onCancelEditHandler()

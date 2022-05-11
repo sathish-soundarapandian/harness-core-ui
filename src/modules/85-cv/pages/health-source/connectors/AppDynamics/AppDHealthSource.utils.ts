@@ -8,14 +8,7 @@
 import { cloneDeep, isEmpty } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import type { StringKeys } from 'framework/strings'
-import type { StringsMap } from 'framework/strings/StringsContext'
-import type {
-  AppDMetricDefinitions,
-  AppDynamicsHealthSourceSpec,
-  AppdynamicsValidationResponse,
-  MetricPackDTO,
-  RiskProfile
-} from 'services/cv'
+import type { AppDMetricDefinitions, AppDynamicsHealthSourceSpec, MetricPackDTO, RiskProfile } from 'services/cv'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { HealthSourceTypes } from '../../types'
@@ -34,7 +27,7 @@ import type { CustomMappedMetric } from '../../common/CustomMetric/CustomMetric.
 export const convertStringBasePathToObject = (baseFolder: string | BasePathData): BasePathData => {
   let basePathObj = {} as any
   if (typeof baseFolder === 'string') {
-    const list = [...baseFolder?.split('|'), '']
+    const list = [...baseFolder.split('|'), '']
     list.forEach((item, index) => {
       basePathObj[`basePathDropdown_${index}`] = {
         path: index === 0 ? '' : list.slice(0, index).join('|'),
@@ -50,7 +43,7 @@ export const convertStringBasePathToObject = (baseFolder: string | BasePathData)
 export const convertStringMetricPathToObject = (metricPath: string | MetricPathData): MetricPathData => {
   let metricPathObj = {} as any
   if (typeof metricPath === 'string') {
-    const list = [...metricPath?.split('|'), '']
+    const list = [...metricPath.split('|'), '']
     let secondLastIndex = 0
     if (list.length > 1) {
       secondLastIndex = list.length - 2
@@ -114,8 +107,7 @@ export const createAppDynamicsData = (sourceData: any): AppDynamicsData => {
         groupName: { label: metricDefinition.groupName || '', value: metricDefinition.groupName || '' },
         continuousVerification: metricDefinition?.analysis?.deploymentVerification?.enabled,
         healthScore: metricDefinition?.analysis?.liveMonitoring?.enabled,
-        sli: metricDefinition.sli?.enabled,
-        serviceInstanceMetricPath: metricDefinition.analysis?.deploymentVerification?.serviceInstanceMetricPath
+        sli: metricDefinition.sli?.enabled
       })
     }
   }
@@ -183,15 +175,9 @@ const validateCustomMetricFields = (
 
   if (values.pathType === PATHTYPE.FullPath) {
     const isfullPathEmpty = !values.fullPath.length
-    const fullPathContainsTierInfo = values.fullPath
-      .split('|')
-      .map((item: string) => item.trim())
-      .includes(values?.appDTier)
     const incorrectPairing = values.fullPath.split('|').filter((item: string) => !item.length).length
     if (incorrectPairing && isfullPathEmpty) {
       _error[PATHTYPE.FullPath] = getString('cv.healthSource.connectors.AppDynamics.validation.fullPath')
-    } else if (!fullPathContainsTierInfo) {
-      _error[PATHTYPE.FullPath] = getString('cv.healthSource.connectors.AppDynamics.validation.missingTierInFullPath')
     }
   }
 
@@ -315,11 +301,6 @@ const validateAssignComponent = (
           'cv.monitoringSources.prometheus.validation.deviation'
         )
       }
-      if (values.continuousVerification && !values.serviceInstanceMetricPath) {
-        _error[AppDynamicsMonitoringSourceFieldNames.CONTINUOUS_VERIFICATION] = getString(
-          'cv.healthSource.connectors.AppDynamics.validation.missingServiceInstanceMetricPath'
-        )
-      }
       if (!isRiskCategoryValid) {
         _error[AppDynamicsMonitoringSourceFieldNames.RISK_CATEGORY] = getString(
           'cv.monitoringSources.gco.mapMetricsToServicesPage.validation.riskCategory'
@@ -435,7 +416,7 @@ export const createAppDynamicsPayload = (formData: any): UpdatedHealthSource | n
     type: 'AppDynamics' as any,
     spec: {
       ...specPayload,
-      feature: 'Application Monitoring' as string,
+      feature: formData.product?.value as string,
       connectorRef: (formData?.connectorRef?.connector?.identifier as string) || (formData.connectorRef as string),
       metricPacks: Object.entries(formData?.metricData)
         .map(item => {
@@ -464,7 +445,6 @@ export const submitData = (
     [AppDynamicsMonitoringSourceFieldNames.APPDYNAMICS_TIER]: true,
     [AppDynamicsMonitoringSourceFieldNames.APPDYNAMICS_APPLICATION]: true,
     [AppDynamicsMonitoringSourceFieldNames.SLI]: true,
-    [AppDynamicsMonitoringSourceFieldNames.CONTINUOUS_VERIFICATION]: true,
     [AppDynamicsMonitoringSourceFieldNames.GROUP_NAME]: true,
     [AppDynamicsMonitoringSourceFieldNames.METRIC_NAME]: true,
     [AppDynamicsMonitoringSourceFieldNames.LOWER_BASELINE_DEVIATION]: true,
@@ -506,26 +486,17 @@ export const createAppDFormData = (
       [key: string]: boolean
     }
   },
-  showCustomMetric: boolean,
-  isTemplate = false
+  showCustomMetric: boolean
 ): AppDynamicsFomikFormInterface => {
   const mappedMetricsData = mappedMetrics.get(selectedMetric) as MapAppDynamicsMetric
-  const metricIdentifier = mappedMetricsData?.metricIdentifier || selectedMetric?.split(' ').join('_')
+  const metricIdentifier = mappedMetricsData?.metricIdentifier || selectedMetric.split(' ').join('_')
   const { basePath = {}, metricPath = {} } = mappedMetricsData || {}
   const lastItemBasePath = Object.keys(basePath)[Object.keys(basePath).length - 1]
   const lastItemMetricPath = Object.keys(metricPath)[Object.keys(metricPath).length - 1]
-  let fullPath =
+  const fullPath =
     basePath[lastItemBasePath]?.path && metricPath[lastItemMetricPath]?.path && appDynamicsData.tierName
       ? `${basePath[lastItemBasePath]?.path}|${appDynamicsData.tierName}|${metricPath[lastItemMetricPath]?.path}`
       : ''
-
-  if (
-    isTemplate &&
-    fullPath === '' &&
-    (nonCustomFeilds.appDTier === '<+input>' || nonCustomFeilds.appdApplication === '<+input>')
-  ) {
-    fullPath = '<+input>'
-  }
   return {
     name: appDynamicsData.name,
     identifier: appDynamicsData.identifier,
@@ -533,7 +504,7 @@ export const createAppDFormData = (
     isEdit: appDynamicsData.isEdit,
     product: appDynamicsData.product,
     type: appDynamicsData.type,
-    pathType: isTemplate ? PATHTYPE.FullPath : PATHTYPE.DropdownPath,
+    pathType: PATHTYPE.DropdownPath,
     fullPath,
     mappedServicesAndEnvs: appDynamicsData.mappedServicesAndEnvs,
     ...nonCustomFeilds,
@@ -559,69 +530,16 @@ export const setAppDynamicsApplication = (
 ): SelectOption | undefined =>
   !appdApplication
     ? { label: '', value: '' }
-    : applicationOptions.find((item: SelectOption) => item.label === appdApplication) || {
-        label: appdApplication,
-        value: appdApplication
-      }
+    : applicationOptions.find((item: SelectOption) => item.label === appdApplication)
 
 export const setAppDynamicsTier = (tierLoading: boolean, appDTier: string, tierOptions: SelectOption[]) =>
   tierLoading || !appDTier
     ? { label: '', value: '' }
-    : tierOptions.find((item: SelectOption) => item.label === appDTier) || {
-        label: appDTier,
-        value: appDTier
-      }
+    : tierOptions.find((item: SelectOption) => item.label === appDTier)
 
-export const initAppDCustomFormValue = () => {
+export const initAppDCustomFormValue = (getString: (key: StringKeys) => string) => {
   return {
     ...initCustomForm,
-    groupName: { label: '', value: '' }
-  }
-}
-
-export const getPlaceholder = (
-  loading: boolean,
-  placeholderText: keyof StringsMap,
-  getString: (key: StringKeys) => string
-): string => (loading ? getString('loading') : getString(placeholderText))
-
-export const showValidation = (appdApplication?: string, appDTier?: string): boolean =>
-  Boolean(appDTier) && Boolean(appdApplication) && !(appdApplication === '<+input>' || appDTier === '<+input>')
-
-export const setCustomFieldAndValidation = (
-  value: string,
-  setNonCustomFeilds: React.Dispatch<
-    React.SetStateAction<{
-      appdApplication: string
-      appDTier: string
-      metricPacks: MetricPackDTO[] | undefined
-      metricData: {
-        [key: string]: boolean
-      }
-    }>
-  >,
-  nonCustomFeilds: {
-    appdApplication: string
-    appDTier: string
-    metricPacks: MetricPackDTO[] | undefined
-    metricData: {
-      [key: string]: boolean
-    }
-  },
-  setAppDValidation: React.Dispatch<
-    React.SetStateAction<{
-      status: string
-      result: AppdynamicsValidationResponse[] | []
-    }>
-  >,
-  validate = false
-): void => {
-  setNonCustomFeilds({
-    ...nonCustomFeilds,
-    appdApplication: value,
-    appDTier: value === '<+input>' ? value : ''
-  })
-  if (validate) {
-    setAppDValidation({ status: '', result: [] })
+    groupName: { label: getString('cv.addGroupName'), value: getString('cv.addGroupName') }
   }
 }

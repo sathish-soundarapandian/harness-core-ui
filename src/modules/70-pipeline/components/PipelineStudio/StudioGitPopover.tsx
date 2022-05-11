@@ -8,8 +8,7 @@
 import React from 'react'
 import { defaultTo } from 'lodash-es'
 
-import { Icon, Layout, Text } from '@wings-software/uicore'
-import { FontVariation, Color } from '@harness/design-system'
+import { Color, FontVariation, Icon, Layout, Text } from '@wings-software/uicore'
 import type { GitSyncEntityDTO, PipelineInfoConfig } from 'services/cd-ng'
 import type { EntityGitDetails, NGTemplateInfoConfig } from 'services/template-ng'
 import { useGitSyncStore } from 'framework/GitRepoStore/GitSyncStoreContext'
@@ -26,14 +25,14 @@ interface StudioGitPopoverProps {
   gitDetails: EntityGitDetails
   identifier: string
   isReadonly: boolean
-  entityData: PipelineInfoConfig | NGTemplateInfoConfig
+  entityData: PipelineInfoConfig & NGTemplateInfoConfig
   onGitBranchChange: (selectedFilter: GitFilterScope) => void
   entityType: string
 }
 
 const breakWord = 'break-word'
 
-export const GitDetails = (props: StudioGitPopoverProps): JSX.Element => {
+export function GitDetails(props: StudioGitPopoverProps): JSX.Element {
   const { gitDetails, identifier, isReadonly, onGitBranchChange, entityType } = props
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { gitSyncRepos, loadingRepos } = useGitSyncStore()

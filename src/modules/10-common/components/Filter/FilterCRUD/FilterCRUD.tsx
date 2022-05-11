@@ -8,9 +8,10 @@
 import React, { useState, useEffect, ReactElement } from 'react'
 import * as Yup from 'yup'
 import cx from 'classnames'
-import { isEmpty, omitBy, truncate } from 'lodash-es'
+import { defaultTo, isEmpty, omitBy, truncate } from 'lodash-es'
 import {
   Button,
+  Color,
   Formik,
   FormInput,
   Icon,
@@ -22,7 +23,6 @@ import {
   ButtonVariation,
   useToaster
 } from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import type { FormikProps, FormikErrors } from 'formik'
 import { Menu, Classes, Position, PopoverInteractionKind, Dialog, IDialogProps } from '@blueprintjs/core'
@@ -50,6 +50,7 @@ interface FilterCRUDProps<T> extends Partial<Omit<FormikProps<T>, 'initialValues
 }
 
 const FILTER_LIST_MAX_HEIGHT = 85
+const EDIT_SECTION_HEIGHT = 30
 const STEP_SIZE = 1.5
 const MAX_FILTER_NAME_LENGTH = 20
 
@@ -124,13 +125,19 @@ const FilterCRUDRef = <T extends FilterInterface>(props: FilterCRUDProps<T>, fil
   const handleSaveOrUpdate = async (isUpdate: boolean, payload: T): Promise<T | undefined> => {
     try {
       if (isUpdate) {
-        const { status, data: updatedFilter } = await dataSvcConfig?.get('UPDATE')?.(payload)
+        const { status, data: updatedFilter } = await defaultTo(
+          dataSvcConfig?.get('UPDATE')?.(payload),
+          Promise.resolve({})
+        )
         if (status === 'SUCCESS') {
           showSuccess(`${payload?.name} updated.`)
           return updatedFilter
         }
       } else {
-        const { status, data: updatedFilter } = await dataSvcConfig?.get('ADD')?.(payload)
+        const { status, data: updatedFilter } = await defaultTo(
+          dataSvcConfig?.get('ADD')?.(payload),
+          Promise.resolve({})
+        )
         if (status === 'SUCCESS') {
           showSuccess(`${payload?.name} saved.`)
           return updatedFilter
@@ -149,7 +156,10 @@ const FilterCRUDRef = <T extends FilterInterface>(props: FilterCRUDProps<T>, fil
       return
     }
     try {
-      const { status, data } = await dataSvcConfig?.get('DELETE')?.(matchingFilter?.identifier || '')
+      const { status, data } = await defaultTo(
+        dataSvcConfig?.get('DELETE')?.(matchingFilter?.identifier || ''),
+        Promise.resolve({})
+      )
       if (status === 'SUCCESS' && data) {
         showSuccess(`${matchingFilter?.name} ${getString('filters.filterDeleted')}`)
       } else {
@@ -183,7 +193,7 @@ const FilterCRUDRef = <T extends FilterInterface>(props: FilterCRUDProps<T>, fil
       filterProperties
     }
     try {
-      const { status } = await dataSvcConfig?.get('ADD')?.(payload)
+      const { status } = await defaultTo(dataSvcConfig?.get('ADD')?.(payload), Promise.resolve({}))
       if (status === 'SUCCESS') {
         showSuccess(`${payload?.name} duplicated.`)
         await onSuccessfulCrudOperation?.()
@@ -334,11 +344,11 @@ const FilterCRUDRef = <T extends FilterInterface>(props: FilterCRUDProps<T>, fil
     )
   }
 
-  const getFilterListHeight = (submitCount: number, errorCount: number): string => {
+  const getFilterListHeight = (submitCount: number, errorCount: number): number => {
     if (isEditEnabled) {
-      return `calc(${FILTER_LIST_MAX_HEIGHT}vh - 300px - ${submitCount > 0 ? STEP_SIZE * errorCount : 0}vh)`
+      return FILTER_LIST_MAX_HEIGHT - EDIT_SECTION_HEIGHT - (submitCount > 0 ? STEP_SIZE * errorCount : 0)
     }
-    return `${FILTER_LIST_MAX_HEIGHT}vh`
+    return FILTER_LIST_MAX_HEIGHT
   }
 
   const renderFilterList = (
@@ -351,7 +361,7 @@ const FilterCRUDRef = <T extends FilterInterface>(props: FilterCRUDProps<T>, fil
       <ol
         className={cx(css.filters)}
         style={{
-          maxHeight: `${getFilterListHeight(submitCount, Object.keys(errors).length)}`
+          maxHeight: `${getFilterListHeight(submitCount, Object.keys(errors).length)}vh`
         }}
       >
         {filters?.filter((filter: T) => filter.name).map((filter: T) => renderFilter(filter))}

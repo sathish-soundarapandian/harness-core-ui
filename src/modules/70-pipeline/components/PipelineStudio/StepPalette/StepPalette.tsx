@@ -6,9 +6,8 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { ExpandingSearchInput, Text, Icon, Layout, Container, Heading } from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
-import { cloneDeep, uniqBy, isEmpty } from 'lodash-es'
+import { ExpandingSearchInput, Text, Icon, Layout, Color, Container, Heading } from '@wings-software/uicore'
+import { cloneDeep, uniqBy, isEmpty, defaultTo } from 'lodash-es'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { StepCategory, StepData, StepPalleteModuleInfo, useGetStepsV2 } from 'services/pipeline-ng'
@@ -95,7 +94,7 @@ export function StepPalette({ onSelect, stepsFactory, stepPaletteModuleInfos }: 
     const toShow: StepCategory[] = []
     fromApi?.forEach(stepCat => {
       if (stepCat?.stepCategories?.length) {
-        toShow.push(...stepCat?.stepCategories)
+        toShow.push(...defaultTo(stepCat?.stepCategories, []))
       }
     })
     if (toShow) {
@@ -320,7 +319,7 @@ export function StepPalette({ onSelect, stepsFactory, stepPaletteModuleInfos }: 
                         name={iconMapByName[category.name || /* istanbul ignore next */ '']?.icon}
                         className={css.paletteIcon}
                       />
-                      {category.name} ({subCategory.length})
+                      {category.name}({subCategory.length})
                     </section>
                   )
                   subCategory.forEach((subCat: StepCategory, k) =>

@@ -6,9 +6,9 @@
  */
 
 import React from 'react'
-import { Text, Popover, Container, Layout, Card, Icon } from '@wings-software/uicore'
+import { Text, Popover, Container, Layout, Color, Card, Icon } from '@wings-software/uicore'
 import { Classes, IPopoverProps, PopoverInteractionKind, Position } from '@blueprintjs/core'
-import { Color } from '@harness/design-system'
+
 import { isEmpty, isNil } from 'lodash-es'
 import cx from 'classnames'
 import { iconMap } from '@pipeline/components/PipelineStudio/StepPalette/iconMap'
@@ -33,7 +33,11 @@ interface StepTooltipContentInterface {
   description?: keyof StringsMap
 }
 
-function TooltipContent({ description, stepsFactory, stepData }: StepTooltipContentInterface) {
+function TooltipContent({
+  description,
+  stepsFactory,
+  stepData
+}: StepTooltipContentInterface): React.ReactElement | null {
   // Component renders the tooltip over steps in the palette.
   // If the step is disabled, show the enforcement tooltip
   const { getString } = useStrings()
@@ -61,7 +65,7 @@ function TooltipContent({ description, stepsFactory, stepData }: StepTooltipCont
   return null
 }
 
-export const StepPopover: React.FC<StepPopoverProps> = props => {
+export function StepPopover(props: StepPopoverProps): React.ReactElement {
   const { stepData, stepsFactory, popoverProps, className } = props
   if (stepData && !isEmpty(stepData)) {
     const step = stepsFactory.getStep(stepData.type)

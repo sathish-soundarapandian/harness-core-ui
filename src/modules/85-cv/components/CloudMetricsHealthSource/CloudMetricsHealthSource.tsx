@@ -6,10 +6,10 @@
  */
 
 import React, { useContext, useEffect, useMemo, useState } from 'react'
-import { isEmpty, omit } from 'lodash-es'
-import { Container, Heading, Text, useConfirmationDialog } from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
+import { Color, Container, Heading, Text, useConfirmationDialog } from '@wings-software/uicore'
+
 import { useParams } from 'react-router-dom'
+import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { SetupSourceLayout } from '@cv/components/CVSetupSourcesView/SetupSourceLayout/SetupSourceLayout'
 import { transformSampleDataIntoHighchartOptions } from '@cv/pages/health-source/connectors/GCOMetricsHealthSource/GCOMetricsHealthSource.utils'
@@ -22,9 +22,8 @@ import MetricsValidationChart from '@cv/components/CloudMetricsHealthSource/comp
 import MetricDashboardWidgetNav from '@cv/components/MetricDashboardWidgetNav/MetricDashboardWidgetNav'
 import type { CloudMetricsHealthSourceProps } from '@cv/components/CloudMetricsHealthSource/CloudMetricsHealthSource.type'
 import SelectHealthSourceServices from '@cv/pages/health-source/common/SelectHealthSourceServices/SelectHealthSourceServices'
-import MetricErrorAndLoading from '@cv/pages/health-source/common/MetricErrorAndLoading/MetricErrorAndLoading'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useGetLabelNames, useGetMetricPacks } from 'services/cv'
+import { useGetMetricPacks } from 'services/cv'
 import css from '@cv/components/CloudMetricsHealthSource/CloudMetricHealthSource.module.scss'
 
 export default function CloudMetricsHealthSource<T>(props: CloudMetricsHealthSourceProps<T>): JSX.Element {
@@ -44,8 +43,7 @@ export default function CloudMetricsHealthSource<T>(props: CloudMetricsHealthSou
     dashboardDetailRequest,
     dashboardDetailMapper,
     formikProps,
-    onChangeManualEditQuery,
-    serviceInstanceList
+    onChangeManualEditQuery
   } = props
   const { getString } = useStrings()
   const { onPrevious } = useContext(SetupSourceTabsContext)
@@ -81,13 +79,8 @@ export default function CloudMetricsHealthSource<T>(props: CloudMetricsHealthSou
     healthScore = false,
     continuousVerification = false,
     isManualQuery,
-    isCustomCreatedMetric,
-    serviceInstance,
-    riskCategory
-  } = formikProps?.values
-
-  const { loading: metricLoading } = dashboardDetailRequest
-
+    isCustomCreatedMetric
+  } = defaultTo(formikProps?.values, {})
   return (
     <Container>
       <SetupSourceLayout
@@ -127,61 +120,55 @@ export default function CloudMetricsHealthSource<T>(props: CloudMetricsHealthSou
                 </Text>
               </Container>
             )}
-            <MetricErrorAndLoading isEmpty={isEmpty(omit(formikProps.values, 'identifier'))} loading={metricLoading}>
-              <Container className={css.metricsMappingContent}>
-                <Container className={css.metricsQueryBuilderContainer}>
-                  {metricDetailsContent}
-                  <Container className={css.healthServicesContainer}>
-                    <SelectHealthSourceServices
-                      values={{
-                        sli,
-                        healthScore,
-                        riskCategory,
-                        serviceInstance,
-                        continuousVerification
-                      }}
-                      metricPackResponse={metricPackResponse}
-                      labelNamesResponse={
-                        { data: { data: serviceInstanceList } } as ReturnType<typeof useGetLabelNames>
-                      }
-                    />
-                  </Container>
-                </Container>
-                <Container className={css.validationContainer}>
-                  <QueryContent
-                    textAreaProps={{ readOnly: !selectedMetricInfo?.queryEditable }}
-                    handleFetchRecords={async () => {
-                      if (!shouldShowChart) {
-                        setShouldShowChart(true)
-                      }
-                      if (!formikProps?.values?.query?.length) {
-                        return
-                      }
-                      onFetchTimeseriesData(formikProps.values.query)
+            <Container className={css.metricsMappingContent}>
+              <Container className={css.metricsQueryBuilderContainer}>
+                {metricDetailsContent}
+                <Container className={css.healthServicesContainer}>
+                  <SelectHealthSourceServices
+                    values={{
+                      sli,
+                      healthScore,
+                      continuousVerification
                     }}
-                    isDialogOpen={false}
-                    onEditQuery={isCustomCreatedMetric && !isManualQuery ? openDialog : undefined}
-                    query={selectedMetricInfo.query}
-                    loading={!selectedMetricInfo}
-                    textAreaName={FieldNames.QUERY}
-                  />
-                  <MetricsValidationChart
-                    submitQueryText={'cv.monitoringSources.datadogLogs.submitQueryToSeeRecords'}
-                    loading={timeseriesDataLoading}
-                    error={timeseriesDataError}
-                    sampleData={sampleData}
-                    queryValue={selectedMetricInfo?.query}
-                    isQueryExecuted={shouldShowChart}
-                    onRetry={async () => {
-                      if (!formikProps?.values?.query?.length) {
-                        return
-                      }
-                      onFetchTimeseriesData(formikProps.values.query)
-                    }}
+                    metricPackResponse={metricPackResponse}
+                    hideServiceIdentifier
                   />
                 </Container>
               </Container>
-            </MetricErrorAndLoading>
+              <Container className={css.validationContainer}>
+                <QueryContent
+                  textAreaProps={{ readOnly: !selectedMetricInfo?.queryEditable }}
+                  handleFetchRecords={async () => {
+                    if (!shouldShowChart) {
+                      setShouldShowChart(true)
+                    }
+                    if (!formikProps?.values?.query?.length) {
+                      return
+                    }
+                    onFetchTimeseriesData(formikProps.values.query)
+                  }}
+                  isDialogOpen={false}
+                  onEditQuery={isCustomCreatedMetric && !isManualQuery ? openDialog : undefined}
+                  query={selectedMetricInfo.query}
+                  loading={!selectedMetricInfo}
+                  textAreaName={FieldNames.QUERY}
+                />
+                <MetricsValidationChart
+                  submitQueryText={'cv.monitoringSources.datadogLogs.submitQueryToSeeRecords'}
+                  loading={timeseriesDataLoading}
+                  error={timeseriesDataError}
+                  sampleData={sampleData}
+                  queryValue={selectedMetricInfo?.query}
+                  isQueryExecuted={shouldShowChart}
+                  onRetry={async () => {
+                    if (!formikProps?.values?.query?.length) {
+                      return
+                    }
+                    onFetchTimeseriesData(formikProps.values.query)
+                  }}
+                />
+              </Container>
+            </Container>
             <DrawerFooter onPrevious={onPrevious} isSubmit onNext={onNextClicked} />
           </Container>
         }

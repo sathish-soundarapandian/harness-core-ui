@@ -8,10 +8,9 @@
 import React, { useState } from 'react'
 import { Dialog, Divider, Intent } from '@blueprintjs/core'
 import * as yup from 'yup'
-import { isEqual, zip, orderBy, clone } from 'lodash-es'
+import { isEqual, zip, orderBy, clone, defaultTo } from 'lodash-es'
 import {
   Button,
-  ButtonVariation,
   Text,
   ButtonProps,
   Container,
@@ -20,12 +19,13 @@ import {
   Formik,
   FormikForm as Form,
   FormInput,
+  Color,
   SelectOption,
+  FontVariation,
   Heading,
   Icon
 } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { FontVariation, Color } from '@harness/design-system'
 import { getErrorMessage, useValidateVariationValues } from '@cf/utils/CFUtils'
 import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/exports'
@@ -38,7 +38,6 @@ import RbacButton from '@rbac/components/Button/Button'
 import { AUTO_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 
 import { GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
-import { useGovernance } from '@cf/hooks/useGovernance'
 import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import patch from '../../utils/instructions'
@@ -58,7 +57,6 @@ export interface EditVariationsModalProps extends Omit<ButtonProps, 'onClick' | 
   cancelButtonTitle?: string
 
   onSuccess: () => void
-  setGovernanceMetadata: (governanceMetadata: any) => void
 }
 
 export const EditVariationsModal: React.FC<EditVariationsModalProps> = ({
@@ -71,7 +69,6 @@ export const EditVariationsModal: React.FC<EditVariationsModalProps> = ({
   submitButtonTitle,
   cancelButtonTitle,
   onSuccess,
-  setGovernanceMetadata,
   ...props
 }) => {
   const { isPlanEnforcementEnabled } = usePlanEnforcement()
@@ -80,7 +77,6 @@ export const EditVariationsModal: React.FC<EditVariationsModalProps> = ({
     const { getString } = useStrings()
     const validateVariationValues = useValidateVariationValues()
     const { showError, clear } = useToaster()
-    const { handleError: handleGovernanceError, isGovernanceError } = useGovernance()
 
     const { mutate: submitPatch, loading: patchLoading } = usePatchFeature({
       identifier: feature.identifier as string,
@@ -165,7 +161,7 @@ export const EditVariationsModal: React.FC<EditVariationsModalProps> = ({
 
       patch.feature.onPatchAvailable(async data => {
         try {
-          const response = await submitPatch(
+          await submitPatch(
             gitSync?.isGitSyncEnabled
               ? {
                   ...data,
@@ -173,7 +169,6 @@ export const EditVariationsModal: React.FC<EditVariationsModalProps> = ({
                 }
               : data
           )
-          setGovernanceMetadata(response.details?.governanceMetadata)
 
           if (!gitSync?.isAutoCommitEnabled && values.autoCommit) {
             await gitSync?.handleAutoCommit(values.autoCommit)
@@ -187,11 +182,7 @@ export const EditVariationsModal: React.FC<EditVariationsModalProps> = ({
           if (error.status === GIT_SYNC_ERROR_CODE) {
             gitSync.handleError(error.data as GitSyncErrorResponse)
           } else {
-            if (isGovernanceError(error?.data)) {
-              handleGovernanceError(error?.data)
-            } else {
-              showError(getErrorMessage(error), 0, 'cf.submit.patch.error')
-            }
+            showError(getErrorMessage(error), 0, 'cf.submit.patch.error')
             patch.feature.reset()
           }
         }
@@ -288,7 +279,7 @@ export const EditVariationsModal: React.FC<EditVariationsModalProps> = ({
                         style={{ paddingLeft: 0 }}
                         onClick={() => {
                           formikProps.setFieldValue('variations', [
-                            ...formikProps.values?.variations,
+                            ...defaultTo(formikProps.values?.variations, []),
                             { identifier: '', name: '', value: '', description: '' }
                           ])
                         }}
@@ -366,15 +357,9 @@ export const EditVariationsModal: React.FC<EditVariationsModalProps> = ({
                     text={submitButtonTitle || getString('save')}
                     intent={Intent.PRIMARY}
                     type="submit"
-                    variation={ButtonVariation.PRIMARY}
                     disabled={isEqual(initialValues, formikProps.values) || patchLoading}
                   />
-                  <Button
-                    text={cancelButtonTitle || getString('cancel')}
-                    minimal
-                    onClick={hideModal}
-                    variation={ButtonVariation.SECONDARY}
-                  />
+                  <Button text={cancelButtonTitle || getString('cancel')} minimal onClick={hideModal} />
                   <FlexExpander />
                   {patchLoading && <Icon intent={Intent.PRIMARY} name="spinner" size={16} />}
                 </Layout.Horizontal>
