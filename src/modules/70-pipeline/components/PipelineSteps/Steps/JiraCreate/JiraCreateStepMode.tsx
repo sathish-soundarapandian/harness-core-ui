@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Dialog, Intent } from '@blueprintjs/core'
 import cx from 'classnames'
@@ -204,9 +204,9 @@ function FormContent({
     const projectResponseList: JiraProjectBasicNG[] = projectsResponse?.data || []
     options =
       projectResponseList.map((project: JiraProjectBasicNG) => ({
-        label: project.name || '',
-        value: project.id || '',
-        key: project.key || ''
+        label: defaultTo(project.name, ''),
+        value: defaultTo(project.id, ''),
+        key: defaultTo(project.key, '')
       })) || []
 
     setProjectOptions(options)

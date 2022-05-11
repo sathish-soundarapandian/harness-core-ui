@@ -11,7 +11,7 @@ import {
   pipelineSaveCall
 } from '../../support/70-pipeline/constants'
 
-describe.skip('RUN PIPELINE MODAL', () => {
+describe('RUN PIPELINE MODAL', () => {
   const gitSyncCall =
     '/ng/api/git-sync/git-sync-enabled?accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
   const resolvedPipelineDetailsCall =
@@ -52,7 +52,7 @@ describe.skip('RUN PIPELINE MODAL', () => {
     cy.clickSubmit()
   })
 
-  describe('Tests close without saving dialog for pipeline', () => {
+  describe.skip('Tests close without saving dialog for pipeline', () => {
     it('should display the close without saving dialog for pipeline', () => {
       cy.contains('p', 'Pipelines').click()
       cy.contains('p', 'Close without saving?').should('be.visible')
@@ -62,7 +62,7 @@ describe.skip('RUN PIPELINE MODAL', () => {
     })
   })
 
-  describe('For deploy stage', () => {
+  describe.skip('For deploy stage', () => {
     beforeEach(() => {
       switch (Cypress.currentTest.title) {
         case 'error validations on pipeline save from API':
@@ -203,7 +203,7 @@ describe.skip('RUN PIPELINE MODAL', () => {
       })
     })
   })
-  describe('For approval stage', () => {
+  describe.skip('For approval stage', () => {
     beforeEach(() => {
       cy.get('[icon="plus"]').click()
       cy.findByTestId('stage-Approval').click()
@@ -289,7 +289,7 @@ describe.skip('RUN PIPELINE MODAL', () => {
       cy.intercept('GET', jirayamlSnippetCall, { fixture: 'pipeline/api/jiraStage/stageYamlSnippet' }).as('stageYaml')
       cy.intercept('POST', stepsCall, { fixture: 'pipeline/api/approvals/steps' })
     })
-    it('should display the delete pipeline stage modal', () => {
+    it.skip('should display the delete pipeline stage modal', () => {
       cy.wait('@stageYaml')
       cy.wait(1000)
       cy.get('[icon="play"]').click({ force: true, multiple: true })
@@ -314,6 +314,30 @@ describe.skip('RUN PIPELINE MODAL', () => {
         cy.contains('span', 'Jira Connector is required').should('be.visible').should('have.class', 'FormError--error')
         cy.contains('span', 'Project is required').should('be.visible').should('have.class', 'FormError--error')
         cy.contains('span', 'Issue Type is required').should('be.visible').should('have.class', 'FormError--error')
+      })
+
+      it('Submit form with empty required fields validations', () => {
+        cy.intercept('GET', jiraConnectorsCall, { fixture: 'ng/api/jiraConnectors' })
+        cy.intercept('GET', jiraProjectsCall, { fixture: 'ng/api/jiraProjects' })
+        cy.intercept('GET', jiraIssueTypesCall, { fixture: 'ng/api/jiraIssueTypes' })
+        cy.wait(2000)
+        cy.contains('span', 'Execution').click({ force: true })
+        cy.wait(4000)
+        cy.contains('p', 'Jira Create').click()
+        cy.wait(4000)
+        cy.contains('span', 'Select Connector').click({ force: true })
+        cy.contains('p', 'Jira cloudJira cloudJira cloudJira cloudJira cloudJira cloud').click({ force: true })
+        cy.contains('span', 'Apply Selected').click({ force: true })
+        cy.wait(1000)
+        cy.get('input[name="spec.projectKey"]').click({ force: true })
+        cy.contains('p', 'ART').click({ force: true })
+        cy.wait(1000)
+        cy.get('input[name="spec.issueType"]').click({ force: true })
+        cy.contains('p', 'Bug').click({ force: true })
+        cy.wait(1000)
+        cy.contains('span', 'Apply Changes').click({ force: true })
+        cy.contains('span', 'This is a required field').should('be.visible').should('have.class', 'FormError--error')
+        cy.wait(1000)
       })
 
       it('Submit form after filling details', () => {
