@@ -17,7 +17,8 @@ import type {
   UserGroupDTO,
   Failure
 } from 'services/cd-ng'
-import { Scope } from '@common/interfaces/SecretsInterface'
+import { Scope, PrincipalScope } from '@common/interfaces/SecretsInterface'
+import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type {
   Assignment,
   RoleOption,
@@ -32,6 +33,7 @@ import { FeatureWarningTooltip } from '@common/components/FeatureWarning/Feature
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import type { ProjectSelectOption } from '@audit-trail/components/FilterDrawer/FilterDrawer'
 import type { RbacMenuItemProps } from '@rbac/components/MenuItem/MenuItem'
+import { data } from '@audit-trail/pages/AuditTrails/views/__tests__/mockData'
 
 export const DEFAULT_RG = '_all_resources_including_child_scopes'
 export const PROJECT_DEFAULT_RG = '_all_project_level_resources'
@@ -341,8 +343,15 @@ export const generateScopeList = (org: string, projects: ProjectSelectOption[], 
   ]
 }
 
-export const getUserGroupActionTooltipText = (userGroup: UserGroupDTO): StringKeys | undefined => {
+export const getUserGroupActionTooltipText = (
+  userGroup: UserGroupDTO,
+  userGroupInherited?: boolean
+): StringKeys | undefined => {
   const { ssoLinked, externallyManaged } = userGroup
+
+  if (userGroupInherited) {
+    return 'rbac.unableToEditInheritedMembershipDetailed'
+  }
 
   if (ssoLinked) {
     return 'rbac.userDetails.linkToSSOProviderModal.btnDisabledTooltipText'
@@ -351,4 +360,31 @@ export const getUserGroupActionTooltipText = (userGroup: UserGroupDTO): StringKe
   if (externallyManaged) {
     return 'rbac.unableToEditSCIMMembership'
   }
+}
+
+export const getScopeFromUserGroupDTO = (userGroupDTO?: UserGroupDTO): Scope => {
+  return getScopeFromDTO({
+    accountIdentifier: userGroupDTO?.accountIdentifier,
+    orgIdentifier: userGroupDTO?.orgIdentifier,
+    projectIdentifier: userGroupDTO?.projectIdentifier
+  })
+}
+
+export const mapfromScopetoPrincipalScope = (scope?: Scope): PrincipalScope | undefined => {
+  if (scope === Scope.ACCOUNT) return PrincipalScope.ACCOUNT
+
+  if (scope === Scope.ORG) return PrincipalScope.ORG
+
+  if (scope === Scope.PROJECT) return PrincipalScope.PROJECT
+}
+
+export const isUserGroupInherited = (scope: Scope, userGroupDTO?: UserGroupDTO): boolean => {
+  if (userGroupDTO === undefined) {
+    return false
+  }
+  const userGroupScope = getScopeFromUserGroupDTO(userGroupDTO)
+  if (userGroupScope !== scope) {
+    return true
+  }
+  return false
 }

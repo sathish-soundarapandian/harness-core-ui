@@ -45,7 +45,7 @@ const UserGroupsPage: React.FC = () => {
       searchTerm: searchTerm,
       filterType: 'INCLUDE_INHERITED_GROUPS'
     },
-    mock: { data: userGroupsAggregate, loading: false },
+    // mock: { data: userGroupsAggregate, loading: false },
     debounce: 300
   })
 

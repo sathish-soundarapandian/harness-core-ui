@@ -882,6 +882,7 @@ export interface StringsMap {
   'rbac.generateToken': string
   'rbac.group': string
   'rbac.in': string
+  'rbac.manageInheritedGroupText': string
   'rbac.manageSCIMText': string
   'rbac.myApiKeys': string
   'rbac.noRoleBinding': string
@@ -970,6 +971,8 @@ export interface StringsMap {
   'rbac.token.rotateLabel': string
   'rbac.token.scheduledToExpire': string
   'rbac.token.successMessage': string
+  'rbac.unableToEditInheritedMembership': string
+  'rbac.unableToEditInheritedMembershipDetailed': string
   'rbac.unableToEditSCIMMembership': string
   'rbac.updateNotificationSuccess': string
   'rbac.userDetails.linkToSSOProviderModal.btnDisabledTooltipText': string
