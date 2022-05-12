@@ -8,6 +8,8 @@
 import React from 'react'
 import { render, waitFor, fireEvent } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import routes from '@common/RouteDefinitions'
+import { accountPathProps, pipelineModuleParams, templatePathProps } from '@common/utils/routeUtils'
 import CDSideNav from '../CDSideNav'
 
 jest.mock('@projects-orgs/components/ProjectSelector/ProjectSelector', () => ({
@@ -54,6 +56,36 @@ describe('Sidenav', () => {
         data-testid="location"
       >
         /account/dummy/cd/orgs/org/projects/project/pipelines/-1/pipeline-studio/?modal=TRIAL
+      </div>
+    `)
+  })
+
+  test('should go to templates page when project is selected  from trial in progress page', async () => {
+    const { container, getByTestId } = render(
+      <TestWrapper
+        path={routes.toTemplateStudio({ ...accountPathProps, ...templatePathProps, ...pipelineModuleParams })}
+        pathParams={{
+          templateIdentifier: 'Test_Http_Template',
+          accountId: 'accountId',
+          orgIdentifier: 'default',
+          projectIdentifier: 'Yogesh_Test',
+          module: 'cd',
+          templateType: 'Step'
+        }}
+      >
+        <CDSideNav />
+      </TestWrapper>
+    )
+
+    const projectButtonSel = '#projectSelectorId'
+    const projectButton = await waitFor(() => container.querySelector(projectButtonSel))
+    fireEvent.click(projectButton!)
+
+    expect(getByTestId('location')).toMatchInlineSnapshot(`
+      <div
+        data-testid="location"
+      >
+        /account/accountId/cd/orgs/org/projects/project/setup/resources/templates
       </div>
     `)
   })

@@ -7,9 +7,12 @@
 
 import type { StringKeys } from 'framework/strings'
 import {
+  getDateUnitAndInterval,
+  getErrorBudgetGaugeOptions,
   getIsClearFilterDisabled,
   getIsDataEmpty,
   getIsMonitoresServicePageClearFilterDisabled,
+  getPlotLines,
   getServiceLevelObjectivesRiskCountParams,
   getSLODashboardWidgetsParams,
   getUserJourneyParams,
@@ -18,7 +21,13 @@ import {
   SLODashboardFilterActions,
   sloFilterReducer
 } from '../CVSLOListingPage.utils'
-import { initialStateForDisableTest, mockedSLORiskCountsData, pathParams } from './CVSLOsListingPage.mock'
+import type { SLOFilterAction } from '../CVSLOsListingPage.types'
+import {
+  dashboardWidgetsContent,
+  initialStateForDisableTest,
+  mockedSLORiskCountsData,
+  pathParams
+} from './CVSLOsListingPage.mock'
 
 function getString(key: StringKeys): StringKeys {
   return key
@@ -100,6 +109,8 @@ describe('CVSLOListingPage.utils', () => {
 
   test('should check sloFilterReducer resets the filters on reset action', () => {
     expect(sloFilterReducer(initialState, SLODashboardFilterActions.resetFilters())).toEqual(initialState)
+
+    expect(sloFilterReducer(undefined, {} as SLOFilterAction)).toEqual(initialState)
   })
 
   test('should check getSLODashboardWidgetsParams returns correct output', () => {
@@ -211,5 +222,35 @@ describe('CVSLOListingPage.utils', () => {
 
   test('getIsDataEmpty should return false if slo content data is not empty and riskCounts data is empty', () => {
     expect(getIsDataEmpty(2, mockedSLORiskCountsData)).toBeFalsy()
+  })
+
+  test('getDateUnitAndInterval', () => {
+    expect(getDateUnitAndInterval({ ...dashboardWidgetsContent, timeRemainingDays: 8 })).toEqual({
+      interval: 86400000,
+      unit: 'Do MMM hh:mm A'
+    })
+
+    expect(getDateUnitAndInterval({ ...dashboardWidgetsContent, timeRemainingDays: 5 })).toEqual({
+      interval: 108000000,
+      unit: 'Do MMM'
+    })
+  })
+
+  test('getErrorBudgetGaugeOptions', () => {
+    const options = getErrorBudgetGaugeOptions(dashboardWidgetsContent)
+
+    expect((options.series?.[0] as any)?.dataLabels.formatter()).toMatchSnapshot()
+  })
+
+  test('getPlotLines', () => {
+    const plotLines = getPlotLines(dashboardWidgetsContent)
+
+    expect((plotLines[0] as any)?.label.formatter()).toMatchSnapshot()
+  })
+
+  test('getPlotLines with 0 sloTargetPercentage', () => {
+    const plotLines = getPlotLines({ ...dashboardWidgetsContent, sloTargetPercentage: 0 })
+
+    expect((plotLines[0] as any)?.label.formatter()).toMatchSnapshot()
   })
 })

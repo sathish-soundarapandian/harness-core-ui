@@ -101,11 +101,6 @@ const CommonProblems: React.FC<StepProps<null>> = () => {
             <CopyToClipboard content={getString('delegates.delegateNotInstalled.verifyField3')} />
           </Container>
         </Layout.Vertical>
-        <Layout.Horizontal width={511} style={{ padding: 'var(--spacing-small) 0px' }}>
-          <Text lineClamp={2} font="normal" color={Color.GREY_700} style={{ lineHeight: '24px' }}>
-            {getString('delegates.delegateNotInstalled.tabs.commonProblems.checkEndPoint')}
-          </Text>
-        </Layout.Horizontal>
       </Layout.Vertical>
     </>
   )

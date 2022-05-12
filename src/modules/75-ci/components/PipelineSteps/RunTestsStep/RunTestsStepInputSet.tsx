@@ -14,27 +14,21 @@ import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import { ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
-import StepCommonFieldsInputSet from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFieldsInputSet'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
 import type { RunTestsStepProps } from './RunTestsStep'
-import { AllMultiTypeInputTypesForInputSet, shouldRenderRunTimeInputView } from '../CIStep/StepUtils'
 import { CIStep } from '../CIStep/CIStep'
 import { ConnectorRefWithImage } from '../CIStep/ConnectorRefWithImage'
-import { CIStepOptionalConfig, getOptionalSubLabel, renderMultiTypeListInputSet } from '../CIStep/CIStepOptionalConfig'
+import { getOptionalSubLabel, renderMultiTypeInputWithAllowedValues } from '../CIStep/CIStepOptionalConfig'
+import { RunAndRunTestStepInputCommonFields } from '../CIStep/RunAndRunTestStepInputCommonFields'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = ({
-  template,
-  path,
-  readonly,
-  stepViewType,
-  allowableTypes,
-  formik
-}) => {
+export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = props => {
+  const { template, path, readonly, stepViewType, allowableTypes } = props
   const { getString } = useStrings()
 
   const { expressions } = useVariablesExpression()
@@ -132,6 +126,8 @@ export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = ({
         showImage={getMultiTypeFromValue(template?.spec?.image) === MultiTypeInputType.RUNTIME}
         stepViewType={stepViewType}
         path={path || ''}
+        template={template}
+        isInputSetView={true}
       />
       {getMultiTypeFromValue(template?.spec?.packages) === MultiTypeInputType.RUNTIME && (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
@@ -196,54 +192,43 @@ export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = ({
           />
         </Container>
       )}
-      {getMultiTypeFromValue(template?.spec?.preCommand) === MultiTypeInputType.RUNTIME &&
-        renderCommandEditor(`${prefix}spec.preCommand`, 'ci.preCommandLabel', 'runTestsPreCommand')}
-      {getMultiTypeFromValue(template?.spec?.preCommand) === MultiTypeInputType.RUNTIME &&
-        renderCommandEditor(`${prefix}spec.postCommand`, 'ci.postCommandLabel', 'runTestsPostCommand')}
-      {shouldRenderRunTimeInputView(template?.spec?.reports?.spec?.paths) && (
-        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
-          {renderMultiTypeListInputSet({
-            name: `${prefix}spec.reports.spec.paths`,
-            tooltipId: 'reportPaths',
-            labelKey: 'pipelineSteps.reportPathsLabel',
-            allowedTypes: AllMultiTypeInputTypesForInputSet,
-            placeholderKey: 'pipelineSteps.reportPathsPlaceholder',
-            expressions,
-            getString,
-            readonly,
-            formik
-          })}
-        </Container>
-      )}
-      {shouldRenderRunTimeInputView(template?.spec?.outputVariables) && (
-        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
-          {renderMultiTypeListInputSet({
-            name: `${prefix}spec.outputVariables`,
-            tooltipId: 'outputVariables',
-            labelKey: 'pipelineSteps.outputVariablesLabel',
-            allowedTypes: AllMultiTypeInputTypesForInputSet,
-            expressions,
-            getString,
-            readonly,
-            formik,
-            withObjectStructure: true,
-            keyName: 'name'
-          })}
-        </Container>
-      )}
-      <CIStepOptionalConfig
-        stepViewType={stepViewType}
-        readonly={readonly}
-        enableFields={{
-          ...(shouldRenderRunTimeInputView(template?.spec?.envVariables) && {
-            'spec.envVariables': { tooltipId: 'environmentVariables' }
-          })
-        }}
-        path={path || ''}
-        formik={formik}
-        isInputSetView={true}
-      />
-      <StepCommonFieldsInputSet path={path} readonly={readonly} template={template} stepViewType={stepViewType} />
+      {getMultiTypeFromValue(template?.spec?.preCommand) === MultiTypeInputType.RUNTIME ? (
+        shouldRenderRunTimeInputViewWithAllowedValues('spec.preCommand', template) ? (
+          <Container className={cx(css.formGroup, stepCss)}>
+            {renderMultiTypeInputWithAllowedValues({
+              name: `${prefix}spec.preCommand`,
+              labelKey: 'ci.preCommandLabel',
+              tooltipId: 'runTestsPreCommand',
+              fieldPath: 'spec.preCommand',
+              getString,
+              readonly,
+              expressions,
+              template
+            })}
+          </Container>
+        ) : (
+          renderCommandEditor(`${prefix}spec.preCommand`, 'ci.preCommandLabel', 'runTestsPreCommand')
+        )
+      ) : null}
+      {getMultiTypeFromValue(template?.spec?.postCommand) === MultiTypeInputType.RUNTIME ? (
+        shouldRenderRunTimeInputViewWithAllowedValues('spec.postCommand', template) ? (
+          <Container className={cx(css.formGroup, stepCss)}>
+            {renderMultiTypeInputWithAllowedValues({
+              name: `${prefix}spec.postCommand`,
+              labelKey: 'ci.postCommandLabel',
+              tooltipId: 'runTestsPostCommand',
+              fieldPath: 'spec.postCommand',
+              getString,
+              readonly,
+              expressions,
+              template
+            })}
+          </Container>
+        ) : (
+          renderCommandEditor(`${prefix}spec.postCommand`, 'ci.postCommandLabel', 'runTestsPostCommand')
+        )
+      ) : null}
+      <RunAndRunTestStepInputCommonFields {...props} />
     </FormikForm>
   )
 }

@@ -8,6 +8,7 @@ exports[`useCommentModal Test should work as expected 1`] = `
     class="StyledProps--font StyledProps--main main StyledProps--padding-xxxlarge"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

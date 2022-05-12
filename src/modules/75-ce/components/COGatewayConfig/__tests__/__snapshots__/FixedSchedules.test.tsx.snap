@@ -15,6 +15,7 @@ exports[`Static Schedule form tests form renders successfully 1`] = `
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>

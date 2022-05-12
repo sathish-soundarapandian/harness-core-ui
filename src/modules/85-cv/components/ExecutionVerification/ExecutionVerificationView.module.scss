@@ -42,4 +42,9 @@
 .mainTabPanel {
   flex: 1;
   overflow-y: scroll;
+
+  &_logs {
+    overflow-y: auto;
+    flex: 1;
+  }
 }

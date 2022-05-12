@@ -259,7 +259,7 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
           )}
         </Container>
 
-        <Layout.Horizontal width={columnWidths.instances} className={css.instancesColumn}>
+        <Layout.Horizontal width={columnWidths.instances}>
           {delegate.delegateInstanceDetails?.length || 0}
         </Layout.Horizontal>
 
@@ -301,7 +301,7 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
                 <Text color={Color.BLACK}>{getString('delegates.noInstances')}</Text>
               </Layout.Horizontal>
               <Container width={columnWidths.tags} />
-              <Container width={columnWidths.instances} />
+              <Layout.Horizontal width={columnWidths.instances} />
               <Layout.Horizontal width={columnWidths.heartbeat} />
               <Layout.Vertical width={columnWidths.status} />
               <Layout.Vertical width={columnWidths.actions} />
@@ -319,9 +319,7 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
                   {index === 0 && <Text color={Color.BLACK}>{getString('instanceFieldOptions.instances')}</Text>}
                 </Layout.Horizontal>
                 <Container className={css.connectivity} width={columnWidths.tags} />
-                <Container width={columnWidths.instances} className={css.instancesColumn}>
-                  {instanceDetails.hostName}
-                </Container>
+                <Layout.Horizontal width={columnWidths.instances}>{instanceDetails.hostName}</Layout.Horizontal>
                 <Layout.Horizontal width={columnWidths.heartbeat}>
                   {instanceDetails.lastHeartbeat ? (
                     <ReactTimeago date={instanceDetails.lastHeartbeat} live />

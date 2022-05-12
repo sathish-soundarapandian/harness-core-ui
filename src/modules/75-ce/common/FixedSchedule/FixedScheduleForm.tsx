@@ -213,7 +213,7 @@ const FixedScheduleForm: React.FC<FixedScheduleFormProps> = props => {
               <Button
                 text={getString('common.apply')}
                 intent="primary"
-                disabled={!_formikProps.isValid}
+                disabled={!_formikProps.isValid || !_formikProps.dirty}
                 type="submit"
               />
               <Button text={getString('cancel')} onClick={props.closeDialog} />

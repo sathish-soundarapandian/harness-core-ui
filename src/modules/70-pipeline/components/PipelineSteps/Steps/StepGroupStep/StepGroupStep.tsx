@@ -72,6 +72,10 @@ export class StepGroupStep extends PipelineStep<StepGroupElementConfig> {
     )
   }
 
+  constructor() {
+    super()
+    this._hasDelegateSelectionVisible = true
+  }
   validateInputSet(): Record<string, any> {
     return {}
   }

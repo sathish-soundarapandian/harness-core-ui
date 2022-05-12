@@ -43,7 +43,9 @@ export const moduleToLabelMap: Record<AuditEventDTO['module'], StringKeys> = {
   CI: 'common.module.ci',
   CORE: 'common.module.core',
   PMS: 'common.module.pms',
-  TEMPLATESERVICE: 'common.module.templateService'
+  TEMPLATESERVICE: 'common.module.templateService',
+  STO: 'common.module.sto',
+  GOVERNANCE: 'common.module.governance'
 }
 
 export const getModuleNameFromAuditModule = (auditModule: AuditEventDTO['module']): Module | undefined => {
@@ -98,6 +100,14 @@ export const moduleInfoMap: Record<AuditEventDTO['module'], ModuleInfo> = {
   },
   TEMPLATESERVICE: {
     moduleLabel: 'common.module.templateService',
+    icon: { name: 'nav-settings' }
+  },
+  STO: {
+    moduleLabel: 'common.module.sto',
+    icon: { name: 'nav-settings' }
+  },
+  GOVERNANCE: {
+    moduleLabel: 'common.module.governance',
     icon: { name: 'nav-settings' }
   }
 }

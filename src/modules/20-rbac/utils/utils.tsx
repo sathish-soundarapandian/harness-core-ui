@@ -14,7 +14,8 @@ import type {
   RoleAssignmentMetadataDTO,
   UserMetadataDTO,
   Scope as CDScope,
-  UserGroupDTO
+  UserGroupDTO,
+  Failure
 } from 'services/cd-ng'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type {
@@ -233,7 +234,7 @@ export const isScopeResourceSelector = (value: string): boolean => {
 }
 
 export interface ErrorHandlerProps {
-  data: AccessControlCheckError
+  data: Failure | AccessControlCheckError | Error
 }
 
 export const getAssignments = (roleBindings: RoleAssignmentMetadataDTO[]): Assignment[] => {

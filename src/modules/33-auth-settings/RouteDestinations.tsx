@@ -24,6 +24,7 @@ import { ResourceType, ResourceCategory } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { String } from 'framework/strings'
 import { AccountSideNavProps } from '@common/RouteDestinations'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 
 RbacFactory.registerResourceTypeHandler(ResourceType.ACCOUNT, {
   icon: 'nav-settings',
@@ -73,6 +74,7 @@ const AuthSettingsRoutes: React.FC = () => {
           sidebarProps={AccountSideNavProps}
           path={routes.toAccountSettings({ ...accountPathProps })}
           exact
+          pageName={PAGE_NAME.AccountOverview}
         >
           <RedirectToOverview />
         </RouteWithLayout>
@@ -83,6 +85,7 @@ const AuthSettingsRoutes: React.FC = () => {
           sidebarProps={AccountSideNavProps}
           path={routes.toAccountConfiguration({ ...accountPathProps })}
           exact
+          pageName={PAGE_NAME.AccountConfiguration}
         >
           <Configuration />
         </RouteWithLayout>
@@ -90,6 +93,7 @@ const AuthSettingsRoutes: React.FC = () => {
           sidebarProps={AccountSideNavProps}
           path={routes.toAccountSettingsOverview({ ...accountPathProps })}
           exact
+          pageName={PAGE_NAME.AccountOverview}
         >
           <AccountOverview />
         </RouteWithLayout>
@@ -97,6 +101,7 @@ const AuthSettingsRoutes: React.FC = () => {
           sidebarProps={AccountSideNavProps}
           path={routes.toSubscriptions({ ...accountPathProps })}
           exact
+          pageName={PAGE_NAME.SubscriptionsPage}
         >
           <SubscriptionsPage />
         </RouteWithLayout>

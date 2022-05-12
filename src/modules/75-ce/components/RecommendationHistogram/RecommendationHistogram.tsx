@@ -9,9 +9,8 @@ import { Container, Text, Layout } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 
 import React from 'react'
-import type { Point } from 'highcharts'
 
-import type { RecommendationItem, HistogramData } from '@ce/types'
+import type { RecommendationItem, HistogramData, CustomPoint, CustomHighcharts } from '@ce/types'
 
 import {
   getCPUValueInReadableForm,
@@ -22,32 +21,17 @@ import {
 import { convertNumberToFixedDecimalPlaces } from '@ce/utils/convertNumberToFixedDecimalPlaces'
 import { useStrings } from 'framework/strings'
 
+import { ChartColors } from '../RecommendationDetails/constants'
 import CEChart from '../CEChart/CEChart'
 import limitMarker from './images/limitMarker.svg'
 import requestMarker from './images/requestMarker.svg'
 import css from './RecommendationHistogram.module.scss'
 
-type CustomPoint = Point & {
-  plotX: number
-  pointWidth: number
-}
-
-export type CustomHighcharts = Highcharts.Chart & {
-  rePlaceMarker: (reqVal: number, limitVal?: number) => void
-}
-
-export enum ChartColors {
-  'BLUE' = '#25a6f7',
-  'GREEN' = '#38d168',
-  'GREY' = '#c4c4c4',
-  'GREEN_300' = '#d7f4e0'
-}
-
 interface HistogramHeaderProps {
   header: string
 }
 
-const HistogramHeader: React.FC<HistogramHeaderProps> = props => (
+export const HistogramHeader: React.FC<HistogramHeaderProps> = props => (
   <Text
     padding="xsmall"
     font={{ variation: FontVariation.TABLE_HEADERS, align: 'center' }}
@@ -62,7 +46,7 @@ interface HistogramDescriptionProps {
   description: React.ReactNode
 }
 
-const HistogramDescription: React.FC<HistogramDescriptionProps> = props => {
+export const HistogramDescription: React.FC<HistogramDescriptionProps> = props => {
   const { getString } = useStrings()
 
   return (

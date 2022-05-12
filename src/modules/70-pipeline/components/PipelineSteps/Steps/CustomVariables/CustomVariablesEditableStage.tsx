@@ -97,7 +97,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
       {formik => {
         const { values, setFieldValue } = formik
         window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: tabName }))
-        formikRef.current = formik
+        formikRef.current = formik as FormikProps<unknown> | null
         return (
           <FieldArray name="variables">
             {({ remove, push, replace }) => {

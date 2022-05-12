@@ -7,8 +7,10 @@
 
 import React from 'react'
 import { render, fireEvent, waitFor } from '@testing-library/react'
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
+import * as ngServices from 'services/cd-ng'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import HelmWithS3 from '../HelmWithS3'
 
@@ -35,13 +37,16 @@ jest.mock('services/portal', () => ({
 }))
 
 jest.mock('services/cd-ng', () => ({
-  useGetBucketListForS3: jest.fn().mockImplementation(() => {
-    return { data: mockBuckets, refetch: jest.fn(), error: null, loading: false }
-  }),
+  useGetBucketListForS3: jest.fn(),
   useHelmCmdFlags: jest.fn().mockImplementation(() => ({ data: { data: ['Template', 'Fetch'] }, refetch: jest.fn() }))
 }))
 
 describe('helm with S3 tests', () => {
+  beforeAll(() => {
+    jest.spyOn(ngServices, 'useGetBucketListForS3').mockImplementation((): any => {
+      return { data: mockBuckets, refetch: jest.fn(), error: null, loading: false }
+    })
+  })
   test(`renders without crashing`, () => {
     const initialValues = {
       identifier: 'test',
@@ -113,25 +118,25 @@ describe('helm with S3 tests', () => {
     )
     expect(container).toMatchSnapshot()
   })
-  // eslint-disable-next-line jest/no-disabled-tests
-  test.skip(`submits with the right payload`, async () => {
+
+  test(`submits with the right payload`, async () => {
     const initialValues = {
       identifier: 'testidentifier',
-
       spec: {
-        bucketName: 'test-bucket',
-        connectorRef: 'awsconnectora',
-        folderPath: 'sdfds',
-        region: 'region1'
+        store: {
+          spec: {
+            bucketName: 'test-bucket',
+            connectorRef: '',
+            folderPath: 'testFolder',
+            region: 'region1'
+          }
+        },
+        chartName: 'testchart',
+        chartVersion: 'v1',
+        helmVersion: 'V2',
+        skipResourceVersioning: false
       },
-      type: ManifestDataType.HelmChart,
-
-      folderPath: 'testFolder',
-      helmVersion: 'V2',
-      chartName: 'testchart',
-      chartVersion: 'v1',
-      skipResourceVersioning: false,
-      commandFlags: [{ commandType: undefined, flag: undefined, id: 'id1' }]
+      type: ManifestDataType.HelmChart
     }
     const { container } = render(
       <TestWrapper>
@@ -140,6 +145,7 @@ describe('helm with S3 tests', () => {
     )
 
     fireEvent.click(container.querySelector('button[type="submit"]')!)
+    expect(container.querySelector('button[type="submit"]')).toBeTruthy()
     expect(container).toMatchSnapshot()
     await waitFor(() => {
       expect(props.handleSubmit).toHaveBeenCalledWith({
@@ -164,5 +170,70 @@ describe('helm with S3 tests', () => {
         }
       })
     })
+  })
+
+  test('bucketname is null', () => {
+    const initialValues = {
+      identifier: 'test',
+      type: ManifestDataType.HelmChart,
+      spec: {
+        store: {
+          type: 'S3',
+          spec: {
+            connectorRef: 'test',
+            bucketName: '',
+            folderPath: 'testfolder',
+            region: 'region1'
+          }
+        },
+        chartName: 'testChart',
+        chartVersion: 'v1',
+        helmVersion: 'V2',
+        skipResourceVersioning: false
+      }
+    }
+    const { container, getByPlaceholderText } = render(
+      <TestWrapper>
+        <HelmWithS3 {...props} initialValues={initialValues} />
+      </TestWrapper>
+    )
+    const bucketField = getByPlaceholderText('pipeline.manifestType.bucketPlaceHolder')
+    userEvent.click(bucketField)
+    expect(container).toMatchSnapshot()
+  })
+})
+
+describe('bucketFetch loading true', () => {
+  beforeAll(() => {
+    jest.spyOn(ngServices, 'useGetBucketListForS3').mockImplementation((): any => {
+      return { data: null, refetch: jest.fn(), error: null, loading: true }
+    })
+  })
+  test('bucketFetch loading true', () => {
+    const initialValues = {
+      identifier: 'test',
+      type: ManifestDataType.HelmChart,
+      spec: {
+        store: {
+          type: 'S3',
+          spec: {
+            connectorRef: 'test',
+            bucketName: RUNTIME_INPUT_VALUE,
+            folderPath: 'testfolder',
+            region: 'region1'
+          }
+        },
+        chartName: 'testChart',
+        chartVersion: 'v1',
+        helmVersion: 'V2',
+        skipResourceVersioning: false
+      }
+    }
+    const { container } = render(
+      <TestWrapper>
+        <HelmWithS3 {...props} initialValues={initialValues} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
   })
 })

@@ -11,8 +11,8 @@ import type { SLOForm } from './CreateSLO.types'
 
 export const isFormDataValid = (formikProps: FormikProps<SLOForm>, selectedTabId: CreateSLOEnum): boolean => {
   if (selectedTabId === CreateSLOEnum.NAME) {
-    formikProps.setFieldTouched('name')
-    formikProps.setFieldTouched('userJourneyRef')
+    formikProps.setFieldTouched('name', true)
+    formikProps.setFieldTouched('userJourneyRef', true)
 
     const { name, userJourneyRef } = formikProps.values
 
@@ -22,13 +22,13 @@ export const isFormDataValid = (formikProps: FormikProps<SLOForm>, selectedTabId
   }
 
   if (selectedTabId === CreateSLOEnum.SLI) {
-    formikProps.setFieldTouched('monitoredServiceRef')
-    formikProps.setFieldTouched('healthSourceRef')
-    formikProps.setFieldTouched('serviceLevelIndicators.spec.spec.eventType')
-    formikProps.setFieldTouched('serviceLevelIndicators.spec.spec.metric1')
-    formikProps.setFieldTouched('serviceLevelIndicators.spec.spec.metric2')
-    formikProps.setFieldTouched('serviceLevelIndicators.spec.objectiveValue')
-    formikProps.setFieldTouched('serviceLevelIndicators.spec.comparator')
+    formikProps.setFieldTouched('monitoredServiceRef', true)
+    formikProps.setFieldTouched('healthSourceRef', true)
+    formikProps.setFieldTouched('serviceLevelIndicators.spec.spec.eventType', true)
+    formikProps.setFieldTouched('serviceLevelIndicators.spec.spec.metric1', true)
+    formikProps.setFieldTouched('serviceLevelIndicators.spec.spec.metric2', true)
+    formikProps.setFieldTouched('serviceLevelIndicators.spec.objectiveValue', true)
+    formikProps.setFieldTouched('serviceLevelIndicators.spec.comparator', true)
 
     const { monitoredServiceRef, healthSourceRef, serviceLevelIndicators } = formikProps.errors
 

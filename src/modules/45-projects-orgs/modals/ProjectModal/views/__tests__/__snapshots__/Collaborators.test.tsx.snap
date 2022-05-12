@@ -6,6 +6,7 @@ exports[`Collaborators test Render Collaborators  1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

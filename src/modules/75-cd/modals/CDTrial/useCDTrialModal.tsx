@@ -12,7 +12,7 @@ import { useModalHook } from '@harness/use-modal'
 import cx from 'classnames'
 
 import { TrialModalTemplate } from '@pipeline/components/TrialModalTemplate/TrialModalTemplate'
-import { isCDCommunity, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { isCommunityPlan } from '@common/utils/utils'
 import type { UseTrialModalProps, UseTrialModalReturns } from '@pipeline/components/TrialModalTemplate/trialModalUtils'
 import { useGetFormPropsByTrialType } from '@pipeline/components/TrialModalTemplate/trialModalUtils'
 import cdImage from '../images/cd.png'
@@ -23,9 +23,8 @@ interface CDTrialTemplateData {
 }
 
 const CDTrialTemplate: React.FC<CDTrialTemplateData> = ({ children }) => {
-  const { licenseInformation } = useLicenseStore()
   return (
-    <TrialModalTemplate imgSrc={cdImage} hideTrialBadge={isCDCommunity(licenseInformation)}>
+    <TrialModalTemplate imgSrc={cdImage} hideTrialBadge={isCommunityPlan()}>
       {children}
     </TrialModalTemplate>
   )

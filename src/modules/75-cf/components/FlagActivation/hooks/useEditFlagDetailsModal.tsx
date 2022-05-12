@@ -6,13 +6,23 @@
  */
 
 import React from 'react'
-import { Button, Container, Formik, FormikForm as Form, FormInput, Layout, Text } from '@wings-software/uicore'
+import {
+  Button,
+  ButtonVariation,
+  Container,
+  Formik,
+  FormikForm as Form,
+  FormInput,
+  Layout,
+  Text
+} from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, Divider } from '@blueprintjs/core'
 import * as yup from 'yup'
 import type { MutateMethod } from 'restful-react/dist/Mutate'
 import type {
   Feature,
+  FeatureResponseMetadata,
   GitSyncErrorResponse,
   GitSyncPatchOperation,
   PatchFeaturePathParams,
@@ -31,8 +41,14 @@ import css from '../FlagActivationDetails.module.scss'
 interface UseEditFlagDetailsModalProps {
   featureFlag: Feature
   gitSync: UseGitSync
-  submitPatch: MutateMethod<Feature, GitSyncPatchOperation, PatchFeatureQueryParams, PatchFeaturePathParams>
+  submitPatch: MutateMethod<
+    FeatureResponseMetadata,
+    GitSyncPatchOperation,
+    PatchFeatureQueryParams,
+    PatchFeaturePathParams
+  >
   refetchFlag: () => void
+  setGovernanceMetadata: (governanceMetadata: any) => void
 }
 
 interface UseEditFlagDetailsModalReturn {
@@ -41,7 +57,7 @@ interface UseEditFlagDetailsModalReturn {
 }
 
 const useEditFlagDetailsModal = (props: UseEditFlagDetailsModalProps): UseEditFlagDetailsModalReturn => {
-  const { featureFlag, gitSync, refetchFlag, submitPatch } = props
+  const { featureFlag, gitSync, refetchFlag, submitPatch, setGovernanceMetadata } = props
   const { getString } = useStrings()
   const { handleError: handleGovernanceError, isGovernanceError } = useGovernance()
 
@@ -80,7 +96,7 @@ const useEditFlagDetailsModal = (props: UseEditFlagDetailsModalProps): UseEditFl
                 }
               : data
           )
-            .then(async () => {
+            .then(async response => {
               if (values.autoCommit) {
                 await gitSync?.handleAutoCommit(values.autoCommit)
               }
@@ -88,14 +104,15 @@ const useEditFlagDetailsModal = (props: UseEditFlagDetailsModalProps): UseEditFl
               patch.feature.reset()
               hideEditDetailsModal()
               refetchFlag()
+              setGovernanceMetadata(response?.details?.governanceMetadata)
               showToaster(getString('cf.messages.flagUpdated'))
             })
             .catch(error => {
               if (error.status === GIT_SYNC_ERROR_CODE) {
                 gitSync?.handleError(error.data as GitSyncErrorResponse)
               } else {
-                if (isGovernanceError(error)) {
-                  handleGovernanceError(error.data)
+                if (isGovernanceError(error?.data)) {
+                  handleGovernanceError(error?.data)
                 } else {
                   patch.feature.reset()
                 }
@@ -142,17 +159,18 @@ const useEditFlagDetailsModal = (props: UseEditFlagDetailsModalProps): UseEditFl
                   </>
                 )}
 
-                <Container>
-                  <Button intent="primary" text={getString('save')} type="submit" />
+                <Layout.Horizontal spacing="small">
+                  <Button intent="primary" text={getString('save')} type="submit" variation={ButtonVariation.PRIMARY} />
                   <Button
                     minimal
                     text={getString('cancel')}
+                    variation={ButtonVariation.SECONDARY}
                     onClick={e => {
                       e.preventDefault()
                       hideEditDetailsModal()
                     }}
                   />
-                </Container>
+                </Layout.Horizontal>
               </Layout.Vertical>
             </Form>
           )}

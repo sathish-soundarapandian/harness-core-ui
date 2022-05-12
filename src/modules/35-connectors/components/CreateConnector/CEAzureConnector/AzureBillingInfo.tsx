@@ -27,6 +27,8 @@ import {
   useUpdateConnector
 } from 'services/cd-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { FeatureFlag } from '@common/featureFlags'
+import { useConnectorGovernanceModal } from '@connectors/hooks/useConnectorGovernanceModal'
 import css from './CreateCeAzureConnector.module.scss'
 
 interface OverviewDetails {
@@ -59,6 +61,10 @@ const AzureBillingInfo: React.FC<StepProps<StepSecretManagerProps> & AzureBillin
   const { mutate: updateConnector } = useUpdateConnector({
     queryParams: { accountIdentifier: accountId }
   })
+  const { hideOrShowGovernanceErrorModal } = useConnectorGovernanceModal({
+    errorOutOnGovernanceWarning: false,
+    featureFlag: FeatureFlag.OPA_CONNECTOR_GOVERNANCE
+  })
 
   const handleSubmit = async (values: OverviewDetails): Promise<void> => {
     setIsSaving(true)
@@ -75,12 +81,11 @@ const AzureBillingInfo: React.FC<StepProps<StepSecretManagerProps> & AzureBillin
         spec: spec
       }
       const connector = { connector: connectorDetails }
-      if (!props.isEditMode) {
-        const response = await createConnector(connector as ConnectorRequestBody)
-        props.onSuccess?.(response.data as ConnectorRequestBody)
-        props.nextStep?.({ ...connectorDetails })
-      } else if (props.isEditMode === true) {
-        const response = await updateConnector(connector)
+      const response = props.isEditMode
+        ? await updateConnector(connector)
+        : await createConnector(connector as ConnectorRequestBody)
+      const { canGoToNextStep } = await hideOrShowGovernanceErrorModal(response)
+      if (canGoToNextStep) {
         props.onSuccess?.(response.data as ConnectorRequestBody)
         props.nextStep?.({ ...connectorDetails })
       }

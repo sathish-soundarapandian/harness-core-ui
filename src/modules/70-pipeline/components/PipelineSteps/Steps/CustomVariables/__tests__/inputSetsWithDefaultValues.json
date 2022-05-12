@@ -1,0 +1,62 @@
+{
+  "template": {
+    "variables": [
+      {
+        "name": "var1",
+        "type": "String",
+        "value": "<+input>"
+      },
+      {
+        "name": "var2",
+        "type": "String",
+        "value": "<+input>"
+      },
+      {
+        "name": "var3",
+        "type": "String",
+        "value": "<+input>"
+      },
+      {
+        "name": "var4",
+        "type": "String",
+        "value": "<+input>"
+      },
+      {
+        "name": "var5",
+        "type": "String",
+        "value": "<+input>"
+      }
+    ]
+  },
+  "allValues": {
+    "variables": [
+      {
+        "name": "var1",
+        "type": "String",
+        "value": "<+input>"
+      },
+      {
+        "name": "var2",
+        "type": "String",
+        "value": "<+input>",
+        "default": "value2"
+      },
+      {
+        "name": "var3",
+        "type": "String",
+        "value": "<+input>",
+        "default": "value3"
+      },
+      {
+        "name": "var4",
+        "type": "String",
+        "value": "<+input>"
+      },
+      {
+        "name": "var5",
+        "type": "String",
+        "value": "<+input>"
+      }
+    ]
+  }
+}

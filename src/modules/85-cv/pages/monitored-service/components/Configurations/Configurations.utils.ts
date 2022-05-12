@@ -18,6 +18,7 @@ import type {
 } from 'services/cv'
 import type { UseStringsReturn } from 'framework/strings'
 import { CVObjectStoreNames } from '@cv/hooks/IndexedDBHook/IndexedDBHook'
+import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import type { MonitoredServiceForm } from './components/Service/Service.types'
 
 export const isUpdated = (
@@ -170,4 +171,12 @@ export const onSubmit = async ({
     await saveMonitoredService(payload)
     setOverrideBlockNavigation(true)
   }
+}
+
+export const getImperativeHandleRef = (isTemplate?: boolean, formikRef?: TemplateFormRef): TemplateFormRef => {
+  const defaultRef = { current: {} } as TemplateFormRef
+  if (!isTemplate || !formikRef) {
+    return defaultRef
+  }
+  return isTemplate ? formikRef : defaultRef
 }

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Formik,
   FormikForm as Form,
@@ -14,6 +14,7 @@ import {
   Container,
   StepProps,
   Button,
+  ButtonVariation,
   Collapse,
   Text,
   Utils
@@ -24,6 +25,8 @@ import type { IconName } from '@blueprintjs/core'
 import * as Yup from 'yup'
 import { useStrings } from 'framework/strings'
 import { illegalIdentifiers } from '@common/utils/StringUtils'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import type { FlagWizardFormValues } from './FlagWizard'
 import css from './FlagElemAbout.module.scss'
 
@@ -93,6 +96,7 @@ const AboutForm: React.FC<AboutFormProps> = props => {
           <Button
             type="button"
             text={getString('back')}
+            variation={ButtonVariation.SECONDARY}
             onMouseDown={e => {
               Utils.stopEvent(e)
               props.goBackToTypeSelections()
@@ -103,6 +107,7 @@ const AboutForm: React.FC<AboutFormProps> = props => {
             intent="primary"
             rightIcon="chevron-right"
             text={getString('next')}
+            variation={ButtonVariation.PRIMARY}
             onClick={() => props.handleSubmit()}
           />
         </Layout.Horizontal>
@@ -115,6 +120,17 @@ const FlagElemAbout: React.FC<StepProps<Partial<FlagWizardFormValues>> & FlagEle
   const { getString } = useStrings()
   const { nextStep, prevStepData, goBackToTypeSelections } = props
   const isEdit = Boolean(prevStepData)
+
+  const { trackEvent } = useTelemetry()
+
+  useEffect(() => {
+    if (!isEdit) {
+      trackEvent(FeatureActions.AboutTheFlag, {
+        category: Category.FEATUREFLAG
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEdit])
 
   return (
     <>
@@ -136,6 +152,10 @@ const FlagElemAbout: React.FC<StepProps<Partial<FlagWizardFormValues>> & FlagEle
             .notOneOf(illegalIdentifiers)
         })}
         onSubmit={vals => {
+          trackEvent(FeatureActions.AboutTheFlagNext, {
+            category: Category.FEATUREFLAG,
+            data: vals
+          })
           nextStep?.({ ...prevStepData, ...vals })
         }}
       >

@@ -89,7 +89,7 @@ jest.mock('services/pipeline-ng', () => ({
   useGetMergeInputSetFromPipelineTemplateWithListInput: jest.fn(() => getMockFor_Generic_useMutate(mockMergeInputSet)),
 
   // used within PipelineVaribalesContext
-  useCreateVariables: jest.fn(() => ({})),
+  useCreateVariablesV2: jest.fn(() => ({})),
 
   // used within PreFlightCheckModal
   useGetPreflightCheckResponse: jest.fn(() => ({ data: { data: { status: 'SUCCESS' } } })),

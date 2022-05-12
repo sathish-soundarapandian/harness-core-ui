@@ -7,7 +7,7 @@
 
 import React from 'react'
 import moment from 'moment'
-import { render } from '@testing-library/react'
+import { render, fireEvent, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { useGetLicensesAndSummary, useExtendTrialLicense, useSaveFeedback } from 'services/cd-ng'
 
@@ -16,15 +16,17 @@ import { TrialLicenseBanner } from '../TrialLicenseBanner'
 jest.mock('services/cd-ng')
 const useGetLicensesAndSummaryMock = useGetLicensesAndSummary as jest.MockedFunction<any>
 const useExtendTrialLicenseMock = useExtendTrialLicense as jest.MockedFunction<any>
+const extendTrialMock = jest.fn()
 useExtendTrialLicenseMock.mockImplementation(() => {
   return {
-    mutate: jest.fn()
+    mutate: extendTrialMock
   }
 })
 const useSaveFeedbackMock = useSaveFeedback as jest.MockedFunction<any>
+const saveFeedbackMock = jest.fn()
 useSaveFeedbackMock.mockImplementation(() => {
   return {
-    mutate: jest.fn()
+    mutate: saveFeedbackMock
   }
 })
 
@@ -98,6 +100,7 @@ describe('TrialLicenseBanner', () => {
     )
     expect(queryByText('common.banners.trial.description')).not.toBeInTheDocument()
     expect(getByText('common.banners.trial.expired.extendTrial')).toBeInTheDocument()
+    expect(getByText('or')).toBeInTheDocument()
     expect(container).toMatchSnapshot()
   })
 
@@ -120,9 +123,62 @@ describe('TrialLicenseBanner', () => {
         <TrialLicenseBanner />
       </TestWrapper>
     )
-    expect(getByText('common.banners.trial.expired.description')).toBeInTheDocument()
+    expect(getByText('common.banners.trial.expired.contactSales')).toBeInTheDocument()
     expect(queryByText('common.banners.trial.description')).not.toBeInTheDocument()
     expect(queryByText('common.banners.trial.expired.extendTrial')).not.toBeInTheDocument()
+    expect(queryByText('or')).not.toBeInTheDocument()
     expect(container).toMatchSnapshot()
+  })
+
+  test('should extend trial when click extend trial button', async () => {
+    useGetLicensesAndSummaryMock.mockImplementation(() => {
+      return {
+        data: {
+          data: {
+            edition: 'TEAM',
+            licenseType: 'TRIAL',
+            maxExpiryTime: moment.now() - 24 * 60 * 60 * 1000,
+            moduleType: 'CD'
+          },
+          status: 'SUCCESS'
+        }
+      }
+    })
+    const { getByText } = render(
+      <TestWrapper path="/account/my_account_id/cd/orgs/my_org/projects/my_project">
+        <TrialLicenseBanner />
+      </TestWrapper>
+    )
+    fireEvent.click(getByText('common.banners.trial.expired.extendTrial'))
+    await waitFor(() => {
+      expect(extendTrialMock).toHaveBeenCalled()
+    })
+  })
+
+  test('should submit feedback when click feedback submit button', async () => {
+    useGetLicensesAndSummaryMock.mockImplementation(() => {
+      return {
+        data: {
+          data: {
+            edition: 'TEAM',
+            licenseType: 'TRIAL',
+            maxExpiryTime: moment.now() + 24 * 60 * 60 * 1000,
+            moduleType: 'CD'
+          },
+          status: 'SUCCESS'
+        }
+      }
+    })
+    const { getByText } = render(
+      <TestWrapper path="/account/my_account_id/cd/orgs/my_org/projects/my_project">
+        <TrialLicenseBanner />
+      </TestWrapper>
+    )
+    fireEvent.click(getByText('common.banners.trial.provideFeedback'))
+    fireEvent.click(getByText('common.extendTrial.feedback.answers.useful'))
+    fireEvent.click(getByText('submit'))
+    await waitFor(() => {
+      expect(saveFeedbackMock).toHaveBeenCalled()
+    })
   })
 })

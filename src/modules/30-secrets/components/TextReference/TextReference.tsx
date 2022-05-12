@@ -9,7 +9,7 @@ import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { get, isPlainObject } from 'lodash-es'
-import { FormikContext, connect } from 'formik'
+import { FormikContextType, connect } from 'formik'
 import { Classes, FormGroup, Intent } from '@blueprintjs/core'
 import { FormInput, Layout, Container, FormikTooltipContext, DataTooltipInterface } from '@wings-software/uicore'
 import type { StringsMap } from 'stringTypes'
@@ -44,11 +44,11 @@ interface TextReferenceProps {
 }
 
 interface FormikTextReference extends TextReferenceProps {
-  formik: FormikContext<any>
+  formik: FormikContextType<any>
   tooltipProps?: DataTooltipInterface
 }
 
-const errorCheck = (name: string, formik?: FormikContext<any>) =>
+const errorCheck = (name: string, formik?: FormikContextType<any>) =>
   (get(formik?.touched, name) || (formik?.submitCount && formik?.submitCount > 0)) &&
   get(formik?.errors, name) &&
   !isPlainObject(get(formik?.errors, name))

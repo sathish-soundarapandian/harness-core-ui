@@ -8,7 +8,8 @@
 import React, { ReactElement } from 'react'
 
 import type { ModuleLicenseDTO } from 'services/cd-ng'
-import { Editions } from '@common/constants/SubscriptionTypes'
+import type { Editions } from '@common/constants/SubscriptionTypes'
+import { isCommunityPlan } from '@common/utils/utils'
 import {
   NoSubscriptionDetailsCardInfo,
   SubscriptionDetailsCardInfo,
@@ -38,7 +39,7 @@ const SubscriptionDetailsCardBody = ({
   if (!licenseData) {
     return <NoSubscriptionDetailsCardInfo accountName={accountName} />
   }
-  if (edition === Editions.COMMUNITY) {
+  if (isCommunityPlan()) {
     return <CommunitySubscriptionDetailsCardInfo accountName={accountName} />
   }
 

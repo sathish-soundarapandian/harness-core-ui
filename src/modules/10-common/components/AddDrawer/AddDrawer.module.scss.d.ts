@@ -13,6 +13,7 @@ declare const styles: {
   readonly category: string
   readonly categoryName: string
   readonly categorySteps: string
+  readonly comingSoonBanner: string
   readonly disabledHover: string
   readonly drawerSubLabel: string
   readonly expandedInput: string

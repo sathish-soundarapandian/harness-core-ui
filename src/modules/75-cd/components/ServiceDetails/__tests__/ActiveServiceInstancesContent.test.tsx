@@ -10,6 +10,8 @@ import { render, fireEvent } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ActiveServiceInstancesContent } from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstancesContent'
 import * as cdngServices from 'services/cd-ng'
+import dataMock from '../DeploymentView/dataMock.json'
+import { ActiveServiceInstances } from '../ActiveServiceInstances/ActiveServiceInstances'
 
 jest.mock('highcharts-react-official', () => () => <></>)
 
@@ -86,5 +88,94 @@ describe('ActiveServiceInstancesContent', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
+  })
+})
+
+//tests differents default states of tab according to the returned api response
+
+jest.spyOn(cdngServices, 'useGetActiveServiceInstanceSummary').mockImplementation(() => {
+  return {
+    loading: false,
+    error: false,
+    data: {},
+    refetch: jest.fn()
+  } as any
+})
+jest.spyOn(cdngServices, 'useGetInstanceGrowthTrend').mockImplementation(() => {
+  return {
+    loading: false,
+    error: false,
+    data: {},
+    refetch: jest.fn()
+  } as any
+})
+describe('ActiveInstance Tab states ', () => {
+  //tab should be defaulted to activeInstances
+  test('when both are not empty - (activeInstance and deployments) ', () => {
+    jest.spyOn(cdngServices, 'useGetEnvArtifactDetailsByServiceId').mockImplementation(() => {
+      return {
+        data: dataMock
+      } as any
+    })
+    jest.spyOn(cdngServices, 'useGetEnvBuildInstanceCount').mockImplementation(() => {
+      return { loading: false, error: false, data: mockData, refetch: jest.fn() } as any
+    })
+    const { getByText } = render(
+      <TestWrapper>
+        <ActiveServiceInstances />
+      </TestWrapper>
+    )
+
+    // activeInstance Tab should be visible
+    expect(getByText('common.instanceLabel')).toBeTruthy()
+  })
+
+  //tab should be defaulted to deployments
+  test('when activeInstance is empty and deployments is not ', () => {
+    jest.spyOn(cdngServices, 'useGetEnvArtifactDetailsByServiceId').mockImplementation(() => {
+      return {
+        data: dataMock
+      } as any
+    })
+    jest.spyOn(cdngServices, 'useGetEnvBuildInstanceCount').mockImplementation(() => {
+      return {
+        loading: false,
+        error: false,
+        data: noData,
+        refetch: jest.fn()
+      } as any
+    })
+    const { getByText } = render(
+      <TestWrapper>
+        <ActiveServiceInstances />
+      </TestWrapper>
+    )
+    //check if table header are visible
+    expect(getByText('environment')).toBeTruthy()
+    expect(getByText('cd.artifactVersion')).toBeTruthy()
+
+    //check if table rows of deployments are visible
+
+    //value is environment column
+    expect(getByText('NewEnv')).toBeTruthy()
+
+    //corresponding artifact version
+    expect(getByText('perl')).toBeTruthy()
+  })
+
+  //when both are empty then defaulted to activeInstance
+  test('when both are empty ', () => {
+    jest.spyOn(cdngServices, 'useGetEnvArtifactDetailsByServiceId').mockImplementation(() => {
+      return {
+        mutate: () => Promise.resolve({ loading: false, data: [] })
+      } as any
+    })
+    const { getByText } = render(
+      <TestWrapper>
+        <ActiveServiceInstances />
+      </TestWrapper>
+    )
+    //activeInstance tab should open
+    expect(getByText('cd.serviceDashboard.noActiveServiceInstances')).toBeTruthy()
   })
 })

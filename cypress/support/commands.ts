@@ -31,7 +31,7 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 import '@testing-library/cypress/add-commands'
-import { addMatchImageSnapshotCommand } from '../../node_modules/cypress-image-snapshot/command'
+import { addMatchImageSnapshotCommand } from 'cypress-image-snapshot/command'
 import { getConnectorIconByType } from '../utils/connctors-utils'
 import {
   servicesCall,
@@ -42,17 +42,22 @@ import {
 
 import {
   applyTemplatesCall,
+  inputSetsTemplateCallResponse,
   monitoresServices,
   monitoresServicesResponse,
   pipelineSteps,
   pipelineStepsResponse,
   servicesCall as verifyStepServicesCall,
+  stagesExecutionList,
+  stagesExecutionListResponse,
   strategies,
   strategiesResponse,
-  strategiesYamlSnippets,
-  strategiesYamlSnippetsResponse,
+  strategiesYAMLResponse,
+  strategiesYamlSnippets2,
+  strategiesYamlSnippets3,
   variables,
-  variablesPostResponse
+  inputSetsCall,
+  variablesV2PostResponse
 } from './85-cv/verifyStep/constants'
 
 declare global {
@@ -61,6 +66,7 @@ declare global {
     /* eslint-disable @typescript-eslint/no-unused-vars  */
     interface Chainable<Subject> {
       login(username: string, pass: string): void
+      visitPageAssertion(): void
       createDeploymentStage(): void
       visitCreatePipeline(): void
       visitPipelinesList(): void
@@ -120,6 +126,13 @@ Cypress.Commands.add('login', (emailValue: string, password: string) => {
   cy.clickSubmit()
 })
 
+Cypress.Commands.add('visitPageAssertion', () => {
+  cy.get('.TabNavigation--active', {
+    timeout: 30000
+  }).should('be.visible')
+  cy.wait(1000)
+})
+
 Cypress.Commands.add('createDeploymentStage', () => {
   cy.get('[icon="plus"]').click()
   cy.findByTestId('stage-Deployment').click()
@@ -156,7 +169,7 @@ Cypress.Commands.add('initializeRoute', () => {
 })
 
 Cypress.Commands.add('visitVerifyStepInPipeline', () => {
-  cy.contains('p', 'Projects').click()
+  cy.contains('p', 'Projects', { timeout: 10000 }).click()
   cy.contains('p', 'Project 1').click()
   cy.contains('p', 'Delivery').click()
   cy.contains('p', 'Pipelines').click()
@@ -289,32 +302,56 @@ Cypress.Commands.add('apiMocksForVerifyStep', () => {
     }
   ).as('pipelineSave')
   cy.intercept('GET', strategies, strategiesResponse).as('strategiesList')
-  cy.intercept('GET', strategiesYamlSnippets, strategiesYamlSnippetsResponse).as('strategiesYaml')
+  cy.intercept('GET', strategiesYamlSnippets3, strategiesYAMLResponse).as('strategiesYaml')
+  cy.intercept('GET', strategiesYamlSnippets2, strategiesYAMLResponse).as('strategiesYaml')
   cy.intercept('GET', monitoresServices, monitoresServicesResponse).as('monitoredServices')
-  cy.intercept('POST', variables, variablesPostResponse).as('variables')
+  cy.intercept('POST', variables, variablesV2PostResponse).as('variables')
   cy.intercept('POST', pipelineSteps, pipelineStepsResponse).as('pipelineSteps')
   cy.intercept('GET', verifyStepServicesCall, { fixture: 'ng/api/servicesV2' }).as('service')
+
+  cy.intercept('GET', stagesExecutionList, stagesExecutionListResponse).as('stagesExecutionList')
+  cy.intercept('POST', inputSetsCall, inputSetsTemplateCallResponse).as('inputSetsTemplateCallResponse')
+  cy.intercept('GET', '/ng/api/pipelines/configuration/cd-stage-yaml-snippet?routingId=accountId', {
+    fixture: 'pipeline/api/pipelines/failureStrategiesYaml'
+  }).as('cdFailureStrategiesYaml')
 })
 
 Cypress.Commands.add('verifyStepInitialSetup', () => {
   cy.apiMocksForVerifyStep()
-  cy.get('[icon="plus"]').first().click()
+  cy.get('[icon="plus"]', { timeout: 5000 }).first().click({ force: true })
   cy.findByTestId('stage-Deployment').click()
 
   cy.fillName('testStage_Cypress')
   cy.clickSubmit()
+
+  cy.wait('@cdFailureStrategiesYaml')
+  cy.wait('@pipelineSteps')
+  cy.wait('@service')
 })
 
 Cypress.Commands.add('verifyStepSelectConnector', () => {
   cy.intercept('POST', applyTemplatesCall).as('applyTemplatesCall')
+  cy.intercept(
+    'GET',
+    '/ng/api/connectors?accountIdentifier=accountId&type=K8sCluster&searchTerm=&pageIndex=0&pageSize=10&projectIdentifier=project1&orgIdentifier=default'
+  ).as('connectors')
   cy.contains('p', /^Kubernetes$/).click()
 
-  cy.contains('span', 'Select Connector').click({ force: true })
-  cy.wait(500)
-  cy.contains('p', 'test1111', { timeout: 10000 }).click({ force: true })
-  cy.contains('span', 'Apply Selected', { timeout: 10000 }).click({ force: true })
+  cy.contains('span', 'Select Connector').scrollIntoView()
 
-  cy.wait('@applyTemplatesCall')
+  cy.contains('span', 'Select Connector').click({ force: true })
+
+  cy.wait('@connectors')
+
+  cy.contains('p', 'test1111', { timeout: 5000 }).should('be.visible')
+
+  cy.contains('p', 'test1111').click({ force: true })
+
+  // cy.wait(500)
+
+  cy.findByRole('button', { name: 'Apply Selected' }).should('be.visible')
+
+  cy.findByRole('button', { name: 'Apply Selected' }).click({ force: true })
 
   cy.get('[name="namespace"]').scrollIntoView()
 
@@ -322,29 +359,26 @@ Cypress.Commands.add('verifyStepSelectConnector', () => {
 })
 
 Cypress.Commands.add('verifyStepChooseRuntimeInput', () => {
-  cy.get('.MultiTypeInput--FIXED').click()
+  cy.get('.MultiTypeInput--FIXED', { timeout: 5000 }).click({ force: true })
   cy.findByText('Runtime input').click()
 })
 
 Cypress.Commands.add('verifyStepSelectStrategyAndVerifyStep', () => {
   cy.intercept('POST', applyTemplatesCall).as('applyTemplatesCall')
   // Execution definition
-  cy.findByTestId('execution').click()
+  cy.findByTestId('execution').scrollIntoView().click()
 
   cy.wait('@strategiesList')
   cy.wait('@strategiesYaml')
 
-  cy.wait(1000)
-
   // choosing deployment strategy
   cy.findByRole('button', { name: /Use Strategy/i }).click()
-
-  cy.wait('@applyTemplatesCall')
-
-  cy.wait(1000)
+  cy.findByRole('button', { name: /Use Strategy/i }).should('not.be.visible')
 
   // adding new step
+  cy.findByText(/Add step/i).should('be.visible')
   cy.findByText(/Add step/i).click()
+  cy.findByTestId('addStepPipeline').should('be.visible')
   cy.findByTestId('addStepPipeline').click()
 
   cy.wait('@pipelineSteps')

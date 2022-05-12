@@ -277,6 +277,7 @@ exports[`ServiceMenu Should go to editModal by clicking edit 2`] = `
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>

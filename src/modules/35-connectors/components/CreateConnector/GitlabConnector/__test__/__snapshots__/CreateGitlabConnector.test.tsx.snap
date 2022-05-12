@@ -158,6 +158,7 @@ exports[`Create Gitlab connector Wizard Creating gitlab step one 1`] = `
             class="OverlaySpinner--overlaySpinner"
           >
             <form
+              action="#"
               class="FormikForm--main"
             >
               <div>
@@ -615,6 +616,7 @@ exports[`Create Gitlab connector Wizard Creating gitlab step one and step two fo
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main connectorForm fullHeight fullHeightDivsWithFlex"
           >
             <div>
@@ -1106,6 +1108,7 @@ exports[`Create Gitlab connector Wizard Creating gitlab step one and step two fo
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main connectorForm fullHeight fullHeightDivsWithFlex"
           >
             <div>
@@ -1628,6 +1631,7 @@ exports[`Create Gitlab connector Wizard Creating gitlab step two for SSH key 1`]
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main connectorForm fullHeight fullHeightDivsWithFlex"
           >
             <div>
@@ -2119,6 +2123,7 @@ exports[`Create Gitlab connector Wizard Creating gitlab step two for SSH key 2`]
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main connectorForm fullHeight fullHeightDivsWithFlex"
           >
             <div>
@@ -2655,6 +2660,7 @@ exports[`Create Gitlab connector Wizard should be able to edit  usernamePassword
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main fullHeight fullHeightDivsWithFlex"
           >
             <div>
@@ -3236,6 +3242,7 @@ exports[`Create Gitlab connector Wizard should be able to edit ssh with API acce
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main fullHeight fullHeightDivsWithFlex"
           >
             <div>

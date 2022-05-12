@@ -30,7 +30,7 @@ import type { MonitoredServiceOverviewProps } from './MonitoredSourceOverview.ty
 import css from './MonitoredServiceOverview.module.scss'
 
 export default function MonitoredServiceOverview(props: MonitoredServiceOverviewProps): JSX.Element {
-  const { formikProps, isEdit, onChangeMonitoredServiceType } = props
+  const { formikProps, isEdit, onChangeMonitoredServiceType, isTemplate = false } = props
   const { getString } = useStrings()
   const [tempServiceType, setTempServiceType] = useState<MonitoredServiceDTO['type']>()
   const { serviceOptions, setServiceOptions } = useGetHarnessServices()
@@ -86,7 +86,8 @@ export default function MonitoredServiceOverview(props: MonitoredServiceOverview
               serviceProps={{
                 className: css.dropdown,
                 disabled: isEdit,
-                item: serviceOptions.find(item => item?.value === values.serviceRef),
+                isMultiType: isTemplate,
+                item: serviceOptions.find(item => item?.value === values.serviceRef) || values.serviceRef,
                 options: serviceOptions,
                 onSelect: selectedService => updateMonitoredServiceNameForService(formikProps, selectedService),
                 onNewCreated: newOption => {
@@ -109,11 +110,12 @@ export default function MonitoredServiceOverview(props: MonitoredServiceOverview
                 {
                   className: css.dropdown,
                   disabled: isEdit,
+                  isMultiType: isTemplate,
                   popOverClassName: css.popOverClassName,
                   item:
                     formikProps.values?.type === ChangeSourceCategoryName.INFRASTRUCTURE
                       ? environmentOptions.filter(it => values.environmentRef?.includes(it.value as string))
-                      : environmentOptions.find(item => item?.value === values.environmentRef),
+                      : environmentOptions.find(item => item?.value === values.environmentRef) || values.environmentRef,
                   onSelect,
                   options: environmentOptions,
                   onNewCreated: newOption => {

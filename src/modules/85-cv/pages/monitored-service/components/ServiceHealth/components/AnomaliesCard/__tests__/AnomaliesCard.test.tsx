@@ -6,10 +6,11 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { useGetAnomaliesSummary } from 'services/cv'
 import { RiskValues } from '@cv/utils/CommonUtils'
+import { ChangeSourceTypes } from '@cv/components/ChangeTimeline/ChangeTimeline.constants'
 import AnomaliesCard from '../AnomaliesCard'
 import type { AnomaliesCardProps } from '../Anomalies.types'
 import { areAnomaliesAvailable } from '../AnomaliesCard.utils'
@@ -74,5 +75,70 @@ describe('Unit tests for AnomaliesCard', () => {
       isTotalAnomaliesAvailable: true,
       isLowestHealthScoreAvailable: true
     })
+  })
+
+  test('it should render no data message for Changes when showOnlyChanges enabled', () => {
+    render(
+      WrapperComponent({
+        ...initialProps,
+        showOnlyChanges: true,
+        changeTimelineSummary: [
+          {
+            key: ChangeSourceTypes.Deployments,
+            count: 0,
+            message: ''
+          }
+        ]
+      })
+    )
+
+    expect(screen.getByText('cv.changeSource.noData')).toBeInTheDocument()
+  })
+
+  test('it should render no data message for Changes when showOnlyChanges disabled', () => {
+    render(
+      WrapperComponent({
+        ...initialProps
+      })
+    )
+
+    expect(screen.queryByText('cv.changeSource.noData')).not.toBeInTheDocument()
+  })
+
+  test('it should render actual data', () => {
+    render(
+      WrapperComponent({
+        ...initialProps,
+        showOnlyChanges: true,
+        changeTimelineSummary: [
+          {
+            key: ChangeSourceTypes.Deployments,
+            count: 10,
+            message: 'MESSAGE'
+          }
+        ]
+      })
+    )
+
+    expect(screen.getByText('MESSAGE')).toBeInTheDocument()
+  })
+
+  test('it should handle timeRange of undefined', () => {
+    const refetch = jest.fn()
+    ;(useGetAnomaliesSummary as jest.Mock).mockImplementation(() => ({
+      loading: true,
+      data: null,
+      error: null,
+      refetch
+    }))
+
+    render(
+      WrapperComponent({
+        ...initialProps,
+        timeRange: undefined
+      })
+    )
+
+    expect(refetch).not.toBeCalled()
   })
 })

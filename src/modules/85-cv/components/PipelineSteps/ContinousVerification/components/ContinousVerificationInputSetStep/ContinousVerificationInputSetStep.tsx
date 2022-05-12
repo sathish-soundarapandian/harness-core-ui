@@ -6,8 +6,8 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { FormInput, FormikForm, Container, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
-import { isEmpty } from 'lodash-es'
+import { FormInput, FormikForm, Container, RUNTIME_INPUT_VALUE, Formik } from '@wings-software/uicore'
+import { isEmpty, noop } from 'lodash-es'
 
 import { parse } from 'yaml'
 import { useParams } from 'react-router-dom'
@@ -16,6 +16,7 @@ import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration
 import type { InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import type { PipelineInfoConfig } from 'services/cd-ng'
 import { useGetPipeline } from 'services/pipeline-ng'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { spec } from '../../types'
 import { checkIfRunTimeInput } from '../../utils'
@@ -48,7 +49,12 @@ export function ContinousVerificationInputSetStep(
   const { sensitivity, duration, baseline, trafficsplit, deploymentTag } = (template?.spec?.spec as spec) || {}
   const { data: pipelineData, refetch: fetchPipeline } = useGetPipeline({
     pipelineIdentifier,
-    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier },
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      getTemplatesResolvedPipeline: template?.type === StepType.Verify
+    },
     lazy: true
   })
 
@@ -58,10 +64,12 @@ export function ContinousVerificationInputSetStep(
   }, [])
 
   useEffect(() => {
-    if (pipelineData?.data?.yamlPipeline) {
+    if (pipelineData?.data?.resolvedTemplatesPipelineYaml) {
+      setPipeline(parse(pipelineData?.data?.resolvedTemplatesPipelineYaml))
+    } else if (pipelineData?.data?.yamlPipeline) {
       setPipeline(parse(pipelineData?.data?.yamlPipeline))
     }
-  }, [pipelineData?.data?.yamlPipeline])
+  }, [pipelineData?.data?.yamlPipeline, pipelineData?.data?.resolvedTemplatesPipelineYaml])
 
   const { serviceIdentifierFromStage, envIdentifierDataFromStage } = useMemo(() => {
     return getInfraAndServiceFromStage(pipeline)
@@ -73,111 +81,113 @@ export function ContinousVerificationInputSetStep(
   }, [pipeline, formik])
 
   return (
-    <FormikForm>
-      {(serviceIdentifierFromStage === RUNTIME_INPUT_VALUE || envIdentifierDataFromStage === RUNTIME_INPUT_VALUE) && (
-        <RunTimeMonitoredService
-          serviceIdentifier={serviceIdentifier}
-          envIdentifier={envIdentifier}
-          onUpdate={onUpdate}
-          initialValues={initialValues}
-          prefix={prefix}
-        />
-      )}
-
-      <Container className={css.container}>
-        {checkIfRunTimeInput(sensitivity) && (
-          <Container className={css.itemRuntimeSetting}>
-            <FormInput.MultiTypeInput
-              label={getString('sensitivity')}
-              name={`${prefix}spec.spec.sensitivity`}
-              selectItems={VerificationSensitivityOptions}
-              useValue
-              multiTypeInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              disabled={readonly}
-            />
-          </Container>
+    <Formik formName={'stepTestUtilForm'} initialValues={{}} onSubmit={noop}>
+      <FormikForm>
+        {(serviceIdentifierFromStage === RUNTIME_INPUT_VALUE || envIdentifierDataFromStage === RUNTIME_INPUT_VALUE) && (
+          <RunTimeMonitoredService
+            serviceIdentifier={serviceIdentifier}
+            envIdentifier={envIdentifier}
+            onUpdate={onUpdate}
+            initialValues={initialValues}
+            prefix={prefix}
+          />
         )}
 
-        {checkIfRunTimeInput(duration) && (
-          <Container className={css.itemRuntimeSetting}>
-            <FormInput.MultiTypeInput
-              label={getString('duration')}
-              name={`${prefix}spec.spec.duration`}
-              selectItems={durationOptions}
-              useValue
-              multiTypeInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              disabled={readonly}
-            />
-          </Container>
-        )}
+        <Container className={css.container}>
+          {checkIfRunTimeInput(sensitivity) && (
+            <Container className={css.itemRuntimeSetting}>
+              <FormInput.MultiTypeInput
+                label={getString('sensitivity')}
+                name={`${prefix}spec.spec.sensitivity`}
+                selectItems={VerificationSensitivityOptions}
+                useValue
+                multiTypeInputProps={{
+                  expressions,
+                  allowableTypes
+                }}
+                disabled={readonly}
+              />
+            </Container>
+          )}
 
-        {checkIfRunTimeInput(baseline) && (
-          <Container className={css.itemRuntimeSetting}>
-            <FormInput.MultiTypeInput
-              label={getString('connectors.cdng.baseline')}
-              name={`${prefix}spec.spec.baseline`}
-              selectItems={baseLineOptions}
-              useValue
-              multiTypeInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              disabled={readonly}
-            />
-          </Container>
-        )}
+          {checkIfRunTimeInput(duration) && (
+            <Container className={css.itemRuntimeSetting}>
+              <FormInput.MultiTypeInput
+                label={getString('duration')}
+                name={`${prefix}spec.spec.duration`}
+                selectItems={durationOptions}
+                useValue
+                multiTypeInputProps={{
+                  expressions,
+                  allowableTypes
+                }}
+                disabled={readonly}
+              />
+            </Container>
+          )}
 
-        {checkIfRunTimeInput(trafficsplit) && (
-          <Container className={css.itemRuntimeSetting}>
-            <FormInput.MultiTypeInput
-              label={getString('connectors.cdng.trafficsplit')}
-              name={`${prefix}spec.spec.trafficsplit`}
-              selectItems={trafficSplitPercentageOptions}
-              useValue
-              multiTypeInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              disabled={readonly}
-            />
-          </Container>
-        )}
+          {checkIfRunTimeInput(baseline) && (
+            <Container className={css.itemRuntimeSetting}>
+              <FormInput.MultiTypeInput
+                label={getString('connectors.cdng.baseline')}
+                name={`${prefix}spec.spec.baseline`}
+                selectItems={baseLineOptions}
+                useValue
+                multiTypeInputProps={{
+                  expressions,
+                  allowableTypes
+                }}
+                disabled={readonly}
+              />
+            </Container>
+          )}
 
-        {checkIfRunTimeInput(deploymentTag) && (
-          <Container className={css.itemRuntimeSetting}>
-            <FormInput.MultiTextInput
-              label={getString('connectors.cdng.artifactTag')}
-              name={`${prefix}spec.spec.deploymentTag`}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              disabled={readonly}
-            />
-          </Container>
-        )}
+          {checkIfRunTimeInput(trafficsplit) && (
+            <Container className={css.itemRuntimeSetting}>
+              <FormInput.MultiTypeInput
+                label={getString('connectors.cdng.trafficsplit')}
+                name={`${prefix}spec.spec.trafficsplit`}
+                selectItems={trafficSplitPercentageOptions}
+                useValue
+                multiTypeInputProps={{
+                  expressions,
+                  allowableTypes
+                }}
+                disabled={readonly}
+              />
+            </Container>
+          )}
 
-        {checkIfRunTimeInput(template?.timeout) && (
-          <Container className={css.itemRuntimeSetting}>
-            <FormMultiTypeDurationField
-              name={`${prefix}timeout`}
-              label={getString('pipelineSteps.timeoutLabel')}
-              disabled={readonly}
-              multiTypeDurationProps={{
-                expressions,
-                enableConfigureOptions: false,
-                allowableTypes
-              }}
-            />
-          </Container>
-        )}
-      </Container>
-    </FormikForm>
+          {checkIfRunTimeInput(deploymentTag) && (
+            <Container className={css.itemRuntimeSetting}>
+              <FormInput.MultiTextInput
+                label={getString('connectors.cdng.artifactTag')}
+                name={`${prefix}spec.spec.deploymentTag`}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes
+                }}
+                disabled={readonly}
+              />
+            </Container>
+          )}
+
+          {checkIfRunTimeInput(template?.timeout) && (
+            <Container className={css.itemRuntimeSetting}>
+              <FormMultiTypeDurationField
+                name={`${prefix}timeout`}
+                label={getString('pipelineSteps.timeoutLabel')}
+                disabled={readonly}
+                multiTypeDurationProps={{
+                  expressions,
+                  enableConfigureOptions: false,
+                  allowableTypes
+                }}
+              />
+            </Container>
+          )}
+        </Container>
+      </FormikForm>
+    </Formik>
   )
 }

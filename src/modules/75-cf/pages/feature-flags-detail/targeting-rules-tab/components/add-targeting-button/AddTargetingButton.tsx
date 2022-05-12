@@ -16,7 +16,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
 import type { Variation } from 'services/cf'
-import type { VariationColorMap } from '../../Types.types'
+import type { VariationColorMap } from '../../types'
 export interface AddTargetingButtonProps {
   targetingDropdownVariations: Variation[]
   addVariation: (newVariation: Variation) => void

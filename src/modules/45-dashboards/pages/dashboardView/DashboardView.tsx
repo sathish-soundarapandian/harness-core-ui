@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { Layout } from '@wings-software/uicore'
+import { Layout } from '@harness/uicore'
 import routes from '@common/RouteDefinitions'
 import { Page } from '@common/exports'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'

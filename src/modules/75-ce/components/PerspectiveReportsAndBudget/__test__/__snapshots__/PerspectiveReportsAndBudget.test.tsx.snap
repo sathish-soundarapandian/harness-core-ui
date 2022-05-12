@@ -9,6 +9,7 @@ exports[`test case for Perspective anomaly alerts should be able to open create 
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -158,7 +159,7 @@ exports[`test case for Perspective anomaly alerts should be able to open create 
                           placeholder="- ce.anomalyDetection.notificationAlerts.selectPerspective -"
                           style="padding-right: 0px;"
                           type="text"
-                          value="e6V1JG61QWubhV89vAmUIg"
+                          value=""
                         />
                         <span
                           class="bp3-input-action"
@@ -185,76 +186,14 @@ exports[`test case for Perspective anomaly alerts should be able to open create 
                         </span>
                       </div>
                     </div>
-                    <div
-                      class="bp3-overlay bp3-overlay-inline"
-                    >
-                      <div
-                        class="bp3-transition-container bp3-popover-exit bp3-popover-exit-active"
-                        style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(NaNpx, NaNpx, 0);"
-                      >
-                        <div
-                          class="bp3-popover bp3-minimal bp3-select-popover"
-                          style="transform-origin: center top;"
-                        >
-                          <div
-                            class="bp3-popover-content"
-                          >
-                            <div>
-                              <ul
-                                class="bp3-menu"
-                              >
-                                <li
-                                  class="Select--menuItem Select--active"
-                                >
-                                  <p
-                                    class="StyledProps--font Text--lineclamp StyledProps--main Select--menuItemLabel"
-                                    style="--text-line-clamp: 1;"
-                                  >
-                                    NBR8rYCgTLyhbKgwxnjKUw
-                                  </p>
-                                </li>
-                                <li
-                                  class="Select--menuItem"
-                                >
-                                  <p
-                                    class="StyledProps--font Text--lineclamp StyledProps--main Select--menuItemLabel"
-                                    style="--text-line-clamp: 1;"
-                                  >
-                                    Yv-hfTBQTc2LO6U-rzZvBA
-                                  </p>
-                                </li>
-                                <li
-                                  class="Select--menuItem"
-                                >
-                                  <p
-                                    class="StyledProps--font Text--lineclamp StyledProps--main Select--menuItemLabel"
-                                    style="--text-line-clamp: 1;"
-                                  >
-                                    uaTTAOdGQOiugVoZIG2lcA
-                                  </p>
-                                </li>
-                                <li
-                                  class="Select--menuItem"
-                                >
-                                  <p
-                                    class="StyledProps--font Text--lineclamp StyledProps--main Select--menuItemLabel"
-                                    style="--text-line-clamp: 1;"
-                                  >
-                                    e6V1JG61QWubhV89vAmUIg
-                                  </p>
-                                </li>
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
             </div>
             <button
-              class="bp3-button Button--button StyledProps--font StyledProps--main actionBtn Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
+              class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main actionBtn Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
+              disabled=""
+              tabindex="-1"
               type="button"
             >
               <span
@@ -448,6 +387,7 @@ exports[`test cases for Perspective Create Budgets should be able to open create
             class="OverlaySpinner--overlaySpinner"
           >
             <form
+              action="#"
               class="FormikForm--main"
             >
               <div>
@@ -784,6 +724,7 @@ exports[`test cases for Perspective Create Report should be able to open create 
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -1105,6 +1046,7 @@ exports[`test cases for Perspective Create Report should be able to open create 
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>

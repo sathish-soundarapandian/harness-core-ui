@@ -53,7 +53,7 @@ const executionsMock = {
 }
 
 jest.mock('services/pipeline-ng', () => ({
-  useGetPipelineExecution: () => ({
+  useGetPipelineDashboardExecution: () => ({
     loading: false,
     data: executionsMock
   })

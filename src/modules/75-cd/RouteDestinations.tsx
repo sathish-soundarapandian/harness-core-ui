@@ -30,7 +30,9 @@ import {
   userGroupPathProps,
   serviceAccountProps,
   servicePathProps,
-  templatePathProps
+  templatePathProps,
+  environmentGroupPathProps,
+  environmentPathProps
 } from '@common/utils/routeUtils'
 import type {
   PipelinePathProps,
@@ -43,7 +45,7 @@ import type {
 import routes from '@common/RouteDefinitions'
 
 import { String as LocaleString } from 'framework/strings'
-import featureFactory from 'framework/featureStore/FeaturesFactory'
+import featureFactory, { RenderMessageReturn } from 'framework/featureStore/FeaturesFactory'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import CDSideNav from '@cd/components/CDSideNav/CDSideNav'
 import CDHomePage from '@cd/pages/home/CDHomePage'
@@ -80,8 +82,7 @@ import { EnhancedInputSetForm } from '@pipeline/components/InputSetForm/InputSet
 import TriggersDetailPage from '@triggers/pages/triggers/TriggersDetailPage'
 import CreateConnectorFromYamlPage from '@connectors/pages/createConnectorFromYaml/CreateConnectorFromYamlPage'
 import CreateSecretFromYamlPage from '@secrets/pages/createSecretFromYaml/CreateSecretFromYamlPage'
-import ServiceDetailPage from '@cd/pages/ServiceDetailPage/ServiceDetailPage'
-import ServiceDetails from '@cd/components/ServiceDetails/ServiceDetails'
+import { Services } from '@cd/components/Services/Services'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 
 import './components/PipelineSteps'
@@ -111,19 +112,21 @@ import ExecutionPolicyEvaluationsView from '@pipeline/pages/execution/ExecutionP
 import ExecutionSecurityView from '@pipeline/pages/execution/ExecutionSecurityView/ExecutionSecurityView'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import {
-  isCDCommunity,
-  LicenseRedirectProps,
-  LICENSE_STATE_NAMES,
-  useLicenseStore
-} from 'framework/LicenseStore/LicenseStoreContext'
+import { LicenseRedirectProps, LICENSE_STATE_NAMES } from 'framework/LicenseStore/LicenseStoreContext'
+import { isCommunityPlan } from '@common/utils/utils'
 import { TemplateStudioWrapper } from '@templates-library/components/TemplateStudio/TemplateStudioWrapper'
 import TemplatesPage from '@templates-library/pages/TemplatesPage/TemplatesPage'
 import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import GitSyncConfigTab from '@gitsync/pages/config/GitSyncConfigTab'
 import FullPageLogView from '@pipeline/pages/full-page-log-view/FullPageLogView'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+import VariablesPage from '@variables/pages/variables/VariablesPage'
 import { Environments } from './components/Environments/Environments'
+import { Environments as EnvironmentsV2 } from './components/EnvironmentsV2/Environments'
+import EnvironmentDetails from './components/EnvironmentsV2/EnvironmentDetails/EnvironmentDetails'
+import EnvironmentGroups from './components/EnvironmentGroups/EnvironmentGroups'
+import EnvironmentGroupDetails from './components/EnvironmentGroups/EnvironmentGroupDetails/EnvironmentGroupDetails'
+
 import CDTrialHomePage from './pages/home/CDTrialHomePage'
 
 import { CDExecutionCardSummary } from './components/CDExecutionCardSummary/CDExecutionCardSummary'
@@ -146,6 +149,7 @@ import {
 } from './components/PipelineSteps/DeployEnvStep/DeployEnvStep'
 import type { GitOpsCustomMicroFrontendProps } from './interfaces/GitOps.types'
 import { getBannerText } from './utils/renderMessageUtils'
+import ServiceStudio from './components/Services/ServiceStudio/ServiceStudio'
 
 // eslint-disable-next-line import/no-unresolved
 const GitOpsServersList = React.lazy(() => import('gitopsui/MicroFrontendApp'))
@@ -242,24 +246,19 @@ featureFactory.registerFeaturesByModule('cd', {
     FeatureIdentifier.SERVICES,
     FeatureIdentifier.INITIAL_DEPLOYMENTS
   ],
-  renderMessage: (props, getString, additionalLicenseProps = {}) => {
+  renderMessage: (props, getString, additionalLicenseProps = {}): RenderMessageReturn => {
     const featuresMap = props.features
     const serviceFeatureDetail = featuresMap.get(FeatureIdentifier.SERVICES)
     const dpmFeatureDetail = featuresMap.get(FeatureIdentifier.DEPLOYMENTS_PER_MONTH)
     const initialDeploymentsFeatureDetail = featuresMap.get(FeatureIdentifier.INITIAL_DEPLOYMENTS)
 
-    const { message, bannerType } = getBannerText(
+    return getBannerText(
       getString,
       additionalLicenseProps,
       serviceFeatureDetail,
       dpmFeatureDetail,
       initialDeploymentsFeatureDetail
     )
-
-    return {
-      message: () => message,
-      bannerType
-    }
   }
 })
 
@@ -304,8 +303,7 @@ const RedirectToCDProject = (): React.ReactElement => {
 const CDDashboardPageOrRedirect = (): React.ReactElement => {
   const params = useParams<ProjectPathProps>()
   const { selectedProject } = useAppStore()
-  const { licenseInformation } = useLicenseStore()
-  const isCommunity = isCDCommunity(licenseInformation)
+  const isCommunity = isCommunityPlan()
 
   if (!isCommunity) {
     return <CDDashboardPage />
@@ -387,6 +385,16 @@ const RedirectToSubscriptions = (): React.ReactElement => {
       })}
     />
   )
+}
+
+const EnvironmentsPage = (): React.ReactElement | null => {
+  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
+
+  if (NG_SVC_ENV_REDESIGN) {
+    return <EnvironmentsV2 />
+  } else {
+    return <Environments />
+  }
 }
 
 const licenseRedirectData: LicenseRedirectProps = {
@@ -473,32 +481,61 @@ export default (
       licenseRedirectData={licenseRedirectData}
       sidebarProps={CDSideNavProps}
       path={routes.toServices({ ...accountPathProps, ...projectPathProps, ...pipelineModuleParams })}
-      pageName={PAGE_NAME.ServiceDetailPage}
+      pageName={PAGE_NAME.Services}
     >
-      <ServiceDetailPage />
+      <Services />
     </RouteWithLayout>
     <RouteWithLayout
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={CDSideNavProps}
-      path={routes.toServiceDetails({
+      path={routes.toServiceStudio({
         ...accountPathProps,
         ...projectPathProps,
         ...pipelineModuleParams,
         ...servicePathProps
       })}
-      pageName={PAGE_NAME.ServiceDetails}
+      pageName={PAGE_NAME.ServiceStudio}
     >
-      <ServiceDetails />
+      <ServiceStudio />
     </RouteWithLayout>
     <RouteWithLayout
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={CDSideNavProps}
-      path={routes.toEnvironment({ ...accountPathProps, ...projectPathProps, ...pipelineModuleParams })}
+      path={routes.toEnvironment({ ...projectPathProps, ...pipelineModuleParams })}
       pageName={PAGE_NAME.Environments}
     >
-      <Environments />
+      <EnvironmentsPage />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CDSideNavProps}
+      path={routes.toEnvironmentDetails({ ...projectPathProps, ...pipelineModuleParams, ...environmentPathProps })}
+      pageName={PAGE_NAME.Environments}
+    >
+      <EnvironmentDetails />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CDSideNavProps}
+      path={routes.toEnvironmentGroups({ ...projectPathProps, ...pipelineModuleParams })}
+    >
+      <EnvironmentGroups />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CDSideNavProps}
+      path={routes.toEnvironmentGroupDetails({
+        ...projectPathProps,
+        ...pipelineModuleParams,
+        ...environmentGroupPathProps
+      })}
+    >
+      <EnvironmentGroupDetails />
     </RouteWithLayout>
 
     <RouteWithLayout
@@ -587,6 +624,14 @@ export default (
       pageName={PAGE_NAME.SecretsPage}
     >
       <SecretsPage />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CDSideNavProps}
+      path={routes.toVariables({ ...accountPathProps, ...projectPathProps, ...pipelineModuleParams })}
+    >
+      <VariablesPage />
     </RouteWithLayout>
     <RouteWithLayout
       exact

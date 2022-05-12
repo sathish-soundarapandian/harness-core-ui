@@ -71,6 +71,16 @@ exports[`STO side nav tests renders account path 1`] = `
               overview
             </p>
           </a>
+          <a
+            class="link"
+            href="/account/accountId/sto/targets"
+          >
+            <p
+              class="StyledProps--font StyledProps--main text"
+            >
+              stoSteps.targets.testTargets
+            </p>
+          </a>
         </div>
       </div>
       <div
@@ -163,6 +173,16 @@ exports[`STO side nav tests renders project path 1`] = `
               overview
             </p>
           </a>
+          <a
+            class="link"
+            href="/account/accountId/sto/targets"
+          >
+            <p
+              class="StyledProps--font StyledProps--main text"
+            >
+              stoSteps.targets.testTargets
+            </p>
+          </a>
         </div>
       </div>
       <div
@@ -187,6 +207,16 @@ exports[`STO side nav tests renders project path 1`] = `
               class="StyledProps--font StyledProps--main text"
             >
               overview
+            </p>
+          </a>
+          <a
+            class="link"
+            href="/account/accountId/sto/orgs/orgIdentifier/projects/projectIdentifier/targets"
+          >
+            <p
+              class="StyledProps--font StyledProps--main text"
+            >
+              stoSteps.targets.testTargets
             </p>
           </a>
         </div>

@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing Summary snapshot with summaryElement 1`] = `
+<div>
+  <div
+    class="summaryElement"
+  >
+    summaryElement
+  </div>
+</div>
+`;
+
+exports[`Testing Summary snapshot without summaryElement 1`] = `
+<div>
+  <div
+    class="summaryElement"
+  >
+    Summary
+  </div>
+</div>
+`;

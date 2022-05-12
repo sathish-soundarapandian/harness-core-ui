@@ -6,10 +6,11 @@
  */
 
 import React from 'react'
-import { act, findByText, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
-import { MultiTypeInputType } from '@wings-software/uicore'
-import { TestWrapper } from '@common/utils/testUtils'
+import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
 import type { ArtifactType, CustomArtifactSource } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { CustomArtifact } from '../CustomArtifact'
 
 const props = {
@@ -19,11 +20,13 @@ const props = {
   context: 2,
   handleSubmit: jest.fn(),
   artifactIdentifiers: [],
-  selectedArtifact: 'CustomArtifact' as ArtifactType
+  selectedArtifact: 'CustomArtifact' as ArtifactType,
+  selectedDeploymentType: ServiceDeploymentType.Kubernetes
 }
 
 const initialValues = {
-  identifier: ''
+  identifier: '',
+  version: RUNTIME_INPUT_VALUE
 }
 
 describe('Nexus Artifact tests', () => {
@@ -35,16 +38,18 @@ describe('Nexus Artifact tests', () => {
     )
     expect(container).toMatchSnapshot()
   })
-  test(`unable to submit the form when version empty`, async () => {
+  test(`version should have default value of runtimeinput`, async () => {
     const { container } = render(
       <TestWrapper>
         <CustomArtifact key={'key'} initialValues={initialValues as CustomArtifactSource} {...props} />
       </TestWrapper>
     )
+    const versionField = queryByNameAttribute('version', container) as HTMLInputElement
+    expect(versionField).toBeTruthy()
+    expect(versionField.value).toEqual(RUNTIME_INPUT_VALUE)
+
     const submitBtn = container.querySelector('button[type="submit"]')!
     fireEvent.click(submitBtn)
-    const versionRequiredError = await findByText(container, 'validation.nexusVersion')
-    expect(versionRequiredError).toBeDefined()
   })
 
   test(`able to submit form when the form is non empty`, async () => {
@@ -55,13 +60,9 @@ describe('Nexus Artifact tests', () => {
     )
     const submitBtn = container.querySelector('button[type="submit"]')!
     fireEvent.click(submitBtn)
-    const versionRequiredError = await findByText(container, 'validation.nexusVersion')
-    expect(versionRequiredError).toBeDefined()
 
-    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
     await act(async () => {
-      fireEvent.change(queryByNameAttribute('identifier')!, { target: { value: 'testidentifier' } })
-      fireEvent.change(queryByNameAttribute('version')!, { target: { value: 'artifact-version' } })
+      fireEvent.change(queryByNameAttribute('identifier', container)!, { target: { value: 'testidentifier' } })
     })
     fireEvent.click(submitBtn)
 
@@ -70,7 +71,7 @@ describe('Nexus Artifact tests', () => {
       expect(props.handleSubmit).toHaveBeenCalledWith({
         identifier: 'testidentifier',
         spec: {
-          version: 'artifact-version'
+          version: '<+input>'
         }
       })
     })

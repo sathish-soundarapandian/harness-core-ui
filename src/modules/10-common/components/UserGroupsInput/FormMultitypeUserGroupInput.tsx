@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { get } from 'lodash-es'
-import type { FormikContext } from 'formik'
+import type { FormikContextType } from 'formik'
 import {
   DataTooltipInterface,
   ExpressionAndRuntimeTypeProps,
@@ -22,7 +22,7 @@ export interface FormMultiTypeUserGroupInputProps
   extends Omit<ExpressionAndRuntimeTypeProps, 'fixedTypeComponent' | 'fixedTypeComponentProps'> {
   label: string
   tooltipProps?: DataTooltipInterface
-  formik?: FormikContext<any>
+  formik?: FormikContextType<any>
   expressions?: string[]
 }
 

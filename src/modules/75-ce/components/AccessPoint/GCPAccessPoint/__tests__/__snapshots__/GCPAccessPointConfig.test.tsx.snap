@@ -7,6 +7,7 @@ exports[`GCP DNS mapping screen Name field should be disabled and should contain
   >
     <h2
       class="StyledProps--font StyledProps--font-h2 StyledProps--main configHeading"
+      data-tooltip-id="gcpConnectorHeader"
       level="2"
     >
       Edit Load Balancer Mock GCP Load Balancer
@@ -19,6 +20,7 @@ exports[`GCP DNS mapping screen Name field should be disabled and should contain
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -208,6 +210,7 @@ exports[`GCP DNS mapping screen cancel ap creation 1`] = `
   >
     <h2
       class="StyledProps--font StyledProps--font-h2 StyledProps--main configHeading"
+      data-tooltip-id="gcpConnectorHeader"
       level="2"
     >
       Edit Load Balancer 
@@ -220,6 +223,7 @@ exports[`GCP DNS mapping screen cancel ap creation 1`] = `
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -437,6 +441,7 @@ exports[`GCP DNS mapping screen render configuration dialog and fill details 1`]
   >
     <h2
       class="StyledProps--font StyledProps--font-h2 StyledProps--main configHeading"
+      data-tooltip-id="gcpConnectorHeader"
       level="2"
     >
       Create a new Load Balancer
@@ -449,6 +454,7 @@ exports[`GCP DNS mapping screen render configuration dialog and fill details 1`]
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -625,6 +631,7 @@ exports[`GCP DNS mapping screen render configuration dialog and fill details 2`]
   >
     <h2
       class="StyledProps--font StyledProps--font-h2 StyledProps--main configHeading"
+      data-tooltip-id="gcpConnectorHeader"
       level="2"
     >
       Create a new Load Balancer
@@ -637,6 +644,7 @@ exports[`GCP DNS mapping screen render configuration dialog and fill details 2`]
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -839,6 +847,7 @@ exports[`GCP DNS mapping screen render second step 1`] = `
   >
     <h2
       class="StyledProps--font StyledProps--font-h2 StyledProps--main configHeading"
+      data-tooltip-id="gcpConnectorHeader"
       level="2"
     >
       Create a new Load Balancer
@@ -851,6 +860,7 @@ exports[`GCP DNS mapping screen render second step 1`] = `
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>

@@ -21,8 +21,10 @@ const props = {
 }
 
 jest.mock('@common/hooks', () => ({
-  useMutateAsGet: jest.fn().mockImplementation(() => ({ data: connectorsData, loading: false }))
+  useMutateAsGet: jest.fn().mockImplementation(() => ({ data: connectorsData, loading: false })),
+  useLocalStorage: jest.fn().mockImplementation(() => [5, jest.fn()])
 }))
+
 describe('Connector Resource Modal Body test', () => {
   test('initializes ok ', async () => {
     const { container } = render(

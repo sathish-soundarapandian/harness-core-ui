@@ -37,7 +37,7 @@ exports[`RightBar renders correctly 1`] = `
       <span
         class="bp3-button-text"
       >
-        templatesLibrary.templateInputs
+        pipeline.templateInputs
       </span>
     </button>
     <button
@@ -72,7 +72,7 @@ exports[`RightBar renders correctly 1`] = `
       <span
         class="bp3-button-text"
       >
-        variablesText
+        common.variables
       </span>
     </button>
     <div

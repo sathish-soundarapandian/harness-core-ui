@@ -189,42 +189,38 @@ exports[`Unit tests for ServiceHealth Verify if all the fields are rendered corr
         class="StyledProps--font StyledProps--main"
         style="width: 60%;"
       >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-normal StyledProps--padding-bottom-medium"
-        >
-          changes
-          (
-          0
-          )
-        </p>
         <div
-          class="StyledProps--font StyledProps--main cardContainer container"
+          class="StyledProps--font StyledProps--main"
         >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--padding-bottom-medium"
+          >
+            changes
+            (
+            0
+            )
+          </p>
           <div
-            class="StyledProps--font StyledProps--main content"
+            class="bp3-card bp3-elevation-0 Card--card childContainer cardContainer"
           >
             <div
-              class="StyledProps--font StyledProps--main noData"
+              class="StyledProps--font StyledProps--main NoDataCard--noDataCard noDataContainer StyledProps--flex StyledProps--flex-align-center-center"
             >
               <div
-                class="StyledProps--font StyledProps--main NoDataCard--noDataCard StyledProps--flex StyledProps--flex-align-center-center"
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+                style="align-items: center; margin-top: -48px; width: 470px;"
               >
-                <div
-                  class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
-                  style="align-items: center; margin-top: -48px; width: 470px;"
+                <img
+                  src="test-file-stub"
+                />
+                <p
+                  class="StyledProps--font StyledProps--main NoDataCard--message StyledProps--font-align-center StyledProps--color StyledProps--color-grey600"
                 >
-                  <img
-                    src="test-file-stub"
-                  />
-                  <p
-                    class="StyledProps--font StyledProps--main NoDataCard--message StyledProps--font-align-center StyledProps--color StyledProps--color-grey600"
-                  >
-                    cv.monitoredServices.noAvailableData
-                  </p>
-                  <div
-                    class="NoDataCard--buttonContainer"
-                  />
-                </div>
+                  cv.monitoredServices.noAvailableData
+                </p>
+                <div
+                  class="NoDataCard--buttonContainer"
+                />
               </div>
             </div>
           </div>

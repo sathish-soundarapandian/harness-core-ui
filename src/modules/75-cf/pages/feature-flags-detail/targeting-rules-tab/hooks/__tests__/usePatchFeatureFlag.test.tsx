@@ -12,6 +12,8 @@ import { waitFor, screen } from '@testing-library/react'
 import * as uuid from 'uuid'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cfServicesMock from 'services/cf'
+import { FFGitSyncProvider } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
+import type { GitRepo } from 'services/cf'
 import usePatchFeatureFlag, { UsePatchFeatureFlagProps } from '../usePatchFeatureFlag'
 import {
   mockPercentageVariationRollout,
@@ -21,9 +23,11 @@ import {
   targetAddedFixture,
   targetGroupsAddedFixture,
   targetGroupsRemovedFixture,
-  targetRemovedFixture
+  targetRemovedFixture,
+  variationAddedFixture,
+  variationRemovedFixture
 } from './fixtures/target_groups_and_targets_fixtures'
-import type { TargetingRulesFormValues } from '../../Types.types'
+import type { TargetingRulesFormValues } from '../../types'
 
 jest.mock('uuid')
 
@@ -41,7 +45,7 @@ const renderHookUnderTest = (props: Partial<UsePatchFeatureFlagProps> = {}) => {
         path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        {children}
+        <FFGitSyncProvider>{children}</FFGitSyncProvider>
       </TestWrapper>
     )
   }
@@ -49,7 +53,8 @@ const renderHookUnderTest = (props: Partial<UsePatchFeatureFlagProps> = {}) => {
   return renderHook(
     () =>
       usePatchFeatureFlag({
-        featureFlagIdentifier: '',
+        featureFlagName: 'test',
+        featureFlagIdentifier: 'test',
         initialValues: defaultInitialValues,
         refetchFlag: jest.fn(),
         variations: [
@@ -70,9 +75,29 @@ const renderHookUnderTest = (props: Partial<UsePatchFeatureFlagProps> = {}) => {
   )
 }
 
+const setUseGitRepoMock = (repoDetails: Partial<GitRepo> = {}, repoSet = false): void => {
+  jest.spyOn(cfServicesMock, 'useGetGitRepo').mockReturnValue({
+    loading: false,
+    refetch: jest.fn(),
+    data: {
+      repoDetails: {
+        autoCommit: repoDetails.autoCommit || false,
+        branch: repoDetails.branch || 'main',
+        enabled: repoDetails.enabled ?? false,
+        filePath: repoDetails.filePath || '/flags.yaml',
+        repoIdentifier: repoDetails.repoIdentifier || 'harnesstest',
+        rootFolder: repoDetails.rootFolder || '/.harness/',
+        yamlError: repoDetails.yamlError || ''
+      },
+      repoSet: repoSet
+    }
+  } as any)
+}
+
 describe('usePatchFeatureFlag', () => {
   const mutateMock = jest.fn()
   beforeAll(() => {
+    setUseGitRepoMock()
     jest.spyOn(uuid, 'v4').mockReturnValue('UUID')
     jest.spyOn(cfServicesMock, 'usePatchFeature').mockReturnValue({
       mutate: mutateMock.mockResolvedValueOnce({}),
@@ -142,6 +167,50 @@ describe('usePatchFeatureFlag', () => {
 
       expect(mutateMock).not.toBeCalledWith()
       expect(refetchFlagMock).not.toBeCalled()
+    })
+  })
+
+  describe('Add/Remove Variations', () => {
+    test('it should send correct values when Variation added', async () => {
+      const refetchFlagMock = jest.fn()
+
+      const { result } = renderHookUnderTest({
+        refetchFlag: refetchFlagMock.mockResolvedValueOnce({}),
+        initialValues: {
+          ...defaultInitialValues,
+          targetingRuleItems: []
+        }
+      })
+
+      const newValues: TargetingRulesFormValues = {
+        ...defaultInitialValues,
+        targetingRuleItems: [variationAddedFixture.addedTargetingRules]
+      }
+      result.current.saveChanges(newValues)
+
+      expect(mutateMock).toBeCalledWith(variationAddedFixture.expected)
+      await waitFor(() => expect(refetchFlagMock).toBeCalled())
+    })
+
+    test('it should send correct values when Variation removed', async () => {
+      const refetchFlagMock = jest.fn()
+
+      const { result } = renderHookUnderTest({
+        refetchFlag: refetchFlagMock.mockResolvedValueOnce({}),
+        initialValues: {
+          ...defaultInitialValues,
+          targetingRuleItems: [variationRemovedFixture.initialTargetingRules]
+        }
+      })
+
+      const newValues: TargetingRulesFormValues = {
+        ...defaultInitialValues,
+        targetingRuleItems: [variationRemovedFixture.removedTargetingRules]
+      }
+      result.current.saveChanges(newValues)
+
+      expect(mutateMock).toBeCalledWith(variationRemovedFixture.expected)
+      await waitFor(() => expect(refetchFlagMock).toBeCalled())
     })
   })
 
@@ -265,7 +334,7 @@ describe('usePatchFeatureFlag', () => {
 
       const newValues = {
         ...defaultInitialValues,
-        targetingRuleItems: [percentageRolloutUpdated.newPercentageRolloutAdded]
+        targetingRuleItems: [percentageRolloutUpdated.newPercentageRolloutUpdated]
       }
       result.current.saveChanges(newValues)
 
@@ -286,7 +355,7 @@ describe('usePatchFeatureFlag', () => {
 
       const newValues = {
         ...defaultInitialValues,
-        targetingRuleItems: []
+        targetingRuleItems: [percentageRolloutRemoved.percentageRolloutRemoved]
       }
       result.current.saveChanges(newValues)
 

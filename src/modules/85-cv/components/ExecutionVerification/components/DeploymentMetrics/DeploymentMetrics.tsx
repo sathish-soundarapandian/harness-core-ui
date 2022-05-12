@@ -22,6 +22,7 @@ import {
   MultiSelectOption,
   Icon
 } from '@wings-software/uicore'
+import cx from 'classnames'
 import { isEqual } from 'lodash-es'
 import { FontVariation, Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
@@ -266,6 +267,9 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
     []
   )
 
+  const getNoDataAvailableOrError = (): boolean | null =>
+    (!currentViewData?.length && !loading) || getShouldShowError(error, shouldUpdateView)
+
   const renderContent = (): JSX.Element => {
     if (getShouldShowSpinner(loading, showSpinner)) {
       return <Icon name="steps-spinner" className={css.loading} color={Color.GREY_400} size={30} />
@@ -399,7 +403,13 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
           </Layout.Horizontal>
         </Layout.Horizontal>
       </Layout.Horizontal>
-      <Container className={css.content}>{renderContent()}</Container>
+      <Container
+        className={cx(css.content, {
+          [css.whiteBackground]: getNoDataAvailableOrError()
+        })}
+      >
+        {renderContent()}
+      </Container>
       <Pagination
         className={css.metricsPagination}
         pageSize={paginationInfo.pageSize as number}

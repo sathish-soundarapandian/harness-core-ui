@@ -10,12 +10,21 @@ import cx from 'classnames'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import produce from 'immer'
 import * as Yup from 'yup'
-import { Layout, Tag, Text, Formik, ButtonVariation } from '@wings-software/uicore'
-import { FontVariation } from '@harness/design-system'
-import { set, debounce, cloneDeep } from 'lodash-es'
+import {
+  Layout,
+  Tag,
+  Text,
+  Formik,
+  ButtonVariation,
+  Button,
+  ButtonSize,
+  useToggleOpen,
+  ConfirmationDialog
+} from '@wings-software/uicore'
+import { FontVariation, Intent } from '@harness/design-system'
+import { set, debounce, cloneDeep, isEqual } from 'lodash-es'
 import { FieldArray } from 'formik'
 import { Tooltip } from '@blueprintjs/core'
-import type { PipelineInfoConfig } from 'services/cd-ng'
 import { String, useStrings } from 'framework/strings'
 import type { UseStringsReturn } from 'framework/strings'
 import { useGetBarriersSetupInfoList, StageDetail } from 'services/pipeline-ng'
@@ -61,21 +70,36 @@ interface Barrier {
   mode?: 'ADD' | 'EDIT' | null
   stages?: StageDetail[]
 }
-interface BarrierListProps {
+export interface BarrierListProps {
+  isReadonly: boolean
   list: Array<Barrier>
-  pipeline: PipelineInfoConfig
   createItem: (push: (data: Barrier) => void) => void
   deleteItem: (index: number, remove: (a: number) => void) => void
   commitItem: (data: Barrier, index: number) => void
-  updatePipeline: (pipeline: PipelineInfoConfig) => Promise<void>
   getString: UseStringsReturn['getString']
   loadingSetupInfo: boolean
 }
-export function FlowControl(): React.ReactElement {
+
+export interface FlowControlRef {
+  onRequestClose(): void
+}
+
+export function FlowControl(
+  { onDiscard }: { onDiscard: () => void },
+  ref: React.ForwardedRef<FlowControlRef>
+): React.ReactElement {
   const {
     state: { pipeline, originalPipeline },
+    isReadonly,
     updatePipeline
   } = usePipelineContext()
+
+  const {
+    isOpen: isConfirmationDialogOpen,
+    open: openConfirmationDialog,
+    close: closeConfirmationDialog
+  } = useToggleOpen()
+
   const [barriers, updateBarriers] = React.useState<Barrier[]>(pipeline?.flowControl?.barriers || [])
   const { data, loading: loadingSetupInfo } = useMutateAsGet(useGetBarriersSetupInfoList, {
     body: yamlStringify({ pipeline: originalPipeline }) as unknown as void,
@@ -86,6 +110,7 @@ export function FlowControl(): React.ReactElement {
     },
     debounce: 800
   })
+
   React.useEffect(() => {
     if (data?.data) {
       const barrierInfoList = data?.data
@@ -127,16 +152,6 @@ export function FlowControl(): React.ReactElement {
       }
     })
     updateBarriers(updatedBarriers)
-    const validBarriers = getValidBarriers(updatedBarriers)
-    debouncedUpdatePipeline({
-      ...pipeline,
-      flowControl: {
-        barriers: validBarriers.map(barrier => ({
-          name: barrier.name,
-          identifier: barrier.identifier
-        }))
-      }
-    })
   }
 
   const deleteBarrier = (index: number, remove: (index: number) => void): void => {
@@ -146,49 +161,102 @@ export function FlowControl(): React.ReactElement {
     })
     updateBarriers(updatedBarriers)
     remove(index)
+  }
+
+  const submitBarrier = (): void => {
+    const validBarriers = getValidBarriers(barriers)
     debouncedUpdatePipeline({
       ...pipeline,
       flowControl: {
-        barriers: barriers.map(barrier => ({
+        barriers: validBarriers.map(barrier => ({
           name: barrier.name,
           identifier: barrier.identifier
         }))
       }
     })
+    onDiscard()
   }
 
+  function onRequestClose(): void {
+    if (!isEqual(pipeline?.flowControl?.barriers, barriers)) {
+      openConfirmationDialog()
+      return
+    }
+    onDiscard()
+  }
+
+  function handleConfirmation(confirm: boolean): void {
+    if (confirm) {
+      submitBarrier()
+    }
+    closeConfirmationDialog()
+  }
+
+  React.useImperativeHandle(ref, () => ({
+    onRequestClose
+  }))
+
   const { getString } = useStrings()
+
+  React.useImperativeHandle(ref, () => ({
+    onRequestClose
+  }))
+
   return (
-    <div className={css.container}>
-      <div className={css.header}>
-        {pipeline?.name}: {getString('pipeline.barriers.flowControl')}
+    <>
+      <ConfirmationDialog
+        titleText={getString('pipeline.barriers.flowControl')}
+        contentText={getString('pipeline.stepConfigHasChanges')}
+        isOpen={isConfirmationDialogOpen}
+        confirmButtonText={getString('applyChanges')}
+        cancelButtonText={getString('cancel')}
+        onClose={handleConfirmation}
+        intent={Intent.WARNING}
+      />
+      <div className={css.flowControlPanelHeader}>
+        <div className={css.flowControlTitle}>
+          <Layout.Horizontal>
+            <Text font={{ variation: FontVariation.H4 }} tooltipProps={{ dataTooltipId: 'pipelineVariables' }}>
+              {pipeline?.name}: {getString('pipeline.barriers.flowControl')}
+            </Text>
+          </Layout.Horizontal>
+        </div>
+        <div className={css.mainActions}>
+          <Button
+            disabled={isReadonly}
+            variation={ButtonVariation.SECONDARY}
+            size={ButtonSize.SMALL}
+            text={getString('applyChanges')}
+            onClick={submitBarrier}
+          />
+          <Button minimal size={ButtonSize.SMALL} text={getString('pipeline.discard')} onClick={onDiscard} />
+        </div>
       </div>
-      <Layout.Vertical spacing="small">
-        <Text font={{ variation: FontVariation.H5 }}>{getString('pipeline.barriers.syncBarriers')}</Text>
+      <div className={css.container}>
         <BarrierList
+          isReadonly={isReadonly}
           list={barriers}
-          pipeline={pipeline}
           createItem={addBarrier}
           deleteItem={deleteBarrier}
           commitItem={commitBarrier}
-          updatePipeline={debouncedUpdatePipeline}
           getString={getString}
           loadingSetupInfo={loadingSetupInfo}
         />
-      </Layout.Vertical>
-    </div>
+      </div>
+    </>
   )
 }
 
-function BarrierList({
+export const FlowControlWithRef = React.forwardRef(FlowControl)
+
+export function BarrierList({
+  isReadonly,
   list,
   createItem,
   deleteItem,
   commitItem,
-  updatePipeline,
   getString,
-  loadingSetupInfo,
-  pipeline
+  loadingSetupInfo
 }: BarrierListProps): React.ReactElement {
   return (
     <Formik
@@ -200,19 +268,8 @@ function BarrierList({
       validate={({ barriers }: { barriers: Barrier[] }) => {
         const errors: any = { barriers: [] }
         const identifierErrors = getErrors(barriers, getString)
-        const validBarriers = getValidBarriers(barriers)
         if (identifierErrors.length) {
           errors.barriers = identifierErrors
-        } else {
-          updatePipeline({
-            ...pipeline,
-            flowControl: {
-              barriers: validBarriers.map(barrier => ({
-                name: barrier.name,
-                identifier: barrier.identifier
-              }))
-            }
-          })
         }
         return errors
       }}
@@ -226,117 +283,124 @@ function BarrierList({
       })}
     >
       {formik => (
-        <FieldArray
-          name="barriers"
-          render={({ push, remove }) => {
-            return (
-              <div>
-                <div className={css.barrierList}>
-                  {list.map((barrier: Barrier, index) =>
-                    !barrier.mode ? (
-                      <div className={css.rowItem} key={barrier.id}>
-                        <div>
-                          <Text lineClamp={1} className={css.rowHeader}>
-                            {barrier.name}
-                          </Text>
-                          <Text lineClamp={1}>{barrier.identifier}</Text>
-                        </div>
-                        <div>
-                          {barrier.stages?.map((stage: StageDetail) => (
-                            <Tag className={cx(css.tag, css.spaceRight)} key={stage.name}>
-                              <Text lineClamp={1} width={50} className={css.tagText}>
-                                {stage.name}
+        <>
+          <Layout.Vertical spacing="small">
+            <Text font={{ variation: FontVariation.H5 }}>{getString('pipeline.barriers.syncBarriers')}</Text>
+            <FieldArray
+              name="barriers"
+              render={({ push, remove }) => {
+                return (
+                  <div>
+                    <div className={css.barrierList}>
+                      {list.map((barrier: Barrier, index) =>
+                        !barrier.mode ? (
+                          <div className={css.rowItem} key={barrier.id}>
+                            <div>
+                              <Text lineClamp={1} className={css.rowHeader}>
+                                {barrier.name}
                               </Text>
-                            </Tag>
-                          ))}
-                        </div>
-                        <div className={css.barrierAction}>
-                          <Tooltip
-                            content={
-                              barrier.stages?.length
-                                ? 'Deleting this barrier is not allowed as it is being used in one or more stages'
-                                : ''
-                            }
-                          >
-                            <RbacButton
-                              permission={{
-                                permission: PermissionIdentifier.EDIT_PIPELINE,
-                                resource: {
-                                  resourceType: ResourceType.PIPELINE
+                              <Text lineClamp={1}>{barrier.identifier}</Text>
+                            </div>
+                            <div>
+                              {barrier.stages?.map((stage: StageDetail) => (
+                                <Tag className={cx(css.tag, css.spaceRight)} key={stage.name}>
+                                  <Text lineClamp={1} width={50} className={css.tagText}>
+                                    {stage.name}
+                                  </Text>
+                                </Tag>
+                              ))}
+                            </div>
+                            <div className={css.barrierAction}>
+                              <Tooltip
+                                content={
+                                  barrier.stages?.length
+                                    ? 'Deleting this barrier is not allowed as it is being used in one or more stages'
+                                    : ''
                                 }
-                              }}
-                              icon="main-trash"
-                              variation={ButtonVariation.ICON}
-                              className={cx(css.deleteIcon, {
-                                [css.disabledIcon]: loadingSetupInfo || barrier.stages?.length
-                              })}
-                              withoutCurrentColor
-                              iconProps={{ size: 16, color: '#6B6D85' }}
-                              onClick={() => deleteItem(index, remove)}
-                            />
-                          </Tooltip>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className={css.rowItem} key={barrier.id}>
-                        <div className={css.newBarrier}>
-                          {barrier.name} <br />
-                          <NameId
-                            nameLabel="Barrier Name"
-                            identifierProps={{
-                              inputName: `barriers[${index}].name`,
-                              idName: `barriers[${index}].identifier`,
-                              inputGroupProps: {
-                                inputGroup: {
-                                  onBlur: () =>
-                                    !formik.errors?.barriers?.[index] &&
-                                    commitItem(formik.values.barriers[index], index)
-                                }
-                              }
-                            }}
-                          />
-                        </div>
-                        <div className={css.barrierAction}>
-                          <RbacButton
-                            permission={{
-                              permission: PermissionIdentifier.EDIT_PIPELINE,
-                              resource: {
-                                resourceType: ResourceType.PIPELINE
-                              }
-                            }}
-                            variation={ButtonVariation.ICON}
-                            iconProps={{ color: '#6B6D85', size: 16 }}
-                            icon="main-trash"
-                            withoutCurrentColor
-                            className={css.deleteIcon}
-                            onClick={() => deleteItem(index, remove)}
-                          />
-                        </div>
-                      </div>
-                    )
-                  )}
-                </div>
+                              >
+                                <RbacButton
+                                  disabled={isReadonly}
+                                  permission={{
+                                    permission: PermissionIdentifier.EDIT_PIPELINE,
+                                    resource: {
+                                      resourceType: ResourceType.PIPELINE
+                                    }
+                                  }}
+                                  icon="main-trash"
+                                  variation={ButtonVariation.ICON}
+                                  className={cx(css.deleteIcon, {
+                                    [css.disabledIcon]: loadingSetupInfo || barrier.stages?.length
+                                  })}
+                                  withoutCurrentColor
+                                  iconProps={{ size: 16, color: '#6B6D85' }}
+                                  onClick={() => deleteItem(index, remove)}
+                                />
+                              </Tooltip>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className={css.rowItem} key={barrier.id}>
+                            <div className={css.newBarrier}>
+                              {barrier.name} <br />
+                              <NameId
+                                nameLabel="Barrier Name"
+                                identifierProps={{
+                                  inputName: `barriers[${index}].name`,
+                                  idName: `barriers[${index}].identifier`,
+                                  inputGroupProps: {
+                                    inputGroup: {
+                                      onBlur: () =>
+                                        !formik.errors?.barriers?.[index] &&
+                                        commitItem(formik.values.barriers[index], index)
+                                    }
+                                  }
+                                }}
+                              />
+                            </div>
+                            <div className={css.barrierAction}>
+                              <RbacButton
+                                permission={{
+                                  permission: PermissionIdentifier.EDIT_PIPELINE,
+                                  resource: {
+                                    resourceType: ResourceType.PIPELINE
+                                  }
+                                }}
+                                variation={ButtonVariation.ICON}
+                                iconProps={{ color: '#6B6D85', size: 16 }}
+                                icon="main-trash"
+                                withoutCurrentColor
+                                className={css.deleteIcon}
+                                onClick={() => deleteItem(index, remove)}
+                              />
+                            </div>
+                          </div>
+                        )
+                      )}
+                    </div>
 
-                <RbacButton
-                  permission={{
-                    permission: PermissionIdentifier.EDIT_PIPELINE,
-                    resource: {
-                      resourceType: ResourceType.PIPELINE
-                    }
-                  }}
-                  intent="primary"
-                  variation={ButtonVariation.LINK}
-                  icon="plus"
-                  onClick={() => createItem(push)}
-                  withoutCurrentColor
-                  className={css.addbarrier}
-                >
-                  <String stringID="pipeline.barriers.addBarrier" />
-                </RbacButton>
-              </div>
-            )
-          }}
-        />
+                    <RbacButton
+                      disabled={isReadonly}
+                      permission={{
+                        permission: PermissionIdentifier.EDIT_PIPELINE,
+                        resource: {
+                          resourceType: ResourceType.PIPELINE
+                        }
+                      }}
+                      intent="primary"
+                      variation={ButtonVariation.LINK}
+                      icon="plus"
+                      onClick={() => createItem(push)}
+                      withoutCurrentColor
+                      className={css.addbarrier}
+                    >
+                      <String stringID="pipeline.barriers.addBarrier" />
+                    </RbacButton>
+                  </div>
+                )
+              }}
+            />
+          </Layout.Vertical>
+        </>
       )}
     </Formik>
   )

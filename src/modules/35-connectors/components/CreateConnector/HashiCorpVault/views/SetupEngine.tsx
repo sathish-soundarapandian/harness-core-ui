@@ -49,6 +49,8 @@ import {
 } from 'services/cd-ng'
 import { useToaster } from '@common/exports'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { FeatureFlag } from '@common/featureFlags'
+import { useConnectorGovernanceModal } from '@connectors/hooks/useConnectorGovernanceModal'
 
 const defaultInitialFormData: SetupEngineFormData = {
   secretEngine: '',
@@ -74,7 +76,10 @@ const SetupEngine: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps>
   const [savingDataInProgress, setSavingDataInProgress] = useState<boolean>(false)
   const [secretEngineOptions, setSecretEngineOptions] = useState<SelectOption[]>([])
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding | undefined>()
-
+  const { hideOrShowGovernanceErrorModal } = useConnectorGovernanceModal({
+    errorOutOnGovernanceWarning: false,
+    featureFlag: FeatureFlag.OPA_CONNECTOR_GOVERNANCE
+  })
   const { mutate: getMetadata, loading } = useGetMetadata({ queryParams: { accountIdentifier: accountId } })
   const { mutate: createConnector, loading: creating } = useCreateConnector({
     queryParams: { accountIdentifier: accountId }
@@ -195,16 +200,14 @@ const SetupEngine: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps>
 
       try {
         setSavingDataInProgress(true)
-        if (isEditMode) {
-          const response = await updateConnector(data)
+        const response = isEditMode ? await updateConnector(data) : await createConnector(data)
+        const { canGoToNextStep } = await hideOrShowGovernanceErrorModal(response)
+        if (canGoToNextStep) {
           nextStep?.({ ...prevStepData, ...formData })
           onConnectorCreated?.(response.data)
-          showSuccess(getString('connectors.updatedSuccessfully'))
-        } else {
-          const response = await createConnector(data)
-          nextStep?.({ ...prevStepData, ...formData })
-          onConnectorCreated?.(response.data)
-          showSuccess(getString('connectors.createdSuccessfully'))
+          isEditMode
+            ? showSuccess(getString('connectors.updatedSuccessfully'))
+            : showSuccess(getString('connectors.createdSuccessfully'))
         }
       } catch (err) {
         /* istanbul ignore next */

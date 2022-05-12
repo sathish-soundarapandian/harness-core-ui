@@ -43,8 +43,7 @@ const renderComponent = (): RenderResult =>
           color: '#0063F7',
           type: 'PreProduction',
           deleted: false,
-          tags: {},
-          version: 0
+          tags: {}
         }}
       />
     </TestWrapper>

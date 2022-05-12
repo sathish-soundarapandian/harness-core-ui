@@ -22,16 +22,6 @@ import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInter
 import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import {
-  manifestTypeIcons,
-  manifestTypeLabels,
-  ManifestDataType
-} from '@pipeline/components/ManifestSelection/Manifesthelper'
-import {
-  ArtifactIconByType,
-  ArtifactTitleIdByType,
-  ENABLED_ARTIFACT_TYPES
-} from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { TriggersListSection, GoToEditWizardInterface } from './TriggersListSection'
 
 import { TriggerTypes } from '../utils/TriggersWizardPageUtils'
@@ -41,10 +31,11 @@ import css from './TriggersList.module.scss'
 
 interface TriggersListPropsInterface {
   onNewTriggerClick: (val: TriggerDataInterface) => void
+  isPipelineInvalid?: boolean
 }
 
 export default function TriggersList(props: TriggersListPropsInterface & GitQueryParams): JSX.Element {
-  const { onNewTriggerClick } = props
+  const { onNewTriggerClick, isPipelineInvalid } = props
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
 
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } = useParams<
@@ -168,48 +159,9 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
       }
     }
 
-    const categoryItems = getCategoryItems(getString)
-    /* istanbul ignore next */
-    categoryItems.categories.splice(
-      1,
-      0,
-      {
-        categoryLabel: getString('pipeline.artifactTriggerConfigPanel.artifact'),
-        categoryValue: 'Artifact',
-        items: [
-          {
-            itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Gcr]),
-            value: ENABLED_ARTIFACT_TYPES.Gcr,
-            iconName: ArtifactIconByType.Gcr
-          },
-          {
-            itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Ecr]),
-            value: ENABLED_ARTIFACT_TYPES.Ecr,
-            iconName: ArtifactIconByType.Ecr
-          },
-          {
-            itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.DockerRegistry]),
-            value: ENABLED_ARTIFACT_TYPES.DockerRegistry,
-            iconName: ArtifactIconByType.DockerRegistry
-          }
-        ]
-      },
-      {
-        categoryLabel: getString('manifestsText'),
-        categoryValue: 'Manifest',
-        items: [
-          {
-            itemLabel: getString(manifestTypeLabels.HelmChart),
-            value: ManifestDataType.HelmChart,
-            iconName: manifestTypeIcons.HelmChart
-          }
-        ]
-      }
-    )
-
     return (
       <AddDrawer
-        addDrawerMap={categoryItems}
+        addDrawerMap={getCategoryItems(getString)}
         onSelect={onSelect}
         onClose={hideDrawer}
         drawerContext={DrawerContext.STUDIO}
@@ -226,7 +178,8 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
     <>
       <Page.SubHeader>
         <Button
-          disabled={!isEditable || incompatibleGitSyncBranch}
+          disabled={!isEditable || incompatibleGitSyncBranch || isPipelineInvalid}
+          tooltip={isPipelineInvalid ? getString('pipeline.cannotAddTriggerInvalidPipeline') : ''}
           text={getString('triggers.newTrigger')}
           variation={ButtonVariation.PRIMARY}
           onClick={openDrawer}
@@ -257,7 +210,8 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
                 message: getString('triggers.aboutTriggers'),
                 buttonText: getString('triggers.addNewTrigger'),
                 onClick: openDrawer,
-                buttonDisabled: !isEditable || incompatibleGitSyncBranch
+                buttonDisabled: !isEditable || incompatibleGitSyncBranch || isPipelineInvalid,
+                buttonDisabledTooltip: isPipelineInvalid ? getString('pipeline.cannotAddTriggerInvalidPipeline') : ''
               }
             : {
                 when: () => Array.isArray(triggerList) && triggerList.length === 0,
@@ -271,6 +225,7 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
           refetchTriggerList={refetch}
           goToEditWizard={goToEditWizard}
           goToDetails={goToDetails}
+          isPipelineInvalid={isPipelineInvalid}
         />
       </Page.Body>
     </>

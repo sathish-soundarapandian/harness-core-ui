@@ -7,14 +7,32 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
+import { parse } from 'yaml'
 import { TemplateInputs } from '@templates-library/components/TemplateInputs/TemplateInputs'
 import { mockTemplates } from '@templates-library/TemplatesTestHelper'
 import { mockTemplatesInputYaml } from '@pipeline/components/PipelineStudio/PipelineStudioTestHelper'
 import { TestWrapper } from '@common/utils/testUtils'
+import { yamlStringify } from '@common/utils/YamlHelperMethods'
 
-jest.mock('@common/components/YAMLBuilder/YamlBuilder')
-jest.mock('@wings-software/monaco-yaml/lib/esm/languageservice/yamlLanguageService', () => ({
-  getLanguageService: jest.fn()
+const baseTemplate = mockTemplates?.data?.content?.[0] || {}
+
+jest.mock('@common/hooks', () => ({
+  ...(jest.requireActual('@common/hooks') as any),
+  useMutateAsGet: jest.fn().mockImplementation(() => {
+    return {
+      data: {
+        correlationId: '',
+        status: 'SUCCESS',
+        metaData: null as unknown as undefined,
+        data: {
+          mergedPipelineYaml: yamlStringify(parse(baseTemplate?.yaml || '').template)
+        }
+      },
+      refetch: jest.fn(),
+      error: null,
+      loading: false
+    }
+  })
 }))
 
 jest.mock('services/template-ng', () => ({
@@ -28,7 +46,7 @@ describe('<TemplateInputs /> tests', () => {
   test('snapshot test', async () => {
     const { container } = render(
       <TestWrapper>
-        <TemplateInputs template={mockTemplates?.data?.content?.[0] || {}} />
+        <TemplateInputs template={baseTemplate} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()

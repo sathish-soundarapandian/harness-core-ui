@@ -20,7 +20,8 @@ export const ManifestDataType: Record<ManifestTypes, ManifestTypes> = {
   Kustomize: 'Kustomize',
   OpenshiftTemplate: 'OpenshiftTemplate',
   OpenshiftParam: 'OpenshiftParam',
-  KustomizePatches: 'KustomizePatches'
+  KustomizePatches: 'KustomizePatches',
+  ServerlessAwsLambda: 'ServerlessAwsLambda'
 }
 
 export const ManifestStoreMap: { [key: string]: ManifestStores } = {
@@ -43,7 +44,8 @@ export const allowedManifestTypes: Record<string, Array<ManifestTypes>> = {
     ManifestDataType.Kustomize,
     ManifestDataType.KustomizePatches
   ],
-  NativeHelm: [ManifestDataType.Values, ManifestDataType.HelmChart]
+  NativeHelm: [ManifestDataType.Values, ManifestDataType.HelmChart],
+  ServerlessAwsLambda: [ManifestDataType.ServerlessAwsLambda]
 }
 
 export const manifestStoreTypes: Array<ManifestStores> = [
@@ -60,7 +62,8 @@ export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
   Kustomize: 'kustamize',
   OpenshiftTemplate: 'openshift',
   OpenshiftParam: 'openshift-params',
-  KustomizePatches: 'kustomizeparam'
+  KustomizePatches: 'kustomizeparam',
+  ServerlessAwsLambda: 'service-serverless-aws'
 }
 
 export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
@@ -70,7 +73,8 @@ export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
   Kustomize: 'pipeline.manifestTypeLabels.KustomizeLabel',
   OpenshiftTemplate: 'pipeline.manifestTypeLabels.OpenshiftTemplate',
   OpenshiftParam: 'pipeline.manifestTypeLabels.OpenshiftParam',
-  KustomizePatches: 'pipeline.manifestTypeLabels.KustomizePatches'
+  KustomizePatches: 'pipeline.manifestTypeLabels.KustomizePatches',
+  ServerlessAwsLambda: 'pipeline.manifestTypeLabels.ServerlessAwsLambda'
 }
 
 export const helmVersions: Array<{ label: string; value: HelmVersionOptions }> = [
@@ -115,7 +119,7 @@ export const ManifestToConnectorLabelMap: Record<ManifestStores, StringKeys> = {
   Bitbucket: 'pipeline.manifestType.bitBucketLabel',
   Http: 'connectors.title.helmConnector',
   S3: 'pipeline.manifestToConnectorLabelMap.AWSLabel',
-  Gcs: 'pipeline.manifestToConnectorLabelMap.GCPLabel'
+  Gcs: 'common.gcp'
 }
 
 export enum GitRepoName {
@@ -130,7 +134,7 @@ export enum GitFetchTypes {
 
 export const gitFetchTypeList = [
   { label: 'Latest from Branch', value: 'Branch' },
-  { label: 'Specific Commit Id / Git Tag ', value: 'Commit' }
+  { label: 'Specific Commit Id / Git Tag', value: 'Commit' }
 ]
 
 export const ManifestIdentifierValidation = (

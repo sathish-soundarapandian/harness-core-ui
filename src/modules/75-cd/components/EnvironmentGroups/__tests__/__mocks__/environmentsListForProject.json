@@ -1,0 +1,113 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "totalPages": 1,
+    "totalItems": 7,
+    "pageItemCount": 7,
+    "pageSize": 100,
+    "content": [
+      {
+        "accountId": "kmpySmUISimoRrJL6NL73w",
+        "orgIdentifier": "default",
+        "projectIdentifier": "Ashwin",
+        "identifier": "Env_7",
+        "name": "Env 7",
+        "description": null,
+        "color": "#0063F7",
+        "type": "PreProduction",
+        "deleted": false,
+        "tags": { "Env 7": "" },
+        "version": 1,
+        "yaml": "environment:\n  orgIdentifier: \"default\"\n  projectIdentifier: \"Ashwin\"\n  identifier: \"Env_7\"\n  tags:\n    Env 7: \"\"\n  name: \"Env 7\"\n  type: \"PreProduction\"\n"
+      },
+      {
+        "accountId": "kmpySmUISimoRrJL6NL73w",
+        "orgIdentifier": "default",
+        "projectIdentifier": "Ashwin",
+        "identifier": "Env_6",
+        "name": "Env 6",
+        "description": null,
+        "color": "#0063F7",
+        "type": "Production",
+        "deleted": false,
+        "tags": {},
+        "version": 0,
+        "yaml": "environment:\n  orgIdentifier: \"default\"\n  projectIdentifier: \"Ashwin\"\n  identifier: \"Env_6\"\n  tags: {}\n  name: \"Env 6\"\n  type: \"Production\"\n"
+      },
+      {
+        "accountId": "kmpySmUISimoRrJL6NL73w",
+        "orgIdentifier": "default",
+        "projectIdentifier": "Ashwin",
+        "identifier": "Env_5",
+        "name": "Env 5",
+        "description": null,
+        "color": "#0063F7",
+        "type": "PreProduction",
+        "deleted": false,
+        "tags": {},
+        "version": 0,
+        "yaml": "environment:\n  orgIdentifier: \"default\"\n  projectIdentifier: \"Ashwin\"\n  identifier: \"Env_5\"\n  tags: {}\n  name: \"Env 5\"\n  type: \"PreProduction\"\n"
+      },
+      {
+        "accountId": "kmpySmUISimoRrJL6NL73w",
+        "orgIdentifier": "default",
+        "projectIdentifier": "Ashwin",
+        "identifier": "Env_4",
+        "name": "Env 4",
+        "description": null,
+        "color": "#0063F7",
+        "type": "Production",
+        "deleted": false,
+        "tags": {},
+        "version": 0,
+        "yaml": "environment:\n  orgIdentifier: \"default\"\n  projectIdentifier: \"Ashwin\"\n  identifier: \"Env_4\"\n  tags: {}\n  name: \"Env 4\"\n  type: \"Production\"\n"
+      },
+      {
+        "accountId": "kmpySmUISimoRrJL6NL73w",
+        "orgIdentifier": "default",
+        "projectIdentifier": "Ashwin",
+        "identifier": "Env_3",
+        "name": "Env 3",
+        "description": null,
+        "color": "#0063F7",
+        "type": "PreProduction",
+        "deleted": false,
+        "tags": {},
+        "version": 0,
+        "yaml": "environment:\n  orgIdentifier: \"default\"\n  projectIdentifier: \"Ashwin\"\n  identifier: \"Env_3\"\n  tags: {}\n  name: \"Env 3\"\n  type: \"PreProduction\"\n"
+      },
+      {
+        "accountId": "kmpySmUISimoRrJL6NL73w",
+        "orgIdentifier": "default",
+        "projectIdentifier": "Ashwin",
+        "identifier": "Env_2",
+        "name": "Env 2",
+        "description": null,
+        "color": "#0063F7",
+        "type": "PreProduction",
+        "deleted": false,
+        "tags": {},
+        "version": 0,
+        "yaml": "environment:\n  orgIdentifier: \"default\"\n  projectIdentifier: \"Ashwin\"\n  identifier: \"Env_2\"\n  tags: {}\n  name: \"Env 2\"\n  type: \"PreProduction\"\n"
+      },
+      {
+        "accountId": "kmpySmUISimoRrJL6NL73w",
+        "orgIdentifier": "default",
+        "projectIdentifier": "Ashwin",
+        "identifier": "Env_1",
+        "name": "Env 1",
+        "description": null,
+        "color": "#0063F7",
+        "type": "Production",
+        "deleted": false,
+        "tags": {},
+        "version": 0,
+        "yaml": "environment:\n  orgIdentifier: \"default\"\n  projectIdentifier: \"Ashwin\"\n  identifier: \"Env_1\"\n  tags: {}\n  name: \"Env 1\"\n  type: \"Production\"\n"
+      }
+    ],
+    "pageIndex": 0,
+    "empty": false
+  },
+  "metaData": null,
+  "correlationId": "c40fc72a-a35e-4cc6-bbc9-b5834770fa9b"
+}

@@ -7,7 +7,16 @@
 
 import { Utils } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import { RiskValues, getRiskColorValue, getSecondaryRiskColorValue, isNumeric } from './CommonUtils'
+import {
+  RiskValues,
+  getRiskColorValue,
+  getSecondaryRiskColorValue,
+  isNumeric,
+  getEventTypeColor,
+  EVENT_TYPE,
+  getEventTypeLightColor,
+  getEventTypeChartColor
+} from './CommonUtils'
 
 describe('Test for getRiskColorValue', () => {
   test('getRiskColorValue should return correct realCSSColors', () => {
@@ -58,5 +67,42 @@ describe('Test for isNumeric', () => {
     expect(isNumeric('123')).toEqual(true)
     expect(isNumeric('abc')).toEqual(false)
     expect(isNumeric('-456')).toEqual(true)
+  })
+})
+
+describe('test for logs screen utils', () => {
+  test('getEventTypeLightColor should return correct color values', () => {
+    expect(getEventTypeLightColor(EVENT_TYPE.UNKNOWN)).toEqual(Utils.getRealCSSColor(Color.RED_50))
+    expect(getEventTypeLightColor(EVENT_TYPE.UNKNOWN, true)).toEqual('var(--red-50)')
+    expect(getEventTypeLightColor(EVENT_TYPE.KNOWN)).toEqual(Utils.getRealCSSColor(Color.PRIMARY_2))
+    expect(getEventTypeLightColor(EVENT_TYPE.KNOWN, true)).toEqual('var(--primary-2)')
+    expect(getEventTypeLightColor(EVENT_TYPE.FREQUENCY)).toEqual(Utils.getRealCSSColor(Color.YELLOW_200))
+    expect(getEventTypeLightColor(EVENT_TYPE.FREQUENCY, true)).toEqual('var(--yellow-200)')
+    expect(getEventTypeLightColor('UNEXPECTED')).toEqual(Utils.getRealCSSColor(Color.YELLOW_200))
+    expect(getEventTypeLightColor('UNEXPECTED', true)).toEqual('var(--yellow-200)')
+    expect(getEventTypeLightColor(EVENT_TYPE.BASELINE)).toEqual(Utils.getRealCSSColor(Color.GREY_200))
+    expect(getEventTypeLightColor(EVENT_TYPE.BASELINE, true)).toEqual('var(--grey-200)')
+  })
+
+  test('getEventTypeColor should return correct color values', () => {
+    expect(getEventTypeColor(EVENT_TYPE.UNKNOWN)).toEqual(Utils.getRealCSSColor(Color.RED_800))
+    expect(getEventTypeColor(EVENT_TYPE.UNKNOWN, true)).toEqual('var(--red-800)')
+    expect(getEventTypeColor(EVENT_TYPE.KNOWN)).toEqual(Utils.getRealCSSColor(Color.PRIMARY_7))
+    expect(getEventTypeColor(EVENT_TYPE.KNOWN, true)).toEqual('var(--primary-7)')
+    expect(getEventTypeColor(EVENT_TYPE.FREQUENCY)).toEqual(Utils.getRealCSSColor(Color.YELLOW_800))
+    expect(getEventTypeColor(EVENT_TYPE.FREQUENCY, true)).toEqual('var(--yellow-800)')
+    expect(getEventTypeColor(EVENT_TYPE.BASELINE)).toEqual(Utils.getRealCSSColor(Color.GREY_700))
+    expect(getEventTypeColor(EVENT_TYPE.BASELINE, true)).toEqual('var(--grey-700)')
+  })
+
+  test('getEventTypeChartColor should return correct color values', () => {
+    expect(getEventTypeChartColor(EVENT_TYPE.UNKNOWN)).toEqual(Utils.getRealCSSColor(Color.RED_400))
+    expect(getEventTypeChartColor(EVENT_TYPE.UNKNOWN, true)).toEqual('var(--red-400)')
+    expect(getEventTypeChartColor(EVENT_TYPE.KNOWN)).toEqual(Utils.getRealCSSColor(Color.PRIMARY_4))
+    expect(getEventTypeChartColor(EVENT_TYPE.KNOWN, true)).toEqual('var(--primary-4)')
+    expect(getEventTypeChartColor(EVENT_TYPE.FREQUENCY)).toEqual(Utils.getRealCSSColor(Color.YELLOW_700))
+    expect(getEventTypeChartColor(EVENT_TYPE.FREQUENCY, true)).toEqual('var(--yellow-700)')
+    expect(getEventTypeChartColor(EVENT_TYPE.BASELINE)).toEqual(Utils.getRealCSSColor(Color.GREY_300))
+    expect(getEventTypeChartColor(EVENT_TYPE.BASELINE, true)).toEqual('var(--grey-300)')
   })
 })

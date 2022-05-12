@@ -9,6 +9,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import React from 'react'
+import * as uuid from 'uuid'
 import { TestWrapper } from '@common/utils/testUtils'
 
 import * as cfServicesMock from 'services/cf'
@@ -19,6 +20,8 @@ import mockSegment from './data/mockSegments'
 import mockTargets from './data/mockTargets'
 import mockFeature from './data/mockFeature'
 import expectedFormValues from './data/expectedFormValues'
+
+jest.mock('uuid')
 
 const renderComponent = (props: Partial<TargetingRulesTabProps> = {}): void => {
   render(
@@ -36,15 +39,21 @@ describe('TargetingRulesTab', () => {
     jest.clearAllMocks()
   })
 
+  beforeAll(() => {
+    jest.spyOn(uuid, 'v4').mockReturnValue('UUID')
+  })
+
   beforeEach(() => {
     jest.spyOn(cfServicesMock, 'useGetAllSegments').mockReturnValue({
       data: { segments: mockSegment },
-      loading: false
+      loading: false,
+      refetch: jest.fn()
     } as any)
 
     jest.spyOn(cfServicesMock, 'useGetAllTargets').mockReturnValue({
       data: { targets: mockTargets },
-      loading: false
+      loading: false,
+      refetch: jest.fn()
     } as any)
   })
 
@@ -129,35 +138,31 @@ describe('TargetingRulesTab', () => {
       expect(targetGroupTagInputValue[0]).toHaveTextContent('target_group_4')
       expect(targetGroupTagInputValue[1]).toHaveTextContent('target_group_5')
 
-      // assert target groups list appear on click
+      // assert available target groups list appear on click
       const targetGroupTagInput = screen.getByTestId('false_target_groups').querySelector('input') as HTMLInputElement
       userEvent.type(targetGroupTagInput, 'target')
       const targetGroupInputList = document.querySelector('ul')
       await waitFor(() => expect(targetGroupInputList).toBeInTheDocument())
-      expect(document.querySelectorAll('li')[0]).toHaveTextContent(/target_group_5/)
-      expect(document.querySelectorAll('li')[1]).toHaveTextContent(/target_group_4/)
-      expect(document.querySelectorAll('li')[2]).toHaveTextContent(/target_group_1/)
-      expect(document.querySelectorAll('li')[3]).toHaveTextContent(/target_group_2/)
-      expect(document.querySelectorAll('li')[4]).toHaveTextContent(/target_group_3/)
+      expect(document.querySelectorAll('li')[0]).toHaveTextContent(/target_group_2/)
+      expect(document.querySelectorAll('li')[1]).toHaveTextContent(/target_group_3/)
+      expect(document.querySelectorAll('li')[2]).toHaveTextContent(/target_group_6/)
     })
 
     test('it should render target tags/dropdown correctly', async () => {
       renderComponent()
 
       // assert correct target are prepopulated
-      const targetGroupTagInputValue = screen.getByTestId('false_targets').querySelectorAll('span[data-tag-index]')
+      await waitFor(() => expect(screen.getByTestId('false_targets')).toHaveTextContent(/target_1/))
 
-      expect(targetGroupTagInputValue[0]).toHaveTextContent(/target_1/)
-
-      // assert target groups list appear on click
-      const targetGroupTagInput = screen.getByTestId('false_targets').querySelector('input') as HTMLInputElement
-      userEvent.type(targetGroupTagInput, 'target')
-      const targetGroupInputList = document.querySelector('ul')
-      await waitFor(() => expect(targetGroupInputList).toBeInTheDocument())
-      expect(document.querySelectorAll('li')[0]).toHaveTextContent(/target_1/)
-      expect(document.querySelectorAll('li')[1]).toHaveTextContent(/target_2/)
-      expect(document.querySelectorAll('li')[2]).toHaveTextContent(/target_3/)
-      expect(document.querySelectorAll('li')[3]).toHaveTextContent(/target_4/)
+      // assert availble targets appear on click
+      const targetsTagInput = screen.getByTestId('false_targets').querySelector('input') as HTMLInputElement
+      userEvent.type(targetsTagInput, 'target')
+      const targetsInputList = document.querySelector('ul')
+      await waitFor(() => expect(targetsInputList).toBeInTheDocument())
+      expect(document.querySelectorAll('li')).toHaveLength(3)
+      expect(document.querySelectorAll('li')[0]).toHaveTextContent(/target_4/)
+      expect(document.querySelectorAll('li')[1]).toHaveTextContent(/target_3/)
+      expect(document.querySelectorAll('li')[2]).toHaveTextContent(/target_2/)
     })
 
     test('it should update Target Groups for a variation correctly', async () => {
@@ -168,7 +173,8 @@ describe('TargetingRulesTab', () => {
       expect(targetGroupTagInputValues[0]).toHaveTextContent(/target_group_4/)
       expect(targetGroupTagInputValues[1]).toHaveTextContent(/target_group_5/)
 
-      userEvent.click(screen.getByTestId('false-target-groups-input'))
+      const targetGroup = document.querySelector('input[name="targetingRuleItems[0].targetGroups"]') as HTMLElement
+      userEvent.click(targetGroup)
 
       await waitFor(() => expect(screen.getByText('target_group_2')).toBeInTheDocument())
       userEvent.click(screen.getByText('target_group_2'))
@@ -187,7 +193,7 @@ describe('TargetingRulesTab', () => {
 
       expect(targetTagInputValues[0]).toHaveTextContent(/target_1/)
 
-      userEvent.click(screen.getByTestId('false-target-input'))
+      userEvent.click(document.querySelector('input[name="targetingRuleItems[0].targets"]') as HTMLInputElement)
 
       await waitFor(() => expect(screen.getByText('target_4')).toBeInTheDocument())
       userEvent.click(screen.getByText('target_4'))
@@ -253,7 +259,7 @@ describe('TargetingRulesTab', () => {
       expect(screen.getByTestId('false_targets').querySelectorAll('span[data-tag-index]')).toHaveLength(0)
     })
 
-    test('it should render empty target groups input when variation segmentsundefined', async () => {
+    test('it should render empty target groups input when variation segments undefined', async () => {
       jest.spyOn(cfServicesMock, 'useGetAllSegments').mockReturnValue({
         data: undefined
       } as any)
@@ -262,17 +268,6 @@ describe('TargetingRulesTab', () => {
       const targetGroupTagInputValue = screen
         .getByTestId('false_target_groups')
         .querySelector('span[data-tag-index="0"]')
-
-      expect(targetGroupTagInputValue).not.toBeInTheDocument()
-    })
-
-    test('it should render empty targets input when targets is/ undefined', async () => {
-      jest.spyOn(cfServicesMock, 'useGetAllTargets').mockReturnValue({
-        data: undefined
-      } as any)
-      renderComponent()
-
-      const targetGroupTagInputValue = screen.getByTestId('false_targets').querySelector('span[data-tag-index="0"]')
 
       expect(targetGroupTagInputValue).not.toBeInTheDocument()
     })
@@ -482,13 +477,15 @@ describe('TargetingRulesTab', () => {
       userEvent.click(screen.getByText('cf.featureFlags.rules.addTargeting'))
       userEvent.click(screen.getByTestId('variation_option_true'))
 
-      await waitFor(() => expect(screen.getByTestId('true-target-groups-input')).toBeInTheDocument())
-      userEvent.click(screen.getByTestId('true-target-groups-input'))
+      const trueTargetGroups = document.querySelector('input[name="targetingRuleItems[0].targetGroups"]') as HTMLElement
+
+      await waitFor(() => expect(trueTargetGroups).toBeInTheDocument())
+      userEvent.click(trueTargetGroups)
 
       await waitFor(() => expect(screen.getByText('target_group_2')).toBeInTheDocument())
       userEvent.click(screen.getByText('target_group_2'))
 
-      userEvent.click(screen.getByTestId('true-target-input'))
+      userEvent.click(document.querySelector('input[name="targetingRuleItems[0].targets"]') as HTMLElement)
       await waitFor(() => screen.getByText('target_2'))
       userEvent.click(screen.getByText('target_2'))
 

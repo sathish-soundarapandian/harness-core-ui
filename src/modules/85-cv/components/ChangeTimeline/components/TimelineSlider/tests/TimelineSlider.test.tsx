@@ -6,7 +6,9 @@
  */
 
 import React from 'react'
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { TestWrapper } from '@common/utils/testUtils'
 import TimelineSlider from '../TimelineSlider'
 
 jest.mock('react-draggable', () => (props: any) => (
@@ -16,8 +18,8 @@ jest.mock('react-draggable', () => (props: any) => (
       onClick={() => props.onStop({ movementX: 15 } as MouseEvent, { deltaX: 15, x: 10 } as any)}
     />
     <button
-      className="onDrag"
-      onClick={() => props.onDrag({ movementX: 15 } as MouseEvent, { deltaX: 15, x: 10 } as any)}
+      className="onDragSlider"
+      onClick={e => props.onDrag(e, { movementX: 15 } as MouseEvent, { deltaX: 15, x: 10 } as any)}
     />
     {props.children}
   </div>
@@ -50,30 +52,81 @@ describe('Unit tests for timeline slider', () => {
     fireEvent.click(dragEnds[0])
     await waitFor(() =>
       expect(onDragEndMock).toHaveBeenLastCalledWith({
-        endX: NaN,
+        endX: 0,
         endXPercentage: NaN,
-        startX: NaN,
-        startXPercentage: NaN
+        startX: 15,
+        startXPercentage: Infinity
       })
     )
 
     fireEvent.click(dragEnds[1])
     await waitFor(() =>
       expect(onDragEndMock).toHaveBeenLastCalledWith({
-        endX: NaN,
+        endX: 0,
         endXPercentage: NaN,
-        startX: NaN,
+        startX: 15,
+        startXPercentage: Infinity
+      })
+    )
+
+    userEvent.click(dragEnds[2])
+    await waitFor(() =>
+      expect(onDragEndMock).toHaveBeenLastCalledWith({
+        endX: 0,
+        endXPercentage: NaN,
+        startX: 0,
         startXPercentage: NaN
       })
     )
 
-    const drags = container.querySelectorAll('[class*="onDrag"]')
+    const drags = container.querySelectorAll('[class*="onDragSlider"]')
+
     fireEvent.click(drags[0])
     await waitFor(() =>
       expect(onDragEndMock).toHaveBeenLastCalledWith({
-        endX: NaN,
+        endX: 0,
         endXPercentage: NaN,
-        startX: NaN,
+        startX: 0,
+        startXPercentage: NaN
+      })
+    )
+
+    userEvent.click(drags[1])
+    await waitFor(() =>
+      expect(onDragEndMock).toHaveBeenLastCalledWith({
+        endX: 0,
+        endXPercentage: NaN,
+        startX: 0,
+        startXPercentage: NaN
+      })
+    )
+
+    userEvent.click(drags[2])
+    await waitFor(() =>
+      expect(onDragEndMock).toHaveBeenLastCalledWith({
+        endX: 0,
+        endXPercentage: NaN,
+        startX: 0,
+        startXPercentage: NaN
+      })
+    )
+
+    userEvent.click(drags[1])
+    await waitFor(() =>
+      expect(onDragEndMock).toHaveBeenLastCalledWith({
+        endX: 0,
+        endXPercentage: NaN,
+        startX: 0,
+        startXPercentage: NaN
+      })
+    )
+
+    userEvent.click(drags[2])
+    await waitFor(() =>
+      expect(onDragEndMock).toHaveBeenLastCalledWith({
+        endX: 0,
+        endXPercentage: NaN,
+        startX: 0,
         startXPercentage: NaN
       })
     )
@@ -90,5 +143,54 @@ describe('Unit tests for timeline slider', () => {
       <TimelineSlider initialSliderWidth={100} minSliderWidth={50} onSliderDragEnd={jest.fn()} hideSlider={false} />
     )
     await waitFor(() => expect(container.querySelector('[class*="sliderContainer"]')).not.toBeNull())
+  })
+
+  test('Ensure zoom callback is handled properly', () => {
+    const onSliderDragEnd = jest.fn()
+    const onZoom = jest.fn()
+
+    const { container } = render(
+      <TestWrapper>
+        <TimelineSlider
+          infoCard={<div />}
+          minSliderWidth={50}
+          initialSliderWidth={100}
+          onSliderDragEnd={onSliderDragEnd}
+          onZoom={onZoom}
+        />
+      </TestWrapper>
+    )
+
+    expect(container.querySelector('[class*="main"]')).toBeInTheDocument()
+
+    expect(screen.getByText('cv.zoom')).toBeInTheDocument()
+    userEvent.click(screen.getByText('cv.zoom'))
+
+    expect(onZoom).toBeCalledTimes(1)
+    expect(onSliderDragEnd).toBeCalledTimes(0)
+  })
+
+  test('it should handle the left and right clicks on mask', () => {
+    const onSliderDragEnd = jest.fn()
+
+    const { container } = render(
+      <TestWrapper>
+        <TimelineSlider
+          infoCard={<div />}
+          minSliderWidth={50}
+          containerWidth="500px"
+          initialSliderWidth={100}
+          onSliderDragEnd={onSliderDragEnd}
+        />
+      </TestWrapper>
+    )
+
+    expect(container.querySelector('[class*="main"]')).toBeInTheDocument()
+
+    userEvent.click(container.querySelectorAll('[class*="mask"]')?.[0]!)
+    expect(onSliderDragEnd).toBeCalledTimes(1)
+
+    userEvent.click(container.querySelectorAll('[class*="mask"]')?.[1]!)
+    expect(onSliderDragEnd).toBeCalledTimes(2)
   })
 })

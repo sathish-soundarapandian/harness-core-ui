@@ -34,6 +34,7 @@ import {
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { channelImgMap } from '@ce/constants'
+import { PAGE_NAMES } from '@ce/TrackingEventsConstants'
 import useAnomaliesAlertDialog from '../AnomaliesAlert/AnomaliesAlertDialog'
 import Table from '../PerspectiveReportsAndBudget/Table'
 import css from './AnomaliesSettings.module.scss'
@@ -50,7 +51,8 @@ const AlertsSection = () => {
   const [selectedAlert, setSelectedAlert] = useState<CCMNotificationSetting>({ perspectiveId: '', channels: [] })
   const { openAnomaliesAlertModal } = useAnomaliesAlertDialog({
     setRefetchingState: setRefetchingState,
-    selectedAlert: selectedAlert as unknown as CCMPerspectiveNotificationChannelsDTO
+    selectedAlert: selectedAlert as unknown as CCMPerspectiveNotificationChannelsDTO,
+    source: PAGE_NAMES.ANOMALY_SETTINGS_FLOW
   })
 
   const {

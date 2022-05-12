@@ -12,13 +12,9 @@ import {
   isFeatureOveruseActive,
   isFeatureWarningActive
 } from '@common/layouts/FeatureBanner'
+import type { RenderMessageReturn } from 'framework/featureStore/FeaturesFactory'
 import type { CheckFeatureReturn } from 'framework/featureStore/featureStoreUtil'
 import type { UseStringsReturn } from 'framework/strings'
-
-interface BannerText {
-  message: () => string
-  bannerType: BannerType
-}
 
 export const getBannerText = (
   getString: UseStringsReturn['getString'],
@@ -26,7 +22,7 @@ export const getBannerText = (
   serviceFeatureDetail?: CheckFeatureReturn,
   dpmFeatureDetail?: CheckFeatureReturn,
   initialDeploymentsFeatureDetail?: CheckFeatureReturn
-): BannerText => {
+): RenderMessageReturn => {
   const { isFreeEdition: isCDFree, isTeamEdition: isCDTeam } = additionalLicenseProps
   // Check for limit breach
   const isServiceLimitBreached = isFeatureLimitBreached(serviceFeatureDetail)

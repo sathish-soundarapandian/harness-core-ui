@@ -419,6 +419,7 @@ exports[`test case for anomalies settings drawer should be able to open alert cr
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

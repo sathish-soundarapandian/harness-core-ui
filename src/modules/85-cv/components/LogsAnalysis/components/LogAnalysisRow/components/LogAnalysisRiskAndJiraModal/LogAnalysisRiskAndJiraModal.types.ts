@@ -5,18 +5,21 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-export interface LogAnalysisRiskAndJiraModalProps {
-  count: number
-  activityType?: string
-  trendData?: Highcharts.Options
-  onHide: (data?: any) => void
-  logMessage: string
-  feedback?: { risk: string; message?: string }
-}
+import type { GetDataError } from 'restful-react'
+import type { LogData } from 'services/cv'
+import type { LogAnalysisRowData } from '../../LogAnalysisRow.types'
 
-export interface DataNameAndDataProps {
-  dataName: string
-  data?: string | number
+export interface LogAnalysisRiskAndJiraModalProps {
+  // count: number
+  // activityType?: string
+  // trendData?: Highcharts.Options
+  rowData: LogAnalysisRowData
+  onHide: (data?: any) => void
+  isDataLoading?: boolean
+  logsError?: GetDataError<unknown> | null
+  retryLogsCall?: () => void
+  // logMessage: string
+  // feedback?: { risk: string; message?: string }
 }
 
 export interface RiskAndMessageFormProps {
@@ -27,6 +30,7 @@ export interface RiskAndMessageFormProps {
 export interface ActivityHeadingContentProps {
   count: number
   trendData?: Highcharts.Options
+  activityType?: LogData['tag']
 }
 
 export interface SampleDataProps {

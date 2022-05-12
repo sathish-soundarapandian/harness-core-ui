@@ -75,7 +75,7 @@ const CertificateUpload: React.FC<CertificateUploadProps> = props => {
           password: Yup.string().required()
         })}
       >
-        {({ isValid, submitForm }) => (
+        {({ isValid, dirty, submitForm }) => (
           <FormikForm className={css.uploadForm}>
             <FormInput.Text
               name={'name'}
@@ -88,7 +88,12 @@ const CertificateUpload: React.FC<CertificateUploadProps> = props => {
               label={getString('password')}
               disabled={isEditMode && !props.editableFieldsMap['password']}
             />
-            <Button text={'Done'} intent={'primary'} disabled={!isValid || !fileContent} onClick={submitForm} />
+            <Button
+              text={'Done'}
+              intent={'primary'}
+              disabled={!isValid || !dirty || !fileContent}
+              onClick={submitForm}
+            />
           </FormikForm>
         )}
       </Formik>

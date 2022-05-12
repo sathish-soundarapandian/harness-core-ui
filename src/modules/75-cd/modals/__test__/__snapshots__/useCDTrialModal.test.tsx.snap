@@ -43,6 +43,7 @@ exports[`CDTrial Modal Rendering should open CDTrial 1`] = `
             class="OverlaySpinner--overlaySpinner"
           >
             <form
+              action="#"
               class="FormikForm--main"
             >
               <div>
@@ -343,6 +344,7 @@ exports[`CDTrial Modal trial type create or select pipeline modal 1`] = `
             class="OverlaySpinner--overlaySpinner"
           >
             <form
+              action="#"
               class="FormikForm--main"
             >
               <div>
@@ -593,6 +595,7 @@ exports[`CDTrial Modal trial type function getCDTrialDialog 1`] = `
             class="OverlaySpinner--overlaySpinner"
           >
             <form
+              action="#"
               class="FormikForm--main"
             >
               <div>

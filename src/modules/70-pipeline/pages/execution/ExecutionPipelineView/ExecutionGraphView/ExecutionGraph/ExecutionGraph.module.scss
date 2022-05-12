@@ -14,3 +14,10 @@
 .executionError {
   padding: var(--spacing-small) var(--spacing-xlarge) !important;
 }
+
+.graphLink {
+  stroke: var(--primary-6);
+  &[data-link-executed='false'] {
+    stroke: var(--grey-200);
+  }
+}

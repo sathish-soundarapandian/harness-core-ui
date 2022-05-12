@@ -11,6 +11,8 @@ import { useToaster } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Category, ContactSalesActions } from '@common/constants/TrackingConstants'
 import css from './useContactSalesMktoModal.module.scss'
 
 interface UseContactSalesModalProps {
@@ -83,6 +85,7 @@ export const useContactSalesMktoModal = ({ onSubmit }: UseContactSalesModalProps
   const [loading, setLoading] = useState<boolean>(false)
   const { currentUserInfo } = useAppStore()
   const { showSuccess } = useToaster()
+  const { trackEvent } = useTelemetry()
 
   useEffect(() => {
     if (!window.MktoForms2) {
@@ -100,12 +103,20 @@ export const useContactSalesMktoModal = ({ onSubmit }: UseContactSalesModalProps
     window?.MktoForms2.loadForm('//go.harness.io', '924-CQO-224', 1249, function (form: any) {
       window?.MktoForms2.lightbox(form).show()
       form.onSuccess(function () {
+        trackEvent(ContactSalesActions.SubmitContactSales, {
+          category: Category.CONTACT_SALES,
+          data: form.values
+        })
         onSubmit?.(form.values)
         showSuccess(getString('common.banners.trial.contactSalesForm.success'))
         return false
       })
     })
     window?.MktoForms2.onFormRender(function (form: any) {
+      trackEvent(ContactSalesActions.LoadContactSales, {
+        category: Category.CONTACT_SALES
+      })
+
       removeInsertedElements()
       insertElements({ getString })
       setPlaceHolders()

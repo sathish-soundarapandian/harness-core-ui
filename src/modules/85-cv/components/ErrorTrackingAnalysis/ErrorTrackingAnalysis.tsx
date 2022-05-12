@@ -157,7 +157,7 @@ const ErrorTrackingAnalysisContent: React.FC<ErrorTrackingAnalysisContentProps> 
 
   return (
     <>
-      <LogAnalysisRow data={getErrorTrackingAnalysisTableData(data.resource.content)} isErrorTracking={true} />
+      <LogAnalysisRow data={getErrorTrackingAnalysisTableData(data.resource.content)} isErrorTracking />
       <Pagination
         pageSize={pageSize}
         pageCount={totalPages}

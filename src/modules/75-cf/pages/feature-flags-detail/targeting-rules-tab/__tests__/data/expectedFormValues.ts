@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { TargetingRuleItemType, TargetingRulesFormValues } from '../../Types.types'
+import { TargetingRuleItemStatus, TargetingRuleItemType, TargetingRulesFormValues } from '../../types'
 
 const expectedFormValues: TargetingRulesFormValues = {
   offVariation: 'false',
@@ -14,24 +14,35 @@ const expectedFormValues: TargetingRulesFormValues = {
   targetingRuleItems: [
     {
       priority: 100,
+      status: TargetingRuleItemStatus.LOADED,
       targetGroups: [
         {
-          identifier: 'randomID',
-          name: 'target_group_4',
+          label: 'target_group_4',
+          value: 'target_group_4',
           priority: 100,
           ruleId: '9dec5abb-002e-45b3-b241-963ac5d9acde'
         },
         {
-          identifier: 'random5',
-          name: 'target_group_5',
+          label: 'target_group_5',
+          value: 'target_group_5',
           priority: 101,
           ruleId: '3ead64d0-3226-4726-8415-acce803fa34e'
+        },
+        {
+          label: 'target_group_2',
+          priority: 1,
+          ruleId: 'UUID',
+          value: 'target_group_2'
         }
       ],
       targets: [
         {
-          identifier: 'target1',
-          name: 'target_1'
+          value: 'target1',
+          label: 'target_1'
+        },
+        {
+          value: 'target2',
+          label: 'target_2'
         }
       ],
       type: TargetingRuleItemType.VARIATION,
@@ -39,6 +50,7 @@ const expectedFormValues: TargetingRulesFormValues = {
       variationName: 'False'
     },
     {
+      status: TargetingRuleItemStatus.LOADED,
       bucketBy: 'name',
       clauses: [
         {
@@ -64,21 +76,10 @@ const expectedFormValues: TargetingRulesFormValues = {
       ]
     },
     {
-      priority: 100,
-      targetGroups: [
-        {
-          identifier: 'target_group_2',
-          name: 'target_group_2',
-          priority: 1,
-          ruleId: ''
-        }
-      ],
-      targets: [
-        {
-          identifier: 'target2',
-          name: 'target_2'
-        }
-      ],
+      priority: 103,
+      status: TargetingRuleItemStatus.ADDED,
+      targetGroups: [],
+      targets: [],
       type: TargetingRuleItemType.VARIATION,
       variationIdentifier: 'true',
       variationName: 'True'

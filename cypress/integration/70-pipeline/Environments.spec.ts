@@ -1,6 +1,14 @@
 import { environmentRoute, environmentsCall, envUpsertCall, envUpdateList } from '../../support/70-pipeline/constants'
 
 describe('Environment for Pipeline', () => {
+  const visitEnvironmentsPageWithAssertion = (): void => {
+    cy.visit(environmentRoute, {
+      timeout: 30000
+    })
+    cy.wait(1000)
+    cy.visitPageAssertion()
+  }
+
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -8,17 +16,28 @@ describe('Environment for Pipeline', () => {
       return false
     })
     cy.initializeRoute()
-    cy.visit(environmentRoute, {
-      timeout: 30000
-    })
+
+    switch (Cypress.currentTest.title) {
+      case 'Environment Addition & YAML/visual parity': {
+        cy.intercept('GET', environmentsCall, { fixture: 'ng/api/environments/environments.empty.json' }).as(
+          'emptyEnvironments'
+        )
+        visitEnvironmentsPageWithAssertion()
+        cy.wait('@emptyEnvironments', { timeout: 30000 })
+        break
+      }
+      default: {
+        cy.intercept('GET', environmentsCall, { fixture: 'ng/api/environments/environmentsList.json' }).as(
+          'environmentsList'
+        )
+        visitEnvironmentsPageWithAssertion()
+        cy.wait('@environmentsList', { timeout: 30000 })
+        break
+      }
+    }
   })
 
   it('Environment Addition & YAML/visual parity', () => {
-    cy.intercept('GET', environmentsCall, { fixture: 'ng/api/environments/environments.empty.json' }).as(
-      'emptyEnvironments'
-    )
-    cy.wait(1000)
-    cy.wait('@emptyEnvironments')
     cy.wait(500)
     cy.contains('h2', 'No Environments Available').should('be.visible')
     cy.contains('span', 'New Environment').should('be.visible')
@@ -43,25 +62,19 @@ describe('Environment for Pipeline', () => {
     cy.contains('span', 'testEnv').should('be.visible')
     cy.contains('span', 'Test Environment Description').should('be.visible')
     cy.contains('span', 'envTag').should('be.visible')
-    cy.contains('span', 'Production').should('be.visible')
+    cy.contains('span', 'Prod').should('be.visible')
 
     // Saving
     cy.contains('span', 'Save').click()
-    cy.wait(1000)
+    cy.wait(2000)
     cy.contains('span', 'Environment created successfully').should('be.visible')
   })
 
   it('Environment Assertion and Edit', () => {
-    cy.intercept('GET', environmentsCall, { fixture: 'ng/api/environments/environmentsList.json' }).as(
-      'environmentsList'
-    )
-    cy.wait(1000)
-    cy.wait('@environmentsList')
-
     cy.wait(1000)
     cy.contains('p', 'testEnv').should('be.visible')
     cy.contains('p', 'Test Environment Description').should('be.visible')
-    cy.contains('p', 'Production').should('be.visible')
+    cy.contains('p', 'Prod').should('be.visible')
 
     cy.get('span[data-icon="main-tags"]').should('be.visible')
     cy.get('span[data-icon="main-tags"]').trigger('mouseover')
@@ -93,27 +106,20 @@ describe('Environment for Pipeline', () => {
     cy.intercept('GET', envUpdateList, { fixture: 'ng/api/environments/environmentListUpdate.json' }).as(
       'environmentListUpdate'
     )
-    cy.wait(1000)
     cy.wait('@environmentListUpdate')
-    cy.wait(1000)
 
     //check if list updated
     cy.contains('p', 'New testEnv').should('be.visible')
-    cy.contains('p', 'PreProduction').should('be.visible')
+    cy.contains('p', 'Pre-Prod').should('be.visible')
 
     cy.contains('span', 'Environment updated successfully').should('be.visible')
   })
 
   it('Environment Assertion and Deletion', () => {
-    cy.intercept('GET', environmentsCall, { fixture: 'ng/api/environments/environmentsList.json' }).as(
-      'environmentsList'
-    )
-    cy.wait(1000)
-    cy.wait('@environmentsList')
     cy.wait(1000)
     cy.contains('p', 'testEnv').should('be.visible')
     cy.contains('p', 'Test Environment Description').should('be.visible')
-    cy.contains('p', 'Production').should('be.visible')
+    cy.contains('p', 'Prod').should('be.visible')
 
     cy.get('span[data-icon="main-tags"]').should('be.visible')
     cy.get('span[data-icon="main-tags"]').trigger('mouseover')

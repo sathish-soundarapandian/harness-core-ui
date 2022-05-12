@@ -15,6 +15,7 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import { isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
 
 import { useStrings } from 'framework/strings'
 import type { Scope } from '@common/interfaces/SecretsInterface'
@@ -29,7 +30,8 @@ export default function ManifestSelection({
   identifierName,
   isForPredefinedSets = false,
   isPropagating,
-  overrideSetIdentifier
+  overrideSetIdentifier,
+  deploymentType
 }: ManifestSelectionProps): JSX.Element {
   const {
     state: {
@@ -127,15 +129,6 @@ export default function ManifestSelection({
     }
   }
 
-  const getDeploymentType = (): string => {
-    if (isPropagating) {
-      const parentStageId = get(stage, 'stage.spec.serviceConfig.useFromStage.stage', null)
-      const parentStage = getStageFromPipeline<DeploymentStageElementConfig>(parentStageId || '')
-      return get(parentStage, 'stage.stage.spec.serviceConfig.serviceDefinition.type', null)
-    }
-    return get(stage, 'stage.spec.serviceConfig.serviceDefinition.type', null)
-  }
-
   return (
     <Layout.Vertical>
       {/* {isForPredefinedSets && <PredefinedOverrideSets context="MANIFEST" currentStage={stage} />} //disabled for now */}
@@ -156,8 +149,9 @@ export default function ManifestSelection({
         refetchConnectors={refetchConnectorList}
         listOfManifests={listOfManifests}
         isReadonly={isReadonly}
-        deploymentType={getDeploymentType()}
+        deploymentType={deploymentType}
         allowableTypes={allowableTypes}
+        allowOnlyOne={isServerlessDeploymentType(deploymentType)}
       />
     </Layout.Vertical>
   )

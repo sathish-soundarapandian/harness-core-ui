@@ -26,8 +26,6 @@ const modalPropsLight: IDialogProps = {
 
 interface DeleteAccessPointProps {
   accessPoints: AccessPoint[]
-  orgID: string
-  projectID: string
   accountId: string
   refresh: () => void
 }
@@ -78,7 +76,8 @@ const DeleteAccessPoint = (props: DeleteAccessPointProps) => {
           withResources: false
         }}
         formName="deleteAccessPt"
-        render={_ => (
+      >
+        {() => (
           <FormikForm>
             <Layout.Vertical spacing="xlarge" margin="xlarge">
               <Heading level={2} font={{ weight: 'bold' }}>
@@ -104,7 +103,7 @@ const DeleteAccessPoint = (props: DeleteAccessPointProps) => {
             </Layout.Vertical>
           </FormikForm>
         )}
-      />
+      </Formik>
     </Dialog>
   )
   if (!accessPoints || accessPoints.length == 0) {

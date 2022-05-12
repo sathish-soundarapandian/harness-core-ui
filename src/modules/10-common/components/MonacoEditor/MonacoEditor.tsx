@@ -10,6 +10,7 @@ import ReactMonacoEditor from 'react-monaco-editor'
 import type { MonacoEditorProps } from 'react-monaco-editor'
 //@ts-ignore
 import { StaticServices } from 'monaco-editor/esm/vs/editor/standalone/browser/standaloneServices'
+import { suppressHotJarRecording } from '@common/utils/utils'
 StaticServices.configurationService.get().updateValue('files.eol', '\n')
 
 export type ReactMonacoEditorRef =
@@ -68,6 +69,9 @@ const MonacoEditor = (props: ExtendedMonacoEditorProps, ref: ReactMonacoEditorRe
         return EditorWorker
       }
     }
+
+    // Don't allow HotJar to record content in Yaml/Code editor(s)
+    suppressHotJarRecording([...document.querySelectorAll('.react-monaco-editor-container')])
   }
 
   const theme = props.options?.readOnly ? 'disable-theme' : 'vs'

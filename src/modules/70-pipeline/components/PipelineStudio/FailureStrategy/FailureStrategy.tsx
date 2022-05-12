@@ -9,7 +9,6 @@ import React from 'react'
 import { Formik, FormikProps } from 'formik'
 import * as Yup from 'yup'
 import { debounce } from 'lodash-es'
-
 import type { StageElementWrapperConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import FailureStrategyPanel from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/FailureStrategyPanel'
@@ -58,6 +57,7 @@ export function FailureStrategy(props: FailureStrategyProps, ref: StepCommandsRe
       if (formikRef.current) {
         return formikRef.current.submitForm()
       }
+      return Promise.resolve()
     },
     getErrors() {
       if (formikRef.current) {
@@ -97,9 +97,14 @@ export function FailureStrategy(props: FailureStrategyProps, ref: StepCommandsRe
     >
       {formik => {
         !!tabName && window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: tabName }))
-        formikRef.current = formik
+        formikRef.current = formik as FormikProps<unknown> | null
         return (
-          <FailureStrategyPanel isReadonly={isReadonly} mode={Modes.STAGE} stageType={stageType} formikProps={formik} />
+          <FailureStrategyPanel
+            isReadonly={isReadonly}
+            mode={Modes.STAGE}
+            stageType={stageType}
+            formikProps={formik as FormikProps<{ failureStrategies?: AllFailureStrategyConfig[] }>}
+          />
         )
       }}
     </Formik>

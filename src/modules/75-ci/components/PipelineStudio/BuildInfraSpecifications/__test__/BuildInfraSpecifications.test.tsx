@@ -11,10 +11,13 @@ import { cloneDeep } from 'lodash-es'
 import * as featureFlags from '@common/hooks/useFeatureFlag'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { UseGetReturnData } from '@common/utils/testUtils'
+import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
 import type { ResponseConnectorResponse } from 'services/cd-ng'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import BuildInfraSpecifications from '../BuildInfraSpecifications'
+
 import contextMock from './pipelineContextMock.json'
+import contextMockAdvancedStagesWithPropagate from './pipelineContextMock2.json'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('@pipeline/components/ErrorsStrip/ErrorsStripBinded', () => () => <></>)
@@ -87,7 +90,8 @@ describe('BuildInfraSpecifications snapshot tests for K8s Build Infra', () => {
               getStageFromPipeline: jest.fn(() => {
                 return { stage: contextMock.state.pipeline.stages[0], parent: undefined }
               }),
-              updatePipeline: jest.fn
+              updatePipeline: jest.fn,
+              updateStage: jest.fn
             } as any
           }
         >
@@ -121,7 +125,8 @@ describe('BuildInfraSpecifications snapshot tests for K8s Build Infra', () => {
               getStageFromPipeline: jest.fn(() => {
                 return { stage: contextMock.state.pipeline.stages[0], parent: undefined }
               }),
-              updatePipeline: jest.fn
+              updatePipeline: jest.fn,
+              updateStage: jest.fn
             } as any
           }
         >
@@ -162,6 +167,57 @@ describe('BuildInfraSpecifications snapshot tests for K8s Build Infra', () => {
               labels: {
                 lab1: 'test',
                 projectid: 'invalidKey'
+              },
+              volumes: [
+                {
+                  mountPath: 'mountPath1',
+                  type: 'EmptyDir',
+                  spec: {
+                    medium: 'medium',
+                    size: '10Gi'
+                  }
+                },
+                {
+                  mountPath: 'mountPath2',
+                  type: 'HostPath',
+                  spec: {
+                    path: 'path',
+                    type: 'pathType'
+                  }
+                },
+                {
+                  mountPath: 'mountPath3',
+                  type: 'PersistentVolumeClaim',
+                  spec: {
+                    claimName: 'claimName',
+                    readOnly: true
+                  }
+                }
+              ],
+              serviceAccountName: 'serviceName',
+              initTimeout: '2d',
+              automountServiceAccountToken: true,
+              priorityClassName: 'priorityClass',
+              tolerations: [
+                {
+                  effect: 'effect',
+                  key: 'key',
+                  operator: 'operator',
+                  value: 'value'
+                }
+              ],
+              nodeSelector: {
+                key: '<+input>'
+              },
+              containerSecurityContext: {
+                capabilities: {
+                  drop: ['ALL']
+                },
+                privileged: true,
+                allowPrivilegeEscalation: true,
+                runAsNonRoot: true,
+                readOnlyRootFilesystem: true,
+                runAsUser: 1000
               }
             }
           },
@@ -184,7 +240,8 @@ describe('BuildInfraSpecifications snapshot tests for K8s Build Infra', () => {
               getStageFromPipeline: jest.fn(() => {
                 return { stage: contextMock.state.pipeline.stages[0], parent: undefined }
               }),
-              updatePipeline: jest.fn
+              updatePipeline: jest.fn,
+              updateStage: jest.fn
             } as any
           }
         >
@@ -222,8 +279,106 @@ describe('BuildInfraSpecifications snapshot tests for AWS Build Infra', () => {
     const awsTile = buildInfraTypeTiles[1]
     expect(awsTile).toBeTruthy()
     fireEvent.click(awsTile)
+    expect(container).toMatchSnapshot()
     const poolIdInputText = await getByText('pipeline.buildInfra.poolId')
     expect(poolIdInputText).toBeTruthy()
-    expect(container).toMatchSnapshot()
+  })
+})
+
+describe('BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build Infra', () => {
+  // jest.spyOn(featureFlags, 'useFeatureFlags').mockImplementation(() => ({
+  //   CI_VM_INFRASTRUCTURE: false
+  // }))
+
+  test('Renders advanced stage fields', async () => {
+    const context = cloneDeep(contextMockAdvancedStagesWithPropagate)
+
+    const { container, findByTestId } = render(
+      <TestWrapper pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}>
+        <PipelineContext.Provider
+          value={
+            {
+              ...context,
+              getStageFromPipeline: jest.fn(() => {
+                return { stage: contextMock.state.pipeline.stages[0], parent: undefined }
+              }),
+              updatePipeline: jest.fn,
+              updateStage: jest.fn
+            } as any
+          }
+        >
+          <BuildInfraSpecifications />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    fireEvent.click(await findByTestId('advanced-summary'))
+
+    await waitFor(() => expect(container.querySelector('[data-name="volumes"]')).toBeDefined())
+  })
+
+  test('Renders advanced stage fields as readonly in propagate stage', async () => {
+    jest.spyOn(featureFlags, 'useFeatureFlags').mockImplementation(() => ({
+      CI_VM_INFRASTRUCTURE: false
+    }))
+
+    const context = cloneDeep(contextMockAdvancedStagesWithPropagate)
+    context.state.selectionState = {
+      selectedStageId: 'propagatestage'
+    }
+    const {
+      container,
+      findByTestId,
+      findByText: getByText
+    } = render(
+      <TestWrapper pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}>
+        <PipelineContext.Provider
+          value={
+            {
+              ...context,
+              getStageFromPipeline: jest.fn(() => {
+                return { stage: contextMock.state.pipeline.stages[0], parent: undefined }
+              }),
+              updatePipeline: jest.fn,
+              updateStage: jest.fn
+            } as any
+          }
+        >
+          <BuildInfraSpecifications />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    await act(async () => {
+      const advancedSummary = container.querySelector(
+        '[class*="sectionCard"] [class*="active"] [data-testid="advanced-summary"]'
+      )
+      if (!advancedSummary) {
+        throw Error('no advanced summary')
+      }
+      fireEvent.click(advancedSummary)
+    })
+    await waitFor(() => expect(findByTestId('propagate-stage-card')).toBeDefined())
+    const buildInfraTypeTiles = container.querySelectorAll('input[type="checkbox"]')
+    expect(buildInfraTypeTiles[0]).toBeTruthy()
+    const propagateFromExistingStage = buildInfraTypeTiles[0]
+    expect(propagateFromExistingStage).toBeTruthy()
+    fireEvent.click(propagateFromExistingStage)
+    const useFromStageSelect = container.querySelector('[name="useFromStage"]')
+    if (!useFromStageSelect) {
+      throw Error('Cannot find select')
+    }
+    fireEvent.click(useFromStageSelect)
+    setFieldValue({ container, type: InputTypes.SELECT, fieldId: 'useFromStage', value: 's' })
+    await act(async () => {
+      const advancedSummary = container.querySelector(
+        '[class*="sectionCard"] [class*="active"] [data-testid="advanced-summary"]'
+      )
+      if (!advancedSummary) {
+        throw Error('no advanced summary')
+      }
+      fireEvent.click(advancedSummary)
+    })
+    await waitFor(() => expect(getByText('pipeline.infraSpecifications.serviceAccountName')).toBeDefined())
   })
 })

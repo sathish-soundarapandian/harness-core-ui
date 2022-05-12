@@ -8,24 +8,17 @@
 import React from 'react'
 import { fireEvent, render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import { useFeatureFlagTelemetry } from '@cf/hooks/useFeatureFlagTelemetry'
 import FlagDialog from '../FlagDialog'
-
-jest.mock('@cf/hooks/useFeatureFlagTelemetry', () => ({
-  useFeatureFlagTelemetry: jest.fn().mockImplementation(() => ({
-    visitedPage: jest.fn(),
-    createFeatureFlagStart: jest.fn(),
-    createFeatureFlagCompleted: jest.fn()
-  }))
-}))
 
 jest.mock('@common/hooks', () => ({
   useQueryParams: () => jest.fn(),
-  useDeepCompareEffect: () => jest.fn()
+  useDeepCompareEffect: () => jest.fn(),
+  useLocalStorage: jest.fn().mockImplementation(() => [5, jest.fn()])
 }))
 
+const trackEventMock = jest.fn()
 jest.mock('@common/hooks/useTelemetry', () => ({
-  useTelemetry: () => ({ identifyUser: jest.fn(), trackEvent: jest.fn() })
+  useTelemetry: () => ({ identifyUser: jest.fn(), trackEvent: trackEventMock })
 }))
 
 describe('FlagDialog', () => {
@@ -44,6 +37,6 @@ describe('FlagDialog', () => {
 
     fireEvent.click(createFlagButton)
 
-    expect(useFeatureFlagTelemetry).toHaveBeenCalled()
+    expect(trackEventMock).toHaveBeenCalled()
   })
 })

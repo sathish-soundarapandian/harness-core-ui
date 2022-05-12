@@ -565,9 +565,6 @@ exports[`CD Pipeline Page List render card view 1`] = `
               class="StyledProps--font StyledProps--main StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge"
             >
               <div
-                class="StyledProps--font StyledProps--main StyledProps--border StyledProps--border-bottom StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
-              />
-              <div
                 class="StyledProps--font StyledProps--main infoContainer StyledProps--border StyledProps--border-bottom StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
               >
                 <div
@@ -966,9 +963,6 @@ exports[`CD Pipeline Page List render card view 1`] = `
             <div
               class="StyledProps--font StyledProps--main StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge"
             >
-              <div
-                class="StyledProps--font StyledProps--main StyledProps--border StyledProps--border-bottom StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
-              />
               <div
                 class="StyledProps--font StyledProps--main infoContainer StyledProps--border StyledProps--border-bottom StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
               >
@@ -1377,9 +1371,6 @@ exports[`CD Pipeline Page List render card view 1`] = `
             <div
               class="StyledProps--font StyledProps--main StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge"
             >
-              <div
-                class="StyledProps--font StyledProps--main StyledProps--border StyledProps--border-bottom StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
-              />
               <div
                 class="StyledProps--font StyledProps--main infoContainer StyledProps--border StyledProps--border-bottom StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
               >

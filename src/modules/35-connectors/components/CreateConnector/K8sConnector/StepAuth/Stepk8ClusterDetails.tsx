@@ -253,7 +253,9 @@ const Stepk8ClusterDetails: React.FC<StepProps<Stepk8ClusterDetailsProps> & K8Cl
         is: delegateType => delegateType === DelegateTypes.DELEGATE_OUT_CLUSTER,
         then: Yup.string().required(getString('validation.masterUrl'))
       }),
-    delegateType: Yup.string().required(getString('connectors.chooseMethodForK8sConnection')),
+    delegateType: Yup.string().required(
+      getString('connectors.chooseMethodForConnection', { name: getString('connectors.k8sConnection') })
+    ),
     authType: Yup.string()
       .nullable()
       .when('delegateType', {

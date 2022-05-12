@@ -1,0 +1,75 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "totalPages": 1,
+    "totalItems": 4,
+    "pageItemCount": 4,
+    "pageSize": 100,
+    "content": [
+      {
+        "name": "F1",
+        "identifier": "F1",
+        "orgIdentifier": "default",
+        "projectIdentifier": "Ashwin",
+        "filterProperties": {
+          "description": null,
+          "envGroupName": "1",
+          "envIdentifiers": null,
+          "envGroupTags": null,
+          "tags": {},
+          "filterType": "EnvironmentGroup"
+        },
+        "filterVisibility": "EveryOne"
+      },
+      {
+        "name": "F2",
+        "identifier": "F2",
+        "orgIdentifier": "default",
+        "projectIdentifier": "Ashwin",
+        "filterProperties": {
+          "description": null,
+          "envGroupName": "",
+          "envIdentifiers": null,
+          "envGroupTags": null,
+          "tags": {},
+          "filterType": "EnvironmentGroup"
+        },
+        "filterVisibility": "OnlyCreator"
+      },
+      {
+        "name": "F3",
+        "identifier": "F3",
+        "orgIdentifier": "default",
+        "projectIdentifier": "Ashwin",
+        "filterProperties": {
+          "description": null,
+          "envGroupName": null,
+          "envIdentifiers": null,
+          "envGroupTags": null,
+          "tags": {},
+          "filterType": "EnvironmentGroup"
+        },
+        "filterVisibility": "OnlyCreator"
+      },
+      {
+        "name": "FTag",
+        "identifier": "",
+        "orgIdentifier": "default",
+        "projectIdentifier": "Ashwin",
+        "filterProperties": {
+          "description": null,
+          "envGroupName": "",
+          "envIdentifiers": null,
+          "envGroupTags": null,
+          "tags": {},
+          "filterType": "EnvironmentGroup"
+        },
+        "filterVisibility": "OnlyCreator"
+      }
+    ],
+    "pageIndex": 0,
+    "empty": false
+  },
+  "metaData": null,
+  "correlationId": "f9b9ea75-3bdb-49c8-a78e-eeca5a15dd39"
+}

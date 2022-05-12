@@ -106,7 +106,12 @@ export enum Category {
   SECRET = 'Secret',
   CONNECTOR = 'Connector',
   DELEGATE = 'Delegate',
-  ENVIRONMENT = 'Environment'
+  ENVIRONMENT = 'Environment',
+  CONTACT_SALES = 'ContactSales',
+  LICENSE = 'License',
+  FEEDBACK = 'Feedback',
+  ENFORCEMENT = 'Enforcement',
+  FEATUREFLAG = 'Featureflag'
 }
 
 export enum ManifestActions {
@@ -140,4 +145,48 @@ export enum ExitModalActions {
 export enum EnvironmentActions {
   StartCreateEnvironment = 'Start Create Environment',
   SaveCreateEnvironment = 'Save Create Environment'
+}
+
+export enum ContactSalesActions {
+  LoadContactSales = 'Load Contact Sales',
+  SubmitContactSales = 'Submit Contact Sales'
+}
+
+export enum FeedbackActions {
+  LoadFeedback = 'Load Feedback',
+  SubmitFeedback = 'Submit Feedback'
+}
+
+export enum LicenseActions {
+  ExtendTrial = 'Extend Trial',
+  LoadExtendedTrial = 'Load Extended Trial'
+}
+
+export enum FeatureActions {
+  DismissFeatureBanner = 'Feature Banner Dismissed',
+  AddNewFeatureFlag = 'Add New FeatureFlag Clicked',
+  SelectFeatureFlagType = 'Select FeatureFlag Type Loaded',
+  AboutTheFlag = 'About the Flag Loaded',
+  AboutTheFlagNext = 'About the Flag Next Clicked',
+  BackToSelectFeatureFlagType = 'Back to FeatureFlag Type Select Clicked',
+  VariationSettings = 'Variation Settings Loaded',
+  CreateFeatureFlagSubmit = 'Create FeatureFlag Submitted',
+  GitExperience = 'Set Up with Existing Repository Loaded',
+  GitExperienceSubmit = 'Set Up with Existing Repository Submitted',
+  GitExperienceBack = 'Set Up with Existing Repository Back Clicked',
+  GetStartedClick = 'Get Started Clicked',
+  CreateAFlagView = 'Create a Flag View Loaded',
+  SetUpYourApplicationView = 'Set Up Your Application View Loaded',
+  SetUpYourApplicationVerify = 'Set Up Your Application Verify Clicked',
+  TestYourFlagBack = 'Test Your Flag Back to Quick Start Guide Clicked',
+  GetStartedPrevious = 'Get Started Previous Clicked',
+  GetStartedNext = 'Get Started Next Clicked',
+  LanguageSelect = 'Language Selected',
+  EnvSelect = 'Environment Selected',
+  CreateEnvClick = 'Create an Environment Clicked',
+  CreateEnvSubmit = 'Create an Environment Submitted',
+  CreateEnvCancel = 'Create an Environment Cancel Clicked',
+  CreateSDKKeyClick = 'Create SDK Key Clicked',
+  CreateSDKKeySubmit = 'Create SDK Key Submitted',
+  CreateSDKKeyCancel = 'Create SDK Key Cancel Clicked'
 }

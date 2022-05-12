@@ -84,8 +84,30 @@ $headerHeight: 146px;
   }
 }
 
+.currentTimeRange {
+  border-radius: 4px;
+  padding: 4px var(--spacing-small) !important;
+  margin-right: var(--spacing-small);
+  background-color: var(--grey-100) !important;
+  box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.08), 0px 0.5px 2px rgba(96, 97, 112, 0.16);
+}
+
+.cardSloAndSli {
+  width: 120px;
+  padding: var(--spacing-small) !important;
+  border-radius: var(--spacing-small);
+}
+
+.cardSloAndSliForCardView {
+  width: 200px;
+  height: 80px;
+  padding: var(--spacing-large) !important;
+  border-radius: var(--spacing-small);
+}
+
 .errorBudgetGaugeContainer {
   position: relative;
+  min-width: 200px;
 
   .errorBudgetRemaining {
     text-align: center;
@@ -121,4 +143,8 @@ $headerHeight: 146px;
 
 .clearButton {
   align-self: flex-end;
+}
+
+.timelineSlider {
+  height: 85% !important;
 }

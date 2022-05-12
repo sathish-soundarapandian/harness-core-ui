@@ -10,7 +10,6 @@
   position: absolute;
   height: 100% !important;
   z-index: 5;
-  pointer-events: none;
   top: 0;
 
   .mask {
@@ -46,7 +45,7 @@
     }
 
     .card {
-      background-color: #383946 !important;
+      background-color: var(--grey-700) !important;
       border-radius: 4px;
       width: 214px;
       position: absolute;
@@ -57,22 +56,19 @@
       pointer-events: initial;
     }
 
-    .resetButton {
+    .cardFooter {
+      width: 100%;
+      margin-top: 5px;
       position: absolute;
-      color: var(--primary);
-      left: 84%;
-      cursor: pointer;
-      pointer-events: initial;
-      margin-top: var(--spacing-xsmall);
-      font-size: var(--font-size-small) !important;
+      justify-content: flex-end;
     }
 
     .reverseCard {
       transform: translate(8%);
       left: 100%;
 
-      .resetButton {
-        left: 0 !important;
+      .cardFooter {
+        justify-content: flex-start;
       }
     }
 

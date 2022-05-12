@@ -11,6 +11,9 @@
   width: 100%;
   overflow: hidden;
 
+  background: linear-gradient(90deg, var(--white) 9px, transparent 1%) center,
+    linear-gradient(#f6fcff 9px, transparent 1%) center, #bbc1c4;
+  background-size: 10px 10px;
   &[data-layout='BOTTOM'] {
     height: 100%;
   }
@@ -24,8 +27,21 @@
     top: var(--spacing-large);
     width: var(--spacing-xxlarge);
   }
+  &.stepGroup {
+    :global(.graphActions) {
+      position: absolute;
+      top: var(--spacing-large);
+    }
+  }
 }
 .popoverHeight {
   min-height: fit-content;
   margin-left: -20px;
+}
+
+.graphLink {
+  stroke: var(--primary-6);
+  &[data-link-executed='false'] {
+    stroke: var(--grey-200);
+  }
 }

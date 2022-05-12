@@ -26,7 +26,7 @@ const mockFeature: Feature = {
             id: 'd36b6624-c514-4b94-94c7-9f558324badf',
             negate: false,
             op: 'segmentMatch',
-            values: ['randomID']
+            values: ['target_group_4']
           }
         ],
         priority: 100,
@@ -40,7 +40,7 @@ const mockFeature: Feature = {
             id: 'd231f9dc-102a-49e0-9c26-2e2e3de99539',
             negate: false,
             op: 'segmentMatch',
-            values: ['random5']
+            values: ['target_group_5']
           }
         ],
         priority: 101,

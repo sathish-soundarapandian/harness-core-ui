@@ -7,6 +7,7 @@
 
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import type { PipelineInfoConfig } from 'services/cd-ng'
+import { getStageFromPipeline, getStagePathFromPipeline } from '../helpers'
 import {
   ActionResponse,
   DrawerTypes,
@@ -121,5 +122,67 @@ describe('PipelineActions test', () => {
     }
     const newState = PipelineReducer(initialState, { ...PipelineContextActions.updateSelectionState(resp) })
     expect(newState).toEqual({ ...initialState, selectionState: resp.selectionState })
+  })
+
+  test('PipelineActions Updating', () => {
+    const newState = PipelineReducer(initialState, {
+      ...PipelineContextActions.updating(),
+      response: { schemaErrors: true }
+    })
+    expect(newState).toEqual({ ...initialState, isLoading: false, isBEPipelineUpdated: false, isUpdated: true })
+  })
+})
+
+const localPipeline: PipelineInfoConfig = {
+  identifier: 'demo',
+  name: 'demo',
+  orgIdentifier: 'org',
+  projectIdentifier: 'project',
+  stages: [
+    {
+      stage: {
+        type: 'Deploy',
+        identifier: 'testCdStage1',
+        name: 'testCdStage1',
+        spec: {}
+      }
+    },
+    {
+      parallel: [
+        {
+          stage: {
+            type: 'Deploy',
+            identifier: 'parallelStage1',
+            name: 'parallelStage1'
+          }
+        }
+      ]
+    },
+    {}
+  ]
+}
+describe('Helpers test', () => {
+  test('getStageFromPipeline ', () => {
+    let returned = getStageFromPipeline('testCdStage1', localPipeline)
+    expect(returned).toStrictEqual({
+      parent: undefined,
+      stage: { stage: { identifier: 'testCdStage1', name: 'testCdStage1', spec: {}, type: 'Deploy' } }
+    })
+    returned = getStageFromPipeline('parallelStage1', localPipeline)
+    expect(returned).toStrictEqual({
+      parent: { parallel: [{ stage: { identifier: 'parallelStage1', name: 'parallelStage1', type: 'Deploy' } }] },
+      stage: { stage: { identifier: 'parallelStage1', name: 'parallelStage1', type: 'Deploy' } }
+    })
+  })
+  test('getStagePathFromPipeline ', () => {
+    let returned = getStagePathFromPipeline('testCdStage1', 'pipeline', localPipeline)
+    expect(returned).toStrictEqual('pipeline.0')
+
+    returned = getStagePathFromPipeline('parallelStage1', 'pipeline', localPipeline)
+    expect(returned).toStrictEqual('pipeline.1.parallel.0')
+
+    localPipeline.stages = []
+    returned = getStagePathFromPipeline('parallelStage1', 'pipeline', localPipeline)
+    expect(returned).toStrictEqual('pipeline')
   })
 })

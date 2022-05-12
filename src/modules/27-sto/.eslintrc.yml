@@ -7,6 +7,7 @@ rules:
         - '!microfrontends/ChildAppMounter'
         - modules/30-delegates/*
         - modules/30-secrets/*
+        - modules/31-variables/*
         - modules/33-auth-settings/*
         - modules/35-connectors/*
         - modules/35-user-profile/*
@@ -24,6 +25,7 @@ rules:
         - modules/85-sto-steps/*
         - '@delegates/*'
         - '@secrets/*'
+        - '@variables/*'
         - '@auth-settings/*'
         - '@connectors/*'
         - '@user-profile/*'

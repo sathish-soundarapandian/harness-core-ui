@@ -20,6 +20,16 @@ jest.mock('react-monaco-editor', () => ({
 
 jest.mock('@common/components/MonacoEditor/MonacoEditor', () => MonacoEditor)
 
+jest.mock(
+  '@cv/pages/monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/components/ChangeCard/components/SLOAndErrorBudget/SLOAndErrorBudget',
+  () => ({
+    __esModule: true,
+    default: function SLOAndErrorBudget() {
+      return <div data-testid="SLO-and-errorBudget" />
+    }
+  })
+)
+
 describe('Unit tests for K8sChangeEventCard', () => {
   test('Ensure data is properly rendered', async () => {
     jest.spyOn(cv, 'useGetMonitoredServiceOverAllHealthScore').mockReturnValue({

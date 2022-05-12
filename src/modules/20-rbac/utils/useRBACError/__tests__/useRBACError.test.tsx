@@ -75,6 +75,6 @@ describe('useRbacError', () => {
     )
     const { result } = renderHook(() => useRBACError(), { wrapper })
     const error = result.current.getRBACErrorMessage(defaultError)
-    expect(error.props.children).toBe('Invalid Request')
+    expect(error).toBe('Invalid Request')
   })
 })

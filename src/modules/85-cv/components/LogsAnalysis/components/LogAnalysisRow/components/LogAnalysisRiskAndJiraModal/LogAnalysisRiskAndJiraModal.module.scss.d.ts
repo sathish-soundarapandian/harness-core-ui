@@ -8,12 +8,13 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly activityContainer: string
-  readonly buttonContainer: string
+  readonly almostFullScreenCloseBtn: string
   readonly chartContainer: string
   readonly copyButton: string
   readonly copySuccess: string
   readonly dataContent: string
   readonly dataNameData: string
+  readonly firstRow: string
   readonly formAndMessageContainer: string
   readonly formContainer: string
   readonly headingContainer: string
@@ -23,9 +24,11 @@ declare const styles: {
   readonly logo: string
   readonly main: string
   readonly message: string
+  readonly messageContainer: string
+  readonly reasonText: string
+  readonly reasonTextContainer: string
   readonly sampleEvent: string
   readonly sharePopoverContent: string
-  readonly trendChart: string
   readonly urlContent: string
 }
 export default styles

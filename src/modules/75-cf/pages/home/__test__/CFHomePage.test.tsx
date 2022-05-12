@@ -102,7 +102,8 @@ const currentUser = {
       uuid: '123',
       createdFromNG: true
     }
-  ]
+  ],
+  uuid: '123'
 }
 
 describe('CFHomePage', () => {
@@ -146,7 +147,8 @@ describe('CFHomePage', () => {
           uuid: '123',
           createdFromNG: false
         }
-      ]
+      ],
+      uuid: '123'
     }
 
     const { container, getByText } = render(

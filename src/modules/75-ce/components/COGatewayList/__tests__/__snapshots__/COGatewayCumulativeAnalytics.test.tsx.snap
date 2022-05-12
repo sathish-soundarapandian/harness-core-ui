@@ -75,10 +75,10 @@ exports[`Cumulative Analytics tests render component 1`] = `
         </div>
         <div
           class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
-          style="flex: 1.2;"
+          style="flex: 1;"
         >
           <div
-            class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--padding-small"
+            class="Layout--vertical Layout--layout-spacing-large StyledProps--main"
           >
             <div
               class="StyledProps--font StyledProps--main StyledProps--padding-small"

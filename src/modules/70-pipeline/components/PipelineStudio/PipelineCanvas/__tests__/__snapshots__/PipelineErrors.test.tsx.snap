@@ -323,7 +323,7 @@ exports[`PipelineErrors should render multiple Stage - multiple errors: multiple
         class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--margin-bottom-small"
         style="--text-line-clamp: 4;"
       >
-        Stage 1 Error 2
+        Stage 1 Error 1
       </p>
       <span
         class="bp3-popover-wrapper"
@@ -432,7 +432,7 @@ exports[`PipelineErrors should render multiple Stage errors and step errors in d
         class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--margin-bottom-small"
         style="--text-line-clamp: 4;"
       >
-        Stage 1 Error 1
+        Stage 1 Error 2
       </p>
       <span
         class="bp3-popover-wrapper"
@@ -712,7 +712,7 @@ exports[`PipelineErrors should render multiple Stage errors and step errors in d
         class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--margin-bottom-small"
         style="--text-line-clamp: 4;"
       >
-        Stage 1 Error 1
+        Stage 1 Error 2
       </p>
       <span
         class="bp3-popover-wrapper"
@@ -1235,7 +1235,7 @@ exports[`PipelineErrors should render one Stage - multiple error: one stage - mu
         class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--margin-bottom-small"
         style="--text-line-clamp: 4;"
       >
-        Stage 1 Error 2
+        Stage 1 Error 1
       </p>
       <span
         class="bp3-popover-wrapper"

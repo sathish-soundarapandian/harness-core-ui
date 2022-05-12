@@ -46,10 +46,9 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import RbacButton from '@rbac/components/Button/Button'
-import { setPageNumber } from '@common/utils/utils'
+import { setPageNumber, isCommunityPlan } from '@common/utils/utils'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { isCDCommunity, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import css from './UserListView.module.scss'
 
 interface ActiveUserListViewProps {
@@ -346,8 +345,7 @@ const ActiveUserListView: React.FC<ActiveUserListViewProps> = ({
   const history = useHistory()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const [page, setPage] = useState(0)
-  const { licenseInformation } = useLicenseStore()
-  const isCommunity = isCDCommunity(licenseInformation)
+  const isCommunity = isCommunityPlan()
 
   const { data, loading, error, refetch } = useMutateAsGet(useGetAggregatedUsers, {
     body: {},

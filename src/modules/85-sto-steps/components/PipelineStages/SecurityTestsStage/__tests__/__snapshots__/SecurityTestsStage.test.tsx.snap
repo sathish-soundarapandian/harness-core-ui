@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SecurityTestsStage matches snapshot 1`] = `
+<div>
+  <div
+    data-test-id="BuildStageSetupShell"
+  />
+</div>
+`;
+
+exports[`SecurityTestsStage matches snapshot when minimal="true" 1`] = `
+<div>
+  <div
+    data-test-id="EditStageView"
+  />
+</div>
+`;

@@ -12,7 +12,7 @@ const mockSegment: Segment[] = [
     createdAt: 1646837515790,
     environment: '',
     excluded: [],
-    identifier: 'random5',
+    identifier: 'target_group_5',
     included: [],
     name: 'target_group_5',
     rules: []
@@ -21,7 +21,7 @@ const mockSegment: Segment[] = [
     createdAt: 1646810745970,
     environment: '',
     excluded: [],
-    identifier: 'randomID',
+    identifier: 'target_group_4',
     included: [],
     name: 'target_group_4',
     rules: []

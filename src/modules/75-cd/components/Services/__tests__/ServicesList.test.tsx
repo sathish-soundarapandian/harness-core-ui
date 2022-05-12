@@ -33,3 +33,64 @@ describe('ServicesList', () => {
     expect(container).toMatchSnapshot()
   })
 })
+
+const renderSetup = (data: ServiceDetailsDTO[]) => {
+  return render(
+    <TestWrapper
+      path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services"
+      pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+    >
+      <ServicesList loading={false} error={false} data={data} refetch={noop} />
+    </TestWrapper>
+  )
+}
+
+describe('DeploymentType in ServicesList ', () => {
+  test('render Kubernetes deployment type', () => {
+    const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
+    const { container } = renderSetup(responseData)
+    expect(container.querySelector('[data-icon="service-kubernetes"]')).toBeTruthy()
+  })
+
+  test('render NativeHelm deployment type', () => {
+    const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
+    responseData[1].deploymentTypeList = ['NativeHelm']
+    const { container } = renderSetup(responseData)
+    expect(container.querySelector('[data-icon="service-helm"]')).toBeTruthy()
+  })
+
+  test('render ServerlessAwsLambda deployment type', () => {
+    const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
+    responseData[1].deploymentTypeList = ['ServerlessAwsLambda']
+    const { container } = renderSetup(responseData)
+    expect(container.querySelector('[data-icon="service-serverless-aws"]')).toBeTruthy()
+  })
+
+  test('render Ssh deployment type', () => {
+    const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
+    responseData[1].deploymentTypeList = ['Ssh']
+    const { container } = renderSetup(responseData)
+    expect(container.querySelector('[data-icon="secret-ssh"]')).toBeTruthy()
+  })
+
+  test('render WinRm deployment type', () => {
+    const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
+    responseData[1].deploymentTypeList = ['WinRm']
+    const { container } = renderSetup(responseData)
+    expect(container.querySelector('[data-icon="command-winrm"]')).toBeTruthy()
+  })
+
+  test('render more than 2 deployments type', () => {
+    const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
+    responseData[1].deploymentTypeList = ['Kubernetes', 'NativeHelm', 'ServerlessAwsLambda', 'Ssh', 'WinRm']
+    const { container, getByText } = renderSetup(responseData)
+
+    //first 2 types should be visible
+    expect(container.querySelector('[data-icon="service-kubernetes"]')).toBeTruthy()
+    expect(container.querySelector('[data-icon="service-helm"]')).toBeTruthy()
+
+    // for the remaining type should show '+ remainingCount'
+    const remainingTypes = responseData[1].deploymentTypeList.length - 2
+    expect(getByText(`+ ${remainingTypes}`)).toBeTruthy()
+  })
+})

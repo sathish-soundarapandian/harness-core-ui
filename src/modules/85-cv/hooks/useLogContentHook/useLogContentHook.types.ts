@@ -52,11 +52,9 @@ export interface SLOLogContentProps {
   setIsFullScreen: (isFullScreen: boolean | ((isFullScreen: boolean) => boolean)) => void
 }
 
-export enum TimeRangeTypes {
-  LAST_1_HOUR = 'LAST_1_HOUR',
-  LAST_4_HOURS = 'LAST_4_HOURS',
-  LAST_12_HOUR = 'LAST_12_HOURS',
-  LAST_24_HOUR = 'LAST_24_HOURS'
+export interface TimeRange {
+  value: [Date, Date]
+  label: string
 }
 
 export enum LogTypes {
@@ -77,8 +75,8 @@ export interface ExecutionAndAPICallLogProps {
   refetchLogs: () => Promise<void>
   healthSource?: SelectOption
   setHealthSource?: (healthSource: SelectOption) => void
-  timeRange?: SelectOption
-  setTimeRange?: (timeRange: SelectOption) => void
+  timeRange?: TimeRange
+  setTimeRange?: (timeRange: TimeRange) => void
   errorLogsOnly: boolean
   setErrorLogsOnly: (errorLogsOnly: boolean) => void
   pageNumber: number

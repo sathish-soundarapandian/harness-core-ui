@@ -6,7 +6,8 @@
  */
 
 import React, { useRef, useState } from 'react'
-import { Button, Heading, Layout, StepProps, CardSelect, Icon, IconName, Container, Text } from '@wings-software/uicore'
+import { Button, Layout, StepProps, CardSelect, Icon, IconName, Container, Text } from '@wings-software/uicore'
+import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { CE_AWS_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
@@ -144,15 +145,21 @@ const CrossAccountRoleStep1: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
 
   return (
     <Layout.Vertical className={css.stepContainer}>
-      <Heading level={2} className={css.header}>
+      <Text
+        font={{ variation: FontVariation.H3 }}
+        tooltipProps={{ dataTooltipId: 'awsConnectorRequirements' }}
+        margin={{ bottom: 'large' }}
+      >
         {getString('connectors.ceAws.crossAccountRoleStep1.heading')}
-        <span>{getString('connectors.ceAws.crossAccountRoleStep1.choosePermissions')}</span>
-      </Heading>
+      </Text>
       <Text color="grey800">{getString('connectors.ceAws.crossAccountRoleStep1.description')}</Text>
       <Container>
-        <Text font={{ italic: true }} className={css.mtblarge}>
-          {getString('connectors.ceAws.crossAccountRoleStep1.info')}
-        </Text>
+        <Layout.Horizontal className={css.infoCard}>
+          <Icon name="info-messaging" size={20} className={css.infoIcon} />
+          <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_800}>
+            {getString('connectors.ceAws.crossAccountRoleStep1.info')}
+          </Text>
+        </Layout.Horizontal>
         <div style={{ flex: 1 }}>
           <div className={css.cards}>
             <DefaultCard />
@@ -252,6 +259,7 @@ const DefaultCard = () => {
       onChange={() => void 0}
       cornerSelected={true}
       renderItem={item => <Card {...item} />}
+      cardClassName={css.defaultCard}
     />
   )
 }

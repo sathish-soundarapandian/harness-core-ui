@@ -23,6 +23,7 @@ import { useListAwsRegions } from 'services/portal'
 import { GitConfigDTO, useGetBucketListForS3, useGetGCSBucketList } from 'services/cd-ng'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import type { Scope } from '@common/interfaces/SecretsInterface'
+import type { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { getConnectorRef, isFieldfromTriggerTabDisabled, shouldDisplayRepositoryName } from '../ManifestSourceUtils'
 import { isFieldFixedType, isFieldRuntime } from '../../K8sServiceSpecHelper'
 import ExperimentalInput from '../../K8sServiceSpecForms/ExperimentalInput'
@@ -201,6 +202,28 @@ const Content = ({
       )
     }
     return null
+  }
+
+  const renderCommandFlags = (commandFlagPath: string): React.ReactElement => {
+    const commandFlags = get(template, commandFlagPath)
+
+    return commandFlags?.map((helmCommandFlag: CommandFlags, helmFlagIdx: number) => {
+      if (isFieldRuntime(`${manifestPath}.spec.commandFlags[${helmFlagIdx}].flag`, template)) {
+        return (
+          <div className={css.verticalSpacingInput}>
+            <FormInput.MultiTextInput
+              disabled={isFieldDisabled(`${manifestPath}.spec.commandFlags[${helmFlagIdx}].flag`)}
+              name={`${path}.${manifestPath}.spec.commandFlags[${helmFlagIdx}].flag`}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              label={`${helmCommandFlag.commandType}: ${getString('flag')}`}
+            />
+          </div>
+        )
+      }
+    })
   }
 
   return (
@@ -383,6 +406,8 @@ const Content = ({
           />
         </div>
       )}
+
+      {renderCommandFlags(`${manifestPath}.spec.commandFlags`)}
     </Layout.Vertical>
   )
 }

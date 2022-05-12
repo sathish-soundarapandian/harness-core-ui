@@ -25,7 +25,8 @@ const currentUser = {
       uuid: '123',
       createdFromNG: true
     }
-  ]
+  ],
+  uuid: '123'
 }
 
 const setup = () =>

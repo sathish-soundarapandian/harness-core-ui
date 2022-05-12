@@ -1,0 +1,1245 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Volumes /> tests All onEdit values render 1`] = `
+<div>
+  <form
+    action="#"
+  >
+    <div
+      class="bp3-form-group"
+      style="flex-grow: 1; margin-bottom: 0px;"
+    >
+      <label
+        class="bp3-label"
+        for="volumes"
+      >
+        <div
+          class="formLabel"
+        >
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="volumes"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
+            >
+              pipeline.buildInfra.volumes
+            </p>
+          </div>
+          <div
+            class="bp3-popover-wrapper typeSelectorWrapper"
+          >
+            <div
+              class="bp3-popover-target typeSelector"
+            >
+              <button
+                class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
+                type="button"
+              >
+                <span
+                  class="bp3-button-text"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main icon fixed"
+                    data-icon="fixed-input"
+                  >
+                    <svg
+                      height="12"
+                      viewBox="0 0 9 9"
+                      width="12"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </span>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+         
+        <span
+          class="bp3-text-muted"
+        />
+      </label>
+      <div
+        class="bp3-form-content"
+      >
+        <section
+          data-name="volumes"
+        >
+          <div
+            class="StyledProps--font StyledProps--main rowContainer group"
+            data-name="rowContainer"
+          >
+            <div
+              class="bp3-form-group textContainer"
+            >
+              <label
+                class="bp3-label"
+                for="volumes.0.mountPath"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-baseline"
+                >
+                  <div
+                    class="Text--withDocsTooltip"
+                    data-tooltip-id="mountPath"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                      style="display: flex; align-items: center;"
+                    >
+                      pipeline.buildInfra.mountPath
+                    </p>
+                  </div>
+                </div>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                >
+                  <div
+                    class="bp3-input-group MultiTypeInput--input"
+                  >
+                    <input
+                      autocomplete="off"
+                      class="bp3-input"
+                      name="volumes.0.mountPath"
+                      type="text"
+                      value="persistenVolumeClaim"
+                    />
+                  </div>
+                  <span
+                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                  >
+                    <span
+                      class="bp3-popover-target"
+                    >
+                      <button
+                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="fixed-input"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 9 9"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bp3-form-group"
+            >
+              <label
+                class="bp3-label"
+                for="volumes.0.type"
+              >
+                Type
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="bp3-popover-wrapper Select--main bp3-fill"
+                >
+                  <div
+                    class="bp3-popover-target"
+                  >
+                    <div
+                      class="bp3-input-group"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="volumes.0.type"
+                        placeholder="- Select -"
+                        style="padding-right: 0px;"
+                        type="text"
+                        value="pipeline.buildInfra.persistentVolumeClaim"
+                      />
+                      <span
+                        class="bp3-input-action"
+                      >
+                        <span
+                          class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                          icon="chevron-down"
+                        >
+                          <svg
+                            data-icon="chevron-down"
+                            height="14"
+                            viewBox="0 0 16 16"
+                            width="14"
+                          >
+                            <desc>
+                              chevron-down
+                            </desc>
+                            <path
+                              d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                              fill-rule="evenodd"
+                            />
+                          </svg>
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bp3-form-group textContainer"
+            >
+              <label
+                class="bp3-label"
+                for="volumes.0.spec.claimName"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-baseline"
+                >
+                  <div
+                    class="Text--withDocsTooltip"
+                    data-tooltip-id="claimName"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main field StyledProps--color StyledProps--color-grey800 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                    >
+                      pipeline.buildInfra.claimName
+                    </p>
+                  </div>
+                   
+                </div>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                >
+                  <div
+                    class="bp3-input-group MultiTypeInput--input"
+                  >
+                    <input
+                      autocomplete="off"
+                      class="bp3-input"
+                      name="volumes.0.spec.claimName"
+                      type="text"
+                      value="claimName"
+                    />
+                  </div>
+                  <span
+                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                  >
+                    <span
+                      class="bp3-popover-target"
+                    >
+                      <button
+                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="fixed-input"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 9 9"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bp3-form-group multiTypeCheckbox checkbox"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                >
+                  <label
+                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input StyledProps--main"
+                  >
+                    <input
+                      checked=""
+                      name="volumes.0.spec.readOnly"
+                      type="checkbox"
+                    />
+                    <span
+                      class="bp3-control-indicator"
+                    />
+                    common.readOnly
+                  </label>
+                  <span
+                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                  >
+                    <span
+                      class="bp3-popover-target"
+                    >
+                      <button
+                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="fixed-input"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 9 9"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                    </span>
+                  </span>
+                </div>
+                <span
+                  class="Tooltip--acenter tooltip"
+                  data-tooltip-id="readOnly"
+                />
+              </div>
+            </div>
+            <div
+              class="withoutAligning"
+            >
+              <button
+                class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main rowTrashIcon StyledProps--color StyledProps--color-grey500 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                data-name="main-delete"
+                data-testid="remove-volumes-[0]"
+                type="button"
+              >
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="main-trash"
+                >
+                  <svg
+                    height="20"
+                    viewBox="0 0 16 20"
+                    width="20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M1.143 8.48a1.2 1.2 0 011.189-1.36h10.649a1.2 1.2 0 011.194 1.321l-1.039 10.208a1.2 1.2 0 01-1.193 1.079H3.716a1.2 1.2 0 01-1.189-1.04L1.143 8.48zm11.837-.16H2.332l1.385 10.207h8.226L12.98 8.32zM5.916 1.594a.6.6 0 01.719-.452l4.224.965a.6.6 0 01.452.719L11 4.179l3.86.882a.6.6 0 01-.267 1.17L1.535 3.248a.6.6 0 11.267-1.17l3.805.87.309-1.354zm.86 1.62l3.056.698.175-.768-3.055-.698-.175.768z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                    <path
+                      clip-rule="evenodd"
+                      d="M8 10.808a.5.5 0 01.5.5v5a.5.5 0 01-1 0v-5a.5.5 0 01.5-.5zm-2.761.012a.5.5 0 01.541.454l.436 4.981a.5.5 0 11-.996.087l-.436-4.98a.5.5 0 01.455-.542zM10.762 10.82a.5.5 0 01.455.541l-.436 4.981a.5.5 0 11-.996-.087l.435-4.98a.5.5 0 01.542-.455z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                      opacity="0.3"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main rowContainer group"
+            data-name="rowContainer"
+          >
+            <div
+              class="bp3-form-group textContainer"
+            >
+              <label
+                class="bp3-label"
+                for="volumes.1.mountPath"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-baseline"
+                >
+                  <div
+                    class="Text--withDocsTooltip"
+                    data-tooltip-id="mountPath"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                      style="display: flex; align-items: center;"
+                    >
+                      pipeline.buildInfra.mountPath
+                    </p>
+                  </div>
+                </div>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                >
+                  <div
+                    class="bp3-input-group MultiTypeInput--input"
+                  >
+                    <input
+                      autocomplete="off"
+                      class="bp3-input"
+                      name="volumes.1.mountPath"
+                      type="text"
+                      value="hostPath"
+                    />
+                  </div>
+                  <span
+                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                  >
+                    <span
+                      class="bp3-popover-target"
+                    >
+                      <button
+                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="fixed-input"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 9 9"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bp3-form-group"
+            >
+              <label
+                class="bp3-label"
+                for="volumes.1.type"
+              >
+                Type
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="bp3-popover-wrapper Select--main bp3-fill"
+                >
+                  <div
+                    class="bp3-popover-target"
+                  >
+                    <div
+                      class="bp3-input-group"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="volumes.1.type"
+                        placeholder="- Select -"
+                        style="padding-right: 0px;"
+                        type="text"
+                        value="pipeline.buildInfra.hostPath"
+                      />
+                      <span
+                        class="bp3-input-action"
+                      >
+                        <span
+                          class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                          icon="chevron-down"
+                        >
+                          <svg
+                            data-icon="chevron-down"
+                            height="14"
+                            viewBox="0 0 16 16"
+                            width="14"
+                          >
+                            <desc>
+                              chevron-down
+                            </desc>
+                            <path
+                              d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                              fill-rule="evenodd"
+                            />
+                          </svg>
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bp3-form-group textContainer"
+            >
+              <label
+                class="bp3-label"
+                for="volumes.1.spec.path"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-baseline"
+                >
+                  <div
+                    class="Text--withDocsTooltip"
+                    data-tooltip-id="path"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main field StyledProps--color StyledProps--color-grey800 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                    >
+                      common.path
+                    </p>
+                  </div>
+                   
+                </div>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                >
+                  <div
+                    class="bp3-input-group MultiTypeInput--input"
+                  >
+                    <input
+                      autocomplete="off"
+                      class="bp3-input"
+                      name="volumes.1.spec.path"
+                      type="text"
+                      value="Path"
+                    />
+                  </div>
+                  <span
+                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                  >
+                    <span
+                      class="bp3-popover-target"
+                    >
+                      <button
+                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="fixed-input"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 9 9"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bp3-form-group textContainer"
+            >
+              <label
+                class="bp3-label"
+                for="volumes.1.spec.type"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-baseline"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main field StyledProps--color StyledProps--color-grey800 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  >
+                    pipeline.buildInfra.pathType
+                  </p>
+                   
+                  <div
+                    class="Text--withDocsTooltip"
+                    data-tooltip-id="pathType"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main capitalize StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                    >
+                      common.optionalLabel
+                    </p>
+                  </div>
+                </div>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                >
+                  <div
+                    class="bp3-input-group MultiTypeInput--input"
+                  >
+                    <input
+                      autocomplete="off"
+                      class="bp3-input"
+                      name="volumes.1.spec.type"
+                      type="text"
+                      value="pathType"
+                    />
+                  </div>
+                  <span
+                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                  >
+                    <span
+                      class="bp3-popover-target"
+                    >
+                      <button
+                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="fixed-input"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 9 9"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="withoutAligning"
+            >
+              <button
+                class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main rowTrashIcon StyledProps--color StyledProps--color-grey500 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                data-name="main-delete"
+                data-testid="remove-volumes-[1]"
+                type="button"
+              >
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="main-trash"
+                >
+                  <svg
+                    height="20"
+                    viewBox="0 0 16 20"
+                    width="20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M1.143 8.48a1.2 1.2 0 011.189-1.36h10.649a1.2 1.2 0 011.194 1.321l-1.039 10.208a1.2 1.2 0 01-1.193 1.079H3.716a1.2 1.2 0 01-1.189-1.04L1.143 8.48zm11.837-.16H2.332l1.385 10.207h8.226L12.98 8.32zM5.916 1.594a.6.6 0 01.719-.452l4.224.965a.6.6 0 01.452.719L11 4.179l3.86.882a.6.6 0 01-.267 1.17L1.535 3.248a.6.6 0 11.267-1.17l3.805.87.309-1.354zm.86 1.62l3.056.698.175-.768-3.055-.698-.175.768z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                    <path
+                      clip-rule="evenodd"
+                      d="M8 10.808a.5.5 0 01.5.5v5a.5.5 0 01-1 0v-5a.5.5 0 01.5-.5zm-2.761.012a.5.5 0 01.541.454l.436 4.981a.5.5 0 11-.996.087l-.436-4.98a.5.5 0 01.455-.542zM10.762 10.82a.5.5 0 01.455.541l-.436 4.981a.5.5 0 11-.996-.087l.435-4.98a.5.5 0 01.542-.455z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                      opacity="0.3"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main rowContainer group"
+            data-name="rowContainer"
+          >
+            <div
+              class="bp3-form-group textContainer"
+            >
+              <label
+                class="bp3-label"
+                for="volumes.2.mountPath"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-baseline"
+                >
+                  <div
+                    class="Text--withDocsTooltip"
+                    data-tooltip-id="mountPath"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                      style="display: flex; align-items: center;"
+                    >
+                      pipeline.buildInfra.mountPath
+                    </p>
+                  </div>
+                </div>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                >
+                  <div
+                    class="bp3-input-group MultiTypeInput--input"
+                  >
+                    <input
+                      autocomplete="off"
+                      class="bp3-input"
+                      name="volumes.2.mountPath"
+                      type="text"
+                      value="emptyDir"
+                    />
+                  </div>
+                  <span
+                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                  >
+                    <span
+                      class="bp3-popover-target"
+                    >
+                      <button
+                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="fixed-input"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 9 9"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bp3-form-group"
+            >
+              <label
+                class="bp3-label"
+                for="volumes.2.type"
+              >
+                Type
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="bp3-popover-wrapper Select--main bp3-fill"
+                >
+                  <div
+                    class="bp3-popover-target"
+                  >
+                    <div
+                      class="bp3-input-group"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="volumes.2.type"
+                        placeholder="- Select -"
+                        style="padding-right: 0px;"
+                        type="text"
+                        value="pipeline.buildInfra.emptyDirectory"
+                      />
+                      <span
+                        class="bp3-input-action"
+                      >
+                        <span
+                          class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                          icon="chevron-down"
+                        >
+                          <svg
+                            data-icon="chevron-down"
+                            height="14"
+                            viewBox="0 0 16 16"
+                            width="14"
+                          >
+                            <desc>
+                              chevron-down
+                            </desc>
+                            <path
+                              d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                              fill-rule="evenodd"
+                            />
+                          </svg>
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bp3-form-group textContainer"
+            >
+              <label
+                class="bp3-label"
+                for="volumes.2.spec.medium"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-baseline"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main field StyledProps--color StyledProps--color-grey800 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  >
+                    connectors.cdng.verificationSensitivityLabel.medium
+                  </p>
+                   
+                  <div
+                    class="Text--withDocsTooltip"
+                    data-tooltip-id="medium"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main capitalize StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                    >
+                      common.optionalLabel
+                    </p>
+                  </div>
+                </div>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                >
+                  <div
+                    class="bp3-input-group MultiTypeInput--input"
+                  >
+                    <input
+                      autocomplete="off"
+                      class="bp3-input"
+                      name="volumes.2.spec.medium"
+                      type="text"
+                      value="1234"
+                    />
+                  </div>
+                  <span
+                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                  >
+                    <span
+                      class="bp3-popover-target"
+                    >
+                      <button
+                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="fixed-input"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 9 9"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bp3-form-group textContainer"
+            >
+              <label
+                class="bp3-label"
+                for="volumes.2.spec.size"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-baseline"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main field StyledProps--color StyledProps--color-grey800 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  >
+                    pipeline.buildInfra.size
+                  </p>
+                   
+                  <div
+                    class="Text--withDocsTooltip"
+                    data-tooltip-id="size"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main capitalize StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                    >
+                      common.optionalLabel
+                    </p>
+                  </div>
+                </div>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                >
+                  <div
+                    class="bp3-input-group MultiTypeInput--input"
+                  >
+                    <input
+                      autocomplete="off"
+                      class="bp3-input"
+                      name="volumes.2.spec.size"
+                      type="text"
+                      value="10Gi"
+                    />
+                  </div>
+                  <span
+                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                  >
+                    <span
+                      class="bp3-popover-target"
+                    >
+                      <button
+                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="fixed-input"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 9 9"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="withoutAligning"
+            >
+              <button
+                class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main rowTrashIcon StyledProps--color StyledProps--color-grey500 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                data-name="main-delete"
+                data-testid="remove-volumes-[2]"
+                type="button"
+              >
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="main-trash"
+                >
+                  <svg
+                    height="20"
+                    viewBox="0 0 16 20"
+                    width="20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M1.143 8.48a1.2 1.2 0 011.189-1.36h10.649a1.2 1.2 0 011.194 1.321l-1.039 10.208a1.2 1.2 0 01-1.193 1.079H3.716a1.2 1.2 0 01-1.189-1.04L1.143 8.48zm11.837-.16H2.332l1.385 10.207h8.226L12.98 8.32zM5.916 1.594a.6.6 0 01.719-.452l4.224.965a.6.6 0 01.452.719L11 4.179l3.86.882a.6.6 0 01-.267 1.17L1.535 3.248a.6.6 0 11.267-1.17l3.805.87.309-1.354zm.86 1.62l3.056.698.175-.768-3.055-.698-.175.768z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                    <path
+                      clip-rule="evenodd"
+                      d="M8 10.808a.5.5 0 01.5.5v5a.5.5 0 01-1 0v-5a.5.5 0 01.5-.5zm-2.761.012a.5.5 0 01.541.454l.436 4.981a.5.5 0 11-.996.087l-.436-4.98a.5.5 0 01.455-.542zM10.762 10.82a.5.5 0 01.455.541l-.436 4.981a.5.5 0 11-.996-.087l.435-4.98a.5.5 0 01.542-.455z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                      opacity="0.3"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
+          <button
+            class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main paddingZero StyledProps--intent-primary Button--with-current-color Button--without-shadow"
+            data-testid="add-volumes"
+            type="button"
+          >
+            <span
+              class="bp3-button-text"
+            >
+              plusAdd
+            </span>
+          </button>
+        </section>
+      </div>
+    </div>
+  </form>
+</div>
+`;
+
+exports[`<Volumes /> tests Initial Default render 1`] = `
+<div>
+  <form
+    action="#"
+  >
+    <div
+      class="bp3-form-group"
+      style="flex-grow: 1; margin-bottom: 0px;"
+    >
+      <label
+        class="bp3-label"
+        for="volumes"
+      >
+        <div
+          class="formLabel"
+        >
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="volumes"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
+            >
+              pipeline.buildInfra.volumes
+            </p>
+          </div>
+          <div
+            class="bp3-popover-wrapper typeSelectorWrapper"
+          >
+            <div
+              class="bp3-popover-target typeSelector"
+            >
+              <button
+                class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
+                type="button"
+              >
+                <span
+                  class="bp3-button-text"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main icon fixed"
+                    data-icon="fixed-input"
+                  >
+                    <svg
+                      height="12"
+                      viewBox="0 0 9 9"
+                      width="12"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </span>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+         
+        <span
+          class="bp3-text-muted"
+        />
+      </label>
+      <div
+        class="bp3-form-content"
+      >
+        <section
+          data-name="volumes"
+        >
+          <button
+            class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main paddingZero StyledProps--intent-primary Button--with-current-color Button--without-shadow"
+            data-testid="add-volumes"
+            type="button"
+          >
+            <span
+              class="bp3-button-text"
+            >
+              plusAdd
+            </span>
+          </button>
+        </section>
+      </div>
+    </div>
+  </form>
+</div>
+`;
+
+exports[`<Volumes /> tests Should render runtime input properly 1`] = `
+<div>
+  <form
+    action="#"
+  >
+    <div
+      class="bp3-form-group"
+      style="width: 300px; margin-bottom: 0px;"
+    >
+      <label
+        class="bp3-label"
+        for="volumes"
+      >
+        <div
+          class="Text--withDocsTooltip"
+          data-tooltip-id="volumes"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
+          >
+            pipeline.buildInfra.volumes
+          </p>
+        </div>
+         
+        <span
+          class="bp3-text-muted"
+        />
+      </label>
+      <div
+        class="bp3-form-content"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
+        >
+          <div
+            class="TextInput--main MultiTypeInput--input"
+          >
+            <div
+              class="bp3-input-group bp3-disabled"
+            >
+              <input
+                class="bp3-input"
+                disabled=""
+                name="volumes"
+                placeholder="<+input>"
+                type="text"
+                value="<+input>"
+              />
+            </div>
+          </div>
+          <span
+            class="bp3-popover-wrapper MultiTypeInput--wrapper"
+          >
+            <span
+              class="bp3-popover-target"
+            >
+              <button
+                class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+              >
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="runtime-input"
+                >
+                  <svg
+                    height="12"
+                    viewBox="0 0 10 7.97"
+                    width="12"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M8.14 4L8 3.72a2.53 2.53 0 01-.12-.3l-.16-.35c-.11-.25-.22-.38-.32-.38s-.28.15-.37.44C7 3.1 7 3.07 7 3a.73.73 0 01.24-.46.66.66 0 01.42-.26c.25 0 .5.35.76 1.05l.07.17.07-.12c.47-.73.86-1.1 1.18-1.1a.71.71 0 01.29.07l-.4.42h-.11c-.24 0-.52.28-.86.83l-.09.16.07.2c.29.79.53 1.18.71 1.18s.31-.12.4-.36q.09.06.09.12t-.27.39a.74.74 0 01-.45.23c-.25 0-.51-.36-.77-1.07l-.12-.25-.1.17c-.44.76-.87 1.14-1.28 1.14a.65.65 0 01-.39-.12L6.84 5a.32.32 0 00.23.1c.25 0 .53-.25.83-.74l.17-.28zm-4-.32L1.7.59h2.47S5 .52 5.35 1a3.28 3.28 0 01.42 1.14h.31L5.94 0H0v.31l3.06 3.74L0 7.62V8h6.08l.38-2.36-.31-.07a2.43 2.43 0 01-.52 1c-.42.48-2 .41-2 .41H1.39z"
+                      fill="current-color"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+`;

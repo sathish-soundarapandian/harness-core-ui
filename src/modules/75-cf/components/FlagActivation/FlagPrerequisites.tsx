@@ -11,7 +11,7 @@ import { flatMap, get, isEqual } from 'lodash-es'
 import * as yup from 'yup'
 import {
   Button,
-  Collapse,
+  ButtonSize,
   Container,
   Formik,
   FormikForm as Form,
@@ -19,12 +19,11 @@ import {
   Heading,
   Layout,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { FontVariation } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { FieldArray } from 'formik'
-import cx from 'classnames'
-import { Divider, IconName, Dialog } from '@blueprintjs/core'
+import { Divider, Dialog } from '@blueprintjs/core'
 import { useToaster } from '@common/exports'
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
 import { useStrings } from 'framework/strings'
@@ -32,7 +31,6 @@ import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { PermissionsRequest } from '@rbac/hooks/usePermission'
-import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
 import {
   Feature,
   GitSyncErrorResponse,
@@ -50,20 +48,12 @@ import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import patch from '../../utils/instructions'
 import SaveFlagToGitSubForm from '../SaveFlagToGitSubForm/SaveFlagToGitSubForm'
-import css from './FlagActivationDetails.module.scss'
-
-const editCardCollapsedProps = {
-  collapsedIcon: 'main-chevron-right' as IconName,
-  expandedIcon: 'main-chevron-down' as IconName,
-  isOpen: false,
-  isRemovable: false,
-  className: 'collapse'
-}
-
+import { PrerequisiteItem } from './FlagPrerequisiteItem'
 interface FlagPrerequisitesProps {
   featureFlag: Feature
   gitSync: UseGitSync
   refetchFlag: () => void
+  setGovernanceMetadata: (governanceMetadata: any) => void
 }
 
 interface PrerequisiteEntry {
@@ -72,7 +62,7 @@ interface PrerequisiteEntry {
 }
 
 export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
-  const { featureFlag, refetchFlag, gitSync } = props
+  const { featureFlag, refetchFlag, gitSync, setGovernanceMetadata } = props
   const { showError } = useToaster()
   const { getString } = useStrings()
   const {
@@ -126,7 +116,7 @@ export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
 
   const { isPlanEnforcementEnabled } = usePlanEnforcement()
 
-  const handlePrerequisiteInteraction = (action: 'edit' | 'delete', prereq: Prerequisite) => () => {
+  const handlePrerequisiteInteraction = (action: 'edit' | 'delete', prereq: Prerequisite): void => {
     if (action === 'delete') {
       patch.feature.addInstruction(patch.creators.removePrerequisite(prereq.feature))
       patch.feature.onPatchAvailable(data => {
@@ -202,11 +192,12 @@ export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
                 }
               : data
           )
-            .then(async () => {
+            .then(async response => {
               if (!gitSync?.isAutoCommitEnabled && prereqValues?.autoCommit) {
                 await gitSync?.handleAutoCommit(prereqValues.autoCommit)
               }
 
+              setGovernanceMetadata(response?.details?.governanceMetadata)
               hideModalPrerequisites()
               refetchFlag()
             })
@@ -214,8 +205,8 @@ export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
               if (err.status === GIT_SYNC_ERROR_CODE) {
                 gitSync.handleError(err.data as GitSyncErrorResponse)
               } else {
-                if (isGovernanceError(err)) {
-                  handleGovernanceError(err.data)
+                if (isGovernanceError(err?.data)) {
+                  handleGovernanceError(err?.data)
                 } else {
                   showError(get(err, 'data.message', err?.message), undefined, 'cf.patch.req.error')
                 }
@@ -362,23 +353,6 @@ export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
     )
   }, [featureList, isEditingPrerequisites, gitSync.isGitSyncEnabled, gitSync.isAutoCommitEnabled])
 
-  const prerequisitesTitle = (
-    <Text
-      style={{
-        fontSize: '14px',
-        color: '#22222A',
-        fontWeight: 600,
-        lineHeight: '20px',
-        paddingLeft: 'var(--spacing-small)'
-      }}
-    >
-      <StringWithTooltip stringId="cf.shared.prerequisites" tooltipId="ff_ffPrerequisites_heading" />
-      <span style={{ fontSize: '12px', fontWeight: 400, display: 'inline-block', marginLeft: 'var(--spacing-xsmall)' }}>
-        {getString('cf.featureFlags.prerequisitesDesc')}
-      </span>
-    </Text>
-  )
-
   const rbacPermission: Omit<PermissionsRequest, 'permissions'> & { permission: PermissionIdentifier } = {
     resource: { resourceType: ResourceType.FEATUREFLAG },
     permission: PermissionIdentifier.EDIT_FF_FEATUREFLAG
@@ -395,58 +369,55 @@ export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
     : undefined
 
   return (
-    <Container className={cx(css.collapseFeatures, css.module)}>
-      <Collapse {...editCardCollapsedProps} heading={prerequisitesTitle}>
-        {!!featureFlag.prerequisites?.length && (
-          <Layout.Horizontal flex margin={{ bottom: 'xsmall' }}>
-            <Text width="50%">{getString('flag')}</Text>
-            <Text width="50%">{getString('cf.shared.variation')}</Text>
+    <Layout.Vertical margin={{ bottom: 'medium', top: 'medium' }}>
+      <Layout.Vertical margin={{ bottom: 'medium' }}>
+        <Heading level={5} font={{ variation: FontVariation.H5 }}>
+          <StringWithTooltip stringId="cf.shared.prerequisites" tooltipId="ff_ffPrerequisites_heading" />
+        </Heading>
+        <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_500}>
+          {getString('cf.featureFlags.prerequisitesDesc')}
+        </Text>
+      </Layout.Vertical>
+      {!!featureFlag.prerequisites?.length && (
+        <>
+          <Layout.Horizontal
+            flex={{ justifyContent: 'flex-start' }}
+            margin={{ bottom: 'xsmall' }}
+            padding="none"
+            border={{ bottom: true, color: Color.GREY_300 }}
+          >
+            <Text width="45%">{getString('flag')}</Text>
+            <Text width="45%">{getString('cf.shared.variation')}</Text>
           </Layout.Horizontal>
-        )}
-        <Layout.Vertical className={css.collapseFeaturesPrerequisites}>
-          {Boolean(featureFlag.prerequisites?.length) &&
-            featureFlag.prerequisites?.map((elem, i) => (
-              <Layout.Horizontal key={i} flex padding="medium">
-                <Text>{elem.feature}</Text>
-                <Text>{elem.variations[0]}</Text>
-                <RbacOptionsMenuButton
-                  items={[
-                    {
-                      icon: 'edit',
-                      text: getString('edit'),
-                      onClick: handlePrerequisiteInteraction('edit', elem),
-                      disabled: featureFlag.archived,
-                      permission: rbacPermission,
-                      ...planEnforcementProps
-                    },
-                    {
-                      icon: 'cross',
-                      text: getString('delete'),
-                      onClick: handlePrerequisiteInteraction('delete', elem),
-                      disabled: featureFlag.archived,
-                      permission: rbacPermission,
-                      ...planEnforcementProps
-                    }
-                  ]}
-                />
-              </Layout.Horizontal>
-            ))}
-          <RbacButton
-            data-testid="add-prerequisites-button"
-            minimal
-            intent="primary"
-            icon="small-plus"
-            text={getString('cf.shared.prerequisites')}
-            onClick={() => {
-              setEditingPrerequisites(false)
-              openModalPrerequisites()
-            }}
-            disabled={featureFlag.archived}
-            permission={rbacPermission}
-            {...planEnforcementProps}
-          />
-        </Layout.Vertical>
-      </Collapse>
-    </Container>
+          {featureFlag.prerequisites.map((prereq, i) => (
+            <PrerequisiteItem
+              key={i}
+              prerequisite={prereq}
+              permission={rbacPermission}
+              flagArchived={featureFlag?.archived || false}
+              handlePrerequisiteInteraction={handlePrerequisiteInteraction}
+            />
+          ))}
+        </>
+      )}
+      <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
+        <RbacButton
+          data-testid="add-prerequisites-button"
+          minimal
+          icon="small-plus"
+          size={ButtonSize.SMALL}
+          font={{ size: 'small' }}
+          style={{ padding: 0 }}
+          text={getString('cf.featureFlags.newPrerequisite')}
+          onClick={() => {
+            setEditingPrerequisites(false)
+            openModalPrerequisites()
+          }}
+          disabled={featureFlag.archived}
+          permission={rbacPermission}
+          {...planEnforcementProps}
+        />
+      </Layout.Horizontal>
+    </Layout.Vertical>
   )
 }

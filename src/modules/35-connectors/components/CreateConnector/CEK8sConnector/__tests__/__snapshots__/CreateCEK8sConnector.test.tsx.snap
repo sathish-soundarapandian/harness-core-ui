@@ -140,6 +140,7 @@ exports[`Create CE K8s Connector Wizard Proceed with following steps 1`] = `
                 class="OverlaySpinner--overlaySpinner"
               >
                 <form
+                  action="#"
                   class="FormikForm--main"
                 >
                   <div>
@@ -1462,6 +1463,7 @@ exports[`Create CE K8s Connector Wizard Step One 1`] = `
                 class="OverlaySpinner--overlaySpinner"
               >
                 <form
+                  action="#"
                   class="FormikForm--main"
                 >
                   <div>

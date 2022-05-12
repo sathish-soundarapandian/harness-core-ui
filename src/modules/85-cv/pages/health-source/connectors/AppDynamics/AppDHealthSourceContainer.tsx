@@ -14,10 +14,11 @@ import AppDMonitoredSource from './AppDHealthSource'
 interface AppDynamicsHealthSource {
   data: any
   onSubmit: (formdata: any, UpdatedHealthSource: UpdatedHealthSource) => Promise<void>
+  isTemplate?: boolean
 }
 
 export default function AppDHealthSourceContainer(props: AppDynamicsHealthSource): JSX.Element {
-  const { data: sourceData, onSubmit } = props
+  const { data: sourceData, onSubmit, isTemplate } = props
   const { onPrevious } = useContext(SetupSourceTabsContext)
 
   const handleSubmit = useCallback(
@@ -34,6 +35,7 @@ export default function AppDHealthSourceContainer(props: AppDynamicsHealthSource
         data={createAppDynamicsData(sourceData)}
         onSubmit={handleSubmit}
         onPrevious={() => onPrevious(sourceData)}
+        isTemplate={isTemplate}
       />
     </>
   )

@@ -13,7 +13,9 @@ exports[`Terraform Remote Form tests initial rendering 1`] = `
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="tfRemoteForm"
         >
@@ -426,7 +428,9 @@ exports[`Terraform Remote Form tests render with more data 1`] = `
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="tfRemoteForm"
         >
@@ -1009,7 +1013,9 @@ exports[`Terraform Remote Form tests should be able to load edit mode correctly 
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="tfRemoteForm"
         >
@@ -1436,7 +1442,9 @@ exports[`Terraform Remote Form tests should be able to load edit mode correctly 
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="tfRemoteForm"
         >
@@ -2139,7 +2147,9 @@ exports[`Terraform Remote Form tests should be able to load with commitId edit m
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="tfRemoteForm"
         >
@@ -2743,7 +2753,9 @@ exports[`Terraform Remote Form tests should be able to remove and add paths 1`] 
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="tfRemoteForm"
         >

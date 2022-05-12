@@ -35,7 +35,12 @@ const renderComponent = (): RenderResult => {
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
     >
-      <FlagActivationDetails gitSync={mockGitSync} featureFlag={mockFeature} refetchFlag={jest.fn()} />
+      <FlagActivationDetails
+        gitSync={mockGitSync}
+        featureFlag={mockFeature}
+        refetchFlag={jest.fn()}
+        setGovernanceMetadata={jest.fn()}
+      />
     </TestWrapper>
   )
 }

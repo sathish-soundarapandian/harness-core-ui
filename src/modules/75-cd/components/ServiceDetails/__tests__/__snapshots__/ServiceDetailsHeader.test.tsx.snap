@@ -203,7 +203,7 @@ exports[`ServiceDetailsHeader should render ServiceDetailsHeader 1`] = `
           class="Layout--horizontal StyledProps--main StyledProps--margin-right-small"
         >
           <div
-            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
           />
         </div>
         <div

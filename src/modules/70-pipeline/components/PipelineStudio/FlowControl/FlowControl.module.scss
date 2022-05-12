@@ -5,6 +5,28 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+.flowControlPanelHeader {
+  display: flex;
+  justify-content: space-around;
+  padding: var(--spacing-xlarge) 0;
+  border-bottom: solid 1px;
+  border-color: var(--grey-200);
+  .flowControlTitle {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+  }
+  .description {
+    padding-left: var(--spacing-small) !important;
+    vertical-align: baseline;
+  }
+}
+
+.main-actions {
+  display: flex;
+  align-items: center;
+}
+
 .container {
   padding: var(--spacing-small) var(--spacing-large);
   height: 100%;
@@ -16,38 +38,7 @@
       background-color: var(--grey-0) !important;
     }
   }
-  .header {
-    display: grid;
-    grid-template-columns: 1fr;
-    border-bottom: 1px solid #e4e4eb !important;
-    background: transparent !important;
-    align-items: center;
-    margin-bottom: var(--spacing-large);
-    margin-top: var(--spacing-large);
 
-    font-style: normal;
-    font-weight: 600;
-    font-size: 20px;
-    height: 30px;
-    /* identical to box height, or 140% */
-
-    color: #000000;
-    .grid-column {
-      display: grid;
-      grid-auto-flow: row;
-    }
-    .title {
-      font-size: 16px;
-      font-weight: 600;
-      color: #22272d;
-      .subtitile {
-        color: var(--pipeline-subtext);
-      }
-    }
-    .headerIcon {
-      padding-right: var(--spacing-small);
-    }
-  }
   .addLink {
     color: var(--pipeline-select-blue);
     padding: var(--spacing-small);
@@ -64,7 +55,7 @@
   grid-auto-flow: row;
   gap: var(--spacing-medium);
   .rowItem {
-    background: #ffffff;
+    background: var(--grey-0);
     box-shadow: 0px 0px 1px rgb(40 41 61 / 4%), 0px 2px 4px rgb(96 97 112 / 16%);
     border-radius: 4px;
     display: grid;
@@ -93,14 +84,14 @@
 
       /* Gray Scale / Gray Scale 700 */
 
-      color: #383946;
+      color: var(--grey-700);
     }
     .space-right {
       margin-right: var(--spacing-small);
     }
     .deleteIcon {
       vertical-align: bottom;
-      color: #000 !important;
+      color: var(--grey-1000) !important;
       cursor: pointer;
       &.disabledIcon {
         opacity: 0.5;

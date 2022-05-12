@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { fireEvent, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cdng from 'services/cd-ng'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
@@ -55,5 +55,20 @@ describe('GitPopover', () => {
     )
 
     expect(container).toMatchInlineSnapshot(`<div />`)
+  })
+
+  test('should render gitpopover info when giticon is hovered', async () => {
+    const props = getProps()
+    const { getByTestId, getByText } = render(
+      <TestWrapper>
+        <GitSyncStoreProvider>
+          <GitPopover {...props} />
+        </GitSyncStoreProvider>
+      </TestWrapper>
+    )
+    fireEvent.mouseOver(getByTestId('git-popover'))
+    await waitFor(() => expect(getByText('PIPELINE.GITDETAILS')).toBeDefined())
+    expect(getByText('repository')).toBeDefined()
+    expect(getByText('pipelineSteps.deploy.inputSet.branch')).toBeDefined()
   })
 })

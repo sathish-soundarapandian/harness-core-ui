@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Checkbox, Layout } from '@wings-software/uicore'
+import { Checkbox, Layout } from '@harness/uicore'
 import { useStrings, StringKeys } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import moduleTagCss from '@dashboards/common/ModuleTags.module.scss'

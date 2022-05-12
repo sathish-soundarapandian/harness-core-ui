@@ -15,17 +15,19 @@ import {
   Formik,
   FormikForm,
   RUNTIME_INPUT_VALUE,
-  TextInput,
-  FormInput,
   Text,
   Layout,
   getMultiTypeFromValue,
   MultiTypeInputType,
   ButtonVariation,
-  VisualYamlSelectedView as SelectedView
+  VisualYamlSelectedView as SelectedView,
+  Container,
+  SelectOption
 } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { isEmpty, get, set, unset } from 'lodash-es'
+import { Color, FontVariation } from '@harness/design-system'
+
 import { Classes, Dialog } from '@blueprintjs/core'
 import produce from 'immer'
 import { useStrings } from 'framework/strings'
@@ -38,35 +40,40 @@ import {
   PipelineInfoConfig,
   useGetConnector
 } from 'services/cd-ng'
-import {
-  ConnectorReferenceField,
-  ConnectorReferenceFieldProps
-} from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { ConnectorReferenceFieldProps } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
 import {
   getIdentifierFromValue,
   getScopeFromDTO,
   getScopeFromValue
 } from '@common/components/EntityReference/EntityReference'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { getPrCloneStrategyOptions, sslVerifyOptions } from '@pipeline/utils/constants'
+import { getOptionalSubLabel } from '@pipeline/components/Volumes/Volumes'
+import { ConnectionType } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
 import type { PipelineType, GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
-import {
-  generateSchemaForLimitCPU,
-  generateSchemaForLimitMemory
-} from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import { Connectors } from '@connectors/constants'
 import { useQueryParams } from '@common/hooks'
-import { usePipelineContext } from '../PipelineContext/PipelineContext'
+import { isRuntimeInput } from '@pipeline/utils/CIUtils'
+import { PipelineContextType, usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerTypes } from '../PipelineContext/PipelineActions'
 import { RightDrawer } from '../RightDrawer/RightDrawer'
+import { renderConnectorAndRepoName, validateCIForm } from './RightBarUtils'
 import css from './RightBar.module.scss'
 
+export interface CodebaseRuntimeInputsInterface {
+  connectorRef?: boolean
+  repoName?: boolean
+}
 interface CodebaseValues {
   connectorRef?: ConnectorReferenceFieldProps['selected']
   repoName?: string
   depth?: string
-  sslVerify?: number
+  sslVerify?: boolean
   prCloneStrategy?: MultiTypeSelectOption
   memoryLimit?: string
   cpuLimit?: string
@@ -80,28 +87,18 @@ enum CodebaseStatuses {
   Validating = 'validating'
 }
 
-export const prCloneStrategyOptions = [
-  { label: 'Merge Commit', value: 'MergeCommit' },
-  { label: 'Source Branch', value: 'SourceBranch' }
-]
-
-const sslVerifyOptions = [
-  {
-    label: 'True',
-    value: 1
-  },
-  {
-    label: 'False',
-    value: 0
-  }
-]
-
 const codebaseIcons: Record<CodebaseStatuses, IconName> = {
   [CodebaseStatuses.ZeroState]: 'codebase-zero-state',
   [CodebaseStatuses.NotConfigured]: 'codebase-not-configured',
   [CodebaseStatuses.Valid]: 'codebase-valid',
   [CodebaseStatuses.Invalid]: 'codebase-invalid',
   [CodebaseStatuses.Validating]: 'codebase-validating'
+}
+
+declare global {
+  interface WindowEventMap {
+    OPEN_PIPELINE_TEMPLATE_RIGHT_DRAWER: CustomEvent
+  }
 }
 
 export function RightBar(): JSX.Element {
@@ -112,8 +109,10 @@ export function RightBar(): JSX.Element {
       isLoading,
       pipelineView: {
         drawerData: { type }
-      }
+      },
+      isUpdated
     },
+    contextType,
     isReadonly,
     view,
     updatePipeline,
@@ -122,6 +121,7 @@ export function RightBar(): JSX.Element {
   const codebase = pipeline?.properties?.ci?.codebase
   const [codebaseStatus, setCodebaseStatus] = React.useState<CodebaseStatuses>(CodebaseStatuses.ZeroState)
   const enableGovernanceSidebar = useFeatureFlag(FeatureFlag.OPA_PIPELINE_GOVERNANCE)
+  const { getString } = useStrings()
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<
     PipelineType<{
@@ -135,10 +135,16 @@ export function RightBar(): JSX.Element {
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
   const [isCodebaseDialogOpen, setIsCodebaseDialogOpen] = React.useState(false)
+
+  const [codebaseRuntimeInputs, setCodebaseRuntimeInputs] = React.useState<CodebaseRuntimeInputsInterface>({
+    ...(isRuntimeInput(codebase?.connectorRef) && { connectorRef: true, repoName: true })
+  })
+  const prCloneStrategyOptions = getPrCloneStrategyOptions(getString)
   const codebaseInitialValues: CodebaseValues = {
+    connectorRef: codebase?.connectorRef,
     repoName: codebase?.repoName,
     depth: codebase?.depth !== undefined ? String(codebase.depth) : undefined,
-    sslVerify: codebase?.sslVerify !== undefined ? Number(codebase.sslVerify) : undefined,
+    sslVerify: codebase?.sslVerify,
     memoryLimit: codebase?.resources?.limits?.memory,
     prCloneStrategy:
       getMultiTypeFromValue(codebase?.prCloneStrategy) === MultiTypeInputType.FIXED
@@ -148,9 +154,11 @@ export function RightBar(): JSX.Element {
   }
 
   const isYaml = view === SelectedView.YAML
+  const isPipelineTemplateContextType = contextType === PipelineContextType.PipelineTemplate
 
   const connectorId = getIdentifierFromValue((codebase?.connectorRef as string) || '')
   const initialScope = getScopeFromValue((codebase?.connectorRef as string) || '')
+  const { expressions } = useVariablesExpression()
 
   const {
     data: connector,
@@ -168,8 +176,8 @@ export function RightBar(): JSX.Element {
     debounce: 300
   })
 
-  const [connectionType, setConnectionType] = React.useState('')
-  const [connectorUrl, setConnectorUrl] = React.useState('')
+  const [connectionType, setConnectionType] = React.useState<string>('')
+  const [connectorUrl, setConnectorUrl] = React.useState<string>('')
 
   if (connector?.data?.connector) {
     const scope = getScopeFromDTO<ConnectorInfoDTO>(connector?.data?.connector)
@@ -183,7 +191,7 @@ export function RightBar(): JSX.Element {
   }
 
   React.useEffect(() => {
-    if (!isEmpty(codebase?.connectorRef)) {
+    if (!isEmpty(codebase?.connectorRef) && !isRuntimeInput(codebase?.connectorRef)) {
       refetch()
     }
   }, [codebase?.connectorRef])
@@ -191,7 +199,7 @@ export function RightBar(): JSX.Element {
   React.useEffect(() => {
     if (connector?.data?.connector) {
       setConnectionType(
-        connector?.data?.connector?.type === 'Git'
+        connector?.data?.connector?.type === Connectors.GIT
           ? connector?.data?.connector.spec.connectionType
           : connector?.data?.connector.spec.type
       )
@@ -208,6 +216,8 @@ export function RightBar(): JSX.Element {
   React.useEffect(() => {
     if (!codebase?.connectorRef) {
       setCodebaseStatus(CodebaseStatuses.NotConfigured)
+    } else if (isRuntimeInput(codebase?.connectorRef)) {
+      setCodebaseStatus(CodebaseStatuses.Valid)
     } else {
       const validate = async () => {
         setCodebaseStatus(CodebaseStatuses.Validating)
@@ -221,7 +231,7 @@ export function RightBar(): JSX.Element {
           }
         })
 
-        if (connectorResult?.data?.connector?.spec.type === 'Account') {
+        if (connectorResult?.data?.connector?.spec.type === ConnectionType.Account) {
           try {
             const response = await getTestGitRepoConnectionResultPromise({
               identifier: connectorId,
@@ -292,7 +302,35 @@ export function RightBar(): JSX.Element {
     setConnectorUrl
   ])
 
-  const { getString } = useStrings()
+  const openVariablesPanel = () => {
+    if (isPipelineTemplateContextType) {
+      updatePipelineView({
+        ...pipelineView,
+        isSplitViewOpen: false,
+        splitViewData: {}
+      })
+      window.dispatchEvent(
+        new CustomEvent('OPEN_PIPELINE_TEMPLATE_RIGHT_DRAWER', { detail: DrawerTypes.PipelineVariables })
+      )
+    } else {
+      updatePipelineView({
+        ...pipelineView,
+        isDrawerOpened: true,
+        drawerData: { type: DrawerTypes.PipelineVariables },
+        isSplitViewOpen: false,
+        splitViewData: {}
+      })
+    }
+  }
+
+  const openTemplatesInputDrawer = () => {
+    updatePipelineView({
+      ...pipelineView,
+      isSplitViewOpen: false,
+      splitViewData: {}
+    })
+    window.dispatchEvent(new CustomEvent('OPEN_PIPELINE_TEMPLATE_RIGHT_DRAWER', { detail: DrawerTypes.TemplateInputs }))
+  }
 
   if (isLoading) {
     return <div className={css.rightBar}></div>
@@ -300,69 +338,80 @@ export function RightBar(): JSX.Element {
 
   return (
     <div className={css.rightBar}>
+      {isPipelineTemplateContextType && (
+        <Button
+          className={cx(css.iconButton, { [css.selected]: type === DrawerTypes.TemplateInputs })}
+          onClick={openTemplatesInputDrawer}
+          variation={ButtonVariation.TERTIARY}
+          font={{ weight: 'semi-bold', size: 'xsmall' }}
+          icon="template-inputs"
+          withoutCurrentColor={true}
+          iconProps={{ size: 28 }}
+          text={getString('pipeline.templateInputs')}
+          data-testid="template-inputs"
+          disabled={isUpdated}
+        />
+      )}
       <Button
         className={cx(css.iconButton, { [css.selected]: type === DrawerTypes.PipelineVariables })}
-        onClick={() =>
-          updatePipelineView({
-            ...pipelineView,
-            isDrawerOpened: true,
-            drawerData: { type: DrawerTypes.PipelineVariables },
-            isSplitViewOpen: false,
-            splitViewData: {}
-          })
-        }
+        onClick={openVariablesPanel}
         variation={ButtonVariation.TERTIARY}
         font={{ weight: 'semi-bold', size: 'xsmall' }}
         icon="pipeline-variables"
         withoutCurrentColor={true}
         iconProps={{ size: 28 }}
-        text={getString('variablesText')}
+        text={getString('common.variables')}
         data-testid="input-variable"
       />
+      {!pipeline.template && (
+        <Button
+          className={cx(css.iconButton, {
+            [css.selected]: type === DrawerTypes.PipelineNotifications
+          })}
+          variation={ButtonVariation.TERTIARY}
+          onClick={() => {
+            updatePipelineView({
+              ...pipelineView,
+              isDrawerOpened: true,
+              drawerData: {
+                type: DrawerTypes.PipelineNotifications
+              },
+              isSplitViewOpen: false,
+              splitViewData: {}
+            })
+          }}
+          font={{ weight: 'semi-bold', size: 'xsmall' }}
+          icon="pipeline-deploy"
+          iconProps={{ size: 24 }}
+          text={getString('notifications.pipelineName')}
+          withoutCurrentColor={true}
+        />
+      )}
 
-      <Button
-        className={cx(css.iconButton, {
-          [css.selected]: type === DrawerTypes.PipelineNotifications
-        })}
-        variation={ButtonVariation.TERTIARY}
-        onClick={() => {
-          updatePipelineView({
-            ...pipelineView,
-            isDrawerOpened: true,
-            drawerData: { type: DrawerTypes.PipelineNotifications, title: `${pipeline?.name} : Notifications` },
-            isSplitViewOpen: false,
-            splitViewData: {}
-          })
-        }}
-        font={{ weight: 'semi-bold', size: 'xsmall' }}
-        icon="pipeline-deploy"
-        iconProps={{ size: 24 }}
-        text={getString('notifications.pipelineName')}
-        withoutCurrentColor={true}
-      />
+      {!pipeline.template && (
+        <Button
+          className={cx(css.iconButton, {
+            [css.selected]: type === DrawerTypes.FlowControl
+          })}
+          variation={ButtonVariation.TERTIARY}
+          onClick={() => {
+            updatePipelineView({
+              ...pipelineView,
+              isDrawerOpened: true,
+              drawerData: { type: DrawerTypes.FlowControl },
+              isSplitViewOpen: false,
+              splitViewData: {}
+            })
+          }}
+          font={{ weight: 'semi-bold', size: 'xsmall' }}
+          icon="settings"
+          withoutCurrentColor={true}
+          iconProps={{ size: 20 }}
+          text={getString('pipeline.barriers.flowControl')}
+        />
+      )}
 
-      <Button
-        className={cx(css.iconButton, {
-          [css.selected]: type === DrawerTypes.FlowControl
-        })}
-        variation={ButtonVariation.TERTIARY}
-        onClick={() => {
-          updatePipelineView({
-            ...pipelineView,
-            isDrawerOpened: true,
-            drawerData: { type: DrawerTypes.FlowControl },
-            isSplitViewOpen: false,
-            splitViewData: {}
-          })
-        }}
-        font={{ weight: 'semi-bold', size: 'xsmall' }}
-        icon="settings"
-        withoutCurrentColor={true}
-        iconProps={{ size: 20 }}
-        text={getString('pipeline.barriers.flowControl')}
-      />
-
-      {enableGovernanceSidebar && (
+      {enableGovernanceSidebar && contextType === PipelineContextType.Pipeline && (
         <Button
           className={cx(css.iconButton, {
             [css.selected]: type === DrawerTypes.PolicySets
@@ -386,7 +435,7 @@ export function RightBar(): JSX.Element {
         />
       )}
 
-      {!isYaml && (
+      {!pipeline.template && !isYaml && (
         <Button
           className={css.iconButton}
           text={getString('codebase')}
@@ -409,26 +458,28 @@ export function RightBar(): JSX.Element {
         />
       )}
 
-      <Button
-        className={cx(css.iconButton, {
-          [css.selected]: type === DrawerTypes.AdvancedOptions
-        })}
-        variation={ButtonVariation.TERTIARY}
-        onClick={() => {
-          updatePipelineView({
-            ...pipelineView,
-            isDrawerOpened: true,
-            drawerData: { type: DrawerTypes.AdvancedOptions },
-            isSplitViewOpen: false,
-            splitViewData: {}
-          })
-        }}
-        font={{ weight: 'semi-bold', size: 'xsmall' }}
-        icon="pipeline-advanced"
-        withoutCurrentColor={true}
-        iconProps={{ size: 24 }}
-        text={getString('pipeline.advancedOptions')}
-      />
+      {!pipeline.template && (
+        <Button
+          className={cx(css.iconButton, {
+            [css.selected]: type === DrawerTypes.AdvancedOptions
+          })}
+          variation={ButtonVariation.TERTIARY}
+          onClick={() => {
+            updatePipelineView({
+              ...pipelineView,
+              isDrawerOpened: true,
+              drawerData: { type: DrawerTypes.AdvancedOptions },
+              isSplitViewOpen: false,
+              splitViewData: {}
+            })
+          }}
+          font={{ weight: 'semi-bold', size: 'xsmall' }}
+          icon="pipeline-advanced"
+          withoutCurrentColor={true}
+          iconProps={{ size: 24 }}
+          text={getString('pipeline.advancedOptions')}
+        />
+      )}
       <div />
       {isCodebaseDialogOpen && (
         <Dialog
@@ -447,36 +498,12 @@ export function RightBar(): JSX.Element {
             initialValues={codebaseInitialValues}
             validationSchema={Yup.object().shape({
               connectorRef: Yup.mixed().required(getString('fieldRequired', { field: getString('connector') })),
-              ...(connectionType === 'Account' && {
-                repoName: Yup.string().required(getString('common.validation.repositoryName'))
-              })
+              ...(connectionType === ConnectionType.Account &&
+                !codebaseRuntimeInputs.repoName && {
+                  repoName: Yup.string().required(getString('common.validation.repositoryName'))
+                })
             })}
-            validate={values => {
-              const errors = {}
-              if (getMultiTypeFromValue(values.depth) === MultiTypeInputType.FIXED) {
-                try {
-                  Yup.number()
-                    .notRequired()
-                    .integer(getString('pipeline.onlyPositiveInteger'))
-                    .positive(getString('pipeline.onlyPositiveInteger'))
-                    .typeError(getString('pipeline.onlyPositiveInteger'))
-                    .validateSync(values.depth === '' ? undefined : values.depth)
-                } catch (error) {
-                  set(errors, 'depth', error.message)
-                }
-              }
-              try {
-                generateSchemaForLimitMemory({ getString }).validateSync(values.memoryLimit)
-              } catch (error) {
-                set(errors, 'memoryLimit', error.message)
-              }
-              try {
-                generateSchemaForLimitCPU({ getString }).validateSync(values.cpuLimit)
-              } catch (error) {
-                set(errors, 'cpuLimit', error.message)
-              }
-              return errors
-            }}
+            validate={values => validateCIForm({ values, getString })}
             onSubmit={(values): void => {
               const pipelineData = produce(pipeline, draft => {
                 set(draft, 'properties.ci.codebase', {
@@ -487,7 +514,10 @@ export function RightBar(): JSX.Element {
                 })
 
                 // Repo level connectors should not have repoName
-                if (connectionType === 'Repo' && (draft as PipelineInfoConfig)?.properties?.ci?.codebase?.repoName) {
+                if (
+                  connectionType === ConnectionType.Repo &&
+                  (draft as PipelineInfoConfig)?.properties?.ci?.codebase?.repoName
+                ) {
                   unset(draft, 'properties.ci.codebase.repoName')
                 }
 
@@ -501,9 +531,8 @@ export function RightBar(): JSX.Element {
                   set(draft, 'properties.ci.codebase.depth', depthValue)
                 }
 
-                const sslVerifyVal = values.sslVerify === undefined ? values.sslVerify : !!values.sslVerify
-                if (get(draft, 'properties.ci.codebase.sslVerify') !== sslVerifyVal) {
-                  set(draft, 'properties.ci.codebase.sslVerify', sslVerifyVal)
+                if (get(draft, 'properties.ci.codebase.sslVerify') !== values.sslVerify) {
+                  set(draft, 'properties.ci.codebase.sslVerify', values.sslVerify)
                 }
 
                 if (get(draft, 'properties.ci.codebase.prCloneStrategy') !== values.prCloneStrategy) {
@@ -528,139 +557,185 @@ export function RightBar(): JSX.Element {
               closeCodebaseDialog()
             }}
           >
-            {({ values, setFieldValue, submitForm, errors }) => (
+            {({ values, submitForm, errors, setFieldValue }) => (
               <>
                 <div className={Classes.DIALOG_BODY}>
                   <FormikForm>
-                    <ConnectorReferenceField
-                      name="connectorRef"
-                      type={['Git', 'Github', 'Gitlab', 'Bitbucket', 'Codecommit']}
-                      selected={values.connectorRef}
-                      width={460}
-                      error={errors?.connectorRef}
-                      label={getString('connector')}
-                      placeholder={loading ? getString('loading') : getString('connectors.selectConnector')}
-                      disabled={loading || isReadonly}
-                      accountIdentifier={accountId}
-                      projectIdentifier={projectIdentifier}
-                      orgIdentifier={orgIdentifier}
-                      onChange={(value, scope) => {
-                        setConnectionType(value.type === 'Git' ? value.spec.connectionType : value.spec.type)
-                        setConnectorUrl(value.spec.url)
-
-                        setFieldValue('connectorRef', {
-                          label: value.name || '',
-                          value: `${scope !== Scope.PROJECT ? `${scope}.` : ''}${value.identifier}`,
-                          scope: scope,
-                          live: value?.status?.status === 'SUCCESS',
-                          connector: value
-                        })
-                      }}
-                      gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-                    />
-                    {connectionType === 'Repo' ? (
-                      <>
-                        <Text margin={{ bottom: 'xsmall' }}>{getString('common.repositoryName')}</Text>
-                        <TextInput name="repoName" value={connectorUrl} style={{ flexGrow: 1 }} disabled />
-                      </>
-                    ) : (
-                      <>
-                        <FormInput.Text
-                          label={getString('common.repositoryName')}
-                          name="repoName"
-                          style={{ flexGrow: 1 }}
-                          disabled={isReadonly}
-                        />
-                        {connectorUrl.length > 0 ? (
-                          <div className={css.predefinedValue}>
-                            <Text lineClamp={1} width="460px">
-                              {(connectorUrl[connectorUrl.length - 1] === '/' ? connectorUrl : connectorUrl + '/') +
-                                (values.repoName ? values.repoName : '')}
-                            </Text>
-                          </div>
-                        ) : null}
-                      </>
-                    )}
+                    {renderConnectorAndRepoName({
+                      values,
+                      setFieldValue,
+                      connectorUrl,
+                      connectionType,
+                      setConnectionType,
+                      setConnectorUrl,
+                      getString,
+                      errors,
+                      loading,
+                      accountId,
+                      projectIdentifier,
+                      orgIdentifier,
+                      repoIdentifier,
+                      branch,
+                      expressions,
+                      isReadonly,
+                      setCodebaseRuntimeInputs,
+                      codebaseRuntimeInputs
+                    })}
                     <Accordion>
                       <Accordion.Panel
                         id="advanced"
                         summary={
                           <Layout.Horizontal>
                             <Text font={{ weight: 'bold' }}>{getString('advancedTitle')}</Text>&nbsp;
-                            <Text>{getString('common.optionalLabel')}</Text>
                           </Layout.Horizontal>
                         }
                         details={
                           <div>
-                            <FormInput.Text
-                              name="depth"
-                              label={
-                                <Text
-                                  tooltipProps={{
-                                    dataTooltipId: 'depth'
-                                  }}
-                                >
-                                  {getString('pipeline.depth')}
-                                </Text>
-                              }
-                              disabled={isReadonly}
-                            />
-                            <FormInput.Select
-                              name="sslVerify"
-                              label={
-                                <Text
-                                  tooltipProps={{
-                                    dataTooltipId: 'sslVerify'
-                                  }}
-                                >
-                                  {getString('pipeline.sslVerify')}
-                                </Text>
-                              }
-                              items={sslVerifyOptions}
-                              disabled={isReadonly}
-                            />
-                            <MultiTypeSelectField
-                              name="prCloneStrategy"
-                              label={
-                                <Text margin={{ bottom: 'xsmall' }} tooltipProps={{ dataTooltipId: 'prCloneStrategy' }}>
-                                  {getString('pipeline.ciCodebase.prCloneStrategy')}
-                                </Text>
-                              }
-                              multiTypeInputProps={{
-                                selectItems: prCloneStrategyOptions,
-                                placeholder: 'Select',
-                                disabled: isReadonly,
-                                multiTypeInputProps: {
-                                  selectProps: { addClearBtn: true, items: prCloneStrategyOptions },
-                                  allowableTypes: [MultiTypeInputType.FIXED]
-                                }
-                              }}
-                              configureOptionsProps={{ variableName: 'prCloneStrategy' }}
-                              style={{ marginBottom: 'var(--spacing-medium)' }}
-                            />
-                            <Text margin={{ top: 'small' }} tooltipProps={{ dataTooltipId: 'setContainerResources' }}>
-                              {getString('pipelineSteps.setContainerResources')}
-                            </Text>
-                            <Layout.Horizontal spacing="small">
-                              <FormInput.Text
-                                name="memoryLimit"
+                            <Container className={css.bottomMargin5}>
+                              <MultiTypeTextField
                                 label={
-                                  <Text margin={{ bottom: 'xsmall' }}>
-                                    {getString('pipelineSteps.limitMemoryLabel')}
-                                  </Text>
+                                  <Layout.Horizontal style={{ display: 'flex', alignItems: 'baseline' }}>
+                                    <Text font={{ variation: FontVariation.FORM_LABEL }} margin={{ bottom: 'xsmall' }}>
+                                      {getString('pipeline.depth')}
+                                    </Text>
+                                    &nbsp;
+                                    {getOptionalSubLabel(getString, 'depth')}
+                                  </Layout.Horizontal>
                                 }
-                                style={{ flex: 1 }}
+                                name="depth"
+                                multiTextInputProps={{
+                                  multiTextInputProps: {
+                                    expressions,
+                                    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+                                  },
+                                  disabled: isReadonly
+                                }}
+                              />
+                            </Container>
+                            <Container className={css.bottomMargin5}>
+                              <MultiTypeSelectField
+                                name="sslVerify"
+                                label={
+                                  <Layout.Horizontal style={{ display: 'flex', alignItems: 'baseline' }}>
+                                    <Text
+                                      className={css.inpLabel}
+                                      color={Color.GREY_600}
+                                      font={{ size: 'small', weight: 'semi-bold' }}
+                                    >
+                                      {getString('pipeline.sslVerify')}
+                                    </Text>
+                                    &nbsp;
+                                    {getOptionalSubLabel(getString, 'sslVerify')}
+                                  </Layout.Horizontal>
+                                }
+                                multiTypeInputProps={{
+                                  selectItems: sslVerifyOptions as unknown as SelectOption[],
+                                  placeholder: getString('select'),
+                                  multiTypeInputProps: {
+                                    expressions,
+                                    selectProps: {
+                                      addClearBtn: true,
+                                      items: sslVerifyOptions as unknown as SelectOption[]
+                                    },
+                                    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+                                  },
+                                  disabled: isReadonly
+                                }}
+                                useValue
                                 disabled={isReadonly}
                               />
-                              <FormInput.Text
-                                name="cpuLimit"
+                            </Container>
+                            <Container className={css.bottomMargin5}>
+                              <MultiTypeSelectField
+                                name="prCloneStrategy"
                                 label={
-                                  <Text margin={{ bottom: 'xsmall' }}>{getString('pipelineSteps.limitCPULabel')}</Text>
+                                  <Layout.Horizontal style={{ display: 'flex', alignItems: 'baseline' }}>
+                                    <Text
+                                      className={css.inpLabel}
+                                      color={Color.GREY_600}
+                                      font={{ size: 'small', weight: 'semi-bold' }}
+                                    >
+                                      {getString('pipeline.ciCodebase.prCloneStrategy')}
+                                    </Text>
+                                    &nbsp;
+                                    {getOptionalSubLabel(getString, 'prCloneStrategy')}
+                                  </Layout.Horizontal>
                                 }
-                                style={{ flex: 1 }}
+                                multiTypeInputProps={{
+                                  selectItems: prCloneStrategyOptions,
+                                  placeholder: getString('select'),
+                                  multiTypeInputProps: {
+                                    expressions,
+                                    selectProps: { addClearBtn: true, items: prCloneStrategyOptions },
+                                    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+                                  },
+                                  disabled: isReadonly
+                                }}
                                 disabled={isReadonly}
                               />
-                            </Layout.Horizontal>
+                            </Container>
+                            <Layout.Vertical spacing="medium">
+                              <Text
+                                className={css.inpLabel}
+                                color={Color.GREY_600}
+                                font={{ size: 'small', weight: 'semi-bold' }}
+                                tooltipProps={{ dataTooltipId: 'setContainerResources' }}
+                              >
+                                {getString('pipelineSteps.setContainerResources')}
+                              </Text>
+                              <Layout.Horizontal spacing="small">
+                                <MultiTypeTextField
+                                  name="memoryLimit"
+                                  label={
+                                    <Layout.Horizontal style={{ display: 'flex', alignItems: 'baseline' }}>
+                                      <Text
+                                        className={css.inpLabel}
+                                        color={Color.GREY_600}
+                                        font={{ size: 'small', weight: 'semi-bold' }}
+                                      >
+                                        {getString('pipelineSteps.limitMemoryLabel')}
+                                      </Text>
+                                      &nbsp;
+                                      {getOptionalSubLabel(getString, 'limitMemory')}
+                                    </Layout.Horizontal>
+                                  }
+                                  multiTextInputProps={{
+                                    multiTextInputProps: {
+                                      expressions,
+                                      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+                                    },
+                                    disabled: isReadonly
+                                  }}
+                                  configureOptionsProps={{ variableName: 'spec.limit.memory' }}
+                                  style={{ flexGrow: 1, flexBasis: '50%' }}
+                                />
+                                <MultiTypeTextField
+                                  name="cpuLimit"
+                                  label={
+                                    <Layout.Horizontal style={{ display: 'flex', alignItems: 'baseline' }}>
+                                      <Text
+                                        className={css.inpLabel}
+                                        color={Color.GREY_600}
+                                        font={{ size: 'small', weight: 'semi-bold' }}
+                                      >
+                                        {getString('pipelineSteps.limitCPULabel')}
+                                      </Text>
+                                      &nbsp;
+                                      {getOptionalSubLabel(getString, 'limitCPULabel')}
+                                    </Layout.Horizontal>
+                                  }
+                                  multiTextInputProps={{
+                                    multiTextInputProps: {
+                                      expressions,
+                                      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+                                    },
+                                    disabled: isReadonly
+                                  }}
+                                  configureOptionsProps={{ variableName: 'spec.limit.cpu' }}
+                                  style={{ flexGrow: 1, flexBasis: '50%' }}
+                                />
+                              </Layout.Horizontal>
+                            </Layout.Vertical>
                           </div>
                         }
                       />
@@ -670,7 +745,7 @@ export function RightBar(): JSX.Element {
                 <div className={Classes.DIALOG_FOOTER}>
                   <Button
                     variation={ButtonVariation.PRIMARY}
-                    text={getString('save')}
+                    text={getString('applyChanges')}
                     onClick={submitForm}
                     disabled={isReadonly}
                   />{' '}

@@ -146,11 +146,15 @@ exports[`test cases for Recommendation List Page should be able to render empty 
             <div
               class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
             >
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-h6"
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
               >
-                ce.recommendation.listPage.monthlySavingsText
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-h6"
+                >
+                  ce.recommendation.listPage.monthlySavingsText
+                </p>
+              </div>
               <div
                 class="StyledProps--font StyledProps--main"
               >
@@ -383,11 +387,15 @@ exports[`test cases for Recommendation List Page should be able to render empty 
             <div
               class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
             >
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-h6"
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
               >
-                ce.recommendation.listPage.monthlyPotentialCostText
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-h6"
+                >
+                  ce.recommendation.listPage.monthlyPotentialCostText
+                </p>
+              </div>
               <div
                 class="StyledProps--font StyledProps--main"
               >
@@ -578,11 +586,15 @@ exports[`test cases for Recommendation List Page should be able to render page w
             <div
               class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
             >
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-h6"
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
               >
-                ce.recommendation.listPage.monthlySavingsText
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-h6"
+                >
+                  ce.recommendation.listPage.monthlySavingsText
+                </p>
+              </div>
               <div
                 class="StyledProps--font StyledProps--main"
               >
@@ -815,11 +827,15 @@ exports[`test cases for Recommendation List Page should be able to render page w
             <div
               class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
             >
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-h6"
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
               >
-                ce.recommendation.listPage.monthlyPotentialCostText
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-h6"
+                >
+                  ce.recommendation.listPage.monthlyPotentialCostText
+                </p>
+              </div>
               <div
                 class="StyledProps--font StyledProps--main"
               >
@@ -1006,11 +1022,15 @@ exports[`test cases for Recommendation List Page should be able to render page w
             <div
               class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
             >
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-h6"
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
               >
-                ce.recommendation.listPage.monthlySavingsText
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-h6"
+                >
+                  ce.recommendation.listPage.monthlySavingsText
+                </p>
+              </div>
               <div
                 class="StyledProps--font StyledProps--main"
               >
@@ -1243,11 +1263,15 @@ exports[`test cases for Recommendation List Page should be able to render page w
             <div
               class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
             >
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-h6"
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
               >
-                ce.recommendation.listPage.monthlyPotentialCostText
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-h6"
+                >
+                  ce.recommendation.listPage.monthlyPotentialCostText
+                </p>
+              </div>
               <div
                 class="StyledProps--font StyledProps--main"
               >
@@ -1455,11 +1479,15 @@ exports[`test cases for Recommendation List Page should be able to render the li
             <div
               class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
             >
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-h6"
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
               >
-                ce.recommendation.listPage.monthlySavingsText
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-h6"
+                >
+                  ce.recommendation.listPage.monthlySavingsText
+                </p>
+              </div>
               <div
                 class="StyledProps--font StyledProps--main"
               >
@@ -1692,11 +1720,15 @@ exports[`test cases for Recommendation List Page should be able to render the li
             <div
               class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
             >
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-h6"
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
               >
-                ce.recommendation.listPage.monthlyPotentialCostText
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-h6"
+                >
+                  ce.recommendation.listPage.monthlyPotentialCostText
+                </p>
+              </div>
               <div
                 class="StyledProps--font StyledProps--main"
               >
@@ -1792,7 +1824,6 @@ exports[`test cases for Recommendation List Page should be able to render the li
                 >
                   <div
                     class="Layout--horizontal StyledProps--main"
-                    style="align-items: center;"
                   >
                     <span
                       class="bp3-icon StyledProps--main StyledProps--padding-right-medium"
@@ -1860,10 +1891,10 @@ exports[`test cases for Recommendation List Page should be able to render the li
                         </a>
                       </div>
                       <div
-                        class="StyledProps--font StyledProps--main"
+                        class="Layout--horizontal StyledProps--main resourceNameContainer"
                       >
                         <span
-                          class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-small-bold"
+                          class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-small-bold StyledProps--margin-right-xsmall"
                         >
                           pipelineSteps.workload: 
                         </span>
@@ -1871,7 +1902,8 @@ exports[`test cases for Recommendation List Page should be able to render the li
                           href="/account/undefined/ce/perspectives/undefined/name/undefined/cluster/clusterName/namespace/namespace/workload/resource-1/details"
                         >
                           <span
-                            class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-primary7 StyledProps--font-variation-body2"
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-primary7 StyledProps--font-variation-body2"
+                            style="--text-line-clamp: 1;"
                           >
                             resource-1
                           </span>
@@ -1934,7 +1966,6 @@ exports[`test cases for Recommendation List Page should be able to render the li
                 >
                   <div
                     class="Layout--horizontal StyledProps--main"
-                    style="align-items: center;"
                   >
                     <span
                       class="bp3-icon StyledProps--main StyledProps--padding-right-medium"
@@ -2002,10 +2033,10 @@ exports[`test cases for Recommendation List Page should be able to render the li
                         </a>
                       </div>
                       <div
-                        class="StyledProps--font StyledProps--main"
+                        class="Layout--horizontal StyledProps--main resourceNameContainer"
                       >
                         <span
-                          class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-small-bold"
+                          class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-small-bold StyledProps--margin-right-xsmall"
                         >
                           pipelineSteps.workload: 
                         </span>
@@ -2013,7 +2044,8 @@ exports[`test cases for Recommendation List Page should be able to render the li
                           href="/account/undefined/ce/perspectives/undefined/name/undefined/cluster/clusterName1/namespace/namespace1/workload/resource-2/details"
                         >
                           <span
-                            class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-primary7 StyledProps--font-variation-body2"
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-primary7 StyledProps--font-variation-body2"
+                            style="--text-line-clamp: 1;"
                           >
                             resource-2
                           </span>
@@ -2076,7 +2108,6 @@ exports[`test cases for Recommendation List Page should be able to render the li
                 >
                   <div
                     class="Layout--horizontal StyledProps--main"
-                    style="align-items: center;"
                   >
                     <span
                       class="bp3-icon StyledProps--main StyledProps--padding-right-medium"
@@ -2144,10 +2175,10 @@ exports[`test cases for Recommendation List Page should be able to render the li
                         </a>
                       </div>
                       <div
-                        class="StyledProps--font StyledProps--main"
+                        class="Layout--horizontal StyledProps--main resourceNameContainer"
                       >
                         <span
-                          class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-small-bold"
+                          class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-small-bold StyledProps--margin-right-xsmall"
                         >
                           pipelineSteps.workload: 
                         </span>
@@ -2155,7 +2186,8 @@ exports[`test cases for Recommendation List Page should be able to render the li
                           href="/account/undefined/ce/perspectives/undefined/name/undefined/cluster/clusterName2/namespace/namespace2/workload/resource-3/details"
                         >
                           <span
-                            class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-primary7 StyledProps--font-variation-body2"
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-primary7 StyledProps--font-variation-body2"
+                            style="--text-line-clamp: 1;"
                           >
                             resource-3
                           </span>
@@ -2218,7 +2250,6 @@ exports[`test cases for Recommendation List Page should be able to render the li
                 >
                   <div
                     class="Layout--horizontal StyledProps--main"
-                    style="align-items: center;"
                   >
                     <span
                       class="bp3-icon StyledProps--main StyledProps--padding-right-medium"
@@ -2286,10 +2317,10 @@ exports[`test cases for Recommendation List Page should be able to render the li
                         </a>
                       </div>
                       <div
-                        class="StyledProps--font StyledProps--main"
+                        class="Layout--horizontal StyledProps--main resourceNameContainer"
                       >
                         <span
-                          class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-small-bold"
+                          class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-small-bold StyledProps--margin-right-xsmall"
                         >
                           pipelineSteps.workload: 
                         </span>
@@ -2297,7 +2328,8 @@ exports[`test cases for Recommendation List Page should be able to render the li
                           href="/account/undefined/ce/perspectives/undefined/name/undefined/cluster/clusterName3/namespace/namespace3/workload/resource-4/details"
                         >
                           <span
-                            class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-primary7 StyledProps--font-variation-body2"
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-primary7 StyledProps--font-variation-body2"
+                            style="--text-line-clamp: 1;"
                           >
                             resource-4
                           </span>
@@ -2360,7 +2392,6 @@ exports[`test cases for Recommendation List Page should be able to render the li
                 >
                   <div
                     class="Layout--horizontal StyledProps--main"
-                    style="align-items: center;"
                   >
                     <span
                       class="bp3-icon StyledProps--main StyledProps--padding-right-medium"
@@ -2428,10 +2459,10 @@ exports[`test cases for Recommendation List Page should be able to render the li
                         </a>
                       </div>
                       <div
-                        class="StyledProps--font StyledProps--main"
+                        class="Layout--horizontal StyledProps--main resourceNameContainer"
                       >
                         <span
-                          class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-small-bold"
+                          class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-small-bold StyledProps--margin-right-xsmall"
                         >
                           pipelineSteps.workload: 
                         </span>
@@ -2439,7 +2470,8 @@ exports[`test cases for Recommendation List Page should be able to render the li
                           href="/account/undefined/ce/perspectives/undefined/name/undefined/cluster/clusterName4/namespace/namespace4/workload/resource-5/details"
                         >
                           <span
-                            class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-primary7 StyledProps--font-variation-body2"
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-primary7 StyledProps--font-variation-body2"
+                            style="--text-line-clamp: 1;"
                           >
                             resource-5
                           </span>

@@ -34,6 +34,7 @@ import BudgetDetailsChart from '@ce/components/BudgetDetailsChart/BudgetDetailsC
 import EmptyView from '@ce/images/empty-state.svg'
 import useBudgetModal from '@ce/components/PerspectiveReportsAndBudget/PerspectiveCreateBudget'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
+import { PAGE_NAMES } from '@ce/TrackingEventsConstants'
 import css from './BudgetDetails.module.scss'
 
 const BudgetDetails: () => JSX.Element | null = () => {
@@ -107,7 +108,8 @@ const BudgetDetails: () => JSX.Element | null = () => {
     openModal({
       isEdit: true,
       perspective: summaryData?.perspectiveId,
-      selectedBudget: summaryData as unknown as Budget
+      selectedBudget: summaryData as unknown as Budget,
+      source: PAGE_NAMES.BUDGET_DETAILS_PAGE
     })
   }
 

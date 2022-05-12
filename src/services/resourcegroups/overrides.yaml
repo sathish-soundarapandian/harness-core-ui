@@ -3,3 +3,7 @@ allowpaths:
   - /resourcegroup/{identifier}
   - /resourcetype
   - /resourcegroup/filter
+  - /v2/resourcegroup
+  - /v2/resourcegroup/{identifier}
+  - /v2/resourcetype
+  - /v2/resourcegroup/filter

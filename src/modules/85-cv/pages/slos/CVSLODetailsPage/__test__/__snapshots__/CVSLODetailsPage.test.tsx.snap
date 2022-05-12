@@ -135,6 +135,21 @@ exports[`Test cases for CVSLODetailsPage it should render the component and take
         </p>
       </div>
     </div>
+    <div
+      class="Layout--vertical StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-end StyledProps--flex-alignItems-end"
+      style="height: 100%;"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey500"
+      >
+        cv.lastModifiedOn 2 Apr 2022 12:00:00 AM
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey500"
+      >
+        cv.createdOn 2 Apr 2022 12:00:00 AM
+      </p>
+    </div>
   </div>
   <div
     class="StyledProps--font StyledProps--main tabContainer"
@@ -386,7 +401,7 @@ exports[`Test cases for CVSLODetailsPage it should render the component and take
               <p
                 class="StyledProps--font StyledProps--main StyledProps--font-variation-card-title StyledProps--color StyledProps--color-grey800 StyledProps--padding-bottom-medium"
               >
-                ce.co.autoStoppingRule.review.serviceDetails
+                cv.serviceDetails
               </p>
               <div
                 class="Layout--horizontal Layout--layout-spacing-xlarge StyledProps--main"
@@ -524,6 +539,51 @@ exports[`Test cases for CVSLODetailsPage it should render the component and take
                   </span>
                 </div>
               </div>
+            </div>
+            <span
+              data-testid="slo-card-content"
+            />
+            <div
+              class="StyledProps--font StyledProps--main StyledProps--padding-bottom-xlarge"
+            />
+            <div
+              class="bp3-card bp3-elevation-0 Card--card changesCard"
+            >
+              <h2
+                class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--padding-bottom-medium StyledProps--font-variation-card-title"
+                level="2"
+              >
+                changes
+              </h2>
+              <span
+                data-testid="changes-source-card"
+              />
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-small StyledProps--padding-top-small StyledProps--padding-bottom-small"
+                style="display: flex; align-items: center;"
+              >
+                <span
+                  class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
+                  data-icon="info"
+                >
+                  <svg
+                    height="12"
+                    viewBox="0 0 12 12"
+                    width="12"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+                cv.theTrendIsDeterminedForTheSelectedPeriodOverPeriod
+              </p>
+              <span
+                data-testid="changes-table"
+              />
             </div>
           </div>
         </div>

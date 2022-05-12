@@ -27,6 +27,22 @@ export const testWrapperProps: TestWrapperProps = {
   pathParams
 }
 
+const monitoredServiceIdentifier = 'Service_1_Environment_1'
+
+const { accountId, orgIdentifier, projectIdentifier } = pathParams
+
+export const SLODetailsResetParams = { accountId, orgIdentifier, projectIdentifier }
+
+export const changeEventSummaryRestParams = { accountId, orgIdentifier, projectIdentifier, monitoredServiceIdentifier }
+
+export const ChangeEventListResetParams = {
+  pageIndex: 0,
+  pageSize: 10,
+  changeCategories: [],
+  changeSourceTypes: [],
+  monitoredServiceIdentifiers: [monitoredServiceIdentifier]
+}
+
 export const responseSLODashboardDetail: ResponseSLODashboardDetail = {
   status: 'SUCCESS',
   data: {
@@ -60,7 +76,9 @@ export const responseSLODashboardDetail: ResponseSLODashboardDetail = {
       recalculatingSLI: false,
       errorBudgetRisk: 'EXHAUSTED'
     },
-    description: '99.9 percent of logins should have <= 50ms latency'
+    description: '99.9 percent of logins should have <= 50ms latency',
+    createdAt: 1648857600000,
+    lastModifiedAt: 1648857600000
   },
   metaData: undefined,
   correlationId: '0c955a4d-29a2-42ff-90b3-2c629dffac84'
@@ -94,12 +112,32 @@ export const responseSLODashboardDetail2: ResponseSLODashboardDetail = {
       currentPeriodStartTime: 1648857600000,
       currentPeriodEndTime: 1649462400000,
       sloTargetPercentage: 99,
-      errorBudgetBurndown: [],
-      sloPerformanceTrend: [],
+      errorBudgetBurndown: [
+        { timestamp: 1639993380000, value: 0 },
+        { timestamp: 1639993440000, value: 0 }
+      ],
+      sloPerformanceTrend: [
+        { timestamp: 1639993380000, value: 0 },
+        { timestamp: 1639993440000, value: 0 }
+      ],
       recalculatingSLI: false,
       errorBudgetRisk: 'EXHAUSTED'
     },
-    description: '99.9 percent of logins should have <= 50ms latency'
+    description: '99.9 percent of logins should have <= 50ms latency',
+    timeRangeFilters: [
+      {
+        displayName: '1 Hour',
+        durationMilliSeconds: 3600000
+      },
+      {
+        displayName: '1 Day',
+        durationMilliSeconds: 86400000
+      },
+      {
+        displayName: '1 Week',
+        durationMilliSeconds: 604800000
+      }
+    ]
   },
   metaData: undefined,
   correlationId: '0c955a4d-29a2-42ff-90b3-2c629dffac84'

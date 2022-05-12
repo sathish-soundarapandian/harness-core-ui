@@ -88,6 +88,7 @@ export const useMutateCreateSignedUrl = (
     path: 'gateway/dashboard/v1/signedUrl',
     queryParams: {
       accountId: accountId,
+      dashboardId: viewId,
       src: `/embed/dashboards-next/${viewId}?embed_domain=${host}&${query}`
     }
   })

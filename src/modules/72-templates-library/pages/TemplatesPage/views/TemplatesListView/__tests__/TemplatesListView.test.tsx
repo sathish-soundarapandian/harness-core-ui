@@ -12,7 +12,7 @@ import produce from 'immer'
 import { mockTemplates } from '@templates-library/TemplatesTestHelper'
 import { TemplatesListView } from '@templates-library/pages/TemplatesPage/views/TemplatesListView/TemplatesListView'
 import { TestWrapper } from '@common/utils/testUtils'
-import type { TemplatesViewProps } from '@templates-library/pages/TemplatesPage/views/TemplatesView'
+import type { TemplatesViewProps } from '@templates-library/pages/TemplatesPage/views/TemplatesView/TemplatesView'
 import { gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import * as cdng from 'services/cd-ng'
 

@@ -34,7 +34,6 @@ interface SelectModuleListProps {
 
 const SelectModuleList: React.FC<SelectModuleListProps> = ({ onModuleClick, moduleList }) => {
   const [selected, setSelected] = useState<Module>()
-
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const { trackEvent } = useTelemetry()
@@ -42,7 +41,6 @@ const SelectModuleList: React.FC<SelectModuleListProps> = ({ onModuleClick, modu
   const { mutate: updateDefaultExperience, loading: updatingDefaultExperience } = useUpdateAccountDefaultExperienceNG({
     accountIdentifier: accountId
   })
-
   const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: innerHeight })
   const ref = useRef<HTMLDivElement>(null)
 
@@ -55,8 +53,8 @@ const SelectModuleList: React.FC<SelectModuleListProps> = ({ onModuleClick, modu
 
   const getButtonProps = (buttonType: string): { clickHandle?: () => void; disabled?: boolean } => {
     switch (buttonType) {
-      case 'cd':
       case 'ci':
+      case 'cd':
       case 'ce':
       case 'cv':
       case 'cf':

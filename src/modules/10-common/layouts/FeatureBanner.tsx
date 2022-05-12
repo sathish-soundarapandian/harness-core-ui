@@ -21,6 +21,8 @@ import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
 import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import {
   ViewUsageLink,
   ExplorePlansBtn,
@@ -189,6 +191,8 @@ export default function FeatureBanner(): React.ReactElement | null {
 
   const message = messageFn?.()
 
+  const { trackEvent } = useTelemetry()
+
   if (
     !isFeatureEnforceEnabled ||
     shouldDisplayForFreePlanOnly ||
@@ -208,7 +212,12 @@ export default function FeatureBanner(): React.ReactElement | null {
         size={ButtonSize.LARGE}
         icon="cross"
         data-testid="feature-banner-dismiss"
-        onClick={() => setIsBannerDismissed(prev => (module ? { ...prev, [module]: true } : prev))}
+        onClick={() => {
+          trackEvent(FeatureActions.DismissFeatureBanner, {
+            category: Category.ENFORCEMENT
+          })
+          setIsBannerDismissed(prev => (module ? { ...prev, [module]: true } : prev))
+        }}
       />
     </div>
   )

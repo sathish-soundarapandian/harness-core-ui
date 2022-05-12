@@ -126,7 +126,7 @@ export function HarnessServiceAsFormField(props: {
     <FormInput.CustomRender
       {...customRenderProps}
       tooltipProps={{ dataTooltipId: 'serviceSelectOrCreate' }}
-      key={`${serviceProps.item?.value as string}`}
+      key={typeof serviceProps.item === 'string' ? serviceProps.item : (serviceProps.item?.value as string)}
       render={formikProps => (
         <ServiceSelectOrCreate
           {...serviceProps}

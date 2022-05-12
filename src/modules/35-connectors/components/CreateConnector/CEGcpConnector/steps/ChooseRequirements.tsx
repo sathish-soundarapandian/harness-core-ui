@@ -96,10 +96,10 @@ const ChooseRequirements: React.FC<StepProps<CEGcpConnectorDTO>> = ({ prevStepDa
       features.push('BILLING')
     }
     const newspec: GcpCloudCostConnector = {
+      projectId: '',
       ...prevStepData?.spec,
       featuresEnabled: features,
-      serviceAccountEmail: defaultTo(prevStepData?.serviceAccount, ''),
-      projectId: ''
+      serviceAccountEmail: defaultTo(prevStepData?.serviceAccount, '')
     }
     const payload = prevStepData
     if (payload) {

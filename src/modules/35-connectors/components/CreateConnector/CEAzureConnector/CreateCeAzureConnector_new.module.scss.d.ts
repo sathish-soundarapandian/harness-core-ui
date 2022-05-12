@@ -20,13 +20,16 @@ declare const styles: {
   readonly dataFields: string
   readonly editOpen: string
   readonly existingBeTable: string
+  readonly existingReportsWrapper: string
   readonly extension: string
   readonly featureCard: string
   readonly features: string
   readonly footer: string
   readonly grid: string
   readonly header: string
-  readonly info: string
+  readonly hintsLineItem: string
+  readonly infoCard: string
+  readonly infoIcon: string
   readonly infobox: string
   readonly instructionBtn: string
   readonly launchTemplateBtn: string
@@ -35,7 +38,6 @@ declare const styles: {
   readonly mtblarge: string
   readonly popoverContent: string
   readonly stepContainer: string
-  readonly subHeader: string
   readonly submitBtn: string
 }
 export default styles

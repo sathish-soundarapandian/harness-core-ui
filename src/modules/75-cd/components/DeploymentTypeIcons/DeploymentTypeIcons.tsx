@@ -7,16 +7,7 @@
 
 import React from 'react'
 import { Icon, Layout, Text } from '@wings-software/uicore'
-import type { IconName } from '@blueprintjs/core'
-
-const getIconName = (deploymentType: string): string => {
-  switch (deploymentType.toLowerCase()) {
-    case 'kubernetes':
-      return 'app-kubernetes'
-    default:
-      return 'question'
-  }
-}
+import { deploymentTypeIcon } from '@pipeline/utils/DeploymentTypeUtils'
 
 export interface DeploymentTypeIconsProps {
   deploymentTypes: string[]
@@ -27,12 +18,12 @@ export interface DeploymentTypeIconsProps {
 export const DeploymentTypeIcons: React.FC<DeploymentTypeIconsProps> = props => {
   const { deploymentTypes, size = 18, limit = 2 } = props
   return (
-    <Layout.Horizontal flex={{ alignItems: 'center' }}>
-      {deploymentTypes.slice(0, limit).map(deploymentType => {
+    <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+      {deploymentTypes.slice(0, limit).map((deploymentType: string) => {
         return (
           <Icon
             key={deploymentType}
-            name={getIconName(deploymentType) as IconName}
+            name={deploymentTypeIcon[deploymentType]}
             size={size}
             padding={{ left: 'xsmall', right: 'xsmall' }}
           />

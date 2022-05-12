@@ -36,6 +36,8 @@ import {
   FeedbackFormValues
 } from '@common/modals/ExtendTrial/useExtendTrialOrFeedbackModal'
 import { Editions } from '@common/constants/SubscriptionTypes'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Category, LicenseActions } from '@common/constants/TrackingConstants'
 import css from './layouts.module.scss'
 
 export const BANNER_KEY = 'license_banner_dismissed'
@@ -108,33 +110,52 @@ export const TrialLicenseBanner = (): React.ReactElement => {
 
   const { openMarketoContactSales, loading: loadingContactSales } = useContactSalesMktoModal({})
 
-  const alertMsg = isExpired ? (
-    <Text
-      color={Color.WHITE}
-      font={{ variation: FontVariation.FORM_MESSAGE_WARNING }}
-      icon="issue"
-      iconProps={{ padding: { right: 'small' }, className: css.issueIcon }}
-    >
-      {getString('common.banners.trial.expired.description', {
-        expiredDays,
-        moduleDescription
-      })}
-    </Text>
-  ) : (
-    <Text
-      color={Color.PRIMARY_10}
-      font={{ variation: FontVariation.FORM_MESSAGE_WARNING }}
-      icon="info-message"
-      iconProps={{ padding: { right: 'small' }, size: 25, className: css.infoIcon }}
-    >
-      {getString('common.banners.trial.description', {
-        module: descriptionModule,
-        days,
-        moduleDescription,
-        edition: capitalize(edition)
-      })}
-    </Text>
-  )
+  const getAlertMsg = (): React.ReactElement => {
+    if (isExpired) {
+      let expiredMsg
+      if (expiredDays > 14) {
+        expiredMsg = getString('common.banners.trial.expired.contactSales', {
+          expiredDays,
+          moduleDescription
+        })
+      } else {
+        expiredMsg = getString('common.banners.trial.expired.description', {
+          expiredDays,
+          moduleDescription
+        })
+      }
+
+      return (
+        <Text
+          color={Color.WHITE}
+          font={{ variation: FontVariation.FORM_MESSAGE_WARNING }}
+          icon="issue"
+          iconProps={{ padding: { right: 'small' }, className: css.issueIcon }}
+        >
+          {expiredMsg}
+        </Text>
+      )
+    }
+
+    return (
+      <Text
+        color={Color.PRIMARY_10}
+        font={{ variation: FontVariation.FORM_MESSAGE_WARNING }}
+        icon="info-message"
+        iconProps={{ padding: { right: 'small' }, size: 25, className: css.infoIcon }}
+      >
+        {getString('common.banners.trial.description', {
+          module: descriptionModule,
+          days,
+          moduleDescription,
+          edition: capitalize(edition)
+        })}
+      </Text>
+    )
+  }
+
+  const alertMsg = getAlertMsg()
+
   const { mutate: saveFeedback, loading: sendingFeedback } = useSaveFeedback({
     queryParams: {
       accountIdentifier: accountId
@@ -176,8 +197,14 @@ export const TrialLicenseBanner = (): React.ReactElement => {
     loading: sendingFeedback
   })
 
+  const { trackEvent } = useTelemetry()
+
   const handleExtendTrial = async (): Promise<void> => {
     try {
+      trackEvent(LicenseActions.ExtendTrial, {
+        category: Category.LICENSE
+      })
+
       const extendedData = await extendTrial({
         moduleType: module as StartTrialDTO['moduleType'],
         edition: Editions.ENTERPRISE
@@ -196,33 +223,60 @@ export const TrialLicenseBanner = (): React.ReactElement => {
   const getExtendOrFeedBackBtn = (): React.ReactElement => {
     if (!isExpired) {
       return (
-        <Text
-          onClick={openExtendTrialOrFeedbackModal}
-          color={Color.PRIMARY_7}
-          className={css.link}
-          flex={{ alignItems: 'center' }}
-        >
-          {getString('common.banners.trial.provideFeedback')}
-        </Text>
+        <Layout.Horizontal padding={{ right: 'large' }} flex={{ alignItems: 'center' }}>
+          <Text
+            padding={{ left: 'small', right: 'small' }}
+            color={Color.PRIMARY_6}
+            font={{ variation: FontVariation.FORM_MESSAGE_WARNING }}
+          >
+            {'or'}
+          </Text>
+          <Text
+            onClick={openExtendTrialOrFeedbackModal}
+            color={Color.PRIMARY_6}
+            className={css.link}
+            flex={{ alignItems: 'center' }}
+            font={{ variation: FontVariation.FORM_MESSAGE_WARNING }}
+          >
+            {getString('common.banners.trial.provideFeedback')}
+          </Text>
+        </Layout.Horizontal>
       )
     }
     if (expiredDays > 14) {
       return <></>
     }
     return (
-      <Text onClick={handleExtendTrial} color={Color.WHITE} className={css.link} flex={{ alignItems: 'center' }}>
-        {getString('common.banners.trial.expired.extendTrial')}
-      </Text>
+      <Layout.Horizontal padding={{ right: 'large' }} flex={{ alignItems: 'center' }}>
+        <Text
+          padding={{ left: 'small', right: 'small' }}
+          color={Color.WHITE}
+          font={{ variation: FontVariation.FORM_MESSAGE_WARNING }}
+        >
+          {'or'}
+        </Text>
+        <Text
+          onClick={handleExtendTrial}
+          color={Color.WHITE}
+          className={css.link}
+          flex={{ alignItems: 'center' }}
+          font={{ variation: FontVariation.FORM_MESSAGE_WARNING }}
+        >
+          {getString('common.banners.trial.expired.extendTrial')}
+        </Text>
+      </Layout.Horizontal>
     )
   }
 
   const contactSalesLink = (
     <Layout.Horizontal padding={{ left: 'large' }} flex={{ alignItems: 'center' }}>
-      <Text onClick={openMarketoContactSales} color={isExpired ? Color.WHITE : Color.PRIMARY_6} className={css.link}>
+      <Text
+        onClick={openMarketoContactSales}
+        color={isExpired ? Color.WHITE : Color.PRIMARY_6}
+        className={css.link}
+        font={{ variation: FontVariation.FORM_MESSAGE_WARNING }}
+      >
         {getString('common.banners.trial.contactSales')}
-      </Text>
-      <Text padding={{ left: 'small', right: 'small' }} color={isExpired ? Color.WHITE : Color.PRIMARY_6}>
-        {'or'}
       </Text>
     </Layout.Horizontal>
   )

@@ -175,7 +175,7 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
   }
 
   return (
-    <>
+    <div className={css.wrapper}>
       <GitSyncStoreProvider>
         <Page.Header
           className={isPipelineStudioRoute ? css.rightMargin : ''}
@@ -262,6 +262,6 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
         />
       </GitSyncStoreProvider>
       <Page.Body className={isPipelineStudioRoute ? css.rightMargin : ''}>{children}</Page.Body>
-    </>
+    </div>
   )
 }

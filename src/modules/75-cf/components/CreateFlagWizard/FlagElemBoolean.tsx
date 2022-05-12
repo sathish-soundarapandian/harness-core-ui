@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction, useState } from 'react'
+import React, { Dispatch, SetStateAction, useState, useEffect } from 'react'
 import * as yup from 'yup'
 import {
   Formik,
@@ -17,12 +17,15 @@ import {
   SelectOption,
   Container,
   Button,
+  ButtonVariation,
   ModalErrorHandler,
   FlexExpander
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { FormikEffect, FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import { FlagTypeVariations } from '../CreateFlagDialog/FlagDialogUtils'
 import type { FlagWizardFormValues } from './FlagWizard'
 import css from './FlagElemVariations.module.scss'
@@ -90,6 +93,16 @@ const FlagElemBoolean = (props: FlagElemBooleanProps): JSX.Element => {
     }
   }
 
+  const { trackEvent } = useTelemetry()
+
+  useEffect(() => {
+    trackEvent(FeatureActions.VariationSettings, {
+      category: Category.FEATUREFLAG,
+      flagTypeView: FlagTypeVariations.booleanFlag
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <Formik
       initialValues={{
@@ -110,6 +123,10 @@ const FlagElemBoolean = (props: FlagElemBooleanProps): JSX.Element => {
         )
       })}
       onSubmit={formData => {
+        trackEvent(FeatureActions.CreateFeatureFlagSubmit, {
+          category: Category.FEATUREFLAG,
+          data: { ...prevStepData, ...formData, kind: FlagTypeVariations.booleanFlag }
+        })
         props.nextStep?.({ ...prevStepData, ...formData, kind: FlagTypeVariations.booleanFlag })
       }}
     >
@@ -226,12 +243,13 @@ const FlagElemBoolean = (props: FlagElemBooleanProps): JSX.Element => {
             </Container>
 
             <Layout.Horizontal spacing="small" margin={{ top: 'large' }} width="100%">
-              <Button text={getString('back')} onClick={onClickBack} />
+              <Button text={getString('back')} onClick={onClickBack} variation={ButtonVariation.SECONDARY} />
               <Button
                 type="submit"
                 intent="primary"
                 rightIcon={isLastStep ? undefined : 'chevron-right'}
                 text={isLastStep ? getString('cf.creationModal.saveAndClose') : getString('next')}
+                variation={ButtonVariation.PRIMARY}
                 disabled={isLoadingCreateFeatureFlag}
                 loading={isLoadingCreateFeatureFlag}
               />

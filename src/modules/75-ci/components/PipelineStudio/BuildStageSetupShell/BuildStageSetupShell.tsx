@@ -6,10 +6,11 @@
  */
 
 import React from 'react'
+import cx from 'classnames'
 import { Expander } from '@blueprintjs/core'
 import { cloneDeep, isEmpty, isEqual, set } from 'lodash-es'
 import produce from 'immer'
-import { Tabs, Tab, Icon, Button, Layout, ButtonVariation } from '@wings-software/uicore'
+import { Tabs, Tab, Icon, Button, Layout, ButtonVariation, IconName } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import type { HarnessIconName } from '@wings-software/uicore/dist/icons/HarnessIcons'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
@@ -37,6 +38,7 @@ import type { K8sDirectInfraYaml, UseFromStageInfraYaml, VmInfraYaml, VmPoolYaml
 import { FeatureFlag } from '@common/featureFlags'
 import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
 import { useAddStepTemplate } from '@pipeline/hooks/useAddStepTemplate'
+import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import BuildInfraSpecifications from '../BuildInfraSpecifications/BuildInfraSpecifications'
 import BuildStageSpecifications from '../BuildStageSpecifications/BuildStageSpecifications'
 import BuildAdvancedSpecifications from '../BuildAdvancedSpecifications/BuildAdvancedSpecifications'
@@ -57,7 +59,12 @@ interface StagesFilledStateFlags {
   execution: boolean
 }
 
-export default function BuildStageSetupShell(): JSX.Element {
+interface BuildStageSetupShellProps {
+  moduleIcon?: IconName
+}
+
+const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon }) => {
+  const icon = moduleIcon ? moduleIcon : 'ci-main'
   const { getString } = useStrings()
   const isTemplatesEnabled = useFeatureFlag(FeatureFlag.NG_TEMPLATES)
   const [selectedTabId, setSelectedTabId] = React.useState<BuildTabs>(BuildTabs.OVERVIEW)
@@ -186,7 +193,7 @@ export default function BuildStageSetupShell(): JSX.Element {
     <Layout.Horizontal spacing="medium" className={css.footer}>
       {selectedTabId !== BuildTabs.OVERVIEW ? (
         <Button
-          text={getString('ci.previous')}
+          text={getString('back')}
           icon="chevron-left"
           onClick={() =>
             handleTabChange(
@@ -213,7 +220,7 @@ export default function BuildStageSetupShell(): JSX.Element {
         ) : null
       ) : (
         <Button
-          text={selectedTabId === BuildTabs.EXECUTION ? getString('ci.save') : getString('ci.next')}
+          text={selectedTabId === BuildTabs.EXECUTION ? getString('ci.save') : getString('continue')}
           intent="primary"
           rightIcon="chevron-right"
           onClick={() => {
@@ -237,7 +244,7 @@ export default function BuildStageSetupShell(): JSX.Element {
           panel={<BuildStageSpecifications>{navBtns}</BuildStageSpecifications>}
           title={
             <span className={css.tab}>
-              <Icon name="ci-main" height={14} size={14} />
+              <Icon name={icon} height={14} size={14} />
               Overview
             </span>
           }
@@ -286,6 +293,7 @@ export default function BuildStageSetupShell(): JSX.Element {
               {getString('ci.executionLabel')}
             </span>
           }
+          className={cx(css.fullHeight, css.stepGroup)}
           panel={
             selectedStageClone ? (
               <ExecutionGraph
@@ -412,7 +420,7 @@ export default function BuildStageSetupShell(): JSX.Element {
           panel={<BuildAdvancedSpecifications>{navBtns}</BuildAdvancedSpecifications>}
           data-testid={getString('ci.advancedLabel')}
         />
-        {contextType === PipelineContextType.Pipeline && isTemplatesEnabled && selectedStage?.stage && (
+        {isTemplatesEnabled && isContextTypeNotStageTemplate(contextType) && selectedStage?.stage && (
           <>
             <Expander />
             <SaveTemplateButton data={selectedStage?.stage} type={'Stage'} />
@@ -422,3 +430,5 @@ export default function BuildStageSetupShell(): JSX.Element {
     </section>
   )
 }
+
+export default BuildStageSetupShell

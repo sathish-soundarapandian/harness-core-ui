@@ -5,9 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import {
-  Heading,
   Layout,
   Text,
   Formik,
@@ -16,19 +15,22 @@ import {
   Icon,
   Button,
   StepProps,
-  Container
+  Container,
+  ButtonSize,
+  ButtonVariation
 } from '@wings-software/uicore'
+import { FontVariation, Color } from '@harness/design-system'
 import * as Yup from 'yup'
 import { get } from 'lodash-es'
 import cx from 'classnames'
-import { Popover, Position, PopoverInteractionKind, Classes } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import type { BillingExportSpec, CEAzureConnector } from 'services/cd-ng'
 import { CE_AZURE_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
+import { connectorHelperUrls } from '@connectors/constants'
+import ConnectorInstructionList from '@connectors/common/ConnectorCreationInstructionList/ConnectorCreationInstructionList'
 import ShowExistingBillingExports from './AzureExistingBillingExports'
 import { CEAzureDTO, guidRegex } from '../Overview/AzureConnectorOverview'
-import { DialogExtensionContext } from '../../ModalExtension'
 import css from '../../CreateCeAzureConnector_new.module.scss'
 
 const storageAccountNameTest = (value: string) => {
@@ -40,7 +42,6 @@ const storageAccountNameTest = (value: string) => {
 
 const BillingExport: React.FC<StepProps<CEAzureDTO>> = props => {
   const { getString } = useStrings()
-  const { triggerExtension, closeExtension } = useContext(DialogExtensionContext)
   const { prevStepData, previousStep, nextStep } = props
   const billingExportSpec = prevStepData?.spec.billingExportSpec
   const [showBillingExportForm, setShowBillingExportForm] = useState(
@@ -66,7 +67,6 @@ const BillingExport: React.FC<StepProps<CEAzureDTO>> = props => {
       }
     }
 
-    closeExtension()
     nextStep?.(nextStepData)
   }
 
@@ -99,31 +99,33 @@ const BillingExport: React.FC<StepProps<CEAzureDTO>> = props => {
       <Container style={{ minHeight: 385 }}>
         <Container className={cx(css.main, css.dataFields)}>
           {FORM_INPUTS.map(({ label, ...rest }, idx) => {
-            return <FormInput.Text key={idx} {...rest} label={<LabelWithToolTip label={label} />} />
+            return <FormInput.Text key={idx} {...rest} label={label} tooltipProps={{ dataTooltipId: rest.name }} />
           })}
         </Container>
       </Container>
     )
   }
 
-  useEffect(() => {
-    if (showBillingExportForm) triggerExtension('BillingExport')
-  }, [showBillingExportForm])
-
   const renderBillingExports = () => {
     return (
       <Container style={{ minHeight: 430 }}>
-        <Layout.Vertical>
+        <Layout.Vertical className={css.existingReportsWrapper}>
           <ShowExistingBillingExports existingBillingExports={prevStepData?.existingBillingExports || []} />
-          <Container style={{ display: 'flex', flexDirection: 'row-reverse' }}>
-            <Button
-              type="submit"
-              withoutBoxShadow={true}
-              className={css.createNewExportBtn}
-              text={getString('connectors.ceAzure.existingExports.createNewExportBtn')}
-              onClick={() => setShowBillingExportForm(true)}
-            />
-          </Container>
+          <ul>
+            <li className={css.hintsLineItem}>{getString('connectors.ceAzure.existingExports.hints.nextStepHint1')}</li>
+            <li className={css.hintsLineItem}>
+              {getString('connectors.ceAzure.existingExports.hints.nextStepHint2')}
+              <Button
+                rightIcon="chevron-right"
+                text={getString('connectors.ceAzure.existingExports.createNewExportBtn')}
+                onClick={() => {
+                  setShowBillingExportForm(true)
+                }}
+                size={ButtonSize.SMALL}
+                variation={ButtonVariation.SECONDARY}
+              />
+            </li>
+          </ul>
         </Layout.Vertical>
       </Container>
     )
@@ -148,44 +150,51 @@ const BillingExport: React.FC<StepProps<CEAzureDTO>> = props => {
     })
   }
 
+  const instructionsList = [
+    {
+      type: 'button',
+      text: 'connectors.ceAzure.billing.launchAzureConsole',
+      icon: 'main-share',
+      url: connectorHelperUrls.ceAzureLaunchConsole,
+      listClassName: 'btnInstruction'
+    },
+    {
+      type: 'text',
+      text: 'connectors.ceAzure.billing.instructions.i1'
+    },
+    {
+      type: 'hybrid',
+      renderer: function instructionRenderer() {
+        return (
+          <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_800}>
+            {getString('connectors.ceAzure.billing.instructions.i2')}
+            <a href={connectorHelperUrls.ceAzureBillingExport} target="_blank" rel="noreferrer">
+              {getString('connectors.ceAzure.billing.instructions.i3')}
+              <Icon name="main-share" size={16} color={Color.PRIMARY_7} />
+            </a>
+          </Text>
+        )
+      }
+    },
+    {
+      type: 'text',
+      text: 'connectors.ceAzure.billing.instructions.i4'
+    }
+  ]
+
   return (
     <Layout.Vertical className={css.stepContainer}>
-      <Heading level={2} className={css.header}>
-        {getString('connectors.ceAzure.billing.heading')}
-      </Heading>
-      <Text className={css.subHeader}>{getString('connectors.ceAzure.billing.subHeading')}</Text>
       <Text
-        font="small"
-        className={css.info}
-        color="primary7"
-        inline
-        icon="info-sign"
-        iconProps={{ size: 15, color: 'primary7', margin: { right: 'xsmall' } }}
+        font={{ variation: FontVariation.H3 }}
+        tooltipProps={{ dataTooltipId: 'azureBillingExport' }}
+        margin={{ bottom: 'large' }}
       >
-        {showBillingExportForm
-          ? getString('connectors.ceAzure.billing.instruction')
-          : getString('connectors.ceAzure.existingExports.instruction')}
+        {getString('connectors.ceAzure.billing.heading')}
       </Text>
-      {showBillingExportForm && (
-        <Container className={css.launchTemplateSection}>
-          <Layout.Vertical spacing="xsmall">
-            <Button
-              type="submit"
-              withoutBoxShadow={true}
-              className={css.launchTemplateBtn}
-              icon="main-share"
-              iconProps={{ size: 12, margin: { right: 'xsmall' } }}
-              text={getString('connectors.ceAzure.billing.launchAzureConsole')}
-              onClick={() => {
-                window.open('https://portal.azure.com/#blade/Microsoft_Azure_CostManagement/Menu/exports')
-              }}
-            />
-            <Text font="small" style={{ textAlign: 'center' }}>
-              {getString('connectors.ceAzure.billing.login')}
-            </Text>
-          </Layout.Vertical>
-        </Container>
-      )}
+      <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600} padding={{ bottom: 'medium' }}>
+        {getString('connectors.ceAzure.billing.subHeading')}
+      </Text>
+      {showBillingExportForm && <ConnectorInstructionList instructionsList={instructionsList} />}
       <Container>
         <Formik<BillingExportSpec>
           onSubmit={formData => {
@@ -210,7 +219,6 @@ const BillingExport: React.FC<StepProps<CEAzureDTO>> = props => {
                     text={getString('previous')}
                     icon="chevron-left"
                     onClick={() => {
-                      closeExtension()
                       previousStep?.(prevStepData)
                     }}
                   />
@@ -224,48 +232,6 @@ const BillingExport: React.FC<StepProps<CEAzureDTO>> = props => {
         </Formik>
       </Container>
     </Layout.Vertical>
-  )
-}
-
-const LabelWithToolTip = ({ label }: { label: string }) => {
-  const { getString } = useStrings()
-  const { triggerExtension } = useContext(DialogExtensionContext)
-  return (
-    <Layout.Horizontal spacing={'xsmall'}>
-      <Text inline>{label}</Text>
-      <Popover
-        popoverClassName={Classes.DARK}
-        position={Position.RIGHT}
-        interactionKind={PopoverInteractionKind.HOVER}
-        content={
-          <div className={css.popoverContent}>
-            <Text color="grey50" font={'xsmall'}>
-              {getString('connectors.ceAzure.billing.tooltipInstruction')}
-            </Text>
-            <div className={css.btnCtn}>
-              <Button
-                intent="primary"
-                className={css.instructionBtn}
-                font={'xsmall'}
-                minimal
-                text={getString('connectors.ceAzure.billing.tooltipBtn')}
-                onClick={() => triggerExtension('BillingExport')}
-              />
-            </div>
-          </div>
-        }
-      >
-        <Icon
-          name="info"
-          size={12}
-          color={'primary5'}
-          onClick={async (event: React.MouseEvent<HTMLHeadingElement, globalThis.MouseEvent>) => {
-            event.preventDefault()
-            event.stopPropagation()
-          }}
-        />
-      </Popover>
-    </Layout.Horizontal>
   )
 }
 

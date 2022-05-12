@@ -6,17 +6,18 @@
  */
 
 import { FontVariation } from '@harness/design-system'
-import { Container, Heading, Button } from '@harness/uicore'
+import { Container, Text, Button, SelectOption } from '@harness/uicore'
 import React, { ReactElement } from 'react'
 import PercentageRollout from '@cf/components/PercentageRollout/PercentageRollout'
 import type { Segment, Variation } from 'services/cf'
 import { useStrings } from 'framework/strings'
-import type { VariationPercentageRollout } from '../../Types.types'
+import type { VariationPercentageRollout } from '../../types'
 import { DisabledFeatureTooltip } from '../disabled-feature-tooltip/DisabledFeatureTooltip'
 
 interface VariationPercentageRolloutProps {
   variationPercentageRollout: VariationPercentageRollout
   index: number
+  initialOption: SelectOption
   disabled: boolean
   removePercentageRollout: (index: number) => void
   segments: Segment[]
@@ -28,6 +29,7 @@ const PercentageRolloutItem = ({
   index,
   disabled,
   removePercentageRollout,
+  initialOption,
   segments,
   featureFlagVariations
 }: VariationPercentageRolloutProps): ReactElement => {
@@ -39,9 +41,9 @@ const PercentageRolloutItem = ({
         flex={{ justifyContent: 'space-between', alignItems: 'center' }}
         data-testid={`percentage_rollout_item_${index}`}
       >
-        <Heading level={4} font={{ variation: FontVariation.BODY2 }}>
+        <Text inline font={{ variation: FontVariation.BODY }} icon="percentage">
           {getString('cf.featureFlags.percentageRollout')}
-        </Heading>
+        </Text>
         <DisabledFeatureTooltip>
           <Button
             disabled={disabled}
@@ -54,14 +56,19 @@ const PercentageRolloutItem = ({
         </DisabledFeatureTooltip>
       </Container>
 
-      <PercentageRollout
-        targetGroups={segments}
-        variations={featureFlagVariations}
-        fieldValues={variationPercentageRollout}
-        prefix={(fieldName: string) => `targetingRuleItems[${index}].${fieldName}`}
-        hideOverError
-      />
-      <Container border={{ bottom: true }} />
+      <Container border={{ bottom: true }} padding={{ bottom: 'large' }}>
+        <PercentageRollout
+          targetGroups={segments}
+          variations={featureFlagVariations}
+          fieldValues={variationPercentageRollout}
+          prefix={(fieldName: string) => `targetingRuleItems[${index}].${fieldName}`}
+          value={initialOption}
+          distributionWidth={340}
+          addClearButton
+          hideOverError
+          hideTargetGroupDivider
+        />
+      </Container>
     </>
   )
 }

@@ -181,7 +181,14 @@ const MapToProvider: React.FC<StepProps<MapToProviderProps> & Props> = props => 
         onSubmit={_ => {
           onSave()
         }}
-        render={formik => (
+        validationSchema={Yup.object().shape({
+          route53Account: Yup.string().when(['dnsProvider'], {
+            is: dns => dns == 'route53',
+            then: Yup.string().required('Connector is a required field')
+          })
+        })}
+      >
+        {formik => (
           <FormikForm>
             <Layout.Vertical spacing="medium" height="640px">
               <RadioGroup
@@ -258,13 +265,7 @@ const MapToProvider: React.FC<StepProps<MapToProviderProps> & Props> = props => 
             </Layout.Horizontal>
           </FormikForm>
         )}
-        validationSchema={Yup.object().shape({
-          route53Account: Yup.string().when(['dnsProvider'], {
-            is: dns => dns == 'route53',
-            then: Yup.string().required('Connector is a required field')
-          })
-        })}
-      ></Formik>
+      </Formik>
     </Layout.Vertical>
   )
 }

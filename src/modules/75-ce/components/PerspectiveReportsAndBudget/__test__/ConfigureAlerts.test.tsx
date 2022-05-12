@@ -8,27 +8,28 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import type { Budget } from 'services/ce'
+import { TestWrapper } from '@common/utils/testUtils'
 import ConfigureAlerts from '../CreateBudgetSteps/ConfigureAlerts'
 
 import MockBudget from './PerspectiveBudgetsResponse.json'
 
-jest.mock('framework/strings', () => ({
-  useStrings: () => ({
-    getString: (key: string) => key
-  })
-}))
+const params = {
+  accountId: 'TEST_ACC'
+}
 
 describe('Test Cases For ConfigureAlerts', () => {
   test('Should be able to render ConfigureAlerts', () => {
     const { container } = render(
-      <ConfigureAlerts
-        isEditMode={true}
-        viewId="mock_id"
-        name="mock_name"
-        accountId="mock_account_id"
-        budget={MockBudget.data[0] as Budget}
-        onSuccess={jest.fn()}
-      />
+      <TestWrapper pathParams={params}>
+        <ConfigureAlerts
+          isEditMode={true}
+          viewId="mock_id"
+          name="mock_name"
+          accountId="mock_account_id"
+          budget={MockBudget.data[0] as Budget}
+          onSuccess={jest.fn()}
+        />
+      </TestWrapper>
     )
 
     expect(container).toMatchSnapshot()

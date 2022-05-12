@@ -10,5 +10,6 @@ declare const styles: {
   readonly link: string
   readonly pipelineStudioTitle: string
   readonly rightMargin: string
+  readonly wrapper: string
 }
 export default styles

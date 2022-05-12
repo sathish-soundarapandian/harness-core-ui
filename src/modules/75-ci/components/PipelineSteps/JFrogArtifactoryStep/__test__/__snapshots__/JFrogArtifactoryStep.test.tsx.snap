@@ -6,6 +6,7 @@ exports[`JFrogArtifactory Step Edit View edit mode works 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -211,6 +212,7 @@ exports[`JFrogArtifactory Step Edit View edit mode works 1`] = `
               >
                 <p
                   class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="display: flex; align-items: center;"
                 >
                   ci.artifactoryConnectorLabel
                 </p>
@@ -543,6 +545,7 @@ exports[`JFrogArtifactory Step Edit View renders runtime inputs 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -793,6 +796,7 @@ exports[`JFrogArtifactory Step Edit View renders runtime inputs 1`] = `
               >
                 <p
                   class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="display: flex; align-items: center;"
                 >
                   ci.artifactoryConnectorLabel
                 </p>
@@ -1169,6 +1173,7 @@ exports[`JFrogArtifactory Step Edit View should render properly 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -1370,6 +1375,7 @@ exports[`JFrogArtifactory Step Edit View should render properly 1`] = `
               >
                 <p
                   class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="display: flex; align-items: center;"
                 >
                   ci.artifactoryConnectorLabel
                 </p>
@@ -1651,6 +1657,7 @@ exports[`JFrogArtifactory Step InputSet View should not render any fields 1`] = 
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main removeBpPopoverWrapperTopMargin"
     >
       <div>
@@ -1687,6 +1694,7 @@ exports[`JFrogArtifactory Step InputSet View should render all fields 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main removeBpPopoverWrapperTopMargin"
     >
       <div>
@@ -1807,12 +1815,12 @@ exports[`JFrogArtifactory Step InputSet View should render all fields 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 310px;"
+                    style="width: 385px;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-spec.connectorRef"
-                      style="width: 310px;"
+                      style="width: 385px;"
                       type="button"
                     >
                       <span
@@ -2040,7 +2048,8 @@ exports[`JFrogArtifactory Step InputSet View should render all fields 1`] = `
             </p>
           </div>
           <div
-            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formGroup lgOverride"
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formGroup lgOverride lg StyledProps--margin-top-xsmall StyledProps--margin-bottom-small"
+            style="align-items: baseline;"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -2344,6 +2353,7 @@ exports[`JFrogArtifactory Step InputSet View should render properly 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main removeBpPopoverWrapperTopMargin"
     >
       <div>

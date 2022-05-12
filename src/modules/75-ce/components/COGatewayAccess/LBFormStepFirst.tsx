@@ -148,7 +148,28 @@ const LBFormStepFirst: React.FC<LBFormStepFirstProps> = props => {
       }}
       formName="lbFormFirst"
       onSubmit={onSubmit}
-      render={({ submitForm, values, setFieldValue }) => (
+      validationSchema={Yup.object().shape({
+        lbName: Yup.string().required('Name is a required field'),
+        hostedZoneId: Yup.string().when('dnsProvider', {
+          is: 'others',
+          then: Yup.string(),
+          otherwise: Yup.string().required('Select Rout53 hosted zone')
+        }),
+        customDomainPrefix: Yup.string().when('dnsProvider', {
+          is: 'others',
+          then: Yup.string()
+            .required(getString('ce.co.accessPoint.validation.domainRequired'))
+            .matches(VALID_DOMAIN_REGEX, getString('ce.co.accessPoint.validation.nonValidDomain')),
+          otherwise: Yup.string()
+            .required(getString('ce.co.accessPoint.validation.domainRequired'))
+            .matches(
+              isEditMode ? VALID_DOMAIN_REGEX : /^[A-Za-z0-9-]*$/,
+              getString('ce.co.accessPoint.validation.nonValidDomain')
+            )
+        })
+      })}
+    >
+      {({ submitForm, values, setFieldValue }) => (
         <FormikForm>
           <Layout.Vertical>
             <FormInput.Text
@@ -257,27 +278,7 @@ const LBFormStepFirst: React.FC<LBFormStepFirstProps> = props => {
           </Layout.Horizontal>
         </FormikForm>
       )}
-      validationSchema={Yup.object().shape({
-        lbName: Yup.string().required('Name is a required field'),
-        hostedZoneId: Yup.string().when('dnsProvider', {
-          is: 'others',
-          then: Yup.string(),
-          otherwise: Yup.string().required('Select Rout53 hosted zone')
-        }),
-        customDomainPrefix: Yup.string().when('dnsProvider', {
-          is: 'others',
-          then: Yup.string()
-            .required(getString('ce.co.accessPoint.validation.domainRequired'))
-            .matches(VALID_DOMAIN_REGEX, getString('ce.co.accessPoint.validation.nonValidDomain')),
-          otherwise: Yup.string()
-            .required(getString('ce.co.accessPoint.validation.domainRequired'))
-            .matches(
-              isEditMode ? VALID_DOMAIN_REGEX : /^[A-Za-z0-9-]*$/,
-              getString('ce.co.accessPoint.validation.nonValidDomain')
-            )
-        })
-      })}
-    ></Formik>
+    </Formik>
   )
 }
 

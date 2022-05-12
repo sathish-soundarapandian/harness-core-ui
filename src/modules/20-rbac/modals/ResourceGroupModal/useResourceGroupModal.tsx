@@ -9,11 +9,11 @@ import React, { useCallback, useState } from 'react'
 import { Dialog } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { useStrings } from 'framework/strings'
-import type { ResourceGroupDTO } from 'services/resourcegroups'
+import type { ResourceGroupV2 } from 'services/resourcegroups'
 import ResourceGroupModalFrom from './views/ResourceGroupModalForm'
 
 export interface UseResourceGroupModalProps {
-  onSuccess: (resourceGroup: ResourceGroupDTO) => void
+  onSuccess: (resourceGroup: ResourceGroupV2) => void
   onCloseModal?: () => void
 }
 
@@ -23,7 +23,7 @@ export interface UseResourceGroupModalReturn {
 }
 
 export const useResourceGroupModal = ({ onSuccess }: UseResourceGroupModalProps): UseResourceGroupModalReturn => {
-  const [resourceGroupData, setResourceGroupData] = useState<ResourceGroupDTO>()
+  const [resourceGroupData, setResourceGroupData] = useState<ResourceGroupV2>()
   const { getString } = useStrings()
   const [showModal, hideModal] = useModalHook(
     () => (
@@ -51,14 +51,14 @@ export const useResourceGroupModal = ({ onSuccess }: UseResourceGroupModalProps)
     [resourceGroupData, onSuccess]
   )
   const open = useCallback(
-    (_resourceGroup?: ResourceGroupDTO) => {
+    (_resourceGroup?: ResourceGroupV2) => {
       setResourceGroupData(_resourceGroup)
       showModal()
     },
     [showModal]
   )
   return {
-    openResourceGroupModal: (resourceGroup?: ResourceGroupDTO) => open(resourceGroup),
+    openResourceGroupModal: (resourceGroup?: ResourceGroupV2) => open(resourceGroup),
     closeResourceGroupModal: hideModal
   }
 }

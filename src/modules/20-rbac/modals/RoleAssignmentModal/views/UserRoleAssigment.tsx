@@ -6,6 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
+import type { FormikProps } from 'formik'
 import {
   Button,
   Formik,
@@ -36,9 +37,10 @@ import { getIdentifierFromValue, getScopeFromDTO } from '@common/components/Enti
 import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import UserGroupsInput from '@common/components/UserGroupsInput/UserGroupsInput'
-import { isCDCommunity, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { isCommunityPlan } from '@common/utils/utils'
 import UserItemRenderer from '@audit-trail/components/UserItemRenderer/UserItemRenderer'
 import UserTagRenderer from '@audit-trail/components/UserTagRenderer/UserTagRenderer'
+import type { RoleAssignmentValues } from './RoleAssignment'
 import RoleAssignmentForm from './RoleAssignmentForm'
 
 interface UserRoleAssignmentData {
@@ -85,8 +87,7 @@ const UserRoleAssignment: React.FC<UserRoleAssignmentData> = props => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const scope = getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
   const { getString } = useStrings()
-  const { licenseInformation } = useLicenseStore()
-  const isCommunity = isCDCommunity(licenseInformation)
+  const isCommunity = isCommunityPlan()
   const [query, setQuery] = useState<string>()
   const { showSuccess } = useToaster()
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
@@ -279,7 +280,7 @@ const UserRoleAssignment: React.FC<UserRoleAssignmentData> = props => {
             {!isCommunity && (
               <RoleAssignmentForm
                 noRoleAssignmentsText={getString('rbac.usersPage.noDataText')}
-                formik={formik}
+                formik={formik as FormikProps<UserRoleAssignmentValues | RoleAssignmentValues>}
                 onSuccess={onSuccess}
               />
             )}

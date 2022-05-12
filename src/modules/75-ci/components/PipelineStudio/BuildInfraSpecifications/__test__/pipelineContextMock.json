@@ -31,6 +31,57 @@
                   "labels": {
                     "lab1": "test",
                     "projectid": "invalidKey"
+                  },
+                  "volumes": [
+                    {
+                      "mountPath": "mountPath1",
+                      "type": "EmptyDir",
+                      "spec": {
+                        "medium": "medium",
+                        "size": "10Gi"
+                      }
+                    },
+                    {
+                      "mountPath": "mountPath2",
+                      "type": "HostPath",
+                      "spec": {
+                        "path": "path",
+                        "type": "pathType"
+                      }
+                    },
+                    {
+                      "mountPath": "mountPath3",
+                      "type": "PersistentVolumeClaim",
+                      "spec": {
+                        "claimName": "claimName",
+                        "readOnly": true
+                      }
+                    }
+                  ],
+                  "serviceAccountName": "serviceName",
+                  "initTimeout": "2d",
+                  "automountServiceAccountToken": true,
+                  "priorityClassName": "priorityClass",
+                  "tolerations": [
+                    {
+                      "effect": "effect",
+                      "key": "key",
+                      "operator": "operator",
+                      "value": "value"
+                    }
+                  ],
+                  "nodeSelector": {
+                    "key": "<+input>"
+                  },
+                  "containerSecurityContext": {
+                    "capabilities": {
+                      "drop": ["ALL"]
+                    },
+                    "privileged": true,
+                    "allowPrivilegeEscalation": true,
+                    "runAsNonRoot": true,
+                    "readOnlyRootFilesystem": true,
+                    "runAsUser": 1000
                   }
                 }
               },

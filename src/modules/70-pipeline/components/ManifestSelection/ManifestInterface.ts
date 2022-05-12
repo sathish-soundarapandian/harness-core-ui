@@ -12,7 +12,8 @@ import type {
   ManifestConfigWrapper,
   PageConnectorResponse,
   PipelineInfoConfig,
-  StageElementConfig
+  StageElementConfig,
+  ServiceDefinition
 } from 'services/cd-ng'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 
@@ -24,6 +25,7 @@ export type ManifestTypes =
   | 'OpenshiftTemplate'
   | 'OpenshiftParam'
   | 'KustomizePatches'
+  | 'ServerlessAwsLambda'
 
 export type ManifestStores = 'Git' | 'Github' | 'GitLab' | 'Bitbucket' | 'Http' | 'S3' | 'Gcs'
 export type HelmVersionOptions = 'V2' | 'V3'
@@ -33,6 +35,7 @@ export interface ManifestSelectionProps {
   isForPredefinedSets?: boolean
   isPropagating?: boolean
   overrideSetIdentifier?: string
+  deploymentType: ServiceDefinition['type']
 }
 
 export interface ManifestListViewProps {
@@ -48,8 +51,9 @@ export interface ManifestListViewProps {
   refetchConnectors: () => void
   listOfManifests: Array<any>
   isReadonly: boolean
-  deploymentType: string
+  deploymentType: ServiceDefinition['type']
   allowableTypes: MultiTypeInputType[]
+  allowOnlyOne?: boolean
 }
 
 export interface ManifestStepInitData {
@@ -57,7 +61,7 @@ export interface ManifestStepInitData {
   store: ManifestStores | string
   selectedManifest: ManifestTypes | null
 }
-export interface ManifestDetailDataType {
+export interface K8sValuesManifestDataType {
   identifier: string
   branch: string | undefined
   commitId: string | undefined
@@ -143,4 +147,13 @@ export interface OpenShiftParamDataType {
   repoName?: string
   gitFetchType?: 'Branch' | 'Commit'
   paths: string[] | any
+}
+export interface ServerlessManifestDataType extends K8sValuesManifestDataType {
+  identifier: string
+  branch: string | undefined
+  commitId: string | undefined
+  gitFetchType: 'Branch' | 'Commit'
+  paths: any
+  repoName?: string
+  configOverridePath?: string
 }

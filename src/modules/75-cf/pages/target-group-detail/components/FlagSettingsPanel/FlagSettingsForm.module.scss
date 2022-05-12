@@ -7,7 +7,7 @@
 
 .formLayout {
   > div {
-    height: calc(100vh - 245px);
+    height: calc(100vh - 125px - var(--page-header-height));
     display: grid;
     grid-template-rows: 1fr auto auto;
 

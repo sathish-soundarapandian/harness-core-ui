@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
 import { Container, Text } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import { TimePeriodEnum } from '@cv/pages/monitored-service/components/ServiceHealth/ServiceHealth.constants'
@@ -18,9 +18,8 @@ import { TWO_HOURS_IN_MILLISECONDS, COLUMN_CHART_PROPS } from './ChangeEventServ
 import css from './ChangeEventServiceHealth.module.scss'
 
 export default function ChangeEventServiceHealth(props: ChangeEventServiceHealthProps): JSX.Element {
-  const { monitoredServiceIdentifier, startTime: propsStartTime, eventType } = props
+  const { monitoredServiceIdentifier, startTime: propsStartTime, eventType, timeStamps, setTimestamps } = props
   const { getString } = useStrings()
-  const [[startTime, endTime], setTimestamps] = useState<[number, number]>([0, 0])
   return (
     <Container className={css.main}>
       <Text className={css.status}>{getString('status')}</Text>
@@ -49,7 +48,7 @@ export default function ChangeEventServiceHealth(props: ChangeEventServiceHealth
           setTimestamps([newStartTime, newEndTime])
         }}
       />
-      <TimelineBar startDate={startTime} endDate={endTime} columnWidth={50} className={css.timestamps} />
+      <TimelineBar startDate={timeStamps[0]} endDate={timeStamps[1]} columnWidth={50} className={css.timestamps} />
       <ServiceDependenciesLegend hideServiceTypeLegend margin={{ top: 'small' }} />
     </Container>
   )

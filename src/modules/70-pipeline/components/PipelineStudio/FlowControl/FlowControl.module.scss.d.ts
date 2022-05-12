@@ -13,17 +13,16 @@ declare const styles: {
   readonly barrierList: string
   readonly container: string
   readonly deleteIcon: string
+  readonly description: string
   readonly disabledIcon: string
-  readonly gridColumn: string
-  readonly header: string
-  readonly headerIcon: string
+  readonly flowControlPanelHeader: string
+  readonly flowControlTitle: string
+  readonly mainActions: string
   readonly newBarrier: string
   readonly rowHeader: string
   readonly rowItem: string
   readonly spaceRight: string
-  readonly subtitile: string
   readonly tag: string
   readonly tagText: string
-  readonly title: string
 }
 export default styles

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import isEmpty from 'lodash/isEmpty'
+import { isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Text, Container, Layout } from '@wings-software/uicore'
@@ -16,9 +16,9 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { useStrings } from 'framework/strings'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { useGitScope } from '@pipeline/utils/CIUtils'
+import { useGitScope, shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { getOptionalSubLabel } from './CIStepOptionalConfig'
+import { renderMultiTypeInputWithAllowedValues, getOptionalSubLabel } from './CIStepOptionalConfig'
 import { AllMultiTypeInputTypesForStep } from './StepUtils'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -29,10 +29,21 @@ interface ConnectorRefWithImageProps {
   showImage?: boolean
   stepViewType: StepViewType
   path?: string
+  isInputSetView?: boolean
+  template?: Record<string, any>
 }
 
 export const ConnectorRefWithImage: React.FC<ConnectorRefWithImageProps> = props => {
-  const { showOptionalSublabel, readonly, showConnectorRef = true, showImage = true, stepViewType, path } = props
+  const {
+    showOptionalSublabel,
+    readonly,
+    showConnectorRef = true,
+    showImage = true,
+    stepViewType,
+    path,
+    isInputSetView,
+    template
+  } = props
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -49,69 +60,96 @@ export const ConnectorRefWithImage: React.FC<ConnectorRefWithImageProps> = props
     <>
       {showConnectorRef ? (
         <Container className={css.bottomMargin3}>
-          <FormMultiTypeConnectorField
-            label={
-              <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}>
-                <Text
-                  className={css.inpLabel}
-                  color={Color.GREY_600}
-                  font={{ size: 'small', weight: 'semi-bold' }}
-                  style={{ display: 'flex', alignItems: 'center' }}
-                >
-                  {getString('pipelineSteps.connectorLabel')}
-                </Text>
-                &nbsp;
-                {showOptionalSublabel ? getOptionalSubLabel(getString) : null}
-              </Layout.Horizontal>
-            }
-            type={[Connectors.GCP, Connectors.AWS, Connectors.DOCKER]}
-            width={385}
-            name={`${prefix}spec.connectorRef`}
-            placeholder={getString('select')}
-            accountIdentifier={accountId}
-            projectIdentifier={projectIdentifier}
-            orgIdentifier={orgIdentifier}
-            multiTypeProps={{
-              expressions,
-              allowableTypes: AllMultiTypeInputTypesForStep,
-              disabled: readonly
-            }}
-            gitScope={gitScope}
-            setRefValue
-          />
+          {isInputSetView && shouldRenderRunTimeInputViewWithAllowedValues('spec.connectorRef', template) ? (
+            <Container className={cx(css.formGroup, stepCss)}>
+              {renderMultiTypeInputWithAllowedValues({
+                name: `${prefix}spec.connectorRef`,
+                labelKey: 'pipelineSteps.connectorLabel',
+                fieldPath: 'spec.connectorRef',
+                getString,
+                readonly,
+                expressions,
+                template
+              })}
+            </Container>
+          ) : (
+            <FormMultiTypeConnectorField
+              label={
+                <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}>
+                  <Text
+                    className={css.inpLabel}
+                    color={Color.GREY_600}
+                    font={{ size: 'small', weight: 'semi-bold' }}
+                    style={{ display: 'flex', alignItems: 'center' }}
+                  >
+                    {getString('pipelineSteps.connectorLabel')}
+                  </Text>
+                  &nbsp;
+                  {showOptionalSublabel ? getOptionalSubLabel(getString) : null}
+                </Layout.Horizontal>
+              }
+              type={[Connectors.GCP, Connectors.AWS, Connectors.DOCKER]}
+              width={385}
+              name={`${prefix}spec.connectorRef`}
+              placeholder={getString('select')}
+              accountIdentifier={accountId}
+              projectIdentifier={projectIdentifier}
+              orgIdentifier={orgIdentifier}
+              multiTypeProps={{
+                expressions,
+                allowableTypes: AllMultiTypeInputTypesForStep,
+                disabled: readonly
+              }}
+              gitScope={gitScope}
+              setRefValue
+            />
+          )}
         </Container>
       ) : null}
       {showImage ? (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
-          <MultiTypeTextField
-            name={`${prefix}spec.image`}
-            label={
-              <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}>
-                <Text
-                  className={css.inpLabel}
-                  color={Color.GREY_600}
-                  font={{ size: 'small', weight: 'semi-bold' }}
-                  tooltipProps={
-                    showOptionalSublabel
-                      ? {}
-                      : {
-                          dataTooltipId: 'image'
-                        }
-                  }
-                  placeholder={getString('imagePlaceholder')}
-                >
-                  {getString('imageLabel')}
-                </Text>
-                &nbsp;
-                {showOptionalSublabel ? getOptionalSubLabel(getString, 'image') : null}
-              </Layout.Horizontal>
-            }
-            multiTextInputProps={{
-              multiTextInputProps: {
-                allowableTypes: AllMultiTypeInputTypesForStep
+          {isInputSetView && shouldRenderRunTimeInputViewWithAllowedValues('spec.image', template) ? (
+            renderMultiTypeInputWithAllowedValues({
+              name: `${prefix}spec.image`,
+              labelKey: 'imageLabel',
+              tooltipId: showOptionalSublabel ? '' : 'image',
+              fieldPath: 'spec.image',
+              getString,
+              readonly,
+              expressions,
+              template
+            })
+          ) : (
+            <MultiTypeTextField
+              name={`${prefix}spec.image`}
+              label={
+                <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}>
+                  <Text
+                    className={css.inpLabel}
+                    color={Color.GREY_600}
+                    font={{ size: 'small', weight: 'semi-bold' }}
+                    tooltipProps={
+                      showOptionalSublabel
+                        ? {}
+                        : {
+                            dataTooltipId: 'image'
+                          }
+                    }
+                    placeholder={getString('imagePlaceholder')}
+                  >
+                    {getString('imageLabel')}
+                  </Text>
+                  &nbsp;
+                  {showOptionalSublabel ? getOptionalSubLabel(getString, 'image') : null}
+                </Layout.Horizontal>
               }
-            }}
-          />
+              multiTextInputProps={{
+                multiTextInputProps: {
+                  allowableTypes: AllMultiTypeInputTypesForStep
+                }
+              }}
+            />
+          )}
         </Container>
       ) : null}
     </>

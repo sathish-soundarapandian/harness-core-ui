@@ -6,20 +6,24 @@
  */
 
 import React from 'react'
-import { Dialog, Spinner } from '@blueprintjs/core'
+import { Spinner } from '@blueprintjs/core'
 import * as yup from 'yup'
 import {
   Button,
   ButtonProps,
+  ButtonVariation,
   CardSelect,
   Container,
+  Dialog,
   Formik,
+  FormikForm,
   FormInput,
-  Label,
   Layout,
   Text
-} from '@wings-software/uicore'
+} from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
+import { NameSchema } from '@common/utils/Validation'
 import { AddAPIKeyQueryParams, ApiKey, useAddAPIKey } from 'services/cf/index'
 import { useEnvStrings } from '@cf/hooks/environment'
 import { useToaster } from '@common/exports'
@@ -29,6 +33,8 @@ import type { EnvironmentResponseDTO } from 'services/cd-ng'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import css from './AddKeyDialog.module.scss'
 
 interface Props {
@@ -76,6 +82,10 @@ const AddKeyDialog: React.FC<Props> = ({ disabled, primary, environment, onCreat
   const getTypeOption = (value: string) => keyTypes.find(k => k.value === value) || keyTypes[0]
 
   const handleSubmit = (values: KeyValues): void => {
+    trackEvent(FeatureActions.CreateSDKKeySubmit, {
+      category: Category.FEATUREFLAG,
+      data: values
+    })
     createKey({
       identifier: getIdentifierFromName(values.name),
       name: values.name,
@@ -85,50 +95,32 @@ const AddKeyDialog: React.FC<Props> = ({ disabled, primary, environment, onCreat
       .catch(error => showError(getErrorMessage(error), undefined, 'cf.create.key.error'))
   }
 
-  const labelStyle = {
-    color: '#627386',
-    fontWeight: 500,
-    fontSize: '12px',
-    lineHeight: '16px'
-  }
+  const { trackEvent } = useTelemetry()
 
   const [openModal, hideModal] = useModalHook(() => {
     return (
-      <Dialog
-        isOpen
-        enforceFocus={false}
-        onClose={hideModal}
-        title={
-          <Text
-            style={{
-              fontWeight: 600,
-              fontSize: '14px',
-              color: 'var(--black)',
-              lineHeight: '20px',
-              padding: 'var(--spacing-large) 0 0 var(--spacing-small)'
-            }}
-          >
-            {getEnvString('apiKeys.addKeyTitle')}
-          </Text>
-        }
-      >
+      <Dialog isOpen enforceFocus={false} onClose={hideModal} title={getEnvString('apiKeys.addKeyTitle')}>
         <Formik
           initialValues={initialValues}
           formName="addKeyDialog"
           validationSchema={yup.object().shape({
-            name: yup.string().trim().required(getEnvString('apiKeys.emptyName'))
+            name: NameSchema({ requiredErrorMsg: getEnvString('apiKeys.emptyName') })
           })}
           onSubmit={handleSubmit}
-          onReset={hideModal}
+          onReset={() => {
+            trackEvent(FeatureActions.CreateSDKKeySubmit, {
+              category: Category.FEATUREFLAG
+            })
+            hideModal()
+          }}
         >
           {formikProps => (
-            <Layout.Vertical spacing="large" padding="xxlarge">
-              <Layout.Vertical spacing="small">
-                <Label style={labelStyle}>{getString('name')}</Label>
-                <FormInput.Text name="name" inputGroup={{ autoFocus: true }} />
-              </Layout.Vertical>
-              <Layout.Vertical spacing="small">
-                <Label style={labelStyle}>{getEnvString('apiKeys.keyType')}</Label>
+            <FormikForm>
+              <Layout.Vertical className={css.container} spacing="small" padding={{ left: 'xsmall', right: 'xsmall' }}>
+                <FormInput.Text label={getString('name')} name="name" inputGroup={{ autoFocus: true }} />
+                <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }}>
+                  {getEnvString('apiKeys.keyType')}
+                </Text>
                 <CardSelect
                   cornerSelected
                   data={keyTypes}
@@ -136,23 +128,24 @@ const AddKeyDialog: React.FC<Props> = ({ disabled, primary, environment, onCreat
                   className={css.cardSelect}
                   onChange={nextValue => formikProps.setFieldValue('type', nextValue.value)}
                   renderItem={cardData => (
-                    <Container flex={{ align: 'center-center', distribution: 'space-between' }} className="cardBody">
-                      {cardData.text}
+                    <Container flex={{ align: 'center-center' }} className={css.cardBody}>
+                      <Text font={{ variation: FontVariation.SMALL }}>{cardData.text}</Text>
                     </Container>
                   )}
                 />
+                <Layout.Horizontal spacing="small" padding={{ top: 'xxxlarge' }}>
+                  <Button
+                    text={getString('createSecretYAML.create')}
+                    type="submit"
+                    intent="primary"
+                    disabled={loading}
+                    variation={ButtonVariation.PRIMARY}
+                  />
+                  <Button text={getString('cancel')} type="reset" minimal variation={ButtonVariation.TERTIARY} />
+                  {loading && <Spinner size={16} />}
+                </Layout.Horizontal>
               </Layout.Vertical>
-              <Layout.Horizontal padding={{ top: 'xxxlarge' }}>
-                <Button
-                  text={getString('createSecretYAML.create')}
-                  onClick={() => formikProps.handleSubmit()}
-                  intent="primary"
-                  disabled={loading}
-                />
-                <Button text={getString('cancel')} onClick={() => formikProps.handleReset()} minimal />
-                {loading && <Spinner size={16} />}
-              </Layout.Horizontal>
-            </Layout.Vertical>
+            </FormikForm>
           )}
         </Formik>
       </Dialog>
@@ -162,8 +155,13 @@ const AddKeyDialog: React.FC<Props> = ({ disabled, primary, environment, onCreat
   return (
     <RbacButton
       disabled={disabled}
-      onClick={openModal}
-      text={getString('cf.environments.apiKeys.addKey')}
+      onClick={() => {
+        trackEvent(FeatureActions.CreateSDKKeyClick, {
+          category: Category.FEATUREFLAG
+        })
+        openModal()
+      }}
+      text={getString('cf.environments.apiKeys.addKeyTitle')}
       minimal={!primary}
       intent="primary"
       permission={{

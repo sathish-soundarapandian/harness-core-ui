@@ -134,6 +134,8 @@ export interface AnalysisStateMachine {
   startTime?: number
   stateMachineIgnoreMinutes: number
   status?: 'CREATED' | 'RUNNING' | 'SUCCESS' | 'RETRY' | 'TRANSITION' | 'IGNORED' | 'TIMEOUT' | 'FAILED' | 'COMPLETED'
+  totalRetryCount?: number
+  totalRetryCountToBePropagated?: number
   uuid?: string
   validUntil?: string
   verificationTaskId?: string
@@ -406,6 +408,10 @@ export interface AzureCredentialSpec {
   [key: string]: any
 }
 
+export type AzureInheritFromDelegateDetails = AzureCredentialSpec & {
+  auth: AzureMSIAuth
+}
+
 export type AzureKeyVaultConnectorDTO = ConnectorConfigDTO & {
   azureEnvironmentType?: 'AZURE' | 'AZURE_US_GOVERNMENT'
   clientId: string
@@ -417,9 +423,13 @@ export type AzureKeyVaultConnectorDTO = ConnectorConfigDTO & {
   vaultName: string
 }
 
+export interface AzureMSIAuth {
+  [key: string]: any
+}
+
 export type AzureManualDetails = AzureCredentialSpec & {
+  applicationId: string
   auth: AzureAuthDTO
-  clientId: string
   tenantId: string
 }
 
@@ -471,6 +481,12 @@ export type AzureRepoUsernameToken = AzureRepoHttpCredentialsSpecDTO & {
   tokenRef: string
   username?: string
   usernameRef?: string
+}
+
+export type AzureSystemAssignedMSIAuth = AzureAuthCredentialDTO & { [key: string]: any }
+
+export type AzureUserAssignedMSIAuth = AzureAuthCredentialDTO & {
+  clientId: string
 }
 
 export interface BillingExportSpec {
@@ -719,7 +735,7 @@ export interface ClusterCoordinates {
 }
 
 export interface ClusterSummary {
-  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNKNOWN_EVENT' | 'UNEXPECTED_FREQUENCY'
+  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   count?: number
   label?: number
   risk?: number
@@ -792,8 +808,8 @@ export interface ConnectorInfoDTO {
     | 'CustomHealth'
     | 'ServiceNow'
     | 'ErrorTracking'
-    | 'AzureRepo'
     | 'Pdc'
+    | 'AzureRepo'
 }
 
 export interface ControlClusterSummary {
@@ -1503,6 +1519,10 @@ export interface Error {
     | 'INVALID_ARTIFACTORY_REGISTRY_REQUEST'
     | 'INVALID_NEXUS_REGISTRY_REQUEST'
     | 'ENTITY_NOT_FOUND'
+    | 'INVALID_AZURE_CONTAINER_REGISTRY_REQUEST'
+    | 'AZURE_AUTHENTICATION_ERROR'
+    | 'AZURE_CONFIG_ERROR'
+    | 'DATA_PROCESSING_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1531,7 +1551,7 @@ export type ErrorTrackingHealthSourceSpec = HealthSourceSpec & {
 }
 
 export interface EventCount {
-  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNKNOWN_EVENT' | 'UNEXPECTED_FREQUENCY'
+  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   count?: number
   displayName?: string
 }
@@ -1860,6 +1880,10 @@ export interface Failure {
     | 'INVALID_ARTIFACTORY_REGISTRY_REQUEST'
     | 'INVALID_NEXUS_REGISTRY_REQUEST'
     | 'ENTITY_NOT_FOUND'
+    | 'INVALID_AZURE_CONTAINER_REGISTRY_REQUEST'
+    | 'AZURE_AUTHENTICATION_ERROR'
+    | 'AZURE_CONFIG_ERROR'
+    | 'DATA_PROCESSING_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1890,7 +1914,7 @@ export type GcpCloudCostConnector = ConnectorConfigDTO & {
 }
 
 export type GcpConnector = ConnectorConfigDTO & {
-  credential?: GcpConnectorCredential
+  credential: GcpConnectorCredential
   delegateSelectors?: string[]
 }
 
@@ -2434,7 +2458,7 @@ export interface LogAnalysisCluster {
 }
 
 export interface LogAnalysisClusterChartDTO {
-  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNKNOWN_EVENT' | 'UNEXPECTED_FREQUENCY'
+  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   hostName?: string
   label?: number
   risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
@@ -2444,7 +2468,7 @@ export interface LogAnalysisClusterChartDTO {
 }
 
 export interface LogAnalysisClusterDTO {
-  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNKNOWN_EVENT' | 'UNEXPECTED_FREQUENCY'
+  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   controlFrequencyData?: number[]
   count?: number
   label?: number
@@ -2475,7 +2499,8 @@ export interface LogAnalysisDTO {
 export interface LogAnalysisRadarChartClusterDTO {
   angle?: number
   baseline?: LogAnalysisRadarChartClusterDTO
-  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNKNOWN_EVENT' | 'UNEXPECTED_FREQUENCY'
+  clusterId?: string
+  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   hasControlData?: boolean
   label?: number
   message?: string
@@ -2486,7 +2511,8 @@ export interface LogAnalysisRadarChartClusterDTO {
 export interface LogAnalysisRadarChartListDTO {
   angle?: number
   baseline?: LogAnalysisRadarChartListDTO
-  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNKNOWN_EVENT' | 'UNEXPECTED_FREQUENCY'
+  clusterId?: string
+  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   count?: number
   frequencyData?: number[]
   hasControlData?: boolean
@@ -2825,6 +2851,13 @@ export type NexusUsernamePasswordAuth = NexusAuthCredentials & {
   usernameRef?: string
 }
 
+export interface NodeErrorInfo {
+  fqn?: string
+  identifier?: string
+  name?: string
+  type?: string
+}
+
 export interface NodeRiskCount {
   count?: number
   displayName?: string
@@ -2835,6 +2868,26 @@ export interface NodeRiskCountDTO {
   anomalousNodeCount?: number
   nodeRiskCounts?: NodeRiskCount[]
   totalNodeCount?: number
+}
+
+export interface NotificationRuleDTO {
+  enabled?: boolean
+  identifier: string
+  name: string
+  orgIdentifier: string
+  projectIdentifier: string
+  spec: NotificationRuleSpec
+  type: 'monitoredService' | 'slo'
+}
+
+export interface NotificationRuleResponse {
+  createdAt?: number
+  lastModifiedAt?: number
+  notificationRule: NotificationRuleDTO
+}
+
+export interface NotificationRuleSpec {
+  type?: 'monitoredService' | 'slo'
 }
 
 export interface OnboardingRequestDTO {
@@ -2957,6 +3010,16 @@ export interface PageMonitoredServiceListItemDTO {
 
 export interface PageMonitoredServiceResponse {
   content?: MonitoredServiceResponse[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
+export interface PageNotificationRuleResponse {
+  content?: NotificationRuleResponse[]
   empty?: boolean
   pageIndex?: number
   pageItemCount?: number
@@ -3094,7 +3157,7 @@ export interface PagerDutyWebhookEventDTO {
 }
 
 export interface PartialSchemaDTO {
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'CORE' | 'PMS' | 'TEMPLATESERVICE'
+  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE'
   namespace?: string
   nodeName?: string
   nodeType?: string
@@ -3653,6 +3716,10 @@ export interface ResponseMessage {
     | 'INVALID_ARTIFACTORY_REGISTRY_REQUEST'
     | 'INVALID_NEXUS_REGISTRY_REQUEST'
     | 'ENTITY_NOT_FOUND'
+    | 'INVALID_AZURE_CONTAINER_REGISTRY_REQUEST'
+    | 'AZURE_AUTHENTICATION_ERROR'
+    | 'AZURE_CONFIG_ERROR'
+    | 'DATA_PROCESSING_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -3735,6 +3802,13 @@ export interface ResponsePageMonitoredServiceListItemDTO {
 export interface ResponsePageMonitoredServiceResponse {
   correlationId?: string
   data?: PageMonitoredServiceResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePageNotificationRuleResponse {
+  correlationId?: string
+  data?: PageNotificationRuleResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -4157,6 +4231,14 @@ export interface RestResponseMonitoredServiceResponse {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseNotificationRuleResponse {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: NotificationRuleResponse
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseOnboardingResponseDTO {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -4258,6 +4340,14 @@ export interface RestResponseSetHealthSourceDTO {
     [key: string]: { [key: string]: any }
   }
   resource?: HealthSourceDTO[]
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseSetString {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: string[]
   responseMessages?: ResponseMessage[]
 }
 
@@ -4397,8 +4487,11 @@ export interface SLIRecord {
 }
 
 export interface SLODashboardDetail {
+  createdAt?: number
   description?: string
+  lastModifiedAt?: number
   sloDashboardWidget?: SLODashboardWidget
+  timeRangeFilters?: TimeRangeFilter[]
 }
 
 export interface SLODashboardWidget {
@@ -4473,6 +4566,10 @@ export interface SLOHealthIndicator {
   projectIdentifier?: string
   serviceLevelObjectiveIdentifier?: string
   uuid?: string
+}
+
+export type SLONotificationRuleSpec = NotificationRuleSpec & {
+  errorBudgetRemainingPercentageThreshold?: number
 }
 
 export interface SLORiskCountResponse {
@@ -4605,6 +4702,7 @@ export interface ServiceLevelObjective {
   sloTarget?: SLOTarget
   sloTargetPercentage?: number
   tags: NGTag[]
+  timeRangeFilters?: TimeRangeFilter[]
   type?: 'Availability' | 'Latency'
   userJourneyIdentifier?: string
   uuid?: string
@@ -4789,6 +4887,11 @@ export interface TimeRangeDetail {
   count?: number
   endTime?: number
   startTime?: number
+}
+
+export interface TimeRangeFilter {
+  displayName?: string
+  durationMilliSeconds?: number
 }
 
 export interface TimeRangeParams {
@@ -5292,10 +5395,22 @@ export interface YamlSchemaDetailsWrapper {
   yamlSchemaWithDetailsList?: YamlSchemaWithDetails[]
 }
 
+export interface YamlSchemaErrorDTO {
+  fqn?: string
+  hintMessage?: string
+  message?: string
+  stageInfo?: NodeErrorInfo
+  stepInfo?: NodeErrorInfo
+}
+
+export type YamlSchemaErrorWrapperDTO = ErrorMetadataDTO & {
+  schemaErrors?: YamlSchemaErrorDTO[]
+}
+
 export interface YamlSchemaMetadata {
   featureFlags?: string[]
   featureRestrictions?: string[]
-  modulesSupported?: ('CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'CORE' | 'PMS' | 'TEMPLATESERVICE')[]
+  modulesSupported?: ('CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE')[]
   namespace?: string
   yamlGroup: YamlGroup
 }
@@ -5304,7 +5419,7 @@ export interface YamlSchemaWithDetails {
   availableAtAccountLevel?: boolean
   availableAtOrgLevel?: boolean
   availableAtProjectLevel?: boolean
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'CORE' | 'PMS' | 'TEMPLATESERVICE'
+  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE'
   schema?: JsonNode
   schemaClassName?: string
   yamlSchemaMetadata?: YamlSchemaMetadata
@@ -5364,6 +5479,8 @@ export type LogSampleRequestDTORequestBody = LogSampleRequestDTO
 export type MetricPackDTOArrayRequestBody = MetricPackDTO[]
 
 export type MonitoredServiceDTORequestBody = MonitoredServiceDTO
+
+export type NotificationRuleDTORequestBody = NotificationRuleDTO
 
 export type ServiceGuardTimeSeriesAnalysisDTORequestBody = ServiceGuardTimeSeriesAnalysisDTO
 
@@ -5631,8 +5748,8 @@ export interface GetDeploymentLogAnalysisClustersQueryParams {
   hostName?: string
   healthSource?: string[]
   healthSources?: string[]
-  clusterType?: ('BASELINE' | 'KNOWN_EVENT' | 'UNKNOWN_EVENT' | 'UNEXPECTED_FREQUENCY')[]
-  clusterTypes?: ('BASELINE' | 'KNOWN_EVENT' | 'UNKNOWN_EVENT' | 'UNEXPECTED_FREQUENCY')[]
+  clusterType?: ('BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT')[]
+  clusterTypes?: ('BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT')[]
 }
 
 export interface GetDeploymentLogAnalysisClustersPathParams {
@@ -5725,8 +5842,8 @@ export interface GetDeploymentLogAnalysisResultQueryParams {
   hostName?: string
   healthSource?: string[]
   healthSources?: string[]
-  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNKNOWN_EVENT' | 'UNEXPECTED_FREQUENCY'
-  clusterTypes?: ('BASELINE' | 'KNOWN_EVENT' | 'UNKNOWN_EVENT' | 'UNEXPECTED_FREQUENCY')[]
+  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
+  clusterTypes?: ('BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT')[]
 }
 
 export interface GetDeploymentLogAnalysisResultPathParams {
@@ -5872,9 +5989,9 @@ export const getHealthSourcesPromise = (
 
 export interface GetAppDynamicsApplicationsQueryParams {
   accountId: string
-  connectorIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  connectorIdentifier: string
   offset: number
   pageSize: number
   filter?: string
@@ -6246,9 +6363,9 @@ export const getServiceInstanceMetricPathPromise = (
 
 export interface GetAppDynamicsTiersQueryParams {
   accountId: string
-  connectorIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  connectorIdentifier: string
   appName: string
   offset: number
   pageSize: number
@@ -6300,9 +6417,9 @@ export const getAppDynamicsTiersPromise = (
   )
 
 export interface GetMonitoredServiceChangeEventSummaryQueryParams {
-  accountId?: string
-  orgIdentifier?: string
-  projectIdentifier?: string
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
   monitoredServiceIdentifier?: string
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert')[]
   changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD')[]
@@ -6416,9 +6533,9 @@ export const getMonitoredServiceChangeTimelinePromise = (
 
 export interface FetchSampleDataQueryParams {
   accountId: string
-  connectorIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  connectorIdentifier: string
   tracingId: string
 }
 
@@ -7290,9 +7407,9 @@ export const getDynatraceMetricDataPromise = (
 
 export interface GetAllDynatraceServiceMetricsQueryParams {
   accountId: string
-  connectorIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  connectorIdentifier: string
   tracingId: string
 }
 
@@ -7347,9 +7464,9 @@ export const getAllDynatraceServiceMetricsPromise = (
 
 export interface GetDynatraceServiceDetailsQueryParams {
   accountId: string
-  connectorIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  connectorIdentifier: string
   serviceId: string
   tracingId: string
 }
@@ -7400,9 +7517,9 @@ export const getDynatraceServiceDetailsPromise = (
 
 export interface GetDynatraceServicesQueryParams {
   accountId: string
-  connectorIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  connectorIdentifier: string
   tracingId: string
 }
 
@@ -7451,7 +7568,7 @@ export const getDynatraceServicesPromise = (
   )
 
 export interface GetAllErrorTrackingClusterDataQueryParams {
-  accountId?: string
+  accountId: string
   orgIdentifier: string
   projectIdentifier: string
   monitoredServiceIdentifier?: string
@@ -7521,7 +7638,7 @@ export const getAllErrorTrackingClusterDataPromise = (
   >(getConfig('cv/api'), `/error-tracking-dashboard/cluster`, props, signal)
 
 export interface GetAllErrorTrackingDataQueryParams {
-  accountId?: string
+  accountId: string
   orgIdentifier: string
   projectIdentifier: string
   monitoredServiceIdentifier?: string
@@ -7739,7 +7856,7 @@ export const getWorkloadsPromise = (
   )
 
 export interface GetAllLogsClusterDataQueryParams {
-  accountId?: string
+  accountId: string
   orgIdentifier: string
   projectIdentifier: string
   monitoredServiceIdentifier?: string
@@ -7799,7 +7916,7 @@ export const getAllLogsClusterDataPromise = (
   )
 
 export interface GetAllLogsDataQueryParams {
-  accountId?: string
+  accountId: string
   orgIdentifier: string
   projectIdentifier: string
   monitoredServiceIdentifier?: string
@@ -9541,9 +9658,9 @@ export const getSliGraphPromise = (
 
 export interface GetNewRelicApplicationsQueryParams {
   accountId: string
-  connectorIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  connectorIdentifier: string
   pageSize: number
   offset: number
   filter?: string
@@ -9769,7 +9886,7 @@ export const getNewRelicMetricDataPromise = (
   >('POST', getConfig('cv/api'), `/newrelic/metric-data`, props, signal)
 
 export interface GetServicesFromPagerDutyQueryParams {
-  accountId?: string
+  accountId: string
   orgIdentifier: string
   projectIdentifier: string
   connectorIdentifier?: string
@@ -9892,9 +10009,9 @@ export const fetchParsedSampleDataPromise = (
 
 export interface GetLabelNamesQueryParams {
   accountId: string
-  connectorIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  connectorIdentifier: string
   tracingId: string
 }
 
@@ -9944,9 +10061,9 @@ export const getLabelNamesPromise = (
 
 export interface GetLabeValuesQueryParams {
   accountId: string
-  connectorIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  connectorIdentifier: string
   labelName: string
   tracingId: string
 }
@@ -9997,9 +10114,9 @@ export const getLabeValuesPromise = (
 
 export interface GetMetricNamesQueryParams {
   accountId: string
-  connectorIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  connectorIdentifier: string
   filter?: string
   tracingId: string
 }
@@ -10050,9 +10167,9 @@ export const getMetricNamesPromise = (
 
 export interface GetSampleDataQueryParams {
   accountId: string
-  connectorIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  connectorIdentifier: string
   query: string
   tracingId: string
 }
@@ -10350,6 +10467,8 @@ export const getServiceLevelObjectivesRiskCountPromise = (
   )
 
 export interface GetSLODetailsQueryParams {
+  startTime?: number
+  endTime?: number
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
@@ -11018,7 +11137,7 @@ export const getSplunkSampleDataPromise = (
   )
 
 export interface GetSplunkSavedSearchesQueryParams {
-  accountId?: string
+  accountId: string
   orgIdentifier: string
   projectIdentifier: string
   connectorIdentifier?: string
@@ -11071,9 +11190,9 @@ export const getSplunkSavedSearchesPromise = (
 
 export interface GetStackdriverLogSampleDataQueryParams {
   accountId: string
-  connectorIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  connectorIdentifier: string
   tracingId: string
 }
 
@@ -11152,9 +11271,9 @@ export const getStackdriverLogSampleDataPromise = (
 
 export interface GetStackdriverDashboardDetailQueryParams {
   accountId: string
-  connectorIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  connectorIdentifier: string
   path: string
   tracingId: string
 }
@@ -11210,9 +11329,9 @@ export const getStackdriverDashboardDetailPromise = (
 
 export interface GetStackdriverDashboardsQueryParams {
   accountId: string
-  connectorIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  connectorIdentifier: string
   pageSize: number
   offset: number
   filter?: string
@@ -11270,9 +11389,9 @@ export const getStackdriverDashboardsPromise = (
 
 export interface GetStackdriverSampleDataQueryParams {
   accountId: string
-  connectorIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  connectorIdentifier: string
   tracingId: string
 }
 
@@ -11663,9 +11782,9 @@ export const saveUserJourneyPromise = (
   )
 
 export interface ListBaselineExecutionsQueryParams {
-  accountId?: string
-  orgIdentifier?: string
-  projectIdentifier?: string
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
   verificationJobIdentifier?: string
 }
 
@@ -11784,7 +11903,7 @@ export interface GetVerifyStepNodeNamesPathParams {
 }
 
 export type GetVerifyStepNodeNamesProps = Omit<
-  GetProps<RestResponseListString, unknown, GetVerifyStepNodeNamesQueryParams, GetVerifyStepNodeNamesPathParams>,
+  GetProps<RestResponseSetString, unknown, GetVerifyStepNodeNamesQueryParams, GetVerifyStepNodeNamesPathParams>,
   'path'
 > &
   GetVerifyStepNodeNamesPathParams
@@ -11793,7 +11912,7 @@ export type GetVerifyStepNodeNamesProps = Omit<
  * get all the Node names
  */
 export const GetVerifyStepNodeNames = ({ verifyStepExecutionId, ...props }: GetVerifyStepNodeNamesProps) => (
-  <Get<RestResponseListString, unknown, GetVerifyStepNodeNamesQueryParams, GetVerifyStepNodeNamesPathParams>
+  <Get<RestResponseSetString, unknown, GetVerifyStepNodeNamesQueryParams, GetVerifyStepNodeNamesPathParams>
     path={`/verify-step/${verifyStepExecutionId}/all-node-names`}
     base={getConfig('cv/api')}
     {...props}
@@ -11801,7 +11920,7 @@ export const GetVerifyStepNodeNames = ({ verifyStepExecutionId, ...props }: GetV
 )
 
 export type UseGetVerifyStepNodeNamesProps = Omit<
-  UseGetProps<RestResponseListString, unknown, GetVerifyStepNodeNamesQueryParams, GetVerifyStepNodeNamesPathParams>,
+  UseGetProps<RestResponseSetString, unknown, GetVerifyStepNodeNamesQueryParams, GetVerifyStepNodeNamesPathParams>,
   'path'
 > &
   GetVerifyStepNodeNamesPathParams
@@ -11810,7 +11929,7 @@ export type UseGetVerifyStepNodeNamesProps = Omit<
  * get all the Node names
  */
 export const useGetVerifyStepNodeNames = ({ verifyStepExecutionId, ...props }: UseGetVerifyStepNodeNamesProps) =>
-  useGet<RestResponseListString, unknown, GetVerifyStepNodeNamesQueryParams, GetVerifyStepNodeNamesPathParams>(
+  useGet<RestResponseSetString, unknown, GetVerifyStepNodeNamesQueryParams, GetVerifyStepNodeNamesPathParams>(
     (paramsInPath: GetVerifyStepNodeNamesPathParams) =>
       `/verify-step/${paramsInPath.verifyStepExecutionId}/all-node-names`,
     { base: getConfig('cv/api'), pathParams: { verifyStepExecutionId }, ...props }
@@ -11824,14 +11943,14 @@ export const getVerifyStepNodeNamesPromise = (
     verifyStepExecutionId,
     ...props
   }: GetUsingFetchProps<
-    RestResponseListString,
+    RestResponseSetString,
     unknown,
     GetVerifyStepNodeNamesQueryParams,
     GetVerifyStepNodeNamesPathParams
   > & { verifyStepExecutionId: string },
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<RestResponseListString, unknown, GetVerifyStepNodeNamesQueryParams, GetVerifyStepNodeNamesPathParams>(
+  getUsingFetch<RestResponseSetString, unknown, GetVerifyStepNodeNamesQueryParams, GetVerifyStepNodeNamesPathParams>(
     getConfig('cv/api'),
     `/verify-step/${verifyStepExecutionId}/all-node-names`,
     props,
@@ -12015,6 +12134,312 @@ export const getVerifyStepDeploymentActivitySummaryPromise = (
     GetVerifyStepDeploymentActivitySummaryQueryParams,
     GetVerifyStepDeploymentActivitySummaryPathParams
   >(getConfig('cv/api'), `/verify-step/${verifyStepExecutionId}/deployment-activity-summary`, props, signal)
+
+export interface GetVerifyStepDeploymentLogAnalysisResultV2QueryParams {
+  accountId: string
+  label?: number
+  filter?: string
+  healthSources?: string[]
+  clusterTypes?: ('BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT')[]
+  hostName?: string
+  minAngle?: number
+  maxAngle?: number
+  hostNames?: string[]
+  clusterId?: string
+  pageNumber?: number
+  pageSize?: number
+}
+
+export interface GetVerifyStepDeploymentLogAnalysisResultV2PathParams {
+  verifyStepExecutionId: string
+}
+
+export type GetVerifyStepDeploymentLogAnalysisResultV2Props = Omit<
+  GetProps<
+    RestResponseLogAnalysisClusterWithCountDTO,
+    unknown,
+    GetVerifyStepDeploymentLogAnalysisResultV2QueryParams,
+    GetVerifyStepDeploymentLogAnalysisResultV2PathParams
+  >,
+  'path'
+> &
+  GetVerifyStepDeploymentLogAnalysisResultV2PathParams
+
+/**
+ * get logs for given activity
+ */
+export const GetVerifyStepDeploymentLogAnalysisResultV2 = ({
+  verifyStepExecutionId,
+  ...props
+}: GetVerifyStepDeploymentLogAnalysisResultV2Props) => (
+  <Get<
+    RestResponseLogAnalysisClusterWithCountDTO,
+    unknown,
+    GetVerifyStepDeploymentLogAnalysisResultV2QueryParams,
+    GetVerifyStepDeploymentLogAnalysisResultV2PathParams
+  >
+    path={`/verify-step/${verifyStepExecutionId}/deployment-log-analysis-data-v2`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetVerifyStepDeploymentLogAnalysisResultV2Props = Omit<
+  UseGetProps<
+    RestResponseLogAnalysisClusterWithCountDTO,
+    unknown,
+    GetVerifyStepDeploymentLogAnalysisResultV2QueryParams,
+    GetVerifyStepDeploymentLogAnalysisResultV2PathParams
+  >,
+  'path'
+> &
+  GetVerifyStepDeploymentLogAnalysisResultV2PathParams
+
+/**
+ * get logs for given activity
+ */
+export const useGetVerifyStepDeploymentLogAnalysisResultV2 = ({
+  verifyStepExecutionId,
+  ...props
+}: UseGetVerifyStepDeploymentLogAnalysisResultV2Props) =>
+  useGet<
+    RestResponseLogAnalysisClusterWithCountDTO,
+    unknown,
+    GetVerifyStepDeploymentLogAnalysisResultV2QueryParams,
+    GetVerifyStepDeploymentLogAnalysisResultV2PathParams
+  >(
+    (paramsInPath: GetVerifyStepDeploymentLogAnalysisResultV2PathParams) =>
+      `/verify-step/${paramsInPath.verifyStepExecutionId}/deployment-log-analysis-data-v2`,
+    { base: getConfig('cv/api'), pathParams: { verifyStepExecutionId }, ...props }
+  )
+
+/**
+ * get logs for given activity
+ */
+export const getVerifyStepDeploymentLogAnalysisResultV2Promise = (
+  {
+    verifyStepExecutionId,
+    ...props
+  }: GetUsingFetchProps<
+    RestResponseLogAnalysisClusterWithCountDTO,
+    unknown,
+    GetVerifyStepDeploymentLogAnalysisResultV2QueryParams,
+    GetVerifyStepDeploymentLogAnalysisResultV2PathParams
+  > & { verifyStepExecutionId: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    RestResponseLogAnalysisClusterWithCountDTO,
+    unknown,
+    GetVerifyStepDeploymentLogAnalysisResultV2QueryParams,
+    GetVerifyStepDeploymentLogAnalysisResultV2PathParams
+  >(getConfig('cv/api'), `/verify-step/${verifyStepExecutionId}/deployment-log-analysis-data-v2`, props, signal)
+
+export interface GetVerifyStepDeploymentRadarChartLogAnalysisClustersQueryParams {
+  accountId: string
+  filter?: string
+  healthSources?: string[]
+  clusterTypes?: ('BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT')[]
+  hostName?: string
+  minAngle?: number
+  maxAngle?: number
+  hostNames?: string[]
+  clusterId?: string
+}
+
+export interface GetVerifyStepDeploymentRadarChartLogAnalysisClustersPathParams {
+  verifyStepExecutionId: string
+}
+
+export type GetVerifyStepDeploymentRadarChartLogAnalysisClustersProps = Omit<
+  GetProps<
+    RestResponseListLogAnalysisRadarChartClusterDTO,
+    unknown,
+    GetVerifyStepDeploymentRadarChartLogAnalysisClustersQueryParams,
+    GetVerifyStepDeploymentRadarChartLogAnalysisClustersPathParams
+  >,
+  'path'
+> &
+  GetVerifyStepDeploymentRadarChartLogAnalysisClustersPathParams
+
+/**
+ * get radar chart logs for given verify step
+ */
+export const GetVerifyStepDeploymentRadarChartLogAnalysisClusters = ({
+  verifyStepExecutionId,
+  ...props
+}: GetVerifyStepDeploymentRadarChartLogAnalysisClustersProps) => (
+  <Get<
+    RestResponseListLogAnalysisRadarChartClusterDTO,
+    unknown,
+    GetVerifyStepDeploymentRadarChartLogAnalysisClustersQueryParams,
+    GetVerifyStepDeploymentRadarChartLogAnalysisClustersPathParams
+  >
+    path={`/verify-step/${verifyStepExecutionId}/deployment-log-analysis-radar-chart-clusters`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetVerifyStepDeploymentRadarChartLogAnalysisClustersProps = Omit<
+  UseGetProps<
+    RestResponseListLogAnalysisRadarChartClusterDTO,
+    unknown,
+    GetVerifyStepDeploymentRadarChartLogAnalysisClustersQueryParams,
+    GetVerifyStepDeploymentRadarChartLogAnalysisClustersPathParams
+  >,
+  'path'
+> &
+  GetVerifyStepDeploymentRadarChartLogAnalysisClustersPathParams
+
+/**
+ * get radar chart logs for given verify step
+ */
+export const useGetVerifyStepDeploymentRadarChartLogAnalysisClusters = ({
+  verifyStepExecutionId,
+  ...props
+}: UseGetVerifyStepDeploymentRadarChartLogAnalysisClustersProps) =>
+  useGet<
+    RestResponseListLogAnalysisRadarChartClusterDTO,
+    unknown,
+    GetVerifyStepDeploymentRadarChartLogAnalysisClustersQueryParams,
+    GetVerifyStepDeploymentRadarChartLogAnalysisClustersPathParams
+  >(
+    (paramsInPath: GetVerifyStepDeploymentRadarChartLogAnalysisClustersPathParams) =>
+      `/verify-step/${paramsInPath.verifyStepExecutionId}/deployment-log-analysis-radar-chart-clusters`,
+    { base: getConfig('cv/api'), pathParams: { verifyStepExecutionId }, ...props }
+  )
+
+/**
+ * get radar chart logs for given verify step
+ */
+export const getVerifyStepDeploymentRadarChartLogAnalysisClustersPromise = (
+  {
+    verifyStepExecutionId,
+    ...props
+  }: GetUsingFetchProps<
+    RestResponseListLogAnalysisRadarChartClusterDTO,
+    unknown,
+    GetVerifyStepDeploymentRadarChartLogAnalysisClustersQueryParams,
+    GetVerifyStepDeploymentRadarChartLogAnalysisClustersPathParams
+  > & { verifyStepExecutionId: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    RestResponseListLogAnalysisRadarChartClusterDTO,
+    unknown,
+    GetVerifyStepDeploymentRadarChartLogAnalysisClustersQueryParams,
+    GetVerifyStepDeploymentRadarChartLogAnalysisClustersPathParams
+  >(
+    getConfig('cv/api'),
+    `/verify-step/${verifyStepExecutionId}/deployment-log-analysis-radar-chart-clusters`,
+    props,
+    signal
+  )
+
+export interface GetVerifyStepDeploymentLogAnalysisRadarChartResultQueryParams {
+  accountId: string
+  filter?: string
+  healthSources?: string[]
+  clusterTypes?: ('BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT')[]
+  hostName?: string
+  minAngle?: number
+  maxAngle?: number
+  hostNames?: string[]
+  clusterId?: string
+  pageNumber?: number
+  pageSize?: number
+}
+
+export interface GetVerifyStepDeploymentLogAnalysisRadarChartResultPathParams {
+  verifyStepExecutionId: string
+}
+
+export type GetVerifyStepDeploymentLogAnalysisRadarChartResultProps = Omit<
+  GetProps<
+    RestResponseLogAnalysisRadarChartListWithCountDTO,
+    unknown,
+    GetVerifyStepDeploymentLogAnalysisRadarChartResultQueryParams,
+    GetVerifyStepDeploymentLogAnalysisRadarChartResultPathParams
+  >,
+  'path'
+> &
+  GetVerifyStepDeploymentLogAnalysisRadarChartResultPathParams
+
+/**
+ * get radar chart logs list for given verify step
+ */
+export const GetVerifyStepDeploymentLogAnalysisRadarChartResult = ({
+  verifyStepExecutionId,
+  ...props
+}: GetVerifyStepDeploymentLogAnalysisRadarChartResultProps) => (
+  <Get<
+    RestResponseLogAnalysisRadarChartListWithCountDTO,
+    unknown,
+    GetVerifyStepDeploymentLogAnalysisRadarChartResultQueryParams,
+    GetVerifyStepDeploymentLogAnalysisRadarChartResultPathParams
+  >
+    path={`/verify-step/${verifyStepExecutionId}/deployment-log-analysis-radar-chart-data`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetVerifyStepDeploymentLogAnalysisRadarChartResultProps = Omit<
+  UseGetProps<
+    RestResponseLogAnalysisRadarChartListWithCountDTO,
+    unknown,
+    GetVerifyStepDeploymentLogAnalysisRadarChartResultQueryParams,
+    GetVerifyStepDeploymentLogAnalysisRadarChartResultPathParams
+  >,
+  'path'
+> &
+  GetVerifyStepDeploymentLogAnalysisRadarChartResultPathParams
+
+/**
+ * get radar chart logs list for given verify step
+ */
+export const useGetVerifyStepDeploymentLogAnalysisRadarChartResult = ({
+  verifyStepExecutionId,
+  ...props
+}: UseGetVerifyStepDeploymentLogAnalysisRadarChartResultProps) =>
+  useGet<
+    RestResponseLogAnalysisRadarChartListWithCountDTO,
+    unknown,
+    GetVerifyStepDeploymentLogAnalysisRadarChartResultQueryParams,
+    GetVerifyStepDeploymentLogAnalysisRadarChartResultPathParams
+  >(
+    (paramsInPath: GetVerifyStepDeploymentLogAnalysisRadarChartResultPathParams) =>
+      `/verify-step/${paramsInPath.verifyStepExecutionId}/deployment-log-analysis-radar-chart-data`,
+    { base: getConfig('cv/api'), pathParams: { verifyStepExecutionId }, ...props }
+  )
+
+/**
+ * get radar chart logs list for given verify step
+ */
+export const getVerifyStepDeploymentLogAnalysisRadarChartResultPromise = (
+  {
+    verifyStepExecutionId,
+    ...props
+  }: GetUsingFetchProps<
+    RestResponseLogAnalysisRadarChartListWithCountDTO,
+    unknown,
+    GetVerifyStepDeploymentLogAnalysisRadarChartResultQueryParams,
+    GetVerifyStepDeploymentLogAnalysisRadarChartResultPathParams
+  > & { verifyStepExecutionId: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    RestResponseLogAnalysisRadarChartListWithCountDTO,
+    unknown,
+    GetVerifyStepDeploymentLogAnalysisRadarChartResultQueryParams,
+    GetVerifyStepDeploymentLogAnalysisRadarChartResultPathParams
+  >(
+    getConfig('cv/api'),
+    `/verify-step/${verifyStepExecutionId}/deployment-log-analysis-radar-chart-data`,
+    props,
+    signal
+  )
 
 export interface GetVerifyStepDeploymentMetricsQueryParams {
   accountId: string

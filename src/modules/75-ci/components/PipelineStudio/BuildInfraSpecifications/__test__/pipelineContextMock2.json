@@ -1,0 +1,335 @@
+{
+  "state": {
+    "pipeline": {
+      "name": "toleration-nodeselector-volumes",
+      "identifier": "tolerationnodeselectorvolumes",
+      "allowStageExecutions": false,
+      "stages": [
+        {
+          "stage": {
+            "name": "s",
+            "identifier": "s",
+            "type": "CI",
+            "spec": {
+              "cloneCodebase": true,
+              "infrastructure": {
+                "type": "KubernetesDirect",
+                "spec": {
+                  "connectorRef": "account.Testconnector",
+                  "namespace": "s",
+                  "volumes": [
+                    {
+                      "mountPath": "mountPath1",
+                      "type": "EmptyDir",
+                      "spec": {
+                        "medium": "medium",
+                        "size": "10Gi"
+                      }
+                    },
+                    {
+                      "mountPath": "mountPath2",
+                      "type": "HostPath",
+                      "spec": {
+                        "path": "path",
+                        "type": "pathType"
+                      }
+                    },
+                    {
+                      "mountPath": "mountPath3",
+                      "type": "PersistentVolumeClaim",
+                      "spec": {
+                        "claimName": "claimName",
+                        "readOnly": true
+                      }
+                    }
+                  ],
+                  "serviceAccountName": "serviceName",
+                  "labels": {
+                    "lab1": "test",
+                    "projectid": "invalidKey"
+                  },
+                  "initTimeout": "2d",
+                  "automountServiceAccountToken": true,
+                  "priorityClassName": "priorityClass",
+                  "tolerations": [
+                    {
+                      "effect": "effect",
+                      "key": "key",
+                      "operator": "operator",
+                      "value": "value"
+                    }
+                  ],
+                  "nodeSelector": {
+                    "key": "<+input>"
+                  },
+                  "containerSecurityContext": {
+                    "capabilities": {
+                      "drop": ["ALL"]
+                    },
+                    "privileged": true,
+                    "allowPrivilegeEscalation": true,
+                    "runAsNonRoot": true,
+                    "readOnlyRootFilesystem": true,
+                    "runAsUser": 1000
+                  }
+                }
+              },
+              "execution": {
+                "steps": [
+                  {
+                    "step": {
+                      "type": "Run",
+                      "name": "s",
+                      "identifier": "s",
+                      "spec": {
+                        "connectorRef": "mtdocker",
+                        "image": "s",
+                        "shell": "Sh",
+                        "command": "s"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "stage": {
+            "name": "propagate-stage",
+            "identifier": "propagatestage",
+            "type": "CI",
+            "spec": {
+              "cloneCodebase": true,
+              "infrastructure": {
+                "useFromStage": "s"
+              },
+              "execution": {
+                "steps": [
+                  {
+                    "step": {
+                      "type": "Run",
+                      "name": "run",
+                      "identifier": "run",
+                      "spec": {
+                        "connectorRef": "mtdocker",
+                        "image": "alpine",
+                        "shell": "Sh",
+                        "command": "echo 'hi'"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "projectIdentifier": "mtran",
+      "orgIdentifier": "default",
+      "tags": {},
+      "properties": {
+        "ci": {
+          "codebase": {
+            "connectorRef": "awscodecommitmt",
+            "repoName": "s",
+            "build": "<+input>"
+          }
+        }
+      }
+    },
+    "originalPipeline": {
+      "name": "toleration-nodeselector-volumes",
+      "identifier": "tolerationnodeselectorvolumes",
+      "allowStageExecutions": false,
+      "stages": [
+        {
+          "stage": {
+            "name": "s",
+            "identifier": "s",
+            "type": "CI",
+            "spec": {
+              "cloneCodebase": true,
+              "infrastructure": {
+                "type": "KubernetesDirect",
+                "spec": {
+                  "connectorRef": "account.Testconnector",
+                  "namespace": "s",
+                  "volumes": "<+input>",
+                  "serviceAccountName": "serviceName",
+                  "initTimeout": "2d",
+                  "automountServiceAccountToken": true,
+                  "priorityClassName": "priorityClass",
+                  "tolerations": "<+input>",
+                  "nodeSelector": {
+                    "key": "<+input>"
+                  },
+                  "containerSecurityContext": {
+                    "capabilities": {
+                      "drop": ["ALL"]
+                    },
+                    "privileged": true,
+                    "allowPrivilegeEscalation": true,
+                    "runAsNonRoot": true,
+                    "readOnlyRootFilesystem": true,
+                    "runAsUser": 1000
+                  }
+                }
+              },
+              "execution": {
+                "steps": [
+                  {
+                    "step": {
+                      "type": "Run",
+                      "name": "s",
+                      "identifier": "s",
+                      "spec": {
+                        "connectorRef": "mtdocker",
+                        "image": "s",
+                        "shell": "Sh",
+                        "command": "s"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "stage": {
+            "name": "propagate-stage",
+            "identifier": "propagatestage",
+            "type": "CI",
+            "spec": {
+              "cloneCodebase": true,
+              "infrastructure": {
+                "useFromStage": "s"
+              },
+              "execution": {
+                "steps": [
+                  {
+                    "step": {
+                      "type": "Run",
+                      "name": "run",
+                      "identifier": "run",
+                      "spec": {
+                        "connectorRef": "mtdocker",
+                        "image": "alpine",
+                        "shell": "Sh",
+                        "command": "echo 'hi'"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "projectIdentifier": "mtran",
+      "orgIdentifier": "default",
+      "tags": {},
+      "properties": {
+        "ci": {
+          "codebase": {
+            "connectorRef": "awscodecommitmt",
+            "repoName": "s",
+            "build": "<+input>"
+          }
+        }
+      }
+    },
+    "pipelineIdentifier": "tolerationnodeselectorvolumes",
+    "pipelineView": {
+      "isSplitViewOpen": true,
+      "isDrawerOpened": false,
+      "isYamlEditable": false,
+      "splitViewData": {
+        "type": "StageView"
+      },
+      "drawerData": {
+        "type": "AddCommand"
+      }
+    },
+    "templateView": {
+      "isTemplateDrawerOpened": false,
+      "templateDrawerData": {
+        "type": "UseTemplate"
+      }
+    },
+    "schemaErrors": false,
+    "gitDetails": {},
+    "entityValidityDetails": {
+      "valid": true,
+      "invalidYaml": null
+    },
+    "templateTypes": {},
+    "isLoading": false,
+    "isBEPipelineUpdated": false,
+    "isDBInitialized": true,
+    "isUpdated": false,
+    "isInitialized": true,
+    "selectionState": {
+      "selectedStageId": "s"
+    },
+    "error": "",
+    "yamlHandler": {}
+  },
+  "stepsFactory": {
+    "invocationMap": {},
+    "stepBank": {},
+    "stepIconMap": {},
+    "type": "pipeline-factory"
+  },
+  "stagesMap": {
+    "Approval": {
+      "name": "Approval",
+      "type": "Approval",
+      "icon": "pipeline-approval",
+      "iconColor": "var(--pipeline-approval-stage-color)",
+      "isApproval": true,
+      "openExecutionStrategy": false
+    },
+    "Custom": {
+      "name": "Custom",
+      "type": "Custom",
+      "icon": "pipeline-custom",
+      "iconColor": "var(--pipeline-custom-stage-color)",
+      "isApproval": false,
+      "openExecutionStrategy": false
+    },
+    "Pipeline": {
+      "name": "Pipeline",
+      "type": "Pipeline",
+      "icon": "pipeline",
+      "iconColor": "var(--pipeline-blue-color)",
+      "isApproval": false,
+      "openExecutionStrategy": false
+    },
+    "Deployment": {
+      "name": "Deploy",
+      "type": "Deployment",
+      "icon": "cd-main",
+      "iconColor": "var(--pipeline-deploy-stage-color)",
+      "isApproval": false,
+      "openExecutionStrategy": true
+    },
+    "CI": {
+      "name": "Build",
+      "type": "CI",
+      "icon": "ci-main",
+      "iconColor": "var(--pipeline-build-stage-color)",
+      "isApproval": false,
+      "openExecutionStrategy": false
+    },
+    "Feature": {
+      "name": "Feature Flag",
+      "type": "Feature",
+      "icon": "cf-main",
+      "iconColor": "var(--pipeline-feature-stage-color)",
+      "isApproval": false,
+      "openExecutionStrategy": false
+    }
+  }
+}

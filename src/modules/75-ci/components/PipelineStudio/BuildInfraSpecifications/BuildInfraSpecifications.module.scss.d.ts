@@ -8,17 +8,22 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly active: string
+  readonly addButton: string
   readonly bottomMargin3: string
+  readonly bottomMargin4: string
   readonly bottomMargin5: string
   readonly bottomMargin7: string
   readonly card: string
   readonly cardTitle: string
   readonly contentSection: string
+  readonly environmentVarHeader: string
   readonly fieldsGroup: string
   readonly formGroup: string
   readonly helptext: string
+  readonly label: string
   readonly md: string
   readonly noPadTop: string
+  readonly panel: string
   readonly plainList: string
   readonly section: string
   readonly sectionCard: string

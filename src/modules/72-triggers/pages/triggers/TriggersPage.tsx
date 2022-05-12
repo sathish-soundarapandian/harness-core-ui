@@ -16,10 +16,6 @@ import { useQueryParams } from '@common/hooks'
 import TriggersList from './views/TriggersList'
 import type { TriggerDataInterface } from './utils/TriggersListUtils'
 
-// interface TriggerDataInterface {
-//   triggerType: string
-//   sourceRepo?: string
-// }
 const TriggersPage: React.FC = (): React.ReactElement => {
   const { orgIdentifier, projectIdentifier, accountId, pipelineIdentifier, module } = useParams<
     PipelineType<{
@@ -66,7 +62,16 @@ const TriggersPage: React.FC = (): React.ReactElement => {
 
   useDocumentTitle([pipeline?.data?.name || getString('pipelines'), getString('common.triggersLabel')])
 
-  return <TriggersList onNewTriggerClick={onNewTriggerClick} repoIdentifier={repoIdentifier} branch={branch} />
+  const isPipelineInvalid = pipeline?.data?.entityValidityDetails?.valid === false
+
+  return (
+    <TriggersList
+      onNewTriggerClick={onNewTriggerClick}
+      repoIdentifier={repoIdentifier}
+      branch={branch}
+      isPipelineInvalid={isPipelineInvalid}
+    />
+  )
 }
 
 export default TriggersPage

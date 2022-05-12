@@ -5,9 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { SelectOption } from '@harness/uicore'
 import type { CVNGLogDTO } from 'services/cv'
-import type { LogTypes } from '../../useLogContentHook.types'
+import type { LogTypes, TimeRange } from '../../useLogContentHook.types'
 import type { ExecutionLogSearchProps, LogLineData } from '../ExecutionLog/ExecutionLog.types'
 
 export interface LogContentToolbarProps {
@@ -17,7 +16,7 @@ export interface LogContentToolbarProps {
   isFullScreen: boolean
   setIsFullScreen: (isFullScreen: boolean | ((isFullScreen: boolean) => boolean)) => void
   isVerifyStep: boolean
-  timeRange?: SelectOption
+  timeRange?: TimeRange
   isMonitoredService?: boolean
   handleDownloadLogs: () => Promise<void>
 }

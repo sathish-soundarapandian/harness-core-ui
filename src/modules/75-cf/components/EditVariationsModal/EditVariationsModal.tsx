@@ -11,6 +11,7 @@ import * as yup from 'yup'
 import { isEqual, zip, orderBy, clone } from 'lodash-es'
 import {
   Button,
+  ButtonVariation,
   Text,
   ButtonProps,
   Container,
@@ -57,6 +58,7 @@ export interface EditVariationsModalProps extends Omit<ButtonProps, 'onClick' | 
   cancelButtonTitle?: string
 
   onSuccess: () => void
+  setGovernanceMetadata: (governanceMetadata: any) => void
 }
 
 export const EditVariationsModal: React.FC<EditVariationsModalProps> = ({
@@ -69,6 +71,7 @@ export const EditVariationsModal: React.FC<EditVariationsModalProps> = ({
   submitButtonTitle,
   cancelButtonTitle,
   onSuccess,
+  setGovernanceMetadata,
   ...props
 }) => {
   const { isPlanEnforcementEnabled } = usePlanEnforcement()
@@ -162,7 +165,7 @@ export const EditVariationsModal: React.FC<EditVariationsModalProps> = ({
 
       patch.feature.onPatchAvailable(async data => {
         try {
-          await submitPatch(
+          const response = await submitPatch(
             gitSync?.isGitSyncEnabled
               ? {
                   ...data,
@@ -170,6 +173,7 @@ export const EditVariationsModal: React.FC<EditVariationsModalProps> = ({
                 }
               : data
           )
+          setGovernanceMetadata(response.details?.governanceMetadata)
 
           if (!gitSync?.isAutoCommitEnabled && values.autoCommit) {
             await gitSync?.handleAutoCommit(values.autoCommit)
@@ -183,8 +187,8 @@ export const EditVariationsModal: React.FC<EditVariationsModalProps> = ({
           if (error.status === GIT_SYNC_ERROR_CODE) {
             gitSync.handleError(error.data as GitSyncErrorResponse)
           } else {
-            if (isGovernanceError(error)) {
-              handleGovernanceError(error.data)
+            if (isGovernanceError(error?.data)) {
+              handleGovernanceError(error?.data)
             } else {
               showError(getErrorMessage(error), 0, 'cf.submit.patch.error')
             }
@@ -362,9 +366,15 @@ export const EditVariationsModal: React.FC<EditVariationsModalProps> = ({
                     text={submitButtonTitle || getString('save')}
                     intent={Intent.PRIMARY}
                     type="submit"
+                    variation={ButtonVariation.PRIMARY}
                     disabled={isEqual(initialValues, formikProps.values) || patchLoading}
                   />
-                  <Button text={cancelButtonTitle || getString('cancel')} minimal onClick={hideModal} />
+                  <Button
+                    text={cancelButtonTitle || getString('cancel')}
+                    minimal
+                    onClick={hideModal}
+                    variation={ButtonVariation.SECONDARY}
+                  />
                   <FlexExpander />
                   {patchLoading && <Icon intent={Intent.PRIMARY} name="spinner" size={16} />}
                 </Layout.Horizontal>

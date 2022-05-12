@@ -89,7 +89,7 @@ const KubernetesServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetPr
 
       {!!template?.variables?.length && (
         <div id={`Stage.${stageIdentifier}.Service.Variables`} className={cx(css.nopadLeft, css.accordionSummary)}>
-          <div className={css.subheading}>{getString('variablesText')}</div>
+          <div className={css.subheading}>{getString('common.variables')}</div>
 
           <div className={css.nestedAccordions}>
             <StepWidget<CustomVariablesData, CustomVariableInputSetExtraProps>

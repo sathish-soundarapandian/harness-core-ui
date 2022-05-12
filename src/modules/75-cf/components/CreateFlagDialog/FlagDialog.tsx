@@ -5,12 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Dialog } from '@blueprintjs/core'
 import { Button, Container, Text, Icon } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { ExitModalActions, Category, FeatureActions } from '@common/constants/TrackingConstants'
 import { FlagTypeVariations } from './FlagDialogUtils'
 import FlagWizard from '../CreateFlagWizard/FlagWizard'
 import FlagTypeElement from '../CreateFlagType/FlagTypeElement'
@@ -41,8 +43,52 @@ const FlagModal: React.FC<FlagModalProps> = ({ disabled, environment }) => {
     setFlagTypeView(newFlagType)
   }
 
-  const [showModal, hideModal] = useModalHook(
-    () => (
+  const { trackEvent } = useTelemetry()
+
+  const FeatureSelect = (): React.ReactElement => {
+    useEffect(() => {
+      trackEvent(FeatureActions.SelectFeatureFlagType, {
+        category: Category.FEATUREFLAG
+      })
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+    return (
+      <Container className={css.typeFlagContainer} padding="huge">
+        <Text color={Color.WHITE} margin={{ bottom: 'small' }} style={{ fontSize: '24px' }}>
+          {getString('cf.featureFlags.typeOfFlag')}
+        </Text>
+        <Text font="small" color={Color.WHITE} margin={{ bottom: 'xxxlarge' }}>
+          {getString('cf.featureFlags.startVariation')}
+        </Text>
+        <Container className={css.typeFlagBtns}>
+          <FlagTypeElement
+            type={FlagTypeVariations.booleanFlag}
+            text={getString('cf.boolean')}
+            textDesc={getString('cf.featureFlags.booleanBtnText')}
+            typeOfFlagFnc={booleanFlagBtn}
+          >
+            <Icon name="full-circle" color={Color.BLUE_800} />
+            <Icon name="full-circle" color={Color.BLUE_500} className={css.iconMl} />
+          </FlagTypeElement>
+
+          <FlagTypeElement
+            type={FlagTypeVariations.multiFlag}
+            text={getString('cf.multivariate')}
+            textDesc={getString('cf.featureFlags.multiBtnText')}
+            typeOfFlagFnc={multiFlagBtn}
+          >
+            <Icon name="full-circle" color={Color.BLUE_800} />
+            <Icon name="full-circle" color={Color.BLUE_500} className={css.iconMl} />
+            <Icon name="full-circle" color={Color.YELLOW_700} className={css.iconMl} />
+            <Icon name="small-plus" color={Color.GREY_600} className={css.iconMl} />
+          </FlagTypeElement>
+        </Container>
+      </Container>
+    )
+  }
+
+  const [showModal, hideModal] = useModalHook(() => {
+    return (
       <Dialog
         isOpen={true}
         enforceFocus={false}
@@ -59,41 +105,14 @@ const FlagModal: React.FC<FlagModalProps> = ({ disabled, environment }) => {
             toggleFlagType={toggleFlagType}
             hideModal={hideModal}
             goBackToTypeSelections={() => {
+              trackEvent(FeatureActions.BackToSelectFeatureFlagType, {
+                category: Category.FEATUREFLAG
+              })
               setFlagTypeClicked(false)
             }}
           />
         ) : (
-          <Container className={css.typeFlagContainer} padding="huge">
-            <Text color={Color.WHITE} margin={{ bottom: 'small' }} style={{ fontSize: '24px' }}>
-              {getString('cf.featureFlags.typeOfFlag')}
-            </Text>
-            <Text font="small" color={Color.WHITE} margin={{ bottom: 'xxxlarge' }}>
-              {getString('cf.featureFlags.startVariation')}
-            </Text>
-            <Container className={css.typeFlagBtns}>
-              <FlagTypeElement
-                type={FlagTypeVariations.booleanFlag}
-                text={getString('cf.boolean')}
-                textDesc={getString('cf.featureFlags.booleanBtnText')}
-                typeOfFlagFnc={booleanFlagBtn}
-              >
-                <Icon name="full-circle" color={Color.BLUE_800} />
-                <Icon name="full-circle" color={Color.BLUE_500} className={css.iconMl} />
-              </FlagTypeElement>
-
-              <FlagTypeElement
-                type={FlagTypeVariations.multiFlag}
-                text={getString('cf.multivariate')}
-                textDesc={getString('cf.featureFlags.multiBtnText')}
-                typeOfFlagFnc={multiFlagBtn}
-              >
-                <Icon name="full-circle" color={Color.BLUE_800} />
-                <Icon name="full-circle" color={Color.BLUE_500} className={css.iconMl} />
-                <Icon name="full-circle" color={Color.YELLOW_700} className={css.iconMl} />
-                <Icon name="small-plus" color={Color.GREY_600} className={css.iconMl} />
-              </FlagTypeElement>
-            </Container>
-          </Container>
+          <FeatureSelect />
         )}
 
         <Button
@@ -102,14 +121,16 @@ const FlagModal: React.FC<FlagModalProps> = ({ disabled, environment }) => {
           iconProps={{ size: 25 }}
           onClick={() => {
             setFlagTypeClicked(false)
+            trackEvent(ExitModalActions.ExitByClose, {
+              category: Category.FEATUREFLAG
+            })
             hideModal()
           }}
           className={css.closeIcon}
         />
       </Dialog>
-    ),
-    [flagTypeClicked, flagTypeView]
-  )
+    )
+  }, [flagTypeClicked, flagTypeView])
 
   return <CreateFlagButton disabled={disabled} showModal={showModal} />
 }

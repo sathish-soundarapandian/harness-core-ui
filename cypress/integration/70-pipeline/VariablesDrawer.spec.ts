@@ -5,7 +5,7 @@ import {
   pipelineVariablesCall
 } from '../../support/70-pipeline/constants'
 
-describe('Pipeline Variables', () => {
+describe.skip('Pipeline Variables', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from

@@ -5,10 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useState, useEffect } from 'react'
 import { Layout, PageError } from '@wings-software/uicore'
-import { useParams } from 'react-router-dom'
+import { useParams, useLocation } from 'react-router-dom'
 import { GetFeatureFlagQueryParams, useGetFeatureFlag } from 'services/cf'
+import { useGovernance } from '@cf/hooks/useGovernance'
 import { getErrorMessage } from '@cf/utils/CFUtils'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { useStrings } from 'framework/strings'
@@ -17,7 +18,7 @@ import FlagActivation from '@cf/components/FlagActivation/FlagActivation'
 import FlagActivationDetails from '@cf/components/FlagActivation/FlagActivationDetails'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import GitSyncActions from '@cf/components/GitSyncActions/GitSyncActions'
-import { useGitSync } from '@cf/hooks/useGitSync'
+import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import css from './FeatureFlagsDetailPage.module.scss'
 
 const FeatureFlagsDetailPage: React.FC = () => {
@@ -30,6 +31,10 @@ const FeatureFlagsDetailPage: React.FC = () => {
     accountId: accountIdentifier
   } = useParams<Record<string, string>>()
   const { activeEnvironment: environmentIdentifier } = useActiveEnvironment()
+  const location = useLocation<{ governanceMetadata: any }>()
+
+  const { handleError: handleGovernanceError, isGovernanceError } = useGovernance()
+  const [governanceMetadata, setGovernanceMetadata] = useState(location?.state?.governanceMetadata)
 
   useDocumentTitle(getString('featureFlagsText'))
 
@@ -50,7 +55,13 @@ const FeatureFlagsDetailPage: React.FC = () => {
     queryParams
   })
 
-  const gitSync = useGitSync()
+  useEffect(() => {
+    if (isGovernanceError({ details: { governanceMetadata: governanceMetadata } })) {
+      handleGovernanceError({ details: { governanceMetadata: governanceMetadata } })
+    }
+  }, [governanceMetadata])
+
+  const gitSync = useFFGitSyncContext()
 
   if (loading && !skipLoading) {
     return <ContainerSpinner className={css.spinner} />
@@ -79,17 +90,7 @@ const FeatureFlagsDetailPage: React.FC = () => {
     })
   }
 
-  const GitSyncActionsComponent = (): ReactElement => (
-    <GitSyncActions
-      isLoading={gitSync.gitSyncLoading}
-      branch={gitSync.gitRepoDetails?.branch || ''}
-      repository={gitSync.gitRepoDetails?.repoIdentifier || ''}
-      isAutoCommitEnabled={gitSync.isAutoCommitEnabled}
-      isGitSyncPaused={gitSync.isGitSyncPaused}
-      handleToggleAutoCommit={gitSync.handleAutoCommit}
-      handleGitPause={gitSync.handleGitPause}
-    />
-  )
+  const GitSyncActionsComponent = (): ReactElement => <GitSyncActions />
 
   return (
     <div className={css.pageLayout}>
@@ -101,6 +102,7 @@ const FeatureFlagsDetailPage: React.FC = () => {
               refetchFlag={refetch}
               gitSyncActionsComponent={gitSync?.isGitSyncActionsEnabled ? <GitSyncActionsComponent /> : undefined}
               gitSync={gitSync}
+              setGovernanceMetadata={setGovernanceMetadata}
             />
           )}
         </Layout.Vertical>

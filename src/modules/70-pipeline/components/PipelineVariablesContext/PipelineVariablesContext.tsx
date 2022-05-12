@@ -10,10 +10,10 @@ import { useParams } from 'react-router-dom'
 
 import { debounce, defaultTo, get, isEmpty, isPlainObject } from 'lodash-es'
 import type { PipelineConfig, PipelineInfoConfig } from 'services/cd-ng'
-import type { VariableMergeServiceResponse, Failure } from 'services/pipeline-ng'
+import type { VariableMergeServiceResponse, Failure, ServiceExpressionProperties } from 'services/pipeline-ng'
 import { useMutateAsGet, useQueryParams, useDeepCompareEffect } from '@common/hooks'
 import type { UseMutateAsGetReturn } from '@common/hooks/useMutateAsGet'
-import { useCreateVariables } from 'services/pipeline-ng'
+import { useCreateVariablesV2 } from 'services/pipeline-ng'
 import type { GitQueryParams, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useGetYamlWithTemplateRefsResolved } from 'services/template-ng'
@@ -32,6 +32,7 @@ export interface PipelineVariablesData {
   variablesPipeline: PipelineInfoConfig
   originalPipeline: PipelineInfoConfig
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
+  serviceExpressionPropertiesList: ServiceExpressionProperties[]
   error?: UseMutateAsGetReturn<Failure | Error>['error'] | null
   initLoading: boolean
   loading: boolean
@@ -68,10 +69,12 @@ export interface PipelineMeta {
   value: string
   metaKeyId: string
 }
+
 export const PipelineVariablesContext = React.createContext<PipelineVariablesData>({
   variablesPipeline: {} as PipelineInfoConfig,
   originalPipeline: {} as PipelineInfoConfig,
   metadataMap: {},
+  serviceExpressionPropertiesList: [],
   error: null,
   initLoading: true,
   loading: false,
@@ -83,6 +86,11 @@ export function usePipelineVariables(): PipelineVariablesData {
   return React.useContext(PipelineVariablesContext)
 }
 
+export type VaribalesState = Pick<
+  PipelineVariablesData,
+  'metadataMap' | 'variablesPipeline' | 'serviceExpressionPropertiesList'
+>
+
 export function PipelineVariablesContextProvider(
   props: React.PropsWithChildren<{ pipeline?: PipelineInfoConfig; enablePipelineTemplatesResolution?: boolean }>
 ): React.ReactElement {
@@ -90,12 +98,12 @@ export function PipelineVariablesContextProvider(
   const [originalPipeline, setOriginalPipeline] = React.useState<PipelineInfoConfig>(
     defaultTo(pipelineFromProps, {} as PipelineInfoConfig)
   )
-  const [{ variablesPipeline, metadataMap }, setPipelineVariablesData] = React.useState<
-    Pick<PipelineVariablesData, 'metadataMap' | 'variablesPipeline'>
-  >({
-    variablesPipeline: { name: '', identifier: '', stages: [] },
-    metadataMap: {}
-  })
+  const [{ variablesPipeline, metadataMap, serviceExpressionPropertiesList }, setPipelineVariablesData] =
+    React.useState<VaribalesState>({
+      variablesPipeline: { name: '', identifier: '', stages: [] },
+      metadataMap: {},
+      serviceExpressionPropertiesList: []
+    })
   const { accountId, orgIdentifier, projectIdentifier } = useParams<PipelinePathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [resolvedPipeline, setResolvedPipeline] = React.useState<PipelineInfoConfig>(originalPipeline)
@@ -115,7 +123,7 @@ export function PipelineVariablesContextProvider(
       ...newState
     }))
   }
-  const { data, error, initLoading, loading } = useMutateAsGet(useCreateVariables, {
+  const { data, error, initLoading, loading } = useMutateAsGet(useCreateVariablesV2, {
     body: yamlStringify({ pipeline: originalPipeline }) as unknown as void,
     requestOptions: {
       headers: {
@@ -176,9 +184,10 @@ export function PipelineVariablesContextProvider(
       variablesPipeline: defaultTo(
         yamlParse<PipelineConfig>(defaultTo(data?.data?.yaml, ''))?.pipeline,
         {} as PipelineInfoConfig
-      )
+      ),
+      serviceExpressionPropertiesList: defaultTo(data?.data?.serviceExpressionPropertiesList, [])
     })
-  }, [data?.data?.metadataMap, data?.data?.yaml])
+  }, [data?.data])
 
   useDeepCompareEffect(() => {
     if (pipelineFromProps) {
@@ -221,6 +230,7 @@ export function PipelineVariablesContextProvider(
         variablesPipeline,
         originalPipeline: resolvedPipeline,
         metadataMap,
+        serviceExpressionPropertiesList,
         error,
         initLoading: initLoading || initLoadingResolvedPipeline,
         loading: loading || loadingResolvedPipeline,

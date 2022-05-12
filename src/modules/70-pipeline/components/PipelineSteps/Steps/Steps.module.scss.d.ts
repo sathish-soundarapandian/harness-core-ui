@@ -20,10 +20,10 @@ declare const styles: {
   readonly bottomSpacing: string
   readonly checkbox: string
   readonly code: string
+  readonly delegate: string
   readonly divider: string
   readonly duration: string
   readonly fieldsGroup: string
-  readonly fieldsSection: string
   readonly formGroup: string
   readonly inpLabel: string
   readonly kvpairLg: string
@@ -34,7 +34,6 @@ declare const styles: {
   readonly md: string
   readonly nameIdLabel: string
   readonly noLookDivider: string
-  readonly optionalConfiguration: string
   readonly removeBpLabelMargin: string
   readonly removeBpPopoverWrapperTopMargin: string
   readonly sm: string
@@ -48,5 +47,6 @@ declare const styles: {
   readonly topSpacingLarge: string
   readonly withoutAligning: string
   readonly withoutSpacing: string
+  readonly xlg: string
 }
 export default styles

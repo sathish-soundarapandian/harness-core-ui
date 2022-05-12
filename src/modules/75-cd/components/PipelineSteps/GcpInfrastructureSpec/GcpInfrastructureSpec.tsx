@@ -41,6 +41,7 @@ import {
   ConnectorReferenceDTO,
   FormMultiTypeConnectorField
 } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 
 import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { Scope } from '@common/interfaces/SecretsInterface'
@@ -58,11 +59,12 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
-import { DeployTabs } from '@cd/components/PipelineStudio/DeployStageSetupShell/DeployStageSetupShellUtils'
+import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { getConnectorName, getConnectorValue } from '@pipeline/components/PipelineSteps/Steps/StepsHelper'
 import { getConnectorSchema, getNameSpaceSchema, getReleaseNameSchema } from '../PipelineStepsUtil'
 import css from './GcpInfrastructureSpec.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 const logger = loggerFor(ModuleName.CD)
 type K8sGcpInfrastructureTemplate = { [key in keyof K8sGcpInfrastructure]: string }
@@ -120,6 +122,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
   const delayedOnUpdate = React.useRef(debounce(onUpdate || noop, 300)).current
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
+  const { getRBACErrorMessage } = useRBACError()
 
   const {
     data: clusterNamesData,
@@ -198,7 +201,6 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
           /* istanbul ignore else */ if (value.connectorRef) {
             data.connectorRef = (value.connectorRef as any)?.value || /* istanbul ignore next */ value.connectorRef
           }
-
           delayedOnUpdate(data)
         }}
         validationSchema={getValidationSchema(getString)}
@@ -206,7 +208,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
       >
         {formik => {
           window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.INFRASTRUCTURE }))
-          formikRef.current = formik
+          formikRef.current = formik as FormikProps<unknown> | null
           return (
             <FormikForm>
               <Layout.Horizontal className={css.formRow} spacing="medium">
@@ -296,7 +298,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                       addClearBtn: !(loadingClusterNames || readonly),
                       noResults: (
                         <Text padding={'small'}>
-                          {get(clusterError, 'data.message', null) ||
+                          {getRBACErrorMessage(clusterError as RBACError) ||
                             getString('cd.pipelineSteps.infraTab.clusterError')}
                         </Text>
                       )
@@ -428,6 +430,7 @@ const GcpInfrastructureSpecInputForm: React.FC<GcpInfrastructureSpecEditableProp
   const { expressions } = useVariablesExpression()
 
   const { getString } = useStrings()
+  const { getRBACErrorMessage } = useRBACError()
 
   const {
     data: clusterNamesData,
@@ -542,7 +545,7 @@ const GcpInfrastructureSpecInputForm: React.FC<GcpInfrastructureSpecEditableProp
                 noResults: (
                   <Text padding={'small'}>
                     {defaultTo(
-                      get(clusterError, 'data.message', clusterError?.message),
+                      getRBACErrorMessage(clusterError as RBACError),
                       getString('cd.pipelineSteps.infraTab.clusterError')
                     )}
                   </Text>
@@ -597,6 +600,7 @@ const GcpInfrastructureSpecVariablesForm: React.FC<GcpInfrastructureSpecEditable
       data={infraVariables}
       originalData={initialValues?.infrastructureDefinition?.spec || initialValues}
       metadataMap={metadataMap}
+      className={pipelineVariableCss.variablePaddingL1}
     />
   ) : null
 }

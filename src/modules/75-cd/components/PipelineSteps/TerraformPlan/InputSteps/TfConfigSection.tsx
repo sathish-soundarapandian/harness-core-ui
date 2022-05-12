@@ -22,6 +22,7 @@ import { connect } from 'formik'
 import { Color } from '@harness/design-system'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useStrings } from 'framework/strings'
 import { Connectors } from '@connectors/constants'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -33,6 +34,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.ReactElement {
   const { getString } = useStrings()
   const { showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
   const { inputSetData, readonly, initialValues, path, allowableTypes, formik } = props
 
   const config = inputSetData?.template?.spec?.configuration
@@ -76,7 +78,7 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
 
   useEffect(() => {
     if (ArtifactRepoError) {
-      showError(ArtifactRepoError.message)
+      showError(getRBACErrorMessage(ArtifactRepoError))
     }
   }, [ArtifactRepoError])
 
@@ -178,7 +180,7 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
       {getMultiTypeFromValue(config?.configFiles?.store?.spec?.folderPath) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormInput.MultiTextInput
-            label={getString('cd.folderPath')}
+            label={getString('common.git.folderPath')}
             name={`${path}.spec.configuration.configFiles.store.spec.folderPath`}
             placeholder={getString('pipeline.manifestType.pathPlaceholder')}
             disabled={readonly}

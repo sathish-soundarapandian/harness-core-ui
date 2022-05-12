@@ -1,0 +1,50 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "envGroup": {
+      "accountId": "accountId",
+      "orgIdentifier": "default",
+      "projectIdentifier": "project1",
+      "identifier": "testEnvGroup",
+      "name": "testEnvGroup",
+      "description": "Test Environment Group Description",
+      "color": "#0063F7",
+      "deleted": false,
+      "tags": { "envGroupTag": "" },
+      "version": 1,
+      "envIdentifiers": ["testEnv"],
+      "envResponse": [
+        {
+          "environment": {
+            "accountId": "accountId",
+            "orgIdentifier": "default",
+            "projectIdentifier": "project1",
+            "identifier": "testEnv",
+            "name": "testEnv",
+            "description": null,
+            "color": "#0063F7",
+            "type": "Production",
+            "deleted": false,
+            "tags": {},
+            "version": 0,
+            "yaml": "environment:\n  orgIdentifier: \"default\"\n  projectIdentifier: \"project1\"\n  identifier: \"testEnv\"\n  tags: {}\n  name: \"testEnv\"\n  type: \"Production\"\n"
+          },
+          "createdAt": 1649229276300,
+          "lastModifiedAt": 1649229276300
+        }
+      ],
+      "gitDetails": {
+        "objectId": null,
+        "branch": null,
+        "repoIdentifier": null,
+        "rootFolder": null,
+        "filePath": null,
+        "repoName": null
+      }
+    },
+    "createdAt": 1651117563855,
+    "lastModifiedAt": 1651118268177
+  },
+  "metaData": null,
+  "correlationId": "a197c3cc-b450-44df-acd0-09c87b443eb3"
+}

@@ -8,25 +8,41 @@
 import React from 'react'
 import { Card, HarnessDocTooltip } from '@wings-software/uicore'
 import cx from 'classnames'
-import { get } from 'lodash-es'
 import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/WorkflowVariables'
 import ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ArtifactsSelection'
 import ManifestSelection from '@pipeline/components/ManifestSelection/ManifestSelection'
+import { getSelectedDeploymentType, isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
 import { useStrings } from 'framework/strings'
-import { DeployTabs } from '@cd/components/PipelineStudio/DeployStageSetupShell/DeployStageSetupShellUtils'
+import type { ServiceDefinition } from 'services/cd-ng'
+import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { setupMode } from '../K8sServiceSpecHelper'
 import type { KubernetesServiceInputFormProps } from '../K8sServiceSpecInterface'
 import css from '../K8sServiceSpec.module.scss'
 
+const getManifestsHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
+  if (isServerlessDeploymentType(selectedDeploymentType)) {
+    return 'serverlessDeploymentTypeManifests'
+  }
+  return 'deploymentTypeManifests'
+}
+
+const getArtifactsHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
+  if (isServerlessDeploymentType(selectedDeploymentType)) {
+    return 'serverlessDeploymentTypeArtifacts'
+  }
+  return 'deploymentTypeArtifacts'
+}
+
 const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
-  initialValues: { stageIndex = 0, setupModeType },
+  initialValues: { stageIndex = 0, setupModeType, deploymentType },
   factory,
   readonly
 }) => {
   const { getString } = useStrings()
   const isPropagating = stageIndex > 0 && setupModeType === setupMode.PROPAGATE
+
   const {
     state: {
       selectionState: { selectedStageId }
@@ -35,39 +51,39 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
   } = usePipelineContext()
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
-  const isDeploymentTypeSelected = (): string => {
-    if (isPropagating) {
-      const parentStageId = get(stage, 'stage.spec.serviceConfig.useFromStage.stage', null)
-      const parentStage = getStageFromPipeline<DeploymentStageElementConfig>(parentStageId || '')
-      return get(parentStage, 'stage.stage.spec.serviceConfig.serviceDefinition.type', null)
-    }
-    return get(stage, 'stage.spec.serviceConfig.serviceDefinition.type', null)
-  }
+  const selectedDeploymentType = deploymentType ?? getSelectedDeploymentType(stage, getStageFromPipeline, isPropagating)
 
   return (
     <div className={css.serviceDefinition}>
-      {!!isDeploymentTypeSelected() && (
+      {!!selectedDeploymentType && (
         <>
           <Card
             className={css.sectionCard}
             id={getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')}
           >
-            <div className={cx(css.tabSubHeading, 'ng-tooltip-native')} data-tooltip-id="deploymentTypeManifests">
+            <div
+              className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+              data-tooltip-id={getManifestsHeaderTooltipId(selectedDeploymentType)}
+            >
               {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')}
-              <HarnessDocTooltip tooltipId="deploymentTypeManifests" useStandAlone={true} />
+              <HarnessDocTooltip tooltipId={getManifestsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
             </div>
-            <ManifestSelection isPropagating={isPropagating} />
+
+            <ManifestSelection isPropagating={isPropagating} deploymentType={selectedDeploymentType} />
           </Card>
 
           <Card
             className={css.sectionCard}
             id={getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
           >
-            <div className={cx(css.tabSubHeading, 'ng-tooltip-native')} data-tooltip-id="deploymentTypeArtifacts">
+            <div
+              className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+              data-tooltip-id={getArtifactsHeaderTooltipId(selectedDeploymentType)}
+            >
               {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
-              <HarnessDocTooltip tooltipId="deploymentTypeArtifacts" useStandAlone={true} />
+              <HarnessDocTooltip tooltipId={getArtifactsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
             </div>
-            <ArtifactsSelection isPropagating={isPropagating} />
+            <ArtifactsSelection isPropagating={isPropagating} deploymentType={selectedDeploymentType} />
           </Card>
         </>
       )}
@@ -76,8 +92,8 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
         <div className={css.tabHeading} id="advanced">
           {getString('advancedTitle')}
         </div>
-        <Card className={css.sectionCard} id={getString('variablesText')}>
-          <div className={css.tabSubHeading}>{getString('variablesText')}</div>
+        <Card className={css.sectionCard} id={getString('common.variables')}>
+          <div className={css.tabSubHeading}>{getString('common.variables')}</div>
           <WorkflowVariables
             tabName={DeployTabs.SERVICE}
             formName={'addEditServiceCustomVariableForm'}

@@ -9,6 +9,7 @@ exports[`<TemplateStepWidgetWithRef /> tests snapshot test 1`] = `
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -129,7 +130,7 @@ exports[`<TemplateStepWidgetWithRef /> tests snapshot test 1`] = `
                 class="StyledProps--font StyledProps--font-h5 StyledProps--main StyledProps--color StyledProps--color-black"
                 level="5"
               >
-                templatesLibrary.templateInputs
+                pipeline.templateInputs
               </h5>
               <div
                 class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-medium"

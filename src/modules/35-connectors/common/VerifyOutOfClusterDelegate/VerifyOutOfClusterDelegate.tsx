@@ -45,6 +45,7 @@ interface VerifyOutOfClusterDelegateProps {
   type: string
   isStep: boolean
   onClose?: () => void
+  onTestConnectionSuccess?: () => void
   setIsEditMode?: (val: boolean) => void // Remove after removing all usages
   url?: string
   isLastStep?: boolean
@@ -65,6 +66,7 @@ export const StepIndex = new Map([[STEP.TEST_CONNECTION, 1]])
 const RenderUrlInfo: React.FC<StepProps<VerifyOutOfClusterStepProps> & RenderUrlInfo> = props => {
   const { getString } = useStrings()
 
+  /* istanbul ignore next */
   const getLabel = (): string => {
     switch (props.type) {
       case Connectors.KUBERNETES_CLUSTER:
@@ -165,9 +167,8 @@ const VerifyOutOfClusterDelegate: React.FC<StepProps<VerifyOutOfClusterStepProps
       status: 'PROCESS'
     })
 
-    const isCeConnector = Boolean(
-      Connectors.CE_KUBERNETES || Connectors.CEAWS || Connectors.CE_AZURE || Connectors.CE_GCP
-    )
+    const ceConnectors: string[] = [Connectors.CE_KUBERNETES, Connectors.CEAWS, Connectors.CE_AZURE, Connectors.CE_GCP]
+    const isCeConnector = ceConnectors.includes(props.type)
 
     const { trackEvent } = useTelemetry()
 
@@ -210,6 +211,16 @@ const VerifyOutOfClusterDelegate: React.FC<StepProps<VerifyOutOfClusterStepProps
           return 'https://ngdocs.harness.io/article/a0jotsvsi7'
         case Connectors.DATADOG:
           return 'https://ngdocs.harness.io/article/g21fb5kfkg-connect-to-monitoring-and-logging-systems#step_add_datadog'
+        case Connectors.AZURE_KEY_VAULT:
+          return 'https://ngdocs.harness.io/article/53jrd1cv4i-azure-key-vault#step_1_create_azure_reader_role'
+        case Connectors.AWS_SECRET_MANAGER:
+          return 'https://ngdocs.harness.io/article/a73o2cg3pe-add-an-aws-secret-manager#permissions_test_aws_permissions'
+        case Connectors.GCP_KMS:
+          return 'https://ngdocs.harness.io/article/cyyym9tbqt-add-google-kms-secrets-manager#before_you_begin'
+        case Connectors.VAULT:
+          return 'https://ngdocs.harness.io/article/s65mzbyags-add-hashicorp-vault#permissions'
+        case Connectors.AWS_KMS:
+          return 'https://ngdocs.harness.io/article/pt52h8sb6z-add-an-aws-kms-secrets-manager'
         default:
           return ''
       }
@@ -441,6 +452,9 @@ const VerifyOutOfClusterDelegate: React.FC<StepProps<VerifyOutOfClusterStepProps
                 intent="primary"
                 onClick={() => {
                   props.onClose?.()
+                  if (stepDetails.status === 'DONE') {
+                    props.onTestConnectionSuccess?.()
+                  }
                 }}
                 text={getString('finish')}
                 variation={ButtonVariation.SECONDARY}

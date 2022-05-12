@@ -7,7 +7,7 @@
 
 import React, { SyntheticEvent, useMemo } from 'react'
 import { Drawer, Position } from '@blueprintjs/core'
-import { Button, Icon, Layout, Text } from '@wings-software/uicore'
+import { Button, Container, Icon, Layout, Text } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
@@ -34,13 +34,15 @@ function TemplateInputsWrapper({ templateDetails }: { templateDetails: NGTemplat
   const TemplateInputsHeader = (
     <Layout.Horizontal padding="xlarge" border={{ bottom: true, color: Color.GREY_200 }}>
       <Icon name="template-inputs" size={24} color={Color.PRIMARY_7} margin={{ right: 'small' }} />
-      <Text font={{ variation: FontVariation.H4 }}>{getString('templatesLibrary.templateInputs')}</Text>
+      <Text font={{ variation: FontVariation.H4 }}>{getString('pipeline.templateInputs')}</Text>
     </Layout.Horizontal>
   )
   return (
     <Layout.Vertical>
       {TemplateInputsHeader}
-      <TemplateInputs template={templateDetails} />
+      <Container className={css.templateInputsContainer}>
+        <TemplateInputs template={templateDetails} />
+      </Container>
     </Layout.Vertical>
   )
 }

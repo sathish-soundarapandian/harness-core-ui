@@ -13,7 +13,7 @@ import { defaultTo } from 'lodash-es'
 import { useDeleteRoleAssignment, useGetRoleList } from 'services/rbac'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useGetResourceGroupList } from 'services/resourcegroups'
+import { useGetResourceGroupListV2 } from 'services/resourcegroups'
 import { errorCheck } from '@common/utils/formikHelpers'
 import { useToaster } from '@common/components'
 import { getScopeBasedDefaultResourceGroup, isAssignmentFieldDisabled } from '@rbac/utils/utils'
@@ -54,7 +54,7 @@ const RoleAssignmentForm: React.FC<RoleAssignmentFormProps> = ({ noRoleAssignmen
     queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
   })
 
-  const { data: resourceGroupList } = useGetResourceGroupList({
+  const { data: resourceGroupList } = useGetResourceGroupListV2({
     queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
   })
 

@@ -25,6 +25,7 @@ interface OpenModalArgs {
   selectedBudget: Budget
   perspectiveName?: string
   perspective?: string
+  source?: string
 }
 
 interface BudgetModalProps {
@@ -38,6 +39,7 @@ const useBudgetModal = ({ onSuccess }: BudgetModalProps) => {
   const [perspectiveInfo, setPerspectiveInfo] = useState<any>()
   const [budget, setBudget] = useState<Budget>()
   const { perspectiveId, accountId } = useParams<{ perspectiveId: string; accountId: string }>()
+  const [initiatorPage, setInitiatorPage] = useState('')
 
   const modalPropsLight: IDialogProps = {
     isOpen: true,
@@ -70,11 +72,13 @@ const useBudgetModal = ({ onSuccess }: BudgetModalProps) => {
               name={getString('ce.perspectives.budgets.defineTarget.title')}
               isEditMode={isEditMode}
               budget={budget}
+              initiatorPage={initiatorPage}
             />
             <SetBudgetAmount
               name={getString('ce.perspectives.budgets.setBudgetAmount.title')}
               budget={budget}
               isEditMode={isEditMode}
+              initiatorPage={initiatorPage}
             />
             <ConfigureAlerts
               isEditMode={isEditMode}
@@ -83,6 +87,7 @@ const useBudgetModal = ({ onSuccess }: BudgetModalProps) => {
               accountId={accountId}
               budget={budget}
               onSuccess={onSuccess}
+              initiatorPage={initiatorPage}
             />
           </StepWizard>
         </Container>
@@ -103,13 +108,14 @@ const useBudgetModal = ({ onSuccess }: BudgetModalProps) => {
   return {
     hideModal,
     openModal: (args?: OpenModalArgs) => {
-      const { isEdit, selectedBudget, perspectiveName, perspective } = args || {}
+      const { isEdit, selectedBudget, perspectiveName, perspective, source = '' } = args || {}
       setIsEditMode(!!isEdit)
       setBudget(selectedBudget)
       setPerspectiveInfo({
         name: perspectiveName,
         id: perspective
       })
+      setInitiatorPage(source)
       openModal()
     }
   }

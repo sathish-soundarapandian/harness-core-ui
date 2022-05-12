@@ -9,11 +9,14 @@
 declare const styles: {
   readonly advancedStepOpen: string
   readonly checkbox: string
+  readonly commandFlagType: string
   readonly commandFlags: string
+  readonly commandType: string
   readonly delBtn: string
   readonly folderPath: string
   readonly halfWidth: string
   readonly helmAdvancedSteps: string
+  readonly helmCommandFlags: string
   readonly helmGitForm: string
   readonly repoName: string
   readonly repoNameSection: string

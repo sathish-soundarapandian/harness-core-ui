@@ -8,25 +8,20 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly actions: string
-  readonly clusterType: string
   readonly columnHeader: string
   readonly compareDataColumn: string
-  readonly count: string
-  readonly dataColumn: string
   readonly dataContainer: string
   readonly dataRow: string
+  readonly eventTypeTag: string
   readonly healthScoreCard: string
-  readonly highlightRow: string
   readonly lineChartContainer: string
   readonly logRowColumnHeader: string
   readonly logRowText: string
   readonly logText: string
   readonly main: string
   readonly mainRow: string
-  readonly message: string
-  readonly messageFrequency: string
   readonly noFeedback: string
   readonly openModalColumn: string
-  readonly risk: string
+  readonly secondaryText: string
 }
 export default styles

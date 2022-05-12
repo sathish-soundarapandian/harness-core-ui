@@ -30,6 +30,7 @@ trend: Trend
 known: Known
 unknown: Unknown
 unexpected: Unexpected
+unexpectedFrequency: Unexpected Frequency
 copyURL: Copy URL
 urlCopied: URL Copied
 unit: Unit
@@ -440,7 +441,7 @@ monitoredServices:
   filterlabel: 'Environment:'
   youHaveNoMonitoredServices: You have no monitored services
   nameValidation: Monitored Service Name is required
-  environmentValidation: '{{$.cd.pipelineSteps.environmentTab.environmentIsRequired}}'
+  environmentValidation: '{{ $.common.validation.environmentIsRequired }}'
   serviceValidation: '{{$.cd.pipelineSteps.serviceTab.serviceIsRequired}}'
   serviceAndEnvironment: Service And Environment
   monitoredServiceDetails: Monitored Service Details
@@ -451,6 +452,7 @@ monitoredServices:
   editService: Edit service
   deleteMonitoredServiceWarning: Deleting your monitored service ‘{{ name }}’ will also delete its resources.
   deleteService: Delete service
+  copyET: Copy Error Tracking Config
   monitoredServiceDeleted: Monitored service successfully deleted
   monitoredServiceCreated: Monitored Service created
   monitoredServiceUpdated: Monitored Service updated
@@ -642,6 +644,8 @@ slos:
   sloUpdated: SLO updated successfully
   noData: You don’t have any SLO created yet
   noMatchingData: No matching data
+  monitoredServiceText: A Monitored Service is automatically created by Harness by concatenating the names of the Service and Environment.
+  createMonitoredService: Create a Monitored Service
   confirmDeleteSLO: 'Are you sure you want to delete SLO: {{ name }}?'
   sloDeleted: '{{ name }} successfully deleted'
   sli: SLI
@@ -715,6 +719,8 @@ slos:
       calendarBasedDefinition2: Calendar windows are more closely aligned with business planning and project work.
 SLO: SLO
 SLOWithName: 'SLO: {{ name }}'
+lastModifiedOn: Last modified on
+createdOn: Created on
 SLOPerformanceTrend: SLO Performance Trend
 sloRecalculationInProgress: SLO recalculation in progress
 errorBudgetRecalculationInProgress: Error Budget recalculation in progress
@@ -834,6 +840,22 @@ download: Download
 lastOneHour: Last 1 hour
 last12Hours: Last 12 hours
 showingLogsFor: Showing logs for
+showingLogs: Showing logs
+logs:
+  priorityOrRiskSelectionRequired: 'Priority or Risk selection is required'
+  eventMarkedAs: This event was marked as
+  eventPriorityUpdate: This event was marked with priority
+  notARisk: Not a Risk
+  reportedBy: Reported by
+  radarChartInfo: The 360° on the circular chart represents the attribute. Use the slider below to narrow down the clusters view on the radar chart. You can click on a cluster to explore more details.
 externalAPICalls: External API Calls
 somethingWentWrongWhileParsingTheData: Something went wrong while parsing the data
 fetchingDataFrom: Fetching data from
+serviceDetails: Service Details
+theTrendIsDeterminedForTheSelectedPeriodOverPeriod: The trend % is determined for the selected period over period.
+zoom: Zoom
+selectTimeRange: Select time range
+aMaximumOfThreeSLOCanBeComparedWithTheServiceHealth: A maximum of three SLO’s can be compared with the Service Health.
+pleaseSelectSLOToGetTheData: Please select a SLO to get the data.
+noSLOHasBeenCreated: No SLO has been created
+noDataAvailableForTheCurrentSLOCycle: No data available for the current SLO cycle

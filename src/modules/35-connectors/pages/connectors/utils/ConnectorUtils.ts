@@ -46,6 +46,16 @@ export interface CredentialType {
   [key: string]: AwsCredential['type']
 }
 
+export enum AzureSecretKeyType {
+  SECRET = 'Secret',
+  CERT = 'Certificate'
+}
+
+export enum AzureManagedIdentityTypes {
+  USER_MANAGED = 'UserAssignedManagedIdentity',
+  SYSTEM_MANAGED = 'SystemAssignedManagedIdentity'
+}
+
 export const GCP_AUTH_TYPE = {
   DELEGATE: 'delegate',
   ENCRYPTED_KEY: 'encryptedKey'
@@ -624,6 +634,41 @@ export const setupArtifactoryFormData = async (
   return formData
 }
 
+export const setupAzureFormData = async (connectorInfo: ConnectorInfoDTO, accountId: string): Promise<FormData> => {
+  const connectorInfoSpec = connectorInfo?.spec
+  const scopeQueryParams: GetSecretV2QueryParams = {
+    accountIdentifier: accountId,
+    projectIdentifier: connectorInfo.projectIdentifier,
+    orgIdentifier: connectorInfo.orgIdentifier
+  }
+
+  const delegateInCluster = connectorInfoSpec.credential.type === DelegateTypes.DELEGATE_IN_CLUSTER
+  const authType = connectorInfoSpec.credential.spec.auth.type
+  const secretKey =
+    !delegateInCluster &&
+    (await setSecretField(
+      authType === AzureSecretKeyType.SECRET
+        ? connectorInfoSpec.credential.spec.auth.spec.secretRef
+        : connectorInfoSpec.credential.spec.auth.spec.certificateRef,
+      scopeQueryParams
+    ))
+
+  return {
+    azureEnvironmentType: connectorInfoSpec.azureEnvironmentType,
+    delegateType: connectorInfoSpec.credential.type,
+    applicationId: connectorInfoSpec.credential.spec.applicationId,
+    managedIdentity: delegateInCluster && authType,
+    tenantId: connectorInfoSpec.credential.spec.tenantId,
+    secretType: !delegateInCluster && authType,
+    secretText: !delegateInCluster && authType === AzureSecretKeyType.SECRET ? secretKey : undefined,
+    secretFile: !delegateInCluster && authType === AzureSecretKeyType.CERT ? secretKey : undefined,
+    clientId:
+      delegateInCluster && authType === AzureManagedIdentityTypes.USER_MANAGED
+        ? connectorInfoSpec.credential.spec.auth.spec.clientId
+        : undefined
+  }
+}
+
 export const setupAwsKmsFormData = async (connectorInfo: ConnectorInfoDTO, accountId: string): Promise<FormData> => {
   const connectorInfoSpec = connectorInfo?.spec
   const scopeQueryParams: GetSecretV2QueryParams = {
@@ -1012,6 +1057,60 @@ export const buildGcpPayload = (formData: FormData) => {
               }
             : null
       }
+    }
+  }
+
+  return { connector: savedData }
+}
+
+export const buildAzurePayload = (formData: FormData): ConnectorRequestBody => {
+  const savedData = {
+    name: formData.name,
+    description: formData.description,
+    projectIdentifier: formData.projectIdentifier,
+    identifier: formData.identifier,
+    orgIdentifier: formData.orgIdentifier,
+    tags: formData.tags,
+    type: Connectors.AZURE,
+    spec: {
+      ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
+      credential:
+        formData?.delegateType === DelegateTypes.DELEGATE_OUT_CLUSTER
+          ? {
+              type: formData.delegateType,
+              spec: {
+                applicationId: formData.applicationId,
+                tenantId: formData.tenantId,
+                auth: {
+                  type: formData.secretType,
+                  spec:
+                    formData.secretType === AzureSecretKeyType.SECRET
+                      ? {
+                          secretRef: formData.secretText.referenceString
+                        }
+                      : {
+                          certificateRef: formData.secretFile.referenceString
+                        }
+                }
+              }
+            }
+          : {
+              type: formData.delegateType,
+              spec: {
+                auth: {
+                  type: formData.managedIdentity,
+                  ...(formData.managedIdentity === AzureManagedIdentityTypes.USER_MANAGED
+                    ? {
+                        spec: {
+                          clientId: formData.clientId
+                        }
+                      }
+                    : {})
+                }
+              },
+              clientId: formData.clientId
+            },
+      azureEnvironmentType: formData.azureEnvironmentType
     }
   }
 
@@ -1670,6 +1769,8 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
       return 'service-custom-connector'
     case Connectors.ERROR_TRACKING:
       return 'error-tracking'
+    case Connectors.AZURE:
+      return 'microsoft-azure'
     default:
       return 'cog'
   }
@@ -1737,6 +1838,8 @@ export const getConnectorDisplayName = (type: string) => {
       return 'Kubernetes'
     case Connectors.CE_GCP:
       return 'GCP'
+    case Connectors.AZURE:
+      return 'Azure'
     default:
       return ''
   }
@@ -1828,6 +1931,8 @@ export function GetTestConnectionValidationTextByType(type: ConnectorConfigDTO['
       return getString('connectors.testConnectionStep.validationText.pagerduty')
     case Connectors.SERVICE_NOW:
       return getString('connectors.testConnectionStep.validationText.serviceNow')
+    case Connectors.AZURE:
+      return getString('connectors.testConnectionStep.validationText.azure')
     default:
       return ''
   }

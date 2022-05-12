@@ -7,12 +7,15 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly arnInstructionList: string
   readonly awsConnector: string
   readonly buttonPanel: string
   readonly cards: string
   readonly connectorExistBox: string
   readonly dataFields: string
+  readonly defaultCard: string
   readonly existingCurTable: string
+  readonly existingReportsWrapper: string
   readonly extention: string
   readonly featureCard: string
   readonly features: string
@@ -20,15 +23,17 @@ declare const styles: {
   readonly gray: string
   readonly grid: string
   readonly header: string
+  readonly hintsLineItem: string
   readonly info: string
+  readonly infoCard: string
+  readonly infoIcon: string
   readonly infobox: string
   readonly launchTemplateBut: string
   readonly launchTemplateSection: string
   readonly main: string
-  readonly mtblarge: string
   readonly newCurReport: string
+  readonly noAccountLink: string
   readonly stepContainer: string
-  readonly subHeader: string
   readonly submitBtn: string
 }
 export default styles

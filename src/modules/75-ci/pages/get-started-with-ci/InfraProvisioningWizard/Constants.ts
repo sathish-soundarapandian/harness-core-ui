@@ -8,6 +8,7 @@
 import type { IconName } from '@harness/uicore'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import type { StringsMap } from 'stringTypes'
+import { Connectors } from '@connectors/constants'
 
 export interface InfraProvisioningWizardProps {
   lastConfiguredWizardStepId?: InfraProvisiongWizardStepId
@@ -42,9 +43,18 @@ export interface WizardStep {
   stepFooterLabel?: keyof StringsMap
 }
 
-export interface SelectBuildLocationProps {
-  selectedBuildLocation: BuildLocationDetails
+export enum ProvisioningStatus {
+  IN_PROGRESS,
+  FAILURE,
+  SUCCESS
 }
+
+export interface SelectBuildLocationProps {
+  selectedHosting?: Hosting
+  selectedBuildLocation?: BuildLocationDetails
+  provisioningStatus?: ProvisioningStatus
+}
+
 export const HostedByHarnessBuildLocation: BuildLocationDetails = {
   icon: 'harness',
   location: BuildLocation.HostedByHarness,
@@ -53,24 +63,16 @@ export const HostedByHarnessBuildLocation: BuildLocationDetails = {
   approxETAInMins: 2
 }
 
-export const AllBuildLocations: BuildLocationDetails[] = [
-  HostedByHarnessBuildLocation,
-  {
-    icon: 'app-kubernetes',
-    location: BuildLocation.Kubernetes,
-    label: 'kubernetesText',
-    details: 'ci.getStartedWithCI.k8sBuildLocation',
-    approxETAInMins: 12,
-    disabled: true
-  },
-  {
-    icon: 'service-aws',
-    location: BuildLocation.AWS,
-    label: 'common.aws',
-    details: 'ci.getStartedWithCI.awsBuildLocation',
-    approxETAInMins: 15,
-    disabled: true
-  },
+export const K8sBuildLocation: BuildLocationDetails = {
+  icon: 'app-kubernetes',
+  location: BuildLocation.Kubernetes,
+  label: 'kubernetesText',
+  details: 'ci.getStartedWithCI.k8sBuildLocation',
+  approxETAInMins: 12
+}
+
+export const AllBuildLocationsForOnPrem: BuildLocationDetails[] = [
+  K8sBuildLocation,
   {
     icon: 'docker-step',
     location: BuildLocation.DockerRunner,
@@ -81,10 +83,14 @@ export const AllBuildLocations: BuildLocationDetails[] = [
   }
 ]
 
+export const AllBuildLocationsForSaaS: BuildLocationDetails[] = [
+  HostedByHarnessBuildLocation,
+  ...AllBuildLocationsForOnPrem
+]
+
 export enum InfraProvisiongWizardStepId {
   SelectBuildLocation = 'SELECT_BUILD_LOCATION',
   SelectGitProvider = 'SELECT_GIT_PROVIDER',
-  SelectGitProviderWithAuthenticationMethod = 'SELECT_GIT_PROVIDER_WITH_AUTHENTICATION_METHOD',
   SelectRepository = 'SELECT_REPOSITORY'
 }
 
@@ -103,13 +109,38 @@ export interface GitProvider {
   disabled?: boolean
 }
 
-export const AllGitProviders: GitProvider[] = [
-  { icon: 'github', label: 'common.repo_provider.githubLabel', type: 'Github' },
-  { icon: 'gitlab', label: 'common.repo_provider.gitlabLabel', type: 'Gitlab', disabled: true },
-  { icon: 'bitbucket-blue', label: 'common.repo_provider.bitbucketLabel', type: 'Bitbucket', disabled: true }
+export const AllSaaSGitProviders: GitProvider[] = [
+  { icon: 'github', label: 'common.repo_provider.githubLabel', type: Connectors.GITHUB },
+  { icon: 'gitlab', label: 'common.repo_provider.gitlabLabel', type: Connectors.GITLAB },
+  { icon: 'bitbucket-blue', label: 'common.repo_provider.bitbucketLabel', type: Connectors.BITBUCKET }
+]
+
+export const AllOnPremGitProviders: GitProvider[] = [
+  ...AllSaaSGitProviders,
+  { icon: 'service-github', label: 'ci.getStartedWithCI.genericGit', type: Connectors.GIT }
 ]
 
 export enum GitAuthenticationMethod {
   OAuth = 'OAUTH',
-  AccessToken = 'ACCESS_TOKEN'
+  AccessToken = 'ACCESS_TOKEN',
+  AccessKey = 'ACCESS_KEY',
+  UserNameAndApplicationPassword = 'USERNAME_AND_PASSWORD'
 }
+
+export interface GitProviderPermission {
+  type: ConnectorInfoDTO['type']
+  permissions: string[]
+}
+
+export const GitProviderPermissions: GitProviderPermission[] = [
+  { type: Connectors.GITHUB, permissions: ['repo', 'admin:repo_hook', 'user'] },
+  { type: Connectors.BITBUCKET, permissions: ['Issues:read', 'Webhooks:read and write', 'Pull requests:write'] },
+  { type: Connectors.GITLAB, permissions: ['api', 'read_repository', 'write_repository'] }
+]
+
+export const GitProviderTypeToAuthenticationMethodMapping: Map<ConnectorInfoDTO['type'], GitAuthenticationMethod> =
+  new Map([
+    [Connectors.GITHUB, GitAuthenticationMethod.AccessToken],
+    [Connectors.GITLAB, GitAuthenticationMethod.AccessKey],
+    [Connectors.BITBUCKET, GitAuthenticationMethod.UserNameAndApplicationPassword]
+  ])

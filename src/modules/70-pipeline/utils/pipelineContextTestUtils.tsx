@@ -52,7 +52,7 @@ jest.mock('services/pipeline-ng', () => ({
   useGetYamlSchema: jest.fn(),
   getPipelinePromise: jest.fn(),
   useGetSteps: jest.fn(),
-  useCreateVariables: jest.fn()
+  useCreateVariablesV2: jest.fn()
 }))
 
 export function PipelineContextTestWrapper(

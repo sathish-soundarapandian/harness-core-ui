@@ -74,7 +74,7 @@ describe('Test TerraformRollback', () => {
         onUpdate={onUpdate}
       />
     )
-    await act(() => ref.current?.submitForm())
+    await act(() => ref.current?.submitForm()!)
     expect(onUpdate).toHaveBeenCalled()
     expect(container).toMatchSnapshot()
   })

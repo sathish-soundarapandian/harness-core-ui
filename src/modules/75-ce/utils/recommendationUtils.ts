@@ -5,11 +5,22 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { IconName } from '@harness/uicore'
 import type { IState } from '@ce/components/NodeRecommendation/constants'
 import type { RecommendClusterRequest } from 'services/ce/recommenderService'
 
-export const addBufferToValue = (value: number, bufferPercentage: number): number =>
-  +(((100 + bufferPercentage) / 100) * value).toFixed(2)
+export const getProviderIcon = (provider: string): IconName => {
+  const iconMapping: Record<string, IconName> = {
+    google: 'gcp',
+    azure: 'service-azure',
+    amazon: 'service-aws'
+  }
+
+  return iconMapping[provider] || 'app-kubernetes'
+}
+
+export const addBufferToValue = (value: number, bufferPercentage: number, precision?: number): number =>
+  +(((100 + bufferPercentage) / 100) * value).toFixed(precision || 2)
 
 export const calculateSavingsPercentage = (savings: number, totalCost: number): string =>
   `(${Math.floor((savings / totalCost) * 100)}%)`

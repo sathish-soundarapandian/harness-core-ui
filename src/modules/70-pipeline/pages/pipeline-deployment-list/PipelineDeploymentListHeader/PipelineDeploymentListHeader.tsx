@@ -36,6 +36,7 @@ export interface FilterQueryParams {
 }
 export interface PipelineDeploymentListHeaderProps {
   onRunPipeline(): void
+  isPipelineInvalid?: boolean
 }
 
 const defaultPageNumber = 1
@@ -88,6 +89,8 @@ export function PipelineDeploymentListHeader(props: PipelineDeploymentListHeader
           variation={ButtonVariation.PRIMARY}
           className={css.runButton}
           onClick={props.onRunPipeline}
+          disabled={props.isPipelineInvalid}
+          tooltip={props.isPipelineInvalid ? getString('pipeline.cannotRunInvalidPipeline') : ''}
           permission={{
             resource: {
               resourceType: ResourceType.PIPELINE,

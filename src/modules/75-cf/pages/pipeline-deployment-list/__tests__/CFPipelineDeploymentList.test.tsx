@@ -18,6 +18,7 @@ import environments from '@pipeline/pages/pipelines/__tests__/mocks/environments
 import filters from '@pipeline/pages/pipeline-deployment-list/__tests__/filters.json'
 import pipelines from '@pipeline/components/PipelineModalListView/__tests__/RunPipelineListViewMocks'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
+import { getMockFor_useGetPipeline } from '@pipeline/components/RunPipelineModal/__tests__/mocks'
 import CIPipelineDeploymentList from '../CFPipelineDeploymentList'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder', () => ({ children }: { children: JSX.Element }) => (
@@ -28,6 +29,7 @@ jest.mock('@common/utils/YamlUtils', () => ({}))
 const mockGetCallFunction = jest.fn()
 
 jest.mock('services/pipeline-ng', () => ({
+  useGetPipelineSummary: getMockFor_useGetPipeline,
   useGetListOfExecutions: jest.fn(() => ({
     mutate: jest.fn(() => Promise.resolve(data)),
     loading: false,

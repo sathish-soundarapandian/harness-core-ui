@@ -320,7 +320,7 @@ export function StepPalette({ onSelect, stepsFactory, stepPaletteModuleInfos }: 
                         name={iconMapByName[category.name || /* istanbul ignore next */ '']?.icon}
                         className={css.paletteIcon}
                       />
-                      {category.name}({subCategory.length})
+                      {category.name} ({subCategory.length})
                     </section>
                   )
                   subCategory.forEach((subCat: StepCategory, k) =>

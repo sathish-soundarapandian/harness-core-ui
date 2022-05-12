@@ -22,7 +22,6 @@ import {
   useGetEditionActions,
   useExtendTrialLicense
 } from 'services/cd-ng'
-import { Editions } from '@common/constants/SubscriptionTypes'
 import SubscriptionPlans from '../plans/SubscriptionPlans'
 import { plansData } from './plansData'
 
@@ -65,6 +64,10 @@ useGetEditionActionsMock.mockImplementation(() => ({
   },
   loading: false
 }))
+
+beforeEach(() => {
+  window.deploymentType = 'SAAS'
+})
 
 describe('Subscription Plans', () => {
   test('should render the plans for CI', async () => {
@@ -177,16 +180,9 @@ describe('Subscription Plans', () => {
         return fromValue({})
       }
     }
+    window.deploymentType = 'COMMUNITY'
     const { container, getByText } = render(
-      <TestWrapper
-        defaultLicenseStoreValues={{
-          licenseInformation: {
-            CD: {
-              edition: Editions.COMMUNITY
-            }
-          }
-        }}
-      >
+      <TestWrapper>
         <Provider value={responseState as any}>
           <SubscriptionPlans module={ModuleName.CD} />
         </Provider>

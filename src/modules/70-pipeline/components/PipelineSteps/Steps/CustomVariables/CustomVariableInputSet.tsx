@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { Text, FormInput, MultiTypeInputType, getMultiTypeFromValue, SelectOption } from '@wings-software/uicore'
+import { Text, FormInput, MultiTypeInputType, getMultiTypeFromValue, SelectOption } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { defaultTo, get, isEqual, isUndefined } from 'lodash-es'
@@ -33,6 +33,7 @@ export interface CustomVariableInputSetExtraProps {
   template?: CustomVariablesData
   path?: string
   allValues?: CustomVariablesData
+  executionIdentifier?: string
 }
 export interface CustomVariableInputSetProps extends CustomVariableInputSetExtraProps {
   initialValues: CustomVariablesData
@@ -53,45 +54,40 @@ function CustomVariableInputSetBasic(props: CustomVariableInputSetProps): React.
     inputSetData,
     formik,
     allValues,
-    allowableTypes
+    allowableTypes,
+    executionIdentifier
   } = props
   const basePath = path?.length ? `${path}.` : ''
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
   const { executionId } = useQueryParams<Record<string, string>>()
-  const { executionIdentifier, triggerIdentifier } = useParams<Record<string, string>>()
+  const { triggerIdentifier } = useParams<Record<string, string>>()
+  const formikVariables = get(formik?.values, `${basePath}variables`, [])
 
   React.useEffect(() => {
-    if (
+    const shouldUseDefaultValue =
       (isUndefined(executionIdentifier) && isUndefined(executionId) && isUndefined(triggerIdentifier)) ||
       triggerIdentifier === 'new'
-    ) {
-      const VariablesFromFormik = get(formik?.values, `${basePath}variables`, [])
-      const updatedVariables =
-        template?.variables?.map((templateVariable: AllNGVariables) => {
-          const index = defaultTo(
-            allValues?.variables?.findIndex((variable: AllNGVariables) => variable.name === templateVariable.name),
-            -1
-          )
-          const pipelineVariable = allValues?.variables?.[index]
-          const formikValue = VariablesFromFormik.find(
-            (variable: AllNGVariables) => variable.name === templateVariable.name
-          )
 
-          return {
-            name: pipelineVariable?.name,
-            type: pipelineVariable?.type,
-            value: formikValue?.value || pipelineVariable?.default || ''
-          }
-        }) || []
+    const updatedVariables = defaultTo(template?.variables, []).map((templateVariable: AllNGVariables) => {
+      const pipelineVariable = defaultTo(allValues?.variables, []).find(
+        (variable: AllNGVariables) => variable.name === templateVariable.name
+      )
+      const formikVariable = formikVariables.find((variable: AllNGVariables) => variable.name === templateVariable.name)
+      const defaultValue = shouldUseDefaultValue ? defaultTo(pipelineVariable?.default, '') : ''
 
-      if (!isEqual(get(formik?.values, `${basePath}variables`, []), updatedVariables)) {
-        formik.setFieldValue(`${basePath}variables`, updatedVariables)
+      return {
+        name: pipelineVariable?.name,
+        type: pipelineVariable?.type,
+        // do not use defaultTo here as we need to override a possible empty string
+        value: formikVariable?.value || defaultValue
       }
-    }
-  }, [formik?.values, template?.variables, allValues?.variables])
+    })
 
-  const formikVariables = get(formik?.values, `${basePath}variables`, [])
+    if (!isEqual(formikVariables, updatedVariables)) {
+      formik.setFieldValue(`${basePath}variables`, updatedVariables)
+    }
+  }, [formikVariables, template?.variables, allValues?.variables, executionId, executionIdentifier, triggerIdentifier])
 
   return (
     <div className={cx(css.customVariablesInputSets, 'customVariables')} id={domId}>
@@ -104,7 +100,9 @@ function CustomVariableInputSetBasic(props: CustomVariableInputSetProps): React.
       )}
       {template?.variables?.map?.(variable => {
         // find Index from values, not from template variables
+        // because the order of the variables might not be the same
         const index = formikVariables.findIndex((fVar: AllNGVariables) => variable.name === fVar.name)
+
         const value = defaultTo(variable.value, '')
         if (getMultiTypeFromValue(value as string) !== MultiTypeInputType.RUNTIME) {
           return

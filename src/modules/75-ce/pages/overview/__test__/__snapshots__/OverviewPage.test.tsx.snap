@@ -217,7 +217,7 @@ exports[`test cases for Overview Page should be able to render the overview dash
               </div>
             </div>
             <div
-              class="clusterCost"
+              class="Layout--vertical Layout--layout-spacing-small StyledProps--main clusterCost"
             >
               <div
                 class="verticalLayout"
@@ -705,11 +705,15 @@ exports[`test cases for Overview Page should be able to render the overview dash
                   class="Layout--horizontal StyledProps--main"
                   style="justify-content: space-between; align-items: center;"
                 >
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-semi-bold StyledProps--font-size-medium"
+                  <div
+                    class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                   >
-                    ce.overview.cardtitles.topRecommendation
-                  </p>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-semi-bold StyledProps--font-size-medium"
+                    >
+                      ce.overview.cardtitles.topRecommendation
+                    </p>
+                  </div>
                 </div>
                 <div
                   class="StyledProps--font StyledProps--main noDataContainer"

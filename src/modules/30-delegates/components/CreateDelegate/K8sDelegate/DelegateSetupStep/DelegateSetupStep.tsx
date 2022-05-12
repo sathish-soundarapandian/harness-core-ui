@@ -22,7 +22,7 @@ import {
   Tag
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
-import type { FormikProps, FormikActions } from 'formik'
+import type { FormikProps, FormikHelpers } from 'formik'
 import {
   DelegateSizeDetails,
   useGetDelegateSizes,
@@ -176,7 +176,7 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
   )
   const { trackEvent } = useTelemetry()
 
-  const onSubmit = async (values: DelegateSetupDetails, formikActions: FormikActions<DelegateSetupDetails>) => {
+  const onSubmit = async (values: DelegateSetupDetails, formikActions: FormikHelpers<DelegateSetupDetails>) => {
     const createParams = { ...values }
     if (createParams.tags) {
       const tagsArray = Object.keys(values.tags || {})

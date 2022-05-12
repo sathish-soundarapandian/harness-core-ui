@@ -12,7 +12,7 @@ import type { CellProps, Renderer } from 'react-table'
 import qs from 'qs'
 import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo, get } from 'lodash-es'
-import { useStrings } from 'framework/strings'
+import { String, useStrings } from 'framework/strings'
 import {
   RecommendationItemDto,
   useRecommendationsQuery,
@@ -35,8 +35,14 @@ import { PAGE_NAMES, USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { CCM_PAGE_TYPE, CloudProvider } from '@ce/types'
-import { calculateSavingsPercentage } from '@ce/utils/recommendationUtils'
+import { calculateSavingsPercentage, getProviderIcon } from '@ce/utils/recommendationUtils'
 import { generateFilters } from '@ce/utils/anomaliesUtils'
+import { getEmissionsValue } from '@ce/utils/formatResourceValue'
+import greenLeafImg from '@ce/common/images/green-leaf.svg'
+import grayLeafImg from '@ce/common/images/gray-leaf.svg'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import type { StringsMap } from 'stringTypes'
 import RecommendationSavingsCard from '../../components/RecommendationSavingsCard/RecommendationSavingsCard'
 import RecommendationFilters from '../../components/RecommendationFilters'
 import css from './RecommendationList.module.scss'
@@ -79,14 +85,16 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
   const resourceTypeToRoute: Record<ResourceType, RouteFn> = useMemo(() => {
     return {
       [ResourceType.Workload]: routes.toCERecommendationDetails,
-      [ResourceType.NodePool]: routes.toCENodeRecommendationDetails
+      [ResourceType.NodePool]: routes.toCENodeRecommendationDetails,
+      [ResourceType.EcsService]: routes.toCEECSRecommendationDetails
     }
   }, [])
 
-  const resourceTypeMap: Record<string, string> = useMemo(
+  const resourceTypeMap: Record<ResourceType, string> = useMemo(
     () => ({
       [ResourceType.Workload]: getString('ce.overview.workload'),
-      [ResourceType.NodePool]: getString('ce.overview.nodepool')
+      [ResourceType.NodePool]: getString('ce.overview.nodepool'),
+      [ResourceType.EcsService]: getString('ce.overview.ecsService')
     }),
     []
   )
@@ -100,6 +108,10 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
   }
 
   if (ccmData && !ccmData.k8sClusterConnectorPresent) {
+    trackEvent(USER_JOURNEY_EVENTS.RECOMMENDATION_PAGE_LOADED, {
+      clustersNotConfigured: 'no',
+      count: 0
+    })
     return (
       <Card elevation={1} className={css.errorContainer}>
         <OverviewAddCluster
@@ -111,6 +123,10 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
   }
 
   if (ccmData && ccmData.k8sClusterConnectorPresent && !ccmData.clusterDataPresent) {
+    trackEvent(USER_JOURNEY_EVENTS.RECOMMENDATION_PAGE_LOADED, {
+      clustersNotConfigured: 'yes',
+      count: 0
+    })
     return (
       <Card elevation={1} className={css.errorContainer}>
         <img src={EmptyView} />
@@ -119,19 +135,24 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
     )
   }
 
+  trackEvent(USER_JOURNEY_EVENTS.RECOMMENDATION_PAGE_LOADED, {
+    clustersNotConfigured: 'yes',
+    count: data.length
+  })
+
   const NameCell: Renderer<CellProps<RecommendationItemDto>> = cell => {
     const originalRowData = cell.row.original
     const { clusterName, namespace, resourceType } = originalRowData
 
     const provider = get(originalRowData, 'recommendationDetails.recommended.provider', '')
 
-    const iconMapping: Record<string, IconName> = {
-      google: 'gcp',
-      azure: 'service-azure',
-      amazon: 'service-aws'
+    const iconMapping: Record<ResourceType, IconName> = {
+      [ResourceType.EcsService]: 'service-ecs',
+      [ResourceType.NodePool]: getProviderIcon(provider),
+      [ResourceType.Workload]: 'app-kubernetes'
     }
 
-    const iconName = provider ? iconMapping[provider] : 'app-kubernetes'
+    const iconName = iconMapping[resourceType]
     const perspectiveKey = 'defaultClusterPerspectiveId'
     const cloudProvider = 'CLUSTER'
 
@@ -183,8 +204,14 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
       []
     )
 
+    const resourceTypeStringKey: Record<ResourceType, keyof StringsMap> = {
+      [ResourceType.EcsService]: 'ce.recommendation.listPage.service',
+      [ResourceType.NodePool]: 'ce.nodeRecommendation.nodepool',
+      [ResourceType.Workload]: 'pipelineSteps.workload'
+    }
+
     return (
-      <Layout.Horizontal style={{ alignItems: 'center' }}>
+      <Layout.Horizontal>
         <Icon name={iconName} size={28} padding={{ right: 'medium' }} />
         <Layout.Vertical>
           <Container>
@@ -209,24 +236,27 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
               </Link>
             </Container>
           ) : null}
-          <Container>
-            <Text inline color={Color.GREY_500} font={{ variation: FontVariation.SMALL_BOLD }}>
-              {`${getString(
-                ResourceType.Workload === resourceType ? 'pipelineSteps.workload' : 'ce.nodeRecommendation.nodepool'
-              )}: `}
+          <Layout.Horizontal className={css.resourceNameContainer}>
+            <Text
+              inline
+              color={Color.GREY_500}
+              font={{ variation: FontVariation.SMALL_BOLD }}
+              margin={{ right: 'xsmall' }}
+            >
+              {`${getString(resourceTypeStringKey[resourceType])}: `}
             </Text>
             {resourceType === ResourceType.Workload ? (
               <Link to={resourceDetailsLink} onClick={e => e.stopPropagation()}>
-                <Text inline color={Color.PRIMARY_7} font={{ variation: FontVariation.BODY2 }}>
+                <Text inline color={Color.PRIMARY_7} font={{ variation: FontVariation.BODY2 }} lineClamp={1}>
                   {cell.value}
                 </Text>
               </Link>
             ) : (
-              <Text inline color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
+              <Text inline color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }} lineClamp={1}>
                 {cell.value}
               </Text>
             )}
-          </Container>
+          </Layout.Horizontal>
         </Layout.Vertical>
       </Layout.Horizontal>
     )
@@ -268,8 +298,11 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
       <Layout.Vertical spacing="large">
         {data.length ? (
           <TableV2<RecommendationItemDto>
-            onRowClick={({ id, resourceType, resourceName }) => {
-              trackEvent(USER_JOURNEY_EVENTS.RECOMMENDATION_CLICK, {})
+            onRowClick={({ id, resourceType, resourceName, monthlySaving }) => {
+              trackEvent(USER_JOURNEY_EVENTS.RECOMMENDATION_CLICK, {
+                recommendationID: id,
+                monthlySaving
+              })
               history.push(
                 resourceTypeToRoute[resourceType]({
                   accountId,
@@ -324,6 +357,7 @@ const RecommendationList: React.FC = () => {
   const { trackPage } = useTelemetry()
   const history = useHistory()
   const { accountId } = useParams<{ accountId: string }>()
+  const sustainabilityEnabled = useFeatureFlag(FeatureFlag.CCM_SUSTAINABILITY)
   const {
     perspectiveId,
     perspectiveName,
@@ -473,12 +507,53 @@ const RecommendationList: React.FC = () => {
                   count: summaryData?.recommendationStatsV2?.count
                 })}
               />
+              {sustainabilityEnabled && (
+                <RecommendationSavingsCard
+                  title={getString('ce.recommendation.listPage.potentialReducedEmissionTitle')}
+                  titleImg={greenLeafImg}
+                  amount={
+                    isEmptyView ? (
+                      ''
+                    ) : (
+                      <String
+                        stringID="ce.common.emissionUnitHTML"
+                        vars={{ value: getEmissionsValue(totalSavings) }}
+                        useRichText
+                      />
+                    )
+                  }
+                  cardCssName={css.potentialReducedEmissionCard}
+                  subTitle={getString('ce.recommendation.listPage.potentialReducedEmissionSubtitle', {
+                    count: summaryData?.recommendationStatsV2?.count
+                  })}
+                />
+              )}
               <RecommendationSavingsCard
                 title={getString('ce.recommendation.listPage.monthlyPotentialCostText')}
                 amount={isEmptyView ? '$-' : formatCost(totalMonthlyCost)}
                 amountSubTitle={getString('ce.recommendation.listPage.byEOM')}
                 subTitle={getString('ce.recommendation.listPage.forecatedCostSubText')}
               />
+              {sustainabilityEnabled && (
+                <RecommendationSavingsCard
+                  title={getString('ce.recommendation.listPage.potentialEmissionTitle')}
+                  titleImg={grayLeafImg}
+                  amount={
+                    isEmptyView ? (
+                      ''
+                    ) : (
+                      <String
+                        stringID="ce.common.emissionUnitHTML"
+                        vars={{ value: getEmissionsValue(totalMonthlyCost) }}
+                        useRichText
+                      />
+                    )
+                  }
+                  cardCssName={css.potentialEmissionCard}
+                  amountSubTitle={getString('ce.recommendation.listPage.byEOM')}
+                  subTitle={getString('ce.recommendation.listPage.forecatedCostSubText')}
+                />
+              )}
             </Layout.Horizontal>
             <RecommendationsList
               onAddClusterSuccess={() => {

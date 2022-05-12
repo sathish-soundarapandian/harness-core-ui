@@ -169,7 +169,6 @@ export default function ExecutionGraphView(): React.ReactElement {
       overflow: 'hidden'
     }
   }
-
   return (
     <ExecutionLayoutContext.Provider
       value={{

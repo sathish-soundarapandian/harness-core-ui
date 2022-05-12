@@ -5,27 +5,31 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
-import { Layout, Container, Heading, PillToggle, PillToggleProps, Text } from '@wings-software/uicore'
+import React, { useCallback, useState } from 'react'
+import { Layout, Container, Heading, PillToggle, PillToggleProps, Text, Card } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { PageSpinner } from '@common/components'
 import { useStrings } from 'framework/strings'
-import { SLOTargetChart } from '@cv/pages/slos/components/SLOTargetChart/SLOTargetChart'
-import { getDataPointsWithMinMaxXLimit } from '@cv/pages/slos/components/SLOTargetChart/SLOTargetChart.utils'
-import ChangeTimeline from '@cv/components/ChangeTimeline/ChangeTimeline'
-import ErrorBudgetGauge from './ErrorBudgetGauge'
-import { getErrorBudgetGaugeOptions, getSLOAndErrorBudgetGraphOptions } from '../CVSLOListingPage.utils'
+import { getErrorBudgetGaugeOptions } from '../CVSLOListingPage.utils'
 import { SLOCardContentProps, SLOCardToggleViews } from '../CVSLOsListingPage.types'
+import TimeRangeFilter from './TimeRangeFilter'
+import ErrorBudgetGauge from './ErrorBudgetGauge'
+import SLOTargetChartWithChangeTimeline from './SLOTargetChartWithChangeTimeline'
 import css from '../CVSLOsListingPage.module.scss'
 
-const SLOCardContent: React.FC<SLOCardContentProps> = ({ serviceLevelObjective }) => {
+const SLOCardContent: React.FC<SLOCardContentProps> = props => {
   const { getString } = useStrings()
-  const { sloPerformanceTrend, sloTargetPercentage, errorBudgetBurndown, monitoredServiceIdentifier } =
-    serviceLevelObjective
+  const { isCardView, serviceLevelObjective, setSliderTimeRange } = props
+  const { sloPerformanceTrend, sloTargetPercentage } = serviceLevelObjective
 
   const [toggle, setToggle] = useState(SLOCardToggleViews.SLO)
-  const startTime = sloPerformanceTrend[0]?.timestamp
-  const endTime = sloPerformanceTrend[sloPerformanceTrend.length - 1]?.timestamp
+  const [showTimelineSlider, setShowTimelineSlider] = useState(false)
+  const [customTimeFilter, setCustomTimeFilter] = useState(false)
+
+  const resetSlider = useCallback(() => {
+    setShowTimelineSlider(false)
+    setSliderTimeRange?.()
+  }, [setSliderTimeRange])
 
   const toggleProps: PillToggleProps<SLOCardToggleViews> = {
     options: [
@@ -38,60 +42,54 @@ const SLOCardContent: React.FC<SLOCardContentProps> = ({ serviceLevelObjective }
         value: SLOCardToggleViews.ERROR_BUDGET
       }
     ],
-    onChange: view => setToggle(view),
+    onChange: view => {
+      resetSlider()
+      setToggle(view)
+    },
     selectedView: toggle,
     className: css.pillToggle
   }
 
-  const sloPerformanceTrendData = useMemo(
-    () => getDataPointsWithMinMaxXLimit(sloPerformanceTrend),
-    [sloPerformanceTrend]
-  )
-  const errorBudgetBurndownData = useMemo(
-    () => getDataPointsWithMinMaxXLimit(errorBudgetBurndown),
-    [errorBudgetBurndown]
-  )
-
-  const renderChangeTimelineSummary = (): JSX.Element => {
-    if (startTime && endTime) {
-      return (
-        <ChangeTimeline
-          monitoredServiceIdentifier={monitoredServiceIdentifier}
-          startTime={startTime}
-          endTime={endTime}
-          hideTimeline
-        />
-      )
-    } else {
-      return <></>
-    }
-  }
+  const SLOAndErrorBudgetChartContainer = isCardView ? Card : Container
+  const stylesSLOAndSLICard = isCardView ? css.cardSloAndSliForCardView : css.cardSloAndSli
+  const headingVariation = isCardView ? FontVariation.SMALL_BOLD : FontVariation.FORM_LABEL
 
   return (
     <Layout.Vertical
       spacing="large"
       margin={{ top: 'medium' }}
       padding={{ top: 'medium' }}
-      border={{ color: Color.GREY_100, top: true }}
+      border={{ color: isCardView ? Color.WHITE : Color.GREY_100, top: true }}
     >
       <Container flex={{ justifyContent: 'center' }}>
         <PillToggle {...toggleProps} />
       </Container>
 
-      <Container style={{ position: 'relative' }}>
+      <SLOAndErrorBudgetChartContainer style={{ position: 'relative' }}>
         {toggle === SLOCardToggleViews.SLO && (
           <>
+            {serviceLevelObjective.recalculatingSLI && (
+              <PageSpinner className={css.sloCardSpinner} message={getString('cv.sloRecalculationInProgress')} />
+            )}
             <Container flex>
-              <Heading level={2} font={{ variation: FontVariation.FORM_HELP }} data-tooltip-id={'SLOPerformanceTrend'}>
+              <Heading level={2} font={{ variation: headingVariation }} data-tooltip-id={'SLOPerformanceTrend'}>
                 {getString('cv.SLOPerformanceTrend')}
               </Heading>
-              {serviceLevelObjective.recalculatingSLI && (
-                <PageSpinner className={css.sloCardSpinner} message={getString('cv.sloRecalculationInProgress')} />
+              {isCardView && (
+                <TimeRangeFilter
+                  {...props}
+                  type={SLOCardToggleViews.SLO}
+                  resetSlider={resetSlider}
+                  showTimelineSlider={showTimelineSlider}
+                  setShowTimelineSlider={setShowTimelineSlider}
+                  customTimeFilter={customTimeFilter}
+                  setCustomTimeFilter={setCustomTimeFilter}
+                />
               )}
             </Container>
-            <Layout.Horizontal spacing="medium">
-              <Layout.Vertical spacing="medium" margin={{ top: 'large' }}>
-                <Container width={120} background={Color.GREY_100} padding="small" className={css.sloGlanceCard}>
+            <Layout.Horizontal spacing="medium" margin={{ top: 'small' }}>
+              <Layout.Vertical spacing="medium" margin={{ top: 'small' }}>
+                <Container background={Color.GREY_100} className={stylesSLOAndSLICard}>
                   <Text font={{ variation: FontVariation.FORM_LABEL }} tooltipProps={{ dataTooltipId: 'SLO' }}>
                     {getString('cv.SLO')}
                   </Text>
@@ -99,7 +97,7 @@ const SLOCardContent: React.FC<SLOCardContentProps> = ({ serviceLevelObjective }
                     {(Number(sloTargetPercentage) || 0).toFixed(2)}%
                   </Heading>
                 </Container>
-                <Container width={120} background={Color.GREY_100} padding="small" className={css.sloGlanceCard}>
+                <Container background={Color.GREY_100} className={stylesSLOAndSLICard}>
                   <Text font={{ variation: FontVariation.FORM_LABEL }} tooltipProps={{ dataTooltipId: 'SLI' }}>
                     {getString('cv.slos.sli')}
                   </Text>
@@ -108,17 +106,16 @@ const SLOCardContent: React.FC<SLOCardContentProps> = ({ serviceLevelObjective }
                   </Heading>
                 </Container>
               </Layout.Vertical>
-              <Container style={{ position: 'relative' }} className={css.flexGrowOne}>
-                <SLOTargetChart
-                  dataPoints={sloPerformanceTrendData.dataPoints}
-                  customChartOptions={getSLOAndErrorBudgetGraphOptions({
-                    type: SLOCardToggleViews.SLO,
-                    serviceLevelObjective,
-                    minXLimit: sloPerformanceTrendData.minXLimit,
-                    maxXLimit: sloPerformanceTrendData.maxXLimit
-                  })}
+              <Container style={{ overflow: 'auto' }} className={css.flexGrowOne}>
+                <SLOTargetChartWithChangeTimeline
+                  {...props}
+                  type={SLOCardToggleViews.SLO}
+                  resetSlider={resetSlider}
+                  showTimelineSlider={showTimelineSlider}
+                  setShowTimelineSlider={setShowTimelineSlider}
+                  customTimeFilter={customTimeFilter}
+                  setCustomTimeFilter={setCustomTimeFilter}
                 />
-                {renderChangeTimelineSummary()}
               </Container>
             </Layout.Horizontal>
           </>
@@ -131,9 +128,9 @@ const SLOCardContent: React.FC<SLOCardContentProps> = ({ serviceLevelObjective }
                 message={getString('cv.errorBudgetRecalculationInProgress')}
               />
             )}
-            <Container width={185} height={200} className={css.errorBudgetGaugeContainer}>
-              <Heading font={{ variation: FontVariation.FORM_HELP }} data-tooltip-id={'errorBudgetRemaining'}>
-                {getString('cv.errorBudgetRemaining')}
+            <Container height={200} className={css.errorBudgetGaugeContainer}>
+              <Heading font={{ variation: headingVariation }} data-tooltip-id={'errorBudgetRemaining'}>
+                {getString('cv.errorBudgetRemainingWithMins')}
               </Heading>
               <ErrorBudgetGauge customChartOptions={getErrorBudgetGaugeOptions(serviceLevelObjective)} />
               <Text font={{ variation: FontVariation.SMALL }} className={css.errorBudgetRemaining} width={175}>
@@ -141,24 +138,36 @@ const SLOCardContent: React.FC<SLOCardContentProps> = ({ serviceLevelObjective }
                 <span style={{ display: 'block' }}>{getString('cv.minutesRemaining')}</span>
               </Text>
             </Container>
-            <Container className={css.flexGrowOne}>
-              <Heading font={{ variation: FontVariation.FORM_HELP }} data-tooltip-id={'errorBudgetBurnDown'}>
-                {getString('cv.errorBudgetBurnDown')}
-              </Heading>
-              <SLOTargetChart
-                dataPoints={errorBudgetBurndownData.dataPoints}
-                customChartOptions={getSLOAndErrorBudgetGraphOptions({
-                  serviceLevelObjective,
-                  type: SLOCardToggleViews.ERROR_BUDGET,
-                  minXLimit: errorBudgetBurndownData.minXLimit,
-                  maxXLimit: errorBudgetBurndownData.maxXLimit
-                })}
+            <Container className={css.flexGrowOne} style={{ overflow: 'auto' }}>
+              <Container flex={{ alignItems: 'flex-start' }} margin={{ bottom: 'small' }}>
+                <Heading font={{ variation: headingVariation }} data-tooltip-id={'errorBudgetBurnDown'}>
+                  {getString('cv.errorBudgetBurnDown')}
+                </Heading>
+                {isCardView && (
+                  <TimeRangeFilter
+                    {...props}
+                    type={SLOCardToggleViews.ERROR_BUDGET}
+                    resetSlider={resetSlider}
+                    showTimelineSlider={showTimelineSlider}
+                    setShowTimelineSlider={setShowTimelineSlider}
+                    customTimeFilter={customTimeFilter}
+                    setCustomTimeFilter={setCustomTimeFilter}
+                  />
+                )}
+              </Container>
+              <SLOTargetChartWithChangeTimeline
+                {...props}
+                type={SLOCardToggleViews.ERROR_BUDGET}
+                resetSlider={resetSlider}
+                showTimelineSlider={showTimelineSlider}
+                setShowTimelineSlider={setShowTimelineSlider}
+                customTimeFilter={customTimeFilter}
+                setCustomTimeFilter={setCustomTimeFilter}
               />
-              {renderChangeTimelineSummary()}
             </Container>
           </Layout.Horizontal>
         )}
-      </Container>
+      </SLOAndErrorBudgetChartContainer>
     </Layout.Vertical>
   )
 }

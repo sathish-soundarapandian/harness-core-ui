@@ -31,6 +31,7 @@ import type { ConnectorConfigDTO, ConnectorInfoDTO } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
 import { useStrings } from 'framework/strings'
+import { Connectors } from '@connectors/constants'
 import css from '../CreateGcrConnector.module.scss'
 
 interface GcrAuthenticationProps {
@@ -107,7 +108,9 @@ const GcrAuthentication: React.FC<StepProps<StepConfigureProps> & GcrAuthenticat
         }}
         formName="gcrAuthForm"
         validationSchema={Yup.object().shape({
-          delegateType: Yup.string().required(getString('connectors.chooseMethodForGCPConnection')),
+          delegateType: Yup.string().required(
+            getString('connectors.chooseMethodForConnection', { name: Connectors.GCP })
+          ),
           password: Yup.object().when('delegateType', {
             is: DelegateTypes.DELEGATE_OUT_CLUSTER,
             then: Yup.object().required(getString('validation.encryptedKey'))

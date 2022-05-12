@@ -20,7 +20,6 @@ import { useToaster } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import { getErrorMessage, showToaster, FeatureFlagMutivariateKind } from '@cf/utils/CFUtils'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
-import { useFeatureFlagTelemetry } from '@cf/hooks/useFeatureFlagTelemetry'
 import { PageSpinner } from '@common/components'
 import { GIT_SYNC_ERROR_CODE, useGitSync } from '@cf/hooks/useGitSync'
 import { useGovernance } from '@cf/hooks/useGovernance'
@@ -71,8 +70,6 @@ const FlagWizard: React.FC<FlagWizardProps> = props => {
     } as CreateFeatureFlagQueryParams
   })
 
-  const events = useFeatureFlagTelemetry()
-
   const onWizardSubmit = (formData: FlagWizardFormValues | undefined): void => {
     modalErrorHandler?.hide()
 
@@ -93,14 +90,13 @@ const FlagWizard: React.FC<FlagWizardProps> = props => {
 
     if (formData) {
       createFeatureFlag(formData)
-        .then(async () => {
+        .then(async response => {
           if (!isAutoCommitEnabled && formData.autoCommit) {
             await handleAutoCommit(formData.autoCommit)
           }
-          events.createFeatureFlagCompleted()
           hideModal()
-          history.push(
-            withActiveEnvironment(
+          history.push({
+            pathname: withActiveEnvironment(
               routes.toCFFeatureFlagsDetail({
                 orgIdentifier: orgIdentifier as string,
                 projectIdentifier: projectIdentifier as string,
@@ -108,15 +104,18 @@ const FlagWizard: React.FC<FlagWizardProps> = props => {
                 accountId: accountIdentifier
               }),
               environmentIdentifier
-            )
-          )
+            ),
+            state: {
+              governanceMetadata: response?.details?.governanceMetadata
+            }
+          })
           showToaster(getString('cf.messages.flagCreated'))
         })
         .catch(error => {
           if (error.status === GIT_SYNC_ERROR_CODE) {
             handleError(error.data as GitSyncErrorResponse)
           } else {
-            if (isGovernanceError(error)) {
+            if (isGovernanceError(error.data)) {
               handleGovernanceError(error.data)
             } else {
               showError(getErrorMessage(error), 0, 'cf.savegw.error')

@@ -37,7 +37,20 @@ const mockFeature: Feature = {
   name: 'new flag ',
   owner: ['chris.blakely@harness.io'],
   permanent: false,
-  prerequisites: [],
+  prerequisites: [
+    {
+      feature: 'Bool_2',
+      variations: ['false']
+    },
+    {
+      feature: 'Multivar_1',
+      variations: ['adminOnly']
+    },
+    {
+      feature: 'Test_Bool_1',
+      variations: ['true']
+    }
+  ],
   project: 'chrisgit2',
   results: undefined,
   status: { lastAccess: -6795364578871, status: 'never-requested' },

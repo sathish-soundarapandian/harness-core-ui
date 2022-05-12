@@ -32,6 +32,7 @@ export interface VisualViewProps {
   setRunClicked: Dispatch<SetStateAction<boolean>>
   selectedInputSets?: InputSetValue[]
   pipelineIdentifier: string
+  executionIdentifier?: string
   executionInputSetTemplateYaml?: string
   template: ResponseInputSetTemplateWithReplacedExpressionsResponse | null
   pipeline?: PipelineInfoConfig
@@ -54,6 +55,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
     setExistingProvide,
     selectedInputSets,
     pipelineIdentifier,
+    executionIdentifier,
     executionInputSetTemplateYaml,
     template,
     pipeline,
@@ -166,6 +168,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
                 loading={loading}
                 existingProvide={existingProvide}
                 currentPipeline={currentPipeline}
+                executionIdentifier={executionIdentifier}
                 executionInputSetTemplateYaml={executionInputSetTemplateYaml}
                 template={template}
                 resolvedPipeline={resolvedPipeline}
@@ -184,6 +187,7 @@ export interface PipelineInputSetFormWrapperProps {
   loading?: boolean
   executionView?: boolean
   existingProvide: ExistingProvide
+  executionIdentifier?: string
   currentPipeline?: {
     pipeline?: PipelineInfoConfig
   }
@@ -201,6 +205,7 @@ function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): R
     currentPipeline,
     executionInputSetTemplateYaml,
     template,
+    executionIdentifier,
     resolvedPipeline,
     loadingMergeInputSetUpdate
   } = props
@@ -232,6 +237,7 @@ function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): R
           path=""
           viewType={StepViewType.DeploymentForm}
           isRunPipelineForm
+          executionIdentifier={executionIdentifier}
           maybeContainerClass={existingProvide === 'provide' ? css.inputSetFormRunPipeline : ''}
         />
       </>

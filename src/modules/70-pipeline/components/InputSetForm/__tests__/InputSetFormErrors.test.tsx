@@ -88,7 +88,7 @@ const useUpdateInputSetForPipelineMock = useUpdateInputSetForPipeline as jest.Mo
 
 jest.mock('services/pipeline-ng', () => ({
   useGetInputSetForPipeline: jest.fn(() => GetInputSetEdit),
-  useCreateVariables: jest.fn().mockImplementation(() => {
+  useCreateVariablesV2: jest.fn().mockImplementation(() => {
     return {
       cancel: jest.fn(),
       loading: false,

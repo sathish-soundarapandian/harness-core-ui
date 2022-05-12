@@ -7,8 +7,10 @@
 
 /* eslint-disable jest/no-disabled-tests */
 import React from 'react'
-import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, waitFor, getByText as getElementByText } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { noop } from 'lodash-es'
+import { Formik } from '@wings-software/uicore'
 
 import { TestWrapper } from '@common/utils/testUtils'
 import {
@@ -92,9 +94,11 @@ describe('Deploy service stage specifications', () => {
   test(`Propagate from option and dropdown to select previous stage and service should be present`, async () => {
     const { getByPlaceholderText, getByText } = render(
       <TestWrapper>
-        <PipelineContext.Provider value={getOverrideContextValue()}>
-          <DeployServiceSpecifications />
-        </PipelineContext.Provider>
+        <Formik initialValues={{}} onSubmit={noop} formName="deployServiceSpecificationsTest">
+          <PipelineContext.Provider value={getOverrideContextValue()}>
+            <DeployServiceSpecifications />
+          </PipelineContext.Provider>
+        </Formik>
       </TestWrapper>
     )
 
@@ -127,21 +131,25 @@ describe('Deploy service stage specifications', () => {
   test(`Variables section is present`, async () => {
     const { queryByText } = render(
       <TestWrapper>
-        <PipelineContext.Provider value={getOverrideContextValue()}>
-          <DeployServiceSpecifications />
-        </PipelineContext.Provider>
+        <Formik initialValues={{}} onSubmit={noop} formName="deployServiceSpecificationsTest">
+          <PipelineContext.Provider value={getOverrideContextValue()}>
+            <DeployServiceSpecifications />
+          </PipelineContext.Provider>
+        </Formik>
       </TestWrapper>
     )
 
-    await waitFor(() => expect(queryByText('variablesText')).toBeTruthy())
+    await waitFor(() => expect(queryByText('common.variables')).toBeTruthy())
   })
 
   test('Should Deployment Type section be present', async () => {
     const { findByText } = render(
       <TestWrapper>
-        <PipelineContext.Provider value={getOverrideContextValue()}>
-          <DeployServiceSpecifications />
-        </PipelineContext.Provider>
+        <Formik initialValues={{}} onSubmit={noop} formName="deployServiceSpecificationsTest">
+          <PipelineContext.Provider value={getOverrideContextValue()}>
+            <DeployServiceSpecifications />
+          </PipelineContext.Provider>
+        </Formik>
       </TestWrapper>
     )
 
@@ -161,14 +169,78 @@ describe('Deploy service stage specifications', () => {
 
     render(
       <TestWrapper>
-        <PipelineContext.Provider value={getOverrideContextValue()}>
-          <StageErrorContext.Provider value={errorContextProvider}>
-            <DeployServiceSpecifications />
-          </StageErrorContext.Provider>
-        </PipelineContext.Provider>
+        <Formik initialValues={{}} onSubmit={noop} formName="deployServiceSpecificationsTest">
+          <PipelineContext.Provider value={getOverrideContextValue()}>
+            <StageErrorContext.Provider value={errorContextProvider}>
+              <DeployServiceSpecifications />
+            </StageErrorContext.Provider>
+          </PipelineContext.Provider>
+        </Formik>
       </TestWrapper>
     )
 
     expect(errorContextProvider.submitFormsForTab).toBeCalled()
+  })
+
+  test('Deployment types should have Serverless Lambda as a part of it', async () => {
+    getOverrideContextValue().state.selectionState.selectedStageId = 'st1'
+    const { getByText } = render(
+      <TestWrapper defaultFeatureFlagValues={{ SERVERLESS_SUPPORT: true }}>
+        <PipelineContext.Provider value={getOverrideContextValue()}>
+          <DeployServiceSpecifications />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    expect(getByText('deploymentTypeText')).toBeInTheDocument()
+
+    const serverlessLambda = getByText('pipeline.serviceDeploymentTypes.serverlessAwsLambda')
+    userEvent.click(serverlessLambda)
+    await waitFor(() => expect(getByText('pipelineSteps.serviceTab.manifestList.addManifest')).toBeInTheDocument())
+  })
+
+  test('Add manifest dialog should display manifest store screen directly if Serverless Lambda is deployment type', async () => {
+    getOverrideContextValue().state.selectionState.selectedStageId = 'st1'
+    const { getByText } = render(
+      <TestWrapper defaultFeatureFlagValues={{ SERVERLESS_SUPPORT: true }}>
+        <PipelineContext.Provider value={getOverrideContextValue()}>
+          <DeployServiceSpecifications />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    expect(getByText('deploymentTypeText')).toBeDefined()
+
+    const serverlessLambda = getByText('pipeline.serviceDeploymentTypes.serverlessAwsLambda')
+    userEvent.click(serverlessLambda)
+    await waitFor(() => expect(getByText('pipelineSteps.serviceTab.manifestList.addManifest')).toBeDefined())
+    const addManifestButton = getByText('pipelineSteps.serviceTab.manifestList.addManifest')
+    userEvent.click(addManifestButton)
+
+    // Find Add Manifest dialog portal div
+    const portalDivElements = document.getElementsByClassName('bp3-portal')
+    await waitFor(() => expect(portalDivElements.length).toBe(1))
+    const portalDiv = portalDivElements[0] as HTMLElement
+
+    // Check if second tab is opened by default
+    expect(
+      getElementByText(portalDiv, 'common.specify pipeline.manifestTypeLabels.ServerlessAwsLambda store')
+    ).toBeDefined()
+
+    // Check if tab names are appearing properly, first step should be completed and should have
+    // chosen manifest type as subtitle
+    const completedStepDivElements = portalDiv.getElementsByClassName('StepWizard--completedStep')
+    expect(completedStepDivElements.length).toBe(1)
+    expect(getElementByText(portalDiv, 'pipeline.manifestType.manifestRepoType')).toBeDefined()
+    const subTitleDivElements = portalDiv.getElementsByClassName('subtitle')
+    expect(subTitleDivElements.length).toBe(1)
+    expect(getElementByText(portalDiv, 'pipeline.manifestTypeLabels.ServerlessAwsLambda')).toBeDefined()
+
+    expect(getElementByText(portalDiv, 'pipeline.manifestType.manifestSource')).toBeDefined()
+    expect(getElementByText(portalDiv, 'pipeline.manifestType.manifestDetails')).toBeDefined()
+
+    // Check for all store types and select GitHub
+    expect(getElementByText(portalDiv, 'pipeline.manifestType.gitConnectorLabel')).toBeDefined()
+    expect(getElementByText(portalDiv, 'common.repo_provider.githubLabel')).toBeDefined()
+    expect(getElementByText(portalDiv, 'common.repo_provider.gitlabLabel')).toBeDefined()
+    expect(getElementByText(portalDiv, 'pipeline.manifestType.bitBucketLabel')).toBeDefined()
   })
 })

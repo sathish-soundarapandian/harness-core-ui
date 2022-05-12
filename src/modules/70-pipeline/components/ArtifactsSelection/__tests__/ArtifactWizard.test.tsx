@@ -9,6 +9,7 @@ import React from 'react'
 import { findAllByText, findByText, fireEvent, render } from '@testing-library/react'
 import { MultiTypeInputType } from '@wings-software/uicore'
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import ArtifactWizard from '../ArtifactWizard/ArtifactWizard'
 import type { ArtifactType, InitialArtifactDataType, TagTypes } from '../ArtifactInterface'
 import { DockerRegistryArtifact } from '../ArtifactRepository/ArtifactLastSteps/DockerRegistryArtifact/DockerRegistryArtifact'
@@ -46,7 +47,8 @@ const laststepProps = {
   },
   handleSubmit: jest.fn(),
   artifactIdentifiers: [],
-  selectedArtifact: 'DockerRegistry' as ArtifactType
+  selectedArtifact: 'DockerRegistry' as ArtifactType,
+  selectedDeploymentType: ServiceDeploymentType.Kubernetes
 }
 
 describe('Artifact WizardStep tests', () => {

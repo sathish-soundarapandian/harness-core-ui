@@ -17,6 +17,7 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { getErrorMessage, getSearchString } from '@cv/utils/CommonUtils'
 import CVCreateSLO from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO'
 import HeaderTitle from './views/HeaderTitle'
+import HeaderToolbar from './views/HeaderToolbar'
 import DetailsPanel from './DetailsPanel/DetailsPanel'
 import TabToolbar from './DetailsPanel/views/TabToolbar'
 import { SLODetailsPageTabIds } from './CVSLODetailsPage.types'
@@ -86,7 +87,7 @@ const CVSLODetailsPage: React.FC = () => {
     }
   }
 
-  const { description, sloDashboardWidget } = data?.data ?? {}
+  const { description, createdAt, lastModifiedAt, sloDashboardWidget, timeRangeFilters } = data?.data ?? {}
   const loading = sloDetailsLoading || resetErrorBudgetLoading || deleteSLOLoading
 
   const breadcrumbLinks = [
@@ -101,6 +102,7 @@ const CVSLODetailsPage: React.FC = () => {
       <Page.Header
         size="large"
         title={<HeaderTitle loading={sloDetailsLoading} title={sloDashboardWidget?.title} description={description} />}
+        toolbar={<HeaderToolbar loading={sloDetailsLoading} createdAt={createdAt} lastModifiedAt={lastModifiedAt} />}
         breadcrumbs={<NGBreadcrumbs links={breadcrumbLinks} />}
       />
       <Container className={css.tabContainer}>
@@ -118,6 +120,7 @@ const CVSLODetailsPage: React.FC = () => {
                   errorMessage={getErrorMessage(error)}
                   retryOnError={() => refetch()}
                   sloDashboardWidget={sloDashboardWidget}
+                  timeRangeFilters={timeRangeFilters}
                 />
               )
             },

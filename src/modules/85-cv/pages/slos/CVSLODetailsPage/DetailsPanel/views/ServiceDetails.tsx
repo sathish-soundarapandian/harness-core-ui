@@ -44,7 +44,7 @@ const ServiceDetails: React.FC<ServiceDetailsProps> = ({ sloDashboardWidget }) =
   return (
     <Card className={css.serviceDetailsCard}>
       <Text font={{ variation: FontVariation.CARD_TITLE }} color={Color.GREY_800} padding={{ bottom: 'medium' }}>
-        {getString('ce.co.autoStoppingRule.review.serviceDetails')}
+        {getString('cv.serviceDetails')}
       </Text>
       <Layout.Horizontal spacing="xlarge">
         <Container>

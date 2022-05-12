@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`PipelineRouteDestinations it should return the pipeline routes when the FF_PIPELINE feature flag is true 1`] = `
+exports[`PipelineRouteDestinations it should return the pipeline routes 1`] = `
 <React.Fragment>
   <RouteWithLayout
     exact={true}
@@ -286,6 +286,30 @@ exports[`PipelineRouteDestinations it should return the pipeline routes when the
     }
   >
     <RedirectToPipelineDetailHome />
+  </RouteWithLayout>
+  <RouteWithLayout
+    exact={true}
+    layout={[Function]}
+    licenseRedirectData={
+      Object {
+        "expiredTrialRedirect": [Function],
+        "licenseStateName": "FF_LICENSE_STATE",
+        "startTrialRedirect": [Function],
+      }
+    }
+    pageName="ExecutionPolicyEvaluationsView"
+    path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/pipelines/:pipelineIdentifier/executions/:executionIdentifier/policy-evaluations"
+    sidebarProps={
+      Object {
+        "icon": "cf-main",
+        "navComponent": [Function],
+        "title": "Feature Flags",
+      }
+    }
+  >
+    <ExecutionLandingPage>
+      <ExecutionPolicyEvaluationsView />
+    </ExecutionLandingPage>
   </RouteWithLayout>
   <RouteWithLayout
     exact={true}

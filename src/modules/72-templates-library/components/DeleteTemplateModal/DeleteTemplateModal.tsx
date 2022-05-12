@@ -22,6 +22,7 @@ import { defaultTo, get, isEmpty, pick } from 'lodash-es'
 import { Formik } from 'formik'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { PageSpinner, useToaster } from '@common/components'
 import { TemplateListType } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
@@ -56,6 +57,7 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
   const [query, setQuery] = React.useState<string>('')
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { showSuccess, showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
   const { isGitSyncEnabled } = useAppStore()
   const { mutate: deleteTemplates, loading: deleteLoading } = useDeleteTemplateVersionsOfIdentifier({})
 
@@ -80,7 +82,7 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
   React.useEffect(() => {
     if (templatesError) {
       onClose()
-      showError(templatesError.message, undefined, 'template.fetch.template.error')
+      showError(getRBACErrorMessage(templatesError), undefined, 'template.fetch.template.error')
     }
   }, [templatesError])
 
@@ -109,7 +111,7 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
         throw getString('somethingWentWrong')
       }
     } catch (err) {
-      showError(err?.data?.message || err?.message, undefined, 'common.template.deleteTemplate.errorWhileDeleting')
+      showError(getRBACErrorMessage(err), undefined, 'common.template.deleteTemplate.errorWhileDeleting')
     }
   }
 

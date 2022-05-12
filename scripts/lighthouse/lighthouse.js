@@ -8,6 +8,7 @@
 const puppeteer = require('puppeteer')
 const lighthouse = require('lighthouse')
 const reportGenerator = require('lighthouse/lighthouse-core/report/report-generator')
+const PRE_QA_URL = 'https://stress.harness.io/ng/'
 const QA_URL = 'https://qa.harness.io/ng/'
 const PROD_URL = 'https://app.harness.io/ng/'
 const dbConnection = require('./connection')
@@ -24,13 +25,17 @@ const acceptableChange = process.env.LIGHT_HOUSE_ACCEPTANCE_CHANGE
 console.log('acceptableChange', acceptableChange)
 const PORT = 8041
 let url = PROD_URL
-let isQA = false
 let passWord = ''
 let emailId = 'ui_perf_test_prod@mailinator.com'
 async function run() {
-  if (process.argv[2] === 'qa') {
-    isQA = true
+  // process.argv[2] could be QA / Pre-QA / Production
+  const env = process.argv[2]
+  if (env === 'QA') {
     url = QA_URL
+    passWord = process.env.PASSWORD
+  } else if (env === 'Pre-QA') {
+    url = PRE_QA_URL
+    emailId = 'perf_test_pre-qa@mailinator.com'
     passWord = process.env.PASSWORD
   } else {
     passWord = process.env.LIGHT_HOUSE_SECRET
@@ -38,9 +43,8 @@ async function run() {
   if (!url) {
     throw 'Please provide URL as a first argument'
   }
-  const env = isQA ? 'QA' : 'Production'
 
-  const createMap = url => {
+  const createMap = passedUrl => {
     const scores = {
       [DATA_POINTS.PERFORMANCE]: 0,
       [DATA_POINTS.ACCESSIBILITY]: 0,
@@ -52,7 +56,7 @@ async function run() {
     }
     const map = new Map()
     pagesToBeTested.map(value => {
-      map.set(value.name, { url: `${url}${value.url}`, ...scores })
+      map.set(value.name, { url: `${passedUrl}${value.url}`, ...scores })
     })
 
     return map
@@ -130,6 +134,7 @@ async function run() {
   }
 
   const runLightHouseNtimesAndGetResults = async (numberOfTimes, passedUrl) => {
+    // Comment executablePath while running in local
     const browser = await puppeteer.launch({
       headless: true,
       executablePath: '/usr/bin/google-chrome',
@@ -145,9 +150,14 @@ async function run() {
     await passwordInput.type(passWord)
     await page.$eval('input[type="submit"]', form => form.click())
     await page.waitForNavigation()
-    await page.waitForXPath("//span[text()='Main Dashboard']")
-
-    let baseUrl = url.concat(`#${page.url().split('#')[1].split('/dashboard')[0]}`)
+    let baseUrl = ''
+    if (page.url().includes('/ng/')) {
+      await page.waitForXPath("//span[text()='Welcome']")
+      baseUrl = page.url().split('/home')[0]
+    } else {
+      await page.waitForXPath("//span[text()='Main Dashboard']")
+      baseUrl = url.concat(`#${page.url().split('#')[1].split('/dashboard')[0]}`)
+    }
     const map = createMap(baseUrl)
     const results = await runLightHouseOnPages(numberOfTimes, map)
     await browser.close()

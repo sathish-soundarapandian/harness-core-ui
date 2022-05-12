@@ -1,0 +1,47 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "totalPages": 1,
+    "totalItems": 2,
+    "pageItemCount": 2,
+    "pageSize": 100,
+    "content": [
+      {
+        "service": {
+          "accountId": "kmpySmUISimoRrJL6NL73w",
+          "identifier": "Service_2",
+          "orgIdentifier": "default",
+          "projectIdentifier": "Chetan_Non_Git_Sync",
+          "name": "Service 2",
+          "description": null,
+          "deleted": false,
+          "tags": {},
+          "version": 1,
+          "yaml": "service:\n  name: \"Service 2\"\n  identifier: \"Service_2\"\n  orgIdentifier: \"default\"\n  projectIdentifier: \"Chetan_Non_Git_Sync\"\n  tags: {}\n"
+        },
+        "createdAt": 1648794337889,
+        "lastModifiedAt": 1648794337889
+      },
+      {
+        "service": {
+          "accountId": "kmpySmUISimoRrJL6NL73w",
+          "identifier": "Service_1",
+          "orgIdentifier": "default",
+          "projectIdentifier": "Chetan_Non_Git_Sync",
+          "name": "Service 1",
+          "description": null,
+          "deleted": false,
+          "tags": {},
+          "version": 7,
+          "yaml": "service:\n  name: \"Service 1\"\n  identifier: \"Service_1\"\n  orgIdentifier: \"default\"\n  projectIdentifier: \"Chetan_Non_Git_Sync\"\n  tags: {}\n"
+        },
+        "createdAt": 1646976099079,
+        "lastModifiedAt": 1651742523101
+      }
+    ],
+    "pageIndex": 0,
+    "empty": false
+  },
+  "metaData": null,
+  "correlationId": "23072506-c777-48de-90fa-ec7873a53c1e"
+}

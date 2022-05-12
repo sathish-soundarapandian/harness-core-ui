@@ -7,9 +7,7 @@
 
 import React from 'react'
 import { render, fireEvent, waitFor } from '@testing-library/react'
-import { noop } from 'lodash-es'
 import { TestWrapper, queryByNameAttribute } from '@common/utils/testUtils'
-import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import { useGetAccountNG, useUpdateAccountDefaultExperienceNG, useUpdateAccountNameNG } from 'services/cd-ng'
 import AccountDetails from '../views/AccountDetails'
 
@@ -49,6 +47,8 @@ beforeEach(() => {
       loading: false
     }
   })
+
+  window.deploymentType = 'SAAS'
 })
 
 describe('AccountDetails', () => {
@@ -141,22 +141,9 @@ describe('AccountDetails', () => {
     expect(getByText('common.harnessNextGeneration')).toBeDefined()
   })
   test('Hide SwitchAccount button for community edition', async () => {
+    window.deploymentType = 'COMMUNITY'
     const { queryByText } = render(
-      <TestWrapper
-        defaultLicenseStoreValues={{
-          licenseInformation: {
-            CD: {
-              edition: 'COMMUNITY'
-            }
-          },
-          CD_LICENSE_STATE: LICENSE_STATE_VALUES.ACTIVE,
-          CI_LICENSE_STATE: LICENSE_STATE_VALUES.ACTIVE,
-          FF_LICENSE_STATE: LICENSE_STATE_VALUES.ACTIVE,
-          CCM_LICENSE_STATE: LICENSE_STATE_VALUES.ACTIVE,
-          updateLicenseStore: noop,
-          versionMap: {}
-        }}
-      >
+      <TestWrapper>
         <AccountDetails />
       </TestWrapper>
     )

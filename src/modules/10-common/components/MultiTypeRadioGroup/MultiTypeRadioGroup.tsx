@@ -62,7 +62,7 @@ export interface FormMultiTypeRadioGroupProps extends Omit<IFormGroupProps, 'lab
   name: string
   options: IOptionProps[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  formik?: any // TODO: Remove this but not sure why FormikContext<any> was not working
+  formik?: any // TODO: Remove this but not sure why FormikContextType<any> was not working
   multiTypeRadioGroup?: Omit<MultiTypeRadioGroupProps, 'onChange'>
   tooltipProps?: DataTooltipInterface
   onChange?: MultiTypeRadioGroupProps['onChange']

@@ -20,6 +20,7 @@ export interface ExecutionContextParams {
   pipelineExecutionDetail: PipelineExecutionDetail | null
   allNodeMap: { [key: string]: ExecutionNode }
   pipelineStagesMap: Map<string, GraphLayoutNode>
+  isPipelineInvalid?: boolean
   selectedStageId: string
   selectedStepId: string
   loading: boolean
@@ -33,12 +34,14 @@ export interface ExecutionContextParams {
   stepsGraphCanvasState?: GraphCanvasState
   setSelectedStepId: (step: string) => void
   setSelectedStageId: (stage: string) => void
+  setIsPipelineInvalid?: (flag: boolean) => void
 }
 
 export const ExecutionContext = createContext<ExecutionContextParams>({
   pipelineExecutionDetail: null,
   allNodeMap: {},
   pipelineStagesMap: new Map(),
+  isPipelineInvalid: false,
   selectedStageId: '',
   selectedStepId: '',
   loading: false,
@@ -51,7 +54,8 @@ export const ExecutionContext = createContext<ExecutionContextParams>({
   setStepsGraphCanvasState: () => undefined,
   stepsGraphCanvasState: { offsetX: 0, offsetY: 0, zoom: 100 },
   setSelectedStepId: () => void 0,
-  setSelectedStageId: () => void 0
+  setSelectedStageId: () => void 0,
+  setIsPipelineInvalid: () => void 0
 })
 
 export default ExecutionContext

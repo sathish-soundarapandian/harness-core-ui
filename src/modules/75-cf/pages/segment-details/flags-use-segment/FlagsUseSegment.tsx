@@ -97,7 +97,12 @@ export const FlagsUseSegment = ({ gitSync }: FlagsUseSegmentProps): ReactElement
         )
       })
     )
-      .then(async () => {
+      .then(async responses => {
+        responses.forEach(response => {
+          if (isGovernanceError(response)) {
+            handleGovernanceError(response)
+          }
+        })
         if (gitFormValues?.autoCommit) {
           await gitSync.handleAutoCommit(gitFormValues?.autoCommit)
         }
@@ -107,7 +112,7 @@ export const FlagsUseSegment = ({ gitSync }: FlagsUseSegmentProps): ReactElement
         if (e.status === GIT_SYNC_ERROR_CODE) {
           gitSync.handleError(e.data as GitSyncErrorResponse)
         } else {
-          if (isGovernanceError(e)) {
+          if (isGovernanceError(e?.data)) {
             handleGovernanceError(e.data)
           } else {
             showError(getErrorMessage(e), undefined, 'cf.path.feature.error')
@@ -328,6 +333,7 @@ const FlagItem: React.FC<FlagItemProps> = ({
   ...props
 }) => {
   const { name, description, variation } = flag
+  const { gitSyncInitialValues, gitSyncValidationSchema } = gitSync.getGitSyncFormMeta()
 
   const variationTextWidth = onRemoveRule ? '88px' : '135px'
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
@@ -365,6 +371,8 @@ const FlagItem: React.FC<FlagItemProps> = ({
         <SaveFlagToGitModal
           flagName={flag.name}
           flagIdentifier={flag.identifier}
+          gitSyncInitialValues={gitSyncInitialValues}
+          gitSyncValidationSchema={gitSyncValidationSchema}
           onSubmit={formValues => onRemoveRule?.(flag.identifier, instruction, variation, flag.ruleId, formValues)}
           onClose={() => {
             setIsDeleteModalOpen(false)

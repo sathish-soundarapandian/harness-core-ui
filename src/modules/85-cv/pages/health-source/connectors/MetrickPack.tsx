@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect } from 'react'
-import type { FormikContext } from 'formik'
+import type { FormikContextType } from 'formik'
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash-es'
 import { Container, FormInput, Icon, PageError } from '@wings-software/uicore'
@@ -22,7 +22,7 @@ export default function MetricPack({
   onChange,
   setSelectedMetricPacks
 }: {
-  formik: FormikContext<any>
+  formik: FormikContextType<any>
   connector: GetMetricPacksQueryParams['dataSourceType']
   value: MetricPackDTO[] | undefined
   onChange: (data: { [key: string]: boolean }) => void

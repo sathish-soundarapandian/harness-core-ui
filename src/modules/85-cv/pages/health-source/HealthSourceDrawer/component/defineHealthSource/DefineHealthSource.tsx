@@ -4,13 +4,11 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-
 import React, { useCallback, useContext, useMemo } from 'react'
 import { Card, Container, Formik, FormikForm, FormInput, Icon, IconName, Layout, Text } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
-import { FormConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
@@ -22,6 +20,11 @@ import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFoot
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { Connectors } from '@connectors/constants'
 import { HealthSourceTypes } from '@cv/pages/health-source/types'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { AllMultiTypeInputTypesForStep } from '@ci/components/PipelineSteps/CIStep/StepUtils'
+import { TemplateType } from '@templates-library/utils/templatesUtils'
+import { FormConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
 import { ConnectorRefFieldName, HEALTHSOURCE_LIST } from './DefineHealthSource.constant'
 import {
   getFeatureOption,
@@ -39,15 +42,17 @@ interface DefineHealthSourceProps {
 function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
   const { onSubmit } = props
   const { getString } = useStrings()
+  const { expressions } = useVariablesExpression?.() || {}
   const { onNext, sourceData } = useContext(SetupSourceTabsContext)
-  const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps & { identifier: string }>()
+  const { orgIdentifier, projectIdentifier, accountId, templateType } = useParams<
+    ProjectPathProps & { identifier: string; templateType?: string }
+  >()
   const { isEdit } = sourceData
 
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.ERROR_TRACKING_ENABLED)
   const isDynatraceAPMEnabled = useFeatureFlag(FeatureFlag.DYNATRACE_APM_ENABLED)
   const isCustomMetricEnabled = useFeatureFlag(FeatureFlag.CHI_CUSTOM_HEALTH)
   const isCustomLogEnabled = useFeatureFlag(FeatureFlag.CHI_CUSTOM_HEALTH_LOGS)
-
   const disabledByFF: string[] = useMemo(() => {
     const disabledConnectorsList = []
     if (!isDynatraceAPMEnabled) {
@@ -85,7 +90,55 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
   //     sourceData.selectedDashboards = new Map()
   //   }
   // }, [sourceData?.connectorRef])
-
+  const connectorData = useCallback(
+    formik => {
+      return (templateType as unknown as TemplateType) === TemplateType.MonitoredService ? (
+        <FormMultiTypeConnectorField
+          name={'connectorId'}
+          label={
+            <Text color={Color.BLACK} font={'small'} margin={{ bottom: 'small' }}>
+              {getString('connectors.selectConnector')}
+            </Text>
+          }
+          placeholder={getString('cv.healthSource.connectors.selectConnector', {
+            sourceType: formik?.values?.sourceType
+          })}
+          disabled={isEdit ? !!formik?.values?.connectorRef && isEdit : !formik?.values?.sourceType}
+          accountIdentifier={accountId}
+          projectIdentifier={projectIdentifier}
+          orgIdentifier={orgIdentifier}
+          width={400}
+          type={formik?.values?.sourceType}
+          multiTypeProps={{ expressions, allowableTypes: AllMultiTypeInputTypesForStep }}
+          onChange={(value: any) => {
+            const connectorValue = value?.scope ? `${value.scope}.${value?.record?.identifier}` : value
+            formik?.setFieldValue(ConnectorRefFieldName, connectorValue)
+          }}
+        />
+      ) : (
+        <FormConnectorReferenceField
+          width={400}
+          formik={formik}
+          type={formik?.values?.sourceType}
+          name={ConnectorRefFieldName}
+          label={
+            <Text color={Color.BLACK} font={'small'} margin={{ bottom: 'small' }}>
+              {getString('connectors.selectConnector')}
+            </Text>
+          }
+          accountIdentifier={accountId}
+          projectIdentifier={projectIdentifier}
+          orgIdentifier={orgIdentifier}
+          placeholder={getString('cv.healthSource.connectors.selectConnector', {
+            sourceType: formik?.values?.sourceType
+          })}
+          disabled={isEdit ? !!formik?.values?.connectorRef && isEdit : !formik?.values?.sourceType}
+          tooltipProps={{ dataTooltipId: 'selectHealthSourceConnector' }}
+        />
+      )
+    },
+    [templateType]
+  )
   return (
     <BGColorWrapper>
       <Formik
@@ -202,27 +255,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
               <CardWithOuterTitle title={getString('cv.healthSource.connectHealthSource')}>
                 <>
                   <Container margin={{ bottom: 'large' }} width={'400px'}>
-                    <div className={css.connectorField}>
-                      <FormConnectorReferenceField
-                        width={400}
-                        formik={formik}
-                        type={formik?.values?.sourceType}
-                        name={ConnectorRefFieldName}
-                        accountIdentifier={accountId}
-                        projectIdentifier={projectIdentifier}
-                        orgIdentifier={orgIdentifier}
-                        placeholder={getString('cv.healthSource.connectors.selectConnector', {
-                          sourceType: formik?.values?.sourceType
-                        })}
-                        disabled={isEdit ? !!formik?.values?.connectorRef && isEdit : !formik?.values?.sourceType}
-                        label={
-                          <Text color={Color.BLACK} font={'small'} margin={{ bottom: 'small' }}>
-                            {getString('connectors.selectConnector')}
-                          </Text>
-                        }
-                        tooltipProps={{ dataTooltipId: 'selectHealthSourceConnector' }}
-                      />
-                    </div>
+                    <div className={css.connectorField}>{connectorData(formik)}</div>
                   </Container>
                   <Container margin={{ bottom: 'large' }} width={'400px'}>
                     <Text

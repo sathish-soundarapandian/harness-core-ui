@@ -17,6 +17,7 @@ exports[`Connector details step Test for  create  connector step one required fe
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>
@@ -294,6 +295,7 @@ exports[`Connector details step Test for going to next step 1`] = `
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>

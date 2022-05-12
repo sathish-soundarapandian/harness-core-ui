@@ -5,17 +5,19 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Text } from '@wings-software/uicore'
+import { Text } from '@harness/uicore'
+import type { FontSize } from '@harness/design-system'
 import React from 'react'
 import type { Variation } from 'services/cf'
 import { CFVariationColors } from '@cf/constants'
-
 interface VariationWithIconProps {
-  variation: Variation
+  variation?: Variation
   index: number
   iconStyle?: React.CSSProperties
   textElement?: React.ReactElement | string
   textStyle?: React.CSSProperties
+  color?: string
+  fontSize?: FontSize
 }
 
 export const VariationWithIcon: React.FC<VariationWithIconProps> = ({
@@ -23,7 +25,9 @@ export const VariationWithIcon: React.FC<VariationWithIconProps> = ({
   index = 0,
   iconStyle,
   textElement,
-  textStyle
+  textStyle,
+  color,
+  fontSize = 'normal'
 }) => {
   const { name, value } = variation
 
@@ -39,7 +43,13 @@ export const VariationWithIcon: React.FC<VariationWithIconProps> = ({
           ...iconStyle
         }}
       ></span>
-      <Text inline margin={{ bottom: 'xsmall' }} style={{ marginBottom: 0, ...textStyle }}>
+      <Text
+        inline
+        margin={{ bottom: 'xsmall' }}
+        color={color}
+        font={{ size: fontSize }}
+        style={{ ...textStyle }} // will override font.size if fontSize set here
+      >
         {textElement || name || value}
       </Text>
     </>

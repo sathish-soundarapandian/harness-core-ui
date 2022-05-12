@@ -8,10 +8,11 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import * as LicenseStoreContext from 'framework/LicenseStore/LicenseStoreContext'
-import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import { LaunchButton } from '../LaunchButton'
 
+beforeEach(() => {
+  window.deploymentType = 'SAAS'
+})
 describe('Launch Button test', () => {
   test('Launch button render ', async () => {
     const { container } = render(
@@ -23,21 +24,7 @@ describe('Launch Button test', () => {
   })
 
   test('Launch button render for community ', async () => {
-    jest.spyOn(LicenseStoreContext, 'useLicenseStore').mockReturnValue({
-      licenseInformation: {
-        CD: {
-          edition: 'COMMUNITY'
-        }
-      },
-      CD_LICENSE_STATE: LICENSE_STATE_VALUES.ACTIVE,
-      CI_LICENSE_STATE: LICENSE_STATE_VALUES.ACTIVE,
-      FF_LICENSE_STATE: LICENSE_STATE_VALUES.ACTIVE,
-      CCM_LICENSE_STATE: LICENSE_STATE_VALUES.ACTIVE,
-      updateLicenseStore: () => {
-        //empty method
-      },
-      versionMap: {}
-    })
+    window.deploymentType = 'COMMUNITY'
     const { container } = render(
       <TestWrapper path="/account/:accountId" pathParams={{ accountId: '123' }}>
         <LaunchButton launchButtonText="Launch Next Generation" redirectUrl="#/account/abc123/dashboard" />

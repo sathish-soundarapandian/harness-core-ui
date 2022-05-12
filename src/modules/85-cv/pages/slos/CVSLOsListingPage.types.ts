@@ -6,7 +6,13 @@
  */
 
 import type { SelectOption } from '@wings-software/uicore'
-import type { MonitoredServiceDTO, RiskCount, SLODashboardWidget, SLOErrorBudgetResetDTO } from 'services/cv'
+import type {
+  MonitoredServiceDTO,
+  RiskCount,
+  SLODashboardWidget,
+  SLOErrorBudgetResetDTO,
+  TimeRangeFilter
+} from 'services/cv'
 import type { SLOActionTypes } from './CVSLOsListingPage.constants'
 
 export interface CVSLOsListingPageProps {
@@ -25,7 +31,23 @@ export interface SLOCardHeaderProps {
 // SLOCardContent
 
 export interface SLOCardContentProps {
+  isCardView?: boolean
   serviceLevelObjective: SLODashboardWidget
+  filteredServiceLevelObjective?: SLODashboardWidget
+  timeRangeFilters?: TimeRangeFilter[]
+  chartTimeRange?: { startTime: number; endTime: number }
+  setChartTimeRange?: (timeRange?: SLOCardContentProps['chartTimeRange']) => void
+  sliderTimeRange?: { startTime: number; endTime: number }
+  setSliderTimeRange?: (timeRange?: SLOCardContentProps['sliderTimeRange']) => void
+}
+
+export interface SLOTargetChartWithChangeTimelineProps extends SLOCardContentProps {
+  type: SLOCardToggleViews
+  resetSlider: () => void
+  showTimelineSlider: boolean
+  setShowTimelineSlider: (showTimelineSlider: boolean) => void
+  customTimeFilter: boolean
+  setCustomTimeFilter: (customTimeFilter: boolean) => void
 }
 
 export enum SLOCardToggleViews {
@@ -38,6 +60,9 @@ export interface GetSLOAndErrorBudgetGraphOptions {
   maxXLimit: number
   type: SLOCardToggleViews
   serviceLevelObjective: SLODashboardWidget
+  startTime: number
+  endTime: number
+  isCardView?: boolean
 }
 
 export type RiskTypes = 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY' | 'EXHAUSTED'

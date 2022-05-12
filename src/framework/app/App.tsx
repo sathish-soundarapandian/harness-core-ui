@@ -5,20 +5,20 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Suspense } from 'react'
 
 import { useHistory, useParams } from 'react-router-dom'
 import { RestfulProvider } from 'restful-react'
 import { FocusStyleManager } from '@blueprintjs/core'
-import { TooltipContextProvider } from '@wings-software/uicore'
+import { TooltipContextProvider, PageSpinner } from '@wings-software/uicore'
 import { tooltipDictionary } from '@wings-software/ng-tooltip'
 import { setAutoFreeze, enableMapSet } from 'immer'
 import SessionToken from 'framework/utils/SessionToken'
 
 import { AppStoreProvider } from 'framework/AppStore/AppStoreContext'
+import { PreferenceStoreProvider } from 'framework/PreferenceStore/PreferenceStoreContext'
+
 import { LicenseStoreProvider } from 'framework/LicenseStore/LicenseStoreContext'
-// eslint-disable-next-line aliased-module-imports
-import RouteDestinations from 'modules/RouteDestinations'
 // eslint-disable-next-line aliased-module-imports
 import RouteDestinationsWithoutAuth from 'modules/RouteDestinationsWithoutAuth'
 import AppErrorBoundary from 'framework/utils/AppErrorBoundary/AppErrorBoundary'
@@ -26,6 +26,7 @@ import { StringsContextProvider } from 'framework/strings/StringsContextProvider
 import { getLoginPageURL } from 'framework/utils/SessionUtils'
 import { NGTooltipEditorPortal } from 'framework/tooltip/TooltipEditor'
 import AppStorage from 'framework/utils/AppStorage'
+import { SideNavProvider } from 'framework/SideNavStore/SideNavContext'
 import { useRefreshToken } from 'services/portal'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 
@@ -34,8 +35,11 @@ import routes from '@common/RouteDefinitions'
 import { returnUrlParams } from '@common/utils/routeUtils'
 import { PermissionsProvider } from 'framework/rbac/PermissionsContext'
 import { FeaturesProvider } from 'framework/featureStore/FeaturesContext'
+import { ThirdPartyIntegrations } from '3rd-party/ThirdPartyIntegrations'
 import { useGlobalEventListener } from '@common/hooks'
-import { identifyFullStoryUser } from '../../3rd-party/FullStory'
+import { global401HandlerUtils } from '@common/utils/global401HandlerUtils'
+
+const RouteDestinations = React.lazy(() => import('modules/RouteDestinations'))
 
 FocusStyleManager.onlyShowFocusOnTabs()
 
@@ -101,11 +105,6 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
     }
   }, [refreshTokenResponse])
 
-  useEffect(() => {
-    // Allow FullStory to recognize current user
-    identifyFullStoryUser({ username })
-  }, [username])
-
   const checkAndRefreshToken = (): void => {
     const currentTime = +new Date()
     const lastTokenSetTime = SessionToken.getLastTokenSetTime() as number
@@ -141,11 +140,7 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
           }
         )
       }
-      AppStorage.clear()
-      history.push({
-        pathname: routes.toRedirect(),
-        search: returnUrlParams(getLoginPageURL({ returnUrl: window.location.href }))
-      })
+      global401HandlerUtils(history)
       return
     }
 
@@ -194,22 +189,29 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
     >
       <StringsContextProvider initialStrings={props.strings}>
         <TooltipContextProvider initialTooltipDictionary={tooltipDictionaryContext}>
-          <AppStoreProvider>
-            <AppErrorBoundary>
-              <FeaturesProvider>
-                <LicenseStoreProvider>
-                  <PermissionsProvider>
-                    <RouteDestinations />
-                    <NGTooltipEditorPortal
-                      showTooltipEditor={showTooltipEditor}
-                      onEditorClose={onEditorClose}
-                      setPreviewDatasetFromLocalStorage={onPreviewDatasetFromLocalStorage}
-                    />
-                  </PermissionsProvider>
-                </LicenseStoreProvider>
-              </FeaturesProvider>
-            </AppErrorBoundary>
-          </AppStoreProvider>
+          <PreferenceStoreProvider>
+            <AppStoreProvider>
+              <AppErrorBoundary>
+                <FeaturesProvider>
+                  <LicenseStoreProvider>
+                    <PermissionsProvider>
+                      <SideNavProvider>
+                        <Suspense fallback={<PageSpinner />}>
+                          <RouteDestinations />
+                        </Suspense>
+                        <NGTooltipEditorPortal
+                          showTooltipEditor={showTooltipEditor}
+                          onEditorClose={onEditorClose}
+                          setPreviewDatasetFromLocalStorage={onPreviewDatasetFromLocalStorage}
+                        />
+                      </SideNavProvider>
+                    </PermissionsProvider>
+                    <ThirdPartyIntegrations />
+                  </LicenseStoreProvider>
+                </FeaturesProvider>
+              </AppErrorBoundary>
+            </AppStoreProvider>
+          </PreferenceStoreProvider>
         </TooltipContextProvider>
       </StringsContextProvider>
     </RestfulProvider>

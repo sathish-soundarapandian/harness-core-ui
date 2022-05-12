@@ -25,7 +25,8 @@ import {
   userPathProps,
   orgPathProps,
   modulePathProps,
-  serviceAccountProps
+  serviceAccountProps,
+  templatePathProps
 } from '@common/utils/routeUtils'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { MinimalLayout } from '@common/layouts'
@@ -65,9 +66,12 @@ import ServiceAccountDetails from '@rbac/pages/ServiceAccountDetails/ServiceAcco
 import ServiceAccountsPage from '@rbac/pages/ServiceAccounts/ServiceAccounts'
 import { PubSubPipelineActions } from '@pipeline/factories/PubSubPipelineAction'
 import { PipelineActions } from '@pipeline/factories/PubSubPipelineAction/types'
+// import TemplatesPage from '@templates-library/pages/TemplatesPage/TemplatesPage'
+import { TemplateStudioWrapper } from '@templates-library/components/TemplateStudio/TemplateStudioWrapper'
 import { inputSetTemplatePromise } from 'services/cv'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { CVChanges } from '@cv/pages/changes/CVChanges'
+import VariablesPage from '@variables/pages/variables/VariablesPage'
 import CVTrialHomePage from './pages/home/CVTrialHomePage'
 import { editParams, isVerifyStepPresent } from './utils/routeUtils'
 import CVSLOsListingPage from './pages/slos/CVSLOsListingPage'
@@ -94,6 +98,11 @@ PubSubPipelineActions.subscribe(
     return Promise.resolve(response)
   }
 )
+
+const cvModule = ':module(cv)'
+const templateModuleParams: ModulePathParams = {
+  module: cvModule
+}
 
 const RedirectToAccessControlHome = (): React.ReactElement => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -127,7 +136,7 @@ const RedirectToCVProject = (): React.ReactElement => {
 }
 
 export const cvModuleParams: ModulePathParams = {
-  module: ':module(cv)'
+  module: cvModule
 }
 
 const CVSideNavProps: SidebarContext = {
@@ -163,7 +172,7 @@ export default (
     <RouteWithLayout
       exact
       sidebarProps={CVSideNavProps}
-      path={routes.toCVMonitoringServices({ ...accountPathProps, ...projectPathProps, module: ':module(cv)' })}
+      path={routes.toCVMonitoringServices({ ...accountPathProps, ...projectPathProps, module: cvModule })}
     >
       <CVMonitoredService />
     </RouteWithLayout>
@@ -171,7 +180,7 @@ export default (
     <RouteWithLayout
       exact
       sidebarProps={CVSideNavProps}
-      path={routes.toCVChanges({ ...accountPathProps, ...projectPathProps, module: ':module(cv)' })}
+      path={routes.toCVChanges({ ...accountPathProps, ...projectPathProps, module: cvModule })}
     >
       <CVChanges />
     </RouteWithLayout>
@@ -179,7 +188,7 @@ export default (
     <RouteWithLayout
       exact
       sidebarProps={CVSideNavProps}
-      path={routes.toCVSLOs({ ...accountPathProps, ...projectPathProps, module: ':module(cv)' })}
+      path={routes.toCVSLOs({ ...accountPathProps, ...projectPathProps, module: cvModule })}
     >
       <CVSLOsListingPage />
     </RouteWithLayout>
@@ -187,14 +196,14 @@ export default (
     <RouteWithLayout
       exact
       sidebarProps={CVSideNavProps}
-      path={routes.toErrorTracking({ ...accountPathProps, ...projectPathProps, module: ':module(cv)' })}
+      path={routes.toErrorTracking({ ...accountPathProps, ...projectPathProps, module: cvModule })}
     >
       <ChildAppMounter ChildApp={ErrorTracking} />
     </RouteWithLayout>
 
     <RouteWithLayout
       sidebarProps={CVSideNavProps}
-      path={routes.toErrorTrackingArc({ ...accountPathProps, ...projectPathProps, module: ':module(cv)' })}
+      path={routes.toErrorTrackingArc({ ...accountPathProps, ...projectPathProps, module: cvModule })}
     >
       <ChildAppMounter ChildApp={ErrorTracking} />
     </RouteWithLayout>
@@ -242,6 +251,22 @@ export default (
     >
       <ConnectorsPage />
     </RouteWithLayout>
+    {/* uncomment once BE integration is complete  */}
+    {/* <RouteWithLayout
+      exact
+      sidebarProps={CVSideNavProps}
+      path={routes.toTemplates({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+    >
+      <TemplatesPage />
+    </RouteWithLayout> */}
+
+    <RouteWithLayout
+      sidebarProps={CVSideNavProps}
+      exact
+      path={routes.toTemplateStudio({ ...accountPathProps, ...templatePathProps, ...templateModuleParams })}
+    >
+      <TemplateStudioWrapper />
+    </RouteWithLayout>
 
     <RouteWithLayout
       exact
@@ -249,6 +274,14 @@ export default (
       path={routes.toSecrets({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
     >
       <SecretsPage />
+    </RouteWithLayout>
+
+    <RouteWithLayout
+      exact
+      sidebarProps={CVSideNavProps}
+      path={routes.toVariables({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+    >
+      <VariablesPage />
     </RouteWithLayout>
 
     <RouteWithLayout

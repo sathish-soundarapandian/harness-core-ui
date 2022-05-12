@@ -146,13 +146,21 @@ exports[`Unit tests for ExecutionVerificationView unit tests Ensure correct tabs
       <div
         aria-hidden="false"
         aria-labelledby="bp3-tab-title_AnalysisTypeTabs_pipeline.verification.analysisTab.logs"
-        class="bp3-tab-panel"
+        class="bp3-tab-panel mainTabPanelLogs"
         id="bp3-tab-panel_AnalysisTypeTabs_pipeline.verification.analysisTab.logs"
         role="tabpanel"
       >
         <div
-          class="LogAnalysisContainer"
-        />
+          class="Layout--horizontal StyledProps--main"
+          style="height: 100%;"
+        >
+          <div
+            class="summary"
+          />
+          <div
+            class="LogAnalysisContainer"
+          />
+        </div>
       </div>
     </div>
   </div>

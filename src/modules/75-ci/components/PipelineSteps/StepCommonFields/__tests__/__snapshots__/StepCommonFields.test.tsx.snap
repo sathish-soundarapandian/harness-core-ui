@@ -6,6 +6,7 @@ exports[`<StepCommonFields /> tests Should render properly with no data 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -386,6 +387,7 @@ exports[`<StepCommonFields /> tests Should render properly with passed initial v
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

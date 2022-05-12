@@ -35,6 +35,7 @@ export default function ChangeTimeline(props: ChangeTimelineProps): JSX.Element 
     startTime,
     endTime,
     selectedTimePeriod,
+    selectedTimeRange,
     onSliderMoved,
     changeCategories,
     changeSourceTypes,
@@ -66,19 +67,19 @@ export default function ChangeTimeline(props: ChangeTimelineProps): JSX.Element 
   })
 
   const { startTimeRoundedOffToNearest30min, endTimeRoundedOffToNearest30min } = useMemo(() => {
-    if (hideTimeline) {
+    if (selectedTimeRange) {
       return {
-        startTimeRoundedOffToNearest30min: startTime as number,
-        endTimeRoundedOffToNearest30min: endTime as number
+        startTimeRoundedOffToNearest30min: selectedTimeRange.startTime,
+        endTimeRoundedOffToNearest30min: selectedTimeRange.endTime
       }
-    } else {
-      return getStartAndEndTime((selectedTimePeriod?.value as string) || '')
     }
-  }, [endTime, selectedTimePeriod?.value, hideTimeline, startTime])
+
+    return getStartAndEndTime((selectedTimePeriod?.value as string) || '')
+  }, [selectedTimePeriod?.value, selectedTimeRange])
 
   useEffect(() => {
     changeEventTimelineCancel()
-    if (!useMonitoredServiceChangeTimeline) {
+    /* istanbul ignore else */ if (!useMonitoredServiceChangeTimeline) {
       changeEventTimelineRefetch({
         queryParams: {
           ...(monitoredServiceIdentifier ? { monitoredServiceIdentifiers: [monitoredServiceIdentifier] } : {}),
@@ -90,8 +91,8 @@ export default function ChangeTimeline(props: ChangeTimelineProps): JSX.Element 
             : {}),
           changeCategories: changeCategories || [],
           changeSourceTypes: changeSourceTypes || [],
-          startTime: startTimeRoundedOffToNearest30min as number,
-          endTime: endTimeRoundedOffToNearest30min as number
+          startTime: startTimeRoundedOffToNearest30min,
+          endTime: endTimeRoundedOffToNearest30min
         },
         queryParamStringifyOptions: {
           arrayFormat: 'repeat'
@@ -112,7 +113,7 @@ export default function ChangeTimeline(props: ChangeTimelineProps): JSX.Element 
 
   useEffect(() => {
     monitoredServiceChangeTimelineCancel()
-    if (useMonitoredServiceChangeTimeline) {
+    /* istanbul ignore else */ if (useMonitoredServiceChangeTimeline) {
       monitoredServiceChangeTimelineRefetch({
         queryParams: {
           accountId,

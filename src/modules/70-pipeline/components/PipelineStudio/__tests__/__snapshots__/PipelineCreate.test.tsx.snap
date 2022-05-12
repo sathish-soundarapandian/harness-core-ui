@@ -6,6 +6,7 @@ exports[`PipelineCreate test initializes ok edit pipeline 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -193,6 +194,7 @@ exports[`PipelineCreate test initializes ok for CD module 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -413,6 +415,7 @@ exports[`PipelineCreate test initializes ok for CI module 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -633,6 +636,7 @@ exports[`PipelineCreate test initializes ok new pipeline 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

@@ -13,6 +13,7 @@ declare const styles: {
   readonly collapseFeaturesPrerequisites: string
   readonly editDetailsModalContainer: string
   readonly editFlagModal: string
+  readonly flagVariationValue: string
   readonly module: string
   readonly newEnvRulesContainer: string
   readonly selectEnv: string

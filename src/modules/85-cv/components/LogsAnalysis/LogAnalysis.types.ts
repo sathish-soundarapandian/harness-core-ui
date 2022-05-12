@@ -5,14 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { SeriesLineOptions } from 'highcharts'
+import type { SeriesColumnOptions } from 'highcharts'
 import type { LogData } from 'services/cv'
 
 export type LogAnalysisRowData = {
   clusterType: LogData['tag']
   message: string
   count: number
-  messageFrequency: SeriesLineOptions[]
+  messageFrequency: SeriesColumnOptions[]
   riskScore: number
   riskStatus: LogData['riskStatus']
 }

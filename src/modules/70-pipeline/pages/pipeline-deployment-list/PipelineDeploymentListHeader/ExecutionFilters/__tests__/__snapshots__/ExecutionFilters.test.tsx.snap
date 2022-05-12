@@ -92,6 +92,7 @@ exports[`<ExecutionFilters /> test snapshot testing for opened filter drawer 1`]
   tabindex="0"
 >
   <form
+    action="#"
     class="FormikForm--main"
   >
     <div>

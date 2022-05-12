@@ -8,7 +8,7 @@
 import React from 'react'
 import { MultiTypeInputType, NestedAccordionPanel, Text } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { isEmpty, lowerCase } from 'lodash-es'
+import { defaultTo, isEmpty, lowerCase } from 'lodash-es'
 import type { ServiceConfig, ServiceSpec, StageElementConfig } from 'services/cd-ng'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
@@ -17,12 +17,16 @@ import { VariablesListTable } from '@pipeline/components/VariablesListTable/Vari
 import { useStrings } from 'framework/strings'
 import VariableListTagRow from '@pipeline/components/VariablesListTable/VariableListTagRow'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
+import { getSelectedDeploymentType } from '@pipeline/utils/stageHelpers'
+import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import VariableAccordionSummary from '../VariableAccordionSummary'
 import type { PipelineVariablesData } from '../types'
+import { usePipelineContext } from '../../PipelineContext/PipelineContext'
 import css from '../PipelineVariables.module.scss'
 
 const StepsMap: Record<string, StepType> = {
-  Kubernetes: StepType.K8sServiceSpec
+  Kubernetes: StepType.K8sServiceSpec,
+  ServerlessAwsLambda: StepType.ServerlessAwsLambda
 }
 
 export interface ServiceCardProps {
@@ -52,7 +56,15 @@ export function ServiceCard(props: ServiceCardProps): React.ReactElement {
     allowableTypes,
     stepsFactory
   } = props
+
+  const { getStageFromPipeline } = usePipelineContext()
+
   const { getString } = useStrings()
+  const stage = getStageFromPipeline(stageIdentifier)
+  const selectedDeploymentType = getSelectedDeploymentType(
+    stage as StageElementWrapper<DeploymentStageElementConfig> | undefined,
+    getStageFromPipeline
+  )
   return (
     <React.Fragment>
       <VariablesListTable
@@ -72,8 +84,11 @@ export function ServiceCard(props: ServiceCardProps): React.ReactElement {
       )}
       <StepWidget<ServiceSpec>
         factory={stepsFactory}
-        initialValues={originalServiceConfig.serviceDefinition?.spec || {}}
-        type={StepsMap[originalServiceConfig.serviceDefinition?.type || '']}
+        initialValues={defaultTo(
+          defaultTo(originalServiceConfig.serviceDefinition?.spec, originalServiceConfig.stageOverrides),
+          {}
+        )}
+        type={StepsMap[selectedDeploymentType] || StepType.K8sServiceSpec}
         stepViewType={StepViewType.InputVariable}
         allowableTypes={allowableTypes}
         onUpdate={onUpdateServiceConfig}
@@ -81,7 +96,7 @@ export function ServiceCard(props: ServiceCardProps): React.ReactElement {
         customStepProps={{
           stageIdentifier,
           metadataMap,
-          variablesData: serviceConfig.serviceDefinition?.spec,
+          variablesData: defaultTo(serviceConfig.serviceDefinition?.spec, serviceConfig.stageOverrides),
           path: props.path
         }}
       />

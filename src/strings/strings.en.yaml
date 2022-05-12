@@ -230,7 +230,6 @@ sidecarArtifactText: Sidecar Artifact
 sidecar: Sidecar
 sidecarsText: '{{$.sidecar}}s'
 manifestsText: Manifest
-variablesText: Variables
 fileFolderPathText: File/Folder Path
 chartPath: Chart Path
 pluginPath: Kustomize Plugin Path
@@ -539,7 +538,7 @@ noProjects: No Projects found
 noRoles: No Roles Found
 string: 'String'
 number: 'Number'
-secretType: 'Secret'
+secretType: Secret
 list: 'List'
 map: 'Map'
 HTTP: 'HTTP'
@@ -904,7 +903,6 @@ pipelineSteps:
       addSharedPath: '+ Path'
       addDescription: '{{$.description}}'
       addTags: '{{$.tagsLabel}}'
-      variablesCell: '{{$.variablesText}}'
       valueCell: '{{$.valueLabel}}'
     infraSpecifications:
       whereToRun: Where do you want the builds to run?
@@ -1059,9 +1057,6 @@ pipeline-list:
   confirmDeleteTitle: Delete Pipeline
   pipelineDeleted: Pipeline {{name}} deleted
   readyToRun: Ready To Run
-variables:
-  copyVariableName: Copy variable name
-  copyFqn: Copy fully qualified name
 customVariables:
   pipelineVariablesTitle: Pipeline Variables
   title: Custom Variables

@@ -23,6 +23,7 @@ export interface EnvironmentPageTemplateProps {
   titleTooltipId?: string
   headerContent?: ReactNode
   toolbar?: ReactNode
+  headerToolbar?: ReactNode
   pagination?: ReactNode
   loading?: boolean
   error?: unknown
@@ -46,6 +47,7 @@ const EnvironmentListingPageTemplate: React.FC<EnvironmentPageTemplateProps> = (
   titleTooltipId,
   headerContent,
   toolbar,
+  headerToolbar,
   pagination,
   error,
   retryOnError,
@@ -83,6 +85,7 @@ const EnvironmentListingPageTemplate: React.FC<EnvironmentPageTemplateProps> = (
         breadcrumbs={<NGBreadcrumbs customPathParams={{ module: 'cd' }} links={breadcrumbs} />}
         className={css.header}
         content={headerContent}
+        toolbar={headerToolbar}
       />
 
       {toolbar && <Page.SubHeader className={css.toolbar}>{toolbar}</Page.SubHeader>}

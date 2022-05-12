@@ -6,20 +6,25 @@
  */
 
 import React from 'react'
-import { toLower } from 'lodash-es'
+import { defaultTo, toLower } from 'lodash-es'
 import { useParams, Link } from 'react-router-dom'
 import { Spinner } from '@blueprintjs/core'
 import { Container, Layout, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ResourceConstraintDetail } from 'services/pipeline-ng'
+import type { CDStageModuleInfo } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
 
 export interface ResourceConstraintTooltipProps {
   loading: boolean
   data?: {
     executionList?: ResourceConstraintDetail[]
+    moduleInfo?: {
+      [key: string]: CDStageModuleInfo
+    }
     executionId: string
   }
 }
@@ -45,6 +50,9 @@ export default function ResourceConstraintTooltip(props: ResourceConstraintToolt
     props.data?.executionId
   )
 
+  const stageDeploymentType = props.data?.moduleInfo?.[module]?.serviceInfo?.deploymentType
+  const isServerlessDeploymentTypeSelected = isServerlessDeploymentType(defaultTo(stageDeploymentType, ''))
+
   return props.loading ? (
     <Container border={{ top: true, width: 1, color: Color.GREY_100 }} padding={'medium'}>
       <Spinner size={24} />
@@ -59,7 +67,10 @@ export default function ResourceConstraintTooltip(props: ResourceConstraintToolt
               executiontext:
                 noOfExecutionsBeforePipeline > 1
                   ? toLower(getString('executionsText'))
-                  : toLower(getString('executionText'))
+                  : toLower(getString('executionText')),
+              infraEntityText: isServerlessDeploymentTypeSelected
+                ? getString('pipeline.resourceConstraints.serverlessInfraEntity')
+                : getString('pipeline.resourceConstraints.k8sNamespaceText')
             })}
           </Text>
           {props?.data?.executionList?.map((pipeline: ResourceConstraintDetail, index: number) => (

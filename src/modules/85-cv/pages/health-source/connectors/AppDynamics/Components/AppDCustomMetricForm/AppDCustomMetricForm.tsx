@@ -32,7 +32,7 @@ import css from '../../AppDHealthSource.module.scss'
 import basePathStyle from '../BasePath/BasePath.module.scss'
 
 export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterface) {
-  const { formikValues, formikSetField, mappedMetrics, selectedMetric, connectorIdentifier } = props
+  const { formikValues, formikSetField, mappedMetrics, selectedMetric, connectorIdentifier, isTemplate } = props
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -138,54 +138,67 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
                   checked={formikValues?.pathType === PATHTYPE.FullPath}
                   onChange={() => formikSetField('pathType', PATHTYPE.FullPath)}
                 />
-                <FormInput.Text
-                  className={css.fullPath}
-                  name={PATHTYPE.FullPath}
-                  tooltipProps={{ dataTooltipId: 'appDynamicsCompletePath' }}
-                  disabled={formikValues?.pathType !== PATHTYPE.FullPath}
-                />
+                {!isTemplate ? (
+                  <FormInput.Text
+                    className={css.fullPath}
+                    name={PATHTYPE.FullPath}
+                    tooltipProps={{ dataTooltipId: 'appDynamicsCompletePath' }}
+                    disabled={formikValues?.pathType !== PATHTYPE.FullPath}
+                  />
+                ) : (
+                  <FormInput.MultiTextInput
+                    className={css.fullPath}
+                    name={PATHTYPE.FullPath}
+                    label={''}
+                    tooltipProps={{ dataTooltipId: 'appDynamicsCompletePath' }}
+                    disabled={formikValues?.pathType !== PATHTYPE.FullPath}
+                  />
+                )}
                 <Radio
                   padding={{ bottom: 'medium', left: 'xlarge' }}
                   label={getString('cv.healthSource.connectors.AppDynamics.metricPathType.dropdown')}
                   checked={formikValues?.pathType === PATHTYPE.DropdownPath}
                   onChange={() => formikSetField('pathType', PATHTYPE.DropdownPath)}
+                  disabled={isTemplate}
                 />
-                <Container
-                  padding={{ left: 'large' }}
-                  className={cx({ [css.disabled]: formikValues?.pathType !== PATHTYPE.DropdownPath })}
-                >
-                  <Text padding={{ bottom: 'medium' }} tooltipProps={{ dataTooltipId: 'appDynamicsBasePath' }}>
-                    {getString('cv.monitoringSources.appD.appdPathDetail')}
-                  </Text>
-                  <BasePath
-                    basePathValue={formikValues?.basePath || BasePathInitValue}
-                    onChange={formikSetField}
-                    appName={formikValues.appdApplication}
-                    connectorIdentifier={connectorIdentifier}
-                  />
-                  {basePathValue && formikValues.appDTier && (
-                    <MetricPath
+                {!isTemplate && (
+                  <Container
+                    padding={{ left: 'large' }}
+                    className={cx({ [css.disabled]: formikValues?.pathType !== PATHTYPE.DropdownPath })}
+                  >
+                    <Text padding={{ bottom: 'medium' }} tooltipProps={{ dataTooltipId: 'appDynamicsBasePath' }}>
+                      {getString('cv.monitoringSources.appD.appdPathDetail')}
+                    </Text>
+                    <BasePath
+                      basePathValue={formikValues?.basePath || BasePathInitValue}
                       onChange={formikSetField}
-                      metricPathValue={formikValues?.metricPath}
-                      connectorIdentifier={connectorIdentifier}
-                      baseFolder={basePathValue}
                       appName={formikValues.appdApplication}
-                      tier={formikValues.appDTier}
+                      connectorIdentifier={connectorIdentifier}
                     />
-                  )}
-                  <Container className={basePathStyle.basePathContainer}>
-                    <Text
-                      font={{ variation: FontVariation.SMALL_BOLD }}
-                      color={Color.GREY_400}
-                      className={basePathStyle.basePathLabel}
-                    >
-                      {getString('cv.healthSource.connectors.AppDynamics.selectedPathLabel')}
-                    </Text>
-                    <Text className={basePathStyle.basePathValue} font={{ variation: FontVariation.SMALL_SEMI }}>
-                      {completeMetricPath}
-                    </Text>
+                    {basePathValue && formikValues.appDTier && (
+                      <MetricPath
+                        onChange={formikSetField}
+                        metricPathValue={formikValues?.metricPath}
+                        connectorIdentifier={connectorIdentifier}
+                        baseFolder={basePathValue}
+                        appName={formikValues.appdApplication}
+                        tier={formikValues.appDTier}
+                      />
+                    )}
+                    <Container className={basePathStyle.basePathContainer}>
+                      <Text
+                        font={{ variation: FontVariation.SMALL_BOLD }}
+                        color={Color.GREY_400}
+                        className={basePathStyle.basePathLabel}
+                      >
+                        {getString('cv.healthSource.connectors.AppDynamics.selectedPathLabel')}
+                      </Text>
+                      <Text className={basePathStyle.basePathValue} font={{ variation: FontVariation.SMALL_SEMI }}>
+                        {completeMetricPath}
+                      </Text>
+                    </Container>
                   </Container>
-                </Container>
+                )}
               </>
             }
           />

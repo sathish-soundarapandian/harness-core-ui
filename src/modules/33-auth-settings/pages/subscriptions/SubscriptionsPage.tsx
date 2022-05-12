@@ -26,8 +26,9 @@ import {
   GetModuleLicensesByAccountAndModuleTypeQueryParams
 } from 'services/cd-ng'
 
-import { useLicenseStore, handleUpdateLicenseStore, isCDCommunity } from 'framework/LicenseStore/LicenseStoreContext'
+import { useLicenseStore, handleUpdateLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { isCommunityPlan } from '@common/utils/utils'
 import SubscriptionTab from './SubscriptionTab'
 
 import css from './SubscriptionsPage.module.scss'
@@ -74,6 +75,7 @@ const SubscriptionsPage: React.FC = () => {
   const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const history = useHistory()
+  const isCommunity = isCommunityPlan()
 
   const ACTIVE_MODULE_SELECT_CARDS = MODULE_SELECT_CARDS.reduce(
     (accumulator: ModuleSelectCard[], card: ModuleSelectCard) => {
@@ -186,7 +188,7 @@ const SubscriptionsPage: React.FC = () => {
   const expiredDays = Math.abs(days)
   const edition = latestModuleLicense?.edition as Editions
 
-  const isFreeOrCommunity = edition === Editions.FREE || isCDCommunity(licenseInformation)
+  const isFreeOrCommunity = edition === Editions.FREE || isCommunity
 
   const trialInformation: TrialInformation = {
     days,
@@ -220,13 +222,13 @@ const SubscriptionsPage: React.FC = () => {
         flex={{ align: 'center-center' }}
       >
         <Heading color={Color.BLACK} padding={{ bottom: 'large' }}>
-          {isCDCommunity(licenseInformation) ? null : getString('common.plans.title')}
+          {isCommunity ? null : getString('common.plans.title')}
         </Heading>
         <Layout.Horizontal
           className={css.moduleSelectCards}
           flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
         >
-          {isCDCommunity(licenseInformation) ? null : getModuleSelectElements()}
+          {isCommunity ? null : getModuleSelectElements()}
         </Layout.Horizontal>
         {innerContent}
       </Layout.Vertical>

@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { noop } from 'lodash-es'
+import { Formik, MultiTypeInputType } from '@wings-software/uicore'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 
@@ -119,7 +120,9 @@ const renderForm = (props: any) => {
       path="/account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier"
       pathParams={{ accountId: 'account', orgIdentifier: 'org', projectIdentifier: 'project' }}
     >
-      <ConfigSection {...props} />
+      <Formik formName="TFConfigSection" onSubmit={noop} initialValues={{}}>
+        <ConfigSection {...props} />
+      </Formik>
     </TestWrapper>
   )
 }

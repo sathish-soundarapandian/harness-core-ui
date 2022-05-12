@@ -18,6 +18,7 @@ exports[`CREATE MODE if form changesupdate the preview card: changed value shoul
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>

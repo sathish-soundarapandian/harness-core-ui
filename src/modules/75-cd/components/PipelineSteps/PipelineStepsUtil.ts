@@ -15,25 +15,27 @@ import {
   getFailureStrategiesValidationSchema,
   getVariablesValidationField
 } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/validation'
+import { isServerlessDeploymentType, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import type { GetExecutionStrategyYamlQueryParams } from 'services/cd-ng'
 
 const namespaceRegex = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/
 const releaseNameRegex = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/
 
-export enum ServiceDeploymentType {
-  Kubernetes = 'Kubernetes',
-  NativeHelm = 'NativeHelm',
-  amazonEcs = 'amazonEcs',
-  amazonAmi = 'amazonAmi',
-  awsCodeDeploy = 'awsCodeDeploy',
-  winrm = 'winrm',
-  awsLambda = 'awsLambda',
-  pcf = 'pcf',
-  ssh = 'ssh'
-}
-
 export enum InfraDeploymentType {
   KubernetesDirect = 'KubernetesDirect',
-  KubernetesGcp = 'KubernetesGcp'
+  KubernetesGcp = 'KubernetesGcp',
+  KubernetesAzure = 'KubernetesAzure',
+  ServerlessAwsLambda = 'ServerlessAwsLambda',
+  ServerlessGoogleFunctions = 'ServerlessGoogleFunctions',
+  ServerlessAzureFunctions = 'ServerlessAzureFunctions',
+  AmazonSAM = 'AwsSAM',
+  AzureFunctions = 'AzureFunctions'
+}
+
+export const deploymentTypeToInfraTypeMap = {
+  [ServiceDeploymentType.ServerlessAwsLambda]: InfraDeploymentType.ServerlessAwsLambda,
+  [ServiceDeploymentType.ServerlessAzureFunctions]: InfraDeploymentType.ServerlessAzureFunctions,
+  [ServiceDeploymentType.ServerlessGoogleFunctions]: InfraDeploymentType.ServerlessGoogleFunctions
 }
 
 export function getNameSpaceSchema(
@@ -67,6 +69,27 @@ export function getReleaseNameSchema(
   return releaseNameSchema
 }
 
+export function getValidationSchemaWithRegion(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
+  return Yup.object().shape({
+    connectorRef: getConnectorSchema(getString),
+    region: Yup.lazy((): Yup.Schema<unknown> => {
+      return Yup.string().required(getString('validation.regionRequired'))
+    }),
+    stage: Yup.lazy((): Yup.Schema<unknown> => {
+      return Yup.string().required(getString('cd.pipelineSteps.infraTab.stageIsRequired'))
+    })
+  })
+}
+
+export function getValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
+  return Yup.object().shape({
+    connectorRef: getConnectorSchema(getString),
+    stage: Yup.lazy((): Yup.Schema<unknown> => {
+      return Yup.string().required(getString('cd.pipelineSteps.infraTab.stageIsRequired'))
+    })
+  })
+}
+
 export function getConnectorSchema(getString: UseStringsReturn['getString']): Yup.StringSchema<string | undefined> {
   return Yup.string().required(getString('fieldRequired', { field: getString('connector') }))
 }
@@ -97,8 +120,41 @@ export function getInfraDeploymentTypeSchema(
     .required(getString('cd.pipelineSteps.infraTab.deploymentType'))
 }
 
+const getInfrastructureDefinitionValidationSchema = (
+  deploymentType: GetExecutionStrategyYamlQueryParams['serviceDefinitionType'],
+  getString: UseStringsReturn['getString']
+) => {
+  if (isServerlessDeploymentType(deploymentType)) {
+    if (deploymentType === ServiceDeploymentType.ServerlessAwsLambda) {
+      return getValidationSchemaWithRegion(getString)
+    } else {
+      return getValidationSchema(getString)
+    }
+  } else {
+    return Yup.object().shape({
+      connectorRef: getConnectorSchema(getString),
+      namespace: getNameSpaceSchema(getString),
+      releaseName: getReleaseNameSchema(getString),
+      cluster: Yup.mixed().test({
+        test(val): boolean | Yup.ValidationError {
+          const infraDeploymentType = get(this.options.context, 'spec.infrastructure.infrastructureDefinition.type')
+          if (infraDeploymentType === InfraDeploymentType.KubernetesGcp) {
+            if (isEmpty(val) || (typeof val === 'object' && isEmpty(val.value))) {
+              return this.createError({
+                message: getString('fieldRequired', { field: getString('common.cluster') })
+              })
+            }
+          }
+          return true
+        }
+      })
+    })
+  }
+}
+
 export function getCDStageValidationSchema(
   getString: UseStringsReturn['getString'],
+  deploymentType: GetExecutionStrategyYamlQueryParams['serviceDefinitionType'],
   contextType?: string
 ): Yup.Schema<unknown> {
   return Yup.object().shape({
@@ -115,27 +171,7 @@ export function getCDStageValidationSchema(
         environmentRef: getEnvironmentRefSchema(getString),
         infrastructureDefinition: Yup.object().shape({
           type: getInfraDeploymentTypeSchema(getString),
-          spec: Yup.object().shape({
-            connectorRef: getConnectorSchema(getString),
-            namespace: getNameSpaceSchema(getString),
-            releaseName: getReleaseNameSchema(getString),
-            cluster: Yup.mixed().test({
-              test(val): boolean | Yup.ValidationError {
-                const infraDeploymentType = get(
-                  this.options.context,
-                  'spec.infrastructure.infrastructureDefinition.type'
-                )
-                if (infraDeploymentType === InfraDeploymentType.KubernetesGcp) {
-                  if (isEmpty(val) || (typeof val === 'object' && isEmpty(val.value))) {
-                    return this.createError({
-                      message: getString('fieldRequired', { field: getString('common.cluster') })
-                    })
-                  }
-                }
-                return true
-              }
-            })
-          })
+          spec: getInfrastructureDefinitionValidationSchema(deploymentType, getString)
         })
       }),
       execution: Yup.object().shape({

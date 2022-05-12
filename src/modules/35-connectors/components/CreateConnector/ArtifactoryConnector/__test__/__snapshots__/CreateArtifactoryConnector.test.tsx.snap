@@ -656,6 +656,7 @@ exports[`Create Artifactory connector Wizard Should render form 1`] = `
             class="OverlaySpinner--overlaySpinner"
           >
             <form
+              action="#"
               class="FormikForm--main"
             >
               <div>

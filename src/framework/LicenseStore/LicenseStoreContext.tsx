@@ -381,12 +381,6 @@ export function handleUpdateLicenseStore(
   }
 }
 
-export const isCDCommunity = (
-  license: { [p: string]: ModuleLicenseDTO } | undefined | Record<string, undefined>
-): boolean => {
-  return license?.CD?.edition === Editions.COMMUNITY
-}
-
 export const isFreePlan = (
   license: { [p: string]: ModuleLicenseDTO } | undefined | Record<string, undefined>,
   moduleName: ModuleName

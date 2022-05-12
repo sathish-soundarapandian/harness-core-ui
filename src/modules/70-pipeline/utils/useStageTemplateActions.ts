@@ -16,7 +16,7 @@ import { createTemplate, getStageType } from '@pipeline/utils/templateUtils'
 import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
 
 interface TemplateActionsReturnType {
-  addOrUpdateTemplate: () => void
+  addOrUpdateTemplate: () => Promise<void>
   removeTemplate: () => Promise<void>
 }
 

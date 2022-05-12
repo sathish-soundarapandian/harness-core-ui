@@ -43,7 +43,7 @@ const healthMock = {
 }
 
 jest.mock('services/pipeline-ng', () => ({
-  useGetPipelinedHealth: () => ({
+  useFetchPipelineHealth: () => ({
     loading: false,
     data: healthMock
   })

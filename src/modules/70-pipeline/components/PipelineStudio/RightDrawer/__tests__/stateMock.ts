@@ -188,6 +188,7 @@ const stateMock = {
     selectedStageId: 's1',
     selectedStepId: 'step1'
   },
+  templateTypes: {},
   error: ''
 }
 
@@ -240,7 +241,7 @@ const pipelineContextMock: PipelineContextInterface = {
   updateStage: jest.fn().mockResolvedValue({}),
   getStageFromPipeline: () => ({ stage: stateMock.pipeline.stages[0] as any, parent: undefined }),
   setYamlHandler: () => undefined,
-  updatePipeline: () => new Promise<void>(() => undefined),
+  updatePipeline: jest.fn(),
   pipelineSaved: () => undefined,
   deletePipelineCache: () => new Promise<void>(() => undefined),
   setSelectedStageId: (_selectedStageId: string | undefined) => undefined,
@@ -352,5 +353,25 @@ export const updatePipelineViewFnArg1 = {
     type: 'StageView'
   }
 }
+
+export const mockBarriers = [
+  {
+    identifier: 'demo',
+    name: 'demo',
+    stages: [
+      {
+        name: 'demoStageName'
+      },
+      {
+        name: 'demoStageName2'
+      }
+    ]
+  },
+  {
+    identifier: 'demo2',
+    name: 'dem2',
+    stages: []
+  }
+]
 
 export default pipelineContextMock

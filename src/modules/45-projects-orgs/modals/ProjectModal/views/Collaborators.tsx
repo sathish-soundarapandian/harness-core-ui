@@ -40,7 +40,7 @@ import { CopyText } from '@common/components/CopyText/CopyText'
 import routes from '@common/RouteDefinitions'
 import { InvitationStatus, handleInvitationResponse } from '@rbac/utils/utils'
 import { getDefaultRole, getDetailsUrl } from '@projects-orgs/utils/utils'
-import { isCDCommunity, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { isCommunityPlan } from '@common/utils/utils'
 import { useMutateAsGet } from '@common/hooks'
 import UserItemRenderer from '@audit-trail/components/UserItemRenderer/UserItemRenderer'
 import UserTagRenderer from '@audit-trail/components/UserTagRenderer/UserTagRenderer'
@@ -67,8 +67,7 @@ const Collaborators: React.FC<CollaboratorModalData> = props => {
   const { projectIdentifier, orgIdentifier, showManage = true } = props
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
-  const { licenseInformation } = useLicenseStore()
-  const isCommunity = isCDCommunity(licenseInformation)
+  const isCommunity = isCommunityPlan()
   const { showSuccess } = useToaster()
   const history = useHistory()
   const [search, setSearch] = useState<string>()
@@ -190,7 +189,7 @@ const Collaborators: React.FC<CollaboratorModalData> = props => {
         modalErrorHandler?.hide()
         SendInvitation(values.collaborators)
         setRole(getDefaultRole({ accountIdentifier: accountId, orgIdentifier, projectIdentifier }, getString))
-        resetForm({ collaborators: [] })
+        resetForm({ values: { collaborators: [] } })
       }}
       enableReinitialize={true}
     >

@@ -10,42 +10,20 @@ import { act, fireEvent, render } from '@testing-library/react'
 import { useLocation } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
-import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
 import { mockTemplates, mockTemplatesSuccessResponse } from '@templates-library/TemplatesTestHelper'
 import { TemplateDetails, TemplateDetailsProps } from '../TemplateDetails'
-
-jest.mock('@common/components/YAMLBuilder/YamlBuilder')
-jest.mock('@wings-software/monaco-yaml/lib/esm/languageservice/yamlLanguageService', () => ({
-  getLanguageService: jest.fn()
-}))
-
-jest.mock('@common/hooks', () => ({
-  ...(jest.requireActual('@common/hooks') as any),
-  useMutateAsGet: jest.fn()
-}))
 
 jest.mock('@common/hooks', () => ({
   ...(jest.requireActual('@common/hooks') as any),
   useMutateAsGet: jest.fn().mockImplementation(() => mockTemplatesSuccessResponse)
 }))
 
-jest.mock('react-monaco-editor', () => ({
-  MonacoDiffEditor: MonacoEditor
+jest.mock('@templates-library/components/TemplateInputs/TemplateInputs', () => ({
+  ...jest.requireActual('@templates-library/components/TemplateInputs/TemplateInputs'),
+  TemplateInputs: () => {
+    return <div className="template-inputs-mock"></div>
+  }
 }))
-
-const mockYaml = {
-  status: 'SUCCESS',
-  data: 'type: "HarnessApproval"\ntimeout: "<+input>"' + '\nspec:\n  approvalMessage: "<+input>"\n'
-}
-
-jest.mock('services/template-ng', () => ({
-  ...(jest.requireActual('services/template-ng') as any),
-  useGetTemplateInputSetYaml: jest
-    .fn()
-    .mockImplementation(() => ({ data: mockYaml, refetch: jest.fn(), error: null, loading: false }))
-}))
-
-jest.mock('@common/components/MonacoEditor/MonacoEditor', () => MonacoEditor)
 
 function ComponentWrapper(props: TemplateDetailsProps): React.ReactElement {
   const location = useLocation()

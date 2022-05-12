@@ -7,24 +7,27 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { Dialog, Spinner } from '@blueprintjs/core'
+import { Spinner } from '@blueprintjs/core'
 import {
   Button,
   ButtonProps,
+  ButtonVariation,
   CardSelect,
-  Collapse,
   Container,
+  Dialog,
   Formik,
+  FormikForm,
   FormInput,
-  IconName,
   Layout,
   Text
-} from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
+} from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
+import type { FormikErrors } from 'formik'
 import * as Yup from 'yup'
-import { ResponseEnvironmentResponseDTO, useCreateEnvironment } from 'services/cd-ng'
+import { EnvironmentResponseDTO, ResponseEnvironmentResponseDTO, useCreateEnvironment } from 'services/cd-ng'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
+import { Description } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { useToaster } from '@common/exports'
 import { useEnvStrings } from '@cf/hooks/environment'
 import { getErrorMessage } from '@cf/utils/CFUtils'
@@ -34,19 +37,15 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import css from './EnvironmentDialog.module.scss'
-
-const collapseProps = {
-  collapsedIcon: 'plus' as IconName,
-  expandedIcon: 'minus' as IconName,
-  isOpen: false,
-  isRemovable: false
-}
 
 export interface EnvironmentDialogProps {
   disabled?: boolean
   onCreate: (response?: ResponseEnvironmentResponseDTO) => void
   buttonProps?: ButtonProps
+  environments?: EnvironmentResponseDTO[]
 }
 
 interface EnvironmentValues {
@@ -57,9 +56,7 @@ interface EnvironmentValues {
   type: EnvironmentType
 }
 
-const identity = (x: any) => x as string
-
-const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({ disabled, onCreate, buttonProps }) => {
+const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({ disabled, onCreate, buttonProps, environments }) => {
   const { showError } = useToaster()
   const { getString, getEnvString } = useEnvStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
@@ -91,6 +88,10 @@ const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({ disabled, onCreat
   }
 
   const handleSubmit = (values: EnvironmentValues) => {
+    trackEvent(FeatureActions.CreateEnvSubmit, {
+      category: Category.FEATUREFLAG,
+      data: values
+    })
     createEnv({
       name: values.name,
       identifier: values.identifier,
@@ -121,38 +122,48 @@ const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({ disabled, onCreat
       }
     : undefined
 
+  const handleValidation = (values: EnvironmentValues): FormikErrors<EnvironmentValues> => {
+    const errors: { name?: string } = {}
+
+    if (environments?.some(env => env.name === values.name)) {
+      errors.name = getEnvString('create.duplicateName')
+    }
+    return errors
+  }
+  const { trackEvent } = useTelemetry()
+
   const [openModal, hideModal] = useModalHook(() => {
     return (
-      <Dialog enforceFocus={false} isOpen onClose={hideModal} className={css.dialog}>
+      <Dialog
+        enforceFocus={false}
+        isOpen
+        onClose={hideModal}
+        className={css.dialog}
+        title={getEnvString('create.title')}
+      >
         <Formik
           initialValues={initialValues}
           formName="cfEnvDialog"
           onSubmit={handleSubmit}
-          onReset={hideModal}
+          onReset={() => {
+            trackEvent(FeatureActions.CreateEnvCancel, {
+              category: Category.FEATUREFLAG
+            })
+            hideModal()
+          }}
           validationSchema={Yup.object().shape({
             name: NameSchema({ requiredErrorMsg: getString?.('fieldRequired', { field: 'Environment' }) }),
             identifier: IdentifierSchema()
           })}
+          validate={handleValidation}
         >
           {formikProps => {
             return (
-              <Container
-                padding="xxxlarge"
-                style={{
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  paddingBottom: 'var(--spacing-medium)'
-                }}
-              >
-                <Text font={{ size: 'medium', weight: 'bold' }} color={Color.BLACK}>
-                  {getEnvString('create.title')}
+              <FormikForm>
+                <Text color={Color.GREY_800} font={{ variation: FontVariation.SMALL }}>
+                  {getEnvString('create.description')}
                 </Text>
-                <Text margin={{ top: 'large', bottom: 'large' }}>{getEnvString('create.description')}</Text>
-                <Layout.Vertical
-                  spacing="small"
-                  style={{ minHeight: 415, overflow: 'auto', padding: 'var(--spacing-xsmall)' }}
-                >
+                <Layout.Vertical padding={{ top: 'medium', left: 'xsmall', right: 'xsmall' }} className={css.container}>
                   <FormInput.InputWithIdentifier
                     inputName="name"
                     idName="identifier"
@@ -160,41 +171,9 @@ const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({ disabled, onCreat
                     inputLabel={getEnvString('create.nameLabel')}
                     inputGroupProps={{ inputGroup: { autoFocus: true } }}
                   />
-                  <Layout.Vertical>
-                    <Container className={css.collapse}>
-                      <Collapse
-                        {...collapseProps}
-                        heading={getString('description')}
-                        collapseHeaderClassName={css.collapseHeaderFix}
-                      >
-                        <FormInput.TextArea name="description" />
-                      </Collapse>
-                    </Container>
-                    <Container className={css.collapse}>
-                      <Collapse
-                        {...collapseProps}
-                        heading={getString('tagsLabel')}
-                        collapseHeaderClassName={css.collapseHeaderFix}
-                      >
-                        <FormInput.TagInput
-                          name="tags"
-                          label=""
-                          items={[]}
-                          labelFor={identity}
-                          itemFromNewTag={identity}
-                          tagInputProps={{
-                            showClearAllButton: true,
-                            allowNewTag: true,
-                            placeholder: 'Tags'
-                          }}
-                        />
-                      </Collapse>
-                    </Container>
-                  </Layout.Vertical>
-                  <Layout.Vertical spacing="small" style={{ margin: 'auto 0' }}>
-                    <Text font={{ size: 'normal' }} padding={{ top: 'medium' }}>
-                      {getEnvString('create.envTypeLabel')}
-                    </Text>
+                  <Description />
+                  <Layout.Vertical spacing="small">
+                    <Text font={{ variation: FontVariation.FORM_LABEL }}>{getEnvString('create.envTypeLabel')}</Text>
                     <CardSelect
                       cornerSelected
                       data={envTypes}
@@ -203,33 +182,27 @@ const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({ disabled, onCreat
                       onChange={nextValue => formikProps.setFieldValue('type', nextValue.value)}
                       renderItem={cardData => (
                         <Container
-                          flex={{ align: 'center-center', distribution: 'space-between' }}
-                          className="cardBody"
+                          flex={{ align: 'center-center', distribution: 'space-between', justifyContent: 'center' }}
+                          className={css.cardBody}
                         >
-                          {cardData.text}
+                          <Text font={{ variation: FontVariation.SMALL }}>{cardData.text}</Text>
                         </Container>
                       )}
                     />
                   </Layout.Vertical>
                 </Layout.Vertical>
-                <Container
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'flex-start',
-                    alignItems: 'center',
-                    marginTop: 'auto'
-                  }}
-                >
+                <Layout.Horizontal spacing="small" padding={{ top: 'xxlarge' }}>
                   <Button
+                    variation={ButtonVariation.PRIMARY}
+                    type="submit"
                     text={getString('createSecretYAML.create')}
-                    onClick={() => formikProps.handleSubmit()}
                     intent="primary"
                     disabled={loading}
                   />
-                  <Button text={getString('cancel')} onClick={() => formikProps.handleReset()} minimal />
+                  <Button variation={ButtonVariation.TERTIARY} text={getString('cancel')} type="reset" minimal />
                   {loading && <Spinner size={16} />}
-                </Container>
-              </Container>
+                </Layout.Horizontal>
+              </FormikForm>
             )
           }}
         </Formik>
@@ -240,8 +213,13 @@ const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({ disabled, onCreat
   return (
     <RbacButton
       disabled={disabled}
-      onClick={openModal}
-      text={`+ ${getString('environment')}`}
+      onClick={() => {
+        trackEvent(FeatureActions.CreateEnvClick, {
+          category: Category.FEATUREFLAG
+        })
+        openModal()
+      }}
+      text={`+ ${getString('newEnvironment')}`}
       intent="primary"
       padding={{
         top: 'small',

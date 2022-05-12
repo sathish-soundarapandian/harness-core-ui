@@ -22,7 +22,7 @@ export interface ArtifactSourceRenderProps extends KubernetesArtifactsProps {
 export abstract class ArtifactSourceBase<T> {
   protected abstract artifactType: string
   protected abstract isSidecar: boolean
-  abstract isTagsSelectionDisabled(params: T): boolean
+  abstract isTagsSelectionDisabled(params: T, isServerlessDeploymentTypeSelected?: boolean): boolean
   abstract renderContent(props: ArtifactSourceRenderProps): JSX.Element | null
 
   getArtifactSourceType() {

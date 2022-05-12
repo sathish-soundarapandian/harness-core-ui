@@ -43,8 +43,8 @@ import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResult
 import templateDoesNotExistSvg from '@templates-library/pages/TemplatesPage/images/template-does-not-exist.svg'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getVersionLabelText } from '@templates-library/utils/templatesUtils'
+import { TemplateInputs } from '@templates-library/components/TemplateInputs/TemplateInputs'
 import { TemplateContext } from '../TemplateStudio/TemplateContext/TemplateContext'
-import { TemplateInputs } from '../TemplateInputs/TemplateInputs'
 import { TemplateActivityLog } from '../TemplateActivityLog/TemplateActivityLog'
 import css from './TemplateDetails.module.scss'
 
@@ -182,6 +182,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   )
 
   const templateIcon = React.useMemo(() => getIconForTemplate(getString, selectedTemplate), [selectedTemplate])
+  const templateType = React.useMemo(() => getTypeForTemplate(getString, selectedTemplate), [selectedTemplate])
 
   return (
     <Container height={'100%'} className={css.container} data-template-id={template.identifier}>
@@ -258,9 +259,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                                     flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
                                   >
                                     {templateIcon && <Icon name={templateIcon} size={20} />}
-                                    <Text color={Color.GREY_900}>
-                                      {getTypeForTemplate(selectedTemplate, getString)}
-                                    </Text>
+                                    {templateType && <Text color={Color.GREY_900}>{templateType}</Text>}
                                   </Layout.Horizontal>
                                 </Container>
                               </Layout.Vertical>
@@ -309,7 +308,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                           <Tabs id="template-details" selectedTabId={selectedTab} onChange={handleTabChange}>
                             <Tab
                               id={TemplateTabs.INPUTS}
-                              title={getString('templatesLibrary.templateInputs')}
+                              title={getString('pipeline.templateInputs')}
                               panel={<TemplateInputs template={selectedTemplate} />}
                             />
                             <Tab

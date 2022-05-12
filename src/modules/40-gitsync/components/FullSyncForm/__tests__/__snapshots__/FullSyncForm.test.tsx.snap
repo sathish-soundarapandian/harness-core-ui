@@ -49,6 +49,7 @@ exports[`Test GitFullSyncForm Should render GitFullSyncForm 1`] = `
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>

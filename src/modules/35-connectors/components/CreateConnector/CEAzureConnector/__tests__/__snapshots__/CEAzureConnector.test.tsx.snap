@@ -149,81 +149,108 @@ exports[`Create Azure connector Wizard should render create new billing exports 
           <div
             class="Layout--vertical StyledProps--main stepContainer"
           >
-            <h2
-              class="StyledProps--font StyledProps--font-h2 StyledProps--main header"
-              level="2"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="azureBillingExport"
             >
-              connectors.ceAzure.billing.heading
-            </h2>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-large"
+              >
+                connectors.ceAzure.billing.heading
+              </p>
+            </div>
             <p
-              class="StyledProps--font StyledProps--main subHeader"
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey600 StyledProps--padding-bottom-medium"
             >
               connectors.ceAzure.billing.subHeading
             </p>
-            <span
-              class="StyledProps--font StyledProps--main info StyledProps--font-small StyledProps--color StyledProps--color-primary7 StyledProps--inline"
-              style="display: inline-flex; align-items: center;"
-            >
-              <span
-                class="bp3-icon bp3-icon-info-sign StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
-                icon="info-sign"
-              >
-                <svg
-                  data-icon="info-sign"
-                  height="15"
-                  viewBox="0 0 16 16"
-                  width="15"
-                >
-                  <desc>
-                    info-sign
-                  </desc>
-                  <path
-                    d="M8 0C3.58 0 0 3.58 0 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zM7 3h2v2H7V3zm3 10H6v-1h1V7H6V6h3v6h1v1z"
-                    fill-rule="evenodd"
-                  />
-                </svg>
-              </span>
-              connectors.ceAzure.billing.instruction
-            </span>
             <div
-              class="StyledProps--font StyledProps--main launchTemplateSection"
+              class="StyledProps--font StyledProps--main instructionPanel"
             >
-              <div
-                class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+              <ol
+                class="instructionList"
               >
-                <button
-                  class="bp3-button Button--button StyledProps--font StyledProps--main launchTemplateBtn Button--with-current-color Button--without-shadow Button--withLeftIcon"
-                  type="submit"
+                <li
+                  class="btnInstruction"
                 >
-                  <span
-                    class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--margin-right-xsmall"
-                    data-icon="main-share"
+                  <button
+                    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-secondary Button--size Button--small"
+                    type="button"
                   >
-                    <svg
-                      height="12"
-                      viewBox="0 0 14 14"
-                      width="12"
-                      xmlns="http://www.w3.org/2000/svg"
+                    <span
+                      class="bp3-button-text"
                     >
-                      <path
-                        d="M10.5 12.6H1.4V3.5h6.1l1.4-1.4H.7c-.4 0-.7.3-.7.7v10.5c0 .4.3.7.7.7h10.5c.4 0 .7-.3.7-.7V5.1l-1.4 1.4zM13.3 0H8.4c-.4 0-.7.3-.7.7s.3.7.7.7h3.2L6.5 6.5c-.1.1-.2.3-.2.5 0 .4.3.7.7.7.2 0 .4-.1.5-.2l5.1-5.1v3.2c0 .4.3.7.7.7s.7-.3.7-.7V.7c0-.4-.3-.7-.7-.7z"
-                        fill="#4d5969"
-                      />
-                    </svg>
-                  </span>
-                  <span
-                    class="bp3-button-text"
-                  >
-                    connectors.ceAzure.billing.launchAzureConsole
-                  </span>
-                </button>
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-small"
-                  style="text-align: center;"
+                      connectors.ceAzure.billing.launchAzureConsole
+                    </span>
+                    <span
+                      class="bp3-icon StyledProps--main StyledProps--margin-left-xsmall"
+                      data-icon="main-share"
+                    >
+                      <svg
+                        height="12"
+                        viewBox="0 0 14 14"
+                        width="12"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M10.5 12.6H1.4V3.5h6.1l1.4-1.4H.7c-.4 0-.7.3-.7.7v10.5c0 .4.3.7.7.7h10.5c.4 0 .7-.3.7-.7V5.1l-1.4 1.4zM13.3 0H8.4c-.4 0-.7.3-.7.7s.3.7.7.7h3.2L6.5 6.5c-.1.1-.2.3-.2.5 0 .4.3.7.7.7.2 0 .4-.1.5-.2l5.1-5.1v3.2c0 .4.3.7.7.7s.7-.3.7-.7V.7c0-.4-.3-.7-.7-.7z"
+                          fill="#4d5969"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </li>
+                <li
+                  class="undefined"
                 >
-                  connectors.ceAzure.billing.login
-                </p>
-              </div>
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey800"
+                  >
+                    connectors.ceAzure.billing.instructions.i1
+                  </p>
+                </li>
+                <li
+                  class="undefined"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey800"
+                  >
+                    connectors.ceAzure.billing.instructions.i2
+                    <a
+                      href="https://ngdocs.harness.io/article/v682mz6qfd-set-up-cost-visibility-for-azure#step_2_azure_billing_exports"
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      connectors.ceAzure.billing.instructions.i3
+                      <span
+                        class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary7"
+                        data-icon="main-share"
+                      >
+                        <svg
+                          height="16"
+                          viewBox="0 0 14 14"
+                          width="16"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10.5 12.6H1.4V3.5h6.1l1.4-1.4H.7c-.4 0-.7.3-.7.7v10.5c0 .4.3.7.7.7h10.5c.4 0 .7-.3.7-.7V5.1l-1.4 1.4zM13.3 0H8.4c-.4 0-.7.3-.7.7s.3.7.7.7h3.2L6.5 6.5c-.1.1-.2.3-.2.5 0 .4.3.7.7.7.2 0 .4-.1.5-.2l5.1-5.1v3.2c0 .4.3.7.7.7s.7-.3.7-.7V.7c0-.4-.3-.7-.7-.7z"
+                            fill="#4d5969"
+                          />
+                        </svg>
+                      </span>
+                    </a>
+                  </p>
+                </li>
+                <li
+                  class="undefined"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey800"
+                  >
+                    connectors.ceAzure.billing.instructions.i4
+                  </p>
+                </li>
+              </ol>
             </div>
             <div
               class="StyledProps--font StyledProps--main"
@@ -232,6 +259,7 @@ exports[`Create Azure connector Wizard should render create new billing exports 
                 class="OverlaySpinner--overlaySpinner"
               >
                 <form
+                  action="#"
                   class="FormikForm--main"
                   style="padding: 10px 0px 25px;"
                 >
@@ -253,43 +281,9 @@ exports[`Create Azure connector Wizard should render create new billing exports 
                           >
                             <span
                               class="Tooltip--acenter"
-                              data-tooltip-id="billingExportsForm_storageAccountName"
+                              data-tooltip-id="storageAccountName"
                             >
-                              <div
-                                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
-                              >
-                                <span
-                                  class="StyledProps--font StyledProps--main StyledProps--inline"
-                                >
-                                  connectors.ceAzure.billing.storageAccountName
-                                </span>
-                                <span
-                                  class="bp3-popover-wrapper"
-                                >
-                                  <span
-                                    class="bp3-popover-target"
-                                  >
-                                    <span
-                                      class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary5"
-                                      data-icon="info"
-                                      tabindex="0"
-                                    >
-                                      <svg
-                                        height="12"
-                                        viewBox="0 0 12 12"
-                                        width="12"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <path
-                                          clip-rule="evenodd"
-                                          d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
-                                          fill-rule="evenodd"
-                                        />
-                                      </svg>
-                                    </span>
-                                  </span>
-                                </span>
-                              </div>
+                              connectors.ceAzure.billing.storageAccountName
                             </span>
                              
                             <span
@@ -322,43 +316,9 @@ exports[`Create Azure connector Wizard should render create new billing exports 
                           >
                             <span
                               class="Tooltip--acenter"
-                              data-tooltip-id="billingExportsForm_subscriptionId"
+                              data-tooltip-id="subscriptionId"
                             >
-                              <div
-                                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
-                              >
-                                <span
-                                  class="StyledProps--font StyledProps--main StyledProps--inline"
-                                >
-                                  connectors.ceAzure.billing.subscriptionId
-                                </span>
-                                <span
-                                  class="bp3-popover-wrapper"
-                                >
-                                  <span
-                                    class="bp3-popover-target"
-                                  >
-                                    <span
-                                      class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary5"
-                                      data-icon="info"
-                                      tabindex="0"
-                                    >
-                                      <svg
-                                        height="12"
-                                        viewBox="0 0 12 12"
-                                        width="12"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <path
-                                          clip-rule="evenodd"
-                                          d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
-                                          fill-rule="evenodd"
-                                        />
-                                      </svg>
-                                    </span>
-                                  </span>
-                                </span>
-                              </div>
+                              connectors.ceAzure.billing.subscriptionId
                             </span>
                              
                             <span
@@ -392,43 +352,9 @@ exports[`Create Azure connector Wizard should render create new billing exports 
                           >
                             <span
                               class="Tooltip--acenter"
-                              data-tooltip-id="billingExportsForm_containerName"
+                              data-tooltip-id="containerName"
                             >
-                              <div
-                                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
-                              >
-                                <span
-                                  class="StyledProps--font StyledProps--main StyledProps--inline"
-                                >
-                                  connectors.ceAzure.billing.containerName
-                                </span>
-                                <span
-                                  class="bp3-popover-wrapper"
-                                >
-                                  <span
-                                    class="bp3-popover-target"
-                                  >
-                                    <span
-                                      class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary5"
-                                      data-icon="info"
-                                      tabindex="0"
-                                    >
-                                      <svg
-                                        height="12"
-                                        viewBox="0 0 12 12"
-                                        width="12"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <path
-                                          clip-rule="evenodd"
-                                          d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
-                                          fill-rule="evenodd"
-                                        />
-                                      </svg>
-                                    </span>
-                                  </span>
-                                </span>
-                              </div>
+                              connectors.ceAzure.billing.containerName
                             </span>
                              
                             <span
@@ -461,43 +387,9 @@ exports[`Create Azure connector Wizard should render create new billing exports 
                           >
                             <span
                               class="Tooltip--acenter"
-                              data-tooltip-id="billingExportsForm_directoryName"
+                              data-tooltip-id="directoryName"
                             >
-                              <div
-                                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
-                              >
-                                <span
-                                  class="StyledProps--font StyledProps--main StyledProps--inline"
-                                >
-                                  connectors.ceAzure.billing.directoryName
-                                </span>
-                                <span
-                                  class="bp3-popover-wrapper"
-                                >
-                                  <span
-                                    class="bp3-popover-target"
-                                  >
-                                    <span
-                                      class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary5"
-                                      data-icon="info"
-                                      tabindex="0"
-                                    >
-                                      <svg
-                                        height="12"
-                                        viewBox="0 0 12 12"
-                                        width="12"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <path
-                                          clip-rule="evenodd"
-                                          d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
-                                          fill-rule="evenodd"
-                                        />
-                                      </svg>
-                                    </span>
-                                  </span>
-                                </span>
-                              </div>
+                              connectors.ceAzure.billing.directoryName
                             </span>
                              
                             <span
@@ -530,43 +422,9 @@ exports[`Create Azure connector Wizard should render create new billing exports 
                           >
                             <span
                               class="Tooltip--acenter"
-                              data-tooltip-id="billingExportsForm_reportName"
+                              data-tooltip-id="reportName"
                             >
-                              <div
-                                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
-                              >
-                                <span
-                                  class="StyledProps--font StyledProps--main StyledProps--inline"
-                                >
-                                  connectors.ceAzure.billing.reportName
-                                </span>
-                                <span
-                                  class="bp3-popover-wrapper"
-                                >
-                                  <span
-                                    class="bp3-popover-target"
-                                  >
-                                    <span
-                                      class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary5"
-                                      data-icon="info"
-                                      tabindex="0"
-                                    >
-                                      <svg
-                                        height="12"
-                                        viewBox="0 0 12 12"
-                                        width="12"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <path
-                                          clip-rule="evenodd"
-                                          d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
-                                          fill-rule="evenodd"
-                                        />
-                                      </svg>
-                                    </span>
-                                  </span>
-                                </span>
-                              </div>
+                              connectors.ceAzure.billing.reportName
                             </span>
                              
                             <span
@@ -677,155 +535,6 @@ exports[`Create Azure connector Wizard should render create new billing exports 
           </svg>
         </span>
       </div>
-    </div>
-    <div
-      class="extension"
-    >
-      <div
-        class="StyledProps--font StyledProps--main"
-      >
-        <h2
-          class="StyledProps--font StyledProps--font-h2 StyledProps--main header"
-          level="2"
-        >
-          connectors.ceAzure.billing.extension.createBillingExportGuide
-        </h2>
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--font-normal StyledProps--color StyledProps--color-grey1000"
-        >
-          connectors.ceAzure.billing.extension.step0
-        </p>
-        <div
-          class="StyledProps--font StyledProps--main"
-        >
-          <ol
-            type="1"
-          >
-            <ol
-              type="1"
-            >
-              <li>
-                connectors.ceAzure.billing.extension.step1
-              </li>
-              <li>
-                connectors.ceAzure.billing.extension.step2
-              </li>
-              <li>
-                connectors.ceAzure.billing.extension.step3
-              </li>
-              <li>
-                connectors.ceAzure.billing.extension.step4
-              </li>
-              <li>
-                connectors.ceAzure.billing.extension.step5
-                <ul>
-                  <li>
-                    connectors.ceAzure.billing.extension.step6
-                    <ul>
-                      <li>
-                        connectors.ceAzure.billing.extension.step7
-                      </li>
-                      <li>
-                        connectors.ceAzure.billing.extension.step8
-                      </li>
-                    </ul>
-                  </li>
-                  <li>
-                    connectors.ceAzure.billing.extension.step9
-                    <ul>
-                      <li>
-                        connectors.ceAzure.billing.extension.step10
-                      </li>
-                      <li>
-                        connectors.ceAzure.billing.extension.step11
-                      </li>
-                      <li>
-                        connectors.ceAzure.billing.extension.step12
-                      </li>
-                      <li>
-                        connectors.ceAzure.billing.extension.step13
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
-              </li>
-              <li>
-                connectors.ceAzure.billing.extension.step14
-              </li>
-              <li>
-                connectors.ceAzure.billing.extension.step15
-              </li>
-              <li>
-                connectors.ceAzure.billing.extension.step16
-              </li>
-            </ol>
-          </ol>
-        </div>
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--font-normal StyledProps--color StyledProps--color-grey1000"
-        >
-          connectors.ceAzure.billing.extension.step17
-        </p>
-        <div
-          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000 StyledProps--font-normal"
-        >
-          <dl>
-            <dt>
-              connectors.ceAzure.billing.extension.links
-            </dt>
-            <dd>
-              <a>
-                - 
-                connectors.ceAzure.billing.extension.video
-              </a>
-               
-              <i>
-                 
-                connectors.ceAzure.billing.extension.soon
-              </i>
-            </dd>
-            <dd>
-              <a
-                href="https://ngdocs.harness.io/article/v682mz6qfd-set-up-cost-visibility-for-azure"
-                rel="noreferrer"
-                target="_blank"
-              >
-                - 
-                connectors.ceAzure.billing.extension.docs
-              </a>
-            </dd>
-            <dd>
-              <a
-                href="https://docs.harness.io/article/7idbmchsim-set-up-cost-visibility-for-azure#step_2_enable_billing_export_for_azure_subscription"
-                rel="noreferrer"
-                target="_blank"
-              >
-                - 
-                connectors.ceAzure.billing.extension.createExport
-              </a>
-            </dd>
-          </dl>
-        </div>
-      </div>
-      <span
-        class="bp3-icon bp3-icon-chevron-left StyledProps--main closeBtn"
-        icon="chevron-left"
-      >
-        <svg
-          data-icon="chevron-left"
-          height="24"
-          viewBox="0 0 20 20"
-          width="24"
-        >
-          <desc>
-            chevron-left
-          </desc>
-          <path
-            d="M8.41 10l5.29-5.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71l-6 6c-.18.18-.29.43-.29.71 0 .28.11.53.29.71l6 6a1.003 1.003 0 001.42-1.42L8.41 10z"
-            fill-rule="evenodd"
-          />
-        </svg>
-      </span>
     </div>
   </div>
 </div>
@@ -980,42 +689,21 @@ exports[`Create Azure connector Wizard should render existing billing exports fo
           <div
             class="Layout--vertical StyledProps--main stepContainer"
           >
-            <h2
-              class="StyledProps--font StyledProps--font-h2 StyledProps--main header"
-              level="2"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="azureBillingExport"
             >
-              connectors.ceAzure.billing.heading
-            </h2>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-large"
+              >
+                connectors.ceAzure.billing.heading
+              </p>
+            </div>
             <p
-              class="StyledProps--font StyledProps--main subHeader"
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey600 StyledProps--padding-bottom-medium"
             >
               connectors.ceAzure.billing.subHeading
             </p>
-            <span
-              class="StyledProps--font StyledProps--main info StyledProps--font-small StyledProps--color StyledProps--color-primary7 StyledProps--inline"
-              style="display: inline-flex; align-items: center;"
-            >
-              <span
-                class="bp3-icon bp3-icon-info-sign StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
-                icon="info-sign"
-              >
-                <svg
-                  data-icon="info-sign"
-                  height="15"
-                  viewBox="0 0 16 16"
-                  width="15"
-                >
-                  <desc>
-                    info-sign
-                  </desc>
-                  <path
-                    d="M8 0C3.58 0 0 3.58 0 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zM7 3h2v2H7V3zm3 10H6v-1h1V7H6V6h3v6h1v1z"
-                    fill-rule="evenodd"
-                  />
-                </svg>
-              </span>
-              connectors.ceAzure.existingExports.instruction
-            </span>
             <div
               class="StyledProps--font StyledProps--main"
             >
@@ -1023,6 +711,7 @@ exports[`Create Azure connector Wizard should render existing billing exports fo
                 class="OverlaySpinner--overlaySpinner"
               >
                 <form
+                  action="#"
                   class="FormikForm--main"
                   style="padding: 10px 0px 25px;"
                 >
@@ -1032,13 +721,75 @@ exports[`Create Azure connector Wizard should render existing billing exports fo
                       style="min-height: 430px;"
                     >
                       <div
-                        class="Layout--vertical StyledProps--main"
+                        class="Layout--vertical StyledProps--main existingReportsWrapper"
                       >
+                        <p
+                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-variation-body StyledProps--padding-bottom-small"
+                        >
+                          connectors.ceAzure.existingExports.instruction
+                        </p>
                         <div
                           class="StyledProps--font StyledProps--main existingBeTable"
                         >
+                          <div
+                            class="bp3-input-group ui-search-box ExpandingSearchInput--main    ExpandingSearchInput--light"
+                            data-name=""
+                          >
+                            <span
+                              class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+                              data-icon="thinner-search"
+                            >
+                              <svg
+                                fill="none"
+                                height="14"
+                                viewBox="0 0 16 16"
+                                width="14"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+                                  stroke="currentColor"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                />
+                              </svg>
+                            </span>
+                            <input
+                              class="bp3-input  ExpandingSearchInput--filter"
+                              dir="auto"
+                              placeholder="connectors.ceAzure.existingExports.searchBillingReports"
+                              style="padding-right: 38px;"
+                              type="search"
+                              value="report"
+                            />
+                            <span
+                              class="ExpandingSearchInput--btnWrapper"
+                            >
+                              <button
+                                class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                                type="button"
+                              >
+                                <span
+                                  class="bp3-icon StyledProps--main"
+                                  data-icon="main-close"
+                                >
+                                  <svg
+                                    height="8"
+                                    viewBox="0 0 14 14"
+                                    width="8"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M8.6 7l5-5c.3-.2.4-.5.4-.8 0-.7-.5-1.2-1.2-1.2-.3 0-.6.1-.8.3l-5 5-5-5C1.8.1 1.5 0 1.2 0 .5 0 0 .5 0 1.2c0 .3.1.6.3.8l5 5-5 5c-.2.2-.3.5-.3.8 0 .7.5 1.2 1.2 1.2.3 0 .6-.1.8-.3l5-5 5 5c.2.2.5.4.8.4.6 0 1.2-.5 1.2-1.2 0-.3-.1-.6-.3-.8z"
+                                      fill="#4d5969"
+                                    />
+                                  </svg>
+                                </span>
+                              </button>
+                            </span>
+                          </div>
                           <table
-                            class="bp3-html-table bp3-html-table-condensed bp3-html-table-striped bp3-interactive"
+                            class="bp3-html-table bp3-html-table-bordered bp3-html-table-condensed bp3-interactive"
                             role="table"
                           >
                             <thead>
@@ -1163,21 +914,47 @@ exports[`Create Azure connector Wizard should render existing billing exports fo
                             </tbody>
                           </table>
                         </div>
-                        <div
-                          class="StyledProps--font StyledProps--main"
-                          style="display: flex; flex-direction: row-reverse;"
-                        >
-                          <button
-                            class="bp3-button Button--button StyledProps--font StyledProps--main createNewExportBtn Button--with-current-color Button--without-shadow"
-                            type="submit"
+                        <ul>
+                          <li
+                            class="hintsLineItem"
                           >
-                            <span
-                              class="bp3-button-text"
+                            connectors.ceAzure.existingExports.hints.nextStepHint1
+                          </li>
+                          <li
+                            class="hintsLineItem"
+                          >
+                            connectors.ceAzure.existingExports.hints.nextStepHint2
+                            <button
+                              class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-secondary Button--size Button--small"
+                              type="button"
                             >
-                              connectors.ceAzure.existingExports.createNewExportBtn
-                            </span>
-                          </button>
-                        </div>
+                              <span
+                                class="bp3-button-text"
+                              >
+                                connectors.ceAzure.existingExports.createNewExportBtn
+                              </span>
+                              <span
+                                class="bp3-icon bp3-icon-chevron-right StyledProps--main"
+                                icon="chevron-right"
+                              >
+                                <svg
+                                  data-icon="chevron-right"
+                                  height="16"
+                                  viewBox="0 0 16 16"
+                                  width="16"
+                                >
+                                  <desc>
+                                    chevron-right
+                                  </desc>
+                                  <path
+                                    d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                                    fill-rule="evenodd"
+                                  />
+                                </svg>
+                              </span>
+                            </button>
+                          </li>
+                        </ul>
                       </div>
                     </div>
                     <div
@@ -1438,12 +1215,16 @@ exports[`Create Azure connector Wizard should render feature cards, render servi
           <div
             class="Layout--vertical StyledProps--main stepContainer"
           >
-            <h2
-              class="StyledProps--font StyledProps--font-h2 StyledProps--main header"
-              level="2"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="azureChooseRequirements"
             >
-              connectors.ceAzure.chooseRequirements.heading
-            </h2>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-large"
+              >
+                connectors.ceAzure.chooseRequirements.heading
+              </p>
+            </div>
             <p
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800"
             >
@@ -1452,15 +1233,49 @@ exports[`Create Azure connector Wizard should render feature cards, render servi
             <div
               class="StyledProps--font StyledProps--main"
             >
-              <p
-                class="StyledProps--font StyledProps--main mtblarge StyledProps--font-italic"
+              <div
+                class="Layout--horizontal StyledProps--main infoCard"
               >
-                connectors.ceAzure.chooseRequirements.info
-              </p>
+                <span
+                  class="bp3-icon StyledProps--main infoIcon"
+                  data-icon="info-messaging"
+                >
+                  <svg
+                    fill="none"
+                    height="20"
+                    viewBox="0 0 32 32"
+                    width="20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M16 29.004c-7.18 0-13-5.82-13-13s5.82-13 13-13 13 5.82 13 13-5.82 13-13 13zm-1.499-18.5a1.5 1.5 0 103 0 1.5 1.5 0 00-3 0zm1.5 3.474a1 1 0 00-1 1v6.002a1 1 0 102 0v-6.002a1 1 0 00-1-1z"
+                      fill="#5452F6"
+                      fill-rule="evenodd"
+                    />
+                    <path
+                      clip-rule="evenodd"
+                      d="M16 28.004c-6.627 0-12-5.373-12-12s5.373-12 12-12 12 5.373 12 12-5.373 12-12 12zm-.244-15.011a2.5 2.5 0 11.49 0 2 2 0 011.755 1.985v6.002a2 2 0 01-4 0v-6.002a2 2 0 011.755-1.985zM3 16.004c0 7.18 5.82 13 13 13s13-5.82 13-13-5.82-13-13-13-13 5.82-13 13zm13.001-4a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm-1 2.974a1 1 0 112 0v6.002a1 1 0 11-2 0v-6.002z"
+                      fill="#5452F6"
+                      fill-rule="evenodd"
+                    />
+                    <path
+                      d="M27.598 28.94c.83.358 1.672-.483 1.314-1.314L25.99 20.85a1 1 0 00-1.625-.311l-3.854 3.854a1 1 0 00.31 1.625l6.777 2.922z"
+                      fill="#5452F6"
+                    />
+                  </svg>
+                </span>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey800"
+                >
+                  connectors.ceAzure.chooseRequirements.info
+                </p>
+              </div>
               <div
                 class="OverlaySpinner--overlaySpinner"
               >
                 <form
+                  action="#"
                   class="FormikForm--main"
                 >
                   <div>
@@ -2148,17 +1963,25 @@ exports[`Create Azure connector Wizard should render feature cards, render servi
           <div
             class="Layout--vertical Layout--layout-spacing-large StyledProps--main stepContainer"
           >
-            <h2
-              class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--color StyledProps--color-grey800"
-              level="2"
-              style="font-size: 20px;"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="servicePrincipal"
             >
-              connectors.ceAzure.servicePrincipal.heading
-            </h2>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
+              >
+                connectors.ceAzure.servicePrincipal.heading
+              </p>
+            </div>
             <p
-              class="StyledProps--font StyledProps--main"
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey800"
             >
-              connectors.ceAzure.servicePrincipal.subHeading
+              connectors.ceAzure.servicePrincipal.subHeading1
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey800"
+            >
+              connectors.ceAzure.servicePrincipal.subHeading2
             </p>
             <div
               class="StyledProps--font StyledProps--main commandsContainer"
@@ -2170,7 +1993,7 @@ exports[`Create Azure connector Wizard should render feature cards, render servi
                 <p
                   class="StyledProps--font StyledProps--main"
                 >
-                  # Register the Harness app
+                  connectors.ceAzure.servicePrincipal.registerCommand
                 </p>
                 <div
                   class="StyledProps--font StyledProps--main command"
@@ -2219,13 +2042,13 @@ exports[`Create Azure connector Wizard should render feature cards, render servi
                 <p
                   class="StyledProps--font StyledProps--main"
                 >
-                  # Role assignment for enabling CCM Billing and Visibility
+                  connectors.ceAzure.servicePrincipal.costVisibilityCmd
                 </p>
                 <div
                   class="StyledProps--font StyledProps--main command"
                 >
                   <pre>
-                    SCOPE=\`az storage account show --name &lt;insert_storage_account_name&gt; --query "id" | xargs\`
+                    SCOPE=\`az storage account show --name abcd --query "id" | xargs\`
                   </pre>
                   <span
                     class="bp3-popover-wrapper"
@@ -2268,7 +2091,7 @@ exports[`Create Azure connector Wizard should render feature cards, render servi
                 <p
                   class="StyledProps--font StyledProps--main"
                 >
-                  # Assign role to the app on the scope fetched above
+                  connectors.ceAzure.servicePrincipal.assignRoleCmd
                 </p>
                 <div
                   class="StyledProps--font StyledProps--main command"
@@ -2876,16 +2699,21 @@ exports[`Create Azure connector Wizard should render overview step 1`] = `
           <div
             class="Layout--vertical StyledProps--main stepContainer"
           >
-            <h2
-              class="StyledProps--font StyledProps--font-h2 StyledProps--main header"
-              level="2"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="azureConnectorOverview"
             >
-              connectors.ceAzure.overview.heading
-            </h2>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-large"
+              >
+                connectors.ceAzure.overview.heading
+              </p>
+            </div>
             <div
               class="OverlaySpinner--overlaySpinner"
             >
               <form
+                action="#"
                 class="FormikForm--main"
               >
                 <div>
@@ -3007,7 +2835,7 @@ exports[`Create Azure connector Wizard should render overview step 1`] = `
                         >
                           <span
                             class="Tooltip--acenter"
-                            data-tooltip-id="connectorOverviewForm_tenantId"
+                            data-tooltip-id="azureTenantId"
                           >
                             connectors.ceAzure.overview.tenantId
                           </span>
@@ -3043,7 +2871,7 @@ exports[`Create Azure connector Wizard should render overview step 1`] = `
                         >
                           <span
                             class="Tooltip--acenter"
-                            data-tooltip-id="connectorOverviewForm_subscriptionId"
+                            data-tooltip-id="azureSubscriptionId"
                           >
                             connectors.ceAzure.overview.subscriptionId
                           </span>
@@ -3337,16 +3165,21 @@ exports[`Create Azure connector Wizard should throw an error when connectors alr
           <div
             class="Layout--vertical StyledProps--main stepContainer"
           >
-            <h2
-              class="StyledProps--font StyledProps--font-h2 StyledProps--main header"
-              level="2"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="azureConnectorOverview"
             >
-              connectors.ceAzure.overview.heading
-            </h2>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-large"
+              >
+                connectors.ceAzure.overview.heading
+              </p>
+            </div>
             <div
               class="OverlaySpinner--overlaySpinner"
             >
               <form
+                action="#"
                 class="FormikForm--main"
               >
                 <div>
@@ -3470,7 +3303,7 @@ exports[`Create Azure connector Wizard should throw an error when connectors alr
                         >
                           <span
                             class="Tooltip--acenter"
-                            data-tooltip-id="connectorOverviewForm_tenantId"
+                            data-tooltip-id="azureTenantId"
                           >
                             connectors.ceAzure.overview.tenantId
                           </span>
@@ -3506,7 +3339,7 @@ exports[`Create Azure connector Wizard should throw an error when connectors alr
                         >
                           <span
                             class="Tooltip--acenter"
-                            data-tooltip-id="connectorOverviewForm_subscriptionId"
+                            data-tooltip-id="azureSubscriptionId"
                           >
                             connectors.ceAzure.overview.subscriptionId
                           </span>

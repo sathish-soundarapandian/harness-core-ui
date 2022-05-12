@@ -28,12 +28,12 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 20%;"
+          style="width: 23%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
           >
-            cd.serviceDashboard.buildName
+            cd.artifactVersion
           </p>
         </div>
         <div
@@ -52,7 +52,7 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 50%;"
+          style="width: 47%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -74,10 +74,11 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
             style="width: 20%;"
           >
             <div
-              class="StyledProps--font StyledProps--main paddedContainer"
+              class="StyledProps--font StyledProps--main envContainer"
             >
               <p
-                class="StyledProps--font StyledProps--main environmentRow overflow StyledProps--font-size-small StyledProps--font-weight-bold StyledProps--color StyledProps--color-white"
+                class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
+                style="--text-line-clamp: 1;"
               >
                 envName
               </p>
@@ -86,13 +87,14 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 20%;"
+            style="width: 23%;"
           >
             <div
               class="StyledProps--font StyledProps--main paddedContainer"
             >
               <p
-                class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                style="--text-line-clamp: 1;"
               >
                 build1
               </p>
@@ -116,7 +118,7 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 50%;"
+            style="width: 47%;"
           >
             <div
               class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
@@ -148,7 +150,7 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 20%;"
+            style="width: 23%;"
           >
             <div
               class="StyledProps--font StyledProps--main paddedContainer"
@@ -168,7 +170,7 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 50%;"
+            style="width: 47%;"
           />
         </div>
         <div
@@ -183,13 +185,14 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 20%;"
+            style="width: 23%;"
           >
             <div
               class="StyledProps--font StyledProps--main paddedContainer"
             >
               <p
-                class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                style="--text-line-clamp: 1;"
               >
                 build3
               </p>
@@ -213,7 +216,7 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 50%;"
+            style="width: 47%;"
           >
             <div
               class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"

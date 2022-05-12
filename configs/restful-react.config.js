@@ -76,6 +76,16 @@ module.exports = {
     },
     customGenerator: arg => customGenerator(arg, "getConfig('ng-dashboard/api')")
   },
+  'custom-dashboards': {
+    output: 'src/services/custom-dashboards/index.tsx',
+    url: 'http://localhost:5000/static/swagger.yaml',
+    transformer: 'scripts/swagger-transform.js',
+    customImport: `import { getConfig, getUsingFetch, GetUsingFetchProps, mutateUsingFetch, MutateUsingFetchProps } from "../config";`,
+    customProps: {
+      base: `{getConfig("dashboard/")}`
+    },
+    customGenerator: arg => customGenerator(arg, "getConfig('dashboard/')")
+  },
   logs: {
     output: 'src/services/logs/index.tsx',
     file: 'src/services/logs/swagger.json',

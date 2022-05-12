@@ -27,6 +27,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 
 import { useHelmCmdFlags } from 'services/cd-ng'
 import { useDeepCompareEffect } from '@common/hooks'
+import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
 import type { CommandFlags, HelmVersionOptions } from '../ManifestInterface'
 
 import helmcss from './HelmWithGIT/HelmWithGIT.module.scss'
@@ -122,8 +123,12 @@ function HelmAdvancedStepSection({
               render={({ push, remove }) => (
                 <Layout.Vertical>
                   {formik.values?.commandFlags?.map((commandFlag: CommandFlags, index: number) => (
-                    <Layout.Horizontal key={commandFlag.id} spacing="xxlarge" margin={{ top: 'small' }}>
-                      <div className={helmcss.halfWidth}>
+                    <Layout.Horizontal key={commandFlag.id} margin={{ top: 'medium' }}>
+                      <div
+                        className={cx(helmcss.commandType, {
+                          [helmcss.commandFlagType]: index !== 0
+                        })}
+                      >
                         <FormInput.Select
                           name={`commandFlags[${index}].commandType`}
                           label={index === 0 ? getString('pipeline.manifestType.helmCommandType') : ''}
@@ -131,34 +136,37 @@ function HelmAdvancedStepSection({
                           placeholder={getString('pipeline.manifestType.helmCommandTypePlaceholder')}
                         />
                       </div>
-                      <div className={helmcss.halfWidth}>
-                        <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'flex-start' }}>
-                          <FormInput.Text
-                            label={index === 0 ? getString('flag') : ''}
+                      <div
+                        className={cx({
+                          [helmcss.helmCommandFlags]: index !== 0
+                        })}
+                      >
+                        <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
+                          <MultiTypeFieldSelector
                             name={`commandFlags[${index}].flag`}
-                          />
-                          {getMultiTypeFromValue(formik.values?.commandFlags?.[index]?.flag) ===
-                            MultiTypeInputType.RUNTIME && (
-                            <div
-                              className={cx({
-                                [css.addmarginTop]: index === 0
-                              })}
-                            >
-                              <ConfigureOptions
-                                style={{ marginBottom: 3 }}
-                                value={(formik.values?.commandFlags?.[index].flag || '') as unknown as string}
-                                type="String"
-                                variableName={`CommandFlag-${index}`}
-                                showRequiredField={false}
-                                showDefaultField={false}
-                                showAdvanced={true}
-                                onChange={value =>
-                                  formik.setFieldValue(`formik.values?.commandFlags?.[${index}].flag`, value)
-                                }
-                                isReadonly={isReadonly}
+                            label={index === 0 ? getString('flag') : ''}
+                            allowedTypes={allowableTypes}
+                            style={{ width: 450 }}
+                            skipRenderValueInExpressionLabel
+                            expressionRender={() => (
+                              <MonacoTextField
+                                name={`commandFlags[${index}].flag`}
+                                expressions={expressions}
+                                height={80}
+                                fullScreenAllowed
+                                fullScreenTitle={getString('flag')}
                               />
-                            </div>
-                          )}
+                            )}
+                          >
+                            <MonacoTextField
+                              name={`commandFlags[${index}].flag`}
+                              expressions={expressions}
+                              height={80}
+                              fullScreenAllowed
+                              fullScreenTitle={getString('flag')}
+                            />
+                          </MultiTypeFieldSelector>
+
                           {index !== 0 && (
                             <Button
                               minimal

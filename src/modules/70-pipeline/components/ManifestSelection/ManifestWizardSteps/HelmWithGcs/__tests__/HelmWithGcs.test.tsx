@@ -162,11 +162,11 @@ describe('helm with http tests', () => {
     )
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
     await act(async () => {
-      fireEvent.change(queryByNameAttribute('identifier')!, { target: { value: 'testidentifier' } })
-      fireEvent.change(queryByNameAttribute('folderPath')!, { target: { value: 'test-folder ' } })
+      await fireEvent.change(queryByNameAttribute('identifier')!, { target: { value: 'testidentifier' } })
+      await fireEvent.change(queryByNameAttribute('folderPath')!, { target: { value: 'test-folder ' } })
 
-      fireEvent.change(queryByNameAttribute('chartName')!, { target: { value: 'testchart' } })
-      fireEvent.change(queryByNameAttribute('chartVersion')!, { target: { value: 'v1' } })
+      await fireEvent.change(queryByNameAttribute('chartName')!, { target: { value: 'testchart' } })
+      await fireEvent.change(queryByNameAttribute('chartVersion')!, { target: { value: 'v1' } })
     })
     fireEvent.click(container.querySelector('button[type="submit"]')!)
     expect(container).toMatchSnapshot()

@@ -81,7 +81,7 @@ export function CIStageDetails(props: StageDetailProps): React.ReactElement {
     if (status && serviceToken) {
       fetchReportSummary()
     }
-  }, [status, serviceToken])
+  }, [status, serviceToken, props.stage?.nodeIdentifier])
 
   return (
     <div className={css.container}>

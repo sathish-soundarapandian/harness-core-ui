@@ -13,6 +13,7 @@ import type {
   ManifestConfig,
   ManifestConfigWrapper,
   PrimaryArtifact,
+  ServiceDefinition,
   ServiceSpec,
   SidecarArtifact
 } from 'services/cd-ng'
@@ -23,6 +24,7 @@ export interface K8SDirectServiceStep extends ServiceSpec {
   setupModeType?: string
   handleTabChange?: (tab: string) => void
   customStepProps?: Record<string, any>
+  deploymentType?: ServiceDefinition['type']
 }
 export interface KubernetesServiceInputFormProps {
   initialValues: K8SDirectServiceStep

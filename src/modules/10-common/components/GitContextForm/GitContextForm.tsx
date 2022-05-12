@@ -7,7 +7,7 @@
 
 import { Container, FormInput, Icon, Layout, SelectOption, Text } from '@wings-software/uicore'
 import { isEmpty } from 'lodash-es'
-import type { FormikContext } from 'formik'
+import type { FormikContextType } from 'formik'
 import React from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
@@ -22,7 +22,7 @@ export interface IGitContextFormProps extends EntityGitDetails {
 }
 
 export interface GitContextFormProps<T> {
-  formikProps: FormikContext<T>
+  formikProps: FormikContextType<T>
   gitDetails?: IGitContextFormProps
   className?: string
   onRepoChange?: (gitDetails: EntityGitDetails) => void

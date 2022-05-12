@@ -10,10 +10,7 @@ import * as Yup from 'yup'
 import { Formik } from 'formik'
 import { Button, Container, FormikForm, Text } from '@wings-software/uicore'
 import { Color, Intent } from '@harness/design-system'
-import {
-  PipelineContextType,
-  usePipelineContext
-} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { useStrings } from 'framework/strings'
 import { NameIdDescriptionTags } from '@common/components'
@@ -21,6 +18,7 @@ import type { ApprovalStageElementConfig, StageElementWrapper } from '@pipeline/
 import { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
 import { createTemplate, getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
+import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import type { ApprovalStageMinimalModeProps, ApprovalStageMinimalValues } from './types'
 import { ApprovalTypeCards } from './ApprovalTypeCards'
 import css from './ApprovalStageMinimalMode.module.scss'
@@ -96,7 +94,7 @@ export function ApprovalStageMinimalMode(props: ApprovalStageMinimalModeProps): 
               {getString('pipelineSteps.build.create.aboutYourStage')}
             </Text>
 
-            {contextType === PipelineContextType.Pipeline &&
+            {isContextTypeNotStageTemplate(contextType) &&
               (template ? (
                 <NameId
                   identifierProps={{

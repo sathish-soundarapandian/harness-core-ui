@@ -40,7 +40,14 @@ const GCPDnsMapping: React.FC<GCPDnsMappingProps> = ({ mode, handleSubmit, loadB
         }}
         formName="azureDnsMapping"
         onSubmit={handleSubmit}
-        render={({ submitForm, values }) => (
+        validationSchema={Yup.object().shape({
+          name: Yup.string().required('Name is a required field'),
+          customDomain: Yup.string()
+            .required('Domain name is a required field')
+            .matches(VALID_DOMAIN_REGEX, 'Enter a valid domain')
+        })}
+      >
+        {({ submitForm, values }) => (
           <FormikForm>
             <Layout.Vertical>
               <FormInput.Text
@@ -94,13 +101,7 @@ const GCPDnsMapping: React.FC<GCPDnsMappingProps> = ({ mode, handleSubmit, loadB
             </Layout.Horizontal>
           </FormikForm>
         )}
-        validationSchema={Yup.object().shape({
-          name: Yup.string().required('Name is a required field'),
-          customDomain: Yup.string()
-            .required('Domain name is a required field')
-            .matches(VALID_DOMAIN_REGEX, 'Enter a valid domain')
-        })}
-      ></Formik>
+      </Formik>
     </Container>
   )
 }

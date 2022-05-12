@@ -5,14 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Container, FontVariation, Label, SimpleTagInput, Text } from '@harness/uicore'
+import { Button, Container, FontVariation, FormInput, Layout, Text } from '@harness/uicore'
 import React, { ReactElement } from 'react'
+import { v4 as uuid } from 'uuid'
 import { useStrings } from 'framework/strings'
-import type { Segment, Target, TargetMap } from 'services/cf'
-import type { FormVariationMap, TargetGroup, VariationColorMap } from '../../Types.types'
+import type { Segment, Target } from 'services/cf'
+import type { FormVariationMap, VariationColorMap, VariationTarget, VariationTargetGroup } from '../../types'
 import DisabledFeatureTooltip from '../disabled-feature-tooltip/DisabledFeatureTooltip'
-import css from './SpecificTargetingItem.module.scss'
-
 export interface SpecificTargetingItemProps {
   index: number
   disabled: boolean
@@ -20,8 +19,9 @@ export interface SpecificTargetingItemProps {
   segments: Segment[]
   formVariationMapItem: FormVariationMap
   variationColorMap: VariationColorMap
-  updateTargetGroups: (index: number, newTargetGroups: TargetGroup[]) => void
-  updateTargets: (index: number, newTargets: TargetMap[]) => void
+  removeVariation: (removedVariationIndex: number) => void
+  refetchSegments: (searchTerm: string) => void
+  refetchTargets: (searchTerm: string) => void
 }
 
 export interface TagInputItem {
@@ -36,16 +36,15 @@ const SpecificTargetingItem = (props: SpecificTargetingItemProps): ReactElement 
     formVariationMapItem,
     variationColorMap,
     index,
-    disabled,
-    updateTargetGroups,
-    updateTargets
+    removeVariation,
+    refetchSegments,
+    refetchTargets,
+    disabled
   } = props
-
-  const delimiter = ','
 
   const { getString } = useStrings()
   return (
-    <>
+    <Layout.Vertical spacing="medium" border={{ bottom: true }}>
       <Container flex={{ justifyContent: 'space-between' }}>
         <Text
           inline
@@ -55,75 +54,56 @@ const SpecificTargetingItem = (props: SpecificTargetingItemProps): ReactElement 
         >
           {formVariationMapItem.variationName}
         </Text>
+        <DisabledFeatureTooltip>
+          <Button
+            disabled={disabled}
+            data-testid={`remove_variation_${formVariationMapItem.variationIdentifier}`}
+            icon="trash"
+            minimal
+            withoutCurrentColor
+            onClick={e => {
+              e.preventDefault()
+              removeVariation(index)
+            }}
+          />
+        </DisabledFeatureTooltip>
       </Container>
-      <div data-testid={`${formVariationMapItem.variationIdentifier}_target_groups`}>
-        <DisabledFeatureTooltip fullWidth>
-          <Label className={css.tagInputLabel}>{getString('cf.featureFlags.rules.toTargetGroups')}</Label>
-          <SimpleTagInput
-            fill
-            readonly={disabled}
-            inputProps={{ 'data-testid': `${formVariationMapItem.variationIdentifier}-target-groups-input` }}
-            items={segments.map<TagInputItem>(segment => ({
-              label: segment.name,
-              value: `${segment.identifier}${delimiter}${segment.name}`
-            }))}
-            selectedItems={
-              segments.length === 0
-                ? []
-                : formVariationMapItem.targetGroups.map<string>(
-                    (targetGroup: TargetGroup) => `${targetGroup.identifier}${delimiter}${targetGroup.name}`
-                  )
-            }
-            onChange={selectedItems => {
-              const newTargetGroups: TargetGroup[] = selectedItems.map(item => {
-                const value = item.toString().split(delimiter)
-                return {
-                  priority: 1,
-                  identifier: value[0],
-                  ruleId: '',
-                  name: value[1]
-                }
-              })
-              updateTargetGroups(index, newTargetGroups)
-            }}
-          />
-        </DisabledFeatureTooltip>
-      </div>
-      <div data-testid={`${formVariationMapItem.variationIdentifier}_targets`}>
-        <DisabledFeatureTooltip fullWidth>
-          <Label className={css.tagInputLabel}>{getString('cf.featureFlags.rules.toTargets')}</Label>
-          <SimpleTagInput
-            fill
-            readonly={disabled}
-            inputProps={{ 'data-testid': `${formVariationMapItem.variationIdentifier}-target-input` }}
-            items={targets.map<TagInputItem>(target => ({
-              label: target.name,
-              value: `${target.identifier}${delimiter}${target.name}`
-            }))}
-            selectedItems={
-              targets.length === 0
-                ? []
-                : formVariationMapItem.targets.map<string>(
-                    (target: TargetMap) => `${target.identifier}${delimiter}${target.name}`
-                  )
-            }
-            onChange={selectedItems => {
-              const newTargets: TargetMap[] = selectedItems.map(item => {
-                const value = item.toString().split(delimiter)
-
-                return {
-                  identifier: value[0],
-                  name: value[1]
-                }
-              })
-              updateTargets(index, newTargets)
-            }}
-          />
-        </DisabledFeatureTooltip>
-      </div>
-
-      <Container border={{ bottom: true }} />
-    </>
+      <Container padding={{ bottom: 'small' }}>
+        <div data-testid={`${formVariationMapItem.variationIdentifier}_targets`}>
+          <DisabledFeatureTooltip fullWidth>
+            <FormInput.MultiSelect
+              name={`targetingRuleItems[${index}].targets`}
+              label={getString('cf.featureFlags.rules.toTargets')}
+              items={targets.map<VariationTarget>(target => ({ label: target.name, value: target.identifier }))}
+              multiSelectProps={{
+                allowCreatingNewItems: false,
+                placeholder: getString('cf.featureFlags.rules.searchTargets'),
+                onQueryChange: query => refetchTargets(query)
+              }}
+            />
+          </DisabledFeatureTooltip>
+        </div>
+        <div data-testid={`${formVariationMapItem.variationIdentifier}_target_groups`}>
+          <DisabledFeatureTooltip fullWidth>
+            <FormInput.MultiSelect
+              name={`targetingRuleItems[${index}].targetGroups`}
+              label={getString('cf.featureFlags.rules.toTargetGroups')}
+              items={segments.map<VariationTargetGroup>(segment => ({
+                label: segment.name,
+                value: segment.identifier,
+                ruleId: uuid(),
+                priority: index + 1
+              }))}
+              multiSelectProps={{
+                allowCreatingNewItems: false,
+                placeholder: getString('cf.featureFlags.rules.searchTargetGroups'),
+                onQueryChange: query => refetchSegments(query)
+              }}
+            />
+          </DisabledFeatureTooltip>
+        </div>
+      </Container>
+    </Layout.Vertical>
   )
 }
 

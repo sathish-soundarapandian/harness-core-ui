@@ -19,15 +19,18 @@ import {
   ThumbnailSelect,
   IconName,
   Container,
+  getMultiTypeFromValue,
   Icon,
   MultiTypeInputType
 } from '@wings-software/uicore'
-import { isEmpty, isUndefined, set, uniqBy } from 'lodash-es'
+import { isEmpty, isUndefined, set, uniqBy, get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { produce } from 'immer'
 import type { FormikProps } from 'formik'
+import Volumes, { VolumesInterface, VolumesTypes } from '@pipeline/components/Volumes/Volumes'
+import MultiTypeCustomMap from '@common/components/MultiTypeCustomMap/MultiTypeCustomMap'
 import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
 import {
   FormMultiTypeDurationField,
@@ -63,6 +66,7 @@ import { k8sLabelRegex, k8sAnnotationRegex } from '@common/utils/StringUtils'
 import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
 import { BuildTabs } from '../CIPipelineStagesUtils'
 import css from './BuildInfraSpecifications.module.scss'
+import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 const logger = loggerFor(ModuleName.CD)
 const k8sClusterKeyRef = 'connectors.title.k8sCluster'
@@ -86,6 +90,7 @@ interface KubernetesBuildInfraFormValues {
   annotations?: MultiTypeMapUIType
   labels?: MultiTypeMapUIType
   priorityClassName?: string
+  volumes?: VolumesInterface
   automountServiceAccountToken?: boolean
   privileged?: boolean
   allowPrivilegeEscalation?: boolean
@@ -93,6 +98,8 @@ interface KubernetesBuildInfraFormValues {
   dropCapabilities?: MultiTypeListUIType
   runAsNonRoot?: boolean
   readOnlyRootFilesystem?: boolean
+  tolerations?: { effect?: string; key?: string; operator?: string; value?: string }[]
+  nodeSelector?: MultiTypeMapUIType
 }
 
 interface ContainerSecurityContext {
@@ -119,6 +126,8 @@ enum Modes {
 type FieldValueType = yup.Ref | yup.Schema<any> | yup.MixedSchema<any>
 
 const runAsUserStringKey = 'pipeline.stepCommonFields.runAsUser'
+const priorityClassNameStringKey = 'pipeline.buildInfra.priorityClassName'
+
 const getInitialMapValues: (value: MultiTypeMapType) => MultiTypeMapUIType = value => {
   const map =
     typeof value === 'string'
@@ -144,23 +153,28 @@ const getInitialListValues: (value: MultiTypeListType) => MultiTypeListUIType = 
 
 const validateUniqueList = ({
   value,
-  getString
+  getString,
+  uniqueKey,
+  stringKey
 }: {
   value: string[] | unknown
   getString: UseStringsReturn['getString']
+  uniqueKey?: string
+  stringKey?: keyof StringsMap
 }): any => {
   if (Array.isArray(value)) {
-    return yup.array().test('valuesShouldBeUnique', getString('validation.uniqueValues'), list => {
+    return yup.array().test('valuesShouldBeUnique', getString(stringKey || 'validation.uniqueValues'), list => {
       if (!list) {
         return true
       }
 
-      return uniqBy(list, 'value').length === list.length
+      return uniqBy(list, uniqueKey || 'value').length === list.length
     })
   } else {
     return yup.string()
   }
 }
+
 const getMapValues: (value: MultiTypeMapUIType) => MultiTypeMapType = value => {
   const map: MapType = {}
   if (Array.isArray(value)) {
@@ -321,6 +335,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
     return {
       namespace: (stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.namespace,
       serviceAccountName: (stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.serviceAccountName,
+      volumes: (stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.volumes,
       runAsUser:
         ((stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.containerSecurityContext
           ?.runAsUser as unknown as string) ||
@@ -349,7 +364,11 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
       runAsNonRoot: (stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.containerSecurityContext
         ?.runAsNonRoot,
       readOnlyRootFilesystem: (stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.containerSecurityContext
-        ?.readOnlyRootFilesystem
+        ?.readOnlyRootFilesystem,
+      tolerations: (stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.tolerations,
+      nodeSelector: getInitialMapValues(
+        (stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.nodeSelector || {}
+      )
     }
   }, [stage])
 
@@ -432,6 +451,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
 
   const handleValidate = (values: any): void => {
     if (stage) {
+      const _buildInfraType = values.buildInfraType || buildInfraTypes[0].value
       const errors: { [key: string]: string } = {}
       const stageData = produce(stage, draft => {
         if (currentMode === Modes.Propagate && values.useFromStage) {
@@ -442,13 +462,27 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           const filteredLabels = getMapValues(
             Array.isArray(values.labels) ? values.labels.filter((val: any) => testLabelKey(val.key)) : values.labels
           )
+          const filteredTolerations = Array.isArray(values.tolerations)
+            ? values.tolerations.map(
+                (val: { effect?: string; key?: string; operator?: string; value?: string; id?: string }) => {
+                  const newVal = val
+                  delete newVal.id
+                  return newVal
+                }
+              )
+            : values.tolerations
+
+          const filteredVolumes = Array.isArray(values.volumes)
+            ? values.volumes.filter((volume: VolumesInterface) => volume.mountPath && volume.type)
+            : values.volumes
+
           try {
             getDurationValidationSchema().validateSync(values.initTimeout)
           } catch (e) {
             errors.initTimeout = e.message
           }
           const additionalKubernetesFields: { containerSecurityContext?: ContainerSecurityContext } = {}
-          if (buildInfraType === 'KubernetesDirect') {
+          if (_buildInfraType === 'KubernetesDirect') {
             const containerSecurityContext: ContainerSecurityContext = {
               capabilities: {}
             }
@@ -498,7 +532,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           set(
             draft,
             'stage.spec.infrastructure',
-            buildInfraType === 'KubernetesDirect'
+            _buildInfraType === 'KubernetesDirect'
               ? {
                   type: 'KubernetesDirect',
                   spec: {
@@ -507,6 +541,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                       values?.connectorRef ||
                       (draft.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.connectorRef,
                     namespace: values.namespace,
+                    volumes: filteredVolumes,
                     serviceAccountName: values.serviceAccountName,
                     runAsUser: values.runAsUser,
                     initTimeout: errors.initTimeout ? undefined : values.initTimeout,
@@ -514,10 +549,12 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                     labels: !isEmpty(filteredLabels) ? filteredLabels : undefined,
                     automountServiceAccountToken: values.automountServiceAccountToken,
                     priorityClassName: values.priorityClassName,
+                    tolerations: filteredTolerations,
+                    nodeSelector: getMapValues(values.nodeSelector),
                     ...additionalKubernetesFields
                   }
                 }
-              : buildInfraType === 'VM'
+              : _buildInfraType === 'VM'
               ? {
                   type: 'VM',
                   spec: {
@@ -585,8 +622,39 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
     )
   }, [])
 
+  const renderCheckboxFields = React.useCallback(
+    ({
+      name,
+      stringKey,
+      tooltipId
+    }: {
+      name: string
+      stringKey: keyof StringsMap
+      tooltipId: string
+    }): React.ReactElement => {
+      return (
+        <>
+          <Container width={300}>
+            <FormMultiTypeCheckboxField
+              name={name}
+              label={getString(stringKey)}
+              multiTypeTextbox={{
+                expressions,
+                allowableTypes,
+                disabled: isReadonly
+              }}
+              tooltipProps={{ dataTooltipId: tooltipId }}
+              disabled={isReadonly}
+            />
+          </Container>
+        </>
+      )
+    },
+    []
+  )
+
   const renderMultiTypeMap = React.useCallback(
-    (fieldName: string, stringKey: keyof StringsMap): React.ReactElement => (
+    ({ fieldName, stringKey }: { fieldName: string; stringKey: keyof StringsMap }): React.ReactElement => (
       <Container className={cx(css.bottomMargin7, css.formGroup, { [css.md]: CI_VM_INFRASTRUCTURE })}>
         <MultiTypeMap
           appearance={'minimal'}
@@ -605,6 +673,99 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
         />
       </Container>
     ),
+    []
+  )
+
+  const renderContainerSecurityContext = React.useCallback(
+    ({ formik }: { formik: FormikProps<unknown> }): JSX.Element => {
+      return (
+        <>
+          <Separator topSeparation={0} />
+          <div className={css.tabSubHeading} id="containerSecurityContext">
+            {getString('pipeline.buildInfra.containerSecurityContext')}
+          </div>
+          {renderCheckboxFields({
+            name: 'privileged',
+            stringKey: 'pipeline.buildInfra.privileged',
+            tooltipId: 'privileged'
+          })}
+          {renderCheckboxFields({
+            name: 'allowPrivilegeEscalation',
+            stringKey: 'pipeline.buildInfra.allowPrivilegeEscalation',
+            tooltipId: 'allowPrivilegeEscalation'
+          })}
+          <Container className={css.bottomMargin7} width={300}>
+            <MultiTypeList
+              name="addCapabilities"
+              multiTextInputProps={{
+                expressions,
+                allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+              }}
+              formik={formik}
+              multiTypeFieldSelectorProps={{
+                label: (
+                  <Text tooltipProps={{ dataTooltipId: 'addCapabilities' }}>
+                    {getString('pipeline.buildInfra.addCapabilities')}
+                  </Text>
+                ),
+                allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+              }}
+              disabled={isReadonly}
+            />
+          </Container>
+          <Container width={300} className={css.bottomMargin7}>
+            <MultiTypeList
+              name="dropCapabilities"
+              multiTextInputProps={{
+                expressions,
+                allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+              }}
+              formik={formik}
+              multiTypeFieldSelectorProps={{
+                label: (
+                  <Text tooltipProps={{ dataTooltipId: 'dropCapabilities' }}>
+                    {getString('pipeline.buildInfra.dropCapabilities')}
+                  </Text>
+                ),
+                allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+              }}
+              disabled={isReadonly}
+            />
+          </Container>
+          {renderCheckboxFields({
+            name: 'runAsNonRoot',
+            stringKey: 'pipeline.buildInfra.runAsNonRoot',
+            tooltipId: 'runAsNonRoot'
+          })}
+          {renderCheckboxFields({
+            name: 'readOnlyRootFilesystem',
+            stringKey: 'pipeline.buildInfra.readOnlyRootFilesystem',
+            tooltipId: 'readOnlyRootFilesystem'
+          })}
+          <Container className={css.bottomMargin7}>
+            <MultiTypeTextField
+              label={
+                <Text
+                  font={{ variation: FontVariation.FORM_LABEL }}
+                  margin={{ bottom: 'xsmall' }}
+                  tooltipProps={{ dataTooltipId: 'runAsUser' }}
+                >
+                  {getString(runAsUserStringKey)}
+                </Text>
+              }
+              name="runAsUser"
+              style={{ width: 300, marginBottom: 'var(--spacing-xsmall)' }}
+              multiTextInputProps={{
+                multiTextInputProps: { expressions, allowableTypes },
+                disabled: isReadonly,
+                placeholder: '1000'
+              }}
+            />
+          </Container>
+          <Separator topSeparation={0} />
+        </>
+      )
+    },
     []
   )
 
@@ -655,7 +816,9 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           {getString(stringKey)}
         </Text>
         {typeof keyValue === 'string' ? (
-          <Text color="black">{keyValue}</Text>
+          <Text className={css.bottomMargin3} color="black">
+            {keyValue}
+          </Text>
         ) : (
           <ul className={css.plainList}>
             {Object.entries(keyValue || {})?.map((entry: [string, unknown], idx: number) => (
@@ -683,7 +846,9 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           {getString(stringKey)}
         </Text>
         {typeof value === 'string' ? (
-          <Text color="black">{value}</Text>
+          <Text className={css.bottomMargin3} color="black">
+            {value}
+          </Text>
         ) : (
           <ul className={css.plainList}>
             {value?.map((str: string, idx: number) => (
@@ -691,6 +856,51 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                 <Text color="black">{str}</Text>
               </li>
             ))}
+          </ul>
+        )}
+      </>
+    )
+
+  const renderPropagateDynamicList = ({
+    value,
+    stringKey
+  }: {
+    value: string | string[] | any
+    stringKey: keyof StringsMap
+  }): JSX.Element | undefined =>
+    value && (
+      <>
+        <Text font={{ variation: FontVariation.FORM_LABEL }} margin={{ bottom: 'xsmall' }}>
+          {getString(stringKey)}
+        </Text>
+        {typeof value === 'string' ? (
+          <Text margin={{ bottom: 'xsmall' }} color="black">
+            {value}
+          </Text>
+        ) : (
+          <ul className={css.plainList}>
+            {value.map((row: { [key: string]: string | { spec: { [key: string]: string } } }[], idx: number) => {
+              const entries = Object.entries(row)
+              return (
+                <li key={idx}>
+                  <Text color="black" lineClamp={1} width={371}>
+                    {entries.map(entry => {
+                      if (typeof entry[1] === 'string' && entry[1] !== '') {
+                        return `${entry[0]}:${entry[1]} `
+                      } else if (entry[0] === 'spec' && typeof entry[1] === 'object') {
+                        // special handling for Volumes
+                        const nestedEntries = Object.entries(entry[1] || {})
+                        return nestedEntries.map(nestedEntry =>
+                          typeof entry[1] === 'string' && entry[1] !== '' ? `${nestedEntry[0]}:${nestedEntry[1]} ` : ''
+                        )
+                      } else {
+                        return ''
+                      }
+                    })}
+                  </Text>
+                </li>
+              )
+            })}
           </ul>
         )}
       </>
@@ -773,10 +983,20 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
   }, [])
 
   const renderAccordianDetailSection = React.useCallback(({ formik }: { formik: any }): React.ReactElement => {
+    const tolerationsValue = get(formik?.values, 'tolerations')
     return (
       <>
         <Container className={css.bottomMargin7}>
-          <FormInput.MultiTextInput
+          <Volumes
+            name="volumes"
+            formik={formik}
+            expressions={expressions}
+            disabled={isReadonly}
+            allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
+          />
+        </Container>
+        <Container className={css.bottomMargin4}>
+          <MultiTypeTextField
             label={
               <Text
                 font={{ variation: FontVariation.FORM_LABEL }}
@@ -787,16 +1007,14 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
               </Text>
             }
             name="serviceAccountName"
-            placeholder={getString('pipeline.infraSpecifications.serviceAccountNamePlaceholder')}
-            style={{
-              width: 300
+            style={{ width: 300 }}
+            multiTextInputProps={{
+              multiTextInputProps: { expressions, allowableTypes },
+              disabled: isReadonly,
+              placeholder: getString('pipeline.infraSpecifications.serviceAccountNamePlaceholder')
             }}
-            multiTextInputProps={{ expressions, disabled: isReadonly, allowableTypes }}
           />
         </Container>
-        {renderTimeOutFields()}
-        <Container className={css.bottomMargin7}>{renderMultiTypeMap('annotations', 'ci.annotations')}</Container>
-        <Container className={css.bottomMargin7}>{renderMultiTypeMap('labels', 'ci.labels')}</Container>
         <Container width={300}>
           <FormMultiTypeCheckboxField
             name="automountServiceAccountToken"
@@ -811,6 +1029,13 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           />
         </Container>
         <Container className={css.bottomMargin7}>
+          {renderMultiTypeMap({ fieldName: 'labels', stringKey: 'ci.labels' })}
+        </Container>
+        <Container className={css.bottomMargin7}>
+          {renderMultiTypeMap({ fieldName: 'annotations', stringKey: 'ci.annotations' })}
+        </Container>
+        {renderContainerSecurityContext({ formik })}
+        <Container className={css.bottomMargin7}>
           <MultiTypeTextField
             label={
               <Text
@@ -818,7 +1043,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                 margin={{ bottom: 'xsmall' }}
                 tooltipProps={{ dataTooltipId: 'priorityClassName' }}
               >
-                {getString('pipeline.buildInfra.priorityClassName')}
+                {getString(priorityClassNameStringKey)}
               </Text>
             }
             name="priorityClassName"
@@ -829,121 +1054,51 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             }}
           />
         </Container>
-        <Separator topSeparation={12} />
-        <div className={css.tabSubHeading} id="containerSecurityContext">
-          {getString('pipeline.buildInfra.containerSecurityContext')}
-        </div>
-        <Container width={300}>
-          <FormMultiTypeCheckboxField
-            name="privileged"
-            label={getString('pipeline.buildInfra.privileged')}
-            multiTypeTextbox={{
-              expressions,
-              allowableTypes,
-              disabled: isReadonly
-            }}
-            tooltipProps={{ dataTooltipId: 'privileged' }}
-            disabled={isReadonly}
-          />
-        </Container>
-        <Container width={300}>
-          <FormMultiTypeCheckboxField
-            name="allowPrivilegeEscalation"
-            label={getString('pipeline.buildInfra.allowPrivilegeEscalation')}
-            multiTypeTextbox={{
-              expressions,
-              allowableTypes,
-              disabled: isReadonly
-            }}
-            tooltipProps={{ dataTooltipId: 'allowPrivilegeEscalation' }}
-            disabled={isReadonly}
-          />
+        <Container className={css.bottomMargin7}>
+          {renderMultiTypeMap({
+            fieldName: 'nodeSelector',
+            stringKey: 'pipeline.buildInfra.nodeSelector'
+          })}
         </Container>
         <Container className={css.bottomMargin7}>
-          <MultiTypeList
-            name="addCapabilities"
-            multiTextInputProps={{
-              expressions,
-              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
-            }}
-            formik={formik}
-            multiTypeFieldSelectorProps={{
-              label: (
-                <Text tooltipProps={{ dataTooltipId: 'addCapabilities' }}>
-                  {getString('pipeline.buildInfra.addCapabilities')}
-                </Text>
-              ),
-              allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
-            }}
-            disabled={isReadonly}
-          />
+          <Container
+            className={cx(stepCss.formGroup, css.bottomMargin7)}
+            {...(typeof tolerationsValue === 'string' &&
+              getMultiTypeFromValue(tolerationsValue) === MultiTypeInputType.RUNTIME && { width: 300 })}
+          >
+            <MultiTypeCustomMap
+              name="tolerations"
+              appearance={'minimal'}
+              cardStyle={{ width: '50%' }}
+              valueMultiTextInputProps={{
+                expressions,
+                allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+              }}
+              formik={formik}
+              multiTypeFieldSelectorProps={{
+                label: (
+                  <Text
+                    font={{ variation: FontVariation.FORM_LABEL }}
+                    margin={{ bottom: 'xsmall' }}
+                    tooltipProps={{ dataTooltipId: 'tolerations' }}
+                  >
+                    {getString('pipeline.buildInfra.tolerations')}
+                  </Text>
+                ),
+                allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+              }}
+              disabled={isReadonly}
+              multiTypeMapKeys={[
+                { label: 'Effect', value: 'effect' },
+                { label: 'Key', value: 'key' },
+                { label: 'Operator', value: 'operator' },
+                { label: 'Value', value: 'value' }
+              ]}
+              enableConfigureOptions={false}
+            />
+          </Container>
         </Container>
-        <Container className={css.bottomMargin7}>
-          <MultiTypeList
-            name="dropCapabilities"
-            multiTextInputProps={{
-              expressions,
-              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
-            }}
-            formik={formik}
-            multiTypeFieldSelectorProps={{
-              label: (
-                <Text tooltipProps={{ dataTooltipId: 'dropCapabilities' }}>
-                  {getString('pipeline.buildInfra.dropCapabilities')}
-                </Text>
-              ),
-              allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
-            }}
-            disabled={isReadonly}
-          />
-        </Container>
-        <Container width={300}>
-          <FormMultiTypeCheckboxField
-            name="runAsNonRoot"
-            label={getString('pipeline.buildInfra.runAsNonRoot')}
-            multiTypeTextbox={{
-              expressions,
-              allowableTypes,
-              disabled: isReadonly
-            }}
-            tooltipProps={{ dataTooltipId: 'runAsNonRoot' }}
-            disabled={isReadonly}
-          />
-        </Container>
-        <Container width={300}>
-          <FormMultiTypeCheckboxField
-            name="readOnlyRootFilesystem"
-            label={getString('pipeline.buildInfra.readOnlyRootFilesystem')}
-            multiTypeTextbox={{
-              expressions,
-              allowableTypes,
-              disabled: isReadonly
-            }}
-            tooltipProps={{ dataTooltipId: 'readOnlyRootFilesystem' }}
-            disabled={isReadonly}
-          />
-        </Container>
-        <Container className={css.bottomMargin7}>
-          <MultiTypeTextField
-            label={
-              <Text
-                font={{ variation: FontVariation.FORM_LABEL }}
-                margin={{ bottom: 'xsmall' }}
-                tooltipProps={{ dataTooltipId: 'runAsUser' }}
-              >
-                {getString(runAsUserStringKey)}
-              </Text>
-            }
-            name="runAsUser"
-            style={{ width: 300, marginBottom: 'var(--spacing-xsmall)' }}
-            multiTextInputProps={{
-              multiTextInputProps: { expressions, allowableTypes },
-              disabled: isReadonly,
-              placeholder: '1000'
-            }}
-          />
-        </Container>
-        <Separator topSeparation={0} />
+        {renderTimeOutFields()}
       </>
     )
   }, [])
@@ -1005,6 +1160,41 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                 return !isNaN(runAsUser)
               }
             ),
+            volumes: yup
+              .array()
+              .test({
+                test: value => !value || uniqBy(value, 'mountPath').length === value.length,
+                message: getString('pipeline.ci.validations.mountPathUnique')
+              })
+              .test({
+                test: value => {
+                  const pattern = /^\d+(\.\d+)?$|^\d+(\.\d+)?(G|M|Gi|Mi)$|^$/
+                  // invalid if size doesn't follow pattern or is an integer without units
+                  const isSizeInvalid = value?.some(
+                    (volume: VolumesInterface) =>
+                      volume?.spec?.size &&
+                      (!pattern.test(volume.spec.size) || !isNaN(volume.spec.size as unknown as number))
+                  )
+                  return !isSizeInvalid
+                },
+                message: getString('pipeline.ci.validations.invalidSize')
+              })
+              .test({
+                test: value => {
+                  const isPathMissing = value?.some(
+                    (volume: VolumesInterface) => volume.type === VolumesTypes.HostPath && !volume.spec?.path
+                  )
+                  return !isPathMissing
+                },
+                message: getString('pipeline.ci.validations.pathRequiredForHostPath')
+              })
+              .test({
+                test: value => {
+                  const isTypeMissing = value?.some((volume: VolumesInterface) => volume.mountPath && !volume.type)
+                  return !isTypeMissing
+                },
+                message: 'Type is required'
+              }),
             annotations: yup.lazy(
               (value: FieldValueType) => getFieldSchema(value, k8sAnnotationRegex) as yup.Schema<FieldValueType>
             ),
@@ -1012,7 +1202,10 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
               (value: FieldValueType) => getFieldSchema(value, k8sLabelRegex) as yup.Schema<FieldValueType>
             ),
             addCapabilities: yup.lazy(value => validateUniqueList({ value, getString })),
-            dropCapabilities: yup.lazy(value => validateUniqueList({ value, getString }))
+            dropCapabilities: yup.lazy(value => validateUniqueList({ value, getString })),
+            tolerations: yup.lazy(value =>
+              validateUniqueList({ value, getString, uniqueKey: 'key', stringKey: 'pipeline.ci.validations.keyUnique' })
+            )
           })
         : buildInfraType === 'VM'
         ? yup.object().shape({
@@ -1072,7 +1265,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           {formik => {
             const { setFieldValue } = formik
             window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: BuildTabs.INFRASTRUCTURE }))
-            formikRef.current = formik
+            formikRef.current = formik as FormikProps<unknown> | null
             return (
               <Layout.Vertical>
                 <Text font={{ variation: FontVariation.H5 }} id="infrastructureDefinition">
@@ -1083,7 +1276,11 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                     <Layout.Vertical>
                       {otherBuildStagesWithInfraConfigurationOptions.length ? (
                         <>
-                          <Card disabled={isReadonly} className={cx(css.sectionCard)}>
+                          <Card
+                            disabled={isReadonly}
+                            className={cx(css.sectionCard)}
+                            {...(currentMode === Modes.Propagate && { ['data-testId']: 'propagate-stage-card' })}
+                          >
                             <Layout.Horizontal spacing="xxlarge">
                               {/* Propagate section */}
                               <div
@@ -1153,6 +1350,12 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                                         }
                                         details={
                                           <>
+                                            {renderPropagateDynamicList({
+                                              value: (
+                                                propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml
+                                              )?.spec?.volumes,
+                                              stringKey: 'pipeline.buildInfra.volumes'
+                                            })}
                                             {(propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
                                               ?.serviceAccountName && (
                                               <>
@@ -1189,35 +1392,17 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                                                 </Text>
                                               </>
                                             )}
-                                            {(propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-                                              ?.initTimeout && (
-                                              <>
-                                                <Text
-                                                  font={{ variation: FontVariation.FORM_LABEL }}
-                                                  margin={{ bottom: 'xsmall' }}
-                                                  tooltipProps={{ dataTooltipId: 'timeout' }}
-                                                >
-                                                  {getString('pipeline.infraSpecifications.initTimeout')}
-                                                </Text>
-                                                <Text color="black" margin={{ bottom: 'medium' }}>
-                                                  {
-                                                    (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)
-                                                      ?.spec?.initTimeout
-                                                  }
-                                                </Text>
-                                              </>
-                                            )}
-                                            {renderPropagateKeyValuePairs({
-                                              keyValue: (
-                                                propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml
-                                              )?.spec?.annotations,
-                                              stringKey: 'ci.annotations'
-                                            })}
                                             {renderPropagateKeyValuePairs({
                                               keyValue: (
                                                 propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml
                                               )?.spec?.labels,
                                               stringKey: 'ci.labels'
+                                            })}
+                                            {renderPropagateKeyValuePairs({
+                                              keyValue: (
+                                                propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml
+                                              )?.spec?.annotations,
+                                              stringKey: 'ci.annotations'
                                             })}
                                             {typeof (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)
                                               ?.spec?.automountServiceAccountToken !== 'undefined' && (
@@ -1245,7 +1430,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                                                   margin={{ bottom: 'xsmall' }}
                                                   tooltipProps={{ dataTooltipId: 'timeout' }}
                                                 >
-                                                  {getString('pipeline.buildInfra.priorityClassName')}
+                                                  {getString(priorityClassNameStringKey)}
                                                 </Text>
                                                 <Text color="black" margin={{ bottom: 'medium' }}>
                                                   {
@@ -1362,6 +1547,54 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                                                 </Text>
                                               </>
                                             )}
+                                            {(propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                                              ?.priorityClassName && (
+                                              <>
+                                                <Text
+                                                  font={{ variation: FontVariation.FORM_LABEL }}
+                                                  margin={{ bottom: 'xsmall' }}
+                                                  tooltipProps={{ dataTooltipId: 'timeout' }}
+                                                >
+                                                  {getString(priorityClassNameStringKey)}
+                                                </Text>
+                                                <Text color="black" margin={{ bottom: 'medium' }}>
+                                                  {
+                                                    (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)
+                                                      ?.spec?.priorityClassName
+                                                  }
+                                                </Text>
+                                              </>
+                                            )}
+                                            {renderPropagateKeyValuePairs({
+                                              keyValue: (
+                                                propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml
+                                              )?.spec?.nodeSelector,
+                                              stringKey: 'pipeline.buildInfra.nodeSelector'
+                                            })}
+                                            {renderPropagateDynamicList({
+                                              value: (
+                                                propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml
+                                              )?.spec?.tolerations,
+                                              stringKey: 'pipeline.buildInfra.tolerations'
+                                            })}
+                                            {(propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                                              ?.initTimeout && (
+                                              <>
+                                                <Text
+                                                  font={{ variation: FontVariation.FORM_LABEL }}
+                                                  margin={{ bottom: 'xsmall' }}
+                                                  tooltipProps={{ dataTooltipId: 'timeout' }}
+                                                >
+                                                  {getString('pipeline.infraSpecifications.initTimeout')}
+                                                </Text>
+                                                <Text color="black" margin={{ bottom: 'medium' }}>
+                                                  {
+                                                    (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)
+                                                      ?.spec?.initTimeout
+                                                  }
+                                                </Text>
+                                              </>
+                                            )}
                                           </>
                                         }
                                       />
@@ -1402,7 +1635,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                                                   connectorRef: '',
                                                   namespace: '',
                                                   annotations: {},
-                                                  labels: {}
+                                                  labels: {},
+                                                  nodeSelector: {}
                                                 }
                                               }
                                             : buildInfraType === 'VM'
@@ -1486,6 +1720,11 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                                       const infraType = val as K8sDirectInfraYaml['type']
                                       setFieldValue('buildInfraType', infraType)
                                       setBuildInfraType(val as K8sDirectInfraYaml['type'])
+                                      if (infraType === 'KubernetesDirect') {
+                                        setFieldValue('automountServiceAccountToken', true)
+                                      } else {
+                                        setFieldValue('automountServiceAccountToken', undefined)
+                                      }
                                     }}
                                   />
                                 </>

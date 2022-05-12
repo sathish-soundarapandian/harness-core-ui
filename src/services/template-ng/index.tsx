@@ -34,16 +34,12 @@ export type AuditFilterProperties = FilterProperties & {
   )[]
   endTime?: number
   environments?: Environment[]
-  modules?: ('CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'CORE' | 'PMS' | 'TEMPLATESERVICE')[]
+  modules?: ('CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE')[]
   principals?: Principal[]
   resources?: ResourceDTO[]
   scopes?: ResourceScopeDTO[]
   startTime?: number
-}
-
-export interface ByteString {
-  empty?: boolean
-  validUtf8?: boolean
+  staticFilter?: 'EXCLUDE_LOGIN_EVENTS' | 'EXCLUDE_SYSTEM_EVENTS'
 }
 
 export interface CcmConnectorFilter {
@@ -87,6 +83,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'AwsSecretManager'
     | 'Gcp'
     | 'Aws'
+    | 'Azure'
     | 'Artifactory'
     | 'Jira'
     | 'Nexus'
@@ -106,112 +103,13 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'CustomHealth'
     | 'ServiceNow'
     | 'ErrorTracking'
+    | 'Pdc'
+    | 'AzureRepo'
   )[]
 }
 
-export interface Descriptor {
-  containingType?: Descriptor
-  enumTypes?: EnumDescriptor[]
-  extendable?: boolean
-  extensions?: FieldDescriptor[]
-  fields?: FieldDescriptor[]
-  file?: FileDescriptor
-  fullName?: string
-  index?: number
-  name?: string
-  nestedTypes?: Descriptor[]
-  oneofs?: OneofDescriptor[]
-  options?: MessageOptions
-}
-
 export interface EntityDetailProtoDTO {
-  allFields?: {
-    [key: string]: { [key: string]: any }
-  }
-  defaultInstanceForType?: EntityDetailProtoDTO
-  descriptorForType?: Descriptor
-  entityRefCase?: 'IDENTIFIERREF' | 'INPUTSETREF' | 'TEMPLATEREF' | 'ENTITYREF_NOT_SET'
-  identifierRef?: IdentifierRefProtoDTO
-  identifierRefOrBuilder?: IdentifierRefProtoDTOOrBuilder
-  initializationErrorString?: string
-  initialized?: boolean
-  inputSetRef?: InputSetReferenceProtoDTO
-  inputSetRefOrBuilder?: InputSetReferenceProtoDTOOrBuilder
-  name?: string
-  nameBytes?: ByteString
-  parserForType?: ParserEntityDetailProtoDTO
-  serializedSize?: number
-  templateRef?: TemplateReferenceProtoDTO
-  templateRefOrBuilder?: TemplateReferenceProtoDTOOrBuilder
-  type?:
-    | 'PROJECTS'
-    | 'PIPELINES'
-    | 'CONNECTORS'
-    | 'SECRETS'
-    | 'SERVICE'
-    | 'ENVIRONMENT'
-    | 'INPUT_SETS'
-    | 'CV_CONFIG'
-    | 'DELEGATES'
-    | 'DELEGATE_CONFIGURATIONS'
-    | 'CV_VERIFICATION_JOB'
-    | 'CV_KUBERNETES_ACTIVITY_SOURCE'
-    | 'INTEGRATION_STEPS'
-    | 'INTEGRATION_STAGE'
-    | 'DEPLOYMENT_STAGE'
-    | 'DEPLOYMENT_STEPS'
-    | 'PIPELINE_STEPS'
-    | 'APPROVAL_STAGE'
-    | 'TRIGGERS'
-    | 'FEATURE_FLAG_STAGE'
-    | 'MONITORED_SERVICE'
-    | 'TEMPLATE'
-    | 'GIT_REPOSITORIES'
-    | 'FEATURE_FLAGS'
-    | 'HTTP_STEP'
-    | 'SHELL_SCRIPT_STEP'
-    | 'K8S_CANARY_DEPLOY_STEP'
-    | 'JIRA_CREATE_STEP'
-    | 'SERVICENOW_APPROVAL_STEP'
-    | 'JIRA_UPDATE_STEP'
-    | 'JIRA_APPROVAL_STEP'
-    | 'HARNESS_APPROVAL_STEP'
-    | 'BARRIER_STEP'
-    | 'VERIFY_STEP'
-    | 'OPAPOLICIES'
-    | 'POLICY_STEP'
-    | 'ARTIFACTORY_UPLOAD'
-    | 'GCS_UPLOAD'
-    | 'S3_UPLOAD'
-    | 'BUILD_AND_PUSH_GCR'
-    | 'BUILD_AND_PUSH_ECR'
-    | 'BUILD_AND_PUSH_DOCKER_REGISTRY'
-    | 'RUN_STEP'
-    | 'RUN_TEST'
-    | 'PLUGIN'
-    | 'RESTORE_CACHE_GCS'
-    | 'RESTORE_CACHE_S3'
-    | 'SAVE_CACHE_GCS'
-    | 'SAVE_CACHE_S3'
-    | 'FLAG_CONFIGURATION'
-    | 'SECURITY'
-    | 'K8S_APPLY_STEP'
-    | 'K8S_BLUE_GREEN_DEPLOY_STEP'
-    | 'K8S_ROLLING_DEPLOY_STEP'
-    | 'K8S_ROLLING_ROLLBACK_STEP'
-    | 'K8S_SCALE_STEP'
-    | 'K8S_DELETE_STEP'
-    | 'K8S_BG_SWAP_SERVICES_STEP'
-    | 'K8S_CANARY_DELETE_STEP'
-    | 'TERRAFORM_APPLY_STEP'
-    | 'TERRAFORM_PLAN_STEP'
-    | 'TERRAFORM_DESTROY_STEP'
-    | 'TERRAFORM_ROLLBACK_STEP'
-    | 'HELM_DEPLOY_STEP'
-    | 'HELM_ROLLBACK_STEP'
-    | 'UNRECOGNIZED'
-  typeValue?: number
-  unknownFields?: UnknownFieldSet
+  [key: string]: any
 }
 
 export interface EntityGitDetails {
@@ -226,67 +124,6 @@ export interface EntityGitDetails {
 export interface EntityValidityDetails {
   invalidYaml?: string
   valid?: boolean
-}
-
-export interface EnumDescriptor {
-  containingType?: Descriptor
-  file?: FileDescriptor
-  fullName?: string
-  index?: number
-  name?: string
-  options?: EnumOptions
-  values?: EnumValueDescriptor[]
-}
-
-export interface EnumOptions {
-  allFields?: {
-    [key: string]: { [key: string]: any }
-  }
-  allFieldsRaw?: {
-    [key: string]: { [key: string]: any }
-  }
-  allowAlias?: boolean
-  defaultInstanceForType?: EnumOptions
-  deprecated?: boolean
-  descriptorForType?: Descriptor
-  initializationErrorString?: string
-  initialized?: boolean
-  parserForType?: ParserEnumOptions
-  serializedSize?: number
-  uninterpretedOptionCount?: number
-  uninterpretedOptionList?: UninterpretedOption[]
-  uninterpretedOptionOrBuilderList?: UninterpretedOptionOrBuilder[]
-  unknownFields?: UnknownFieldSet
-}
-
-export interface EnumValueDescriptor {
-  file?: FileDescriptor
-  fullName?: string
-  index?: number
-  name?: string
-  number?: number
-  options?: EnumValueOptions
-  type?: EnumDescriptor
-}
-
-export interface EnumValueOptions {
-  allFields?: {
-    [key: string]: { [key: string]: any }
-  }
-  allFieldsRaw?: {
-    [key: string]: { [key: string]: any }
-  }
-  defaultInstanceForType?: EnumValueOptions
-  deprecated?: boolean
-  descriptorForType?: Descriptor
-  initializationErrorString?: string
-  initialized?: boolean
-  parserForType?: ParserEnumValueOptions
-  serializedSize?: number
-  uninterpretedOptionCount?: number
-  uninterpretedOptionList?: UninterpretedOption[]
-  uninterpretedOptionOrBuilderList?: UninterpretedOptionOrBuilder[]
-  unknownFields?: UnknownFieldSet
 }
 
 export interface Environment {
@@ -600,6 +437,14 @@ export interface Error {
     | 'INVALID_JSON_PAYLOAD'
     | 'POLICY_EVALUATION_FAILURE'
     | 'POLICY_SET_ERROR'
+    | 'INVALID_ARTIFACTORY_REGISTRY_REQUEST'
+    | 'INVALID_NEXUS_REGISTRY_REQUEST'
+    | 'ENTITY_NOT_FOUND'
+    | 'INVALID_AZURE_CONTAINER_REGISTRY_REQUEST'
+    | 'AZURE_AUTHENTICATION_ERROR'
+    | 'AZURE_CONFIG_ERROR'
+    | 'DATA_PROCESSING_ERROR'
+    | 'INVALID_AZURE_AKS_REQUEST'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -918,162 +763,18 @@ export interface Failure {
     | 'INVALID_JSON_PAYLOAD'
     | 'POLICY_EVALUATION_FAILURE'
     | 'POLICY_SET_ERROR'
+    | 'INVALID_ARTIFACTORY_REGISTRY_REQUEST'
+    | 'INVALID_NEXUS_REGISTRY_REQUEST'
+    | 'ENTITY_NOT_FOUND'
+    | 'INVALID_AZURE_CONTAINER_REGISTRY_REQUEST'
+    | 'AZURE_AUTHENTICATION_ERROR'
+    | 'AZURE_CONFIG_ERROR'
+    | 'DATA_PROCESSING_ERROR'
+    | 'INVALID_AZURE_AKS_REQUEST'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface FieldDescriptor {
-  containingOneof?: OneofDescriptor
-  containingType?: Descriptor
-  defaultValue?: { [key: string]: any }
-  enumType?: EnumDescriptor
-  extension?: boolean
-  extensionScope?: Descriptor
-  file?: FileDescriptor
-  fullName?: string
-  index?: number
-  javaType?: 'INT' | 'LONG' | 'FLOAT' | 'DOUBLE' | 'BOOLEAN' | 'STRING' | 'BYTE_STRING' | 'ENUM' | 'MESSAGE'
-  jsonName?: string
-  liteJavaType?: 'INT' | 'LONG' | 'FLOAT' | 'DOUBLE' | 'BOOLEAN' | 'STRING' | 'BYTE_STRING' | 'ENUM' | 'MESSAGE'
-  liteType?:
-    | 'DOUBLE'
-    | 'FLOAT'
-    | 'INT64'
-    | 'UINT64'
-    | 'INT32'
-    | 'FIXED64'
-    | 'FIXED32'
-    | 'BOOL'
-    | 'STRING'
-    | 'GROUP'
-    | 'MESSAGE'
-    | 'BYTES'
-    | 'UINT32'
-    | 'ENUM'
-    | 'SFIXED32'
-    | 'SFIXED64'
-    | 'SINT32'
-    | 'SINT64'
-  mapField?: boolean
-  messageType?: Descriptor
-  name?: string
-  number?: number
-  optional?: boolean
-  options?: FieldOptions
-  packable?: boolean
-  packed?: boolean
-  repeated?: boolean
-  required?: boolean
-  type?:
-    | 'DOUBLE'
-    | 'FLOAT'
-    | 'INT64'
-    | 'UINT64'
-    | 'INT32'
-    | 'FIXED64'
-    | 'FIXED32'
-    | 'BOOL'
-    | 'STRING'
-    | 'GROUP'
-    | 'MESSAGE'
-    | 'BYTES'
-    | 'UINT32'
-    | 'ENUM'
-    | 'SFIXED32'
-    | 'SFIXED64'
-    | 'SINT32'
-    | 'SINT64'
-}
-
-export interface FieldOptions {
-  allFields?: {
-    [key: string]: { [key: string]: any }
-  }
-  allFieldsRaw?: {
-    [key: string]: { [key: string]: any }
-  }
-  ctype?: 'STRING' | 'CORD' | 'STRING_PIECE'
-  defaultInstanceForType?: FieldOptions
-  deprecated?: boolean
-  descriptorForType?: Descriptor
-  initializationErrorString?: string
-  initialized?: boolean
-  jstype?: 'JS_NORMAL' | 'JS_STRING' | 'JS_NUMBER'
-  lazy?: boolean
-  packed?: boolean
-  parserForType?: ParserFieldOptions
-  serializedSize?: number
-  uninterpretedOptionCount?: number
-  uninterpretedOptionList?: UninterpretedOption[]
-  uninterpretedOptionOrBuilderList?: UninterpretedOptionOrBuilder[]
-  unknownFields?: UnknownFieldSet
-  weak?: boolean
-}
-
-export interface FileDescriptor {
-  dependencies?: FileDescriptor[]
-  enumTypes?: EnumDescriptor[]
-  extensions?: FieldDescriptor[]
-  file?: FileDescriptor
-  fullName?: string
-  messageTypes?: Descriptor[]
-  name?: string
-  options?: FileOptions
-  package?: string
-  publicDependencies?: FileDescriptor[]
-  services?: ServiceDescriptor[]
-  syntax?: 'UNKNOWN' | 'PROTO2' | 'PROTO3'
-}
-
-export interface FileOptions {
-  allFields?: {
-    [key: string]: { [key: string]: any }
-  }
-  allFieldsRaw?: {
-    [key: string]: { [key: string]: any }
-  }
-  ccEnableArenas?: boolean
-  ccGenericServices?: boolean
-  csharpNamespace?: string
-  csharpNamespaceBytes?: ByteString
-  defaultInstanceForType?: FileOptions
-  deprecated?: boolean
-  descriptorForType?: Descriptor
-  goPackage?: string
-  goPackageBytes?: ByteString
-  initializationErrorString?: string
-  initialized?: boolean
-  javaGenerateEqualsAndHash?: boolean
-  javaGenericServices?: boolean
-  javaMultipleFiles?: boolean
-  javaOuterClassname?: string
-  javaOuterClassnameBytes?: ByteString
-  javaPackage?: string
-  javaPackageBytes?: ByteString
-  javaStringCheckUtf8?: boolean
-  objcClassPrefix?: string
-  objcClassPrefixBytes?: ByteString
-  optimizeFor?: 'SPEED' | 'CODE_SIZE' | 'LITE_RUNTIME'
-  parserForType?: ParserFileOptions
-  phpClassPrefix?: string
-  phpClassPrefixBytes?: ByteString
-  phpGenericServices?: boolean
-  phpMetadataNamespace?: string
-  phpMetadataNamespaceBytes?: ByteString
-  phpNamespace?: string
-  phpNamespaceBytes?: ByteString
-  pyGenericServices?: boolean
-  rubyPackage?: string
-  rubyPackageBytes?: ByteString
-  serializedSize?: number
-  swiftPrefix?: string
-  swiftPrefixBytes?: ByteString
-  uninterpretedOptionCount?: number
-  uninterpretedOptionList?: UninterpretedOption[]
-  uninterpretedOptionOrBuilderList?: UninterpretedOptionOrBuilder[]
-  unknownFields?: UnknownFieldSet
 }
 
 export interface FilterDTO {
@@ -1095,212 +796,17 @@ export interface FilterProperties {
     | 'Deployment'
     | 'Audit'
     | 'Template'
+    | 'EnvironmentGroup'
+    | 'FileStore'
+    | 'CCMRecommendation'
+    | 'Anomaly'
   tags?: {
     [key: string]: string
   }
 }
 
-export interface IdentifierRefProtoDTO {
-  accountIdentifier?: StringValue
-  accountIdentifierOrBuilder?: StringValueOrBuilder
-  allFields?: {
-    [key: string]: { [key: string]: any }
-  }
-  defaultInstanceForType?: IdentifierRefProtoDTO
-  descriptorForType?: Descriptor
-  identifier?: StringValue
-  identifierOrBuilder?: StringValueOrBuilder
-  initializationErrorString?: string
-  initialized?: boolean
-  metadata?: {
-    [key: string]: string
-  }
-  metadataCount?: number
-  metadataMap?: {
-    [key: string]: string
-  }
-  orgIdentifier?: StringValue
-  orgIdentifierOrBuilder?: StringValueOrBuilder
-  parserForType?: ParserIdentifierRefProtoDTO
-  projectIdentifier?: StringValue
-  projectIdentifierOrBuilder?: StringValueOrBuilder
-  scope?: 'ACCOUNT' | 'ORG' | 'PROJECT' | 'UNKNOWN' | 'UNRECOGNIZED'
-  scopeValue?: number
-  serializedSize?: number
-  unknownFields?: UnknownFieldSet
-}
-
-export interface IdentifierRefProtoDTOOrBuilder {
-  accountIdentifier?: StringValue
-  accountIdentifierOrBuilder?: StringValueOrBuilder
-  allFields?: {
-    [key: string]: { [key: string]: any }
-  }
-  defaultInstanceForType?: Message
-  descriptorForType?: Descriptor
-  identifier?: StringValue
-  identifierOrBuilder?: StringValueOrBuilder
-  initializationErrorString?: string
-  initialized?: boolean
-  metadata?: {
-    [key: string]: string
-  }
-  metadataCount?: number
-  metadataMap?: {
-    [key: string]: string
-  }
-  orgIdentifier?: StringValue
-  orgIdentifierOrBuilder?: StringValueOrBuilder
-  projectIdentifier?: StringValue
-  projectIdentifierOrBuilder?: StringValueOrBuilder
-  scope?: 'ACCOUNT' | 'ORG' | 'PROJECT' | 'UNKNOWN' | 'UNRECOGNIZED'
-  scopeValue?: number
-  unknownFields?: UnknownFieldSet
-}
-
-export interface InputSetReferenceProtoDTO {
-  accountIdentifier?: StringValue
-  accountIdentifierOrBuilder?: StringValueOrBuilder
-  allFields?: {
-    [key: string]: { [key: string]: any }
-  }
-  defaultInstanceForType?: InputSetReferenceProtoDTO
-  descriptorForType?: Descriptor
-  identifier?: StringValue
-  identifierOrBuilder?: StringValueOrBuilder
-  initializationErrorString?: string
-  initialized?: boolean
-  orgIdentifier?: StringValue
-  orgIdentifierOrBuilder?: StringValueOrBuilder
-  parserForType?: ParserInputSetReferenceProtoDTO
-  pipelineIdentifier?: StringValue
-  pipelineIdentifierOrBuilder?: StringValueOrBuilder
-  projectIdentifier?: StringValue
-  projectIdentifierOrBuilder?: StringValueOrBuilder
-  serializedSize?: number
-  unknownFields?: UnknownFieldSet
-}
-
-export interface InputSetReferenceProtoDTOOrBuilder {
-  accountIdentifier?: StringValue
-  accountIdentifierOrBuilder?: StringValueOrBuilder
-  allFields?: {
-    [key: string]: { [key: string]: any }
-  }
-  defaultInstanceForType?: Message
-  descriptorForType?: Descriptor
-  identifier?: StringValue
-  identifierOrBuilder?: StringValueOrBuilder
-  initializationErrorString?: string
-  initialized?: boolean
-  orgIdentifier?: StringValue
-  orgIdentifierOrBuilder?: StringValueOrBuilder
-  pipelineIdentifier?: StringValue
-  pipelineIdentifierOrBuilder?: StringValueOrBuilder
-  projectIdentifier?: StringValue
-  projectIdentifierOrBuilder?: StringValueOrBuilder
-  unknownFields?: UnknownFieldSet
-}
-
 export interface JsonNode {
-  array?: boolean
-  bigDecimal?: boolean
-  bigInteger?: boolean
-  binary?: boolean
-  boolean?: boolean
-  containerNode?: boolean
-  double?: boolean
-  float?: boolean
-  floatingPointNumber?: boolean
-  int?: boolean
-  integralNumber?: boolean
-  long?: boolean
-  missingNode?: boolean
-  nodeType?: 'ARRAY' | 'BINARY' | 'BOOLEAN' | 'MISSING' | 'NULL' | 'NUMBER' | 'OBJECT' | 'POJO' | 'STRING'
-  null?: boolean
-  number?: boolean
-  object?: boolean
-  pojo?: boolean
-  short?: boolean
-  textual?: boolean
-  valueNode?: boolean
-}
-
-export interface Message {
-  allFields?: {
-    [key: string]: { [key: string]: any }
-  }
-  defaultInstanceForType?: MessageLite
-  descriptorForType?: Descriptor
-  initializationErrorString?: string
-  initialized?: boolean
-  parserForType?: ParserMessage
-  serializedSize?: number
-  unknownFields?: UnknownFieldSet
-}
-
-export interface MessageLite {
-  defaultInstanceForType?: MessageLite
-  initialized?: boolean
-  parserForType?: ParserMessageLite
-  serializedSize?: number
-}
-
-export interface MessageOptions {
-  allFields?: {
-    [key: string]: { [key: string]: any }
-  }
-  allFieldsRaw?: {
-    [key: string]: { [key: string]: any }
-  }
-  defaultInstanceForType?: MessageOptions
-  deprecated?: boolean
-  descriptorForType?: Descriptor
-  initializationErrorString?: string
-  initialized?: boolean
-  mapEntry?: boolean
-  messageSetWireFormat?: boolean
-  noStandardDescriptorAccessor?: boolean
-  parserForType?: ParserMessageOptions
-  serializedSize?: number
-  uninterpretedOptionCount?: number
-  uninterpretedOptionList?: UninterpretedOption[]
-  uninterpretedOptionOrBuilderList?: UninterpretedOptionOrBuilder[]
-  unknownFields?: UnknownFieldSet
-}
-
-export interface MethodDescriptor {
-  clientStreaming?: boolean
-  file?: FileDescriptor
-  fullName?: string
-  index?: number
-  inputType?: Descriptor
-  name?: string
-  options?: MethodOptions
-  outputType?: Descriptor
-  serverStreaming?: boolean
-  service?: ServiceDescriptor
-}
-
-export interface MethodOptions {
-  allFields?: {
-    [key: string]: { [key: string]: any }
-  }
-  allFieldsRaw?: {
-    [key: string]: { [key: string]: any }
-  }
-  defaultInstanceForType?: MethodOptions
-  deprecated?: boolean
-  descriptorForType?: Descriptor
-  idempotencyLevel?: 'IDEMPOTENCY_UNKNOWN' | 'NO_SIDE_EFFECTS' | 'IDEMPOTENT'
-  initializationErrorString?: string
-  initialized?: boolean
-  parserForType?: ParserMethodOptions
-  serializedSize?: number
-  uninterpretedOptionCount?: number
-  uninterpretedOptionList?: UninterpretedOption[]
-  uninterpretedOptionOrBuilderList?: UninterpretedOptionOrBuilder[]
-  unknownFields?: UnknownFieldSet
+  [key: string]: any
 }
 
 export interface NGTag {
@@ -1322,68 +828,15 @@ export interface NGTemplateInfoConfig {
   tags?: {
     [key: string]: string
   }
-  type: 'Step' | 'Stage'
+  type: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService'
   versionLabel: string
 }
 
-export interface NamePart {
-  allFields?: {
-    [key: string]: { [key: string]: any }
-  }
-  defaultInstanceForType?: NamePart
-  descriptorForType?: Descriptor
-  initializationErrorString?: string
-  initialized?: boolean
-  isExtension?: boolean
-  namePart?: string
-  namePartBytes?: ByteString
-  parserForType?: ParserNamePart
-  serializedSize?: number
-  unknownFields?: UnknownFieldSet
-}
-
-export interface NamePartOrBuilder {
-  allFields?: {
-    [key: string]: { [key: string]: any }
-  }
-  defaultInstanceForType?: Message
-  descriptorForType?: Descriptor
-  initializationErrorString?: string
-  initialized?: boolean
-  isExtension?: boolean
-  namePart?: string
-  namePartBytes?: ByteString
-  unknownFields?: UnknownFieldSet
-}
-
-export interface OneofDescriptor {
-  containingType?: Descriptor
-  fieldCount?: number
-  fields?: FieldDescriptor[]
-  file?: FileDescriptor
-  fullName?: string
-  index?: number
+export interface NodeErrorInfo {
+  fqn?: string
+  identifier?: string
   name?: string
-  options?: OneofOptions
-}
-
-export interface OneofOptions {
-  allFields?: {
-    [key: string]: { [key: string]: any }
-  }
-  allFieldsRaw?: {
-    [key: string]: { [key: string]: any }
-  }
-  defaultInstanceForType?: OneofOptions
-  descriptorForType?: Descriptor
-  initializationErrorString?: string
-  initialized?: boolean
-  parserForType?: ParserOneofOptions
-  serializedSize?: number
-  uninterpretedOptionCount?: number
-  uninterpretedOptionList?: UninterpretedOption[]
-  uninterpretedOptionOrBuilderList?: UninterpretedOptionOrBuilder[]
-  unknownFields?: UnknownFieldSet
+  type?: string
 }
 
 export interface Page {
@@ -1433,86 +886,6 @@ export interface Pageable {
   unpaged?: boolean
 }
 
-export interface Parser {
-  [key: string]: any
-}
-
-export interface ParserEntityDetailProtoDTO {
-  [key: string]: any
-}
-
-export interface ParserEnumOptions {
-  [key: string]: any
-}
-
-export interface ParserEnumValueOptions {
-  [key: string]: any
-}
-
-export interface ParserFieldOptions {
-  [key: string]: any
-}
-
-export interface ParserFileOptions {
-  [key: string]: any
-}
-
-export interface ParserIdentifierRefProtoDTO {
-  [key: string]: any
-}
-
-export interface ParserInputSetReferenceProtoDTO {
-  [key: string]: any
-}
-
-export interface ParserMessage {
-  [key: string]: any
-}
-
-export interface ParserMessageLite {
-  [key: string]: any
-}
-
-export interface ParserMessageOptions {
-  [key: string]: any
-}
-
-export interface ParserMethodOptions {
-  [key: string]: any
-}
-
-export interface ParserNamePart {
-  [key: string]: any
-}
-
-export interface ParserOneofOptions {
-  [key: string]: any
-}
-
-export interface ParserServiceOptions {
-  [key: string]: any
-}
-
-export interface ParserStringValue {
-  [key: string]: any
-}
-
-export interface ParserTemplateReferenceProtoDTO {
-  [key: string]: any
-}
-
-export interface ParserUninterpretedOption {
-  [key: string]: any
-}
-
-export interface ParserYamlOutputProperties {
-  [key: string]: any
-}
-
-export interface ParserYamlProperties {
-  [key: string]: any
-}
-
 export type PipelineFilterProperties = FilterProperties & {
   description?: string
   moduleProperties?: {
@@ -1526,6 +899,10 @@ export type PipelineFilterProperties = FilterProperties & {
 export interface Principal {
   identifier: string
   type: 'USER' | 'SYSTEM' | 'API_KEY' | 'SERVICE_ACCOUNT'
+}
+
+export interface RefreshRequestDTO {
+  type?: 'PIPELINE' | 'TEMPLATE'
 }
 
 export interface ResourceDTO {
@@ -1547,6 +924,7 @@ export interface ResourceDTO {
     | 'TEMPLATE'
     | 'INPUT_SET'
     | 'DELEGATE_CONFIGURATION'
+    | 'DELEGATE_GROUPS'
     | 'SERVICE'
     | 'ENVIRONMENT'
     | 'DELEGATE'
@@ -1555,6 +933,9 @@ export interface ResourceDTO {
     | 'API_KEY'
     | 'TOKEN'
     | 'DELEGATE_TOKEN'
+    | 'GOVERNANCE_POLICY'
+    | 'GOVERNANCE_POLICY_SET'
+    | 'VARIABLE'
 }
 
 export interface ResourceScopeDTO {
@@ -1900,6 +1281,14 @@ export interface ResponseMessage {
     | 'INVALID_JSON_PAYLOAD'
     | 'POLICY_EVALUATION_FAILURE'
     | 'POLICY_SET_ERROR'
+    | 'INVALID_ARTIFACTORY_REGISTRY_REQUEST'
+    | 'INVALID_NEXUS_REGISTRY_REQUEST'
+    | 'ENTITY_NOT_FOUND'
+    | 'INVALID_AZURE_CONTAINER_REGISTRY_REQUEST'
+    | 'AZURE_AUTHENTICATION_ERROR'
+    | 'AZURE_CONFIG_ERROR'
+    | 'DATA_PROCESSING_ERROR'
+    | 'INVALID_AZURE_AKS_REQUEST'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -1965,9 +1354,23 @@ export interface ResponseTemplateWrapperResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseValidateTemplateInputsResponseDTO {
+  correlationId?: string
+  data?: ValidateTemplateInputsResponseDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseVariableMergeServiceResponse {
   correlationId?: string
   data?: VariableMergeServiceResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseYamlDiffResponseDTO {
+  correlationId?: string
+  data?: YamlDiffResponseDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -1982,38 +1385,9 @@ export type ScmErrorMetadataDTO = ErrorMetadataDTO & {
   conflictCommitId?: string
 }
 
-export interface ServiceDescriptor {
-  file?: FileDescriptor
-  fullName?: string
-  index?: number
-  methods?: MethodDescriptor[]
-  name?: string
-  options?: ServiceOptions
-}
-
 export interface ServiceExpressionProperties {
   expression?: string
   serviceName?: string
-}
-
-export interface ServiceOptions {
-  allFields?: {
-    [key: string]: { [key: string]: any }
-  }
-  allFieldsRaw?: {
-    [key: string]: { [key: string]: any }
-  }
-  defaultInstanceForType?: ServiceOptions
-  deprecated?: boolean
-  descriptorForType?: Descriptor
-  initializationErrorString?: string
-  initialized?: boolean
-  parserForType?: ParserServiceOptions
-  serializedSize?: number
-  uninterpretedOptionCount?: number
-  uninterpretedOptionList?: UninterpretedOption[]
-  uninterpretedOptionOrBuilderList?: UninterpretedOptionOrBuilder[]
-  unknownFields?: UnknownFieldSet
 }
 
 export interface Sort {
@@ -2028,34 +1402,6 @@ export interface StackTraceElement {
   lineNumber?: number
   methodName?: string
   nativeMethod?: boolean
-}
-
-export interface StringValue {
-  allFields?: {
-    [key: string]: { [key: string]: any }
-  }
-  defaultInstanceForType?: StringValue
-  descriptorForType?: Descriptor
-  initializationErrorString?: string
-  initialized?: boolean
-  parserForType?: ParserStringValue
-  serializedSize?: number
-  unknownFields?: UnknownFieldSet
-  value?: string
-  valueBytes?: ByteString
-}
-
-export interface StringValueOrBuilder {
-  allFields?: {
-    [key: string]: { [key: string]: any }
-  }
-  defaultInstanceForType?: Message
-  descriptorForType?: Descriptor
-  initializationErrorString?: string
-  initialized?: boolean
-  unknownFields?: UnknownFieldSet
-  value?: string
-  valueBytes?: ByteString
 }
 
 export interface TemplateApplyRequest {
@@ -2079,10 +1425,14 @@ export interface TemplateFilterProperties {
     | 'Deployment'
     | 'Audit'
     | 'Template'
+    | 'EnvironmentGroup'
+    | 'FileStore'
+    | 'CCMRecommendation'
+    | 'Anomaly'
   tags?: {
     [key: string]: string
   }
-  templateEntityTypes?: ('Step' | 'Stage')[]
+  templateEntityTypes?: ('Step' | 'Stage' | 'Pipeline' | 'MonitoredService')[]
   templateIdentifiers?: string[]
   templateNames?: string[]
 }
@@ -2103,54 +1453,6 @@ export type TemplateInputsErrorMetadataDTO = ErrorMetadataDTO & {
 export interface TemplateMergeResponse {
   mergedPipelineYaml?: string
   templateReferenceSummaries?: TemplateReferenceSummary[]
-}
-
-export interface TemplateReferenceProtoDTO {
-  accountIdentifier?: StringValue
-  accountIdentifierOrBuilder?: StringValueOrBuilder
-  allFields?: {
-    [key: string]: { [key: string]: any }
-  }
-  defaultInstanceForType?: TemplateReferenceProtoDTO
-  descriptorForType?: Descriptor
-  identifier?: StringValue
-  identifierOrBuilder?: StringValueOrBuilder
-  initializationErrorString?: string
-  initialized?: boolean
-  orgIdentifier?: StringValue
-  orgIdentifierOrBuilder?: StringValueOrBuilder
-  parserForType?: ParserTemplateReferenceProtoDTO
-  projectIdentifier?: StringValue
-  projectIdentifierOrBuilder?: StringValueOrBuilder
-  scope?: 'ACCOUNT' | 'ORG' | 'PROJECT' | 'UNKNOWN' | 'UNRECOGNIZED'
-  scopeValue?: number
-  serializedSize?: number
-  unknownFields?: UnknownFieldSet
-  versionLabel?: StringValue
-  versionLabelOrBuilder?: StringValueOrBuilder
-}
-
-export interface TemplateReferenceProtoDTOOrBuilder {
-  accountIdentifier?: StringValue
-  accountIdentifierOrBuilder?: StringValueOrBuilder
-  allFields?: {
-    [key: string]: { [key: string]: any }
-  }
-  defaultInstanceForType?: Message
-  descriptorForType?: Descriptor
-  identifier?: StringValue
-  identifierOrBuilder?: StringValueOrBuilder
-  initializationErrorString?: string
-  initialized?: boolean
-  orgIdentifier?: StringValue
-  orgIdentifierOrBuilder?: StringValueOrBuilder
-  projectIdentifier?: StringValue
-  projectIdentifierOrBuilder?: StringValueOrBuilder
-  scope?: 'ACCOUNT' | 'ORG' | 'PROJECT' | 'UNKNOWN' | 'UNRECOGNIZED'
-  scopeValue?: number
-  unknownFields?: UnknownFieldSet
-  versionLabel?: StringValue
-  versionLabelOrBuilder?: StringValueOrBuilder
 }
 
 export interface TemplateReferenceSummary {
@@ -2176,7 +1478,7 @@ export interface TemplateResponse {
   tags?: {
     [key: string]: string
   }
-  templateEntityType?: 'Step' | 'Stage'
+  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService'
   templateScope?: 'account' | 'org' | 'project' | 'unknown'
   version?: number
   versionLabel?: string
@@ -2199,7 +1501,7 @@ export interface TemplateSummaryResponse {
   tags?: {
     [key: string]: string
   }
-  templateEntityType?: 'Step' | 'Stage'
+  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService'
   templateScope?: 'account' | 'org' | 'project' | 'unknown'
   version?: number
   versionLabel?: string
@@ -2219,58 +1521,8 @@ export interface Throwable {
   suppressed?: Throwable[]
 }
 
-export interface UninterpretedOption {
-  aggregateValue?: string
-  aggregateValueBytes?: ByteString
-  allFields?: {
-    [key: string]: { [key: string]: any }
-  }
-  defaultInstanceForType?: UninterpretedOption
-  descriptorForType?: Descriptor
-  doubleValue?: number
-  identifierValue?: string
-  identifierValueBytes?: ByteString
-  initializationErrorString?: string
-  initialized?: boolean
-  nameCount?: number
-  nameList?: NamePart[]
-  nameOrBuilderList?: NamePartOrBuilder[]
-  negativeIntValue?: number
-  parserForType?: ParserUninterpretedOption
-  positiveIntValue?: number
-  serializedSize?: number
-  stringValue?: ByteString
-  unknownFields?: UnknownFieldSet
-}
-
-export interface UninterpretedOptionOrBuilder {
-  aggregateValue?: string
-  aggregateValueBytes?: ByteString
-  allFields?: {
-    [key: string]: { [key: string]: any }
-  }
-  defaultInstanceForType?: Message
-  descriptorForType?: Descriptor
-  doubleValue?: number
-  identifierValue?: string
-  identifierValueBytes?: ByteString
-  initializationErrorString?: string
-  initialized?: boolean
-  nameCount?: number
-  nameList?: NamePart[]
-  nameOrBuilderList?: NamePartOrBuilder[]
-  negativeIntValue?: number
-  positiveIntValue?: number
-  stringValue?: ByteString
-  unknownFields?: UnknownFieldSet
-}
-
-export interface UnknownFieldSet {
-  defaultInstanceForType?: UnknownFieldSet
-  initialized?: boolean
-  parserForType?: Parser
-  serializedSize?: number
-  serializedSizeAsMessageSet?: number
+export interface ValidateTemplateInputsResponseDTO {
+  [key: string]: any
 }
 
 export interface ValidationError {
@@ -2288,47 +1540,44 @@ export interface VariableMergeServiceResponse {
 }
 
 export interface VariableResponseMapValue {
+  yamlExtraProperties?: YamlExtraProperties
   yamlOutputProperties?: YamlOutputProperties
   yamlProperties?: YamlProperties
 }
 
+export interface YamlDiffResponseDTO {
+  [key: string]: any
+}
+
+export interface YamlExtraProperties {
+  [key: string]: any
+}
+
 export interface YamlOutputProperties {
-  allFields?: {
-    [key: string]: { [key: string]: any }
-  }
-  defaultInstanceForType?: YamlOutputProperties
-  descriptorForType?: Descriptor
-  fqn?: string
-  fqnBytes?: ByteString
-  initializationErrorString?: string
-  initialized?: boolean
-  localName?: string
-  localNameBytes?: ByteString
-  parserForType?: ParserYamlOutputProperties
-  serializedSize?: number
-  unknownFields?: UnknownFieldSet
+  [key: string]: any
 }
 
 export interface YamlProperties {
-  allFields?: {
-    [key: string]: { [key: string]: any }
-  }
-  defaultInstanceForType?: YamlProperties
-  descriptorForType?: Descriptor
+  [key: string]: any
+}
+
+export interface YamlSchemaErrorDTO {
   fqn?: string
-  fqnBytes?: ByteString
-  initializationErrorString?: string
-  initialized?: boolean
-  localName?: string
-  localNameBytes?: ByteString
-  parserForType?: ParserYamlProperties
-  serializedSize?: number
-  unknownFields?: UnknownFieldSet
+  hintMessage?: string
+  message?: string
+  stageInfo?: NodeErrorInfo
+  stepInfo?: NodeErrorInfo
+}
+
+export type YamlSchemaErrorWrapperDTO = ErrorMetadataDTO & {
+  schemaErrors?: YamlSchemaErrorDTO[]
 }
 
 export type FilterDTORequestBody = FilterDTO
 
-export type GetTemplateReferencesBodyRequestBody = string
+export type RefreshRequestDTORequestBody = RefreshRequestDTO
+
+export type UpdateExistingTemplateLabelBodyRequestBody = string
 
 export interface GetFilterListQueryParams {
   pageIndex?: number
@@ -2345,6 +1594,10 @@ export interface GetFilterListQueryParams {
     | 'Deployment'
     | 'Audit'
     | 'Template'
+    | 'EnvironmentGroup'
+    | 'FileStore'
+    | 'CCMRecommendation'
+    | 'Anomaly'
 }
 
 export type GetFilterListProps = Omit<
@@ -2505,6 +1758,10 @@ export interface DeleteFilterQueryParams {
     | 'Deployment'
     | 'Audit'
     | 'Template'
+    | 'EnvironmentGroup'
+    | 'FileStore'
+    | 'CCMRecommendation'
+    | 'Anomaly'
 }
 
 export type DeleteFilterProps = Omit<
@@ -2566,6 +1823,10 @@ export interface GetFilterQueryParams {
     | 'Deployment'
     | 'Audit'
     | 'Template'
+    | 'EnvironmentGroup'
+    | 'FileStore'
+    | 'CCMRecommendation'
+    | 'Anomaly'
 }
 
 export interface GetFilterPathParams {
@@ -2648,6 +1909,300 @@ export const getTemplateHealthStatusPromise = (
   signal?: RequestInit['signal']
 ) => getUsingFetch<ResponseString, unknown, void, void>(getConfig('template/api'), `/health`, props, signal)
 
+export interface RefreshAndUpdateTemplateInputsQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+}
+
+export type RefreshAndUpdateTemplateInputsProps = Omit<
+  MutateProps<
+    ResponseBoolean,
+    Failure | Error,
+    RefreshAndUpdateTemplateInputsQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This refreshes and update template inputs in template/pipeline
+ */
+export const RefreshAndUpdateTemplateInputs = (props: RefreshAndUpdateTemplateInputsProps) => (
+  <Mutate<
+    ResponseBoolean,
+    Failure | Error,
+    RefreshAndUpdateTemplateInputsQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >
+    verb="POST"
+    path={`/refresh-template`}
+    base={getConfig('template/api')}
+    {...props}
+  />
+)
+
+export type UseRefreshAndUpdateTemplateInputsProps = Omit<
+  UseMutateProps<
+    ResponseBoolean,
+    Failure | Error,
+    RefreshAndUpdateTemplateInputsQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This refreshes and update template inputs in template/pipeline
+ */
+export const useRefreshAndUpdateTemplateInputs = (props: UseRefreshAndUpdateTemplateInputsProps) =>
+  useMutate<
+    ResponseBoolean,
+    Failure | Error,
+    RefreshAndUpdateTemplateInputsQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >('POST', `/refresh-template`, { base: getConfig('template/api'), ...props })
+
+/**
+ * This refreshes and update template inputs in template/pipeline
+ */
+export const refreshAndUpdateTemplateInputsPromise = (
+  props: MutateUsingFetchProps<
+    ResponseBoolean,
+    Failure | Error,
+    RefreshAndUpdateTemplateInputsQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseBoolean,
+    Failure | Error,
+    RefreshAndUpdateTemplateInputsQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >('POST', getConfig('template/api'), `/refresh-template`, props, signal)
+
+export interface RefreshAllQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+}
+
+export type RefreshAllProps = Omit<
+  MutateProps<ResponseBoolean, Failure | Error, RefreshAllQueryParams, RefreshRequestDTORequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * This does recursive refresh and update template inputs in template/pipeline
+ */
+export const RefreshAll = (props: RefreshAllProps) => (
+  <Mutate<ResponseBoolean, Failure | Error, RefreshAllQueryParams, RefreshRequestDTORequestBody, void>
+    verb="POST"
+    path={`/refresh-template/refresh-all`}
+    base={getConfig('template/api')}
+    {...props}
+  />
+)
+
+export type UseRefreshAllProps = Omit<
+  UseMutateProps<ResponseBoolean, Failure | Error, RefreshAllQueryParams, RefreshRequestDTORequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * This does recursive refresh and update template inputs in template/pipeline
+ */
+export const useRefreshAll = (props: UseRefreshAllProps) =>
+  useMutate<ResponseBoolean, Failure | Error, RefreshAllQueryParams, RefreshRequestDTORequestBody, void>(
+    'POST',
+    `/refresh-template/refresh-all`,
+    { base: getConfig('template/api'), ...props }
+  )
+
+/**
+ * This does recursive refresh and update template inputs in template/pipeline
+ */
+export const refreshAllPromise = (
+  props: MutateUsingFetchProps<
+    ResponseBoolean,
+    Failure | Error,
+    RefreshAllQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseBoolean, Failure | Error, RefreshAllQueryParams, RefreshRequestDTORequestBody, void>(
+    'POST',
+    getConfig('template/api'),
+    `/refresh-template/refresh-all`,
+    props,
+    signal
+  )
+
+export interface GetYamlDiffQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+}
+
+export type GetYamlDiffProps = Omit<
+  MutateProps<ResponseYamlDiffResponseDTO, Failure | Error, GetYamlDiffQueryParams, RefreshRequestDTORequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * This returns original yaml and refresh yaml of template/pipeline
+ */
+export const GetYamlDiff = (props: GetYamlDiffProps) => (
+  <Mutate<ResponseYamlDiffResponseDTO, Failure | Error, GetYamlDiffQueryParams, RefreshRequestDTORequestBody, void>
+    verb="POST"
+    path={`/refresh-template/show-diff`}
+    base={getConfig('template/api')}
+    {...props}
+  />
+)
+
+export type UseGetYamlDiffProps = Omit<
+  UseMutateProps<
+    ResponseYamlDiffResponseDTO,
+    Failure | Error,
+    GetYamlDiffQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This returns original yaml and refresh yaml of template/pipeline
+ */
+export const useGetYamlDiff = (props: UseGetYamlDiffProps) =>
+  useMutate<ResponseYamlDiffResponseDTO, Failure | Error, GetYamlDiffQueryParams, RefreshRequestDTORequestBody, void>(
+    'POST',
+    `/refresh-template/show-diff`,
+    { base: getConfig('template/api'), ...props }
+  )
+
+/**
+ * This returns original yaml and refresh yaml of template/pipeline
+ */
+export const getYamlDiffPromise = (
+  props: MutateUsingFetchProps<
+    ResponseYamlDiffResponseDTO,
+    Failure | Error,
+    GetYamlDiffQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseYamlDiffResponseDTO,
+    Failure | Error,
+    GetYamlDiffQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >('POST', getConfig('template/api'), `/refresh-template/show-diff`, props, signal)
+
+export interface ValidateTemplateInputsQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+}
+
+export type ValidateTemplateInputsProps = Omit<
+  MutateProps<
+    ResponseValidateTemplateInputsResponseDTO,
+    Failure | Error,
+    ValidateTemplateInputsQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This validates whether yaml of template/pipeline is valid or not
+ */
+export const ValidateTemplateInputs = (props: ValidateTemplateInputsProps) => (
+  <Mutate<
+    ResponseValidateTemplateInputsResponseDTO,
+    Failure | Error,
+    ValidateTemplateInputsQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >
+    verb="POST"
+    path={`/refresh-template/validate-template-inputs`}
+    base={getConfig('template/api')}
+    {...props}
+  />
+)
+
+export type UseValidateTemplateInputsProps = Omit<
+  UseMutateProps<
+    ResponseValidateTemplateInputsResponseDTO,
+    Failure | Error,
+    ValidateTemplateInputsQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This validates whether yaml of template/pipeline is valid or not
+ */
+export const useValidateTemplateInputs = (props: UseValidateTemplateInputsProps) =>
+  useMutate<
+    ResponseValidateTemplateInputsResponseDTO,
+    Failure | Error,
+    ValidateTemplateInputsQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >('POST', `/refresh-template/validate-template-inputs`, { base: getConfig('template/api'), ...props })
+
+/**
+ * This validates whether yaml of template/pipeline is valid or not
+ */
+export const validateTemplateInputsPromise = (
+  props: MutateUsingFetchProps<
+    ResponseValidateTemplateInputsResponseDTO,
+    Failure | Error,
+    ValidateTemplateInputsQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseValidateTemplateInputsResponseDTO,
+    Failure | Error,
+    ValidateTemplateInputsQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >('POST', getConfig('template/api'), `/refresh-template/validate-template-inputs`, props, signal)
+
 export interface CreateTemplateQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -2659,6 +2214,8 @@ export interface CreateTemplateQueryParams {
   commitMsg?: string
   isNewBranch?: boolean
   baseBranch?: string
+  connectorRef?: string
+  storeType?: 'INLINE' | 'REMOTE'
   setDefaultTemplate?: boolean
   comments?: string
 }
@@ -2668,7 +2225,7 @@ export type CreateTemplateProps = Omit<
     ResponseTemplateWrapperResponse,
     Failure | Error,
     CreateTemplateQueryParams,
-    GetTemplateReferencesBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -2682,7 +2239,7 @@ export const CreateTemplate = (props: CreateTemplateProps) => (
     ResponseTemplateWrapperResponse,
     Failure | Error,
     CreateTemplateQueryParams,
-    GetTemplateReferencesBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     void
   >
     verb="POST"
@@ -2697,7 +2254,7 @@ export type UseCreateTemplateProps = Omit<
     ResponseTemplateWrapperResponse,
     Failure | Error,
     CreateTemplateQueryParams,
-    GetTemplateReferencesBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -2711,7 +2268,7 @@ export const useCreateTemplate = (props: UseCreateTemplateProps) =>
     ResponseTemplateWrapperResponse,
     Failure | Error,
     CreateTemplateQueryParams,
-    GetTemplateReferencesBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     void
   >('POST', `/templates`, { base: getConfig('template/api'), ...props })
 
@@ -2723,7 +2280,7 @@ export const createTemplatePromise = (
     ResponseTemplateWrapperResponse,
     Failure | Error,
     CreateTemplateQueryParams,
-    GetTemplateReferencesBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -2732,7 +2289,7 @@ export const createTemplatePromise = (
     ResponseTemplateWrapperResponse,
     Failure | Error,
     CreateTemplateQueryParams,
-    GetTemplateReferencesBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     void
   >('POST', getConfig('template/api'), `/templates`, props, signal)
 
@@ -3024,6 +2581,9 @@ export interface GetTemplateReferencesQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
 }
 
 export type GetTemplateReferencesProps = Omit<
@@ -3031,7 +2591,7 @@ export type GetTemplateReferencesProps = Omit<
     ResponseListEntityDetailProtoDTO,
     Failure | Error,
     GetTemplateReferencesQueryParams,
-    GetTemplateReferencesBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -3042,7 +2602,7 @@ export const GetTemplateReferences = (props: GetTemplateReferencesProps) => (
     ResponseListEntityDetailProtoDTO,
     Failure | Error,
     GetTemplateReferencesQueryParams,
-    GetTemplateReferencesBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     void
   >
     verb="POST"
@@ -3057,7 +2617,7 @@ export type UseGetTemplateReferencesProps = Omit<
     ResponseListEntityDetailProtoDTO,
     Failure | Error,
     GetTemplateReferencesQueryParams,
-    GetTemplateReferencesBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -3068,7 +2628,7 @@ export const useGetTemplateReferences = (props: UseGetTemplateReferencesProps) =
     ResponseListEntityDetailProtoDTO,
     Failure | Error,
     GetTemplateReferencesQueryParams,
-    GetTemplateReferencesBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     void
   >('POST', `/templates/templateReferences`, { base: getConfig('template/api'), ...props })
 
@@ -3077,7 +2637,7 @@ export const getTemplateReferencesPromise = (
     ResponseListEntityDetailProtoDTO,
     Failure | Error,
     GetTemplateReferencesQueryParams,
-    GetTemplateReferencesBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -3086,7 +2646,7 @@ export const getTemplateReferencesPromise = (
     ResponseListEntityDetailProtoDTO,
     Failure | Error,
     GetTemplateReferencesQueryParams,
-    GetTemplateReferencesBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     void
   >('POST', getConfig('template/api'), `/templates/templateReferences`, props, signal)
 
@@ -3102,6 +2662,8 @@ export interface UpdateExistingTemplateLabelQueryParams {
   lastObjectId?: string
   resolvedConflictCommitId?: string
   baseBranch?: string
+  connectorRef?: string
+  storeType?: 'INLINE' | 'REMOTE'
   setDefaultTemplate?: boolean
   comments?: string
 }
@@ -3116,7 +2678,7 @@ export type UpdateExistingTemplateLabelProps = Omit<
     ResponseTemplateWrapperResponse,
     Failure | Error,
     UpdateExistingTemplateLabelQueryParams,
-    GetTemplateReferencesBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     UpdateExistingTemplateLabelPathParams
   >,
   'path' | 'verb'
@@ -3135,7 +2697,7 @@ export const UpdateExistingTemplateLabel = ({
     ResponseTemplateWrapperResponse,
     Failure | Error,
     UpdateExistingTemplateLabelQueryParams,
-    GetTemplateReferencesBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     UpdateExistingTemplateLabelPathParams
   >
     verb="PUT"
@@ -3150,7 +2712,7 @@ export type UseUpdateExistingTemplateLabelProps = Omit<
     ResponseTemplateWrapperResponse,
     Failure | Error,
     UpdateExistingTemplateLabelQueryParams,
-    GetTemplateReferencesBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     UpdateExistingTemplateLabelPathParams
   >,
   'path' | 'verb'
@@ -3169,7 +2731,7 @@ export const useUpdateExistingTemplateLabel = ({
     ResponseTemplateWrapperResponse,
     Failure | Error,
     UpdateExistingTemplateLabelQueryParams,
-    GetTemplateReferencesBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     UpdateExistingTemplateLabelPathParams
   >(
     'PUT',
@@ -3190,7 +2752,7 @@ export const updateExistingTemplateLabelPromise = (
     ResponseTemplateWrapperResponse,
     Failure | Error,
     UpdateExistingTemplateLabelQueryParams,
-    GetTemplateReferencesBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     UpdateExistingTemplateLabelPathParams
   > & { templateIdentifier: string; versionLabel: string },
   signal?: RequestInit['signal']
@@ -3199,7 +2761,7 @@ export const updateExistingTemplateLabelPromise = (
     ResponseTemplateWrapperResponse,
     Failure | Error,
     UpdateExistingTemplateLabelQueryParams,
-    GetTemplateReferencesBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     UpdateExistingTemplateLabelPathParams
   >('PUT', getConfig('template/api'), `/templates/update/${templateIdentifier}/${versionLabel}`, props, signal)
 

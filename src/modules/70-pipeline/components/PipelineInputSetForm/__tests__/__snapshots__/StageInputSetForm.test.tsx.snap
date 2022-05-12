@@ -5,7 +5,9 @@ exports[`stageinputset tests viewType DeploymentForm initial render 1`] = `
   <div
     class="OverlaySpinner--overlaySpinner"
   >
-    <form>
+    <form
+      action="#"
+    >
       <div
         class="accordionSummary"
         id="Stage.undefined.Service"
@@ -38,8 +40,7 @@ exports[`stageinputset tests viewType DeploymentForm initial render 1`] = `
           infrastructureText
         </div>
         <div
-          class="nestedAccordions"
-          style="width: 50%;"
+          class="nestedAccordions infraSection"
         >
           <div
             class="StyledProps--font StyledProps--main bottomMargin3"
@@ -74,12 +75,12 @@ exports[`stageinputset tests viewType DeploymentForm initial render 1`] = `
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      style="width: 385px;"
+                      style="width: 320px;"
                     >
                       <button
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                         data-testid="cr-field-stages[0].stage.spec.infrastructure.spec.connectorRef"
-                        style="width: 385px;"
+                        style="width: 320px;"
                         type="button"
                       >
                         <span
@@ -146,387 +147,152 @@ exports[`stageinputset tests viewType DeploymentForm initial render 1`] = `
             </div>
           </div>
           <div
-            class="bp3-form-group"
+            class="StyledProps--font StyledProps--main bottomMargin3"
           >
-            <label
-              class="bp3-label"
-              for="stages[0].stage.spec.infrastructure.spec.namespace"
-            >
-              <span
-                class="Tooltip--acenter"
-                data-tooltip-id="test-form_stages[0].stage.spec.infrastructure.spec.namespace"
-              >
-                <div
-                  class="Text--withDocsTooltip"
-                  data-tooltip-id="namespace"
-                >
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
-                  >
-                    pipelineSteps.build.infraSpecifications.namespace
-                  </p>
-                </div>
-              </span>
-               
-              <span
-                class="bp3-text-muted"
-              />
-            </label>
             <div
-              class="bp3-form-content"
+              style="width: 300px;"
             >
               <div
-                class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-              >
-                <div
-                  class="bp3-input-group MultiTypeInput--input"
-                >
-                  <input
-                    autocomplete="off"
-                    class="bp3-input"
-                    name="stages[0].stage.spec.infrastructure.spec.namespace"
-                    type="text"
-                    value=""
-                  />
-                </div>
-                <span
-                  class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                >
-                  <span
-                    class="bp3-popover-target"
-                  >
-                    <button
-                      class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                    >
-                      <span
-                        class="bp3-icon StyledProps--main"
-                        data-icon="fixed-input"
-                      >
-                        <svg
-                          height="12"
-                          viewBox="0 0 9 9"
-                          width="12"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                            fill="currentColor"
-                          />
-                        </svg>
-                      </span>
-                    </button>
-                  </span>
-                </span>
-              </div>
-            </div>
-          </div>
-          <div
-            class="bp3-form-group"
-          >
-            <label
-              class="bp3-label"
-              for="stages[0].stage.spec.infrastructure.spec.serviceAccountName"
-            >
-              <span
-                class="Tooltip--acenter"
-                data-tooltip-id="test-form_stages[0].stage.spec.infrastructure.spec.serviceAccountName"
+                class="Text--withDocsTooltip"
+                data-tooltip-id="namespace"
               >
                 <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
                 >
-                  pipeline.infraSpecifications.serviceAccountName
+                  pipelineSteps.build.infraSpecifications.namespace
                 </p>
-              </span>
-               
-              <span
-                class="bp3-text-muted"
-              />
-            </label>
-            <div
-              class="bp3-form-content"
-            >
-              <div
-                class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-              >
-                <div
-                  class="bp3-input-group MultiTypeInput--input"
-                >
-                  <input
-                    autocomplete="off"
-                    class="bp3-input"
-                    name="stages[0].stage.spec.infrastructure.spec.serviceAccountName"
-                    type="text"
-                    value=""
-                  />
-                </div>
-                <span
-                  class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                >
-                  <span
-                    class="bp3-popover-target"
-                  >
-                    <button
-                      class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                    >
-                      <span
-                        class="bp3-icon StyledProps--main"
-                        data-icon="fixed-input"
-                      >
-                        <svg
-                          height="12"
-                          viewBox="0 0 9 9"
-                          width="12"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                            fill="currentColor"
-                          />
-                        </svg>
-                      </span>
-                    </button>
-                  </span>
-                </span>
               </div>
-            </div>
-          </div>
-          <div
-            class="bp3-form-group"
-          >
-            <label
-              class="bp3-label"
-              for="stages[0].stage.spec.infrastructure.spec.initTimeout"
-            >
-              <span
-                class="Tooltip--acenter"
-                data-tooltip-id="test-form_stages[0].stage.spec.infrastructure.spec.initTimeout"
-              >
-                <div
-                  class="Text--withDocsTooltip"
-                  data-tooltip-id="timeout"
-                >
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
-                  >
-                    pipeline.infraSpecifications.initTimeout
-                  </p>
-                </div>
-              </span>
-               
-              <span
-                class="bp3-text-muted"
-              />
-            </label>
-            <div
-              class="bp3-form-content"
-            >
               <div
-                class="container"
+                style="display: flex; align-items: center;"
               >
                 <div
-                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="flex-grow: 1;"
+                  class="bp3-form-group"
+                  style="margin-bottom: 0px; flex-grow: 1;"
                 >
+                  
                   <div
-                    class="bp3-input-group bp3-fill"
+                    class="bp3-form-content"
                   >
-                    <input
-                      class="bp3-input"
-                      name="stages[0].stage.spec.infrastructure.spec.initTimeout"
-                      placeholder="Enter w/d/h/m/s/ms"
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                  <span
-                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                  >
-                    <span
-                      class="bp3-popover-target"
-                    >
-                      <button
-                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                      >
-                        <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="fixed-input"
-                        >
-                          <svg
-                            height="12"
-                            viewBox="0 0 9 9"
-                            width="12"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                              fill="currentColor"
-                            />
-                          </svg>
-                        </span>
-                      </button>
-                    </span>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="group withoutSpacing minimalCard"
-          >
-            <div
-              class="bp3-form-group"
-              style="flex-grow: 1; margin-bottom: 0px;"
-            >
-              <label
-                class="bp3-label"
-                for="stages[0].stage.spec.infrastructure.spec.annotations"
-              >
-                <div
-                  class="formLabel"
-                >
-                  <span
-                    class="Tooltip--acenter"
-                    data-tooltip-id="test-form_stages[0].stage.spec.infrastructure.spec.annotations"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
-                    >
-                      ci.annotations
-                    </p>
-                  </span>
-                </div>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
-              <div
-                class="bp3-form-content"
-              >
-                <div
-                  class="group withoutAligning"
-                >
-                  <div>
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--font-variation-form-label"
-                    >
-                      keyLabel
-                    </p>
                     <div
-                      class="TextInput--main"
+                      class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                     >
                       <div
-                        class="bp3-input-group"
+                        class="bp3-input-group MultiTypeInput--input"
                       >
                         <input
+                          autocomplete="off"
                           class="bp3-input"
-                          data-testid="key-stages[0].stage.spec.infrastructure.spec.annotations-[0]"
-                          name="stages[0].stage.spec.infrastructure.spec.annotations[0].key"
+                          name="stages[0].stage.spec.infrastructure.spec.namespace"
                           type="text"
                           value=""
                         />
                       </div>
-                    </div>
-                  </div>
-                  <div>
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--font-variation-form-label"
-                    >
-                      valueLabel
-                    </p>
-                    <div
-                      class="group withoutAligning withoutSpacing"
-                    >
-                      <div
-                        class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                        data-testid="value-stages[0].stage.spec.infrastructure.spec.annotations-[0]"
-                        style="flex-shrink: 1;"
+                      <span
+                        class="bp3-popover-wrapper MultiTypeInput--wrapper"
                       >
-                        <div
-                          class="bp3-input-group MultiTypeInput--input"
-                        >
-                          <input
-                            class="bp3-input"
-                            name="stages[0].stage.spec.infrastructure.spec.annotations[0].value"
-                            type="text"
-                            value=""
-                          />
-                        </div>
                         <span
-                          class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                          class="bp3-popover-target"
                         >
-                          <span
-                            class="bp3-popover-target"
+                          <button
+                            class="MultiTypeInput--btn MultiTypeInput--FIXED"
                           >
-                            <button
-                              class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            <span
+                              class="bp3-icon StyledProps--main"
+                              data-icon="fixed-input"
                             >
-                              <span
-                                class="bp3-icon StyledProps--main"
-                                data-icon="fixed-input"
+                              <svg
+                                height="12"
+                                viewBox="0 0 9 9"
+                                width="12"
+                                xmlns="http://www.w3.org/2000/svg"
                               >
-                                <svg
-                                  height="12"
-                                  viewBox="0 0 9 9"
-                                  width="12"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                    fill="currentColor"
-                                  />
-                                </svg>
-                              </span>
-                            </button>
-                          </span>
+                                <path
+                                  d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                  fill="currentColor"
+                                />
+                              </svg>
+                            </span>
+                          </button>
                         </span>
-                      </div>
-                      <button
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
-                        data-testid="remove-stages[0].stage.spec.infrastructure.spec.annotations-[0]"
-                        type="button"
-                      >
-                        <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="main-trash"
-                        >
-                          <svg
-                            height="20"
-                            viewBox="0 0 16 20"
-                            width="20"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              clip-rule="evenodd"
-                              d="M1.143 8.48a1.2 1.2 0 011.189-1.36h10.649a1.2 1.2 0 011.194 1.321l-1.039 10.208a1.2 1.2 0 01-1.193 1.079H3.716a1.2 1.2 0 01-1.189-1.04L1.143 8.48zm11.837-.16H2.332l1.385 10.207h8.226L12.98 8.32zM5.916 1.594a.6.6 0 01.719-.452l4.224.965a.6.6 0 01.452.719L11 4.179l3.86.882a.6.6 0 01-.267 1.17L1.535 3.248a.6.6 0 11.267-1.17l3.805.87.309-1.354zm.86 1.62l3.056.698.175-.768-3.055-.698-.175.768z"
-                              fill="currentColor"
-                              fill-rule="evenodd"
-                            />
-                            <path
-                              clip-rule="evenodd"
-                              d="M8 10.808a.5.5 0 01.5.5v5a.5.5 0 01-1 0v-5a.5.5 0 01.5-.5zm-2.761.012a.5.5 0 01.541.454l.436 4.981a.5.5 0 11-.996.087l-.436-4.98a.5.5 0 01.455-.542zM10.762 10.82a.5.5 0 01.455.541l-.436 4.981a.5.5 0 11-.996-.087l.435-4.98a.5.5 0 01.542-.455z"
-                              fill="currentColor"
-                              fill-rule="evenodd"
-                              opacity="0.3"
-                            />
-                          </svg>
-                        </span>
-                      </button>
+                      </span>
                     </div>
                   </div>
                 </div>
-                <button
-                  class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
-                  data-testid="add-stages[0].stage.spec.infrastructure.spec.annotations"
-                  style="padding: 0px;"
-                  type="button"
+              </div>
+            </div>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main formGroup sm bottomMargin3"
+          >
+            <div
+              style="width: 300px;"
+            >
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="serviceAccountName"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
                 >
-                  <span
-                    class="bp3-button-text"
+                  pipeline.infraSpecifications.serviceAccountName
+                </p>
+              </div>
+              <div
+                style="display: flex; align-items: center;"
+              >
+                <div
+                  class="bp3-form-group"
+                  style="margin-bottom: 0px; flex-grow: 1;"
+                >
+                  
+                  <div
+                    class="bp3-form-content"
                   >
-                    plusAdd
-                  </span>
-                </button>
+                    <div
+                      class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    >
+                      <div
+                        class="bp3-input-group MultiTypeInput--input"
+                      >
+                        <input
+                          autocomplete="off"
+                          class="bp3-input"
+                          name="stages[0].stage.spec.infrastructure.spec.serviceAccountName"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                      <span
+                        class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                      >
+                        <span
+                          class="bp3-popover-target"
+                        >
+                          <button
+                            class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          >
+                            <span
+                              class="bp3-icon StyledProps--main"
+                              data-icon="fixed-input"
+                            >
+                              <svg
+                                height="12"
+                                viewBox="0 0 9 9"
+                                width="12"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                  fill="currentColor"
+                                />
+                              </svg>
+                            </span>
+                          </button>
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -690,6 +456,166 @@ exports[`stageinputset tests viewType DeploymentForm initial render 1`] = `
               </div>
             </div>
           </div>
+          <div
+            class="group withoutSpacing minimalCard"
+          >
+            <div
+              class="bp3-form-group"
+              style="flex-grow: 1; margin-bottom: 0px;"
+            >
+              <label
+                class="bp3-label"
+                for="stages[0].stage.spec.infrastructure.spec.annotations"
+              >
+                <div
+                  class="formLabel"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="test-form_stages[0].stage.spec.infrastructure.spec.annotations"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
+                    >
+                      ci.annotations
+                    </p>
+                  </span>
+                </div>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="group withoutAligning"
+                >
+                  <div>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--font-variation-form-label"
+                    >
+                      keyLabel
+                    </p>
+                    <div
+                      class="TextInput--main"
+                    >
+                      <div
+                        class="bp3-input-group"
+                      >
+                        <input
+                          class="bp3-input"
+                          data-testid="key-stages[0].stage.spec.infrastructure.spec.annotations-[0]"
+                          name="stages[0].stage.spec.infrastructure.spec.annotations[0].key"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--font-variation-form-label"
+                    >
+                      valueLabel
+                    </p>
+                    <div
+                      class="group withoutAligning withoutSpacing"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                        data-testid="value-stages[0].stage.spec.infrastructure.spec.annotations-[0]"
+                        style="flex-shrink: 1;"
+                      >
+                        <div
+                          class="bp3-input-group MultiTypeInput--input"
+                        >
+                          <input
+                            class="bp3-input"
+                            name="stages[0].stage.spec.infrastructure.spec.annotations[0].value"
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                        <span
+                          class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <button
+                              class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main"
+                                data-icon="fixed-input"
+                              >
+                                <svg
+                                  height="12"
+                                  viewBox="0 0 9 9"
+                                  width="12"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </span>
+                            </button>
+                          </span>
+                        </span>
+                      </div>
+                      <button
+                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                        data-testid="remove-stages[0].stage.spec.infrastructure.spec.annotations-[0]"
+                        type="button"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="main-trash"
+                        >
+                          <svg
+                            height="20"
+                            viewBox="0 0 16 20"
+                            width="20"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              clip-rule="evenodd"
+                              d="M1.143 8.48a1.2 1.2 0 011.189-1.36h10.649a1.2 1.2 0 011.194 1.321l-1.039 10.208a1.2 1.2 0 01-1.193 1.079H3.716a1.2 1.2 0 01-1.189-1.04L1.143 8.48zm11.837-.16H2.332l1.385 10.207h8.226L12.98 8.32zM5.916 1.594a.6.6 0 01.719-.452l4.224.965a.6.6 0 01.452.719L11 4.179l3.86.882a.6.6 0 01-.267 1.17L1.535 3.248a.6.6 0 11.267-1.17l3.805.87.309-1.354zm.86 1.62l3.056.698.175-.768-3.055-.698-.175.768z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                            />
+                            <path
+                              clip-rule="evenodd"
+                              d="M8 10.808a.5.5 0 01.5.5v5a.5.5 0 01-1 0v-5a.5.5 0 01.5-.5zm-2.761.012a.5.5 0 01.541.454l.436 4.981a.5.5 0 11-.996.087l-.436-4.98a.5.5 0 01.455-.542zM10.762 10.82a.5.5 0 01.455.541l-.436 4.981a.5.5 0 11-.996-.087l.435-4.98a.5.5 0 01.542-.455z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                              opacity="0.3"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
+                  data-testid="add-stages[0].stage.spec.infrastructure.spec.annotations"
+                  style="padding: 0px;"
+                  type="button"
+                >
+                  <span
+                    class="bp3-button-text"
+                  >
+                    plusAdd
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
           <div>
             <div
               style="min-height: 16px;"
@@ -708,14 +634,21 @@ exports[`stageinputset tests viewType DeploymentForm initial render 1`] = `
             pipeline.buildInfra.containerSecurityContext
           </div>
           <div
-            class="StyledProps--font StyledProps--main bottomMargin3"
+            class="StyledProps--font StyledProps--main formGroup sm bottomMargin3"
           >
-            <div>
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
+            <div
+              style="width: 300px;"
+            >
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="runAsUser"
               >
-                pipeline.stepCommonFields.runAsUser
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                >
+                  pipeline.stepCommonFields.runAsUser
+                </p>
+              </div>
               <div
                 style="display: flex; align-items: center;"
               >
@@ -729,6 +662,7 @@ exports[`stageinputset tests viewType DeploymentForm initial render 1`] = `
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                      placeholder="1000"
                     >
                       <div
                         class="bp3-input-group MultiTypeInput--input"
@@ -737,7 +671,6 @@ exports[`stageinputset tests viewType DeploymentForm initial render 1`] = `
                           autocomplete="off"
                           class="bp3-input"
                           name="stages[0].stage.spec.infrastructure.spec.containerSecurityContext.runAsUser"
-                          placeholder="1000"
                           type="text"
                           value=""
                         />
@@ -787,6 +720,90 @@ exports[`stageinputset tests viewType DeploymentForm initial render 1`] = `
               style="min-height: 16px;"
             />
           </div>
+          <div
+            class="StyledProps--font StyledProps--main formGroup xlg bottomMargin3"
+          >
+            <div
+              class="bp3-form-group"
+            >
+              <label
+                class="bp3-label"
+                for="stages[0].stage.spec.infrastructure.spec.initTimeout"
+              >
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="test-form_stages[0].stage.spec.infrastructure.spec.initTimeout"
+                >
+                  <div
+                    class="Text--withDocsTooltip"
+                    data-tooltip-id="timeout"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
+                    >
+                      pipeline.infraSpecifications.initTimeout
+                    </p>
+                  </div>
+                </span>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="container"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    style="flex-grow: 1;"
+                  >
+                    <div
+                      class="bp3-input-group bp3-fill"
+                    >
+                      <input
+                        class="bp3-input"
+                        name="stages[0].stage.spec.infrastructure.spec.initTimeout"
+                        placeholder="Enter w/d/h/m/s/ms"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div
           class="nestedAccordions"
@@ -832,6 +849,7 @@ exports[`stageinputset tests viewType DeploymentForm initial render 1`] = `
             </label>
             <div>
               <form
+                action="#"
                 class="FormikForm--main removeBpPopoverWrapperTopMargin"
               >
                 <div>
@@ -898,7 +916,9 @@ exports[`stageinputset tests viewType DeploymentForm initial render2 1`] = `
   <div
     class="OverlaySpinner--overlaySpinner"
   >
-    <form>
+    <form
+      action="#"
+    >
       <div
         class="accordionSummary"
         id="Stage.undefined.Service"
@@ -931,8 +951,7 @@ exports[`stageinputset tests viewType DeploymentForm initial render2 1`] = `
           infrastructureText
         </div>
         <div
-          class="nestedAccordions"
-          style="width: 50%;"
+          class="nestedAccordions infraSection"
         >
           <div
             class="StyledProps--font StyledProps--main bottomMargin3"
@@ -967,12 +986,12 @@ exports[`stageinputset tests viewType DeploymentForm initial render2 1`] = `
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      style="width: 385px;"
+                      style="width: 320px;"
                     >
                       <button
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                         data-testid="cr-field-stages[0].stage.spec.infrastructure.spec.connectorRef"
-                        style="width: 385px;"
+                        style="width: 320px;"
                         type="button"
                       >
                         <span
@@ -1039,387 +1058,152 @@ exports[`stageinputset tests viewType DeploymentForm initial render2 1`] = `
             </div>
           </div>
           <div
-            class="bp3-form-group"
+            class="StyledProps--font StyledProps--main bottomMargin3"
           >
-            <label
-              class="bp3-label"
-              for="stages[0].stage.spec.infrastructure.spec.namespace"
-            >
-              <span
-                class="Tooltip--acenter"
-                data-tooltip-id="test-form_stages[0].stage.spec.infrastructure.spec.namespace"
-              >
-                <div
-                  class="Text--withDocsTooltip"
-                  data-tooltip-id="namespace"
-                >
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
-                  >
-                    pipelineSteps.build.infraSpecifications.namespace
-                  </p>
-                </div>
-              </span>
-               
-              <span
-                class="bp3-text-muted"
-              />
-            </label>
             <div
-              class="bp3-form-content"
+              style="width: 300px;"
             >
               <div
-                class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-              >
-                <div
-                  class="bp3-input-group MultiTypeInput--input"
-                >
-                  <input
-                    autocomplete="off"
-                    class="bp3-input"
-                    name="stages[0].stage.spec.infrastructure.spec.namespace"
-                    type="text"
-                    value=""
-                  />
-                </div>
-                <span
-                  class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                >
-                  <span
-                    class="bp3-popover-target"
-                  >
-                    <button
-                      class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                    >
-                      <span
-                        class="bp3-icon StyledProps--main"
-                        data-icon="fixed-input"
-                      >
-                        <svg
-                          height="12"
-                          viewBox="0 0 9 9"
-                          width="12"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                            fill="currentColor"
-                          />
-                        </svg>
-                      </span>
-                    </button>
-                  </span>
-                </span>
-              </div>
-            </div>
-          </div>
-          <div
-            class="bp3-form-group"
-          >
-            <label
-              class="bp3-label"
-              for="stages[0].stage.spec.infrastructure.spec.serviceAccountName"
-            >
-              <span
-                class="Tooltip--acenter"
-                data-tooltip-id="test-form_stages[0].stage.spec.infrastructure.spec.serviceAccountName"
+                class="Text--withDocsTooltip"
+                data-tooltip-id="namespace"
               >
                 <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
                 >
-                  pipeline.infraSpecifications.serviceAccountName
+                  pipelineSteps.build.infraSpecifications.namespace
                 </p>
-              </span>
-               
-              <span
-                class="bp3-text-muted"
-              />
-            </label>
-            <div
-              class="bp3-form-content"
-            >
-              <div
-                class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-              >
-                <div
-                  class="bp3-input-group MultiTypeInput--input"
-                >
-                  <input
-                    autocomplete="off"
-                    class="bp3-input"
-                    name="stages[0].stage.spec.infrastructure.spec.serviceAccountName"
-                    type="text"
-                    value=""
-                  />
-                </div>
-                <span
-                  class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                >
-                  <span
-                    class="bp3-popover-target"
-                  >
-                    <button
-                      class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                    >
-                      <span
-                        class="bp3-icon StyledProps--main"
-                        data-icon="fixed-input"
-                      >
-                        <svg
-                          height="12"
-                          viewBox="0 0 9 9"
-                          width="12"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                            fill="currentColor"
-                          />
-                        </svg>
-                      </span>
-                    </button>
-                  </span>
-                </span>
               </div>
-            </div>
-          </div>
-          <div
-            class="bp3-form-group"
-          >
-            <label
-              class="bp3-label"
-              for="stages[0].stage.spec.infrastructure.spec.initTimeout"
-            >
-              <span
-                class="Tooltip--acenter"
-                data-tooltip-id="test-form_stages[0].stage.spec.infrastructure.spec.initTimeout"
-              >
-                <div
-                  class="Text--withDocsTooltip"
-                  data-tooltip-id="timeout"
-                >
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
-                  >
-                    pipeline.infraSpecifications.initTimeout
-                  </p>
-                </div>
-              </span>
-               
-              <span
-                class="bp3-text-muted"
-              />
-            </label>
-            <div
-              class="bp3-form-content"
-            >
               <div
-                class="container"
+                style="display: flex; align-items: center;"
               >
                 <div
-                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="flex-grow: 1;"
+                  class="bp3-form-group"
+                  style="margin-bottom: 0px; flex-grow: 1;"
                 >
+                  
                   <div
-                    class="bp3-input-group bp3-fill"
+                    class="bp3-form-content"
                   >
-                    <input
-                      class="bp3-input"
-                      name="stages[0].stage.spec.infrastructure.spec.initTimeout"
-                      placeholder="Enter w/d/h/m/s/ms"
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                  <span
-                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                  >
-                    <span
-                      class="bp3-popover-target"
-                    >
-                      <button
-                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                      >
-                        <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="fixed-input"
-                        >
-                          <svg
-                            height="12"
-                            viewBox="0 0 9 9"
-                            width="12"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                              fill="currentColor"
-                            />
-                          </svg>
-                        </span>
-                      </button>
-                    </span>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="group withoutSpacing minimalCard"
-          >
-            <div
-              class="bp3-form-group"
-              style="flex-grow: 1; margin-bottom: 0px;"
-            >
-              <label
-                class="bp3-label"
-                for="stages[0].stage.spec.infrastructure.spec.annotations"
-              >
-                <div
-                  class="formLabel"
-                >
-                  <span
-                    class="Tooltip--acenter"
-                    data-tooltip-id="test-form_stages[0].stage.spec.infrastructure.spec.annotations"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
-                    >
-                      ci.annotations
-                    </p>
-                  </span>
-                </div>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
-              <div
-                class="bp3-form-content"
-              >
-                <div
-                  class="group withoutAligning"
-                >
-                  <div>
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--font-variation-form-label"
-                    >
-                      keyLabel
-                    </p>
                     <div
-                      class="TextInput--main"
+                      class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                     >
                       <div
-                        class="bp3-input-group"
+                        class="bp3-input-group MultiTypeInput--input"
                       >
                         <input
+                          autocomplete="off"
                           class="bp3-input"
-                          data-testid="key-stages[0].stage.spec.infrastructure.spec.annotations-[0]"
-                          name="stages[0].stage.spec.infrastructure.spec.annotations[0].key"
+                          name="stages[0].stage.spec.infrastructure.spec.namespace"
                           type="text"
                           value=""
                         />
                       </div>
-                    </div>
-                  </div>
-                  <div>
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--font-variation-form-label"
-                    >
-                      valueLabel
-                    </p>
-                    <div
-                      class="group withoutAligning withoutSpacing"
-                    >
-                      <div
-                        class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                        data-testid="value-stages[0].stage.spec.infrastructure.spec.annotations-[0]"
-                        style="flex-shrink: 1;"
+                      <span
+                        class="bp3-popover-wrapper MultiTypeInput--wrapper"
                       >
-                        <div
-                          class="bp3-input-group MultiTypeInput--input"
-                        >
-                          <input
-                            class="bp3-input"
-                            name="stages[0].stage.spec.infrastructure.spec.annotations[0].value"
-                            type="text"
-                            value=""
-                          />
-                        </div>
                         <span
-                          class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                          class="bp3-popover-target"
                         >
-                          <span
-                            class="bp3-popover-target"
+                          <button
+                            class="MultiTypeInput--btn MultiTypeInput--FIXED"
                           >
-                            <button
-                              class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            <span
+                              class="bp3-icon StyledProps--main"
+                              data-icon="fixed-input"
                             >
-                              <span
-                                class="bp3-icon StyledProps--main"
-                                data-icon="fixed-input"
+                              <svg
+                                height="12"
+                                viewBox="0 0 9 9"
+                                width="12"
+                                xmlns="http://www.w3.org/2000/svg"
                               >
-                                <svg
-                                  height="12"
-                                  viewBox="0 0 9 9"
-                                  width="12"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                    fill="currentColor"
-                                  />
-                                </svg>
-                              </span>
-                            </button>
-                          </span>
+                                <path
+                                  d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                  fill="currentColor"
+                                />
+                              </svg>
+                            </span>
+                          </button>
                         </span>
-                      </div>
-                      <button
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
-                        data-testid="remove-stages[0].stage.spec.infrastructure.spec.annotations-[0]"
-                        type="button"
-                      >
-                        <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="main-trash"
-                        >
-                          <svg
-                            height="20"
-                            viewBox="0 0 16 20"
-                            width="20"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              clip-rule="evenodd"
-                              d="M1.143 8.48a1.2 1.2 0 011.189-1.36h10.649a1.2 1.2 0 011.194 1.321l-1.039 10.208a1.2 1.2 0 01-1.193 1.079H3.716a1.2 1.2 0 01-1.189-1.04L1.143 8.48zm11.837-.16H2.332l1.385 10.207h8.226L12.98 8.32zM5.916 1.594a.6.6 0 01.719-.452l4.224.965a.6.6 0 01.452.719L11 4.179l3.86.882a.6.6 0 01-.267 1.17L1.535 3.248a.6.6 0 11.267-1.17l3.805.87.309-1.354zm.86 1.62l3.056.698.175-.768-3.055-.698-.175.768z"
-                              fill="currentColor"
-                              fill-rule="evenodd"
-                            />
-                            <path
-                              clip-rule="evenodd"
-                              d="M8 10.808a.5.5 0 01.5.5v5a.5.5 0 01-1 0v-5a.5.5 0 01.5-.5zm-2.761.012a.5.5 0 01.541.454l.436 4.981a.5.5 0 11-.996.087l-.436-4.98a.5.5 0 01.455-.542zM10.762 10.82a.5.5 0 01.455.541l-.436 4.981a.5.5 0 11-.996-.087l.435-4.98a.5.5 0 01.542-.455z"
-                              fill="currentColor"
-                              fill-rule="evenodd"
-                              opacity="0.3"
-                            />
-                          </svg>
-                        </span>
-                      </button>
+                      </span>
                     </div>
                   </div>
                 </div>
-                <button
-                  class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
-                  data-testid="add-stages[0].stage.spec.infrastructure.spec.annotations"
-                  style="padding: 0px;"
-                  type="button"
+              </div>
+            </div>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main formGroup sm bottomMargin3"
+          >
+            <div
+              style="width: 300px;"
+            >
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="serviceAccountName"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
                 >
-                  <span
-                    class="bp3-button-text"
+                  pipeline.infraSpecifications.serviceAccountName
+                </p>
+              </div>
+              <div
+                style="display: flex; align-items: center;"
+              >
+                <div
+                  class="bp3-form-group"
+                  style="margin-bottom: 0px; flex-grow: 1;"
+                >
+                  
+                  <div
+                    class="bp3-form-content"
                   >
-                    plusAdd
-                  </span>
-                </button>
+                    <div
+                      class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    >
+                      <div
+                        class="bp3-input-group MultiTypeInput--input"
+                      >
+                        <input
+                          autocomplete="off"
+                          class="bp3-input"
+                          name="stages[0].stage.spec.infrastructure.spec.serviceAccountName"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                      <span
+                        class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                      >
+                        <span
+                          class="bp3-popover-target"
+                        >
+                          <button
+                            class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          >
+                            <span
+                              class="bp3-icon StyledProps--main"
+                              data-icon="fixed-input"
+                            >
+                              <svg
+                                height="12"
+                                viewBox="0 0 9 9"
+                                width="12"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                  fill="currentColor"
+                                />
+                              </svg>
+                            </span>
+                          </button>
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1583,6 +1367,166 @@ exports[`stageinputset tests viewType DeploymentForm initial render2 1`] = `
               </div>
             </div>
           </div>
+          <div
+            class="group withoutSpacing minimalCard"
+          >
+            <div
+              class="bp3-form-group"
+              style="flex-grow: 1; margin-bottom: 0px;"
+            >
+              <label
+                class="bp3-label"
+                for="stages[0].stage.spec.infrastructure.spec.annotations"
+              >
+                <div
+                  class="formLabel"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="test-form_stages[0].stage.spec.infrastructure.spec.annotations"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
+                    >
+                      ci.annotations
+                    </p>
+                  </span>
+                </div>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="group withoutAligning"
+                >
+                  <div>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--font-variation-form-label"
+                    >
+                      keyLabel
+                    </p>
+                    <div
+                      class="TextInput--main"
+                    >
+                      <div
+                        class="bp3-input-group"
+                      >
+                        <input
+                          class="bp3-input"
+                          data-testid="key-stages[0].stage.spec.infrastructure.spec.annotations-[0]"
+                          name="stages[0].stage.spec.infrastructure.spec.annotations[0].key"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--font-variation-form-label"
+                    >
+                      valueLabel
+                    </p>
+                    <div
+                      class="group withoutAligning withoutSpacing"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                        data-testid="value-stages[0].stage.spec.infrastructure.spec.annotations-[0]"
+                        style="flex-shrink: 1;"
+                      >
+                        <div
+                          class="bp3-input-group MultiTypeInput--input"
+                        >
+                          <input
+                            class="bp3-input"
+                            name="stages[0].stage.spec.infrastructure.spec.annotations[0].value"
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                        <span
+                          class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <button
+                              class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main"
+                                data-icon="fixed-input"
+                              >
+                                <svg
+                                  height="12"
+                                  viewBox="0 0 9 9"
+                                  width="12"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </span>
+                            </button>
+                          </span>
+                        </span>
+                      </div>
+                      <button
+                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                        data-testid="remove-stages[0].stage.spec.infrastructure.spec.annotations-[0]"
+                        type="button"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="main-trash"
+                        >
+                          <svg
+                            height="20"
+                            viewBox="0 0 16 20"
+                            width="20"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              clip-rule="evenodd"
+                              d="M1.143 8.48a1.2 1.2 0 011.189-1.36h10.649a1.2 1.2 0 011.194 1.321l-1.039 10.208a1.2 1.2 0 01-1.193 1.079H3.716a1.2 1.2 0 01-1.189-1.04L1.143 8.48zm11.837-.16H2.332l1.385 10.207h8.226L12.98 8.32zM5.916 1.594a.6.6 0 01.719-.452l4.224.965a.6.6 0 01.452.719L11 4.179l3.86.882a.6.6 0 01-.267 1.17L1.535 3.248a.6.6 0 11.267-1.17l3.805.87.309-1.354zm.86 1.62l3.056.698.175-.768-3.055-.698-.175.768z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                            />
+                            <path
+                              clip-rule="evenodd"
+                              d="M8 10.808a.5.5 0 01.5.5v5a.5.5 0 01-1 0v-5a.5.5 0 01.5-.5zm-2.761.012a.5.5 0 01.541.454l.436 4.981a.5.5 0 11-.996.087l-.436-4.98a.5.5 0 01.455-.542zM10.762 10.82a.5.5 0 01.455.541l-.436 4.981a.5.5 0 11-.996-.087l.435-4.98a.5.5 0 01.542-.455z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                              opacity="0.3"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
+                  data-testid="add-stages[0].stage.spec.infrastructure.spec.annotations"
+                  style="padding: 0px;"
+                  type="button"
+                >
+                  <span
+                    class="bp3-button-text"
+                  >
+                    plusAdd
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
           <div>
             <div
               style="min-height: 16px;"
@@ -1601,14 +1545,21 @@ exports[`stageinputset tests viewType DeploymentForm initial render2 1`] = `
             pipeline.buildInfra.containerSecurityContext
           </div>
           <div
-            class="StyledProps--font StyledProps--main bottomMargin3"
+            class="StyledProps--font StyledProps--main formGroup sm bottomMargin3"
           >
-            <div>
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
+            <div
+              style="width: 300px;"
+            >
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="runAsUser"
               >
-                pipeline.stepCommonFields.runAsUser
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                >
+                  pipeline.stepCommonFields.runAsUser
+                </p>
+              </div>
               <div
                 style="display: flex; align-items: center;"
               >
@@ -1622,6 +1573,7 @@ exports[`stageinputset tests viewType DeploymentForm initial render2 1`] = `
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                      placeholder="1000"
                     >
                       <div
                         class="bp3-input-group MultiTypeInput--input"
@@ -1630,7 +1582,6 @@ exports[`stageinputset tests viewType DeploymentForm initial render2 1`] = `
                           autocomplete="off"
                           class="bp3-input"
                           name="stages[0].stage.spec.infrastructure.spec.containerSecurityContext.runAsUser"
-                          placeholder="1000"
                           type="text"
                           value=""
                         />
@@ -1680,6 +1631,90 @@ exports[`stageinputset tests viewType DeploymentForm initial render2 1`] = `
               style="min-height: 16px;"
             />
           </div>
+          <div
+            class="StyledProps--font StyledProps--main formGroup xlg bottomMargin3"
+          >
+            <div
+              class="bp3-form-group"
+            >
+              <label
+                class="bp3-label"
+                for="stages[0].stage.spec.infrastructure.spec.initTimeout"
+              >
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="test-form_stages[0].stage.spec.infrastructure.spec.initTimeout"
+                >
+                  <div
+                    class="Text--withDocsTooltip"
+                    data-tooltip-id="timeout"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
+                    >
+                      pipeline.infraSpecifications.initTimeout
+                    </p>
+                  </div>
+                </span>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="container"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    style="flex-grow: 1;"
+                  >
+                    <div
+                      class="bp3-input-group bp3-fill"
+                    >
+                      <input
+                        class="bp3-input"
+                        name="stages[0].stage.spec.infrastructure.spec.initTimeout"
+                        placeholder="Enter w/d/h/m/s/ms"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div
           class="nestedAccordions"
@@ -1725,6 +1760,7 @@ exports[`stageinputset tests viewType DeploymentForm initial render2 1`] = `
             </label>
             <div>
               <form
+                action="#"
                 class="FormikForm--main removeBpPopoverWrapperTopMargin"
               >
                 <div>
@@ -1791,7 +1827,9 @@ exports[`stageinputset tests viewType InputSet initial render 1`] = `
   <div
     class="OverlaySpinner--overlaySpinner"
   >
-    <form>
+    <form
+      action="#"
+    >
       <div
         class="accordionSummary"
         id="Stage.undefined.Service"
@@ -1824,8 +1862,7 @@ exports[`stageinputset tests viewType InputSet initial render 1`] = `
           infrastructureText
         </div>
         <div
-          class="nestedAccordions"
-          style="width: 50%;"
+          class="nestedAccordions infraSection"
         >
           <div
             class="StyledProps--font StyledProps--main bottomMargin3"
@@ -1932,387 +1969,152 @@ exports[`stageinputset tests viewType InputSet initial render 1`] = `
             </div>
           </div>
           <div
-            class="bp3-form-group"
+            class="StyledProps--font StyledProps--main bottomMargin3"
           >
-            <label
-              class="bp3-label"
-              for="stages[0].stage.spec.infrastructure.spec.namespace"
-            >
-              <span
-                class="Tooltip--acenter"
-                data-tooltip-id="test-form_stages[0].stage.spec.infrastructure.spec.namespace"
-              >
-                <div
-                  class="Text--withDocsTooltip"
-                  data-tooltip-id="namespace"
-                >
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
-                  >
-                    pipelineSteps.build.infraSpecifications.namespace
-                  </p>
-                </div>
-              </span>
-               
-              <span
-                class="bp3-text-muted"
-              />
-            </label>
             <div
-              class="bp3-form-content"
+              style="width: 300px;"
             >
               <div
-                class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-              >
-                <div
-                  class="bp3-input-group MultiTypeInput--input"
-                >
-                  <input
-                    autocomplete="off"
-                    class="bp3-input"
-                    name="stages[0].stage.spec.infrastructure.spec.namespace"
-                    type="text"
-                    value=""
-                  />
-                </div>
-                <span
-                  class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                >
-                  <span
-                    class="bp3-popover-target"
-                  >
-                    <button
-                      class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                    >
-                      <span
-                        class="bp3-icon StyledProps--main"
-                        data-icon="fixed-input"
-                      >
-                        <svg
-                          height="12"
-                          viewBox="0 0 9 9"
-                          width="12"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                            fill="currentColor"
-                          />
-                        </svg>
-                      </span>
-                    </button>
-                  </span>
-                </span>
-              </div>
-            </div>
-          </div>
-          <div
-            class="bp3-form-group"
-          >
-            <label
-              class="bp3-label"
-              for="stages[0].stage.spec.infrastructure.spec.serviceAccountName"
-            >
-              <span
-                class="Tooltip--acenter"
-                data-tooltip-id="test-form_stages[0].stage.spec.infrastructure.spec.serviceAccountName"
+                class="Text--withDocsTooltip"
+                data-tooltip-id="namespace"
               >
                 <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
                 >
-                  pipeline.infraSpecifications.serviceAccountName
+                  pipelineSteps.build.infraSpecifications.namespace
                 </p>
-              </span>
-               
-              <span
-                class="bp3-text-muted"
-              />
-            </label>
-            <div
-              class="bp3-form-content"
-            >
-              <div
-                class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-              >
-                <div
-                  class="bp3-input-group MultiTypeInput--input"
-                >
-                  <input
-                    autocomplete="off"
-                    class="bp3-input"
-                    name="stages[0].stage.spec.infrastructure.spec.serviceAccountName"
-                    type="text"
-                    value=""
-                  />
-                </div>
-                <span
-                  class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                >
-                  <span
-                    class="bp3-popover-target"
-                  >
-                    <button
-                      class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                    >
-                      <span
-                        class="bp3-icon StyledProps--main"
-                        data-icon="fixed-input"
-                      >
-                        <svg
-                          height="12"
-                          viewBox="0 0 9 9"
-                          width="12"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                            fill="currentColor"
-                          />
-                        </svg>
-                      </span>
-                    </button>
-                  </span>
-                </span>
               </div>
-            </div>
-          </div>
-          <div
-            class="bp3-form-group"
-          >
-            <label
-              class="bp3-label"
-              for="stages[0].stage.spec.infrastructure.spec.initTimeout"
-            >
-              <span
-                class="Tooltip--acenter"
-                data-tooltip-id="test-form_stages[0].stage.spec.infrastructure.spec.initTimeout"
-              >
-                <div
-                  class="Text--withDocsTooltip"
-                  data-tooltip-id="timeout"
-                >
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
-                  >
-                    pipeline.infraSpecifications.initTimeout
-                  </p>
-                </div>
-              </span>
-               
-              <span
-                class="bp3-text-muted"
-              />
-            </label>
-            <div
-              class="bp3-form-content"
-            >
               <div
-                class="container"
+                style="display: flex; align-items: center;"
               >
                 <div
-                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="flex-grow: 1;"
+                  class="bp3-form-group"
+                  style="margin-bottom: 0px; flex-grow: 1;"
                 >
+                  
                   <div
-                    class="bp3-input-group bp3-fill"
+                    class="bp3-form-content"
                   >
-                    <input
-                      class="bp3-input"
-                      name="stages[0].stage.spec.infrastructure.spec.initTimeout"
-                      placeholder="Enter w/d/h/m/s/ms"
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                  <span
-                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                  >
-                    <span
-                      class="bp3-popover-target"
-                    >
-                      <button
-                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                      >
-                        <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="fixed-input"
-                        >
-                          <svg
-                            height="12"
-                            viewBox="0 0 9 9"
-                            width="12"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                              fill="currentColor"
-                            />
-                          </svg>
-                        </span>
-                      </button>
-                    </span>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="group withoutSpacing minimalCard"
-          >
-            <div
-              class="bp3-form-group"
-              style="flex-grow: 1; margin-bottom: 0px;"
-            >
-              <label
-                class="bp3-label"
-                for="stages[0].stage.spec.infrastructure.spec.annotations"
-              >
-                <div
-                  class="formLabel"
-                >
-                  <span
-                    class="Tooltip--acenter"
-                    data-tooltip-id="test-form_stages[0].stage.spec.infrastructure.spec.annotations"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
-                    >
-                      ci.annotations
-                    </p>
-                  </span>
-                </div>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
-              <div
-                class="bp3-form-content"
-              >
-                <div
-                  class="group withoutAligning"
-                >
-                  <div>
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--font-variation-form-label"
-                    >
-                      keyLabel
-                    </p>
                     <div
-                      class="TextInput--main"
+                      class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                     >
                       <div
-                        class="bp3-input-group"
+                        class="bp3-input-group MultiTypeInput--input"
                       >
                         <input
+                          autocomplete="off"
                           class="bp3-input"
-                          data-testid="key-stages[0].stage.spec.infrastructure.spec.annotations-[0]"
-                          name="stages[0].stage.spec.infrastructure.spec.annotations[0].key"
+                          name="stages[0].stage.spec.infrastructure.spec.namespace"
                           type="text"
                           value=""
                         />
                       </div>
-                    </div>
-                  </div>
-                  <div>
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--font-variation-form-label"
-                    >
-                      valueLabel
-                    </p>
-                    <div
-                      class="group withoutAligning withoutSpacing"
-                    >
-                      <div
-                        class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                        data-testid="value-stages[0].stage.spec.infrastructure.spec.annotations-[0]"
-                        style="flex-shrink: 1;"
+                      <span
+                        class="bp3-popover-wrapper MultiTypeInput--wrapper"
                       >
-                        <div
-                          class="bp3-input-group MultiTypeInput--input"
-                        >
-                          <input
-                            class="bp3-input"
-                            name="stages[0].stage.spec.infrastructure.spec.annotations[0].value"
-                            type="text"
-                            value=""
-                          />
-                        </div>
                         <span
-                          class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                          class="bp3-popover-target"
                         >
-                          <span
-                            class="bp3-popover-target"
+                          <button
+                            class="MultiTypeInput--btn MultiTypeInput--FIXED"
                           >
-                            <button
-                              class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            <span
+                              class="bp3-icon StyledProps--main"
+                              data-icon="fixed-input"
                             >
-                              <span
-                                class="bp3-icon StyledProps--main"
-                                data-icon="fixed-input"
+                              <svg
+                                height="12"
+                                viewBox="0 0 9 9"
+                                width="12"
+                                xmlns="http://www.w3.org/2000/svg"
                               >
-                                <svg
-                                  height="12"
-                                  viewBox="0 0 9 9"
-                                  width="12"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                    fill="currentColor"
-                                  />
-                                </svg>
-                              </span>
-                            </button>
-                          </span>
+                                <path
+                                  d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                  fill="currentColor"
+                                />
+                              </svg>
+                            </span>
+                          </button>
                         </span>
-                      </div>
-                      <button
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
-                        data-testid="remove-stages[0].stage.spec.infrastructure.spec.annotations-[0]"
-                        type="button"
-                      >
-                        <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="main-trash"
-                        >
-                          <svg
-                            height="20"
-                            viewBox="0 0 16 20"
-                            width="20"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              clip-rule="evenodd"
-                              d="M1.143 8.48a1.2 1.2 0 011.189-1.36h10.649a1.2 1.2 0 011.194 1.321l-1.039 10.208a1.2 1.2 0 01-1.193 1.079H3.716a1.2 1.2 0 01-1.189-1.04L1.143 8.48zm11.837-.16H2.332l1.385 10.207h8.226L12.98 8.32zM5.916 1.594a.6.6 0 01.719-.452l4.224.965a.6.6 0 01.452.719L11 4.179l3.86.882a.6.6 0 01-.267 1.17L1.535 3.248a.6.6 0 11.267-1.17l3.805.87.309-1.354zm.86 1.62l3.056.698.175-.768-3.055-.698-.175.768z"
-                              fill="currentColor"
-                              fill-rule="evenodd"
-                            />
-                            <path
-                              clip-rule="evenodd"
-                              d="M8 10.808a.5.5 0 01.5.5v5a.5.5 0 01-1 0v-5a.5.5 0 01.5-.5zm-2.761.012a.5.5 0 01.541.454l.436 4.981a.5.5 0 11-.996.087l-.436-4.98a.5.5 0 01.455-.542zM10.762 10.82a.5.5 0 01.455.541l-.436 4.981a.5.5 0 11-.996-.087l.435-4.98a.5.5 0 01.542-.455z"
-                              fill="currentColor"
-                              fill-rule="evenodd"
-                              opacity="0.3"
-                            />
-                          </svg>
-                        </span>
-                      </button>
+                      </span>
                     </div>
                   </div>
                 </div>
-                <button
-                  class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
-                  data-testid="add-stages[0].stage.spec.infrastructure.spec.annotations"
-                  style="padding: 0px;"
-                  type="button"
+              </div>
+            </div>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main formGroup sm bottomMargin3"
+          >
+            <div
+              style="width: 300px;"
+            >
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="serviceAccountName"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
                 >
-                  <span
-                    class="bp3-button-text"
+                  pipeline.infraSpecifications.serviceAccountName
+                </p>
+              </div>
+              <div
+                style="display: flex; align-items: center;"
+              >
+                <div
+                  class="bp3-form-group"
+                  style="margin-bottom: 0px; flex-grow: 1;"
+                >
+                  
+                  <div
+                    class="bp3-form-content"
                   >
-                    plusAdd
-                  </span>
-                </button>
+                    <div
+                      class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    >
+                      <div
+                        class="bp3-input-group MultiTypeInput--input"
+                      >
+                        <input
+                          autocomplete="off"
+                          class="bp3-input"
+                          name="stages[0].stage.spec.infrastructure.spec.serviceAccountName"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                      <span
+                        class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                      >
+                        <span
+                          class="bp3-popover-target"
+                        >
+                          <button
+                            class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          >
+                            <span
+                              class="bp3-icon StyledProps--main"
+                              data-icon="fixed-input"
+                            >
+                              <svg
+                                height="12"
+                                viewBox="0 0 9 9"
+                                width="12"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                  fill="currentColor"
+                                />
+                              </svg>
+                            </span>
+                          </button>
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -2476,6 +2278,166 @@ exports[`stageinputset tests viewType InputSet initial render 1`] = `
               </div>
             </div>
           </div>
+          <div
+            class="group withoutSpacing minimalCard"
+          >
+            <div
+              class="bp3-form-group"
+              style="flex-grow: 1; margin-bottom: 0px;"
+            >
+              <label
+                class="bp3-label"
+                for="stages[0].stage.spec.infrastructure.spec.annotations"
+              >
+                <div
+                  class="formLabel"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="test-form_stages[0].stage.spec.infrastructure.spec.annotations"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
+                    >
+                      ci.annotations
+                    </p>
+                  </span>
+                </div>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="group withoutAligning"
+                >
+                  <div>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--font-variation-form-label"
+                    >
+                      keyLabel
+                    </p>
+                    <div
+                      class="TextInput--main"
+                    >
+                      <div
+                        class="bp3-input-group"
+                      >
+                        <input
+                          class="bp3-input"
+                          data-testid="key-stages[0].stage.spec.infrastructure.spec.annotations-[0]"
+                          name="stages[0].stage.spec.infrastructure.spec.annotations[0].key"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--font-variation-form-label"
+                    >
+                      valueLabel
+                    </p>
+                    <div
+                      class="group withoutAligning withoutSpacing"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                        data-testid="value-stages[0].stage.spec.infrastructure.spec.annotations-[0]"
+                        style="flex-shrink: 1;"
+                      >
+                        <div
+                          class="bp3-input-group MultiTypeInput--input"
+                        >
+                          <input
+                            class="bp3-input"
+                            name="stages[0].stage.spec.infrastructure.spec.annotations[0].value"
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                        <span
+                          class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <button
+                              class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main"
+                                data-icon="fixed-input"
+                              >
+                                <svg
+                                  height="12"
+                                  viewBox="0 0 9 9"
+                                  width="12"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </span>
+                            </button>
+                          </span>
+                        </span>
+                      </div>
+                      <button
+                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                        data-testid="remove-stages[0].stage.spec.infrastructure.spec.annotations-[0]"
+                        type="button"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="main-trash"
+                        >
+                          <svg
+                            height="20"
+                            viewBox="0 0 16 20"
+                            width="20"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              clip-rule="evenodd"
+                              d="M1.143 8.48a1.2 1.2 0 011.189-1.36h10.649a1.2 1.2 0 011.194 1.321l-1.039 10.208a1.2 1.2 0 01-1.193 1.079H3.716a1.2 1.2 0 01-1.189-1.04L1.143 8.48zm11.837-.16H2.332l1.385 10.207h8.226L12.98 8.32zM5.916 1.594a.6.6 0 01.719-.452l4.224.965a.6.6 0 01.452.719L11 4.179l3.86.882a.6.6 0 01-.267 1.17L1.535 3.248a.6.6 0 11.267-1.17l3.805.87.309-1.354zm.86 1.62l3.056.698.175-.768-3.055-.698-.175.768z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                            />
+                            <path
+                              clip-rule="evenodd"
+                              d="M8 10.808a.5.5 0 01.5.5v5a.5.5 0 01-1 0v-5a.5.5 0 01.5-.5zm-2.761.012a.5.5 0 01.541.454l.436 4.981a.5.5 0 11-.996.087l-.436-4.98a.5.5 0 01.455-.542zM10.762 10.82a.5.5 0 01.455.541l-.436 4.981a.5.5 0 11-.996-.087l.435-4.98a.5.5 0 01.542-.455z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                              opacity="0.3"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
+                  data-testid="add-stages[0].stage.spec.infrastructure.spec.annotations"
+                  style="padding: 0px;"
+                  type="button"
+                >
+                  <span
+                    class="bp3-button-text"
+                  >
+                    plusAdd
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
           <div>
             <div
               style="min-height: 16px;"
@@ -2494,14 +2456,21 @@ exports[`stageinputset tests viewType InputSet initial render 1`] = `
             pipeline.buildInfra.containerSecurityContext
           </div>
           <div
-            class="StyledProps--font StyledProps--main bottomMargin3"
+            class="StyledProps--font StyledProps--main formGroup sm bottomMargin3"
           >
-            <div>
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
+            <div
+              style="width: 300px;"
+            >
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="runAsUser"
               >
-                pipeline.stepCommonFields.runAsUser
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                >
+                  pipeline.stepCommonFields.runAsUser
+                </p>
+              </div>
               <div
                 style="display: flex; align-items: center;"
               >
@@ -2515,6 +2484,7 @@ exports[`stageinputset tests viewType InputSet initial render 1`] = `
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                      placeholder="1000"
                     >
                       <div
                         class="bp3-input-group MultiTypeInput--input"
@@ -2523,7 +2493,6 @@ exports[`stageinputset tests viewType InputSet initial render 1`] = `
                           autocomplete="off"
                           class="bp3-input"
                           name="stages[0].stage.spec.infrastructure.spec.containerSecurityContext.runAsUser"
-                          placeholder="1000"
                           type="text"
                           value=""
                         />
@@ -2573,6 +2542,90 @@ exports[`stageinputset tests viewType InputSet initial render 1`] = `
               style="min-height: 16px;"
             />
           </div>
+          <div
+            class="StyledProps--font StyledProps--main formGroup xlg bottomMargin3"
+          >
+            <div
+              class="bp3-form-group"
+            >
+              <label
+                class="bp3-label"
+                for="stages[0].stage.spec.infrastructure.spec.initTimeout"
+              >
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="test-form_stages[0].stage.spec.infrastructure.spec.initTimeout"
+                >
+                  <div
+                    class="Text--withDocsTooltip"
+                    data-tooltip-id="timeout"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
+                    >
+                      pipeline.infraSpecifications.initTimeout
+                    </p>
+                  </div>
+                </span>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="container"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    style="flex-grow: 1;"
+                  >
+                    <div
+                      class="bp3-input-group bp3-fill"
+                    >
+                      <input
+                        class="bp3-input"
+                        name="stages[0].stage.spec.infrastructure.spec.initTimeout"
+                        placeholder="Enter w/d/h/m/s/ms"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div
           class="nestedAccordions"
@@ -2618,6 +2671,7 @@ exports[`stageinputset tests viewType InputSet initial render 1`] = `
             </label>
             <div>
               <form
+                action="#"
                 class="FormikForm--main removeBpPopoverWrapperTopMargin"
               >
                 <div>
@@ -2684,7 +2738,9 @@ exports[`stageinputset tests viewType InputSet initial render2 1`] = `
   <div
     class="OverlaySpinner--overlaySpinner"
   >
-    <form>
+    <form
+      action="#"
+    >
       <div
         class="accordionSummary"
         id="Stage.undefined.Service"
@@ -2717,8 +2773,7 @@ exports[`stageinputset tests viewType InputSet initial render2 1`] = `
           infrastructureText
         </div>
         <div
-          class="nestedAccordions"
-          style="width: 50%;"
+          class="nestedAccordions infraSection"
         >
           <div
             class="StyledProps--font StyledProps--main bottomMargin3"
@@ -2825,387 +2880,152 @@ exports[`stageinputset tests viewType InputSet initial render2 1`] = `
             </div>
           </div>
           <div
-            class="bp3-form-group"
+            class="StyledProps--font StyledProps--main bottomMargin3"
           >
-            <label
-              class="bp3-label"
-              for="stages[0].stage.spec.infrastructure.spec.namespace"
-            >
-              <span
-                class="Tooltip--acenter"
-                data-tooltip-id="test-form_stages[0].stage.spec.infrastructure.spec.namespace"
-              >
-                <div
-                  class="Text--withDocsTooltip"
-                  data-tooltip-id="namespace"
-                >
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
-                  >
-                    pipelineSteps.build.infraSpecifications.namespace
-                  </p>
-                </div>
-              </span>
-               
-              <span
-                class="bp3-text-muted"
-              />
-            </label>
             <div
-              class="bp3-form-content"
+              style="width: 300px;"
             >
               <div
-                class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-              >
-                <div
-                  class="bp3-input-group MultiTypeInput--input"
-                >
-                  <input
-                    autocomplete="off"
-                    class="bp3-input"
-                    name="stages[0].stage.spec.infrastructure.spec.namespace"
-                    type="text"
-                    value=""
-                  />
-                </div>
-                <span
-                  class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                >
-                  <span
-                    class="bp3-popover-target"
-                  >
-                    <button
-                      class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                    >
-                      <span
-                        class="bp3-icon StyledProps--main"
-                        data-icon="fixed-input"
-                      >
-                        <svg
-                          height="12"
-                          viewBox="0 0 9 9"
-                          width="12"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                            fill="currentColor"
-                          />
-                        </svg>
-                      </span>
-                    </button>
-                  </span>
-                </span>
-              </div>
-            </div>
-          </div>
-          <div
-            class="bp3-form-group"
-          >
-            <label
-              class="bp3-label"
-              for="stages[0].stage.spec.infrastructure.spec.serviceAccountName"
-            >
-              <span
-                class="Tooltip--acenter"
-                data-tooltip-id="test-form_stages[0].stage.spec.infrastructure.spec.serviceAccountName"
+                class="Text--withDocsTooltip"
+                data-tooltip-id="namespace"
               >
                 <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
                 >
-                  pipeline.infraSpecifications.serviceAccountName
+                  pipelineSteps.build.infraSpecifications.namespace
                 </p>
-              </span>
-               
-              <span
-                class="bp3-text-muted"
-              />
-            </label>
-            <div
-              class="bp3-form-content"
-            >
-              <div
-                class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-              >
-                <div
-                  class="bp3-input-group MultiTypeInput--input"
-                >
-                  <input
-                    autocomplete="off"
-                    class="bp3-input"
-                    name="stages[0].stage.spec.infrastructure.spec.serviceAccountName"
-                    type="text"
-                    value=""
-                  />
-                </div>
-                <span
-                  class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                >
-                  <span
-                    class="bp3-popover-target"
-                  >
-                    <button
-                      class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                    >
-                      <span
-                        class="bp3-icon StyledProps--main"
-                        data-icon="fixed-input"
-                      >
-                        <svg
-                          height="12"
-                          viewBox="0 0 9 9"
-                          width="12"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                            fill="currentColor"
-                          />
-                        </svg>
-                      </span>
-                    </button>
-                  </span>
-                </span>
               </div>
-            </div>
-          </div>
-          <div
-            class="bp3-form-group"
-          >
-            <label
-              class="bp3-label"
-              for="stages[0].stage.spec.infrastructure.spec.initTimeout"
-            >
-              <span
-                class="Tooltip--acenter"
-                data-tooltip-id="test-form_stages[0].stage.spec.infrastructure.spec.initTimeout"
-              >
-                <div
-                  class="Text--withDocsTooltip"
-                  data-tooltip-id="timeout"
-                >
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
-                  >
-                    pipeline.infraSpecifications.initTimeout
-                  </p>
-                </div>
-              </span>
-               
-              <span
-                class="bp3-text-muted"
-              />
-            </label>
-            <div
-              class="bp3-form-content"
-            >
               <div
-                class="container"
+                style="display: flex; align-items: center;"
               >
                 <div
-                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="flex-grow: 1;"
+                  class="bp3-form-group"
+                  style="margin-bottom: 0px; flex-grow: 1;"
                 >
+                  
                   <div
-                    class="bp3-input-group bp3-fill"
+                    class="bp3-form-content"
                   >
-                    <input
-                      class="bp3-input"
-                      name="stages[0].stage.spec.infrastructure.spec.initTimeout"
-                      placeholder="Enter w/d/h/m/s/ms"
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                  <span
-                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                  >
-                    <span
-                      class="bp3-popover-target"
-                    >
-                      <button
-                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                      >
-                        <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="fixed-input"
-                        >
-                          <svg
-                            height="12"
-                            viewBox="0 0 9 9"
-                            width="12"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                              fill="currentColor"
-                            />
-                          </svg>
-                        </span>
-                      </button>
-                    </span>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="group withoutSpacing minimalCard"
-          >
-            <div
-              class="bp3-form-group"
-              style="flex-grow: 1; margin-bottom: 0px;"
-            >
-              <label
-                class="bp3-label"
-                for="stages[0].stage.spec.infrastructure.spec.annotations"
-              >
-                <div
-                  class="formLabel"
-                >
-                  <span
-                    class="Tooltip--acenter"
-                    data-tooltip-id="test-form_stages[0].stage.spec.infrastructure.spec.annotations"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
-                    >
-                      ci.annotations
-                    </p>
-                  </span>
-                </div>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
-              <div
-                class="bp3-form-content"
-              >
-                <div
-                  class="group withoutAligning"
-                >
-                  <div>
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--font-variation-form-label"
-                    >
-                      keyLabel
-                    </p>
                     <div
-                      class="TextInput--main"
+                      class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                     >
                       <div
-                        class="bp3-input-group"
+                        class="bp3-input-group MultiTypeInput--input"
                       >
                         <input
+                          autocomplete="off"
                           class="bp3-input"
-                          data-testid="key-stages[0].stage.spec.infrastructure.spec.annotations-[0]"
-                          name="stages[0].stage.spec.infrastructure.spec.annotations[0].key"
+                          name="stages[0].stage.spec.infrastructure.spec.namespace"
                           type="text"
                           value=""
                         />
                       </div>
-                    </div>
-                  </div>
-                  <div>
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--font-variation-form-label"
-                    >
-                      valueLabel
-                    </p>
-                    <div
-                      class="group withoutAligning withoutSpacing"
-                    >
-                      <div
-                        class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                        data-testid="value-stages[0].stage.spec.infrastructure.spec.annotations-[0]"
-                        style="flex-shrink: 1;"
+                      <span
+                        class="bp3-popover-wrapper MultiTypeInput--wrapper"
                       >
-                        <div
-                          class="bp3-input-group MultiTypeInput--input"
-                        >
-                          <input
-                            class="bp3-input"
-                            name="stages[0].stage.spec.infrastructure.spec.annotations[0].value"
-                            type="text"
-                            value=""
-                          />
-                        </div>
                         <span
-                          class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                          class="bp3-popover-target"
                         >
-                          <span
-                            class="bp3-popover-target"
+                          <button
+                            class="MultiTypeInput--btn MultiTypeInput--FIXED"
                           >
-                            <button
-                              class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            <span
+                              class="bp3-icon StyledProps--main"
+                              data-icon="fixed-input"
                             >
-                              <span
-                                class="bp3-icon StyledProps--main"
-                                data-icon="fixed-input"
+                              <svg
+                                height="12"
+                                viewBox="0 0 9 9"
+                                width="12"
+                                xmlns="http://www.w3.org/2000/svg"
                               >
-                                <svg
-                                  height="12"
-                                  viewBox="0 0 9 9"
-                                  width="12"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                    fill="currentColor"
-                                  />
-                                </svg>
-                              </span>
-                            </button>
-                          </span>
+                                <path
+                                  d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                  fill="currentColor"
+                                />
+                              </svg>
+                            </span>
+                          </button>
                         </span>
-                      </div>
-                      <button
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
-                        data-testid="remove-stages[0].stage.spec.infrastructure.spec.annotations-[0]"
-                        type="button"
-                      >
-                        <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="main-trash"
-                        >
-                          <svg
-                            height="20"
-                            viewBox="0 0 16 20"
-                            width="20"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              clip-rule="evenodd"
-                              d="M1.143 8.48a1.2 1.2 0 011.189-1.36h10.649a1.2 1.2 0 011.194 1.321l-1.039 10.208a1.2 1.2 0 01-1.193 1.079H3.716a1.2 1.2 0 01-1.189-1.04L1.143 8.48zm11.837-.16H2.332l1.385 10.207h8.226L12.98 8.32zM5.916 1.594a.6.6 0 01.719-.452l4.224.965a.6.6 0 01.452.719L11 4.179l3.86.882a.6.6 0 01-.267 1.17L1.535 3.248a.6.6 0 11.267-1.17l3.805.87.309-1.354zm.86 1.62l3.056.698.175-.768-3.055-.698-.175.768z"
-                              fill="currentColor"
-                              fill-rule="evenodd"
-                            />
-                            <path
-                              clip-rule="evenodd"
-                              d="M8 10.808a.5.5 0 01.5.5v5a.5.5 0 01-1 0v-5a.5.5 0 01.5-.5zm-2.761.012a.5.5 0 01.541.454l.436 4.981a.5.5 0 11-.996.087l-.436-4.98a.5.5 0 01.455-.542zM10.762 10.82a.5.5 0 01.455.541l-.436 4.981a.5.5 0 11-.996-.087l.435-4.98a.5.5 0 01.542-.455z"
-                              fill="currentColor"
-                              fill-rule="evenodd"
-                              opacity="0.3"
-                            />
-                          </svg>
-                        </span>
-                      </button>
+                      </span>
                     </div>
                   </div>
                 </div>
-                <button
-                  class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
-                  data-testid="add-stages[0].stage.spec.infrastructure.spec.annotations"
-                  style="padding: 0px;"
-                  type="button"
+              </div>
+            </div>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main formGroup sm bottomMargin3"
+          >
+            <div
+              style="width: 300px;"
+            >
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="serviceAccountName"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
                 >
-                  <span
-                    class="bp3-button-text"
+                  pipeline.infraSpecifications.serviceAccountName
+                </p>
+              </div>
+              <div
+                style="display: flex; align-items: center;"
+              >
+                <div
+                  class="bp3-form-group"
+                  style="margin-bottom: 0px; flex-grow: 1;"
+                >
+                  
+                  <div
+                    class="bp3-form-content"
                   >
-                    plusAdd
-                  </span>
-                </button>
+                    <div
+                      class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    >
+                      <div
+                        class="bp3-input-group MultiTypeInput--input"
+                      >
+                        <input
+                          autocomplete="off"
+                          class="bp3-input"
+                          name="stages[0].stage.spec.infrastructure.spec.serviceAccountName"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                      <span
+                        class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                      >
+                        <span
+                          class="bp3-popover-target"
+                        >
+                          <button
+                            class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          >
+                            <span
+                              class="bp3-icon StyledProps--main"
+                              data-icon="fixed-input"
+                            >
+                              <svg
+                                height="12"
+                                viewBox="0 0 9 9"
+                                width="12"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                  fill="currentColor"
+                                />
+                              </svg>
+                            </span>
+                          </button>
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -3369,6 +3189,166 @@ exports[`stageinputset tests viewType InputSet initial render2 1`] = `
               </div>
             </div>
           </div>
+          <div
+            class="group withoutSpacing minimalCard"
+          >
+            <div
+              class="bp3-form-group"
+              style="flex-grow: 1; margin-bottom: 0px;"
+            >
+              <label
+                class="bp3-label"
+                for="stages[0].stage.spec.infrastructure.spec.annotations"
+              >
+                <div
+                  class="formLabel"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="test-form_stages[0].stage.spec.infrastructure.spec.annotations"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
+                    >
+                      ci.annotations
+                    </p>
+                  </span>
+                </div>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="group withoutAligning"
+                >
+                  <div>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--font-variation-form-label"
+                    >
+                      keyLabel
+                    </p>
+                    <div
+                      class="TextInput--main"
+                    >
+                      <div
+                        class="bp3-input-group"
+                      >
+                        <input
+                          class="bp3-input"
+                          data-testid="key-stages[0].stage.spec.infrastructure.spec.annotations-[0]"
+                          name="stages[0].stage.spec.infrastructure.spec.annotations[0].key"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--font-variation-form-label"
+                    >
+                      valueLabel
+                    </p>
+                    <div
+                      class="group withoutAligning withoutSpacing"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                        data-testid="value-stages[0].stage.spec.infrastructure.spec.annotations-[0]"
+                        style="flex-shrink: 1;"
+                      >
+                        <div
+                          class="bp3-input-group MultiTypeInput--input"
+                        >
+                          <input
+                            class="bp3-input"
+                            name="stages[0].stage.spec.infrastructure.spec.annotations[0].value"
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                        <span
+                          class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <button
+                              class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main"
+                                data-icon="fixed-input"
+                              >
+                                <svg
+                                  height="12"
+                                  viewBox="0 0 9 9"
+                                  width="12"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </span>
+                            </button>
+                          </span>
+                        </span>
+                      </div>
+                      <button
+                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                        data-testid="remove-stages[0].stage.spec.infrastructure.spec.annotations-[0]"
+                        type="button"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="main-trash"
+                        >
+                          <svg
+                            height="20"
+                            viewBox="0 0 16 20"
+                            width="20"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              clip-rule="evenodd"
+                              d="M1.143 8.48a1.2 1.2 0 011.189-1.36h10.649a1.2 1.2 0 011.194 1.321l-1.039 10.208a1.2 1.2 0 01-1.193 1.079H3.716a1.2 1.2 0 01-1.189-1.04L1.143 8.48zm11.837-.16H2.332l1.385 10.207h8.226L12.98 8.32zM5.916 1.594a.6.6 0 01.719-.452l4.224.965a.6.6 0 01.452.719L11 4.179l3.86.882a.6.6 0 01-.267 1.17L1.535 3.248a.6.6 0 11.267-1.17l3.805.87.309-1.354zm.86 1.62l3.056.698.175-.768-3.055-.698-.175.768z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                            />
+                            <path
+                              clip-rule="evenodd"
+                              d="M8 10.808a.5.5 0 01.5.5v5a.5.5 0 01-1 0v-5a.5.5 0 01.5-.5zm-2.761.012a.5.5 0 01.541.454l.436 4.981a.5.5 0 11-.996.087l-.436-4.98a.5.5 0 01.455-.542zM10.762 10.82a.5.5 0 01.455.541l-.436 4.981a.5.5 0 11-.996-.087l.435-4.98a.5.5 0 01.542-.455z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                              opacity="0.3"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
+                  data-testid="add-stages[0].stage.spec.infrastructure.spec.annotations"
+                  style="padding: 0px;"
+                  type="button"
+                >
+                  <span
+                    class="bp3-button-text"
+                  >
+                    plusAdd
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
           <div>
             <div
               style="min-height: 16px;"
@@ -3387,14 +3367,21 @@ exports[`stageinputset tests viewType InputSet initial render2 1`] = `
             pipeline.buildInfra.containerSecurityContext
           </div>
           <div
-            class="StyledProps--font StyledProps--main bottomMargin3"
+            class="StyledProps--font StyledProps--main formGroup sm bottomMargin3"
           >
-            <div>
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
+            <div
+              style="width: 300px;"
+            >
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="runAsUser"
               >
-                pipeline.stepCommonFields.runAsUser
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                >
+                  pipeline.stepCommonFields.runAsUser
+                </p>
+              </div>
               <div
                 style="display: flex; align-items: center;"
               >
@@ -3408,6 +3395,7 @@ exports[`stageinputset tests viewType InputSet initial render2 1`] = `
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                      placeholder="1000"
                     >
                       <div
                         class="bp3-input-group MultiTypeInput--input"
@@ -3416,7 +3404,6 @@ exports[`stageinputset tests viewType InputSet initial render2 1`] = `
                           autocomplete="off"
                           class="bp3-input"
                           name="stages[0].stage.spec.infrastructure.spec.containerSecurityContext.runAsUser"
-                          placeholder="1000"
                           type="text"
                           value=""
                         />
@@ -3466,6 +3453,90 @@ exports[`stageinputset tests viewType InputSet initial render2 1`] = `
               style="min-height: 16px;"
             />
           </div>
+          <div
+            class="StyledProps--font StyledProps--main formGroup xlg bottomMargin3"
+          >
+            <div
+              class="bp3-form-group"
+            >
+              <label
+                class="bp3-label"
+                for="stages[0].stage.spec.infrastructure.spec.initTimeout"
+              >
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="test-form_stages[0].stage.spec.infrastructure.spec.initTimeout"
+                >
+                  <div
+                    class="Text--withDocsTooltip"
+                    data-tooltip-id="timeout"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
+                    >
+                      pipeline.infraSpecifications.initTimeout
+                    </p>
+                  </div>
+                </span>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="container"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    style="flex-grow: 1;"
+                  >
+                    <div
+                      class="bp3-input-group bp3-fill"
+                    >
+                      <input
+                        class="bp3-input"
+                        name="stages[0].stage.spec.infrastructure.spec.initTimeout"
+                        placeholder="Enter w/d/h/m/s/ms"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div
           class="nestedAccordions"
@@ -3511,6 +3582,7 @@ exports[`stageinputset tests viewType InputSet initial render2 1`] = `
             </label>
             <div>
               <form
+                action="#"
                 class="FormikForm--main removeBpPopoverWrapperTopMargin"
               >
                 <div>

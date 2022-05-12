@@ -154,6 +154,9 @@ const stateMock = {
       type: 'AddCommand'
     }
   },
+  templateView: {
+    isTemplateDrawerOpened: false
+  },
   schemaErrors: false,
   gitDetails: {
     branch: 'feature',

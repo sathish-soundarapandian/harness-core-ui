@@ -26,7 +26,7 @@ export function getLogAnalysisTableData(logsData: RestResponsePageAnalyzedLogDat
       messageFrequency: [
         {
           name: 'trendData',
-          type: 'line',
+          type: 'column',
           color: getRiskColorValue(log?.logData?.riskStatus),
           data: log?.logData?.trend?.map(trend => trend.count) as number[]
         }

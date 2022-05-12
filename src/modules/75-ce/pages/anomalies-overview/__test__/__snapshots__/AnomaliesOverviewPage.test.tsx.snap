@@ -172,7 +172,7 @@ exports[`test case for anomalies detection overview page should be able to rende
           <span
             class="bp3-button-text"
           >
-            ce.perspectives.timeRangeConstants.last7Days
+            projectsOrgs.landingDashboard.last30Days
           </span>
           <span
             class="bp3-icon bp3-icon-caret-down StyledProps--main"

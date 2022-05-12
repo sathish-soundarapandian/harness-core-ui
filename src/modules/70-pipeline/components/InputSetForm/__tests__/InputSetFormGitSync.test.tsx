@@ -75,7 +75,7 @@ const updateInputSet = jest.fn().mockImplementation(() => Promise.resolve({ stat
 
 jest.mock('services/pipeline-ng', () => ({
   useGetInputSetForPipeline: jest.fn(() => GetInputSetEdit),
-  useCreateVariables: () => jest.fn(() => ({})),
+  useCreateVariablesV2: () => jest.fn(() => ({})),
   useGetMergeInputSetFromPipelineTemplateWithListInput: jest.fn(() => MergeInputSetResponse),
   useGetPipeline: jest.fn(() => PipelineResponse),
   useGetTemplateFromPipeline: jest.fn(() => TemplateResponse),

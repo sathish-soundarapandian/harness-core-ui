@@ -33,7 +33,7 @@
 }
 
 .topCluster {
-  color: red;
+  color: var(--red-500);
 }
 
 .topRecommendations {
@@ -206,7 +206,7 @@
   .addClusterBtn {
     box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16) !important;
     border-radius: 4px;
-    border: 1px solid #0278d5 !important;
+    border: 1px solid var(--primary-7) !important;
   }
 }
 
@@ -260,4 +260,15 @@
 .radialChartTable {
   display: flex;
   justify-content: space-evenly;
+}
+
+.sustainabilityCard {
+  @extend .card;
+  background-color: rgba(228, 247, 225, 0.3) !important;
+  -webkit-filter: grayscale(50%) !important;
+  filter: grayscale(50%) !important;
+  padding: var(--spacing-medium);
+  > div {
+    margin-top: var(--spacing-small) !important;
+  }
 }

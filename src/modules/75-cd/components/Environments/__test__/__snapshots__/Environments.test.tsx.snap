@@ -76,6 +76,16 @@ exports[`Environments should render Environments 1`] = `
           environments
         </h3>
       </div>
+      <div
+        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main TabNavigation--container"
+      >
+        <a
+          class="TabNavigation--tags TabNavigation--small"
+          href="/account/dummy/undefined/orgs/dummy/projects/dummy/environment"
+        >
+          environment
+        </a>
+      </div>
     </div>
     <div
       class="Layout--horizontal StyledProps--main PageSubHeader--container toolbar StyledProps--flex"

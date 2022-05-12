@@ -1,0 +1,271 @@
+[
+  {
+    "envGroup": {
+      "accountId": "kmpySmUISimoRrJL6NL73w",
+      "orgIdentifier": "default",
+      "projectIdentifier": "Ashwin",
+      "identifier": "Env_Group_4",
+      "name": "Env Group 4",
+      "description": "",
+      "color": "#0063F7",
+      "deleted": false,
+      "tags": { "Test": "" },
+      "version": 4,
+      "envIdentifiers": ["Env_1", "Env_3", "Env_4", "Env_5", "Env_7"],
+      "envResponse": [
+        {
+          "environment": {
+            "accountId": "kmpySmUISimoRrJL6NL73w",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Ashwin",
+            "identifier": "Env_1",
+            "name": "Env 1",
+            "description": null,
+            "color": "#0063F7",
+            "type": "Production",
+            "deleted": false,
+            "tags": {},
+            "version": 0,
+            "yaml": "environment:\n  orgIdentifier: \"default\"\n  projectIdentifier: \"Ashwin\"\n  identifier: \"Env_1\"\n  tags: {}\n  name: \"Env 1\"\n  type: \"Production\"\n"
+          },
+          "createdAt": 1650445681958,
+          "lastModifiedAt": 1650445681958
+        },
+        {
+          "environment": {
+            "accountId": "kmpySmUISimoRrJL6NL73w",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Ashwin",
+            "identifier": "Env_3",
+            "name": "Env 3",
+            "description": null,
+            "color": "#0063F7",
+            "type": "PreProduction",
+            "deleted": false,
+            "tags": {},
+            "version": 0,
+            "yaml": "environment:\n  orgIdentifier: \"default\"\n  projectIdentifier: \"Ashwin\"\n  identifier: \"Env_3\"\n  tags: {}\n  name: \"Env 3\"\n  type: \"PreProduction\"\n"
+          },
+          "createdAt": 1650445701201,
+          "lastModifiedAt": 1650445701201
+        },
+        {
+          "environment": {
+            "accountId": "kmpySmUISimoRrJL6NL73w",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Ashwin",
+            "identifier": "Env_4",
+            "name": "Env 4",
+            "description": null,
+            "color": "#0063F7",
+            "type": "Production",
+            "deleted": false,
+            "tags": {},
+            "version": 0,
+            "yaml": "environment:\n  orgIdentifier: \"default\"\n  projectIdentifier: \"Ashwin\"\n  identifier: \"Env_4\"\n  tags: {}\n  name: \"Env 4\"\n  type: \"Production\"\n"
+          },
+          "createdAt": 1650445709499,
+          "lastModifiedAt": 1650445709499
+        },
+        {
+          "environment": {
+            "accountId": "kmpySmUISimoRrJL6NL73w",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Ashwin",
+            "identifier": "Env_5",
+            "name": "Env 5",
+            "description": null,
+            "color": "#0063F7",
+            "type": "PreProduction",
+            "deleted": false,
+            "tags": {},
+            "version": 0,
+            "yaml": "environment:\n  orgIdentifier: \"default\"\n  projectIdentifier: \"Ashwin\"\n  identifier: \"Env_5\"\n  tags: {}\n  name: \"Env 5\"\n  type: \"PreProduction\"\n"
+          },
+          "createdAt": 1650445780375,
+          "lastModifiedAt": 1650445780375
+        },
+        {
+          "environment": {
+            "accountId": "kmpySmUISimoRrJL6NL73w",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Ashwin",
+            "identifier": "Env_7",
+            "name": "Env 7",
+            "description": null,
+            "color": "#0063F7",
+            "type": "PreProduction",
+            "deleted": false,
+            "tags": { "Env 7": "" },
+            "version": 1,
+            "yaml": "environment:\n  orgIdentifier: \"default\"\n  projectIdentifier: \"Ashwin\"\n  identifier: \"Env_7\"\n  tags:\n    Env 7: \"\"\n  name: \"Env 7\"\n  type: \"PreProduction\"\n"
+          },
+          "createdAt": 1650445796973,
+          "lastModifiedAt": 1650525045789
+        }
+      ],
+      "gitDetails": {
+        "objectId": null,
+        "branch": null,
+        "repoIdentifier": null,
+        "rootFolder": null,
+        "filePath": null,
+        "repoName": null
+      }
+    },
+    "createdAt": 1650707868089,
+    "lastModifiedAt": 1650966428123
+  },
+  {
+    "envGroup": {
+      "accountId": "kmpySmUISimoRrJL6NL73w",
+      "orgIdentifier": "default",
+      "projectIdentifier": "Ashwin",
+      "identifier": "Env_Group_2",
+      "name": "Env Group 2",
+      "description": "",
+      "color": "#0063F7",
+      "deleted": false,
+      "tags": { "Test": "" },
+      "version": 2,
+      "envIdentifiers": [],
+      "envResponse": [],
+      "gitDetails": {
+        "objectId": null,
+        "branch": null,
+        "repoIdentifier": null,
+        "rootFolder": null,
+        "filePath": null,
+        "repoName": null
+      }
+    },
+    "createdAt": 1650445959574,
+    "lastModifiedAt": 1650965930263
+  },
+  {
+    "envGroup": {
+      "accountId": "kmpySmUISimoRrJL6NL73w",
+      "orgIdentifier": "default",
+      "projectIdentifier": "Ashwin",
+      "identifier": "Env_Group_3",
+      "name": "Env Group 3",
+      "description": "",
+      "color": "#0063F7",
+      "deleted": false,
+      "tags": {},
+      "version": 0,
+      "envIdentifiers": ["Env_7", "Env_4"],
+      "envResponse": [
+        {
+          "environment": {
+            "accountId": "kmpySmUISimoRrJL6NL73w",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Ashwin",
+            "identifier": "Env_4",
+            "name": "Env 4",
+            "description": null,
+            "color": "#0063F7",
+            "type": "Production",
+            "deleted": false,
+            "tags": {},
+            "version": 0,
+            "yaml": "environment:\n  orgIdentifier: \"default\"\n  projectIdentifier: \"Ashwin\"\n  identifier: \"Env_4\"\n  tags: {}\n  name: \"Env 4\"\n  type: \"Production\"\n"
+          },
+          "createdAt": 1650445709499,
+          "lastModifiedAt": 1650445709499
+        },
+        {
+          "environment": {
+            "accountId": "kmpySmUISimoRrJL6NL73w",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Ashwin",
+            "identifier": "Env_7",
+            "name": "Env 7",
+            "description": null,
+            "color": "#0063F7",
+            "type": "PreProduction",
+            "deleted": false,
+            "tags": { "Env 7": "" },
+            "version": 1,
+            "yaml": "environment:\n  orgIdentifier: \"default\"\n  projectIdentifier: \"Ashwin\"\n  identifier: \"Env_7\"\n  tags:\n    Env 7: \"\"\n  name: \"Env 7\"\n  type: \"PreProduction\"\n"
+          },
+          "createdAt": 1650445796973,
+          "lastModifiedAt": 1650525045789
+        }
+      ],
+      "gitDetails": {
+        "objectId": null,
+        "branch": null,
+        "repoIdentifier": null,
+        "rootFolder": null,
+        "filePath": null,
+        "repoName": null
+      }
+    },
+    "createdAt": 1650707829349,
+    "lastModifiedAt": 1650707829349
+  },
+  {
+    "envGroup": {
+      "accountId": "kmpySmUISimoRrJL6NL73w",
+      "orgIdentifier": "default",
+      "projectIdentifier": "Ashwin",
+      "identifier": "Env_Group_1",
+      "name": "Env Group 1",
+      "description": "Env Group 1 Desc",
+      "color": "#0063F7",
+      "deleted": false,
+      "tags": {},
+      "version": 5,
+      "envIdentifiers": ["Env_7", "Env_6"],
+      "envResponse": [
+        {
+          "environment": {
+            "accountId": "kmpySmUISimoRrJL6NL73w",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Ashwin",
+            "identifier": "Env_6",
+            "name": "Env 6",
+            "description": null,
+            "color": "#0063F7",
+            "type": "Production",
+            "deleted": false,
+            "tags": {},
+            "version": 0,
+            "yaml": "environment:\n  orgIdentifier: \"default\"\n  projectIdentifier: \"Ashwin\"\n  identifier: \"Env_6\"\n  tags: {}\n  name: \"Env 6\"\n  type: \"Production\"\n"
+          },
+          "createdAt": 1650445789269,
+          "lastModifiedAt": 1650445789269
+        },
+        {
+          "environment": {
+            "accountId": "kmpySmUISimoRrJL6NL73w",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Ashwin",
+            "identifier": "Env_7",
+            "name": "Env 7",
+            "description": null,
+            "color": "#0063F7",
+            "type": "PreProduction",
+            "deleted": false,
+            "tags": { "Env 7": "" },
+            "version": 1,
+            "yaml": "environment:\n  orgIdentifier: \"default\"\n  projectIdentifier: \"Ashwin\"\n  identifier: \"Env_7\"\n  tags:\n    Env 7: \"\"\n  name: \"Env 7\"\n  type: \"PreProduction\"\n"
+          },
+          "createdAt": 1650445796973,
+          "lastModifiedAt": 1650525045789
+        }
+      ],
+      "gitDetails": {
+        "objectId": null,
+        "branch": null,
+        "repoIdentifier": null,
+        "rootFolder": null,
+        "filePath": null,
+        "repoName": null
+      }
+    },
+    "createdAt": 1650445934283,
+    "lastModifiedAt": 1650524436984
+  }
+]

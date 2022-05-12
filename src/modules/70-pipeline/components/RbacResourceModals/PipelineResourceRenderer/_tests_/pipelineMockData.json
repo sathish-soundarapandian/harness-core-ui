@@ -1,0 +1,32 @@
+{
+  "loading": false,
+  "data": {
+    "content": [
+      {
+        "name": "shell",
+        "identifier": "shell",
+        "description": "",
+        "tags": {},
+        "numOfStages": 1,
+        "createdAt": 1610773936801,
+        "lastUpdatedAt": 1617690550779,
+        "modules": ["cd"],
+        "executionSummaryInfo": {
+          "numOfErrors": [0, 0, 0, 0, 0, 0, 0],
+          "deployments": [0, 0, 0, 0, 0, 0, 0],
+          "lastExecutionTs": 1612245891280,
+          "lastExecutionStatus": "Failed"
+        },
+        "filters": {
+          "cd": {
+            "deploymentTypes": ["Kubernetes"],
+            "environmentNames": [],
+            "serviceNames": ["ManagerService"],
+            "infrastructureTypes": ["KubernetesDirect"]
+          }
+        },
+        "stageNames": ["qa stage"]
+      }
+    ]
+  }
+}

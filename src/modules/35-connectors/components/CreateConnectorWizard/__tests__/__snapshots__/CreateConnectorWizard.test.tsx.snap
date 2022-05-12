@@ -125,6 +125,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Artifacto
               class="OverlaySpinner--overlaySpinner"
             >
               <form
+                action="#"
                 class="FormikForm--main"
               >
                 <div>
@@ -512,6 +513,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for BITBUCKET
               class="OverlaySpinner--overlaySpinner"
             >
               <form
+                action="#"
                 class="FormikForm--main"
               >
                 <div>
@@ -888,6 +890,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for DOCKER 1`
               class="OverlaySpinner--overlaySpinner"
             >
               <form
+                action="#"
                 class="FormikForm--main"
               >
                 <div>
@@ -1317,6 +1320,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for GCP 1`] =
               class="OverlaySpinner--overlaySpinner"
             >
               <form
+                action="#"
                 class="FormikForm--main"
               >
                 <div>
@@ -1708,6 +1712,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for GCP KMS 1
               class="OverlaySpinner--overlaySpinner"
             >
               <form
+                action="#"
                 class="FormikForm--main"
               >
                 <div>
@@ -2094,6 +2099,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Git 1`] =
               class="OverlaySpinner--overlaySpinner"
             >
               <form
+                action="#"
                 class="FormikForm--main"
               >
                 <div>
@@ -2479,6 +2485,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Github 1`
               class="OverlaySpinner--overlaySpinner"
             >
               <form
+                action="#"
                 class="FormikForm--main"
               >
                 <div>
@@ -2889,6 +2896,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Gitlab 1`
               class="OverlaySpinner--overlaySpinner"
             >
               <form
+                action="#"
                 class="FormikForm--main"
               >
                 <div>
@@ -3276,6 +3284,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Nexus 1`]
               class="OverlaySpinner--overlaySpinner"
             >
               <form
+                action="#"
                 class="FormikForm--main"
               >
                 <div>
@@ -3663,6 +3672,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for VAULT 1`]
               class="OverlaySpinner--overlaySpinner"
             >
               <form
+                action="#"
                 class="FormikForm--main"
               >
                 <div>
@@ -4044,6 +4054,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for k8 1`] = 
               class="OverlaySpinner--overlaySpinner"
             >
               <form
+                action="#"
                 class="FormikForm--main"
               >
                 <div>

@@ -2,6 +2,8 @@ upgrade: 'Requires upgrade to Enterprise Plan to set up Dashboards'
 sortBy: 'Sort By'
 switchToGridView: 'Switch to grid view'
 switchToListView: 'Switch to list view'
+shared: 'shared'
+sharedFolderTitle: 'Organization Shared Folder'
 sideNav:
   byHarness: 'BY HARNESS'
   custom: 'CUSTOM'
@@ -22,6 +24,7 @@ homePage:
   # addDashboard: 'Dashboard'
 createModal:
   stepOne: 'About the Dashboard'
+  howToCreate: 'How to create a Dashboard'
   # name: 'Name'
 
   sampleTitle: 'Dashboard Title'
@@ -34,13 +37,21 @@ createModal:
   # description: 'Description'
   descriptionPlaceholder: 'Provide dashboard purpose'
   # submit: 'Submit'
+  success: 'Successfully create a new dashboard'
   submitFail: 'Dashboard creation failed, Please try again.'
-createFolder:
+editModal:
+  editDashboard: 'Edit Dashboard'
+  submitFail: 'Edit dashboard failed, Please try again.'
+  success: 'Successfully updated the dashboard'
+folderForm:
   stepOne: 'About the Folder'
   folderPlaceholder: 'Name your folder'
   folderNameValidation: 'Folder name is a required field'
   folderDescriptionPlaceholder: 'Provide folder purpose'
+createFolder:
   folderSubmitFail: 'Folder creation failed, Please try again.'
+updateFolder:
+  folderUpdateFail: 'Failed to update folder, Please try again.'
 deleteFolder:
   confirmDeleteTitle: 'Delete {{name}} folder'
   confirmDeleteText: 'Deleting the folder {{name}} would mean that you are also deleting all the dashboards associated with it. Are you sure you want to delete the Folder?'

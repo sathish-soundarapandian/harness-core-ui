@@ -16,7 +16,6 @@ import {
   queryByAttribute,
   getAllByText
 } from '@testing-library/react'
-import { noop } from 'lodash-es'
 import UserProfilePage from '@user-profile/pages/UserProfile/UserProfilePage'
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
@@ -24,8 +23,6 @@ import { InputTypes, setFieldValue, clickSubmit } from '@common/utils/JestFormHe
 import * as cdngServices from 'services/cd-ng'
 import type { ResponseBoolean } from 'services/cd-ng'
 import { ChangePasswordResponse } from '@user-profile/modals/useChangePassword/views/ChangePasswordForm'
-import * as LicenseStoreContext from 'framework/LicenseStore/LicenseStoreContext'
-import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import {
   connectorMockData,
   enabledTwoFactorAuth,
@@ -129,6 +126,10 @@ jest.mock('services/cd-ng', () => ({
 }))
 
 let enabledAuth = false
+
+beforeEach(() => {
+  window.deploymentType = 'SAAS'
+})
 
 describe('User Profile Page', () => {
   let container: HTMLElement
@@ -361,19 +362,7 @@ describe('User Profile Page', () => {
       expect(queryByText(document.body, 'noProjects')).toBeTruthy()
     })
   test('Hide SwitchAccount button for community edition', async () => {
-    jest.spyOn(LicenseStoreContext, 'useLicenseStore').mockReturnValue({
-      licenseInformation: {
-        CD: {
-          edition: 'COMMUNITY'
-        }
-      },
-      CD_LICENSE_STATE: LICENSE_STATE_VALUES.ACTIVE,
-      CI_LICENSE_STATE: LICENSE_STATE_VALUES.ACTIVE,
-      FF_LICENSE_STATE: LICENSE_STATE_VALUES.ACTIVE,
-      CCM_LICENSE_STATE: LICENSE_STATE_VALUES.ACTIVE,
-      updateLicenseStore: noop,
-      versionMap: {}
-    })
+    window.deploymentType = 'COMMUNITY'
     testSetup()
     expect(queryByText(document.body, 'common.switchAccount')).toBeNull()
   })

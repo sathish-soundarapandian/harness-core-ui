@@ -38,6 +38,7 @@ declare const styles: {
   readonly recommendations: string
   readonly resourceType: string
   readonly rowGap8: string
+  readonly sustainabilityCard: string
   readonly tableList: string
   readonly topCluster: string
   readonly topRecommendations: string

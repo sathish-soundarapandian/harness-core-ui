@@ -38,6 +38,7 @@ export interface ExecutionCardProps {
   pipelineExecution: PipelineExecutionSummary
   variant?: CardVariant
   staticCard?: boolean
+  isPipelineInvalid?: boolean
 }
 
 function ExecutionCardFooter({ pipelineExecution, variant }: ExecutionCardProps): React.ReactElement {
@@ -104,7 +105,7 @@ function ExecutionCardFooter({ pipelineExecution, variant }: ExecutionCardProps)
 }
 
 export default function ExecutionCard(props: ExecutionCardProps): React.ReactElement {
-  const { pipelineExecution, variant = CardVariant.Default, staticCard = false } = props
+  const { pipelineExecution, variant = CardVariant.Default, staticCard = false, isPipelineInvalid } = props
   const { orgIdentifier, projectIdentifier, accountId, module } = useParams<PipelineType<ProjectPathProps>>()
   const history = useHistory()
   const { getString } = useStrings()
@@ -223,6 +224,7 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
                     branch: pipelineExecution?.gitDetails?.branch,
                     stagesExecuted: pipelineExecution?.stagesExecuted
                   }}
+                  isPipelineInvalid={isPipelineInvalid}
                   canEdit={canEdit}
                   canExecute={canExecute}
                   canRetry={pipelineExecution.canRetry}

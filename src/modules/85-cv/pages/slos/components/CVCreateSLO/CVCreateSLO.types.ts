@@ -146,6 +146,7 @@ export interface SLONameProps {
   identifier?: string
   monitoredServicesLoading: boolean
   monitoredServicesOptions: SelectOption[]
+  fetchingMonitoredServices: () => void
 }
 
 export interface SLIProps

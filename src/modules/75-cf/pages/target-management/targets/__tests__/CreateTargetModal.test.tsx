@@ -31,7 +31,7 @@ describe('CreateTargetModal', () => {
         path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <CreateTargetModal loading={false} onSubmitTargets={jest.fn()} onSubmitUpload={jest.fn()} {...props} />
+        <CreateTargetModal loading={false} onSubmitTargets={jest.fn()} onSubmitTargetFile={jest.fn()} {...props} />
       </TestWrapper>
     )
   }
@@ -52,12 +52,12 @@ describe('CreateTargetModal', () => {
 
   test('CreateTargetModal should call callbacks properly', async () => {
     const onSubmitTargets = jest.fn()
-    const onSubmitUpload = jest.fn()
+    const onSubmitTargetFile = jest.fn()
 
     const { container } = renderComponent({
       loading: false,
       onSubmitTargets: onSubmitTargets,
-      onSubmitUpload: onSubmitUpload
+      onSubmitTargetFile: onSubmitTargetFile
     })
 
     fireEvent.click(getByText(container, 'cf.targets.create'))
@@ -142,7 +142,7 @@ describe('CreateTargetModal', () => {
     expect(getAllByPlaceholderText(modal, 'cf.targets.enterName').length).toBeDefined
   })
 
-  test('+ Target(s) button should show CreateTargetModal when user is within MAU limit', async () => {
+  test('+ New Target button should show CreateTargetModal when user is within MAU limit', async () => {
     jest.spyOn(useFeaturesMock, 'useGetFirstDisabledFeature').mockReturnValue({ featureEnabled: true })
     jest.spyOn(usePlanEnforcementMock, 'default').mockReturnValue({ isPlanEnforcementEnabled: true, isFreePlan: true })
 
@@ -157,7 +157,7 @@ describe('CreateTargetModal', () => {
     })
   })
 
-  test('+ Target(s) button should show plan enforcement tooltip when user exceeds MAU limit', async () => {
+  test('+ New Target button should show plan enforcement tooltip when user exceeds MAU limit', async () => {
     jest.spyOn(usePlanEnforcementMock, 'default').mockReturnValue({ isPlanEnforcementEnabled: true, isFreePlan: true })
     const mockedReturnValue = new Map<FeatureIdentifier, CheckFeatureReturn>()
     mockedReturnValue.set(FeatureIdentifier.MAUS, {

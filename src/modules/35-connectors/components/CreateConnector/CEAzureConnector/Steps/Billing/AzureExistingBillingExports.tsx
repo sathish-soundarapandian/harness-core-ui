@@ -5,8 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { Container, Table } from '@wings-software/uicore'
+import React, { useState } from 'react'
+import { Container, ExpandingSearchInput, Table, Text } from '@wings-software/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { CEAzureConnector } from 'services/cd-ng'
 import css from '../../CreateCeAzureConnector_new.module.scss'
@@ -17,39 +18,61 @@ interface Props {
 
 const ExistingBillingExports = (props: Props) => {
   const { getString } = useStrings()
+  const [billingReports, setBillingReports] = useState(props.existingBillingExports)
+
+  const onChange = (searchVal: string) => {
+    let filteredReports = props.existingBillingExports
+    if (searchVal) {
+      filteredReports = filteredReports.filter(item => item.reportName.includes(searchVal))
+    }
+    setBillingReports(filteredReports)
+  }
+
   return (
-    <Container className={css.existingBeTable}>
-      <Table
-        data={props.existingBillingExports}
-        bpTableProps={{ bordered: false, condensed: true, striped: true }}
-        columns={[
-          {
-            accessor: 'tenantId',
-            Header: getString('connectors.ceAzure.existingExports.tenantId')
-          },
-          {
-            accessor: 'billingExportSpec.storageAccountName',
-            Header: getString('connectors.ceAzure.billing.storageAccountName')
-          },
-          {
-            accessor: 'billingExportSpec.containerName',
-            Header: getString('connectors.ceAzure.billing.containerName')
-          },
-          {
-            accessor: 'billingExportSpec.directoryName',
-            Header: getString('connectors.ceAzure.billing.directoryName')
-          },
-          {
-            accessor: 'billingExportSpec.reportName',
-            Header: getString('connectors.ceAzure.billing.reportName')
-          },
-          {
-            accessor: 'billingExportSpec.subscriptionId',
-            Header: getString('connectors.ceAzure.existingExports.subscriptionId')
-          }
-        ]}
-      />
-    </Container>
+    <>
+      <Text color={Color.GREY_800} font={{ variation: FontVariation.BODY }} padding={{ bottom: 'small' }}>
+        {getString('connectors.ceAzure.existingExports.instruction', {
+          reportCount: props.existingBillingExports.length
+        })}
+      </Text>
+      <Container className={css.existingBeTable}>
+        <ExpandingSearchInput
+          onChange={text => onChange(text.trim())}
+          alwaysExpanded={false}
+          placeholder={getString('connectors.ceAzure.existingExports.searchBillingReports')}
+        />
+        <Table
+          data={billingReports}
+          bpTableProps={{ bordered: true, condensed: true, striped: false }}
+          columns={[
+            {
+              accessor: 'tenantId',
+              Header: getString('connectors.ceAzure.existingExports.tenantId')
+            },
+            {
+              accessor: 'billingExportSpec.storageAccountName',
+              Header: getString('connectors.ceAzure.billing.storageAccountName')
+            },
+            {
+              accessor: 'billingExportSpec.containerName',
+              Header: getString('connectors.ceAzure.billing.containerName')
+            },
+            {
+              accessor: 'billingExportSpec.directoryName',
+              Header: getString('connectors.ceAzure.billing.directoryName')
+            },
+            {
+              accessor: 'billingExportSpec.reportName',
+              Header: getString('connectors.ceAzure.billing.reportName')
+            },
+            {
+              accessor: 'billingExportSpec.subscriptionId',
+              Header: getString('connectors.ceAzure.existingExports.subscriptionId')
+            }
+          ]}
+        />
+      </Container>
+    </>
   )
 }
 

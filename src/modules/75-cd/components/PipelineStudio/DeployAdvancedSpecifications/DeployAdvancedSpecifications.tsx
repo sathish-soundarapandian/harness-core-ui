@@ -13,11 +13,12 @@ import { StepActions } from '@common/constants/TrackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { FailureStrategyWithRef } from '@pipeline/components/PipelineStudio/FailureStrategy/FailureStrategy'
+import { DelegateSelectorWithRef } from '@pipeline/components/PipelineStudio/DelegateSelector/DelegateSelector'
 import type { StepFormikRef } from '@pipeline/components/PipelineStudio/StepCommands/StepCommands'
 import ConditionalExecution from '@pipeline/components/PipelineStudio/ConditionalExecution/ConditionalExecution'
 import { useStrings } from 'framework/strings'
 import DeployServiceErrors from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceErrors'
-import { DeployTabs } from '@cd/components/PipelineStudio/DeployStageSetupShell/DeployStageSetupShellUtils'
+import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
@@ -54,6 +55,41 @@ const DeployAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childr
     <div className={stageCss.serviceOverrides}>
       <DeployServiceErrors domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
       <div className={stageCss.contentSection} ref={scrollRef}>
+        <div className={stageCss.tabHeading}>
+          <span data-tooltip-id="delegateSelectorDeployStage">
+            {getString('pipeline.delegate.DelegateSelectorOptional')}
+          </span>
+        </div>
+        <Card className={stageCss.sectionCard} id="delegateSelector">
+          <Layout.Horizontal>
+            <div>
+              <DelegateSelectorWithRef
+                selectedStage={stage}
+                isReadonly={isReadonly}
+                ref={formikRef}
+                onUpdate={delegateSelectors => {
+                  const valuePassed = delegateSelectors.delegateSelectors
+                  const { stage: pipelineStage } = getStageFromPipeline(
+                    selectedStageId || /* istanbul ignore next */ ''
+                  )
+                  /* istanbul ignore else */
+                  if (pipelineStage && pipelineStage.stage) {
+                    const stageData = produce(pipelineStage, draft => {
+                      set(draft, 'stage.delegateSelectors', valuePassed)
+                    })
+                    /* istanbul ignore else */
+                    if (stageData.stage) {
+                      updateStage(stageData.stage)
+                    }
+                  }
+                }}
+                tabName={DeployTabs.ADVANCED}
+              />
+            </div>
+          </Layout.Horizontal>
+        </Card>
+        <Container margin={{ top: 'xxlarge' }}>{children}</Container>
+
         <div className={stageCss.tabHeading}>
           <span data-tooltip-id="conditionalExecutionDeployStage">
             {getString('pipeline.conditionalExecution.title')}

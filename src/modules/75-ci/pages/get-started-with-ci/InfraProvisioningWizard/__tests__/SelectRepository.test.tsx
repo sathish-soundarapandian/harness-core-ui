@@ -7,19 +7,30 @@
 
 import React from 'react'
 import { render, act, fireEvent } from '@testing-library/react'
+import { TestWrapper } from '@common/utils/testUtils'
+import routes from '@common/RouteDefinitions'
 import { InfraProvisioningWizard } from '../InfraProvisioningWizard'
 import { InfraProvisiongWizardStepId } from '../Constants'
 
-jest.mock('framework/strings', () => ({
-  useStrings: () => ({
-    getString: (key: string) => key
-  })
+jest.mock('services/pipeline-ng', () => ({
+  createPipelineV2Promise: jest.fn().mockImplementation(() =>
+    Promise.resolve({
+      status: 'SUCCESS',
+      data: {
+        identifier: 'Default_Pipeline'
+      }
+    })
+  )
 }))
+
+const pathParams = { accountId: 'accountId', orgIdentifier: 'orgId', projectIdentifier: 'projectId' }
 
 describe('Test SelectRepository component', () => {
   test('Initial render', async () => {
     const { container, getByText } = render(
-      <InfraProvisioningWizard lastConfiguredWizardStepId={InfraProvisiongWizardStepId.SelectRepository} />
+      <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
+        <InfraProvisioningWizard lastConfiguredWizardStepId={InfraProvisiongWizardStepId.SelectRepository} />
+      </TestWrapper>
     )
     const createPipelineBtn = getByText('ci.getStartedWithCI.createPipeline')
     await act(async () => {
@@ -47,5 +58,25 @@ describe('Test SelectRepository component', () => {
       fireEvent.change(repositorySearch!, { target: { value: 'wings-software/monaco' } })
     })
     expect(getByText('wings-software/monaco')).toBeInTheDocument()
+  })
+
+  const routesToPipelineStudio = jest.spyOn(routes, 'toPipelineStudio')
+  test('Should create a pipeline if a repository is selected and user clicks on next', async () => {
+    const { getByText } = render(
+      <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
+        <InfraProvisioningWizard lastConfiguredWizardStepId={InfraProvisiongWizardStepId.SelectRepository} />
+      </TestWrapper>
+    )
+
+    const testRepository = getByText('wings-software/monaco')
+    expect(testRepository).toBeInTheDocument()
+    await act(async () => {
+      fireEvent.click(testRepository)
+    })
+    const createPipelineBtn = getByText('ci.getStartedWithCI.createPipeline')
+    await act(async () => {
+      fireEvent.click(createPipelineBtn)
+    })
+    expect(routesToPipelineStudio).toHaveBeenCalled()
   })
 })

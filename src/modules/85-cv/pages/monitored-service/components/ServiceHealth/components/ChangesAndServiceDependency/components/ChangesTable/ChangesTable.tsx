@@ -6,13 +6,12 @@
  */
 
 import React, { useEffect, useState, useMemo } from 'react'
-import { noop } from 'lodash-es'
+import { defaultTo, noop } from 'lodash-es'
 import type { IDrawerProps } from '@blueprintjs/core'
 import { useParams, Link } from 'react-router-dom'
 import type { Column } from 'react-table'
-import { Text, Icon, Container, NoDataCard, PageError, TableV2 } from '@wings-software/uicore'
+import { Icon, Container, NoDataCard, PageError, TableV2, Pagination, Layout } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import Card from '@cv/components/Card/Card'
 import { useStrings } from 'framework/strings'
 import { useChangeEventList } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -21,13 +20,15 @@ import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServi
 import routes from '@common/RouteDefinitions'
 import noDataImage from '@cv/assets/noData.svg'
 import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
-import type { ChangesTableInterface } from './ChangesTable.types'
+import type { ChangesTableContentWrapper, ChangesTableInterface } from './ChangesTable.types'
 import { renderTime, renderName, renderImpact, renderType, renderChangeType } from './ChangesTable.utils'
 import { PAGE_SIZE } from './ChangesTable.constants'
 import ChangeEventCard from './components/ChangeEventCard/ChangeEventCard'
+import ChangesTableWrapper from './ChangesTableWrapper'
 import css from './ChangeTable.module.scss'
 
 export default function ChangesTable({
+  isCardView = true,
   startTime,
   endTime,
   hasChangeSource,
@@ -69,12 +70,12 @@ export default function ChangesTable({
       ...(!monitoredServiceIdentifier && environmentIdentifier
         ? { envIdentifiers: Array.isArray(environmentIdentifier) ? environmentIdentifier : [environmentIdentifier] }
         : {}),
-      changeSourceTypes: changeSourceTypes || [],
-      changeCategories: changeCategories || [],
+      changeSourceTypes: defaultTo(changeSourceTypes, []),
+      changeCategories: defaultTo(changeCategories, []),
       startTime,
       endTime,
       pageIndex: page,
-      pageSize: recordsPerPage || PAGE_SIZE
+      pageSize: defaultTo(recordsPerPage, PAGE_SIZE)
     }
   }, [
     endTime,
@@ -102,6 +103,8 @@ export default function ChangesTable({
   })
 
   const { content = [], pageSize = 0, pageIndex = 0, totalPages = 0, totalItems = 0 } = data?.resource ?? {}
+
+  const wrapperProps: ChangesTableContentWrapper = { isCardView, totalItems, dataTooltipId }
 
   useEffect(() => {
     if (startTime && endTime) {
@@ -152,95 +155,74 @@ export default function ChangesTable({
     [customCols, content]
   )
 
-  const renderContent = () => {
-    if (loading) {
-      return (
-        <Card className={css.cardContainer}>
-          <Container className={css.noData}>
-            <Icon name="steps-spinner" color={Color.GREY_400} size={30} />
-          </Container>
-        </Card>
-      )
-    } else if (error) {
-      return (
-        <Card className={css.cardContainer}>
-          <Container className={css.noData}>
-            <PageError message={getErrorMessage(error)} onClick={() => refetch()} />
-          </Container>
-        </Card>
-      )
-    } else if (!hasChangeSource) {
-      const configurationsTabRoute = `${routes.toCVAddMonitoringServicesEdit({
-        accountId,
-        projectIdentifier,
-        orgIdentifier,
-        identifier,
-        module: 'cv'
-      })}${getCVMonitoringServicesSearchParam({ tab: MonitoredServiceEnum.Configurations })}`
-      return (
-        <Card className={css.cardContainer}>
-          {content?.length ? (
-            <TableV2
-              onRowClick={showDrawer}
-              sortable={true}
-              columns={columns}
-              data={content}
-              pagination={{
-                pageSize,
-                pageIndex,
-                pageCount: totalPages,
-                itemCount: totalItems,
-                gotoPage: setPage
-              }}
-            />
-          ) : (
-            <Container className={css.noData}>
-              <NoDataCard
-                button={<Link to={configurationsTabRoute}>{getString('cv.changeSource.configureChangeSource')}</Link>}
-                message={getString('cv.changeSource.noChangeSource')}
-                image={noDataImage}
-              />
-            </Container>
-          )}
-        </Card>
-      )
-    } else if (!content?.length) {
-      return (
-        <Card className={css.cardContainer}>
-          <Container className={css.noData}>
-            <NoDataCard message={getString('cv.monitoredServices.noAvailableData')} image={noDataImage} />
-          </Container>
-        </Card>
-      )
-    } else {
-      return (
-        <Card className={css.cardContainer}>
-          <TableV2
-            onRowClick={info => {
-              showDrawer(info)
-            }}
-            sortable={true}
-            columns={columns}
-            data={content}
-            pagination={{
-              pageSize,
-              pageIndex,
-              pageCount: totalPages,
-              itemCount: totalItems,
-              gotoPage: setPage
-            }}
-          />
-        </Card>
-      )
-    }
+  if (loading) {
+    return (
+      <ChangesTableWrapper {...wrapperProps}>
+        <Container height="100%" flex={{ justifyContent: 'center' }}>
+          <Icon name="steps-spinner" color={Color.GREY_400} size={30} />
+        </Container>
+      </ChangesTableWrapper>
+    )
+  }
+
+  if (error) {
+    return (
+      <ChangesTableWrapper {...wrapperProps}>
+        <PageError message={getErrorMessage(error)} onClick={() => refetch()} />
+      </ChangesTableWrapper>
+    )
+  }
+
+  const configurationsTabRoute =
+    routes.toCVAddMonitoringServicesEdit({
+      accountId,
+      projectIdentifier,
+      orgIdentifier,
+      identifier,
+      module: 'cv'
+    }) + getCVMonitoringServicesSearchParam({ tab: MonitoredServiceEnum.Configurations })
+
+  if (!content.length && !hasChangeSource) {
+    return (
+      <ChangesTableWrapper {...wrapperProps}>
+        <NoDataCard
+          image={noDataImage}
+          containerClassName={css.noDataContainer}
+          message={getString('cv.changeSource.noChangeSource')}
+          button={<Link to={configurationsTabRoute}>{getString('cv.changeSource.configureChangeSource')}</Link>}
+        />
+      </ChangesTableWrapper>
+    )
+  }
+
+  if (!content.length) {
+    return (
+      <ChangesTableWrapper {...wrapperProps}>
+        <NoDataCard
+          image={noDataImage}
+          containerClassName={css.noDataContainer}
+          message={getString('cv.monitoredServices.noAvailableData')}
+        />
+      </ChangesTableWrapper>
+    )
   }
 
   return (
-    <>
-      <Text font={{ weight: 'bold', size: 'normal' }} padding={{ bottom: 'medium' }} tooltipProps={{ dataTooltipId }}>
-        {getString('changes')}({totalItems})
-      </Text>
-      {renderContent()}
-    </>
+    <ChangesTableWrapper {...wrapperProps}>
+      <Layout.Vertical height="100%">
+        <Container className={css.tableContainer}>
+          <TableV2 sortable data={content} columns={columns} onRowClick={showDrawer} />
+        </Container>
+        <Container padding={{ left: 'medium', right: 'medium' }}>
+          <Pagination
+            pageSize={pageSize}
+            pageIndex={pageIndex}
+            pageCount={totalPages}
+            itemCount={totalItems}
+            gotoPage={setPage}
+          />
+        </Container>
+      </Layout.Vertical>
+    </ChangesTableWrapper>
   )
 }

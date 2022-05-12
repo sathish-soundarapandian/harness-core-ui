@@ -10,7 +10,7 @@ import { Container, Layout, Pagination } from '@wings-software/uicore'
 import { defaultTo } from 'lodash-es'
 import { TemplateCard } from '@templates-library/components/TemplateCard/TemplateCard'
 import type { TemplateSummaryResponse } from 'services/template-ng'
-import type { TemplatesViewProps } from '@templates-library/pages/TemplatesPage/views/TemplatesView'
+import type { TemplatesViewProps } from '@templates-library/pages/TemplatesPage/views/TemplatesView/TemplatesView'
 import css from './TemplatesGridView.module.scss'
 
 export const TemplatesGridView: React.FC<TemplatesViewProps> = (props): JSX.Element => {

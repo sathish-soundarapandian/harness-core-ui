@@ -12,6 +12,7 @@ import { OpenshiftParamManifestSource } from '@cd/components/PipelineSteps/K8sSe
 import { KustomizeManifestSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/KustomizeManifestSource/KustomizeManifestSource'
 import { KustomizePatchesManifestSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/KustomizePatchesManifestSource/KustomizePatchesManifestSource'
 import { HelmChartManifestSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/HelmChartManifestSource/HelmChartManifestSource'
+import { ServerlessAwsLambdaManifestSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/ServerlessAwsLambdaManifestSource/ServerlessAwsLambdaManifestSource'
 import type { ManifestSourceBase } from './ManifestSourceBase'
 
 export class ManifestSourceBaseFactory {
@@ -44,5 +45,6 @@ manifestSourceBaseFactory.registerManifestSource(new OpenshiftParamManifestSourc
 manifestSourceBaseFactory.registerManifestSource(new KustomizeManifestSource())
 manifestSourceBaseFactory.registerManifestSource(new KustomizePatchesManifestSource())
 manifestSourceBaseFactory.registerManifestSource(new HelmChartManifestSource())
+manifestSourceBaseFactory.registerManifestSource(new ServerlessAwsLambdaManifestSource())
 
 export default manifestSourceBaseFactory

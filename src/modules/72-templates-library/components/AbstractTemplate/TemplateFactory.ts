@@ -22,13 +22,6 @@ export class TemplateFactory {
     this.templateBank.set(template.getType(), template as Template<unknown>)
   }
 
-  deregisterStep(type: string): void {
-    const deletedTemplate = this.templateBank.get(type)
-    if (deletedTemplate) {
-      this.templateBank.delete(type)
-    }
-  }
-
   getTemplate<T>(type: string): Template<T> | undefined {
     return this.templateBank.get(type) as Template<T>
   }

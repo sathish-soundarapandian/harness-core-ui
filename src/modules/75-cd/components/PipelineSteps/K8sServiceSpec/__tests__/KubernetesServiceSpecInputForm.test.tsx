@@ -110,7 +110,6 @@ describe('DOCKER', () => {
           stepViewType={StepViewType.InputSet}
           template={{
             artifacts: {
-              metadata: 'artifactmetadata',
               primary: {
                 type: 'DockerRegistry',
                 spec: {
@@ -145,7 +144,6 @@ describe('DOCKER', () => {
           readonly={true}
           template={{
             artifacts: {
-              metadata: 'artifactmetadata',
               primary: {
                 type: 'DockerRegistry',
                 spec: {
@@ -179,7 +177,6 @@ describe('DOCKER', () => {
           stepViewType={StepViewType.InputSet}
           template={{
             artifacts: {
-              metadata: 'artifactmetadata',
               primary: {
                 type: 'DockerRegistry',
                 spec: {
@@ -236,7 +233,6 @@ describe('ECR', () => {
           stepViewType={StepViewType.InputSet}
           template={{
             artifacts: {
-              metadata: 'artifactmetadata',
               primary: {
                 type: 'Ecr',
                 spec: {
@@ -271,7 +267,6 @@ describe('ECR', () => {
           readonly={true}
           template={{
             artifacts: {
-              metadata: 'artifactmetadata',
               primary: {
                 type: 'Ecr',
                 spec: {
@@ -305,7 +300,6 @@ describe('ECR', () => {
           stepViewType={StepViewType.InputSet}
           template={{
             artifacts: {
-              metadata: 'artifactmetadata',
               primary: {
                 type: 'Ecr',
                 spec: {
@@ -361,7 +355,6 @@ describe('GCR', () => {
           stepViewType={StepViewType.InputSet}
           template={{
             artifacts: {
-              metadata: 'artifactmetadata',
               primary: {
                 type: 'Gcr',
                 spec: {
@@ -396,7 +389,6 @@ describe('GCR', () => {
           readonly={true}
           template={{
             artifacts: {
-              metadata: 'artifactmetadata',
               primary: {
                 type: 'Gcr',
                 spec: {
@@ -430,7 +422,6 @@ describe('GCR', () => {
           stepViewType={StepViewType.InputSet}
           template={{
             artifacts: {
-              metadata: 'artifactmetadata',
               primary: {
                 type: 'Gcr',
                 spec: {
@@ -519,7 +510,7 @@ describe('VARIABLES', () => {
       </Formik>
     )
 
-    await waitFor(() => expect(queryByText('variablesText')).toBeTruthy())
+    await waitFor(() => expect(queryByText('common.variables')).toBeTruthy())
     expect(container).toMatchSnapshot('variables with default value')
   })
 })
@@ -576,7 +567,6 @@ describe('VALIDATIONS', () => {
         ref={ref}
         template={{
           artifacts: {
-            metadata: 'artifactmetadata',
             primary: {
               type: 'DockerRegistry',
               spec: {
@@ -592,7 +582,6 @@ describe('VALIDATIONS', () => {
         }}
         initialValues={{
           artifacts: {
-            metadata: 'artifactmetadata',
             primary: {
               type: 'DockerRegistry',
               spec: {
@@ -625,7 +614,6 @@ describe('VALIDATIONS', () => {
         ref={ref}
         template={{
           artifacts: {
-            metadata: 'artifactmetadata',
             primary: {
               type: 'DockerRegistry',
               spec: {
@@ -641,7 +629,6 @@ describe('VALIDATIONS', () => {
         }}
         initialValues={{
           artifacts: {
-            metadata: 'artifactmetadata',
             primary: {
               type: 'DockerRegistry',
               spec: {
@@ -674,7 +661,6 @@ describe('VALIDATIONS', () => {
         ref={ref}
         template={{
           artifacts: {
-            metadata: 'artifactmetadata',
             primary: {
               type: 'DockerRegistry',
               spec: {
@@ -690,7 +676,6 @@ describe('VALIDATIONS', () => {
         }}
         initialValues={{
           artifacts: {
-            metadata: 'artifactmetadata',
             primary: {
               type: 'DockerRegistry',
               spec: {
@@ -1043,7 +1028,6 @@ describe('INPUT VARIABLE VIEW', () => {
           customStepProps={{
             variablesData: {
               artifacts: {
-                metadata: 'artifactmetadata',
                 primary: {
                   type: 'Gcr',
                   spec: {

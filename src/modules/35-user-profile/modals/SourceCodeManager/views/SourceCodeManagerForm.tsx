@@ -124,7 +124,7 @@ const RenderAuthSection: React.FC<RenderAuthSectionProps> = props => {
             value: AuthTypes.AWSCredentials
           }
         ]
-      case SourceCodeTypes.AZURE_DEV_OPS:
+      case SourceCodeTypes.AZURE_REPO:
         return [
           {
             label: getString('usernamePassword'),
@@ -197,7 +197,7 @@ const SourceCodeManagerForm: React.FC<SourceCodeManagerProps> = props => {
     [SourceCodeTypes.GITHUB]: SourceCodeTypes.GITHUB,
     [SourceCodeTypes.GITLAB]: SourceCodeTypes.GITLAB,
     [SourceCodeTypes.AWS_CODE_COMMIT]: SourceCodeTypes.AWS_CODE_COMMIT,
-    [SourceCodeTypes.AZURE_DEV_OPS]: SourceCodeTypes.AZURE_DEV_OPS
+    [SourceCodeTypes.AZURE_REPO]: SourceCodeTypes.AZURE_REPO
   }
 
   const handleCreate = async (dataToSubmit: SourceCodeManagerDTO): Promise<void> => {

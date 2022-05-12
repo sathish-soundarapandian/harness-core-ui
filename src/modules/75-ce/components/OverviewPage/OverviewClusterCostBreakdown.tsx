@@ -6,8 +6,9 @@
  */
 
 import React, { useMemo } from 'react'
-import { Container, Text } from '@wings-software/uicore'
+import { Container, Text, Layout } from '@wings-software/uicore'
 import { Link, useParams } from 'react-router-dom'
+import { defaultTo } from 'lodash-es'
 import routes from '@common/RouteDefinitions'
 import {
   Maybe,
@@ -20,8 +21,12 @@ import { useStrings } from 'framework/strings'
 import { getGMTEndDateTime, getGMTStartDateTime } from '@ce/utils/momentUtils'
 import { getTimeFilters } from '@ce/utils/perspectiveUtils'
 import type { TimeRange } from '@ce/pages/overview/OverviewPage'
+import { getEmissionsValue } from '@ce/utils/formatResourceValue'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { CE_COLOR_CONST } from '../CEChart/CEChartOptions'
 import { EfficiencyScore, LEGEND_LIMIT, ListType, Loader, Stats, TableList, VerticalLayout } from './OverviewPageLayout'
+import SustainabilityCard from './SustainabilityCard'
 import css from './OverviewPage.module.scss'
 
 interface ClusterCostBreakdownProps {
@@ -77,6 +82,7 @@ const useClusterCostBreakdown = (timeRange: TimeRange) => {
 const OverviewClusterCostBreakdown = (props: ClusterCostBreakdownProps) => {
   const { getString } = useStrings()
   const { accountId } = useParams<{ accountId: string }>()
+  const sustainabilityEnabled = useFeatureFlag(FeatureFlag.CCM_SUSTAINABILITY)
   const { timeRange, defaultClusterPerspectiveId } = props
   const {
     fetching,
@@ -90,7 +96,7 @@ const OverviewClusterCostBreakdown = (props: ClusterCostBreakdownProps) => {
   }
 
   return (
-    <div className={css.clusterCost}>
+    <Layout.Vertical spacing="small" className={css.clusterCost}>
       <VerticalLayout
         title={getString('ce.overview.cardtitles.clusterBreakdown')}
         chartData={chartData}
@@ -125,7 +131,16 @@ const OverviewClusterCostBreakdown = (props: ClusterCostBreakdownProps) => {
           </div>
         }
       />
-    </div>
+      {sustainabilityEnabled && (
+        <SustainabilityCard
+          title={getString('ce.overview.sustainability.fromClusterTitle')}
+          firstColValue={getEmissionsValue(totalCost.value || 0)}
+          firstColText={getString('ce.allClusters')}
+          secondColValue={getEmissionsValue(defaultTo(chartData[0]?.value, 0) + defaultTo(chartData[2]?.value, 0))}
+          secondColText={getString('ce.overview.sustainability.idleAndUnallocatedClusters')}
+        />
+      )}
+    </Layout.Vertical>
   )
 }
 

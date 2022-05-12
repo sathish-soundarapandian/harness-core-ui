@@ -209,4 +209,21 @@ describe('Change table', () => {
 
     expect(container).toMatchSnapshot()
   })
+
+  test('should verify container should not be a Card', () => {
+    const { container } = render(
+      <TestWrapper>
+        <ChangesTable
+          isCardView={false}
+          hasChangeSource
+          startTime={1}
+          endTime={2}
+          serviceIdentifier={'srv'}
+          environmentIdentifier={'env'}
+        />
+      </TestWrapper>
+    )
+
+    expect(container.querySelector('.bp3-card')).not.toBeInTheDocument()
+  })
 })

@@ -21,7 +21,7 @@ import cx from 'classnames'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { getConnectorNameFromValue, getStatus } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
-import type { SidecarArtifactWrapper } from 'services/cd-ng'
+import type { PrimaryArtifact, SidecarArtifactWrapper } from 'services/cd-ng'
 import {
   ArtifactIconByType,
   ENABLED_ARTIFACT_TYPES,
@@ -30,6 +30,15 @@ import {
 import type { ArtifactListViewProps, ArtifactType } from '../ArtifactInterface'
 import { showConnectorStep } from '../ArtifactUtils'
 import css from '../ArtifactsSelection.module.scss'
+
+const getPrimaryArtifactLocation = (primaryArtifact: PrimaryArtifact): string => {
+  return (
+    primaryArtifact.spec.imagePath ??
+    primaryArtifact.spec.artifactPath ??
+    primaryArtifact.spec.artifactPathFilter ??
+    primaryArtifact.spec.repository
+  )
+}
 
 function ArtifactRepositoryTooltip({
   artifactType,
@@ -67,7 +76,8 @@ function ArtifactListView({
   overrideSetIdentifier,
   removePrimary,
   removeSidecar,
-  addNewArtifact
+  addNewArtifact,
+  allowSidecar = true
 }: ArtifactListViewProps): React.ReactElement {
   const { getString } = useStrings()
   const { color: primaryConnectorColor } = getStatus(
@@ -129,9 +139,7 @@ function ArtifactListView({
                 </div>
                 <div>
                   <Text width={340} lineClamp={1} style={{ color: Color.GREY_500 }}>
-                    <span className={css.noWrap}>
-                      {primaryArtifact.spec.imagePath ?? primaryArtifact.spec.artifactPath}
-                    </span>
+                    <span className={css.noWrap}>{getPrimaryArtifactLocation(primaryArtifact)}</span>
                   </Text>
                 </div>
                 {overrideSetIdentifier?.length === 0 && !isReadonly && (
@@ -207,7 +215,9 @@ function ArtifactListView({
                     </div>
                     <div className={css.locationField}>
                       <Text width={340} lineClamp={1} style={{ color: Color.GREY_500 }}>
-                        <span className={css.noWrap}>{sidecar?.spec.imagePath ?? sidecar?.spec.artifactPath}</span>
+                        <span className={css.noWrap}>
+                          {sidecar?.spec.imagePath ?? sidecar?.spec.artifactPath ?? sidecar?.spec.repository}
+                        </span>
                       </Text>
                     </div>
                     {overrideSetIdentifier?.length === 0 && !isReadonly && (
@@ -249,7 +259,7 @@ function ArtifactListView({
             text={getString('pipelineSteps.serviceTab.artifactList.addPrimary')}
           />
         )}
-        {!overrideSetIdentifier?.length && !isReadonly && (
+        {!overrideSetIdentifier?.length && !isReadonly && allowSidecar && (
           <Button
             className={css.addArtifact}
             id="add-artifact"

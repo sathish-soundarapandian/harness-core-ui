@@ -15,6 +15,7 @@ declare const styles: {
   readonly spacer: string
   readonly stageDropDown: string
   readonly stageDropDownTab: string
+  readonly stepGroup: string
   readonly tab: string
   readonly tabExecution: string
   readonly templateNameDialog: string

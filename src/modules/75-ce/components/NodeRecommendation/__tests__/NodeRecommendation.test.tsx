@@ -13,6 +13,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import MockRecommendationData from '@ce/pages/node-recommendation-details/__test__/NodeRecommendationResponse.json'
 import type {
   NodeRecommendationDto,
+  RecommendationItemDto,
   RecommendationOverviewStats,
   RecommendNodePoolClusterRequest
 } from 'services/ce/services'
@@ -171,6 +172,7 @@ describe('test cases for node recommendations details', () => {
     const { container, getByTestId, getByText, queryByText } = render(
       <TestWrapper>
         <NodeRecommendationDetails
+          nodePoolData={MockRecommendationData.data.recommendationsV2.items[0] as RecommendationItemDto}
           recommendationDetails={MockRecommendationData.data.recommendationDetails as NodeRecommendationDto}
           recommendationName="MOCK_RECOMMENDATION"
           recommendationStats={MockRecommendationData.data.recommendationStatsV2 as RecommendationOverviewStats}
@@ -245,6 +247,7 @@ describe('test cases for node recommendations details', () => {
     const { getByTestId, queryByText } = render(
       <TestWrapper>
         <NodeRecommendationDetails
+          nodePoolData={MockRecommendationData.data.recommendationsV2.items[0] as RecommendationItemDto}
           recommendationDetails={MockRecommendationData.data.recommendationDetails as NodeRecommendationDto}
           recommendationName="MOCK_RECOMMENDATION"
           recommendationStats={MockRecommendationData.data.recommendationStatsV2 as RecommendationOverviewStats}
@@ -271,6 +274,7 @@ describe('test cases for node recommendations details', () => {
     const { container } = render(
       <TestWrapper>
         <NodeRecommendationDetails
+          nodePoolData={MockRecommendationData.data.recommendationsV2.items[0] as RecommendationItemDto}
           recommendationDetails={MockRecommendationData.data.recommendationDetails as NodeRecommendationDto}
           recommendationName="MOCK_RECOMMENDATION"
           recommendationStats={MockRecommendationData.data.recommendationStatsV2 as RecommendationOverviewStats}
@@ -287,6 +291,7 @@ describe('test cases for node recommendations details', () => {
     const { container } = render(
       <TestWrapper>
         <NodeRecommendationDetails
+          nodePoolData={MockRecommendationData.data.recommendationsV2.items[0] as RecommendationItemDto}
           recommendationDetails={MockRecommendationData.data.recommendationDetails as NodeRecommendationDto}
           recommendationName="MOCK_RECOMMENDATION"
           recommendationStats={MockRecommendationData.data.recommendationStatsV2 as RecommendationOverviewStats}
@@ -303,6 +308,7 @@ describe('test cases for node recommendations details', () => {
     const { container } = render(
       <TestWrapper>
         <NodeRecommendationDetails
+          nodePoolData={MockRecommendationData.data.recommendationsV2.items[0] as RecommendationItemDto}
           recommendationDetails={{} as NodeRecommendationDto}
           recommendationName="MOCK_RECOMMENDATION"
           recommendationStats={{} as RecommendationOverviewStats}

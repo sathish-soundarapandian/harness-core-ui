@@ -11,7 +11,7 @@ import { Container, Text } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { useGetPipelinedHealth } from 'services/pipeline-ng'
+import { useFetchPipelineHealth } from 'services/pipeline-ng'
 import type { PipelineType, ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
 import { SummaryCard } from '../CIDashboardSummaryCards/CIDashboardSummaryCards'
 import { RangeSelectorWithTitle } from '../RangeSelector'
@@ -23,7 +23,7 @@ export default function PipelineSummaryCards() {
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } =
     useParams<PipelineType<ExecutionPathProps>>()
   const [range, setRange] = useState([Date.now() - 30 * 24 * 60 * 60000, Date.now()])
-  const { data, loading, error } = useGetPipelinedHealth({
+  const { data, loading, error } = useFetchPipelineHealth({
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,

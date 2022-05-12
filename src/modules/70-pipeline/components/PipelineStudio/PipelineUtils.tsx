@@ -14,6 +14,7 @@ import type { UseStringsReturn } from 'framework/strings'
 
 import type { PipelineInfoConfig, StageElementConfig } from 'services/cd-ng'
 import { StageType } from '@pipeline/utils/stageHelpers'
+import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
 export interface NodeClasses {
   primary?: string
@@ -287,3 +288,5 @@ export const getPipelineTree = (
   }
   return returnNodes
 }
+
+export const isContextTypeNotStageTemplate = (contextType?: string) => contextType !== PipelineContextType.StageTemplate

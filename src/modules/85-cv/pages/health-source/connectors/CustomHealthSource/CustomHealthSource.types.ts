@@ -48,7 +48,7 @@ export type MapCustomHealthToService = {
 }
 
 export interface onSubmitCustomHealthSourceInterface {
-  formikProps: FormikProps<MapCustomHealthToService | undefined>
+  formikProps: FormikProps<MapCustomHealthToService>
   createdMetrics: string[]
   selectedMetricIndex: number
   mappedMetrics: Map<string, CustomMappedMetric>

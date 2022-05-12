@@ -34,7 +34,8 @@ import css from './ExecutionHeader.module.scss'
 export function ExecutionHeader(): React.ReactElement {
   const { orgIdentifier, projectIdentifier, executionIdentifier, accountId, pipelineIdentifier, module } =
     useParams<PipelineType<ExecutionPathProps>>()
-  const { refetch, pipelineExecutionDetail, selectedStageId, selectedStepId, allNodeMap } = useExecutionContext()
+  const { refetch, pipelineExecutionDetail, selectedStageId, selectedStepId, allNodeMap, isPipelineInvalid } =
+    useExecutionContext()
   const { getString } = useStrings()
   const { pipelineExecutionSummary = {} } = pipelineExecutionDetail || {}
   const history = useHistory()
@@ -158,6 +159,7 @@ export function ExecutionHeader(): React.ReactElement {
               branch: pipelineExecutionSummary?.gitDetails?.branch,
               stagesExecuted: pipelineExecutionSummary?.stagesExecuted
             }}
+            isPipelineInvalid={isPipelineInvalid}
             canEdit={canEdit}
             showEditButton={false}
             canExecute={canExecute}

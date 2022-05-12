@@ -38,6 +38,8 @@ import type { ProjectPathProps, AccountPathProps } from '@common/interfaces/Rout
 import { useToaster } from '@common/exports'
 import { setSecretField } from '@secrets/utils/SecretField'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { FeatureFlag } from '@common/featureFlags'
+import { useConnectorGovernanceModal } from '@connectors/hooks/useConnectorGovernanceModal'
 import css from '../commonSteps/ConnectorCommonStyles.module.scss'
 
 interface AWSCCAuthStepProps extends StepProps<ConnectorConfigDTO> {
@@ -61,7 +63,10 @@ export default function AWSCCAuthStep(props: AWSCCAuthStepProps) {
   })
   const { mutate: createConnector } = useCreateConnector({ queryParams: { accountIdentifier: accountId } })
   const { mutate: updateConnector } = useUpdateConnector({ queryParams: { accountIdentifier: accountId } })
-
+  const { hideOrShowGovernanceErrorModal } = useConnectorGovernanceModal({
+    errorOutOnGovernanceWarning: false,
+    featureFlag: FeatureFlag.OPA_CONNECTOR_GOVERNANCE
+  })
   useEffect(() => {
     ;(async () => {
       if (props.isEditMode) {
@@ -89,17 +94,20 @@ export default function AWSCCAuthStep(props: AWSCCAuthStepProps) {
     try {
       modalErrorHandler?.hide()
       setIsSaving(true)
-      let response
-      if (props.isEditMode) {
-        response = await updateConnector(buildAWSCodeCommitPayload(formData))
-        showSuccess(getString('connectors.successfullUpdate', { name: formData.name }))
-      } else {
-        response = await createConnector(buildAWSCodeCommitPayload(formData))
+      const response = props.isEditMode
+        ? await updateConnector(buildAWSCodeCommitPayload(formData))
+        : await createConnector(buildAWSCodeCommitPayload(formData))
+      if (!props.isEditMode) {
         props.setIsEditMode(true)
-        showSuccess(getString('connectors.successfullCreate', { name: formData.name }))
       }
-      props.onSuccess?.(response.data)
-      props.nextStep?.({ ...props.prevStepData, ...formData })
+      const { canGoToNextStep } = await hideOrShowGovernanceErrorModal(response)
+      if (canGoToNextStep) {
+        props.isEditMode
+          ? showSuccess(getString('connectors.successfullUpdate', { name: formData.name }))
+          : showSuccess(getString('connectors.successfullCreate', { name: formData.name }))
+        props.onSuccess?.(response.data)
+        props.nextStep?.({ ...props.prevStepData, ...formData })
+      }
     } catch (e) {
       modalErrorHandler?.showDanger(getRBACErrorMessage(e))
     } finally {

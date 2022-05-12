@@ -169,6 +169,7 @@ exports[`smtp details create smtp details and test 1`] = `
             class="StyledProps--font StyledProps--main smtpMdlContainer"
           >
             <form
+              action="#"
               class="FormikForm--main"
             >
               <div>
@@ -490,6 +491,7 @@ exports[`smtp details render smtp creation dialog 1`] = `
             class="StyledProps--font StyledProps--main smtpMdlContainer"
           >
             <form
+              action="#"
               class="FormikForm--main"
             >
               <div>

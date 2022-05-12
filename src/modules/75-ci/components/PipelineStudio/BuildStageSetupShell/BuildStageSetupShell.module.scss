@@ -19,6 +19,12 @@
 
   .fullHeight {
     height: 100%;
+    &.stepGroup {
+      :global(.graphActions) {
+        position: fixed;
+        right: calc(64px + var(--spacing-large));
+      }
+    }
   }
   &.tab-execution {
     :global(.bp3-tab-panel) {

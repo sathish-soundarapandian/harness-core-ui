@@ -31,7 +31,7 @@ import {
   TemplateConfigModal
 } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import { TagsPopover, useToaster } from '@common/components'
-
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import type {
   GitQueryParams,
@@ -82,6 +82,7 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
   const history = useHistory()
   const [versionOptions, setVersionOptions] = React.useState<SelectOption[]>([])
   const { showSuccess, showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
 
   const { mutate: updateStableTemplate, loading: updateStableTemplateLoading } = useUpdateStableTemplate({
@@ -205,7 +206,7 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
       await fetchTemplate({ forceFetch: true, forceUpdate: true })
     } catch (error) {
       showError(
-        error?.message || getString('common.template.updateTemplate.errorWhileUpdating'),
+        getRBACErrorMessage(error) || getString('common.template.updateTemplate.errorWhileUpdating'),
         undefined,
         'template.save.template.error'
       )

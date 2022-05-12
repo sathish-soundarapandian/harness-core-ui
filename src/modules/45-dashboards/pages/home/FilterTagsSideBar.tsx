@@ -8,7 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { Button, Container, Layout, Text } from '@wings-software/uicore'
+import { Button, Container, Layout, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useGetTags } from '@dashboards/services/CustomDashboardsService'

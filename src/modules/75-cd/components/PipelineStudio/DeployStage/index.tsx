@@ -12,7 +12,7 @@ import { stagesCollection } from '@pipeline/components/PipelineStudio/Stages/Sta
 import type { StageAttributes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { DeployStage } from './DeployStage'
 
-const getStageAttributes = (getString: UseStringsReturn['getString']): StageAttributes => ({
+export const getStageAttributes = (getString: UseStringsReturn['getString']): StageAttributes => ({
   name: getString('pipelineSteps.deploy.create.deployStageName'),
   type: StageType.DEPLOY,
   icon: 'cd-main',
@@ -21,7 +21,7 @@ const getStageAttributes = (getString: UseStringsReturn['getString']): StageAttr
   openExecutionStrategy: true
 })
 
-const getStageEditorImplementation = (isEnabled: boolean, getString: UseStringsReturn['getString']) => (
+export const getStageEditorImplementation = (isEnabled: boolean, getString: UseStringsReturn['getString']) => (
   <DeployStage
     icon={'cd-main'}
     hoverIcon={'deploy-stage'}

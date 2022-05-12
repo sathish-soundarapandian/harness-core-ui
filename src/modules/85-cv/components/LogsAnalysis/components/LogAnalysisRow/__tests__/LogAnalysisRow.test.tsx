@@ -8,22 +8,41 @@
 import React from 'react'
 import { render, waitFor, screen, fireEvent } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import * as cvService from 'services/cv'
 import { LogAnalysisRow } from '../LogAnalysisRow'
-import { mockedLogAnalysisData } from './LogAnalysisRow.mocks'
+import { mockedLogAnalysisData, mockLogsCall } from './LogAnalysisRow.mocks'
 import type { LogAnalysisRowData, LogAnalysisRowProps } from '../LogAnalysisRow.types'
 import * as utils from '../LogAnalysisRow.utils'
 
 const WrapperComponent = (props: LogAnalysisRowProps): JSX.Element => {
   return (
-    <TestWrapper>
+    <TestWrapper
+      path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/pipeline/executions/:executionId/pipeline"
+      pathParams={{
+        accountId: '1234_accountId',
+        projectIdentifier: '1234_project',
+        orgIdentifier: '1234_ORG',
+        executionId: 'Test_execution'
+      }}
+    >
       <LogAnalysisRow {...props} />
     </TestWrapper>
   )
 }
 
+const fetchLogsAnalysisData = jest.fn()
+
+jest.spyOn(cvService, 'useGetVerifyStepDeploymentLogAnalysisRadarChartResult').mockReturnValue({
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  data: mockLogsCall,
+  refetch: fetchLogsAnalysisData
+})
+
 describe('Unit tests for LogAnalysisRow', () => {
   const initialProps = {
-    data: mockedLogAnalysisData.resource.content as LogAnalysisRowData[]
+    data: mockedLogAnalysisData.resource.content as LogAnalysisRowData[],
+    goToPage: jest.fn()
   }
 
   test('Verify if Logs Record Table is rendered correctly', async () => {
@@ -34,30 +53,66 @@ describe('Unit tests for LogAnalysisRow', () => {
     )
   })
 
-  test('Verify if clicking on the row opens the slider with complete details', async () => {
-    const { getByText, queryByText } = render(<WrapperComponent {...initialProps} />)
+  test('Verify if clicking on the row opens the slider with complete details', () => {
+    render(<WrapperComponent {...initialProps} />)
     const firstRow = screen.getAllByTestId('logs-data-row')[0]
-    expect(queryByText('back')).toBeNull()
-    await waitFor(() => {
-      fireEvent.click(firstRow.childNodes[0].childNodes[0])
-    })
-    expect(getByText('back')).toBeDefined()
-    expect(getByText('pipeline.verification.logs.clusterType')).toBeDefined()
-    expect(getByText('pipeline.verification.logs.risk')).toBeDefined()
-    expect(getByText('pipeline.verification.logs.sampleMessage')).toBeDefined()
-    expect(getByText('pipeline.verification.logs.messageCount')).toBeDefined()
-    expect(getByText('pipeline.verification.logs.messageFrequency')).toBeDefined()
+
+    expect(screen.queryByTestId('LogAnalysis_detailsDrawer')).not.toBeInTheDocument()
+
+    fireEvent.click(firstRow)
+
+    expect(screen.getByTestId('LogAnalysis_detailsDrawer')).toBeInTheDocument()
+
+    expect(screen.getAllByText('pipeline.verification.logs.eventType')).toHaveLength(2)
+    expect(screen.getByText('cv.sampleMessage')).toBeInTheDocument()
   })
 
   test('Verify if clicking on an error row that it calls onClickErrorTrackingRow', async () => {
     const clickErrorTrackingSpy = jest.spyOn(utils, 'onClickErrorTrackingRow').mockReturnValue()
 
-    const { queryByText } = render(<WrapperComponent isErrorTracking={true} {...initialProps} />)
+    render(<WrapperComponent isErrorTracking={true} {...initialProps} />)
+
     const firstRowError = screen.getAllByTestId('logs-data-row')[0]
     await waitFor(() => {
       fireEvent.click(firstRowError.childNodes[0].childNodes[0])
     })
-    expect(queryByText('back')).toBeNull()
     expect(clickErrorTrackingSpy).toHaveBeenCalled()
+  })
+
+  test('should open the drawer if correct selectedLog is passed as props', () => {
+    const resetSelectedLog = jest.fn()
+    const { rerender } = render(
+      <TestWrapper>
+        <LogAnalysisRow {...initialProps} resetSelectedLog={resetSelectedLog} />
+      </TestWrapper>
+    )
+
+    expect(screen.queryByTestId('LogAnalysis_detailsDrawer')).not.toBeInTheDocument()
+
+    rerender(
+      <TestWrapper>
+        <LogAnalysisRow {...initialProps} selectedLog="abc" resetSelectedLog={resetSelectedLog} />
+      </TestWrapper>
+    )
+
+    expect(fetchLogsAnalysisData).not.toHaveBeenCalled()
+
+    expect(screen.queryByTestId('LogAnalysis_detailsDrawer')).toBeInTheDocument()
+
+    fireEvent.click(screen.getByTestId('DrawerClose_button'))
+
+    expect(resetSelectedLog).toHaveBeenCalled()
+    expect(screen.queryByTestId('LogAnalysis_detailsDrawer')).not.toBeInTheDocument()
+  })
+
+  test('should make API call to fetch logs data if the data is not already present', () => {
+    const resetSelectedLog = jest.fn()
+
+    render(<WrapperComponent {...initialProps} selectedLog="def" resetSelectedLog={resetSelectedLog} />)
+
+    expect(fetchLogsAnalysisData).toHaveBeenCalledWith({
+      queryParams: { accountId: '1234_accountId', clusterId: 'def' }
+    })
+    expect(screen.queryByTestId('LogAnalysis_detailsDrawer')).toBeInTheDocument()
   })
 })

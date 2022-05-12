@@ -138,12 +138,16 @@ exports[`Create Secret Manager Wizard should render form 1`] = `
           <div
             class="Layout--vertical StyledProps--main stepContainer"
           >
-            <h2
-              class="StyledProps--font StyledProps--font-h2 StyledProps--main header"
-              level="2"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="awsConnectorOverview"
             >
-              connectors.ceAws.overview.heading
-            </h2>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-large"
+              >
+                connectors.ceAws.overview.heading
+              </p>
+            </div>
             <div
               style="flex: 1;"
             >
@@ -151,6 +155,7 @@ exports[`Create Secret Manager Wizard should render form 1`] = `
                 class="OverlaySpinner--overlaySpinner"
               >
                 <form
+                  action="#"
                   class="FormikForm--main"
                 >
                   <div>
@@ -272,7 +277,7 @@ exports[`Create Secret Manager Wizard should render form 1`] = `
                         >
                           <span
                             class="Tooltip--acenter"
-                            data-tooltip-id="connectorsCeAwsOverViewForm_awsAccountId"
+                            data-tooltip-id="awsAccountId"
                           >
                             connectors.ceAws.overview.awsAccountId
                           </span>
@@ -588,56 +593,41 @@ exports[`Create Secret Manager Wizard should render form 2`] = `
           <div
             class="Layout--vertical StyledProps--main stepContainer"
           >
-            <h2
-              class="StyledProps--font StyledProps--font-h2 StyledProps--main header"
-              level="2"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="awsConnectorCUR"
             >
-              connectors.ceAws.cur.heading
-            </h2>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-large"
+              >
+                connectors.ceAws.cur.heading
+              </p>
+            </div>
             <p
-              class="StyledProps--font StyledProps--main subHeader"
+              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-variation-body StyledProps--margin-bottom-large"
             >
               connectors.ceAws.cur.subheading
             </p>
-            <div>
-              <span
-                class="StyledProps--font StyledProps--main info StyledProps--font-small StyledProps--color StyledProps--color-primary7 StyledProps--inline"
-                style="display: inline-flex; align-items: center;"
+            <div
+              class="StyledProps--font StyledProps--main instructionPanel"
+            >
+              <ol
+                class="instructionList"
               >
-                <span
-                  class="bp3-icon bp3-icon-info-sign StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
-                  icon="info-sign"
-                >
-                  <svg
-                    data-icon="info-sign"
-                    height="15"
-                    viewBox="0 0 16 16"
-                    width="15"
-                  >
-                    <desc>
-                      info-sign
-                    </desc>
-                    <path
-                      d="M8 0C3.58 0 0 3.58 0 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zM7 3h2v2H7V3zm3 10H6v-1h1V7H6V6h3v6h1v1z"
-                      fill-rule="evenodd"
-                    />
-                  </svg>
-                </span>
-                connectors.ceAws.cur.followInstruction
-              </span>
-              <div
-                class="StyledProps--font StyledProps--main"
-              >
-                <div
-                  class="Layout--vertical StyledProps--main"
-                  style="width: 65%;"
+                <li
+                  class="btnInstruction"
                 >
                   <button
-                    class="bp3-button Button--button StyledProps--font StyledProps--main launchTemplateBut Button--with-current-color Button--withLeftIcon"
+                    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-secondary Button--size Button--small"
                     type="button"
                   >
                     <span
-                      class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--margin-right-xsmall"
+                      class="bp3-button-text"
+                    >
+                      connectors.ceAws.cur.launchTemplate
+                    </span>
+                    <span
+                      class="bp3-icon StyledProps--main StyledProps--margin-left-xsmall"
                       data-icon="main-share"
                     >
                       <svg
@@ -652,20 +642,59 @@ exports[`Create Secret Manager Wizard should render form 2`] = `
                         />
                       </svg>
                     </span>
-                    <span
-                      class="bp3-button-text"
-                    >
-                      connectors.ceAws.cur.launchTemplate
-                    </span>
                   </button>
+                </li>
+                <li
+                  class="undefined"
+                >
                   <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-small"
-                    style="text-align: center;"
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey800"
                   >
-                    connectors.ceAws.cur.login
+                    connectors.ceAws.cur.instructions.i1
                   </p>
-                </div>
-              </div>
+                </li>
+                <li
+                  class="undefined"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey800"
+                  >
+                    connectors.ceAws.cur.instructions.i2
+                    <a
+                      href="https://ngdocs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#step_2_cost_and_usage_report"
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      connectors.ceAws.cur.instructions.i3
+                      <span
+                        class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary7"
+                        data-icon="main-share"
+                      >
+                        <svg
+                          height="16"
+                          viewBox="0 0 14 14"
+                          width="16"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10.5 12.6H1.4V3.5h6.1l1.4-1.4H.7c-.4 0-.7.3-.7.7v10.5c0 .4.3.7.7.7h10.5c.4 0 .7-.3.7-.7V5.1l-1.4 1.4zM13.3 0H8.4c-.4 0-.7.3-.7.7s.3.7.7.7h3.2L6.5 6.5c-.1.1-.2.3-.2.5 0 .4.3.7.7.7.2 0 .4-.1.5-.2l5.1-5.1v3.2c0 .4.3.7.7.7s.7-.3.7-.7V.7c0-.4-.3-.7-.7-.7z"
+                            fill="#4d5969"
+                          />
+                        </svg>
+                      </span>
+                    </a>
+                  </p>
+                </li>
+                <li
+                  class="undefined"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey800"
+                  >
+                    connectors.ceAws.cur.instructions.i4
+                  </p>
+                </li>
+              </ol>
             </div>
             <div
               style="flex: 1;"
@@ -674,6 +703,7 @@ exports[`Create Secret Manager Wizard should render form 2`] = `
                 class="OverlaySpinner--overlaySpinner"
               >
                 <form
+                  action="#"
                   class="FormikForm--main"
                 >
                   <div>
@@ -688,43 +718,9 @@ exports[`Create Secret Manager Wizard should render form 2`] = `
                         >
                           <span
                             class="Tooltip--acenter"
-                            data-tooltip-id="costUsageReportForm_reportName"
+                            data-tooltip-id="reportName"
                           >
-                            <div
-                              class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
-                            >
-                              <span
-                                class="StyledProps--font StyledProps--main StyledProps--inline"
-                              >
-                                connectors.ceAws.cur.reportName
-                              </span>
-                              <span
-                                class="bp3-popover-wrapper"
-                              >
-                                <span
-                                  class="bp3-popover-target"
-                                >
-                                  <span
-                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary5"
-                                    data-icon="info"
-                                    tabindex="0"
-                                  >
-                                    <svg
-                                      height="12"
-                                      viewBox="0 0 12 12"
-                                      width="12"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path
-                                        clip-rule="evenodd"
-                                        d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
-                                        fill-rule="evenodd"
-                                      />
-                                    </svg>
-                                  </span>
-                                </span>
-                              </span>
-                            </div>
+                            connectors.ceAws.cur.reportName
                           </span>
                            
                           <span
@@ -757,43 +753,9 @@ exports[`Create Secret Manager Wizard should render form 2`] = `
                         >
                           <span
                             class="Tooltip--acenter"
-                            data-tooltip-id="costUsageReportForm_s3BucketName"
+                            data-tooltip-id="s3BucketName"
                           >
-                            <div
-                              class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
-                            >
-                              <span
-                                class="StyledProps--font StyledProps--main StyledProps--inline"
-                              >
-                                connectors.ceAws.cur.bucketName
-                              </span>
-                              <span
-                                class="bp3-popover-wrapper"
-                              >
-                                <span
-                                  class="bp3-popover-target"
-                                >
-                                  <span
-                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary5"
-                                    data-icon="info"
-                                    tabindex="0"
-                                  >
-                                    <svg
-                                      height="12"
-                                      viewBox="0 0 12 12"
-                                      width="12"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path
-                                        clip-rule="evenodd"
-                                        d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
-                                        fill-rule="evenodd"
-                                      />
-                                    </svg>
-                                  </span>
-                                </span>
-                              </span>
-                            </div>
+                            connectors.ceAws.cur.bucketName
                           </span>
                            
                           <span
@@ -816,6 +778,14 @@ exports[`Create Secret Manager Wizard should render form 2`] = `
                           </div>
                         </div>
                       </div>
+                      <a
+                        class="noAccountLink"
+                        href="https://newdocs.helpdocs.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#review_aws_access_permissions"
+                        rel="noreferrer"
+                        target="_blank"
+                      >
+                        connectors.ceAws.cur.noAccountLink
+                      </a>
                     </div>
                     <div
                       class="Layout--horizontal Layout--layout-spacing-small StyledProps--main buttonPanel"
@@ -903,208 +873,6 @@ exports[`Create Secret Manager Wizard should render form 2`] = `
           </svg>
         </span>
       </div>
-    </div>
-    <div
-      class="extension"
-    >
-      <div>
-        <div
-          class="StyledProps--font StyledProps--main extention"
-        >
-          <h2
-            class="StyledProps--font StyledProps--font-h2 StyledProps--main header"
-            level="2"
-          >
-            connectors.ceAws.curExtention.heading
-          </h2>
-          <p>
-            connectors.ceAws.curExtention.subtext
-          </p>
-          <ol
-            type="A"
-          >
-            <li>
-              <p
-                style="font-weight: 700;"
-              >
-                connectors.ceAws.curExtention.stepA.heading
-              </p>
-              <ol>
-                <li>
-                  connectors.click
-                   
-                  <span
-                    class="gray"
-                  >
-                    connectors.ceAws.curExtention.stepA.step1.p1
-                  </span>
-                   
-                  connectors.ceAws.curExtention.stepA.step1.p2
-                </li>
-                <li>
-                  connectors.ceAws.curExtention.stepA.step2
-                </li>
-                <li>
-                  connectors.ceAws.curExtention.stepA.step3
-                </li>
-              </ol>
-            </li>
-            <li>
-               
-              <p
-                style="font-weight: 700;"
-              >
-                connectors.ceAws.curExtention.stepB.heading
-              </p>
-              <ol>
-                <li>
-                  connectors.click
-                   
-                  <span
-                    class="gray"
-                  >
-                    connectors.ceAws.curExtention.stepB.step1.p1
-                  </span>
-                   
-                  connectors.ceAws.curExtention.stepB.step1.p2
-                </li>
-                <li>
-                  connectors.ceAws.curExtention.stepB.step2
-                </li>
-                <li>
-                   
-                  connectors.click
-                   
-                  <span
-                    class="gray"
-                  >
-                    next
-                  </span>
-                  connectors.ceAws.curExtention.stepB.step3.p1
-                  <span
-                    class="gray"
-                  >
-                    save
-                  </span>
-                  .
-                </li>
-                <li>
-                   
-                  connectors.ceAws.curExtention.stepB.step4
-                </li>
-                <li>
-                  connectors.ceAws.curExtention.stepB.step5.heading
-                  <ul>
-                    <li>
-                      connectors.ceAws.curExtention.stepB.step5.subStep1.p1
-                       
-                      <span
-                        class="gray"
-                      >
-                        connectors.ceAws.curExtention.stepB.step5.subStep1.p2
-                      </span>
-                    </li>
-                    <li>
-                      connectors.ceAws.curExtention.stepB.step5.subStep2.p1
-                      <span
-                        class="gray"
-                      >
-                        connectors.ceAws.curExtention.stepB.step5.subStep2.p2
-                      </span>
-                    </li>
-                    <li>
-                      connectors.ceAws.curExtention.stepB.step5.subStep3
-                    </li>
-                    <li>
-                      connectors.ceAws.curExtention.stepB.step5.subStep4.p1
-                      <span
-                        class="gray"
-                      >
-                        connectors.ceAws.curExtention.stepB.step5.subStep4.p2
-                      </span>
-                    </li>
-                  </ul>
-                </li>
-                <li>
-                  connectors.click
-                   
-                  <span
-                    class="gray"
-                  >
-                    next
-                  </span>
-                  connectors.ceAws.curExtention.stepB.step6.p1
-                  <span
-                    class="gray"
-                  >
-                    connectors.ceAws.curExtention.stepB.step6.p2
-                  </span>
-                   .
-                </li>
-                <li>
-                  connectors.ceAws.curExtention.stepB.step7
-                </li>
-              </ol>
-            </li>
-          </ol>
-          <p>
-            connectors.ceAws.curExtention.moreHelp.heading
-          </p>
-          <ul>
-            <li>
-              <a>
-                connectors.ceAws.curExtention.moreHelp.step1
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://ngdocs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws"
-                rel="noreferrer"
-                target="_blank"
-              >
-                connectors.ceAws.curExtention.moreHelp.step2
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://docs.aws.amazon.com/cur/latest/userguide/cur-create.html"
-                rel="noreferrer"
-                target="_blank"
-              >
-                connectors.ceAws.curExtention.moreHelp.step3
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/billing-example-policies.html#example-billing-view-reports"
-                rel="noreferrer"
-                target="_blank"
-              >
-                connectors.ceAws.curExtention.moreHelp.step4
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <span
-        class="bp3-icon bp3-icon-chevron-left StyledProps--main closeBtn"
-        icon="chevron-left"
-      >
-        <svg
-          data-icon="chevron-left"
-          height="24"
-          viewBox="0 0 20 20"
-          width="24"
-        >
-          <desc>
-            chevron-left
-          </desc>
-          <path
-            d="M8.41 10l5.29-5.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71l-6 6c-.18.18-.29.43-.29.71 0 .28.11.53.29.71l6 6a1.003 1.003 0 001.42-1.42L8.41 10z"
-            fill-rule="evenodd"
-          />
-        </svg>
-      </span>
     </div>
   </div>
 </div>
@@ -1284,15 +1052,16 @@ exports[`Create Secret Manager Wizard should render form 3`] = `
           <div
             class="Layout--vertical StyledProps--main stepContainer"
           >
-            <h2
-              class="StyledProps--font StyledProps--font-h2 StyledProps--main header"
-              level="2"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="awsConnectorRequirements"
             >
-              connectors.ceAws.crossAccountRoleStep1.heading
-              <span>
-                connectors.ceAws.crossAccountRoleStep1.choosePermissions
-              </span>
-            </h2>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-large"
+              >
+                connectors.ceAws.crossAccountRoleStep1.heading
+              </p>
+            </div>
             <p
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800"
             >
@@ -1301,11 +1070,44 @@ exports[`Create Secret Manager Wizard should render form 3`] = `
             <div
               class="StyledProps--font StyledProps--main"
             >
-              <p
-                class="StyledProps--font StyledProps--main mtblarge StyledProps--font-italic"
+              <div
+                class="Layout--horizontal StyledProps--main infoCard"
               >
-                connectors.ceAws.crossAccountRoleStep1.info
-              </p>
+                <span
+                  class="bp3-icon StyledProps--main infoIcon"
+                  data-icon="info-messaging"
+                >
+                  <svg
+                    fill="none"
+                    height="20"
+                    viewBox="0 0 32 32"
+                    width="20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M16 29.004c-7.18 0-13-5.82-13-13s5.82-13 13-13 13 5.82 13 13-5.82 13-13 13zm-1.499-18.5a1.5 1.5 0 103 0 1.5 1.5 0 00-3 0zm1.5 3.474a1 1 0 00-1 1v6.002a1 1 0 102 0v-6.002a1 1 0 00-1-1z"
+                      fill="#5452F6"
+                      fill-rule="evenodd"
+                    />
+                    <path
+                      clip-rule="evenodd"
+                      d="M16 28.004c-6.627 0-12-5.373-12-12s5.373-12 12-12 12 5.373 12 12-5.373 12-12 12zm-.244-15.011a2.5 2.5 0 11.49 0 2 2 0 011.755 1.985v6.002a2 2 0 01-4 0v-6.002a2 2 0 011.755-1.985zM3 16.004c0 7.18 5.82 13 13 13s13-5.82 13-13-5.82-13-13-13-13 5.82-13 13zm13.001-4a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm-1 2.974a1 1 0 112 0v6.002a1 1 0 11-2 0v-6.002z"
+                      fill="#5452F6"
+                      fill-rule="evenodd"
+                    />
+                    <path
+                      d="M27.598 28.94c.83.358 1.672-.483 1.314-1.314L25.99 20.85a1 1 0 00-1.625-.311l-3.854 3.854a1 1 0 00.31 1.625l6.777 2.922z"
+                      fill="#5452F6"
+                    />
+                  </svg>
+                </span>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey800"
+                >
+                  connectors.ceAws.crossAccountRoleStep1.info
+                </p>
+              </div>
               <div
                 style="flex: 1;"
               >
@@ -1316,7 +1118,7 @@ exports[`Create Secret Manager Wizard should render form 3`] = `
                     class=""
                   >
                     <div
-                      class="bp3-card bp3-interactive bp3-elevation-0 Card--card Card--selected Card--interactive"
+                      class="bp3-card bp3-interactive bp3-elevation-0 Card--card defaultCard Card--selected Card--interactive"
                       data-index="0"
                       tabindex="0"
                     >
@@ -2147,62 +1949,126 @@ exports[`Create Secret Manager Wizard should render form 4`] = `
           <div
             class="Layout--vertical StyledProps--main stepContainer"
           >
-            <h2
-              class="StyledProps--font StyledProps--font-h2 StyledProps--main header"
-              level="2"
-            >
-              connectors.ceAws.crossAccountRoleStep2.heading
-              <span>
-                connectors.ceAws.crossAccountRoleStep2.createRole
-              </span>
-            </h2>
             <div
-              class="infobox"
-              style="margin-bottom: 25px;"
+              class="Text--withDocsTooltip"
+              data-tooltip-id="awsConnectorCreateRole"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-large"
+              >
+                connectors.ceAws.crossAccountRoleStep2.heading
+              </p>
+            </div>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-variation-body StyledProps--margin-bottom-large"
             >
               connectors.ceAws.crossAccountRoleStep2.subHeading
-            </div>
+            </p>
             <div
-              class="StyledProps--font StyledProps--main"
-              style="padding-bottom: 40px;"
+              class="StyledProps--font StyledProps--main instructionPanel"
             >
-              <div
-                class="Layout--vertical StyledProps--main"
-                style="width: 65%;"
+              <ol
+                class="instructionList"
               >
-                <button
-                  class="bp3-button Button--button StyledProps--font StyledProps--main launchTemplateBut Button--with-current-color Button--withLeftIcon"
-                  type="button"
+                <li
+                  class="undefined"
                 >
-                  <span
-                    class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--margin-right-xsmall"
-                    data-icon="main-share"
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey800"
                   >
-                    <svg
-                      height="12"
-                      viewBox="0 0 14 14"
-                      width="12"
-                      xmlns="http://www.w3.org/2000/svg"
+                    connectors.ceAws.crossAccountRoleStep2.instructions.i1
+                    <button
+                      class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-secondary Button--size Button--small"
+                      type="button"
                     >
-                      <path
-                        d="M10.5 12.6H1.4V3.5h6.1l1.4-1.4H.7c-.4 0-.7.3-.7.7v10.5c0 .4.3.7.7.7h10.5c.4 0 .7-.3.7-.7V5.1l-1.4 1.4zM13.3 0H8.4c-.4 0-.7.3-.7.7s.3.7.7.7h3.2L6.5 6.5c-.1.1-.2.3-.2.5 0 .4.3.7.7.7.2 0 .4-.1.5-.2l5.1-5.1v3.2c0 .4.3.7.7.7s.7-.3.7-.7V.7c0-.4-.3-.7-.7-.7z"
-                        fill="#4d5969"
-                      />
-                    </svg>
-                  </span>
-                  <span
-                    class="bp3-button-text"
+                      <span
+                        class="bp3-button-text"
+                      >
+                        connectors.ceAws.crossAccountRoleStep2.launchTemplate
+                      </span>
+                      <span
+                        class="bp3-icon StyledProps--main StyledProps--margin-left-xsmall"
+                        data-icon="main-share"
+                      >
+                        <svg
+                          height="12"
+                          viewBox="0 0 14 14"
+                          width="12"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10.5 12.6H1.4V3.5h6.1l1.4-1.4H.7c-.4 0-.7.3-.7.7v10.5c0 .4.3.7.7.7h10.5c.4 0 .7-.3.7-.7V5.1l-1.4 1.4zM13.3 0H8.4c-.4 0-.7.3-.7.7s.3.7.7.7h3.2L6.5 6.5c-.1.1-.2.3-.2.5 0 .4.3.7.7.7.2 0 .4-.1.5-.2l5.1-5.1v3.2c0 .4.3.7.7.7s.7-.3.7-.7V.7c0-.4-.3-.7-.7-.7z"
+                            fill="#4d5969"
+                          />
+                        </svg>
+                      </span>
+                    </button>
+                  </p>
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey800"
                   >
-                    connectors.ceAws.crossAccountRoleStep2.launchTemplate
-                  </span>
-                </button>
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-small"
-                  style="text-align: center;"
+                    connectors.ceAws.crossAccountRoleStep2.instructions.i2
+                    <a
+                      href=""
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      connectors.ceAws.crossAccountRoleStep2.instructions.templateRedirection
+                    </a>
+                    .)
+                  </p>
+                </li>
+                <li
+                  class="instructionList"
                 >
-                  connectors.ceAws.crossAccountRoleStep2.followInstructions
-                </p>
-              </div>
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey800"
+                  >
+                    connectors.ceAws.crossAccountRoleStep2.instructions.i3
+                  </p>
+                </li>
+                <li
+                  class="instructionList"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey800"
+                  >
+                    connectors.ceAws.cur.instructions.i2
+                    <a
+                      href="https://ngdocs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#step_4_create_cross_account_role"
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      connectors.ceAws.crossAccountRoleStep2.instructions.i4
+                      <span
+                        class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary7"
+                        data-icon="main-share"
+                      >
+                        <svg
+                          height="16"
+                          viewBox="0 0 14 14"
+                          width="16"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10.5 12.6H1.4V3.5h6.1l1.4-1.4H.7c-.4 0-.7.3-.7.7v10.5c0 .4.3.7.7.7h10.5c.4 0 .7-.3.7-.7V5.1l-1.4 1.4zM13.3 0H8.4c-.4 0-.7.3-.7.7s.3.7.7.7h3.2L6.5 6.5c-.1.1-.2.3-.2.5 0 .4.3.7.7.7.2 0 .4-.1.5-.2l5.1-5.1v3.2c0 .4.3.7.7.7s.7-.3.7-.7V.7c0-.4-.3-.7-.7-.7z"
+                            fill="#4d5969"
+                          />
+                        </svg>
+                      </span>
+                    </a>
+                  </p>
+                </li>
+                <li
+                  class="instructionList"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey800"
+                  >
+                    connectors.ceAws.crossAccountRoleStep2.instructions.i5
+                  </p>
+                </li>
+              </ol>
             </div>
             <div
               style="flex: 1;"
@@ -2211,6 +2077,7 @@ exports[`Create Secret Manager Wizard should render form 4`] = `
                 class="OverlaySpinner--overlaySpinner"
               >
                 <form
+                  action="#"
                   class="FormikForm--main"
                 >
                   <div>
@@ -2227,43 +2094,9 @@ exports[`Create Secret Manager Wizard should render form 4`] = `
                         >
                           <span
                             class="Tooltip--acenter"
-                            data-tooltip-id="crossAccountRoleStep2Form_crossAccountRoleArn"
+                            data-tooltip-id="crossAccountRoleArn"
                           >
-                            <div
-                              class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
-                            >
-                              <span
-                                class="StyledProps--font StyledProps--main StyledProps--inline"
-                              >
-                                connectors.ceAws.crossAccountRoleStep2.roleArn
-                              </span>
-                              <span
-                                class="bp3-popover-wrapper"
-                              >
-                                <span
-                                  class="bp3-popover-target"
-                                >
-                                  <span
-                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary5"
-                                    data-icon="info"
-                                    tabindex="0"
-                                  >
-                                    <svg
-                                      height="12"
-                                      viewBox="0 0 12 12"
-                                      width="12"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path
-                                        clip-rule="evenodd"
-                                        d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
-                                        fill-rule="evenodd"
-                                      />
-                                    </svg>
-                                  </span>
-                                </span>
-                              </span>
-                            </div>
+                            connectors.ceAws.crossAccountRoleStep2.roleArn
                           </span>
                            
                           <span
@@ -2296,43 +2129,9 @@ exports[`Create Secret Manager Wizard should render form 4`] = `
                         >
                           <span
                             class="Tooltip--acenter"
-                            data-tooltip-id="crossAccountRoleStep2Form_externalId"
+                            data-tooltip-id="externalId"
                           >
-                            <div
-                              class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
-                            >
-                              <span
-                                class="StyledProps--font StyledProps--main StyledProps--inline"
-                              >
-                                connectors.ceAws.crossAccountRoleStep2.extId
-                              </span>
-                              <span
-                                class="bp3-popover-wrapper"
-                              >
-                                <span
-                                  class="bp3-popover-target"
-                                >
-                                  <span
-                                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary5"
-                                    data-icon="info"
-                                    tabindex="0"
-                                  >
-                                    <svg
-                                      height="12"
-                                      viewBox="0 0 12 12"
-                                      width="12"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path
-                                        clip-rule="evenodd"
-                                        d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
-                                        fill-rule="evenodd"
-                                      />
-                                    </svg>
-                                  </span>
-                                </span>
-                              </span>
-                            </div>
+                            connectors.ceAws.crossAccountRoleStep2.extId
                           </span>
                            
                           <span
@@ -2356,7 +2155,12 @@ exports[`Create Secret Manager Wizard should render form 4`] = `
                         </div>
                       </div>
                     </div>
-                    <a>
+                    <a
+                      class="noAccountLink"
+                      href="https://newdocs.helpdocs.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#review_aws_access_permissions"
+                      rel="noreferrer"
+                      target="_blank"
+                    >
                       connectors.ceAws.crossAccountRoleStep2.dontHaveAccess
                     </a>
                     <div
@@ -2445,111 +2249,6 @@ exports[`Create Secret Manager Wizard should render form 4`] = `
           </svg>
         </span>
       </div>
-    </div>
-    <div
-      class="extension"
-    >
-      <div>
-        <div
-          class="StyledProps--font StyledProps--main extention"
-        >
-          <h2
-            class="StyledProps--font StyledProps--font-h2 StyledProps--main header"
-            level="2"
-          >
-            connectors.ceAws.crossAccountRoleExtention.heading
-          </h2>
-          <p>
-            connectors.ceAws.crossAccountRoleExtention.subHeading
-          </p>
-          <ol>
-            <li>
-              connectors.ceAws.crossAccountRoleExtention.step1.p1
-              <a
-                href=""
-                rel="noreferrer"
-                target="_blank"
-              >
-                connectors.ceAws.crossAccountRoleExtention.step1.p2
-              </a>
-               
-              connectors.ceAws.crossAccountRoleExtention.step1.p3
-            </li>
-            <li>
-              connectors.ceAws.crossAccountRoleExtention.step2.heading
-              <ul>
-                <li>
-                  connectors.ceAws.crossAccountRoleExtention.step2.subStep1
-                </li>
-                <li>
-                  connectors.ceAws.crossAccountRoleExtention.step2.subStep2.p1
-                  <span
-                    class="gray"
-                  >
-                    connectors.ceAws.crossAccountRoleExtention.step2.subStep2.p2
-                  </span>
-                </li>
-              </ul>
-            </li>
-            <li>
-              connectors.ceAws.crossAccountRoleExtention.step3.p1
-               
-              <span
-                class="gray"
-              >
-                connectors.ceAws.crossAccountRoleExtention.step3.p2
-              </span>
-               
-              connectors.ceAws.crossAccountRoleExtention.step3.p3
-              <span
-                class="gray"
-              >
-                connectors.ceAws.crossAccountRoleExtention.step3.p4
-              </span>
-              .
-            </li>
-            <li>
-              connectors.ceAws.crossAccountRoleExtention.step4
-            </li>
-            <li>
-              connectors.ceAws.crossAccountRoleExtention.step5
-            </li>
-          </ol>
-          <p>
-            connectors.ceAws.curExtention.moreHelp.heading
-          </p>
-          <ul>
-            <li>
-              <a
-                href="https://docs.harness.io/article/5ql31pdjcm-enable-continuous-efficiency-for-aws"
-                rel="noreferrer"
-                target="_blank"
-              >
-                connectors.ceAws.curExtention.moreHelp.step2
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <span
-        class="bp3-icon bp3-icon-chevron-left StyledProps--main closeBtn"
-        icon="chevron-left"
-      >
-        <svg
-          data-icon="chevron-left"
-          height="24"
-          viewBox="0 0 20 20"
-          width="24"
-        >
-          <desc>
-            chevron-left
-          </desc>
-          <path
-            d="M8.41 10l5.29-5.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71l-6 6c-.18.18-.29.43-.29.71 0 .28.11.53.29.71l6 6a1.003 1.003 0 001.42-1.42L8.41 10z"
-            fill-rule="evenodd"
-          />
-        </svg>
-      </span>
     </div>
   </div>
 </div>

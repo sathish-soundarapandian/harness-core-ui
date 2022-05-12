@@ -7,12 +7,14 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly checkBox: string
   readonly connectorIcon: string
   readonly formComponent: string
   readonly formContainerStepOne: string
   readonly horizontalFlex: string
   readonly modal: string
   readonly newConnectorButton: string
+  readonly sourceModule: string
   readonly squareCardContainer: string
   readonly tfConfigForm: string
   readonly tfRemoteForm: string

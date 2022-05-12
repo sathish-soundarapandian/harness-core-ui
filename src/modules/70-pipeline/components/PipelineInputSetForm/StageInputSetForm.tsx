@@ -17,8 +17,8 @@ import {
   Container
 } from '@wings-software/uicore'
 import { connect } from 'formik'
-import { FontVariation } from '@harness/design-system'
-import { get, set, isEmpty, pickBy, identity, isNil } from 'lodash-es'
+import { Color, FontVariation } from '@harness/design-system'
+import { get, set, isEmpty, pickBy, identity, isNil, defaultTo } from 'lodash-es'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -34,26 +34,37 @@ import type {
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { FormMultiTypeCheckboxField, Separator } from '@common/components'
-import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
+import { MultiTypeTextField, MultiTypeTextProps } from '@common/components/MultiTypeText/MultiTypeText'
 import MultiTypeListInputSet from '@common/components/MultiTypeListInputSet/MultiTypeListInputSet'
 import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
 import { MultiTypeMapInputSet } from '@common/components/MultiTypeMapInputSet/MultiTypeMapInputSet'
+import { MultiTypeCustomMap } from '@common/components/MultiTypeCustomMap/MultiTypeCustomMap'
+import Volumes from '@pipeline/components/Volumes/Volumes'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
-import { useGitScope } from '@pipeline/utils/CIUtils'
-import { ConnectorRefWidth } from '@pipeline/utils/constants'
+import {
+  getAllowedValuesFromTemplate,
+  getConnectorRefWidth,
+  shouldRenderRunTimeInputViewWithAllowedValues,
+  useGitScope
+} from '@pipeline/utils/CIUtils'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { StringsMap } from 'stringTypes'
+import {
+  getCustomStepProps,
+  getStepTypeByDeploymentType,
+  infraDefinitionTypeMapping
+} from '@pipeline/utils/stageHelpers'
+import type { K8sDirectInfraYaml } from 'services/ci'
 import factory from '../PipelineSteps/PipelineStepFactory'
 import { StepType } from '../PipelineSteps/PipelineStepInterface'
-
 import { CollapseForm } from './CollapseForm'
 import { getStepFromStage } from '../PipelineStudio/StepUtil'
 import { StepWidget } from '../AbstractSteps/StepWidget'
 import { ConditionalExecutionForm } from './StageAdvancedInputSetForm'
-import type { StepViewType } from '../AbstractSteps/Step'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
+import type { StepViewType } from '../AbstractSteps/Step'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './PipelineInputSetForm.module.scss'
 
@@ -242,6 +253,7 @@ export interface StageInputSetFormProps {
   readonly?: boolean
   viewType: StepViewType
   stageIdentifier?: string
+  executionIdentifier?: string
   allowableTypes: MultiTypeInputType[]
 }
 
@@ -254,8 +266,10 @@ function ExecutionWrapperInputSetForm(props: {
   readonly?: boolean
   viewType: StepViewType
   allowableTypes: MultiTypeInputType[]
+  executionIdentifier?: string
 }): JSX.Element {
-  const { stepsTemplate, allValues, values, path, formik, readonly, viewType, allowableTypes } = props
+  const { stepsTemplate, allValues, values, path, formik, readonly, viewType, allowableTypes, executionIdentifier } =
+    props
   return (
     <>
       {stepsTemplate?.map((item, index) => {
@@ -352,6 +366,7 @@ function ExecutionWrapperInputSetForm(props: {
                     headerColor="var(--black)"
                   >
                     <ExecutionWrapperInputSetForm
+                      executionIdentifier={executionIdentifier}
                       stepsTemplate={nodep.stepGroup.steps}
                       formik={formik}
                       readonly={readonly}
@@ -379,6 +394,7 @@ function ExecutionWrapperInputSetForm(props: {
                 headerColor="var(--black)"
               >
                 <ExecutionWrapperInputSetForm
+                  executionIdentifier={executionIdentifier}
                   stepsTemplate={item.stepGroup.steps}
                   formik={formik}
                   readonly={readonly}
@@ -407,6 +423,7 @@ export function StageInputSetFormInternal({
   readonly,
   viewType,
   stageIdentifier,
+  executionIdentifier,
   allowableTypes
 }: StageInputSetFormProps): React.ReactElement {
   const deploymentStageInputSet = get(formik?.values, path, {})
@@ -426,8 +443,96 @@ export function StageInputSetFormInternal({
   const hasContainerSecurityContextFields = containerSecurityContextFields.some(field =>
     deploymentStageTemplateInfraKeys.includes(field)
   )
+  const namePath = isEmpty(path) ? '' : `${path}.`
+
+  const renderMultiTypeInputWithAllowedValues = React.useCallback(
+    ({
+      name,
+      tooltipId,
+      labelKey,
+      placeholderKey,
+      fieldPath
+    }: {
+      name: string
+      tooltipId?: string
+      labelKey: keyof StringsMap
+      placeholderKey?: keyof StringsMap
+      fieldPath: string
+    }) => {
+      if (!name) {
+        return
+      }
+      if (deploymentStageTemplate.infrastructure && fieldPath) {
+        const items = getAllowedValuesFromTemplate(deploymentStageTemplate.infrastructure, fieldPath)
+        return (
+          <FormInput.MultiTypeInput
+            name={name}
+            label={getString(labelKey)}
+            useValue
+            selectItems={items}
+            placeholder={placeholderKey ? getString(placeholderKey) : ''}
+            multiTypeInputProps={{
+              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+              expressions,
+              selectProps: { disabled: readonly, items }
+            }}
+            disabled={readonly}
+            tooltipProps={{ dataTooltipId: tooltipId ?? '' }}
+            style={{ width: 300 }}
+          />
+        )
+      }
+    },
+    [deploymentStageTemplate.infrastructure]
+  )
+
+  const renderMultiTypeTextField = React.useCallback(
+    ({
+      name,
+      tooltipId,
+      labelKey,
+      inputProps,
+      fieldPath
+    }: {
+      name: string
+      tooltipId: string
+      labelKey: keyof StringsMap
+      inputProps: MultiTypeTextProps['multiTextInputProps']
+      fieldPath: string
+    }) => {
+      if (shouldRenderRunTimeInputViewWithAllowedValues(fieldPath, deploymentStageTemplate.infrastructure)) {
+        return renderMultiTypeInputWithAllowedValues({
+          name,
+          tooltipId,
+          labelKey: labelKey,
+          fieldPath
+        })
+      }
+      return (
+        <MultiTypeTextField
+          name={name}
+          label={
+            <Text
+              className={stepCss.inpLabel}
+              color={Color.GREY_600}
+              font={{ size: 'small', weight: 'semi-bold' }}
+              tooltipProps={{
+                dataTooltipId: tooltipId
+              }}
+            >
+              {getString(labelKey)}
+            </Text>
+          }
+          style={{ width: 300 }}
+          multiTextInputProps={inputProps}
+        />
+      )
+    },
+    [deploymentStageTemplate.infrastructure]
+  )
+
   const renderMultiTypeMapInputSet = React.useCallback(
-    (fieldName: string, stringKey: keyof StringsMap): React.ReactElement => (
+    ({ fieldName, stringKey }: { fieldName: string; stringKey: keyof StringsMap }): React.ReactElement => (
       <MultiTypeMapInputSet
         appearance={'minimal'}
         cardStyle={{ width: '50%' }}
@@ -493,7 +598,7 @@ export function StageInputSetFormInternal({
           name={name}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
           }}
           formik={formik}
           multiTypeFieldSelectorProps={{
@@ -544,7 +649,9 @@ export function StageInputSetFormInternal({
                     ? deploymentStageTemplate?.serviceConfig?.stageOverrides
                     : deploymentStageTemplate?.serviceConfig?.serviceDefinition?.spec || {}
                 }
-                type={StepType.K8sServiceSpec}
+                type={getStepTypeByDeploymentType(
+                  defaultTo(deploymentStage?.serviceConfig?.serviceDefinition?.type, '')
+                )}
                 stepViewType={viewType}
                 path={
                   isPropagating
@@ -581,135 +688,129 @@ export function StageInputSetFormInternal({
         <div id={`Stage.${stageIdentifier}.Infrastructure`} className={cx(css.accordionSummary)}>
           <div className={css.inputheader}>{getString('infrastructureText')}</div>
 
-          <div className={css.nestedAccordions} style={{ width: '50%' }}>
+          <div className={cx(css.nestedAccordions, css.infraSection)}>
             {(deploymentStageTemplate.infrastructure as any).type === 'KubernetesDirect' ? (
               <>
-                {(deploymentStageTemplate.infrastructure as any).spec?.connectorRef && (
-                  <Container className={stepCss.bottomMargin3}>
-                    <FormMultiTypeConnectorField
-                      width={ConnectorRefWidth.DefaultView}
-                      name={`${isEmpty(path) ? '' : `${path}.`}infrastructure.spec.connectorRef`}
-                      label={
-                        <Text font={{ variation: FontVariation.FORM_LABEL }}>
-                          {getString('connectors.title.k8sCluster')}
-                        </Text>
-                      }
-                      placeholder={getString('pipelineSteps.build.infraSpecifications.kubernetesClusterPlaceholder')}
-                      accountIdentifier={accountId}
-                      projectIdentifier={projectIdentifier}
-                      orgIdentifier={orgIdentifier}
-                      gitScope={gitScope}
-                      multiTypeProps={{ expressions, disabled: readonly, allowableTypes }}
-                      setRefValue
-                    />
-                  </Container>
-                )}
+                {(deploymentStageTemplate.infrastructure as any).spec?.connectorRef ? (
+                  shouldRenderRunTimeInputViewWithAllowedValues(
+                    'spec.connectorRef',
+                    deploymentStageTemplate.infrastructure
+                  ) ? (
+                    renderMultiTypeInputWithAllowedValues({
+                      name: `${namePath}infrastructure.spec.connectorRef`,
+                      tooltipId: 'connectorRef',
+                      labelKey: 'connectors.title.k8sCluster',
+                      placeholderKey: 'pipelineSteps.build.infraSpecifications.kubernetesClusterPlaceholder',
+                      fieldPath: 'spec.connectorRef'
+                    })
+                  ) : (
+                    <Container className={stepCss.bottomMargin3}>
+                      <FormMultiTypeConnectorField
+                        width={getConnectorRefWidth(viewType)}
+                        name={`${namePath}infrastructure.spec.connectorRef`}
+                        label={
+                          <Text font={{ variation: FontVariation.FORM_LABEL }}>
+                            {getString('connectors.title.k8sCluster')}
+                          </Text>
+                        }
+                        placeholder={getString('pipelineSteps.build.infraSpecifications.kubernetesClusterPlaceholder')}
+                        accountIdentifier={accountId}
+                        projectIdentifier={projectIdentifier}
+                        orgIdentifier={orgIdentifier}
+                        gitScope={gitScope}
+                        multiTypeProps={{ expressions, disabled: readonly, allowableTypes }}
+                        setRefValue
+                      />
+                    </Container>
+                  )
+                ) : null}
                 {(deploymentStageTemplate.infrastructure as any).spec?.namespace && (
-                  <FormInput.MultiTextInput
-                    label={
-                      <Text
-                        font={{ variation: FontVariation.FORM_LABEL }}
-                        tooltipProps={{ dataTooltipId: 'namespace' }}
-                      >
-                        {getString('pipelineSteps.build.infraSpecifications.namespace')}
-                      </Text>
-                    }
-                    name={`${isEmpty(path) ? '' : `${path}.`}infrastructure.spec.namespace`}
-                    multiTextInputProps={{
-                      expressions,
-                      allowableTypes: allowableTypes
-                    }}
-                    disabled={readonly}
-                  />
+                  <Container className={stepCss.bottomMargin3}>
+                    {renderMultiTypeTextField({
+                      name: `${namePath}infrastructure.spec.namespace`,
+                      tooltipId: 'namespace',
+                      labelKey: 'pipelineSteps.build.infraSpecifications.namespace',
+                      inputProps: {
+                        multiTextInputProps: {
+                          expressions,
+                          allowableTypes: allowableTypes
+                        },
+                        disabled: readonly
+                      },
+                      fieldPath: 'spec.namespace'
+                    })}
+                  </Container>
                 )}
               </>
             ) : (deploymentStageTemplate.infrastructure as any).type === 'VM' ? (
               (deploymentStageTemplate.infrastructure as any).spec?.spec?.identifier && (
-                <MultiTypeTextField
-                  label={
-                    <Text
-                      tooltipProps={{ dataTooltipId: 'poolId' }}
-                      font={{ variation: FontVariation.FORM_LABEL }}
-                      margin={{ bottom: 'xsmall' }}
-                    >
-                      {getString('pipeline.buildInfra.poolId')}
-                    </Text>
-                  }
-                  name={`${isEmpty(path) ? '' : `${path}.`}infrastructure.spec.spec.identifier`}
-                  multiTextInputProps={{
-                    multiTextInputProps: { expressions, allowableTypes },
-                    disabled: readonly
-                  }}
-                />
+                <Container className={cx(stepCss.formGroup, stepCss.sm)}>
+                  {renderMultiTypeTextField({
+                    name: `${namePath}infrastructure.spec.spec.identifier`,
+                    tooltipId: 'poolId',
+                    labelKey: 'pipeline.buildInfra.poolId',
+                    inputProps: {
+                      multiTextInputProps: {
+                        expressions,
+                        allowableTypes: allowableTypes
+                      },
+                      disabled: readonly
+                    },
+                    fieldPath: 'spec.spec.identifier'
+                  })}
+                </Container>
               )
             ) : null}
+            {(deploymentStageTemplate.infrastructure as K8sDirectInfraYaml).spec?.volumes && (
+              <Container data-name="100width" className={stepCss.bottomMargin5}>
+                <Volumes
+                  name={`${namePath}infrastructure.spec.volumes`}
+                  formik={formik}
+                  expressions={expressions}
+                  disabled={readonly}
+                  allowableTypes={[MultiTypeInputType.FIXED]}
+                />
+              </Container>
+            )}
             {(deploymentStageTemplate.infrastructure as any).spec?.serviceAccountName && (
-              <FormInput.MultiTextInput
-                label={
-                  <Text font={{ variation: FontVariation.FORM_LABEL }}>
-                    {getString('pipeline.infraSpecifications.serviceAccountName')}
-                  </Text>
-                }
-                name={`${isEmpty(path) ? '' : `${path}.`}infrastructure.spec.serviceAccountName`}
-                multiTextInputProps={{
-                  expressions,
-                  allowableTypes: allowableTypes
-                }}
-                disabled={readonly}
-              />
-            )}
-            {(deploymentStageTemplate.infrastructure as any).spec?.initTimeout && (
-              <FormMultiTypeDurationField
-                label={
-                  <Text font={{ variation: FontVariation.FORM_LABEL }} tooltipProps={{ dataTooltipId: 'timeout' }}>
-                    {getString('pipeline.infraSpecifications.initTimeout')}
-                  </Text>
-                }
-                name={`${isEmpty(path) ? '' : `${path}.`}infrastructure.spec.initTimeout`}
-                multiTypeDurationProps={{
-                  expressions,
-                  allowableTypes: allowableTypes
-                }}
-                disabled={readonly}
-              />
-            )}
-            {(deploymentStageTemplate.infrastructure as any).spec?.annotations &&
-              renderMultiTypeMapInputSet(
-                `${isEmpty(path) ? '' : `${path}.`}infrastructure.spec.annotations`,
-                'ci.annotations'
-              )}
-            {(deploymentStageTemplate.infrastructure as any).spec?.labels &&
-              renderMultiTypeMapInputSet(`${isEmpty(path) ? '' : `${path}.`}infrastructure.spec.labels`, 'ci.labels')}
-            {(deploymentStageTemplate.infrastructure as any).spec?.automountServiceAccountToken &&
-              renderMultiTypeCheckboxInputSet({
-                name: `${isEmpty(path) ? '' : `${path}.`}infrastructure.spec.automountServiceAccountToken`,
-                labelKey: 'pipeline.buildInfra.automountServiceAccountToken',
-                tooltipId: 'automountServiceAccountToken',
-                defaultTrue: true
-              })}
-            {(deploymentStageTemplate.infrastructure as any).spec?.priorityClassName && (
-              <Container className={stepCss.bottomMargin3}>
-                <MultiTypeTextField
-                  label={
-                    <Text font={{ variation: FontVariation.FORM_LABEL }} margin={{ bottom: 'xsmall' }}>
-                      {getString('pipeline.buildInfra.priorityClassName')}
-                    </Text>
-                  }
-                  name={`${isEmpty(path) ? '' : `${path}.`}infrastructure.spec.priorityClassName`}
-                  multiTextInputProps={{
+              <Container className={cx(stepCss.formGroup, stepCss.sm, stepCss.bottomMargin3)}>
+                {renderMultiTypeTextField({
+                  name: `${namePath}infrastructure.spec.serviceAccountName`,
+                  tooltipId: 'serviceAccountName',
+                  labelKey: 'pipeline.infraSpecifications.serviceAccountName',
+                  inputProps: {
                     multiTextInputProps: {
                       expressions,
                       allowableTypes: allowableTypes
                     },
                     disabled: readonly
-                  }}
-                />
+                  },
+                  fieldPath: 'spec.serviceAccountName'
+                })}
               </Container>
             )}
+            {(deploymentStageTemplate.infrastructure as any).spec?.automountServiceAccountToken &&
+              renderMultiTypeCheckboxInputSet({
+                name: `${namePath}infrastructure.spec.automountServiceAccountToken`,
+                labelKey: 'pipeline.buildInfra.automountServiceAccountToken',
+                tooltipId: 'automountServiceAccountToken',
+                defaultTrue: true
+              })}
+            {(deploymentStageTemplate.infrastructure as any).spec?.labels &&
+              renderMultiTypeMapInputSet({
+                fieldName: `${namePath}infrastructure.spec.labels`,
+                stringKey: 'ci.labels'
+              })}
+
+            {(deploymentStageTemplate.infrastructure as any).spec?.annotations &&
+              renderMultiTypeMapInputSet({
+                fieldName: `${namePath}infrastructure.spec.annotations`,
+                stringKey: 'ci.annotations'
+              })}
+
             {hasContainerSecurityContextFields && (
               <>
                 <Separator topSeparation={16} bottomSeparation={8} />
-
                 <div className={cx(css.tabSubHeading, stepCss.topMargin5)} id="containerSecurityContext">
                   {getString('pipeline.buildInfra.containerSecurityContext')}
                 </div>
@@ -717,68 +818,146 @@ export function StageInputSetFormInternal({
             )}
             {(deploymentStageTemplate.infrastructure as any).spec?.containerSecurityContext?.privileged &&
               renderMultiTypeCheckboxInputSet({
-                name: `${isEmpty(path) ? '' : `${path}.`}infrastructure.spec.containerSecurityContext.privileged`,
+                name: `${namePath}infrastructure.spec.containerSecurityContext.privileged`,
                 labelKey: 'pipeline.buildInfra.privileged',
                 tooltipId: 'privileged'
               })}
             {(deploymentStageTemplate.infrastructure as any).spec?.containerSecurityContext?.allowPrivilegeEscalation &&
               renderMultiTypeCheckboxInputSet({
-                name: `${
-                  isEmpty(path) ? '' : `${path}.`
-                }infrastructure.spec.containerSecurityContext.allowPrivilegeEscalation`,
+                name: `${namePath}infrastructure.spec.containerSecurityContext.allowPrivilegeEscalation`,
                 labelKey: 'pipeline.buildInfra.allowPrivilegeEscalation',
                 tooltipId: 'allowPrivilegeEscalation'
               })}
             {(deploymentStageTemplate.infrastructure as any).spec?.containerSecurityContext?.capabilities?.add &&
               renderMultiTypeListInputSet({
-                name: `${isEmpty(path) ? '' : `${path}.`}infrastructure.spec.containerSecurityContext.capabilities.add`,
+                name: `${namePath}infrastructure.spec.containerSecurityContext.capabilities.add`,
                 labelKey: 'pipeline.buildInfra.addCapabilities',
                 tooltipId: 'addCapabilities'
               })}
             {(deploymentStageTemplate.infrastructure as any).spec?.containerSecurityContext?.capabilities?.drop &&
               renderMultiTypeListInputSet({
-                name: `${
-                  isEmpty(path) ? '' : `${path}.`
-                }infrastructure.spec.containerSecurityContext.capabilities.drop`,
+                name: `${namePath}infrastructure.spec.containerSecurityContext.capabilities.drop`,
                 labelKey: 'pipeline.buildInfra.dropCapabilities',
                 tooltipId: 'dropCapabilities'
               })}
             {(deploymentStageTemplate.infrastructure as any).spec?.containerSecurityContext?.runAsNonRoot &&
               renderMultiTypeCheckboxInputSet({
-                name: `${isEmpty(path) ? '' : `${path}.`}infrastructure.spec.containerSecurityContext.runAsNonRoot`,
+                name: `${namePath}infrastructure.spec.containerSecurityContext.runAsNonRoot`,
                 labelKey: 'pipeline.buildInfra.runAsNonRoot',
                 tooltipId: 'runAsNonRoot'
               })}
             {(deploymentStageTemplate.infrastructure as any).spec?.containerSecurityContext?.readOnlyRootFilesystem &&
               renderMultiTypeCheckboxInputSet({
-                name: `${
-                  isEmpty(path) ? '' : `${path}.`
-                }infrastructure.spec.containerSecurityContext.readOnlyRootFilesystem`,
+                name: `${namePath}infrastructure.spec.containerSecurityContext.readOnlyRootFilesystem`,
                 labelKey: 'pipeline.buildInfra.readOnlyRootFilesystem',
                 tooltipId: 'readOnlyRootFilesystem'
               })}
             {((deploymentStageTemplate.infrastructure as any).spec?.runAsUser ||
               (deploymentStageTemplate.infrastructure as any).spec?.containerSecurityContext?.runAsUser) && (
-              <Container className={stepCss.bottomMargin3}>
-                <MultiTypeTextField
-                  label={
-                    <Text font={{ variation: FontVariation.FORM_LABEL }} margin={{ bottom: 'xsmall' }}>
-                      {getString('pipeline.stepCommonFields.runAsUser')}
-                    </Text>
-                  }
-                  name={`${isEmpty(path) ? '' : `${path}.`}infrastructure.spec.containerSecurityContext.runAsUser`}
-                  multiTextInputProps={{
+              <Container className={cx(stepCss.formGroup, stepCss.sm, stepCss.bottomMargin3)}>
+                {renderMultiTypeTextField({
+                  name: `${namePath}infrastructure.spec.containerSecurityContext.runAsUser`,
+                  tooltipId: 'runAsUser',
+                  labelKey: 'pipeline.stepCommonFields.runAsUser',
+                  inputProps: {
+                    multiTextInputProps: {
+                      expressions,
+                      allowableTypes: allowableTypes,
+                      placeholder: '1000'
+                    },
+                    disabled: readonly
+                  },
+                  fieldPath: 'spec.containerSecurityContext.runAsUser'
+                })}
+              </Container>
+            )}
+            {hasContainerSecurityContextFields && <Separator topSeparation={16} bottomSeparation={16} />}
+            {(deploymentStageTemplate.infrastructure as any).spec?.priorityClassName && (
+              <Container className={cx(stepCss.formGroup, stepCss.sm, stepCss.bottomMargin3)}>
+                {renderMultiTypeTextField({
+                  name: `${namePath}infrastructure.spec.priorityClassName`,
+                  tooltipId: 'priorityClassName',
+                  labelKey: 'pipeline.buildInfra.priorityClassName',
+                  inputProps: {
                     multiTextInputProps: {
                       expressions,
                       allowableTypes: allowableTypes
                     },
-                    disabled: readonly,
-                    placeholder: '1000'
+                    disabled: readonly
+                  },
+                  fieldPath: 'spec.priorityClassName'
+                })}
+              </Container>
+            )}
+
+            {(deploymentStageTemplate.infrastructure as K8sDirectInfraYaml).spec?.nodeSelector &&
+              renderMultiTypeMapInputSet({
+                fieldName: `${namePath}infrastructure.spec.nodeSelector`,
+                stringKey: 'pipeline.buildInfra.nodeSelector'
+              })}
+            {(deploymentStageTemplate.infrastructure as K8sDirectInfraYaml).spec?.tolerations && (
+              <Container data-name="100width" className={cx(stepCss.formGroup, stepCss.bottomMargin3)}>
+                <MultiTypeCustomMap
+                  name={`${namePath}infrastructure.spec.tolerations`}
+                  appearance={'minimal'}
+                  cardStyle={{ width: '50%' }}
+                  valueMultiTextInputProps={{
+                    expressions,
+                    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
                   }}
+                  formik={formik}
+                  multiTypeFieldSelectorProps={{
+                    label: (
+                      <Text
+                        font={{ variation: FontVariation.FORM_LABEL }}
+                        margin={{ bottom: 'xsmall' }}
+                        tooltipProps={{ dataTooltipId: 'tolerations' }}
+                      >
+                        {getString('pipeline.buildInfra.tolerations')}
+                      </Text>
+                    ),
+                    allowedTypes: allowableTypes
+                  }}
+                  disabled={readonly}
+                  multiTypeMapKeys={[
+                    { label: getString('pipeline.buildInfra.effect'), value: 'effect' },
+                    { label: getString('keyLabel'), value: 'key' },
+                    { label: getString('common.operator'), value: 'operator' },
+                    { label: getString('valueLabel'), value: 'value' }
+                  ]}
+                  excludeId={true}
                 />
               </Container>
             )}
-            {hasContainerSecurityContextFields && <Separator topSeparation={16} bottomSeparation={16} />}
+            {(deploymentStageTemplate.infrastructure as any).spec?.initTimeout && (
+              <Container className={cx(stepCss.formGroup, stepCss.xlg, stepCss.bottomMargin3)}>
+                {shouldRenderRunTimeInputViewWithAllowedValues(
+                  'spec.initTimeout',
+                  deploymentStageTemplate.infrastructure
+                ) ? (
+                  renderMultiTypeInputWithAllowedValues({
+                    name: `${namePath}infrastructure.spec.initTimeout`,
+                    tooltipId: 'timeout',
+                    labelKey: 'pipeline.infraSpecifications.initTimeout',
+                    fieldPath: 'spec.initTimeout'
+                  })
+                ) : (
+                  <FormMultiTypeDurationField
+                    label={
+                      <Text font={{ variation: FontVariation.FORM_LABEL }} tooltipProps={{ dataTooltipId: 'timeout' }}>
+                        {getString('pipeline.infraSpecifications.initTimeout')}
+                      </Text>
+                    }
+                    name={`${namePath}infrastructure.spec.initTimeout`}
+                    multiTypeDurationProps={{
+                      expressions,
+                      allowableTypes: allowableTypes
+                    }}
+                    disabled={readonly}
+                  />
+                )}
+              </Container>
+            )}
           </div>
           <div className={css.nestedAccordions}>
             {deploymentStageTemplate.infrastructure?.environmentRef && (
@@ -803,8 +982,10 @@ export function StageInputSetFormInternal({
                   deploymentStage?.infrastructure?.infrastructureDefinition?.spec || /* istanbul ignore next */ {}
                 }
                 type={
-                  (deploymentStage?.infrastructure?.infrastructureDefinition?.type as StepType) ||
-                  /* istanbul ignore next */ StepType.KubernetesDirect
+                  ((infraDefinitionTypeMapping[
+                    deploymentStage?.infrastructure?.infrastructureDefinition?.type as string
+                  ] || deploymentStage?.infrastructure?.infrastructureDefinition?.type) as StepType) ||
+                  StepType.KubernetesDirect
                 }
                 path={`${path}.infrastructure.infrastructureDefinition.spec`}
                 readonly={readonly}
@@ -816,6 +997,10 @@ export function StageInputSetFormInternal({
                   }
                 }}
                 stepViewType={viewType}
+                customStepProps={getCustomStepProps(
+                  deploymentStage?.infrastructure?.infrastructureDefinition?.type || '',
+                  getString
+                )}
               />
             )}
           </div>
@@ -832,6 +1017,7 @@ export function StageInputSetFormInternal({
           <div className={css.nestedAccordions}>
             {deploymentStageTemplate.infrastructure.infrastructureDefinition?.provisioner?.steps && (
               <ExecutionWrapperInputSetForm
+                executionIdentifier={executionIdentifier}
                 stepsTemplate={deploymentStageTemplate.infrastructure.infrastructureDefinition?.provisioner?.steps}
                 path={`${path}.infrastructure.infrastructureDefinition.provisioner.steps`}
                 allValues={deploymentStage?.infrastructure.infrastructureDefinition?.provisioner?.steps}
@@ -844,6 +1030,7 @@ export function StageInputSetFormInternal({
             )}
             {deploymentStageTemplate.infrastructure.infrastructureDefinition?.provisioner?.rollbackSteps && (
               <ExecutionWrapperInputSetForm
+                executionIdentifier={executionIdentifier}
                 stepsTemplate={
                   deploymentStageTemplate.infrastructure.infrastructureDefinition?.provisioner?.rollbackSteps
                 }
@@ -866,7 +1053,7 @@ export function StageInputSetFormInternal({
         >
           <div className={css.nestedAccordions} style={{ width: '50%' }}>
             <MultiTypeListInputSet
-              name={`${isEmpty(path) ? '' : `${path}.`}sharedPaths`}
+              name={`${namePath}sharedPaths`}
               multiTextInputProps={{
                 allowableTypes: allowableTypes,
                 expressions
@@ -886,7 +1073,7 @@ export function StageInputSetFormInternal({
       )}
       {(deploymentStageTemplate as ServiceSpec).variables && (
         /* istanbul ignore next */ <div id={`Stage.${stageIdentifier}.Variables`} className={cx(css.accordionSummary)}>
-          <div className={css.inputheader}>{getString('variablesText')}</div>
+          <div className={css.inputheader}>{getString('common.variables')}</div>
 
           <div className={css.nestedAccordions}>WIP</div>
         </div>
@@ -942,6 +1129,7 @@ export function StageInputSetFormInternal({
           <div className={css.nestedAccordions}>
             {deploymentStageTemplate.execution?.steps && (
               <ExecutionWrapperInputSetForm
+                executionIdentifier={executionIdentifier}
                 stepsTemplate={deploymentStageTemplate.execution.steps}
                 path={`${path}.execution.steps`}
                 allValues={deploymentStage?.execution?.steps}
@@ -954,6 +1142,7 @@ export function StageInputSetFormInternal({
             )}
             {deploymentStageTemplate.execution?.rollbackSteps && (
               <ExecutionWrapperInputSetForm
+                executionIdentifier={executionIdentifier}
                 stepsTemplate={deploymentStageTemplate.execution.rollbackSteps}
                 path={`${path}.execution.rollbackSteps`}
                 allValues={deploymentStage?.execution?.rollbackSteps}

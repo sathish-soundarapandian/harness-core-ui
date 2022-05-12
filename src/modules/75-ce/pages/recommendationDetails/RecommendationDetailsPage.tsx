@@ -1,11 +1,11 @@
 /*
- * Copyright 2021 Harness Inc. All rights reserved.
+ * Copyright 2022 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 
 import {
@@ -33,6 +33,7 @@ import { ViewTimeRange } from '@ce/components/RecommendationDetails/constants'
 import { RecommendationOverviewStats, ResourceType, useFetchRecommendationQuery } from 'services/ce/services'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { PAGE_NAMES, USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
+import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import CustomizeRecommendationsImg from './images/custom-recommendations.gif'
 
 import RecommendationDetails from '../../components/RecommendationDetails/RecommendationDetails'
@@ -57,9 +58,9 @@ interface WorkloadDetailsProps {
   workloadData: WorkloadDataType
   goToWorkloadDetails: () => void
   qualityOfService: QualityOfService
-  setQualityOfService: React.Dispatch<React.SetStateAction<QualityOfService>>
+  setQualityOfService: (newState: QualityOfService) => void
   cpuAndMemoryValueBuffer: number
-  setCpuAndMemoryValueBuffer: React.Dispatch<React.SetStateAction<number>>
+  setCpuAndMemoryValueBuffer: (newState: number) => void
 }
 
 const WorkloadDetails: React.FC<WorkloadDetailsProps> = props => {
@@ -194,10 +195,16 @@ const RecommendationDetailsPage: React.FC = () => {
   const { getString } = useStrings()
   const { trackPage, trackEvent } = useTelemetry()
   const history = useHistory()
-  const [timeRange, setTimeRange] = useState<TimeRangeValue>({ value: TimeRangeType.LAST_7, label: TimeRange.LAST_7 })
+  const [timeRange, setTimeRange] = useQueryParamsState<TimeRangeValue>('timeRange', {
+    value: TimeRangeType.LAST_7,
+    label: TimeRange.LAST_7
+  })
 
-  const [qualityOfService, setQualityOfService] = useState<QualityOfService>(QualityOfService.BURSTABLE)
-  const [cpuAndMemoryValueBuffer, setCpuAndMemoryValueBuffer] = useState(0)
+  const [qualityOfService, setQualityOfService] = useQueryParamsState<QualityOfService>(
+    'QoS',
+    QualityOfService.BURSTABLE
+  )
+  const [cpuAndMemoryValueBuffer, setCpuAndMemoryValueBuffer] = useQueryParamsState('buffer', 0)
 
   useEffect(() => {
     trackPage(PAGE_NAMES.RECOMMENDATIONS_DETAILS_PAGE, {})

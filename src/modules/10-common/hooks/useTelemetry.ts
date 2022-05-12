@@ -45,12 +45,18 @@ export function useTelemetry(pageParams: PageParams = {}): TelemetryReturnType {
       }
     : null
 
+  const sourceProperties = {
+    source: SOURCE_UI,
+    userId,
+    groupId
+  }
+
   useEffect(() => {
     pageParams.pageName &&
       telemetry.page({
         name: pageParams.pageName,
         category: pageParams.category || '',
-        properties: { source: SOURCE_UI, userId, groupId, ...licenseProperties, ...pageParams.properties } || {}
+        properties: { ...sourceProperties, ...licenseProperties, ...pageParams.properties } || {}
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageParams.pageName, pageParams.category, pageParams.properties])
@@ -58,15 +64,15 @@ export function useTelemetry(pageParams: PageParams = {}): TelemetryReturnType {
   const trackEvent: TrackEvent = (eventName: string, properties: Record<string, unknown>) => {
     telemetry.track({
       event: eventName,
-      properties: { source: SOURCE_UI, userId, groupId, ...licenseProperties, ...properties }
+      properties: { ...sourceProperties, ...licenseProperties, ...properties }
     })
   }
 
   const trackPage: TrackPage = (name: string, properties: Record<string, string>, category?: string) => {
     telemetry.page({
-      name: name,
-      category: category,
-      properties: { source: SOURCE_UI, ...licenseProperties, ...properties }
+      name,
+      category,
+      properties: { ...sourceProperties, ...licenseProperties, ...properties }
     })
   }
 

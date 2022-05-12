@@ -9,20 +9,16 @@ import { render, fireEvent, waitFor } from '@testing-library/react'
 import React from 'react'
 import moment from 'moment'
 import { TestWrapper } from '@common/utils/testUtils'
-import { Editions } from '@common/constants/SubscriptionTypes'
 import MenuItems from '../MenuItems'
 
+beforeEach(() => {
+  window.deploymentType = 'SAAS'
+})
 describe('MenuItems', () => {
   test('Community Plan', () => {
-    const defaultLicenseStoreValues = {
-      licenseInformation: {
-        CD: {
-          edition: Editions.COMMUNITY
-        }
-      }
-    }
+    window.deploymentType = 'COMMUNITY'
     const { container } = render(
-      <TestWrapper defaultLicenseStoreValues={defaultLicenseStoreValues}>
+      <TestWrapper>
         <MenuItems closeResourceCenter={jest.fn} />
       </TestWrapper>
     )
@@ -30,15 +26,9 @@ describe('MenuItems', () => {
   })
 
   test('Community submit a ticket tooltip', async () => {
-    const defaultLicenseStoreValues = {
-      licenseInformation: {
-        CD: {
-          edition: Editions.COMMUNITY
-        }
-      }
-    }
+    window.deploymentType = 'COMMUNITY'
     const { getByText } = render(
-      <TestWrapper defaultLicenseStoreValues={defaultLicenseStoreValues}>
+      <TestWrapper>
         <MenuItems closeResourceCenter={jest.fn} />
       </TestWrapper>
     )

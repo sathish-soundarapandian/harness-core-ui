@@ -13,13 +13,13 @@ import { useChangePassword } from '@user-profile/modals/useChangePassword/useCha
 import { useUserProfile } from '@user-profile/modals/UserProfile/useUserProfile'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import { useCommunity } from 'framework/LicenseStore/useCommunity'
 import { useGetAuthenticationSettings } from 'services/cd-ng'
 import type { UsernamePasswordSettings } from 'services/cd-ng'
 import { Page } from '@common/components'
 import TwoFactorAuthentication from '@user-profile/components/TwoFactorAuthentication/TwoFactorAuthentication'
 import useSwitchAccountModal from '@common/modals/SwitchAccount/useSwitchAccountModal'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { addHotJarSuppressionAttribute, isCommunityPlan } from '@common/utils/utils'
 import { AuthenticationMechanisms } from '@auth-settings/constants/utils'
 import UserOverView from './views/UserOverView'
 import css from './UserProfile.module.scss'
@@ -30,7 +30,7 @@ const UserProfilePage: React.FC = () => {
   const { openSwitchAccountModal } = useSwitchAccountModal({})
   const { openUserProfile } = useUserProfile({})
   const { currentUserInfo: user } = useAppStore()
-  const isCommunity = useCommunity()
+  const isCommunity = isCommunityPlan()
 
   const {
     data: loginSettingsData,
@@ -77,6 +77,7 @@ const UserProfilePage: React.FC = () => {
                 font={{ size: 'large', weight: 'semi-bold' }}
                 lineClamp={1}
                 className={css.overflow}
+                {...addHotJarSuppressionAttribute()}
               >
                 {user.name}
               </Text>

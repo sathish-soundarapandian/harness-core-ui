@@ -15,14 +15,13 @@ import ArtifactTableInfo from './subviews/ArtifactTableInfo'
 import {
   parseArtifactsManifests,
   getArtifactTableDataFromData,
-  artifactManifestData,
-  artifactTableItem,
   getPathString,
   getArtifactSpecObj,
   updatePipelineManifest,
   updatePipelineArtifact,
   getArtifactId
 } from '../utils/TriggersWizardPageUtils'
+import type { artifactTableItem, artifactManifestData } from '../interface/TriggersWizardInterface'
 import css from './ArtifactTriggerConfigPanel.module.scss'
 
 export interface ArtifactTriggerConfigPanelPropsInterface {

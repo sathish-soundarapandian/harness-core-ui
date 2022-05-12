@@ -34,6 +34,7 @@ exports[`SeviceModal  should render Services modal 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -375,6 +376,7 @@ exports[`SeviceModal  should validate edit mode snapshot 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -627,6 +629,7 @@ exports[`Test DeployService Step Should be able save even if there is 63 charact
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -936,6 +939,7 @@ exports[`Test DeployService Step should render edit service view (service), then
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -1245,6 +1249,7 @@ exports[`Test DeployService Step should render service view and save 1`] = `
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>

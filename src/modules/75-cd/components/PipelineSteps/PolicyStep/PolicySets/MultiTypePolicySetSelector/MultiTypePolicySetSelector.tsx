@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { connect, FormikContext } from 'formik'
+import { connect, FormikContextType } from 'formik'
 import { get } from 'lodash-es'
 
 import { Button, MultiTypeInputType } from '@harness/uicore'
@@ -24,7 +24,7 @@ import { MiniPolicySetRenderer } from '../PolicySetListRenderer/MiniPolicySetRen
 import css from './MultiTypePolicySetSelector.module.scss'
 
 export interface MultiTypePolicySetSelectorInternalProps extends Omit<IFormGroupProps, 'label'> {
-  formik?: FormikContext<PolicyStepFormData>
+  formik?: FormikContextType<PolicyStepFormData>
   name: string
   label: string
   expressions?: string[]
@@ -70,7 +70,7 @@ export const MultiTypePolicySetSelector = connect(MultiTypePolicySetSelectorInte
 interface PolicySetFixedTypeSelectorProps extends IFormGroupProps {
   name: string
   policySetIds: string[]
-  formik?: FormikContext<PolicyStepFormData>
+  formik?: FormikContextType<PolicyStepFormData>
 }
 
 function PolicySetFixedTypeSelector({ formik, name, policySetIds, disabled }: PolicySetFixedTypeSelectorProps) {

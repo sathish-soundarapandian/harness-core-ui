@@ -8,7 +8,7 @@
 import { defaultTo, get, isEmpty, set, unset } from 'lodash-es'
 import produce from 'immer'
 import { parse } from 'yaml'
-import type { StageElementConfig, StepElementConfig, TemplateLinkConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig, StageElementConfig, StepElementConfig, TemplateLinkConfig } from 'services/cd-ng'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { getIdentifierFromValue, getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
@@ -45,7 +45,7 @@ export const getStepType = (step?: StepElementConfig | TemplateStepNode): StepTy
 }
 
 export const setTemplateInputs = (
-  data: TemplateStepNode | StageElementConfig,
+  data: TemplateStepNode | StageElementConfig | PipelineInfoConfig,
   templateInputs: TemplateLinkConfig['templateInputs']
 ) => {
   if (isEmpty(templateInputs)) {
@@ -55,7 +55,7 @@ export const setTemplateInputs = (
   }
 }
 
-export const createTemplate = <T extends StageElementConfig | StepOrStepGroupOrTemplateStepData>(
+export const createTemplate = <T extends PipelineInfoConfig | StageElementConfig | StepOrStepGroupOrTemplateStepData>(
   data?: T,
   template?: TemplateSummaryResponse
 ) => {

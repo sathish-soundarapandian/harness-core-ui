@@ -15,6 +15,8 @@ import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/exports'
 import { getErrorMessage } from '@cf/utils/CFUtils'
 import type { PlatformEntry } from '@cf/components/LanguageSelection/LanguageSelection'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import { CreateAFlagView } from './views/CreateAFlagView'
 import { SetUpYourApplicationView } from './views/SetUpYourApplicationView'
 import { TestYourFlagView } from './views/TestYourFlagView'
@@ -99,7 +101,7 @@ export const OnboardingDetailPage: React.FC = () => {
     }
   }
   const disableNext = !flagName || (!!flagName && selectedTabId === TabId.SET_UP_APP && !apiKey)
-
+  const { trackEvent } = useTelemetry()
   return (
     <Container height="100%" background={Color.WHITE} className={css.container}>
       <Layout.Horizontal
@@ -214,7 +216,16 @@ export const OnboardingDetailPage: React.FC = () => {
           right: 0
         }}
       >
-        <Button text={getString('previous')} icon="chevron-left" onClick={onPrevious} />
+        <Button
+          text={getString('previous')}
+          icon="chevron-left"
+          onClick={() => {
+            trackEvent(FeatureActions.GetStartedPrevious, {
+              category: Category.FEATUREFLAG
+            })
+            onPrevious()
+          }}
+        />
         <Button
           text={getString(
             selectedTabId === TabId.SET_UP_APP
@@ -226,7 +237,22 @@ export const OnboardingDetailPage: React.FC = () => {
           rightIcon={selectedTabId === TabId.TEST_YOUR_FLAG ? undefined : 'chevron-right'}
           intent={Intent.PRIMARY}
           disabled={disableNext}
-          onClick={onNext}
+          onClick={() => {
+            if (selectedTabId === TabId.SET_UP_APP) {
+              trackEvent(FeatureActions.SetUpYourApplicationVerify, {
+                category: Category.FEATUREFLAG
+              })
+            } else if (selectedTabId === TabId.TEST_YOUR_FLAG) {
+              trackEvent(FeatureActions.TestYourFlagBack, {
+                category: Category.FEATUREFLAG
+              })
+            } else {
+              trackEvent(FeatureActions.GetStartedNext, {
+                category: Category.FEATUREFLAG
+              })
+            }
+            onNext()
+          }}
           loading={isLoadingCreateFeatureFlag}
         />
         <FlexExpander />

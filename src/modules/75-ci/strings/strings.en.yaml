@@ -28,7 +28,6 @@ delegates: '{{ $.delegate.delegates }}'
 templates: '{{ $.common.templates }}'
 fileStore: '{{ $.resourcePage.fileStore }}'
 titleSettings: 'GENERAL SETTINGS'
-titleGovernance: 'GOVERNANCE'
 newItem: '+ new item'
 noData: 'No data found. Click the button below to create a new item.'
 welcome: 'Welcome to Continuous Integration'
@@ -154,7 +153,7 @@ getStartedWithCI:
   hosting: 'My Repo is {{hosting}}'
   onCloudLabel: on Cloud
   onPremLabel: On-prem
-  codeRepo: Which Code repository do you use?
+  codeRepo: Which code repository do you use?
   authMethod: Select your Authentication method
   oAuthLabel: OAuth
   accessTokenLabel: Access Token
@@ -164,6 +163,14 @@ getStartedWithCI:
   createPipeline: Create Pipeline
   codebaseHelptext: Harness will clone your codebase to your build infrastructure at Pipeline runtime.
   searchRepo: Search Repository
+  learnMoreAboutPermissions: Learn more about the required permissions
+  verifyConnection: Verify connection before you can continue
+  appPassword: Application Password
+  apiUrlLabel: API URL
+  provisioningSuccessful: Provisioning successful
+  provisioningFailed: Provisioning failed
+  setUpAuth: Set up Authentication
+  genericGit: Generic Git
   carousel:
     labels:
       harnessCIFeatures: Harness CI

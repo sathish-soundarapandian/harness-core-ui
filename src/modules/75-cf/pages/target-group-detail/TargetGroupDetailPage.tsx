@@ -7,22 +7,16 @@
 
 import React, { FC } from 'react'
 import { useParams } from 'react-router-dom'
-import { Tab, Tabs, Page, Container, Layout } from '@wings-software/uicore'
+import { Page, Tab, Tabs } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { useGetSegment, Segment, Feature } from 'services/cf'
+import { Feature, Segment, useGetSegment } from 'services/cf'
 import { useGetEnvironment } from 'services/cd-ng'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
-import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import routes from '@common/RouteDefinitions'
-import { AuditLogObjectType, formatDate, formatTime } from '@cf/utils/CFUtils'
+import { AuditLogObjectType } from '@cf/utils/CFUtils'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
-import { useGitSync } from '@cf/hooks/useGitSync'
-import TargetManagementToolbar from '@cf/components/TargetManagementToolbar/TargetManagementToolbar'
 import { AuditLogs } from '@cf/components/AuditLogs/AuditLogs'
-import { DetailPageTemplate } from '@cf/components/DetailPageTemplate/DetailPageTemplate'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import TargetManagementDetailPageTemplate from '@cf/components/TargetManagementDetailPageTemplate/TargetManagementDetailPageTemplate'
 import TargetGroupCriteria from './components/TargetGroupCriteria'
 import FlagSettingsPanel from './components/FlagSettingsPanel/FlagSettingsPanel'
 import useDeleteTargetGroupDialog from './hooks/useDeleteTargetGroupDialog'
@@ -31,10 +25,7 @@ import css from './TargetGroupDetailPage.module.scss'
 
 const TargetGroupDetailPage: FC = () => {
   const { getString } = useStrings()
-  const { withActiveEnvironment, activeEnvironment: environmentIdentifier } = useActiveEnvironment()
-  const gitSync = useGitSync()
-
-  useDocumentTitle(`${getString('cf.shared.targetManagement')}: ${getString('cf.shared.segments')}`)
+  const { activeEnvironment: environmentIdentifier } = useActiveEnvironment()
 
   const {
     accountId: accountIdentifier,
@@ -74,19 +65,6 @@ const TargetGroupDetailPage: FC = () => {
 
   const deleteTargetGroupDialog = useDeleteTargetGroupDialog(targetGroup as Segment)
 
-  const breadcrumbs = [
-    {
-      label: `${getString('cf.shared.targetManagement')}: ${getString('cf.shared.segments')}`,
-      url: withActiveEnvironment(
-        routes.toCFSegments({
-          accountId: accountIdentifier,
-          orgIdentifier,
-          projectIdentifier
-        })
-      )
-    }
-  ]
-
   if (targetGroupLoading || envLoading) {
     return <ContainerSpinner flex={{ align: 'center-center' }} />
   }
@@ -103,55 +81,34 @@ const TargetGroupDetailPage: FC = () => {
   }
 
   return (
-    <DetailPageTemplate
-      breadcrumbs={breadcrumbs}
-      title={targetGroup?.name}
-      subTitle={getString('cf.targetDetail.createdOnDate', {
-        date: formatDate(targetGroup?.createdAt as number),
-        time: formatTime(targetGroup?.createdAt as number)
-      })}
-      identifier={targetGroup?.identifier}
-      menuItems={[
-        {
-          icon: 'cross',
-          text: getString('delete'),
-          onClick: deleteTargetGroupDialog,
-          permission: {
-            resource: { resourceType: ResourceType.ENVIRONMENT, resourceIdentifier: targetGroup?.identifier },
-            permission: PermissionIdentifier.DELETE_FF_TARGETGROUP
-          }
-        }
-      ]}
+    <TargetManagementDetailPageTemplate
+      item={targetGroup as Segment}
+      openDeleteDialog={deleteTargetGroupDialog}
       metaData={{ environment: envData?.data?.name as string }}
+      leftBar={<TargetGroupCriteria targetGroup={targetGroup as Segment} reloadTargetGroup={refetchTargetGroup} />}
     >
-      <Layout.Vertical height="100%">
-        {gitSync.isGitSyncActionsEnabled && <TargetManagementToolbar gitSync={gitSync} />}
-
-        <Container className={css.layout}>
-          <TargetGroupCriteria targetGroup={targetGroup as Segment} reloadTargetGroup={refetchTargetGroup} />
-
-          <Tabs id="TargetGroupDetailPageTabs">
-            <Tab
-              id="FlagSettingsTab"
-              title={
-                <StringWithTooltip
-                  stringId="cf.targetDetail.flagSetting"
-                  tooltipId="ff_targetGroupDetail_flagSettings_heading"
-                />
-              }
-              panel={<FlagSettingsPanel targetGroup={targetGroup as Segment} />}
-              panelClassName={css.panel}
-            />
-            <Tab
-              id="AuditLogsTab"
-              title={getString('activityLog')}
-              panel={<AuditLogs flagData={targetGroup as Feature} objectType={AuditLogObjectType.Segment} />}
-              panelClassName={css.panel}
-            />
-          </Tabs>
-        </Container>
-      </Layout.Vertical>
-    </DetailPageTemplate>
+      <div className={css.tabs}>
+        <Tabs id="TargetGroupDetailPageTabs">
+          <Tab
+            id="FlagSettingsTab"
+            title={
+              <StringWithTooltip
+                stringId="cf.targetDetail.flagSetting"
+                tooltipId="ff_targetGroupDetail_flagSettings_heading"
+              />
+            }
+            panel={<FlagSettingsPanel targetGroup={targetGroup as Segment} />}
+            panelClassName={css.panel}
+          />
+          <Tab
+            id="AuditLogsTab"
+            title={getString('activityLog')}
+            panel={<AuditLogs flagData={targetGroup as Feature} objectType={AuditLogObjectType.Segment} />}
+            panelClassName={css.panel}
+          />
+        </Tabs>
+      </div>
+    </TargetManagementDetailPageTemplate>
   )
 }
 

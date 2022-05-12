@@ -9,7 +9,7 @@ import React from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useGet } from 'restful-react'
 
-import { Layout, Text, Icon } from '@wings-software/uicore'
+import { Layout, Text, Icon } from '@harness/uicore'
 import type { CellProps, Renderer } from 'react-table'
 import { Color } from '@harness/design-system'
 import type { RbacResourceRendererProps } from '@rbac/factories/RbacFactory'

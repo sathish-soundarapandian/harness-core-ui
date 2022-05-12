@@ -7,31 +7,55 @@
 
 import React from 'react'
 import { act, fireEvent, render, getByText as getByTextBody } from '@testing-library/react'
-import { findDialogContainer } from '@common/utils/testUtils'
-import { HostedByHarnessBuildLocation, InfraProvisiongWizardStepId, AllBuildLocations } from '../Constants'
+import { StringsContext } from 'framework/strings'
+import type { ResponseDelegateStatus, ResponseSetupStatus } from 'services/cd-ng'
+import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
+import routes from '@common/RouteDefinitions'
+import { HostedByHarnessBuildLocation, InfraProvisiongWizardStepId, AllBuildLocationsForSaaS } from '../Constants'
 import { InfraProvisioningWizard } from '../InfraProvisioningWizard'
 import { SelectBuildLocation } from '../SelectBuildLocation'
 
-jest.mock('framework/strings', () => ({
-  useStrings: () => ({
-    getString: (key: string) => key
+jest.mock('services/cd-ng', () => ({
+  useGetDelegateInstallStatus: jest.fn().mockImplementation(() => ({
+    refetch: jest.fn(),
+    data: {
+      status: 'SUCCESS',
+      data: 'SUCCESS'
+    } as ResponseDelegateStatus
+  })),
+  useProvisionResourcesForCI: jest.fn().mockImplementation(() => {
+    return {
+      mutate: () =>
+        Promise.resolve({
+          data: 'SUCCESS',
+          status: 'SUCCESS'
+        } as ResponseSetupStatus)
+    }
   })
 }))
 
+const pathParams = { accountId: 'accountId', orgIdentifier: 'orgId', projectIdentifier: 'projectId' }
+
 describe('Render and test InfraProvisioningWizard', () => {
   test('Initial render for SelectBuildLocation', async () => {
-    const { container } = render(<SelectBuildLocation selectedBuildLocation={HostedByHarnessBuildLocation} />)
+    const { container } = render(
+      <StringsContext.Provider value={{ data: {} as any, getString: (key: string) => key as string }}>
+        <SelectBuildLocation selectedBuildLocation={HostedByHarnessBuildLocation} />
+      </StringsContext.Provider>
+    )
     expect(container.getElementsByClassName('div[class*="MultiStepProgressIndicator"]'))
 
     // All build infra type cards should be visible
     const buildInfraCards = Array.from(container.querySelectorAll('div[class*="bp3-card"]')) as HTMLElement[]
-    expect(buildInfraCards.length).toBe(AllBuildLocations.length)
+    expect(buildInfraCards.length).toBe(AllBuildLocationsForSaaS.length)
 
     // Hosted By Harness build infra card should be selected by default
     expect(buildInfraCards[0].className).toContain('Card--selected')
 
     // Docker Runner build infra card should be disabled by default
-    buildInfraCards.map((card, index) => index !== 0 && expect(card.className).toContain('Card--disabled'))
+    buildInfraCards.map(
+      (card, index) => index === buildInfraCards.length - 1 && expect(card.className).toContain('Card--disabled')
+    )
 
     // Only one build infra type card should marked as selected at all times
     expect(container.querySelectorAll('[data-icon="main-tick"]').length).toBe(1)
@@ -46,7 +70,11 @@ describe('Render and test InfraProvisioningWizard', () => {
   })
 
   test('Test Wizard Navigation with Select Build Location as first step', async () => {
-    const { container, getByText } = render(<InfraProvisioningWizard />)
+    const { container, getByText } = render(
+      <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
+        <InfraProvisioningWizard />
+      </TestWrapper>
+    )
 
     // Infra provisioning carousel dialog should not be visible before button click
     let dialog = findDialogContainer() as HTMLElement
@@ -67,7 +95,7 @@ describe('Render and test InfraProvisioningWizard', () => {
     dialog = findDialogContainer() as HTMLElement
     expect(dialog).toBeTruthy()
 
-    expect(getByTextBody(dialog, 'ci.getStartedWithCI.provisionSecureEnv')).toBeTruthy()
+    expect(getByTextBody(dialog, 'ci.getStartedWithCI.provisioningSuccessful')).toBeTruthy()
     await act(async () => {
       fireEvent.click(dialog.querySelector('[data-icon="Stroke"]')!)
     })
@@ -85,8 +113,11 @@ describe('Render and test InfraProvisioningWizard', () => {
 
   test('Test Wizard Navigation with Select Git Provider as first step', async () => {
     const { getByText } = render(
-      <InfraProvisioningWizard lastConfiguredWizardStepId={InfraProvisiongWizardStepId.SelectGitProvider} />
+      <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
+        <InfraProvisioningWizard lastConfiguredWizardStepId={InfraProvisiongWizardStepId.SelectGitProvider} />
+      </TestWrapper>
     )
+
     expect(getByText('ci.getStartedWithCI.codeRepo')).toBeTruthy()
     expect(getByText('next: ci.getStartedWithCI.selectRepo')).toBeTruthy()
     // Going back to SelectBuildLocation

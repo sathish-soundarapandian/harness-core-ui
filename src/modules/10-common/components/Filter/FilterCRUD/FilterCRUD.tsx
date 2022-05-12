@@ -50,7 +50,6 @@ interface FilterCRUDProps<T> extends Partial<Omit<FormikProps<T>, 'initialValues
 }
 
 const FILTER_LIST_MAX_HEIGHT = 85
-const EDIT_SECTION_HEIGHT = 30
 const STEP_SIZE = 1.5
 const MAX_FILTER_NAME_LENGTH = 20
 
@@ -335,11 +334,11 @@ const FilterCRUDRef = <T extends FilterInterface>(props: FilterCRUDProps<T>, fil
     )
   }
 
-  const getFilterListHeight = (submitCount: number, errorCount: number): number => {
+  const getFilterListHeight = (submitCount: number, errorCount: number): string => {
     if (isEditEnabled) {
-      return FILTER_LIST_MAX_HEIGHT - EDIT_SECTION_HEIGHT - (submitCount > 0 ? STEP_SIZE * errorCount : 0)
+      return `calc(${FILTER_LIST_MAX_HEIGHT}vh - 300px - ${submitCount > 0 ? STEP_SIZE * errorCount : 0}vh)`
     }
-    return FILTER_LIST_MAX_HEIGHT
+    return `${FILTER_LIST_MAX_HEIGHT}vh`
   }
 
   const renderFilterList = (
@@ -352,7 +351,7 @@ const FilterCRUDRef = <T extends FilterInterface>(props: FilterCRUDProps<T>, fil
       <ol
         className={cx(css.filters)}
         style={{
-          maxHeight: `${getFilterListHeight(submitCount, Object.keys(errors).length)}vh`
+          maxHeight: `${getFilterListHeight(submitCount, Object.keys(errors).length)}`
         }}
       >
         {filters?.filter((filter: T) => filter.name).map((filter: T) => renderFilter(filter))}

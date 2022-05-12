@@ -24,6 +24,7 @@ export interface TimelineSliderProps {
   infoCard?: JSX.Element
   resetFocus?: () => void
   hideSlider?: boolean
+  onZoom?: () => void
 }
 
 export type SliderAspects = {

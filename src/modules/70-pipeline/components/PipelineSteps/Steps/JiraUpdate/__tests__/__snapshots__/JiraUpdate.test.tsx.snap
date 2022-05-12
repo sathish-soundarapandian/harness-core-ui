@@ -860,6 +860,7 @@ exports[`Jira Update tests Edit stage - readony view: editstage-readonly 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

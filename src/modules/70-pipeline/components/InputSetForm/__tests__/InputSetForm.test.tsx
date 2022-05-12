@@ -100,7 +100,7 @@ jest.mock('@common/hooks', () => ({
 
 jest.mock('services/pipeline-ng', () => ({
   useGetInputSetForPipeline: jest.fn(() => GetInputSetEdit),
-  useCreateVariables: () => jest.fn(() => ({})),
+  useCreateVariablesV2: () => jest.fn(() => ({})),
   useGetMergeInputSetFromPipelineTemplateWithListInput: jest.fn(() => MergeInputSetResponse),
   useGetPipeline: jest.fn(() => PipelineResponse),
   useSanitiseInputSet: jest.fn(() => PipelineResponse),
@@ -442,7 +442,7 @@ describe('Render Forms - Snapshot Testing', () => {
     act(() => {
       fireEvent.change(container.querySelector('input[name="name"]')!, { target: { value: 'asd56' } })
     })
-    await act(() => ref.current?.submitForm())
+    await act(() => ref.current?.submitForm()!)
     expect(handleSubmit).toHaveBeenCalledWith(
       {
         branch: '',

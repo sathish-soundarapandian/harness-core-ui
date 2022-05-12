@@ -37,7 +37,10 @@ export const getCDPipelineStages: (args: GetCDPipelineStagesArgs) => React.React
       {stagesCollection.getStage(StageType.APPROVAL, isApprovalStageEnabled, getString)}
       {stagesCollection.getStage(StageType.FEATURE, isCFEnabled, getString)}
       {stagesCollection.getStage(StageType.SECURITY, isSTOEnabled, getString)}
-      {stagesCollection.getStage(StageType.PIPELINE, false, getString)}
+      {/* 
+      Chained pipeline is hidden as of now, uncomment below statement to unhide it.
+      {stagesCollection.getStage(StageType.PIPELINE, false, getString)} 
+      */}
       {stagesCollection.getStage(StageType.CUSTOM, false, getString)}
       {stagesCollection.getStage(StageType.Template, false, getString)}
     </PipelineStages>

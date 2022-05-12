@@ -1,0 +1,105 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "totalPages": 1,
+    "totalItems": 5,
+    "pageItemCount": 5,
+    "pageSize": 20,
+    "content": [
+      {
+        "environment": {
+          "accountId": "px7xd_BFRCi-pfWPYXVjvw",
+          "orgIdentifier": "default",
+          "projectIdentifier": "Ashwin",
+          "identifier": "Env_Ash_1",
+          "name": "Env Ash 1",
+          "description": null,
+          "color": "#0063F7",
+          "type": "Production",
+          "deleted": false,
+          "tags": {},
+          "version": 0,
+          "yaml": "environment:\n  orgIdentifier: \"default\"\n  projectIdentifier: \"Ashwin\"\n  identifier: \"Env_Ash_1\"\n  tags: {}\n  name: \"Env Ash 1\"\n  type: \"Production\"\n"
+        },
+        "createdAt": 1649229276300,
+        "lastModifiedAt": 1649229276300
+      },
+      {
+        "environment": {
+          "accountId": "px7xd_BFRCi-pfWPYXVjvw",
+          "orgIdentifier": "default",
+          "projectIdentifier": "Ashwin",
+          "identifier": "Environment_Ash_3",
+          "name": "Environment Ash 3",
+          "description": null,
+          "color": "#0063F7",
+          "type": "PreProduction",
+          "deleted": false,
+          "tags": {},
+          "version": 0,
+          "yaml": "environment:\n  orgIdentifier: \"default\"\n  projectIdentifier: \"Ashwin\"\n  identifier: \"Environment_Ash_3\"\n  tags: {}\n  name: \"Environment Ash 3\"\n  type: \"PreProduction\"\n"
+        },
+        "createdAt": 1648795776680,
+        "lastModifiedAt": 1648795776680
+      },
+      {
+        "environment": {
+          "accountId": "px7xd_BFRCi-pfWPYXVjvw",
+          "orgIdentifier": "default",
+          "projectIdentifier": "Ashwin",
+          "identifier": "Environment_Ash_2",
+          "name": "Environment Ash 2",
+          "description": null,
+          "color": "#0063F7",
+          "type": "PreProduction",
+          "deleted": false,
+          "tags": {},
+          "version": 0,
+          "yaml": "environment:\n  orgIdentifier: \"default\"\n  projectIdentifier: \"Ashwin\"\n  identifier: \"Environment_Ash_2\"\n  tags: {}\n  name: \"Environment Ash 2\"\n  type: \"PreProduction\"\n"
+        },
+        "createdAt": 1648795644918,
+        "lastModifiedAt": 1648795644918
+      },
+      {
+        "environment": {
+          "accountId": "px7xd_BFRCi-pfWPYXVjvw",
+          "orgIdentifier": "default",
+          "projectIdentifier": "Ashwin",
+          "identifier": "Env_Ash",
+          "name": "Env Ash",
+          "description": null,
+          "color": "#0063F7",
+          "type": "Production",
+          "deleted": false,
+          "tags": {},
+          "version": 0,
+          "yaml": "environment:\n  orgIdentifier: \"default\"\n  projectIdentifier: \"Ashwin\"\n  identifier: \"Env_Ash\"\n  tags: {}\n  name: \"Env Ash\"\n  type: \"Production\"\n"
+        },
+        "createdAt": 1648126287023,
+        "lastModifiedAt": 1648126287023
+      },
+      {
+        "environment": {
+          "accountId": "px7xd_BFRCi-pfWPYXVjvw",
+          "orgIdentifier": "default",
+          "projectIdentifier": "Ashwin",
+          "identifier": "Environment_1",
+          "name": "Environment 1",
+          "description": "This is the environment for OPA step",
+          "color": "#0063F7",
+          "type": "Production",
+          "deleted": false,
+          "tags": { "hk": "" },
+          "version": 55,
+          "yaml": "environment:\n  orgIdentifier: \"default\"\n  projectIdentifier: \"Ashwin\"\n  identifier: \"Environment_1\"\n  tags:\n    hk: \"\"\n  name: \"Environment 1\"\n  description: \"This is the environment for OPA step\"\n  type: \"Production\"\n"
+        },
+        "createdAt": 1646824469699,
+        "lastModifiedAt": 1649789438978
+      }
+    ],
+    "pageIndex": 0,
+    "empty": false
+  },
+  "metaData": null,
+  "correlationId": "36224fe6-2baa-46cf-b94d-78531bfb23f1"
+}

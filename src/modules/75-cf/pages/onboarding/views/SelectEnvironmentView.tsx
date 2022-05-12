@@ -18,6 +18,8 @@ import { IdentifierText } from '@cf/components/IdentifierText/IdentifierText'
 import type { ApiKey } from 'services/cf'
 import type { EnvironmentResponseDTO } from 'services/cd-ng'
 import { PlatformEntry, PlatformEntryType } from '@cf/components/LanguageSelection/LanguageSelection'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 
 export interface SelectEnvironmentViewProps {
   language: PlatformEntry
@@ -32,8 +34,13 @@ export const SelectEnvironmentView: React.FC<SelectEnvironmentViewProps> = props
   const [environmentCreated, setEnvironmentCreated] = useState(false)
   const [environment, setEnvironment] = useState<EnvironmentResponseDTO>()
   const [apiKey, setApiKey] = useState<SelectEnvironmentViewProps['apiKey']>()
+  const { trackEvent } = useTelemetry()
   const { EnvironmentSelect, loading, error, refetch, environments } = useEnvironmentSelectV2({
     onChange: (_value, _environment, userEvent) => {
+      trackEvent(FeatureActions.EnvSelect, {
+        category: Category.FEATUREFLAG,
+        environment: _environment
+      })
       setEnvironment(_environment)
       props.setEnvironmentIdentifier(_environment.identifier)
       if (userEvent) {

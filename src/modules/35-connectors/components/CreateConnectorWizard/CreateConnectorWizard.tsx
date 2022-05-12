@@ -48,6 +48,7 @@ import CENGAwsConnector from '../CreateConnector/CENGAwsConnector/CreateCeAwsCon
 import CreateCeGcpConnector from '../CreateConnector/CEGcpConnector/CreateCeGcpConnector'
 import CreateCustomHealthConnector from '../CreateConnector/CustomHealthConnector/CreateCustomHealthConnector'
 import CreateErrorTrackingConnector from '../CreateConnector/ErrorTrackingConnector/CreateErrorTrackingConnector'
+import CreateAzureConnector from '../CreateConnector/AzureConnector/CreateAzureConnector'
 import css from './CreateConnectorWizard.module.scss'
 
 interface CreateConnectorWizardProps {
@@ -93,13 +94,16 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     ...commonProps,
     onSuccess: onSuccessWithEventTracking
   }
-  const { ERROR_TRACKING_ENABLED } = useFeatureFlags()
+
+  const { ERROR_TRACKING_ENABLED, NG_AZURE } = useFeatureFlags()
+
   React.useEffect(() => {
     trackEvent(ConnectorActions.StartCreateConnector, {
       category: Category.CONNECTOR
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
   switch (type) {
     case Connectors.CUSTOM:
       return <CreateCustomHealthConnector {...commonProps} />
@@ -169,6 +173,8 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
       return <ServiceNowConnector {...commonProps} />
     case Connectors.ERROR_TRACKING:
       return ERROR_TRACKING_ENABLED ? <CreateErrorTrackingConnector {...commonProps} /> : null
+    case Connectors.AZURE:
+      return NG_AZURE ? <CreateAzureConnector {...commonProps} /> : null
     default:
       return null
   }

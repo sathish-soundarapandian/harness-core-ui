@@ -11,6 +11,7 @@ import PipelineDeploymentList from '@pipeline/pages/pipeline-deployment-list/Pip
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { useQueryParams } from '@common/hooks'
+import { useGetPipelineSummary } from 'services/pipeline-ng'
 
 export default function CIPipelineDeploymentList(): React.ReactElement {
   const { pipelineIdentifier, orgIdentifier, projectIdentifier, accountId, module } =
@@ -34,5 +35,24 @@ export default function CIPipelineDeploymentList(): React.ReactElement {
     )
   }
 
-  return <PipelineDeploymentList showHealthAndExecution onRunPipeline={onRunPipeline} />
+  const { data: pipeline } = useGetPipelineSummary({
+    pipelineIdentifier,
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      repoIdentifier,
+      branch
+    }
+  })
+
+  const isPipelineInvalid = pipeline?.data?.entityValidityDetails?.valid === false
+
+  return (
+    <PipelineDeploymentList
+      showHealthAndExecution
+      onRunPipeline={onRunPipeline}
+      isPipelineInvalid={isPipelineInvalid}
+    />
+  )
 }

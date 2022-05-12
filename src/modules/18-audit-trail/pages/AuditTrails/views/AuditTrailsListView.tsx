@@ -216,7 +216,7 @@ const AuditTrailsListView: React.FC<AuditTrailsListViewProps> = ({ data, setPage
       Header: getString('projectLabel'),
       id: 'project',
       accessor: row => row.resourceScope.projectIdentifier,
-      width: orgIdentifier ? '18' : '13%',
+      width: orgIdentifier ? '18%' : '13%',
       Cell: renderColumnProject
     },
     {

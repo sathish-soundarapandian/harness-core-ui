@@ -5,10 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo, useState, useCallback } from 'react'
+import React, { useEffect, useMemo, useState, useCallback, useRef } from 'react'
 import { Container, Tab, Tabs, PageError, Views } from '@wings-software/uicore'
 import { useHistory, useParams, matchPath } from 'react-router-dom'
-import { isEqual, omit } from 'lodash-es'
+import { defaultTo, isEqual, omit } from 'lodash-es'
 import { parse } from 'yaml'
 import type { FormikProps } from 'formik'
 import { useQueryParams } from '@common/hooks'
@@ -26,19 +26,30 @@ import {
   useSaveMonitoredService,
   useUpdateMonitoredService
 } from 'services/cv'
+import type { NGTemplateInfoConfig } from 'services/template-ng'
 import { PageSpinner, useToaster, NavigationCheck } from '@common/components'
+import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
 import { ChangeSourceCategoryName } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 import { useStrings } from 'framework/strings'
 import { SLODetailsPageTabIds } from '@cv/pages/slos/CVSLODetailsPage/CVSLODetailsPage.types'
-import Service from './components/Service/Service'
+import Service, { ServiceWithRef } from './components/Service/Service'
 import Dependency from './components/Dependency/Dependency'
 import { getInitFormData } from './components/Service/Service.utils'
 import type { MonitoredServiceForm } from './components/Service/Service.types'
-import { determineUnSaveState, onTabChange, onSubmit } from './Configurations.utils'
+import { determineUnSaveState, onTabChange, onSubmit, getImperativeHandleRef } from './Configurations.utils'
 import css from './Configurations.module.scss'
 
-export default function Configurations(): JSX.Element {
+interface ConfigurationsInterface {
+  isTemplate?: boolean
+  templateValue?: NGTemplateInfoConfig
+  updateTemplate?: (template: MonitoredServiceForm) => void
+}
+
+export default function Configurations(
+  { isTemplate, updateTemplate, templateValue }: ConfigurationsInterface,
+  formikRef: TemplateFormRef
+): JSX.Element {
   const { getString } = useStrings()
   const { showWarning, showError, showSuccess } = useToaster()
   const history = useHistory()
@@ -97,6 +108,20 @@ export default function Configurations(): JSX.Element {
     queryParams: { accountId }
   })
 
+  const serviceRef = useRef<any | null>()
+
+  React.useImperativeHandle(getImperativeHandleRef(isTemplate, formikRef), () => ({
+    resetForm() {
+      return serviceRef?.current?.resetForm()
+    },
+    submitForm() {
+      return serviceRef?.current?.submitForm()
+    },
+    getErrors() {
+      return defaultTo(serviceRef?.current?.getErrors(), {})
+    }
+  }))
+
   useEffect(() => {
     if (overrideBlockNavigation && !redirectToSLO) {
       history.push({
@@ -146,7 +171,14 @@ export default function Configurations(): JSX.Element {
   }, [identifier])
 
   const initialValues: MonitoredServiceForm = useMemo(
-    () => getInitFormData(dataMonitoredServiceById?.data?.monitoredService, defaultMonitoredService, !!identifier),
+    () =>
+      getInitFormData(
+        dataMonitoredServiceById?.data?.monitoredService,
+        defaultMonitoredService,
+        !!identifier,
+        isTemplate,
+        templateValue
+      ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       dataMonitoredServiceById?.data?.monitoredService.name,
@@ -281,6 +313,9 @@ export default function Configurations(): JSX.Element {
     )
   }
 
+  const ServiceComponent = isTemplate ? ServiceWithRef : Service
+  const ServiceProps = isTemplate ? { ref: serviceRef } : {}
+
   return (
     <Container className={css.configurationTabs}>
       {(loadingGetMonitoredService || loadingFetchMonitoredServiceYAML || loadingUpdateMonitoredService) && (
@@ -306,13 +341,16 @@ export default function Configurations(): JSX.Element {
           id={getString('service')}
           title={getString('service')}
           panel={
-            <Service
+            <ServiceComponent
               value={initialValues}
+              {...ServiceProps}
               onSuccess={async payload => onSuccess(payload, getString('service'))}
               serviceTabformRef={serviceTabformRef}
-              cachedInitialValues={cachedInitialValues}
+              cachedInitialValues={!isTemplate ? cachedInitialValues : undefined}
               setDBData={setDBData}
               onDiscard={onDiscard}
+              isTemplate={isTemplate}
+              updateTemplate={updateTemplate}
               onChangeMonitoredServiceType={updatedDTO => {
                 setDefaultMonitoredService(omit(updatedDTO, ['isEdit']) as MonitoredServiceDTO)
                 setCachedInitialValue(updatedDTO)
@@ -343,13 +381,17 @@ export default function Configurations(): JSX.Element {
           }
         />
       </Tabs>
-      <NavigationCheck
-        when={true}
-        shouldBlockNavigation={onNavigationChange}
-        navigate={newPath => {
-          history.push(newPath)
-        }}
-      />
+      {!isTemplate && (
+        <NavigationCheck
+          when={true}
+          shouldBlockNavigation={onNavigationChange}
+          navigate={newPath => {
+            history.push(newPath)
+          }}
+        />
+      )}
     </Container>
   )
 }
+
+export const ConfigurationsWithRef = React.forwardRef(Configurations)

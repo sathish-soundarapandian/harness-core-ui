@@ -1,0 +1,45 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "type": "object",
+    "properties": {
+      "environmentGroup": { "$ref": "#/definitions/EnvironmentGroupConfig" }
+    },
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+      "EnvironmentGroupConfig": {
+        "type": "object",
+        "required": ["identifier", "name", "orgIdentifier", "projectIdentifier"],
+        "properties": {
+          "color": { "type": "string" },
+          "description": { "type": "string" },
+          "envIdentifiers": { "type": "array", "items": { "type": "string" } },
+          "identifier": {
+            "type": "string",
+            "pattern": "^[a-zA-Z_][0-9a-zA-Z_$]{0,63}$"
+          },
+          "name": {
+            "type": "string",
+            "pattern": "^[a-zA-Z_][-0-9a-zA-Z_\\s]{0,63}$"
+          },
+          "orgIdentifier": { "type": "string", "const": "default" },
+          "projectIdentifier": { "type": "string", "const": "project1" },
+          "tags": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          }
+        },
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "EnvironmentGroupWrapperConfig": {
+        "type": "object",
+        "properties": {
+          "environmentGroup": { "$ref": "#/definitions/EnvironmentGroupConfig" }
+        },
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    }
+  },
+  "metaData": null,
+  "correlationId": "12662af2-5390-4501-a017-97f8a41ab48c"
+}

@@ -38,7 +38,7 @@ export const dashboardWidgetsContent: SLODashboardWidget = {
   currentPeriodEndTime: 9000,
   currentPeriodLengthDays: 10,
   currentPeriodStartTime: 8000,
-  errorBudgetBurndown: [],
+  errorBudgetBurndown: [{ timestamp: 1639993380000, value: 0 }, { value: 0 }],
   errorBudgetRemaining: 60,
   errorBudgetRemainingPercentage: 60,
   errorBudgetRisk: RiskValues.HEALTHY,

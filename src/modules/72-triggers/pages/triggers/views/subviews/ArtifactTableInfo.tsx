@@ -9,7 +9,7 @@ import React, { Dispatch, SetStateAction } from 'react'
 import { Button, Layout, TableV2, Text } from '@wings-software/uicore'
 import { RadioGroup, Radio } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
-import type { artifactTableItem } from '../../utils/TriggersWizardPageUtils'
+import type { artifactTableItem } from '../../interface/TriggersWizardInterface'
 import css from './ArtifactTableInfo.module.scss'
 
 interface ArtifactTableInfoInterface {

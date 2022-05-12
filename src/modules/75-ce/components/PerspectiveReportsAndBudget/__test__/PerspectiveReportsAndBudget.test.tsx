@@ -392,6 +392,8 @@ describe('test case for Perspective anomaly alerts', () => {
     const modal = findDialogContainer()
     expect(modal).toBeDefined()
 
+    expect(modal).toMatchSnapshot()
+
     await waitFor(() => {
       expect(getByText('ce.anomalyDetection.notificationAlerts.heading')).toBeDefined()
       expect(getAllByText('ce.anomalyDetection.notificationAlerts.overviewStep')).toBeDefined()
@@ -408,11 +410,21 @@ describe('test case for Perspective anomaly alerts', () => {
       value: 'e6V1JG61QWubhV89vAmUIg'
     })
 
-    await act(async () => {
-      clickSubmit(modal!)
+    const saveAndContinueBtn = getAllByText('saveAndContinue')[0]
+    act(() => {
+      fireEvent.click(saveAndContinueBtn!)
+    })
+    expect(getByText('ce.anomalyDetection.notificationAlerts.notificationStepSubtext')).toBeDefined()
+
+    const submitFormBtn = modal?.querySelector('[data-testid="submitForm"]')
+    expect(submitFormBtn).toBeDefined()
+    act(() => {
+      fireEvent.click(submitFormBtn!)
     })
 
-    expect(modal).toMatchSnapshot()
+    await waitFor(() => {
+      expect(findDialogContainer()).toBeFalsy()
+    })
   })
 
   test('should be able to delete the anomaly alert', async () => {

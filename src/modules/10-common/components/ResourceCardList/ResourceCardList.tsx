@@ -13,8 +13,7 @@ import { FontVariation, Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
 import type { OrgPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import useCreateSmtpModal from '@common/components/Smtp/useCreateSmtpModal'
 import { useGetSmtpConfig } from 'services/cd-ng'
 import css from './ResourceCardList.module.scss'
@@ -36,7 +35,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   const { accountId, orgIdentifier } = useParams<OrgPathProps>()
   const history = useHistory()
   const { getString } = useStrings()
-  const templatesEnabled: boolean = useFeatureFlag(FeatureFlag.NG_TEMPLATES)
+  const { NG_TEMPLATES, NG_VARIABLES } = useFeatureFlags()
   const { loading, data, refetch } = useGetSmtpConfig({ queryParams: { accountId } })
   const refetchSmtpData = (): void => {
     refetch()
@@ -98,13 +97,23 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       colorClass: css.secrets
     },
     ...(!orgIdentifier ? smtpResource : []),
-    ...(templatesEnabled
+    ...(NG_TEMPLATES
       ? [
           {
             label: <String stringID="common.templates" />,
             icon: 'templates-icon',
             route: routes.toTemplates({ accountId, orgIdentifier }),
             colorClass: css.templates
+          } as ResourceOption
+        ]
+      : []),
+    ...(NG_VARIABLES
+      ? [
+          {
+            label: <String stringID="common.variables" />,
+            icon: 'variable',
+            route: routes.toVariables({ accountId, orgIdentifier }),
+            colorClass: css.variables
           } as ResourceOption
         ]
       : [])

@@ -215,7 +215,8 @@ const LBFormStepSecond: React.FC<LBFormStepSecondProps> = props => {
       }}
       formName="lbFormSecond"
       onSubmit={values => handleSubmit?.(values)}
-      render={({ submitForm, setFieldValue }) => (
+    >
+      {({ submitForm, setFieldValue }) => (
         <FormikForm>
           <Layout.Horizontal className={css.formFieldRow}>
             <FormInput.Select
@@ -318,7 +319,7 @@ const LBFormStepSecond: React.FC<LBFormStepSecondProps> = props => {
           </Layout.Horizontal>
         </FormikForm>
       )}
-    ></Formik>
+    </Formik>
   )
 }
 

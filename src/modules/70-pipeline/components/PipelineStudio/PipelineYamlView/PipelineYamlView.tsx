@@ -18,6 +18,7 @@ import RbacButton from '@rbac/components/Button/Button'
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import type { EntityValidityDetails } from 'services/pipeline-ng'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { useVariablesExpression } from '../PiplineHooks/useVariablesExpression'
 import { usePipelineSchema } from '../PipelineSchema/PipelineSchemaContext'
@@ -69,6 +70,8 @@ function PipelineYamlView(): React.ReactElement {
   const { expressions } = useVariablesExpression()
   const expressionRef = React.useRef<string[]>([])
   expressionRef.current = expressions
+  const updateEntityValidityDetailsRef = React.useRef<(entityValidityDetails: EntityValidityDetails) => Promise<void>>()
+  updateEntityValidityDetailsRef.current = updateEntityValidityDetails
 
   // setup polling
   React.useEffect(() => {
@@ -78,12 +81,13 @@ function PipelineYamlView(): React.ReactElement {
           try {
             const pipelineFromYaml = parse(yamlHandler.getLatestYaml())?.pipeline
             if (
-              !isEqual(omit(pipeline, 'repo', 'branch'), pipelineFromYaml) &&
+              (!isEqual(omit(pipeline, 'repo', 'branch'), pipelineFromYaml) ||
+                entityValidityDetails?.valid === false) &&
               yamlHandler.getYAMLValidationErrorMap()?.size === 0 // Don't update for Invalid Yaml
             ) {
               updatePipeline(pipelineFromYaml).then(() => {
-                if (entityValidityDetails.valid === false) {
-                  updateEntityValidityDetails({ ...entityValidityDetails, valid: true })
+                if (entityValidityDetails?.valid === false) {
+                  updateEntityValidityDetailsRef.current?.({ ...entityValidityDetails, valid: true, invalidYaml: '' })
                 }
               })
             }
@@ -117,6 +121,11 @@ function PipelineYamlView(): React.ReactElement {
     }
   }, [gitDetails, isGitSyncEnabled, pipeline?.identifier])
 
+  const yamlOrJsonProp =
+    entityValidityDetails?.valid === false && entityValidityDetails?.invalidYaml
+      ? { existingYaml: entityValidityDetails?.invalidYaml }
+      : { existingJSON: { pipeline: omit(pipeline, 'repo', 'branch') } }
+
   return (
     <div className={css.yamlBuilder}>
       <>
@@ -126,7 +135,6 @@ function PipelineYamlView(): React.ReactElement {
             fileName={defaultTo(yamlFileName, defaultFileName)}
             entityType="Pipelines"
             isReadOnlyMode={isReadonly || !isYamlEditable}
-            existingJSON={{ pipeline: omit(pipeline, 'repo', 'branch') }}
             bind={setYamlHandler}
             showSnippetSection={false}
             onExpressionTrigger={() => {
@@ -143,6 +151,7 @@ function PipelineYamlView(): React.ReactElement {
               updatePipelineView({ ...pipelineView, isYamlEditable: true })
             }}
             isEditModeSupported={!isReadonly}
+            {...yamlOrJsonProp}
           />
         )}
       </>

@@ -40,7 +40,7 @@ const templateListCallMock = jest
   .spyOn(hooks, 'useMutateAsGet')
   .mockImplementation(() => mockTemplatesSuccessResponse as any)
 
-jest.mock('@templates-library/pages/TemplatesPage/views/TemplatesView', () => ({
+jest.mock('@templates-library/pages/TemplatesPage/views/TemplatesView/TemplatesView', () => ({
   __esModule: true,
   default: () => <div className={'templates-view-mock'}></div>
 }))

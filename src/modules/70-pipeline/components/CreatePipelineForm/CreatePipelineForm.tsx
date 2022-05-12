@@ -83,7 +83,7 @@ export function CreatePipelineForm(props: CreatePipelineFormProps): React.ReactE
             {isGitSyncEnabled && (
               <GitSyncStoreProvider>
                 <GitContextForm
-                  formikProps={formikProps}
+                  formikProps={formikProps as any}
                   gitDetails={{
                     repoIdentifier: formikProps.values.repo,
                     branch: formikProps.values.branch,

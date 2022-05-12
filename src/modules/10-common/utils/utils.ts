@@ -72,3 +72,22 @@ export const focusOnNode = (node: HTMLElement): void => {
   node.focus()
   node.tabIndex = oldTabIndex
 }
+
+const HOTJAR_SUPPRESSION_ATTR = 'data-hj-suppress'
+
+// Utility to add `data-hj-suppress` into a collection of elements to
+// suppress data from HotJar recording
+// @see https://bit.ly/3rCgpOY
+export const suppressHotJarRecording = (elements: Element[] | null | undefined): void => {
+  if (window.hj) {
+    elements?.forEach?.((e: Element) => {
+      if (!e.hasAttribute(HOTJAR_SUPPRESSION_ATTR)) {
+        e.setAttribute(HOTJAR_SUPPRESSION_ATTR, 'true')
+      }
+    })
+  }
+}
+
+// Utility to generate { 'data-hj-suppress': true } attribute if HotJar is available
+export const addHotJarSuppressionAttribute = (): { [HOTJAR_SUPPRESSION_ATTR]: boolean } | undefined =>
+  window.hj ? { [HOTJAR_SUPPRESSION_ATTR]: true } : undefined

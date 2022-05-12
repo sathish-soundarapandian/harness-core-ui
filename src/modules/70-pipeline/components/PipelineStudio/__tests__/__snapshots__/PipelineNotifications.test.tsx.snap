@@ -3,6 +3,43 @@
 exports[`Test PipelineNotifications should test render 1`] = `
 <div>
   <div
+    class="Layout--horizontal StyledProps--main StyledProps--padding-bottom-medium StyledProps--padding-top-medium StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--flex StyledProps--flex-distribution-space-between StyledProps--border StyledProps--border-bottom StyledProps--border-color-grey300"
+  >
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-bold StyledProps--font-size-medium"
+    >
+       : notifications.name
+    </p>
+    <div
+      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+    >
+      <button
+        class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
+        disabled=""
+        tabindex="-1"
+        type="button"
+      >
+        <span
+          class="bp3-button-text"
+        >
+          applyChanges
+        </span>
+      </button>
+      <button
+        class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--size Button--small"
+        disabled=""
+        tabindex="-1"
+        type="button"
+      >
+        <span
+          class="bp3-button-text"
+        >
+          pipeline.discard
+        </span>
+      </button>
+    </div>
+  </div>
+  <div
     class="pipelineNotifications"
   >
     <div

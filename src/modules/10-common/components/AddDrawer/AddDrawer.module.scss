@@ -47,12 +47,24 @@ $top-offset: 110px;
     .categorySteps {
       color: var(--grey-400);
       .categoryName {
-        color: var(--grey-400);
         margin-bottom: var(--spacing-large);
         font-size: 14px;
         line-height: 17px;
-        color: #000000;
+        color: var(--grey-900);
         font-weight: bold;
+
+        .coming-soon-banner {
+          padding: var(--spacing-1) var(--spacing-3);
+          background-color: var(--blue-100);
+          color: var(--blue-500);
+          font-size: var(--font-size-xsmall);
+          font-weight: bold;
+          line-height: 12px;
+          border-radius: 4px;
+          text-transform: uppercase;
+          width: 380px;
+          text-align: center;
+        }
       }
       .steps {
         display: grid;
@@ -120,7 +132,7 @@ $top-offset: 110px;
     font-family: Inter;
     font-style: normal;
 
-    background: #00467b;
+    background: var(--primary-9);
     color: var(--white);
     .library {
       font-weight: 600;
@@ -136,7 +148,7 @@ $top-offset: 110px;
     }
     .showAllBtn {
       height: 40px;
-      background: rgba(17, 33, 67, 0.14);
+      background: var(--primary-10);
       mix-blend-mode: normal;
       border-radius: 5px;
       display: flex;
@@ -227,7 +239,7 @@ $top-offset: 110px;
   position: absolute;
   right: 100%;
   top: 0;
-  background: #00ade4 !important;
+  background: var(--primary-4) !important;
   opacity: 0.5;
   color: var(--white) !important;
   border-radius: 4px 0 0 4px !important;

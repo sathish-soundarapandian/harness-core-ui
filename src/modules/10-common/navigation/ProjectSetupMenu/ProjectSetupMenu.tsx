@@ -22,9 +22,10 @@ interface ProjectSetupMenuProps {
 const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module }) => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<PipelineType<ProjectPathProps>>()
-  const { NG_TEMPLATES, OPA_PIPELINE_GOVERNANCE } = useFeatureFlags()
+  const { NG_TEMPLATES, OPA_PIPELINE_GOVERNANCE, NG_VARIABLES } = useFeatureFlags()
   const params = { accountId, orgIdentifier, projectIdentifier, module }
   const isCIorCD = module === 'ci' || module === 'cd'
+  // const isCV = module === 'cv'
   const getGitSyncEnabled = isCIorCD || !module
 
   return (
@@ -32,6 +33,7 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module }) => {
       <Layout.Vertical spacing="small">
         <SidebarLink label={getString('connectorsLabel')} to={routes.toConnectors(params)} />
         <SidebarLink label={getString('common.secrets')} to={routes.toSecrets(params)} />
+        {NG_VARIABLES && <SidebarLink label={getString('common.variables')} to={routes.toVariables(params)} />}
         <SidebarLink to={routes.toAccessControl(params)} label={getString('accessControl')} />
         <SidebarLink label={getString('delegate.delegates')} to={routes.toDelegates(params)} />
         {getGitSyncEnabled ? (
@@ -40,6 +42,10 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module }) => {
             to={routes.toGitSyncAdmin({ accountId, orgIdentifier, projectIdentifier, module })}
           />
         ) : null}
+        {/* 
+         To enable templates for CV
+         Replace isCIorCD with (isCIorCD || isCV) 
+         */}
         {NG_TEMPLATES && isCIorCD && (
           <SidebarLink label={getString('common.templates')} to={routes.toTemplates(params)} />
         )}

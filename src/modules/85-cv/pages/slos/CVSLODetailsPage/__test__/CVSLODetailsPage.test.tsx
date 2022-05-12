@@ -26,6 +26,40 @@ jest.mock('@cv/pages/slos/components/CVCreateSLO/CVCreateSLO', () => ({
   }
 }))
 
+jest.mock('@cv/pages/slos/SLOCard/ErrorBudgetGauge', () => ({
+  __esModule: true,
+  default: function ErrorBudgetGauge() {
+    return <span data-testid="error-budget-gauge" />
+  }
+}))
+
+jest.mock('@cv/pages/slos/SLOCard/SLOCardContent', () => ({
+  __esModule: true,
+  default: function ErrorBudgetGauge() {
+    return <span data-testid="slo-card-content" />
+  }
+}))
+
+jest.mock(
+  '@cv/pages/monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/ChangesTable',
+  () => ({
+    __esModule: true,
+    default: function ErrorBudgetGauge() {
+      return <span data-testid="changes-table" />
+    }
+  })
+)
+
+jest.mock(
+  '@cv/pages/monitored-service/components/ServiceHealth/components/ChangesSourceCard/ChangesSourceCard',
+  () => ({
+    __esModule: true,
+    default: function ChangesSourceCard() {
+      return <span data-testid="changes-source-card" />
+    }
+  })
+)
+
 const renderComponent = (): RenderResult => {
   return render(
     <TestWrapper {...testWrapperProps}>
@@ -50,7 +84,7 @@ describe('Test cases for CVSLODetailsPage', () => {
 
     const { container } = renderComponent()
 
-    expect(container.getElementsByClassName('bp3-skeleton')).toHaveLength(2)
+    expect(container.getElementsByClassName('bp3-skeleton')).toHaveLength(4)
   })
 
   test('is should handle retryOnError for both tabs', async () => {

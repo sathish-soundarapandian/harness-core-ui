@@ -7,9 +7,7 @@
 
 import React from 'react'
 import { connect } from 'formik'
-import { Text, getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
-import { useStrings } from 'framework/strings'
+import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@wings-software/uicore'
 import StepCommonFieldsInputSet from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFieldsInputSet'
 import { Connectors } from '@connectors/constants'
 import type { SaveCacheGCSStepProps } from './SaveCacheGCSStep'
@@ -24,8 +22,6 @@ export const SaveCacheGCSStepInputSetBasic: React.FC<SaveCacheGCSStepProps> = ({
   stepViewType,
   formik
 }) => {
-  const { getString } = useStrings()
-
   return (
     <FormikForm className={css.removeBpPopoverWrapperTopMargin}>
       <CIStep
@@ -34,17 +30,7 @@ export const SaveCacheGCSStepInputSetBasic: React.FC<SaveCacheGCSStepProps> = ({
         enableFields={{
           ...(getMultiTypeFromValue(template?.spec?.connectorRef) === MultiTypeInputType.RUNTIME && {
             'spec.connectorRef': {
-              label: (
-                <Text
-                  className={css.inpLabel}
-                  color={Color.GREY_600}
-                  font={{ size: 'small', weight: 'semi-bold' }}
-                  style={{ display: 'flex', alignItems: 'center' }}
-                  tooltipProps={{ dataTooltipId: 'gcpConnector' }}
-                >
-                  {getString('pipelineSteps.gcpConnectorLabel')}
-                </Text>
-              ),
+              label: { labelKey: 'pipelineSteps.gcpConnectorLabel', tooltipId: 'gcpConnector' },
               type: Connectors.DOCKER
             }
           }),
@@ -61,6 +47,7 @@ export const SaveCacheGCSStepInputSetBasic: React.FC<SaveCacheGCSStepProps> = ({
         path={path || ''}
         isInputSetView={true}
         formik={formik}
+        template={template}
       />
       <CIStepOptionalConfig
         stepViewType={stepViewType}
@@ -72,6 +59,7 @@ export const SaveCacheGCSStepInputSetBasic: React.FC<SaveCacheGCSStepProps> = ({
           ...(getMultiTypeFromValue(template?.spec?.override) === MultiTypeInputType.RUNTIME && { 'spec.override': {} })
         }}
         path={path || ''}
+        template={template}
       />
       <StepCommonFieldsInputSet path={path} readonly={readonly} template={template} stepViewType={stepViewType} />
     </FormikForm>

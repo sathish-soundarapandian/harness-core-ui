@@ -8,6 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
 import { Container, Page } from '@wings-software/uicore'
+import { defaultTo } from 'lodash-es'
 import {
   CcmMetaData,
   StatsInfo,
@@ -35,6 +36,10 @@ import { Utils } from '@ce/common/Utils'
 import { useCreateConnectorMinimal } from '@ce/components/CreateConnector/CreateConnector'
 import NoData from '@ce/components/OverviewPage/OverviewNoData'
 import { TitleWithToolTipId } from '@common/components/Title/TitleWithToolTipId'
+import SustainabilityCard from '@ce/components/OverviewPage/SustainabilityCard'
+import { getEmissionsValue } from '@ce/utils/formatResourceValue'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
 import bgImage from './images/CD/overviewBg.png'
 import css from './Overview.module.scss'
@@ -81,6 +86,7 @@ const NoDataOverviewPage: React.FC<NoDataOverviewPageProps> = (props: NoDataOver
 
 const OverviewPage: React.FC = () => {
   const { getString } = useStrings()
+  const sustainabilityEnabled = useFeatureFlag(FeatureFlag.CCM_SUSTAINABILITY)
   const [timeRange, setTimeRange] = useState<TimeRange>({
     to: DATE_RANGE_SHORTCUTS.LAST_30_DAYS[1].format(CE_DATE_FORMAT_INTERNAL),
     from: DATE_RANGE_SHORTCUTS.LAST_30_DAYS[0].format(CE_DATE_FORMAT_INTERNAL)
@@ -166,6 +172,21 @@ const OverviewPage: React.FC = () => {
               {!cloudDataPresent && clusterDataPresent && <OverviewTopCluster timeRange={timeRange} />}
             </div>
             <div className={css.columnTwo}>
+              {sustainabilityEnabled && (
+                <SustainabilityCard
+                  className={css.cloudEmissionCard}
+                  title={getString('ce.overview.sustainability.fromClousUsageTitle')}
+                  firstColValue={getEmissionsValue(
+                    defaultTo(Number(cloudCost?.statsValue?.substring(1).replace(/,/g, '')), 0)
+                  )}
+                  firstColText={getString('ce.overview.sustainability.tillDate')}
+                  secondColText={getString('ce.recommendation.listPage.byEOM')}
+                  secondColValue={getEmissionsValue(
+                    defaultTo(Number(forecastedCost?.statsValue?.substring(1).replace(',', '')), 0)
+                  )}
+                  fetching={summaryFetching}
+                />
+              )}
               <OverviewCostByProviders timeRange={timeRange} clusterDataPresent={clusterDataPresent} />
               {clusterDataPresent && <OverviewTopRecommendations />}
               {/* <div>PUT AUTOSTOPPING COMPONENT HERE</div> */}

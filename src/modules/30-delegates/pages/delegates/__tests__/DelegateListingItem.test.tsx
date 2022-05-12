@@ -90,4 +90,20 @@ describe('Delegates Listing With Groups', () => {
       expect(document.body.innerHTML).not.toContain('useConfirmationDialog')
     })
   })
+
+  test('click on delegate item and expand it', async () => {
+    const { container } = render(
+      <TestWrapper>
+        <DelegatesListingItem delegate={delegateGroupsMock[1]} setOpenTroubleshoter={setOpenTroubleshoterFn} />
+      </TestWrapper>
+    )
+    const expandRowBtn = container.querySelector('[data-icon="chevron-right"]') as HTMLButtonElement
+    act(() => {
+      fireEvent.click(expandRowBtn!)
+    })
+
+    waitFor(() => {
+      expect(document.body.innerHTML).toContain('delegates.noInstances')
+    })
+  })
 })

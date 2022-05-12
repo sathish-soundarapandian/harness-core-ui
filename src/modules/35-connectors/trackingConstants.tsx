@@ -41,5 +41,6 @@ export const CE_K8S_CONNECTOR_CREATION_EVENTS = {
 }
 
 export const CCM_CONNECTOR_SAVE_EVENT = PREFIX_CCM_EVENTS + 'connector_save'
+export const CCM_CONNECTOR_SAVE_SUCCESS = PREFIX_CCM_EVENTS + 'connector_save_success'
 export const CE_CONNECTOR_CLICK = PREFIX_CCM_EVENTS + 'connector_click'
 export const CONNECTORS_PAGE = 'connectors_page'

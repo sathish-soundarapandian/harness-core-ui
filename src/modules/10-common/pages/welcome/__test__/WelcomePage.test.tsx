@@ -12,7 +12,7 @@ import WelcomePage from '../WelcomePage'
 
 jest.mock('services/cd-ng', () => ({
   useUpdateAccountDefaultExperienceNG: jest.fn().mockImplementation(() => {
-    return { mutate: jest.fn() }
+    return { mutate: () => Promise.resolve({ status: 'SUCCESS', data: { defaultExperience: 'NG' } }) }
   })
 }))
 

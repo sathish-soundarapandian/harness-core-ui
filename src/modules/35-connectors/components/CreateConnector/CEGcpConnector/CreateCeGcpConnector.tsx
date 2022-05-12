@@ -14,7 +14,7 @@ import { useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
 import { useTelemetry } from '@common/hooks/useTelemetry'
-import { CCM_CONNECTOR_SAVE_EVENT } from '@connectors/trackingConstants'
+import { CCM_CONNECTOR_SAVE_EVENT, CCM_CONNECTOR_SAVE_SUCCESS } from '@connectors/trackingConstants'
 import OverviewStep, { CEGcpConnectorDTO } from './steps/OverviewStep'
 import BillingExport from './steps/BillingExport'
 import GrantPermission from './steps/GrantPermission'
@@ -53,6 +53,7 @@ const CreateCeGcpConnector: React.FC<CreateConnectorModalProps> = props => {
             trackEvent(CCM_CONNECTOR_SAVE_EVENT, { type: Connectors.CE_GCP })
             props.onClose?.()
           }}
+          onTestConnectionSuccess={() => trackEvent(CCM_CONNECTOR_SAVE_SUCCESS, { type: Connectors.CE_GCP })}
         />
       </StepWizard>
     </DialogExtention>

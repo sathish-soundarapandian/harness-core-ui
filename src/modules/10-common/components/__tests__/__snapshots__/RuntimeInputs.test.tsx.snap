@@ -6,6 +6,7 @@ exports[`RuntimeInput Tests for checkbox, RadioGroup and Text Area should render
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -233,6 +234,7 @@ exports[`RuntimeInput Tests for checkbox, RadioGroup and Text Area should render
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -469,6 +471,7 @@ exports[`RuntimeInput Tests for checkbox, RadioGroup and Text Area should render
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

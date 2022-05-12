@@ -26,7 +26,7 @@ jest.mock('services/pipeline-ng', () => ({
   })),
   useGetStagesExecutionList: jest.fn(() => ({})),
   useGetPipeline: jest.fn(() => ({ data: null })),
-  useCreateVariables: jest.fn(() => ({
+  useCreateVariablesV2: jest.fn(() => ({
     mutate: jest.fn().mockResolvedValue({ data: {} })
   })),
   usePostPipelineExecuteWithInputSetYaml: jest.fn(() => ({ data: null })),

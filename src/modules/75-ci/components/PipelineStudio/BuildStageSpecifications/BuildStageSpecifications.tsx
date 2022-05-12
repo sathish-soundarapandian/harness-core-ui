@@ -19,10 +19,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import type { AllNGVariables } from '@pipeline/utils/types'
 import type { NGVariable, StageElementConfig, StringNGVariable } from 'services/cd-ng'
-import {
-  PipelineContextType,
-  usePipelineContext
-} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type {
   CustomVariableEditableExtraProps,
   CustomVariablesData
@@ -37,6 +34,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import type { BuildStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
+import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import { BuildTabs } from '../CIPipelineStagesUtils'
 import css from './BuildStageSpecifications.module.scss'
 
@@ -118,7 +116,7 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
   }, [])
 
   const validationSchema = yup.object().shape({
-    ...(contextType === PipelineContextType.Pipeline && { name: NameSchema() }),
+    ...(isContextTypeNotStageTemplate(contextType) && { name: NameSchema() }),
     sharedPaths: yup.lazy(value => {
       if (Array.isArray(value)) {
         return yup.array().test('valuesShouldBeUnique', getString('validation.uniqueValues'), list => {
@@ -219,7 +217,7 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
           {formik => {
             const { values: formValues, setFieldValue } = formik
             window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: BuildTabs.OVERVIEW }))
-            formikRef.current = formik
+            formikRef.current = formik as FormikProps<unknown> | null
             return (
               <>
                 <div className={css.tabHeading} id="stageDetails">
@@ -227,7 +225,7 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
                 </div>
                 <Card className={cx(css.sectionCard)} disabled={isReadonly}>
                   <FormikForm>
-                    {contextType === PipelineContextType.Pipeline && (
+                    {isContextTypeNotStageTemplate(contextType) && (
                       <NameIdDescriptionTags
                         formikProps={formik}
                         identifierProps={{
@@ -268,11 +266,7 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
                             {getString('pipelineSteps.build.stageSpecifications.sharedPaths')}
                           </Text>
                         ),
-                        allowedTypes: [
-                          MultiTypeInputType.FIXED,
-                          MultiTypeInputType.EXPRESSION,
-                          MultiTypeInputType.RUNTIME
-                        ]
+                        allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
                       }}
                       disabled={isReadonly}
                     />

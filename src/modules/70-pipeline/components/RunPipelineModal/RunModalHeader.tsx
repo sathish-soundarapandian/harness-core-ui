@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction, useRef } from 'react'
+import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
 import cx from 'classnames'
 import {
   Heading,
@@ -80,6 +80,7 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
   const { isGitSyncEnabled } = useAppStore()
   const { getString } = useStrings()
   const stageSelectionRef = useRef(false)
+  const [localSelectedStagesData, setLocalSelectedStagesData] = useState(selectedStageData)
 
   const isStageExecutionDisabled = (): boolean => {
     //stageExecutionData?.data is empty array when allowStageExecution is set to false in advanced tab
@@ -96,7 +97,7 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
       items.length === stageExecutionData?.data?.length &&
       !items.find(item => item.value === getAllStageItem(getString).value)
     if (
-      (!selectedStageData.allStagesSelected && allStagesSelected) ||
+      (!localSelectedStagesData.allStagesSelected && allStagesSelected) ||
       hasOnlyAllStagesUnChecked ||
       items?.length === 0
     ) {
@@ -104,7 +105,7 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
       updatedSelectedStageItems.push(getAllStageItem(getString))
       updatedSelectedStages.push(getAllStageData(getString))
 
-      setSelectedStageData({
+      setLocalSelectedStagesData({
         selectedStages: updatedSelectedStages,
         selectedStageItems: updatedSelectedStageItems,
         allStagesSelected: true
@@ -115,7 +116,7 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
         stageDetails && updatedSelectedStages.push(stageDetails)
         return option.value !== ALL_STAGE_VALUE
       })
-      setSelectedStageData({
+      setLocalSelectedStagesData({
         selectedStages: updatedSelectedStages,
         selectedStageItems: newItems,
         allStagesSelected: false
@@ -153,22 +154,25 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
         <div data-tooltip-id={stageExecutionDisabledTooltip}>
           <MultiSelectDropDown
             popoverClassName={css.disabledStageDropdown}
-            hideItemCount={selectedStageData.allStagesSelected}
+            hideItemCount={localSelectedStagesData.allStagesSelected}
             disabled={isStageExecutionDisabled()}
             buttonTestId={'stage-select'}
             onChange={onStageSelect}
             onPopoverClose={() => {
+              setSelectedStageData(localSelectedStagesData)
               if (stageSelectionRef.current) {
                 getTemplateFromPipeline()?.then(() => {
                   stageSelectionRef.current = false
                 })
               }
             }}
-            value={selectedStageData.selectedStageItems}
+            value={localSelectedStagesData.selectedStageItems}
             items={executionStageList}
             minWidth={150}
             usePortal={true}
-            placeholder={selectedStageData.allStagesSelected ? getString('pipeline.allStages') : getString('stages')}
+            placeholder={
+              localSelectedStagesData.allStagesSelected ? getString('pipeline.allStages') : getString('stages')
+            }
             className={cx({ [css.stagesDropdown]: isGitSyncEnabled })}
           />
           <HarnessDocTooltip tooltipId={stageExecutionDisabledTooltip} useStandAlone={true} />

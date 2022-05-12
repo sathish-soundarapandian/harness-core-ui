@@ -17,6 +17,7 @@ exports[`Test SourceCodeManagerForm Should render SourceCodeManagerForm for exis
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>
@@ -443,6 +444,7 @@ exports[`Test SourceCodeManagerForm Should render SourceCodeManagerForm for new 
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>

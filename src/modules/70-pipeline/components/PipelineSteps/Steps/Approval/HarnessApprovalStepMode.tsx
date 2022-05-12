@@ -7,7 +7,8 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { isEmpty, compact } from 'lodash-es'
+import { produce } from 'immer'
+import { isEmpty, compact, isArray } from 'lodash-es'
 import * as Yup from 'yup'
 import { FieldArray, FormikProps } from 'formik'
 import {
@@ -18,7 +19,8 @@ import {
   FormInput,
   getMultiTypeFromValue,
   HarnessDocTooltip,
-  MultiTypeInputType
+  MultiTypeInputType,
+  Container
 } from '@wings-software/uicore'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { String, useStrings } from 'framework/strings'
@@ -132,6 +134,20 @@ function FormContent({
           expressions={expressions}
           allowableTypes={allowableTypes}
         />
+        {getMultiTypeFromValue(formik.values.spec.approvers.userGroups) === MultiTypeInputType.RUNTIME && (
+          <Container margin={{ top: 'medium' }}>
+            <ConfigureOptions
+              value={formik.values.spec.approvers.userGroups as string}
+              type="String"
+              variableName="spec.approvers.userGroups"
+              showRequiredField={false}
+              showDefaultField={false}
+              showAdvanced={true}
+              onChange={value => formik.setFieldValue('spec.approvers.userGroups', value)}
+              isReadonly={readonly}
+            />
+          </Container>
+        )}
       </div>
 
       <div className={cx(stepCss.formGroup, stepCss.lg)}>
@@ -253,9 +269,21 @@ function HarnessApprovalStepMode(
   const { onUpdate, isNewStep = true, readonly, stepViewType, onChange, allowableTypes } = props
   const { getString } = useStrings()
 
+  const handleOnSubmit = (values: HarnessApprovalData) => {
+    onUpdate?.(
+      produce(values, draft => {
+        const userGroupValues = draft.spec.approvers?.userGroups
+
+        if (isArray(userGroupValues) && userGroupValues.length > 0) {
+          draft.spec.approvers.userGroups = compact(userGroupValues as string[])
+        }
+      })
+    )
+  }
+
   return (
     <Formik<HarnessApprovalData>
-      onSubmit={values => onUpdate?.(values)}
+      onSubmit={handleOnSubmit}
       initialValues={props.initialValues}
       formName="harnessApproval"
       validate={data => {

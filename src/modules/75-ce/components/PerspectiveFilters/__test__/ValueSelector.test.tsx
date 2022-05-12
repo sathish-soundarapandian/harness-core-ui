@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, act, fireEvent } from '@testing-library/react'
 import { Provider } from 'urql'
 import { fromValue } from 'wonka'
 import { QlceViewFilterOperator } from 'services/ce/services'
@@ -51,5 +51,26 @@ describe('test cases for value Selector component', () => {
     )
 
     expect(container).toMatchSnapshot()
+  })
+
+  test('Should be able to switch to like operator', () => {
+    const responseState = {
+      executeQuery: () => {
+        return fromValue(ResponseData)
+      }
+    }
+    const { container, getByText } = render(
+      <TestWrapper>
+        <Provider value={responseState as any}>
+          <ValueSelector {...props} />
+        </Provider>
+      </TestWrapper>
+    )
+
+    act(() => {
+      fireEvent.click(getByText('ce.perspectives.createPerspective.operatorLabels.opLike'))
+    })
+
+    expect(container.querySelector('.bp3-input')).toBeDefined()
   })
 })

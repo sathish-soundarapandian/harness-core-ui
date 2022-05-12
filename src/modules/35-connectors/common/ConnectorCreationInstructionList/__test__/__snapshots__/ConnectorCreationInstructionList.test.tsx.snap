@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Connect creation instruction list component List should render 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main instructionPanel"
+  >
+    <ol
+      class="instructionList"
+    >
+      <li
+        class="btnInstruction"
+      >
+        <button
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-secondary Button--size Button--small"
+          type="button"
+        >
+          <span
+            class="bp3-button-text"
+          >
+            connectors.ceAws.cur.launchTemplate
+          </span>
+          <span
+            class="bp3-icon StyledProps--main StyledProps--margin-left-xsmall"
+            data-icon="main-share"
+          >
+            <svg
+              height="12"
+              viewBox="0 0 14 14"
+              width="12"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10.5 12.6H1.4V3.5h6.1l1.4-1.4H.7c-.4 0-.7.3-.7.7v10.5c0 .4.3.7.7.7h10.5c.4 0 .7-.3.7-.7V5.1l-1.4 1.4zM13.3 0H8.4c-.4 0-.7.3-.7.7s.3.7.7.7h3.2L6.5 6.5c-.1.1-.2.3-.2.5 0 .4.3.7.7.7.2 0 .4-.1.5-.2l5.1-5.1v3.2c0 .4.3.7.7.7s.7-.3.7-.7V.7c0-.4-.3-.7-.7-.7z"
+                fill="#4d5969"
+              />
+            </svg>
+          </span>
+        </button>
+      </li>
+      <li
+        class="undefined"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey800"
+        >
+          connectors.ceAws.cur.instructions.i1
+        </p>
+      </li>
+      <li
+        class="undefined"
+      >
+        <div />
+      </li>
+      <li
+        class="undefined"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey800"
+        >
+          connectors.ceAws.cur.instructions.i4
+        </p>
+      </li>
+    </ol>
+  </div>
+</div>
+`;

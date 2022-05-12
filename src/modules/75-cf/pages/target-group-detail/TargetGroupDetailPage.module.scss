@@ -5,13 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.layout {
-  flex-basis: 100%;
+.tabs {
+  background-color: var(--white);
   display: grid;
-  grid-template-columns: 470px 1fr;
 
   > :global(.bp3-tabs) {
-    background-color: var(--white);
     display: grid;
     grid-template-rows: auto 1fr;
 

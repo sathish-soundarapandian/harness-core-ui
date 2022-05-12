@@ -12,13 +12,14 @@ import {
   Formik,
   FormikForm,
   FormInput,
-  Heading,
   Layout,
   ModalErrorHandler,
   ModalErrorHandlerBinding,
   StepProps,
-  Icon
+  Icon,
+  Text
 } from '@wings-software/uicore'
+import { FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
 import { omit, pick } from 'lodash-es'
 import { useParams } from 'react-router-dom'
@@ -178,9 +179,13 @@ const OverviewStep: React.FC<OverviewProps> = props => {
 
   return (
     <Layout.Vertical className={css.stepContainer}>
-      <Heading level={2} className={css.header}>
+      <Text
+        font={{ variation: FontVariation.H3 }}
+        tooltipProps={{ dataTooltipId: 'awsConnectorOverview' }}
+        margin={{ bottom: 'large' }}
+      >
         {getString('connectors.ceAws.overview.heading')}
-      </Heading>
+      </Text>
       <div style={{ flex: 1 }}>
         <Formik<OverviewDetails>
           formName="connectorsCeAwsOverViewForm"
@@ -211,6 +216,7 @@ const OverviewStep: React.FC<OverviewProps> = props => {
                   className={css.dataFields}
                   name={'awsAccountId'}
                   label={getString('connectors.ceAws.overview.awsAccountId')}
+                  tooltipProps={{ dataTooltipId: 'awsAccountId' }}
                 />
                 <Description />
                 <Tags />

@@ -20,6 +20,7 @@ import {
 import { useModalHook } from '@harness/use-modal'
 import { Dialog } from '@blueprintjs/core'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
 import { PageSpinner } from '@common/components'
 
@@ -51,6 +52,7 @@ const GitOpsModalContainer: React.FC = () => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
 
   const { showSuccess, showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
   // Adding timeout to escape the timegap between loading set by useListGitOpsProviders and setting deleting to false
   const [deleting, setDeleting] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
@@ -103,7 +105,7 @@ const GitOpsModalContainer: React.FC = () => {
         showSuccess(getString('cd.adapterDelete', { adapterName: provider?.name }))
       }
     } catch (err) {
-      showError(err?.data?.message || err?.message)
+      showError(getRBACErrorMessage(err))
     } finally {
       timerRef.current = window.setTimeout(() => {
         setDeleting(false)
@@ -283,7 +285,7 @@ const GitOpsModalContainer: React.FC = () => {
             ) : /* istanbul ignore next */ connectorFetchError && shouldShowError(connectorFetchError) ? (
               <div style={{ paddingTop: '200px' }}>
                 <PageError
-                  message={(connectorFetchError?.data as Error)?.message || connectorFetchError?.message}
+                  message={getRBACErrorMessage(connectorFetchError) as string}
                   onClick={(e: React.MouseEvent<Element, MouseEvent>) => {
                     e.preventDefault()
                     e.stopPropagation()

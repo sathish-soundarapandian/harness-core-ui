@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing LogsHeader snapshot 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main headerContainer"
+  >
+    <header
+      class="logsHeader"
+    >
+      <section
+        class="headerContent"
+      >
+        <p
+          class="StyledProps--font StyledProps--main header"
+        >
+          Logs
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main subHeader StyledProps--font-small"
+        >
+          
+        </p>
+      </section>
+      <div />
+    </header>
+    <section
+      class="headerActions"
+    >
+      <button
+        class="bp3-button Button--button StyledProps--font StyledProps--main redirectBtn Button--with-current-color"
+        type="button"
+      >
+        <span
+          class="bp3-button-text"
+        >
+          logView
+        </span>
+      </button>
+      <div
+        class="searchInput"
+      />
+    </section>
+  </div>
+</div>
+`;

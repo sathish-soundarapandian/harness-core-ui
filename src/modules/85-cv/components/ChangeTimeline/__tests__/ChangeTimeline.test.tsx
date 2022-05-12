@@ -129,4 +129,99 @@ describe('Render ChangeTimeline', () => {
     const { container } = render(<WrapperComponent {...defaultProps} />)
     await waitFor(() => expect(container.querySelector('[data-testid="timelineLoading"]')).toBeTruthy())
   })
+
+  test('it should call useChangeEventTimeline with monitoredServiceIdentifiers', async () => {
+    const refetch = jest.fn()
+    const sliderTimeRange = { startTime: 1639993400000, endTime: 1639993420000 }
+
+    jest.spyOn(cvServices, 'useChangeEventTimeline').mockReturnValue({ data: {}, refetch, cancel: jest.fn() } as any)
+
+    render(
+      <WrapperComponent
+        {...defaultProps}
+        monitoredServiceIdentifier="monitored_service_identifier"
+        selectedTimeRange={sliderTimeRange}
+      />
+    )
+
+    await waitFor(() => {
+      expect(refetch).toHaveBeenLastCalledWith({
+        queryParams: {
+          monitoredServiceIdentifiers: ['monitored_service_identifier'],
+          changeCategories: [],
+          changeSourceTypes: [],
+          ...sliderTimeRange
+        },
+        queryParamStringifyOptions: {
+          arrayFormat: 'repeat'
+        }
+      })
+    })
+  })
+
+  test('it should call useChangeEventTimeline without monitoredServiceIdentifiers', async () => {
+    const refetch = jest.fn()
+    const sliderTimeRange = { startTime: 1639993400000, endTime: 1639993420000 }
+    const serviceIdentifier = 'SERVICE_IDENTIFIER'
+    const environmentIdentifier = 'ENV_IDENTIFIER'
+
+    jest.spyOn(cvServices, 'useChangeEventTimeline').mockReturnValue({ data: {}, refetch, cancel: jest.fn() } as any)
+
+    render(
+      <WrapperComponent
+        {...defaultProps}
+        selectedTimeRange={sliderTimeRange}
+        serviceIdentifier={serviceIdentifier}
+        environmentIdentifier={environmentIdentifier}
+      />
+    )
+
+    await waitFor(() => {
+      expect(refetch).toHaveBeenLastCalledWith({
+        queryParams: {
+          changeCategories: [],
+          changeSourceTypes: [],
+          serviceIdentifiers: [serviceIdentifier],
+          envIdentifiers: [environmentIdentifier],
+          ...sliderTimeRange
+        },
+        queryParamStringifyOptions: {
+          arrayFormat: 'repeat'
+        }
+      })
+    })
+  })
+
+  test('it should call useChangeEventTimeline with multiple service and environments', async () => {
+    const refetch = jest.fn()
+    const sliderTimeRange = { startTime: 1639993400000, endTime: 1639993420000 }
+    const serviceIdentifier = 'SERVICE_IDENTIFIER'
+    const environmentIdentifier = 'ENV_IDENTIFIER'
+
+    jest.spyOn(cvServices, 'useChangeEventTimeline').mockReturnValue({ data: {}, refetch, cancel: jest.fn() } as any)
+
+    render(
+      <WrapperComponent
+        {...defaultProps}
+        selectedTimeRange={sliderTimeRange}
+        serviceIdentifier={[serviceIdentifier]}
+        environmentIdentifier={[environmentIdentifier]}
+      />
+    )
+
+    await waitFor(() => {
+      expect(refetch).toHaveBeenLastCalledWith({
+        queryParams: {
+          changeCategories: [],
+          changeSourceTypes: [],
+          serviceIdentifiers: [serviceIdentifier],
+          envIdentifiers: [environmentIdentifier],
+          ...sliderTimeRange
+        },
+        queryParamStringifyOptions: {
+          arrayFormat: 'repeat'
+        }
+      })
+    })
+  })
 })

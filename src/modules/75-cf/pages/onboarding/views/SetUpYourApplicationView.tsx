@@ -5,12 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Container, Heading, Layout, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
 import type { ApiKey, FeatureFlagRequestRequestBody } from 'services/cf'
 import { LanguageSelection, PlatformEntry } from '@cf/components/LanguageSelection/LanguageSelection'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import { SetUpAppInfoView } from './SetUpAppInfoView'
 import { SelectEnvironmentView } from './SelectEnvironmentView'
 import { SetUpYourCodeView } from './SetUpYourCodeView'
@@ -29,7 +31,14 @@ export const SetUpYourApplicationView: React.FC<SetUpYourApplicationViewProps> =
   const { getString } = useStrings()
   const [language, setLanguage] = useState<PlatformEntry | undefined>(props.language)
   const [apiKey, setApiKey] = useState<ApiKey | undefined>(props.apiKey)
+  const { trackEvent } = useTelemetry()
 
+  useEffect(() => {
+    trackEvent(FeatureActions.SetUpYourApplicationView, {
+      category: Category.FEATUREFLAG
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   return (
     <Container height="100%">
       <Container padding="xlarge" width="calc(100% - 400px)" height="calc(100vh - 140px)" style={{ overflow: 'auto' }}>
@@ -69,6 +78,10 @@ export const SetUpYourApplicationView: React.FC<SetUpYourApplicationViewProps> =
               <LanguageSelection
                 selected={language}
                 onSelect={entry => {
+                  trackEvent(FeatureActions.LanguageSelect, {
+                    category: Category.FEATUREFLAG,
+                    language: entry
+                  })
                   setLanguage(entry)
                   props.setLanguage(entry)
                   setApiKey(undefined)

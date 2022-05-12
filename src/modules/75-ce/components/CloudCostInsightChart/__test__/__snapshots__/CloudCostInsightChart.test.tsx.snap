@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test cases for cloud cost insight charts Should be able to render the chart component 1`] = `
+<div>
+  <div />
+</div>
+`;
+
+exports[`Test cases for cloud cost insight charts Should show loading in case data is not present 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main chartMainContainer loadingContainer"
+    data-testid="loader"
+  >
+    <span
+      class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-blue500"
+      data-icon="spinner"
+    >
+      <svg
+        fill="none"
+        height="28"
+        viewBox="0 0 36 36"
+        width="28"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
+          stroke="currentColor"
+          stroke-dasharray="75,100"
+          stroke-linecap="round"
+          stroke-width="2.8"
+          style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
+        />
+      </svg>
+    </span>
+  </div>
+</div>
+`;

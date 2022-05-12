@@ -35,7 +35,8 @@ jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('@common/exports', () => ({
   useToaster: () => ({
     showSuccess: jest.fn(),
-    showError: jest.fn()
+    showError: jest.fn(),
+    clear: jest.fn
   }),
   useConfirmationDialog: jest.fn().mockImplementation(async ({ onCloseDialog }) => {
     await onCloseDialog(true)

@@ -8,6 +8,7 @@
 interface FormatCostOptions {
   currency?: string
   locale?: string
+  style?: string
   decimalPoints?: number
   shortFormat?: boolean
 }
@@ -15,6 +16,7 @@ interface FormatCostOptions {
 type FormatCost = (value: number, options?: FormatCostOptions) => string
 
 const defaultOptions = {
+  style: 'currency',
   shortFormat: false,
   currency: 'USD',
   locale: 'en-us',
@@ -29,6 +31,7 @@ const POWER_OF_TEN_IN_THOUSANDS = 3
 type convertNumberToLocaleStringType = (
   value: number,
   locale: string,
+  style: string,
   currency: string,
   maximumFractionDigits: number,
   minimumFractionDigits: number
@@ -37,12 +40,13 @@ type convertNumberToLocaleStringType = (
 const convertNumberToLocaleString: convertNumberToLocaleStringType = (
   value,
   locale,
+  style,
   currency,
   maximumFractionDigits,
   minimumFractionDigits
 ) =>
   value.toLocaleString(locale, {
-    style: 'currency',
+    style,
     currency,
     maximumFractionDigits,
     minimumFractionDigits
@@ -60,6 +64,7 @@ const formatCost: FormatCost = (value: number, options?: FormatCostOptions) => {
       convertNumberToLocaleString(
         cost / Math.pow(10, power),
         costOptions.locale,
+        costOptions.style,
         costOptions.currency,
         decimalPlacesToHave,
         decimalPlacesToHave
@@ -92,6 +97,7 @@ const formatCost: FormatCost = (value: number, options?: FormatCostOptions) => {
   return convertNumberToLocaleString(
     value,
     costOptions.locale,
+    costOptions.style,
     costOptions.currency,
     costOptions.decimalPoints,
     costOptions.decimalPoints

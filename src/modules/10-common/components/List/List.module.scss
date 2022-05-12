@@ -22,5 +22,7 @@
 }
 
 .label {
-  padding-bottom: var(--spacing-small);
+  color: var(--grey-600);
+  font-size: var(--form-input-font-size);
+  font-weight: 500;
 }

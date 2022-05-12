@@ -125,5 +125,38 @@ query FetchRecommendation(
         sumMem
       }
     }
+
+    ... on ECSRecommendationDTO {
+      clusterName
+      id
+      percentileBased
+      serviceArn
+      serviceName
+      currentResources: current
+      lastDayCost {
+        cpu
+        memory
+      }
+      cpuHistogram {
+        bucketWeights
+        firstBucketSize
+        growthRatio
+        maxBucket
+        minBucket
+        numBuckets
+        precomputed
+        totalWeight
+      }
+      memoryHistogram {
+        bucketWeights
+        firstBucketSize
+        growthRatio
+        maxBucket
+        minBucket
+        numBuckets
+        precomputed
+        totalWeight
+      }
+    }
   }
 }

@@ -39,6 +39,23 @@ export function ServicePopoverCard(props: ServicePopoveCardProps): React.ReactEl
               {getString('version')}: {(service.artifacts.primary as unknown as any).version}
             </Text>
           )}
+          {!!(service.artifacts.primary as unknown as any).artifactDirectory && (
+            <Text color="grey800" font={'small'}>
+              {getString('pipeline.artifactsSelection.artifactDirectory')}:{' '}
+              {(service.artifacts.primary as unknown as any).artifactDirectory}
+            </Text>
+          )}
+          {!!(service.artifacts.primary as unknown as any).artifactPath && (
+            <Text color="grey800" font={'small'}>
+              {getString('pipeline.artifactPathLabel')}: {(service.artifacts.primary as unknown as any).artifactPath}
+            </Text>
+          )}
+          {!!(service.artifacts.primary as unknown as any).artifactPathFilter && (
+            <Text color="grey800" font={'small'}>
+              {getString('pipeline.artifactPathFilterLabel')}:{' '}
+              {(service.artifacts.primary as unknown as any).artifactPathFilter}
+            </Text>
+          )}
         </>
       ) : (
         <String tagName="div" stringID="noArtifact" />

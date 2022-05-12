@@ -191,7 +191,7 @@ export const mockedLogsTableData = [
     messageFrequency: [
       {
         name: 'trendData',
-        type: 'line',
+        type: 'column',
         color: getRiskColorValue(RiskValues.HEALTHY),
         data: [1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000]
       }
@@ -218,7 +218,7 @@ export const mockedLogsTableData2 = [
     messageFrequency: [
       {
         name: 'trendData',
-        type: 'line',
+        type: 'column',
         color: getRiskColorValue(RiskValues.NO_DATA),
         data: undefined
       }

@@ -48,6 +48,7 @@ import NodeDetailsPage from './pages/node-details/NodeDetailsPage'
 import AnomaliesOverviewPage from './pages/anomalies-overview/AnomaliesOverviewPage'
 import formatCost from './utils/formatCost'
 import BusinessMapping from './pages/business-mapping/BusinessMapping'
+import ECSRecommendationDetailsPage from './pages/ecs-recommendation-details/ECSRecommendationDetailsPage'
 
 featureFactory.registerFeaturesByModule('ce', {
   features: [FeatureIdentifier.PERSPECTIVES],
@@ -148,41 +149,53 @@ const RedirectToSubscriptions = (): React.ReactElement => {
   )
 }
 
+const RedirectToNewNodeRecommendationDetailsRoute = (): React.ReactElement => {
+  const { recommendation, recommendationName, accountId } = useParams<{
+    recommendationName: string
+    recommendation: string
+    accountId: string
+  }>()
+  return (
+    <Redirect
+      to={routes.toCENodeRecommendationDetails({
+        accountId,
+        recommendationName,
+        recommendation
+      })}
+    />
+  )
+}
+
 const licenseRedirectData: LicenseRedirectProps = {
   licenseStateName: LICENSE_STATE_NAMES.CCM_LICENSE_STATE,
   startTrialRedirect: RedirectToModuleTrialHome,
   expiredTrialRedirect: RedirectToSubscriptions
 }
 
-const CERoutes: React.FC = () => {
+const getRequestOptions = (): Partial<RequestInit> => {
   const token = SessionToken.getToken()
+
+  const headers: RequestInit['headers'] = {}
+
+  if (token && token.length > 0) {
+    headers.Authorization = `Bearer ${token}`
+  }
+
+  return { headers }
+}
+
+const CERoutes: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
-
-  const getRequestOptions = React.useMemo((): Partial<RequestInit> => {
-    const headers: RequestInit['headers'] = {}
-
-    if (token && token.length > 0) {
-      headers.Authorization = `Bearer ${token}`
-    }
-
-    return { headers }
-  }, [token])
 
   const urqlClient = React.useMemo(() => {
     const url = getConfig(`ccm/api/graphql?accountIdentifier=${accountId}&routingId=${accountId}`)
-
-    // if (url.startsWith('/')) {
-    //   url = url.substr(1)
-    // }
     return createClient({
       url: url,
-      fetchOptions: () => {
-        return getRequestOptions
-      },
+      fetchOptions: getRequestOptions,
       exchanges: [dedupExchange, requestPolicyExchange({}), cacheExchange, fetchExchange],
       requestPolicy: 'cache-first'
     })
-  }, [token, accountId])
+  }, [accountId])
 
   return (
     <Provider value={urqlClient}>
@@ -300,6 +313,19 @@ const CERoutes: React.FC = () => {
         <RouteWithLayout
           licenseRedirectData={licenseRedirectData}
           sidebarProps={CESideNavProps}
+          path={routes.toOldCENodeRecommendationDetails({
+            ...accountPathProps,
+            ...projectPathProps,
+            recommendationName: ':recommendationName',
+            recommendation: ':recommendation'
+          })}
+          exact
+        >
+          <RedirectToNewNodeRecommendationDetailsRoute />
+        </RouteWithLayout>
+        <RouteWithLayout
+          licenseRedirectData={licenseRedirectData}
+          sidebarProps={CESideNavProps}
           path={routes.toCENodeRecommendationDetails({
             ...accountPathProps,
             ...projectPathProps,
@@ -309,6 +335,19 @@ const CERoutes: React.FC = () => {
           exact
         >
           <NodeRecommendationDetailsPage />
+        </RouteWithLayout>
+        <RouteWithLayout
+          licenseRedirectData={licenseRedirectData}
+          sidebarProps={CESideNavProps}
+          path={routes.toCEECSRecommendationDetails({
+            ...accountPathProps,
+            ...projectPathProps,
+            recommendationName: ':recommendationName',
+            recommendation: ':recommendation'
+          })}
+          exact
+        >
+          <ECSRecommendationDetailsPage />
         </RouteWithLayout>
         <RouteWithLayout
           sidebarProps={CESideNavProps}

@@ -26,7 +26,7 @@ import type { RoleAssignmentMetadataDTO, ServiceAccountDTO, UserGroupDTO } from 
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getAssignments, isNewRoleAssignment, PrincipalType } from '@rbac/utils/utils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { isCDCommunity, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { isCommunityPlan } from '@common/utils/utils'
 import RoleAssignmentForm from './RoleAssignmentForm'
 import type { Assignment } from './UserRoleAssigment'
 
@@ -56,8 +56,7 @@ const RoleAssignment: React.FC<RoleAssignmentData> = ({
   const { getRBACErrorMessage } = useRBACError()
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
   const { getString } = useStrings()
-  const { licenseInformation } = useLicenseStore()
-  const isCommunity = isCDCommunity(licenseInformation)
+  const isCommunity = isCommunityPlan()
   const { showSuccess } = useToaster()
   const assignments: Assignment[] = getAssignments(defaultTo(roleBindings, []))
 

@@ -91,12 +91,8 @@ const RenderEnvironment: Renderer<CellProps<TableRowData>> = ({
   }
 }) => {
   return showEnvName ? (
-    <Container className={css.paddedContainer}>
-      <Text
-        className={cx(css.environmentRow, css.overflow)}
-        font={{ size: 'small', weight: 'bold' }}
-        color={Color.WHITE}
-      >
+    <Container className={css.envContainer}>
+      <Text className={css.environmentRow} font={{ size: 'small' }} color={Color.WHITE} lineClamp={1}>
         {envName}
       </Text>
     </Container>
@@ -113,7 +109,7 @@ const RenderBuildName: Renderer<CellProps<TableRowData>> = ({
 }) => {
   const { getString } = useStrings()
   const component = buildId ? (
-    <Text font={{ size: 'small', weight: 'semi-bold' }} className={css.overflow} color={Color.GREY_800}>
+    <Text font={{ size: 'small', weight: 'semi-bold' }} lineClamp={1} color={Color.GREY_800}>
       {buildId}
     </Text>
   ) : (
@@ -224,9 +220,9 @@ export const ActiveServiceInstancesContent: React.FC = () => {
         Cell: RenderEnvironment
       },
       {
-        Header: getString('cd.serviceDashboard.buildName'),
+        Header: getString('cd.artifactVersion'),
         id: 'type',
-        width: '20%',
+        width: '23%',
         Cell: RenderBuildName,
         expandBuilds
       },
@@ -239,7 +235,7 @@ export const ActiveServiceInstancesContent: React.FC = () => {
       {
         Header: getString('common.instanceLabel'),
         id: 'deployments',
-        width: '50%',
+        width: '47%',
         Cell: RenderInstances
       }
     ]

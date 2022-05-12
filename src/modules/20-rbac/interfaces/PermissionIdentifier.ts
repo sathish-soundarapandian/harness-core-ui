@@ -34,6 +34,9 @@ export enum PermissionIdentifier {
   EDIT_ENVIRONMENT = 'core_environment_edit',
   DELETE_ENVIRONMENT = 'core_environment_delete',
   RUNTIMEACCESS_ENVIRONMENT = 'core_environment_access',
+  VIEW_ENVIRONMENT_GROUP = 'core_environmentgroup_view',
+  EDIT_ENVIRONMENT_GROUP = 'core_environmentgroup_edit',
+  DELETE_ENVIRONMENT_GROUP = 'core_environmentgroup_delete',
   VIEW_USERGROUP = 'core_usergroup_view',
   MANAGE_USERGROUP = 'core_usergroup_manage',
   VIEW_USER = 'core_user_view',
@@ -60,6 +63,10 @@ export enum PermissionIdentifier {
   UPDATE_DELEGATE_CONFIGURATION = 'core_delegateconfiguration_edit',
   DELETE_DELEGATE_CONFIGURATION = 'core_delegateconfiguration_delete',
   VIEW_DELEGATE_CONFIGURATION = 'core_delegateconfiguration_view',
+  EDIT_VARIABLE = 'core_variable_edit',
+  DELETE_VARIABLE = 'core_variable_delete',
+  VIEW_VARIABLE = 'core_variable_view',
+  ACCESS_VARIABLE = 'core_variable_access',
 
   // FEATURE FLAG PERMISSIONS
   DELETE_FF_FEATUREFLAG = 'ff_featureflag_delete',

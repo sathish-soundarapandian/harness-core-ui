@@ -21,6 +21,7 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
+import { global401HandlerUtils } from '@common/utils/global401HandlerUtils'
 import ChildAppError from './ChildAppError'
 import type { ChildAppProps, Scope } from './index'
 
@@ -53,7 +54,7 @@ export class ChildAppMounter<T = never> extends React.Component<
   }
 
   render(): React.ReactElement {
-    const { ChildApp, match, children, ...rest } = this.props
+    const { ChildApp, match, children, history, ...rest } = this.props
 
     // We use routeMatch instead of location because,
     // we want to pass the mount url and not the actual url
@@ -75,6 +76,9 @@ export class ChildAppMounter<T = never> extends React.Component<
             appStoreContext: AppStoreContext,
             permissionsContext: PermissionsContext,
             licenseStoreProvider: LicenseStoreContext
+          }}
+          on401={() => {
+            global401HandlerUtils(history)
           }}
           components={{
             RbacButton,

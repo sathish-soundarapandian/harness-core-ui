@@ -8,18 +8,14 @@
 /* eslint-disable react/display-name */
 import React from 'react'
 import { render, waitFor, fireEvent } from '@testing-library/react'
-
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ExecutionContext, ExecutionContextParams } from '@pipeline/context/ExecutionContext'
-
 import { LogsContent, DefaultConsoleViewStepDetails } from '../LogsContent'
 import { useLogsContent } from '../useLogsContent'
 import { getDefaultReducerState } from '../LogsState/utils'
 import type { UseActionCreatorReturn } from '../LogsState/actions'
-
-jest.mock('../components/SingleSectionLogs', () => ({
-  SingleSectionLogsWithRef: React.forwardRef(() => <div>Single section logs</div>)
-}))
+import { testReducerState } from './mocks'
 
 jest.mock('../components/GroupedLogs', () => ({
   GroupedLogsWithRef: React.forwardRef(() => <div>Grouped logs</div>)
@@ -214,7 +210,7 @@ describe('<LogsContent /> tests', () => {
   describe('Logs test', () => {
     test('SingleSectionLogs', () => {
       ;(useLogsContent as jest.Mock).mockImplementation(() => ({
-        state: { ...getDefaultReducerState(), units: ['Section 1'] },
+        state: { ...testReducerState, units: ['Section 1'] },
         actions
       }))
 
@@ -223,14 +219,14 @@ describe('<LogsContent /> tests', () => {
           <LogsContent mode="console-view" />
         </TestWrapper>
       )
-
+      const button = getByText('Bottom')
+      userEvent.click(button)
       expect(container).toMatchSnapshot()
-      expect(getByText('Single section logs')).toBeTruthy()
     })
 
     test('GroupedLogs', () => {
       ;(useLogsContent as jest.Mock).mockImplementation(() => ({
-        state: { ...getDefaultReducerState(), units: ['Section 1', 'Section 2'] },
+        state: { ...testReducerState, units: ['Section 1', 'Section 2'] },
         actions
       }))
 

@@ -11,6 +11,8 @@ declare const styles: {
   readonly canvasContainer: string
   readonly canvasWrapper: string
   readonly container: string
+  readonly graphActions: string
+  readonly graphLink: string
   readonly renderPopover: string
   readonly stageList: string
 }

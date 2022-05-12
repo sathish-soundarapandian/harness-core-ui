@@ -473,7 +473,7 @@ export function ConfigureOptions(props: ConfigureOptionsProps): JSX.Element {
         className={className}
         minimal
         rightIcon="cog"
-        // To avoid non unique IDs ina  asingle form
+        // To avoid non unique IDs in a single form
         id={`configureOptions_${variableName}`}
         onClick={showModal}
         onMouseEnter={() => setIsHover(true)}

@@ -123,8 +123,8 @@ export const getTemplateTypesByRef = (
       })
       return templateTypes
     })
-    .catch(_error => {
-      return {}
+    .catch(error => {
+      return error
     })
 }
 
@@ -157,7 +157,13 @@ export const getPipelineByIdentifier = (
       obj = response
     }
     if (obj.status === 'SUCCESS' && obj.data?.yamlPipeline) {
-      const yamlPipelineDetails = parse(obj.data?.yamlPipeline)
+      let yamlPipelineDetails = null
+      try {
+        yamlPipelineDetails = parse(obj.data?.yamlPipeline)
+      } catch (e) {
+        // caught YAMLSemanticError, YAMLReferenceError, YAMLSyntaxError, YAMLWarning
+      }
+
       return {
         ...(yamlPipelineDetails !== null && { ...yamlPipelineDetails.pipeline }),
         gitDetails: obj.data.gitDetails ?? {},
@@ -765,7 +771,8 @@ const _deletePipelineCache = async (
 
 export enum PipelineContextType {
   Pipeline = 'Pipeline',
-  Template = 'Template'
+  StageTemplate = 'StageTemplate',
+  PipelineTemplate = 'PipelineTemplate'
 }
 
 export const PipelineContext = React.createContext<PipelineContextInterface>({
@@ -950,7 +957,7 @@ export function PipelineProvider({
       selectedSectionId: queryParamStateSelection.sectionId as string
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [queryParamStateSelection.stepId, queryParamStateSelection.stageId])
+  }, [queryParamStateSelection.stepId, queryParamStateSelection.stageId, queryParamStateSelection.sectionId])
 
   const getStageFromPipeline = React.useCallback(
     <T extends StageElementConfig = StageElementConfig>(

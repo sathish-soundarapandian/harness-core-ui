@@ -7,26 +7,28 @@
 
 import React from 'react'
 import { act, findByText, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
-import { ArtifactType, TagTypes } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
+import { TagTypes } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
+import * as pipelineng from 'services/cd-ng'
 import Artifactory from '../Artifactory'
-
-const props = {
-  name: 'Artifact details',
-  expressions: [],
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
-  context: 2,
-  handleSubmit: jest.fn(),
-  artifactIdentifiers: [],
-  selectedArtifact: 'Nexus3Registry' as ArtifactType
-}
+import {
+  emptyRepoMockData,
+  props,
+  repoMock,
+  serverlessDeploymentTypeProps,
+  useGetRepositoriesDetailsForArtifactoryError,
+  useGetRepositoriesDetailsForArtifactoryFailure
+} from './mock'
 
 jest.mock('services/cd-ng', () => ({
   useGetBuildDetailsForArtifactoryArtifact: jest.fn().mockImplementation(() => {
     return { data: {}, refetch: jest.fn(), error: null, loading: false }
-  })
+  }),
+  useGetRepositoriesDetailsForArtifactory: jest.fn()
 }))
+
 const initialValues = {
   identifier: '',
   artifactPath: '',
@@ -37,7 +39,28 @@ const initialValues = {
   repositoryUrl: ''
 }
 
+const runtimeInitialValues = {
+  spec: {
+    artifactDirectory: '/',
+    artifactPath: '<+input>',
+    connectorRef: 'connector',
+    repositoryFormat: 'generic',
+    repository: RUNTIME_INPUT_VALUE
+  },
+  type: 'ArtifactoryRegistry'
+}
+
 describe('Nexus Artifact tests', () => {
+  beforeEach(() => {
+    jest.spyOn(pipelineng, 'useGetRepositoriesDetailsForArtifactory').mockImplementation((): any => {
+      return {
+        loading: false,
+        data: repoMock,
+        refetch: jest.fn()
+      }
+    })
+  })
+
   test(`renders without crashing`, () => {
     const { container } = render(
       <TestWrapper>
@@ -46,6 +69,7 @@ describe('Nexus Artifact tests', () => {
     )
     expect(container).toMatchSnapshot()
   })
+
   test(`tag is disabled if imagepath and repository is empty`, () => {
     const { container } = render(
       <TestWrapper>
@@ -174,5 +198,112 @@ describe('Nexus Artifact tests', () => {
     await waitFor(() => expect(container.querySelector('input[name="repository"]')).toHaveValue('repository'))
     await waitFor(() => expect(container.querySelector('input[name="artifactPath"]')).toHaveValue('artifact-path'))
     await waitFor(() => expect(container.querySelector('input[name="repositoryUrl"]')).toHaveValue('repositoryUrl'))
+  })
+})
+
+describe('Serverless artifact', () => {
+  test(`renders serverlessArtifactRepository`, () => {
+    const { container } = render(
+      <TestWrapper>
+        <Artifactory key={'key'} initialValues={initialValues} {...serverlessDeploymentTypeProps} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test(`ServerlessArtifactoryRepository while fetching repository list`, () => {
+    jest.spyOn(pipelineng, 'useGetRepositoriesDetailsForArtifactory').mockImplementation((): any => {
+      return {
+        loading: true,
+        data: repoMock,
+        refetch: jest.fn()
+      }
+    })
+    const { container } = render(
+      <TestWrapper>
+        <Artifactory key={'key'} initialValues={initialValues} {...serverlessDeploymentTypeProps} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test(`ServerlessArtifactoryRepository with status as error`, async () => {
+    jest.spyOn(pipelineng, 'useGetRepositoriesDetailsForArtifactory').mockImplementation((): any => {
+      return {
+        loading: false,
+        data: emptyRepoMockData,
+        error: useGetRepositoriesDetailsForArtifactoryError,
+        refetch: jest.fn()
+      }
+    })
+    const { container, getByPlaceholderText } = render(
+      <TestWrapper>
+        <Artifactory key={'key'} initialValues={initialValues} {...serverlessDeploymentTypeProps} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+
+    const repositoryField = getByPlaceholderText('Search...')
+    expect(repositoryField).toBeTruthy()
+    userEvent.click(repositoryField)
+    const errorText = await findByText(container, 'error')
+    expect(errorText).toBeTruthy()
+  })
+
+  test(`ServerlessArtifactoryRepository with status as failure`, async () => {
+    jest.spyOn(pipelineng, 'useGetRepositoriesDetailsForArtifactory').mockImplementation((): any => {
+      return {
+        loading: false,
+        error: useGetRepositoriesDetailsForArtifactoryFailure,
+        refetch: jest.fn()
+      }
+    })
+    const { container, getByPlaceholderText } = render(
+      <TestWrapper>
+        <Artifactory key={'key'} initialValues={initialValues} {...serverlessDeploymentTypeProps} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+
+    const repositoryField = getByPlaceholderText('Search...')
+    expect(repositoryField).toBeTruthy()
+    userEvent.click(repositoryField)
+    const errorText = await findByText(container, 'repository fetch failed')
+    expect(errorText).toBeTruthy()
+  })
+
+  test(`ServerlessArtifactoryRepository with empty repo list`, async () => {
+    jest.spyOn(pipelineng, 'useGetRepositoriesDetailsForArtifactory').mockImplementation((): any => {
+      return {
+        loading: false,
+        data: emptyRepoMockData,
+        refetch: jest.fn()
+      }
+    })
+    const { getByPlaceholderText } = render(
+      <TestWrapper>
+        <Artifactory key={'key'} initialValues={initialValues} {...serverlessDeploymentTypeProps} />
+      </TestWrapper>
+    )
+
+    const repositoryField = getByPlaceholderText('Search...')
+    expect(repositoryField).toBeTruthy()
+    userEvent.click(repositoryField)
+  })
+
+  test(`ServerlessArtifactoryRepository with repository as runtime`, () => {
+    jest.spyOn(pipelineng, 'useGetRepositoriesDetailsForArtifactory').mockImplementation((): any => {
+      return {
+        loading: false,
+        refetch: jest.fn()
+      }
+    })
+
+    const { container } = render(
+      <TestWrapper>
+        <Artifactory key={'key'} initialValues={runtimeInitialValues as any} {...serverlessDeploymentTypeProps} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
   })
 })

@@ -114,6 +114,7 @@ const PerspectiveBuilder: React.FC<{ perspectiveData?: CEView; onNext: (resource
     }
   }
 
+  /* istanbul ignore next */
   const goBack: () => void = () => {
     history.goBack()
   }
@@ -144,7 +145,7 @@ const PerspectiveBuilder: React.FC<{ perspectiveData?: CEView; onNext: (resource
       .trim()
       .required(getString('ce.perspectives.createPerspective.validationErrors.nameError'))
       .min(1, getString('ce.perspectives.createPerspective.validationErrors.nameLengthError'))
-      .max(32, getString('ce.perspectives.createPerspective.validationErrors.nameLengthError')),
+      .max(80, getString('ce.perspectives.createPerspective.validationErrors.nameLengthError')),
     viewRules: Yup.array().of(
       Yup.object().shape({
         viewConditions: Yup.array().of(
@@ -180,11 +181,14 @@ const PerspectiveBuilder: React.FC<{ perspectiveData?: CEView; onNext: (resource
           viewRules: perspectiveData?.viewRules || []
         }}
         enableReinitialize={true}
-        onSubmit={() => {
-          Promise.resolve()
-        }}
+        onSubmit={
+          /* istanbul ignore next */ () => {
+            Promise.resolve()
+          }
+        }
         validationSchema={validationSchema}
-        render={formikProps => {
+      >
+        {formikProps => {
           return (
             <FormikForm className={css.formContainer}>
               <Container className={css.innerContainer}>
@@ -287,10 +291,12 @@ const PerspectiveBuilder: React.FC<{ perspectiveData?: CEView; onNext: (resource
                       intent="primary"
                       disabled={!!Object.keys(formikProps.errors).length}
                       text={getString('ce.perspectives.createPerspective.nextButton')}
-                      onClick={() => {
-                        trackEvent(USER_JOURNEY_EVENTS.PERSPECTIVE_STEP1_NEXT, {})
-                        makeCreateCall(formikProps.values)
-                      }}
+                      onClick={
+                        /* istanbul ignore next */ () => {
+                          trackEvent(USER_JOURNEY_EVENTS.PERSPECTIVE_STEP1_NEXT, {})
+                          makeCreateCall(formikProps.values)
+                        }
+                      }
                     />
                   </Layout.Horizontal>
                 </Layout.Vertical>
@@ -310,7 +316,7 @@ const PerspectiveBuilder: React.FC<{ perspectiveData?: CEView; onNext: (resource
             </FormikForm>
           )
         }}
-      />
+      </Formik>
     </Container>
   )
 }

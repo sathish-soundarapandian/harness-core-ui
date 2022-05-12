@@ -116,6 +116,7 @@ export class TemplateStep extends PipelineStep<TemplateStepNode> {
     try {
       pipelineObj = parse(yaml)
     } catch (err) {
+      /* istanbul ignore next */
       logger.error('Error while parsing the yaml', err)
     }
     const { accountId, projectIdentifier, orgIdentifier } = params as {

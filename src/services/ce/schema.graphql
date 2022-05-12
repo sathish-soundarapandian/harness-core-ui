@@ -19,7 +19,7 @@ directive @deprecated(
 directive @specifiedBy("The URL that specifies the behaviour of this scalar." url: String!) on SCALAR
 
 "This union of all types of recommendations"
-union recommendationDetails = NodeRecommendationDTO | WorkloadRecommendationDTO
+union recommendationDetails = ECSRecommendationDTO | NodeRecommendationDTO | WorkloadRecommendationDTO
 
 type AlertThreshold {
   alertsSent: Int!
@@ -266,6 +266,18 @@ type Cost {
 type DataPoint {
   key: Reference!
   value: BigDecimal!
+}
+
+type ECSRecommendationDTO {
+  clusterName: String
+  cpuHistogram: HistogramExp
+  current: Map_String_StringScalar
+  id: String
+  lastDayCost: Cost
+  memoryHistogram: HistogramExp
+  percentileBased: Map_String_Map_String_StringScalar
+  serviceArn: String
+  serviceName: String
 }
 
 type EfficiencyScoreStats {
@@ -799,6 +811,7 @@ enum QLCEViewTimeGroupType {
 }
 
 enum ResourceType {
+  ECS_SERVICE
   NODE_POOL
   WORKLOAD
 }
@@ -854,6 +867,9 @@ scalar Long
 
 "Built-in scalar for map-like structures"
 scalar Map_String_ContainerRecommendationScalar
+
+"Built-in scalar for map-like structures"
+scalar Map_String_Map_String_StringScalar
 
 "Built-in scalar for map-like structures"
 scalar Map_String_ResourceRequirementScalar

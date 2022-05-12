@@ -23,12 +23,12 @@ import {
 import CloudCostInsightChart from '@ce/components/CloudCostInsightChart/CloudCostInsightChart'
 import {
   normalizeViewRules,
-  getRuleFilters,
   getGroupByFilter,
   getTimeRangeFilter,
   getTimeFilters,
   getViewFilterForId,
-  perspectiveDefaultTimeRangeMapper
+  perspectiveDefaultTimeRangeMapper,
+  getRuleFilters
 } from '@ce/utils/perspectiveUtils'
 import { CCM_CHART_TYPES } from '@ce/constants'
 import { DAYS_FOR_TICK_INTERVAL } from '@ce/components/CloudCostInsightChart/Chart'

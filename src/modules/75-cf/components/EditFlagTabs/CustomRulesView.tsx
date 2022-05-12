@@ -758,7 +758,7 @@ const ServingCardRow: React.FC<ServingCardRowProps> = ({
         )}
       </div>
       <Text>{getString('cf.featureFlags.toTarget')}</Text>
-      <AvatarGroup overlap avatars={avatars} />
+      <AvatarGroup overlap avatars={avatars} restrictLengthTo={10} />
       <Text>({targetAvatars.length})</Text>
       {editing && (
         <Container style={{ marginLeft: 'auto' }}>

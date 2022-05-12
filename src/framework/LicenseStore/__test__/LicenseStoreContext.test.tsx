@@ -19,7 +19,8 @@ const defaultUserInfo = {
     {
       uuid: defaultUuid
     }
-  ]
+  ],
+  uuid: defaultUuid
 }
 
 const defaultAppStoreValues = {

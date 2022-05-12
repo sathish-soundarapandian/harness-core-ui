@@ -2,6 +2,7 @@
 
 exports[`FlagActivationDetails it should render edit flag modal correctly 1`] = `
 <form
+  action="#"
   class="FormikForm--main"
   data-testid="edit-flag-form"
 >
@@ -372,10 +373,10 @@ exports[`FlagActivationDetails it should render edit flag modal correctly 1`] = 
         </div>
       </div>
       <div
-        class="StyledProps--font StyledProps--main"
+        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
       >
         <button
-          class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
+          class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--variation Button--variation-primary"
           type="submit"
         >
           <span
@@ -385,7 +386,7 @@ exports[`FlagActivationDetails it should render edit flag modal correctly 1`] = 
           </span>
         </button>
         <button
-          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow"
+          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--variation Button--variation-secondary"
           type="button"
         >
           <span

@@ -177,6 +177,7 @@ exports[`Create GCP connector Wizard Should render form 1`] = `
             class="OverlaySpinner--overlaySpinner"
           >
             <form
+              action="#"
               class="FormikForm--main"
             >
               <div>
@@ -945,6 +946,7 @@ exports[`Create GCP connector Wizard Should render form for edit authtype encryp
             class="OverlaySpinner--overlaySpinner"
           >
             <form
+              action="#"
               class="FormikForm--main"
             >
               <div>

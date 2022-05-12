@@ -8,6 +8,8 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly checkbox: string
+  readonly conditionInput: string
+  readonly conditionInputWrapper: string
   readonly disabledSelect: string
   readonly fetchingMoreLoader: string
   readonly groupByLabel: string
@@ -23,7 +25,9 @@ declare const styles: {
   readonly selectedValues: string
   readonly tabClass: string
   readonly tabsContainer: string
+  readonly tagInput: string
   readonly valueContainer: string
   readonly valueFetching: string
+  readonly valueTag: string
 }
 export default styles

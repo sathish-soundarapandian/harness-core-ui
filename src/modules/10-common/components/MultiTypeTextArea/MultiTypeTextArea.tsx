@@ -109,7 +109,7 @@ export interface FormMultiTypeTextAreaProps extends Omit<IFormGroupProps, 'label
   name: string
   placeholder?: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  formik?: any // TODO: Remove this but not sure why FormikContext<any> was not working
+  formik?: any // TODO: Remove this but not sure why FormikContextType<any> was not working
   multiTypeTextArea?: Omit<MultiTypeTextAreaProps, 'name' | 'onChange'>
   onChange?: MultiTypeTextAreaProps['onChange']
   isOptional?: boolean

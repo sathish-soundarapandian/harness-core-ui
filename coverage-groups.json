@@ -14,6 +14,7 @@
       "src/modules/35-connectors/components/CreateConnector/AppDynamicsConnector/**",
       "src/modules/35-connectors/components/CreateConnector/SplunkConnector/**"
     ],
+    "Variables": ["src/modules/31-variables"],
     "Connectors": ["src/modules/35-connectors/**", "src/modules/10-common/components/YAMLBuilder/**"],
     "Delegates": ["src/modules/30-delegates/**"],
     "STO": ["src/modules/85-sto-steps/**", "src/modules/27-sto/**"],

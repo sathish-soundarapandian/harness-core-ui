@@ -13,6 +13,7 @@ declare const styles: {
   readonly fullHeight: string
   readonly graphLoadingSpinner: string
   readonly spacer: string
+  readonly stepGroup: string
   readonly tab: string
   readonly tabExecution: string
   readonly templateNameDialog: string

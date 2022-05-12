@@ -35,7 +35,7 @@ const StepTemplateForm = (_props: unknown, formikRef: TemplateFormRef): JSX.Elem
       return stepFormikRef.current?.resetForm()
     },
     submitForm() {
-      return stepFormikRef.current?.submitForm()
+      return stepFormikRef.current?.submitForm() || Promise.resolve()
     },
     getErrors() {
       return stepFormikRef.current?.getErrors() || {}

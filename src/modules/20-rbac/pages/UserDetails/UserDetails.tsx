@@ -22,7 +22,7 @@ import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PrincipalType } from '@rbac/utils/utils'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
-import { useLicenseStore, isCDCommunity } from 'framework/LicenseStore/LicenseStoreContext'
+import { isCommunityPlan } from '@common/utils/utils'
 import UserGroupTable from './views/UserGroupTable'
 import css from './UserDetails.module.scss'
 
@@ -30,8 +30,7 @@ const UserDetails: React.FC = () => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, module, userIdentifier } =
     useParams<PipelineType<ProjectPathProps & UserPathProps>>()
-  const { licenseInformation } = useLicenseStore()
-  const isCommunity = isCDCommunity(licenseInformation)
+  const isCommunity = isCommunityPlan()
 
   const { data, loading, error, refetch } = useGetAggregatedUser({
     userId: userIdentifier,

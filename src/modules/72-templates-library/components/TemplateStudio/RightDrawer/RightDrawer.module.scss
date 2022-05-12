@@ -104,9 +104,14 @@ $top-offset: 110px;
   position: absolute;
   right: 100%;
   top: 0;
-  background: #00ade4 !important;
+  background: var(--primary-5) !important;
   opacity: 0.5;
   color: var(--white) !important;
   border-radius: 4px 0 0 4px !important;
   padding: 0 !important;
+}
+
+.templateInputsContainer {
+  max-height: calc(100vh - 77px);
+  overflow: scroll;
 }

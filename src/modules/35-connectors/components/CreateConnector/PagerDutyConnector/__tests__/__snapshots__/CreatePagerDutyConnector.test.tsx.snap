@@ -23,6 +23,7 @@ exports[`Create PagerDuty Connector Wizard Ensure create flow works 1`] = `
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main form"
       >
         <div>

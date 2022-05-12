@@ -50,7 +50,7 @@ const mockTargets: Target[] = [
     attributes: {},
     createdAt: 1646810408416,
     environment: 'qatest',
-    identifier: 'target1',
+    identifier: 'target_1',
     name: 'target_1',
     org: '',
     project: 'cmproj',

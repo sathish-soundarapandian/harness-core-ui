@@ -595,7 +595,7 @@ describe('TriggersWizardPage Triggers tests', () => {
         .spyOn(pipelineNg, 'useGetTemplateFromPipeline')
         .mockReturnValue(GetUpdatedTemplateFromPipelineResponse as any)
       jest.spyOn(hooks, 'useMutateAsGet').mockReturnValue(GetUpdatedTemplateFromPipelineResponse as any)
-      jest.spyOn(pipelineNg, 'useCreateVariables').mockImplementation(() => ({
+      jest.spyOn(pipelineNg, 'useCreateVariablesV2').mockImplementation(() => ({
         cancel: jest.fn(),
         loading: false,
         error: null,

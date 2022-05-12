@@ -348,7 +348,7 @@ exports[`<TemplateStudio /> tests snapshot test for new template with git sync 1
           <span
             class="bp3-button-text"
           >
-            templatesLibrary.templateInputs
+            pipeline.templateInputs
           </span>
         </button>
         <button
@@ -383,7 +383,7 @@ exports[`<TemplateStudio /> tests snapshot test for new template with git sync 1
           <span
             class="bp3-button-text"
           >
-            variablesText
+            common.variables
           </span>
         </button>
       </div>
@@ -740,7 +740,7 @@ exports[`<TemplateStudio /> tests snapshot test for new template without git syn
           <span
             class="bp3-button-text"
           >
-            templatesLibrary.templateInputs
+            pipeline.templateInputs
           </span>
         </button>
         <button
@@ -775,7 +775,7 @@ exports[`<TemplateStudio /> tests snapshot test for new template without git syn
           <span
             class="bp3-button-text"
           >
-            variablesText
+            common.variables
           </span>
         </button>
       </div>
@@ -1209,7 +1209,7 @@ exports[`<TemplateStudio /> tests snapshot test for template studio in visual vi
           <span
             class="bp3-button-text"
           >
-            templatesLibrary.templateInputs
+            pipeline.templateInputs
           </span>
         </button>
         <button
@@ -1244,7 +1244,7 @@ exports[`<TemplateStudio /> tests snapshot test for template studio in visual vi
           <span
             class="bp3-button-text"
           >
-            variablesText
+            common.variables
           </span>
         </button>
       </div>

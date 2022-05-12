@@ -8,10 +8,10 @@
 import { clone } from 'lodash-es'
 import type { IDrawerProps } from '@blueprintjs/core'
 import type { GetDataError } from 'restful-react'
-import type { YamlSnippetMetaData, PipelineInfoConfig, Failure } from 'services/cd-ng'
+import type { YamlSnippetMetaData, PipelineInfoConfig } from 'services/cd-ng'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import type * as Diagram from '@pipeline/components/Diagram'
-import type { EntityGitDetails, EntityValidityDetails } from 'services/pipeline-ng'
+import type { EntityGitDetails, EntityValidityDetails, Failure } from 'services/pipeline-ng'
 import type { DependencyElement } from 'services/ci'
 import type { TemplateType } from '@common/interfaces/RouteInterfaces'
 import type { TemplateSummaryResponse } from 'services/template-ng'
@@ -52,7 +52,8 @@ export enum DrawerTypes {
   AdvancedOptions = 'AdvancedOptions',
   PolicySets = 'PolicySets',
   ProvisionerStepConfig = 'ProvisionerStepConfig',
-  AddProvisionerStep = 'AddProvisionerStep'
+  AddProvisionerStep = 'AddProvisionerStep',
+  TemplateInputs = 'TemplateInputs'
 }
 
 export const TemplateDrawerSizes: Record<TemplateDrawerTypes, React.CSSProperties['width']> = {
@@ -72,7 +73,8 @@ export const DrawerSizes: Record<DrawerTypes, React.CSSProperties['width']> = {
   [DrawerTypes.PipelineNotifications]: 'calc(100% - 270px - 60px)', // has 60px more offset from right
   [DrawerTypes.FlowControl]: 600,
   [DrawerTypes.AdvancedOptions]: 840,
-  [DrawerTypes.PolicySets]: 1000
+  [DrawerTypes.PolicySets]: 1000,
+  [DrawerTypes.TemplateInputs]: 876
 }
 
 export enum SplitViewTypes {
@@ -164,9 +166,7 @@ export interface PipelineReducerState {
 
 export const DefaultPipeline: PipelineInfoConfig = {
   name: '',
-  identifier: DefaultNewPipelineId,
-  allowStageExecutions: false,
-  stages: []
+  identifier: DefaultNewPipelineId
 }
 
 export interface ActionResponse {

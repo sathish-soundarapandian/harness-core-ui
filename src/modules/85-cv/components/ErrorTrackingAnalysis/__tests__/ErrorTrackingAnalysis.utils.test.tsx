@@ -23,9 +23,9 @@ describe('Unit tests for LogAnalysis utils', () => {
   test('Verify if getClusterTypes gives correct results', async () => {
     expect(getClusterTypes(getString)).toEqual([
       { label: 'auditTrail.allEvents', value: '' },
-      { label: 'pipeline.verification.logs.knownEvent', value: ErrorTrackingEvents.KNOWN },
-      { label: 'pipeline.verification.logs.unknownEvent', value: ErrorTrackingEvents.UNKNOWN },
-      { label: 'pipeline.verification.logs.unexpectedFrequency', value: ErrorTrackingEvents.UNEXPECTED }
+      { label: 'cv.known', value: ErrorTrackingEvents.KNOWN },
+      { label: 'cv.unknown', value: ErrorTrackingEvents.UNKNOWN },
+      { label: 'cv.unexpected', value: ErrorTrackingEvents.UNEXPECTED }
     ])
   })
 

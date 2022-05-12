@@ -10,6 +10,7 @@ import React from 'react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockFeature from '@cf/utils/testData/data/mockFeature'
+import mockFeatureResponse from '@cf/utils/testData/data/mockFeatureResponse'
 import mockGitSync from '@cf/utils/testData/data/mockGitSync'
 import * as gitSync from '@cf/hooks/useGitSync'
 import * as useFeaturesMock from '@common/hooks/useFeatures'
@@ -34,7 +35,8 @@ const renderComponent = (props: Partial<FlagDetailsOptionsMenuButtonProps> = {})
           commitMsg: 'test message'
         }}
         refetchFlag={jest.fn()}
-        submitPatch={jest.fn(() => Promise.resolve(mockFeature))}
+        submitPatch={jest.fn(() => Promise.resolve(mockFeatureResponse))}
+        setGovernanceMetadata={jest.fn()}
         {...props}
       />
     </TestWrapper>
@@ -279,7 +281,7 @@ describe('FlagDetailsOptionsMenuButton', () => {
     })
 
     test('it should call callback correctly on save click', async () => {
-      const submitPatchMock = jest.fn(() => Promise.resolve(mockFeature))
+      const submitPatchMock = jest.fn(() => Promise.resolve(mockFeatureResponse))
 
       renderComponent({ submitPatch: submitPatchMock })
 
@@ -310,7 +312,7 @@ describe('FlagDetailsOptionsMenuButton', () => {
     })
 
     test('it should close modal on cancel click', async () => {
-      const submitPatchMock = jest.fn(() => Promise.resolve(mockFeature))
+      const submitPatchMock = jest.fn(() => Promise.resolve(mockFeatureResponse))
 
       renderComponent({ submitPatch: submitPatchMock })
 
@@ -345,7 +347,7 @@ describe('FlagDetailsOptionsMenuButton', () => {
     })
 
     test('it should call callback correctly on save click when Git Sync enabled', async () => {
-      const submitPatchMock = jest.fn(() => Promise.resolve(mockFeature))
+      const submitPatchMock = jest.fn(() => Promise.resolve(mockFeatureResponse))
 
       renderComponent({ gitSync: mockGitSync, submitPatch: submitPatchMock })
 

@@ -5,13 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useEffect } from 'react'
+import React, { FC } from 'react'
 import { Redirect, Route, useParams } from 'react-router-dom'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
-import { registerFeatureFlagPipelineStage } from '@cf/pages/pipeline-studio/views/FeatureFlagStage'
-import { registerFlagConfigurationPipelineStep } from '@cf/components/PipelineSteps'
 import { RouteWithLayout } from '@common/router'
+import { MinimalLayout } from '@common/layouts'
 import { CFSideNavProps } from '@cf/constants'
 import routes from '@common/RouteDefinitions'
 import {
@@ -30,6 +27,8 @@ import PipelinesPage from '@pipeline/pages/pipelines/PipelinesPage'
 import DeploymentsList from '@pipeline/pages/deployments-list/DeploymentsList'
 import InputSetList from '@pipeline/pages/inputSet-list/InputSetList'
 import { EnhancedInputSetForm } from '@pipeline/components/InputSetForm/InputSetForm'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+import ExecutionPolicyEvaluationsView from '@pipeline/pages/execution/ExecutionPolicyEvaluationsView/ExecutionPolicyEvaluationsView'
 import TriggersPage from '@triggers/pages/triggers/TriggersPage'
 import TriggersDetailPage from '@triggers/pages/triggers/TriggersDetailPage'
 import TriggerDetails from '@triggers/pages/trigger-details/TriggerDetails'
@@ -53,185 +52,187 @@ const RedirectToPipelineDetailHome = (): React.ReactElement => {
   return <Redirect to={routes.toPipelineStudio(params)} />
 }
 
-const PipelineRouteDestinations: FC = () => {
-  const pipelineEnabled = useFeatureFlag(FeatureFlag.FF_PIPELINE)
+const PipelineRouteDestinations: FC = () => (
+  <>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CFSideNavProps}
+      exact
+      path={routes.toPipelineStudio({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })}
+    >
+      <PipelineDetails>
+        <CFPipelineStudio />
+      </PipelineDetails>
+    </RouteWithLayout>
 
-  useEffect(() => {
-    if (pipelineEnabled) {
-      registerFeatureFlagPipelineStage()
-      registerFlagConfigurationPipelineStep()
-    }
-  }, [pipelineEnabled])
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      exact
+      sidebarProps={CFSideNavProps}
+      path={routes.toPipelines({ ...accountPathProps, ...projectPathProps, ...pipelineModuleParams })}
+    >
+      <PipelinesPage />
+    </RouteWithLayout>
 
-  if (!pipelineEnabled) {
-    return null
-  }
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      exact
+      sidebarProps={CFSideNavProps}
+      path={routes.toDeployments({ ...accountPathProps, ...projectPathProps, ...pipelineModuleParams })}
+    >
+      <DeploymentsList />
+    </RouteWithLayout>
 
-  return (
-    <>
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        sidebarProps={CFSideNavProps}
-        exact
-        path={routes.toPipelineStudio({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })}
-      >
-        <PipelineDetails>
-          <CFPipelineStudio />
-        </PipelineDetails>
-      </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CFSideNavProps}
+      exact
+      path={routes.toInputSetList({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })}
+    >
+      <PipelineDetails>
+        <InputSetList />
+      </PipelineDetails>
+    </RouteWithLayout>
 
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        exact
-        sidebarProps={CFSideNavProps}
-        path={routes.toPipelines({ ...accountPathProps, ...projectPathProps, ...pipelineModuleParams })}
-      >
-        <PipelinesPage />
-      </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CFSideNavProps}
+      path={routes.toInputSetForm({ ...accountPathProps, ...inputSetFormPathProps, ...pipelineModuleParams })}
+      exact
+    >
+      <EnhancedInputSetForm />
+    </RouteWithLayout>
 
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        exact
-        sidebarProps={CFSideNavProps}
-        path={routes.toDeployments({ ...accountPathProps, ...projectPathProps, ...pipelineModuleParams })}
-      >
-        <DeploymentsList />
-      </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CFSideNavProps}
+      path={routes.toTriggersPage({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })}
+      exact
+    >
+      <PipelineDetails>
+        <TriggersPage />
+      </PipelineDetails>
+    </RouteWithLayout>
 
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        sidebarProps={CFSideNavProps}
-        exact
-        path={routes.toInputSetList({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })}
-      >
-        <PipelineDetails>
-          <InputSetList />
-        </PipelineDetails>
-      </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CFSideNavProps}
+      path={routes.toTriggersDetailPage({ ...accountPathProps, ...triggerPathProps, ...pipelineModuleParams })}
+      exact
+    >
+      <TriggersDetailPage />
+    </RouteWithLayout>
 
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        sidebarProps={CFSideNavProps}
-        path={routes.toInputSetForm({ ...accountPathProps, ...inputSetFormPathProps, ...pipelineModuleParams })}
-        exact
-      >
-        <EnhancedInputSetForm />
-      </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CFSideNavProps}
+      path={routes.toTriggersWizardPage({ ...accountPathProps, ...triggerPathProps, ...pipelineModuleParams })}
+    >
+      <TriggerDetails>
+        <TriggersWizardPage />
+      </TriggerDetails>
+    </RouteWithLayout>
 
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        sidebarProps={CFSideNavProps}
-        path={routes.toTriggersPage({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })}
-        exact
-      >
-        <PipelineDetails>
-          <TriggersPage />
-        </PipelineDetails>
-      </RouteWithLayout>
+    <Route
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CFSideNavProps}
+      path={routes.toExecution({ ...accountPathProps, ...executionPathProps, ...pipelineModuleParams })}
+      exact
+    >
+      <RedirectToExecutionPipeline />
+    </Route>
 
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        sidebarProps={CFSideNavProps}
-        path={routes.toTriggersDetailPage({ ...accountPathProps, ...triggerPathProps, ...pipelineModuleParams })}
-        exact
-      >
-        <TriggersDetailPage />
-      </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CFSideNavProps}
+      path={routes.toExecutionPipelineView({
+        ...accountPathProps,
+        ...executionPathProps,
+        ...pipelineModuleParams
+      })}
+      exact
+    >
+      <ExecutionLandingPage>
+        <ExecutionPipelineView />
+      </ExecutionLandingPage>
+    </RouteWithLayout>
 
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        sidebarProps={CFSideNavProps}
-        path={routes.toTriggersWizardPage({ ...accountPathProps, ...triggerPathProps, ...pipelineModuleParams })}
-      >
-        <TriggerDetails>
-          <TriggersWizardPage />
-        </TriggerDetails>
-      </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CFSideNavProps}
+      path={routes.toExecutionInputsView({ ...accountPathProps, ...executionPathProps, ...pipelineModuleParams })}
+      exact
+    >
+      <ExecutionLandingPage>
+        <ExecutionInputsView />
+      </ExecutionLandingPage>
+    </RouteWithLayout>
 
-      <Route
-        licenseRedirectData={licenseRedirectData}
-        sidebarProps={CFSideNavProps}
-        path={routes.toExecution({ ...accountPathProps, ...executionPathProps, ...pipelineModuleParams })}
-        exact
-      >
-        <RedirectToExecutionPipeline />
-      </Route>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CFSideNavProps}
+      path={routes.toExecutionArtifactsView({
+        ...accountPathProps,
+        ...executionPathProps,
+        ...pipelineModuleParams
+      })}
+      exact
+    >
+      <ExecutionLandingPage>
+        <ExecutionArtifactsView />
+      </ExecutionLandingPage>
+    </RouteWithLayout>
 
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        sidebarProps={CFSideNavProps}
-        path={routes.toExecutionPipelineView({
-          ...accountPathProps,
-          ...executionPathProps,
-          ...pipelineModuleParams
-        })}
-        exact
-      >
-        <ExecutionLandingPage>
-          <ExecutionPipelineView />
-        </ExecutionLandingPage>
-      </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CFSideNavProps}
+      path={routes.toPipelineDetail({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })}
+      exact
+    >
+      <RedirectToPipelineDetailHome />
+    </RouteWithLayout>
 
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        sidebarProps={CFSideNavProps}
-        path={routes.toExecutionInputsView({ ...accountPathProps, ...executionPathProps, ...pipelineModuleParams })}
-        exact
-      >
-        <ExecutionLandingPage>
-          <ExecutionInputsView />
-        </ExecutionLandingPage>
-      </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CFSideNavProps}
+      layout={MinimalLayout}
+      path={routes.toExecutionPolicyEvaluationsView({
+        ...accountPathProps,
+        ...executionPathProps,
+        ...pipelineModuleParams
+      })}
+      pageName={PAGE_NAME.ExecutionPolicyEvaluationsView}
+    >
+      <ExecutionLandingPage>
+        <ExecutionPolicyEvaluationsView />
+      </ExecutionLandingPage>
+    </RouteWithLayout>
 
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        sidebarProps={CFSideNavProps}
-        path={routes.toExecutionArtifactsView({
-          ...accountPathProps,
-          ...executionPathProps,
-          ...pipelineModuleParams
-        })}
-        exact
-      >
-        <ExecutionLandingPage>
-          <ExecutionArtifactsView />
-        </ExecutionLandingPage>
-      </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CFSideNavProps}
+      path={routes.toPipelineDeploymentList({
+        ...accountPathProps,
+        ...pipelinePathProps,
+        ...pipelineModuleParams
+      })}
+      exact
+    >
+      <PipelineDetails>
+        <CFPipelineDeploymentList />
+      </PipelineDetails>
+    </RouteWithLayout>
 
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        sidebarProps={CFSideNavProps}
-        path={routes.toPipelineDetail({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })}
-        exact
-      >
-        <RedirectToPipelineDetailHome />
-      </RouteWithLayout>
-
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        sidebarProps={CFSideNavProps}
-        path={routes.toPipelineDeploymentList({
-          ...accountPathProps,
-          ...pipelinePathProps,
-          ...pipelineModuleParams
-        })}
-        exact
-      >
-        <PipelineDetails>
-          <CFPipelineDeploymentList />
-        </PipelineDetails>
-      </RouteWithLayout>
-
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        sidebarProps={CFSideNavProps}
-        path={routes.toPipelineDetail({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })}
-        exact
-      >
-        <RedirectToPipelineDetailHome />
-      </RouteWithLayout>
-    </>
-  )
-}
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CFSideNavProps}
+      path={routes.toPipelineDetail({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })}
+      exact
+    >
+      <RedirectToPipelineDetailHome />
+    </RouteWithLayout>
+  </>
+)
 
 export default PipelineRouteDestinations

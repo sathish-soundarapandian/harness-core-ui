@@ -35,7 +35,7 @@ export enum SourceCodeTypes {
   BITBUCKET = 'BITBUCKET',
   GITHUB = 'GITHUB',
   GITLAB = 'GITLAB',
-  AZURE_DEV_OPS = 'AZURE_DEV_OPS',
+  AZURE_REPO = 'AZURE_REPO',
   AWS_CODE_COMMIT = 'AWS_CODE_COMMIT'
 }
 
@@ -44,7 +44,7 @@ export const selectedValueToTypeMap: Record<SourceCodeTypes, SourceCodeTypes> = 
   [SourceCodeTypes.GITHUB]: SourceCodeTypes.GITHUB,
   [SourceCodeTypes.GITLAB]: SourceCodeTypes.GITLAB,
   [SourceCodeTypes.AWS_CODE_COMMIT]: SourceCodeTypes.AWS_CODE_COMMIT,
-  [SourceCodeTypes.AZURE_DEV_OPS]: SourceCodeTypes.AZURE_DEV_OPS
+  [SourceCodeTypes.AZURE_REPO]: SourceCodeTypes.AZURE_REPO
 }
 
 export const getIconBySCM = (item: SourceCodeTypes): IconName => {
@@ -57,7 +57,7 @@ export const getIconBySCM = (item: SourceCodeTypes): IconName => {
       return 'service-gotlab'
     case SourceCodeTypes.AWS_CODE_COMMIT:
       return 'service-aws-code-deploy'
-    case SourceCodeTypes.AZURE_DEV_OPS:
+    case SourceCodeTypes.AZURE_REPO:
       return 'service-azure'
     default:
       return 'bitbucket'
@@ -161,7 +161,7 @@ export const getDefaultSelected = (type?: SourceCodeTypes): AuthTypes | undefine
       return AuthTypes.USERNAME_TOKEN
     case SourceCodeTypes.BITBUCKET:
     case SourceCodeTypes.GITLAB:
-    case SourceCodeTypes.AZURE_DEV_OPS:
+    case SourceCodeTypes.AZURE_REPO:
       return AuthTypes.USERNAME_PASSWORD
     case SourceCodeTypes.AWS_CODE_COMMIT:
       return AuthTypes.AWSCredentials

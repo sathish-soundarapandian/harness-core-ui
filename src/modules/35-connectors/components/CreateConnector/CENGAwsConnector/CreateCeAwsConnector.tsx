@@ -13,7 +13,7 @@ import { useStrings } from 'framework/strings'
 import DialogExtention from '@connectors/common/ConnectorExtention/DialogExtention'
 import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
 import { useTelemetry } from '@common/hooks/useTelemetry'
-import { CCM_CONNECTOR_SAVE_EVENT } from '@connectors/trackingConstants'
+import { CCM_CONNECTOR_SAVE_EVENT, CCM_CONNECTOR_SAVE_SUCCESS } from '@connectors/trackingConstants'
 import OverviewStep, { CEAwsConnectorDTO } from './steps/OverviewStep'
 import CostUsageStep from './steps/CostUsageReport'
 import CrossAccountRoleStep1 from './steps/CrossAccountRoleStep1'
@@ -46,9 +46,10 @@ const CreateCeAwsConnector: React.FC<CreateConnectorModalProps> = props => {
           isLastStep={true}
           type={Connectors.CEAWS}
           onClose={() => {
-            trackEvent(CCM_CONNECTOR_SAVE_EVENT, { connectorType: Connectors.CEAWS })
+            trackEvent(CCM_CONNECTOR_SAVE_EVENT, { type: Connectors.CEAWS })
             props.onClose?.()
           }}
+          onTestConnectionSuccess={() => trackEvent(CCM_CONNECTOR_SAVE_SUCCESS, { type: Connectors.CEAWS })}
         />
       </StepWizard>
     </DialogExtention>

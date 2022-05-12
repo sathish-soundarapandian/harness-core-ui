@@ -31,8 +31,10 @@ import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useConfirmAction } from '@common/hooks'
+import { NoData } from '@cf/components/NoData/NoData'
 import { String } from 'framework/strings'
 import AddKeyDialog from '../../components/AddKeyDialog/AddKeyDialog'
+import EmptySDKs from './NoSDKs.svg'
 
 import css from './EnvironmentDetails.module.scss'
 
@@ -245,18 +247,23 @@ const EnvironmentSDKKeys: React.FC<{ environment: EnvironmentResponseDTO }> = ({
       )}
 
       {emptyData && (
-        <Layout.Vertical width="100%" height="100%" flex={{ align: 'center-center' }} spacing="medium">
-          <Text>{getEnvString('apiKeys.noKeysFound')}</Text>
-          <AddKeyDialog
-            primary
-            environment={environment}
-            onCreate={(newKey: ApiKey, hideCreate) => {
-              setRecents([...recents, newKey])
-              hideCreate()
-              refetch()
-            }}
-          />
-        </Layout.Vertical>
+        <Container height="100%" flex={{ align: 'center-center' }}>
+          <NoData
+            imageURL={EmptySDKs}
+            message={getString('cf.environments.apiKeys.noKeysFoundTitle')}
+            description={<String useRichText stringID="cf.environments.apiKeys.noKeysFoundMessage" />}
+          >
+            <AddKeyDialog
+              primary
+              environment={environment}
+              onCreate={(newKey: ApiKey, hideCreate) => {
+                setRecents([...recents, newKey])
+                hideCreate()
+                refetch()
+              }}
+            />
+          </NoData>
+        </Container>
       )}
 
       {loading && (

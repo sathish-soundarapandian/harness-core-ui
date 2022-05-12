@@ -6,6 +6,7 @@ exports[`Copy group form test render 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

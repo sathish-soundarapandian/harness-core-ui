@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { NestedAccordionPanel, Text } from '@wings-software/uicore'
+import { MultiTypeInputType, NestedAccordionPanel, Text } from '@harness/uicore'
 import cx from 'classnames'
 import { FontVariation, Color } from '@harness/design-system'
 import { isEmpty, omit } from 'lodash-es'
@@ -37,6 +37,7 @@ export interface K8sServiceSpecVariablesFormProps {
   variablesData: ServiceSpec
   readonly?: boolean
   path?: string
+  allowableTypes: MultiTypeInputType[]
 }
 
 export interface VariableRowProps {
@@ -46,13 +47,13 @@ export interface VariableRowProps {
 }
 
 export function K8sServiceSpecVariablesForm(props: K8sServiceSpecVariablesFormProps): React.ReactElement {
-  const { initialValues, stepsFactory, onUpdate, variablesData, metadataMap, readonly, path } = props
+  const { initialValues, stepsFactory, onUpdate, variablesData, metadataMap, readonly, path, allowableTypes } = props
   const { manifests, artifacts, variables } = initialValues
   const { getString } = useStrings()
 
   const primaryArtifactVariables = variablesData?.artifacts?.primary?.spec
   const sidecarArtifactVariables = variablesData?.artifacts?.sidecars
-  const manifestsVariables = variablesData.manifests
+  const manifestsVariables = variablesData?.manifests
   return (
     <React.Fragment>
       {artifacts && !isEmpty(omit(variablesData?.artifacts, 'uuid')) ? (
@@ -172,7 +173,7 @@ export function K8sServiceSpecVariablesForm(props: K8sServiceSpecVariablesFormPr
         summary={
           <VariableAccordionSummary>
             <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.BLACK}>
-              {getString('variablesText')}
+              {getString('common.variables')}
             </Text>
           </VariableAccordionSummary>
         }
@@ -187,7 +188,7 @@ export function K8sServiceSpecVariablesForm(props: K8sServiceSpecVariablesFormPr
             type={StepType.CustomVariable}
             stepViewType={StepViewType.InputVariable}
             onUpdate={onUpdate}
-            allowableTypes={[]}
+            allowableTypes={allowableTypes}
             readonly={readonly}
             customStepProps={{
               formName: 'addEditServiceCustomVariableForm',

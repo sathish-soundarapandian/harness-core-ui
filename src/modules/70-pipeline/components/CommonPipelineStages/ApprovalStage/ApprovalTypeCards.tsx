@@ -11,7 +11,6 @@ import { Layout } from '@wings-software/uicore'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { RbacThumbnailItem, RbacThumbnailSelect } from '@rbac/components/RbacThumbnailSelect/RbacThumbnailSelect'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './ApprovalStageMinimalMode.module.scss'
 
 /*
@@ -19,7 +18,6 @@ The component to select approval type card in stage
 Used in both minimal view as well as detailed view
 */
 export function ApprovalTypeCards({ isReadonly }: { formikProps: FormikValues; isReadonly?: boolean }): JSX.Element {
-  const { SERVICENOW_NG_INTEGRATION } = useFeatureFlags()
   const approvalTypeCardsData: RbacThumbnailItem[] = React.useMemo(
     () => [
       {
@@ -41,7 +39,6 @@ export function ApprovalTypeCards({ isReadonly }: { formikProps: FormikValues; i
         label: 'ServiceNow',
         value: 'SERVICENOW_APPROVAL',
         icon: 'service-servicenow',
-        disabled: SERVICENOW_NG_INTEGRATION ? false : true,
         featureProps: {
           featureRequest: {
             featureName: FeatureIdentifier.INTEGRATED_APPROVALS_WITH_SERVICE_NOW
@@ -55,7 +52,7 @@ export function ApprovalTypeCards({ isReadonly }: { formikProps: FormikValues; i
         disabled: true
       }
     ],
-    [SERVICENOW_NG_INTEGRATION]
+    []
   )
   return (
     <Layout.Vertical>

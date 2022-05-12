@@ -1,0 +1,246 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "pipelineExecutionSummary": {
+      "pipelineIdentifier": "Pipeline_1304",
+      "planExecutionId": "executionId",
+      "name": "Pipeline 1304",
+      "status": "Running",
+      "tags": [],
+      "executionTriggerInfo": {
+        "triggerType": "MANUAL",
+        "triggeredBy": {
+          "uuid": "lv0euRhKRCyiXWzS7pOg6g",
+          "identifier": "Admin",
+          "extraInfo": {
+            "email": "admin@harness.io"
+          }
+        },
+        "isRerun": false
+      },
+      "governanceMetadata": {
+        "id": "",
+        "deny": false,
+        "details": [],
+        "message": "FF: [OPA_PIPELINE_GOVERNANCE] is disabled for account: [kmpySmUISimoRrJL6NL73w]",
+        "timestamp": "0",
+        "status": "",
+        "accountId": "",
+        "orgId": "",
+        "projectId": "",
+        "entity": "",
+        "type": "",
+        "action": "",
+        "created": "0"
+      },
+      "moduleInfo": {},
+      "layoutNodeMap": {
+        "nodeId": {
+          "nodeType": "Deployment",
+          "nodeGroup": "STAGE",
+          "nodeIdentifier": "Stage_1",
+          "name": "Stage 1",
+          "nodeUuid": "nodeId",
+          "status": "Running",
+          "module": "cd",
+          "moduleInfo": { "cd": {} },
+          "startTs": 1649819227654,
+          "edgeLayoutList": { "currentNodeChildren": [], "nextIds": [] },
+          "nodeRunInfo": {
+            "whenCondition": "\u003c+OnPipelineSuccess\u003e",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnPipelineSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          }
+        }
+      },
+      "modules": ["cd"],
+      "startingNodeId": "nodeId",
+      "startTs": 1649819224550,
+      "createdAt": 1649819225355,
+      "canRetry": true,
+      "showRetryHistory": false,
+      "runSequence": 1,
+      "successfulStagesCount": 0,
+      "runningStagesCount": 1,
+      "failedStagesCount": 0,
+      "totalStagesCount": 1,
+      "allowStageExecutions": false,
+      "stagesExecution": false
+    },
+    "executionGraph": {
+      "rootNodeId": "w7mfjePBQ-6mX37v2xxZEQ",
+      "nodeMap": {
+        "CqL54EdOQhCWyMukP9ZGjQ": {
+          "uuid": "CqL54EdOQhCWyMukP9ZGjQ",
+          "setupId": "nodeId",
+          "name": "Stage 1",
+          "identifier": "Stage_1",
+          "baseFqn": "pipeline.stages.Stage_1",
+          "outcomes": {},
+          "stepParameters": {
+            "uuid": "nodeId",
+            "identifier": "Stage_1",
+            "name": "Stage 1",
+            "description": "",
+            "skipCondition": null,
+            "failureStrategies": [
+              { "onFailure": { "errors": ["ALL_ERRORS"], "action": { "type": "STAGE_ROLLBACK" } } }
+            ],
+            "variables": { "__recast": "java.util.LinkedHashMap" },
+            "tags": {},
+            "type": "Deployment",
+            "specConfig": { "childNodeID": null }
+          },
+          "startTs": 1649819227654,
+          "endTs": null,
+          "stepType": "DEPLOYMENT_STAGE_STEP",
+          "status": "Running",
+          "failureInfo": null,
+          "skipInfo": null,
+          "nodeRunInfo": {
+            "whenCondition": "\u003c+OnPipelineSuccess\u003e",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnPipelineSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "executableResponses": [
+            {
+              "child": {
+                "childNodeId": "5VCKLgHfTBiVDMTI-f82iw",
+                "logKeys": [],
+                "units": []
+              }
+            }
+          ],
+          "unitProgresses": [],
+          "progressData": null,
+          "delegateInfoList": [],
+          "interruptHistories": [],
+          "stepDetails": null
+        },
+        "eeIs1HiTSAmpX9Kd6IQ0vw": {
+          "uuid": "eeIs1HiTSAmpX9Kd6IQ0vw",
+          "setupId": "si_3Z1FdQqCkgJhc-RLwNg",
+          "name": "Service",
+          "identifier": "serviceConfig",
+          "baseFqn": "pipeline.stages.Stage_1.spec.serviceConfig",
+          "outcomes": {},
+          "stepParameters": { "serviceRef": "Service_1", "childNodeId": null },
+          "startTs": 1649819229648,
+          "endTs": null,
+          "stepType": "SERVICE_CONFIG",
+          "status": "Running",
+          "failureInfo": null,
+          "skipInfo": null,
+          "nodeRunInfo": null,
+          "executableResponses": [
+            {
+              "child": {
+                "childNodeId": "service-si_3Z1FdQqCkgJhc-RLwNg",
+                "logKeys": [
+                  "accountId:kmpySmUISimoRrJL6NL73w/orgId:default/projectId:Chetan_Non_Git_Sync/pipelineId:Pipeline_1304/runSequence:1/level0:pipeline/level1:stages/level2:Stage_1/level3:spec/level4:serviceConfig"
+                ],
+                "units": []
+              }
+            }
+          ],
+          "unitProgresses": [],
+          "progressData": null,
+          "delegateInfoList": [],
+          "interruptHistories": [],
+          "stepDetails": null
+        },
+        "vPmzQDULR5ui0x4jCh9QhQ": {
+          "uuid": "vPmzQDULR5ui0x4jCh9QhQ",
+          "setupId": "TJjL34-aRTmDGLlEaqmPfAstages",
+          "name": "stages",
+          "identifier": "stages",
+          "baseFqn": "pipeline.stages",
+          "outcomes": {},
+          "stepParameters": { "childNodeId": "nodeId", "logMessage": "Stages" },
+          "startTs": 1649819226963,
+          "endTs": null,
+          "stepType": "STAGES_STEP",
+          "status": "Running",
+          "failureInfo": null,
+          "skipInfo": null,
+          "nodeRunInfo": null,
+          "executableResponses": [
+            {
+              "child": {
+                "childNodeId": "nodeId",
+                "logKeys": [],
+                "units": []
+              }
+            }
+          ],
+          "unitProgresses": [],
+          "progressData": null,
+          "delegateInfoList": [],
+          "interruptHistories": [],
+          "stepDetails": null
+        },
+        "w7mfjePBQ-6mX37v2xxZEQ": {
+          "uuid": "w7mfjePBQ-6mX37v2xxZEQ",
+          "setupId": "TJjL34-aRTmDGLlEaqmPfA",
+          "name": "Pipeline 1304",
+          "identifier": "pipeline",
+          "baseFqn": "pipeline",
+          "outcomes": {},
+          "stepParameters": {
+            "childNodeID": "TJjL34-aRTmDGLlEaqmPfAstages",
+            "name": "Pipeline 1304",
+            "identifier": "Pipeline_1304",
+            "description": "",
+            "tags": {},
+            "properties": { "__recast": "java.util.LinkedHashMap" },
+            "variables": { "__recast": "java.util.LinkedHashMap" },
+            "executionId": "executionId",
+            "sequenceId": 1
+          },
+          "startTs": 1649819225895,
+          "endTs": null,
+          "stepType": "PIPELINE_SECTION",
+          "status": "Running",
+          "failureInfo": null,
+          "skipInfo": null,
+          "nodeRunInfo": null,
+          "executableResponses": [
+            {
+              "child": {
+                "childNodeId": "TJjL34-aRTmDGLlEaqmPfAstages",
+                "logKeys": [],
+                "units": []
+              }
+            }
+          ],
+          "unitProgresses": [],
+          "progressData": null,
+          "delegateInfoList": [],
+          "interruptHistories": [],
+          "stepDetails": null
+        }
+      },
+      "nodeAdjacencyListMap": {
+        "CqL54EdOQhCWyMukP9ZGjQ": { "children": ["eeIs1HiTSAmpX9Kd6IQ0vw"], "nextIds": [] },
+        "eeIs1HiTSAmpX9Kd6IQ0vw": { "children": [], "nextIds": [] },
+        "vPmzQDULR5ui0x4jCh9QhQ": { "children": ["CqL54EdOQhCWyMukP9ZGjQ"], "nextIds": [] },
+        "w7mfjePBQ-6mX37v2xxZEQ": { "children": ["vPmzQDULR5ui0x4jCh9QhQ"], "nextIds": [] }
+      },
+      "representationStrategy": "camelCase"
+    }
+  },
+  "metaData": null,
+  "correlationId": "855e069b-5545-426b-b75a-c95899c515d0"
+}

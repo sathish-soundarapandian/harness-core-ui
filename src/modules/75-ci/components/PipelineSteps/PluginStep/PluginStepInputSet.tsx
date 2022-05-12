@@ -7,16 +7,15 @@
 
 import React from 'react'
 import { connect } from 'formik'
-import { Text, getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
+import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import StepCommonFieldsInputSet from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFieldsInputSet'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
 import { Connectors } from '@connectors/constants'
 import type { PluginStepProps } from './PluginStep'
 import { CIStep } from '../CIStep/CIStep'
 import { CIStepOptionalConfig } from '../CIStep/CIStepOptionalConfig'
-import { shouldRenderRunTimeInputView } from '../CIStep/StepUtils'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const PluginStepInputSetBasic: React.FC<PluginStepProps> = ({
@@ -41,17 +40,7 @@ export const PluginStepInputSetBasic: React.FC<PluginStepProps> = ({
           }),
           ...(getMultiTypeFromValue(template?.spec?.connectorRef) === MultiTypeInputType.RUNTIME && {
             'spec.connectorRef': {
-              label: (
-                <Text
-                  className={css.inpLabel}
-                  color={Color.GREY_600}
-                  font={{ size: 'small', weight: 'semi-bold' }}
-                  style={{ display: 'flex', alignItems: 'center' }}
-                  tooltipProps={{ dataTooltipId: 'connector' }}
-                >
-                  {getString('pipelineSteps.connectorLabel')}
-                </Text>
-              ),
+              label: { labelKey: 'pipelineSteps.connectorLabel', tooltipId: 'connector' },
               type: [Connectors.GCP, Connectors.AWS, Connectors.DOCKER]
             }
           }),
@@ -70,6 +59,8 @@ export const PluginStepInputSetBasic: React.FC<PluginStepProps> = ({
           })
         }}
         path={path || ''}
+        isInputSetView={true}
+        template={template}
       />
       <CIStepOptionalConfig
         readonly={readonly}
@@ -85,6 +76,7 @@ export const PluginStepInputSetBasic: React.FC<PluginStepProps> = ({
         path={path || ''}
         formik={formik}
         isInputSetView={true}
+        template={template}
       />
       <StepCommonFieldsInputSet path={path} readonly={readonly} template={template} stepViewType={stepViewType} />
     </FormikForm>

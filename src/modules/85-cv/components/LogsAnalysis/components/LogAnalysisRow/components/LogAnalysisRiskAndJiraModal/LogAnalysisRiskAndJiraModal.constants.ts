@@ -24,7 +24,8 @@ export const DrawerProps: IDrawerProps = {
   hasBackdrop: true,
   position: Position.RIGHT,
   usePortal: true,
-  size: '70%'
+  size: '50%',
+  isCloseButtonShown: true
 }
 
 export const ShareContentPopoverProps: IPopoverProps = {

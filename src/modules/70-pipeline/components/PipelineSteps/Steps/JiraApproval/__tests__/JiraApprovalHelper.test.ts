@@ -7,7 +7,7 @@
 
 import type { ApprovalRejectionCriteria } from '@pipeline/components/PipelineSteps/Steps/Common/types'
 import { ApprovalRejectionCriteriaType } from '@pipeline/components/PipelineSteps/Steps/Common/types'
-import { getApprovalRejectionCriteriaForSubmit, handleOperatorChange } from '../helper'
+import { getApprovalRejectionCriteriaForSubmit, handleOperatorChange, resetForm } from '../helper'
 
 describe('Approval Rejection criteria for submit tests', () => {
   test('if criteria is set properly', () => {
@@ -192,5 +192,31 @@ describe('Operator onchange tests', () => {
     handleOperatorChange(selectedOperator, onChange, values, index)
 
     expect(onChange).not.toBeCalled()
+  })
+})
+
+describe('Reset Form tests', () => {
+  test('reset form test for connectorRef, projectKey and issueType', () => {
+    const formValues = {
+      values: {
+        name: 'jiraApproval',
+        identifier: 'jar',
+        timeout: '10m',
+        type: 'JiraApproval',
+        spec: {
+          connectorRef: '',
+          delegateSelectors: undefined,
+          projectKey: '',
+          issueType: '',
+          issueKey: '',
+          approvalCriteria: { spec: {}, type: ApprovalRejectionCriteriaType.Jexl },
+          rejectionCriteria: { spec: {}, type: ApprovalRejectionCriteriaType.Jexl }
+        }
+      },
+      setFieldValue: jest.fn()
+    } as any
+    expect(resetForm(formValues, 'connectorRef')).toBe(undefined)
+    expect(resetForm(formValues, 'projectKey')).toBe(undefined)
+    expect(resetForm(formValues, 'issueType')).toBe(undefined)
   })
 })

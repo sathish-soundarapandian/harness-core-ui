@@ -8,10 +8,11 @@
 import React, { MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { v4 as uuid } from 'uuid'
-import type { FormikActions } from 'formik'
+import type { FormikHelpers } from 'formik'
 import { cloneDeep, get, isEqual } from 'lodash-es'
 import {
   Button,
+  ButtonVariation,
   Container,
   FlexExpander,
   Formik,
@@ -167,7 +168,7 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
   const [isGitSyncOpenModal, setIsGitSyncModalOpen] = useState(false)
 
   const onSaveChanges = useCallback(
-    (values: FlagActivationFormValues, formikActions: FormikActions<FlagActivationFormValues>): void => {
+    (values: FlagActivationFormValues, formikActions: FormikHelpers<FlagActivationFormValues>): void => {
       // handle flag state changed - e.g. toggled from off to on
       if (values.state !== initialValues.state) {
         patch.feature.addInstruction(patch.creators.setFeatureFlagState(values?.state as FeatureState))
@@ -329,7 +330,11 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
                 }
               : data
           )
-            .then(async () => {
+            .then(async response => {
+              if (isGovernanceError(response)) {
+                handleGovernanceError(response)
+              }
+
               if (!gitSync?.isAutoCommitEnabled && values.autoCommit) {
                 await gitSync?.handleAutoCommit(values.autoCommit)
               }
@@ -344,7 +349,7 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
               if (err.status === GIT_SYNC_ERROR_CODE) {
                 gitSync.handleError(err.data as GitSyncErrorResponse)
               } else {
-                if (isGovernanceError(err)) {
+                if (isGovernanceError(err?.data)) {
                   handleGovernanceError(err.data)
                 } else {
                   showError(get(err, 'data.message', err?.message), 0)
@@ -471,7 +476,7 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
   }
 
   return (
-    <Formik
+    <Formik<FlagActivationFormValues>
       enableReinitialize={true}
       validateOnChange={false}
       validateOnBlur={false}
@@ -548,6 +553,7 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
                       type="submit"
                       intent="primary"
                       text={getString('save')}
+                      variation={ButtonVariation.PRIMARY}
                       onClick={event => {
                         if (gitSync?.isGitSyncEnabled && !gitSync?.isAutoCommitEnabled) {
                           event.preventDefault()
@@ -558,6 +564,7 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
                     <Button
                       minimal
                       text={getString('cancel')}
+                      variation={ButtonVariation.SECONDARY}
                       onClick={(e: MouseEvent) => {
                         e.preventDefault()
                         onCancelEditHandler()

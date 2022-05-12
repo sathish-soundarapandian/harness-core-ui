@@ -28,7 +28,11 @@ export function updatedMonitoredServiceNameForEnv(
   const { values } = formik || {}
   const monitoredServiceName = generateMonitoredServiceName(
     values.serviceRef,
-    monitoredServiceType === 'Infrastructure' ? undefined : ((environment as SelectOption)?.value as string)
+    monitoredServiceType === 'Infrastructure'
+      ? undefined
+      : typeof environment === 'string'
+      ? environment
+      : ((environment as SelectOption)?.value as string)
   )
   formik.setValues({
     ...values,
@@ -41,8 +45,12 @@ export function updatedMonitoredServiceNameForEnv(
 export function updateMonitoredServiceNameForService(formik: FormikProps<any>, service?: SelectOption): void {
   const { values } = formik || {}
   const monitoredServiceName = generateMonitoredServiceName(
-    service?.value as string,
-    values?.type === 'Infrastructure' ? undefined : ((values.environmentRef as SelectOption)?.value as string)
+    typeof service === 'string' ? service : (service?.value as string),
+    values?.type === 'Infrastructure'
+      ? undefined
+      : typeof values.environmentRef === 'string'
+      ? values.environmentRef
+      : ((values.environmentRef as SelectOption)?.value as string)
   )
   formik.setValues({
     ...values,

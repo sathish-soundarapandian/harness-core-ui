@@ -20,6 +20,7 @@ import {
   ResponseInputSetResponse,
   useCreateInputSetForPipeline
 } from 'services/pipeline-ng'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { NameIdDescriptionTags } from '@common/components'
 import { useToaster } from '@common/exports'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
@@ -64,6 +65,7 @@ const useCreateUpdateInputSet = (
 ): UseCreateUpdateInputSetReturnType => {
   const { getString } = useStrings()
   const { showError, showSuccess } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<
     PipelineType<{
       orgIdentifier: string
@@ -111,7 +113,7 @@ const useCreateUpdateInputSet = (
         status: response?.status // nextCallback can be added if required
       }
     } catch (e) {
-      showError(e?.data?.message)
+      showError(getRBACErrorMessage(e))
       // throw error here so that it's uncaught in handleSubmit and we don'tr end up reloading the modal
       throw e
     }

@@ -5,12 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Color } from '@harness/design-system'
 import { Layout, Text } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import type { FetchPlansQuery } from 'services/common/services'
 import type { ModuleName } from 'framework/types/ModuleName'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import PlansPanel from './PlansPanel'
 import FeatureComparison from './FeatureComparison'
 import css from './Plans.module.scss'
@@ -32,6 +34,11 @@ const Plans: React.FC<PlansProps> = ({ plans, featureCaption, featureGroup, modu
     cf: 'ff',
     ci: 'ci'
   }
+  const { trackPage } = useTelemetry()
+  useEffect(() => {
+    trackPage(PAGE_NAME.PlanPage, { module })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const moduleParam = moduleNameMap[module.toLowerCase()]
   const { getString } = useStrings()

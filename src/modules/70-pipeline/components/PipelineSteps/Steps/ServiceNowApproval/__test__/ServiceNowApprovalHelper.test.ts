@@ -9,6 +9,7 @@ import type { ApprovalRejectionCriteria } from '@pipeline/components/PipelineSte
 import { ApprovalRejectionCriteriaType } from '@pipeline/components/PipelineSteps/Steps/Common/types'
 import { handleOperatorChange } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/helper'
 import { getApprovalRejectionCriteriaForSubmit } from '../helper'
+import { resetForm } from '../types'
 
 describe('Approval Rejection criteria for submit tests', () => {
   test('if criteria is set properly', () => {
@@ -193,5 +194,30 @@ describe('Operator onchange tests', () => {
     handleOperatorChange(selectedOperator, onChange, values, index)
 
     expect(onChange).not.toBeCalled()
+  })
+})
+
+describe('Reset form Test', () => {
+  test('Reset form for connetorRef and ticketType', () => {
+    const formValues = {
+      values: {
+        name: 'serviceNowApprovalTest',
+        identifier: 'snow',
+        timeout: '10m',
+        type: 'ServiceNowApproval',
+        spec: {
+          connectorRef: '',
+          delegateSelectors: undefined,
+          ticketNumber: '',
+          ticketType: '',
+          approvalCriteria: { spec: {}, type: ApprovalRejectionCriteriaType.Jexl },
+          rejectionCriteria: { spec: {}, type: ApprovalRejectionCriteriaType.Jexl }
+        }
+      },
+      setFieldValue: jest.fn()
+    } as any
+
+    expect(resetForm(formValues, 'connectorRef')).toBe(undefined)
+    expect(resetForm(formValues, 'ticketType')).toBe(undefined)
   })
 })

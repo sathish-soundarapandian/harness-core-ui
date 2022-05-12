@@ -4,6 +4,9 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
+.container {
+  overflow: auto;
+}
 
 .card-select {
   margin-top: var(--spacing-medium);
@@ -11,13 +14,13 @@
   :global {
     .bp3-card {
       margin-right: var(--spacing-large);
-      & .cardBody {
-        text-align: center;
-        word-wrap: break-word;
-        height: 50px;
-        width: 50px;
-        font-weight: bold;
-      }
     }
   }
+}
+
+.cardBody {
+  text-align: center;
+  word-wrap: break-word;
+  height: 48px;
+  width: 48px;
 }

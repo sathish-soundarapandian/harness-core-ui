@@ -12,7 +12,7 @@ import routes from '@common/RouteDefinitions'
 import { accountPathProps, executionPathProps } from '@common/utils/routeUtils'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { PipelineLogsPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
-import { useGetExecutionDetail, useGetExecutionNode } from 'services/pipeline-ng'
+import { useGetExecutionDetailV2, useGetExecutionNode } from 'services/pipeline-ng'
 
 import singleSectionData from './single-section-data.json'
 import multiSectionData from './multi-section-data.json'
@@ -27,7 +27,7 @@ const LOGS_TEXT = `{"level":"INFO","pos":0,"out":"Initializing..","time":"2022-0
 {"level":"INFO","pos":0,"out":"Done.","time":"2022-01-27T20:51:00.325Z","args":null}`
 
 jest.mock('services/pipeline-ng', () => ({
-  useGetExecutionDetail: jest.fn(() => ({ data: {}, loading: false })),
+  useGetExecutionDetailV2: jest.fn(() => ({ data: {}, loading: false })),
   useGetExecutionNode: jest.fn(() => ({ data: {}, loading: false }))
 }))
 
@@ -70,7 +70,7 @@ describe('<FullPageLogView /> tests', () => {
   })
 
   test('loading', () => {
-    ;(useGetExecutionDetail as jest.Mock).mockReturnValue({ loading: true })
+    ;(useGetExecutionDetailV2 as jest.Mock).mockReturnValue({ loading: true })
     const { container } = render(
       <TestWrapper path={TEST_PATH} pathParams={TEST_PARAMS as any}>
         <FullPageLogView />
@@ -80,7 +80,7 @@ describe('<FullPageLogView /> tests', () => {
   })
 
   test('single section data', async () => {
-    ;(useGetExecutionDetail as jest.Mock).mockReturnValue({ data: singleSectionData, loading: false })
+    ;(useGetExecutionDetailV2 as jest.Mock).mockReturnValue({ data: singleSectionData, loading: false })
     const { container, getByTestId } = render(
       <TestWrapper path={TEST_PATH} pathParams={{ ...TEST_PARAMS, stepIndentifier: 'ASRaWM6CQbOA6Gk3dpnSxw' } as any}>
         <FullPageLogView />
@@ -93,7 +93,7 @@ describe('<FullPageLogView /> tests', () => {
   })
 
   test('multi section data', async () => {
-    ;(useGetExecutionDetail as jest.Mock).mockReturnValue({ data: multiSectionData, loading: false })
+    ;(useGetExecutionDetailV2 as jest.Mock).mockReturnValue({ data: multiSectionData, loading: false })
     const { container, getByTestId } = render(
       <TestWrapper path={TEST_PATH} pathParams={{ ...TEST_PARAMS, stepIndentifier: '4Hwky8Z5QEWUPOg0Av2_Yg' } as any}>
         <FullPageLogView />
@@ -106,7 +106,7 @@ describe('<FullPageLogView /> tests', () => {
   })
 
   test('retry node', async () => {
-    ;(useGetExecutionDetail as jest.Mock).mockReturnValue({ data: {}, loading: false })
+    ;(useGetExecutionDetailV2 as jest.Mock).mockReturnValue({ data: {}, loading: false })
     ;(useGetExecutionNode as jest.Mock).mockReturnValue({
       data: { data: singleSectionData.data.executionGraph.nodeMap.ASRaWM6CQbOA6Gk3dpnSxw }
     })

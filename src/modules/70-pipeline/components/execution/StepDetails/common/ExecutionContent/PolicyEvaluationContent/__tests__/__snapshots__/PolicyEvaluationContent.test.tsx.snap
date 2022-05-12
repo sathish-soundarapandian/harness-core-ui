@@ -405,7 +405,7 @@ exports[`Policy Info under Policy Evaluation Content snapshot renders for failed
         style="--text-line-clamp: 1; width: 400px;"
       >
         <a
-          href="/account/acc/settings/governance/policies/view/account.policy2"
+          href="/account/acc/settings/governance/policy-evaluations/2980"
         >
           Policy 1: Account Policy 2
         </a>
@@ -491,7 +491,7 @@ exports[`Policy Info under Policy Evaluation Content snapshot renders for failed
         style="--text-line-clamp: 1; width: 400px;"
       >
         <a
-          href="/account/acc/settings/governance/policies/view/account.policy1"
+          href="/account/acc/settings/governance/policy-evaluations/2980"
         >
           Policy 1: Account Policy 1
         </a>
@@ -565,7 +565,7 @@ exports[`Policy Info under Policy Evaluation Content snapshot renders for failed
         style="--text-line-clamp: 1; width: 400px;"
       >
         <a
-          href="/account/acc/settings/governance/policies/view/account.policy3"
+          href="/account/acc/settings/governance/policy-evaluations/2980"
         >
           Policy 1: Account Policy 3
         </a>
@@ -638,7 +638,7 @@ exports[`Policy Info under Policy Evaluation Content snapshot renders for passed
         style="--text-line-clamp: 1; width: 400px;"
       >
         <a
-          href="/account/acc/settings/organizations/org/setup/governance/policies/view/org.policy1"
+          href="/account/acc/settings/organizations/org/setup/governance/policy-evaluations/2980"
         >
           Policy 1: Org Policy 1
         </a>
@@ -692,7 +692,7 @@ exports[`Policy Info under Policy Evaluation Content snapshot renders for policy
         style="--text-line-clamp: 1; width: 400px;"
       >
         <a
-          href="/account/acc/cd/orgs/org/projects/project/setup/governance/policies/view/policy1"
+          href="/account/acc/cd/orgs/org/projects/project/setup/governance/policy-evaluations/2980"
         >
           Policy 1: Policy 1
         </a>

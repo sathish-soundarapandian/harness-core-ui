@@ -416,635 +416,648 @@ exports[`Unit tests for CVChanges Verify if all the fields are rendered correctl
       class="StyledProps--font StyledProps--main"
     >
       <div
-        class="Text--withDocsTooltip"
-        data-tooltip-id="CVChangesTable"
-      >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-normal StyledProps--padding-bottom-medium"
-        >
-          changes
-          (
-          4
-          )
-        </p>
-      </div>
-      <div
-        class="StyledProps--font StyledProps--main cardContainer container"
+        class="StyledProps--font StyledProps--main"
       >
         <div
-          class="StyledProps--font StyledProps--main content"
+          class="Text--withDocsTooltip"
+          data-tooltip-id="CVChangesTable"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--padding-bottom-medium"
+          >
+            changes
+            (
+            4
+            )
+          </p>
+        </div>
+        <div
+          class="bp3-card bp3-elevation-0 Card--card childContainer cardContainer"
         >
           <div
-            class="TableV2--table"
+            class="Layout--vertical StyledProps--main"
+            style="height: 100%;"
           >
             <div
-              class="TableV2--header"
-              role="row"
+              class="StyledProps--font StyledProps--main tableContainer"
             >
               <div
-                class="TableV2--cell TableV2--sortable"
-                colspan="1"
-                role="columnheader"
-                style="width: 15%;"
-                title="Toggle SortBy"
+                class="TableV2--table"
               >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                <div
+                  class="TableV2--header"
+                  role="row"
                 >
-                  timeLabel
-                </p>
-                <span
-                  class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
-                  icon="double-caret-vertical"
-                >
-                  <svg
-                    data-icon="double-caret-vertical"
-                    height="15"
-                    viewBox="0 0 16 16"
-                    width="15"
+                  <div
+                    class="TableV2--cell TableV2--sortable"
+                    colspan="1"
+                    role="columnheader"
+                    style="width: 15%;"
+                    title="Toggle SortBy"
                   >
-                    <desc>
-                      double-caret-vertical
-                    </desc>
-                    <path
-                      d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
-                      fill-rule="evenodd"
-                    />
-                  </svg>
-                </span>
-              </div>
-              <div
-                class="TableV2--cell TableV2--sortable"
-                colspan="1"
-                role="columnheader"
-                style="width: 30%;"
-                title="Toggle SortBy"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-                >
-                  description
-                </p>
-                <span
-                  class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
-                  icon="double-caret-vertical"
-                >
-                  <svg
-                    data-icon="double-caret-vertical"
-                    height="15"
-                    viewBox="0 0 16 16"
-                    width="15"
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                    >
+                      timeLabel
+                    </p>
+                    <span
+                      class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+                      icon="double-caret-vertical"
+                    >
+                      <svg
+                        data-icon="double-caret-vertical"
+                        height="15"
+                        viewBox="0 0 16 16"
+                        width="15"
+                      >
+                        <desc>
+                          double-caret-vertical
+                        </desc>
+                        <path
+                          d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                  <div
+                    class="TableV2--cell TableV2--sortable"
+                    colspan="1"
+                    role="columnheader"
+                    style="width: 30%;"
+                    title="Toggle SortBy"
                   >
-                    <desc>
-                      double-caret-vertical
-                    </desc>
-                    <path
-                      d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
-                      fill-rule="evenodd"
-                    />
-                  </svg>
-                </span>
-              </div>
-              <div
-                class="TableV2--cell TableV2--sortable"
-                colspan="1"
-                role="columnheader"
-                style="width: 25%;"
-                title="Toggle SortBy"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-                >
-                  connectors.cdng.monitoredService.label
-                </p>
-                <span
-                  class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
-                  icon="double-caret-vertical"
-                >
-                  <svg
-                    data-icon="double-caret-vertical"
-                    height="15"
-                    viewBox="0 0 16 16"
-                    width="15"
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                    >
+                      description
+                    </p>
+                    <span
+                      class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+                      icon="double-caret-vertical"
+                    >
+                      <svg
+                        data-icon="double-caret-vertical"
+                        height="15"
+                        viewBox="0 0 16 16"
+                        width="15"
+                      >
+                        <desc>
+                          double-caret-vertical
+                        </desc>
+                        <path
+                          d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                  <div
+                    class="TableV2--cell TableV2--sortable"
+                    colspan="1"
+                    role="columnheader"
+                    style="width: 25%;"
+                    title="Toggle SortBy"
                   >
-                    <desc>
-                      double-caret-vertical
-                    </desc>
-                    <path
-                      d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
-                      fill-rule="evenodd"
-                    />
-                  </svg>
-                </span>
-              </div>
-              <div
-                class="TableV2--cell TableV2--sortable"
-                colspan="1"
-                role="columnheader"
-                style="width: 15%;"
-                title="Toggle SortBy"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-                >
-                  typeLabel
-                </p>
-                <span
-                  class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
-                  icon="double-caret-vertical"
-                >
-                  <svg
-                    data-icon="double-caret-vertical"
-                    height="15"
-                    viewBox="0 0 16 16"
-                    width="15"
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                    >
+                      connectors.cdng.monitoredService.label
+                    </p>
+                    <span
+                      class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+                      icon="double-caret-vertical"
+                    >
+                      <svg
+                        data-icon="double-caret-vertical"
+                        height="15"
+                        viewBox="0 0 16 16"
+                        width="15"
+                      >
+                        <desc>
+                          double-caret-vertical
+                        </desc>
+                        <path
+                          d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                  <div
+                    class="TableV2--cell TableV2--sortable"
+                    colspan="1"
+                    role="columnheader"
+                    style="width: 15%;"
+                    title="Toggle SortBy"
                   >
-                    <desc>
-                      double-caret-vertical
-                    </desc>
-                    <path
-                      d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
-                      fill-rule="evenodd"
-                    />
-                  </svg>
-                </span>
-              </div>
-              <div
-                class="TableV2--cell TableV2--sortable"
-                colspan="1"
-                role="columnheader"
-                style="width: 15%;"
-                title="Toggle SortBy"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-                >
-                  source
-                </p>
-                <span
-                  class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
-                  icon="double-caret-vertical"
-                >
-                  <svg
-                    data-icon="double-caret-vertical"
-                    height="15"
-                    viewBox="0 0 16 16"
-                    width="15"
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                    >
+                      typeLabel
+                    </p>
+                    <span
+                      class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+                      icon="double-caret-vertical"
+                    >
+                      <svg
+                        data-icon="double-caret-vertical"
+                        height="15"
+                        viewBox="0 0 16 16"
+                        width="15"
+                      >
+                        <desc>
+                          double-caret-vertical
+                        </desc>
+                        <path
+                          d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                  <div
+                    class="TableV2--cell TableV2--sortable"
+                    colspan="1"
+                    role="columnheader"
+                    style="width: 15%;"
+                    title="Toggle SortBy"
                   >
-                    <desc>
-                      double-caret-vertical
-                    </desc>
-                    <path
-                      d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
-                      fill-rule="evenodd"
-                    />
-                  </svg>
-                </span>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                    >
+                      source
+                    </p>
+                    <span
+                      class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+                      icon="double-caret-vertical"
+                    >
+                      <svg
+                        data-icon="double-caret-vertical"
+                        height="15"
+                        viewBox="0 0 16 16"
+                        width="15"
+                      >
+                        <desc>
+                          double-caret-vertical
+                        </desc>
+                        <path
+                          d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+                <div
+                  class="TableV2--body"
+                >
+                  <div
+                    class="TableV2--row TableV2--card TableV2--clickable"
+                    role="row"
+                  >
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 15%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                      >
+                        Oct 19, 2021
+                      </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
+                      >
+                        01:35 PM
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 30%;"
+                    >
+                      <div
+                        class="StyledProps--font StyledProps--main changeSoureName"
+                      >
+                        <span
+                          class="bp3-popover-wrapper"
+                        >
+                          <span
+                            class="bp3-popover-target Text--targetClass"
+                          >
+                            <p
+                              class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                              tabindex="0"
+                            >
+                              Kubernetes Deployment event
+                            </p>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 25%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                      >
+                        service12
+                      </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
+                      >
+                        env11
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 15%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                      >
+                        Infrastructure
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 15%;"
+                    >
+                      <div
+                        class="StyledProps--font StyledProps--main changeSoureName"
+                      >
+                        <p
+                          class="StyledProps--font StyledProps--main sourceName StyledProps--font-size-small"
+                        >
+                          K8sCluster
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="TableV2--row TableV2--card TableV2--clickable"
+                    role="row"
+                  >
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 15%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                      >
+                        Oct 19, 2021
+                      </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
+                      >
+                        01:25 PM
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 30%;"
+                    >
+                      <div
+                        class="StyledProps--font StyledProps--main changeSoureName"
+                      >
+                        <span
+                          class="bp3-popover-wrapper"
+                        >
+                          <span
+                            class="bp3-popover-target Text--targetClass"
+                          >
+                            <p
+                              class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                              tabindex="0"
+                            >
+                              Deployment of manager in prod HarnessCD
+                            </p>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 25%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                      >
+                        AppDService1012
+                      </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
+                      >
+                        AppDTestEnv1-1
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 15%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                      >
+                        Deployment
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 15%;"
+                    >
+                      <div
+                        class="StyledProps--font StyledProps--main changeSoureName"
+                      >
+                        <p
+                          class="StyledProps--font StyledProps--main sourceName StyledProps--font-size-small"
+                        >
+                          HarnessCD
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="TableV2--row TableV2--card TableV2--clickable"
+                    role="row"
+                  >
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 15%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                      >
+                        Oct 19, 2021
+                      </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
+                      >
+                        01:05 PM
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 30%;"
+                    >
+                      <div
+                        class="StyledProps--font StyledProps--main changeSoureName"
+                      >
+                        <span
+                          class="bp3-popover-wrapper"
+                        >
+                          <span
+                            class="bp3-popover-target Text--targetClass"
+                          >
+                            <p
+                              class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                              tabindex="0"
+                            >
+                              Deployment of manager in prod HarnessCDNextGen
+                            </p>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 25%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                      >
+                        service132
+                      </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
+                      >
+                        environ
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 15%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                      >
+                        Deployment
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 15%;"
+                    >
+                      <div
+                        class="StyledProps--font StyledProps--main changeSoureName"
+                      >
+                        <p
+                          class="StyledProps--font StyledProps--main sourceName StyledProps--font-size-small"
+                        >
+                          HarnessCDNextGen
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="TableV2--row TableV2--card TableV2--clickable"
+                    role="row"
+                  >
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 15%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                      >
+                        Oct 19, 2021
+                      </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
+                      >
+                        12:54 PM
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 30%;"
+                    >
+                      <div
+                        class="StyledProps--font StyledProps--main changeSoureName"
+                      >
+                        <span
+                          class="bp3-popover-wrapper"
+                        >
+                          <span
+                            class="bp3-popover-target Text--targetClass"
+                          >
+                            <p
+                              class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                              tabindex="0"
+                            >
+                              Demo Test PD
+                            </p>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 25%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                      >
+                        AppDService1012
+                      </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
+                      >
+                        environ1
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 15%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                      >
+                        Incident
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 15%;"
+                    >
+                      <div
+                        class="StyledProps--font StyledProps--main changeSoureName"
+                      >
+                        <p
+                          class="StyledProps--font StyledProps--main sourceName StyledProps--font-size-small"
+                        >
+                          PagerDuty
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <div
-              class="TableV2--body"
+              class="StyledProps--font StyledProps--main StyledProps--padding-left-medium StyledProps--padding-right-medium"
             >
               <div
-                class="TableV2--row TableV2--card TableV2--clickable"
-                role="row"
+                class="Layout--horizontal StyledProps--main Pagination--container StyledProps--padding-top-medium StyledProps--padding-bottom-medium StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-distribution-space-between"
               >
-                <div
-                  class="TableV2--cell"
-                  role="cell"
-                  style="width: 15%;"
+                <span
+                  class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-small-semi"
                 >
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                  >
-                    Oct 19, 2021
-                  </p>
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
-                  >
-                    01:35 PM
-                  </p>
-                </div>
+                  4
+                   of 
+                  4
+                </span>
                 <div
-                  class="TableV2--cell"
-                  role="cell"
-                  style="width: 30%;"
+                  class="Layout--horizontal StyledProps--main"
                 >
-                  <div
-                    class="StyledProps--font StyledProps--main changeSoureName"
+                  <button
+                    class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
+                    disabled=""
+                    tabindex="-1"
+                    type="button"
                   >
                     <span
-                      class="bp3-popover-wrapper"
+                      class="bp3-icon bp3-icon-arrow-left StyledProps--main StyledProps--padding-right-xsmall"
+                      icon="arrow-left"
                     >
-                      <span
-                        class="bp3-popover-target Text--targetClass"
+                      <svg
+                        data-icon="arrow-left"
+                        height="12"
+                        viewBox="0 0 16 16"
+                        width="12"
                       >
-                        <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                          tabindex="0"
-                        >
-                          Kubernetes Deployment event
-                        </p>
-                      </span>
+                        <desc>
+                          arrow-left
+                        </desc>
+                        <path
+                          d="M13.99 6.99H4.41L7.7 3.7a1.003 1.003 0 00-1.42-1.42l-5 5a1.014 1.014 0 000 1.42l5 5a1.003 1.003 0 001.42-1.42L4.41 8.99H14c.55 0 1-.45 1-1s-.46-1-1.01-1z"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
                     </span>
-                  </div>
-                </div>
-                <div
-                  class="TableV2--cell"
-                  role="cell"
-                  style="width: 25%;"
-                >
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                  >
-                    service12
-                  </p>
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
-                  >
-                    env11
-                  </p>
-                </div>
-                <div
-                  class="TableV2--cell"
-                  role="cell"
-                  style="width: 15%;"
-                >
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                  >
-                    Infrastructure
-                  </p>
-                </div>
-                <div
-                  class="TableV2--cell"
-                  role="cell"
-                  style="width: 15%;"
-                >
-                  <div
-                    class="StyledProps--font StyledProps--main changeSoureName"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main sourceName StyledProps--font-size-small"
+                    <span
+                      class="bp3-button-text"
                     >
-                      K8sCluster
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="TableV2--row TableV2--card TableV2--clickable"
-                role="row"
-              >
-                <div
-                  class="TableV2--cell"
-                  role="cell"
-                  style="width: 15%;"
-                >
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                  >
-                    Oct 19, 2021
-                  </p>
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
-                  >
-                    01:25 PM
-                  </p>
-                </div>
-                <div
-                  class="TableV2--cell"
-                  role="cell"
-                  style="width: 30%;"
-                >
-                  <div
-                    class="StyledProps--font StyledProps--main changeSoureName"
+                      Prev
+                    </span>
+                  </button>
+                  <button
+                    class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--selected Button--with-current-color"
+                    disabled=""
+                    tabindex="-1"
+                    type="button"
                   >
                     <span
-                      class="bp3-popover-wrapper"
+                      class="bp3-button-text"
                     >
-                      <span
-                        class="bp3-popover-target Text--targetClass"
-                      >
-                        <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                          tabindex="0"
-                        >
-                          Deployment of manager in prod HarnessCD
-                        </p>
-                      </span>
+                      1
                     </span>
-                  </div>
-                </div>
-                <div
-                  class="TableV2--cell"
-                  role="cell"
-                  style="width: 25%;"
-                >
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                  >
-                    AppDService1012
-                  </p>
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
-                  >
-                    AppDTestEnv1-1
-                  </p>
-                </div>
-                <div
-                  class="TableV2--cell"
-                  role="cell"
-                  style="width: 15%;"
-                >
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                  >
-                    Deployment
-                  </p>
-                </div>
-                <div
-                  class="TableV2--cell"
-                  role="cell"
-                  style="width: 15%;"
-                >
-                  <div
-                    class="StyledProps--font StyledProps--main changeSoureName"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main sourceName StyledProps--font-size-small"
-                    >
-                      HarnessCD
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="TableV2--row TableV2--card TableV2--clickable"
-                role="row"
-              >
-                <div
-                  class="TableV2--cell"
-                  role="cell"
-                  style="width: 15%;"
-                >
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                  >
-                    Oct 19, 2021
-                  </p>
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
-                  >
-                    01:05 PM
-                  </p>
-                </div>
-                <div
-                  class="TableV2--cell"
-                  role="cell"
-                  style="width: 30%;"
-                >
-                  <div
-                    class="StyledProps--font StyledProps--main changeSoureName"
+                  </button>
+                  <button
+                    class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
+                    disabled=""
+                    tabindex="-1"
+                    type="button"
                   >
                     <span
-                      class="bp3-popover-wrapper"
+                      class="bp3-button-text"
                     >
-                      <span
-                        class="bp3-popover-target Text--targetClass"
-                      >
-                        <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                          tabindex="0"
-                        >
-                          Deployment of manager in prod HarnessCDNextGen
-                        </p>
-                      </span>
+                      Next
                     </span>
-                  </div>
-                </div>
-                <div
-                  class="TableV2--cell"
-                  role="cell"
-                  style="width: 25%;"
-                >
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                  >
-                    service132
-                  </p>
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
-                  >
-                    environ
-                  </p>
-                </div>
-                <div
-                  class="TableV2--cell"
-                  role="cell"
-                  style="width: 15%;"
-                >
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                  >
-                    Deployment
-                  </p>
-                </div>
-                <div
-                  class="TableV2--cell"
-                  role="cell"
-                  style="width: 15%;"
-                >
-                  <div
-                    class="StyledProps--font StyledProps--main changeSoureName"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main sourceName StyledProps--font-size-small"
-                    >
-                      HarnessCDNextGen
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="TableV2--row TableV2--card TableV2--clickable"
-                role="row"
-              >
-                <div
-                  class="TableV2--cell"
-                  role="cell"
-                  style="width: 15%;"
-                >
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                  >
-                    Oct 19, 2021
-                  </p>
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
-                  >
-                    12:54 PM
-                  </p>
-                </div>
-                <div
-                  class="TableV2--cell"
-                  role="cell"
-                  style="width: 30%;"
-                >
-                  <div
-                    class="StyledProps--font StyledProps--main changeSoureName"
-                  >
                     <span
-                      class="bp3-popover-wrapper"
+                      class="bp3-icon bp3-icon-arrow-right StyledProps--main"
+                      icon="arrow-right"
                     >
-                      <span
-                        class="bp3-popover-target Text--targetClass"
+                      <svg
+                        data-icon="arrow-right"
+                        height="12"
+                        viewBox="0 0 16 16"
+                        width="12"
                       >
-                        <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                          tabindex="0"
-                        >
-                          Demo Test PD
-                        </p>
-                      </span>
+                        <desc>
+                          arrow-right
+                        </desc>
+                        <path
+                          d="M14.7 7.29l-5-5a.965.965 0 00-.71-.3 1.003 1.003 0 00-.71 1.71l3.29 3.29H1.99c-.55 0-1 .45-1 1s.45 1 1 1h9.59l-3.29 3.29a1.003 1.003 0 001.42 1.42l5-5c.18-.18.29-.43.29-.71s-.12-.52-.3-.7z"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
                     </span>
-                  </div>
+                  </button>
                 </div>
-                <div
-                  class="TableV2--cell"
-                  role="cell"
-                  style="width: 25%;"
-                >
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                  >
-                    AppDService1012
-                  </p>
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
-                  >
-                    environ1
-                  </p>
-                </div>
-                <div
-                  class="TableV2--cell"
-                  role="cell"
-                  style="width: 15%;"
-                >
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                  >
-                    Incident
-                  </p>
-                </div>
-                <div
-                  class="TableV2--cell"
-                  role="cell"
-                  style="width: 15%;"
-                >
-                  <div
-                    class="StyledProps--font StyledProps--main changeSoureName"
-                  >
-                    <p
-                      class="StyledProps--font StyledProps--main sourceName StyledProps--font-size-small"
-                    >
-                      PagerDuty
-                    </p>
-                  </div>
-                </div>
+                <span>
+                  Showing 10 per page
+                </span>
               </div>
-            </div>
-            <div
-              class="Layout--horizontal StyledProps--main TableV2--pagination Pagination--container StyledProps--padding-top-medium StyledProps--padding-bottom-medium StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-distribution-space-between"
-            >
-              <span
-                class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-small-semi"
-              >
-                4
-                 of 
-                4
-              </span>
-              <div
-                class="Layout--horizontal StyledProps--main"
-              >
-                <button
-                  class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonLeft Button--with-current-color Button--withLeftIcon Button--size Button--small"
-                  disabled=""
-                  tabindex="-1"
-                  type="button"
-                >
-                  <span
-                    class="bp3-icon bp3-icon-arrow-left StyledProps--main StyledProps--padding-right-xsmall"
-                    icon="arrow-left"
-                  >
-                    <svg
-                      data-icon="arrow-left"
-                      height="12"
-                      viewBox="0 0 16 16"
-                      width="12"
-                    >
-                      <desc>
-                        arrow-left
-                      </desc>
-                      <path
-                        d="M13.99 6.99H4.41L7.7 3.7a1.003 1.003 0 00-1.42-1.42l-5 5a1.014 1.014 0 000 1.42l5 5a1.003 1.003 0 001.42-1.42L4.41 8.99H14c.55 0 1-.45 1-1s-.46-1-1.01-1z"
-                        fill-rule="evenodd"
-                      />
-                    </svg>
-                  </span>
-                  <span
-                    class="bp3-button-text"
-                  >
-                    Prev
-                  </span>
-                </button>
-                <button
-                  class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--selected Button--with-current-color"
-                  disabled=""
-                  tabindex="-1"
-                  type="button"
-                >
-                  <span
-                    class="bp3-button-text"
-                  >
-                    1
-                  </span>
-                </button>
-                <button
-                  class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
-                  disabled=""
-                  tabindex="-1"
-                  type="button"
-                >
-                  <span
-                    class="bp3-button-text"
-                  >
-                    Next
-                  </span>
-                  <span
-                    class="bp3-icon bp3-icon-arrow-right StyledProps--main"
-                    icon="arrow-right"
-                  >
-                    <svg
-                      data-icon="arrow-right"
-                      height="12"
-                      viewBox="0 0 16 16"
-                      width="12"
-                    >
-                      <desc>
-                        arrow-right
-                      </desc>
-                      <path
-                        d="M14.7 7.29l-5-5a.965.965 0 00-.71-.3 1.003 1.003 0 00-.71 1.71l3.29 3.29H1.99c-.55 0-1 .45-1 1s.45 1 1 1h9.59l-3.29 3.29a1.003 1.003 0 001.42 1.42l5-5c.18-.18.29-.43.29-.71s-.12-.52-.3-.7z"
-                        fill-rule="evenodd"
-                      />
-                    </svg>
-                  </span>
-                </button>
-              </div>
-              <span>
-                Showing 10 per page
-              </span>
             </div>
           </div>
         </div>

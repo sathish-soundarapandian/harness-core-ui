@@ -9,11 +9,11 @@ import React from 'react'
 import { get } from 'lodash-es'
 import { getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
+import { shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
 import { Connectors } from '@connectors/constants'
 import type { ECRStepProps } from '../ECRStep/ECRStep'
 import type { GCRStepProps } from '../GCRStep/GCRStep'
 import type { DockerHubStepProps } from '../DockerHubStep/DockerHubStep'
-import { shouldRenderRunTimeInputView } from './StepUtils'
 import { CIStepOptionalConfig } from './CIStepOptionalConfig'
 
 interface ArtifactStepCommonProps extends Omit<ECRStepProps | GCRStepProps | DockerHubStepProps, 'initialValues'> {
@@ -71,6 +71,7 @@ export const ArtifactStepCommon: React.FC<ArtifactStepCommonProps> = ({
       path={path || ''}
       formik={formik}
       isInputSetView={true}
+      template={template}
     />
   )
 }

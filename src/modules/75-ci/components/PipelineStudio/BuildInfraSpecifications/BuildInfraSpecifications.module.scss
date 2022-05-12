@@ -169,6 +169,10 @@
   margin-bottom: var(--spacing-3) !important;
 }
 
+.bottomMargin4 {
+  margin-bottom: var(--spacing-4) !important;
+}
+
 .bottomMargin5 {
   margin-bottom: var(--spacing-5) !important;
 }
@@ -191,4 +195,31 @@
   &.sm {
     width: 45%;
   }
+}
+
+.environmentVarHeader {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 2fr 30px;
+  column-gap: var(--spacing-small);
+  margin-bottom: var(--spacing-small);
+  align-items: start;
+
+  :global(.bp3-form-group) {
+    margin: 0;
+  }
+
+  .label {
+    color: var(--grey-400);
+  }
+}
+
+.panel {
+  border: 1px solid var(--form-field-border);
+  border-radius: 4px;
+  padding: var(--spacing-small);
+  margin-top: var(--spacing-small);
+}
+
+.addButton {
+  padding-left: 0 !important;
 }

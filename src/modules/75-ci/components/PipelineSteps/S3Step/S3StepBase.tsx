@@ -6,9 +6,8 @@
  */
 
 import React from 'react'
-import { Text, Formik, FormikForm, Accordion, Container } from '@wings-software/uicore'
+import { Formik, FormikForm, Accordion, Container } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
-import { Color } from '@harness/design-system'
 import get from 'lodash/get'
 import type { K8sDirectInfraYaml } from 'services/ci'
 import { Connectors } from '@connectors/constants'
@@ -101,16 +100,7 @@ export const S3StepBase = (
               enableFields={{
                 name: {},
                 'spec.connectorRef': {
-                  label: (
-                    <Text
-                      className={css.inpLabel}
-                      color={Color.GREY_600}
-                      font={{ size: 'small', weight: 'semi-bold' }}
-                      style={{ display: 'flex', alignItems: 'center' }}
-                    >
-                      {getString('pipelineSteps.awsConnectorLabel')}
-                    </Text>
-                  ),
+                  label: { labelKey: 'pipelineSteps.awsConnectorLabel' },
                   type: Connectors.AWS
                 },
                 'spec.region': {},

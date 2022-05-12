@@ -14,6 +14,7 @@ import { useStrings } from 'framework/strings'
 import type {
   DeleteFeatureFlagQueryParams,
   Feature,
+  FeatureResponseMetadata,
   GitSyncPatchOperation,
   PatchFeaturePathParams,
   PatchFeatureQueryParams
@@ -32,12 +33,19 @@ export interface FlagDetailsOptionsMenuButtonProps {
     data: string,
     mutateRequestOptions?: MutateRequestOptions<DeleteFeatureFlagQueryParams, void> | undefined
   ) => void
-  submitPatch: MutateMethod<Feature, GitSyncPatchOperation, PatchFeatureQueryParams, PatchFeaturePathParams>
+  submitPatch: MutateMethod<
+    FeatureResponseMetadata,
+    GitSyncPatchOperation,
+    PatchFeatureQueryParams,
+    PatchFeaturePathParams
+  >
   queryParams: DeleteFeatureFlagQueryParams
+  setGovernanceMetadata: (governanceMetadata: any) => void
 }
 
 const FlagDetailsOptionsMenuButton = (props: FlagDetailsOptionsMenuButtonProps): ReactElement => {
-  const { featureFlag, gitSync, queryParams, refetchFlag, submitPatch, deleteFeatureFlag } = props
+  const { featureFlag, gitSync, queryParams, refetchFlag, submitPatch, deleteFeatureFlag, setGovernanceMetadata } =
+    props
 
   const { getString } = useStrings()
 
@@ -47,7 +55,8 @@ const FlagDetailsOptionsMenuButton = (props: FlagDetailsOptionsMenuButtonProps):
     featureFlag,
     gitSync,
     refetchFlag,
-    submitPatch
+    submitPatch,
+    setGovernanceMetadata
   })
 
   const { isPlanEnforcementEnabled } = usePlanEnforcement()

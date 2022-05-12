@@ -108,9 +108,6 @@ describe('Create Secret Manager Wizard', () => {
     //Cost and Usage Step
     expect(getAllByText(container, 'connectors.ceAws.cur.heading')[0]).toBeDefined()
 
-    //Check if the extention opens
-    expect(getAllByText(container, 'connectors.ceAws.curExtention.heading')[0]).toBeDefined()
-
     expect(container).toMatchSnapshot()
 
     fillAtForm([
@@ -143,9 +140,6 @@ describe('Create Secret Manager Wizard', () => {
     //Cross Account Role Step 2
     expect(getAllByText(container, 'connectors.ceAws.crossAccountRoleStep2.heading')[0]).toBeDefined()
 
-    //Check if the extention opens
-    expect(getAllByText(container, 'connectors.ceAws.crossAccountRoleExtention.heading')[0]).toBeDefined()
-
     expect(container).toMatchSnapshot()
 
     fillAtForm([
@@ -161,7 +155,7 @@ describe('Create Secret Manager Wizard', () => {
       clickSubmit(container)
     })
 
-    expect(getAllByText(container, 'connectors.ceAws.testConnection.heading')[0]).toBeDefined()
+    expect(getByText(container, 'connectors.ceAws.testConnection.heading')).toBeDefined()
 
     const finishBtn = getByText(container, 'finish')
     expect(finishBtn).toBeDefined()

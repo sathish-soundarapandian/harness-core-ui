@@ -36,6 +36,8 @@ import { useTemplateSelector } from '@pipeline/utils/useTemplateSelector'
 import { createTemplate } from '@pipeline/utils/templateUtils'
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import type { StringsMap } from 'stringTypes'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerData, DrawerSizes, DrawerTypes, PipelineViewData } from '../PipelineContext/PipelineActions'
 import { StepCommandsWithRef as StepCommands, StepFormikRef } from '../StepCommands/StepCommands'
@@ -48,16 +50,17 @@ import {
 } from '../StepCommands/StepCommandTypes'
 import { StepPalette } from '../StepPalette/StepPalette'
 import { addService, addStepOrGroup, generateRandomString, getStepFromId } from '../ExecutionGraph/ExecutionGraphUtil'
-import PipelineVariables from '../PipelineVariables/PipelineVariables'
-import { PipelineNotifications } from '../PipelineNotifications/PipelineNotifications'
+import PipelineVariables, { PipelineVariablesRef } from '../PipelineVariables/PipelineVariables'
+import { PipelineNotifications, PipelineNotificationsRef } from '../PipelineNotifications/PipelineNotifications'
 import { PipelineTemplates } from '../PipelineTemplates/PipelineTemplates'
 import { ExecutionStrategy, ExecutionStrategyRefInterface } from '../ExecutionStrategy/ExecutionStrategy'
 import type { StepData } from '../../AbstractSteps/AbstractStepFactory'
 import { StepType } from '../../PipelineSteps/PipelineStepInterface'
-import { FlowControl } from '../FlowControl/FlowControl'
+import { FlowControlWithRef as FlowControl, FlowControlRef } from '../FlowControl/FlowControl'
 import { AdvancedOptions } from '../AdvancedOptions/AdvancedOptions'
 import { RightDrawerTitle } from './RightDrawerTitle'
 
+import { getFlattenedStages } from '../StageBuilder/StageBuilderUtil'
 import css from './RightDrawer.module.scss'
 
 export const FullscreenDrawers: DrawerTypes[] = [
@@ -160,6 +163,9 @@ const processNodeImpl = (
     if (item.delegateSelectors && item.tab === TabTypes.Advanced) {
       set(node, 'spec.delegateSelectors', item.delegateSelectors)
     }
+    if ((item as StepElementConfig)?.spec?.commandOptions && item.tab !== TabTypes.Advanced) {
+      set(node, 'spec.commandOptions', (item as StepElementConfig)?.spec?.commandOptions)
+    }
 
     // Delete values if they were already added and now removed
     if (node.timeout && !(item as StepElementConfig).timeout && item.tab !== TabTypes.Advanced) delete node.timeout
@@ -174,6 +180,16 @@ const processNodeImpl = (
     ) {
       delete node.spec.delegateSelectors
     }
+    if (
+      node.spec?.commandOptions &&
+      (!(item as StepElementConfig)?.spec?.commandOptions ||
+        (item as StepElementConfig)?.spec?.commandOptions?.length === 0) &&
+      item.tab !== TabTypes.Advanced
+    ) {
+      delete (item as StepElementConfig)?.spec?.commandOptions
+      delete node.spec.commandOptions
+    }
+
     if (item.template) {
       node.template = item.template
     }
@@ -299,24 +315,69 @@ const applyChanges = async (
   }
 }
 
-const closeDrawer = (
-  e: SyntheticEvent<HTMLElement, Event> | undefined,
-  formikRef: React.MutableRefObject<StepFormikRef | null>,
-  data: any,
-  getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
-  openConfirmBEUpdateError: () => void,
-  updatePipelineView: (data: PipelineViewData) => void,
-  pipelineView: PipelineViewData,
+export interface CloseDrawerArgs {
+  e?: SyntheticEvent<Element, Event> | undefined
+  formikRef: React.MutableRefObject<StepFormikRef | null>
+  data: any
+  getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
+  openConfirmBEUpdateError: () => void
+  updatePipelineView: (data: PipelineViewData) => void
+  pipelineView: PipelineViewData
   setSelectedStepId: (selectedStepId: string | undefined) => void
-): void => {
+  type: DrawerTypes
+  onSearchInputChange?: (value: string) => void
+  executionStrategyRef: React.MutableRefObject<ExecutionStrategyRefInterface | null>
+  variablesRef: React.MutableRefObject<PipelineVariablesRef | null>
+  flowControlRef: React.MutableRefObject<FlowControlRef | null>
+  notificationsRef: React.MutableRefObject<PipelineNotificationsRef | null>
+}
+
+const closeDrawer = (args: CloseDrawerArgs): void => {
+  const {
+    e,
+    formikRef,
+    data,
+    getString,
+    openConfirmBEUpdateError,
+    updatePipelineView,
+    setSelectedStepId,
+    pipelineView,
+    type,
+    onSearchInputChange,
+    executionStrategyRef,
+    variablesRef,
+    flowControlRef,
+    notificationsRef
+  } = args
   e?.persist()
   if (checkDuplicateStep(formikRef, data, getString)) {
     return
   }
-  if (formikRef.current?.isDirty()) {
+  if (formikRef.current?.isDirty?.()) {
     openConfirmBEUpdateError()
     return
   }
+
+  if (type === DrawerTypes.FlowControl) {
+    flowControlRef.current?.onRequestClose()
+    return
+  }
+  if (type === DrawerTypes.ExecutionStrategy) {
+    executionStrategyRef.current?.cancelExecutionStrategySelection()
+    return
+  }
+
+  if (type === DrawerTypes.PipelineVariables) {
+    onSearchInputChange?.('')
+    variablesRef.current?.onRequestClose()
+    return
+  }
+
+  if (type === DrawerTypes.PipelineNotifications) {
+    notificationsRef.current?.onRequestClose()
+    return
+  }
+
   updatePipelineView({ ...pipelineView, isDrawerOpened: false, drawerData: { type: DrawerTypes.AddStep } })
   setSelectedStepId(undefined)
 }
@@ -351,6 +412,9 @@ export function RightDrawer(): React.ReactElement {
     : null
   const templateStepTemplate = (data?.stepConfig?.node as TemplateStepNode)?.template
   const formikRef = React.useRef<StepFormikRef | null>(null)
+  const flowControlRef = React.useRef<FlowControlRef | null>(null)
+  const variablesRef = React.useRef<PipelineVariablesRef | null>(null)
+  const notificationsRef = React.useRef<PipelineNotificationsRef | null>(null)
   const executionStrategyRef = React.useRef<ExecutionStrategyRefInterface | null>(null)
   const { getString } = useStrings()
   const isFullScreenDrawer = FullscreenDrawers.includes(type)
@@ -358,6 +422,7 @@ export function RightDrawer(): React.ReactElement {
   if (data?.stepConfig?.isStepGroup) {
     stepData = stepsFactory.getStepData(StepType.StepGroup)
   }
+  const newPipelineStudioEnabled: boolean = useFeatureFlag(FeatureFlag.NEW_PIPELINE_STUDIO)
 
   const discardChanges = (): void => {
     updatePipelineView({
@@ -387,11 +452,7 @@ export function RightDrawer(): React.ReactElement {
       ></RightDrawerTitle>
     )
   } else {
-    if (type === DrawerTypes.PipelineNotifications) {
-      title = getString('notifications.name')
-    } else {
-      title = null
-    }
+    title = null
   }
 
   React.useEffect(() => {
@@ -540,7 +601,8 @@ export function RightDrawer(): React.ReactElement {
         pipelineStage?.stage?.spec?.execution as any,
         newStepData,
         paletteData.isParallelNodeClicked,
-        paletteData.isRollback
+        paletteData.isRollback,
+        newPipelineStudioEnabled
       )
 
       if (pipelineStage?.stage) {
@@ -631,23 +693,38 @@ export function RightDrawer(): React.ReactElement {
     await updateNode(processNode)
   }
 
+  const onDiscard = () => {
+    updatePipelineView({
+      ...pipelineView,
+      isDrawerOpened: false,
+      drawerData: {
+        type: DrawerTypes.AddStep
+      }
+    })
+  }
+
+  const handleClose = (e?: React.SyntheticEvent<Element, Event>): void => {
+    closeDrawer({
+      e,
+      formikRef,
+      data,
+      getString,
+      openConfirmBEUpdateError,
+      updatePipelineView,
+      pipelineView,
+      setSelectedStepId,
+      type,
+      onSearchInputChange,
+      executionStrategyRef,
+      variablesRef,
+      flowControlRef,
+      notificationsRef
+    })
+  }
+
   return (
     <Drawer
-      onClose={async e => {
-        if (type === DrawerTypes.PipelineVariables) {
-          onSearchInputChange?.('')
-        }
-        closeDrawer(
-          e,
-          formikRef,
-          data,
-          getString,
-          openConfirmBEUpdateError,
-          updatePipelineView,
-          pipelineView,
-          setSelectedStepId
-        )
-      }}
+      onClose={handleClose}
       usePortal={true}
       autoFocus={true}
       canEscapeKeyClose={type !== DrawerTypes.ExecutionStrategy}
@@ -668,23 +745,7 @@ export function RightDrawer(): React.ReactElement {
       // "classnames" package cannot be used here because it returns an empty string when no classes are applied
       portalClassName={isFullScreenDrawer ? css.almostFullScreenPortal : 'pipeline-studio-right-drawer'}
     >
-      <Button
-        minimal
-        className={css.almostFullScreenCloseBtn}
-        icon="cross"
-        withoutBoxShadow
-        onClick={() => {
-          if (type === DrawerTypes.ExecutionStrategy) {
-            executionStrategyRef.current?.cancelExecutionStrategySelection()
-          } else {
-            if (type === DrawerTypes.PipelineVariables) {
-              onSearchInputChange?.('')
-            }
-            updatePipelineView({ ...pipelineView, isDrawerOpened: false, drawerData: { type: DrawerTypes.AddStep } })
-            setSelectedStepId(undefined)
-          }
-        }}
-      />
+      <Button minimal className={css.almostFullScreenCloseBtn} icon="cross" withoutBoxShadow onClick={handleClose} />
 
       {type === DrawerTypes.StepConfig && data?.stepConfig?.node && (
         <StepCommands
@@ -719,19 +780,24 @@ export function RightDrawer(): React.ReactElement {
       {type === DrawerTypes.AddStep && selectedStageId && data?.paletteData && (
         <StepPalette
           stepsFactory={stepsFactory}
-          stepPaletteModuleInfos={getStepPaletteModuleInfosFromStage(stageType, selectedStage?.stage)}
+          stepPaletteModuleInfos={getStepPaletteModuleInfosFromStage(
+            stageType,
+            selectedStage?.stage,
+            undefined,
+            getFlattenedStages(pipeline).stages
+          )}
           stageType={stageType as StageType}
           onSelect={onStepSelection}
         />
       )}
       {/* TODO */}
-      {type === DrawerTypes.PipelineVariables && <PipelineVariables pipeline={pipeline} />}
+      {type === DrawerTypes.PipelineVariables && <PipelineVariables ref={variablesRef} pipeline={pipeline} />}
       {type === DrawerTypes.Templates && <PipelineTemplates />}
       {type === DrawerTypes.ExecutionStrategy && (
         <ExecutionStrategy selectedStage={defaultTo(selectedStage, {})} ref={executionStrategyRef} />
       )}
-      {type === DrawerTypes.PipelineNotifications && <PipelineNotifications />}
-      {type === DrawerTypes.FlowControl && <FlowControl />}
+      {type === DrawerTypes.FlowControl && <FlowControl ref={flowControlRef} onDiscard={onDiscard} />}
+      {type === DrawerTypes.PipelineNotifications && <PipelineNotifications ref={notificationsRef} />}
       {type === DrawerTypes.AdvancedOptions && (
         <AdvancedOptions
           pipeline={cloneDeep(pipeline)}
@@ -745,15 +811,7 @@ export function RightDrawer(): React.ReactElement {
               }
             })
           }}
-          onDiscard={() => {
-            updatePipelineView({
-              ...pipelineView,
-              isDrawerOpened: false,
-              drawerData: {
-                type: DrawerTypes.AddStep
-              }
-            })
-          }}
+          onDiscard={onDiscard}
         />
       )}
       {type === DrawerTypes.PolicySets && <PipelineGovernanceView pipelineName={pipeline.name} />}
@@ -776,7 +834,12 @@ export function RightDrawer(): React.ReactElement {
       {type === DrawerTypes.AddProvisionerStep && selectedStageId && data?.paletteData && (
         <StepPalette
           stepsFactory={stepsFactory}
-          stepPaletteModuleInfos={getStepPaletteModuleInfosFromStage(stageType, undefined, 'Provisioner')}
+          stepPaletteModuleInfos={getStepPaletteModuleInfosFromStage(
+            stageType,
+            undefined,
+            'Provisioner',
+            getFlattenedStages(pipeline).stages
+          )}
           stageType={stageType as StageType}
           isProvisioner={true}
           onSelect={async (item: StepData) => {
@@ -814,7 +877,8 @@ export function RightDrawer(): React.ReactElement {
                 provisioner,
                 newStepData,
                 paletteData.isParallelNodeClicked,
-                paletteData.isRollback
+                paletteData.isRollback,
+                newPipelineStudioEnabled
               )
 
               if (pipelineStage?.stage) {

@@ -119,24 +119,20 @@ describe('SLOLogContent', () => {
 
     expect(screen.getByText('cv.showingLogsFor cv.lastonehour from DUMMY_DATE to DUMMY_DATE.')).toBeInTheDocument()
 
-    userEvent.click(screen.getByPlaceholderText('- Select -'))
+    userEvent.click(screen.getByText('cv.lastOneHour'))
     userEvent.click(screen.getByText('cv.monitoredServices.serviceHealth.last4Hrs'))
 
-    expect(
-      screen.getByText('cv.showingLogsFor cv.monitoredservices.servicehealth.last4hrs from DUMMY_DATE to DUMMY_DATE.')
-    ).toBeInTheDocument()
+    expect(screen.getByText('cv.monitoredServices.serviceHealth.last4Hrs')).toBeInTheDocument()
 
-    userEvent.click(screen.getByPlaceholderText('- Select -'))
+    userEvent.click(screen.getByText('cv.monitoredServices.serviceHealth.last4Hrs'))
     userEvent.click(screen.getByText('cv.last12Hours'))
 
-    expect(screen.getByText('cv.showingLogsFor cv.last12hours from DUMMY_DATE to DUMMY_DATE.')).toBeInTheDocument()
+    expect(screen.getByText('cv.last12Hours')).toBeInTheDocument()
 
-    userEvent.click(screen.getByPlaceholderText('- Select -'))
+    userEvent.click(screen.getByText('cv.last12Hours'))
     userEvent.click(screen.getByText('cv.monitoredServices.serviceHealth.last24Hrs'))
 
-    expect(
-      screen.getByText('cv.showingLogsFor cv.monitoredservices.servicehealth.last24hrs from DUMMY_DATE to DUMMY_DATE.')
-    ).toBeInTheDocument()
+    expect(screen.getByText('cv.monitoredServices.serviceHealth.last24Hrs')).toBeInTheDocument()
 
     await waitFor(() => {
       expect(cvService.useGetServiceLevelObjectiveLogs).toHaveBeenLastCalledWith({
@@ -172,12 +168,10 @@ describe('SLOLogContent', () => {
 
     expect(screen.getByText('cv.showingLogsFor cv.lastonehour from DUMMY_DATE to DUMMY_DATE.')).toBeInTheDocument()
 
-    userEvent.click(screen.getByPlaceholderText('- Select -'))
+    userEvent.click(screen.getByText('cv.lastOneHour'))
     userEvent.click(screen.getByText('cv.monitoredServices.serviceHealth.last4Hrs'))
 
-    expect(
-      screen.getByText('cv.showingLogsFor cv.monitoredservices.servicehealth.last4hrs from DUMMY_DATE to DUMMY_DATE.')
-    ).toBeInTheDocument()
+    expect(screen.getByText('cv.monitoredServices.serviceHealth.last4Hrs')).toBeInTheDocument()
 
     await waitFor(() => {
       expect(cvService.useGetServiceLevelObjectiveLogs).toHaveBeenLastCalledWith({
@@ -267,5 +261,59 @@ describe('SLOLogContent', () => {
         }
       })
     })
+  })
+
+  test('it should handle the custom time range filter for ExecutionLog', () => {
+    render(
+      <TestWrapper {...testWrapperProps}>
+        <SLOLogContent
+          logType={LogTypes.ExecutionLog}
+          identifier="SLO_IDENTIFIER"
+          serviceName="SERVICE_NAME"
+          envName="ENV_NAME"
+          isFullScreen={false}
+          setIsFullScreen={jest.fn()}
+        />
+      </TestWrapper>
+    )
+
+    userEvent.click(screen.getByRole('button', { name: /cv.lastOneHour/i }))
+
+    expect(screen.getByText('cv.selectTimeRange')).toBeInTheDocument()
+
+    userEvent.click(screen.getByText('cancel'))
+
+    expect(screen.queryByText('cv.selectTimeRange')).not.toBeVisible()
+
+    userEvent.click(screen.getByRole('button', { name: /cv.lastOneHour/i }))
+
+    expect(screen.getByText('cv.selectTimeRange')).toBeInTheDocument()
+
+    userEvent.click(screen.getByText('common.apply'))
+
+    expect(screen.queryByText('cv.selectTimeRange')).not.toBeVisible()
+  })
+
+  test('it should handle the custom time range filter for ApiCallLog', () => {
+    render(
+      <TestWrapper {...testWrapperProps}>
+        <SLOLogContent
+          logType={LogTypes.ApiCallLog}
+          identifier="SLO_IDENTIFIER"
+          serviceName="SERVICE_NAME"
+          envName="ENV_NAME"
+          isFullScreen={false}
+          setIsFullScreen={jest.fn()}
+        />
+      </TestWrapper>
+    )
+
+    userEvent.click(screen.getByRole('button', { name: /cv.lastOneHour/i }))
+
+    expect(screen.getByText('cv.selectTimeRange')).toBeInTheDocument()
+
+    userEvent.click(screen.getByText('common.apply'))
+
+    expect(screen.queryByText('cv.selectTimeRange')).not.toBeVisible()
   })
 })

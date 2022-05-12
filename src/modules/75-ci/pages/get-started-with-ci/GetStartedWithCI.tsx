@@ -12,6 +12,7 @@ import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import { InfraProvisioningWizard } from './InfraProvisioningWizard/InfraProvisioningWizard'
 import { InfraProvisioningCarousel } from './InfraProvisioningCarousel/InfraProvisioningCarousel'
+import { ProvisioningStatus } from './InfraProvisioningWizard/Constants'
 
 import samplePipelineImg from '../../assets/images/sample-pipeline.svg'
 
@@ -96,7 +97,7 @@ export default function GetStartedWithCI(): React.ReactElement {
 
   const renderCatalogueItem = React.useCallback(
     ({ icon, label, helptext }: { icon: IconName; label: keyof StringsMap; helptext: keyof StringsMap }) => (
-      <Layout.Vertical padding={{ bottom: 'xxxlarge' }}>
+      <Layout.Vertical padding={{ bottom: 'xxxlarge' }} key={label}>
         <Icon name={icon} size={50} />
         <Text font={{ variation: FontVariation.CARD_TITLE }}>{getString(label)}</Text>
         <Text font={{ variation: FontVariation.SMALL }}>{getString(helptext)}</Text>
@@ -174,7 +175,7 @@ export default function GetStartedWithCI(): React.ReactElement {
               <InfraProvisioningCarousel
                 show={showDialog}
                 onClose={() => setShowDialog(false)}
-                provisioningStatus="IN_PROGRESS"
+                provisioningStatus={ProvisioningStatus.IN_PROGRESS}
               />
             ) : null}
           </Layout.Horizontal>

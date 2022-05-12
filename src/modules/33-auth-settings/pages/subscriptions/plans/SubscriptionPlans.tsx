@@ -10,7 +10,7 @@ import { Layout, PageError, PageSpinner } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
 import { FetchPlansQuery, useFetchPlansQuery } from 'services/common/services'
-import { isCDCommunity, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { isCommunityPlan } from '@common/utils/utils'
 import { Editions } from '@common/constants/SubscriptionTypes'
 import Plans from './Plans'
 import CommunityPlans from './CommunityPlans'
@@ -73,12 +73,10 @@ const PlanTabs: React.FC<PlanTabsProps> = ({ module, plans }) => {
 }
 
 const SubscriptionPlans: React.FC<SubscriptionPlansProps> = ({ module }) => {
-  const { licenseInformation } = useLicenseStore()
-
   const [result, executeQuery] = useFetchPlansQuery()
   const { data, fetching, error } = result
   const { getString } = useStrings()
-  if (isCDCommunity(licenseInformation)) {
+  if (isCommunityPlan()) {
     return <CommunityPlans />
   }
 

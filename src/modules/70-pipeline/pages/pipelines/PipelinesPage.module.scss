@@ -105,7 +105,8 @@ $header-height: 80px;
 button.runPipelineListBtn {
   width: 62px;
   &:global {
-    &.Button--button[class*='bp3-button'] {
+    &.Button--button[class*='bp3-button'],
+    &.Button--button[class*='bp3-disabled'] {
       &.Button--withLeftIcon {
         border: solid 1px var(--success) !important;
         color: var(--success) !important;

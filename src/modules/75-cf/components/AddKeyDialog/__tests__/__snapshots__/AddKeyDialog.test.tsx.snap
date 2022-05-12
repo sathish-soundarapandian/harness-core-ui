@@ -37,7 +37,7 @@ exports[`Test AddKeyDialog AddKeyDialog should be rendered properly 1`] = `
     <span
       class="bp3-button-text"
     >
-      cf.environments.apiKeys.addKey
+      cf.environments.apiKeys.addKeyTitle
     </span>
   </button>
 </div>

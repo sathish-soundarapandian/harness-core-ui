@@ -525,6 +525,12 @@ const PerspectiveListPage: React.FC = () => {
     trackPage(PAGE_NAMES.PERSPECTIVE_LIST, {})
   }, [])
 
+  useEffect(() => {
+    if (data) {
+      trackEvent(USER_JOURNEY_EVENTS.PERSPECTIVE_LOADED, { count: pespectiveList.length })
+    }
+  }, [data])
+
   useMemo(() => {
     pespectiveList.sort(perspectiveSortFunction)
   }, [pespectiveList])

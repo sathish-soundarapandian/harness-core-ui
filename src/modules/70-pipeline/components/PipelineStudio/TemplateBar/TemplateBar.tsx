@@ -20,11 +20,15 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import routes from '@common/RouteDefinitions'
 import type { PipelineType, ProjectPathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useGetTemplate } from 'services/template-ng'
-import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import {
+  getIdentifierFromValue,
+  getScopeBasedProjectPathParams,
+  getScopeFromValue
+} from '@common/components/EntityReference/EntityReference'
 import { TemplateYaml } from '@pipeline/components/PipelineStudio/TemplateYaml/TemplateYaml'
-import { Scope } from '@common/interfaces/SecretsInterface'
 import type { TemplateLinkConfig } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import css from './TemplateBar.module.scss'
 
 interface TemplateMenuItem {
@@ -42,24 +46,25 @@ export interface TemplateBarProps {
 }
 
 export function TemplateBar(props: TemplateBarProps): JSX.Element {
+  const { isReadonly } = usePipelineContext()
   const { templateLinkConfig, onOpenTemplateSelector, onRemoveTemplate, className = '' } = props
   const [menuOpen, setMenuOpen] = React.useState(false)
   const { getString } = useStrings()
-  const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
+  const { module, ...params } = useParams<PipelineType<ProjectPathProps>>()
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
   const scope = getScopeFromValue(templateLinkConfig.templateRef)
-  const { enabled: templatesEnabled } = useFeature({
+  const { enabled } = useFeature({
     featureRequest: {
       featureName: FeatureIdentifier.TEMPLATE_SERVICE
     }
   })
 
+  const readyOnly = isReadonly || !enabled
+
   const { data } = useGetTemplate({
     templateIdentifier: getIdentifierFromValue(templateLinkConfig.templateRef),
     queryParams: {
-      accountIdentifier: accountId,
-      projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined,
-      orgIdentifier: scope === Scope.PROJECT || scope === Scope.ORG ? orgIdentifier : undefined,
+      ...getScopeBasedProjectPathParams(params, scope),
       versionLabel: defaultTo(templateLinkConfig.versionLabel, ''),
       repoIdentifier,
       branch,
@@ -125,27 +130,28 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
 
   const getItems = (): TemplateMenuItem[] => {
     return [
-      {
-        icon: 'command-switch',
-        label: getString('pipeline.changeTemplateLabel'),
-        disabled: !templatesEnabled,
-        onClick: onOpenTemplateSelector
-      },
-      {
-        icon: 'main-trash',
-        label: getString('pipeline.removeTemplateLabel'),
-        onClick: openRemoveTemplateDialog
-      },
+      ...(!readyOnly
+        ? ([
+            {
+              icon: 'command-switch',
+              label: getString('pipeline.changeTemplateLabel'),
+              onClick: onOpenTemplateSelector
+            },
+            {
+              icon: 'main-trash',
+              label: getString('pipeline.removeTemplateLabel'),
+              onClick: openRemoveTemplateDialog
+            }
+          ] as TemplateMenuItem[])
+        : []),
       {
         icon: 'main-share',
         label: getString('pipeline.openTemplateInNewTabLabel'),
-        disabled: !selectedTemplate,
         onClick: openTemplateInNewTab
       },
       {
         icon: 'main-view',
         label: getString('pipeline.previewTemplateLabel'),
-        disabled: !selectedTemplate,
         onClick: showTemplateYAMLPreviewModal
       }
     ]
@@ -183,7 +189,7 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
             }}
           />
           <Menu style={{ minWidth: 'unset' }} onClick={e => e.stopPropagation()}>
-            {getItems()?.map(item => {
+            {getItems().map(item => {
               return (
                 <li
                   key={item.label}

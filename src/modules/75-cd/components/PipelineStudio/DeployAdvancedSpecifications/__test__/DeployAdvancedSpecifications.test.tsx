@@ -22,6 +22,13 @@ import * as useValidationErrors from '@pipeline/components/PipelineStudio/Piplin
 import DeployAdvancedSpecifications from '../DeployAdvancedSpecifications'
 import overridePipelineContext from './overrideSetPipeline.json'
 
+const mockGetCallFunction = jest.fn()
+jest.mock('services/portal', () => ({
+  useGetDelegateSelectorsUpTheHierarchy: jest.fn().mockImplementation(args => {
+    mockGetCallFunction(args)
+    return []
+  })
+}))
 const getOverrideContextValue = (): PipelineContextInterface => {
   return {
     ...overridePipelineContext,

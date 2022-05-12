@@ -12,7 +12,7 @@ import { Spinner } from '@blueprintjs/core'
 
 import { String as LocaleString, useStrings } from 'framework/strings'
 import type { PipelineLogsPathProps } from '@common/interfaces/RouteInterfaces'
-import { useGetExecutionDetail, useGetExecutionNode } from 'services/pipeline-ng'
+import { useGetExecutionDetailV2, useGetExecutionNode } from 'services/pipeline-ng'
 import { logBlobPromise, useGetToken } from 'services/logs'
 
 import { useDeepCompareEffect } from '@common/hooks'
@@ -37,7 +37,7 @@ export default function FullPageLogView(): React.ReactElement {
   const [logsData, setLogsData] = React.useState<LogsData[]>([])
   const [logsDataLoading, setLogsDataLoading] = React.useState(false)
   const { data: tokenData, loading: tokenLoading } = useGetToken({ queryParams: { accountID: accountId } })
-  const { data: executionData, loading: executionLoading } = useGetExecutionDetail({
+  const { data: executionData, loading: executionLoading } = useGetExecutionDetailV2({
     planExecutionId: executionIdentifier,
     queryParams: {
       orgIdentifier,

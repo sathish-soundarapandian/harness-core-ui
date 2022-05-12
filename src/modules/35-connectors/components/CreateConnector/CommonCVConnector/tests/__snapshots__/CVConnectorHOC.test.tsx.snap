@@ -114,6 +114,7 @@ exports[`Unit tests for cv connector hoc should render form 1`] = `
             class="OverlaySpinner--overlaySpinner"
           >
             <form
+              action="#"
               class="FormikForm--main"
             >
               <div>

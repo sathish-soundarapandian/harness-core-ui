@@ -131,7 +131,9 @@ clause:
     equalSensitive: 'equals (sensitive)'
     matchSegment: 'Match Target Group'
 featureFlags:
-  newFlag: + Flag
+  newFlag: + New Flag
+  true: 'True'
+  false: 'False'
   typeOfFlag: Select the Type of Flag You Want to Create
   startVariation: Start by selecting the variation type that the flag will use
   booleanBtnText: This is a simple ON/OFF toggle
@@ -148,7 +150,8 @@ featureFlags:
   defaultServedOff: '{{defaultVariation}} when flag is OFF'
   createdDate: 'Created: {{date}}'
   modifiedDate: 'Modified: {{date}}'
-  prerequisitesDesc: '(what’s required before enabling flags)'
+  prerequisitesDesc: 'What’s required before enabling this flag'
+  newPrerequisite: New Prerequisite
   ifFlagOnServe: 'If the flag is <strong>ON</strong>, serve '
   ifFlagOffServe: 'If the flag is <strong>OFF</strong>, serve '
   bucketBy: Bucket by <strong>{{targetField}}</strong>
@@ -196,10 +199,12 @@ featureFlags:
     specificTargeting: Specific Targeting
     toTargetGroups: To Target Groups
     toTargets: To Targets
+    searchTargetGroups: 'Search Target Groups'
+    searchTargets: 'Search Targets'
     validation:
       selectTargetGroup: Please select a Target Group
       valueRequired: Please enter a value
-      valueMustAddTo100: Values must add up to 100
+      valueMustAddTo100: Values must add up to 100%
   flagFilters:
     environment: '{{ $.environment }}'
     envDefault: Production (Default)
@@ -244,7 +249,7 @@ targets:
   targetSegment: Target Group
   lastActivity: '{{ $.lastActivity }}'
   createdDate: Created Date
-  create: + Target(s)
+  create: + New Target
   list: Add a target
   upload: Upload a list of targets (CSV files only)
   enterName: 'Enter target name'
@@ -262,6 +267,7 @@ targets:
   deleteTargetMessage: Are you sure you want to delete target <strong>{{name}}</strong>? This action cannot be undone.
   deleteTargetSuccess: Target <strong>{{name}}</strong> deleted.
   pageDescription: This list displays targets manually added or impacted by flags.
+  uploadError: CSV processing failed
 targetDetail:
   title: 'Targets: Individual'
   environmentLine: '<strong>Environment</strong>: {{name}}'
@@ -272,10 +278,10 @@ targetDetail:
   attributes: Attributes ({{ counter }})
   learnMore: To learn how to mark specific target attributes or information as private, read <a href="https://ngdocs.harness.io/category/vjolt35atg-feature-flags" target="_blank" rel="noreferrer">documentation</a>.
   manuallyAdded: MANUALLY ADDED
-  addToSegment: Add to Target Group
+  addToSegment: Add to {{count}} Target Groups
   autoAdded: AUTOMATICALLY ADDED THROUGH CONDITIONS
   exclusionList: EXCLUSION LIST
-  excludefromSegment: Exclude from Target Group
+  excludeFromSegment: Exclude from {{count}} Target Groups
   removeSegment: Remove from list
   noSegmentAdded: No Target Group added
   noSegmentMatched: No Target Group matched
@@ -291,13 +297,15 @@ targetDetail:
   searchPlaceholder: Search Feature Flags...
   deleteTargetSuccess: Target <strong>{{name}}</strong> deleted.
   flagDisabled: This flag is disabled. The default off value will be served.
+  addTargetToTargetGroup: Add Target to Target Group {{name}}
+  noTargetGroupsAvailable: No Target Groups available
 selectSegmentModal:
   searchSegmentPlaceholder: Search for Target Group by Name or Description
   flagsUsingSegment: '{{ counter }} flag'
   flagsUsingThisSegment: FLAGS USING THIS TARGET GROUP
   empty: No Target Group found
 segments:
-  create: + Target Group
+  create: + New Target Group
   targetDefinition: Target Definition
   usingSegment: Flags using this target group
   usingSegmentWithCount: Flags using this target group ({{ count }})
@@ -318,26 +326,28 @@ environments:
   modifiedBy: 'Modified by'
   adminEnvironments: 'Admin: Environments'
   delete:
-    message: 'Are you sure you want to delete environment <strong>{{name}}</strong>?'
-    title: '{{ $.common.deleteEnvironment.title }}'
+    message: 'If you want to delete environment <strong>{{name}}</strong>, the SDK keys for this environment will also be deleted. Delete environment <strong>{{name}}</strong>?'
+    title: '{{ $.common.deleteEnvironment.title }}?'
   create:
     title: 'Create an Environment'
     description: 'An environment is the representation of your production or non-production infrastructure'
     envTypeLabel: 'Environment type'
     nameLabel: 'Name of your environment'
+    duplicateName: 'Environment with this name already exists. Try another name'
   apiKeys:
     addKeyTitle: Create SDK Key
     message: 'Secrets are only visible right after creation and redacted once you leave the page. Please make sure to copy and store your secret somewhere safe'
     title: 'SDK Keys'
     emptyName: 'SDK Key name is required'
-    addKey: '+ Add Key'
+    addKey: '+ New SDK Key'
     clientType: '{{ $.cf.testTheFlag.sdkClient }}'
     serverType: '{{ $.cf.testTheFlag.sdkServer }}'
     deleteTitle: 'Confirm Key Delete'
     deleteMessage: 'Are you sure you want to delete Key: {{keyName}}? You cannot recover it afterwards'
     deleteSuccess: 'Successfully deleted Key: {{keyName}}'
     keyType: 'Key Type'
-    noKeysFound: 'No SDK Keys found in this environment. Click the button below to create a Key'
+    noKeysFoundTitle: There are no SDK keys for this environment
+    noKeysFoundMessage: Create an <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_3_create_an_sdk_key" target="_blank" rel="noreferrer"> SDK key</a> for this environment so that your application can connect to our FF client. We support SDK keys for multiple programming languages.
     redactionWarning: Your secret will be redacted once you leave the page. Please make sure to copy and store your secret.
 auditLogs:
   title: Audit Logs
@@ -509,6 +519,7 @@ gitSync:
   invalidYaml: 'We are unable to render your {{{ flagsYamlFilename }}} file because it is invalid. Fix the following issues on Git and try again.'
 policyEvaluations:
   failedToSave: Flag cannot be saved due to the policy evaluation failures
+  warning: Flag saved with policy warnings
 planEnforcement:
   upgradeRequiredDev: Total Developers managing feature flags has exceeded the Subscribed developer count.
   upgradeRequiredMau: 'Total Monthly Active Users (MAU) has reached the free plan limit. Upgrade to manage unlimited MAUs.'

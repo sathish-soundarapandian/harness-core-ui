@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   Container,
   Text,
@@ -27,6 +27,8 @@ import { useCreatePerspective, CEView, Budget } from 'services/ce'
 import { useStrings } from 'framework/strings'
 import { QlceView, useFetchPerspectiveListQuery } from 'services/ce/services'
 import { generateId, CREATE_CALL_OBJECT } from '@ce/utils/perspectiveUtils'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
 import type { BudgetStepData } from '../types'
 import css from '../PerspectiveCreateBudget.module.scss'
 
@@ -39,11 +41,13 @@ interface SelectPerspectiveProps {
   perspective?: string
   isEditMode?: boolean
   budget?: Budget
+  initiatorPage?: string
 }
 
 const SelectPerspective: (props: StepProps<BudgetStepData> & SelectPerspectiveProps) => JSX.Element = props => {
   const { getString } = useStrings()
-  const { nextStep, prevStepData, perspective, isEditMode, budget: { name } = {} } = props
+  const { nextStep, prevStepData, perspective, isEditMode, budget: { name } = {}, initiatorPage = '' } = props
+  const { trackEvent } = useTelemetry()
 
   const { showError } = useToaster()
   const history = useHistory()
@@ -65,6 +69,10 @@ const SelectPerspective: (props: StepProps<BudgetStepData> & SelectPerspectivePr
     label: pName.name as string,
     value: pName.id as string
   }))
+
+  useEffect(() => {
+    trackEvent(USER_JOURNEY_EVENTS.DEFINE_BUDGET_TARGET, { pageName: initiatorPage, isEditMode })
+  }, [])
 
   const handleSubmit = (data: PerspectiveForm) => {
     const perspectiveName = items.find(e => e.value === data.perspective)?.label as string

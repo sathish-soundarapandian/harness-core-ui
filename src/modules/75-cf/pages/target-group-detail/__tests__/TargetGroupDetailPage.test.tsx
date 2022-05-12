@@ -22,11 +22,6 @@ jest.mock('@cf/components/AuditLogs/AuditLogs', () => ({
   AuditLogs: () => <span data-testid="audit-logs">Audit logs</span>
 }))
 
-jest.mock('@cf/components/TargetManagementToolbar/TargetManagementToolbar', () => ({
-  __esModule: true,
-  default: () => <span data-testid="target-management-toolbar">Target Management Toolbar</span>
-}))
-
 jest.mock('@common/components/ContainerSpinner/ContainerSpinner', () => ({
   ContainerSpinner: () => <span data-testid="container-spinner">Container Spinner</span>
 }))
@@ -59,6 +54,8 @@ describe('TargetGroupDetailPage', () => {
   const usePlanEnforcementMock = jest.spyOn(planEnforcement, 'default')
 
   beforeEach(() => {
+    jest.clearAllMocks()
+
     useGetSegmentMock.mockReturnValue({
       data: {
         createdAt: 1635935343546,
@@ -166,22 +163,6 @@ describe('TargetGroupDetailPage', () => {
         expect(refetchTargetGroupMock).toHaveBeenCalled()
         expect(refetchEnvMock).toHaveBeenCalled()
       })
-    })
-  })
-
-  describe('gitSync', () => {
-    test('it should not display the Target Management Toolbar when gitSync is disabled', async () => {
-      renderComponent()
-
-      expect(screen.queryByTestId('target-management-toolbar')).not.toBeInTheDocument()
-    })
-
-    test('it should display the Target Management Toolbar when gitSync is enabled', async () => {
-      useGitSyncMock.mockReturnValue({ isGitSyncActionsEnabled: true } as any)
-
-      renderComponent()
-
-      expect(screen.getByTestId('target-management-toolbar')).toBeInTheDocument()
     })
   })
 

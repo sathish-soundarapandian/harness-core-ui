@@ -9,6 +9,7 @@ import React, { useEffect, useState } from 'react'
 import { useToaster } from '@wings-software/uicore'
 import moment from 'moment'
 import type { GetDataError } from 'restful-react'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import type { Failure, Error } from 'services/cd-ng'
 
@@ -96,8 +97,9 @@ export function diffStartAndEndTime(startTime?: number, endTime?: number): strin
 
 export function useErrorHandler(error: GetDataError<Failure | Error> | null, timeout?: number, key?: string) {
   const toaster = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
   useEffect(() => {
-    const errorMsg = (error?.data as any)?.message || error?.message
+    const errorMsg = getRBACErrorMessage(error as RBACError)
     if (errorMsg) {
       if (!(toaster as any)?.state?.toasts?.find((t: any) => t.message === errorMsg)) {
         toaster.showError(errorMsg, timeout, key)

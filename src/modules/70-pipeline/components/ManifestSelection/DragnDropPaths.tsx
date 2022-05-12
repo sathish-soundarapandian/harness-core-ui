@@ -5,6 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import React, { useCallback } from 'react'
+import { defaultTo } from 'lodash-es'
+import { FieldArray, FieldArrayRenderProps } from 'formik'
+import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import {
   Layout,
   FormInput,
@@ -15,33 +19,52 @@ import {
   Icon,
   ButtonSize
 } from '@wings-software/uicore'
-import { FieldArray, FieldArrayRenderProps } from 'formik'
-import React, { useCallback } from 'react'
-import { v4 as nameSpace, v5 as uuid } from 'uuid'
 
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
 import { useStrings } from 'framework/strings'
+import type { StringsMap } from 'framework/strings/StringsContext'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import type { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
+import { isServerlessManifestType } from '@pipeline/utils/stageHelpers'
 
 import { ManifestDataType } from './Manifesthelper'
-import css from './ManifestWizardSteps/ManifestDetails/ManifestDetails.module.scss'
+import css from './ManifestWizardSteps/K8sValuesManifest/ManifestDetails.module.scss'
 
 export interface DragnDropPathsProps {
   formik: any
   expressions: any
   allowableTypes: MultiTypeInputType[]
-  selectedManifest?: string | null
-  pathLabel?: string | null
+  selectedManifest?: ManifestTypes | null
+  pathLabel?: string
+  allowOnlyOneFilePath?: boolean
 }
 
 const defaultValueToReset = [{ path: '', uuid: uuid('', nameSpace()) }]
+
+const getFileFolderPath = (
+  getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
+  selectedManifest?: ManifestTypes | null,
+  pathLabel?: string
+): string => {
+  if (pathLabel) {
+    return pathLabel
+  }
+  if (selectedManifest === ManifestDataType.K8sManifest) {
+    return getString('fileFolderPathText')
+  }
+  if (isServerlessManifestType(defaultTo(selectedManifest, null))) {
+    return getString('common.git.folderPath')
+  }
+  return getString('common.git.filePath')
+}
 
 function DragnDropPaths({
   formik,
   selectedManifest,
   expressions,
   allowableTypes,
-  pathLabel
+  pathLabel,
+  allowOnlyOneFilePath = false
 }: DragnDropPathsProps): React.ReactElement {
   const { getString } = useStrings()
   const onDragStart = useCallback((event: React.DragEvent<HTMLDivElement>, index: number) => {
@@ -102,15 +125,7 @@ function DragnDropPaths({
               defaultValueToReset={defaultValueToReset}
               allowedTypes={allowableTypes.filter(allowedType => allowedType !== MultiTypeInputType.EXPRESSION)}
               name={'paths'}
-              label={
-                <Text>
-                  {pathLabel
-                    ? pathLabel
-                    : selectedManifest === ManifestDataType.K8sManifest
-                    ? getString('fileFolderPathText')
-                    : getString('common.git.filePath')}
-                </Text>
-              }
+              label={<Text>{getFileFolderPath(getString, selectedManifest, pathLabel)}</Text>}
             >
               <FieldArray
                 name="paths"
@@ -138,8 +153,12 @@ function DragnDropPaths({
                               onDragLeave={onDragLeave}
                               onDrop={event => onDrop(event, arrayHelpers, index)}
                             >
-                              <Icon name="drag-handle-vertical" className={css.drag} />
-                              <Text width={12}>{`${index + 1}.`}</Text>
+                              {!allowOnlyOneFilePath && (
+                                <>
+                                  <Icon name="drag-handle-vertical" className={css.drag} />
+                                  <Text width={12}>{`${index + 1}.`}</Text>
+                                </>
+                              )}
                               <FormInput.MultiTextInput
                                 label={''}
                                 placeholder={
@@ -165,16 +184,18 @@ function DragnDropPaths({
                       </Draggable>
                     ))}
                     {provided.placeholder}
-                    <span>
-                      <Button
-                        text={getString('addFileText')}
-                        icon="plus"
-                        size={ButtonSize.SMALL}
-                        variation={ButtonVariation.LINK}
-                        className={css.addFileButton}
-                        onClick={() => arrayHelpers.push({ path: '', uuid: uuid('', nameSpace()) })}
-                      />
-                    </span>
+                    {allowOnlyOneFilePath && formik.values?.paths.length === 1 ? null : (
+                      <span>
+                        <Button
+                          text={getString('addFileText')}
+                          icon="plus"
+                          size={ButtonSize.SMALL}
+                          variation={ButtonVariation.LINK}
+                          className={css.addFileButton}
+                          onClick={() => arrayHelpers.push({ path: '', uuid: uuid('', nameSpace()) })}
+                        />
+                      </span>
+                    )}
                   </Layout.Vertical>
                 )}
               />

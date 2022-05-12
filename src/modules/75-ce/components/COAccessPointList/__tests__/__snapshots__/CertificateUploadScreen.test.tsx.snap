@@ -33,6 +33,7 @@ exports[`Certificate Upload Screen render upload component along with other fiel
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main uploadForm"
       >
         <div>
@@ -159,6 +160,7 @@ exports[`Certificate Upload Screen render upload component in edit mode 1`] = `
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main uploadForm"
       >
         <div>

@@ -11,7 +11,6 @@ import { HashRouter, Route, Switch } from 'react-router-dom'
 
 import languageLoader from 'strings/languageLoader'
 import type { LangLocale } from 'strings/languageLoader'
-import { injectFullStory } from '../../3rd-party/FullStory'
 
 import { AppWithAuthentication, AppWithoutAuthentication } from './App'
 
@@ -35,8 +34,6 @@ export default async function render(): Promise<void> {
       }
     })
   }
-
-  injectFullStory()
 
   ReactDOM.render(
     <HashRouter>

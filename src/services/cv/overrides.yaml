@@ -133,6 +133,8 @@ allowpaths:
   - /monitored-service/all/time-series-health-sources
   - /monitored-service/{monitoredServiceIdentifier}/health-source/{healthSourceIdentifier}/slo-metrics
   - /monitored-service/{monitoredServiceIdentifier}/sli/onboarding-graph
+  - /monitored-service/{monitoredServiceIdentifier}/logs
+  - /monitored-service/health-sources
   - /custom-health/sample-data
   - /parse-sample-data
   - /slo-dashboard/risk-count
@@ -142,6 +144,9 @@ allowpaths:
   - /verify-step/{verifyStepExecutionId}/healthSources
   - /verify-step/{verifyStepExecutionId}/logs
   - /change-event/monitored-service-timeline
+  - /verify-step/{verifyStepExecutionId}/deployment-log-analysis-data-v2
+  - /verify-step/{verifyStepExecutionId}/deployment-log-analysis-radar-chart-clusters
+  - /verify-step/{verifyStepExecutionId}/deployment-log-analysis-radar-chart-data
 operationIdOverrides:
   /appdynamics/applications.get: getAppDynamicsApplications
   /appdynamics/metric-data.post: getAppDynamicsMetricData

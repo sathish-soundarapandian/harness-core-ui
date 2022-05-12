@@ -80,6 +80,14 @@ export const helperTextData = (
       return {
         artifactPath: formik.values?.artifactPath,
         repository: formik.values?.repository,
+        connectorRef: connectorIdValue,
+        artifactDirectory: formik.values?.artifactDirectory
+      }
+    case ENABLED_ARTIFACT_TYPES.Acr:
+      return {
+        subscription: formik.values?.subscription,
+        registry: formik.values?.registry,
+        repository: formik.values?.repository,
         connectorRef: connectorIdValue
       }
     default:
@@ -138,39 +146,69 @@ export const getFinalArtifactObj = (
   return artifactObj
 }
 
-export const getFinalArtifactFormObj = (
-  formData: ImagePathTypes & { connectorId?: string },
-  isSideCar: boolean
-): ArtifactConfig => {
-  const tagData =
+const getServerlessArtifactFromObj = (formData: ImagePathTypes & { connectorId?: string }): ArtifactConfig => {
+  const artifactPathData =
     formData?.tagType === TagTypes.Value
-      ? { tag: defaultTo(formData.tag?.value, formData.tag) }
-      : { tagRegex: defaultTo(formData.tagRegex?.value, formData.tagRegex) }
+      ? { artifactPath: defaultTo(formData.tag?.value, formData.tag) }
+      : {
+          artifactPathFilter: defaultTo(formData.tagRegex?.value, formData.tagRegex)
+        }
 
-  const artifactObj: ArtifactConfig = {
+  return {
     spec: {
       connectorRef: formData?.connectorId,
-      artifactPath: formData?.artifactPath,
-      ...tagData
+      artifactDirectory: formData?.artifactDirectory,
+      ...artifactPathData
     }
   }
+}
+
+export const getFinalArtifactFormObj = (
+  formData: ImagePathTypes & { connectorId?: string },
+  isSideCar: boolean,
+  isServerlessDeploymentTypeSelected = false
+): ArtifactConfig => {
+  let artifactObj: ArtifactConfig = {}
+
+  if (isServerlessDeploymentTypeSelected) {
+    artifactObj = getServerlessArtifactFromObj(formData)
+  } else {
+    const tagData =
+      formData?.tagType === TagTypes.Value
+        ? { tag: defaultTo(formData.tag?.value, formData.tag) }
+        : { tagRegex: defaultTo(formData.tagRegex?.value, formData.tagRegex) }
+
+    artifactObj = {
+      spec: {
+        connectorRef: formData?.connectorId,
+        artifactPath: formData?.artifactPath,
+        ...tagData
+      }
+    }
+  }
+
   if (isSideCar) {
     merge(artifactObj, { identifier: formData?.identifier })
   }
   return artifactObj
 }
 
-export const getArtifactFormData = (
-  initialValues: ImagePathTypes,
-  selectedArtifact: ArtifactType,
-  isSideCar: boolean
-): ImagePathTypes => {
-  const specValues = get(initialValues, 'spec', null)
-
-  if (selectedArtifact !== (initialValues as any)?.type || !specValues) {
-    return defaultArtifactInitialValues(selectedArtifact)
+const getTagValues = (specValues: any, isServerlessDeploymentTypeSelected = false): ImagePathTypes => {
+  if (isServerlessDeploymentTypeSelected) {
+    // In serverless, we do not have concept of tag / tagRegex,
+    // rather we have artifactPath and artifactPathFilter and hence below name for overall object
+    // Inside object we have fields tag / tagRegex because we want to reuse exisint code which is there for Kubernetes
+    const artifactPathValues = {
+      ...specValues,
+      tagType: specValues?.artifactPath ? TagTypes.Value : TagTypes.Regex,
+      tag: specValues?.artifactPath,
+      tagRegex: specValues?.artifactPathFilter
+    }
+    if (specValues?.artifactPath && getMultiTypeFromValue(specValues?.artifactPath) === MultiTypeInputType.FIXED) {
+      artifactPathValues.tag = { label: specValues?.artifactPath, value: specValues?.artifactPath }
+    }
+    return artifactPathValues
   }
-
   const values = {
     ...specValues,
     tagType: specValues.tag ? TagTypes.Value : TagTypes.Regex
@@ -178,6 +216,23 @@ export const getArtifactFormData = (
   if (specValues?.tag && getMultiTypeFromValue(specValues?.tag) === MultiTypeInputType.FIXED) {
     values.tag = { label: specValues?.tag, value: specValues?.tag }
   }
+  return values
+}
+
+export const getArtifactFormData = (
+  initialValues: ImagePathTypes,
+  selectedArtifact: ArtifactType,
+  isSideCar: boolean,
+  isServerlessDeploymentTypeSelected = false
+): ImagePathTypes => {
+  const specValues = get(initialValues, 'spec', null)
+
+  if (selectedArtifact !== (initialValues as any)?.type || !specValues) {
+    return defaultArtifactInitialValues(selectedArtifact)
+  }
+
+  const values = getTagValues(specValues, isServerlessDeploymentTypeSelected)
+
   if (isSideCar && initialValues?.identifier) {
     merge(values, { identifier: initialValues?.identifier })
   }
@@ -196,8 +251,10 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
       }
     case ENABLED_ARTIFACT_TYPES.CustomArtifact:
       return {
-        identifier: ''
+        identifier: '',
+        version: RUNTIME_INPUT_VALUE
       }
+    case ENABLED_ARTIFACT_TYPES.Acr:
     case ENABLED_ARTIFACT_TYPES.DockerRegistry:
     case ENABLED_ARTIFACT_TYPES.Gcr:
     case ENABLED_ARTIFACT_TYPES.Ecr:
@@ -212,6 +269,24 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
   }
 }
 
+export const getArtifactPathToFetchTags = (
+  formik: FormikValues,
+  isArtifactPath = false,
+  isServerlessDeploymentTypeSelected = false
+): string => {
+  if (isServerlessDeploymentTypeSelected) {
+    return formik.values.artifactDirectory
+  }
+  if (isArtifactPath) {
+    return formik.values.artifactPath
+  }
+  return formik.values.imagePath
+}
+
 export const showConnectorStep = (selectedArtifact: ArtifactType): boolean => {
   return selectedArtifact !== ENABLED_ARTIFACT_TYPES.CustomArtifact
+}
+
+export const isFieldRuntime = (field: string): boolean => {
+  return getMultiTypeFromValue(field) === MultiTypeInputType.FIXED
 }

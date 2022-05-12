@@ -21,6 +21,7 @@ import { isEmpty } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { PageSpinner, useToaster } from '@common/components'
@@ -143,6 +144,7 @@ export const TemplateSettingsModal = (props: TemplateSettingsModalProps) => {
   const { accountId, orgIdentifier, projectIdentifier } = params
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { showSuccess, showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
 
   const {
@@ -186,7 +188,7 @@ export const TemplateSettingsModal = (props: TemplateSettingsModalProps) => {
   React.useEffect(() => {
     if (templatesError) {
       onClose()
-      showError(templatesError.message, undefined, 'template.fetch.template.error')
+      showError(getRBACErrorMessage(templatesError), undefined, 'template.fetch.template.error')
     }
   }, [templatesError])
 
@@ -202,7 +204,7 @@ export const TemplateSettingsModal = (props: TemplateSettingsModalProps) => {
       onSuccess?.()
     } catch (error) {
       showError(
-        error?.data?.message || error?.message || getString('common.template.updateTemplate.errorWhileUpdating'),
+        getRBACErrorMessage(error) || getString('common.template.updateTemplate.errorWhileUpdating'),
         undefined,
         'template.save.template.error'
       )

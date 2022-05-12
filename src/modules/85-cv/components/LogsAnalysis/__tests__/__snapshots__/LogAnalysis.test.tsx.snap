@@ -23,7 +23,7 @@ exports[`Unit tests for LogAnalysisContainer Verify if LogAnalysisContainer rend
               placeholder="pipeline.verification.logs.filterByClusterType"
               style="padding-right: 0px;"
               type="text"
-              value="pipeline.verification.logs.unknownEvent"
+              value="cv.unknown"
             />
             <span
               class="bp3-input-action"
@@ -116,62 +116,36 @@ exports[`Unit tests for LogAnalysisContainer Verify if LogAnalysisContainer rend
         class="StyledProps--font StyledProps--main mainRow columnHeader"
       >
         <p
-          class="StyledProps--font StyledProps--main clusterType logRowColumnHeader StyledProps--color StyledProps--color-black"
+          class="StyledProps--font StyledProps--main StyledProps--padding-left-small"
         >
-          pipeline.verification.logs.clusterType
+          pipeline.verification.logs.eventType
         </p>
         <p
-          class="StyledProps--font StyledProps--main risk logRowColumnHeader StyledProps--color StyledProps--color-black"
+          class="StyledProps--font StyledProps--main"
         >
-          pipeline.verification.logs.risk
+          cv.sampleMessage
         </p>
-        <p
-          class="StyledProps--font StyledProps--main message logRowColumnHeader StyledProps--color StyledProps--color-black"
-        >
-          pipeline.verification.logs.sampleMessage
-        </p>
-        <p
-          class="StyledProps--font StyledProps--main count logRowColumnHeader StyledProps--color StyledProps--color-black"
-        >
-          pipeline.verification.logs.messageCount
-        </p>
-        <p
-          class="StyledProps--font StyledProps--main messageFrequency logRowColumnHeader StyledProps--color StyledProps--color-black"
-        >
-          pipeline.verification.logs.messageFrequency
-        </p>
+        <span />
+        <span />
       </div>
       <div
         class="StyledProps--font StyledProps--main dataContainer"
       >
         <div
-          class="StyledProps--font StyledProps--main mainRow dataRow highlightRow"
+          class="StyledProps--font StyledProps--main mainRow dataRow"
           data-testid="logs-data-row"
         >
           <div
-            class="StyledProps--font StyledProps--main dataColumn openModalColumn compareDataColumn clusterType"
+            class="StyledProps--font StyledProps--main openModalColumn compareDataColumn StyledProps--padding-left-small"
           >
             <p
-              class="StyledProps--font StyledProps--main"
+              class="StyledProps--font StyledProps--main eventTypeTag StyledProps--font-xsmall"
             >
               Known
             </p>
           </div>
           <div
-            class="StyledProps--font StyledProps--main logRowText dataColumn openModalColumn risk"
-          >
-            <div
-              class="healthScoreCard"
-            >
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-white"
-              >
-                NA
-              </p>
-            </div>
-          </div>
-          <div
-            class="StyledProps--font StyledProps--main logText dataColumn openModalColumn message"
+            class="StyledProps--font StyledProps--main logText openModalColumn"
           >
             <p
               class="logRowText"
@@ -179,47 +153,66 @@ exports[`Unit tests for LogAnalysisContainer Verify if LogAnalysisContainer rend
               prod-setup-205416
             </p>
           </div>
+          <span />
           <div
-            class="StyledProps--font StyledProps--main logRowText dataColumn openModalColumn count StyledProps--padding-left-medium"
+            class="Layout--horizontal StyledProps--main StyledProps--margin-top-xsmall"
+            style="align-items: center; justify-content: flex-end;"
           >
-            <p
-              class="count"
+            <span
+              class="bp3-icon StyledProps--main"
+              data-icon="description"
             >
-              1
-            </p>
+              <svg
+                fill="none"
+                height="24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g
+                  opacity="0.3"
+                >
+                  <mask
+                    fill="#fff"
+                    id="description_svg__a"
+                  >
+                    <path
+                      d="M6.75 6.625a.5.5 0 100 1h4.5a.5.5 0 100-1h-4.5zm-.5 2.75a.5.5 0 01.5-.5h4.5a.5.5 0 110 1h-4.5a.5.5 0 01-.5-.5zm0 2.25a.5.5 0 01.5-.5h4.5a.5.5 0 110 1h-4.5a.5.5 0 01-.5-.5z"
+                      fill-rule="evenodd"
+                    />
+                  </mask>
+                  <path
+                    d="M7.25 7.125a.5.5 0 01-.5.5v-2a1.5 1.5 0 00-1.5 1.5h2zm-.5-.5a.5.5 0 01.5.5h-2a1.5 1.5 0 001.5 1.5v-2zm4.5 0h-4.5v2h4.5v-2zm-.5.5a.5.5 0 01.5-.5v2a1.5 1.5 0 001.5-1.5h-2zm.5.5a.5.5 0 01-.5-.5h2a1.5 1.5 0 00-1.5-1.5v2zm-4.5 0h4.5v-2h-4.5v2zm0 .25a1.5 1.5 0 00-1.5 1.5h2a.5.5 0 01-.5.5v-2zm4.5 0h-4.5v2h4.5v-2zm1.5 1.5a1.5 1.5 0 00-1.5-1.5v2a.5.5 0 01-.5-.5h2zm-1.5 1.5a1.5 1.5 0 001.5-1.5h-2a.5.5 0 01.5-.5v2zm-4.5 0h4.5v-2h-4.5v2zm-1.5-1.5a1.5 1.5 0 001.5 1.5v-2a.5.5 0 01.5.5h-2zm1.5.75a1.5 1.5 0 00-1.5 1.5h2a.5.5 0 01-.5.5v-2zm4.5 0h-4.5v2h4.5v-2zm1.5 1.5a1.5 1.5 0 00-1.5-1.5v2a.5.5 0 01-.5-.5h2zm-1.5 1.5a1.5 1.5 0 001.5-1.5h-2a.5.5 0 01.5-.5v2zm-4.5 0h4.5v-2h-4.5v2zm-1.5-1.5a1.5 1.5 0 001.5 1.5v-2a.5.5 0 01.5.5h-2z"
+                    fill="#6b6d85"
+                    mask="url(#description_svg__a)"
+                  />
+                </g>
+                <rect
+                  height="13.5"
+                  rx="1"
+                  stroke="#6b6d85"
+                  width="10.5"
+                  x="3.75"
+                  y="2.25"
+                />
+              </svg>
+            </span>
           </div>
-          <div
-            class="StyledProps--font StyledProps--main lineChartContainer dataColumn messageFrequency"
-          />
         </div>
         <div
-          class="StyledProps--font StyledProps--main mainRow dataRow highlightRow"
+          class="StyledProps--font StyledProps--main mainRow dataRow"
           data-testid="logs-data-row"
         >
           <div
-            class="StyledProps--font StyledProps--main dataColumn openModalColumn compareDataColumn clusterType"
+            class="StyledProps--font StyledProps--main openModalColumn compareDataColumn StyledProps--padding-left-small"
           >
             <p
-              class="StyledProps--font StyledProps--main"
+              class="StyledProps--font StyledProps--main eventTypeTag StyledProps--font-xsmall"
             >
               Unknown
             </p>
           </div>
           <div
-            class="StyledProps--font StyledProps--main logRowText dataColumn openModalColumn risk"
-          >
-            <div
-              class="healthScoreCard"
-            >
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-white"
-              >
-                NA
-              </p>
-            </div>
-          </div>
-          <div
-            class="StyledProps--font StyledProps--main logText dataColumn openModalColumn message"
+            class="StyledProps--font StyledProps--main logText openModalColumn"
           >
             <p
               class="logRowText"
@@ -227,47 +220,66 @@ exports[`Unit tests for LogAnalysisContainer Verify if LogAnalysisContainer rend
               prod-setup-205416
             </p>
           </div>
+          <span />
           <div
-            class="StyledProps--font StyledProps--main logRowText dataColumn openModalColumn count StyledProps--padding-left-medium"
+            class="Layout--horizontal StyledProps--main StyledProps--margin-top-xsmall"
+            style="align-items: center; justify-content: flex-end;"
           >
-            <p
-              class="count"
+            <span
+              class="bp3-icon StyledProps--main"
+              data-icon="description"
             >
-              1
-            </p>
+              <svg
+                fill="none"
+                height="24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g
+                  opacity="0.3"
+                >
+                  <mask
+                    fill="#fff"
+                    id="description_svg__a"
+                  >
+                    <path
+                      d="M6.75 6.625a.5.5 0 100 1h4.5a.5.5 0 100-1h-4.5zm-.5 2.75a.5.5 0 01.5-.5h4.5a.5.5 0 110 1h-4.5a.5.5 0 01-.5-.5zm0 2.25a.5.5 0 01.5-.5h4.5a.5.5 0 110 1h-4.5a.5.5 0 01-.5-.5z"
+                      fill-rule="evenodd"
+                    />
+                  </mask>
+                  <path
+                    d="M7.25 7.125a.5.5 0 01-.5.5v-2a1.5 1.5 0 00-1.5 1.5h2zm-.5-.5a.5.5 0 01.5.5h-2a1.5 1.5 0 001.5 1.5v-2zm4.5 0h-4.5v2h4.5v-2zm-.5.5a.5.5 0 01.5-.5v2a1.5 1.5 0 001.5-1.5h-2zm.5.5a.5.5 0 01-.5-.5h2a1.5 1.5 0 00-1.5-1.5v2zm-4.5 0h4.5v-2h-4.5v2zm0 .25a1.5 1.5 0 00-1.5 1.5h2a.5.5 0 01-.5.5v-2zm4.5 0h-4.5v2h4.5v-2zm1.5 1.5a1.5 1.5 0 00-1.5-1.5v2a.5.5 0 01-.5-.5h2zm-1.5 1.5a1.5 1.5 0 001.5-1.5h-2a.5.5 0 01.5-.5v2zm-4.5 0h4.5v-2h-4.5v2zm-1.5-1.5a1.5 1.5 0 001.5 1.5v-2a.5.5 0 01.5.5h-2zm1.5.75a1.5 1.5 0 00-1.5 1.5h2a.5.5 0 01-.5.5v-2zm4.5 0h-4.5v2h4.5v-2zm1.5 1.5a1.5 1.5 0 00-1.5-1.5v2a.5.5 0 01-.5-.5h2zm-1.5 1.5a1.5 1.5 0 001.5-1.5h-2a.5.5 0 01.5-.5v2zm-4.5 0h4.5v-2h-4.5v2zm-1.5-1.5a1.5 1.5 0 001.5 1.5v-2a.5.5 0 01.5.5h-2z"
+                    fill="#6b6d85"
+                    mask="url(#description_svg__a)"
+                  />
+                </g>
+                <rect
+                  height="13.5"
+                  rx="1"
+                  stroke="#6b6d85"
+                  width="10.5"
+                  x="3.75"
+                  y="2.25"
+                />
+              </svg>
+            </span>
           </div>
-          <div
-            class="StyledProps--font StyledProps--main lineChartContainer dataColumn messageFrequency"
-          />
         </div>
         <div
-          class="StyledProps--font StyledProps--main mainRow dataRow highlightRow"
+          class="StyledProps--font StyledProps--main mainRow dataRow"
           data-testid="logs-data-row"
         >
           <div
-            class="StyledProps--font StyledProps--main dataColumn openModalColumn compareDataColumn clusterType"
+            class="StyledProps--font StyledProps--main openModalColumn compareDataColumn StyledProps--padding-left-small"
           >
             <p
-              class="StyledProps--font StyledProps--main"
+              class="StyledProps--font StyledProps--main eventTypeTag StyledProps--font-xsmall"
             >
               Unexpected
             </p>
           </div>
           <div
-            class="StyledProps--font StyledProps--main logRowText dataColumn openModalColumn risk"
-          >
-            <div
-              class="healthScoreCard"
-            >
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-white"
-              >
-                NA
-              </p>
-            </div>
-          </div>
-          <div
-            class="StyledProps--font StyledProps--main logText dataColumn openModalColumn message"
+            class="StyledProps--font StyledProps--main logText openModalColumn"
           >
             <p
               class="logRowText"
@@ -275,18 +287,50 @@ exports[`Unit tests for LogAnalysisContainer Verify if LogAnalysisContainer rend
               prod-setup-205416
             </p>
           </div>
+          <span />
           <div
-            class="StyledProps--font StyledProps--main logRowText dataColumn openModalColumn count StyledProps--padding-left-medium"
+            class="Layout--horizontal StyledProps--main StyledProps--margin-top-xsmall"
+            style="align-items: center; justify-content: flex-end;"
           >
-            <p
-              class="count"
+            <span
+              class="bp3-icon StyledProps--main"
+              data-icon="description"
             >
-              1
-            </p>
+              <svg
+                fill="none"
+                height="24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g
+                  opacity="0.3"
+                >
+                  <mask
+                    fill="#fff"
+                    id="description_svg__a"
+                  >
+                    <path
+                      d="M6.75 6.625a.5.5 0 100 1h4.5a.5.5 0 100-1h-4.5zm-.5 2.75a.5.5 0 01.5-.5h4.5a.5.5 0 110 1h-4.5a.5.5 0 01-.5-.5zm0 2.25a.5.5 0 01.5-.5h4.5a.5.5 0 110 1h-4.5a.5.5 0 01-.5-.5z"
+                      fill-rule="evenodd"
+                    />
+                  </mask>
+                  <path
+                    d="M7.25 7.125a.5.5 0 01-.5.5v-2a1.5 1.5 0 00-1.5 1.5h2zm-.5-.5a.5.5 0 01.5.5h-2a1.5 1.5 0 001.5 1.5v-2zm4.5 0h-4.5v2h4.5v-2zm-.5.5a.5.5 0 01.5-.5v2a1.5 1.5 0 001.5-1.5h-2zm.5.5a.5.5 0 01-.5-.5h2a1.5 1.5 0 00-1.5-1.5v2zm-4.5 0h4.5v-2h-4.5v2zm0 .25a1.5 1.5 0 00-1.5 1.5h2a.5.5 0 01-.5.5v-2zm4.5 0h-4.5v2h4.5v-2zm1.5 1.5a1.5 1.5 0 00-1.5-1.5v2a.5.5 0 01-.5-.5h2zm-1.5 1.5a1.5 1.5 0 001.5-1.5h-2a.5.5 0 01.5-.5v2zm-4.5 0h4.5v-2h-4.5v2zm-1.5-1.5a1.5 1.5 0 001.5 1.5v-2a.5.5 0 01.5.5h-2zm1.5.75a1.5 1.5 0 00-1.5 1.5h2a.5.5 0 01-.5.5v-2zm4.5 0h-4.5v2h4.5v-2zm1.5 1.5a1.5 1.5 0 00-1.5-1.5v2a.5.5 0 01-.5-.5h2zm-1.5 1.5a1.5 1.5 0 001.5-1.5h-2a.5.5 0 01.5-.5v2zm-4.5 0h4.5v-2h-4.5v2zm-1.5-1.5a1.5 1.5 0 001.5 1.5v-2a.5.5 0 01.5.5h-2z"
+                    fill="#6b6d85"
+                    mask="url(#description_svg__a)"
+                  />
+                </g>
+                <rect
+                  height="13.5"
+                  rx="1"
+                  stroke="#6b6d85"
+                  width="10.5"
+                  x="3.75"
+                  y="2.25"
+                />
+              </svg>
+            </span>
           </div>
-          <div
-            class="StyledProps--font StyledProps--main lineChartContainer dataColumn messageFrequency"
-          />
         </div>
       </div>
     </div>

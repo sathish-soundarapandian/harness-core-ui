@@ -14,3 +14,9 @@ export enum StepStatus {
   Running = 'Running',
   AsyncWaiting = 'AsyncWaiting'
 }
+
+export enum EventTypeFullName {
+  KNOWN_EVENT = 'KNOWN_EVENT',
+  UNKNOWN_EVENT = 'UNKNOWN_EVENT',
+  UNEXPECTED_FREQUENCY = 'UNEXPECTED_FREQUENCY'
+}

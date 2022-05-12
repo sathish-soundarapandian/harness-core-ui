@@ -311,6 +311,7 @@ exports[`Test GCOMetricsHealthSource Should show please Enter Query when ther is
                 class="StyledProps--font StyledProps--main content"
               >
                 <form
+                  action="#"
                   class="FormikForm--main setupContainer"
                 >
                   <div>

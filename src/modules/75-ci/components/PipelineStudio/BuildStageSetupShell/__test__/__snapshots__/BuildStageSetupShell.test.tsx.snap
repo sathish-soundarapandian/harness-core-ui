@@ -157,7 +157,7 @@ exports[`BuildStageSetupShell snapshot test initializes ok 1`] = `
           aria-disabled="false"
           aria-expanded="false"
           aria-selected="false"
-          class="bp3-tab"
+          class="bp3-tab fullHeight stepGroup"
           data-tab-id="EXECUTION"
           data-testid="ci.executionLabel"
           id="bp3-tab-title_stageSetupShell_EXECUTION"
@@ -285,6 +285,7 @@ exports[`BuildStageSetupShell snapshot test initializes ok 1`] = `
                 class="bp3-card bp3-elevation-0 Card--card sectionCard"
               >
                 <form
+                  action="#"
                   class="FormikForm--main"
                 >
                   <div>
@@ -473,6 +474,7 @@ exports[`BuildStageSetupShell snapshot test initializes ok 1`] = `
                 class="bp3-card bp3-elevation-0 Card--card sectionCard"
               >
                 <form
+                  action="#"
                   class="FormikForm--main fields contentCard"
                 >
                   <div>
@@ -616,7 +618,7 @@ exports[`BuildStageSetupShell snapshot test initializes ok 1`] = `
                 <span
                   class="bp3-button-text"
                 >
-                  ci.next
+                  continue
                 </span>
                 <span
                   class="bp3-icon bp3-icon-chevron-right StyledProps--main"

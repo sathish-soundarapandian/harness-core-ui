@@ -9,7 +9,7 @@ import moment from 'moment'
 import type { SelectOption } from '@harness/uicore'
 import type { ApiCallLogDTO, HealthSourceDTO } from 'services/cv'
 import type { UseStringsReturn } from 'framework/strings'
-import { TimeRangeTypes } from './useLogContentHook.types'
+import type { TimeRange } from './useLogContentHook.types'
 import { RESPONSE_BODY } from './useLogContentHook.constants'
 
 export function isPositiveNumber(index: unknown): index is number {
@@ -31,60 +31,44 @@ export function getHealthSourceOptions(
   return [optionAll, ...healthSourcesOptions]
 }
 
-export const getTimeRangeOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
+export const startOfSecond = (time: moment.Moment): Date => time.utc().startOf('minute').toDate()
+
+export const getDateRangeShortcuts = (getString: UseStringsReturn['getString']): TimeRange[] => [
   {
-    label: getString('cv.lastOneHour'),
-    value: TimeRangeTypes.LAST_1_HOUR
+    value: [startOfSecond(moment().subtract(1, 'hour').add(1, 'second')), startOfSecond(moment())],
+    label: getString('cv.lastOneHour')
   },
   {
-    label: getString('cv.monitoredServices.serviceHealth.last4Hrs'),
-    value: TimeRangeTypes.LAST_4_HOURS
+    value: [startOfSecond(moment().subtract(4, 'hours').add(1, 'second')), startOfSecond(moment())],
+    label: getString('cv.monitoredServices.serviceHealth.last4Hrs')
   },
   {
-    label: getString('cv.last12Hours'),
-    value: TimeRangeTypes.LAST_12_HOUR
+    value: [startOfSecond(moment().subtract(12, 'hours').add(1, 'second')), startOfSecond(moment())],
+    label: getString('cv.last12Hours')
   },
   {
-    label: getString('cv.monitoredServices.serviceHealth.last24Hrs'),
-    value: TimeRangeTypes.LAST_24_HOUR
+    value: [startOfSecond(moment().subtract(24, 'hours').add(1, 'second')), startOfSecond(moment())],
+    label: getString('cv.monitoredServices.serviceHealth.last24Hrs')
   }
 ]
 
-export const startOfSecond = (time: moment.Moment): Date => time.utc().startOf('minute').toDate()
-
-export const getTimeRangeInMilliseconds = (timeRange: TimeRangeTypes): [number, number] => {
-  switch (timeRange) {
-    case TimeRangeTypes.LAST_1_HOUR:
-      return [startOfSecond(moment().subtract(1, 'hour').add(1, 'second')).getTime(), startOfSecond(moment()).getTime()]
-    case TimeRangeTypes.LAST_4_HOURS:
-      return [
-        startOfSecond(moment().subtract(4, 'hours').add(1, 'second')).getTime(),
-        startOfSecond(moment()).getTime()
-      ]
-    case TimeRangeTypes.LAST_12_HOUR:
-      return [
-        startOfSecond(moment().subtract(12, 'hours').add(1, 'second')).getTime(),
-        startOfSecond(moment()).getTime()
-      ]
-    case TimeRangeTypes.LAST_24_HOUR:
-      return [
-        startOfSecond(moment().subtract(24, 'hours').add(1, 'second')).getTime(),
-        startOfSecond(moment()).getTime()
-      ]
-    default:
-      return [0, 0]
-  }
-}
-
 export const formatDate = (date?: number): string => (date ? moment(new Date(date)).format('L, LT') : '')
 
-export const getInfoText = (getString: UseStringsReturn['getString'], timeRange?: SelectOption): string => {
-  const [_startTime, _endTime] = getTimeRangeInMilliseconds(timeRange?.value as TimeRangeTypes)
+export const getInfoText = (getString: UseStringsReturn['getString'], timeRange?: TimeRange): string => {
+  if (!timeRange) {
+    return ''
+  }
 
-  const startTime = formatDate(_startTime)
-  const endTime = formatDate(_endTime)
+  const [_startTime, _endTime] = timeRange.value
 
-  return `${getString('cv.showingLogsFor')} ${timeRange?.label?.toLowerCase()} from ${startTime} to ${endTime}.`
+  const startTime = moment(_startTime).format('L LT')
+  const endTime = moment(_endTime).format('L LT')
+
+  if (timeRange.label === getString('common.repo_provider.customLabel')) {
+    return `${getString('cv.showingLogs')} from ${startTime} to ${endTime}.`
+  }
+
+  return `${getString('cv.showingLogsFor')} ${timeRange.label.toLowerCase()} from ${startTime} to ${endTime}.`
 }
 
 export const getStatusColor = (statusCode = '500'): 'success' | 'error' => {
@@ -124,4 +108,27 @@ export function parseResponseBody(data: ApiCallLogDTO[]): ApiCallLogDTO[] {
       return response
     })
   }))
+}
+
+export function getDateTime(date: Date, time: Date): Date {
+  return new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    time.getHours(),
+    time.getMinutes(),
+    time.getSeconds(),
+    time.getMilliseconds()
+  )
+}
+
+export function isTimeRangeChanged(newTimeRange: TimeRange, timeRange?: TimeRange): boolean {
+  if (!timeRange) {
+    return false
+  }
+
+  const [startTime, endTime] = timeRange.value
+  const [newStartTime, newEndTime] = newTimeRange.value
+
+  return newStartTime.getTime() !== startTime.getTime() || newEndTime.getTime() !== endTime.getTime()
 }

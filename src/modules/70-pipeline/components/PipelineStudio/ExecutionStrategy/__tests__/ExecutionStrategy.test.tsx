@@ -26,10 +26,6 @@ import {
 import { PipelineContext, PipelineContextInterface } from '../../PipelineContext/PipelineContext'
 
 jest
-  .spyOn(cdngServices, 'useGetExecutionStrategyList')
-  .mockImplementation(() => ({ data: executionStrategies, error: null } as any))
-
-jest
   .spyOn(cdngServices, 'useGetExecutionStrategyYaml')
   .mockImplementation((props: cdngServices.UseGetExecutionStrategyYamlProps) => {
     switch (props.queryParams?.strategyType) {
@@ -58,6 +54,11 @@ jest
     }
   })
 
+const getLoader = (container: HTMLElement): Element =>
+  container.querySelector('[data-test="executionStrategyListLoader"]')!
+const getError = (container: HTMLElement): Element =>
+  container.querySelector('[data-test="executionStrategyListError"]')!
+
 describe('ExecutionStrategy test', () => {
   let rollingCard: HTMLElement
   let blueGreenCard: HTMLElement
@@ -66,6 +67,10 @@ describe('ExecutionStrategy test', () => {
   let component: HTMLElement
   let pipelineContextMockValue: PipelineContextInterface
   beforeEach(() => {
+    jest
+      .spyOn(cdngServices, 'useGetExecutionStrategyList')
+      .mockImplementation(() => ({ data: executionStrategies, error: null } as any))
+
     pipelineContextMockValue = getDummyPipelineContextValue()
     const { container } = render(
       <TestWrapper
@@ -339,5 +344,124 @@ describe('ExecutionStrategy test', () => {
     })
     await waitFor(() => expect(pipelineContextMockValue.updateStage).toHaveBeenCalled())
     expect(pipelineContextMockValue.updateStage).toHaveBeenCalledWith(defaultUpdateStageFnArg)
+  })
+  test('isPropagating true and checkBox', () => {
+    pipelineContextMockValue = getDummyPipelineContextValue()
+    jest.spyOn(cdngServices, 'useGetExecutionStrategyYaml').mockImplementation((): any => {
+      return { data: {}, error: true }
+    })
+    const { container } = render(
+      <TestWrapper>
+        <PipelineContext.Provider value={pipelineContextMockValue}>
+          <ExecutionStrategy
+            selectedStage={
+              {
+                stage: {
+                  identifier: 'stage_1',
+                  name: 'stage 1',
+                  spec: {
+                    serviceConfig: {
+                      serviceDefinition: { type: 'Kubernetes' },
+                      serviceRef: 'service_3',
+                      useFromStage: {
+                        stage: 'deploy'
+                      }
+                    },
+                    execution: {
+                      steps: [],
+                      rollbackSteps: []
+                    }
+                  },
+                  type: 'Deployment'
+                }
+              } as StageElementWrapperConfig
+            }
+            ref={jest.fn()}
+          />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    const checkBox = container.querySelector('[data-testid="enable-verification-options-switch"]')
+    expect(checkBox).not.toBeChecked()
+    fireEvent.click(checkBox!)
+    expect(checkBox).toBeChecked()
+  })
+
+  test('should display loading state', () => {
+    jest.spyOn(cdngServices, 'useGetExecutionStrategyList').mockImplementation(() => {
+      return { loading: true, error: false, data: [], refetch: jest.fn() } as any
+    })
+    const { container } = render(
+      <TestWrapper>
+        <PipelineContext.Provider value={pipelineContextMockValue}>
+          <ExecutionStrategy
+            selectedStage={
+              {
+                stage: {
+                  identifier: 'stage_1',
+                  name: 'stage 1',
+                  spec: {
+                    serviceConfig: {
+                      serviceDefinition: { type: 'Kubernetes' },
+                      serviceRef: 'service_3',
+                      useFromStage: {
+                        stage: 'deploy'
+                      }
+                    },
+                    execution: {
+                      steps: [],
+                      rollbackSteps: []
+                    }
+                  },
+                  type: 'Deployment'
+                }
+              } as StageElementWrapperConfig
+            }
+            ref={jest.fn()}
+          />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    expect(getLoader(container)).toBeTruthy()
+    expect(getError(container)).toBeFalsy()
+  })
+
+  test('should display error state', () => {
+    jest.spyOn(cdngServices, 'useGetExecutionStrategyList').mockImplementation(() => {
+      return { loading: false, error: true, data: [], refetch: jest.fn() } as any
+    })
+    const { container } = render(
+      <TestWrapper>
+        <PipelineContext.Provider value={pipelineContextMockValue}>
+          <ExecutionStrategy
+            selectedStage={
+              {
+                stage: {
+                  identifier: 'stage_1',
+                  name: 'stage 1',
+                  spec: {
+                    serviceConfig: {
+                      serviceDefinition: { type: 'Kubernetes' },
+                      serviceRef: 'service_3',
+                      useFromStage: {
+                        stage: 'deploy'
+                      }
+                    },
+                    execution: {
+                      steps: [],
+                      rollbackSteps: []
+                    }
+                  },
+                  type: 'Deployment'
+                }
+              } as StageElementWrapperConfig
+            }
+            ref={jest.fn()}
+          />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    expect(getLoader(container)).toBeFalsy()
+    expect(getError(container)).toBeTruthy()
   })
 })

@@ -13,6 +13,13 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StageAdvancedInputSetForm } from '../StageAdvancedInputSetForm'
 
+const mockGetCallFunction = jest.fn()
+jest.mock('services/portal', () => ({
+  useGetDelegateSelectorsUpTheHierarchy: jest.fn().mockImplementation(args => {
+    mockGetCallFunction(args)
+    return []
+  })
+}))
 const props = {
   deploymentStageTemplate: {
     spec: {
@@ -70,7 +77,8 @@ const props = {
     },
     when: { condition: '<+input>' }
   },
-  path: 'stages[1].stage'
+  path: 'stages[1].stage',
+  delegateSelectors: '<+input>'
 } as any
 
 describe('StageAdvancedInputSetForm tests', () => {

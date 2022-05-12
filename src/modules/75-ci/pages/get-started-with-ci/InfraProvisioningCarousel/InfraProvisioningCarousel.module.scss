@@ -7,7 +7,11 @@
 
 .main {
   width: 855px;
-  min-height: 495px;
+  min-height: 580px;
+  padding: var(--spacing-huge) var(--spacing-xxxlarge);
+  span[class*='Dialog--close'] {
+    visibility: hidden !important;
+  }
 }
 
 .fixedMinHeight {
@@ -17,4 +21,23 @@
 .samplePipeline {
   width: 300px;
   height: 112px;
+}
+
+.rightBg {
+  border-radius: 10px;
+  background: var(--grey-50) !important;
+}
+
+.provisioningStatus {
+  height: 200px;
+  width: 320px;
+}
+
+.centerAlign {
+  align-items: center;
+}
+
+.bg {
+  background: var(--grey-50) !important;
+  border-radius: 8px;
 }

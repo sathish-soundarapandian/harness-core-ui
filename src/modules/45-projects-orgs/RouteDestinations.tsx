@@ -73,6 +73,7 @@ import ServiceAccountsPage from '@rbac/pages/ServiceAccounts/ServiceAccounts'
 import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import type { ResourceDTO } from 'services/audit'
 import GitSyncConfigTab from '@gitsync/pages/config/GitSyncConfigTab'
+import VariablesPage from '@variables/pages/variables/VariablesPage'
 import LandingDashboardPage from './pages/LandingDashboardPage/LandingDashboardPage'
 
 const ProjectDetailsSideNavProps: SidebarContext = {
@@ -177,6 +178,13 @@ export default (
       exact
     >
       <ConnectorsPage />
+    </RouteWithLayout>
+    <RouteWithLayout
+      sidebarProps={ProjectDetailsSideNavProps}
+      path={routes.toVariables({ ...accountPathProps, ...projectPathProps })}
+      exact
+    >
+      <VariablesPage />
     </RouteWithLayout>
     <RouteWithLayout
       sidebarProps={ProjectDetailsSideNavProps}
@@ -375,6 +383,9 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toConnectors({ ...orgPathProps })} exact>
       <ConnectorsPage />
+    </RouteWithLayout>
+    <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toVariables({ ...orgPathProps })} exact>
+      <VariablesPage />
     </RouteWithLayout>
     <RouteWithLayout
       sidebarProps={AccountSideNavProps}

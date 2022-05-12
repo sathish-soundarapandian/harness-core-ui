@@ -7,9 +7,7 @@
 
 import React from 'react'
 import { connect } from 'formik'
-import { Text, getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
-import { useStrings } from 'framework/strings'
+import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@wings-software/uicore'
 import { Connectors } from '@connectors/constants'
 import StepCommonFieldsInputSet from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFieldsInputSet'
 import type { DockerHubStepProps } from './DockerHubStep'
@@ -25,8 +23,6 @@ export const DockerHubStepInputSetBasic: React.FC<DockerHubStepProps> = ({
   stepViewType,
   formik
 }) => {
-  const { getString } = useStrings()
-
   return (
     <FormikForm className={css.removeBpPopoverWrapperTopMargin}>
       <CIStep
@@ -35,16 +31,7 @@ export const DockerHubStepInputSetBasic: React.FC<DockerHubStepProps> = ({
         enableFields={{
           ...(getMultiTypeFromValue(template?.spec?.connectorRef) === MultiTypeInputType.RUNTIME && {
             'spec.connectorRef': {
-              label: (
-                <Text
-                  className={css.inpLabel}
-                  color={Color.GREY_600}
-                  font={{ size: 'small', weight: 'semi-bold' }}
-                  tooltipProps={{ dataTooltipId: 'dockerHubConnector' }}
-                >
-                  {getString('pipelineSteps.dockerHubConnectorLabel')}
-                </Text>
-              ),
+              label: { labelKey: 'pipelineSteps.dockerHubConnectorLabel', tooltipId: 'dockerHubConnector' },
               type: Connectors.DOCKER
             }
           }),
@@ -53,6 +40,8 @@ export const DockerHubStepInputSetBasic: React.FC<DockerHubStepProps> = ({
           })
         }}
         path={path || ''}
+        isInputSetView={true}
+        template={template}
       />
       <ArtifactStepCommon
         path={path}

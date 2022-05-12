@@ -15,6 +15,7 @@
 ////////////////////////////////////////////////////////////////////////
 
 import * as SecureStorage from 'secure-web-storage'
+import { PREFERENCES_TOP_LEVEL_KEY } from 'framework/PreferenceStore/PreferenceStoreContext'
 
 const SecureStorageConstructor = SecureStorage.default
 const keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
@@ -171,8 +172,17 @@ export default class AppStorage {
   }
 
   static clear() {
+    // clear localStorage, except fields to persist across user-sessions:
+    const storage = {
+      [PREFERENCES_TOP_LEVEL_KEY]: localStorage.getItem(PREFERENCES_TOP_LEVEL_KEY) || ''
+    }
+
     secureStorage.clear()
     localStorage.clear()
+
+    Object.keys(storage).forEach(key => {
+      localStorage.setItem(key, storage[key])
+    })
   }
 
   static decode64 = decode64

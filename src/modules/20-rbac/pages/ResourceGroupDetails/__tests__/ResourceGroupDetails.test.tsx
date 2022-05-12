@@ -23,15 +23,15 @@ const getResourceGroupDetailsMock = jest.fn().mockImplementation(() => {
   return { data: resourceGroupDetails, refetch: jest.fn(), error: null, loading: false }
 })
 const updateResourceGroupDetailsMock = (data: any): Promise<{ status: string }> => {
-  updateResourceGroupDetails(data.resourcegroup)
+  updateResourceGroupDetails(data.resourceGroup)
   return Promise.resolve({ status: 'SUCCESS' })
 }
 jest.mock('services/resourcegroups', () => ({
   useGetResourceTypes: jest.fn().mockImplementation(() => {
     return { data: resourceTypes, refetch: jest.fn(), error: null, loading: false }
   }),
-  useUpdateResourceGroup: jest.fn().mockImplementation(() => ({ mutate: updateResourceGroupDetailsMock })),
-  useGetResourceGroup: jest.fn().mockImplementation(() => {
+  useUpdateResourceGroupV2: jest.fn().mockImplementation(() => ({ mutate: updateResourceGroupDetailsMock })),
+  useGetResourceGroupV2: jest.fn().mockImplementation(() => {
     return getResourceGroupDetailsMock()
   })
 }))
@@ -64,6 +64,7 @@ describe('Resource Groups Page', () => {
     expect(container).toMatchSnapshot()
   })
   test('test projects selection and save', async () => {
+    updateResourceGroupDetails.mockReset()
     const { getAllByText, container } = renderObj
     const project = queryByAttribute('data-testid', container, 'CHECK-BOX-CONNECTOR')
     expect(project).toBeTruthy()
@@ -74,16 +75,20 @@ describe('Resource Groups Page', () => {
     await act(async () => {
       fireEvent.click(getByText(container, 'applyChanges'))
     })
-    expect(updateResourceGroupDetails).toBeCalledWith({
+    expect(updateResourceGroupDetails).toHaveBeenCalledWith({
       accountIdentifier: 'kmpySmUISimoRrJL6NL73w',
-      orgIdentifier: null,
-      projectIdentifier: null,
       identifier: 'ewrewew',
       name: 'nameewrewew',
-      resourceSelectors: [
-        { type: 'DynamicResourceSelector', resourceType: 'SECRET', includeChildScopes: false },
-        { type: 'DynamicResourceSelector', resourceType: 'CONNECTOR', includeChildScopes: false }
+      includedScopes: [
+        {
+          filter: 'EXCLUDING_CHILD_SCOPES',
+          accountIdentifier: 'kmpySmUISimoRrJL6NL73w'
+        }
       ],
+      resourceFilter: {
+        includeAllResources: false,
+        resources: [{ resourceType: 'SECRET' }, { resourceType: 'CONNECTOR' }]
+      },
       tags: {},
       description: '',
       color: '#0063f7'
@@ -114,14 +119,18 @@ describe('Resource Groups Page', () => {
     })
     expect(updateResourceGroupDetails).toBeCalledWith({
       accountIdentifier: 'kmpySmUISimoRrJL6NL73w',
-      orgIdentifier: null,
-      projectIdentifier: null,
       identifier: 'ewrewew',
       name: 'nameewrewew',
-      resourceSelectors: [
-        { type: 'DynamicResourceSelector', resourceType: 'SECRET', includeChildScopes: false },
-        { type: 'DynamicResourceSelector', resourceType: 'CONNECTOR', includeChildScopes: false }
+      includedScopes: [
+        {
+          filter: 'EXCLUDING_CHILD_SCOPES',
+          accountIdentifier: 'kmpySmUISimoRrJL6NL73w'
+        }
       ],
+      resourceFilter: {
+        includeAllResources: false,
+        resources: [{ resourceType: 'SECRET' }, { resourceType: 'CONNECTOR' }]
+      },
       tags: {},
       description: '',
       color: '#0063f7'

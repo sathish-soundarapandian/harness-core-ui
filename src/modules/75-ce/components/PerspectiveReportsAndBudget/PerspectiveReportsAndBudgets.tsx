@@ -44,7 +44,7 @@ import { useStrings } from 'framework/strings'
 import formatCost from '@ce/utils/formatCost'
 
 import { useTelemetry } from '@common/hooks/useTelemetry'
-import { USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
+import { PAGE_NAMES, USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
 import Table from './Table'
 import PerspectiveBuilderPreview from '../PerspectiveBuilderPreview/PerspectiveBuilderPreview'
 import useCreateReportModal from './PerspectiveCreateReport'
@@ -173,6 +173,7 @@ export const ScheduledReports: React.FC = () => {
   const { mutate: deleteReport } = useDeleteReportSetting({})
   const { openModal, hideModal } = useCreateReportModal({
     onSuccess: () => {
+      trackEvent(USER_JOURNEY_EVENTS.PERSPECTIVE_REPORT_SCHEDULE_DONE, {})
       hideModal()
       refetch()
     }
@@ -392,7 +393,8 @@ export const Budgets = ({ perspectiveName }: { perspectiveName: string }): JSX.E
                   perspectiveName: perspectiveName,
                   perspective: perspectiveId,
                   isEdit: true,
-                  selectedBudget: budget
+                  selectedBudget: budget,
+                  source: PAGE_NAMES.PERSPECTIVE_BUILDER_PAGE
                 })
               }
               onClickDelete={() => handleDeleteBudget(budget)}
@@ -405,12 +407,16 @@ export const Budgets = ({ perspectiveName }: { perspectiveName: string }): JSX.E
   }
 
   const openCreateNewBudgetModal = (): void => {
-    trackEvent(USER_JOURNEY_EVENTS.CREATE_PERSPECTIVE_ADD_NEW_BUDGET, {})
+    trackEvent(USER_JOURNEY_EVENTS.CREATE_NEW_BUDGET, {
+      pageName: PAGE_NAMES.PERSPECTIVE_BUILDER_PAGE,
+      isEditMode: false
+    })
     openModal({
       isEdit: false,
       perspectiveName: perspectiveName,
       perspective: perspectiveId,
-      selectedBudget: {}
+      selectedBudget: {},
+      source: PAGE_NAMES.PERSPECTIVE_BUILDER_PAGE
     })
   }
 
@@ -483,7 +489,8 @@ export const AnomalyAlerts = () => {
   const [selectedAlert, setSelectedAlert] = useState(selectedAlertInitState)
   const { openAnomaliesAlertModal } = useAnomaliesAlertDialog({
     setRefetchingState: setRefetchingState,
-    selectedAlert: selectedAlert
+    selectedAlert: selectedAlert,
+    source: PAGE_NAMES.PERSPECTIVE_BUILDER_PAGE
   })
 
   const {

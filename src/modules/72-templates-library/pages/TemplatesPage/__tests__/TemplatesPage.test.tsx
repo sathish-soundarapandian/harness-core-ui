@@ -6,128 +6,276 @@
  */
 
 import React from 'react'
-import { act, fireEvent, queryByText, render } from '@testing-library/react'
-import { findDialogContainer, findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
-import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
-import { mockTemplatesSuccessResponse } from '@templates-library/TemplatesTestHelper'
+import { act, fireEvent, getByRole, render, waitFor } from '@testing-library/react'
+import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
+import { mockTemplates, mockTemplatesSuccessResponse } from '@templates-library/TemplatesTestHelper'
 import TemplatesPage from '@templates-library/pages/TemplatesPage/TemplatesPage'
+import { useMutateAsGet } from '@common/hooks'
+import type { TemplateDetailsDrawerProps } from '@templates-library/components/TemplateDetailDrawer/TemplateDetailDrawer'
+import type { TemplatesViewProps } from '@templates-library/pages/TemplatesPage/views/TemplatesView/TemplatesView'
+import type { GitFiltersProps } from '@common/components/GitFilters/GitFilters'
+import { gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
+import * as hooks from '@common/hooks/useMutateAsGet'
+import routes from '@common/RouteDefinitions'
+import { pipelineModuleParams, projectPathProps } from '@common/utils/routeUtils'
+import {
+  mockApiErrorResponse,
+  mockApiFetchingResponse
+} from '@templates-library/components/TemplateActivityLog/__tests__/TemplateActivityLogTestHelper'
 
-jest.mock('@blueprintjs/core', () => ({
-  ...(jest.requireActual('@blueprintjs/core') as any),
-  // eslint-disable-next-line react/display-name
-  Drawer: ({ children, title }: any) => (
-    <div className="drawer-mock">
-      {title}
-      {children}
-    </div>
-  )
+const templateListCallMock = jest
+  .spyOn(hooks, 'useMutateAsGet')
+  .mockImplementation(() => mockTemplatesSuccessResponse as any)
+
+jest.mock('@templates-library/pages/TemplatesPage/views/TemplatesView/TemplatesView', () => ({
+  ...jest.requireActual('@templates-library/pages/TemplatesPage/views/TemplatesView/TemplatesView'),
+  __esModule: true,
+  default: (props: TemplatesViewProps) => {
+    return (
+      <div className={'templates-view-mock'}>
+        <button onClick={() => props.onSelect(mockTemplates.data?.content?.[0] || {})}>Select Template</button>
+      </div>
+    )
+  }
 }))
 
-jest.mock('@common/components/YAMLBuilder/YamlBuilder')
-jest.mock('@wings-software/monaco-yaml/lib/esm/languageservice/yamlLanguageService', () => ({
-  getLanguageService: jest.fn()
+jest.mock('@templates-library/components/TemplateDetailDrawer/TemplateDetailDrawer', () => ({
+  ...jest.requireActual('@templates-library/components/TemplateDetailDrawer/TemplateDetailDrawer'),
+  TemplateDetailsDrawer: (props: TemplateDetailsDrawerProps) => {
+    return (
+      <div className={'template-detail-drawer-mock'}>
+        <button onClick={props.onClose}>Close</button>
+      </div>
+    )
+  }
 }))
 
-jest.mock('@common/hooks', () => ({
-  ...(jest.requireActual('@common/hooks') as any),
-  useMutateAsGet: jest.fn().mockImplementation(() => mockTemplatesSuccessResponse)
+jest.mock('@common/components/GitFilters/GitFilters', () => ({
+  ...jest.requireActual('@common/components/GitFilters/GitFilters'),
+  __esModule: true,
+  default: (props: GitFiltersProps) => {
+    return (
+      <div className={'git-filters-mock'}>
+        <button onClick={() => props.onChange({ repo: 'repo', branch: 'branch' })}>Change Git Filter</button>
+      </div>
+    )
+  }
 }))
 
-jest.mock('react-monaco-editor', () => ({
-  MonacoDiffEditor: MonacoEditor
+jest.mock('services/cd-ng', () => ({
+  useListGitSync: jest.fn().mockImplementation(() => {
+    return { data: gitConfigs, refetch: jest.fn() }
+  }),
+  useGetSourceCodeManagers: jest.fn().mockImplementation(() => {
+    return { data: sourceCodeManagers, refetch: jest.fn() }
+  })
 }))
 
-jest.mock('@common/components/MonacoEditor/MonacoEditor', () => MonacoEditor)
+const PATH = routes.toTemplates({ ...projectPathProps, ...pipelineModuleParams })
+const PATH_PARAMS = {
+  accountId: 'accountId',
+  orgIdentifier: 'default',
+  projectIdentifier: 'Yogesh_Test',
+  module: 'cd'
+}
 
-jest.mock('services/template-ng', () => ({
-  ...(jest.requireActual('services/template-ng') as any),
-  useGetTemplateInputSetYaml: jest.fn().mockImplementation(() => ({
+const defaultQueryParams = {
+  accountIdentifier: 'accountId',
+  orgIdentifier: 'default',
+  page: 0,
+  projectIdentifier: 'Yogesh_Test',
+  searchTerm: '',
+  size: 20,
+  sort: ['lastUpdatedAt', 'DESC'],
+  templateListType: 'LastUpdated'
+}
+
+const mockEmptySuccessResponse = {
+  loading: false,
+  refetch: jest.fn(),
+  mutate: jest.fn(),
+  cancel: jest.fn(),
+  data: {
+    status: 'SUCCESS',
     data: {
-      status: 'SUCCESS',
-      data: 'type: "HarnessApproval"\ntimeout: "<+input>"' + '\nspec:\n  approvalMessage: "<+input>"\n'
-    },
-    refetch: jest.fn(),
-    error: null,
-    loading: false
-  }))
-}))
+      content: []
+    }
+  }
+}
 
 describe('<TemplatesPage /> tests', () => {
-  test('snapshot test in grid view', async () => {
+  beforeEach(() => jest.clearAllMocks())
+
+  test('should match snapshot', async () => {
     const { container } = render(
-      <TestWrapper>
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
         <TemplatesPage />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
+    expect(templateListCallMock).toBeCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        queryParams: defaultQueryParams
+      })
+    )
   })
-  test('delete dialog test in grid view', async () => {
-    const { container } = render(
-      <TestWrapper>
+
+  test('should call get template api with correct params when type filter is changed', async () => {
+    const { getByText } = render(
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
         <TemplatesPage />
       </TestWrapper>
     )
 
-    const firstCard = container.querySelector('.templateCard')
-    const optionsMenu = firstCard && firstCard.querySelector('.bp3-icon-more')
-    await act(async () => {
-      fireEvent.click(optionsMenu!)
+    const typeFilterButton = getByText('all')
+    act(() => {
+      fireEvent.click(typeFilterButton)
     })
-    const popover = findPopoverContainer()
-    const deleteBtn = queryByText(popover!, 'templatesLibrary.deleteTemplate')
-    expect(deleteBtn).toBeDefined()
-    await act(async () => {
-      fireEvent.click(deleteBtn!)
+
+    const popover = findPopoverContainer() as HTMLElement
+    await waitFor(() => popover)
+
+    const menuItems = popover.querySelectorAll('[class*="menuItem"]')
+    expect(menuItems?.length).toBe(2)
+
+    act(() => {
+      fireEvent.click(menuItems[1])
     })
-    expect(findDialogContainer()).toBeTruthy()
+
+    expect(useMutateAsGet).toBeCalledWith(
+      expect.anything(),
+      expect.objectContaining({ body: { filterType: 'Template', templateEntityTypes: ['Stage'] } })
+    )
   })
-  test('setting dialog test in grid view', async () => {
-    const { container } = render(
-      <TestWrapper>
+
+  test('should open template drawer when template is selected', () => {
+    const { container, getByText } = render(
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
         <TemplatesPage />
       </TestWrapper>
     )
 
-    const firstCard = container.querySelector('.templateCard')
-    const optionsMenu = firstCard && firstCard.querySelector('.bp3-icon-more')
-    await act(async () => {
-      fireEvent.click(optionsMenu!)
+    const selectTemplateButton = getByText('Select Template')
+    act(() => {
+      fireEvent.click(selectTemplateButton)
     })
-    const popover = findPopoverContainer()
-    const settingsBtn = queryByText(popover!, 'templatesLibrary.templateSettings')
-    expect(settingsBtn).toBeDefined()
-    await act(async () => {
-      fireEvent.click(settingsBtn!)
+
+    let drawerContainer = container.querySelector('[class*="template-detail-drawer-mock"]')
+    expect(drawerContainer).not.toBeNull()
+
+    const closeButton = getByText('Close')
+    act(() => {
+      fireEvent.click(closeButton)
     })
-    expect(findDialogContainer()).toBeTruthy()
+    drawerContainer = container.querySelector('[class*="template-detail-drawer-mock"]')
+    expect(drawerContainer).toBeNull()
   })
-  test('snapshot test in list view after toggle', async () => {
-    const { container } = render(
-      <TestWrapper>
+
+  test('should change git filters correctly', () => {
+    const { getByText } = render(
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS} defaultAppStoreValues={{ isGitSyncEnabled: true }}>
         <TemplatesPage />
       </TestWrapper>
     )
-    const listViewBtn = container.querySelector('[data-testid="list-view"]')
-    expect(listViewBtn).toBeTruthy()
-    await act(async () => {
-      fireEvent.click(listViewBtn!)
+
+    const changeGitFilterButton = getByText('Change Git Filter')
+    act(() => {
+      fireEvent.click(changeGitFilterButton)
     })
+    expect(useMutateAsGet).toBeCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        queryParams: {
+          ...defaultQueryParams,
+          repoIdentifier: 'repo',
+          branch: 'branch'
+        }
+      })
+    )
+  })
+
+  test('should render no results view correctly', async () => {
+    templateListCallMock.mockReturnValue(mockEmptySuccessResponse as any)
+
+    const { container } = render(
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
+        <TemplatesPage />
+      </TestWrapper>
+    )
+
     expect(container).toMatchSnapshot()
   })
-  test('should open template drawer when clicked on template card', async () => {
+
+  test('should render loading view correctly', async () => {
+    templateListCallMock.mockImplementation(() => mockApiFetchingResponse as any)
+
     const { container } = render(
-      <TestWrapper>
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
         <TemplatesPage />
       </TestWrapper>
     )
 
-    const templateCards = container.querySelectorAll('.bp3-card.templateCard')
-    expect(templateCards).toHaveLength(1)
-    await act(async () => {
-      fireEvent.click(templateCards[0])
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should render error view correctly', async () => {
+    const refetch = jest.fn()
+    templateListCallMock.mockImplementation(() => ({ ...mockApiErrorResponse, refetch } as any))
+
+    const { container, getByText } = render(
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
+        <TemplatesPage />
+      </TestWrapper>
+    )
+
+    expect(container).toMatchSnapshot()
+
+    waitFor(() => getByText('Retry'))
+
+    act(() => {
+      fireEvent.click(getByText('Retry'))
     })
-    const drawer = document.querySelector('.drawer-mock')
-    expect(drawer).toBeTruthy()
-    expect(drawer!.querySelector('[data-template-id="manjutesttemplate"]')).toBeTruthy()
+
+    expect(refetch).toBeCalledTimes(1)
+  })
+
+  test('should render no results view correctly with search params', async () => {
+    templateListCallMock.mockReturnValue(mockEmptySuccessResponse as any)
+
+    const { container, getByTestId } = render(
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
+        <TemplatesPage />
+      </TestWrapper>
+    )
+
+    await waitFor(() => getByTestId('dropdown-button'))
+    const typeButton = getByTestId('dropdown-button')
+    act(() => {
+      fireEvent.click(typeButton)
+    })
+
+    const popover = findPopoverContainer() as HTMLElement
+    await waitFor(() => popover)
+
+    const menuItems = popover.querySelectorAll('[class*="menuItem"]')
+    act(() => {
+      fireEvent.click(menuItems[1])
+    })
+
+    act(() => {
+      fireEvent.click(getByRole(container, 'button', { name: /common.filters.clearFilters/ }))
+    })
+
+    expect(templateListCallMock).toHaveBeenNthCalledWith(
+      4,
+      expect.anything(),
+      expect.objectContaining({
+        body: {
+          filterType: 'Template'
+        },
+        queryParams: defaultQueryParams
+      })
+    )
   })
 })

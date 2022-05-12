@@ -27,12 +27,12 @@ import {
   SaveTemplatePopover
 } from '@templates-library/components/TemplateStudio/SaveTemplatePopover/SaveTemplatePopover'
 import { DefaultNewTemplateId } from 'framework/Templates/templates'
-import { TemplateStudioSubHeaderLeftView } from './views/TemplateStudioSubHeaderLeftView/TemplateStudioSubHeaderLeftView'
+import { TemplateStudioSubHeaderLeftView } from '@templates-library/components/TemplateStudio/TemplateStudioSubHeader/views/TemplateStudioSubHeaderLeftView/TemplateStudioSubHeaderLeftView'
 import css from './TemplateStudioSubHeader.module.scss'
 
 export interface TemplateStudioSubHeaderProps {
   onViewChange: (view: SelectedView) => boolean
-  getErrors?: () => Promise<GetErrorResponse>
+  getErrors: () => Promise<GetErrorResponse>
   onGitBranchChange: (selectedFilter: GitFilterScope) => void
 }
 
@@ -45,16 +45,8 @@ export const TemplateStudioSubHeader: (props: TemplateStudioSubHeaderProps) => J
   const { isUpdated, entityValidityDetails } = state
   const { getString } = useStrings()
   const { templateIdentifier } = useParams<TemplateStudioPathProps>()
-  const [disableVisualView, setDisableVisualView] = React.useState(entityValidityDetails.valid === false)
   const isYaml = view === SelectedView.YAML
-
-  React.useEffect(() => {
-    if (entityValidityDetails.valid === false) {
-      setDisableVisualView(true)
-    } else {
-      setDisableVisualView(false)
-    }
-  }, [entityValidityDetails.valid])
+  const isVisualViewDisabled = React.useMemo(() => entityValidityDetails.valid === false, [entityValidityDetails.valid])
 
   return (
     <Container
@@ -69,11 +61,11 @@ export const TemplateStudioSubHeader: (props: TemplateStudioSubHeaderProps) => J
         <Container>
           <VisualYamlToggle
             className={css.visualYamlToggle}
-            selectedView={isYaml || disableVisualView ? SelectedView.YAML : SelectedView.VISUAL}
+            selectedView={isYaml || isVisualViewDisabled ? SelectedView.YAML : SelectedView.VISUAL}
             onChange={nextMode => {
               onViewChange(nextMode)
             }}
-            disableToggle={disableVisualView}
+            disableToggle={isVisualViewDisabled}
           />
         </Container>
         <Container>

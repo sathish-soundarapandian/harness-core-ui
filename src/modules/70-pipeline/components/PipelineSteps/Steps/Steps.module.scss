@@ -25,6 +25,10 @@
   padding-left: var(--spacing-xlarge) !important;
 }
 
+.delegate {
+  margin-left: 25px;
+}
+
 .accordion {
   margin-bottom: var(--spacing-large);
 }
@@ -52,6 +56,10 @@
 
   &.lg {
     width: 75%;
+  }
+
+  &.xlg {
+    width: 85%;
   }
 
   &.lgOverride {
@@ -106,22 +114,6 @@
   margin-bottom: var(--spacing-4);
 }
 
-.fieldsSection {
-  padding-bottom: var(--spacing-xlarge);
-  margin-bottom: var(--spacing-xlarge);
-
-  &:not(:last-child) {
-    // TODO: Replace color once it is available in UIKit
-    border-bottom: 1px solid #d9dae6;
-  }
-
-  :global {
-    .bp3-popover-wrapper {
-      margin-top: 0 !important;
-    }
-  }
-}
-
 .fieldsGroup {
   display: flex;
 
@@ -140,11 +132,6 @@
       margin-right: var(--spacing-medium) !important;
     }
   }
-}
-
-.optionalConfiguration {
-  // TODO: Replace color once it is available in UIKit
-  color: #9293ab !important;
 }
 
 .textWithTooltip {
@@ -222,7 +209,7 @@
 }
 
 .mainLabel {
-  color: black !important;
+  color: var(--black) !important;
 }
 
 .inpLabel {

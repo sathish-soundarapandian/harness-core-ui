@@ -80,7 +80,8 @@ const currentUser = {
       uuid: '123',
       createdFromNG: true
     }
-  ]
+  ],
+  uuid: '123'
 }
 
 jest.mock('services/pipeline-ng', () => ({

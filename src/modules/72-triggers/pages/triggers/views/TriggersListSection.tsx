@@ -55,6 +55,7 @@ interface TriggersListSectionProps {
   refetchTriggerList: () => void
   goToEditWizard: ({ triggerIdentifier, triggerType }: GoToEditWizardInterface) => void
   goToDetails: ({ triggerIdentifier, triggerType }: GoToEditWizardInterface) => void
+  isPipelineInvalid?: boolean
 }
 
 // type CustomColumn<T extends object> = Column<T> & {
@@ -518,7 +519,8 @@ export const TriggersListSection: React.FC<TriggersListSectionProps> = ({
   data,
   refetchTriggerList,
   goToEditWizard,
-  goToDetails
+  goToDetails,
+  isPipelineInvalid
 }): JSX.Element => {
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
@@ -547,7 +549,7 @@ export const TriggersListSection: React.FC<TriggersListSectionProps> = ({
     [projectIdentifier, orgIdentifier, accountId, pipelineIdentifier]
   )
 
-  const isTriggerRbacDisabled = !isExecutable
+  const isTriggerRbacDisabled = !isExecutable || isPipelineInvalid
 
   const columns: any = React.useMemo(
     // const columns: CustomColumn<NGTriggerDetailsResponse>[] = React.useMemo( // wait for backend to support condition

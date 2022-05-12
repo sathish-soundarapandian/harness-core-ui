@@ -1,0 +1,23 @@
+.main {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  width: 100%;
+  background-color: var(--white) !important;
+  padding: var(--spacing-small) var(--spacing-large) !important;
+  overflow: hidden !important;
+
+  &.logAnalysis {
+    margin-left: var(--spacing-xlarge) !important;
+  }
+
+  .noDataContainer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    :global(.NoDataCard--noDataCard) {
+      height: unset !important;
+    }
+  }
+}

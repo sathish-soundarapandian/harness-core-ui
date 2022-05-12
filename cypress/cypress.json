@@ -1,0 +1,12 @@
+{
+  "baseUrl": "https://localhost:8181",
+  "viewportWidth": 1500,
+  "viewportHeight": 1000,
+  "retries": 2,
+  "projectId": "if5p69",
+  "integrationFolder": "integration",
+  "pluginsFile": "plugins/index.js",
+  "fixturesFolder": "fixtures",
+  "supportFile": "support/index.ts",
+  "videoUploadOnPasses": false
+}

@@ -19,15 +19,15 @@ import css from './RecommendationDetails.module.scss'
 
 interface RecommendationTabsProps {
   selectedRecommendation: RecommendationType
-  setSelectedRecommendation: React.Dispatch<React.SetStateAction<RecommendationType>>
+  setSelectedRecommendation: (newState: RecommendationType) => void
   setCPUReqVal: React.Dispatch<React.SetStateAction<number>>
   setMemReqVal: React.Dispatch<React.SetStateAction<number>>
-  setMemLimitVal: React.Dispatch<React.SetStateAction<number>>
-  costOptimizedSavings: number
-  performanceOptimizedSavings: number
-  currentSavings: number
-  isPerfOptimizedCustomized: boolean
-  isCostOptimizedCustomized: boolean
+  setMemLimitVal?: React.Dispatch<React.SetStateAction<number>>
+  costOptimizedSavings?: number
+  performanceOptimizedSavings?: number
+  currentSavings?: number
+  isPerfOptimizedCustomized?: boolean
+  isCostOptimizedCustomized?: boolean
 }
 
 const RecommendationTabs: React.FC<RecommendationTabsProps> = ({
@@ -54,7 +54,7 @@ const RecommendationTabs: React.FC<RecommendationTabsProps> = ({
             })
             setCPUReqVal(50)
             setMemReqVal(50)
-            setMemLimitVal(95)
+            setMemLimitVal?.(95)
             setSelectedRecommendation(RecommendationType.CostOptimized)
           }}
         >
@@ -80,7 +80,7 @@ const RecommendationTabs: React.FC<RecommendationTabsProps> = ({
             })
             setCPUReqVal(95)
             setMemReqVal(95)
-            setMemLimitVal(95)
+            setMemLimitVal?.(95)
             setSelectedRecommendation(RecommendationType.PerformanceOptimized)
           }}
         >

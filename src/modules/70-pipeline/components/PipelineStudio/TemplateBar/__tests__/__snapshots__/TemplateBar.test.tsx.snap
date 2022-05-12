@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<TemplateBar /> tests should match snapshot and work as expected 1`] = `
+exports[`<TemplateBar /> tests should match snapshot in loading 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main container StyledProps--padding-top-small StyledProps--padding-right-medium StyledProps--padding-bottom-small StyledProps--padding-left-medium StyledProps--background-primary6 StyledProps--border"
@@ -44,7 +44,7 @@ exports[`<TemplateBar /> tests should match snapshot and work as expected 1`] = 
         class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-white"
         style="flex-grow: 1;"
       >
-        Using Template: New Stage Name (v1)
+        loading
       </p>
       <span
         class="bp3-popover-wrapper main"

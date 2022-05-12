@@ -12,17 +12,21 @@ declare const styles: {
   readonly activeServiceInstances: string
   readonly activeServiceInstancesEmpty: string
   readonly activeServiceInstancesHeader: string
+  readonly envContainer: string
   readonly environmentRow: string
   readonly hex: string
   readonly hexContainer: string
   readonly hover: string
   readonly instanceCount: string
   readonly instanceTable: string
+  readonly labelStyles: string
+  readonly listStyles: string
   readonly overflow: string
   readonly paddedContainer: string
   readonly pieChartLabelContainerStyles: string
   readonly pieChartLabelStyles: string
   readonly sectionValue: string
   readonly seeMore: string
+  readonly tabsStyle: string
 }
 export default styles

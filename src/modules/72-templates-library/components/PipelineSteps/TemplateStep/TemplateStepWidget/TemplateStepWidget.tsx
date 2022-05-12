@@ -24,6 +24,7 @@ import { useParams } from 'react-router-dom'
 import { parse } from 'yaml'
 import { defaultTo, get, isEmpty, merge, noop, set } from 'lodash-es'
 import produce from 'immer'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { setFormikRef, StepViewType, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
@@ -69,6 +70,7 @@ function TemplateStepWidget(
   const queryParams = useParams<ProjectPathProps>()
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
   const { showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
   const stepTemplateRef = getIdentifierFromValue(initialValues.template.templateRef)
   const scope = getScopeFromValue(initialValues.template.templateRef)
 
@@ -119,7 +121,7 @@ function TemplateStepWidget(
         setTemplateInputs(initialValues, mergedTemplateInputs)
         onUpdate?.(initialValues)
       } catch (error) {
-        showError(error.message, undefined, 'template.parse.inputSet.error')
+        showError(getRBACErrorMessage(error), undefined, 'template.parse.inputSet.error')
       }
     }
   }, [stepTemplateLoading, stepTemplateResponse?.data && stepTemplateInputSetLoading && stepTemplateInputSetYaml?.data])
@@ -196,7 +198,7 @@ function TemplateStepWidget(
                   formik.values.allValues && (
                     <Layout.Vertical padding={{ top: 'large', bottom: 'large' }} spacing={'large'}>
                       <Heading level={5} color={Color.BLACK}>
-                        {getString('templatesLibrary.templateInputs')}
+                        {getString('pipeline.templateInputs')}
                       </Heading>
                       <StepForm
                         key={`${formik.values.template.templateRef}-${defaultTo(

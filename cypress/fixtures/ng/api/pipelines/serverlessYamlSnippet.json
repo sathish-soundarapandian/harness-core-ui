@@ -1,0 +1,6 @@
+{
+  "status": "SUCCESS",
+  "data": "failureStrategies:\n  - onFailure:\n      errors:\n        - AllErrors\n      action:\n        type: StageRollback\nspec:\n  execution:\n    steps:\n      - step:\n          name: \"Serverless Aws Lambda Deploy\"\n          identifier: ServerlessAwsLambdaDeploy\n          type: ServerlessAwsLambdaDeploy\n          timeout: 10m\n          spec:\n            commandOptions: \"\"\n    rollbackSteps:\n      - step:\n          name: \"Serverless Aws Lambda Rollback\"\n          identifier: ServerlessAwsLambdaRollback\n          type: ServerlessAwsLambdaRollback\n          timeout: 10m\n          spec: {}",
+  "metaData": null,
+  "correlationId": "72f70a74-a508-4c94-9674-331148eb8323"
+}

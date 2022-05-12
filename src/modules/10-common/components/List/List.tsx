@@ -11,7 +11,7 @@ import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { Text, TextInput, Card, Button, MultiTypeInputType, MultiTextInput } from '@wings-software/uicore'
 import { Intent } from '@harness/design-system'
 import { get, isEmpty } from 'lodash-es'
-import { connect, FormikContext } from 'formik'
+import { connect, FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
 import css from './List.module.scss'
 
@@ -24,17 +24,22 @@ export interface ListProps {
   placeholder?: string
   disabled?: boolean
   style?: React.CSSProperties
-  formik?: FormikContext<any>
+  formik?: FormikContextType<any>
   expressions?: string[]
   enableExpressions?: boolean
   isNameOfArrayType?: boolean
   labelClassName?: string
+  allowOnlyOne?: boolean
 }
 
 const generateNewValue: () => { id: string; value: string } = () => ({
   id: uuid('', nameSpace()),
   value: ''
 })
+
+const showAddTrashButtons = (disabled = false, allowOnlyOne = false): boolean => {
+  return !disabled && !allowOnlyOne
+}
 
 export const List = (props: ListProps): React.ReactElement => {
   const {
@@ -46,7 +51,8 @@ export const List = (props: ListProps): React.ReactElement => {
     formik,
     expressions,
     isNameOfArrayType,
-    labelClassName = ''
+    labelClassName = '',
+    allowOnlyOne = false
   } = props
   const { getString } = useStrings()
   const [value, setValue] = React.useState<ListUIType>(() => {
@@ -171,7 +177,7 @@ export const List = (props: ListProps): React.ReactElement => {
                   />
                 )}
               </div>
-              {!disabled && (
+              {showAddTrashButtons(disabled, allowOnlyOne) && (
                 <Button
                   icon="main-trash"
                   iconProps={{ size: 20 }}
@@ -184,7 +190,7 @@ export const List = (props: ListProps): React.ReactElement => {
           )
         })}
 
-        {!disabled && (
+        {showAddTrashButtons(disabled, allowOnlyOne) && (
           <Button intent="primary" minimal text={getString('plusAdd')} data-testid={`add-${name}`} onClick={addValue} />
         )}
       </Card>

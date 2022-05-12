@@ -10,6 +10,7 @@ rules:
         - modules/27-sto/*
         - modules/30-delegates/*
         - modules/30-secrets/*
+        - modules/31-variables/*
         - modules/33-auth-settings/*
         - modules/35-connectors/*
         - modules/35-user-profile/*
@@ -30,6 +31,7 @@ rules:
         - '@sto/*'
         - '@delegates/*'
         - '@secrets/*'
+        - '@variables/*'
         - '@auth-settings/*'
         - '@connectors/*'
         - '@user-profile/*'

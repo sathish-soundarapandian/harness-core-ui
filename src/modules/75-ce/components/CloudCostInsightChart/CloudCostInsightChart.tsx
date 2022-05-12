@@ -40,6 +40,7 @@ interface CloudCostInsightChartProps {
   anomaliesCountData?: PerspectiveAnomalyData[]
 }
 
+/* istanbul ignore next */
 function getChartList({
   data,
   pageType,
@@ -127,7 +128,7 @@ const CloudCostInsightChart = forwardRef((props: CloudCostInsightChartProps, ref
 
   if (fetching) {
     return (
-      <Container className={cx(css.chartMainContainer, css.loadingContainer)}>
+      <Container className={cx(css.chartMainContainer, css.loadingContainer)} data-testid="loader">
         <Icon name="spinner" size={28} color="blue500" />
       </Container>
     )

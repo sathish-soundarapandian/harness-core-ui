@@ -51,7 +51,7 @@ jest.mock('@cv/hooks/IndexedDBHook/IndexedDBHook', () => ({
 }))
 
 describe('DefineHealthSource', () => {
-  test('should have proper validation', async () => {
+  test.only('should have proper validation', async () => {
     const { getByText } = render(
       <TestWrapper {...createModeProps}>
         <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>
@@ -67,9 +67,6 @@ describe('DefineHealthSource', () => {
       // check error texts
       await waitFor(() => expect(getByText('cv.onboarding.selectProductScreen.validationText.source')).not.toBeNull())
       await waitFor(() => expect(getByText('cv.onboarding.selectProductScreen.validationText.name')).not.toBeNull())
-      await waitFor(() =>
-        expect(getByText('cv.onboarding.selectProductScreen.validationText.connectorRef')).not.toBeNull()
-      )
     })
   })
 

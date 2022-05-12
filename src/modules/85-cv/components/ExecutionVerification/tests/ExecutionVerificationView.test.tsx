@@ -110,6 +110,7 @@ describe('Unit tests for ExecutionVerificationView unit tests', () => {
       </TestWrapper>
     )
     expect(LogsContainer.container.querySelector('.LogAnalysisContainer')).toBeInTheDocument()
+    expect(LogsContainer.container.querySelector('.summary')).toBeInTheDocument()
     expect(LogsContainer.container.querySelector('.deploymentMetrics')).not.toBeInTheDocument()
     expect(LogsContainer.container).toMatchSnapshot()
 

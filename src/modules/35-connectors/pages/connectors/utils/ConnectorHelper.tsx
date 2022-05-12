@@ -135,6 +135,8 @@ export const getConnectorTitleIdByType = (type: string): StringKeys => {
       return 'connectors.title.azureKeyVault'
     case Connectors.ERROR_TRACKING:
       return 'connectors.title.errorTracking'
+    case Connectors.AZURE:
+      return 'connectors.title.azure'
     default:
       return 'connector'
   }
@@ -216,6 +218,8 @@ export const getConnectorIconByType = (type: string): IconName => {
       return 'service-custom-connector'
     case Connectors.ERROR_TRACKING:
       return 'error-tracking'
+    case Connectors.AZURE:
+      return 'microsoft-azure'
     default:
       return 'placeholder'
   }

@@ -13,5 +13,6 @@ declare const styles: {
   readonly secrets: string
   readonly smtp: string
   readonly templates: string
+  readonly variables: string
 }
 export default styles

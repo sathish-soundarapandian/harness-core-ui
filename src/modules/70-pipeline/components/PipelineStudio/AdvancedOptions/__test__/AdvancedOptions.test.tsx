@@ -10,6 +10,13 @@ import { act, fireEvent, render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { AdvancedOptions } from '../AdvancedOptions'
 
+const mockGetCallFunction = jest.fn()
+jest.mock('services/portal', () => ({
+  useGetDelegateSelectorsUpTheHierarchy: jest.fn().mockImplementation(args => {
+    mockGetCallFunction(args)
+    return []
+  })
+}))
 describe('<AdvancedOptions/> tests', () => {
   const baseProps = {
     pipeline: {

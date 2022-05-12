@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import isEmpty from 'lodash/isEmpty'
+import { isEmpty } from 'lodash-es'
 import type { FormikErrors } from 'formik'
-import { RUNTIME_INPUT_VALUE, MultiTypeInputType } from '@wings-software/uicore'
+import { MultiTypeInputType } from '@wings-software/uicore'
 import type { UseFromStageInfraYaml } from 'services/ci'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { StringsMap } from 'stringTypes'
@@ -47,19 +47,6 @@ export const validateConnectorRefAndImageDepdendency = (
   return errors
 }
 
-export const shouldRenderRunTimeInputView = (value: any): boolean => {
-  if (value) {
-    if (typeof value === 'object') {
-      return Object.keys(value).some(
-        key => typeof value[key] === 'string' && value[key].startsWith(RUNTIME_INPUT_VALUE)
-      )
-    } else {
-      return typeof value === 'string' && value.startsWith(RUNTIME_INPUT_VALUE)
-    }
-  }
-  return false
-}
-
 export const AllMultiTypeInputTypesForStep = [
   MultiTypeInputType.FIXED,
   MultiTypeInputType.EXPRESSION,
@@ -67,3 +54,18 @@ export const AllMultiTypeInputTypesForStep = [
 ]
 
 export const AllMultiTypeInputTypesForInputSet = [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+
+/* Field of type lists have some limitations to support all three input types */
+
+/* a field of type list cannot assume expression as supported a value */
+export const SupportedInputTypesForListTypeField = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+
+/* Note:  list items do not support runtime inputs by design, captured in https://harness.atlassian.net/browse/PIE-2617 */
+
+/* for few fields, list items cannot support be expressions due to a limitation, captured in https://harness.atlassian.net/browse/CI-3950 */
+export const SupportedInputTypesForOPVarsListItems = [MultiTypeInputType.FIXED]
+
+/* few fields are able to support expressions for list items */
+export const SupportedInputTypesForListItems = [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+
+export const SupportedInputTypesForListTypeFieldInInputSetView = [MultiTypeInputType.FIXED]

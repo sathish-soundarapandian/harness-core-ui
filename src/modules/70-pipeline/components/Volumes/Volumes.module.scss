@@ -1,0 +1,116 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.conditionsRowHeaders {
+  padding-bottom: var(--spacing-small) !important;
+  border-bottom: 1px solid var(--grey-100);
+  display: flex;
+  p:nth-child(1),
+  p:nth-child(3) {
+    width: 308px;
+  }
+  p:nth-child(2) {
+    width: 248px;
+  }
+}
+
+.conditionsRow {
+  display: flex;
+  align-items: center;
+
+  .textContainer {
+    margin: var(--spacing-small) var(--spacing-small) var(--spacing-small) 0 !important;
+    div {
+      width: 300px;
+    }
+  }
+  .operatorContainer {
+    margin: var(--spacing-small) var(--spacing-small) var(--spacing-small) 0 !important;
+
+    div {
+      width: 240px;
+    }
+  }
+}
+
+.predefinedRows {
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--grey-100);
+  }
+  > p {
+    width: 308px;
+  }
+}
+
+.rowTrashIcon {
+  cursor: pointer;
+  margin-top: var(--spacing-6) !important;
+}
+
+.rowContainer {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--grey-100);
+  margin-top: var(--spacing-medium) !important;
+  padding-bottom: var(--spacing-large) !important;
+}
+
+.sectionHeader {
+  margin-bottom: var(--spacing-3) !important;
+}
+
+.group {
+  display: flex;
+  &.minimalCard {
+    :global {
+      .bp3-card {
+        border: none;
+        background: transparent;
+        box-shadow: none;
+        border-radius: 0;
+        padding: var(--spacing-small) 0;
+        .bp3-button[data-testid*='add'] {
+          padding: 5px 0;
+        }
+      }
+    }
+  }
+
+  &:not(.withoutAligning) {
+    align-items: center;
+  }
+
+  > * {
+    margin-bottom: 0;
+
+    &:not(:last-child) {
+      margin-right: var(--spacing-medium) !important;
+    }
+  }
+}
+
+[data-name='volumes'] [data-name='rowContainer']:nth-child(2) {
+  margin-top: 0;
+}
+
+.checkbox {
+  margin-top: var(--spacing-6);
+  width: 205px;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.paddingZero {
+  padding: 0 !important;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+}

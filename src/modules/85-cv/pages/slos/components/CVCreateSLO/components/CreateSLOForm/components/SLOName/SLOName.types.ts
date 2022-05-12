@@ -13,3 +13,9 @@ export interface SLONameProps {
   children: JSX.Element
   identifier?: string
 }
+
+export interface ServiceAndEnv {
+  environmentRef: string
+  serviceRef: string
+  type: string
+}

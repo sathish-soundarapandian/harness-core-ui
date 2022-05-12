@@ -17,6 +17,7 @@ import {
   ExecutionNode,
   HandleManualInterventionInterruptQueryParams
 } from 'services/pipeline-ng'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { Strategy, strategyIconMap, stringsMap } from '@pipeline/utils/FailureStrategyUtils'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 
@@ -41,6 +42,7 @@ export function ManualInterventionTab(props: ManualInterventionTabProps): React.
   })
   const { showError } = useToaster()
   const { getString } = useStrings()
+  const { getRBACErrorMessage } = useRBACError()
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
     const interruptType = e.target.value as HandleManualInterventionInterruptQueryParams['interruptType']
@@ -59,7 +61,7 @@ export function ManualInterventionTab(props: ManualInterventionTabProps): React.
 
   React.useEffect(() => {
     if (error) {
-      showError((error as any).data?.message || error.message, undefined, 'pipeline.error.intervention')
+      showError(getRBACErrorMessage(error), undefined, 'pipeline.error.intervention')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error])

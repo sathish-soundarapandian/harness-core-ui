@@ -18,7 +18,7 @@ import ConfigureSlackNotifications from '@notifications/modals/ConfigureNotifica
 import ConfigurePagerDutyNotifications from '@notifications/modals/ConfigureNotificationsModal/views/ConfigurePagerDutyNotifications/ConfigurePagerDutyNotifications'
 import ConfigureMSTeamsNotifications from '@notifications/modals/ConfigureNotificationsModal/views/ConfigureMSTeamsNotifications/ConfigureMSTeamsNotifications'
 
-type NotificationMethodsProps = StepProps<NotificationRules> & {
+export type NotificationMethodsProps = StepProps<NotificationRules> & {
   typeOptions?: SelectOption[]
 }
 

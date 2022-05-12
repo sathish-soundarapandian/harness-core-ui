@@ -468,6 +468,7 @@ export class KubernetesServiceSpec extends Step<ServiceSpec> {
           stepsFactory={factory}
           onUpdate={onUpdate}
           readonly={readonly}
+          allowableTypes={allowableTypes}
         />
       )
     }

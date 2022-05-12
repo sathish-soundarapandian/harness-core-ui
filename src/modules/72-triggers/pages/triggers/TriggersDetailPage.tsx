@@ -292,8 +292,6 @@ export default function TriggersDetailPage(): JSX.Element {
     [projectIdentifier, orgIdentifier, accountId, pipelineIdentifier]
   )
 
-  const isTriggerRbacDisabled = !isExecutable
-
   const history = useHistory()
 
   const goToEditWizard = (): void => {
@@ -372,6 +370,10 @@ export default function TriggersDetailPage(): JSX.Element {
     triggerResponse?.data?.name || getString('common.triggersLabel')
   ])
 
+  const isPipelineInvalid = pipeline?.data?.entityValidityDetails?.valid === false
+
+  const isTriggerRbacDisabled = !isExecutable || isPipelineInvalid
+
   return (
     <>
       <Container
@@ -437,6 +439,7 @@ export default function TriggersDetailPage(): JSX.Element {
                 onClick={goToEditWizard}
                 minimal
                 disabled={isTriggerRbacDisabled}
+                tooltip={isPipelineInvalid ? getString('pipeline.cannotEditTriggerInvalidPipeline') : ''}
                 text={getString('edit')}
               ></Button>
             </Layout.Horizontal>
@@ -476,6 +479,7 @@ export default function TriggersDetailPage(): JSX.Element {
                     showSnippetSection={false}
                     schema={pipelineSchema?.data}
                     onEnableEditMode={goToEditWizard}
+                    isEditModeSupported={!isPipelineInvalid}
                     // isEditModeSupported={!isTriggerRbacDisabled}
                   />
                 )}

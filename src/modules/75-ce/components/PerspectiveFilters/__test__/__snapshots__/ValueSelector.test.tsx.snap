@@ -73,6 +73,19 @@ exports[`test cases for value Selector component should be able to render the co
               />
               ce.perspectives.createPerspective.operatorLabels.opNotNull
             </label>
+            <label
+              class="bp3-control bp3-radio radioValue"
+            >
+              <input
+                name="Blueprint3.RadioGroup-0"
+                type="radio"
+                value="LIKE"
+              />
+              <span
+                class="bp3-control-indicator"
+              />
+              ce.perspectives.createPerspective.operatorLabels.opLike
+            </label>
           </div>
         </div>
       </div>

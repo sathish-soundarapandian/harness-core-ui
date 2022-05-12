@@ -14,6 +14,7 @@ import type {
   ConnectorRequestBody,
   VaultMetadataRequestSpecDTO
 } from 'services/cd-ng'
+import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 
 export interface KubFormData {
   name?: string
@@ -132,4 +133,16 @@ export interface GcpKmsConfigFormData {
   keyName?: string
   credentials?: SecretReference
   default: boolean
+}
+
+export interface AzureFormInterface {
+  delegateType?: string
+  azureEnvironmentType?: string
+  applicationId?: string
+  tenantId?: string
+  secretType?: string
+  secretText?: SecretReferenceInterface | void
+  secretFile?: SecretReferenceInterface | void
+  clientId?: string
+  managedIdentity?: string
 }

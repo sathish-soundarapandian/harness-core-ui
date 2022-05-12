@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container } from '@wings-software/uicore'
+import { Container } from '@harness/uicore'
 import { Editions } from '@common/constants/SubscriptionTypes'
 import LevelUpBanner from '@common/components/FeatureWarning/LevelUpBanner'
 import type { ModuleLicenseDTO } from 'services/cd-ng'

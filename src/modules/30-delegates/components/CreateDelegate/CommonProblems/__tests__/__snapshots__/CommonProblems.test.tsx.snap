@@ -230,17 +230,6 @@ exports[`Create Common Problems Tab render data 1`] = `
         </span>
       </div>
     </div>
-    <div
-      class="Layout--horizontal StyledProps--main"
-      style="width: 511px;"
-    >
-      <p
-        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-normal StyledProps--color StyledProps--color-grey700"
-        style="line-height: 24px; --text-line-clamp: 2;"
-      >
-        delegates.delegateNotInstalled.tabs.commonProblems.checkEndPoint
-      </p>
-    </div>
   </div>
 </div>
 `;

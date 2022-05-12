@@ -38,7 +38,8 @@ const ModuleCard: React.FC<ModuleCardProps> = ({
   className,
   cornerSelected,
   handleButtonClick,
-  buttonText
+  buttonText,
+  buttonDisabled
 }) => {
   return (
     <div className={cx(css.cardContainer)}>
@@ -60,7 +61,7 @@ const ModuleCard: React.FC<ModuleCardProps> = ({
         </Container>
       </Card>
       {selected && (
-        <Button intent="primary" onClick={handleButtonClick} width="100%">
+        <Button intent="primary" onClick={handleButtonClick} width="100%" disabled={buttonDisabled}>
           {buttonText}
         </Button>
       )}

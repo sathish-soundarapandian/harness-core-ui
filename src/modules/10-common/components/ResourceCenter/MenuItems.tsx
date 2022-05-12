@@ -13,7 +13,7 @@ import { Button, ButtonVariation, Layout, Text, Popover, Icon } from '@wings-sof
 import { Color, FontVariation } from '@harness/design-system'
 import { PopoverInteractionKind, Classes, Position } from '@blueprintjs/core'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { useCommunity } from 'framework/LicenseStore/useCommunity'
+import { isCommunityPlan } from '@common/utils/utils'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import Feedback from './Feedback'
@@ -96,7 +96,7 @@ const HARNESS_SUPPORT_LINK =
 
 const MenuItems: React.FC<MenuItemsProps> = ({ closeResourceCenter }: MenuItemsProps) => {
   const { getString } = useStrings()
-  const isCommunity = useCommunity()
+  const isCommunity = isCommunityPlan()
   const { SHOW_NG_REFINER_FEEDBACK } = useFeatureFlags()
   const { currentUserInfo } = useAppStore()
   const openZendeskSupport = (e: React.MouseEvent<Element, MouseEvent>): void => {

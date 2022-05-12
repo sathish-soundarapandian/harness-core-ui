@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Delete access points button tests should not show delete button in case of empty list 1`] = `<div />`;

@@ -19,12 +19,13 @@ import {
   useToaster,
   SelectOption
 } from '@wings-software/uicore'
-import { connect, FormikContext } from 'formik'
+import { connect, FormikContextType } from 'formik'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { Connectors } from '@connectors/constants'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useGetRepositoriesDetailsForArtifactory } from 'services/cd-ng'
@@ -32,10 +33,11 @@ import type { TerraformData, TerraformProps } from '../TerraformInterfaces'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 function ConfigSectionRef<T extends TerraformData = TerraformData>(
-  props: TerraformProps<T> & { formik?: FormikContext<any> }
+  props: TerraformProps<T> & { formik?: FormikContextType<any> }
 ): React.ReactElement {
   const { getString } = useStrings()
   const { showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
   const { expressions } = useVariablesExpression()
   const { inputSetData, readonly, initialValues, path, allowableTypes, formik } = props
   const config = inputSetData?.template?.spec?.configuration
@@ -79,7 +81,7 @@ function ConfigSectionRef<T extends TerraformData = TerraformData>(
 
   useEffect(() => {
     if (ArtifactRepoError) {
-      showError(ArtifactRepoError.message)
+      showError(getRBACErrorMessage(ArtifactRepoError))
     }
   }, [ArtifactRepoError])
 
@@ -181,7 +183,7 @@ function ConfigSectionRef<T extends TerraformData = TerraformData>(
       {getMultiTypeFromValue(config?.spec?.configFiles?.store?.spec?.folderPath) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormInput.MultiTextInput
-            label={getString('cd.folderPath')}
+            label={getString('common.git.folderPath')}
             name={`${path}.spec.configuration.spec.configFiles.store.spec.folderPath`}
             placeholder={getString('pipeline.manifestType.pathPlaceholder')}
             disabled={readonly}

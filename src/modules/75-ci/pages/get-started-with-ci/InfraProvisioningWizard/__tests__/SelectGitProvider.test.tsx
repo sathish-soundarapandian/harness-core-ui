@@ -7,24 +7,36 @@
 
 import React from 'react'
 import { render, act, fireEvent, waitFor } from '@testing-library/react'
+import { StringsContext } from 'framework/strings'
+import routes from '@common/RouteDefinitions'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
+import { TestWrapper } from '@common/utils/testUtils'
 import { SelectGitProvider } from '../SelectGitProvider'
-import { AllGitProviders, InfraProvisiongWizardStepId } from '../Constants'
 import { InfraProvisioningWizard } from '../InfraProvisioningWizard'
-
-jest.mock('framework/strings', () => ({
-  useStrings: () => ({
-    getString: (key: string) => key
-  })
-}))
+import { AllBuildLocationsForSaaS, Hosting, InfraProvisiongWizardStepId } from '../Constants'
 
 jest.useFakeTimers()
 
+const pathParams = { accountId: 'accountId', orgIdentifier: 'orgId', projectIdentifier: 'projectId' }
+
 describe('Test SelectGitProvider component', () => {
   test('Initial render', async () => {
-    const { container, getByText } = render(<SelectGitProvider />)
+    const { container } = render(
+      <StringsContext.Provider value={{ data: {} as any, getString: (key: string) => key as string }}>
+        <SelectGitProvider enableNextBtn={jest.fn()} disableNextBtn={jest.fn()} selectedHosting={Hosting.SaaS} />
+      </StringsContext.Provider>
+    )
     const gitProviderCards = Array.from(container.querySelectorAll('div[class*="bp3-card"]')) as HTMLElement[]
-    expect(gitProviderCards.length).toBe(AllGitProviders.length)
+    expect(gitProviderCards.length).toBe(AllBuildLocationsForSaaS.length)
+  })
+
+  test('User clicks on Github Provider card', async () => {
+    const { container, getByText } = render(
+      <StringsContext.Provider value={{ data: {} as any, getString: (key: string) => key as string }}>
+        <SelectGitProvider enableNextBtn={jest.fn()} disableNextBtn={jest.fn()} selectedHosting={Hosting.SaaS} />
+      </StringsContext.Provider>
+    )
+    const gitProviderCards = Array.from(container.querySelectorAll('div[class*="bp3-card"]')) as HTMLElement[]
 
     // Clicking on Github Git Provider card should select it
     expect(gitProviderCards[0].classList.contains('Card--selected')).not.toBe(true)
@@ -33,25 +45,23 @@ describe('Test SelectGitProvider component', () => {
     })
     expect(gitProviderCards[0].classList.contains('Card--selected')).toBe(true)
 
-    // All other git provider cards except Github should be disabled
-    gitProviderCards.map((card, index) => index !== 0 && expect(card.className).toContain('Card--disabled'))
+    // All other git provider cards should be disabled
+    gitProviderCards.map(card => expect(card.className).not.toContain('Card--disabled'))
 
-    // OAuth button lookup fails
-    try {
-      expect(getByText('ci.getStartedWithCI.oAuthLabel'))
-    } catch (e) {
-      expect(e).toBeTruthy()
-    }
-    // Access button lookup fails
-    try {
-      expect(getByText('ci.getStartedWithCI.accessTokenLabel'))
-    } catch (e) {
-      expect(e).toBeTruthy()
-    }
+    expect(getByText('ci.getStartedWithCI.oAuthLabel')).toBeInTheDocument()
+    expect(getByText('ci.getStartedWithCI.accessTokenLabel')).toBeInTheDocument()
   })
 
-  test('Render with a git provider already selected by the user', async () => {
-    const { container, getByText } = render(<SelectGitProvider selectedGitProvider={AllGitProviders[0]} />)
+  test('User selects a github provider and access token authentication method', async () => {
+    window.open = jest.fn()
+    const { container, getByText } = render(
+      <StringsContext.Provider value={{ data: {} as any, getString: (key: string) => key as string }}>
+        <SelectGitProvider enableNextBtn={jest.fn()} disableNextBtn={jest.fn()} selectedHosting={Hosting.SaaS} />
+      </StringsContext.Provider>
+    )
+    await act(async () => {
+      fireEvent.click((Array.from(container.querySelectorAll('div[class*="bp3-card"]')) as HTMLElement[])[0])
+    })
 
     // Access token field should be visible only for Access Token auth method
     await act(async () => {
@@ -70,7 +80,7 @@ describe('Test SelectGitProvider component', () => {
     })
 
     expect(container.querySelector('span[data-tooltip-id="accessToken"]')).toBeTruthy()
-    const testConnectionBtn = getByText('common.smtp.testConnection')
+    const testConnectionBtn = container.querySelector("button[id='test-connection-btn']") as Element
     expect(testConnectionBtn).toBeInTheDocument()
 
     // Clicking Test Connection button without access token field set should not show "in progress" view for Test Connection button
@@ -108,20 +118,16 @@ describe('Test SelectGitProvider component', () => {
       fireEvent.click(testConnectionBtn)
     })
 
-    expect(getByText('common.test.inProgress')).toBeTruthy()
-
-    act(() => {
-      jest.runOnlyPendingTimers()
-    })
-
-    // Test Connection should show success eventually
-    expect(getByText('common.test.connectionSuccessful')).toBeTruthy()
+    expect(getByText('common.test.inProgress')).toBeInTheDocument()
   })
 
   test('Render SelectGitProvider inside InfraProvisioningWizard', async () => {
     const { container, getByText } = render(
-      <InfraProvisioningWizard lastConfiguredWizardStepId={InfraProvisiongWizardStepId.SelectGitProvider} />
+      <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
+        <InfraProvisioningWizard lastConfiguredWizardStepId={InfraProvisiongWizardStepId.SelectGitProvider} />
+      </TestWrapper>
     )
+
     const nextBtn = getByText('next: ci.getStartedWithCI.selectRepo')
     await act(async () => {
       fireEvent.click(nextBtn)
@@ -145,10 +151,9 @@ describe('Test SelectGitProvider component', () => {
       fireEvent.click(nextBtn)
     })
 
-    // Schema validation error should show up for if Git Authentication method is not selected
+    // Schema validation error should not show up for if Git Authentication method is not selected if hosting is onprem
     expect(
       container.querySelector('div[class*="FormError--errorDiv"][data-name="gitAuthenticationMethod"]')
-    ).toBeInTheDocument()
-    expect(getByText('fieldRequired')).toBeTruthy()
+    ).not.toBeInTheDocument()
   })
 })

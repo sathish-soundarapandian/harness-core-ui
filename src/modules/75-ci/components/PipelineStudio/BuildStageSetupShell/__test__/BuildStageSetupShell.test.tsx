@@ -168,7 +168,7 @@ describe('BuildStageSetupShell snapshot test', () => {
       </TestWrapper>
     )
     expect(container.querySelector('#stageDetails')).not.toBeNull()
-    fireEvent.click(await findByText('ci.next'))
+    fireEvent.click(await findByText('continue'))
     await waitFor(() => expect(findByText('pipelineSteps.build.infraSpecifications.whereToRun')).not.toBeNull())
     fireEvent.click(await findByTestId('ci.advancedLabel'))
     fireEvent.click(await findByText('Done'))

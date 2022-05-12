@@ -1,0 +1,19 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "yamlPipeline": "pipeline:\n    name: Pipeline 1304\n    identifier: Pipeline_1304\n    projectIdentifier: Chetan_Non_Git_Sync\n    orgIdentifier: default\n    tags: {}\n    allowStageExecutions: false\n    stages:\n        - stage:\n              name: Stage 1\n              identifier: Stage_1\n              description: \"\"\n              type: Deployment\n              spec:\n                  serviceConfig:\n                      serviceRef: Service_1\n                      serviceDefinition:\n                          spec:\n                              variables:[]\n              failureStrategies:\n                  - onFailure:\n                      errors:\n                          - All Errors\n                      action:\n                          type: StageRollback\n",
+    "version": 12,
+    "gitDetails": {
+      "objectId": null,
+      "branch": null,
+      "repoIdentifier": null,
+      "rootFolder": null,
+      "filePath": null,
+      "repoName": null
+    },
+    "entityValidityDetails": { "valid": true, "invalidYaml": null },
+    "modules": ["cd"]
+  },
+  "metaData": null,
+  "correlationId": "8fe46e93-3a01-42e5-99b1-38cb758d6f4a"
+}

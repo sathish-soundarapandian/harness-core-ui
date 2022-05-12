@@ -8,6 +8,7 @@
 .main {
   height: min-content;
 
+  background: var(--primary-1);
   :global(.Resizer.horizontal:not(.disabled)) {
     height: var(--spacing-small) !important;
     cursor: row-resize;
@@ -30,6 +31,7 @@
   }
 
   .splitPane2 {
+    z-index: 200;
     /* vertical split styles */
     & :global(.Pane.vertical.Pane2) {
       border-left: 1px solid var(--grey-200);

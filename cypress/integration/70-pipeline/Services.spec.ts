@@ -94,9 +94,7 @@ describe('Services for Pipeline', () => {
     cy.intercept('GET', servicesUpdateList, { fixture: 'ng/api/servicesV2/servicesListUpdate.json' }).as(
       'serviceListUpdate'
     )
-    cy.wait(1000)
     cy.wait('@serviceListUpdate')
-    cy.wait(1000)
 
     //check if list updated
     cy.contains('p', 'NewtestService').should('be.visible')

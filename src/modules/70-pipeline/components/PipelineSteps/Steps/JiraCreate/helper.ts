@@ -71,15 +71,21 @@ export const getInitialValueForSelectedField = (
   if (typeof savedValue === 'number') {
     return savedValue as number
   } else if (typeof savedValue === 'string') {
-    if (field.allowedValues && field.schema.type === 'option' && field.schema.array) {
-      // multiselect
-      // return multiselectoption[]
-      const splitValues = (savedValue as string).split(',')
-      return splitValues.map(splitvalue => ({ label: splitvalue, value: splitvalue })) as MultiSelectOption[]
-    } else if (field.allowedValues && field.schema.type === 'option') {
-      // singleselect
-      // return selectoption
-      return { label: savedValue, value: savedValue } as SelectOption
+    if (
+      getMultiTypeFromValue(savedValue) === MultiTypeInputType.FIXED &&
+      field.allowedValues &&
+      field.schema.type === 'option'
+    ) {
+      if (field.schema.array) {
+        // multiselect
+        // return multiselectoption[]
+        const splitValues = (savedValue as string).split(',')
+        return splitValues.map(splitvalue => ({ label: splitvalue, value: splitvalue })) as MultiSelectOption[]
+      } else {
+        // singleselect
+        // return selectoption
+        return { label: savedValue, value: savedValue } as SelectOption
+      }
     }
     return savedValue as string
   }

@@ -6,7 +6,7 @@
  */
 
 import produce from 'immer'
-import { cloneDeep, get, isEmpty, omit, set } from 'lodash-es'
+import { get, merge, omit, set } from 'lodash-es'
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import {
@@ -15,13 +15,14 @@ import {
 } from '@templates-library/components/TemplateStudio/StageTemplateCanvas/StageTemplateForm/StageTemplateForm'
 import { TemplatePipelineProvider } from '@pipeline/components/TemplatePipelineContext'
 import { StageTemplateCanvasWithRef } from '@templates-library/components/TemplateStudio/StageTemplateCanvas/StageTemplateCanvas'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig, StageElementConfig } from 'services/cd-ng'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { DefaultPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import type { ProjectPathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { sanitize } from '@common/utils/JSONUtils'
 import { useQueryParams } from '@common/hooks'
+import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
 const StageTemplateCanvasWrapper = (_props: unknown, formikRef: TemplateFormRef) => {
   const {
@@ -35,11 +36,14 @@ const StageTemplateCanvasWrapper = (_props: unknown, formikRef: TemplateFormRef)
   const pipeline = React.useMemo(
     () =>
       produce({ ...DefaultPipeline }, draft => {
-        if (!isEmpty(template.spec)) {
-          set(draft, 'stages[0].stage', cloneDeep(template.spec))
-          set(draft, 'stages[0].stage.name', DefaultNewStageName)
-          set(draft, 'stages[0].stage.identifier', DefaultNewStageId)
-        }
+        set(
+          draft,
+          'stages[0].stage',
+          merge({}, template.spec as StageElementConfig, {
+            name: DefaultNewStageName,
+            identifier: DefaultNewStageId
+          })
+        )
       }),
     [template.spec]
   )
@@ -52,20 +56,17 @@ const StageTemplateCanvasWrapper = (_props: unknown, formikRef: TemplateFormRef)
     await updateTemplate(template)
   }
 
-  if (pipeline) {
-    return (
-      <TemplatePipelineProvider
-        queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier, repoIdentifier, branch }}
-        initialValue={pipeline as PipelineInfoConfig}
-        onUpdatePipeline={onUpdatePipeline}
-        isReadOnly={isReadonly}
-      >
-        <StageTemplateCanvasWithRef ref={formikRef} />
-      </TemplatePipelineProvider>
-    )
-  } else {
-    return <></>
-  }
+  return (
+    <TemplatePipelineProvider
+      queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier, repoIdentifier, branch }}
+      initialValue={pipeline as PipelineInfoConfig}
+      onUpdatePipeline={onUpdatePipeline}
+      contextType={PipelineContextType.StageTemplate}
+      isReadOnly={isReadonly}
+    >
+      <StageTemplateCanvasWithRef ref={formikRef} />
+    </TemplatePipelineProvider>
+  )
 }
 
 export const StageTemplateCanvasWrapperWithRef = React.forwardRef(StageTemplateCanvasWrapper)

@@ -61,11 +61,12 @@ import StepArtifactoryAuthentication from '@connectors/components/CreateConnecto
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { TFMonaco } from './TFMonacoEditor'
 
 import TfVarFileList from './TFVarFileList'
 import { TFArtifactoryForm } from './TerraformArtifactoryForm'
-import { ConfigurationTypes, TerraformProps, TFFormData } from '../TerraformInterfaces'
+import { ConfigurationTypes, TerraformData, TerraformProps, TFFormData } from '../TerraformInterfaces'
 import { TerraformConfigStepOne } from './TerraformConfigFormStepOne'
 import { TerraformConfigStepTwo } from './TerraformConfigFormStepTwo'
 import { ConnectorTypes, ConnectorMap, getBuildPayload } from './TerraformConfigFormHelper'
@@ -90,6 +91,7 @@ export default function TerraformEditView(
   const { stepType, isNewStep = true } = props
   const { initialValues, onUpdate, onChange, allowableTypes, stepViewType, readonly = false } = props
   const { getString } = useStrings()
+  const { TF_MODULE_SOURCE_INHERIT_SSH } = useFeatureFlags()
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -462,7 +464,7 @@ export default function TerraformEditView(
                           )}
                           <div className={css.divider} />
                           <TfVarFileList
-                            formik={formik}
+                            formik={formik as FormikProps<TerraformData>}
                             isReadonly={readonly}
                             allowableTypes={allowableTypes}
                             setSelectedConnector={setSelectedConnector}
@@ -488,7 +490,7 @@ export default function TerraformEditView(
                                 return (
                                   <TFMonaco
                                     name="spec.configuration.spec.backendConfig.spec.content"
-                                    formik={formik}
+                                    formik={formik as FormikProps<unknown>}
                                     expressions={expressions}
                                     title={getString('cd.backEndConfig')}
                                   />
@@ -497,7 +499,7 @@ export default function TerraformEditView(
                             >
                               <TFMonaco
                                 name="spec.configuration.spec.backendConfig.spec.content"
-                                formik={formik}
+                                formik={formik as FormikProps<unknown>}
                                 expressions={expressions}
                                 title={getString('cd.backEndConfig')}
                               />
@@ -611,6 +613,14 @@ export default function TerraformEditView(
                                 const configObject = {
                                   ...data.spec?.configuration?.spec?.configFiles
                                 }
+
+                                if (TF_MODULE_SOURCE_INHERIT_SSH) {
+                                  configObject.moduleSource =
+                                    data?.type === 'TerraformPlan'
+                                      ? data.spec?.configuration?.configFiles?.moduleSource
+                                      : data.spec?.configuration?.spec?.configFiles?.moduleSource
+                                }
+
                                 if (prevStepData.identifier && prevStepData.identifier !== data?.identifier) {
                                   configObject.store.spec.connectorRef = prevStepData?.identifier
                                 }

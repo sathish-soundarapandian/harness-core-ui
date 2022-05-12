@@ -23,7 +23,11 @@ import {
 import type { InputSetData } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { getOptionalSubLabel } from '@ci/components/PipelineSteps/CIStep/CIStepOptionalConfig'
+import { shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
+import {
+  getOptionalSubLabel,
+  renderMultiTypeInputWithAllowedValues
+} from '@ci/components/PipelineSteps/CIStep/CIStepOptionalConfig'
 import { AllMultiTypeInputTypesForInputSet } from '../CIStep/StepUtils'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -54,32 +58,49 @@ function StepCommonFieldsInputSet<T>(props: StepCommonFieldsInputSetProps<T>): J
     name,
     tooltipId,
     labelKey,
-    inputProps
+    inputProps,
+    fieldPath
   }: {
     name: string
     tooltipId: string
     labelKey: keyof StringsMap
     inputProps: MultiTypeTextProps['multiTextInputProps']
-  }) => (
-    <MultiTypeTextField
-      name={name}
-      label={
-        <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}>
-          <Text
-            style={{ display: 'flex', alignItems: 'center' }}
-            className={css.inpLabel}
-            color={Color.GREY_800}
-            font={{ size: 'small', weight: 'semi-bold' }}
-          >
-            {getString(labelKey)}
-          </Text>
-          &nbsp;
-          {getOptionalSubLabel(getString, tooltipId)}
-        </Layout.Horizontal>
-      }
-      multiTextInputProps={inputProps}
-    />
-  )
+    fieldPath: string
+  }) => {
+    if (shouldRenderRunTimeInputViewWithAllowedValues(fieldPath, template)) {
+      return renderMultiTypeInputWithAllowedValues({
+        name,
+        tooltipId: tooltipId,
+        labelKey: labelKey,
+        fieldPath,
+        getString,
+        readonly,
+        expressions,
+        template,
+        showOptionalSublabel: true
+      })
+    }
+    return (
+      <MultiTypeTextField
+        name={name}
+        label={
+          <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}>
+            <Text
+              style={{ display: 'flex', alignItems: 'center' }}
+              className={css.inpLabel}
+              color={Color.GREY_800}
+              font={{ size: 'small', weight: 'semi-bold' }}
+            >
+              {getString(labelKey)}
+            </Text>
+            &nbsp;
+            {getOptionalSubLabel(getString, tooltipId)}
+          </Layout.Horizontal>
+        }
+        multiTextInputProps={inputProps}
+      />
+    )
+  }
 
   return (
     <>
@@ -144,102 +165,114 @@ function StepCommonFieldsInputSet<T>(props: StepCommonFieldsInputSetProps<T>): J
       )}
       {isRunAsUserRuntime && (
         <Container className={cx(css.formGroup, stepCss, css.topSpacingLarge, css.bottomMargin5)}>
-          <MultiTypeTextField
-            label={
-              <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}>
-                <Text className={css.inpLabel} color={Color.GREY_600} font={{ size: 'small', weight: 'semi-bold' }}>
-                  {getString('pipeline.stepCommonFields.runAsUser')}
-                </Text>
-                &nbsp;
-                {getOptionalSubLabel(getString, 'runAsUser')}
-              </Layout.Horizontal>
-            }
-            name={`${isEmpty(path) ? '' : `${path}.`}spec.runAsUser`}
-            multiTextInputProps={{
+          {renderMultiTypeTextField({
+            name: `${isEmpty(path) ? '' : `${path}.`}spec.runAsUser`,
+            labelKey: 'pipeline.stepCommonFields.runAsUser',
+            tooltipId: 'runAsUser',
+            inputProps: {
               multiTextInputProps: {
                 expressions,
                 allowableTypes: AllMultiTypeInputTypesForInputSet
               },
               disabled: readonly,
               placeholder: '1000'
-            }}
-          />
+            },
+            fieldPath: 'spec.runAsUser'
+          })}
         </Container>
       )}
       {(isLimitMemoryRuntime || isLimitCPURuntime) && (
-        <>
-          <Container className={css.bottomMargin5}>
-            <Text
-              className={css.inpLabel}
-              color={Color.GREY_600}
-              font={{ size: 'small', weight: 'semi-bold' }}
-              tooltipProps={{ dataTooltipId: 'setContainerResources' }}
-            >
-              {getString('pipelineSteps.setContainerResources')}
-            </Text>
-
-            <Layout.Horizontal
-              className={cx(css.formGroup, css.lgOverride)}
-              style={{ marginTop: 'small', marginBottom: 'small' }}
-              spacing="medium"
-            >
-              {isLimitMemoryRuntime && (
-                <Container style={{ flex: 1 }}>
-                  {renderMultiTypeTextField({
-                    name: `${isEmpty(path) ? '' : `${path}.`}spec.resources.limits.memory`,
-                    tooltipId: 'limitMemory',
-                    labelKey: 'pipelineSteps.limitMemoryLabel',
-                    inputProps: {
-                      multiTextInputProps: {
-                        expressions,
-                        allowableTypes: AllMultiTypeInputTypesForInputSet
-                      },
-                      disabled: readonly
-                    }
-                  })}
-                </Container>
-              )}
-              {isLimitCPURuntime && (
-                <Container style={{ flex: 1 }}>
-                  {renderMultiTypeTextField({
-                    name: `${isEmpty(path) ? '' : `${path}.`}spec.resources.limits.cpu`,
-                    tooltipId: 'limitCPULabel',
-                    labelKey: 'pipelineSteps.limitCPULabel',
-                    inputProps: {
-                      multiTextInputProps: {
-                        expressions,
-                        allowableTypes: AllMultiTypeInputTypesForInputSet
-                      },
-                      disabled: readonly
-                    }
-                  })}
-                </Container>
-              )}
-            </Layout.Horizontal>
-          </Container>
-        </>
+        <Container className={css.bottomMargin5}>
+          <Text
+            className={css.inpLabel}
+            color={Color.GREY_600}
+            font={{ size: 'small', weight: 'semi-bold' }}
+            tooltipProps={{ dataTooltipId: 'setContainerResources' }}
+          >
+            {getString('pipelineSteps.setContainerResources')}
+          </Text>
+          <Layout.Horizontal
+            className={cx(
+              css.formGroup,
+              { [css.lgOverride]: isLimitMemoryRuntime && isLimitCPURuntime },
+              { [stepCss]: isLimitMemoryRuntime || isLimitCPURuntime }
+            )}
+            style={{ alignItems: 'baseline' }}
+            margin={{ top: 'xsmall', bottom: 'small' }}
+            spacing="medium"
+          >
+            {isLimitMemoryRuntime && (
+              <Container style={{ flex: 1 }}>
+                {renderMultiTypeTextField({
+                  name: `${isEmpty(path) ? '' : `${path}.`}spec.resources.limits.memory`,
+                  tooltipId: 'limitMemory',
+                  labelKey: 'pipelineSteps.limitMemoryLabel',
+                  inputProps: {
+                    multiTextInputProps: {
+                      expressions,
+                      allowableTypes: AllMultiTypeInputTypesForInputSet
+                    },
+                    disabled: readonly
+                  },
+                  fieldPath: 'spec.resources.limits.memory'
+                })}
+              </Container>
+            )}
+            {isLimitCPURuntime && (
+              <Container style={{ flex: 1 }}>
+                {renderMultiTypeTextField({
+                  name: `${isEmpty(path) ? '' : `${path}.`}spec.resources.limits.cpu`,
+                  tooltipId: 'limitCPULabel',
+                  labelKey: 'pipelineSteps.limitCPULabel',
+                  inputProps: {
+                    multiTextInputProps: {
+                      expressions,
+                      allowableTypes: AllMultiTypeInputTypesForInputSet
+                    },
+                    disabled: readonly
+                  },
+                  fieldPath: 'spec.resources.limits.cpu'
+                })}
+              </Container>
+            )}
+          </Layout.Horizontal>
+        </Container>
       )}
       {!withoutTimeout && isTimeoutRuntime && (
         <Container className={cx(css.formGroup, css.sm, css.bottomMargin5)}>
-          <FormMultiTypeDurationField
-            className={css.removeBpLabelMargin}
-            label={
-              <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}>
-                <Text className={css.inpLabel} color={Color.GREY_600} font={{ size: 'small', weight: 'semi-bold' }}>
-                  {getString('pipelineSteps.timeoutLabel')}
-                </Text>
-                &nbsp;
-                {getOptionalSubLabel(getString, 'timeout')}
-              </Layout.Horizontal>
-            }
-            name={`${isEmpty(path) ? '' : `${path}.`}timeout`}
-            placeholder={getString('pipelineSteps.timeoutPlaceholder')}
-            multiTypeDurationProps={{
+          {shouldRenderRunTimeInputViewWithAllowedValues('timeout', template) ? (
+            renderMultiTypeInputWithAllowedValues({
+              name: `${isEmpty(path) ? '' : `${path}.`}timeout`,
+              tooltipId: 'timeout',
+              labelKey: 'pipelineSteps.timeoutLabel',
+              fieldPath: 'timeout',
+              getString,
+              readonly,
               expressions,
-              allowableTypes: AllMultiTypeInputTypesForInputSet
-            }}
-            disabled={readonly}
-          />
+              template,
+              showOptionalSublabel: true
+            })
+          ) : (
+            <FormMultiTypeDurationField
+              className={css.removeBpLabelMargin}
+              label={
+                <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}>
+                  <Text className={css.inpLabel} color={Color.GREY_600} font={{ size: 'small', weight: 'semi-bold' }}>
+                    {getString('pipelineSteps.timeoutLabel')}
+                  </Text>
+                  &nbsp;
+                  {getOptionalSubLabel(getString, 'timeout')}
+                </Layout.Horizontal>
+              }
+              name={`${isEmpty(path) ? '' : `${path}.`}timeout`}
+              placeholder={getString('pipelineSteps.timeoutPlaceholder')}
+              multiTypeDurationProps={{
+                expressions,
+                allowableTypes: AllMultiTypeInputTypesForInputSet
+              }}
+              disabled={readonly}
+            />
+          )}
         </Container>
       )}
     </>

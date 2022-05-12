@@ -1,0 +1,167 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+/* stylelint-disable color-no-hex */
+.stepGroupNode {
+  height: 80px !important;
+  width: 80px !important;
+}
+.stepGroup {
+  width: fit-content;
+  height: fit-content;
+  padding-bottom: var(--spacing-large);
+  &.marginBottom {
+    margin-bottom: 30px;
+  }
+  position: relative;
+
+  &:hover .closeNode {
+    opacity: 1;
+    &.readonly {
+      opacity: 0 !important;
+    }
+    pointer-events: initial;
+  }
+
+  .closeNode {
+    --icon-padding: 0 !important;
+    position: absolute;
+    top: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease-in-out;
+    display: flex;
+    justify-content: center;
+    left: -15px;
+    background-color: var(--primary-7) !important;
+    min-width: 14px !important;
+    min-height: 14px !important;
+    height: 14px !important;
+    padding: 0 !important;
+    align-items: center;
+    z-index: 1;
+    cursor: pointer;
+
+    :global {
+      span.bp3-icon {
+        color: var(--white) !important;
+      }
+    }
+  }
+
+  .horizontalBar {
+    position: absolute;
+    top: 46px;
+    height: 64px;
+    opacity: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .svgLeftJointPoint {
+    position: absolute;
+    top: 46px;
+    height: 40px;
+    opacity: 0;
+    left: 0;
+  }
+
+  .svgRightJointPoint {
+    position: absolute;
+    top: 46px;
+    height: 40px;
+    opacity: 0;
+    right: 0;
+  }
+  background: rgba(244, 251, 255, 0.25);
+  border-radius: 8px;
+  border: dashed 1px var(--primary-4);
+
+  &.firstnode {
+    top: -47px;
+    &.nestedGroup {
+      top: -37px;
+      .horizontalBar {
+        top: 36px;
+      }
+      .markerStart {
+        top: 58px !important;
+      }
+      :global(#tree-container) {
+        top: -10px !important;
+      }
+      svg {
+        top: -10px !important;
+      }
+    }
+  }
+
+  .stepGroupHeader {
+    padding: var(--spacing-small) var(--spacing-small) 0 var(--spacing-small);
+
+    .collapseIcon {
+      color: var(--primary-7) !important;
+      cursor: pointer;
+    }
+  }
+
+  .stepGroupBody {
+    padding: var(--spacing-large) var(--spacing-xxxlarge);
+  }
+
+  .conditional {
+    position: absolute;
+    top: -10px;
+    left: 5px;
+    color: var(--white) !important;
+
+    svg {
+      path,
+      circle {
+        fill: currentColor !important;
+      }
+      rect {
+        // TODO: Replace color once it is available in UIKit
+
+        stroke: #f79400 !important;
+      }
+    }
+  }
+}
+
+.createnodeci {
+  margin-left: var(--spacing-small) !important;
+}
+
+.createnodecititle {
+  width: 175px;
+}
+
+.createnodecimain {
+  padding: 0 var(--spacing-large);
+}
+
+.cursor {
+  cursor: pointer;
+}
+
+.nodeNameText {
+  cursor: pointer;
+  line-height: 1.5;
+  overflow-wrap: normal;
+  position: absolute;
+
+  left: -68%;
+  height: 48px;
+  overflow: hidden;
+  &.stageName {
+    left: -25%;
+  }
+  p {
+    word-break: break-word !important;
+  }
+}

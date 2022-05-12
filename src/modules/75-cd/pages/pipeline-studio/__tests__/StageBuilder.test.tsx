@@ -69,7 +69,7 @@ jest.mock('services/pipeline-ng', () => ({
   useGetYamlSchema: jest.fn(() => ({ loading: false, data: null, refetch: jest.fn() })),
   getPipelinePromise: jest.fn(() => Promise.resolve(PipelineResponse)),
   useGetSteps: jest.fn(() => ({ loading: false, refetch: jest.fn(), data: StepsResponse })),
-  useCreateVariables: jest.fn(() => ({ mutate: jest.fn(), loading: false, cancel: jest.fn() }))
+  useCreateVariablesV2: jest.fn(() => ({ mutate: jest.fn(), loading: false, cancel: jest.fn() }))
 }))
 
 jest.mock('resize-observer-polyfill', () => {

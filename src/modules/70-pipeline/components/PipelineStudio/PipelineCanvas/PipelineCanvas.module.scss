@@ -32,6 +32,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 8px 12px 0px 0px;
+  flex: 1 0 60%;
 }
 .pipelineStudioTitleContainer {
   text-align: center;
@@ -81,6 +82,7 @@
   position: absolute;
   left: 50%;
   transform: translate(-50%);
+  background-color: var(--white);
 }
 
 .savePublishContainer {
@@ -89,6 +91,8 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  min-width: max-content;
+  margin-left: var(--spacing-xlarge);
 
   .readonlyAccessTag {
     display: flex;

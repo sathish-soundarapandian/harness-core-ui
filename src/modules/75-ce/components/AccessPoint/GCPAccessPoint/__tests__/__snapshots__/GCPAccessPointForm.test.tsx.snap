@@ -9,6 +9,7 @@ exports[`GCP AP form fill form 1`] = `
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -478,6 +479,7 @@ exports[`GCP AP form form in edit mode 1`] = `
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -485,7 +487,7 @@ exports[`GCP AP form form in edit mode 1`] = `
             class="Layout--horizontal StyledProps--main formFieldRow"
           >
             <div
-              class="bp3-form-group"
+              class="bp3-form-group bp3-disabled"
               data-id="region-0"
             >
               <label
@@ -513,11 +515,12 @@ exports[`GCP AP form form in edit mode 1`] = `
                     class="bp3-popover-target"
                   >
                     <div
-                      class="bp3-input-group"
+                      class="bp3-input-group bp3-disabled"
                     >
                       <input
                         autocomplete="off"
                         class="bp3-input"
+                        disabled=""
                         name="region"
                         placeholder="- pipeline.regionPlaceholder -"
                         style="padding-right: 0px;"
@@ -553,7 +556,7 @@ exports[`GCP AP form form in edit mode 1`] = `
               </div>
             </div>
             <div
-              class="bp3-form-group"
+              class="bp3-form-group bp3-disabled"
               data-id="zone-1"
             >
               <label
@@ -581,11 +584,12 @@ exports[`GCP AP form form in edit mode 1`] = `
                     class="bp3-popover-target"
                   >
                     <div
-                      class="bp3-input-group"
+                      class="bp3-input-group bp3-disabled"
                     >
                       <input
                         autocomplete="off"
                         class="bp3-input"
+                        disabled=""
                         name="zone"
                         placeholder="- ce.co.accessPoint.select.zone -"
                         style="padding-right: 0px;"
@@ -625,7 +629,7 @@ exports[`GCP AP form form in edit mode 1`] = `
             class="Layout--horizontal StyledProps--main formFieldRow"
           >
             <div
-              class="bp3-form-group"
+              class="bp3-form-group bp3-disabled"
               data-id="vpc-2"
             >
               <label
@@ -653,11 +657,12 @@ exports[`GCP AP form form in edit mode 1`] = `
                     class="bp3-popover-target"
                   >
                     <div
-                      class="bp3-input-group"
+                      class="bp3-input-group bp3-disabled"
                     >
                       <input
                         autocomplete="off"
                         class="bp3-input"
+                        disabled=""
                         name="vpc"
                         placeholder="- ce.co.accessPoint.select.vpc -"
                         style="padding-right: 0px;"
@@ -693,7 +698,7 @@ exports[`GCP AP form form in edit mode 1`] = `
               </div>
             </div>
             <div
-              class="bp3-form-group"
+              class="bp3-form-group bp3-disabled"
               data-id="securityGroups-3"
             >
               <label
@@ -724,7 +729,7 @@ exports[`GCP AP form form in edit mode 1`] = `
                       class=""
                     >
                       <div
-                        class="bp3-input bp3-tag-input bp3-multi-select"
+                        class="bp3-input bp3-tag-input bp3-disabled bp3-multi-select"
                       >
                         <div
                           class="bp3-tag-input-values"
@@ -738,34 +743,11 @@ exports[`GCP AP form form in edit mode 1`] = `
                             >
                               http-server
                             </span>
-                            <button
-                              class="bp3-tag-remove"
-                              type="button"
-                            >
-                              <span
-                                class="bp3-icon bp3-icon-small-cross"
-                                icon="small-cross"
-                              >
-                                <svg
-                                  data-icon="small-cross"
-                                  height="16"
-                                  viewBox="0 0 16 16"
-                                  width="16"
-                                >
-                                  <desc>
-                                    small-cross
-                                  </desc>
-                                  <path
-                                    d="M9.41 8l2.29-2.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42L6.59 8 4.3 10.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l2.29 2.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
-                                    fill-rule="evenodd"
-                                  />
-                                </svg>
-                              </span>
-                            </button>
                           </span>
                           <input
                             autocomplete="off"
                             class="bp3-input-ghost bp3-multi-select-tag-input-input"
+                            disabled=""
                             name="securityGroups"
                             placeholder="ce.co.accessPoint.select.securityGroups"
                             value=""
@@ -782,7 +764,7 @@ exports[`GCP AP form form in edit mode 1`] = `
             class="Layout--horizontal StyledProps--main formFieldRow"
           >
             <div
-              class="bp3-form-group"
+              class="bp3-form-group bp3-disabled"
               data-id="subnet_name-4"
             >
               <label
@@ -810,11 +792,12 @@ exports[`GCP AP form form in edit mode 1`] = `
                     class="bp3-popover-target"
                   >
                     <div
-                      class="bp3-input-group"
+                      class="bp3-input-group bp3-disabled"
                     >
                       <input
                         autocomplete="off"
                         class="bp3-input"
+                        disabled=""
                         name="subnet_name"
                         placeholder="- ce.co.accessPoint.select.subnet -"
                         style="padding-right: 0px;"
@@ -850,7 +833,7 @@ exports[`GCP AP form form in edit mode 1`] = `
               </div>
             </div>
             <div
-              class="bp3-form-group"
+              class="bp3-form-group bp3-disabled"
               data-id="machine_type-5"
             >
               <label
@@ -878,11 +861,12 @@ exports[`GCP AP form form in edit mode 1`] = `
                     class="bp3-popover-target"
                   >
                     <div
-                      class="bp3-input-group"
+                      class="bp3-input-group bp3-disabled"
                     >
                       <input
                         autocomplete="off"
                         class="bp3-input"
+                        disabled=""
                         name="machine_type"
                         placeholder="- ce.co.accessPoint.select.machineType -"
                         style="padding-right: 0px;"
@@ -979,6 +963,7 @@ exports[`GCP AP form form while saving 1`] = `
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -986,7 +971,7 @@ exports[`GCP AP form form while saving 1`] = `
             class="Layout--horizontal StyledProps--main formFieldRow"
           >
             <div
-              class="bp3-form-group"
+              class="bp3-form-group bp3-disabled"
               data-id="region-0"
             >
               <label
@@ -1014,11 +999,12 @@ exports[`GCP AP form form while saving 1`] = `
                     class="bp3-popover-target"
                   >
                     <div
-                      class="bp3-input-group"
+                      class="bp3-input-group bp3-disabled"
                     >
                       <input
                         autocomplete="off"
                         class="bp3-input"
+                        disabled=""
                         name="region"
                         placeholder="- pipeline.regionPlaceholder -"
                         style="padding-right: 0px;"
@@ -1054,7 +1040,7 @@ exports[`GCP AP form form while saving 1`] = `
               </div>
             </div>
             <div
-              class="bp3-form-group"
+              class="bp3-form-group bp3-disabled"
               data-id="zone-1"
             >
               <label
@@ -1082,11 +1068,12 @@ exports[`GCP AP form form while saving 1`] = `
                     class="bp3-popover-target"
                   >
                     <div
-                      class="bp3-input-group"
+                      class="bp3-input-group bp3-disabled"
                     >
                       <input
                         autocomplete="off"
                         class="bp3-input"
+                        disabled=""
                         name="zone"
                         placeholder="- ce.co.accessPoint.select.zone -"
                         style="padding-right: 0px;"
@@ -1126,7 +1113,7 @@ exports[`GCP AP form form while saving 1`] = `
             class="Layout--horizontal StyledProps--main formFieldRow"
           >
             <div
-              class="bp3-form-group"
+              class="bp3-form-group bp3-disabled"
               data-id="vpc-2"
             >
               <label
@@ -1154,11 +1141,12 @@ exports[`GCP AP form form while saving 1`] = `
                     class="bp3-popover-target"
                   >
                     <div
-                      class="bp3-input-group"
+                      class="bp3-input-group bp3-disabled"
                     >
                       <input
                         autocomplete="off"
                         class="bp3-input"
+                        disabled=""
                         name="vpc"
                         placeholder="- ce.co.accessPoint.select.vpc -"
                         style="padding-right: 0px;"
@@ -1194,7 +1182,7 @@ exports[`GCP AP form form while saving 1`] = `
               </div>
             </div>
             <div
-              class="bp3-form-group"
+              class="bp3-form-group bp3-disabled"
               data-id="securityGroups-3"
             >
               <label
@@ -1225,7 +1213,7 @@ exports[`GCP AP form form while saving 1`] = `
                       class=""
                     >
                       <div
-                        class="bp3-input bp3-tag-input bp3-multi-select"
+                        class="bp3-input bp3-tag-input bp3-disabled bp3-multi-select"
                       >
                         <div
                           class="bp3-tag-input-values"
@@ -1239,34 +1227,11 @@ exports[`GCP AP form form while saving 1`] = `
                             >
                               http-server
                             </span>
-                            <button
-                              class="bp3-tag-remove"
-                              type="button"
-                            >
-                              <span
-                                class="bp3-icon bp3-icon-small-cross"
-                                icon="small-cross"
-                              >
-                                <svg
-                                  data-icon="small-cross"
-                                  height="16"
-                                  viewBox="0 0 16 16"
-                                  width="16"
-                                >
-                                  <desc>
-                                    small-cross
-                                  </desc>
-                                  <path
-                                    d="M9.41 8l2.29-2.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42L6.59 8 4.3 10.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l2.29 2.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
-                                    fill-rule="evenodd"
-                                  />
-                                </svg>
-                              </span>
-                            </button>
                           </span>
                           <input
                             autocomplete="off"
                             class="bp3-input-ghost bp3-multi-select-tag-input-input"
+                            disabled=""
                             name="securityGroups"
                             placeholder="ce.co.accessPoint.select.securityGroups"
                             value=""
@@ -1283,7 +1248,7 @@ exports[`GCP AP form form while saving 1`] = `
             class="Layout--horizontal StyledProps--main formFieldRow"
           >
             <div
-              class="bp3-form-group"
+              class="bp3-form-group bp3-disabled"
               data-id="subnet_name-4"
             >
               <label
@@ -1311,11 +1276,12 @@ exports[`GCP AP form form while saving 1`] = `
                     class="bp3-popover-target"
                   >
                     <div
-                      class="bp3-input-group"
+                      class="bp3-input-group bp3-disabled"
                     >
                       <input
                         autocomplete="off"
                         class="bp3-input"
+                        disabled=""
                         name="subnet_name"
                         placeholder="- ce.co.accessPoint.select.subnet -"
                         style="padding-right: 0px;"
@@ -1351,7 +1317,7 @@ exports[`GCP AP form form while saving 1`] = `
               </div>
             </div>
             <div
-              class="bp3-form-group"
+              class="bp3-form-group bp3-disabled"
               data-id="machine_type-5"
             >
               <label
@@ -1379,11 +1345,12 @@ exports[`GCP AP form form while saving 1`] = `
                     class="bp3-popover-target"
                   >
                     <div
-                      class="bp3-input-group"
+                      class="bp3-input-group bp3-disabled"
                     >
                       <input
                         autocomplete="off"
                         class="bp3-input"
+                        disabled=""
                         name="machine_type"
                         placeholder="- ce.co.accessPoint.select.machineType -"
                         style="padding-right: 0px;"
@@ -1492,6 +1459,7 @@ exports[`GCP AP form form with no data 1`] = `
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>

@@ -6,7 +6,7 @@
  */
 
 import type { SelectOption } from '@harness/uicore'
-import type { LogTypes } from '../../useLogContentHook.types'
+import type { LogTypes, TimeRange } from '../../useLogContentHook.types'
 
 export interface LogContentHeaderProps {
   logType: LogTypes
@@ -15,8 +15,8 @@ export interface LogContentHeaderProps {
   envName?: string
   healthSource?: SelectOption
   handleHealthSource?: (healthSource: SelectOption) => void
-  timeRange?: SelectOption
-  handleTimeRange?: (timeRange: SelectOption) => void
+  timeRange?: TimeRange
+  handleTimeRange?: (timeRange: TimeRange) => void
   errorLogsOnly: boolean
   handleDisplayOnlyErrors: (errorLogsOnly: boolean) => void
   monitoredServiceIdentifier?: string

@@ -5,24 +5,31 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { Container, SelectOption } from '@wings-software/uicore'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Container, NoDataCard } from '@wings-software/uicore'
+import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import {
-  useGetDeploymentLogAnalysisResult,
-  useGetDeploymentLogAnalysisClusters,
-  GetDeploymentLogAnalysisResultQueryParams
+  useGetVerifyStepDeploymentRadarChartLogAnalysisClusters,
+  useGetVerifyStepDeploymentLogAnalysisRadarChartResult,
+  useGetVerifyStepNodeNames,
+  GetVerifyStepDeploymentRadarChartLogAnalysisClustersQueryParams
 } from 'services/cv'
-import { useToaster } from '@common/exports'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import noDataImage from '@cv/assets/noData.svg'
+import { useQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
 import LogAnalysis from './LogAnalysis'
-import { pageSize, initialPageNumber, POLLING_INTERVAL, StepStatus } from './LogAnalysis.constants'
+import { pageSize, initialPageNumber, POLLING_INTERVAL, StepStatus, EventTypeFullName } from './LogAnalysis.constants'
+import type { ClusterTypes, LogAnalysisQueryParams, MinMaxAngleState } from './LogAnalysisView.container.types'
 import type { LogAnalysisContainerProps } from './LogAnalysis.types'
 import { getActivityId } from '../../ExecutionVerificationView.utils'
-import { getClusterTypes } from './LogAnalysis.utils'
-
-type ClusterTypes = GetDeploymentLogAnalysisResultQueryParams['clusterTypes']
+import { getClusterTypes, getInitialNodeName } from './LogAnalysis.utils'
+import { getQueryParamForHostname, getQueryParamFromFilters } from '../DeploymentMetrics/DeploymentMetrics.utils'
+import { RadarChartAngleLimits } from './LogAnalysisView.container.constants'
+import ClusterTypeFiltersForLogs from './components/ClusterTypeFiltersForLogs'
+import css from './LogAnalysisView.container.module.scss'
+import logAnalysisStyles from './LogAnalysis.module.scss'
 
 export default function LogAnalysisContainer({
   step,
@@ -30,45 +37,64 @@ export default function LogAnalysisContainer({
   isErrorTracking
 }: LogAnalysisContainerProps): React.ReactElement {
   const { accountId } = useParams<AccountPathProps>()
-  const { showError } = useToaster()
   const { getString } = useStrings()
-  const [selectedClusterType, setSelectedClusterType] = useState<SelectOption>(getClusterTypes(getString)[0])
-  const [selectedHealthSource, setSelectedHealthSource] = useState<string>()
+  const pageParams = useQueryParams<LogAnalysisQueryParams>()
+  const [clusterTypeFilters, setClusterTypeFilters] = useState<ClusterTypes>(() => {
+    let filterValues = getClusterTypes(getString).map(i => i.value) as ClusterTypes
+
+    if (pageParams.filterAnomalous === 'true') {
+      filterValues = filterValues?.filter(clusterType => clusterType !== EventTypeFullName.KNOWN_EVENT)
+    }
+
+    return filterValues
+  })
+
+  const isMounted = useRef(false)
+  const isFirstFilterCall = useRef(true)
+  const [selectedHealthSource] = useState<string>()
   const [pollingIntervalId, setPollingIntervalId] = useState<any>(-1)
+
+  const [selectedNodeName, setSelectedNodeName] = useState(getInitialNodeName(hostName))
+
+  const [minMaxAngle, setMinMaxAngle] = useState({ min: RadarChartAngleLimits.MIN, max: RadarChartAngleLimits.MAX })
+
   const activityId = useMemo(() => getActivityId(step), [step])
 
-  const logsAnalysisQueryParams = useMemo(() => {
-    return {
-      accountId,
-      pageNumber: initialPageNumber,
-      pageSize,
-      ...(hostName && { hostName }),
-      clusterTypes: selectedClusterType.value ? ([selectedClusterType.value] as ClusterTypes) : undefined,
-      healthSources: selectedHealthSource ? [selectedHealthSource] : undefined
-    }
-  }, [accountId, hostName, selectedClusterType?.value, selectedHealthSource])
+  const [logsDataQueryParams, setLogsDataQueryParams] =
+    useState<GetVerifyStepDeploymentRadarChartLogAnalysisClustersQueryParams>(() => {
+      return {
+        accountId,
+        pageNumber: initialPageNumber,
+        pageSize,
+        hostNames: getQueryParamForHostname(hostName),
+        minAngle: minMaxAngle.min,
+        maxAngle: minMaxAngle.max,
+        clusterTypes: clusterTypeFilters?.length ? clusterTypeFilters : undefined,
+        healthSources: selectedHealthSource ? [selectedHealthSource] : undefined
+      }
+    })
 
-  const clusterAnalysisQueryParams = useMemo(() => {
-    return {
-      accountId,
-      ...(hostName && { hostName }),
-      clusterTypes: selectedClusterType.value ? ([selectedClusterType.value] as ClusterTypes) : undefined,
-      healthSources: selectedHealthSource ? [selectedHealthSource] : undefined
-    }
-  }, [accountId, hostName, selectedClusterType?.value, selectedHealthSource])
+  const [radarChartDataQueryParams, setradarChartDataQueryParams] =
+    useState<GetVerifyStepDeploymentRadarChartLogAnalysisClustersQueryParams>(() => {
+      return {
+        accountId,
+        hostNames: getQueryParamForHostname(hostName),
+        clusterTypes: clusterTypeFilters?.length ? clusterTypeFilters : undefined,
+        healthSources: selectedHealthSource ? [selectedHealthSource] : undefined
+      }
+    })
 
   const {
     data: logsData,
     loading: logsLoading,
     error: logsError,
     refetch: fetchLogAnalysis
-  } = useGetDeploymentLogAnalysisResult({
-    activityId: activityId as unknown as string,
-    queryParams: logsAnalysisQueryParams,
+  } = useGetVerifyStepDeploymentLogAnalysisRadarChartResult({
+    verifyStepExecutionId: activityId,
+    queryParams: logsDataQueryParams,
     queryParamStringifyOptions: {
       arrayFormat: 'repeat'
-    },
-    lazy: true
+    }
   })
 
   const {
@@ -76,43 +102,106 @@ export default function LogAnalysisContainer({
     loading: clusterChartLoading,
     error: clusterChartError,
     refetch: fetchClusterAnalysis
-  } = useGetDeploymentLogAnalysisClusters({
-    activityId: activityId as unknown as string,
-    queryParams: clusterAnalysisQueryParams,
+  } = useGetVerifyStepDeploymentRadarChartLogAnalysisClusters({
+    verifyStepExecutionId: activityId,
+    queryParams: radarChartDataQueryParams,
     queryParamStringifyOptions: {
       arrayFormat: 'repeat'
-    },
-    lazy: true
+    }
   })
+
+  const {
+    data: nodeNames,
+    loading: nodeNamesLoading,
+    error: nodeNamesError
+  } = useGetVerifyStepNodeNames({
+    verifyStepExecutionId: activityId,
+    queryParams: {
+      accountId
+    }
+  })
+
+  const handleNodeNameChange = useCallback(selectedNodeNameFitlers => {
+    setSelectedNodeName(selectedNodeNameFitlers)
+  }, [])
+
+  useEffect(() => {
+    if (!isFirstFilterCall.current) {
+      const nodeNameParams = selectedNodeName.map(item => item.value) as string[]
+
+      const hostNames = getQueryParamFromFilters(nodeNameParams)
+
+      const updatedLogsDataQueryParams = {
+        ...logsDataQueryParams,
+        hostNames
+      }
+
+      const updatedRadarChartDataQueryParams = {
+        ...radarChartDataQueryParams,
+        hostNames
+      }
+
+      setLogsDataQueryParams(updatedLogsDataQueryParams)
+      setradarChartDataQueryParams(updatedRadarChartDataQueryParams)
+      setMinMaxAngle({ min: RadarChartAngleLimits.MIN, max: RadarChartAngleLimits.MAX })
+    }
+  }, [selectedNodeName])
+
+  useEffect(() => {
+    if (!isFirstFilterCall.current) {
+      const hostNames = getQueryParamForHostname(hostName)
+
+      const updatedLogsDataQueryParams = {
+        ...logsDataQueryParams,
+        hostNames
+      }
+
+      const updatedRadarChartDataQueryParams = {
+        ...radarChartDataQueryParams,
+        hostNames
+      }
+
+      setLogsDataQueryParams(updatedLogsDataQueryParams)
+      setradarChartDataQueryParams(updatedRadarChartDataQueryParams)
+      setSelectedNodeName(getInitialNodeName(hostName))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hostName, activityId])
 
   // Fetching logs and cluster data for selected cluster type
   useEffect(() => {
-    fetchLogsDataForCluster(selectedClusterType.value as string)
-    fetchLogsClusterDataForCluster(selectedClusterType.value as string)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedClusterType?.value])
+    if (!isFirstFilterCall.current) {
+      const updatedLogsDataParams = {
+        ...logsDataQueryParams,
+        clusterTypes: clusterTypeFilters?.length ? clusterTypeFilters : undefined
+      }
 
-  // Fetching logs and cluster data for selected health source
-  useEffect(() => {
-    fetchLogsDataForHealthSource(selectedHealthSource)
-    fetchLogsClusterDataForHealthSource(selectedHealthSource)
+      const updatedRadarChartDataParams = {
+        ...radarChartDataQueryParams,
+        clusterTypes: clusterTypeFilters?.length ? clusterTypeFilters : undefined
+      }
+
+      setLogsDataQueryParams(updatedLogsDataParams)
+      setradarChartDataQueryParams(updatedRadarChartDataParams)
+      setMinMaxAngle({ min: RadarChartAngleLimits.MIN, max: RadarChartAngleLimits.MAX })
+    } else {
+      isFirstFilterCall.current = false
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedHealthSource])
+  }, [clusterTypeFilters])
 
   useEffect(() => {
-    if (logsError) showError(logsError.message)
-    if (clusterChartError) showError(clusterChartError.message)
+    if (isMounted.current) {
+      setLogsDataQueryParams({
+        ...logsDataQueryParams,
+        minAngle: minMaxAngle.min,
+        maxAngle: minMaxAngle.max
+      })
+    } else {
+      isMounted.current = true
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [logsError, clusterChartError])
-
-  // Fetching logs and cluster data when different host name or activityId is selected
-  useEffect(() => {
-    Promise.all([
-      fetchLogAnalysis({ queryParams: logsAnalysisQueryParams }),
-      fetchClusterAnalysis({ queryParams: clusterAnalysisQueryParams })
-    ])
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hostName, activityId])
+  }, [minMaxAngle])
 
   // Polling for Logs and Cluster Chart data
   useEffect(() => {
@@ -121,85 +210,89 @@ export default function LogAnalysisContainer({
     if (step?.status === StepStatus.Running || step?.status === StepStatus.AsyncWaiting) {
       intervalId = setInterval(() => {
         Promise.all([
-          fetchLogAnalysis({ queryParams: logsAnalysisQueryParams }),
-          fetchClusterAnalysis({ queryParams: clusterAnalysisQueryParams })
+          fetchLogAnalysis({ queryParams: logsDataQueryParams }),
+          fetchClusterAnalysis({ queryParams: radarChartDataQueryParams })
         ])
       }, POLLING_INTERVAL)
       setPollingIntervalId(intervalId)
     }
     return () => clearInterval(intervalId)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clusterAnalysisQueryParams, logsAnalysisQueryParams, step?.status])
+  }, [logsDataQueryParams, radarChartDataQueryParams, step?.status])
 
-  const fetchLogsDataForHealthSource = useCallback(
-    currentHealthSource => {
-      fetchLogAnalysis({
-        queryParams: {
-          ...logsAnalysisQueryParams,
-          healthSources: currentHealthSource ? [currentHealthSource] : undefined
-        }
-      })
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [logsAnalysisQueryParams]
-  )
+  const handleClustersFilterChange = useCallback((checked: boolean, filterName: EventTypeFullName): void => {
+    setClusterTypeFilters(currentFilters => {
+      if (checked) {
+        return [...(currentFilters as EventTypeFullName[]), filterName]
+      } else {
+        return currentFilters?.filter((item: string) => item !== filterName)
+      }
+    })
+  }, [])
 
-  const fetchLogsDataForCluster = useCallback(
-    clusterType => {
-      fetchLogAnalysis({
-        queryParams: { ...logsAnalysisQueryParams, clusterTypes: clusterType ? [clusterType] : undefined }
-      })
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [logsAnalysisQueryParams]
-  )
-
-  const fetchLogsClusterDataForHealthSource = useCallback(
-    currentHealthSource => {
-      fetchClusterAnalysis({
-        queryParams: {
-          ...clusterAnalysisQueryParams,
-          healthSources: currentHealthSource ? [currentHealthSource] : undefined
-        }
-      })
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [logsAnalysisQueryParams]
-  )
-
-  const fetchLogsClusterDataForCluster = useCallback(
-    clusterType => {
-      fetchClusterAnalysis({
-        queryParams: { ...clusterAnalysisQueryParams, clusterTypes: clusterType ? [clusterType] : undefined }
-      })
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [logsAnalysisQueryParams]
-  )
+  const handleMinMaxChange = useCallback((updatedAngle: MinMaxAngleState): void => {
+    setMinMaxAngle({ ...updatedAngle })
+  }, [])
 
   const goToLogsPage = useCallback(
     pageNumber => {
       fetchLogAnalysis({
-        queryParams: { ...logsAnalysisQueryParams, pageNumber }
+        queryParams: { ...logsDataQueryParams, pageNumber }
       })
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [logsAnalysisQueryParams]
+    [logsDataQueryParams]
   )
 
-  return (
-    <Container padding="large">
+  const renderContent = (): JSX.Element => {
+    if (
+      !logsData?.resource?.logAnalysisRadarCharts?.content?.length &&
+      !clusterChartData?.resource?.length &&
+      !clusterChartLoading &&
+      !logsLoading &&
+      !logsError &&
+      !clusterChartError
+    ) {
+      return (
+        <Container className={css.noDataContainer}>
+          <Container className={logAnalysisStyles.noData} data-testid="LogAnalysis_common_noData">
+            <NoDataCard message={getString('cv.monitoredServices.noMatchingData')} image={noDataImage} />
+          </Container>
+        </Container>
+      )
+    }
+
+    return (
       <LogAnalysis
         data={logsData}
         clusterChartData={clusterChartData}
+        filteredAngle={minMaxAngle}
         logsLoading={logsLoading}
+        logsError={logsError}
+        refetchLogAnalysis={fetchLogAnalysis}
+        refetchClusterAnalysis={fetchClusterAnalysis}
+        clusterChartError={clusterChartError}
         clusterChartLoading={clusterChartLoading}
         goToPage={goToLogsPage}
-        setSelectedClusterType={setSelectedClusterType}
-        onChangeHealthSource={setSelectedHealthSource}
         activityId={activityId}
         isErrorTracking={isErrorTracking}
+        handleAngleChange={handleMinMaxChange}
       />
+    )
+  }
+
+  return (
+    <Container className={cx(css.main, { [css.logAnalysis]: !isErrorTracking })}>
+      <ClusterTypeFiltersForLogs
+        nodeNames={nodeNames}
+        clusterTypeFilters={clusterTypeFilters}
+        onFilterChange={handleClustersFilterChange}
+        selectedNodeName={selectedNodeName}
+        handleNodeNameChange={handleNodeNameChange}
+        nodeNamesError={nodeNamesError}
+        nodeNamesLoading={nodeNamesLoading}
+      />
+      {renderContent()}
     </Container>
   )
 }

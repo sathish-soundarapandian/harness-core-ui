@@ -83,7 +83,7 @@ exports[`Approval Stage readonly view if readonly view works: readonly view appr
           aria-disabled="false"
           aria-expanded="false"
           aria-selected="false"
-          class="bp3-tab"
+          class="bp3-tab fullHeight stepGroup"
           data-tab-id="executionText"
           data-testid="executionText"
           id="bp3-tab-title_approvalStageSetupShell_executionText"
@@ -219,6 +219,7 @@ exports[`Approval Stage readonly view if readonly view works: readonly view appr
               id="stageOverview"
             >
               <form
+                action="#"
                 class="FormikForm--main"
               >
                 <div>

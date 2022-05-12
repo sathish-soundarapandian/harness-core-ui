@@ -11,7 +11,7 @@ import { render, fireEvent, act, findByText as findByTextContainer, queryByAttri
 import { TestWrapper, CurrentLocation } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, executionPathProps, pipelineModuleParams } from '@common/utils/routeUtils'
-import { ResponsePipelineExecutionDetail, useGetExecutionDetail } from 'services/pipeline-ng'
+import { ResponsePipelineExecutionDetail, useGetExecutionDetailV2 } from 'services/pipeline-ng'
 
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
@@ -21,7 +21,7 @@ import ExecutionLandingPage, { POLL_INTERVAL } from '../ExecutionLandingPage'
 import mockData from './mock.json'
 
 jest.mock('services/pipeline-ng', () => ({
-  useGetExecutionDetail: jest.fn(() => ({
+  useGetExecutionDetailV2: jest.fn(() => ({
     refetch: jest.fn(),
     loading: false,
     data: {
@@ -69,7 +69,7 @@ describe('<ExecutionLandingPage /> tests', () => {
   }
 
   test('loading state - snapshot test', () => {
-    ;(useGetExecutionDetail as jest.Mock).mockImplementation(() => ({
+    ;(useGetExecutionDetailV2 as jest.Mock).mockImplementation(() => ({
       refetch: jest.fn(),
       loading: true,
       data: null
@@ -89,7 +89,7 @@ describe('<ExecutionLandingPage /> tests', () => {
     ['inputs', routes.toExecutionInputsView(pathParams)]
     // [i18nTabs.artifacts, routes.toExecutionArtifactsView(pathParams)]
   ])('Navigation to "%s" Tabs work', async (tab, url) => {
-    ;(useGetExecutionDetail as jest.Mock).mockImplementation(() => ({
+    ;(useGetExecutionDetailV2 as jest.Mock).mockImplementation(() => ({
       refetch: jest.fn(),
       loading: true,
       data: null
@@ -125,7 +125,7 @@ describe('<ExecutionLandingPage /> tests', () => {
       <div
         data-testid="location"
       >
-        /account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions/TEST_EXECUTION/pipeline?view=log&filterAnomalous=false
+        /account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions/TEST_EXECUTION/pipeline?view=log&filterAnomalous=false&type=pipeline.verification.analysisTab.metrics
       </div>
     `)
 
@@ -135,7 +135,7 @@ describe('<ExecutionLandingPage /> tests', () => {
       <div
         data-testid="location"
       >
-        /account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions/TEST_EXECUTION/pipeline?view=graph&filterAnomalous=false
+        /account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions/TEST_EXECUTION/pipeline?view=graph&filterAnomalous=false&type=pipeline.verification.analysisTab.metrics
       </div>
     `)
   })
@@ -146,7 +146,7 @@ describe('<ExecutionLandingPage /> tests', () => {
   ])('For status "%s" - polling is `%s`', (status, called) => {
     const refetch = jest.fn()
 
-    ;(useGetExecutionDetail as jest.Mock).mockImplementation(() => ({
+    ;(useGetExecutionDetailV2 as jest.Mock).mockImplementation(() => ({
       refetch,
       loading: false,
       data: { data: { pipelineExecutionSummary: { status } } }
@@ -168,7 +168,7 @@ describe('<ExecutionLandingPage /> tests', () => {
   })
 
   test('auto stage selection works', () => {
-    ;(useGetExecutionDetail as jest.Mock).mockImplementation(() => ({
+    ;(useGetExecutionDetailV2 as jest.Mock).mockImplementation(() => ({
       refetch: jest.fn(),
       loading: true,
       data: mockData
@@ -202,7 +202,7 @@ describe('<ExecutionLandingPage /> tests', () => {
   })
 
   test('auto stage should not work when user has selected a stage/step', () => {
-    ;(useGetExecutionDetail as jest.Mock).mockImplementation(() => ({
+    ;(useGetExecutionDetailV2 as jest.Mock).mockImplementation(() => ({
       refetch: jest.fn(),
       loading: false,
       data: mockData
@@ -247,7 +247,7 @@ describe('<ExecutionLandingPage /> tests for CI', () => {
   }
 
   test('loading state - snapshot test for CI module', () => {
-    ;(useGetExecutionDetail as jest.Mock).mockImplementation(() => ({
+    ;(useGetExecutionDetailV2 as jest.Mock).mockImplementation(() => ({
       refetch: jest.fn(),
       loading: true,
       data: null

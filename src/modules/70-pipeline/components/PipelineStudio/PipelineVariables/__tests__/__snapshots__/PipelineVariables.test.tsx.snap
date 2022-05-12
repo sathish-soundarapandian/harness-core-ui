@@ -171,7 +171,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
               <p
                 class="StyledProps--font StyledProps--main StyledProps--font-variation-h4"
               >
-                variablesText
+                common.variables
               </p>
             </div>
           </div>
@@ -180,7 +180,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
           <div
             class="bp3-input-group ui-search-box ExpandingSearchInput--main   ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
             data-name=""
-            style="width: 450px; max-width: 450px;"
+            style="width: 420px; max-width: 420px;"
           >
             <span
               class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
@@ -211,6 +211,30 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
             />
           </div>
         </div>
+        <div
+          class="mainActions"
+        >
+          <button
+            class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
+            type="button"
+          >
+            <span
+              class="bp3-button-text"
+            >
+              applyChanges
+            </span>
+          </button>
+          <button
+            class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--size Button--small"
+            type="button"
+          >
+            <span
+              class="bp3-button-text"
+            >
+              pipeline.discard
+            </span>
+          </button>
+        </div>
       </div>
       <div
         class="variableListHeader"
@@ -219,13 +243,11 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
           class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey600"
         >
           variableLabel
-           
         </p>
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey600"
         >
           common.input
-           
         </p>
       </div>
       <div
@@ -1728,7 +1750,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                   data-testid="pipeline.stage_1.Environment-details"
                                 >
                                   <div
-                                    class="variablesListTable variablePaddingL0"
+                                    class="variablesListTable variablePaddingL1"
                                   >
                                     <div
                                       class="variableListRow variable-list-row"
@@ -3047,7 +3069,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                   data-testid="pipeline.stage_2.Environment-details"
                                 >
                                   <div
-                                    class="variablesListTable variablePaddingL0"
+                                    class="variablesListTable variablePaddingL1"
                                   >
                                     <div
                                       class="variableListRow variable-list-row"
@@ -3923,7 +3945,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                   data-testid="pipeline.parallel_stage_.Environment-details"
                                 >
                                   <div
-                                    class="variablesListTable variablePaddingL0"
+                                    class="variablesListTable variablePaddingL1"
                                   >
                                     <div
                                       class="variableListRow variable-list-row"
@@ -4799,7 +4821,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                   data-testid="pipeline.parallel_stage_2.Environment-details"
                                 >
                                   <div
-                                    class="variablesListTable variablePaddingL0"
+                                    class="variablesListTable variablePaddingL1"
                                   >
                                     <div
                                       class="variableListRow variable-list-row"

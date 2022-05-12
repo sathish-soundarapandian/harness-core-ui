@@ -53,7 +53,7 @@ interface SortByObjInterface {
   order?: orderType
 }
 interface ListProps {
-  listData: AnomalyData[]
+  listData: AnomalyData[] | null
   sortByObj: SortByObjInterface
   setSortByObj: Dispatch<SetStateAction<SortByObjInterface>>
   timeRange: TimeRangeFilterType
@@ -357,7 +357,7 @@ const AnomaliesListGridView: React.FC<ListProps> = ({ listData, sortByObj, setSo
   )
 
   /* istanbul ignore next */
-  if (!listData.length) {
+  if (!listData || !listData.length) {
     return null
   }
 

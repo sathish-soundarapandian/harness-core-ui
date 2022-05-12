@@ -42,7 +42,8 @@ export const ExecutionStatusEnum: Readonly<Record<ExecutionStatus, ExecutionStat
   ApprovalRejected: 'ApprovalRejected',
   InterventionWaiting: 'InterventionWaiting',
   ApprovalWaiting: 'ApprovalWaiting',
-  Pausing: 'Pausing'
+  Pausing: 'Pausing',
+  Waiting: 'Waiting'
 }
 
 export const EXECUTION_STATUS: readonly ExecutionStatus[] = Object.keys(ExecutionStatusEnum) as ExecutionStatus[]

@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly executionError: string
+  readonly graphLink: string
   readonly main: string
 }
 export default styles

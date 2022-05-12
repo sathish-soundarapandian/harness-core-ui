@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react'
 import cx from 'classnames'
-import { connect, FormikContext } from 'formik'
+import { connect, FormikContextType } from 'formik'
 import {
   Layout,
   Container,
@@ -19,7 +19,7 @@ import {
 } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 
-import { get } from 'lodash-es'
+import { get, isArray } from 'lodash-es'
 import { FormGroup, Intent } from '@blueprintjs/core'
 import type { UserGroupDTO } from 'services/cd-ng'
 import { Scope } from '@common/interfaces/SecretsInterface'
@@ -30,6 +30,7 @@ import { errorCheck } from '@common/utils/formikHelpers'
 import type { ScopeAndIdentifier } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
 import { getScopeFromValue, getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
 import css from './UserGroupsInput.module.scss'
+
 export interface UserGroupsInputProps {
   name: string
   label?: string
@@ -43,7 +44,7 @@ interface MappedUserGroupData {
 }
 
 export interface FormikUserGroupsInput extends UserGroupsInputProps {
-  formik: FormikContext<any>
+  formik: FormikContextType<any>
   tooltipProps?: DataTooltipInterface
   disabled?: boolean
   formGroupClass?: string
@@ -78,7 +79,7 @@ const UserGroupsInput: React.FC<FormikUserGroupsInput> = props => {
   const [userGroupsScopeAndIndentifier, setUserGroupsScopeAndIndentifier] = useState<ScopeAndIdentifier[]>()
 
   useEffect(() => {
-    if (userGroupsReference && userGroupsReference.length) {
+    if (isArray(userGroupsReference) && userGroupsReference.length > 0) {
       setUserGroupsScopeAndIndentifier(
         userGroupsReference
           .filter(userGroupStr => !!userGroupStr)

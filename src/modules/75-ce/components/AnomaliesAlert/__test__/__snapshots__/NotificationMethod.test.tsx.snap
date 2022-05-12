@@ -6,6 +6,7 @@ exports[`Test case for Anomalies alert notification method selection Should be a
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -264,6 +265,7 @@ exports[`Test case for Anomalies alert notification method selection Should be a
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

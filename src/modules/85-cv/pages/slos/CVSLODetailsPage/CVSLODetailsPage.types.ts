@@ -15,3 +15,9 @@ export interface HeaderTitleProps {
   title?: string
   description?: string
 }
+
+export interface HeaderToolbarProps {
+  loading: boolean
+  createdAt?: number
+  lastModifiedAt?: number
+}

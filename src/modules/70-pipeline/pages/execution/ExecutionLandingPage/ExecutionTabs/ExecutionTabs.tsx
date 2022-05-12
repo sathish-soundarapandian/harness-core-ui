@@ -20,6 +20,7 @@ import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { useStrings } from 'framework/strings'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import { SavedExecutionViewTypes } from '@pipeline/components/LogsContent/LogsContent'
 import css from './ExecutionTabs.module.scss'
 
 const TAB_ID_MAP = {
@@ -32,11 +33,18 @@ const TAB_ID_MAP = {
   STO_SECURITY: 'sto_security'
 }
 
-export default function ExecutionTabs(props: React.PropsWithChildren<unknown>): React.ReactElement {
+interface ExecutionTabsProps {
+  children?: React.ReactChild
+  savedExecutionView: string | undefined
+  setSavedExecutionView: (data: string) => void
+}
+
+export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactElement {
   const [selectedTabId, setSelectedTabId] = React.useState('')
-  const { children } = props
+  const { children, savedExecutionView, setSavedExecutionView } = props
   const { getString } = useStrings()
-  const { pipelineExecutionDetail } = useExecutionContext()
+  const { pipelineExecutionDetail, isPipelineInvalid } = useExecutionContext()
+  const initialSelectedView = savedExecutionView || SavedExecutionViewTypes.GRAPH
   const params = useParams<PipelineType<ExecutionPathProps>>()
   const location = useLocation()
   const { view } = useQueryParams<ExecutionQueryParams>()
@@ -46,8 +54,8 @@ export default function ExecutionTabs(props: React.PropsWithChildren<unknown>): 
   const stoCIPipelineSecurityEnabled = useFeatureFlag(FeatureFlag.STO_CI_PIPELINE_SECURITY)
 
   const routeParams = { ...accountPathProps, ...executionPathProps, ...pipelineModuleParams }
-  // const isGraphView = !view || view === 'graph'
-  const isLogView = view === 'log'
+  const isLogView =
+    view === SavedExecutionViewTypes.LOG || (!view && initialSelectedView === SavedExecutionViewTypes.LOG)
   const isCD = params.module === 'cd'
   const isCI = params.module === 'ci'
   const isCIInPipeline = pipelineExecutionDetail?.pipelineExecutionSummary?.moduleInfo?.ci
@@ -61,7 +69,12 @@ export default function ExecutionTabs(props: React.PropsWithChildren<unknown>): 
   function handleLogViewChange(e: React.ChangeEvent<HTMLInputElement>): void {
     const { checked } = e.target as HTMLInputElement
 
-    updateQueryParams({ view: checked ? 'log' : 'graph', filterAnomalous: 'false' })
+    updateQueryParams({
+      view: checked ? SavedExecutionViewTypes.LOG : SavedExecutionViewTypes.GRAPH,
+      filterAnomalous: 'false',
+      type: getString('pipeline.verification.analysisTab.metrics')
+    })
+    setSavedExecutionView(checked ? SavedExecutionViewTypes.LOG : SavedExecutionViewTypes.GRAPH)
   }
 
   React.useEffect(() => {
@@ -124,8 +137,11 @@ export default function ExecutionTabs(props: React.PropsWithChildren<unknown>): 
           <span>{getString('common.pipeline')}</span>
         </NavLink>
       )
-    },
-    {
+    }
+  ]
+
+  if (!isPipelineInvalid) {
+    tabList.push({
       id: TAB_ID_MAP.INPUTS,
       title: (
         <NavLink
@@ -137,8 +153,8 @@ export default function ExecutionTabs(props: React.PropsWithChildren<unknown>): 
           <span>{getString('inputs')}</span>
         </NavLink>
       )
-    }
-  ]
+    })
+  }
 
   if (opaBasedGovernanceEnabled) {
     tabList.push({
@@ -203,11 +219,7 @@ export default function ExecutionTabs(props: React.PropsWithChildren<unknown>): 
     })
   }
 
-  if (
-    (isCD && stoCDPipelineSecurityEnabled) ||
-    (isCI && stoCIPipelineSecurityEnabled) ||
-    localStorage.STO_PIPELINE_SECURITY_ENABLED
-  ) {
+  if ((isCD && stoCDPipelineSecurityEnabled) || (isCI && stoCIPipelineSecurityEnabled)) {
     tabList.push({
       id: TAB_ID_MAP.STO_SECURITY,
       title: (
@@ -217,7 +229,7 @@ export default function ExecutionTabs(props: React.PropsWithChildren<unknown>): 
           activeClassName={css.activeLink}
         >
           <Icon name="sto-grey" size={16} />
-          <span>{getString('pipeline.security.title')}</span>
+          <span>{getString('common.purpose.sto.continuous')}</span>
         </NavLink>
       )
     })

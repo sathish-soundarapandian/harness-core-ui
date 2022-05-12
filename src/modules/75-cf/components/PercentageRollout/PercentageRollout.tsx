@@ -6,7 +6,7 @@
  */
 
 import React, { CSSProperties, FC, useMemo } from 'react'
-import { FormInput, Layout, SelectOption, Text } from '@wings-software/uicore'
+import { Container, FormInput, Layout, SelectOption, Text } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { Segment, Variation } from 'services/cf'
@@ -22,9 +22,13 @@ export interface PercentageRolloutProps {
   fieldValues?: {
     variations: { variation: string; weight: string | number }[]
   }
+  value?: SelectOption
   targetGroups?: Segment[]
   bucketByAttributes?: string[]
   hideOverError?: boolean
+  hideTargetGroupDivider?: boolean
+  addClearButton?: boolean
+  distributionWidth?: string | number
   [propName: string]: unknown
 }
 
@@ -34,7 +38,11 @@ const PercentageRollout: FC<PercentageRolloutProps> = ({
   fieldValues,
   targetGroups,
   bucketByAttributes,
+  value,
+  distributionWidth = '100%',
   hideOverError = false,
+  hideTargetGroupDivider = false,
+  addClearButton = false,
   ...restProps
 }) => {
   const { getString } = useStrings()
@@ -83,17 +91,19 @@ const PercentageRollout: FC<PercentageRolloutProps> = ({
   return (
     <Layout.Vertical spacing="large" {...restProps}>
       {!!targetGroups && (
-        <div className={css.targetGroupContainer}>
+        <div className={hideTargetGroupDivider ? '' : css.targetGroupContainer}>
           <FormInput.Select
+            value={value ? value : undefined}
             className={css.targetGroup}
             name={prefix('clauses[0].values[0]')}
             items={targetGroupItems}
             label={getString('cf.percentageRollout.toTargetGroup')}
+            addClearButton={addClearButton}
           />
         </div>
       )}
 
-      <div className={css.distribution}>
+      <Container className={css.distribution} width={distributionWidth}>
         {!!bucketByAttributes && (
           <FormInput.Select
             className={css.bucketBy}
@@ -122,7 +132,7 @@ const PercentageRollout: FC<PercentageRolloutProps> = ({
             </div>
           )
         })}
-      </div>
+      </Container>
 
       {!hideOverError && total > 100 && (
         <Text font={{ variation: FontVariation.FORM_MESSAGE_DANGER }}>

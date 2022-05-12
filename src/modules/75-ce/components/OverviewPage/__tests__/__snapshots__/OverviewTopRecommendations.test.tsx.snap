@@ -12,11 +12,15 @@ exports[`test cases for overview top recommendations should be able to render to
         class="Layout--horizontal StyledProps--main"
         style="justify-content: space-between; align-items: center;"
       >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-semi-bold StyledProps--font-size-medium"
+        <div
+          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
         >
-          ce.overview.cardtitles.topRecommendation
-        </p>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-semi-bold StyledProps--font-size-medium"
+          >
+            ce.overview.cardtitles.topRecommendation
+          </p>
+        </div>
         <a
           href="/account/undefined/ce/recommendations"
         >

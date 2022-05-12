@@ -15,6 +15,7 @@ import { RightDrawer } from '@pipeline/components/PipelineStudio/RightDrawer/Rig
 import { TemplateDrawer } from '@templates-library/components/TemplateDrawer/TemplateDrawer'
 import { SplitViewTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { useSaveTemplateListener } from '@pipeline/components/PipelineStudio/hooks/useSaveTemplateListener'
 
 const StageTemplateCanvas = (_props: unknown, formikRef: TemplateFormRef): JSX.Element => {
   const {
@@ -58,6 +59,8 @@ const StageTemplateCanvas = (_props: unknown, formikRef: TemplateFormRef): JSX.E
       setSelection({ stageId: stages?.[0]?.stage?.identifier })
     }
   }, [stages])
+
+  useSaveTemplateListener()
 
   return (
     <>

@@ -13,6 +13,7 @@ declare const styles: {
   readonly comparatorOptions: string
   readonly contextualHelp: string
   readonly createSloTabsContainer: string
+  readonly dialog: string
   readonly errorBudget: string
   readonly eventType: string
   readonly graphContainer: string

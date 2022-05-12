@@ -11,7 +11,7 @@
   :global {
     span[data-icon='service-azure'] {
       svg > g {
-        fill: white;
+        fill: var(--white);
       }
     }
   }
@@ -38,7 +38,6 @@
   .stepContainer {
     height: 100%;
     position: relative;
-    padding: var(--spacing-medium) !important;
     :global {
       .OverlaySpinner--overlaySpinner {
         height: 100%;
@@ -72,7 +71,7 @@
   }
 
   .header {
-    color: #22222a !important;
+    color: var(--grey-800) !important;
     font-weight: 600 !important;
     font-size: 20px !important;
     margin-bottom: var(--spacing-large) !important;
@@ -81,13 +80,6 @@
       font-weight: lighter;
       color: var(--grey-700);
     }
-  }
-
-  .subHeader,
-  .info,
-  .dataFields,
-  .launchTemplateSection {
-    margin-bottom: var(--spacing-large) !important;
   }
 
   .dataFields,
@@ -114,6 +106,19 @@
     [class*='bp3-card'] {
       box-shadow: 0px 2px 4px rgba(40, 41, 61, 0.04), 0px 8px 16px rgba(96, 97, 112, 0.16) !important;
       padding: var(--spacing-large) 0 0 0;
+    }
+    :global {
+      .Card--selected:first-of-type {
+        box-shadow: none !important;
+        background-color: var(--grey-50);
+        opacity: 80%;
+        &:hover {
+          box-shadow: none !important;
+        }
+        .Card--badge {
+          opacity: 50%;
+        }
+      }
     }
   }
 
@@ -146,12 +151,41 @@
   .createNewExportBtn {
     box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16) !important;
     border-radius: 8px;
-    border: 1px solid #0278d5 !important;
+    border: 1px solid var(--primary-7) !important;
   }
 
   .createNewExportBtn {
     margin-top: var(--spacing-large) !important;
     width: 250px;
+  }
+
+  .existingReportsWrapper {
+    background: var(--primary-1) !important;
+    border-radius: 4px;
+    padding: var(--spacing-xlarge);
+
+    ul {
+      padding: var(--spacing-medium);
+      margin: 0;
+    }
+  }
+
+  .hintsLineItem {
+    padding-bottom: var(--spacing-small);
+    font-size: 13px;
+    line-height: 30px;
+    color: var(--grey-800);
+  }
+
+  .infoCard {
+    background: var(--blue-50);
+    padding: var(--spacing-small) var(--spacing-medium);
+    margin: var(--spacing-xlarge) 0;
+    align-items: center;
+
+    .infoIcon {
+      margin-right: var(--spacing-medium);
+    }
   }
 }
 
@@ -210,7 +244,7 @@
 .extension {
   width: 500px;
   position: relative;
-  background: #fefefe;
+  background: var(--grey-50);
   box-shadow: 0px 2px 4px rgba(40, 41, 61, 0.04), 0px 8px 16px rgba(96, 97, 112, 0.16);
   border-radius: 4px;
   padding: 75px 25px 15px;
@@ -266,10 +300,10 @@
   max-height: 250px;
   line-height: 20px !important;
   width: 100%;
-  border: thin solid var(--grey-100);
 
   table {
     width: 1100px;
+    background: var(--white);
   }
 
   thead {

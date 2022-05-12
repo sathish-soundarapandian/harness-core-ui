@@ -8,8 +8,10 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly canvasBtns: string
+  readonly graphLink: string
   readonly main: string
   readonly popoverHeight: string
   readonly stepDetails: string
+  readonly stepGroup: string
 }
 export default styles

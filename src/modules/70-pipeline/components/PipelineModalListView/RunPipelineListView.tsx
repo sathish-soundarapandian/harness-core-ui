@@ -98,10 +98,14 @@ export default function RunPipelineListView({ data, refetch, gotoPage }: Pipelin
   // eslint-disable-next-line react/function-component-definition
   const RenderColumnMenu: Renderer<CellProps<PipelineDTO>> = ({ row }): JSX.Element => {
     const rowdata = row.original
+    const isPipelineInvalid = rowdata?.entityValidityDetails?.valid === false
+
     return (
       <RbacButton
         icon="run-pipeline"
         className={css.rbacButton}
+        disabled={isPipelineInvalid}
+        tooltip={isPipelineInvalid ? getString('pipeline.cannotRunInvalidPipeline') : ''}
         intent="primary"
         text={<String stringID="runPipeline" />}
         onClick={() => routeToPipelinesPage(rowdata)}

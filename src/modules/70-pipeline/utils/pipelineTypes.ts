@@ -50,3 +50,8 @@ export interface StageElementWrapper<T extends StageElementConfig = StageElement
   extends StageElementWrapperConfig {
   stage?: T
 }
+
+export interface DeploymentStageElementConfigWrapper {
+  stage: DeploymentStageElementConfig
+  parallel: DeploymentStageElementConfigWrapper[]
+}

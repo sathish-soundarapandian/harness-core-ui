@@ -8,12 +8,15 @@ import {
 } from '../../support/70-pipeline/constants'
 
 import {
+  aggregateProjectsCall,
   deploymentActivitySummaryAPI,
   deploymentTimeseriesDataAPI,
   deploymentTimeseriesDataWithFilters,
   deploymentTimeseriesDataWithNodeFilterAPI,
+  gitSyncCall,
   healthSourceAPI,
   nodeNamesFilterAPI,
+  sourceCodeManagerCall,
   transactionsFilterAPI
 } from '../../support/85-cv/verifyStep/constants'
 
@@ -55,38 +58,58 @@ describe('Verify step', () => {
       fixture: '/cv/verifyStep/getDeploumentTimeseriesNoData'
     }).as('deploymentTimeseriesDataWithFilters')
 
+    cy.intercept('GET', gitSyncCall, {}).as('gitSyncCall')
+    cy.intercept('GET', sourceCodeManagerCall, {}).as('sourceCodeManagerCall')
+    cy.intercept('GET', aggregateProjectsCall, {}).as('aggregateProjectsCall')
+
     cy.on('uncaught:exception', () => false)
     cy.login('test', 'test')
     cy.contains('p', 'Projects').click()
     cy.contains('p', 'Project 1').click()
     cy.contains('p', 'Delivery').click()
     cy.contains('p', 'Pipelines').click()
+
+    cy.wait('@pipelineList')
+    cy.wait('@aggregateProjectsCall')
+    cy.wait('@sourceCodeManagerCall')
+    cy.wait('@gitSyncCall')
   })
 
   it('should test verify step features', () => {
-    cy.wait(1000)
-
     cy.findByText('appd-test').click()
 
-    cy.wait(1000)
+    cy.wait('@pipelineSummary')
+    cy.wait('@pipelineDetails')
 
     cy.url().should('include', '/pipelines/appdtest/pipeline-studio')
 
     cy.findByRole('link', { name: /Execution History/i }).click()
-    cy.wait(1000)
-    cy.findByText(/(Execution Id: 5)/i).click()
-    cy.wait(1000)
+
+    cy.wait('@pipelineExecutionSumary')
+    cy.wait('@pipelineSummary')
+
+    cy.findByText(/(Execution Id: 5)/i)
+      .scrollIntoView()
+      .click()
+
+    cy.wait('@pipelineExecution')
+    cy.wait('@pipelineExecutionForNode')
+
     cy.url().should('include', '/pipelines/appdtest/executions/C9mgNjxSS7-B-qQek27iuA/pipeline')
 
     cy.findByText(/appd_dev/i).click()
-    cy.wait(500)
+
+    cy.wait('@deployment-activity-summary')
+
     cy.url().should(
       'include',
       '/pipelines/appdtest/executions/C9mgNjxSS7-B-qQek27iuA/pipeline?stage=g_LkakmWRPm-wC6rfC2ufg&step=MC56t3BmR4mUBHPuiL6JWQ'
     )
 
     cy.findByTestId(/Metrics/i).click()
+
     cy.wait(500)
+
     cy.url().should(
       'include',
       '/pipelines/appdtest/executions/C9mgNjxSS7-B-qQek27iuA/pipeline?stage=g_LkakmWRPm-wC6rfC2ufg&step=MC56t3BmR4mUBHPuiL6JWQ&view=log&type=Metrics&filterAnomalous=true'

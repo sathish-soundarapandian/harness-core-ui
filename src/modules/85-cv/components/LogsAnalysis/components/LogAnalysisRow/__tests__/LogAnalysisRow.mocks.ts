@@ -7,6 +7,21 @@
 
 import { RiskValues } from '@cv/utils/CommonUtils'
 
+// clusterType
+// message
+// count
+// messageFrequency
+// riskStatus
+
+const messageFrequency = [
+  {
+    name: 'testData',
+    type: 'column',
+    color: 'var(--primary-3)',
+    data: [1]
+  }
+]
+
 export const mockedLogAnalysisData = {
   metaData: {},
   resource: {
@@ -20,7 +35,10 @@ export const mockedLogAnalysisData = {
         clusterType: 'KNOWN',
         riskStatus: RiskValues.HEALTHY,
         riskScore: 0.0,
-        count: 410
+        count: 410,
+        messageFrequency,
+        label: 1,
+        clusterId: 'abc'
       },
       {
         message:
@@ -28,14 +46,18 @@ export const mockedLogAnalysisData = {
         clusterType: 'KNOWN',
         riskStatus: RiskValues.HEALTHY,
         riskScore: 0.0,
-        count: 330
+        count: 330,
+        messageFrequency,
+        label: 2
       },
       {
         message: 'for VP4Jp_fnRwObcTDj_hu8qA the cron will handle data collection',
         clusterType: 'UNEXPECTED_FREQUENY',
         riskStatus: RiskValues.HEALTHY,
         riskScore: 0.0,
-        count: 19
+        count: 19,
+        messageFrequency,
+        label: 3
       },
       {
         message:
@@ -43,7 +65,9 @@ export const mockedLogAnalysisData = {
         clusterType: 'UNEXPECTED_FREQUENY',
         riskStatus: RiskValues.HEALTHY,
         riskScore: 0.0,
-        count: 3
+        count: 3,
+        messageFrequency,
+        label: 4
       },
       {
         message:
@@ -51,7 +75,9 @@ export const mockedLogAnalysisData = {
         clusterType: 'KNOWN',
         riskStatus: RiskValues.HEALTHY,
         riskScore: 0.0,
-        count: 3
+        count: 3,
+        messageFrequency,
+        label: 5
       },
       {
         message:
@@ -59,7 +85,9 @@ export const mockedLogAnalysisData = {
         clusterType: 'KNOWN',
         riskStatus: RiskValues.HEALTHY,
         riskScore: 0.0,
-        count: 3
+        count: 3,
+        messageFrequency,
+        label: 6
       },
       {
         message:
@@ -67,7 +95,9 @@ export const mockedLogAnalysisData = {
         clusterType: 'KNOWN',
         riskStatus: RiskValues.HEALTHY,
         riskScore: 0.0,
-        count: 3
+        count: 3,
+        messageFrequency,
+        label: 7
       },
       {
         message:
@@ -75,7 +105,9 @@ export const mockedLogAnalysisData = {
         clusterType: 'KNOWN',
         riskStatus: RiskValues.HEALTHY,
         riskScore: 0.0,
-        count: 9
+        count: 9,
+        messageFrequency,
+        label: 8
       },
       {
         message:
@@ -83,7 +115,9 @@ export const mockedLogAnalysisData = {
         clusterType: 'UNKNOWN',
         riskStatus: RiskValues.HEALTHY,
         riskScore: 0.0,
-        count: 12
+        count: 12,
+        messageFrequency,
+        label: 9
       },
       {
         message:
@@ -91,11 +125,68 @@ export const mockedLogAnalysisData = {
         clusterType: 'UNKNOWN',
         riskStatus: RiskValues.HEALTHY,
         riskScore: 0.0,
-        count: 3
+        count: 3,
+        messageFrequency,
+        label: 10
       }
     ],
     pageIndex: 0,
     empty: false
+  },
+  responseMessages: []
+}
+
+export const mockLogsCall = {
+  metaData: {},
+  resource: {
+    totalClusters: 29,
+    eventCounts: [
+      {
+        clusterType: 'KNOWN_EVENT',
+        count: 24,
+        displayName: 'Known'
+      },
+      {
+        clusterType: 'UNKNOWN_EVENT',
+        count: 4,
+        displayName: 'Unknown'
+      },
+      {
+        clusterType: 'UNEXPECTED_FREQUENCY',
+        count: 1,
+        displayName: 'Unexpected Frequency'
+      }
+    ],
+    logAnalysisRadarCharts: {
+      totalPages: 3,
+      totalItems: 29,
+      pageItemCount: 10,
+      pageSize: 10,
+      content: [
+        {
+          message: '< Transfer-Encoding: chunked\r\n',
+          label: 0,
+          clusterId: 'abc',
+          risk: 'UNHEALTHY',
+          clusterType: 'UNEXPECTED_FREQUENCY',
+          count: 258,
+          frequencyData: [45, 74, 44, 43, 52],
+          baseline: {
+            message: '< Transfer-Encoding: chunked\r\n',
+            label: 0,
+            risk: 'NO_ANALYSIS',
+            clusterType: 'BASELINE',
+            count: 0,
+            frequencyData: [2],
+            baseline: null,
+            hasControlData: false
+          },
+          hasControlData: true
+        }
+      ],
+      pageIndex: 0,
+      empty: false
+    }
   },
   responseMessages: []
 }

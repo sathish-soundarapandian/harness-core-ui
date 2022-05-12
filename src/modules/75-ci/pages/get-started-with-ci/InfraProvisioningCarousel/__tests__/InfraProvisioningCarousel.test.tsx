@@ -9,6 +9,7 @@ import React from 'react'
 import { render, getByText as getByTextBody, act, fireEvent } from '@testing-library/react'
 import { findDialogContainer } from '@common/utils/testUtils'
 import { CarouselSlides, InfraProvisioningCarousel } from '../InfraProvisioningCarousel'
+import { ProvisioningStatus } from '../../InfraProvisioningWizard/Constants'
 
 jest.mock('framework/strings', () => ({
   useStrings: () => ({
@@ -26,7 +27,7 @@ jest.useFakeTimers()
 describe('Test Infra Provisioning Carousel', () => {
   test('Initial render', () => {
     const { rerender } = render(
-      <InfraProvisioningCarousel onClose={jest.fn} provisioningStatus="IN_PROGRESS" show={true} />
+      <InfraProvisioningCarousel onClose={jest.fn} provisioningStatus={ProvisioningStatus.IN_PROGRESS} show={true} />
     )
 
     const dialog = findDialogContainer() as HTMLElement
@@ -64,9 +65,9 @@ describe('Test Infra Provisioning Carousel', () => {
       'bp3-icon bp3-icon-dot StyledProps--main StyledProps--color StyledProps--color-blue600'
     )
 
-    expect(dialog).toMatchSnapshot()
-
-    rerender(<InfraProvisioningCarousel onClose={jest.fn} provisioningStatus="FAILED" show={true} />)
+    rerender(
+      <InfraProvisioningCarousel onClose={jest.fn} provisioningStatus={ProvisioningStatus.FAILURE} show={true} />
+    )
     expect(getByTextBody(dialog, 'ci.getStartedWithCI.infraProvisioningFailed')).toBeTruthy()
   })
 })

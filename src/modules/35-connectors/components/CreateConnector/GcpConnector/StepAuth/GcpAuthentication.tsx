@@ -29,6 +29,7 @@ import type { ConnectorConfigDTO, ConnectorInfoDTO } from 'services/cd-ng'
 
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
 import { useStrings } from 'framework/strings'
+import { Connectors } from '@connectors/constants'
 import css from '../CreateGcpConnector.module.scss'
 
 interface GcpAuthenticationProps {
@@ -108,7 +109,9 @@ const GcpAuthentication: React.FC<StepProps<StepConfigureProps> & GcpAuthenticat
         }}
         formName="gcpAuthForm"
         validationSchema={Yup.object().shape({
-          delegateType: Yup.string().required(getString('connectors.chooseMethodForGCPConnection')),
+          delegateType: Yup.string().required(
+            getString('connectors.chooseMethodForConnection', { name: Connectors.GCP })
+          ),
           password: Yup.object().when('delegateType', {
             is: DelegateTypes.DELEGATE_OUT_CLUSTER,
             then: Yup.object().required(getString('validation.encryptedKey'))

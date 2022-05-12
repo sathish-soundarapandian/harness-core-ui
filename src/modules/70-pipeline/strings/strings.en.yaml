@@ -23,6 +23,7 @@ changeTemplateLabel: Change Template
 removeTemplateLabel: Remove Template
 openTemplateInNewTabLabel: Open Template in new tab
 previewTemplateLabel: Preview Template YAML
+templateInputs: Template Inputs
 onlyPositiveInteger: Only positive integer values
 depth: Depth
 advancedOptions: Advanced Options
@@ -62,6 +63,7 @@ selectStage: Select Stage
 stepNamePlaceholder: 'Enter Step Name'
 rightBar:
   editCodebaseConfiguration: Edit Codebase Configuration
+  mergeCommit: Merge Commit
 barrierStep:
   barrierReference: Barrier Reference
   barrierReferenceRequired: Barrier Reference is required
@@ -205,6 +207,29 @@ serviceNowApprovalStep:
     connectorRef: ServiceNow Connector is required
     ticketType: Ticket Type is required
     issueNumber: Ticket Number is required
+serviceNowCreateStep:
+  fieldType:
+    configureFields: Configure Fields
+    createFromTemplate: Create From Template
+  selectFieldListHelp: Select the issue type to list available fields to choose from.
+  addFields: Add ServiceNow Fields
+  descriptionPlaceholder: Enter the Description
+  shortDescriptionPlaceholder: Enter the Short Description
+  shortDescription: Short Description
+  templateNamePlaceholder: Enter the Template Name
+  fetchingFields: Fetching fields
+  fetchingTemplateDetails: Fetching template details
+  noSuchTemplateFound: No Such Template Found
+  templateName: Template name
+  validations:
+    description: Description is required
+    shortDescription: Short Description is required
+    validTemplateName: Valid Template Name is required
+    templateName: Template Name is required
+serviceNowUpdateStep:
+  fieldType:
+    applyFromTemplate: Apply from template
+    updateFields: Update Fields
 manifestType:
   manifestTyperequired: Manifest Type is required
   gitConnectorLabel: 'Git'
@@ -253,6 +278,8 @@ manifestType:
   kustomizeFolderPathPlaceholder: Enter Kustomize Folder Path
   kustomizePluginPathPlaceholder: Enter Kustomize Plugin Path
   repoNamePlaceholder: Enter Repository Name
+  serverlessConfigFilePath: Serverless Config File Path
+  serverlessConfigFilePathPlaceholder: Enter Serverless Config File Path
   http:
     chartName: 'Chart Name'
     chartVersion: 'Chart Version'
@@ -268,9 +295,13 @@ manifestTypeLabels:
   OpenshiftTemplate: OpenShift Template
   OpenshiftParam: OpenShift Param
   KustomizePatches: Kustomize Patches
+  ServerlessAwsLambda: Serverless Lambda Manifest
+  ServerlessAzure: Serverless Azure Manifest
+  ServerlessGCP: Serverless GCP Manifest
+  AwsSAM: AWS SAM Manifest
+  AzureFunctions: Azure Functions Manifest
 manifestToConnectorLabelMap:
   AWSLabel: '{{ $.common.aws }}'
-  GCPLabel: GCP
 failureStrategies:
   performAction: '{{ $.common.performAction }}'
   title: Failure Strategy
@@ -373,9 +404,11 @@ execution:
     abortTitle: Abort Execution?
 resourceConstraints:
   title: Resource Constraint
-  infoText: 'You have {{executioncount}} {{executiontext}} in queue that have to complete before your execution begins. Only one execution on a K8s namespace is allowed at a time.'
+  infoText: 'You have {{executioncount}} {{executiontext}} in queue that have to complete before your execution begins. Only one execution on a {{infraEntityText}} is allowed at a time.'
   currentlyExecuting: ' ( currently executing )'
   yourPipeline: ' ( your execution )'
+  k8sNamespaceText: K8s namespace
+  serverlessInfraEntity: serverless infrastructure entity
 targets:
   title: Targets
 barriers:
@@ -612,6 +645,7 @@ infraSpecifications:
     requiredExistingStage: Existing stage is a required field
 imagePathLabel: Image Path
 artifactPathLabel: Artifact Path
+artifactPathFilterLabel: Artifact Path Filter
 artifactsSelection:
   repositoryPort: Repository Port
   repositoryPortPlaceholder: Enter Repository Port
@@ -619,7 +653,10 @@ artifactsSelection:
   artifactDetails: Artifact Details
   artifactTyperequired: Artifact Type is required
   loadingTags: Loading Tags...
+  loadingArtifactPaths: Loading Artifact Paths...
   artifactNamePlaceholder: Enter Artifact Path
+  artifactDirectory: Artifact Directory
+  artifactDirectoryPlaceholder: Enter Artifact Directory
   versionPlaceholder: Enter Version
   existingDocker:
     sidecarId: Sidecar Identifier
@@ -635,6 +672,12 @@ artifactsSelection:
     sidecarId: Sidecar Identifier is required
     repositoryPort: Repository Port is required
     repositoryUrl: Repository URL is required
+    artifactDirectory: Artifact Directory is required
+    artifactPathFilter: Artifact Path Filter is required
+    artifactPathAndArtifactPathFilter: Artifact Path and Artifact Path Filter, both can not be empty
+    manifestRequiredForStage: 'Please provide manifest for stage: {{ stageName }}'
+  errors:
+    noRepositories: No repositories found with given connector
 overrideSets:
   createOverrideSet: Create Override Set
   overrideSetPlaceholder: Enter Override Set Name
@@ -686,9 +729,6 @@ verification:
   logs:
     logCluster: Log cluster
     filterByClusterType: Filter by cluster type
-    knownEvent: Known Event
-    unknownEvent: Unknown Event
-    unexpectedFrequency: Unexpected Frequency
     noAnalysis: No analysis
     clusterType: CLUSTER TYPE
     sampleMessage: MESSAGE
@@ -701,6 +741,18 @@ verification:
     share: share
     sampleEvent: Sample event
     trend: trend
+    eventType: Event Type
+    countPerMin: Count per min
+    eventCountPerMin: Event count per minute
+    eventDetails: Event Details
+    updateEventPreference: Update Event Preference
+    eventPreference: Event Preference
+    lastKnownOccurrence: Last Known Occurrence
+    firstOccurrence: First Occurrence
+    notARiskLabel: Mark as Not a Risk
+    eventPriorityLabel: Update the Event Priority
+    reasonRequired: Reason field is required
+    totalClusters: Total Clusters
 stepCommonFields:
   runAsUser: Run as User
   ifNotPresent: 'If Not Present'
@@ -710,9 +762,18 @@ stepCommonFields:
     invalidLimitCPU: Invalid Limit CPU. To learn more, hover over the Set Container Resources tooltip.
 ciCodebase:
   prCloneStrategy: Pull Request Clone Strategy
-  buildType: CI Codebase Build Type
+  ciCodebaseBuildType: CI Codebase Build Type
   pullRequestNumber: Pull Request Number
+  validation:
+    oneOfValues: Value must be one of these values [{{values}}]
+    optionalDepth: Only positive integer values. You may use the default value provided.
+    optionalSslVerify: SSL Verify must be a boolean value. You may use the default value provided.
+    optionalPrCloneStrategy: Value must be one of these values [{{values}}]. You may use the default value provided.
+    optionalLimitMemory: Invalid Limit Memory. To learn more, hover over the Set Container Resources tooltip. You may use the default value provided.
+    optionalLimitCPU: Invalid Limit CPU. To learn more, hover over the Set Container Resources tooltip. You may use the default value provided.
 tagDependencyRequired: required to fetch the tags
+artifactPathDependencyRequired: required to fetch the artifact paths
+artifactRepositoryDependencyRequired: 'Artifactory Connector is required to fetch repositories. You can make this field Runtime input otherwise.'
 myDeploymentsText: My Deployments
 myBuildsText: My Builds
 noBuckets: No buckets found with given region
@@ -759,6 +820,8 @@ stepDescription:
   HelmRollback: Rolls back all the deployed objects to the previous version.
   ServiceNowApproval: Use ServiceNow issues to approve steps and stages.
   Policy: Evaluate policy during pipeline execution
+  ServerlessLambdaDeploy: Create the Lambda functions defined in this Stage.
+  ServerlessLambdaRollback: Deploy the previous successful version as a new version.
 executionStrategy:
   executionStrategies: Execution Strategies
   useStrategy: Use Strategy
@@ -882,25 +945,38 @@ dashboardDeploymentsWidget:
     singular: Currently running pipeline
     plural: Currently running pipelines
 runtimeInputNotSupported: '{{field}} cannot be runtime inputs'
-security:
-  title: Security
 runPipeline:
   ciCodebaseConfig: CI Codebase Configuration is missing. Codebase is required when the pipeline contains a CI stage that is set to clone codebase.
 buildInfra:
   poolId: Pool Id
+  nodeSelector: Node Selector
+  tolerations: Tolerations
+  volumes: Volumes
   automountServiceAccountToken: Automount Service Account Token
   priorityClassName: Priority Class
   containerSecurityContext: Container Security Context
   allowPrivilegeEscalation: Allow Privilege Escalation
-  addCapabilities: ADD Capabilities
-  dropCapabilities: DROP Capabilities
+  addCapabilities: Add Capabilities
+  dropCapabilities: Drop Capabilities
   runAsNonRoot: Run as Non Root
   readOnlyRootFilesystem: Read-only Root Filesystem
   privileged: Privileged
+  effect: Effect
+  mountPath: Mount Path
+  size: Size
+  pathType: Path Type
+  emptyDirectory: Empty Directory
+  hostPath: Host Path
+  persistentVolumeClaim: Persistent Volume Claim
+  claimName: Claim Name
 ci:
   validations:
     port: Port can only contain digits
     serviceDependencyIdentifier: 'Identifier should match regex {{regex}}'
+    mountPathUnique: Mount Path should be unique
+    keyUnique: Key should be unique
+    invalidSize: Invalid Size. To learn more, hover over the Size tooltip.
+    pathRequiredForHostPath: 'Path is required for Type Host Path'
 imageVersionDeprecated: Image version outdated
 unsupportedImagesWarning: 'You are using unsupported Harness CI images. Harness allows builds to use these images, but we cannot ensure that builds will not fail. Please update the versions of the following image(s) {{summary}}'
 invalidRequest: Invalid Request
@@ -914,6 +990,14 @@ serviceDeploymentTypes:
   pcf: TAS
   ssh: Secure Shell
   deployDifferentLabel: Deploy different service
+  serverlessAwsLambda: Serverless Lambda
+  serverlessAzureFunctions: Serverless Azure Functions
+  serverlessGoogleFunctions: Serverless Google Functions
+  awsSAM: AWS SAM
+  azureFunctions: Azure Functions
+noArtifactPaths: No artifact paths found with given Artifact Directory
+stageDataDeleteWarningTitle: Discard Stage Data
+stageDataDeleteWarningText: Changing deployment type will delete existing stage data like artifacts, manifests, infrastructure details, steps etc. Do you still want to proceed?
 errorFramework:
   pipelineErrorsTitle: 'Pipeline cannot be saved because {{fields}} further configuration.'
   fixErrors: Fix Errors
@@ -931,3 +1015,19 @@ errorFramework:
   header10: 'some stages need'
   header11: 'some steps need'
   header12: 'it needs'
+delegate:
+  DelegateSelectorOptional: 'Delegate Selector (optional)'
+cannotRunInvalidPipeline: Cannot run the pipeline because it's invalid, please review the configuration.
+cannotAddTriggerInvalidPipeline: Cannot add a trigger because pipeline is invalid, please review the configuration.
+cannotAddInputSetInvalidPipeline: Cannot add an input set because pipeline is invalid, please review the configuration.
+cannotEditTriggerInvalidPipeline: Cannot edit the trigger because pipeline is invalid, please review the configuration.
+ACR:
+  name: ACR
+  subscription: '{{ $.common.subscriptionId }}'
+  subscriptionPlaceholder: '{{ $.common.subscriptionPlaceholder }}'
+  subscriptionError: 'No subscription found with given Connector'
+  registry: 'Registry'
+  registryPlaceholder: 'Select or add Registry'
+  registryError: 'No registry found with given Subscription'
+  repositoryPlaceholder: 'Select or add Repository'
+  repositoryError: 'No repository found with given Registry'

@@ -6,19 +6,16 @@
  */
 
 import React from 'react'
-import { render, getByText, getAllByText, fireEvent, waitFor } from '@testing-library/react'
+import { render, getByText, getAllByText, waitFor, RenderResult, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockImport from 'framework/utils/mockImport'
 import EnvironmentsPage from '../EnvironmentsPage'
 import mockEnvironments from './mockEnvironments'
 
 describe('EnvironmentsPage', () => {
-  test('EnvironmentsPage should render loading correctly', async () => {
-    mockImport('services/cd-ng', {
-      useGetEnvironmentListForProject: () => ({ loading: true, refetch: jest.fn() })
-    })
-
-    const { container } = render(
+  const renderComponent = (): RenderResult => {
+    return render(
       <TestWrapper
         path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/environments"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
@@ -26,6 +23,14 @@ describe('EnvironmentsPage', () => {
         <EnvironmentsPage />
       </TestWrapper>
     )
+  }
+
+  test('EnvironmentsPage should render loading correctly', async () => {
+    mockImport('services/cd-ng', {
+      useGetEnvironmentListForProject: () => ({ loading: true, refetch: jest.fn() })
+    })
+
+    const { container } = renderComponent()
 
     expect(container.querySelector('[data-icon="steps-spinner"]')).toBeDefined()
   })
@@ -36,14 +41,9 @@ describe('EnvironmentsPage', () => {
     mockImport('services/cd-ng', {
       useGetEnvironmentListForProject: () => ({ error: { message }, refetch: jest.fn() })
     })
-    render(
-      <TestWrapper
-        path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/environments"
-        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
-      >
-        <EnvironmentsPage />
-      </TestWrapper>
-    )
+
+    renderComponent()
+
     expect(getByText(document.body, message)).toBeDefined()
   })
 
@@ -56,15 +56,7 @@ describe('EnvironmentsPage', () => {
         refetch: jest.fn()
       })
     })
-
-    render(
-      <TestWrapper
-        path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/environments"
-        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
-      >
-        <EnvironmentsPage />
-      </TestWrapper>
-    )
+    renderComponent()
 
     expect(getAllByText(document.body, mockEnvironments.data.content[0].name)).toBeDefined()
     expect(getAllByText(document.body, mockEnvironments.data.content[1].name)).toBeDefined()
@@ -80,16 +72,9 @@ describe('EnvironmentsPage', () => {
       })
     })
 
-    const { container } = render(
-      <TestWrapper
-        path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/environments"
-        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
-      >
-        <EnvironmentsPage />
-      </TestWrapper>
-    )
+    const { container } = renderComponent()
 
-    fireEvent.click(container.querySelector('[role="row"]:not(:first-of-type)') as HTMLElement)
+    userEvent.click(container.querySelector('[role="row"]:not(:first-of-type)') as HTMLElement)
 
     expect(getByText(container, '/account/dummy/cf/orgs/dummy/projects/dummy/environments/QB')).toBeDefined()
   })
@@ -104,17 +89,10 @@ describe('EnvironmentsPage', () => {
       })
     })
 
-    const { container } = render(
-      <TestWrapper
-        path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/environments"
-        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
-      >
-        <EnvironmentsPage />
-      </TestWrapper>
-    )
+    const { container } = renderComponent()
 
-    fireEvent.click(container.querySelector('[data-icon="Options"]') as HTMLElement)
-    fireEvent.click(document.querySelector('[icon="edit"]') as HTMLElement)
+    userEvent.click(container.querySelector('[data-icon="Options"]') as HTMLElement)
+    userEvent.click(document.querySelector('[icon="edit"]') as HTMLElement)
 
     expect(getByText(container, '/account/dummy/cf/orgs/dummy/projects/dummy/environments/foobar')).toBeDefined()
   })
@@ -139,20 +117,49 @@ describe('EnvironmentsPage', () => {
       })
     })
 
-    const { container } = render(
-      <TestWrapper
-        path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/environments"
-        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
-      >
-        <EnvironmentsPage />
-      </TestWrapper>
-    )
+    renderComponent()
 
-    fireEvent.click(container.querySelector('[role="row"]:not(:first-of-type) [data-icon="Options"]') as HTMLElement)
-    fireEvent.click(document.querySelector('[icon="trash"]') as HTMLElement)
+    userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+    userEvent.click(document.querySelector('[icon="trash"]') as HTMLElement)
 
-    expect(getByText(document.body, 'confirm')).toBeDefined()
-    fireEvent.click(getByText(document.body, 'confirm') as HTMLButtonElement)
-    await waitFor(() => expect(mutate).toBeCalledTimes(1))
+    // Delete environment modal to appear
+    await waitFor(() => {
+      expect(screen.queryByText('cf.environments.delete.title')).toBeInTheDocument()
+    })
+
+    userEvent.click(screen.getByRole('button', { name: 'delete' }))
+
+    await waitFor(() => {
+      // expect successfully deleted toaster to appear
+      expect(screen.getByText('Successfully deleted environment foobar')).toBeInTheDocument()
+    })
+  })
+
+  test('Should close Delete env modal if user cancels deletion', async () => {
+    mockImport('services/cd-ng', {
+      useGetEnvironmentListForProject: () => ({
+        data: mockEnvironments,
+        loading: false,
+        error: undefined,
+        refetch: jest.fn()
+      })
+    })
+
+    renderComponent()
+
+    userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+    userEvent.click(document.querySelector('[icon="trash"]') as HTMLElement)
+
+    // Delete environment modal to appear
+    await waitFor(() => {
+      expect(screen.queryByText('cf.environments.delete.title')).toBeInTheDocument()
+    })
+
+    userEvent.click(screen.getByRole('button', { name: 'cancel' }))
+
+    await waitFor(() => {
+      // expect modal to disappear
+      expect(screen.queryByText('cf.environments.delete.title')).not.toBeInTheDocument()
+    })
   })
 })

@@ -33,6 +33,8 @@ import CEChart from '@ce/components/CEChart/CEChart'
 import { todayInUTC } from '@ce/utils/momentUtils'
 import { useStrings } from 'framework/strings'
 import { BudgetPeriod } from 'services/ce/services'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
 import type { BudgetStepData } from '../types'
 import css from '../PerspectiveCreateBudget.module.scss'
 
@@ -203,12 +205,12 @@ const SetBudgetForm: (props: SetBudgetFormProps) => JSX.Element = ({
         }}
         value={String(formikProps.values.startTime)}
         onChange={val => {
-          const startTime = moment(Number(val)).startOf('day').format('x')
+          const startTime = Number(val)
           setLastCostPeriodCostVar(x => ({ ...x, startTime: startTime as any }))
 
           formikProps.setValues({
             ...formikProps.values,
-            startTime: Number(startTime)
+            startTime: startTime
           })
         }}
       />
@@ -273,6 +275,7 @@ interface Props {
   budget?: Budget
   isEditMode: boolean
   perspective?: string
+  initiatorPage?: string
 }
 
 interface Form {
@@ -289,12 +292,14 @@ const SetBudgetAmount: React.FC<StepProps<BudgetStepData> & Props> = props => {
   const { accountId } = useParams<{
     accountId: string
   }>()
+  const { trackEvent } = useTelemetry()
   const {
     nextStep,
     prevStepData,
     previousStep,
     budget: { budgetAmount = 0, period, startTime, growthRate } = {},
-    isEditMode
+    isEditMode,
+    initiatorPage = ''
   } = props
 
   let type = props.budget?.type
@@ -327,6 +332,10 @@ const SetBudgetAmount: React.FC<StepProps<BudgetStepData> & Props> = props => {
       startTime: lastPeriodCostVar.startTime
     }
   })
+
+  useEffect(() => {
+    trackEvent(USER_JOURNEY_EVENTS.SET_BUDGET_AMOUNT, { pageName: initiatorPage, isEditMode })
+  }, [])
 
   const COSTS = useMemo(
     () => [

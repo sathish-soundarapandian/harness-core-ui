@@ -9,6 +9,7 @@ import type { Column } from 'react-table'
 import type { ChangeSourceTypes } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 
 export interface ChangesTableInterface {
+  isCardView?: boolean
   startTime: number
   endTime: number
   hasChangeSource: boolean
@@ -19,5 +20,11 @@ export interface ChangesTableInterface {
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert')[]
   changeSourceTypes?: ChangeSourceTypes[]
   recordsPerPage?: number
+  dataTooltipId?: string
+}
+
+export interface ChangesTableContentWrapper {
+  isCardView: boolean
+  totalItems: number
   dataTooltipId?: string
 }

@@ -126,9 +126,11 @@ exports[`AddDrawer Triggers tests Renders/snapshots Initial Render - Trigger Lis
                   <div
                     class="Layout--horizontal Layout--layout-spacing-small StyledProps--main categoryName StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
                   >
-                    <span>
+                    <div
+                      class=""
+                    >
                       New Artifact/Manifest
-                    </span>
+                    </div>
                   </div>
                   <section
                     class="steps"
@@ -223,9 +225,11 @@ exports[`AddDrawer Triggers tests Renders/snapshots Initial Render - Trigger Lis
                   <div
                     class="Layout--horizontal Layout--layout-spacing-small StyledProps--main categoryName StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
                   >
-                    <span>
+                    <div
+                      class=""
+                    >
                       Scheduled
-                    </span>
+                    </div>
                   </div>
                   <section
                     class="steps"
@@ -283,9 +287,11 @@ exports[`AddDrawer Triggers tests Renders/snapshots Initial Render - Trigger Lis
                   <div
                     class="Layout--horizontal Layout--layout-spacing-small StyledProps--main categoryName StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
                   >
-                    <span>
+                    <div
+                      class=""
+                    >
                       Webhook
-                    </span>
+                    </div>
                   </div>
                   <section
                     class="steps"

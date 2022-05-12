@@ -11,6 +11,7 @@ import type { MonitoredServiceForm } from '../../Service.types'
 
 export type MonitoredServiceOverviewProps = {
   isEdit?: boolean
+  isTemplate?: boolean
   formikProps: FormikProps<MonitoredServiceForm>
   onChangeMonitoredServiceType?: (type: MonitoredServiceDTO['type']) => void
 }

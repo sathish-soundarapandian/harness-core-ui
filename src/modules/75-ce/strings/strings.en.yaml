@@ -10,6 +10,7 @@ common:
   containerService: 'ECS'
   database: 'RDS'
   totalCount: 'Total: {{ count }}'
+  emissionUnitHTML: '{{value}} kg CO<sub>2</sub>'
 allRegions: 'All Regions'
 allClusters: 'All Clusters'
 enforcementMessage:
@@ -41,6 +42,9 @@ co:
   selectResourceGroupPlaceholder: '{{$.select}} Resource Groups'
   noOfTasks: 'No. of tasks:'
   noOfInstances: 'No. of instances:'
+  totalEmissions: 'TOTAL EMISSIONS'
+  reducedEmissions: 'EMISSIONS REDUCED'
+  rules: 'rules'
   landingPageText:
     '<b>AutoStopping Rules</b> dynamically make sure that your <i>non-production workloads</i> are <b>running (and costing you)
     only when you’re using them</b>, and never when they are idle. Additionally, run your workloads on fully
@@ -307,6 +311,10 @@ co:
     vpcLabel: 'VPC'
     securityGroupsLabel: 'Network tags'
     machineType: 'Machine type'
+    gcpCertificateId: 'TLS Certificate Secret Version'
+    gcpSecretId: 'TLS Private Key Secret Version'
+    gcpCertificatePlaceholder: 'projects/123456789012/secrets/secretkey/versions/1'
+    gcpSecretPlaceholder: 'projects/123456789012/secrets/privkey/versions/1'
     select:
       accessPoint: 'Select Access Point'
       account: 'Select {{$.ce.co.accessPoint.cloudAccount}}'
@@ -511,6 +519,10 @@ recommendation:
     recommnedationBreakdown: 'Recommendations Breakdown'
     filterHereText: 'Filter here'
     backToPerspectives: 'Back to perspective {{ name }}'
+    potentialReducedEmissionTitle: 'Emissions that can be reduced'
+    potentialReducedEmissionSubtitle: 'by applying {{ count }} recommendations'
+    potentialEmissionTitle: 'Potential Carbon Emissions'
+    service: '{{ $.service }}'
     filters:
       minSaving: Monthly savings greater than
       minCost: Monthly cost greater than
@@ -543,6 +555,7 @@ recommendation:
     resourceChanges: 'RESOURCE CHANGES TO BE MADE TO APPLY THE RECOMMENDATION'
     currentResources: 'Current limits/request for CPU/Memory'
     recommendedResources: 'limits/request for CPU/Memory'
+    ecsRecommendedResources: 'request for CPU/Memory'
     timeChangeText: 'OF SAMPLES ANALYSED OVER THE'
     percentileOfReqAndLimit: 'Percentile of request and limit'
     resizeText: 'Resize from a to b'
@@ -554,6 +567,7 @@ recommendation:
     customDetailsText1: 'The recommendations are computed by analyzing the past utilization of CPU and memory of your workload. The implementation uses a histogram method to compute the recommendations.'
     customDetailsText2: 'You can also '
     customDetailsText3: 'tune recommendations by changing the Quality of Service (QoS) and the percentage of recommended CPU and memory requests/limits buffer.'
+    ecsRecommendationHelpText: 'tune recommendations by changing the percentage of recommended CPU and memory requests buffer.'
     totalCost: 'TOTAL COST'
     idleCost: 'IDLE COST'
     reqPercentileLegendText: 'Percentile of Samples whose request will be met'
@@ -562,14 +576,18 @@ recommendation:
     costOptimizedCaps: 'COST OPTIMIZED'
     performanceOptimizedCaps: 'PERFORMANCE OPTIMIZED'
     tuneRecommendations: Tune Recommendations
+    setBuffer: Set Buffer for recommended requests
     setQoSAndBuffer: 'Set QoS and Buffer for recommended requests/limits'
     qualityOfService: 'Quality Of Service(QoS)'
     memoryValueBuffer: '% Buffer to be considered for CPU/Memory values'
     burstable: 'BURSTABLE'
     guaranteed: 'GUARANTEED'
     monthlySpendByDate: 'by {{date}}'
+    nodepoolDetails: Nodepool Details
+    ecsServiceDetails: 'ECS Service Details'
   recommendationChart:
     cpuPlaceholder: 'CPU Usage(millicores)'
+    cpuValuePlaceholder: 'CPU Usage(CPU values)'
     noOfSamples: 'Number of samples'
     memoryLabel: 'MEMORY'
     limitLabel: 'LIMIT'
@@ -578,6 +596,7 @@ recommendation:
     and: '{{ $.common.and }}'
     request: '{{ $.common.request }}'
     memoryUsagePlaceholder: 'Memory usage(GBs)'
+    memoryUsageInMBsPlaceholder: 'Memory usage(MBs)'
     willBeMet: 'will be met'
     cpuHistogramHeader: ' {{ $.ce.recommendation.recommendationChart.noOfSamples }} {{ $.common.whose }} {{ $.delegate.delegateCPU }}'
     memoryHistogramHeader: ' {{ $.ce.recommendation.recommendationChart.noOfSamples }} {{ $.common.whose }} {{ $.ce.recommendation.recommendationChart.memoryLabelRegular }}'
@@ -662,12 +681,13 @@ perspectives:
     nextButton: '{{$.next}}'
     prevButton: '{{$.previous}}'
     validationErrors:
-      nameLengthError: The name must be between 1 and 32 characters.
+      nameLengthError: The name must be between 1 and 80 characters.
       nameError: '{{$.validation.nameRequired}}'
       ruleError: 'values length should be greater than 1'
     filters:
       operator: '{{$.common.operator}}'
       searchText: 'Search Here'
+      enterCondition: 'Enter condition'
       selectValues: 'Select Values'
       rulesTitle: 'Rules for Perspective'
       rulesText1: 'Data that matches ANY of the rules will be added to the perspective.'
@@ -675,6 +695,8 @@ perspectives:
       addRuleText: 'Add rule'
       selectOperator: 'SELECT OPERATOR'
       selectValuesText: 'SELECT VALUES'
+      selectAll: 'Select all'
+      chooseOperand: 'Choose Operand'
     preview:
       groupBy: 'Group By'
       title: '{{$.executionStrategy.preview}}'
@@ -683,6 +705,7 @@ perspectives:
       notIn: 'NOT IN'
       opNull: 'NULL'
       opNotNull: 'NOT NULL'
+      opLike: 'LIKE'
   reports:
     title: 'Report Schedules({{ count }})'
     desc: Reports can send a cost report to specified users at the specified frequency.
@@ -761,7 +784,9 @@ overview:
   totalCost: Total Cost
   workload: Workload Resizing
   nodepool: Nodepool Rightsizing
+  ecsService: Service Resizing
   savings: savings per month
+  recommendationsEmission: 'Potential to reduce '
   cardtitles:
     multipleCloud: Cost by cloud providers
     azure: Top Azure services
@@ -778,6 +803,11 @@ overview:
     autoStopping: Create a new AutoStopping Rule
     connector: Create another Connector
     ngDocs: Learn what CCM has to offer
+  sustainability:
+    fromClusterTitle: 'Carbon emissions from Clusters'
+    idleAndUnallocatedClusters: 'Idle + Unallocated clusters'
+    fromClousUsageTitle: 'Carbon emissions from Cloud Usage'
+    tillDate: 'till date'
 sideNav:
   perspective: 'Perspective'
 nodeRecommendation:

@@ -17,7 +17,8 @@ const RECOMMENDATION_EVENTS = {
   RECOMMENDATION_EDIT_CPU: PREFIX_CCM_EVENTS + 'recommendation_edit_cpu',
   RECOMMENDATION_EDIT_RAM: PREFIX_CCM_EVENTS + 'recommendation_edit_ram',
   RECOMMENDATION_EDIT_MIN_NODE: PREFIX_CCM_EVENTS + 'recommendation_edit_min_node',
-  NODE_RECOMMENDATION_EDIT_PREFERENCE: PREFIX_CCM_EVENTS + 'node_recommendation_edit_preference'
+  NODE_RECOMMENDATION_EDIT_PREFERENCE: PREFIX_CCM_EVENTS + 'node_recommendation_edit_preference',
+  RECOMMENDATION_PAGE_LOADED: PREFIX_CCM_EVENTS + 'recommendation_page_loaded'
 }
 
 const PERSPECTIVE_EVENTS = {
@@ -26,9 +27,27 @@ const PERSPECTIVE_EVENTS = {
   ADD_PERSPECTIVE_RULE: PREFIX_CCM_EVENTS + 'add_perspective_rule',
   PERSPECTIVE_STEP1_NEXT: PREFIX_CCM_EVENTS + 'create_perspective_step1_next',
   CREATE_PERSPECTIVE_ADD_NEW_REPORT: PREFIX_CCM_EVENTS + 'create_perspective_add_new_report',
-  CREATE_PERSPECTIVE_ADD_NEW_BUDGET: PREFIX_CCM_EVENTS + 'create_perspective_add_new_budget',
   SAVE_PERSPECTIVE: PREFIX_CCM_EVENTS + 'save_perspective',
-  OPEN_PERSPECTIVE_DETAILS: PREFIX_CCM_EVENTS + 'open_perspective_details'
+  OPEN_PERSPECTIVE_DETAILS: PREFIX_CCM_EVENTS + 'open_perspective_details',
+  PERSPECTIVE_LOADED: PREFIX_CCM_EVENTS + 'perspective_list_loaded',
+  PERSPECTIVE_REPORT_SCHEDULE: PREFIX_CCM_EVENTS + 'perspective_report_schedule_trigger',
+  PERSPECTIVE_REPORT_SCHEDULE_DONE: PREFIX_CCM_EVENTS + 'perspective_report_schedule_done'
+}
+
+const BUDGET_EVENTS = {
+  BUDGETS_LIST_ITEM_CLICK: PREFIX_CCM_EVENTS + 'budget_list_item_click',
+  CREATE_NEW_BUDGET: PREFIX_CCM_EVENTS + 'create_new_budget',
+  DEFINE_BUDGET_TARGET: PREFIX_CCM_EVENTS + 'define_budget_target',
+  SET_BUDGET_AMOUNT: PREFIX_CCM_EVENTS + 'set_budget_amount',
+  CONFIGURE_BUDGET_ALERTS: PREFIX_CCM_EVENTS + 'configure_budget_alerts',
+  SAVE_BUDGET: PREFIX_CCM_EVENTS + 'save_budget'
+}
+
+const ANOMALY_EVENTS = {
+  VIEW_ANOMALIES_CLICK: PREFIX_CCM_EVENTS + 'view_anomalies_click',
+  APPLY_ANOMALY_FILTERS: PREFIX_CCM_EVENTS + 'apply_anomaly_filters',
+  ANOMALY_ALERTS_OVERVIEW: PREFIX_CCM_EVENTS + 'anomaly_alerts_overview',
+  SAVE_ANOMALY_ALERTS: PREFIX_CCM_EVENTS + 'save_anomaly_alerts'
 }
 
 export const USER_JOURNEY_EVENTS = {
@@ -46,7 +65,9 @@ export const USER_JOURNEY_EVENTS = {
   LOAD_AS_SUMMARY_PAGE: PREFIX_CCM_EVENTS + 'load_as_summary_page',
   LOAD_RULE_DETAILS_WINDOW: PREFIX_CCM_EVENTS + 'load_rule_details_window',
   ...PERSPECTIVE_EVENTS,
-  ...RECOMMENDATION_EVENTS
+  ...RECOMMENDATION_EVENTS,
+  ...BUDGET_EVENTS,
+  ...ANOMALY_EVENTS
 }
 
 export const PAGE_NAMES = {
@@ -56,5 +77,10 @@ export const PAGE_NAMES = {
   RECOMMENDATIONS_DETAILS_PAGE: PREFIX_CCM_EVENTS + 'recommendations_details_page',
   OVERVIEW_PAGE: PREFIX_CCM_EVENTS + 'overview_page',
   NO_CONNECTOR_MODAL: PREFIX_CCM_EVENTS + 'no_connector_modal',
-  START_TRIAL_MODAL: PREFIX_CCM_EVENTS + 'start_trial_modal'
+  START_TRIAL_MODAL: PREFIX_CCM_EVENTS + 'start_trial_modal',
+  BUDGET_LANDING_PAGE: PREFIX_CCM_EVENTS + 'budget_landing_page',
+  BUDGET_DETAILS_PAGE: PREFIX_CCM_EVENTS + 'budget_details_page',
+  ANOMALY_LANDING_PAGE: PREFIX_CCM_EVENTS + 'anomaly_landing_page',
+  ANOMALY_SETTINGS_FLOW: PREFIX_CCM_EVENTS + 'anomaly_settings_flow',
+  PERSPECTIVE_BUILDER_PAGE: PREFIX_CCM_EVENTS + 'perspective_builder_page'
 }

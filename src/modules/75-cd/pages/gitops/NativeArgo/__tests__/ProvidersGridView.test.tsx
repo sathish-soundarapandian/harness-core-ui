@@ -17,7 +17,8 @@ const currentUser = {
       uuid: '123',
       createdFromNG: true
     }
-  ]
+  ],
+  uuid: '123'
 }
 
 describe('ProvidersGridView snapshot test', () => {

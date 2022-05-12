@@ -60,6 +60,7 @@ export interface ChildAppProps {
   scope: Scope
   components: CommonComponents
   hooks: Hooks
+  on401: () => void
 }
 
 /**

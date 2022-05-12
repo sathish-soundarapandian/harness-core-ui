@@ -10,7 +10,6 @@ import {
   Button,
   Formik,
   FormikForm,
-  Heading,
   Layout,
   ModalErrorHandler,
   StepProps,
@@ -20,6 +19,7 @@ import {
   Text,
   Container
 } from '@wings-software/uicore'
+import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { CEAzureConnector } from 'services/cd-ng'
 import { CE_AZURE_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
@@ -144,14 +144,21 @@ const ChooseRequirements: React.FC<StepProps<CEAzureDTO>> = props => {
 
   return (
     <Layout.Vertical className={css.stepContainer}>
-      <Heading level={2} className={css.header}>
+      <Text
+        font={{ variation: FontVariation.H3 }}
+        tooltipProps={{ dataTooltipId: 'azureChooseRequirements' }}
+        margin={{ bottom: 'large' }}
+      >
         {getString('connectors.ceAzure.chooseRequirements.heading')}
-      </Heading>
+      </Text>
       <Text color="grey800">{getString('connectors.ceAzure.chooseRequirements.featureDesc')}</Text>
       <Container>
-        <Text font={{ italic: true }} className={css.mtblarge}>
-          {getString('connectors.ceAzure.chooseRequirements.info')}
-        </Text>
+        <Layout.Horizontal className={css.infoCard}>
+          <Icon name="info-messaging" size={20} className={css.infoIcon} />
+          <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_800}>
+            {getString('connectors.ceAzure.chooseRequirements.info')}
+          </Text>
+        </Layout.Horizontal>
         <Formik<CloudFeatures>
           initialValues={{
             VISIBILITY: false,

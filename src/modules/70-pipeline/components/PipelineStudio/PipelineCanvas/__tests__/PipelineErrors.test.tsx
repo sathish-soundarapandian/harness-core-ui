@@ -163,7 +163,7 @@ describe('PipelineErrors', () => {
     act(() => {
       fireEvent.click(fixButton)
     })
-    expect(fn).toHaveBeenCalledWith({ stageId: STAGE_1_ERROR_1.stageInfo.identifier })
+    expect(fn).toHaveBeenCalledWith({ stageId: STAGE_1_ERROR_1.stageInfo.identifier, sectionId: '' })
   })
   test('should render one Stage - multiple error', () => {
     render(
@@ -175,8 +175,8 @@ describe('PipelineErrors', () => {
         />
       </TestWrapper>
     )
-    expect(getByText(document.body, 'Stage 1 Error 2')).toBeDefined()
-    expect(() => getByText(document.body, 'Stage 1 Error 1')).toThrow()
+    expect(getByText(document.body, 'Stage 1 Error 1')).toBeDefined()
+    expect(() => getByText(document.body, 'Stage 1 Error 2')).toThrow()
     expect(getByText(document.body, 'cd.moreIssue')).toBeDefined()
     expect(getByText(document.body, 'pipeline.execution.stageTitlePrefix stage1Name')).toBeDefined()
     expect(getBp3Dialog(document)).toMatchSnapshot('one stage - multiple errors')
@@ -208,7 +208,8 @@ describe('PipelineErrors', () => {
         />
       </TestWrapper>
     )
-    expect(getByText(document.body, 'Stage 1 Error 2')).toBeDefined()
+    expect(getByText(document.body, 'Stage 1 Error 1')).toBeDefined()
+    expect(() => getByText(document.body, 'Stage 1 Error 2')).toThrow()
     expect(getByText(document.body, 'Stage 2 Error 1')).toBeDefined()
     expect(getByText(document.body, 'cd.moreIssue')).toBeDefined()
     expect(getByText(document.body, 'pipeline.execution.stageTitlePrefix stage1Name')).toBeDefined()
@@ -322,8 +323,8 @@ describe('PipelineErrors', () => {
         />
       </TestWrapper>
     )
-    expect(getByText(document.body, 'Stage 1 Error 1')).toBeDefined()
-    expect(() => getByText(document.body, 'Stage 1 Error 2')).toThrow()
+    expect(getByText(document.body, 'Stage 1 Error 2')).toBeDefined()
+    expect(() => getByText(document.body, 'Stage 1 Error 1')).toThrow()
     // expect(getByText(document.body, 'cd.moreIssue')).toBeDefined()
 
     expect(() => getByText(document.body, 'Step Error 1')).toThrow()
@@ -361,8 +362,9 @@ describe('PipelineErrors', () => {
         />
       </TestWrapper>
     )
-    expect(getByText(document.body, 'Stage 1 Error 1')).toBeDefined()
-    expect(() => getByText(document.body, 'Stage 1 Error 2')).toThrow()
+    expect(getByText(document.body, 'Stage 1 Error 2')).toBeDefined()
+    expect(() => getByText(document.body, 'Stage 1 Error 1')).toThrow()
+    expect(getByText(document.body, 'Stage 2 Error 1')).toBeDefined()
     // expect(getByText(document.body, 'cd.moreIssue')).toBeDefined()
 
     expect(() => getByText(document.body, 'Step Error 1')).toThrow()

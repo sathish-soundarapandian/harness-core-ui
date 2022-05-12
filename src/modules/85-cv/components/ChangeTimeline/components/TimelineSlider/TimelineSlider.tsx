@@ -5,8 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useLayoutEffect, useMemo, useRef, useState, useEffect } from 'react'
-import { Container, Text } from '@wings-software/uicore'
+import React, { useLayoutEffect, useMemo, useRef, useState, useEffect, useCallback } from 'react'
+import { defaultTo } from 'lodash-es'
+import { Button, ButtonSize, ButtonVariation, Container, Layout } from '@wings-software/uicore'
 import Draggable from 'react-draggable'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
@@ -33,24 +34,22 @@ import {
 } from './TimelineSlider.constants'
 import css from './TimelineSlider.module.scss'
 
-export default function TimelineSlider(props: TimelineSliderProps): JSX.Element {
-  const {
-    initialSliderWidth,
-    className,
-    containerWidth: propsContainerWidth,
-    leftContainerOffset = 0,
-    minSliderWidth,
-    onSliderDragEnd,
-    infoCard,
-    resetFocus,
-    maxSliderWidth,
-    hideSlider
-  } = props
+const TimelineSlider: React.FC<TimelineSliderProps> = ({
+  initialSliderWidth,
+  className,
+  containerWidth: initialContainerWidth,
+  leftContainerOffset = 0,
+  minSliderWidth,
+  onSliderDragEnd,
+  infoCard,
+  resetFocus,
+  maxSliderWidth,
+  hideSlider,
+  onZoom
+}) => {
   const { getString } = useStrings()
-  const [containerWidth, setContainerWidth] = useState<number>(0)
-  const sliderContainerRef = useRef<HTMLDivElement>(null)
-  const [parentClickEvent, setParentClickEvent] = useState<MouseEvent>()
-  const [isDragging, setIsDragging] = useState(false)
+  const mainRef = useRef<HTMLDivElement>(null)
+  const [containerWidth, setContainerWidth] = useState(0)
   const [{ width, leftOffset, rightHandlePosition, leftHandlePosition, onClickTransition }, setSliderAspects] =
     useState<SliderAspects>({
       width: initialSliderWidth,
@@ -59,45 +58,51 @@ export default function TimelineSlider(props: TimelineSliderProps): JSX.Element 
       leftHandlePosition: LEFT_SLIDER_OFFSET
     })
 
-  useEffect(() => {
-    if (!sliderContainerRef.current || !parentClickEvent) return
-    if (isDragging) {
-      setIsDragging(false)
-      return
-    }
+  const handleSliderClick = useCallback(
+    (parentClickEvent: MouseEvent): void => {
+      /* istanbul ignore else */ if (mainRef.current) {
+        const updatedSliderAspects = determineSliderPlacementForClick({
+          clickEventX: parentClickEvent.clientX,
+          containerOffset: mainRef.current.getBoundingClientRect().x,
+          containerWidth,
+          sliderAspects: { width, leftOffset, rightHandlePosition, leftHandlePosition },
+          isSliderHidden: hideSlider
+        })
 
-    const updatedSliderAspects = determineSliderPlacementForClick({
-      clickEventX: parentClickEvent.clientX,
-      containerOffset: sliderContainerRef.current.getBoundingClientRect().x,
-      containerWidth,
-      sliderAspects: { width, leftOffset, rightHandlePosition, leftHandlePosition },
-      isSliderHidden: hideSlider
-    })
-
-    if (updatedSliderAspects) {
-      setSliderAspects(updatedSliderAspects)
-      onSliderDragEnd?.(calculateSliderDragEndData(updatedSliderAspects, parentClickEvent, containerWidth))
-    }
-  }, [parentClickEvent, onSliderDragEnd])
-
-  useLayoutEffect(() => {
-    if (!sliderContainerRef.current) return
-    if (!propsContainerWidth) {
-      setContainerWidth(
-        (sliderContainerRef.current.parentElement?.getBoundingClientRect().width || 0) - leftContainerOffset
-      )
-    } else if (typeof propsContainerWidth === 'string') {
-      setContainerWidth(sliderContainerRef.current.getBoundingClientRect().width)
-    }
-  }, [propsContainerWidth, sliderContainerRef.current])
+        /* istanbul ignore else */ if (updatedSliderAspects) {
+          setSliderAspects(updatedSliderAspects)
+          onSliderDragEnd?.(calculateSliderDragEndData(updatedSliderAspects, parentClickEvent, containerWidth))
+        }
+      }
+    },
+    [containerWidth, hideSlider, leftHandlePosition, leftOffset, onSliderDragEnd, rightHandlePosition, width]
+  )
 
   useLayoutEffect(() => {
-    if (!sliderContainerRef.current) return
-    sliderContainerRef.current.parentNode?.addEventListener('click', setParentClickEvent as EventListener, false)
+    /* istanbul ignore else */ if (mainRef.current) {
+      if (initialContainerWidth) {
+        setContainerWidth(mainRef.current.getBoundingClientRect().width)
+      } else {
+        setContainerWidth(
+          defaultTo(mainRef.current.parentElement?.getBoundingClientRect().width, 0) - leftContainerOffset
+        )
+      }
+    }
+  }, [initialContainerWidth, leftContainerOffset])
 
-    return () =>
-      sliderContainerRef.current?.parentNode?.removeEventListener('click', setParentClickEvent as EventListener, false)
-  }, [sliderContainerRef.current])
+  useLayoutEffect(() => {
+    const ref = mainRef
+
+    if (ref.current && hideSlider) {
+      ref.current.parentNode?.addEventListener('click', handleSliderClick as EventListener, {
+        once: true
+      })
+    }
+
+    return () => {
+      ref.current?.parentNode?.removeEventListener('click', handleSliderClick as EventListener, false)
+    }
+  }, [handleSliderClick, hideSlider])
 
   useEffect(() => {
     if (hideSlider) {
@@ -108,41 +113,47 @@ export default function TimelineSlider(props: TimelineSliderProps): JSX.Element 
         leftHandlePosition: LEFT_SLIDER_OFFSET
       })
     }
-  }, [hideSlider])
+  }, [hideSlider, initialSliderWidth])
 
-  const containerStyles = useMemo(() => {
-    return { width: propsContainerWidth, left: leftContainerOffset }
-  }, [propsContainerWidth, leftContainerOffset])
+  const containerStyles = useMemo(
+    () => ({ width: initialContainerWidth, left: leftContainerOffset }),
+    [initialContainerWidth, leftContainerOffset]
+  )
 
   if (hideSlider) {
-    return <div className={cx(css.main, className)} ref={sliderContainerRef} style={containerStyles} />
+    return <div ref={mainRef} className={cx(css.main, className)} style={containerStyles} />
   }
 
   return (
-    <div className={cx(css.main, className)} ref={sliderContainerRef} style={containerStyles}>
-      <Container className={css.mask} width={leftOffset} />
+    <div ref={mainRef} className={cx(css.main, className)} style={containerStyles}>
+      <Container className={css.mask} width={leftOffset} onClick={e => handleSliderClick(e as unknown as MouseEvent)} />
       <Container
         className={css.sliderContainer}
         width={width}
         style={{ left: leftOffset, transition: onClickTransition }}
-        onClick={() => false}
+        onClick={e => e.stopPropagation()}
       >
-        {infoCard ? (
-          <Container flex>
-            <Container className={cx(css.card, { [css.reverseCard]: leftOffset < LEFT_TEXTFIELD_WIDTH })}>
-              {infoCard}
-              <Text
-                className={css.resetButton}
-                onClick={e => {
-                  e.stopPropagation()
-                  resetFocus?.()
-                }}
-              >
-                {getString('reset')}
-              </Text>
-            </Container>
+        {infoCard && (
+          <Container className={cx(css.card, { [css.reverseCard]: leftOffset < LEFT_TEXTFIELD_WIDTH })}>
+            {infoCard}
+            <Layout.Horizontal className={css.cardFooter} spacing="xsmall">
+              <Button
+                text={getString('reset')}
+                size={ButtonSize.SMALL}
+                variation={ButtonVariation.LINK}
+                onClick={resetFocus}
+              />
+              {onZoom && (
+                <Button
+                  text={getString('cv.zoom')}
+                  size={ButtonSize.SMALL}
+                  variation={ButtonVariation.SECONDARY}
+                  onClick={onZoom}
+                />
+              )}
+            </Layout.Horizontal>
           </Container>
-        ) : null}
+        )}
         <TimelineSliderHandle
           className={css.leftHandle}
           bounds={LEFT_SLIDER_BOUNDS}
@@ -157,8 +168,6 @@ export default function TimelineSlider(props: TimelineSliderProps): JSX.Element 
             )
           }}
           onDrag={e => {
-            e.stopPropagation()
-            setIsDragging(true)
             const draggableEvent = e as MouseEvent
             if (isLeftHandleWithinBounds({ draggableEvent, leftOffset, minSliderWidth, width, maxSliderWidth })) {
               setSliderAspects(currAspects => calculateSliderAspectsOnLeftHandleDrag(currAspects, draggableEvent))
@@ -178,7 +187,6 @@ export default function TimelineSlider(props: TimelineSliderProps): JSX.Element 
             )
           }}
           onDrag={e => {
-            e.stopPropagation()
             const draggableEvent = e as MouseEvent
             if (isSliderWithinBounds({ draggableEvent, leftOffset, width, containerWidth })) {
               setSliderAspects(currAspects => calculateSliderAspectsOnDrag(currAspects, draggableEvent))
@@ -206,8 +214,6 @@ export default function TimelineSlider(props: TimelineSliderProps): JSX.Element 
             )
           }}
           onDrag={(e, dragData) => {
-            e.stopPropagation()
-            setIsDragging(true)
             const draggableEvent = e as MouseEvent
             if (draggableEvent.movementX === 0) return
             setSliderAspects(currAspects => calculateSliderAspectsOnRightHandleDrag(currAspects, dragData))
@@ -215,6 +221,7 @@ export default function TimelineSlider(props: TimelineSliderProps): JSX.Element 
         />
       </Container>
       <Container
+        onClick={e => handleSliderClick(e as unknown as MouseEvent)}
         className={css.mask}
         width={containerWidth - leftOffset - width}
         style={{ left: leftOffset + width }}
@@ -222,3 +229,5 @@ export default function TimelineSlider(props: TimelineSliderProps): JSX.Element 
     </div>
   )
 }
+
+export default TimelineSlider

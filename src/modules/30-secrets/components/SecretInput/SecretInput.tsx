@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { connect, FormikContext } from 'formik'
+import { connect, FormikContextType } from 'formik'
 import {
   Layout,
   Icon,
@@ -52,7 +52,7 @@ export interface SecretInputProps {
 }
 
 interface FormikSecretInput extends SecretInputProps {
-  formik: FormikContext<any>
+  formik: FormikContextType<any>
 }
 
 const SecretInput: React.FC<FormikSecretInput> = props => {

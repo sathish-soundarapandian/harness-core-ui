@@ -8,7 +8,7 @@
 import { Spinner } from '@blueprintjs/core'
 import { Container, Text } from '@wings-software/uicore'
 import moment from 'moment'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { getTimeFormatMoment } from '@cv/pages/monitored-service/components/ServiceHealth/ServiceHealth.utils'
@@ -24,6 +24,7 @@ import css from './AnomaliesCard.module.scss'
 
 export default function AnomaliesCard(props: AnomaliesCardProps): JSX.Element {
   const {
+    showOnlyChanges,
     timeRange,
     timeFormat,
     changeTimelineSummary,
@@ -150,10 +151,21 @@ export default function AnomaliesCard(props: AnomaliesCardProps): JSX.Element {
   ])
   const renderChangesData = useCallback(() => {
     const allZero = changeTimelineSummary?.every(item => item.count === 0)
+
+    const noData = showOnlyChanges ? (
+      <Container>
+        <hr className={css.seperator} />
+        <Text color={Color.WHITE} font={{ variation: FontVariation.TINY }} padding={{ left: 'small' }}>
+          {getString('cv.changeSource.noData')}
+        </Text>
+      </Container>
+    ) : null
+
     return !allZero ? (
       <>
+        <hr className={css.seperator} />
         <Container className={css.cardRow}>
-          <Container className={css.cardColumn} padding={{ left: 'small', right: 'small' }}>
+          <Container className={css.cardColumn} padding={{ left: 'small', right: 'small', bottom: 'small' }}>
             {changeTimelineSummary?.map(item => {
               return (
                 <Text
@@ -171,10 +183,11 @@ export default function AnomaliesCard(props: AnomaliesCardProps): JSX.Element {
             })}
           </Container>
         </Container>
-        <hr className={css.seperator} />
       </>
-    ) : null
-  }, [changeTimelineSummary])
+    ) : (
+      noData
+    )
+  }, [changeTimelineSummary, showOnlyChanges, getString])
 
   return (
     <Container className={css.anomaliesContainer}>
@@ -185,25 +198,29 @@ export default function AnomaliesCard(props: AnomaliesCardProps): JSX.Element {
           )}`}
         </Text>
       </Container>
-      <hr className={css.seperator} />
       {changeTimelineSummary && renderChangesData()}
-      <Container className={css.cardRow}>
-        {isLowestHealthScoreAvailable && (
-          <Container className={css.cardColumn} padding={{ left: 'small', right: 'small' }}>
-            <Text padding={{ top: 'small' }} color={Color.WHITE} font={{ size: 'xsmall' }}>
-              {getString('cv.monitoredServices.serviceHealth.lowestHealthScore')}
-            </Text>
-            <Text
-              padding={{ top: 'xsmall', bottom: 'xxsmall' }}
-              color={getRiskColorValue(lowestHealthScoreBarForTimeRange?.riskStatus, false)}
-              font={{ size: 'large', weight: 'bold' }}
-            >
-              {lowestHealthScoreBarForTimeRange?.healthScore}
-            </Text>
+      {!showOnlyChanges && (
+        <>
+          <hr className={css.seperator} />
+          <Container className={css.cardRow}>
+            {isLowestHealthScoreAvailable && (
+              <Container className={css.cardColumn} padding={{ left: 'small', right: 'small' }}>
+                <Text padding={{ top: 'small' }} color={Color.WHITE} font={{ size: 'xsmall' }}>
+                  {getString('cv.monitoredServices.serviceHealth.lowestHealthScore')}
+                </Text>
+                <Text
+                  padding={{ top: 'xsmall', bottom: 'xxsmall' }}
+                  color={getRiskColorValue(lowestHealthScoreBarForTimeRange?.riskStatus, false)}
+                  font={{ size: 'large', weight: 'bold' }}
+                >
+                  {lowestHealthScoreBarForTimeRange?.healthScore}
+                </Text>
+              </Container>
+            )}
+            <Container className={css.cardColumn}>{renderAnomaliesData()}</Container>
           </Container>
-        )}
-        <Container className={css.cardColumn}>{renderAnomaliesData()}</Container>
-      </Container>
+        </>
+      )}
     </Container>
   )
 }

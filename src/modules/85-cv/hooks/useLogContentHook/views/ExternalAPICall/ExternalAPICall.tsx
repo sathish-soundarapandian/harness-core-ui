@@ -11,7 +11,8 @@ import { Layout, SelectOption } from '@harness/uicore'
 import LogContentHeader from '../LogContentHeader/LogContentHeader'
 import LogContentToolbar from '../LogContentToolbar/LogContentToolbar'
 import ExternalAPICallContent from './ExternalAPICallContent'
-import { ExecutionAndAPICallLogProps, LogTypes } from '../../useLogContentHook.types'
+import { isTimeRangeChanged } from '../../useLogContentHook.utils'
+import { ExecutionAndAPICallLogProps, LogTypes, TimeRange } from '../../useLogContentHook.types'
 import css from './ExternalAPICall.module.scss'
 
 const ExternalAPICall: React.FC<ExecutionAndAPICallLogProps> = props => {
@@ -40,9 +41,11 @@ const ExternalAPICall: React.FC<ExecutionAndAPICallLogProps> = props => {
     }
   }
 
-  const handleTimeRange = (_timeRange: SelectOption): void => {
-    setPageNumber(0)
-    setTimeRange?.(_timeRange)
+  const handleTimeRange = (newTimeRange: TimeRange): void => {
+    if (isTimeRangeChanged(newTimeRange, timeRange)) {
+      setPageNumber(0)
+      setTimeRange?.(newTimeRange)
+    }
   }
 
   const handleDisplayOnlyErrors = (_errorLogsOnly: boolean): void => {

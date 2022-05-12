@@ -43,7 +43,15 @@ export default function CDPipelineDeploymentList(): React.ReactElement {
     }
   })
 
+  const isPipelineInvalid = pipeline?.data?.entityValidityDetails?.valid === false
+
   useDocumentTitle([pipeline?.data?.name || getString('pipelines'), getString('executionsText')])
 
-  return <PipelineDeploymentList showHealthAndExecution onRunPipeline={onRunPipeline} />
+  return (
+    <PipelineDeploymentList
+      showHealthAndExecution
+      onRunPipeline={onRunPipeline}
+      isPipelineInvalid={isPipelineInvalid}
+    />
+  )
 }

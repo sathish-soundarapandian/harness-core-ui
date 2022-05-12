@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { IFormGroupProps } from '@blueprintjs/core'
-import { connect, FormikContext } from 'formik'
+import { connect, FormikContextType } from 'formik'
 import {
   FormInput,
   getMultiTypeFromValue,
@@ -28,6 +28,7 @@ interface MultiTextTypeInputProps extends Omit<IFormGroupProps, 'label' | 'label
   placeholder?: string
   onChange?: MultiTextInputProps['onChange']
   multiTextInputProps?: Omit<MultiTextInputProps, 'name'>
+  textProps?: { type?: string }
 }
 
 interface MultiTypeTextConfigureOptionsProps
@@ -39,7 +40,7 @@ export interface MultiTypeTextProps {
   className?: string
   name: string
   label: string | React.ReactElement
-  formik?: FormikContext<any>
+  formik?: FormikContextType<any>
   multiTextInputProps?: Omit<MultiTextTypeInputProps, 'name' | 'label'>
   enableConfigureOptions?: boolean
   configureOptionsProps?: MultiTypeTextConfigureOptionsProps

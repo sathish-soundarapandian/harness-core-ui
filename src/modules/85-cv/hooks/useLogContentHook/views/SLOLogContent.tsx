@@ -7,19 +7,14 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { SelectOption, useToaster } from '@harness/uicore'
+import { useToaster } from '@harness/uicore'
 import { getServiceLevelObjectiveLogsPromise, useGetServiceLevelObjectiveLogs } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
-import { LogTypes, TimeRangeTypes, SLOLogContentProps } from '../useLogContentHook.types'
+import { LogTypes, SLOLogContentProps, TimeRange } from '../useLogContentHook.types'
 import ExecutionLog from './ExecutionLog/ExecutionLog'
-import {
-  downloadJson,
-  getTimeRangeInMilliseconds,
-  getTimeRangeOptions,
-  parseResponseBody
-} from '../useLogContentHook.utils'
+import { downloadJson, getDateRangeShortcuts, parseResponseBody } from '../useLogContentHook.utils'
 import ExternalAPICall from './ExternalAPICall/ExternalAPICall'
 import { PAGE_SIZE } from '../useLogContentHook.constants'
 
@@ -36,8 +31,8 @@ const SLOLogContent: React.FC<SLOLogContentProps> = ({
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [errorLogsOnly, setErrorLogsOnly] = React.useState<boolean>(false)
   const [pageNumber, setPageNumber] = React.useState(0)
-  const [timeRange, setTimeRange] = React.useState<SelectOption>(getTimeRangeOptions(getString)[0])
-  const [startTime, endTime] = getTimeRangeInMilliseconds(timeRange.value as TimeRangeTypes)
+  const [timeRange, setTimeRange] = React.useState<TimeRange>(getDateRangeShortcuts(getString)[0])
+  const [startTime, endTime] = [timeRange.value[0].getTime(), timeRange.value[1].getTime()]
 
   const { data, loading, error, refetch } = useGetServiceLevelObjectiveLogs({
     identifier,

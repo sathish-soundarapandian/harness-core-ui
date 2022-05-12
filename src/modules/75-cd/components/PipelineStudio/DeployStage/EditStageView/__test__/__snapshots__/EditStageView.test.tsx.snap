@@ -21,6 +21,7 @@ exports[`Edit stage view test Should match snapshot when context is provided 1`]
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -400,6 +401,7 @@ exports[`Edit stage view test Should match snapshot when template is provided 1`
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>

@@ -106,14 +106,16 @@ const TargetList: React.FC<TargetListProps> = ({ targets, onAdd, onRemove, onCha
   )
 }
 
-const FileUpload: React.FC<{ onChange: (targets: TargetData[]) => void }> = ({ onChange }) => {
+const FileUpload: React.FC<{
+  onChange: (file?: File) => void
+}> = ({ onChange }) => {
   const { getString } = useStrings()
   const uploadContainerHeight = 260
   const [targets, setTargets] = useState<TargetData[]>([])
   const [tagItems, setTagItems] = useState<{ label: string; value: string }[]>([])
   const handleRemove = (): void => {
     setTargets([])
-    onChange([])
+    onChange(undefined)
     setTagItems([])
   }
   const handleUpload = (file: File): void => {
@@ -136,23 +138,11 @@ const FileUpload: React.FC<{ onChange: (targets: TargetData[]) => void }> = ({ o
           )
         )
         setTargets(targetData)
-        onChange(targetData)
+        onChange(file)
       })
   }
   const handleChange = (e: any) => {
     handleUpload(e.target.files[0])
-  }
-  const onTagChanged: React.ComponentProps<typeof SimpleTagInput>['onChange'] = (
-    selectedItems,
-    _createdItems,
-    _items
-  ) => {
-    const updatedTargets = selectedItems.map(arg => {
-      const { label, value } = arg as { label: string; value: string }
-      return { name: value, identifier: label }
-    })
-    setTargets(updatedTargets)
-    onChange(updatedTargets)
   }
 
   return (
@@ -198,7 +188,7 @@ const FileUpload: React.FC<{ onChange: (targets: TargetData[]) => void }> = ({ o
             padding="xsmall"
             className={css.uploadTargetContainer}
           >
-            <SimpleTagInput noInputBorder selectedItems={tagItems} items={tagItems} onChange={onTagChanged} />
+            <SimpleTagInput readonly noInputBorder selectedItems={tagItems} items={tagItems} />
           </Container>
         </Container>
       )}
@@ -212,15 +202,16 @@ const filterTargets = (targets: TargetData[]): TargetData[] =>
 export interface CreateTargetModalProps {
   loading: boolean
   onSubmitTargets: (targets: TargetData[], hideModal: () => void) => void
-  onSubmitUpload: (file: File, hideModal: () => void) => void
+  onSubmitTargetFile: (file: File, hideModal: () => void) => void
 }
 
-const CreateTargetModal: React.FC<CreateTargetModalProps> = ({ loading, onSubmitTargets }) => {
+const CreateTargetModal: React.FC<CreateTargetModalProps> = ({ loading, onSubmitTargets, onSubmitTargetFile }) => {
   const LIST = 'list'
   const UPLOAD = 'upload'
   const [isList, setIsList] = useState(true)
   const [targets, setTargets] = useState<TargetData[]>([emptyTarget()])
-  const addDisabled = filterTargets(targets).length === 0
+  const [targetFile, setTargetFile] = useState<File>()
+  const addDisabled = filterTargets(targets).length === 0 && !targetFile
   const { getString } = useStrings()
   const getPageString = (key: string): string =>
     getString(`cf.targets.${key}` as StringKeys /* TODO: fix this by using a map */)
@@ -241,6 +232,7 @@ const CreateTargetModal: React.FC<CreateTargetModalProps> = ({ loading, onSubmit
   const handleChange = (e: React.FormEvent<HTMLInputElement>): void => {
     setIsList((e.target as HTMLInputElement).value === LIST)
     setTargets([emptyTarget()])
+    setTargetFile(undefined)
   }
 
   const handleTargetAdd = (): void => {
@@ -258,18 +250,29 @@ const CreateTargetModal: React.FC<CreateTargetModalProps> = ({ loading, onSubmit
   }
 
   const handleSubmit = (): void => {
-    const filteredTargets = filterTargets(targets)
-    if (filteredTargets.length) {
-      onSubmitTargets(filteredTargets, () => {
+    if (!isList && targetFile) {
+      // submit target csv
+      onSubmitTargetFile(targetFile, () => {
         hideModal()
-        setTargets([emptyTarget()])
+        setTargetFile(undefined)
       })
+    } else {
+      // submit manually typed targets
+      const filteredTargets = filterTargets(targets)
+      if (filteredTargets.length) {
+        onSubmitTargets(filteredTargets, () => {
+          hideModal()
+          setTargets([emptyTarget()])
+          setTargetFile(undefined)
+        })
+      }
     }
   }
 
   const handleCancel = (): void => {
     setIsList(true)
     setTargets([emptyTarget()])
+    setTargetFile(undefined)
     hideModal()
   }
 
@@ -306,7 +309,7 @@ const CreateTargetModal: React.FC<CreateTargetModalProps> = ({ loading, onSubmit
                       style={{ transform: 'translateY(2px)', cursor: 'pointer' }}
                     />
                   </Text>
-                  <FileUpload onChange={_targets => setTargets(_targets)} />
+                  <FileUpload onChange={file => setTargetFile(file)} />
                 </Layout.Vertical>
               )}
             </RadioGroup>

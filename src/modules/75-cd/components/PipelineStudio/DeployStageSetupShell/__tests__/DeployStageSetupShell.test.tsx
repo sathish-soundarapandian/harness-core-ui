@@ -7,6 +7,8 @@
 
 import React from 'react'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import { noop } from 'lodash-es'
+import { Formik } from '@wings-software/uicore'
 
 import { TestWrapper } from '@common/utils/testUtils'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
@@ -65,7 +67,8 @@ jest.mock('services/cd-ng', () => ({
       status: 'SUCCESS'
     },
     loading: false
-  })
+  }),
+  useGetExecutionStrategyYaml: jest.fn().mockReturnValue({})
 }))
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -82,9 +85,11 @@ describe('DeployStageSetupShell tests', () => {
   test('opens services tab by default', async () => {
     const { container, findByTestId } = render(
       <TestWrapper>
-        <PipelineContext.Provider value={context}>
-          <DeployStageSetupShell />
-        </PipelineContext.Provider>
+        <Formik initialValues={{}} onSubmit={noop} formName="test">
+          <PipelineContext.Provider value={context}>
+            <DeployStageSetupShell />
+          </PipelineContext.Provider>
+        </Formik>
       </TestWrapper>
     )
 
@@ -108,9 +113,11 @@ describe('DeployStageSetupShell tests', () => {
     }
     const { container, findByTestId } = render(
       <TestWrapper>
-        <StageErrorContext.Provider value={errorContextProvider}>
-          <DeployStageSetupShell />
-        </StageErrorContext.Provider>
+        <Formik initialValues={{}} onSubmit={noop} formName="test">
+          <StageErrorContext.Provider value={errorContextProvider}>
+            <DeployStageSetupShell />
+          </StageErrorContext.Provider>
+        </Formik>
       </TestWrapper>
     )
 
@@ -137,9 +144,11 @@ describe('DeployStageSetupShell tests', () => {
     }
     const { container, findByTestId } = render(
       <TestWrapper>
-        <StageErrorContext.Provider value={errorContextProvider}>
-          <DeployStageSetupShell />
-        </StageErrorContext.Provider>
+        <Formik initialValues={{}} onSubmit={noop} formName="test">
+          <StageErrorContext.Provider value={errorContextProvider}>
+            <DeployStageSetupShell />
+          </StageErrorContext.Provider>
+        </Formik>
       </TestWrapper>
     )
 
@@ -168,9 +177,11 @@ describe('DeployStageSetupShell tests', () => {
 
     const { findByTestId } = render(
       <TestWrapper>
-        <StageErrorContext.Provider value={errorContextProvider}>
-          <DeployStageSetupShell />
-        </StageErrorContext.Provider>
+        <Formik initialValues={{}} onSubmit={noop} formName="test">
+          <StageErrorContext.Provider value={errorContextProvider}>
+            <DeployStageSetupShell />
+          </StageErrorContext.Provider>
+        </Formik>
       </TestWrapper>
     )
 
@@ -227,11 +238,13 @@ describe('DeployStageSetupShell tests', () => {
     }
     const { container, findByTestId } = render(
       <TestWrapper>
-        <PipelineContext.Provider value={context}>
-          <StageErrorContext.Provider value={errorContextProvider}>
-            <DeployStageSetupShell />
-          </StageErrorContext.Provider>
-        </PipelineContext.Provider>
+        <Formik initialValues={{}} onSubmit={noop} formName="test">
+          <PipelineContext.Provider value={context}>
+            <StageErrorContext.Provider value={errorContextProvider}>
+              <DeployStageSetupShell />
+            </StageErrorContext.Provider>
+          </PipelineContext.Provider>
+        </Formik>
       </TestWrapper>
     )
     const buttonService = (await waitFor(() => container.querySelector('[icon="chevron-right"]'))) as HTMLElement

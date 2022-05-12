@@ -194,7 +194,7 @@ describe('TerraformConfigForm StepOne tests', () => {
 
 const renderStepTwoComponent = (data?: any): void => {
   render(
-    <TestWrapper>
+    <TestWrapper defaultAppStoreValues={{ featureFlags: { TF_MODULE_SOURCE_INHERIT_SSH: true } }}>
       <TerraformConfigStepTwo
         isTerraformPlan={isTerraformPlan}
         prevStepData={data}
@@ -513,6 +513,55 @@ describe('TerraformConfigForm StepTwo tests', () => {
     renderStepTwoComponent(prevStepData)
     const previousButton = await screen.getByTestId('previous-button')
     fireEvent.click(previousButton)
+    expect(screen).toMatchSnapshot()
+  })
+
+  test(`should show module source section`, async () => {
+    isTerraformPlan = false
+    const prevStepData = {
+      formValues: {
+        spec: {
+          configuration: {
+            spec: {
+              configFiles: {
+                store: {
+                  spec: {
+                    repoName: '',
+                    gitFetchType: '',
+                    commitId: '',
+                    folderPath: '',
+                    connectorRef: {
+                      connector: {
+                        type: 'Git',
+                        spec: {
+                          type: 'Account'
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    renderStepTwoComponent(prevStepData)
+    // all inputs are displayed
+    const fetchType = await screen.findByPlaceholderText('- pipeline.manifestType.gitFetchTypeLabel -')
+    expect(fetchType).toBeInTheDocument()
+
+    const folderPath = await screen.findByPlaceholderText('pipeline.manifestType.pathPlaceholder')
+    expect(folderPath).toBeInTheDocument()
+
+    const githubbConnector = await screen.findByTestId('advanced-config-summary')
+    expect(githubbConnector).toBeInTheDocument()
+
+    fireEvent.click(githubbConnector)
+
+    const useConnectorCredentials = await screen.findByTestId('useConnectorCredentials')
+    expect(useConnectorCredentials).toBeInTheDocument()
+
     expect(screen).toMatchSnapshot()
   })
 })

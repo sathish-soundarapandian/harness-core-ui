@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { IFormGroupProps } from '@blueprintjs/core'
-import { connect, FormikContext } from 'formik'
+import { connect, FormikContextType } from 'formik'
 import {
   FormInput,
   getMultiTypeFromValue,
@@ -36,12 +36,13 @@ export interface MultiTypeSelectProps {
   className?: string
   name: string
   label: string | React.ReactElement
-  formik?: FormikContext<any>
+  formik?: FormikContextType<any>
   multiTypeInputProps: Omit<FormMultiTypeInputProps, 'name' | 'label'>
   enableConfigureOptions?: boolean
   configureOptionsProps?: MultiTypeSelectConfigureOptionsProps
   style?: React.CSSProperties
   disabled?: boolean
+  useValue?: boolean
 }
 
 export function MultiTypeSelect(props: MultiTypeSelectProps): React.ReactElement {
@@ -54,7 +55,8 @@ export function MultiTypeSelect(props: MultiTypeSelectProps): React.ReactElement
     enableConfigureOptions = true,
     configureOptionsProps,
     style,
-    disabled = false
+    disabled = false,
+    useValue
   } = props
 
   const value = get(formik?.values, name, '')
@@ -70,6 +72,7 @@ export function MultiTypeSelect(props: MultiTypeSelectProps): React.ReactElement
           label=""
           style={{ marginBottom: 0, flexGrow: 1 }}
           {...multiTypeInputProps}
+          {...(useValue && { useValue: true })}
         />
         {enableConfigureOptions && getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions

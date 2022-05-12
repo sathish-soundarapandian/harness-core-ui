@@ -57,6 +57,10 @@
     min-height: 250px;
     flex: 1;
     padding-top: var(--spacing-xlarge) !important;
+
+    &.whiteBackground {
+      background-color: var(--white);
+    }
   }
 
   .loading,

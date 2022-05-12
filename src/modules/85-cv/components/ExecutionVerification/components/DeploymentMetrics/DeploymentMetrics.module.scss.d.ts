@@ -35,5 +35,6 @@ declare const styles: {
   readonly nodeCountMessage: string
   readonly predicted: string
   readonly refreshButton: string
+  readonly whiteBackground: string
 }
 export default styles

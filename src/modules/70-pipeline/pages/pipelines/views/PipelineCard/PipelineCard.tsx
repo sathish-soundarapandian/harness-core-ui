@@ -110,12 +110,14 @@ function ContextMenu({
     branch: pipeline?.gitDetails?.branch
   })
 
+  const isPipelineInvalid = pipeline?.entityValidityDetails?.valid === false
+
   return (
     <Menu style={{ minWidth: 'unset' }} onClick={e => e.stopPropagation()}>
       <Menu.Item
         icon="play"
         text={getString('runPipelineText')}
-        disabled={!canRun}
+        disabled={!canRun || isPipelineInvalid}
         onClick={(e: React.MouseEvent) => {
           e.stopPropagation()
           runPipeline()
@@ -271,6 +273,8 @@ export function PipelineCard({
 
   const pipelineIcons = getIconsForPipeline(pipeline)
   const status = pipeline.executionSummaryInfo?.lastExecutionStatus
+  const isPipelineInvalid = pipeline?.entityValidityDetails?.valid === false
+
   return (
     <Card className={css.pipelineCard} interactive onClick={() => goToPipelineStudio(pipeline)}>
       <Container padding={'xlarge'} border={{ bottom: true }}>
@@ -299,7 +303,7 @@ export function PipelineCard({
               {!isEmpty(pipelineIcons) &&
                 pipelineIcons.map(iconObj => <Icon key={iconObj.icon} name={iconObj.icon} size={16} />)}
             </Container>
-            {pipeline.entityValidityDetails?.valid === false && (
+            {isPipelineInvalid && (
               <Badge
                 text={'common.invalid'}
                 iconName="error-outline"
@@ -330,16 +334,16 @@ export function PipelineCard({
         </Container>
       </Container>
       <Container padding={{ left: 'xlarge', right: 'xlarge' }}>
-        <Container border={{ bottom: true }} padding={{ top: 'medium', bottom: 'medium' }}>
-          {pipeline.stageNames?.length ? (
+        {pipeline.stageNames && !isEmpty(pipeline.stageNames) && (
+          <Container border={{ bottom: true }} padding={{ top: 'medium', bottom: 'medium' }}>
             <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing={'small'}>
               <Text className={css.label} font="small" width={LEFT_COLUMN_WIDTH} color={Color.GREY_700}>
                 {getString('stages')}
               </Text>
               {renderEntityWithAdditionalCountInfo(pipeline.stageNames)}
             </Layout.Horizontal>
-          ) : null}
-        </Container>
+          </Container>
+        )}
         <Container
           className={css.infoContainer}
           border={{ bottom: true }}
@@ -531,6 +535,8 @@ export function PipelineCard({
                 e.stopPropagation()
                 runPipeline()
               }}
+              disabled={isPipelineInvalid}
+              tooltip={isPipelineInvalid ? getString('pipeline.cannotRunInvalidPipeline') : ''}
             />
             {pipeline.executionSummaryInfo?.lastExecutionTs && (
               <Button

@@ -33,6 +33,7 @@ import type { AccountPathProps, OrgPathProps } from '@common/interfaces/RouteInt
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import RbacButton from '@rbac/components/Button/Button'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import ProjectsListView from './views/ProjectListView/ProjectListView'
 import ProjectsGridView from './views/ProjectGridView/ProjectGridView'
 import ProjectsEmptyState from './projects-empty-state.png'
@@ -48,11 +49,16 @@ const ProjectsListPage: React.FC = () => {
   const { verify } = useQueryParams<{ verify?: boolean }>()
   const { getString } = useStrings()
   useDocumentTitle(getString('projectsText'))
-  const [view, setView] = useState(Views.GRID)
+
+  const { preference: savedProjectView, setPreference: setSavedProjectView } = usePreferenceStore<Views | undefined>(
+    PreferenceScope.USER,
+    'projectsViewType'
+  )
+  const initialSelectedView = savedProjectView || Views.GRID
+  const [view, setView] = useState(initialSelectedView)
   const [searchParam, setSearchParam] = useState<string>()
   const [page, setPage] = useState(0)
   const history = useHistory()
-
   const allOrgsSelectOption: SelectOption = useMemo(
     () => ({
       label: getString('all'),
@@ -127,6 +133,11 @@ const ProjectsListPage: React.FC = () => {
     openCollaboratorModal({ projectIdentifier: project.identifier, orgIdentifier: project.orgIdentifier || 'default' })
   }
 
+  const setProjectView = (viewType: Views): void => {
+    setView(viewType)
+    setSavedProjectView(viewType)
+  }
+
   return (
     <Container className={css.projectsPage} height="inherit">
       <Page.Header breadcrumbs={<NGBreadcrumbs />} title={getString('projectsText')} />
@@ -166,7 +177,7 @@ const ProjectsListPage: React.FC = () => {
             width={300}
             className={css.expandSearch}
           />
-          <GridListToggle initialSelectedView={Views.GRID} onViewToggle={setView} />
+          <GridListToggle initialSelectedView={initialSelectedView} onViewToggle={setProjectView} />
         </Layout.Horizontal>
       ) : null}
       <Page.Body

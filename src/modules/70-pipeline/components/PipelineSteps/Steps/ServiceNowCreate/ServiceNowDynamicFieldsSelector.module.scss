@@ -1,0 +1,72 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Free Trial 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
+ */
+
+.radioGroup {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--spacing-xlarge);
+}
+
+.selectFieldListHelp {
+  margin: var(--spacing-medium) 0;
+}
+
+.select {
+  margin: var(--spacing-large) 0;
+}
+
+.fieldsSelectorPlaceholder {
+  padding: var(--spacing-large);
+  text-align: center;
+  background-color: var(--grey-100);
+}
+
+.selectLabel {
+  margin-bottom: var(--spacing-small) !important;
+}
+
+.headerRow {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 30px;
+  column-gap: var(--spacing-small);
+  margin-bottom: var(--spacing-small);
+  align-items: center;
+
+  :global(.bp3-form-group) {
+    margin: 0;
+  }
+
+  .label {
+    color: var(--grey-400);
+  }
+
+  :global(.bp3-icon-trash) {
+    color: var(--grey-400) !important;
+  }
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  margin-top: var(--spacing-large) !important;
+}
+
+.secondButton {
+  margin-left: var(--spacing-medium) !important;
+}
+
+.contentWrapper {
+  padding: 0 var(--spacing-large);
+}
+
+.addFieldsButton {
+  padding: 0 !important;
+}
+
+.fetchingPageSpinner {
+  transform: scale(0.6);
+}

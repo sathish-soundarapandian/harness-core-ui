@@ -11,6 +11,8 @@ import { useHistory, useParams } from 'react-router-dom'
 import { Intent, Color } from '@harness/design-system'
 import routes from '@common/RouteDefinitions'
 import { useStrings } from 'framework/strings'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import theBasicsImage from './basics.svg'
 import upAndRunningImage from './upAndRunning.svg'
 import css from './OnboardingPage.module.scss'
@@ -19,6 +21,7 @@ export const OnboardingPage = () => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
   const { getString } = useStrings()
   const history = useHistory()
+  const { trackEvent } = useTelemetry()
 
   return (
     <Container padding="huge" height="100%" background={Color.WHITE}>
@@ -78,6 +81,9 @@ export const OnboardingPage = () => {
           style={{ fontWeight: 700 }}
           width={350}
           onClick={() => {
+            trackEvent(FeatureActions.GetStartedClick, {
+              category: Category.FEATUREFLAG
+            })
             history.push(routes.toCFOnboardingDetail({ accountId, orgIdentifier, projectIdentifier }))
           }}
         />

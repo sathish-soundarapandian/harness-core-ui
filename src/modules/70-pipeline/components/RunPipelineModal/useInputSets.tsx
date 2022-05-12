@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import type { GetDataError } from 'restful-react'
 import { parse } from 'yaml'
 import { memoize } from 'lodash-es'
@@ -56,6 +63,8 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
     rerunInputSetYaml,
     accountId,
     orgIdentifier,
+    branch,
+    repoIdentifier,
     projectIdentifier,
     pipelineIdentifier,
     selectedStageData
@@ -76,7 +85,9 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      pipelineIdentifier
+      pipelineIdentifier,
+      branch,
+      repoIdentifier
     }
   })
 
@@ -94,6 +105,8 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
+      branch,
+      repoIdentifier,
       pipelineIdentifier
     }
   })
@@ -112,9 +125,9 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
 
       if (shouldFetchInputSets && inputSetData?.data?.pipelineYaml) {
         isInputSetApplied = true
-        const parsedInputSets = memoizedParse(inputSetData.data.pipelineYaml)
+        const parsedInputSets = clearRuntimeInput(memoizedParse(inputSetData.data.pipelineYaml).pipeline)
 
-        return mergeTemplateWithInputSetData({ pipeline: parsedRunPipelineYaml }, parsedInputSets)
+        return mergeTemplateWithInputSetData({ pipeline: parsedRunPipelineYaml }, { pipeline: parsedInputSets })
       }
 
       return { pipeline: parsedRunPipelineYaml }

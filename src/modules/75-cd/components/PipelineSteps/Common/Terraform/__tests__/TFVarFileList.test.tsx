@@ -6,8 +6,9 @@
  */
 
 import React from 'react'
+import { noop } from 'lodash-es'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { MultiTypeInputType, Formik } from '@wings-software/uicore'
 import { findDialogContainer, findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import TfVarFileList from '../Editview/TFVarFileList'
 
@@ -62,10 +63,12 @@ const defaultProps = {
   allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
 }
 
-const renderComponent = (props: any): void => {
-  render(
+const renderComponent = (props: any) => {
+  return render(
     <TestWrapper>
-      <TfVarFileList {...props} />
+      <Formik formName="TfVarFileList" onSubmit={noop} initialValues={{}}>
+        <TfVarFileList {...props} />
+      </Formik>
     </TestWrapper>
   )
 }
@@ -148,11 +151,7 @@ describe('Test TfPlanVarFileList', () => {
       allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME],
       selectedConnector: 'Artifactory'
     } as any
-    const { container, getByText } = render(
-      <TestWrapper>
-        <TfVarFileList {...props} />
-      </TestWrapper>
-    )
+    const { container, getByText } = renderComponent(props)
     const editQueries = container.querySelectorAll('[data-icon="edit"]')
     // remote edit
     fireEvent.click(editQueries[0])

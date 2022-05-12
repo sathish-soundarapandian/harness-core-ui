@@ -12,7 +12,7 @@ import cx from 'classnames'
 import { isEmpty, lowerCase } from 'lodash-es'
 import type { PipelineInfrastructure, Infrastructure, ExecutionElementConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
@@ -23,6 +23,11 @@ import { ExecutionCardPanel } from './ExecutionCard'
 import type { PipelineVariablesData } from '../types'
 import VariableAccordionSummary from '../VariableAccordionSummary'
 import css from '../PipelineVariables.module.scss'
+
+const StepsMap: Record<string, StepType> = {
+  KubernetesDirect: StepType.KubernetesDirect,
+  ServerlessAwsLambda: StepType.ServerlessAwsInfra
+}
 
 export interface InfrastructureCardProps {
   infrastructure: PipelineInfrastructure
@@ -72,7 +77,10 @@ export function InfrastructureCard(props: InfrastructureCardProps): React.ReactE
       <StepWidget<Infrastructure>
         factory={stepsFactory}
         initialValues={originalInfrastructure.infrastructureDefinition?.spec || {}}
-        type={originalInfrastructure.infrastructureDefinition?.type as StepType}
+        type={
+          StepsMap[originalInfrastructure.infrastructureDefinition?.type as StepType] ||
+          (originalInfrastructure.infrastructureDefinition?.type as StepType)
+        }
         stepViewType={StepViewType.InputVariable}
         allowableTypes={allowableTypes}
         onUpdate={onUpdateInfrastructure}

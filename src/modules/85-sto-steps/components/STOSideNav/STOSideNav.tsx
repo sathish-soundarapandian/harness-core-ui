@@ -92,16 +92,29 @@ const TabPanel: React.FC<TabPanelProps> = ({ isProjectMode }) => {
       {showLinks && (
         <React.Fragment>
           {isProjectMode ? (
-            <SidebarLink
-              label={getString('overview')}
-              to={routes.toSTOProjectOverview({
-                accountId,
-                projectIdentifier,
-                orgIdentifier
-              })}
-            />
+            <>
+              <SidebarLink
+                label={getString('overview')}
+                to={routes.toSTOProjectOverview({
+                  accountId,
+                  projectIdentifier,
+                  orgIdentifier
+                })}
+              />
+              <SidebarLink
+                label={getString('stoSteps.targets.testTargets')}
+                to={routes.toSTOProjectTargets({
+                  accountId,
+                  projectIdentifier,
+                  orgIdentifier
+                })}
+              />
+            </>
           ) : (
-            <SidebarLink label={getString('overview')} to={routes.toSTOOverview({ accountId })} />
+            <>
+              <SidebarLink label={getString('overview')} to={routes.toSTOOverview({ accountId })} />
+              <SidebarLink label={getString('stoSteps.targets.testTargets')} to={routes.toSTOTargets({ accountId })} />
+            </>
           )}
         </React.Fragment>
       )}

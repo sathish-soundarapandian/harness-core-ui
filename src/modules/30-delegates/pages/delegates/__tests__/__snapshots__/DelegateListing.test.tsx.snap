@@ -542,7 +542,7 @@ exports[`Test delegate buttons click on filter 1`] = `
                 <span />
               </div>
               <div
-                class="Layout--horizontal StyledProps--main instancesColumn"
+                class="Layout--horizontal StyledProps--main"
                 style="width: 20%;"
               >
                 0
@@ -979,7 +979,7 @@ exports[`Test delegate buttons click on new delegate 1`] = `
                 <span />
               </div>
               <div
-                class="Layout--horizontal StyledProps--main instancesColumn"
+                class="Layout--horizontal StyledProps--main"
                 style="width: 20%;"
               >
                 0

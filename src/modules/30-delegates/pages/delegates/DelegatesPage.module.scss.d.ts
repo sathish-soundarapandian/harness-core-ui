@@ -26,7 +26,6 @@ declare const styles: {
   readonly expandIcon: string
   readonly groupHostName: string
   readonly header: string
-  readonly instancesColumn: string
   readonly instancesContainer: string
   readonly itemActionContainer: string
   readonly listBody: string

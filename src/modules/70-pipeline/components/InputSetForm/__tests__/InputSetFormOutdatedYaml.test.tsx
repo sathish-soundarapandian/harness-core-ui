@@ -118,7 +118,7 @@ jest.mock('@common/hooks', () => ({
 
 jest.mock('services/pipeline-ng', () => ({
   useGetInputSetForPipeline: jest.fn(() => GetInputSetEdit),
-  useCreateVariables: () => jest.fn(() => ({})),
+  useCreateVariablesV2: () => jest.fn(() => ({})),
   useGetMergeInputSetFromPipelineTemplateWithListInput: jest.fn(() => MergeInputSetResponse),
   useGetPipeline: jest.fn(() => PipelineResponse),
   useSanitiseInputSet: jest.fn(() => PipelineResponse),

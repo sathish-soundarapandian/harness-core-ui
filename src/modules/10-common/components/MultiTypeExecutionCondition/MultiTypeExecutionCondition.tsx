@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { connect, FormikContext } from 'formik'
+import { connect, FormikContextType } from 'formik'
 import { filter, get } from 'lodash-es'
 import { Container, ExpressionAndRuntimeType, MultiTypeInputType } from '@wings-software/uicore'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
@@ -17,7 +17,7 @@ import css from './MultiTypeExecutionCondition.module.scss'
 interface MultiTypeExecutionConditionProps {
   path: string
   allowableTypes?: MultiTypeInputType[]
-  formik?: FormikContext<any>
+  formik?: FormikContextType<any>
   isInputDisabled?: boolean
   readonly?: boolean
   multiType?: MultiTypeInputType

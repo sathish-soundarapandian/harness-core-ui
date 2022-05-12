@@ -16,6 +16,7 @@ declare const styles: {
   readonly main: string
   readonly showRighDrawer: string
   readonly stepConfig: string
+  readonly templateInputsContainer: string
   readonly title: string
 }
 export default styles

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useCallback } from 'react'
 import { Container, Tabs, Tab, NoDataCard, Layout, FlexExpander, Button, ButtonVariation } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
@@ -40,11 +40,15 @@ export function ExecutionVerificationView(props: ExecutionVerificationViewProps)
 
   const { openLogContentHook } = useLogContentHook({ verifyStepExecutionId: activityId })
 
+  const handleTabChange = useCallback(() => {
+    setSelectedNode(undefined)
+  }, [])
+
   const content = activityId ? (
     <>
       <ManualInterventionVerifyStep step={step} />
       <InterruptedHistory interruptedHistories={step?.interruptHistories} />
-      <Tabs id="AnalysisTypeTabs" defaultSelectedTabId={defaultTabId}>
+      <Tabs id="AnalysisTypeTabs" defaultSelectedTabId={defaultTabId} onChange={handleTabChange}>
         <Tab
           id={getString('pipeline.verification.analysisTab.metrics')}
           title={getString('pipeline.verification.analysisTab.metrics')}
@@ -65,7 +69,19 @@ export function ExecutionVerificationView(props: ExecutionVerificationViewProps)
         <Tab
           id={getString('pipeline.verification.analysisTab.logs')}
           title={getString('pipeline.verification.analysisTab.logs')}
-          panel={<LogAnalysisContainer step={step} hostName={selectedNode?.hostName} />}
+          panel={
+            <Layout.Horizontal style={{ height: '100%' }}>
+              <ExecutionVerificationSummary
+                displayAnalysisCount={false}
+                step={step}
+                className={css.executionSummary}
+                onSelectNode={setSelectedNode}
+                isConsoleView
+              />
+              <LogAnalysisContainer step={step} hostName={selectedNode?.hostName} />
+            </Layout.Horizontal>
+          }
+          panelClassName={css.mainTabPanelLogs}
         />
         {isErrorTrackingEnabled && (
           <Tab

@@ -6,53 +6,119 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { Icon, Container, Text, FontVariation, Layout, CardSelect, PillToggle, Color } from '@harness/uicore'
+import {
+  Icon,
+  Container,
+  Text,
+  FontVariation,
+  Layout,
+  CardSelect,
+  PillToggle,
+  Color,
+  Button,
+  ButtonVariation
+} from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { Hosting, SelectBuildLocationProps, BuildLocationDetails, AllBuildLocations } from './Constants'
+import {
+  Hosting,
+  SelectBuildLocationProps,
+  BuildLocationDetails,
+  AllBuildLocationsForSaaS,
+  AllBuildLocationsForOnPrem,
+  ProvisioningStatus,
+  HostedByHarnessBuildLocation,
+  K8sBuildLocation
+} from './Constants'
 
 import css from './InfraProvisioningWizard.module.scss'
 
-export const SelectBuildLocation: React.FC<SelectBuildLocationProps> = props => {
-  const { selectedBuildLocation } = props
-  const [selected, setSelected] = useState<BuildLocationDetails>()
-  const [hosting, setHosting] = useState<Hosting>(Hosting.SaaS)
+export interface SelectBuildLocationRef {
+  hosting: Hosting
+  buildLocation: BuildLocationDetails
+}
+
+export type SelectBuildLocationForwardRef =
+  | ((instance: SelectBuildLocationRef | null) => void)
+  | React.MutableRefObject<SelectBuildLocationRef | null>
+  | null
+
+const SelectBuildLocationRef = (
+  props: SelectBuildLocationProps,
+  forwardRef: SelectBuildLocationForwardRef
+): React.ReactElement => {
+  const { selectedHosting, selectedBuildLocation, provisioningStatus } = props
+  const [buildLocation, setBuildLocation] = useState<BuildLocationDetails>()
+  const [hosting, setHosting] = useState<Hosting>()
 
   useEffect(() => {
-    setSelected(selectedBuildLocation)
+    if (!forwardRef) {
+      return
+    }
+    if (typeof forwardRef === 'function') {
+      return
+    }
+
+    if (hosting && buildLocation) {
+      forwardRef.current = {
+        hosting,
+        buildLocation
+      }
+    }
+  }, [hosting, buildLocation])
+
+  useEffect(() => {
+    if (hosting === Hosting.OnPrem) {
+      setBuildLocation(K8sBuildLocation)
+    } else if (hosting === Hosting.SaaS) {
+      setBuildLocation(selectedBuildLocation ?? HostedByHarnessBuildLocation)
+    }
+  }, [hosting])
+
+  useEffect(() => {
+    setBuildLocation(selectedBuildLocation)
   }, [selectedBuildLocation])
+
+  useEffect(() => {
+    if (selectedHosting) {
+      setHosting(selectedHosting)
+    } else {
+      setHosting(Hosting.SaaS)
+    }
+  }, [selectedHosting])
 
   const { getString } = useStrings()
   return (
     <Layout.Vertical>
       <Text font={{ variation: FontVariation.H4 }}>{getString('ci.getStartedWithCI.buildLocation')}</Text>
       <Container padding={{ top: 'xlarge', bottom: 'xxlarge' }}>
-        <PillToggle
-          options={[
-            {
-              label: getString('ci.getStartedWithCI.hosting', {
-                hosting: getString('ci.getStartedWithCI.onCloudLabel')
-              }),
-              value: Hosting.SaaS
-            },
-            {
-              label: getString('ci.getStartedWithCI.hosting', {
-                hosting: getString('ci.getStartedWithCI.onPremLabel').toLowerCase()
-              }),
-              value: Hosting.OnPrem
-            }
-          ]}
-          selectedView={hosting}
-          onChange={(item: Hosting) => setHosting(item)}
-          className={css.hostingToggle}
-          disableToggle={true}
-        />
+        {hosting ? (
+          <PillToggle
+            options={[
+              {
+                label: getString('ci.getStartedWithCI.hosting', {
+                  hosting: getString('ci.getStartedWithCI.onCloudLabel')
+                }),
+                value: Hosting.SaaS
+              },
+              {
+                label: getString('ci.getStartedWithCI.hosting', {
+                  hosting: getString('ci.getStartedWithCI.onPremLabel').toLowerCase()
+                }),
+                value: Hosting.OnPrem
+              }
+            ]}
+            selectedView={hosting}
+            onChange={(item: Hosting) => setHosting(item)}
+            className={css.hostingToggle}
+          />
+        ) : null}
       </Container>
       <Text font={{ variation: FontVariation.H5 }} padding={{ bottom: 'medium' }}>
         {getString('ci.getStartedWithCI.selectInfra')}
       </Text>
       <CardSelect
         cornerSelected={true}
-        data={AllBuildLocations}
+        data={hosting === Hosting.SaaS ? AllBuildLocationsForSaaS : AllBuildLocationsForOnPrem}
         cardClassName={css.card}
         renderItem={(item: BuildLocationDetails) => {
           const { icon, label, details, approxETAInMins, disabled } = item
@@ -65,7 +131,17 @@ export const SelectBuildLocation: React.FC<SelectBuildLocationProps> = props => 
                 </Layout.Horizontal>
                 <Text font={{ variation: FontVariation.SMALL }}>{getString(details)}</Text>
               </Layout.Vertical>
-              <Layout.Horizontal flex={{ justifyContent: disabled ? 'space-between' : 'flex-end' }} width="100%">
+              <Layout.Horizontal
+                flex={{
+                  justifyContent:
+                    disabled ||
+                    (item.location === selectedBuildLocation?.location &&
+                      provisioningStatus === ProvisioningStatus.FAILURE)
+                      ? 'space-between'
+                      : 'flex-end'
+                }}
+                width="100%"
+              >
                 {disabled ? (
                   <Container className={css.comingSoonPill} flex={{ justifyContent: 'center' }}>
                     <Text font={{ variation: FontVariation.TINY }} color={Color.WHITE}>
@@ -73,16 +149,43 @@ export const SelectBuildLocation: React.FC<SelectBuildLocationProps> = props => 
                     </Text>
                   </Container>
                 ) : null}
-                <Text font={{ variation: FontVariation.TINY }}>
-                  ~ {approxETAInMins} {getString('timeMinutes')}
-                </Text>
+                {item.location === selectedBuildLocation?.location &&
+                selectedBuildLocation?.location === HostedByHarnessBuildLocation.location &&
+                provisioningStatus === ProvisioningStatus.FAILURE ? (
+                  <Layout.Vertical padding={{ top: 'large' }}>
+                    <Layout.Horizontal
+                      className={css.provisioningFailed}
+                      flex
+                      padding={{ left: 'small', top: 'xsmall', right: 'small', bottom: 'xsmall' }}
+                      spacing="xsmall"
+                    >
+                      <Icon name="danger-icon" size={24} />
+                      <Text font={{ weight: 'semi-bold' }} color={Color.RED_600}>
+                        {getString('ci.getStartedWithCI.provisioningFailed')}
+                      </Text>
+                    </Layout.Horizontal>
+                    <Button
+                      variation={ButtonVariation.LINK}
+                      icon="contact-support"
+                      text={getString('common.contactSupport')}
+                      disabled={true}
+                      minimal
+                    />
+                  </Layout.Vertical>
+                ) : (
+                  <Text font={{ variation: FontVariation.TINY }}>
+                    ~ {approxETAInMins} {getString('timeMinutes')}
+                  </Text>
+                )}
               </Layout.Horizontal>
             </Layout.Vertical>
           )
         }}
-        selected={selected}
-        onChange={(item: BuildLocationDetails) => setSelected(item)}
+        selected={buildLocation}
+        onChange={(item: BuildLocationDetails) => setBuildLocation(item)}
       />
     </Layout.Vertical>
   )
 }
+
+export const SelectBuildLocation = React.forwardRef(SelectBuildLocationRef)

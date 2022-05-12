@@ -80,7 +80,7 @@ export function TextInputWithCopyBtn(props: TextInputWithCopyBtnProps): React.Re
               className={css.menuItem}
               labelClassName={css.menuItemLabel}
               labelElement={<Icon name="copy-alt" />}
-              text={<ItemName mainText={localName} secondaryText={getString('variables.copyVariableName')} />}
+              text={<ItemName mainText={localName} secondaryText={getString('common.copyVariableName')} />}
               onClick={() => Utils.copy(toVariableStr(localName))}
             />
           ) : null}
@@ -89,7 +89,7 @@ export function TextInputWithCopyBtn(props: TextInputWithCopyBtnProps): React.Re
               className={css.menuItem}
               labelClassName={css.menuItemLabel}
               labelElement={<Icon name="copy-alt" />}
-              text={<ItemName mainText={fullName} secondaryText={getString('variables.copyFqn')} />}
+              text={<ItemName mainText={fullName} secondaryText={getString('common.copyFqn')} />}
               onClick={() => Utils.copy(toVariableStr(fullName))}
             />
           ) : null}

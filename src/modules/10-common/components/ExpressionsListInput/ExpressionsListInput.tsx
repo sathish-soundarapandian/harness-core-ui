@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect } from 'react'
-import { connect, FormikContext } from 'formik'
+import { connect, FormikContextType } from 'formik'
 import { isEmpty } from 'lodash-es'
 import { FormGroup } from '@blueprintjs/core'
 import { ExpressionInput, EXPRESSION_INPUT_PLACEHOLDER } from '@wings-software/uicore'
@@ -20,7 +20,7 @@ export interface ExpressionsListInputProps {
   readOnly?: boolean
   expressions?: string[]
   inputClassName?: string
-  formik?: FormikContext<any>
+  formik?: FormikContextType<any>
 }
 
 function ExpressionsListInputInternal(props: ExpressionsListInputProps) {

@@ -27,7 +27,7 @@ export default {
 
 interface BasicArgs {
   data: {
-    failureStrategies: AllFailureStrategyConfig[]
+    failureStrategies?: AllFailureStrategyConfig[]
   }
   mode: Modes
   stageType?: StageType

@@ -1,0 +1,240 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Delegate Selector/> tests renders ok with data 1`] = `
+<div>
+  <div
+    class="bp3-form-group"
+  >
+    <div
+      class="bp3-form-content"
+    >
+      <div
+        class="StyledProps--font StyledProps--main fieldSelectorContainer"
+      >
+        <div
+          class="bp3-form-group"
+          style="flex-grow: 1; margin-bottom: 0px;"
+        >
+          <label
+            class="bp3-label"
+            for="delegateSelectors"
+          >
+            <div
+              class="formLabel"
+            >
+              common.defineDelegateSelector
+              <div
+                class="bp3-popover-wrapper typeSelectorWrapper"
+              >
+                <div
+                  class="bp3-popover-target typeSelector"
+                >
+                  <button
+                    class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
+                    type="button"
+                  >
+                    <span
+                      class="bp3-button-text"
+                    >
+                      <span
+                        class="bp3-icon StyledProps--main icon fixed"
+                        data-icon="fixed-input"
+                      >
+                        <svg
+                          height="12"
+                          viewBox="0 0 9 9"
+                          width="12"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </span>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+             
+            <span
+              class="bp3-text-muted"
+            />
+          </label>
+          <div
+            class="bp3-form-content"
+          >
+            <div
+              class="wrapper wrapper"
+              data-name="DelegateSelectors"
+            >
+              <div
+                class="bp3-popover-wrapper delegateInput delegatePopover bp3-fill"
+              >
+                <div
+                  class="bp3-popover-target"
+                >
+                  <div
+                    class=""
+                  >
+                    <div
+                      class="bp3-input bp3-tag-input bp3-fill bp3-multi-select"
+                    >
+                      <div
+                        class="bp3-tag-input-values"
+                      >
+                        <span
+                          class="bp3-tag bp3-intent-danger bp3-minimal TagInput--tag"
+                          data-tag-index="0"
+                        >
+                          <span
+                            class="bp3-text-overflow-ellipsis bp3-fill"
+                          >
+                            random
+                          </span>
+                          <button
+                            class="bp3-tag-remove"
+                            type="button"
+                          >
+                            <span
+                              class="bp3-icon bp3-icon-small-cross"
+                              icon="small-cross"
+                            >
+                              <svg
+                                data-icon="small-cross"
+                                height="16"
+                                viewBox="0 0 16 16"
+                                width="16"
+                              >
+                                <desc>
+                                  small-cross
+                                </desc>
+                                <path
+                                  d="M9.41 8l2.29-2.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42L6.59 8 4.3 10.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l2.29 2.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </button>
+                        </span>
+                        <input
+                          class="bp3-input-ghost bp3-multi-select-tag-input-input"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<Delegate Selector/> tests renders ok with no data 1`] = `
+<div>
+  <div
+    class="bp3-form-group"
+  >
+    <div
+      class="bp3-form-content"
+    >
+      <div
+        class="StyledProps--font StyledProps--main fieldSelectorContainer"
+      >
+        <div
+          class="bp3-form-group"
+          style="flex-grow: 1; margin-bottom: 0px;"
+        >
+          <label
+            class="bp3-label"
+            for="delegateSelectors"
+          >
+            <div
+              class="formLabel"
+            >
+              common.defineDelegateSelector
+              <div
+                class="bp3-popover-wrapper typeSelectorWrapper"
+              >
+                <div
+                  class="bp3-popover-target typeSelector"
+                >
+                  <button
+                    class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
+                    type="button"
+                  >
+                    <span
+                      class="bp3-button-text"
+                    >
+                      <span
+                        class="bp3-icon StyledProps--main icon fixed"
+                        data-icon="fixed-input"
+                      >
+                        <svg
+                          height="12"
+                          viewBox="0 0 9 9"
+                          width="12"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </span>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+             
+            <span
+              class="bp3-text-muted"
+            />
+          </label>
+          <div
+            class="bp3-form-content"
+          >
+            <div
+              class="wrapper wrapper"
+              data-name="DelegateSelectors"
+            >
+              <div
+                class="bp3-popover-wrapper delegateInput delegatePopover bp3-fill"
+              >
+                <div
+                  class="bp3-popover-target"
+                >
+                  <div
+                    class=""
+                  >
+                    <div
+                      class="bp3-input bp3-tag-input bp3-fill bp3-multi-select"
+                    >
+                      <div
+                        class="bp3-tag-input-values"
+                      >
+                        <input
+                          class="bp3-input-ghost bp3-multi-select-tag-input-input"
+                          placeholder="delegate.Delegate_Selector_placeholder"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

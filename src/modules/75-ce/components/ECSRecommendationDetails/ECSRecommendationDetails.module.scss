@@ -1,0 +1,150 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.mainContainer {
+  position: relative;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--grey-100);
+  border-radius: 4px;
+
+  .diffContainer {
+    margin-top: 20px;
+    height: 150px;
+
+    .diffHeader {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      font-size: 12px;
+      letter-spacing: 0;
+      line-height: 16px;
+      color: var(--grey-800);
+
+      .heading {
+        padding: var(--spacing-xsmall) var(--spacing-medium);
+      }
+
+      .copyIcon {
+        padding: var(--spacing-xsmall) var(--spacing-xsmall) 0 0;
+        cursor: pointer;
+        margin-left: auto !important;
+      }
+    }
+
+    .diff {
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  .timeframeContainer {
+    margin-top: var(--spacing-medium) !important;
+
+    .actionText {
+      cursor: pointer;
+    }
+
+    .histogram {
+      width: 445px;
+    }
+  }
+
+  .histogramContainer {
+    margin-top: var(--spacing-medium) !important;
+  }
+
+  .sliderContainer {
+    display: grid;
+    grid-gap: 20px;
+    grid-template-columns: 1fr 1fr;
+
+    .limitHandle {
+      background-color: var(--green-600);
+    }
+
+    .requestHandle {
+      background-color: var(--blue-500);
+    }
+
+    :global {
+      .bp3-slider > .bp3-slider-handle:nth-child(3) {
+        background: var(--blue-500) !important;
+      }
+
+      .bp3-slider > .bp3-slider-handle:nth-child(4) {
+        background: var(--green-500) !important;
+      }
+
+      .bp3-slider-progress.bp3-intent-primary {
+        background-color: var(--blue-500) !important;
+      }
+
+      .bp3-slider-progress.bp3-intent-success {
+        background-color: var(--green-500) !important;
+      }
+
+      .request-slider {
+        background-color: var(--blue-500);
+      }
+    }
+  }
+
+  .xaxislabels {
+    margin-bottom: var(--spacing-medium) !important;
+  }
+
+  .legendContainer {
+    display: grid;
+    grid-template-columns: 1fr 20px 180px;
+  }
+}
+
+.bufferCard {
+  width: 100%;
+  border: 0 !important;
+  padding: 0 !important;
+
+  .cardHeader {
+    padding: var(--spacing-medium);
+  }
+
+  .cardBody {
+    padding: var(--spacing-xlarge) var(--spacing-medium);
+    background-color: var(--primary-1);
+    border: 1px solid var(--primary-2);
+    border-radius: 3px;
+
+    .sliderContainer {
+      padding: var(--spacing-medium) 0 0 0;
+      width: 212px;
+
+      .bufferSlider {
+        > span[class*='bp3-slider-handle'] {
+          background: var(--white);
+          box-shadow: 0px 1px 2px rgba(40, 41, 61, 0.2), 0px 2px 4px rgba(96, 97, 112, 0.2);
+          border-radius: 100px;
+          height: 16px;
+          width: 16px;
+        }
+
+        > div[class*='bp3-slider-track'] {
+          height: 2px;
+          top: 7px;
+        }
+      }
+    }
+  }
+}
+
+.optimizedHeader {
+  border-left: 2px solid var(--green-700);
+  border-right: 2px solid var(--green-700);
+  border-top: 2px solid var(--green-700);
+}
+
+.resetButton {
+  padding: 5px 12px !important;
+}

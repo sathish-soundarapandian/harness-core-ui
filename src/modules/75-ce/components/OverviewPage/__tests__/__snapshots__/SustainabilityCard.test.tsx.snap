@@ -1,0 +1,93 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Sustainability Card test should show card details after getting data 1`] = `
+<div>
+  <div
+    class="sustainabilityCard"
+  >
+    <div
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+    >
+      <img
+        src="test-file-stub"
+        width="16"
+      />
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--color StyledProps--color-grey600"
+      >
+        Sustainability card title
+      </p>
+    </div>
+    <div
+      class="Layout--horizontal Layout--layout-spacing-huge StyledProps--main"
+    >
+      <div
+        class="StyledProps--font StyledProps--main"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-h4 StyledProps--color StyledProps--color-grey800"
+        >
+          <span>
+            ce.common.emissionUnitHTML
+          </span>
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny StyledProps--color StyledProps--color-grey500"
+        >
+          Total
+        </p>
+      </div>
+      <div
+        class="StyledProps--font StyledProps--main"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-h4 StyledProps--color StyledProps--color-grey800"
+        >
+          <span>
+            ce.common.emissionUnitHTML
+          </span>
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny StyledProps--color StyledProps--color-grey500"
+        >
+          Reduced
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Sustainability Card test should show loader while fetching the data 1`] = `
+<div>
+  <div
+    class="sustainabilityCard"
+  >
+    <div
+      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-center"
+    >
+      <span
+        class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-blue500"
+        data-icon="spinner"
+      >
+        <svg
+          fill="none"
+          height="30"
+          viewBox="0 0 36 36"
+          width="30"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
+            stroke="currentColor"
+            stroke-dasharray="75,100"
+            stroke-linecap="round"
+            stroke-width="2.8"
+            style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
+          />
+        </svg>
+      </span>
+    </div>
+  </div>
+</div>
+`;

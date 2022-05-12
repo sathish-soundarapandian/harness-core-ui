@@ -19,6 +19,7 @@ import {
   pipelineInputSetTemplate,
   ValidObject,
   servicesCallV2,
+  servicesV2,
   servicesV2AccessResponse,
   stepsData,
   StepResourceObject,
@@ -29,11 +30,15 @@ import {
   cdFailureStrategiesYaml,
   approvalStageYamlSnippet,
   jiraApprovalStageYamlSnippet,
-  snowApprovalStageYamlSnippet
+  snowApprovalStageYamlSnippet,
+  serverlessLambdaYamlSnippet,
+  yamlSnippet,
+  executionStratergies
 } from '../../support/70-pipeline/constants'
+import { connectorsListAPI } from '../../support/35-connectors/constants'
 import { getIdentifierFromName } from '../../utils/stringHelpers'
 
-describe('GIT SYNC DISABLED', () => {
+describe.skip('GIT SYNC DISABLED', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -41,24 +46,22 @@ describe('GIT SYNC DISABLED', () => {
       return false
     })
     cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
+    cy.intercept('GET', cdFailureStrategiesYaml, {
+      fixture: 'pipeline/api/pipelines/failureStrategiesYaml'
+    }).as('cdFailureStrategiesYaml')
     cy.login('test', 'test')
 
     cy.visitCreatePipeline()
-
     cy.fillName('testPipeline_Cypress')
-
     cy.clickSubmit()
-
     cy.createDeploymentStage()
   })
 
   it('should display the error returned by pipeline save API', () => {
     cy.intercept('POST', pipelineSaveCall, { fixture: 'pipeline/api/pipelines.post' }).as('pipelineSaveCall')
-    cy.intercept('GET', cdFailureStrategiesYaml, { fixture: 'pipeline/api/pipelines/failureStrategiesYaml' }).as(
-      'cdFailureStrategiesYaml'
-    )
-    cy.contains('span', 'New Service').click()
 
+    cy.wait('@cdFailureStrategiesYaml')
+    cy.contains('span', 'New Service').click()
     cy.fillName('testService')
     cy.get('[data-id="service-save"]').click()
 
@@ -72,7 +75,7 @@ describe('GIT SYNC DISABLED', () => {
 
     cy.get('[name="variables[0].value"]').type('varvalue')
 
-    cy.contains('span', 'Next').click()
+    cy.contains('span', 'Continue').click()
 
     cy.contains('span', 'New Environment').click()
     cy.fillName('testEnv')
@@ -228,6 +231,17 @@ describe('GIT SYNC ENABLED', () => {
 })
 
 describe('Execution Stages', () => {
+  const visitExecutionStageWithAssertion = (): void => {
+    cy.visit(pipelineStudioRoute, {
+      timeout: 30000
+    })
+    cy.wait(2000)
+    cy.visitPageAssertion()
+    cy.wait('@inputSetsTemplateCall', { timeout: 30000 })
+    cy.wait('@pipelineDetails', { timeout: 30000 })
+    cy.wait(2000)
+  }
+
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -247,6 +261,8 @@ describe('Execution Stages', () => {
     cy.intercept('GET', pipelineDetails, { fixture: 'pipeline/api/inputSet/pipelineDetails' }).as('pipelineDetails')
     cy.intercept('POST', applyTemplatesCall, { fixture: 'pipeline/api/inputSet/applyTemplatesCall' })
     cy.intercept('GET', inputSetsCall, { fixture: 'pipeline/api/inputSet/emptyInputSetsList' }).as('emptyInputSetList')
+
+    visitExecutionStageWithAssertion()
   })
 
   const stepFieldSelection = function (stepName: string, resourceName: StepResourceObject[]): void {
@@ -287,11 +303,19 @@ describe('Execution Stages', () => {
     resourceName: StepResourceObject[],
     withWarning?: boolean
   ): void {
-    cy.get('p[data-name="node-name"]').contains('Add step').click({ force: true })
-
-    cy.get('[data-testid=addStepPipeline]').should('be.visible')
-    cy.wait(500)
-    cy.get('[data-testid=addStepPipeline]').click({ force: true })
+    cy.get('*[class^="ExecutionGraph-module_canvas"]')
+      .should('be.visible')
+      .within(() => {
+        cy.get('span[data-icon="zoom-out"]').click()
+        cy.get('p[data-name="node-name"]').contains('Add step').click({ force: true })
+        cy.wait(1000)
+        cy.get('[class*="ExecutionGraph-module_add-step-popover"]', { withinSubject: null })
+          .should('be.visible')
+          .within(() => {
+            cy.contains('span', 'Add Step').should('be.visible').click({ force: true })
+          })
+        cy.wait(500)
+      })
     cy.wait('@stepLibrary').wait(500)
     cy.contains('section', stageText).click({ force: true })
 
@@ -310,10 +334,6 @@ describe('Execution Stages', () => {
 
   Object.entries<ValidObject>(stepsData).forEach(([key, value]) => {
     it(`Stage Steps - ${key}`, () => {
-      cy.visit(pipelineStudioRoute, { timeout: 30000 })
-      cy.wait('@inputSetsTemplateCall')
-      cy.wait('@pipelineDetails')
-      cy.wait(2000)
       cy.get(`div[data-testid="pipeline-studio"]`, {
         timeout: 5000
       }).should('be.visible')
@@ -321,6 +341,186 @@ describe('Execution Stages', () => {
       cy.contains('span', 'Execution').click()
       stepLibrarySelection(key, value?.resourceName, value?.warningCheck)
     })
+  })
+})
+
+describe('ServerlessAwsLambda as deployment type', () => {
+  beforeEach(() => {
+    cy.on('uncaught:exception', () => {
+      // returning false here prevents Cypress from
+      // failing the test
+      return false
+    })
+    cy.initializeRoute()
+    cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
+    cy.intercept('POST', pipelineSaveCall, { fixture: 'pipeline/api/pipelines.post' })
+    cy.intercept('POST', stepLibrary, { fixture: 'ng/api/stepLibrary' }).as('stepLibrary')
+    cy.intercept('POST', pipelineSaveCall, { fixture: 'pipeline/api/pipelines.postsuccess' })
+    // Input Set APIs
+    cy.intercept('POST', inputSetsTemplateCall, { fixture: 'pipeline/api/inputSet/inputSetsTemplateCall' }).as(
+      'inputSetsTemplateCall'
+    )
+    cy.intercept('GET', pipelineDetails, { fixture: 'pipeline/api/inputSet/pipelineDetails' }).as('pipelineDetails')
+    cy.intercept('POST', applyTemplatesCall, { fixture: 'pipeline/api/inputSet/applyTemplatesCall' })
+    cy.intercept('GET', inputSetsCall, { fixture: 'pipeline/api/inputSet/emptyInputSetsList' }).as('emptyInputSetList')
+  })
+
+  const yamlValidations = function (stageName: string, regionName: string): void {
+    // Toggle to YAML view
+    cy.get('[data-name="toggle-option-two"]').click({ force: true })
+    cy.wait(1000)
+    cy.get('.monaco-editor .overflow-guard').scrollTo('0%', '25%', { ensureScrollable: false })
+    cy.contains('span', stageName).should('be.visible')
+    cy.contains('span', regionName).should('be.visible')
+  }
+
+  it(`fixed values to region and stage in infrastructure tab`, () => {
+    cy.visit(pipelineStudioRoute, { timeout: 30000 })
+    cy.get(`div[data-testid="pipeline-studio"]`, {
+      timeout: 5000
+    }).should('be.visible')
+    cy.contains('p', 'testStage_Cypress').click()
+    cy.contains('p', 'Serverless Lambda').click()
+    cy.wait(1000)
+    cy.contains('span', 'Confirm').click()
+    cy.wait(1000)
+    cy.contains('span', 'Continue').click()
+    cy.contains('span', 'Select Connector').click()
+    cy.contains('p', 'dynatrace').click()
+    cy.wait(500)
+    cy.contains('span', 'Apply Selected').click()
+    cy.wait(500)
+    cy.get('input[name="region"]').type('region1')
+    cy.wait(500)
+    cy.get('input[name="stage"]').type('stage1')
+    cy.wait(1000)
+    yamlValidations('stage1', 'region1')
+  })
+
+  it(`runtime values to region, stage in infrastructure tab`, () => {
+    cy.visit(pipelineStudioRoute, { timeout: 30000 })
+    cy.get(`div[data-testid="pipeline-studio"]`, {
+      timeout: 5000
+    }).should('be.visible')
+    cy.contains('p', 'testStage_Cypress').click()
+    cy.contains('p', 'Serverless Lambda').click()
+    cy.wait(1000)
+    cy.contains('span', 'Confirm').click()
+    cy.wait(1000)
+    cy.contains('span', 'Continue').click()
+    cy.get('span[data-icon="fixed-input"]').eq(1).click()
+    cy.get('.MultiTypeInput--header svg[data-icon="cross"]').eq(0).click()
+    cy.contains('div', 'Runtime input').click()
+    cy.wait(1000)
+    cy.get('[data-name="toggle-option-two"]').click({ force: true })
+    cy.wait(1000)
+    cy.get('.monaco-editor .overflow-guard').scrollTo('0%', '25%', { ensureScrollable: false })
+    cy.contains('span', '<+input>').should('be.visible')
+  })
+
+  it(`select Serverless Lambda deployment type and validate execution tab`, () => {
+    cy.intercept('GET', pipelineDetails, {
+      fixture: 'pipeline/api/pipelines/pipelineDetailsWithoutServiceDefinitionType'
+    }).as('pipelineDetails')
+    cy.intercept('GET', servicesV2, { fixture: 'pipeline/api/services/serviceV2' }).as('servicesCall')
+    cy.intercept('GET', 'ng/api/pipelines/configuration/cd-stage-yaml-snippet?routingId=accountId', {
+      fixture: 'pipeline/api/pipelines/failureStrategiesYaml'
+    }).as('cdFailureStrategiesYaml')
+    cy.intercept('POST', connectorsListAPI, { fixture: 'ng/api/connectors' }).as('connectorsList')
+    cy.intercept('GET', serverlessLambdaYamlSnippet, { fixture: 'ng/api/pipelines/serverlessYamlSnippet' }).as(
+      'serverlessYamlSnippet'
+    )
+
+    // Visit Pipeline Studio
+    cy.visit(pipelineStudioRoute, { timeout: 30000 })
+    cy.get(`div[data-testid="pipeline-studio"]`, {
+      timeout: 5000
+    }).should('be.visible')
+
+    // Select Stage
+    cy.contains('p', 'Stage 1').click()
+    cy.wait(1000)
+    cy.wait('@servicesCall')
+    cy.wait('@cdFailureStrategiesYaml')
+    cy.wait('@stepLibrary')
+    cy.wait(1000)
+
+    // Select Serverless Lambda as deployment type
+    cy.contains('p', 'Serverless Lambda').click()
+    cy.wait('@serverlessYamlSnippet')
+
+    // Got to Execution tab, Serverless Aws Lambda Deploy should be added by default
+    // Switching between Rollback and Execution should work as expected
+    cy.contains('span', 'Execution').click()
+    cy.contains('p', 'Serverless Aws Lambda Deploy')
+    cy.contains('p', 'Rollback').click()
+    cy.contains('p', 'Serverless Aws Lambda Rollback')
+    cy.contains('p', 'Execution').click()
+    cy.contains('p', 'Serverless Aws Lambda Deploy')
+
+    // Add another Serverless Lambda Deploy Step
+    cy.contains('p', 'Add step').click()
+    cy.contains('span', 'Add Step').parent().click()
+    cy.contains('section', 'Serverless Lambda Deploy').click()
+    cy.contains('p', 'Serverless Lambda Deploy Step').should('be.visible')
+    cy.get('input[name="name"]').type('Serverless Deploy Step 2')
+    cy.contains('div', 'Optional configurations').click()
+    cy.contains('p', 'Serverless Deploy Command Options').should('be.visible')
+    cy.contains('span', 'Apply Changes').click()
+    cy.contains('p', 'Serverless Deploy Step 2').should('be.visible')
+
+    // Add Serverless Lambda Rollback Step
+    cy.contains('p', 'Add step').click()
+    cy.contains('span', 'Add Step').parent().click()
+    cy.contains('section', 'Serverless Lambda Rollback').click()
+    cy.contains('p', 'Serverless Lambda Rollback Step').should('be.visible')
+    cy.get('input[name="name"]').type('Serverless Rollback Step 1')
+    cy.contains('span', 'Apply Changes').click()
+    cy.contains('p', 'Serverless Rollback Step 1').should('be.visible')
+  })
+
+  it(`select Kubernetes deployment type and check for execution strategies`, () => {
+    cy.intercept('GET', pipelineDetails, {
+      fixture: 'pipeline/api/pipelines/pipelineDetailsWithoutServiceDefinitionType'
+    }).as('pipelineDetails')
+    cy.intercept('GET', servicesV2, { fixture: 'pipeline/api/services/serviceV2' }).as('servicesCall')
+    cy.intercept('GET', 'ng/api/pipelines/configuration/cd-stage-yaml-snippet?routingId=accountId', {
+      fixture: 'pipeline/api/pipelines/failureStrategiesYaml'
+    }).as('cdFailureStrategiesYaml')
+    cy.intercept('POST', connectorsListAPI, { fixture: 'ng/api/connectors' }).as('connectorsList')
+    cy.intercept('GET', yamlSnippet, { fixture: 'ng/api/pipelines/kubernetesYamlSnippet' }).as('kubernetesYamlSnippet')
+    cy.intercept('GET', executionStratergies, { fixture: 'pipeline/api/pipelines/strategies.json' }).as(
+      'executionStratergies'
+    )
+
+    // Visit Pipeline Studio
+    cy.visit(pipelineStudioRoute, { timeout: 30000 })
+    cy.get(`div[data-testid="pipeline-studio"]`, {
+      timeout: 5000
+    }).should('be.visible')
+
+    // Select Stage
+    cy.contains('p', 'Stage 1').click()
+    cy.wait(1000)
+    cy.wait('@servicesCall')
+    cy.wait('@cdFailureStrategiesYaml')
+    cy.wait('@stepLibrary')
+    cy.wait(1000)
+
+    // Select Kubernetes as deployment type
+    cy.contains('p', 'Kubernetes').click()
+
+    // Got to Execution tab, 4 diff Execution Strategies should appear
+    // Use Rolling strategy and check if respective step is added
+    cy.contains('span', 'Execution').click()
+    cy.wait('@executionStratergies')
+    cy.wait('@kubernetesYamlSnippet')
+    cy.contains('section', 'Rolling').should('be.visible')
+    cy.contains('section', 'Blue Green').should('be.visible')
+    cy.contains('section', 'Canary').should('be.visible')
+    cy.contains('section', 'Blank Canvas').should('be.visible')
+    cy.contains('span', 'Use Strategy').should('be.visible').click()
+    cy.contains('p', 'Rollout Deployment').should('be.visible')
   })
 })
 
@@ -438,7 +638,12 @@ describe('Add stage view with enabled licences', () => {
     cy.contains('span', 'Use template').should('be.visible')
     cy.findByTestId('stage-CI').should('be.visible')
     cy.findByTestId('stage-Approval').should('be.visible')
-    cy.findByTestId('stage-Security').should('be.visible')
+    cy.findByTestId('stage-SecurityTests').should('be.visible')
+  })
+
+  it('should not display chained pipeline', () => {
+    cy.get('[icon="plus"]').click()
+    cy.findByTestId('stage-Pipeline').should('not.exist')
   })
 })
 
@@ -492,6 +697,6 @@ describe('Add stage view with disabled licences', () => {
     cy.get('[data-icon="template-library"]').should('not.exist')
     cy.contains('span', 'Use template').should('not.exist')
     cy.findByTestId('stage-CI').should('not.exist')
-    cy.findByTestId('stage-Security').should('not.exist')
+    cy.findByTestId('stage-SecurityTests').should('not.exist')
   })
 })

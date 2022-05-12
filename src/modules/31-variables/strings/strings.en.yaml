@@ -1,0 +1,17 @@
+newVariable: New Variable
+editVar: Edit Variable
+defaultValue: Default Value
+allowedValues: Allowed Values
+noVariableFound: No Variable Found
+noVariableExist: There are no variables in your {{resourceName}}.
+inputValidation: Input Validation
+confirmDeleteTitle: Delete Variable
+editVariable: Edit the Variable
+confirmDelete: Are you sure you want to delete the Variable '{{name}}'?
+successDelete: Variable '{{name}}' deleted successfully
+successCreate: Variable '{{name}}' created successfully
+successUpdate: Variable '{{name}}' updated successfully
+validation:
+  type: 'Type is a required field'
+  validation: 'Please select a validation type'
+  fixedValue: 'Fixed Value is a required field'

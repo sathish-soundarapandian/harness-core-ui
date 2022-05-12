@@ -6,16 +6,21 @@
  */
 
 import routes from '@common/RouteDefinitions'
+import type { UseStringsReturn } from 'framework/strings'
 import type { LogData } from 'services/cv'
 
-export const getEventTypeFromClusterType = (tag: LogData['tag']): string => {
+export const getEventTypeFromClusterType = (
+  tag: LogData['tag'],
+  getString: UseStringsReturn['getString'],
+  fullName = false
+): string => {
   switch (tag) {
     case 'KNOWN':
       return 'Known'
     case 'UNKNOWN':
       return 'Unknown'
     case 'UNEXPECTED':
-      return 'Unexpected'
+      return fullName ? getString('cv.unexpectedFrequency') : 'Unexpected'
     default:
       return ''
   }
@@ -57,3 +62,6 @@ export const onClickErrorTrackingRow = (
   const baseUrl = window.location.href.split('#')[0]
   window.open(`${baseUrl}#${arcUrl}/arc?event=${btoa(arcJson)}`)
 }
+
+export const isNoLogSelected = (selectedLog?: string | null): boolean =>
+  selectedLog === null || typeof selectedLog === 'undefined'

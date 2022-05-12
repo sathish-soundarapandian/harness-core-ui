@@ -8,6 +8,7 @@
 import { Color, getErrorInfoFromErrorObject, Layout, Text } from '@harness/uicore'
 import React from 'react'
 import { useParams } from 'react-router-dom'
+import type { GetDataError } from 'restful-react'
 import { defaultTo } from 'lodash-es'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -18,12 +19,15 @@ import { useStrings } from 'framework/strings'
 import type { ResourceType } from '@rbac/interfaces/ResourceType'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import type { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import type { ResourceScope } from 'services/cd-ng'
+import type { AccessControlCheckError, Error, Failure, ResourceScope } from 'services/cd-ng'
 import type { ErrorHandlerProps } from '../utils'
 import css from '@rbac/components/RBACTooltip/RBACTooltip.module.scss'
 
+// Giving this type the name of RBACError for the time being.
+// Once RBAC Error is renamed to a more generic solution and naming, this name should be renamed and made generic as well
+export type RBACError = ErrorHandlerProps | GetDataError<Failure | AccessControlCheckError | Error>
 interface RbacErrorReturn {
-  getRBACErrorMessage: (error: ErrorHandlerProps) => React.ReactElement
+  getRBACErrorMessage: (error: RBACError) => React.ReactElement | string
 }
 
 const useRBACError = (): RbacErrorReturn => {
@@ -55,10 +59,15 @@ const useRBACError = (): RbacErrorReturn => {
     }
   }
 
-  const getRBACErrorMessage = (error: ErrorHandlerProps): React.ReactElement => {
+  const getRBACErrorMessage = (error: RBACError): React.ReactElement | string => {
     const err = error?.data
-    if (err && err.code === 'NG_ACCESS_DENIED' && err.failedPermissionChecks?.length) {
-      const { permission, resourceType, resourceScope } = err.failedPermissionChecks[0]
+    if (
+      err &&
+      (err as AccessControlCheckError).code === 'NG_ACCESS_DENIED' &&
+      (err as AccessControlCheckError)?.failedPermissionChecks
+    ) {
+      const { permission, resourceType, resourceScope } =
+        (err as AccessControlCheckError)?.failedPermissionChecks?.[0] || {}
       /* istanbul ignore else */
       if (permission && resourceType && resourceScope) {
         const resourceTypeHandler = RbacFactory.getResourceTypeHandler(resourceType as ResourceType)
@@ -99,7 +108,7 @@ const useRBACError = (): RbacErrorReturn => {
         )
       }
     }
-    return <>{getErrorInfoFromErrorObject(error)}</>
+    return getErrorInfoFromErrorObject(error)
   }
   return {
     getRBACErrorMessage

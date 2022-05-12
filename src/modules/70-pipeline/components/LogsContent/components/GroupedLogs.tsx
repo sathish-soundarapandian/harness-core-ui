@@ -8,6 +8,7 @@
 import React from 'react'
 import { GroupedVirtuoso, GroupedVirtuosoHandle } from 'react-virtuoso'
 import { sum } from 'lodash-es'
+import { addHotJarSuppressionAttribute } from '@common/utils/utils'
 
 import { GroupHeader, GroupHeaderProps, LogViewerAccordionStatus } from './GroupHeader/GroupHeader'
 import { MultiLogLine } from './MultiLogLine/MultiLogLine'
@@ -59,7 +60,7 @@ export function GroupedLogs(
   }
 
   return (
-    <pre className={css.container}>
+    <pre className={css.container} {...addHotJarSuppressionAttribute()}>
       <GroupedVirtuoso
         overscan={50}
         ref={ref}

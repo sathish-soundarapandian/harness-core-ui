@@ -27,6 +27,8 @@ describe('Unit tests for ChangeEventServiceHealth', () => {
           eventType="K8sCluster"
           monitoredServiceIdentifier="monitored_service_identifier"
           startTime={123123}
+          timeStamps={[1632958200, 1633042800]}
+          setTimestamps={jest.fn()}
         />
       </TestWrapper>
     )

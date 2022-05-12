@@ -86,6 +86,23 @@ AuditTrailFactory.registerResourceHandler(ResourceType.DELEGATE_TOKEN, {
   }
 })
 
+AuditTrailFactory.registerResourceHandler(ResourceType.DELEGATE, {
+  moduleIcon: {
+    name: 'delegates-icon'
+  },
+  moduleLabel: 'delegate.DelegateName',
+  resourceLabel: 'delegate.DelegateName',
+  resourceUrl: (_: ResourceDTO, resourceScope: ResourceScope, module?: Module) => {
+    const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
+    return routes.toDelegateList({
+      module,
+      orgIdentifier,
+      projectIdentifier,
+      accountId: accountIdentifier
+    })
+  }
+})
+
 const RedirectToDelegatesHome = (): React.ReactElement => {
   const { accountId } = useParams<AccountPathProps>()
   return <Redirect to={routes.toDelegateList({ accountId })} />

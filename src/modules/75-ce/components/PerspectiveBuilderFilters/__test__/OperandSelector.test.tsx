@@ -68,7 +68,5 @@ describe('test cases for filters operand selector', () => {
     const labelText = queryByText(container, 'Label')
     fireEvent.mouseOver(labelText!)
     await waitFor(() => expect(queryByText(container, 'label 1')).toBeInTheDocument())
-
-    expect(container).toMatchSnapshot()
   })
 })

@@ -13,6 +13,11 @@ import type { CheckFeaturesReturn } from './featureStoreUtil'
 
 import type { Module } from '../types/ModuleName'
 
+export interface RenderMessageReturn {
+  message: () => React.ReactNode
+  bannerType: BannerType
+}
+
 export interface FeatureProps {
   features: FeatureIdentifier[]
   renderMessage(
@@ -20,10 +25,7 @@ export interface FeatureProps {
     getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
     additionalLicenseProps?: Record<string, any>,
     usageAndLimitInfo?: UsageAndLimitReturn
-  ): {
-    message: () => React.ReactNode
-    bannerType: BannerType
-  }
+  ): RenderMessageReturn
 }
 
 export type FeatureRegistry = Partial<Record<Module, FeatureProps>>

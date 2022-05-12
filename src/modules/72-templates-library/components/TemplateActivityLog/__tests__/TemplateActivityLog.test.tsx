@@ -9,7 +9,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { mockTemplates } from '@templates-library/TemplatesTestHelper'
-import * as infiniteScrollHook from '../InfiniteScroll'
+import * as infiniteScrollHook from '@common/hooks/useInfiniteScroll'
 import { TemplateActivityLog } from '../TemplateActivityLog'
 import { mockActivityLogs } from './TemplateActivityLogTestHelper'
 

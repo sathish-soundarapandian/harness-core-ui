@@ -10,7 +10,7 @@ import cx from 'classnames'
 
 import { useParams } from 'react-router-dom'
 import { get, map } from 'lodash-es'
-import { connect, FormikContext } from 'formik'
+import { connect, FormikContextType } from 'formik'
 import {
   getMultiTypeFromValue,
   MultiTypeInputType,
@@ -23,6 +23,7 @@ import {
 import { useStrings } from 'framework/strings'
 import List from '@common/components/List/List'
 import { Connectors } from '@connectors/constants'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useGetRepositoriesDetailsForArtifactory } from 'services/cd-ng'
 import { useQueryParams } from '@common/hooks'
@@ -36,13 +37,14 @@ function TFRemoteSectionRef<T extends TerraformData = TerraformData>(
   props: TerraformProps<T> & {
     remoteVar: any
     index: number
-    formik?: FormikContext<any>
+    formik?: FormikContextType<any>
   }
 ): React.ReactElement {
   const { remoteVar, index, allowableTypes, formik } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [connectorRepos, setConnectorRepos] = useState<SelectOption[]>()
   const { readonly, initialValues, path } = props
@@ -85,7 +87,7 @@ function TFRemoteSectionRef<T extends TerraformData = TerraformData>(
 
   useEffect(() => {
     if (ArtifactRepoError) {
-      showError(ArtifactRepoError.message)
+      showError(getRBACErrorMessage(ArtifactRepoError))
     }
   }, [ArtifactRepoError])
 

@@ -100,7 +100,7 @@ jest.mock('@common/hooks', () => ({
 
 jest.mock('services/pipeline-ng', () => ({
   useGetInputSetForPipeline: jest.fn(() => GetInputSetEdit),
-  useCreateVariables: jest.fn(() => ({
+  useCreateVariablesV2: jest.fn(() => ({
     mutate: jest.fn(() => Promise.resolve({ data: { yaml: '' } })),
     loading: false,
     cancel: jest.fn()

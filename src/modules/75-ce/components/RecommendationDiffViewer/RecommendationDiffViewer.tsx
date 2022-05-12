@@ -10,7 +10,7 @@ import { Container, Layout, Text } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import type { BorderProps } from '@harness/design-system'
 import cx from 'classnames'
-import { QualityOfService, ResourceDetails, ResourceObject } from '@ce/types'
+import { ECSResourceObject, QualityOfService, ResourceDetails, ResourceObject } from '@ce/types'
 
 import css from './RecommendationDiffViewer.module.scss'
 
@@ -48,7 +48,7 @@ const DiffBlock: React.FC<DiffBlockProps> = ({
           padding={{ left: 'small' }}
           data-testid={`${dataTestId}-memVal`}
         >
-          {resources.memory}
+          {resources?.memory}
         </Text>
       </Layout.Horizontal>
       {qualityOfService !== QualityOfService.BURSTABLE ? (
@@ -56,7 +56,7 @@ const DiffBlock: React.FC<DiffBlockProps> = ({
           <Text font={{ mono: true, variation: FontVariation.BODY }} color={Color.GREY_600}>
             cpu:
           </Text>
-          {resources.cpu ? (
+          {resources?.cpu ? (
             <Text
               font={{ mono: true, variation: FontVariation.BODY }}
               color={textColor}
@@ -125,6 +125,35 @@ const RecommendationDiffViewer: React.FC<RecommendationDiffViewerProps> = ({
         qualityOfService={qualityOfService}
         dataTestId="limitsId"
       />
+      <DiffBlock
+        resources={currentResources.requests}
+        text="request"
+        color={Color.PRIMARY_1}
+        textColor={Color.RED_700}
+      />
+      <DiffBlock
+        resources={recommendedResources.requests}
+        text="request"
+        color={Color.PRIMARY_1}
+        border={{ left: true, right: true, bottom: true }}
+        textColor={Color.GREEN_700}
+        dataTestId="requestId"
+      />
+    </Container>
+  )
+}
+
+interface ECSRecommendationDiffViewerProps {
+  recommendedResources: ECSResourceObject
+  currentResources: ECSResourceObject
+}
+
+export const ECSRecommendationDiffViewer: React.FC<ECSRecommendationDiffViewerProps> = ({
+  recommendedResources,
+  currentResources
+}) => {
+  return (
+    <Container className={css.diffContainer}>
       <DiffBlock
         resources={currentResources.requests}
         text="request"

@@ -5,26 +5,27 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import * as Yup from 'yup'
 import {
   Button,
-  Container,
   Formik,
   FormikForm,
-  Heading,
   Layout,
   StepProps,
   FormInput,
-  Text
+  Text,
+  ButtonSize,
+  ButtonVariation,
+  Icon
 } from '@wings-software/uicore'
+import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { AwsCurAttributes, CEAwsConnector } from 'services/cd-ng'
-import { DialogExtensionContext } from '@connectors/common/ConnectorExtention/DialogExtention'
-import LabelWithTooltip from '@connectors/common/LabelWithTooltip/LabelWithTooltip'
 import { CE_AWS_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
-import CostUsageReportExtention from './CostUsageReportExtenstion'
+import ConnectorInstructionList from '@connectors/common/ConnectorCreationInstructionList/ConnectorCreationInstructionList'
+import { connectorHelperUrls } from '@connectors/constants'
 import CostUsageReportExisting from './CostUsageReportExisting'
 import type { CEAwsConnectorDTO } from './OverviewStep'
 import css from '../CreateCeAwsConnector.module.scss'
@@ -35,7 +36,6 @@ const CostUsageStep: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
   useStepLoadTelemetry(CE_AWS_CONNECTOR_CREATION_EVENTS.LOAD_CUR_STEP)
 
   const { prevStepData, nextStep, previousStep } = props
-  const { triggerExtension, closeExtension } = useContext(DialogExtensionContext)
   const existingCurReports = prevStepData?.existingCurReports || []
   const [isExistingCostUsageReport, setIsExistingCostUsageReport] = useState<boolean>(
     (!prevStepData?.includeBilling || false) && (existingCurReports.length > 0 || false)
@@ -52,12 +52,10 @@ const CostUsageStep: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
       payload.spec = newspec
       payload.includeBilling = !isExistingCostUsageReport
     }
-    closeExtension()
     nextStep?.(payload)
   }
 
   const handlePrev = () => {
-    closeExtension()
     previousStep?.({ ...(prevStepData as CEAwsConnectorDTO) })
   }
 
@@ -70,47 +68,52 @@ const CostUsageStep: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
       })
   }
 
-  useEffect(() => {
-    if (!isExistingCostUsageReport) triggerExtension(<CostUsageReportExtention />)
-  }, [isExistingCostUsageReport])
+  const instructionsList = [
+    {
+      type: 'button',
+      text: 'connectors.ceAws.cur.launchTemplate',
+      icon: 'main-share',
+      url: connectorHelperUrls.ceAwsLaunchConsole,
+      listClassName: 'btnInstruction'
+    },
+    {
+      type: 'text',
+      text: 'connectors.ceAws.cur.instructions.i1'
+    },
+    {
+      type: 'hybrid',
+      renderer: function instructionRenderer() {
+        return (
+          <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_800}>
+            {getString('connectors.ceAws.cur.instructions.i2')}
+            <a href={connectorHelperUrls.ceAwscostUsageReportSteps} target="_blank" rel="noreferrer">
+              {getString('connectors.ceAws.cur.instructions.i3')}
+              <Icon name="main-share" size={16} color={Color.PRIMARY_7} />
+            </a>
+          </Text>
+        )
+      }
+    },
+    {
+      type: 'text',
+      text: 'connectors.ceAws.cur.instructions.i4'
+    }
+  ]
 
   return (
     <Layout.Vertical className={css.stepContainer}>
-      <Heading level={2} className={css.header}>
+      <Text
+        font={{ variation: FontVariation.H3 }}
+        tooltipProps={{ dataTooltipId: 'awsConnectorCUR' }}
+        margin={{ bottom: 'large' }}
+      >
         {getString('connectors.ceAws.cur.heading')}
-      </Heading>
-      <Text className={css.subHeader}>{getString('connectors.ceAws.cur.subheading')}</Text>
+      </Text>
+      <Text color={Color.GREY_800} font={{ variation: FontVariation.BODY }} margin={{ bottom: 'large' }}>
+        {getString('connectors.ceAws.cur.subheading')}
+      </Text>
 
-      {!isExistingCostUsageReport && (
-        <div>
-          <Text
-            font="small"
-            className={css.info}
-            color="primary7"
-            inline
-            icon="info-sign"
-            iconProps={{ size: 15, color: 'primary7', margin: { right: 'xsmall' } }}
-          >
-            {getString('connectors.ceAws.cur.followInstruction')}
-          </Text>
-          <Container padding={{ bottom: 35 }}>
-            <Layout.Vertical style={{ width: '65%' }}>
-              <Button
-                className={css.launchTemplateBut}
-                text={getString('connectors.ceAws.cur.launchTemplate')}
-                icon="main-share"
-                iconProps={{ size: 12, margin: { right: 'xsmall' } }}
-                onClick={() => {
-                  window.open('https://console.aws.amazon.com/billing/home?#/reports')
-                }}
-              />
-              <Text font="small" style={{ textAlign: 'center' }}>
-                {getString('connectors.ceAws.cur.login')}
-              </Text>
-            </Layout.Vertical>
-          </Container>
-        </div>
-      )}
+      {!isExistingCostUsageReport && <ConnectorInstructionList instructionsList={instructionsList} />}
 
       <div style={{ flex: 1 }}>
         <Formik<AwsCurAttributes>
@@ -125,16 +128,24 @@ const CostUsageStep: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
           {() => (
             <FormikForm>
               {isExistingCostUsageReport && (
-                <Layout.Vertical spacing="xlarge">
+                <Layout.Vertical spacing="xlarge" className={css.existingReportsWrapper}>
                   <CostUsageReportExisting existingCurReports={prevStepData?.existingCurReports || []} />
                   <div>
-                    <Button
-                      className={css.newCurReport}
-                      text={getString('connectors.ceAws.cur.createNew')}
-                      onClick={() => {
-                        setIsExistingCostUsageReport(false)
-                      }}
-                    />
+                    <ul>
+                      <li className={css.hintsLineItem}>{getString('connectors.ceAws.curExising.nextStepHint1')}</li>
+                      <li className={css.hintsLineItem}>
+                        {getString('connectors.ceAws.curExising.nextStepHint2')}
+                        <Button
+                          rightIcon="chevron-right"
+                          text={getString('connectors.ceAws.cur.createNew')}
+                          onClick={() => {
+                            setIsExistingCostUsageReport(false)
+                          }}
+                          size={ButtonSize.SMALL}
+                          variation={ButtonVariation.SECONDARY}
+                        />
+                      </li>
+                    </ul>
                   </div>
                 </Layout.Vertical>
               )}
@@ -143,24 +154,24 @@ const CostUsageStep: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
                 <div>
                   <FormInput.Text
                     name={'reportName'}
-                    label={
-                      <LabelWithTooltip
-                        label={getString('connectors.ceAws.cur.reportName')}
-                        extentionComponent={CostUsageReportExtention}
-                      />
-                    }
+                    label={getString('connectors.ceAws.cur.reportName')}
                     className={css.dataFields}
+                    tooltipProps={{ dataTooltipId: 'reportName' }}
                   />
                   <FormInput.Text
                     name={'s3BucketName'}
-                    label={
-                      <LabelWithTooltip
-                        label={getString('connectors.ceAws.cur.bucketName')}
-                        extentionComponent={CostUsageReportExtention}
-                      />
-                    }
+                    label={getString('connectors.ceAws.cur.bucketName')}
                     className={css.dataFields}
+                    tooltipProps={{ dataTooltipId: 's3BucketName' }}
                   />
+                  <a
+                    href={connectorHelperUrls.ceAwsNoAccount}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={css.noAccountLink}
+                  >
+                    {getString('connectors.ceAws.cur.noAccountLink')}
+                  </a>
                 </div>
               )}
 

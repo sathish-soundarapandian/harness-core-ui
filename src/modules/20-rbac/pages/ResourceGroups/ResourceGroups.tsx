@@ -7,16 +7,15 @@
 
 import React from 'react'
 
-import { isCDCommunity, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { isCommunityPlan } from '@common/utils/utils'
 import FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarningBanner'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { useStrings } from 'framework/strings'
 import ResourceGroupsList from '@rbac/pages/ResourceGroups/views/ResourceGroupsList'
 
 const ResourceGroups: React.FC = () => {
-  const { licenseInformation } = useLicenseStore()
   const { getString } = useStrings()
-  const isCommunity = isCDCommunity(licenseInformation)
+  const isCommunity = isCommunityPlan()
 
   if (isCommunity) {
     return (

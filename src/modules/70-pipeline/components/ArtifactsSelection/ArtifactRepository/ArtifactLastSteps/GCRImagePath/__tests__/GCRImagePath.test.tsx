@@ -10,6 +10,7 @@ import { act, fireEvent, queryByAttribute, render, waitFor } from '@testing-libr
 import { MultiTypeInputType } from '@wings-software/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ArtifactType, TagTypes } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { GCRImagePath } from '../GCRImagePath'
 
 const props = {
@@ -19,7 +20,8 @@ const props = {
   context: 2,
   handleSubmit: jest.fn(),
   artifactIdentifiers: [],
-  selectedArtifact: 'Gcr' as ArtifactType
+  selectedArtifact: 'Gcr' as ArtifactType,
+  selectedDeploymentType: ServiceDeploymentType.Kubernetes
 }
 
 describe('GCR Image Path Artifact tests', () => {

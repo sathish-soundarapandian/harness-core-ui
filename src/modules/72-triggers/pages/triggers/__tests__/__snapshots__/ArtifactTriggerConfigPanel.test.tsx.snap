@@ -6,6 +6,7 @@ exports[`Artifact Trigger Config Panel  tests Renders/snapshots edit render 1`] 
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -422,6 +423,7 @@ exports[`Artifact Trigger Config Panel  tests Renders/snapshots inital Render 1`
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

@@ -7,8 +7,11 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly cardSloAndSli: string
+  readonly cardSloAndSliForCardView: string
   readonly clearButton: string
   readonly createSloInMonitoredService: string
+  readonly currentTimeRange: string
   readonly errorBudgetGaugeContainer: string
   readonly errorBudgetRemaining: string
   readonly flexGrowOne: string
@@ -24,5 +27,6 @@ declare const styles: {
   readonly sloGlanceCard: string
   readonly sloRiskFilterCard: string
   readonly sloTags: string
+  readonly timelineSlider: string
 }
 export default styles

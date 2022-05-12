@@ -14,6 +14,13 @@ import type { StringsMap } from 'stringTypes'
 import type { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
 import type { SloHealthIndicatorDTO } from 'services/cv'
 
+export enum EVENT_TYPE {
+  KNOWN = 'KNOWN',
+  UNKNOWN = 'UNKNOWN',
+  FREQUENCY = 'UNEXPECTED_FREQUENCY',
+  BASELINE = 'BASELINE'
+}
+
 export enum RiskValues {
   NO_DATA = 'NO_DATA',
   NO_ANALYSIS = 'NO_ANALYSIS',
@@ -172,4 +179,51 @@ export const prepareFilterInfo = (data?: MultiSelectOption[]): Array<string | nu
 
 export const isNumeric = (val: string): boolean => {
   return /^-?\d+$/.test(val)
+}
+
+export function getEventTypeColor(eventType?: string, realCSSColor = true): string {
+  switch (eventType) {
+    case EVENT_TYPE.UNKNOWN:
+      return realCSSColor ? Utils.getRealCSSColor(Color.RED_800) : Color.RED_800
+    case EVENT_TYPE.KNOWN:
+      return realCSSColor ? Utils.getRealCSSColor(Color.PRIMARY_7) : Color.PRIMARY_7
+    case EVENT_TYPE.FREQUENCY:
+    case 'UNEXPECTED':
+      return realCSSColor ? Utils.getRealCSSColor(Color.YELLOW_800) : Color.YELLOW_800
+    case EVENT_TYPE.BASELINE:
+    default:
+      return realCSSColor ? Utils.getRealCSSColor(Color.GREY_700) : Color.GREY_700
+  }
+}
+
+export function getEventTypeLightColor(eventType?: string, realCSSColor = true): string {
+  switch (eventType) {
+    case EVENT_TYPE.UNKNOWN:
+      return realCSSColor ? Utils.getRealCSSColor(Color.RED_50) : Color.RED_50
+    case EVENT_TYPE.KNOWN:
+      return realCSSColor ? Utils.getRealCSSColor(Color.PRIMARY_2) : Color.PRIMARY_2
+    case EVENT_TYPE.FREQUENCY:
+    case 'UNEXPECTED':
+      return realCSSColor ? Utils.getRealCSSColor(Color.YELLOW_200) : Color.YELLOW_200
+    case EVENT_TYPE.BASELINE:
+    default:
+      return realCSSColor ? Utils.getRealCSSColor(Color.GREY_200) : Color.GREY_200
+  }
+}
+
+export function getEventTypeChartColor(eventType?: string, realCSSColor = true): string {
+  switch (eventType) {
+    case EVENT_TYPE.UNKNOWN:
+    case 'UNKNOWN_EVENT':
+      return realCSSColor ? Utils.getRealCSSColor(Color.RED_400) : Color.RED_400
+    case EVENT_TYPE.KNOWN:
+    case 'KNOWN_EVENT':
+      return realCSSColor ? Utils.getRealCSSColor(Color.PRIMARY_4) : Color.PRIMARY_4
+    case EVENT_TYPE.FREQUENCY:
+    case 'UNEXPECTED_FREQUENCY':
+      return realCSSColor ? Utils.getRealCSSColor(Color.YELLOW_700) : Color.YELLOW_700
+    case EVENT_TYPE.BASELINE:
+    default:
+      return realCSSColor ? Utils.getRealCSSColor(Color.GREY_300) : Color.GREY_300
+  }
 }

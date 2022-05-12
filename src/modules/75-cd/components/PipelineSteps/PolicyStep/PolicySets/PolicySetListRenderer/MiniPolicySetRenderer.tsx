@@ -15,9 +15,9 @@ import { Button, Color, Layout, Text } from '@harness/uicore'
 import { LinkedPolicy, useGetPolicySet } from 'services/pm'
 
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 
 import { PolicySetType } from '../../PolicyStepTypes'
-import { getErrorMessage } from '../../utils'
 
 import css from './PolicySetListRenderer.module.scss'
 
@@ -28,6 +28,7 @@ interface MiniPolicySetRendererProps {
 
 export function MiniPolicySetRenderer({ policySetId, deletePolicySet }: MiniPolicySetRendererProps) {
   const { accountId: accountIdentifier, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { getRBACErrorMessage } = useRBACError()
 
   const policySetType = policySetId.includes('account.')
     ? PolicySetType.ACCOUNT
@@ -71,7 +72,7 @@ export function MiniPolicySetRenderer({ policySetId, deletePolicySet }: MiniPoli
           <Spinner size={Spinner.SIZE_SMALL} />
         ) : error ? (
           <Text lineClamp={1} color={Color.RED_800}>
-            {getErrorMessage(error)}
+            {getRBACErrorMessage(error as RBACError)}
           </Text>
         ) : policySet ? (
           <>

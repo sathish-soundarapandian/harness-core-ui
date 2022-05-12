@@ -25,6 +25,7 @@ import type {
   GetAllJourneysQueryParams
 } from 'services/cv'
 import { getRiskColorValue } from '@cv/utils/CommonUtils'
+import { DAYS, HOURS } from '@cv/pages/monitored-service/components/ServiceHealth/ServiceHealth.constants'
 import {
   PAGE_SIZE_DASHBOARD_WIDGETS,
   LIST_USER_JOURNEYS_OFFSET,
@@ -40,9 +41,9 @@ import {
   TargetTypesParams,
   SLOActionPayload,
   SLOFilterAction,
-  SLOFilterState
+  SLOFilterState,
+  SLOTargetChartWithChangeTimelineProps
 } from './CVSLOsListingPage.types'
-
 import { getUserJourneyOptions } from './components/CVCreateSLO/CVCreateSLO.utils'
 import { getMonitoredServicesOptions } from './components/CVCreateSLO/components/CreateSLOForm/components/SLI/SLI.utils'
 
@@ -104,31 +105,27 @@ export const getErrorBudgetGaugeOptions = (serviceLevelObjective: SLODashboardWi
   ]
 })
 
-const getDateUnitAndInterval = (serviceLevelObjective: SLODashboardWidget): { unit: string; interval: number } => {
+export const getDateUnitAndInterval = (
+  serviceLevelObjective: SLODashboardWidget
+): { unit: string; interval: number } => {
   const MILLISECONDS_PER_SIX_HOURS = 1000 * 60 * 60 * 6
   const timeline = serviceLevelObjective.currentPeriodLengthDays - serviceLevelObjective.timeRemainingDays
 
-  if (timeline <= 1) {
+  /* istanbul ignore else */ if (timeline <= 1) {
     return { unit: 'Do MMM hh:mm A', interval: (MILLISECONDS_PER_SIX_HOURS * 4) / 3 }
   }
 
-  if (timeline <= 3) {
+  /* istanbul ignore else */ if (timeline <= 3) {
     return { unit: 'Do MMM hh:mm A', interval: MILLISECONDS_PER_SIX_HOURS * timeline * 2 }
   }
 
   return { unit: 'Do MMM', interval: MILLISECONDS_PER_SIX_HOURS * timeline }
 }
 
-export const getSLOAndErrorBudgetGraphOptions = ({
-  type,
-  minXLimit,
-  maxXLimit,
-  serviceLevelObjective
-}: GetSLOAndErrorBudgetGraphOptions): Highcharts.Options => {
+export const getPlotLines = (serviceLevelObjective: SLODashboardWidget): Highcharts.YAxisPlotLinesOptions[] => {
   const labelColor = Utils.getRealCSSColor(Color.PRIMARY_7)
-  const { unit, interval } = getDateUnitAndInterval(serviceLevelObjective)
 
-  const plotLines: Highcharts.YAxisPlotLinesOptions[] = [
+  return [
     {
       value: Number((Number(serviceLevelObjective.sloTargetPercentage) || 0).toFixed(2)),
       color: Utils.getRealCSSColor(Color.PRIMARY_7),
@@ -138,23 +135,38 @@ export const getSLOAndErrorBudgetGraphOptions = ({
         useHTML: true,
         formatter: function () {
           return `
-            <div style="background-color:${labelColor};padding:4px 6px;border-radius:4px" >
-              <span style="color:white">
-                ${Number((Number(serviceLevelObjective.sloTargetPercentage) || 0).toFixed(2))}%
-              </span>
-            </div>
-          `
+          <div style="background-color:${labelColor};padding:4px 6px;border-radius:4px" >
+            <span style="color:white">
+              ${Number((Number(serviceLevelObjective.sloTargetPercentage) || 0).toFixed(2))}%
+            </span>
+          </div>
+        `
         }
       }
     }
   ]
+}
+
+export const getSLOAndErrorBudgetGraphOptions = ({
+  type,
+  minXLimit,
+  maxXLimit,
+  serviceLevelObjective,
+  startTime,
+  endTime,
+  isCardView
+}: GetSLOAndErrorBudgetGraphOptions): Highcharts.Options => {
+  const { unit, interval } = getDateUnitAndInterval(serviceLevelObjective)
 
   return {
-    chart: { height: 200, spacing: [30, 0, 20, 0] },
+    chart: { height: 200, spacing: [20, 0, 20, 0] },
     xAxis: {
-      min: serviceLevelObjective.currentPeriodStartTime,
+      min: startTime,
+      max: endTime,
       tickInterval: interval,
+      tickWidth: isCardView ? 0 : 1,
       labels: {
+        enabled: !isCardView,
         formatter: function () {
           return moment(new Date(this.value)).format(unit)
         }
@@ -163,7 +175,7 @@ export const getSLOAndErrorBudgetGraphOptions = ({
     yAxis: {
       min: minXLimit,
       max: maxXLimit,
-      plotLines: type === SLOCardToggleViews.SLO ? plotLines : undefined
+      plotLines: type === SLOCardToggleViews.SLO ? getPlotLines(serviceLevelObjective) : undefined
     },
     plotOptions: {
       area: {
@@ -348,31 +360,33 @@ export const SLODashboardFilterActions = {
 }
 
 export const sloFilterReducer = (state = initialState, data: SLOFilterAction): SLOFilterState => {
+  const { payload = {} } = data
+
   switch (data.type) {
     case SLOActionTypes.userJourney:
       return {
         ...state,
-        userJourney: data.payload?.userJourney as SelectOption
+        userJourney: payload.userJourney as SelectOption
       }
     case SLOActionTypes.monitoredService:
       return {
         ...state,
-        monitoredService: data.payload?.monitoredService as SelectOption
+        monitoredService: payload.monitoredService as SelectOption
       }
     case SLOActionTypes.sliTypes:
       return {
         ...state,
-        sliTypes: data.payload?.sliTypes as SelectOption
+        sliTypes: payload.sliTypes as SelectOption
       }
     case SLOActionTypes.targetTypes:
       return {
         ...state,
-        targetTypes: data.payload?.targetTypes as SelectOption
+        targetTypes: payload.targetTypes as SelectOption
       }
     case SLOActionTypes.sloRiskFilterAction:
       return {
         ...state,
-        sloRiskFilter: data.payload?.sloRiskFilter as SLORiskFilter | null
+        sloRiskFilter: payload.sloRiskFilter as SLORiskFilter | null
       }
     case SLOActionTypes.reset:
       return initialState
@@ -523,4 +537,12 @@ export const getMonitoredServicesInitialState = (monitoredService: {
 
 export const getClassNameForMonitoredServicePage = (className: string, isMonitoredServicePage?: string): string => {
   return isMonitoredServicePage ? className : ''
+}
+
+export const getTimeFormatForAnomaliesCard = (
+  sliderTimeRange: SLOTargetChartWithChangeTimelineProps['sliderTimeRange']
+): string => {
+  const diff = moment(sliderTimeRange?.endTime).diff(moment(sliderTimeRange?.startTime), 'days')
+
+  return diff < 2 ? HOURS : DAYS
 }

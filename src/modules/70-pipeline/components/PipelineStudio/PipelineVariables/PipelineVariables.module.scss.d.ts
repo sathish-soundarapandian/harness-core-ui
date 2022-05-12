@@ -15,7 +15,6 @@ declare const styles: {
   readonly accordionSummary: string
   readonly addVariableL1: string
   readonly addVariableL2: string
-  readonly applyChanges: string
   readonly closed: string
   readonly collapse: string
   readonly content: string
@@ -25,11 +24,11 @@ declare const styles: {
   readonly customVariables: string
   readonly description: string
   readonly descriptionTooltip: string
-  readonly discard: string
   readonly header: string
   readonly iconCollapsed: string
   readonly iconExpanded: string
   readonly lhs: string
+  readonly mainActions: string
   readonly marginIndentL1: string
   readonly marginIndentXlarge: string
   readonly marginIndentXxlarge: string
@@ -38,7 +37,6 @@ declare const styles: {
   readonly pipelineDetails: string
   readonly pipelineMarginBottom: string
   readonly pipelineVariables: string
-  readonly searchActions: string
   readonly stageDetails: string
   readonly stageSummary: string
   readonly stageTitle: string

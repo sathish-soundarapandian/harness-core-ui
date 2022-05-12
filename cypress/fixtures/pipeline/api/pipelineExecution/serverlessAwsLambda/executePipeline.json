@@ -1,0 +1,78 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "planExecution": {
+      "uuid": "executionId",
+      "createdAt": 1649819224657,
+      "planId": "hZQsR6qLQNuVftQSbAHdBA",
+      "setupAbstractions": {
+        "accountId": "kmpySmUISimoRrJL6NL73w",
+        "orgIdentifier": "default",
+        "projectIdentifier": "Chetan_Non_Git_Sync"
+      },
+      "validUntil": 1665630424550,
+      "status": "RUNNING",
+      "startTs": 1649819224550,
+      "endTs": null,
+      "metadata": {
+        "runSequence": 1,
+        "triggerInfo": {
+          "triggerType": "MANUAL",
+          "triggeredBy": {
+            "uuid": "lv0euRhKRCyiXWzS7pOg6g",
+            "identifier": "Admin",
+            "extraInfo": {
+              "email": "admin@harness.io"
+            }
+          },
+          "isRerun": false
+        },
+        "pipelineIdentifier": "Pipeline_1304",
+        "executionUuid": "executionId",
+        "principalInfo": {
+          "principal": "lv0euRhKRCyiXWzS7pOg6g",
+          "principalType": "USER",
+          "shouldValidateRbac": true
+        },
+        "gitSyncBranchContext": "eJxtkEFuwjAQRWPIEq7CBdg1JSiLlqocIDLOBKaa2JU9FHIQuujlukEqG8SildhiQJVI8OLL0ps/st5svoZCjJGntVYPVmq1SIxmWPNgjnwFmS4P+86nL/Z9caQZufbMDGbSwaWya/EAU6aqkLNtiD65nyYukeBF8q5NdfEIpVwSp9ZUE16AfYV389uqGSrA3q+jS5dEZ8+UzLE9e4ZVSAXdZcF/N8a/5oik48nsDdSdlQVn6AMKf8mSUHESdK9lRZ6cSzjPtj2R58XVLv/uRiL2iW7eUOL/iCg6AdaGpMY=",
+        "moduleType": "cd",
+        "retryInfo": {
+          "isRetry": false,
+          "rootExecutionId": "",
+          "parentRetryId": ""
+        },
+        "isNotificationConfigured": false
+      },
+      "governanceMetadata": {
+        "id": "",
+        "deny": false,
+        "details": [],
+        "message": "FF: [OPA_PIPELINE_GOVERNANCE] is disabled for account: [kmpySmUISimoRrJL6NL73w]",
+        "timestamp": "0",
+        "status": "",
+        "accountId": "",
+        "orgId": "",
+        "projectId": "",
+        "entity": "",
+        "type": "",
+        "action": "",
+        "created": "0"
+      },
+      "lastUpdatedAt": 1649819224657,
+      "version": 0,
+      "nextIteration": null,
+      "nodeType": "PLAN",
+      "nodeId": "hZQsR6qLQNuVftQSbAHdBA"
+    },
+    "gitDetails": {
+      "objectId": null,
+      "branch": null,
+      "repoIdentifier": null,
+      "rootFolder": null,
+      "filePath": null,
+      "repoName": null
+    }
+  },
+  "metaData": null,
+  "correlationId": "d5ae71a3-7726-47f4-b9c3-efdbe4709d20"
+}

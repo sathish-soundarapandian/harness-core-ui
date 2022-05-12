@@ -105,6 +105,7 @@ export const joinAsASentence = (items: string[]): string => {
   if (!items.length) {
     return ''
   }
-  const last = items.pop()
-  return items.join(', ') + ' and ' + last
+  const itemsClone = [...items]
+  const last = itemsClone.pop()
+  return `${itemsClone.join(', ')} and ${last}`
 }

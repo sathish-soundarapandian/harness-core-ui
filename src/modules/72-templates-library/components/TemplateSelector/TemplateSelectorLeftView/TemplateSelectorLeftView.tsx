@@ -13,10 +13,10 @@ import {
   ExpandingSearchInputHandle,
   GridListToggle,
   Layout,
+  PageError,
   SelectOption,
   Text,
-  Views,
-  PageError
+  Views
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { defaultTo, isEmpty } from 'lodash-es'
@@ -28,7 +28,7 @@ import { useStrings } from 'framework/strings'
 import { PageSpinner } from '@common/components'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import { TemplateListType } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
-import TemplatesView from '@templates-library/pages/TemplatesPage/views/TemplatesView'
+import TemplatesView from '@templates-library/pages/TemplatesPage/views/TemplatesView/TemplatesView'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import routes from '@common/RouteDefinitions'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -37,6 +37,8 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { stagesCollection } from '@pipeline/components/PipelineStudio/Stages/StagesCollection'
+import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
+import { getScopeOptions } from '@templates-library/components/TemplateSelector/TemplateSelectorLeftView/TemplateSelectorLeftViewUtils'
 import css from './TemplateSelectorLeftView.module.scss'
 
 export interface TemplateSelectorLeftViewProps {
@@ -57,30 +59,14 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
   const [page, setPage] = useState(0)
   const [view, setView] = useState<Views>(Views.GRID)
   const [searchParam, setSearchParam] = useState('')
-  const { projectIdentifier, orgIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
+  const { module, ...params } = useParams<ProjectPathProps & ModulePathParams>()
+  const { projectIdentifier, orgIdentifier, accountId } = params
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { isGitSyncEnabled } = useAppStore()
   const [childType, setChildType] = React.useState<string | undefined>(selectedChildType)
   const scopeOptions: SelectOption[] = React.useMemo(
-    () => [
-      {
-        value: 'all',
-        label: getString('all')
-      },
-      {
-        value: Scope.PROJECT,
-        label: getString('projectLabel')
-      },
-      {
-        value: Scope.ORG,
-        label: getString('orgLabel')
-      },
-      {
-        value: Scope.ACCOUNT,
-        label: getString('account')
-      }
-    ],
-    []
+    () => getScopeOptions(getScopeFromDTO(params), getString),
+    [params]
   )
   const [selectedScope, setSelectedScope] = useState<SelectOption>(scopeOptions[0])
   const searchRef = React.useRef<ExpandingSearchInputHandle>({} as ExpandingSearchInputHandle)

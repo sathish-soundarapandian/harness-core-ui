@@ -24,6 +24,7 @@
       "@sto/*": ["modules/27-sto/*"],
       "@auth-settings/*": ["modules/33-auth-settings/*"],
       "@secrets/*": ["modules/30-secrets/*"],
+      "@variables/*": ["modules/31-variables/*"],
       "@connectors/*": ["modules/35-connectors/*"],
       "@user-profile/*": ["modules/35-user-profile/*"],
       "@projects-orgs/*": ["modules/45-projects-orgs/*"],

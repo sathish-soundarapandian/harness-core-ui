@@ -8,6 +8,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { ResponseJsonNode, useGetSchemaYaml } from 'services/pipeline-ng'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useToaster } from '@common/exports'
@@ -28,6 +29,7 @@ export function PipelineSchemaContextProvider(props: React.PropsWithChildren<unk
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
   const { data: pipelineSchema, error } = useGetSchemaYaml({
     queryParams: {
       entityType: 'Pipelines',
@@ -38,7 +40,7 @@ export function PipelineSchemaContextProvider(props: React.PropsWithChildren<unk
     }
   })
   if (error?.message) {
-    showError(error?.message, undefined, 'pipeline.get.yaml.error')
+    showError(getRBACErrorMessage(error), undefined, 'pipeline.get.yaml.error')
   }
   return <PipelineSchemaContext.Provider value={{ pipelineSchema }}>{props.children}</PipelineSchemaContext.Provider>
 }

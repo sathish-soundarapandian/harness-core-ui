@@ -8,7 +8,7 @@
 import React, { ReactElement } from 'react'
 import css from './LogsHeader.module.scss'
 
-interface SummaryProps {
+export interface SummaryProps {
   summaryElement?: ReactElement
 }
 

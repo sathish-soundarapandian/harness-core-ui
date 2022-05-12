@@ -1,0 +1,211 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ServiceNowcreateupdate view test  snapshot for displaying ticketNumber info 1`] = `
+<div>
+  <div
+    class="bp3-tabs tabs"
+  >
+    <div
+      class="bp3-tab-list"
+      role="tablist"
+    >
+      <div
+        class="bp3-tab-indicator-wrapper"
+        style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
+      >
+        <div
+          class="bp3-tab-indicator"
+        />
+      </div>
+      <div
+        aria-controls="bp3-tab-panel_step-details_STEP_DETAILS"
+        aria-disabled="false"
+        aria-expanded="true"
+        aria-selected="true"
+        class="bp3-tab"
+        data-tab-id="STEP_DETAILS"
+        id="bp3-tab-title_step-details_STEP_DETAILS"
+        role="tab"
+        tabindex="0"
+      >
+        details
+      </div>
+      <div
+        aria-controls="bp3-tab-panel_step-details_Input"
+        aria-disabled="false"
+        aria-expanded="false"
+        aria-selected="false"
+        class="bp3-tab"
+        data-tab-id="Input"
+        id="bp3-tab-title_step-details_Input"
+        role="tab"
+        tabindex="0"
+      >
+        common.input
+      </div>
+      <div
+        aria-controls="bp3-tab-panel_step-details_Output"
+        aria-disabled="false"
+        aria-expanded="false"
+        aria-selected="false"
+        class="bp3-tab"
+        data-tab-id="Output"
+        id="bp3-tab-title_step-details_Output"
+        role="tab"
+        tabindex="0"
+      >
+        outputLabel
+      </div>
+    </div>
+    <div
+      aria-hidden="false"
+      aria-labelledby="bp3-tab-title_step-details_STEP_DETAILS"
+      class="bp3-tab-panel"
+      id="bp3-tab-panel_step-details_STEP_DETAILS"
+      role="tabpanel"
+    >
+      <div
+        class="detailsTab"
+      >
+        <table
+          class="detailsTable"
+        >
+          <tbody>
+            <tr>
+              <th>
+                startedAt
+              </th>
+              <td>
+                -
+              </td>
+            </tr>
+            <tr>
+              <th>
+                endedAt
+              </th>
+              <td>
+                -
+              </td>
+            </tr>
+            <tr>
+              <th>
+                pipeline.duration
+              </th>
+              <td>
+                <span
+                  class="StyledProps--font StyledProps--main timer StyledProps--inline"
+                >
+                  
+                  0s
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                pipeline.serviceNowApprovalStep.issueNumber
+              </th>
+              <td>
+                <a
+                  href="ticketUrl"
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  ticketNumber
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          class="main"
+          data-mode="step-details"
+        >
+          <div
+            class="header"
+          >
+            <div>
+              execution.stepLogs
+            </div>
+            <div
+              class="rhs"
+            >
+              <div
+                class="bp3-input-group ui-search-box ExpandingSearchInput--main search ExpandingSearchInput--flip  ExpandingSearchInput--dark"
+                data-name=""
+              >
+                <span
+                  class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey200"
+                  data-icon="thinner-search"
+                >
+                  <svg
+                    fill="none"
+                    height="14"
+                    viewBox="0 0 16 16"
+                    width="14"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+                <input
+                  class="bp3-input  ExpandingSearchInput--find"
+                  dir="auto"
+                  placeholder="Search"
+                  style="padding-right: 0px;"
+                  type="search"
+                  value=""
+                />
+              </div>
+              <button
+                class="bp3-button Button--button StyledProps--font StyledProps--main fullScreen Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
+                type="button"
+              >
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="full-screen"
+                >
+                  <svg
+                    fill="none"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    width="22"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M15.12 19.512h4.876v-4.815M8.88 19.512H4.003v-4.815M15.12 4.488h4.876v4.814M8.88 4.488H4.003v4.814"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </span>
+              </button>
+              <a
+                class="toConsoleView"
+                href="/?view=log"
+              >
+                <span>
+                  consoleView
+                </span>
+              </a>
+            </div>
+          </div>
+          <pre
+            class="container"
+          >
+            <div
+              class="noLogs"
+            >
+              common.logs.noLogsText
+            </div>
+          </pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

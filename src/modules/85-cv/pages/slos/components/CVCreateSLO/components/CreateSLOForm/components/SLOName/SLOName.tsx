@@ -6,22 +6,39 @@
  */
 
 import React, { useCallback, useEffect, useMemo } from 'react'
-import { Card, Container, SelectOption, useToaster, Utils, FormInput, ButtonVariation } from '@wings-software/uicore'
-import { useHistory, useParams } from 'react-router-dom'
+import {
+  Card,
+  Container,
+  SelectOption,
+  useToaster,
+  Utils,
+  FormInput,
+  ButtonVariation,
+  Dialog,
+  Formik,
+  Text
+} from '@wings-software/uicore'
+import { useParams } from 'react-router-dom'
+
+import { useModalHook } from '@harness/use-modal'
+import cx from 'classnames'
+import { Classes } from '@blueprintjs/core'
+import { Form } from 'formik'
 import { NameIdDescriptionTags } from '@common/components'
 import { useStrings } from 'framework/strings'
 import { HarnessServiceAsFormField } from '@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironment'
 import { useGetAllJourneys, useSaveUserJourney } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { getCVMonitoringServicesSearchParam, getErrorMessage } from '@cv/utils/CommonUtils'
+import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { LIST_USER_JOURNEYS_OFFSET, LIST_USER_JOURNEYS_PAGESIZE } from '@cv/pages/slos/CVSLOsListingPage.constants'
 import { SLONameProps, SLOFormFields } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.types'
 import { getUserJourneyOptions } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.utils'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import routes from '@common/RouteDefinitions'
-import { useQueryParams } from '@common/hooks'
+import CreateMonitoredServiceFromSLO from './components/CreateMonitoredServiceFromSLO/CreateMonitoredServiceFromSLO'
+import type { ServiceAndEnv } from './SLOName.types'
+import { initialFormData } from './components/CreateMonitoredServiceFromSLO/CreateMonitoredServiceFromSLO.constants'
 import css from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.module.scss'
 
 const SLOName: React.FC<SLONameProps> = ({
@@ -29,14 +46,13 @@ const SLOName: React.FC<SLONameProps> = ({
   formikProps,
   identifier,
   monitoredServicesLoading,
-  monitoredServicesOptions
+  monitoredServicesOptions,
+  fetchingMonitoredServices
 }) => {
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const TEXT_USER_JOURNEY = getString('cv.slos.userJourney')
-  const { monitoredServiceIdentifier } = useQueryParams<{ monitoredServiceIdentifier?: string }>()
-  const history = useHistory()
   const { userJourneyRef } = formikProps.values
 
   const {
@@ -89,7 +105,6 @@ const SLOName: React.FC<SLONameProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const key = useMemo(() => Utils.randomId(), [userJourneyRef])
 
   const userJourneyOptions = useMemo(
@@ -100,6 +115,35 @@ const SLOName: React.FC<SLONameProps> = ({
   const activeUserJourney = useMemo(
     () => userJourneyOptions.find(userJourney => userJourney.value === userJourneyRef),
     [userJourneyOptions, userJourneyRef]
+  )
+
+  const [showModal, hideModal] = useModalHook(
+    () => (
+      <Dialog
+        isOpen
+        title={getString('cv.slos.createMonitoredService')}
+        onClose={hideModal}
+        enforceFocus={false}
+        className={cx(css.dialog, Classes.DIALOG)}
+      >
+        <Formik<ServiceAndEnv> initialValues={initialFormData} formName="monitoredServiceForm" onSubmit={hideModal}>
+          {monitoredServiceFormikProps => {
+            return (
+              <Form>
+                <Text padding={{ bottom: 'medium' }}>{getString('cv.slos.monitoredServiceText')}</Text>
+                <CreateMonitoredServiceFromSLO
+                  monitoredServiceFormikProps={monitoredServiceFormikProps}
+                  setFieldForSLOForm={formikProps?.setFieldValue}
+                  fetchingMonitoredServices={fetchingMonitoredServices}
+                  hideModal={hideModal}
+                />
+              </Form>
+            )
+          }}
+        </Formik>
+      </Dialog>
+    ),
+    []
   )
 
   return (
@@ -136,20 +180,7 @@ const SLOName: React.FC<SLONameProps> = ({
             icon="plus"
             text={getString('cv.monitoredServices.newMonitoredServices')}
             variation={ButtonVariation.LINK}
-            onClick={() => {
-              history.push({
-                pathname: routes.toCVAddMonitoringServicesSetup({
-                  accountId,
-                  orgIdentifier,
-                  projectIdentifier
-                }),
-                search: getCVMonitoringServicesSearchParam({
-                  redirectToSLO: true,
-                  sloIdentifier: identifier,
-                  monitoredServiceIdentifier
-                })
-              })
-            }}
+            onClick={showModal}
             permission={{
               permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
               resource: {

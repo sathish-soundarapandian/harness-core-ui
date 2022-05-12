@@ -27,6 +27,8 @@ import { CEReportSchedule, useCreateReportSetting, useUpdateReportSetting } from
 import { useStrings } from 'framework/strings'
 import { regexEmail } from '@common/utils/StringUtils'
 import TimezoneSelector from '@ce/common/TimeZoneSelector/TimeZoneSelector'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
 import Cron from './Cron'
 import css from './PerspectiveCreateReport.module.scss'
 
@@ -55,6 +57,7 @@ const useCreateReportModal = ({ onSuccess, onError }: CreateReportModalProps) =>
   const { perspectiveId, accountId } = useParams<{ perspectiveId: string; accountId: string }>()
   const { mutate: createReport } = useCreateReportSetting({ accountIdentifier: accountId })
   const { mutate: updateReport } = useUpdateReportSetting({ accountIdentifier: accountId })
+  const { trackEvent } = useTelemetry()
   const modalPropsLight: IDialogProps = {
     isOpen: true,
     usePortal: true,
@@ -127,6 +130,7 @@ const useCreateReportModal = ({ onSuccess, onError }: CreateReportModalProps) =>
         <Container padding="xlarge">
           <Formik<ReportDetailsForm>
             onSubmit={data => {
+              trackEvent(USER_JOURNEY_EVENTS.PERSPECTIVE_REPORT_SCHEDULE, {})
               handleSubmit(data)
             }}
             formName="createReportScheduleForm"

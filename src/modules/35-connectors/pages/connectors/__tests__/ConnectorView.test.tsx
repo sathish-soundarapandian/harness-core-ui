@@ -147,4 +147,38 @@ describe('Connector Details Page', () => {
     fireEvent.click(saveToGitBtn)
     expect(saveToGitModal).toMatchSnapshot()
   })
+
+  test('Edit and save connector via YAML for a non git-sync enabled project', async () => {
+    const { container } = render(
+      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+        <ConnectorView
+          type={'Git'}
+          response={GitHttp.data.content as ConnectorResponse}
+          refetchConnector={() => Promise.resolve()}
+          mockMetaData={mockMetaData as any}
+          mockSnippetData={mockSnippetData as any}
+          mockSchemaData={mockSchemaData as any}
+          mockSecretData={mockSecretData as any}
+        ></ConnectorView>
+      </TestWrapper>
+    )
+    await waitFor(() => {
+      expect(container.querySelector('[data-name="toggle-option-two"]')).toBeTruthy()
+    })
+    const switchToYAML = container.querySelector('[data-name="toggle-option-two"]')
+    act(() => {
+      fireEvent.click(switchToYAML!)
+    })
+    await waitFor(() => expect(getByText(container, 'YAML')))
+    const editDetailsBtn = container?.querySelector('#editDetailsBtn')
+    act(() => {
+      fireEvent.click(editDetailsBtn!)
+    })
+    await waitFor(() => expect(getByText(container, 'saveChanges')))
+    act(() => {
+      const saveYamlBtn = container?.querySelector('#saveYAMLChanges')
+      fireEvent.click(saveYamlBtn!)
+    })
+    await waitFor(() => expect(updateConnector).toBeCalled())
+  })
 })

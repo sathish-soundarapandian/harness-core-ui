@@ -7,7 +7,7 @@
 
 import React, { useMemo } from 'react'
 import { noop } from 'lodash-es'
-import { Container, Select, SelectOption } from '@wings-software/uicore'
+import { Container, MultiTypeInput, MultiTypeInputType, Select, SelectOption } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { useHarnessServicetModal } from '@common/modals/HarnessServiceModal/HarnessServiceModal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -16,7 +16,7 @@ import { useStrings } from 'framework/strings'
 import { ADD_NEW_VALUE } from '@cv/constants'
 
 export interface ServiceSelectOrCreateProps {
-  item?: SelectOption
+  item?: SelectOption | string
   options: Array<SelectOption>
   onSelect(value: SelectOption): void
   className?: string
@@ -28,6 +28,8 @@ export interface ServiceSelectOrCreateProps {
   loading?: boolean
   name?: string
   customLoading?: boolean
+  isMultiType?: boolean
+  isTemplate?: boolean
 }
 export function generateOptions(response?: ServiceResponseDTO[]): SelectOption[] {
   return response
@@ -40,7 +42,15 @@ export function generateOptions(response?: ServiceResponseDTO[]): SelectOption[]
 export const ServiceSelectOrCreate: React.FC<ServiceSelectOrCreateProps> = props => {
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
-  const { modalTitle, placeholder, skipServiceCreateOrUpdate, loading, name, customLoading } = props
+  const {
+    isMultiType = false,
+    modalTitle,
+    placeholder,
+    skipServiceCreateOrUpdate,
+    loading,
+    name,
+    customLoading
+  } = props
 
   const selectOptions = useMemo(
     () => [
@@ -69,27 +79,46 @@ export const ServiceSelectOrCreate: React.FC<ServiceSelectOrCreateProps> = props
     customLoading
   })
 
-  const onSelectChange = (val: SelectOption): void => {
-    if (val.value === ADD_NEW_VALUE) {
+  const onSelectChange = (val: SelectOption | string): void => {
+    if (typeof val !== 'string' && val?.value === ADD_NEW_VALUE) {
       openHarnessServiceModal()
     } else {
-      props.onSelect(val)
+      if (typeof val === 'string') {
+        props.onSelect({ label: val, value: val })
+      } else {
+        props.onSelect(val)
+      }
     }
   }
 
   return (
     <Container onClick={e => e.stopPropagation()}>
-      <Select
-        name={name ?? 'service'}
-        value={props.item}
-        className={props.className}
-        disabled={props.disabled}
-        items={selectOptions}
-        inputProps={{
-          placeholder: loading ? getString('loading') : placeholder ?? getString('cv.selectCreateService')
-        }}
-        onChange={onSelectChange}
-      />
+      {isMultiType ? (
+        <MultiTypeInput
+          name={name ?? 'service'}
+          disabled={props.disabled}
+          selectProps={{
+            items: selectOptions
+          }}
+          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
+          value={props.item}
+          style={{ width: '400px' }}
+          onChange={(val: any) => onSelectChange(val)}
+          placeholder={loading ? getString('loading') : placeholder ?? getString('cv.selectCreateService')}
+        />
+      ) : (
+        <Select
+          name={name ?? 'service'}
+          value={props.item as SelectOption}
+          className={props.className}
+          disabled={props.disabled}
+          items={selectOptions}
+          inputProps={{
+            placeholder: loading ? getString('loading') : placeholder ?? getString('cv.selectCreateService')
+          }}
+          onChange={onSelectChange}
+        />
+      )}
     </Container>
   )
 }

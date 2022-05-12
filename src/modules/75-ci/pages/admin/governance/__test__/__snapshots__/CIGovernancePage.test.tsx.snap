@@ -12,7 +12,7 @@ exports[`CIGovernancePage snapshot test should render properly 1`] = `
         class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold"
         level="2"
       >
-        ci.titleGovernance
+        common.module.governance
       </h2>
     </div>
     <div

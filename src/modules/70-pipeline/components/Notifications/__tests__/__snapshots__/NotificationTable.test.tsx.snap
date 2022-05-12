@@ -676,3 +676,257 @@ exports[`Notification Table test render 1`] = `
   </div>
 </div>
 `;
+
+exports[`testing notification method selecting slack as notification method from dropdown 1`] = `
+<div>
+  <div
+    class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main StyledProps--padding-small"
+  >
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-medium StyledProps--color StyledProps--color-black"
+    >
+      notifications.notificationMethod
+    </p>
+    <div
+      class="Layout--vertical Layout--layout-spacing-large StyledProps--main"
+      style="width: 550px; height: 500px;"
+    >
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+      >
+        <div
+          class="Text--withDocsTooltip"
+          data-tooltip-id="notifications.notificationMethod"
+        >
+          <p
+            class="StyledProps--font StyledProps--main"
+          >
+            notifications.notificationMethod
+          </p>
+        </div>
+        <div
+          class="bp3-popover-wrapper Select--main bp3-fill"
+        >
+          <div
+            class="bp3-popover-target"
+          >
+            <div
+              class="bp3-input-group"
+            >
+              <input
+                autocomplete="off"
+                class="bp3-input"
+                placeholder="- Select -"
+                style="padding-right: 0px;"
+                type="text"
+                value="Slack"
+              />
+              <span
+                class="bp3-input-action"
+              >
+                <span
+                  class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                  icon="chevron-down"
+                >
+                  <svg
+                    data-icon="chevron-down"
+                    height="14"
+                    viewBox="0 0 16 16"
+                    width="14"
+                  >
+                    <desc>
+                      chevron-down
+                    </desc>
+                    <path
+                      d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </div>
+          </div>
+          <div
+            class="bp3-overlay bp3-overlay-inline"
+          >
+            <div
+              class="bp3-transition-container bp3-popover-exit bp3-popover-exit-active"
+              style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(NaNpx, NaNpx, 0);"
+            >
+              <div
+                class="bp3-popover bp3-minimal bp3-select-popover"
+                style="transform-origin: center top;"
+              >
+                <div
+                  class="bp3-popover-content"
+                >
+                  <div>
+                    <ul
+                      class="bp3-menu"
+                    >
+                      <li
+                        class="Select--menuItem Select--active"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main Select--menuItemLabel"
+                          style="--text-line-clamp: 1;"
+                        >
+                          Slack
+                        </p>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="body"
+      >
+        <div
+          class="Layout--vertical Layout--layout-spacing-large StyledProps--main"
+        >
+          <p
+            class="StyledProps--font StyledProps--main"
+          >
+            notifications.helpSlack
+          </p>
+          <p
+            class="StyledProps--font StyledProps--main"
+          >
+            notifications.infoSlack
+          </p>
+          <div
+            class="OverlaySpinner--overlaySpinner"
+          >
+            <form
+              action="#"
+              class="FormikForm--main"
+            >
+              <div>
+                <div
+                  class="bp3-form-group"
+                  data-id="webhookUrl-0"
+                >
+                  <label
+                    class="bp3-label"
+                    for="webhookUrl"
+                  >
+                    <span
+                      class="Tooltip--acenter"
+                      data-tooltip-id="configureSlackNotifications_webhookUrl"
+                    >
+                      notifications.labelWebhookUrl
+                    </span>
+                     
+                    <span
+                      class="bp3-text-muted"
+                    />
+                  </label>
+                  <div
+                    class="bp3-form-content"
+                  >
+                    <div
+                      class="bp3-input-group"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="webhookUrl"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--margin-bottom-xxlarge"
+                  style="align-items: center;"
+                >
+                  <div
+                    class="Button--withDocsTooltip"
+                    data-tooltip-id="testSlackConfigButton"
+                  >
+                    <button
+                      class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
+                      type="button"
+                    >
+                      <span
+                        class="bp3-button-text"
+                      >
+                        test
+                      </span>
+                    </button>
+                  </div>
+                </div>
+                <div
+                  class="bp3-form-group"
+                  data-id="undefined-1"
+                >
+                  <div
+                    class="bp3-form-content"
+                  >
+                    <div
+                      class="Layout--vertical StyledProps--main"
+                    >
+                      <div
+                        class="Text--withDocsTooltip"
+                        data-tooltip-id="configureSlackNotifications_userGroups"
+                      >
+                        <p
+                          class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
+                        >
+                          notifications.labelSlackUserGroups
+                        </p>
+                      </div>
+                      <div
+                        class="StyledProps--font StyledProps--main bp3-input userGroupInputContainer StyledProps--border StyledProps--padding-xsmall"
+                      >
+                        <div
+                          class="StyledProps--font StyledProps--main pointer"
+                        >
+                          <p
+                            class="StyledProps--font StyledProps--main selectBtn StyledProps--color StyledProps--color-primary7 StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--flex-inline StyledProps--padding-xsmall"
+                          >
+                            common.selectUserGroups
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-large StyledProps--main buttonGroupSlack"
+                >
+                  <button
+                    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
+                    type="button"
+                  >
+                    <span
+                      class="bp3-button-text"
+                    >
+                      back
+                    </span>
+                  </button>
+                  <button
+                    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
+                    type="submit"
+                  >
+                    <span
+                      class="bp3-button-text"
+                    >
+                      finish
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

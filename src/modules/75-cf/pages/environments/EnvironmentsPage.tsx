@@ -10,7 +10,8 @@ import { useHistory, useParams } from 'react-router-dom'
 import type { Column } from 'react-table'
 import { get } from 'lodash-es'
 import { Position } from '@blueprintjs/core'
-import { Container, Layout, Pagination, Text, TableV2 } from '@wings-software/uicore'
+import { Container, Layout, Pagination, Text, TableV2 } from '@harness/uicore'
+import { Intent } from '@harness/design-system'
 import {
   EnvironmentResponseDTO,
   GetEnvironmentListForProjectQueryParams,
@@ -23,6 +24,7 @@ import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
 import { EnvironmentType } from '@common/constants/EnvironmentType'
 import { useConfirmAction } from '@common/hooks/useConfirmAction'
 import { useEnvStrings } from '@cf/hooks/environment'
+import { String } from 'framework/strings'
 import ListingPageTemplate from '@cf/components/ListingPageTemplate/ListingPageTemplate'
 import EnvironmentDialog from '@cf/components/CreateEnvironmentDialog/EnvironmentDialog'
 import routes from '@common/RouteDefinitions'
@@ -108,14 +110,12 @@ export const ModifiedByCell = withActions(({ environment, actions }) => {
   const identifier = environment.identifier as string
   const deleteEnvironment = useConfirmAction({
     title: getString('cf.environments.delete.title'),
-    message: (
-      <span
-        dangerouslySetInnerHTML={{ __html: getString('cf.environments.delete.message', { name: environment.name }) }}
-      />
-    ),
+    message: <String useRichText stringID="cf.environments.delete.message" vars={{ name: environment.name }} />,
     action: () => {
       actions.onDelete?.(identifier)
-    }
+    },
+    intent: Intent.DANGER,
+    confirmText: getString('delete')
   })
 
   return (
@@ -248,6 +248,7 @@ const EnvironmentsPage: React.FC = () => {
           <Layout.Horizontal>
             <EnvironmentDialog
               disabled={loading}
+              environments={environments}
               onCreate={response => {
                 setTimeout(() => {
                   history.push(

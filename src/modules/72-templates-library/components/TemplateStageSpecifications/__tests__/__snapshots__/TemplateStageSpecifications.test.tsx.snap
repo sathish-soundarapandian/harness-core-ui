@@ -16,6 +16,7 @@ exports[`<TemplateStageSpecifications /> tests snapshot test with error 1`] = `
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>
@@ -176,6 +177,7 @@ exports[`<TemplateStageSpecifications /> tests snapshot test with no template in
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>
@@ -286,6 +288,7 @@ exports[`<TemplateStageSpecifications /> tests snapshot test with template input
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>
@@ -379,7 +382,7 @@ exports[`<TemplateStageSpecifications /> tests snapshot test with template input
                   class="StyledProps--font StyledProps--font-h5 StyledProps--main StyledProps--color StyledProps--color-black"
                   level="5"
                 >
-                  templatesLibrary.templateInputs
+                  pipeline.templateInputs
                 </h5>
                 <div
                   id="Stage.Stage_1"
@@ -490,8 +493,7 @@ exports[`<TemplateStageSpecifications /> tests snapshot test with template input
                         infrastructureText
                       </div>
                       <div
-                        class="nestedAccordions"
-                        style="width: 50%;"
+                        class="nestedAccordions infraSection"
                       />
                       <div
                         class="nestedAccordions"

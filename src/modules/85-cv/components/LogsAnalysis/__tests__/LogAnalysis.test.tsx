@@ -8,7 +8,7 @@
 import React from 'react'
 import userEvent from '@testing-library/user-event'
 import { render, waitFor, screen, fireEvent, act } from '@testing-library/react'
-import type * as cvServices from 'services/cv'
+import * as cvServices from 'services/cv'
 import { TestWrapper } from '@common/utils/testUtils'
 import LogAnalysis from '@cv/components/LogsAnalysis/LogAnalysis'
 import {
@@ -17,6 +17,7 @@ import {
 } from '@cv/pages/monitored-service/components/ServiceHealth/components/MetricsAndLogs/__tests__/MetricsAndLogs.mock'
 import { LogAnalysisProps, LogEvents } from '../LogAnalysis.types'
 import { mockedLogAnalysisData } from './LogAnalysis.mocks'
+import { mockLogsCall } from '../components/LogAnalysisRow/__tests__/LogAnalysisRow.mocks'
 
 const WrapperComponent = (props: LogAnalysisProps): JSX.Element => {
   return (
@@ -25,6 +26,12 @@ const WrapperComponent = (props: LogAnalysisProps): JSX.Element => {
     </TestWrapper>
   )
 }
+
+jest.spyOn(cvServices, 'useGetVerifyStepDeploymentLogAnalysisRadarChartResult').mockReturnValue({
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  data: mockLogsCall
+})
 
 jest.mock('highcharts-react-official', () => () => <></>)
 const fetchLogAnalysis = jest.fn()
@@ -43,6 +50,11 @@ jest.mock('services/cv', () => ({
   useGetAllLogsClusterData: jest.fn().mockImplementation(props => {
     useGetAllLogsClusterDataQueryParams = props.queryParams
     return { data: mockedClustersData, error: null, loading: false, refetch: fetchClusterData }
+  }),
+  useGetVerifyStepDeploymentLogAnalysisRadarChartResult: jest.fn().mockImplementation(() => {
+    return {
+      data: mockLogsCall
+    }
   })
 }))
 
@@ -78,7 +90,7 @@ describe('Unit tests for LogAnalysisContainer', () => {
     expect(clusterTypeFilterDropdown).toBeTruthy()
 
     // verify default filter is unknownEvent
-    expect(clusterTypeFilterDropdown.value).toBe('pipeline.verification.logs.unknownEvent')
+    expect(clusterTypeFilterDropdown.value).toBe('cv.unknown')
 
     // Clicking the filter dropdown
     const selectCaret = container
@@ -89,22 +101,22 @@ describe('Unit tests for LogAnalysisContainer', () => {
     })
 
     // Selecting Known event cluster type
-    const typeToSelect = await getByText('pipeline.verification.logs.knownEvent')
+    const typeToSelect = await getByText('cv.known')
     act(() => {
       fireEvent.click(typeToSelect)
     })
-    expect(clusterTypeFilterDropdown.value).toBe('pipeline.verification.logs.knownEvent')
+    expect(clusterTypeFilterDropdown.value).toBe('cv.known')
 
     // Verifying if correct number of records are shown for Known event type.
     const knownClusterTypeMockedData = mockedLogAnalysisData.resource.content.filter(el => el.logData.tag === 'KNOWN')
     await waitFor(() => expect(getAllByText('Known')).toHaveLength(knownClusterTypeMockedData.length))
 
     // Selecting UnKnown event cluster type
-    const unknownEventTypeSelected = await getByText('pipeline.verification.logs.unknownEvent')
+    const unknownEventTypeSelected = await getByText('cv.unknown')
     act(() => {
       fireEvent.click(unknownEventTypeSelected)
     })
-    expect(clusterTypeFilterDropdown.value).toBe('pipeline.verification.logs.unknownEvent')
+    expect(clusterTypeFilterDropdown.value).toBe('cv.unknown')
 
     // Verifying if correct number of records are shown for unKnown event type.
     const unknownClusterTypeMockedData = mockedLogAnalysisData.resource.content.filter(
@@ -120,7 +132,7 @@ describe('Unit tests for LogAnalysisContainer', () => {
       'pipeline.verification.logs.filterByClusterType'
     ) as HTMLInputElement
 
-    expect(clusterTypeFilterDropdown.value).toBe('pipeline.verification.logs.unknownEvent')
+    expect(clusterTypeFilterDropdown.value).toBe('cv.unknown')
     expect(useGetAllLogsClusterDataQueryParams?.clusterTypes).toEqual([LogEvents.UNKNOWN])
     expect(useGetAllLogsDataQueryParams?.clusterTypes).toEqual([LogEvents.UNKNOWN])
 

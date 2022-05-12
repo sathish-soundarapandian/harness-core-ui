@@ -5,14 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement } from 'react'
 import * as Yup from 'yup'
 import { Drawer, IDrawerProps } from '@blueprintjs/core'
 import { Formik, FormikProps, FormikErrors } from 'formik'
 import { truncate } from 'lodash-es'
 import { FormikForm, Button, Layout, OverlaySpinner, ButtonVariation } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
-import { CrudOperation, FilterCRUD, FilterCRUDRef } from './FilterCRUD/FilterCRUD'
+import { CrudOperation, FilterCRUD, FilterCRUDFowardRef } from './FilterCRUD/FilterCRUD'
 import type { FilterInterface, FilterDataInterface } from './Constants'
 
 import css from './Filter.module.scss'
@@ -52,7 +52,7 @@ export type FilterFowardRef<U> =
   | React.MutableRefObject<FilterRef<U> | null>
   | null
 
-const FilterRef = <T, U extends FilterInterface>(props: FilterProps<T, U>, filterRef: FilterFowardRef<U>) => {
+const FilterRef = <T, U extends FilterInterface>(props: FilterProps<T, U>, filterRef: FilterCRUDFowardRef<U>) => {
   const {
     formFields,
     onApply,
@@ -71,21 +71,6 @@ const FilterRef = <T, U extends FilterInterface>(props: FilterProps<T, U>, filte
     isOpen
   } = props
   const { getString } = useStrings()
-  const filterCRUDRef = React.useRef<FilterCRUDRef<U> | null>(null)
-
-  useEffect(() => {
-    if (!filterRef) return
-
-    if (typeof filterRef === 'function') {
-      return
-    }
-
-    filterRef.current = {
-      deleteFilterHandler: filterCRUDRef.current?.deleteFilterHandler,
-      saveOrUpdateFilterHandler: filterCRUDRef.current?.saveOrUpdateFilterHandler,
-      duplicateFilterHandler: filterCRUDRef.current?.duplicateFilterHandler
-    }
-  })
 
   const [drawerOpen, setDrawerOpen] = React.useState(typeof isOpen === 'undefined' ? true : isOpen)
 
@@ -207,7 +192,7 @@ const FilterRef = <T, U extends FilterInterface>(props: FilterProps<T, U>, filte
                     onClose={closeDrawer}
                     onDelete={onDelete}
                     onFilterSelect={onFilterSelect}
-                    ref={filterCRUDRef}
+                    ref={filterRef}
                     dataSvcConfig={dataSvcConfig}
                     onSuccessfulCrudOperation={onSuccessfulCrudOperation}
                   />
@@ -223,5 +208,5 @@ const FilterRef = <T, U extends FilterInterface>(props: FilterProps<T, U>, filte
 
 export const Filter = React.forwardRef(FilterRef) as <T, U extends FilterInterface>(
   props: FilterProps<T, U>,
-  filterRef: FilterFowardRef<U>
+  filterRef: FilterCRUDFowardRef<U>
 ) => ReactElement

@@ -7,6 +7,7 @@
 
 import React, { useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { defaultTo } from 'lodash-es'
 import { Container, Layout, Text } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import {
@@ -15,11 +16,15 @@ import {
   ResourceType,
   useRecommendationsQuery
 } from 'services/ce/services'
-import { useStrings } from 'framework/strings'
+import { String, useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import formatCost from '@ce/utils/formatCost'
 import EmptyView from '@ce/images/empty-state.svg'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import greenLeafImg from '@ce/common/images/green-leaf.svg'
+import { getEmissionsValue } from '@ce/utils/formatResourceValue'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { Loader } from './OverviewPageLayout'
 import css from './OverviewPage.module.scss'
 
@@ -35,6 +40,7 @@ type RouteFn = (
 const OverviewTopRecommendations = () => {
   const { getString } = useStrings()
   const pathParams = useParams<AccountPathProps>()
+  const sustainabilityEnabled = useFeatureFlag(FeatureFlag.CCM_SUSTAINABILITY)
   const [result] = useRecommendationsQuery({
     requestPolicy: 'network-only',
     variables: {
@@ -43,7 +49,13 @@ const OverviewTopRecommendations = () => {
   })
 
   const { data, fetching } = result
-  const recommendationItems = data?.recommendationsV2?.items || []
+
+  const recommendationItems = (data?.recommendationsV2?.items || []) as RecommendationItemDto[]
+
+  const totalRecommendedSavings = useMemo(
+    () => recommendationItems.reduce((prev, curr) => prev + defaultTo(curr?.monthlySaving, 0), 0),
+    [recommendationItems]
+  )
 
   if (fetching) {
     return <Loader />
@@ -53,9 +65,28 @@ const OverviewTopRecommendations = () => {
     <div className={css.topRecommendations}>
       <Layout.Vertical spacing="medium">
         <Layout.Horizontal style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text color="grey800" font={{ weight: 'semi-bold', size: 'medium' }}>
-            {getString('ce.overview.cardtitles.topRecommendation')}
-          </Text>
+          <Layout.Horizontal flex={{ alignItems: 'center' }} spacing="medium">
+            <Text color="grey800" font={{ weight: 'semi-bold', size: 'medium' }}>
+              {getString('ce.overview.cardtitles.topRecommendation')}
+            </Text>
+            {sustainabilityEnabled && (
+              <Layout.Horizontal spacing={'small'}>
+                <img src={greenLeafImg} width={14} />
+                <Container>
+                  <Text inline font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREEN_600}>
+                    {getString('ce.overview.recommendationsEmission')}
+                  </Text>
+                  <Text inline font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREEN_600}>
+                    <String
+                      stringID="ce.common.emissionUnitHTML"
+                      vars={{ value: getEmissionsValue(totalRecommendedSavings) }}
+                      useRichText
+                    />
+                  </Text>
+                </Container>
+              </Layout.Horizontal>
+            )}
+          </Layout.Horizontal>
           {recommendationItems.length ? (
             <Link to={routes.toCERecommendations({ ...pathParams })}>
               <Text inline color="primary7">
@@ -95,7 +126,8 @@ const Recommendation = (props: RecommendationProps) => {
   const map: Record<string, string> = useMemo(
     () => ({
       [ResourceType.Workload]: getString('ce.overview.workload'),
-      [ResourceType.NodePool]: getString('ce.overview.nodepool')
+      [ResourceType.NodePool]: getString('ce.overview.nodepool'),
+      [ResourceType.EcsService]: getString('ce.overview.ecsService')
     }),
     []
   )
@@ -103,7 +135,8 @@ const Recommendation = (props: RecommendationProps) => {
   const resourceTypeToRoute: Record<ResourceType, RouteFn> = useMemo(() => {
     return {
       [ResourceType.Workload]: routes.toCERecommendationDetails,
-      [ResourceType.NodePool]: routes.toCENodeRecommendationDetails
+      [ResourceType.NodePool]: routes.toCENodeRecommendationDetails,
+      [ResourceType.EcsService]: routes.toCEECSRecommendationDetails
     }
   }, [])
 

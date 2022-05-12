@@ -76,6 +76,30 @@ describe('Artifactory Artifact Source tests', () => {
           artifactSourceBaseFactory={new ArtifactSourceBaseFactory()}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
           stepViewType={StepViewType.DeploymentForm}
+          formik={{
+            values: {
+              pipeline: {
+                identifier: 'pipeline_1',
+                name: 'Pipeline 1',
+                stages: [
+                  {
+                    stage: {
+                      identifier: 'stage-0',
+                      name: 'Stage 0',
+                      type: 'Deployment',
+                      spec: {
+                        serviceConfig: {
+                          serviceDefinition: {
+                            type: 'Kubernetes'
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }}
         />
       </TestWrapper>
     )

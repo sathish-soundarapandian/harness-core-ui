@@ -576,6 +576,8 @@ describe('Unit tests for Deployment metrics ', () => {
 
     fireEvent.click(getByText('Retry'))
     await waitFor(() => expect(refetchFn).toHaveBeenCalledTimes(1))
+
+    expect(container).toMatchSnapshot()
   })
 
   test('Ensure no data state is rendered', async () => {
@@ -587,7 +589,8 @@ describe('Unit tests for Deployment metrics ', () => {
     const refetchFn = jest.fn()
     jest.spyOn(cvService, 'useGetVerifyStepDeploymentMetrics').mockReturnValue({
       data: { resource: { content: [] } } as any,
-      refetch: refetchFn as unknown
+      refetch: refetchFn as unknown,
+      loading: false
     } as any)
 
     jest.spyOn(cvService, 'useGetVerifyStepTransactionNames').mockReturnValue({
@@ -611,6 +614,7 @@ describe('Unit tests for Deployment metrics ', () => {
 
     await waitFor(() => expect(container.querySelector('[class*="main"]')).not.toBeNull())
     expect(getByText('cv.monitoredServices.noMatchingData')).not.toBeNull()
+    expect(container).toMatchSnapshot()
   })
 
   test('Ensure that when new activityId is passed as prop view is reset', async () => {

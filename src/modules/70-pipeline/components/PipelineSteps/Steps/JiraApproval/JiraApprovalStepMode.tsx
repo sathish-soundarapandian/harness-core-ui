@@ -21,6 +21,7 @@ import {
   MultiTypeInputType
 } from '@wings-software/uicore'
 import { Intent } from '@harness/design-system'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 import {
@@ -76,6 +77,7 @@ function FormContent({
   stepViewType
 }: JiraFormContentInterface): JSX.Element {
   const { getString } = useStrings()
+  const { getRBACErrorMessage } = useRBACError()
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
@@ -317,7 +319,7 @@ function FormContent({
               intent={Intent.DANGER}
               tooltipProps={{ isDark: true, popoverClassName: css.tooltip }}
             >
-              {(projectsFetchError as any)?.data?.message}
+              {getRBACErrorMessage(projectsFetchError)}
             </Text>
           }
           name="spec.projectKey"

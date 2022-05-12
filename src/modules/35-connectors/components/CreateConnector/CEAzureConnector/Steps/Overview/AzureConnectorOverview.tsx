@@ -15,9 +15,10 @@ import {
   ModalErrorHandler,
   FormikForm,
   Container,
-  Heading,
+  Text,
   FormInput
 } from '@wings-software/uicore'
+import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { isEmpty, pick, get, omit } from 'lodash-es'
 import cx from 'classnames'
@@ -200,9 +201,13 @@ const Overview: React.FC<StepProps<CEAzureDTO> & OverviewProps> = props => {
 
   return (
     <Layout.Vertical className={css.stepContainer}>
-      <Heading level={2} className={css.header}>
+      <Text
+        font={{ variation: FontVariation.H3 }}
+        tooltipProps={{ dataTooltipId: 'azureConnectorOverview' }}
+        margin={{ bottom: 'large' }}
+      >
         {getString('connectors.ceAzure.overview.heading')}
-      </Heading>
+      </Text>
       <ModalErrorHandler bind={setModalErrorHandler} />
       <Formik<OverviewForm>
         onSubmit={formData => {
@@ -238,12 +243,14 @@ const Overview: React.FC<StepProps<CEAzureDTO> & OverviewProps> = props => {
                     label={getString('connectors.ceAzure.overview.tenantId')}
                     placeholder={getString('connectors.ceAzure.guidPlaceholder')}
                     onChange={resetExistingConnectorError}
+                    tooltipProps={{ dataTooltipId: 'azureTenantId' }}
                   />
                   <FormInput.Text
                     name={'subscriptionId'}
                     label={getString('connectors.ceAzure.overview.subscriptionId')}
                     placeholder={getString('connectors.ceAzure.guidPlaceholder')}
                     onChange={resetExistingConnectorError}
+                    tooltipProps={{ dataTooltipId: 'azureSubscriptionId' }}
                   />
                   <Description descriptionProps={{}} hasValue={!!formikProps?.values.description} />
                   <Tags tagsProps={{}} isOptional={true} hasValue={!isEmpty(formikProps?.values.tags)} />
@@ -251,7 +258,7 @@ const Overview: React.FC<StepProps<CEAzureDTO> & OverviewProps> = props => {
                 {isGitSyncEnabled && (
                   <GitSyncStoreProvider>
                     <GitContextForm
-                      formikProps={formikProps}
+                      formikProps={formikProps as any}
                       gitDetails={props.gitDetails}
                       className={'gitDetailsContainer'}
                     />

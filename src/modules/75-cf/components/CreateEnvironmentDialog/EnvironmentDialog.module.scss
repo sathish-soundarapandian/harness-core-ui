@@ -18,8 +18,13 @@
 
 .dialog {
   position: relative;
-  min-height: 600px;
-  min-width: 650px;
+  max-height: 680px;
+  min-width: 500px;
+}
+
+.container {
+  min-height: 332px;
+  overflow: 'auto';
 }
 
 .card-select {
@@ -27,17 +32,14 @@
   flex-direction: row;
   align-items: center;
   margin-top: var(--spacing-medium);
-
-  :global {
-    .bp3-card {
-      margin-right: var(--spacing-large);
-      & .cardBody {
-        text-align: center;
-        word-wrap: break-word;
-        height: 70px;
-        width: 70px;
-        font-weight: bold;
-      }
-    }
+  :global(.bp3-card) {
+    margin-right: var(--spacing-large);
   }
+}
+
+.card-body {
+  text-align: center;
+  word-wrap: break-word;
+  height: 48px;
+  width: 48px;
 }

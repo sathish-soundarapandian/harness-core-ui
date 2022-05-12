@@ -73,6 +73,7 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -459,7 +460,7 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                           class="bp3-input"
                                           name="pipeline.variables[1].value"
                                           type="text"
-                                          value="1"
+                                          value=""
                                         />
                                       </div>
                                       <span
@@ -537,7 +538,7 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                               placeholder="Search..."
                                               style="padding-right: 0px;"
                                               type="text"
-                                              value="val1"
+                                              value=""
                                             />
                                             <span
                                               class="bp3-input-action"
@@ -622,18 +623,29 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                             >
                               <div
                                 class="nestedAccordions"
-                                style="width: 50%;"
                               >
                                 <div
                                   class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
                                 >
                                   <div
-                                    class="Layout--horizontal Layout--layout-spacing-huge StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-start StyledProps--padding-top-small StyledProps--padding-left-xsmall StyledProps--padding-bottom-xsmall StyledProps--margin-left-large"
+                                    class="Text--withDocsTooltip"
+                                    data-tooltip-id="ciCodebaseBuildType"
+                                  >
+                                    <p
+                                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                                    >
+                                      filters.executions.buildType
+                                    </p>
+                                  </div>
+                                  <div
+                                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-start StyledProps--padding-top-small StyledProps--padding-left-xsmall StyledProps--padding-bottom-xsmall StyledProps--margin-left-large"
                                   >
                                     <label
                                       class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--font-variation-form-label"
+                                      style="width: 110px;"
                                     >
                                       <input
+                                        checked=""
                                         type="radio"
                                       />
                                       <span
@@ -642,7 +654,8 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                       gitBranch
                                     </label>
                                     <label
-                                      class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--font-variation-form-label"
+                                      class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--margin-left-huge StyledProps--font-variation-form-label"
+                                      style="width: 90px;"
                                     >
                                       <input
                                         type="radio"
@@ -653,7 +666,8 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                       gitTag
                                     </label>
                                     <label
-                                      class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--font-variation-form-label"
+                                      class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--margin-left-huge StyledProps--font-variation-form-label"
+                                      style="width: 110px;"
                                     >
                                       <input
                                         type="radio"
@@ -666,75 +680,80 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                   </div>
                                   <div
                                     class="StyledProps--font StyledProps--main"
+                                    style="width: 50%;"
                                   >
                                     <div
-                                      class="bp3-form-group"
+                                      class="StyledProps--font StyledProps--main"
                                     >
-                                      <label
-                                        class="bp3-label"
-                                        for="pipeline.properties.ci.codebase.build.spec.branch"
-                                      >
-                                        <span
-                                          class="Tooltip--acenter"
-                                          data-tooltip-id="wizardForm_webhook_pipeline.properties.ci.codebase.build.spec.branch"
-                                        >
-                                          <p
-                                            class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
-                                          >
-                                            common.branchName
-                                          </p>
-                                        </span>
-                                         
-                                        <span
-                                          class="bp3-text-muted"
-                                        />
-                                      </label>
                                       <div
-                                        class="bp3-form-content"
+                                        class="bp3-form-group"
                                       >
+                                        <label
+                                          class="bp3-label"
+                                          for="pipeline.properties.ci.codebase.build.spec.branch"
+                                        >
+                                          <span
+                                            class="Tooltip--acenter"
+                                            data-tooltip-id="wizardForm_webhook_pipeline.properties.ci.codebase.build.spec.branch"
+                                          >
+                                            <p
+                                              class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
+                                            >
+                                              common.branchName
+                                            </p>
+                                          </span>
+                                           
+                                          <span
+                                            class="bp3-text-muted"
+                                          />
+                                        </label>
                                         <div
-                                          class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                                          class="bp3-form-content"
                                         >
                                           <div
-                                            class="bp3-input-group MultiTypeInput--input"
+                                            class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                                           >
-                                            <input
-                                              autocomplete="off"
-                                              class="bp3-input"
-                                              name="pipeline.properties.ci.codebase.build.spec.branch"
-                                              placeholder=""
-                                              type="text"
-                                              value="test"
-                                            />
-                                          </div>
-                                          <span
-                                            class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                                          >
-                                            <span
-                                              class="bp3-popover-target"
+                                            <div
+                                              class="bp3-input-group MultiTypeInput--input"
                                             >
-                                              <button
-                                                class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                              <input
+                                                autocomplete="off"
+                                                class="bp3-input"
+                                                name="pipeline.properties.ci.codebase.build.spec.branch"
+                                                placeholder=""
+                                                type="text"
+                                                value="test"
+                                              />
+                                            </div>
+                                            <span
+                                              class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                                            >
+                                              <span
+                                                class="bp3-popover-target"
                                               >
-                                                <span
-                                                  class="bp3-icon StyledProps--main"
-                                                  data-icon="fixed-input"
+                                                <button
+                                                  class="MultiTypeInput--btn MultiTypeInput--FIXED"
                                                 >
-                                                  <svg
-                                                    height="12"
-                                                    viewBox="0 0 9 9"
-                                                    width="12"
-                                                    xmlns="http://www.w3.org/2000/svg"
+                                                  <span
+                                                    class="bp3-icon StyledProps--main"
+                                                    data-icon="fixed-input"
                                                   >
-                                                    <path
-                                                      d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                                      fill="currentColor"
-                                                    />
-                                                  </svg>
-                                                </span>
-                                              </button>
+                                                    <svg
+                                                      height="12"
+                                                      viewBox="0 0 9 9"
+                                                      width="12"
+                                                      xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                      <path
+                                                        d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                                        fill="currentColor"
+                                                      />
+                                                    </svg>
+                                                  </span>
+                                                </button>
+                                              </span>
                                             </span>
-                                          </span>
+                                          </div>
                                         </div>
                                       </div>
                                     </div>
@@ -808,81 +827,80 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                     infrastructureText
                                   </div>
                                   <div
-                                    class="nestedAccordions"
-                                    style="width: 50%;"
+                                    class="nestedAccordions infraSection"
                                   >
                                     <div
-                                      class="bp3-form-group"
+                                      class="StyledProps--font StyledProps--main bottomMargin3"
                                     >
-                                      <label
-                                        class="bp3-label"
-                                        for="pipeline.stages[0].stage.spec.infrastructure.spec.namespace"
-                                      >
-                                        <span
-                                          class="Tooltip--acenter"
-                                          data-tooltip-id="wizardForm_webhook_pipeline.stages[0].stage.spec.infrastructure.spec.namespace"
-                                        >
-                                          <div
-                                            class="Text--withDocsTooltip"
-                                            data-tooltip-id="namespace"
-                                          >
-                                            <p
-                                              class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
-                                            >
-                                              pipelineSteps.build.infraSpecifications.namespace
-                                            </p>
-                                          </div>
-                                        </span>
-                                         
-                                        <span
-                                          class="bp3-text-muted"
-                                        />
-                                      </label>
                                       <div
-                                        class="bp3-form-content"
+                                        style="width: 300px;"
                                       >
                                         <div
-                                          class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                                          class="Text--withDocsTooltip"
+                                          data-tooltip-id="namespace"
+                                        >
+                                          <p
+                                            class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                                          >
+                                            pipelineSteps.build.infraSpecifications.namespace
+                                          </p>
+                                        </div>
+                                        <div
+                                          style="display: flex; align-items: center;"
                                         >
                                           <div
-                                            class="bp3-input-group MultiTypeInput--input"
+                                            class="bp3-form-group"
+                                            style="margin-bottom: 0px; flex-grow: 1;"
                                           >
-                                            <input
-                                              autocomplete="off"
-                                              class="bp3-input"
-                                              name="pipeline.stages[0].stage.spec.infrastructure.spec.namespace"
-                                              type="text"
-                                              value="default"
-                                            />
-                                          </div>
-                                          <span
-                                            class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                                          >
-                                            <span
-                                              class="bp3-popover-target"
+                                            
+                                            <div
+                                              class="bp3-form-content"
                                             >
-                                              <button
-                                                class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                              <div
+                                                class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                                               >
-                                                <span
-                                                  class="bp3-icon StyledProps--main"
-                                                  data-icon="fixed-input"
+                                                <div
+                                                  class="bp3-input-group MultiTypeInput--input"
                                                 >
-                                                  <svg
-                                                    height="12"
-                                                    viewBox="0 0 9 9"
-                                                    width="12"
-                                                    xmlns="http://www.w3.org/2000/svg"
+                                                  <input
+                                                    autocomplete="off"
+                                                    class="bp3-input"
+                                                    name="pipeline.stages[0].stage.spec.infrastructure.spec.namespace"
+                                                    type="text"
+                                                    value="default"
+                                                  />
+                                                </div>
+                                                <span
+                                                  class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                                                >
+                                                  <span
+                                                    class="bp3-popover-target"
                                                   >
-                                                    <path
-                                                      d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                                      fill="currentColor"
-                                                    />
-                                                  </svg>
+                                                    <button
+                                                      class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                                    >
+                                                      <span
+                                                        class="bp3-icon StyledProps--main"
+                                                        data-icon="fixed-input"
+                                                      >
+                                                        <svg
+                                                          height="12"
+                                                          viewBox="0 0 9 9"
+                                                          width="12"
+                                                          xmlns="http://www.w3.org/2000/svg"
+                                                        >
+                                                          <path
+                                                            d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                                            fill="currentColor"
+                                                          />
+                                                        </svg>
+                                                      </span>
+                                                    </button>
+                                                  </span>
                                                 </span>
-                                              </button>
-                                            </span>
-                                          </span>
+                                              </div>
+                                            </div>
+                                          </div>
                                         </div>
                                       </div>
                                     </div>
@@ -931,6 +949,7 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                       </label>
                                       <div>
                                         <form
+                                          action="#"
                                           class="FormikForm--main removeBpPopoverWrapperTopMargin"
                                         >
                                           <div>
@@ -1292,6 +1311,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -2314,6 +2334,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -3295,6 +3316,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Sch
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -3793,6 +3815,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Sch
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>

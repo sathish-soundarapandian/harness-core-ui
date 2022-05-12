@@ -9,7 +9,13 @@ import { cloneDeep, isEmpty } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import type { StringKeys } from 'framework/strings'
 import type { StringsMap } from 'framework/strings/StringsContext'
-import type { AppDMetricDefinitions, AppDynamicsHealthSourceSpec, MetricPackDTO, RiskProfile } from 'services/cv'
+import type {
+  AppDMetricDefinitions,
+  AppDynamicsHealthSourceSpec,
+  AppdynamicsValidationResponse,
+  MetricPackDTO,
+  RiskProfile
+} from 'services/cv'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { HealthSourceTypes } from '../../types'
@@ -500,17 +506,26 @@ export const createAppDFormData = (
       [key: string]: boolean
     }
   },
-  showCustomMetric: boolean
+  showCustomMetric: boolean,
+  isTemplate = false
 ): AppDynamicsFomikFormInterface => {
   const mappedMetricsData = mappedMetrics.get(selectedMetric) as MapAppDynamicsMetric
   const metricIdentifier = mappedMetricsData?.metricIdentifier || selectedMetric?.split(' ').join('_')
   const { basePath = {}, metricPath = {} } = mappedMetricsData || {}
   const lastItemBasePath = Object.keys(basePath)[Object.keys(basePath).length - 1]
   const lastItemMetricPath = Object.keys(metricPath)[Object.keys(metricPath).length - 1]
-  const fullPath =
+  let fullPath =
     basePath[lastItemBasePath]?.path && metricPath[lastItemMetricPath]?.path && appDynamicsData.tierName
       ? `${basePath[lastItemBasePath]?.path}|${appDynamicsData.tierName}|${metricPath[lastItemMetricPath]?.path}`
       : ''
+
+  if (
+    isTemplate &&
+    fullPath === '' &&
+    (nonCustomFeilds.appDTier === '<+input>' || nonCustomFeilds.appdApplication === '<+input>')
+  ) {
+    fullPath = '<+input>'
+  }
   return {
     name: appDynamicsData.name,
     identifier: appDynamicsData.identifier,
@@ -518,7 +533,7 @@ export const createAppDFormData = (
     isEdit: appDynamicsData.isEdit,
     product: appDynamicsData.product,
     type: appDynamicsData.type,
-    pathType: PATHTYPE.DropdownPath,
+    pathType: isTemplate ? PATHTYPE.FullPath : PATHTYPE.DropdownPath,
     fullPath,
     mappedServicesAndEnvs: appDynamicsData.mappedServicesAndEnvs,
     ...nonCustomFeilds,
@@ -544,12 +559,18 @@ export const setAppDynamicsApplication = (
 ): SelectOption | undefined =>
   !appdApplication
     ? { label: '', value: '' }
-    : applicationOptions.find((item: SelectOption) => item.label === appdApplication)
+    : applicationOptions.find((item: SelectOption) => item.label === appdApplication) || {
+        label: appdApplication,
+        value: appdApplication
+      }
 
 export const setAppDynamicsTier = (tierLoading: boolean, appDTier: string, tierOptions: SelectOption[]) =>
   tierLoading || !appDTier
     ? { label: '', value: '' }
-    : tierOptions.find((item: SelectOption) => item.label === appDTier)
+    : tierOptions.find((item: SelectOption) => item.label === appDTier) || {
+        label: appDTier,
+        value: appDTier
+      }
 
 export const initAppDCustomFormValue = () => {
   return {
@@ -563,3 +584,44 @@ export const getPlaceholder = (
   placeholderText: keyof StringsMap,
   getString: (key: StringKeys) => string
 ): string => (loading ? getString('loading') : getString(placeholderText))
+
+export const showValidation = (appdApplication?: string, appDTier?: string): boolean =>
+  Boolean(appDTier) && Boolean(appdApplication) && !(appdApplication === '<+input>' || appDTier === '<+input>')
+
+export const setCustomFieldAndValidation = (
+  value: string,
+  setNonCustomFeilds: React.Dispatch<
+    React.SetStateAction<{
+      appdApplication: string
+      appDTier: string
+      metricPacks: MetricPackDTO[] | undefined
+      metricData: {
+        [key: string]: boolean
+      }
+    }>
+  >,
+  nonCustomFeilds: {
+    appdApplication: string
+    appDTier: string
+    metricPacks: MetricPackDTO[] | undefined
+    metricData: {
+      [key: string]: boolean
+    }
+  },
+  setAppDValidation: React.Dispatch<
+    React.SetStateAction<{
+      status: string
+      result: AppdynamicsValidationResponse[] | []
+    }>
+  >,
+  validate = false
+): void => {
+  setNonCustomFeilds({
+    ...nonCustomFeilds,
+    appdApplication: value,
+    appDTier: value === '<+input>' ? value : ''
+  })
+  if (validate) {
+    setAppDValidation({ status: '', result: [] })
+  }
+}

@@ -1,0 +1,42 @@
+.reasonTextArea {
+  textarea {
+    height: 100px !important;
+  }
+}
+
+.priorityRadioGroup {
+  div div div {
+    display: flex;
+
+    span {
+      display: none;
+    }
+
+    label input:checked ~ p {
+      background-color: var(--red-600) !important;
+    }
+
+    label p {
+      width: 40px;
+      height: 40px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white) !important;
+      background: var(--grey-300) !important;
+      margin-right: var(--spacing-small) !important;
+      cursor: pointer;
+    }
+  }
+}
+
+.separator {
+  margin: var(--spacing-large) 0;
+  border-bottom: 1px solid var(--grey-200);
+}
+
+.errorText {
+  font-size: var(--font-size-normal) !important;
+  font-weight: 400 !important;
+}

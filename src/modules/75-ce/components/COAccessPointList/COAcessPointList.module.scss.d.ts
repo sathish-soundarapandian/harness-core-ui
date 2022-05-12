@@ -7,11 +7,14 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly accessPointIpTooltip: string
   readonly analyticsHeader: string
+  readonly apNameContainer: string
   readonly breadCrumb: string
   readonly fulFilmentIcon: string
   readonly header: string
   readonly headerLayout: string
+  readonly ipBtn: string
   readonly layout: string
   readonly pageContainer: string
   readonly savingsAmount: string

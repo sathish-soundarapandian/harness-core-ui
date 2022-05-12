@@ -111,7 +111,7 @@ describe('ECR Step', () => {
       )
 
       expect(container).toMatchSnapshot()
-      await act(() => ref.current?.submitForm())
+      await act(() => ref.current?.submitForm()!)
       expect(onUpdate).toHaveBeenCalledWith(initialValues)
     })
 
@@ -164,7 +164,7 @@ describe('ECR Step', () => {
       )
 
       expect(container).toMatchSnapshot()
-      await act(() => ref.current?.submitForm())
+      await act(() => ref.current?.submitForm()!)
       expect(onUpdate).toHaveBeenCalledWith(initialValues)
     })
   })

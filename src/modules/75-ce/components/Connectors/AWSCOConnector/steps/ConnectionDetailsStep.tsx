@@ -28,6 +28,8 @@ import { DialogWithExtensionContext } from '@ce/common/DialogWithExtension/Dialo
 import { useGetCloudFormationTemplate } from 'services/lw'
 import { useStrings } from 'framework/strings'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { FeatureFlag } from '@common/featureFlags'
+import { useConnectorGovernanceModal } from '@connectors/hooks/useConnectorGovernanceModal'
 import { OPTIMIZATION_FEATURE, CROSS_ACCOUNT_ACCESS, FEATURES_ENABLED } from '../constants'
 import type { feature } from '../constants'
 import css from './Steps.module.scss'
@@ -60,6 +62,10 @@ const ConnectionDetailsStep: React.FC<StepProps<ConnectorInfoDTO>> = props => {
     queryParams: {
       accountIdentifier: accountId
     }
+  })
+  const { hideOrShowGovernanceErrorModal } = useConnectorGovernanceModal({
+    errorOutOnGovernanceWarning: false,
+    featureFlag: FeatureFlag.OPA_CONNECTOR_GOVERNANCE
   })
 
   if (error) {
@@ -104,9 +110,12 @@ const ConnectionDetailsStep: React.FC<StepProps<ConnectorInfoDTO>> = props => {
     try {
       modalErrorHandler?.hide()
       const connector: ConnectorRequestBody = { connector: connectorInfo }
-      await createConnector(connector)
+      const res = await createConnector(connector)
+      const { canGoToNextStep } = await hideOrShowGovernanceErrorModal(res)
       setSaving(false)
-      nextStep?.(connectorInfo)
+      if (canGoToNextStep) {
+        nextStep?.(connectorInfo)
+      }
     } catch (e) {
       setSaving(false)
       modalErrorHandler?.showDanger(getRBACErrorMessage(e))

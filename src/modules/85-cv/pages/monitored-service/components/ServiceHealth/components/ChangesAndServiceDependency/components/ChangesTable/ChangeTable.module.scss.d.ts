@@ -9,9 +9,9 @@
 declare const styles: {
   readonly cardContainer: string
   readonly changeSoureName: string
-  readonly error: string
-  readonly loading: string
-  readonly noData: string
+  readonly childContainer: string
+  readonly noDataContainer: string
   readonly sourceName: string
+  readonly tableContainer: string
 }
 export default styles

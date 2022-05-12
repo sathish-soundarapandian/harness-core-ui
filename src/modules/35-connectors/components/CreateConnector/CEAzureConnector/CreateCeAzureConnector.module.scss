@@ -9,7 +9,7 @@
   :global {
     span[data-icon='service-azure'] {
       svg > g {
-        fill: white;
+        fill: var(--white);
       }
     }
   }
@@ -25,7 +25,7 @@
   }
 
   .header {
-    color: #22222a !important;
+    color: var(--grey-800) !important;
     font-weight: 600 !important;
     font-size: 20px !important;
     margin-bottom: var(--spacing-xxxlarge) !important;
@@ -48,9 +48,9 @@
   }
 
   .commandsContainer {
-    background: #effbff;
     padding: var(--spacing-large);
     margin: var(--spacing-large) auto;
+    border: 0.5px solid var(--grey-300);
     width: 90%;
     pre {
       white-space: pre-wrap;

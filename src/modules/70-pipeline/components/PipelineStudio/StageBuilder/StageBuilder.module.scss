@@ -58,6 +58,11 @@ $dot-space: 10px;
       min-width: 140px;
       z-index: 2;
     }
+    &.graphActions {
+      :global(.graphActions) {
+        bottom: 70px !important;
+      }
+    }
   }
 }
 
@@ -68,4 +73,8 @@ $dot-space: 10px;
       margin: 8px 16px !important;
     }
   }
+}
+
+.graphLink {
+  stroke: var(--primary-4);
 }

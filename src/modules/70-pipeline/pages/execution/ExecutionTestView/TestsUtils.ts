@@ -176,8 +176,18 @@ export const setInitialStageAndSteps = ({
   if (uniqueStageIdOptions.length > 1) {
     uniqueStageIdOptions = orderBy(uniqueStageIdOptions, 'index')
     uniqueStageIdOptions.unshift(AllStagesOption)
-    selectedStageIndex = 1
-    setSelectedStageId(uniqueStageIdOptions[1])
+    // select id from previously selected node on Pipeline tab
+    const preSelectedStageId = context.pipelineStagesMap.get(context.selectedStageId)?.nodeIdentifier
+    const preselectedStageIndex = uniqueStageIdOptions.findIndex(
+      (option: SelectOption) => option.value === preSelectedStageId
+    )
+    if (preselectedStageIndex > -1) {
+      selectedStageIndex = preselectedStageIndex
+      setSelectedStageId(uniqueStageIdOptions[preselectedStageIndex])
+    } else {
+      selectedStageIndex = 1
+      setSelectedStageId(uniqueStageIdOptions[1])
+    }
   } else {
     setSelectedStageId(uniqueStageIdOptions[0])
   }

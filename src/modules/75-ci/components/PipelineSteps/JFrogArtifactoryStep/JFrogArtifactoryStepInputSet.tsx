@@ -6,9 +6,7 @@
  */
 
 import React from 'react'
-import { Text, getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
-import { useStrings } from 'framework/strings'
+import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@wings-software/uicore'
 import StepCommonFieldsInputSet from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFieldsInputSet'
 import { Connectors } from '@connectors/constants'
 import type { JFrogArtifactoryStepProps } from './JFrogArtifactoryStep'
@@ -21,8 +19,6 @@ export const JFrogArtifactoryStepInputSet: React.FC<JFrogArtifactoryStepProps> =
   readonly,
   stepViewType
 }) => {
-  const { getString } = useStrings()
-
   return (
     <FormikForm className={css.removeBpPopoverWrapperTopMargin}>
       <CIStep
@@ -34,17 +30,7 @@ export const JFrogArtifactoryStepInputSet: React.FC<JFrogArtifactoryStepProps> =
           }),
           ...(getMultiTypeFromValue(template?.spec?.connectorRef) === MultiTypeInputType.RUNTIME && {
             'spec.connectorRef': {
-              label: (
-                <Text
-                  className={css.inpLabel}
-                  color={Color.GREY_600}
-                  font={{ size: 'small', weight: 'semi-bold' }}
-                  style={{ display: 'flex', alignItems: 'center' }}
-                  tooltipProps={{ dataTooltipId: 'gcrConnector' }}
-                >
-                  {getString('pipelineSteps.connectorLabel')}
-                </Text>
-              ),
+              label: { labelKey: 'pipelineSteps.connectorLabel', tooltipId: 'gcrConnector' },
               type: Connectors.ARTIFACTORY
             }
           }),
@@ -56,6 +42,8 @@ export const JFrogArtifactoryStepInputSet: React.FC<JFrogArtifactoryStepProps> =
           })
         }}
         path={path || ''}
+        isInputSetView={true}
+        template={template}
       />
       <StepCommonFieldsInputSet path={path} readonly={readonly} template={template} stepViewType={stepViewType} />
     </FormikForm>

@@ -6,6 +6,8 @@
  */
 
 import React from 'react'
+import { noop } from 'lodash-es'
+import { Formik } from '@wings-software/uicore'
 
 import { fireEvent, render } from '@testing-library/react'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
@@ -17,7 +19,9 @@ describe('TFMonaco Editor ', () => {
   test('initial render', () => {
     const { container } = render(
       <TestWrapper>
-        <TFBackendConfigMonaco {...props} />
+        <Formik initialValues={{}} onSubmit={noop} formName="test">
+          <TFBackendConfigMonaco {...props} />
+        </Formik>
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -25,7 +29,9 @@ describe('TFMonaco Editor ', () => {
   test('test for open dailog', () => {
     const { container } = render(
       <TestWrapper>
-        <TFBackendConfigMonaco {...props} />
+        <Formik initialValues={{}} onSubmit={noop} formName="test">
+          <TFBackendConfigMonaco {...props} />
+        </Formik>
       </TestWrapper>
     )
     fireEvent.click(container.querySelector('[data-icon="fullscreen"]') as HTMLElement)

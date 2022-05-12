@@ -17,6 +17,7 @@ exports[`ConfigureNotifications Email 1`] = `
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>
@@ -172,6 +173,7 @@ exports[`ConfigureNotifications Microsoft Teams - edit case 1`] = `
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>
@@ -370,6 +372,7 @@ exports[`ConfigureNotifications Microsoft Teams - edit case 2`] = `
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>
@@ -587,6 +590,7 @@ exports[`ConfigureNotifications Microsoft Teams 1`] = `
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>
@@ -830,6 +834,7 @@ exports[`ConfigureNotifications PagerDuty 1`] = `
         notifications.infoPagerDuty
       </p>
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -1007,6 +1012,7 @@ exports[`ConfigureNotifications Slack 1`] = `
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>

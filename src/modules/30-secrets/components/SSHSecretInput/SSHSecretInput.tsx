@@ -8,7 +8,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { pick, get, isPlainObject } from 'lodash-es'
-import { connect, FormikContext } from 'formik'
+import { connect, FormikContextType } from 'formik'
 import { FormGroup, Intent } from '@blueprintjs/core'
 import {
   HarnessDocTooltip,
@@ -44,7 +44,7 @@ export interface SSHSecretInputProps {
 }
 
 interface FormikSSHSecretInput extends SSHSecretInputProps {
-  formik: FormikContext<any>
+  formik: FormikContextType<any>
 }
 
 const SSHSecretInput: React.FC<FormikSSHSecretInput> = ({

@@ -18,7 +18,7 @@ const CIGovernancePage: React.FC = () => {
   return (
     <>
       <Page.Header
-        title={getString('ci.titleGovernance')}
+        title={getString('common.module.governance')}
         toolbar={
           <Container>
             <Button text={getString('ci.newItem')} onClick={tbd} />

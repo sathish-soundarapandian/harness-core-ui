@@ -93,6 +93,16 @@ exports[`EnvironmentList Should go to edit modal by clicking edit 1`] = `
           environments
         </h3>
       </div>
+      <div
+        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main TabNavigation--container"
+      >
+        <a
+          class="TabNavigation--tags TabNavigation--small"
+          href="/account/dummy/undefined/orgs/dummy/projects/dummy/environment"
+        >
+          environment
+        </a>
+      </div>
     </div>
     <div
       class="Layout--horizontal StyledProps--main PageSubHeader--container toolbar StyledProps--flex"
@@ -211,28 +221,25 @@ exports[`EnvironmentList Should go to edit modal by clicking edit 1`] = `
                 style="width: 40%;"
               >
                 <div
-                  class="name"
+                  class="Layout--vertical StyledProps--main"
                 >
                   <div
-                    class="Layout--vertical StyledProps--main"
+                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                   >
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black"
                     >
                       gjhjghjhg
                     </p>
-                    <div
-                      class="Layout--horizontal StyledProps--main StyledProps--flex"
-                    >
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--margin-top-xsmall StyledProps--margin-right-medium StyledProps--color StyledProps--color-grey500"
-                        style="font-size: 12px; line-height: 24px; word-break: break-word;"
-                      >
-                        Id: 
-                        gjhjghjhg
-                      </p>
-                    </div>
                   </div>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-size-small"
+                    style="--text-line-clamp: 1;"
+                  >
+                    common.ID
+                    : 
+                    gjhjghjhg
+                  </p>
                 </div>
               </div>
               <div
@@ -259,7 +266,7 @@ exports[`EnvironmentList Should go to edit modal by clicking edit 1`] = `
                 style="width: 15%;"
               >
                 <p
-                  class="StyledProps--font StyledProps--main"
+                  class="StyledProps--font StyledProps--main environmentType StyledProps--font-size-small"
                 >
                   cd.preProductionType
                 </p>
@@ -322,28 +329,25 @@ exports[`EnvironmentList Should go to edit modal by clicking edit 1`] = `
                 style="width: 40%;"
               >
                 <div
-                  class="name"
+                  class="Layout--vertical StyledProps--main"
                 >
                   <div
-                    class="Layout--vertical StyledProps--main"
+                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                   >
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black"
                     >
                       asdd
                     </p>
-                    <div
-                      class="Layout--horizontal StyledProps--main StyledProps--flex"
-                    >
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--margin-top-xsmall StyledProps--margin-right-medium StyledProps--color StyledProps--color-grey500"
-                        style="font-size: 12px; line-height: 24px; word-break: break-word;"
-                      >
-                        Id: 
-                        fdf
-                      </p>
-                    </div>
                   </div>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-size-small"
+                    style="--text-line-clamp: 1;"
+                  >
+                    common.ID
+                    : 
+                    fdf
+                  </p>
                 </div>
               </div>
               <div
@@ -370,9 +374,9 @@ exports[`EnvironmentList Should go to edit modal by clicking edit 1`] = `
                 style="width: 15%;"
               >
                 <p
-                  class="StyledProps--font StyledProps--main"
+                  class="StyledProps--font StyledProps--main environmentType production StyledProps--font-size-small"
                 >
-                  production
+                  cd.serviceDashboard.prod
                 </p>
               </div>
               <div
@@ -433,28 +437,25 @@ exports[`EnvironmentList Should go to edit modal by clicking edit 1`] = `
                 style="width: 40%;"
               >
                 <div
-                  class="name"
+                  class="Layout--vertical StyledProps--main"
                 >
                   <div
-                    class="Layout--vertical StyledProps--main"
+                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                   >
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black"
                     >
                       ddsffdgg
                     </p>
-                    <div
-                      class="Layout--horizontal StyledProps--main StyledProps--flex"
-                    >
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--margin-top-xsmall StyledProps--margin-right-medium StyledProps--color StyledProps--color-grey500"
-                        style="font-size: 12px; line-height: 24px; word-break: break-word;"
-                      >
-                        Id: 
-                        ddsffdgg
-                      </p>
-                    </div>
                   </div>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-size-small"
+                    style="--text-line-clamp: 1;"
+                  >
+                    common.ID
+                    : 
+                    ddsffdgg
+                  </p>
                 </div>
               </div>
               <div
@@ -481,9 +482,9 @@ exports[`EnvironmentList Should go to edit modal by clicking edit 1`] = `
                 style="width: 15%;"
               >
                 <p
-                  class="StyledProps--font StyledProps--main"
+                  class="StyledProps--font StyledProps--main environmentType production StyledProps--font-size-small"
                 >
-                  production
+                  cd.serviceDashboard.prod
                 </p>
               </div>
               <div
@@ -544,28 +545,25 @@ exports[`EnvironmentList Should go to edit modal by clicking edit 1`] = `
                 style="width: 40%;"
               >
                 <div
-                  class="name"
+                  class="Layout--vertical StyledProps--main"
                 >
                   <div
-                    class="Layout--vertical StyledProps--main"
+                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                   >
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black"
                     >
                       asdfdf
                     </p>
-                    <div
-                      class="Layout--horizontal StyledProps--main StyledProps--flex"
-                    >
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--margin-top-xsmall StyledProps--margin-right-medium StyledProps--color StyledProps--color-grey500"
-                        style="font-size: 12px; line-height: 24px; word-break: break-word;"
-                      >
-                        Id: 
-                        asdfdf
-                      </p>
-                    </div>
                   </div>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-size-small"
+                    style="--text-line-clamp: 1;"
+                  >
+                    common.ID
+                    : 
+                    asdfdf
+                  </p>
                 </div>
               </div>
               <div
@@ -592,7 +590,7 @@ exports[`EnvironmentList Should go to edit modal by clicking edit 1`] = `
                 style="width: 15%;"
               >
                 <p
-                  class="StyledProps--font StyledProps--main"
+                  class="StyledProps--font StyledProps--main environmentType StyledProps--font-size-small"
                 >
                   cd.preProductionType
                 </p>
@@ -655,66 +653,59 @@ exports[`EnvironmentList Should go to edit modal by clicking edit 1`] = `
                 style="width: 40%;"
               >
                 <div
-                  class="name"
+                  class="Layout--vertical StyledProps--main"
                 >
                   <div
-                    class="Layout--vertical StyledProps--main"
+                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                   >
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black"
                     >
                       qa
                     </p>
-                    <div
-                      class="Layout--horizontal StyledProps--main StyledProps--flex"
+                    <span
+                      class="bp3-popover-wrapper"
                     >
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--margin-top-xsmall StyledProps--margin-right-medium StyledProps--color StyledProps--color-grey500"
-                        style="font-size: 12px; line-height: 24px; word-break: break-word;"
+                      <span
+                        class="bp3-popover-target"
                       >
-                        Id: 
-                        qa
-                      </p>
-                      <div
-                        class="tags"
-                      >
-                        <span
-                          class="bp3-popover-wrapper"
+                        <div
+                          class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main tagsPopover StyledProps--flex StyledProps--flex-align-center-center"
+                          tabindex="0"
                         >
                           <span
-                            class="bp3-popover-target"
+                            class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey600"
+                            data-icon="main-tags"
                           >
-                            <div
-                              class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main tagsPopover StyledProps--flex StyledProps--flex-align-center-center"
-                              tabindex="0"
+                            <svg
+                              height="14"
+                              viewBox="0 0 14 14"
+                              width="14"
+                              xmlns="http://www.w3.org/2000/svg"
                             >
-                              <span
-                                class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey600"
-                                data-icon="main-tags"
-                              >
-                                <svg
-                                  height="14"
-                                  viewBox="0 0 14 14"
-                                  width="14"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    d="M7 0h-.2c-.2 0-.4.1-.6.3l-6 6c-.3.3-.3.8 0 1.1L2 9.1l4.6 4.6c.3.3.8.3 1.1 0l6-6c.2-.1.3-.3.3-.5v-.7-.3-1.3-2c0-.5-.4-1-1-1h-.9V1c0-.5-.4-1-1-1H7zm0 .6h4.2c.2 0 .4.2.4.4v.9h-1.1c-.3-.3-.5-.4-.8-.4s-.4.1-.6.3h-.5c-.2.1-.4.1-.6.3l-6 6s-.1.1-.1.2L.7 6.9c-.1-.1-.1-.2 0-.3l6-6s.1-.1.2-.1c0 .1.1.1.1.1zm1.9 1.8H13c.2 0 .4.2.4.4v4.3s0 .2-.1.2l-6 6c-.1.1-.2.1-.3 0L2.5 8.8c-.1-.1-.1-.2 0-.3l6-6s.1-.1.2-.1zm2.7.9c-.2 0-.5.1-.6.3-.4.4-.4.9 0 1.3s.9.4 1.3 0 .4-.9 0-1.3c-.3-.2-.5-.3-.7-.3zm0 .7c.1 0 .2 0 .2.1.1.1.1.3 0 .4s-.3.1-.4 0-.1-.3 0-.4c0-.1.1-.1.2-.1z"
-                                    fill="#4d5969"
-                                  />
-                                </svg>
-                              </span>
-                              <p
-                                class="StyledProps--font StyledProps--main"
-                              >
-                                1
-                              </p>
-                            </div>
+                              <path
+                                d="M7 0h-.2c-.2 0-.4.1-.6.3l-6 6c-.3.3-.3.8 0 1.1L2 9.1l4.6 4.6c.3.3.8.3 1.1 0l6-6c.2-.1.3-.3.3-.5v-.7-.3-1.3-2c0-.5-.4-1-1-1h-.9V1c0-.5-.4-1-1-1H7zm0 .6h4.2c.2 0 .4.2.4.4v.9h-1.1c-.3-.3-.5-.4-.8-.4s-.4.1-.6.3h-.5c-.2.1-.4.1-.6.3l-6 6s-.1.1-.1.2L.7 6.9c-.1-.1-.1-.2 0-.3l6-6s.1-.1.2-.1c0 .1.1.1.1.1zm1.9 1.8H13c.2 0 .4.2.4.4v4.3s0 .2-.1.2l-6 6c-.1.1-.2.1-.3 0L2.5 8.8c-.1-.1-.1-.2 0-.3l6-6s.1-.1.2-.1zm2.7.9c-.2 0-.5.1-.6.3-.4.4-.4.9 0 1.3s.9.4 1.3 0 .4-.9 0-1.3c-.3-.2-.5-.3-.7-.3zm0 .7c.1 0 .2 0 .2.1.1.1.1.3 0 .4s-.3.1-.4 0-.1-.3 0-.4c0-.1.1-.1.2-.1z"
+                                fill="#4d5969"
+                              />
+                            </svg>
                           </span>
-                        </span>
-                      </div>
-                    </div>
+                          <p
+                            class="StyledProps--font StyledProps--main"
+                          >
+                            1
+                          </p>
+                        </div>
+                      </span>
+                    </span>
                   </div>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-size-small"
+                    style="--text-line-clamp: 1;"
+                  >
+                    common.ID
+                    : 
+                    qa
+                  </p>
                 </div>
               </div>
               <div
@@ -741,9 +732,9 @@ exports[`EnvironmentList Should go to edit modal by clicking edit 1`] = `
                 style="width: 15%;"
               >
                 <p
-                  class="StyledProps--font StyledProps--main"
+                  class="StyledProps--font StyledProps--main environmentType production StyledProps--font-size-small"
                 >
-                  production
+                  cd.serviceDashboard.prod
                 </p>
               </div>
               <div
@@ -804,28 +795,25 @@ exports[`EnvironmentList Should go to edit modal by clicking edit 1`] = `
                 style="width: 40%;"
               >
                 <div
-                  class="name"
+                  class="Layout--vertical StyledProps--main"
                 >
                   <div
-                    class="Layout--vertical StyledProps--main"
+                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                   >
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black"
                     >
                       asd
                     </p>
-                    <div
-                      class="Layout--horizontal StyledProps--main StyledProps--flex"
-                    >
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--margin-top-xsmall StyledProps--margin-right-medium StyledProps--color StyledProps--color-grey500"
-                        style="font-size: 12px; line-height: 24px; word-break: break-word;"
-                      >
-                        Id: 
-                        asd
-                      </p>
-                    </div>
                   </div>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-size-small"
+                    style="--text-line-clamp: 1;"
+                  >
+                    common.ID
+                    : 
+                    asd
+                  </p>
                 </div>
               </div>
               <div
@@ -852,9 +840,9 @@ exports[`EnvironmentList Should go to edit modal by clicking edit 1`] = `
                 style="width: 15%;"
               >
                 <p
-                  class="StyledProps--font StyledProps--main"
+                  class="StyledProps--font StyledProps--main environmentType production StyledProps--font-size-small"
                 >
-                  production
+                  cd.serviceDashboard.prod
                 </p>
               </div>
               <div
@@ -915,28 +903,25 @@ exports[`EnvironmentList Should go to edit modal by clicking edit 1`] = `
                 style="width: 40%;"
               >
                 <div
-                  class="name"
+                  class="Layout--vertical StyledProps--main"
                 >
                   <div
-                    class="Layout--vertical StyledProps--main"
+                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                   >
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black"
                     >
                       sdf
                     </p>
-                    <div
-                      class="Layout--horizontal StyledProps--main StyledProps--flex"
-                    >
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--margin-top-xsmall StyledProps--margin-right-medium StyledProps--color StyledProps--color-grey500"
-                        style="font-size: 12px; line-height: 24px; word-break: break-word;"
-                      >
-                        Id: 
-                        sdf
-                      </p>
-                    </div>
                   </div>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-size-small"
+                    style="--text-line-clamp: 1;"
+                  >
+                    common.ID
+                    : 
+                    sdf
+                  </p>
                 </div>
               </div>
               <div
@@ -963,7 +948,7 @@ exports[`EnvironmentList Should go to edit modal by clicking edit 1`] = `
                 style="width: 15%;"
               >
                 <p
-                  class="StyledProps--font StyledProps--main"
+                  class="StyledProps--font StyledProps--main environmentType StyledProps--font-size-small"
                 >
                   cd.preProductionType
                 </p>
@@ -1196,6 +1181,7 @@ exports[`EnvironmentList Should open Add Environment Modal on click 1`] = `
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>

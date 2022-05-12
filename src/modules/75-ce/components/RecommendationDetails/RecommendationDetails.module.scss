@@ -96,51 +96,51 @@
     margin-bottom: var(--spacing-medium) !important;
   }
 
-  .recommendationTypeContainer {
-    display: flex;
-    justify-content: center;
-    position: absolute;
-    width: 100%;
-    top: -24px;
-
-    .recommendations {
-      background-color: var(--grey-100) !important;
-      border-radius: 8px;
-      color: var(--primary9) !important;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-
-      .selectedTab {
-        background-color: var(--primary-9);
-        border-radius: 8px;
-      }
-    }
-  }
-
-  .recommendationTypeText {
-    padding: var(--spacing-small) var(--spacing-xlarge) !important;
-    cursor: pointer !important;
-
-    .recommendationCost {
-      align-items: center;
-      border-radius: 8px;
-      padding-top: 1px;
-      background-color: rgba(0, 75, 164, 0.1);
-    }
-
-    .selectedTabCost {
-      color: var(--grey-100);
-      background-color: rgba(255, 255, 255, 0.2);
-    }
-
-    .astericSign {
-      line-height: 10px !important;
-      color: inherit !important;
-    }
-  }
-
   .legendContainer {
     display: grid;
     grid-template-columns: 1fr 20px 180px 20px 180px;
+  }
+}
+
+.recommendationTypeContainer {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+  top: -24px;
+
+  .recommendations {
+    background-color: var(--grey-100) !important;
+    border-radius: 8px;
+    color: var(--primary9) !important;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+
+    .recommendationTypeText {
+      padding: var(--spacing-small) var(--spacing-xlarge) !important;
+      cursor: pointer !important;
+
+      .recommendationCost {
+        align-items: center;
+        border-radius: 8px;
+        padding-top: 1px;
+        background-color: rgba(0, 75, 164, 0.1);
+      }
+
+      .selectedTabCost {
+        color: var(--grey-100);
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .astericSign {
+        line-height: 10px !important;
+        color: inherit !important;
+      }
+    }
+
+    .selectedTab {
+      background-color: var(--primary-9);
+      border-radius: 8px;
+    }
   }
 }
 

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useParams, useHistory, useRouteMatch } from 'react-router-dom'
 import { Layout } from '@wings-software/uicore'
 import { compile } from 'path-to-regexp'
@@ -15,6 +15,7 @@ import { ProjectSelector } from '@projects-orgs/components/ProjectSelector/Proje
 import type {
   ConnectorPathProps,
   PipelinePathProps,
+  TemplateStudioPathProps,
   ResourceGroupPathProps,
   RolePathProps,
   SecretsPathProps,
@@ -22,16 +23,21 @@ import type {
   UserPathProps
 } from '@common/interfaces/RouteInterfaces'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
+import { useStrings } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useQueryParams } from '@common/hooks'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMenu'
 import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
+import { useGetPipelines } from '@pipeline/hooks/useGetPipelines'
+import { useSideNavContext } from 'framework/SideNavStore/SideNavContext'
+import type { PagePMSPipelineSummaryResponse } from 'services/pipeline-ng'
 
 export default function CISideNav(): React.ReactElement {
   const params = useParams<
     PipelinePathProps &
+      TemplateStudioPathProps &
       ConnectorPathProps &
       SecretsPathProps &
       UserPathProps &
@@ -44,6 +50,7 @@ export default function CISideNav(): React.ReactElement {
     projectIdentifier,
     orgIdentifier,
     pipelineIdentifier,
+    templateIdentifier,
     connectorId,
     secretId,
     userIdentifier,
@@ -55,8 +62,35 @@ export default function CISideNav(): React.ReactElement {
   const history = useHistory()
   const module = 'ci'
   const { updateAppStore } = useAppStore()
-  const { CI_OVERVIEW_PAGE } = useFeatureFlags()
+  const { CI_OVERVIEW_PAGE, CIE_HOSTED_BUILDS } = useFeatureFlags()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
+  const { getString } = useStrings()
+  const { showGetStartedTab, setShowGetStartedTab } = useSideNavContext()
+  const {
+    data: fetchPipelinesData,
+    loading: fetchingPipelines,
+    refetch: fetchPipelines
+  } = useGetPipelines({
+    accountIdentifier: accountId,
+    projectIdentifier,
+    orgIdentifier,
+    module,
+    lazy: true,
+    size: 1
+  })
+
+  useEffect(() => {
+    if (CIE_HOSTED_BUILDS) {
+      fetchPipelines()
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!fetchingPipelines && fetchPipelinesData) {
+      const { data, status } = fetchPipelinesData
+      setShowGetStartedTab(status === 'SUCCESS' && (data as PagePMSPipelineSummaryResponse)?.totalElements === 0)
+    }
+  }, [fetchPipelinesData])
 
   return (
     <Layout.Vertical spacing="small">
@@ -118,6 +152,15 @@ export default function CISideNav(): React.ReactElement {
                 module
               })
             )
+          } else if (templateIdentifier) {
+            history.push(
+              routes.toTemplates({
+                projectIdentifier: data.identifier,
+                orgIdentifier: data.orgIdentifier || /* istanbul ignore next */ '',
+                accountId,
+                module
+              })
+            )
           } else if (projectIdentifier && !pipelineIdentifier) {
             // changing project
             history.push(
@@ -156,10 +199,14 @@ export default function CISideNav(): React.ReactElement {
       />
       {projectIdentifier && orgIdentifier ? (
         <React.Fragment>
-          {CI_OVERVIEW_PAGE && <SidebarLink label="Overview" to={routes.toProjectOverview({ ...params, module })} />}
+          {showGetStartedTab && (
+            <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCI({ ...params, module })} />
+          )}
+          {!showGetStartedTab && CI_OVERVIEW_PAGE && (
+            <SidebarLink label={getString('overview')} to={routes.toProjectOverview({ ...params, module })} />
+          )}
           <SidebarLink label="Builds" to={routes.toDeployments({ ...params, module })} />
           <SidebarLink label="Pipelines" to={routes.toPipelines({ ...params, module })} />
-
           <ProjectSetupMenu module={module} />
         </React.Fragment>
       ) : null}

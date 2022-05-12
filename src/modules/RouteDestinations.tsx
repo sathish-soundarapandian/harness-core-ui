@@ -13,6 +13,7 @@ import commonRoutes from '@common/RouteDestinations'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import AuthSettingsRoutes from '@auth-settings/RouteDestinations'
 import secretsRoutes from '@secrets/RouteDestinations'
+import variableRoutes from '@variables/RouteDestinations'
 import rbacRoutes from '@rbac/RouteDestinations'
 import projectsOrgsRoutes from '@projects-orgs/RouteDestinations'
 import connectorRoutes from '@connectors/RouteDestinations'
@@ -76,6 +77,7 @@ export default function RouteDestinations(): React.ReactElement {
     <Switch>
       {commonRoutes.props.children}
       {secretsRoutes.props.children}
+      {variableRoutes.props.children}
       {auditTrailRoutes.props.children}
       {rbacRoutes.props.children}
       {delegatesRoutes.props.children}

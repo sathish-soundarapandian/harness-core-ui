@@ -6,7 +6,7 @@
  */
 
 import { FeatureFlagActivationStatus } from '@cf/utils/CFUtils'
-import { Feature, PatchFeatureQueryParams, usePatchFeature } from 'services/cf'
+import { FeatureResponseMetadata, PatchFeatureQueryParams, usePatchFeature } from 'services/cf'
 import type { GitDetails } from './useGitSync'
 
 export interface UseToggleFeatureFlagProps {
@@ -32,8 +32,8 @@ const makeInstruction = (isOn: boolean, gitDetails?: GitDetails) => {
 }
 
 export interface UseToggleFeatureFlag {
-  on: (flagIdentifier: string, gitDetails?: GitDetails) => Promise<Feature>
-  off: (flagIdentifier: string, gitDetails?: GitDetails) => Promise<Feature>
+  on: (flagIdentifier: string, gitDetails?: GitDetails) => Promise<FeatureResponseMetadata>
+  off: (flagIdentifier: string, gitDetails?: GitDetails) => Promise<FeatureResponseMetadata>
   loading: boolean
   error: string | undefined
 }
@@ -55,11 +55,11 @@ export const useToggleFeatureFlag = ({
   })
 
   return {
-    on: (flagIdentifier: string, gitDetails?: GitDetails): Promise<Feature> =>
+    on: (flagIdentifier: string, gitDetails?: GitDetails): Promise<FeatureResponseMetadata> =>
       mutate(makeInstruction(true, gitDetails), {
         pathParams: { identifier: flagIdentifier }
       }),
-    off: (flagIdentifier: string, gitDetails?: GitDetails): Promise<Feature> =>
+    off: (flagIdentifier: string, gitDetails?: GitDetails): Promise<FeatureResponseMetadata> =>
       mutate(makeInstruction(false, gitDetails), {
         pathParams: { identifier: flagIdentifier }
       }),

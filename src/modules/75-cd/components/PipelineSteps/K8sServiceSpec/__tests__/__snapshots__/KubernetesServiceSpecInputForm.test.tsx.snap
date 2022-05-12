@@ -551,7 +551,7 @@ exports[`INPUT VARIABLE VIEW renders the input variable view: input variabe mode
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-black"
             >
-              variablesText
+              common.variables
             </p>
           </p>
         </div>
@@ -607,7 +607,7 @@ exports[`VARIABLES renders the service variables form: variables with default va
         <div
           class="subheading"
         >
-          variablesText
+          common.variables
         </div>
         <div
           class="nestedAccordions"

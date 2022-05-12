@@ -6,9 +6,7 @@
  */
 
 import React from 'react'
-import { Text, getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
-import { useStrings } from 'framework/strings'
+import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@wings-software/uicore'
 import { Connectors } from '@connectors/constants'
 import StepCommonFieldsInputSet from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFieldsInputSet'
 import type { RestoreCacheS3StepProps } from './RestoreCacheS3Step'
@@ -22,8 +20,6 @@ export const RestoreCacheS3StepInputSet: React.FC<RestoreCacheS3StepProps> = ({
   readonly,
   stepViewType
 }) => {
-  const { getString } = useStrings()
-
   return (
     <FormikForm className={css.removeBpPopoverWrapperTopMargin}>
       <CIStep
@@ -32,17 +28,7 @@ export const RestoreCacheS3StepInputSet: React.FC<RestoreCacheS3StepProps> = ({
         enableFields={{
           ...(getMultiTypeFromValue(template?.spec?.connectorRef) === MultiTypeInputType.RUNTIME && {
             'spec.connectorRef': {
-              label: (
-                <Text
-                  className={css.inpLabel}
-                  color={Color.GREY_600}
-                  font={{ size: 'small', weight: 'semi-bold' }}
-                  style={{ display: 'flex', alignItems: 'center' }}
-                  tooltipProps={{ dataTooltipId: 'restoreCacheAwsConnector' }}
-                >
-                  {getString('pipelineSteps.awsConnectorLabel')}
-                </Text>
-              ),
+              label: { labelKey: 'pipelineSteps.awsConnectorLabel', tooltipId: 'restoreCacheAwsConnector' },
               type: Connectors.AWS
             }
           }),
@@ -57,6 +43,8 @@ export const RestoreCacheS3StepInputSet: React.FC<RestoreCacheS3StepProps> = ({
           })
         }}
         path={path || ''}
+        isInputSetView={true}
+        template={template}
       />
       <CIStepOptionalConfig
         stepViewType={stepViewType}
@@ -76,6 +64,7 @@ export const RestoreCacheS3StepInputSet: React.FC<RestoreCacheS3StepProps> = ({
           })
         }}
         path={path || ''}
+        template={template}
       />
       <StepCommonFieldsInputSet path={path} readonly={readonly} template={template} stepViewType={stepViewType} />
     </FormikForm>

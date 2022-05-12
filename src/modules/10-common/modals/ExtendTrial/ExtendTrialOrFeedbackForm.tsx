@@ -5,11 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Formik, FormikForm, Heading, Container, Text, Layout, Button, FormInput, Tag } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import * as Yup from 'yup'
 import { useStrings } from 'framework/strings'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Category, LicenseActions, FeedbackActions } from '@common/constants/TrackingConstants'
 import css from './useExtendTrialOrFeedbackModal.module.scss'
 
 export interface FeedbackFormValues {
@@ -95,6 +97,13 @@ const Footer = ({
 
 export const FeedBackForm: React.FC<FeedBackFormProps> = ({ onCloseModal, onSubmit, moduleDescription, loading }) => {
   const { getString } = useStrings()
+  const { trackEvent } = useTelemetry()
+
+  useEffect(() => {
+    trackEvent(FeedbackActions.LoadFeedback, {
+      category: Category.FEEDBACK
+    })
+  }, [])
   return (
     <Formik
       initialValues={{
@@ -131,6 +140,13 @@ export const ExtendTrialForm: React.FC<ExtendTrialFormProps> = ({
   loading
 }) => {
   const { getString } = useStrings()
+  const { trackEvent } = useTelemetry()
+
+  useEffect(() => {
+    trackEvent(LicenseActions.LoadExtendedTrial, {
+      category: Category.LICENSE
+    })
+  }, [])
   return (
     <Formik
       initialValues={{

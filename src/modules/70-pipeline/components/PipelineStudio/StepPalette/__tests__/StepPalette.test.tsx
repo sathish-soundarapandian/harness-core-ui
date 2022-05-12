@@ -82,6 +82,20 @@ const mockStepsData = {
               ]
             },
             {
+              name: 'Serverless Lambda',
+              stepCategories: [],
+              stepsData: [
+                {
+                  name: 'Serverless AWS Lambda Deploy',
+                  type: StepType.ServerlessAwsLambdaDeploy
+                },
+                {
+                  name: 'Serverless AWS Lambda Rollback',
+                  type: StepType.ServerlessAwsLambdaRollback
+                }
+              ]
+            },
+            {
               name: 'Utilities',
               stepCategories: [
                 {
@@ -124,8 +138,8 @@ describe('Step Palette tests', () => {
       </TestWrapper>
     )
 
-    expect(queryByText('Show All Steps (4)')).toBeDefined()
-    expect(container.getElementsByClassName('paletteCard')).toHaveLength(4)
+    expect(queryByText('Show All Steps (6)')).toBeDefined()
+    expect(container.getElementsByClassName('paletteCard')).toHaveLength(6)
     fireEvent.change(container.querySelector('input[type="search"]')!, { target: { value: 'tttt' } })
     await waitFor(() => expect(queryByText('stepPalette.noSearchResultsFound')).not.toBeNull())
   })
@@ -138,8 +152,8 @@ describe('Step Palette tests', () => {
       </TestWrapper>
     )
 
-    expect(queryByText('Show All Steps (4)')).toBeDefined()
-    expect(container.getElementsByClassName('paletteCard')).toHaveLength(4)
+    expect(queryByText('Show All Steps (6)')).toBeDefined()
+    expect(container.getElementsByClassName('paletteCard')).toHaveLength(6)
     // Click on K8 category
     const k8Category = queryByText('K8 (2)')
     act(() => {
@@ -158,14 +172,33 @@ describe('Step Palette tests', () => {
       </TestWrapper>
     )
 
-    expect(queryByText('Show All Steps (4)')).toBeDefined()
-    expect(container.getElementsByClassName('paletteCard')).toHaveLength(4)
+    expect(queryByText('Show All Steps (6)')).toBeDefined()
+    expect(container.getElementsByClassName('paletteCard')).toHaveLength(6)
     // Click on K8 category
     const scriptedStepCategory = queryByText('Scripted (2)')
     act(() => {
       fireEvent.click(scriptedStepCategory!)
     })
     expect(getByText('Utilities')).toBeDefined()
+    expect(container.getElementsByClassName('paletteCard')).toHaveLength(2)
+  })
+
+  test('clicking on category Serverless Lambda should display steps which are falling under Serverless Lambda', async () => {
+    const props = getProps()
+    const { container, queryByText, getByText } = render(
+      <TestWrapper>
+        <StepPalette {...props} />
+      </TestWrapper>
+    )
+
+    expect(queryByText('Show All Steps (6)')).toBeDefined()
+    expect(container.getElementsByClassName('paletteCard')).toHaveLength(6)
+    // Click on Serverless Lambda category
+    const serverlessLambdaStepCategory = queryByText('Serverless Lambda (2)')
+    act(() => {
+      fireEvent.click(serverlessLambdaStepCategory!)
+    })
+    expect(getByText('Serverless Lambda')).toBeDefined()
     expect(container.getElementsByClassName('paletteCard')).toHaveLength(2)
   })
 

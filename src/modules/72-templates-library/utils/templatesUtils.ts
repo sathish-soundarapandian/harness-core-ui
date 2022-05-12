@@ -18,7 +18,8 @@ export enum TemplateType {
   Service = 'Service',
   Infrastructure = 'Infrastructure',
   StepGroup = 'StepGroup',
-  Execution = 'Execution'
+  Execution = 'Execution',
+  MonitoredService = 'MonitoredService'
 }
 
 export const AllTemplatesTypes = 'All'
@@ -40,41 +41,59 @@ export const getScopeBasedQueryParams = (
   }
 }
 
-export const getAllowedTemplateTypes = (getString: UseStringsReturn['getString']): TemplateTypeOption[] => [
-  {
-    label: getString('step'),
-    value: TemplateType.Step
-  },
-  {
-    label: getString('templatesLibrary.stageTemplate'),
-    value: TemplateType.Stage
-  },
-  {
-    label: getString('common.pipeline'),
-    value: TemplateType.Pipeline,
-    disabled: true
-  },
-  {
-    label: getString('service'),
-    value: TemplateType.Service,
-    disabled: true
-  },
-  {
-    label: getString('infrastructureText'),
-    value: TemplateType.Infrastructure,
-    disabled: true
-  },
-  {
-    label: getString('stepGroup'),
-    value: TemplateType.StepGroup,
-    disabled: true
-  },
-  {
-    label: getString('executionText'),
-    value: TemplateType.Execution,
-    disabled: true
+export const getAllowedTemplateTypes = (
+  getString: UseStringsReturn['getString'],
+  module?: string,
+  isPipelineTemplateEnabled?: boolean
+): TemplateTypeOption[] => {
+  const AllowedTemplateTypes = [
+    {
+      label: getString('step'),
+      value: TemplateType.Step,
+      disabled: false
+    },
+    {
+      label: getString('common.stage'),
+      value: TemplateType.Stage,
+      disabled: false
+    },
+    {
+      label: getString('common.pipeline'),
+      value: TemplateType.Pipeline,
+      disabled: !isPipelineTemplateEnabled
+    },
+    {
+      label: getString('service'),
+      value: TemplateType.Service,
+      disabled: true
+    },
+    {
+      label: getString('infrastructureText'),
+      value: TemplateType.Infrastructure,
+      disabled: true
+    },
+    {
+      label: getString('stepGroup'),
+      value: TemplateType.StepGroup,
+      disabled: true
+    },
+    {
+      label: getString('executionText'),
+      value: TemplateType.Execution,
+      disabled: true
+    }
+  ]
+  if (module === 'cv') {
+    return [
+      {
+        label: getString('connectors.cdng.monitoredService.label'),
+        value: TemplateType.MonitoredService,
+        disabled: false
+      }
+    ]
   }
-]
+  return AllowedTemplateTypes
+}
 
 export const getVersionLabelText = (template: TemplateSummaryResponse, getString: UseStringsReturn['getString']) => {
   return isEmpty(template.versionLabel)

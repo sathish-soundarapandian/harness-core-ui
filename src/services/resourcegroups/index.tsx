@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Harness Inc. All rights reserved.
+ * Copyright 2022 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -31,6 +31,7 @@ export interface AccessControlCheckError {
     | 'USER_DOMAIN_NOT_ALLOWED'
     | 'MAX_FAILED_ATTEMPT_COUNT_EXCEEDED'
     | 'RESOURCE_NOT_FOUND'
+    | 'INVALID_FORMAT'
     | 'ROLE_DOES_NOT_EXIST'
     | 'EMAIL_NOT_VERIFIED'
     | 'EMAIL_VERIFICATION_TOKEN_NOT_FOUND'
@@ -281,6 +282,7 @@ export interface AccessControlCheckError {
     | 'INSTANCE_STATS_PROCESS_ERROR'
     | 'INSTANCE_STATS_MIGRATION_ERROR'
     | 'DEPLOYMENT_MIGRATION_ERROR'
+    | 'CG_LICENSE_USAGE_ERROR'
     | 'INSTANCE_STATS_AGGREGATION_ERROR'
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
@@ -295,6 +297,7 @@ export interface AccessControlCheckError {
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_INTERNAL_SERVER_ERROR'
     | 'DATA'
     | 'CONTEXT'
     | 'PR_CREATION_ERROR'
@@ -308,6 +311,16 @@ export interface AccessControlCheckError {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'INVALID_INPUT_SET'
+    | 'INVALID_OVERLAY_INPUT_SET'
+    | 'RESOURCE_ALREADY_EXISTS'
+    | 'INVALID_JSON_PAYLOAD'
+    | 'POLICY_EVALUATION_FAILURE'
+    | 'POLICY_SET_ERROR'
+    | 'INVALID_ARTIFACTORY_REGISTRY_REQUEST'
+    | 'INVALID_NEXUS_REGISTRY_REQUEST'
+    | 'ENTITY_NOT_FOUND'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -339,7 +352,11 @@ export interface AuditEventDTO {
     | 'REVOKE_INVITE'
     | 'ADD_COLLABORATOR'
     | 'REMOVE_COLLABORATOR'
+    | 'CREATE_TOKEN'
     | 'REVOKE_TOKEN'
+    | 'LOGIN'
+    | 'LOGIN2FA'
+    | 'UNSUCCESSFUL_LOGIN'
     | 'ADD_MEMBERSHIP'
     | 'REMOVE_MEMBERSHIP'
   auditEventData?: AuditEventData
@@ -380,7 +397,11 @@ export interface AuditFilterProperties {
     | 'REVOKE_INVITE'
     | 'ADD_COLLABORATOR'
     | 'REMOVE_COLLABORATOR'
+    | 'CREATE_TOKEN'
     | 'REVOKE_TOKEN'
+    | 'LOGIN'
+    | 'LOGIN2FA'
+    | 'UNSUCCESSFUL_LOGIN'
     | 'ADD_MEMBERSHIP'
     | 'REMOVE_MEMBERSHIP'
   )[]
@@ -450,6 +471,7 @@ export interface Error {
     | 'USER_DOMAIN_NOT_ALLOWED'
     | 'MAX_FAILED_ATTEMPT_COUNT_EXCEEDED'
     | 'RESOURCE_NOT_FOUND'
+    | 'INVALID_FORMAT'
     | 'ROLE_DOES_NOT_EXIST'
     | 'EMAIL_NOT_VERIFIED'
     | 'EMAIL_VERIFICATION_TOKEN_NOT_FOUND'
@@ -700,6 +722,7 @@ export interface Error {
     | 'INSTANCE_STATS_PROCESS_ERROR'
     | 'INSTANCE_STATS_MIGRATION_ERROR'
     | 'DEPLOYMENT_MIGRATION_ERROR'
+    | 'CG_LICENSE_USAGE_ERROR'
     | 'INSTANCE_STATS_AGGREGATION_ERROR'
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
@@ -714,6 +737,7 @@ export interface Error {
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_INTERNAL_SERVER_ERROR'
     | 'DATA'
     | 'CONTEXT'
     | 'PR_CREATION_ERROR'
@@ -727,6 +751,16 @@ export interface Error {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'INVALID_INPUT_SET'
+    | 'INVALID_OVERLAY_INPUT_SET'
+    | 'RESOURCE_ALREADY_EXISTS'
+    | 'INVALID_JSON_PAYLOAD'
+    | 'POLICY_EVALUATION_FAILURE'
+    | 'POLICY_SET_ERROR'
+    | 'INVALID_ARTIFACTORY_REGISTRY_REQUEST'
+    | 'INVALID_NEXUS_REGISTRY_REQUEST'
+    | 'ENTITY_NOT_FOUND'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -758,6 +792,7 @@ export interface Failure {
     | 'USER_DOMAIN_NOT_ALLOWED'
     | 'MAX_FAILED_ATTEMPT_COUNT_EXCEEDED'
     | 'RESOURCE_NOT_FOUND'
+    | 'INVALID_FORMAT'
     | 'ROLE_DOES_NOT_EXIST'
     | 'EMAIL_NOT_VERIFIED'
     | 'EMAIL_VERIFICATION_TOKEN_NOT_FOUND'
@@ -1008,6 +1043,7 @@ export interface Failure {
     | 'INSTANCE_STATS_PROCESS_ERROR'
     | 'INSTANCE_STATS_MIGRATION_ERROR'
     | 'DEPLOYMENT_MIGRATION_ERROR'
+    | 'CG_LICENSE_USAGE_ERROR'
     | 'INSTANCE_STATS_AGGREGATION_ERROR'
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
@@ -1022,6 +1058,7 @@ export interface Failure {
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_INTERNAL_SERVER_ERROR'
     | 'DATA'
     | 'CONTEXT'
     | 'PR_CREATION_ERROR'
@@ -1035,6 +1072,16 @@ export interface Failure {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'INVALID_INPUT_SET'
+    | 'INVALID_OVERLAY_INPUT_SET'
+    | 'RESOURCE_ALREADY_EXISTS'
+    | 'INVALID_JSON_PAYLOAD'
+    | 'POLICY_EVALUATION_FAILURE'
+    | 'POLICY_SET_ERROR'
+    | 'INVALID_ARTIFACTORY_REGISTRY_REQUEST'
+    | 'INVALID_NEXUS_REGISTRY_REQUEST'
+    | 'ENTITY_NOT_FOUND'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1139,6 +1186,16 @@ export interface PageResourceGroupResponse {
   totalPages?: number
 }
 
+export interface PageResourceGroupV2Response {
+  content?: ResourceGroupV2Response[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
 export type PagerDutySettingDTO = NotificationSettingDTO & {}
 
 export interface PermissionCheck {
@@ -1186,6 +1243,11 @@ export interface ResourceDTO {
     | 'DELEGATE_TOKEN'
 }
 
+export interface ResourceFilter {
+  includeAllResources?: boolean
+  resources?: ResourceSelectorV2[]
+}
+
 export interface ResourceGroupDTO {
   accountIdentifier: string
   allowedScopeLevels?: string[]
@@ -1224,6 +1286,33 @@ export interface ResourceGroupResponse {
   resourceGroup: ResourceGroupDTO
 }
 
+export interface ResourceGroupV2 {
+  accountIdentifier: string
+  allowedScopeLevels?: string[]
+  color?: string
+  description?: string
+  identifier: string
+  includedScopes?: ScopeSelector[]
+  name: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  resourceFilter?: ResourceFilter
+  tags?: {
+    [key: string]: string
+  }
+}
+
+export interface ResourceGroupV2Request {
+  resourceGroup: ResourceGroupV2
+}
+
+export interface ResourceGroupV2Response {
+  createdAt?: number
+  harnessManaged?: boolean
+  lastModifiedAt?: number
+  resourceGroup: ResourceGroupV2
+}
+
 export interface ResourceScope {
   accountIdentifier?: string
   orgIdentifier?: string
@@ -1250,6 +1339,11 @@ export type ResourceSelectorByScope = ResourceSelector & {
 
 export interface ResourceSelectorFilter {
   resourceIdentifier?: string
+  resourceType: string
+}
+
+export interface ResourceSelectorV2 {
+  identifiers?: string[]
   resourceType: string
 }
 
@@ -1316,6 +1410,7 @@ export interface ResponseMessage {
     | 'USER_DOMAIN_NOT_ALLOWED'
     | 'MAX_FAILED_ATTEMPT_COUNT_EXCEEDED'
     | 'RESOURCE_NOT_FOUND'
+    | 'INVALID_FORMAT'
     | 'ROLE_DOES_NOT_EXIST'
     | 'EMAIL_NOT_VERIFIED'
     | 'EMAIL_VERIFICATION_TOKEN_NOT_FOUND'
@@ -1566,6 +1661,7 @@ export interface ResponseMessage {
     | 'INSTANCE_STATS_PROCESS_ERROR'
     | 'INSTANCE_STATS_MIGRATION_ERROR'
     | 'DEPLOYMENT_MIGRATION_ERROR'
+    | 'CG_LICENSE_USAGE_ERROR'
     | 'INSTANCE_STATS_AGGREGATION_ERROR'
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
@@ -1580,6 +1676,7 @@ export interface ResponseMessage {
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_INTERNAL_SERVER_ERROR'
     | 'DATA'
     | 'CONTEXT'
     | 'PR_CREATION_ERROR'
@@ -1593,6 +1690,16 @@ export interface ResponseMessage {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'INVALID_INPUT_SET'
+    | 'INVALID_OVERLAY_INPUT_SET'
+    | 'RESOURCE_ALREADY_EXISTS'
+    | 'INVALID_JSON_PAYLOAD'
+    | 'POLICY_EVALUATION_FAILURE'
+    | 'POLICY_SET_ERROR'
+    | 'INVALID_ARTIFACTORY_REGISTRY_REQUEST'
+    | 'INVALID_NEXUS_REGISTRY_REQUEST'
+    | 'ENTITY_NOT_FOUND'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -1603,6 +1710,7 @@ export interface ResponseMessage {
     | 'APPLICATION_ERROR'
     | 'AUTHORIZATION_ERROR'
     | 'TIMEOUT_ERROR'
+    | 'POLICY_EVALUATION_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -1650,9 +1758,23 @@ export interface ResponsePageResourceGroupResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponsePageResourceGroupV2Response {
+  correlationId?: string
+  data?: PageResourceGroupV2Response
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseResourceGroupResponse {
   correlationId?: string
   data?: ResourceGroupResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseResourceGroupV2Response {
+  correlationId?: string
+  data?: ResourceGroupV2Response
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -1689,8 +1811,19 @@ export type SampleErrorMetadataDTO = ErrorMetadataDTO & {
   }
 }
 
+export type ScmErrorMetadataDTO = ErrorMetadataDTO & {
+  conflictCommitId?: string
+}
+
 export interface Scope {
   accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface ScopeSelector {
+  accountIdentifier?: string
+  filter: 'EXCLUDING_CHILD_SCOPES' | 'INCLUDING_CHILD_SCOPES'
   orgIdentifier?: string
   projectIdentifier?: string
 }
@@ -1783,7 +1916,11 @@ export interface YamlDiffRecordDTO {
 
 export type FilterDTORequestBody = FilterDTO
 
+export type ResourceGroupFilterDTORequestBody = ResourceGroupFilterDTO
+
 export type ResourceGroupRequestRequestBody = ResourceGroupRequest
+
+export type ResourceGroupV2RequestRequestBody = ResourceGroupV2Request
 
 export type PutTemplateRequestBody = void
 
@@ -1943,6 +2080,7 @@ export const createResourceGroupPromise = (
   >('POST', getConfig('resourcegroup/api'), `/resourcegroup`, props, signal)
 
 export interface GetFilterResourceGroupListQueryParams {
+  accountIdentifier: string
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
@@ -1953,7 +2091,7 @@ export type GetFilterResourceGroupListProps = Omit<
     ResponsePageResourceGroupResponse,
     Failure | AccessControlCheckError | Error,
     GetFilterResourceGroupListQueryParams,
-    ResourceGroupFilterDTO,
+    ResourceGroupFilterDTORequestBody,
     void
   >,
   'path' | 'verb'
@@ -1967,7 +2105,7 @@ export const GetFilterResourceGroupList = (props: GetFilterResourceGroupListProp
     ResponsePageResourceGroupResponse,
     Failure | AccessControlCheckError | Error,
     GetFilterResourceGroupListQueryParams,
-    ResourceGroupFilterDTO,
+    ResourceGroupFilterDTORequestBody,
     void
   >
     verb="POST"
@@ -1982,7 +2120,7 @@ export type UseGetFilterResourceGroupListProps = Omit<
     ResponsePageResourceGroupResponse,
     Failure | AccessControlCheckError | Error,
     GetFilterResourceGroupListQueryParams,
-    ResourceGroupFilterDTO,
+    ResourceGroupFilterDTORequestBody,
     void
   >,
   'path' | 'verb'
@@ -1996,7 +2134,7 @@ export const useGetFilterResourceGroupList = (props: UseGetFilterResourceGroupLi
     ResponsePageResourceGroupResponse,
     Failure | AccessControlCheckError | Error,
     GetFilterResourceGroupListQueryParams,
-    ResourceGroupFilterDTO,
+    ResourceGroupFilterDTORequestBody,
     void
   >('POST', `/resourcegroup/filter`, { base: getConfig('resourcegroup/api'), ...props })
 
@@ -2008,7 +2146,7 @@ export const getFilterResourceGroupListPromise = (
     ResponsePageResourceGroupResponse,
     Failure | AccessControlCheckError | Error,
     GetFilterResourceGroupListQueryParams,
-    ResourceGroupFilterDTO,
+    ResourceGroupFilterDTORequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -2017,7 +2155,7 @@ export const getFilterResourceGroupListPromise = (
     ResponsePageResourceGroupResponse,
     Failure | AccessControlCheckError | Error,
     GetFilterResourceGroupListQueryParams,
-    ResourceGroupFilterDTO,
+    ResourceGroupFilterDTORequestBody,
     void
   >('POST', getConfig('resourcegroup/api'), `/resourcegroup/filter`, props, signal)
 
@@ -2312,3 +2450,486 @@ export const getResourceTypesPromise = (
     props,
     signal
   )
+
+export interface GetResourceGroupListV2QueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  searchTerm?: string
+  pageIndex?: number
+  pageSize?: number
+  sortOrders?: string[]
+}
+
+export type GetResourceGroupListV2Props = Omit<
+  GetProps<
+    ResponsePageResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetResourceGroupListV2QueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Get list of resource groups
+ */
+export const GetResourceGroupListV2 = (props: GetResourceGroupListV2Props) => (
+  <Get<
+    ResponsePageResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetResourceGroupListV2QueryParams,
+    void
+  >
+    path={`/v2/resourcegroup`}
+    base={getConfig('resourcegroup/api')}
+    {...props}
+  />
+)
+
+export type UseGetResourceGroupListV2Props = Omit<
+  UseGetProps<
+    ResponsePageResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetResourceGroupListV2QueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Get list of resource groups
+ */
+export const useGetResourceGroupListV2 = (props: UseGetResourceGroupListV2Props) =>
+  useGet<
+    ResponsePageResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetResourceGroupListV2QueryParams,
+    void
+  >(`/v2/resourcegroup`, { base: getConfig('resourcegroup/api'), ...props })
+
+/**
+ * Get list of resource groups
+ */
+export const getResourceGroupListV2Promise = (
+  props: GetUsingFetchProps<
+    ResponsePageResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetResourceGroupListV2QueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponsePageResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetResourceGroupListV2QueryParams,
+    void
+  >(getConfig('resourcegroup/api'), `/v2/resourcegroup`, props, signal)
+
+export interface CreateResourceGroupV2QueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type CreateResourceGroupV2Props = Omit<
+  MutateProps<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    CreateResourceGroupV2QueryParams,
+    ResourceGroupV2RequestRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Create a resource group
+ */
+export const CreateResourceGroupV2 = (props: CreateResourceGroupV2Props) => (
+  <Mutate<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    CreateResourceGroupV2QueryParams,
+    ResourceGroupV2RequestRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/v2/resourcegroup`}
+    base={getConfig('resourcegroup/api')}
+    {...props}
+  />
+)
+
+export type UseCreateResourceGroupV2Props = Omit<
+  UseMutateProps<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    CreateResourceGroupV2QueryParams,
+    ResourceGroupV2RequestRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Create a resource group
+ */
+export const useCreateResourceGroupV2 = (props: UseCreateResourceGroupV2Props) =>
+  useMutate<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    CreateResourceGroupV2QueryParams,
+    ResourceGroupV2RequestRequestBody,
+    void
+  >('POST', `/v2/resourcegroup`, { base: getConfig('resourcegroup/api'), ...props })
+
+/**
+ * Create a resource group
+ */
+export const createResourceGroupV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    CreateResourceGroupV2QueryParams,
+    ResourceGroupV2RequestRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    CreateResourceGroupV2QueryParams,
+    ResourceGroupV2RequestRequestBody,
+    void
+  >('POST', getConfig('resourcegroup/api'), `/v2/resourcegroup`, props, signal)
+
+export interface GetFilterResourceGroupListV2QueryParams {
+  accountIdentifier: string
+  pageIndex?: number
+  pageSize?: number
+  sortOrders?: string[]
+}
+
+export type GetFilterResourceGroupListV2Props = Omit<
+  MutateProps<
+    ResponsePageResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetFilterResourceGroupListV2QueryParams,
+    ResourceGroupFilterDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get filtered resource group list
+ */
+export const GetFilterResourceGroupListV2 = (props: GetFilterResourceGroupListV2Props) => (
+  <Mutate<
+    ResponsePageResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetFilterResourceGroupListV2QueryParams,
+    ResourceGroupFilterDTORequestBody,
+    void
+  >
+    verb="POST"
+    path={`/v2/resourcegroup/filter`}
+    base={getConfig('resourcegroup/api')}
+    {...props}
+  />
+)
+
+export type UseGetFilterResourceGroupListV2Props = Omit<
+  UseMutateProps<
+    ResponsePageResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetFilterResourceGroupListV2QueryParams,
+    ResourceGroupFilterDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get filtered resource group list
+ */
+export const useGetFilterResourceGroupListV2 = (props: UseGetFilterResourceGroupListV2Props) =>
+  useMutate<
+    ResponsePageResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetFilterResourceGroupListV2QueryParams,
+    ResourceGroupFilterDTORequestBody,
+    void
+  >('POST', `/v2/resourcegroup/filter`, { base: getConfig('resourcegroup/api'), ...props })
+
+/**
+ * Get filtered resource group list
+ */
+export const getFilterResourceGroupListV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponsePageResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetFilterResourceGroupListV2QueryParams,
+    ResourceGroupFilterDTORequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePageResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetFilterResourceGroupListV2QueryParams,
+    ResourceGroupFilterDTORequestBody,
+    void
+  >('POST', getConfig('resourcegroup/api'), `/v2/resourcegroup/filter`, props, signal)
+
+export interface DeleteResourceGroupV2QueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type DeleteResourceGroupV2Props = Omit<
+  MutateProps<
+    ResponseBoolean,
+    Failure | AccessControlCheckError | Error,
+    DeleteResourceGroupV2QueryParams,
+    string,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Delete a resource group
+ */
+export const DeleteResourceGroupV2 = (props: DeleteResourceGroupV2Props) => (
+  <Mutate<ResponseBoolean, Failure | AccessControlCheckError | Error, DeleteResourceGroupV2QueryParams, string, void>
+    verb="DELETE"
+    path={`/v2/resourcegroup`}
+    base={getConfig('resourcegroup/api')}
+    {...props}
+  />
+)
+
+export type UseDeleteResourceGroupV2Props = Omit<
+  UseMutateProps<
+    ResponseBoolean,
+    Failure | AccessControlCheckError | Error,
+    DeleteResourceGroupV2QueryParams,
+    string,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Delete a resource group
+ */
+export const useDeleteResourceGroupV2 = (props: UseDeleteResourceGroupV2Props) =>
+  useMutate<ResponseBoolean, Failure | AccessControlCheckError | Error, DeleteResourceGroupV2QueryParams, string, void>(
+    'DELETE',
+    `/v2/resourcegroup`,
+    { base: getConfig('resourcegroup/api'), ...props }
+  )
+
+/**
+ * Delete a resource group
+ */
+export const deleteResourceGroupV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponseBoolean,
+    Failure | AccessControlCheckError | Error,
+    DeleteResourceGroupV2QueryParams,
+    string,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseBoolean,
+    Failure | AccessControlCheckError | Error,
+    DeleteResourceGroupV2QueryParams,
+    string,
+    void
+  >('DELETE', getConfig('resourcegroup/api'), `/v2/resourcegroup`, props, signal)
+
+export interface GetResourceGroupV2QueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface GetResourceGroupV2PathParams {
+  identifier: string
+}
+
+export type GetResourceGroupV2Props = Omit<
+  GetProps<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetResourceGroupV2QueryParams,
+    GetResourceGroupV2PathParams
+  >,
+  'path'
+> &
+  GetResourceGroupV2PathParams
+
+/**
+ * Get a resource group by Identifier
+ */
+export const GetResourceGroupV2 = ({ identifier, ...props }: GetResourceGroupV2Props) => (
+  <Get<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetResourceGroupV2QueryParams,
+    GetResourceGroupV2PathParams
+  >
+    path={`/v2/resourcegroup/${identifier}`}
+    base={getConfig('resourcegroup/api')}
+    {...props}
+  />
+)
+
+export type UseGetResourceGroupV2Props = Omit<
+  UseGetProps<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetResourceGroupV2QueryParams,
+    GetResourceGroupV2PathParams
+  >,
+  'path'
+> &
+  GetResourceGroupV2PathParams
+
+/**
+ * Get a resource group by Identifier
+ */
+export const useGetResourceGroupV2 = ({ identifier, ...props }: UseGetResourceGroupV2Props) =>
+  useGet<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetResourceGroupV2QueryParams,
+    GetResourceGroupV2PathParams
+  >((paramsInPath: GetResourceGroupV2PathParams) => `/v2/resourcegroup/${paramsInPath.identifier}`, {
+    base: getConfig('resourcegroup/api'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * Get a resource group by Identifier
+ */
+export const getResourceGroupV2Promise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetResourceGroupV2QueryParams,
+    GetResourceGroupV2PathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    GetResourceGroupV2QueryParams,
+    GetResourceGroupV2PathParams
+  >(getConfig('resourcegroup/api'), `/v2/resourcegroup/${identifier}`, props, signal)
+
+export interface UpdateResourceGroupV2QueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface UpdateResourceGroupV2PathParams {
+  identifier: string
+}
+
+export type UpdateResourceGroupV2Props = Omit<
+  MutateProps<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    UpdateResourceGroupV2QueryParams,
+    ResourceGroupV2RequestRequestBody,
+    UpdateResourceGroupV2PathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateResourceGroupV2PathParams
+
+/**
+ * Update a resource group
+ */
+export const UpdateResourceGroupV2 = ({ identifier, ...props }: UpdateResourceGroupV2Props) => (
+  <Mutate<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    UpdateResourceGroupV2QueryParams,
+    ResourceGroupV2RequestRequestBody,
+    UpdateResourceGroupV2PathParams
+  >
+    verb="PUT"
+    path={`/v2/resourcegroup/${identifier}`}
+    base={getConfig('resourcegroup/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateResourceGroupV2Props = Omit<
+  UseMutateProps<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    UpdateResourceGroupV2QueryParams,
+    ResourceGroupV2RequestRequestBody,
+    UpdateResourceGroupV2PathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateResourceGroupV2PathParams
+
+/**
+ * Update a resource group
+ */
+export const useUpdateResourceGroupV2 = ({ identifier, ...props }: UseUpdateResourceGroupV2Props) =>
+  useMutate<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    UpdateResourceGroupV2QueryParams,
+    ResourceGroupV2RequestRequestBody,
+    UpdateResourceGroupV2PathParams
+  >('PUT', (paramsInPath: UpdateResourceGroupV2PathParams) => `/v2/resourcegroup/${paramsInPath.identifier}`, {
+    base: getConfig('resourcegroup/api'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * Update a resource group
+ */
+export const updateResourceGroupV2Promise = (
+  {
+    identifier,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    UpdateResourceGroupV2QueryParams,
+    ResourceGroupV2RequestRequestBody,
+    UpdateResourceGroupV2PathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseResourceGroupV2Response,
+    Failure | AccessControlCheckError | Error,
+    UpdateResourceGroupV2QueryParams,
+    ResourceGroupV2RequestRequestBody,
+    UpdateResourceGroupV2PathParams
+  >('PUT', getConfig('resourcegroup/api'), `/v2/resourcegroup/${identifier}`, props, signal)

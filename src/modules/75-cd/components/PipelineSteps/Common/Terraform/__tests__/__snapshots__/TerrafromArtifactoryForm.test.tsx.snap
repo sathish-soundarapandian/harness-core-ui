@@ -13,7 +13,9 @@ exports[`Terraform artifactory tests initial render 1`] = `
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="tfRemoteForm"
         >
@@ -348,7 +350,9 @@ exports[`Terraform artifactory tests initial render with form data for config an
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="tfRemoteForm"
         >
@@ -683,7 +687,9 @@ exports[`Terraform artifactory tests initial render with form data for config in
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="tfRemoteForm"
         >
@@ -1018,7 +1024,9 @@ exports[`Terraform artifactory tests initial render with form data for var files
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="tfRemoteForm"
         >
@@ -1611,7 +1619,9 @@ exports[`Terraform artifactory tests initial render with no form data for config
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="tfRemoteForm"
         >
@@ -1946,7 +1956,9 @@ exports[`Terraform artifactory tests submit when it is a config form 1`] = `
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="tfRemoteForm"
         >
@@ -2281,7 +2293,9 @@ exports[`Terraform artifactory tests test click previous button 1`] = `
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="tfRemoteForm"
         >
@@ -2616,7 +2630,9 @@ exports[`Terraform artifactory tests test submitting when terraform plan form 1`
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="tfRemoteForm"
         >
@@ -3089,7 +3105,9 @@ exports[`Terraform artifactory tests when deleting a artifact path 1`] = `
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="tfRemoteForm"
         >

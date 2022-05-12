@@ -11,11 +11,21 @@ dashboard:
 steps:
   common:
     clusterDetails: Cluster Details
-    selectOrEnterClusterPlaceholder: Select or add cluster
+    selectOrEnterClusterPlaceholder: Select or add Cluster
     releaseNamePlaceholder: Enter Release Name
+    undefinedType: Undefined deployment type
   kubernetesGcpStep:
     stepName: Specify your GCP Connector
-folderPath: Folder Path
+  azureInfraStep:
+    azure: 'Microsoft Azure'
+    subscription: '{{ $.common.subscriptionId }}'
+    subscriptionPlaceholder: '{{ $.common.subscriptionPlaceholder }}'
+    resourceGroupPlaceholder: 'Select or add Resource Group'
+    resourceGroupError: 'No resource groups found with given Subscription'
+    clusterError: 'No cluster found with given Resource Group'
+  serverless:
+    regionPlaceholder: Specify a region
+    stagePlaceholder: Specify a stage
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'
@@ -27,7 +37,7 @@ serviceUpdated: '{{ $.common.serviceUpdated }}'
 environmentCreated: '{{ $.common.environmentCreated }}'
 environmentUpdated: '{{ $.common.environmentUpdated }}'
 preProduction: 'Pre Production'
-preProductionType: 'PreProduction'
+preProductionType: 'Pre-Prod'
 environmentDelete: '{{ $.common.deleteEnvironment.title }}'
 environmentDeleteMessage: 'Are you sure you want to delete environment <strong>{{name}}</strong>?'
 namespaceValidation: Namespace must consist of lower case alphanumeric characters or '-', and must start and end with an alphanumeric character (e.g. 'my-name',  or '123-abc')
@@ -74,10 +84,9 @@ pipelineSteps:
     selectEnvironment: '- Select Environment -'
     plusNewEnvironment: '+ {{$.newEnvironment}}'
     newEnvironment: '{{$.newEnvironment}}'
-    environmentIsRequired: Environment is required
+    environmentIsRequired: '{{ $.common.validation.environmentIsRequired }}'
   serviceTab:
     stageOverrides: Stage Overrides
-    propagateStage: Stage is required
     overrideChanges: Override artifacts, manifests, service variables for this stage
     deploymentTypeRequired: Deployment type selection is required
     propagateFrom: Propagate from
@@ -91,6 +100,7 @@ pipelineSteps:
   infraTab:
     deploymentType: Infrastructure type selection is required
     clusterError: No cluster found with given Connector
+    stageIsRequired: Stage is required
   executionTab:
     stepsCount: At least one step is required
 cdLaunchText: Launch CD First Generation
@@ -206,3 +216,6 @@ artifactPaths: Artifact Paths
 serviceList:
   noIdentifier: Selected service does not have any identifier associated with it.
 artifactRepoTooltip: Enter the name of the repository where the artifact source is located.
+serverlessDeployCommandOptions: Serverless Deploy Command Options
+artifactVersion: ARTIFACT VERSION
+useConnectorCredentials: 'Use Connector Credentials'

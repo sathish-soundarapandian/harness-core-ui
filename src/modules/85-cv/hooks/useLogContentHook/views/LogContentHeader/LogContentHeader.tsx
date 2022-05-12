@@ -11,7 +11,8 @@ import { FontVariation, Heading, Layout, Container, Text, Color, Select, Checkbo
 import { useStrings } from 'framework/strings'
 import { useGetAllHealthSourcesForServiceAndEnvironment, useGetVerifyStepHealthSources } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { getHealthSourceOptions, getTimeRangeOptions } from '../../useLogContentHook.utils'
+import CustomDatePicker from './CustomDatePicker/CustomDatePicker'
+import { getHealthSourceOptions } from '../../useLogContentHook.utils'
 import { LogTypes } from '../../useLogContentHook.types'
 import type { LogContentHeaderProps } from './LogContentHeader.types'
 
@@ -115,8 +116,8 @@ const LogContentHeader: React.FC<LogContentHeaderProps> = ({
           </Layout.Horizontal>
         </Container>
         <Container border={{ left: true }} />
-        <Container width={230}>
-          {isVerifyStep || isMonitoredDetailsStep ? (
+        {isVerifyStep || isMonitoredDetailsStep ? (
+          <Container width={230}>
             <Select
               value={{
                 label: `${getString('pipeline.verification.healthSourceLabel')}: ${healthSource?.label}`,
@@ -129,10 +130,10 @@ const LogContentHeader: React.FC<LogContentHeaderProps> = ({
               onChange={handleHealthSource}
               disabled={loading || monitoredServiceLoading}
             />
-          ) : (
-            <Select value={timeRange} items={getTimeRangeOptions(getString)} onChange={handleTimeRange} />
-          )}
-        </Container>
+          </Container>
+        ) : (
+          timeRange && handleTimeRange && <CustomDatePicker value={timeRange} onChange={handleTimeRange} />
+        )}
         <Checkbox
           checked={errorLogsOnly}
           onChange={e => handleDisplayOnlyErrors(e.currentTarget.checked)}

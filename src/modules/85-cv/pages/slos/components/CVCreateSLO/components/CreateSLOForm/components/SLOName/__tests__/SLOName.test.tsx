@@ -17,13 +17,19 @@ import { expectedUserJourneyOptions, mockedUserJourneysData } from './SLOName.mo
 
 function WrapperComponent(props: { initialValues: any }): JSX.Element {
   const { initialValues } = props
+  const fetchingMonitoredServices = jest.fn()
   return (
     <TestWrapper>
       <Formik enableReinitialize={true} initialValues={initialValues} onSubmit={jest.fn()}>
         {formikProps => {
           return (
             <FormikForm>
-              <SLOName formikProps={formikProps} monitoredServicesLoading={false} monitoredServicesOptions={[]}>
+              <SLOName
+                formikProps={formikProps}
+                monitoredServicesLoading={false}
+                monitoredServicesOptions={[]}
+                fetchingMonitoredServices={fetchingMonitoredServices}
+              >
                 <></>
               </SLOName>
             </FormikForm>

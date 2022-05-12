@@ -35,6 +35,7 @@ import {
   StoreConfig,
   useGetBucketListForS3
 } from 'services/cd-ng'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useListAwsRegions } from 'services/portal'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -70,6 +71,7 @@ function HelmWithS3({
   deploymentType
 }: StepProps<ConnectorConfigDTO> & HelmWithHttpPropType): React.ReactElement {
   const { getString } = useStrings()
+  const { getRBACErrorMessage } = useRBACError()
   const [regions, setRegions] = useState<SelectOption[]>([])
 
   /* Code related to region */
@@ -279,7 +281,7 @@ function HelmWithS3({
             allowableTypes,
             selectProps: {
               noResults: (
-                <Text lineClamp={1}>{get(error, 'data.message', null) || getString('pipeline.noBuckets')}</Text>
+                <Text lineClamp={1}>{getRBACErrorMessage(error as RBACError) || getString('pipeline.noBuckets')}</Text>
               ),
               itemRenderer: itemRenderer,
               items: getBuckets(),

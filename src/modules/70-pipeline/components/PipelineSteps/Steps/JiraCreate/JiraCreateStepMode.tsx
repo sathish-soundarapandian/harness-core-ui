@@ -27,6 +27,7 @@ import {
 import { useModalHook } from '@harness/use-modal'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { String, useStrings } from 'framework/strings'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
@@ -88,6 +89,7 @@ function FormContent({
   readonly
 }: JiraCreateFormContentInterface): JSX.Element {
   const { getString } = useStrings()
+  const { getRBACErrorMessage } = useRBACError()
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
@@ -401,7 +403,7 @@ function FormContent({
                 intent={Intent.DANGER}
                 tooltipProps={{ isDark: true, popoverClassName: css.tooltip }}
               >
-                {(projectsFetchError as any)?.data?.message}
+                {getRBACErrorMessage(projectsFetchError)}
               </Text>
             }
             name="spec.projectKey"

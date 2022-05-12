@@ -16,6 +16,7 @@ export interface IsAnomaliesDataAvailable {
 }
 
 export interface AnomaliesCardProps {
+  showOnlyChanges?: boolean
   timeRange?: TimeRangeParams
   lowestHealthScoreBarForTimeRange?: RiskData
   timeFormat: string

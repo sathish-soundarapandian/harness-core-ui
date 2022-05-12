@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback } from 'react'
-import type { FormikContext, FormikProps } from 'formik'
+import type { FormikContextType, FormikProps } from 'formik'
 import type { HealthSource } from 'services/cv'
 import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
 import HealthSourceTable from '@cv/pages/health-source/HealthSourceTable/HealthSourceTable'
@@ -23,10 +23,12 @@ import { createOpenHealthSourceTableProps } from './HealthSourceTableContainer.u
 
 export default function HealthSourceTableContainer({
   serviceFormFormik,
-  healthSourceListFromAPI
+  healthSourceListFromAPI,
+  isTemplate
 }: {
-  serviceFormFormik: FormikContext<MonitoredServiceForm>
+  serviceFormFormik: FormikContextType<MonitoredServiceForm>
   healthSourceListFromAPI: HealthSource[] | undefined
+  isTemplate?: boolean
 }): JSX.Element {
   const {
     showDrawer: showHealthSourceDrawer,
@@ -34,11 +36,11 @@ export default function HealthSourceTableContainer({
     setDrawerHeaderProps
   } = useDrawer({
     createHeader: props => <HealthSourceDrawerHeader {...props} />,
-    createDrawerContent: props => <HealthSourceDrawerContent {...props} />
+    createDrawerContent: props => <HealthSourceDrawerContent {...props} isTemplate={isTemplate} />
   })
 
   const updateHealthSource = useCallback(
-    (data: any, formik: FormikContext<MonitoredServiceForm>): void => {
+    (data: any, formik: FormikContextType<MonitoredServiceForm>): void => {
       formik.setFieldValue('sources', {
         ...formik.values?.sources,
         healthSources: data
@@ -50,7 +52,7 @@ export default function HealthSourceTableContainer({
 
   const onSuccessHealthSourceTableWrapper = (
     data: UpdatedHealthSource,
-    formik: FormikContext<MonitoredServiceForm>
+    formik: FormikContextType<MonitoredServiceForm>
   ): void => {
     const healthsourceList = createHealthsourceList(formik?.values?.sources?.healthSources as RowData[], data)
     updateHealthSource(healthsourceList, formik)

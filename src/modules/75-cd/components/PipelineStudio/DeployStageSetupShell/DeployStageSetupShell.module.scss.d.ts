@@ -10,6 +10,7 @@ declare const styles: {
   readonly fullHeight: string
   readonly navigationBtns: string
   readonly setupShell: string
+  readonly stepGroup: string
   readonly templateNameDialog: string
   readonly title: string
 }

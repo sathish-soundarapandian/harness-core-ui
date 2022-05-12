@@ -18,14 +18,16 @@ import {
 } from '@ce/components/OverviewPage/OverviewPageLayout'
 import { CE_COLOR_CONST } from '@ce/components/CEChart/CEChartOptions'
 import formatCost from '@ce/utils/formatCost'
+import type { AnomalySummary } from 'services/ce'
+import type { CcmMetaData } from 'services/ce/services'
 import css from '../../pages/anomalies-overview/AnomaliesOverviewPage.module.scss'
 
 interface AnomaliesOverviewProps {
-  costData: Record<string, any>
-  perspectiveAnomaliesData: Record<string, any>[]
-  cloudProvidersWiseData: Record<string, any>[]
-  statusWiseData: Record<string, any>[]
-  allDefaultProviders: Record<string, any>
+  costData: AnomalySummary | null
+  perspectiveAnomaliesData: AnomalySummary[]
+  cloudProvidersWiseData: AnomalySummary[]
+  statusWiseData: AnomalySummary[]
+  allDefaultProviders: CcmMetaData
 }
 
 const map: Record<string, string> = {

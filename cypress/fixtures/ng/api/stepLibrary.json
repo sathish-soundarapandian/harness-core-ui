@@ -23,18 +23,8 @@
                 "disabled": false,
                 "featureRestrictionName": "K8S_BLUE_GREEN_DEPLOY"
               },
-              {
-                "name": "Apply",
-                "type": "K8sApply",
-                "disabled": false,
-                "featureRestrictionName": "K8S_APPLY"
-              },
-              {
-                "name": "Delete",
-                "type": "K8sDelete",
-                "disabled": false,
-                "featureRestrictionName": "K8S_DELETE"
-              },
+              { "name": "Apply", "type": "K8sApply", "disabled": false, "featureRestrictionName": "K8S_APPLY" },
+              { "name": "Delete", "type": "K8sDelete", "disabled": false, "featureRestrictionName": "K8S_DELETE" },
               {
                 "name": "Canary Delete",
                 "type": "K8sCanaryDelete",
@@ -53,12 +43,7 @@
                 "disabled": false,
                 "featureRestrictionName": "K8S_CANARY_DEPLOY"
               },
-              {
-                "name": "Scale",
-                "type": "K8sScale",
-                "disabled": false,
-                "featureRestrictionName": "K8S_SCALE"
-              },
+              { "name": "Scale", "type": "K8sScale", "disabled": false, "featureRestrictionName": "K8S_SCALE" },
               {
                 "name": "Rolling Rollback",
                 "type": "K8sRollingRollback",
@@ -99,31 +84,37 @@
             "stepCategories": []
           },
           {
+            "name": "Serverless Lambda",
+            "stepsData": [
+              {
+                "name": "Serverless Lambda Rollback",
+                "type": "ServerlessAwsLambdaRollback",
+                "disabled": false,
+                "featureRestrictionName": null
+              },
+              {
+                "name": "Serverless Lambda Deploy",
+                "type": "ServerlessAwsLambdaDeploy",
+                "disabled": false,
+                "featureRestrictionName": null
+              }
+            ],
+            "stepCategories": []
+          },
+          {
             "name": "Utilities",
             "stepsData": [],
             "stepCategories": [
               {
                 "name": "Scripted",
                 "stepsData": [
-                  {
-                    "name": "Shell Script",
-                    "type": "ShellScript",
-                    "disabled": false,
-                    "featureRestrictionName": null
-                  }
+                  { "name": "Shell Script", "type": "ShellScript", "disabled": false, "featureRestrictionName": null }
                 ],
                 "stepCategories": []
               },
               {
                 "name": "Non-Scripted",
-                "stepsData": [
-                  {
-                    "name": "HTTP",
-                    "type": "Http",
-                    "disabled": false,
-                    "featureRestrictionName": null
-                  }
-                ],
+                "stepsData": [{ "name": "HTTP", "type": "Http", "disabled": false, "featureRestrictionName": null }],
                 "stepCategories": []
               }
             ]
@@ -142,12 +133,6 @@
                 "type": "JiraApproval",
                 "disabled": false,
                 "featureRestrictionName": "INTEGRATED_APPROVALS_WITH_JIRA"
-              },
-              {
-                "name": "ServiceNow Approval",
-                "type": "ServiceNowApproval",
-                "disabled": false,
-                "featureRestrictionName": "INTEGRATED_APPROVALS_WITH_SERVICE_NOW"
               }
             ],
             "stepCategories": []
@@ -177,28 +162,11 @@
               {
                 "name": "Barrier",
                 "stepsData": [
-                  {
-                    "name": "Barrier",
-                    "type": "Barrier",
-                    "disabled": false,
-                    "featureRestrictionName": null
-                  }
+                  { "name": "Barrier", "type": "Barrier", "disabled": false, "featureRestrictionName": null }
                 ],
                 "stepCategories": []
               }
             ]
-          },
-          {
-            "name": "Governance",
-            "stepsData": [
-              {
-                "name": "Policy",
-                "type": "Policy",
-                "disabled": false,
-                "featureRestrictionName": null
-              }
-            ],
-            "stepCategories": []
           }
         ]
       },
@@ -208,14 +176,7 @@
         "stepCategories": [
           {
             "name": "Continuous Verification",
-            "stepsData": [
-              {
-                "name": "Verify",
-                "type": "Verify",
-                "disabled": false,
-                "featureRestrictionName": null
-              }
-            ],
+            "stepsData": [{ "name": "Verify", "type": "Verify", "disabled": false, "featureRestrictionName": null }],
             "stepCategories": []
           }
         ]
@@ -223,5 +184,5 @@
     ]
   },
   "metaData": null,
-  "correlationId": "2fc60058-40f6-417c-9fa9-883e7a2d9d24"
+  "correlationId": "4449128a-aeba-4872-949c-d247d52aacc6"
 }

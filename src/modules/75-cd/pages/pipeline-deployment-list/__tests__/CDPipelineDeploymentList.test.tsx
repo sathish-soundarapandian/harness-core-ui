@@ -76,7 +76,7 @@ jest.mock('services/pipeline-ng', () => ({
   useRePostPipelineExecuteWithInputSetYaml: jest.fn(() => ({ data: null })),
   useRerunStagesWithRuntimeInputYaml: jest.fn(() => ({ data: null })),
   useGetInputSetsListForPipeline: jest.fn(() => ({ data: null, refetch: jest.fn() })),
-  useCreateVariables: jest.fn(() => ({}))
+  useCreateVariablesV2: jest.fn(() => ({}))
 }))
 
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMock))

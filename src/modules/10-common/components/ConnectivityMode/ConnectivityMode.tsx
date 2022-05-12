@@ -9,7 +9,7 @@ import React from 'react'
 import cx from 'classnames'
 import { Text, FormikCollapsableSelect, CollapsableSelectType, CollapsableSelectOptions } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import type { FormikContext } from 'formik'
+import type { FormikContextType } from 'formik'
 
 import DelegatesGit from '@common/icons/DelegatesGit.svg'
 import PlatformGit from '@common/icons/PlatformGit.svg'
@@ -26,8 +26,12 @@ export interface ConnectivityCardItem extends CollapsableSelectOptions {
   icon: JSX.Element
 }
 
+export interface ConnectivityModeForm {
+  connectivityMode: ConnectivityModeType | undefined
+}
+
 interface ConnectivityModeProps {
-  formik: FormikContext<Record<string, unknown>>
+  formik: FormikContextType<ConnectivityModeForm>
   className?: string
   onChange: (val: ConnectivityCardItem) => void
 }

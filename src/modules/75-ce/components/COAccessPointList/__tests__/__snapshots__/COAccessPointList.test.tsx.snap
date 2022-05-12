@@ -159,12 +159,16 @@ exports[`Test Access Point List Renders without errors 1`] = `
             class="TableV2--cell"
             colspan="1"
             role="columnheader"
-            style="width: 15%;"
+            style="width: 22%;"
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
             >
-              NAME
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+              >
+                name
+              </p>
             </p>
           </div>
           <div
@@ -176,19 +180,11 @@ exports[`Test Access Point List Renders without errors 1`] = `
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
             >
-              CE.CO.ACCESSPOINT.CLOUDACCOUNT
-            </p>
-          </div>
-          <div
-            class="TableV2--cell"
-            colspan="1"
-            role="columnheader"
-            style="width: 8%;"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-            >
-              CE.CO.ACCESSPOINT.DNSPROVIDER
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+              >
+                ce.co.accessPoint.cloudAccount
+              </p>
             </p>
           </div>
           <div
@@ -200,7 +196,11 @@ exports[`Test Access Point List Renders without errors 1`] = `
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
             >
-              CE.CO.ACCESSPOINT.ASSSOCIATEDRULES
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+              >
+                ce.co.accessPoint.dnsProvider
+              </p>
             </p>
           </div>
           <div
@@ -212,19 +212,11 @@ exports[`Test Access Point List Renders without errors 1`] = `
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
             >
-              Region
-            </p>
-          </div>
-          <div
-            class="TableV2--cell"
-            colspan="1"
-            role="columnheader"
-            style="width: 12%;"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-            >
-              VPC
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+              >
+                ce.co.accessPoint.asssociatedRules
+              </p>
             </p>
           </div>
           <div
@@ -236,7 +228,11 @@ exports[`Test Access Point List Renders without errors 1`] = `
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
             >
-              CE.CO.ACCESSPOINT.LASTACTIVITY
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+              >
+                regionLabel
+              </p>
             </p>
           </div>
           <div
@@ -248,7 +244,27 @@ exports[`Test Access Point List Renders without errors 1`] = `
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
             >
-              CE.CO.ACCESSPOINT.STATUS
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+              >
+                ce.co.accessPoint.vpcLabel
+              </p>
+            </p>
+          </div>
+          <div
+            class="TableV2--cell"
+            colspan="1"
+            role="columnheader"
+            style="width: 10%;"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+              >
+                ce.co.accessPoint.lastActivity
+              </p>
             </p>
           </div>
           <div
@@ -283,23 +299,64 @@ exports[`Test Access Point List Renders without errors 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 15%;"
+              style="width: 22%;"
             >
               <div
-                style="overflow-wrap: anywhere;"
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main apNameContainer StyledProps--flex StyledProps--flex-alignItems-start"
               >
-                <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
-                  style="font-weight: 600; --text-line-clamp: 1;"
+                <div
+                  class="StyledProps--font StyledProps--main"
                 >
-                  mockname
-                </p>
-                <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey400"
-                  style="--text-line-clamp: 1;"
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                    style="font-weight: 600; --text-line-clamp: 1;"
+                  >
+                    mockname
+                  </p>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey400"
+                    style="--text-line-clamp: 1;"
+                  >
+                    mock.com
+                  </p>
+                </div>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
                 >
-                  mock.com
-                </p>
+                  <span
+                    class="bp3-popover-wrapper"
+                  >
+                    <span
+                      class="bp3-popover-target Text--targetClass"
+                    >
+                      <span
+                        class="StyledProps--font StyledProps--main StyledProps--inline"
+                        style="display: inline-flex; align-items: center;"
+                        tabindex="0"
+                      >
+                        <span
+                          class="bp3-icon bp3-icon-warning-sign StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-red500"
+                          icon="warning-sign"
+                        >
+                          <svg
+                            data-icon="warning-sign"
+                            height="6"
+                            viewBox="0 0 16 16"
+                            width="6"
+                          >
+                            <desc>
+                              warning-sign
+                            </desc>
+                            <path
+                              d="M15.84 13.5l.01-.01-7-12-.01.01c-.17-.3-.48-.5-.85-.5s-.67.2-.85.5l-.01-.01-7 12 .01.01c-.09.15-.15.31-.15.5 0 .55.45 1 1 1h14c.55 0 1-.45 1-1 0-.19-.06-.35-.15-.5zm-6.85-.51h-2v-2h2v2zm0-3h-2v-5h2v5z"
+                              fill-rule="evenodd"
+                            />
+                          </svg>
+                        </span>
+                      </span>
+                    </span>
+                  </span>
+                </div>
               </div>
             </div>
             <div
@@ -308,7 +365,7 @@ exports[`Test Access Point List Renders without errors 1`] = `
               style="width: 15%;"
             >
               <div
-                class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-right-large"
                 style="overflow-wrap: anywhere;"
               >
                 <span
@@ -348,7 +405,7 @@ exports[`Test Access Point List Renders without errors 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 8%;"
+              style="width: 10%;"
             >
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main"
@@ -369,8 +426,7 @@ exports[`Test Access Point List Renders without errors 1`] = `
                   class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500"
                   style="--text-line-clamp: 3;"
                 >
-                  1
-                   Rules
+                  1 ce.co.rules
                 </p>
               </div>
             </div>
@@ -393,7 +449,7 @@ exports[`Test Access Point List Renders without errors 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 12%;"
+              style="width: 10%;"
             >
               <div
                 style="overflow-wrap: anywhere; padding-right: 10px;"
@@ -412,46 +468,6 @@ exports[`Test Access Point List Renders without errors 1`] = `
               style="width: 10%;"
             >
               -
-            </div>
-            <div
-              class="TableV2--cell"
-              role="cell"
-              style="width: 10%;"
-            >
-              <span
-                class="bp3-popover-wrapper"
-              >
-                <span
-                  class="bp3-popover-target Text--targetClass"
-                >
-                  <span
-                    class="StyledProps--font StyledProps--main StyledProps--inline"
-                    style="display: inline-flex; align-items: center;"
-                    tabindex="0"
-                  >
-                    <span
-                      class="bp3-icon bp3-icon-warning-sign StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-red500"
-                      icon="warning-sign"
-                    >
-                      <svg
-                        data-icon="warning-sign"
-                        height="12"
-                        viewBox="0 0 16 16"
-                        width="12"
-                      >
-                        <desc>
-                          warning-sign
-                        </desc>
-                        <path
-                          d="M15.84 13.5l.01-.01-7-12-.01.01c-.17-.3-.48-.5-.85-.5s-.67.2-.85.5l-.01-.01-7 12 .01.01c-.09.15-.15.31-.15.5 0 .55.45 1 1 1h14c.55 0 1-.45 1-1 0-.19-.06-.35-.15-.5zm-6.85-.51h-2v-2h2v2zm0-3h-2v-5h2v5z"
-                          fill-rule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                    errored
-                  </span>
-                </span>
-              </span>
             </div>
             <div
               class="TableV2--cell"

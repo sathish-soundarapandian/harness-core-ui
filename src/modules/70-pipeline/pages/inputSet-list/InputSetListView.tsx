@@ -50,6 +50,7 @@ interface InputSetListViewProps {
   gotoPage: (pageNumber: number) => void
   canUpdate?: boolean
   pipelineHasRuntimeInputs?: boolean
+  isPipelineInvalid?: boolean
   onDeleteInputSet: (commitMsg: string) => Promise<void>
   onDelete: (inputSet: InputSetSummaryResponse) => void
   template?: ResponseInputSetTemplateWithReplacedExpressionsResponse | null
@@ -136,6 +137,7 @@ const RenderColumnMenu: Renderer<CellProps<InputSetLocal>> = ({ row, column }) =
   const data = row.original
   const [menuOpen, setMenuOpen] = React.useState(false)
   const { getString } = useStrings()
+  const isPipelineInvalid = (column as any)?.isPipelineInvalid
 
   const { confirmDelete } = useDeleteConfirmationDialog(
     data,
@@ -176,7 +178,7 @@ const RenderColumnMenu: Renderer<CellProps<InputSetLocal>> = ({ row, column }) =
               ;(column as any).goToInputSetDetail?.(data)
               setMenuOpen(false)
             }}
-            disabled={!(column as any).canUpdate}
+            disabled={!(column as any).canUpdate || isPipelineInvalid}
           />
           <Menu.Item
             icon="duplicate"
@@ -212,6 +214,7 @@ const RenderColumnMenu: Renderer<CellProps<InputSetLocal>> = ({ row, column }) =
 // eslint-disable-next-line react/function-component-definition
 const RenderColumnActions: Renderer<CellProps<InputSetLocal>> = ({ row, column }) => {
   const rowData = row.original
+  const isPipelineInvalid = (column as any)?.isPipelineInvalid
 
   const { pipelineIdentifier } = useParams<{
     pipelineIdentifier: string
@@ -240,7 +243,8 @@ const RenderColumnActions: Renderer<CellProps<InputSetLocal>> = ({ row, column }
 
   return (
     <RbacButton
-      disabled={!(column as any)?.pipelineHasRuntimeInputs}
+      disabled={!(column as any)?.pipelineHasRuntimeInputs || isPipelineInvalid}
+      tooltip={isPipelineInvalid ? getString('pipeline.cannotRunInvalidPipeline') : ''}
       icon="run-pipeline"
       variation={ButtonVariation.PRIMARY}
       intent="success"
@@ -272,6 +276,7 @@ export function InputSetListView({
   cloneInputSet,
   canUpdate = true,
   pipelineHasRuntimeInputs,
+  isPipelineInvalid,
   onDeleteInputSet,
   onDelete,
   template
@@ -308,6 +313,7 @@ export function InputSetListView({
         disableSortBy: true,
         goToInputSetDetail,
         pipelineHasRuntimeInputs,
+        isPipelineInvalid,
         template
       },
       {
@@ -316,6 +322,7 @@ export function InputSetListView({
         width: '5%',
         Cell: RenderColumnMenu,
         disableSortBy: true,
+        isPipelineInvalid,
         goToInputSetDetail,
         refetchInputSet,
         cloneInputSet,
@@ -336,7 +343,7 @@ export function InputSetListView({
       className={css.table}
       columns={columns}
       data={data?.content || /* istanbul ignore next */ []}
-      onRowClick={item => pipelineHasRuntimeInputs && goToInputSetDetail?.(item)}
+      onRowClick={item => !isPipelineInvalid && pipelineHasRuntimeInputs && goToInputSetDetail?.(item)}
       pagination={{
         itemCount: data?.totalItems || /* istanbul ignore next */ 0,
         pageSize: data?.pageSize || /* istanbul ignore next */ 10,

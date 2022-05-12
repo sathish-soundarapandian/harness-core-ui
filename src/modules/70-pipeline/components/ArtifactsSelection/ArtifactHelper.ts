@@ -27,15 +27,18 @@ export const ArtifactIconByType: Record<ArtifactType, IconName> = {
   Ecr: 'ecr-step',
   Nexus3Registry: 'service-nexus',
   ArtifactoryRegistry: 'service-artifactory',
-  CustomArtifact: 'custom-artifact'
+  CustomArtifact: 'custom-artifact',
+  Acr: 'service-azure'
 }
+
 export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
   DockerRegistry: 'dockerRegistry',
   Gcr: 'connectors.GCR.name',
   Ecr: 'connectors.ECR.name',
   Nexus3Registry: 'connectors.nexus.nexusLabel',
   ArtifactoryRegistry: 'connectors.artifactory.artifactoryLabel',
-  CustomArtifact: 'common.repo_provider.customLabel'
+  CustomArtifact: 'common.repo_provider.customLabel',
+  Acr: 'pipeline.ACR.name'
 }
 
 export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
@@ -44,7 +47,8 @@ export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
   Ecr: 'Ecr',
   Nexus3Registry: 'Nexus3Registry',
   ArtifactoryRegistry: 'ArtifactoryRegistry',
-  CustomArtifact: 'CustomArtifact'
+  CustomArtifact: 'CustomArtifact',
+  Acr: 'Acr'
 }
 
 export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = {
@@ -52,7 +56,8 @@ export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = 
   Gcr: Connectors.GCP,
   Ecr: Connectors.AWS,
   Nexus3Registry: Connectors.NEXUS,
-  ArtifactoryRegistry: Connectors.ARTIFACTORY
+  ArtifactoryRegistry: Connectors.ARTIFACTORY,
+  Acr: Connectors.AZURE
 }
 
 export const ArtifactConnectorLabelMap: Record<string, string> = {
@@ -60,12 +65,14 @@ export const ArtifactConnectorLabelMap: Record<string, string> = {
   Gcr: 'GCP',
   Ecr: 'AWS',
   Nexus3Registry: 'Nexus',
-  ArtifactoryRegistry: 'Artifactory'
+  ArtifactoryRegistry: 'Artifactory',
+  Acr: 'Azure'
 }
 
 export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<ArtifactType>> = {
   Kubernetes: [ENABLED_ARTIFACT_TYPES.DockerRegistry, ENABLED_ARTIFACT_TYPES.Gcr, ENABLED_ARTIFACT_TYPES.Ecr],
   NativeHelm: [ENABLED_ARTIFACT_TYPES.DockerRegistry, ENABLED_ARTIFACT_TYPES.Gcr, ENABLED_ARTIFACT_TYPES.Ecr],
+  ServerlessAwsLambda: [ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry],
   Ssh: [],
   WinRm: []
 }

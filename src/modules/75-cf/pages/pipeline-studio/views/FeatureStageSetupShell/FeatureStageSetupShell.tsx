@@ -121,7 +121,7 @@ export default function FeatureStageSetupShell(): JSX.Element {
               {rolloutTitle}
             </span>
           }
-          className={css.fullHeight}
+          className={cx(css.fullHeight, css.stepGroup)}
           panel={<RolloutStrategy selectedStageId={selectedStageId} />}
         />
         <Tab

@@ -9,6 +9,7 @@ import React, { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import moment from 'moment'
 import { Color } from '@harness/design-system'
+import { isEmpty } from 'lodash-es'
 import { Container, Layout, Text } from '@wings-software/uicore'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import {
@@ -96,6 +97,23 @@ export const ActiveServiceInstancesHeader: React.FC = () => {
       }
     }
   }
+  const labelsHtml = (
+    <Layout.Vertical className={css.labelStyles}>
+      {!isEmpty(pieChartProps.items) ? (
+        <ul>
+          {pieChartProps.items.map(({ label, formattedValue, value, color }) => (
+            <li style={{ color }} key={`${label}_${value}`}>
+              <Text className={css.listStyles} key={label}>{`${label} (${
+                formattedValue ? formattedValue : value
+              })`}</Text>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </Layout.Vertical>
+  )
+
+  pieChartProps['labelsContent'] = labelsHtml
 
   const isBoostMode = changeRate === INVALID_CHANGE_RATE
   const tickerColor = isBoostMode || changeRate > 0 ? Color.GREEN_600 : Color.RED_500
@@ -140,7 +158,7 @@ export const ActiveServiceInstancesHeader: React.FC = () => {
       </Layout.Horizontal>
       <Layout.Horizontal>
         {trendData.length ? (
-          <Container margin={{ right: 'medium' }}>
+          <Container>
             <TrendPopover
               title={getString('cd.serviceDashboard.serviceInstancesInLast', {
                 period: getString('common.duration.6months')
@@ -150,7 +168,7 @@ export const ActiveServiceInstancesHeader: React.FC = () => {
               <SparklineChart
                 title={getString('cd.serviceDashboard.6monthTrend')}
                 data={trendData}
-                options={{ chart: { width: 80, height: 50 } }}
+                options={{ chart: { width: 122, height: 54 } }}
                 sparklineChartContainerStyles={css.hover}
               />
             </TrendPopover>
@@ -158,8 +176,8 @@ export const ActiveServiceInstancesHeader: React.FC = () => {
         ) : (
           <></>
         )}
-        {totalInstances ? <PieChart {...pieChartProps} /> : <></>}
       </Layout.Horizontal>
+      <Layout.Horizontal>{totalInstances ? <PieChart {...pieChartProps} /> : <></>}</Layout.Horizontal>
     </Layout.Horizontal>
   )
 }

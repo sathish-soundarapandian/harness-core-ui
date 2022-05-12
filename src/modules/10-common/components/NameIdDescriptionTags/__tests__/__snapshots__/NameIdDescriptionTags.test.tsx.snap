@@ -6,6 +6,7 @@ exports[`NameIdDescriptionTags  tests Renders/snapshots Initial Render - Name, I
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -199,6 +200,7 @@ exports[`NameIdDescriptionTags  tests Renders/snapshots On Edit Render - Name, I
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

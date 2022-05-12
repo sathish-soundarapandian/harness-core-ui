@@ -10,8 +10,16 @@ import type { IconName } from '@wings-software/uicore'
 import { parse } from 'yaml'
 import type { AddDrawerMapInterface } from '@common/components/AddDrawer/AddDrawer'
 import type { StringKeys } from 'framework/strings'
-import { manifestTypeIcons, ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
-import { ArtifactIconByType, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
+import {
+  manifestTypeIcons,
+  ManifestDataType,
+  manifestTypeLabels
+} from '@pipeline/components/ManifestSelection/Manifesthelper'
+import {
+  ArtifactIconByType,
+  ArtifactTitleIdByType,
+  ENABLED_ARTIFACT_TYPES
+} from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { TriggerTypes, AWS_CODECOMMIT, AwsCodeCommit } from './TriggersWizardPageUtils'
 
 export const GitSourceProviders: Record<string, { value: string; iconName: IconName }> = {
@@ -92,6 +100,62 @@ const triggerDrawerMap = (getString: (key: StringKeys) => string): AddDrawerMapI
           itemLabel: getString('common.repo_provider.customLabel'),
           value: GitSourceProviders.CUSTOM.value,
           iconName: GitSourceProviders.CUSTOM.iconName
+        }
+      ]
+    },
+    {
+      categoryLabel: getString('pipeline.artifactTriggerConfigPanel.artifact'),
+      categoryValue: 'Artifact',
+      items: [
+        {
+          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Gcr]),
+          value: ENABLED_ARTIFACT_TYPES.Gcr,
+          iconName: ArtifactIconByType.Gcr
+        },
+        {
+          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Ecr]),
+          value: ENABLED_ARTIFACT_TYPES.Ecr,
+          iconName: ArtifactIconByType.Ecr
+        },
+        {
+          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.DockerRegistry]),
+          value: ENABLED_ARTIFACT_TYPES.DockerRegistry,
+          iconName: ArtifactIconByType.DockerRegistry
+        }
+      ]
+    },
+    {
+      categoryLabel: getString('common.comingSoon'),
+      categoryValue: 'ArtifactComingSoon',
+      items: [
+        {
+          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Acr]),
+          value: ENABLED_ARTIFACT_TYPES.Acr,
+          iconName: ArtifactIconByType.Acr,
+          disabled: true
+        },
+        {
+          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry]),
+          value: ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
+          iconName: ArtifactIconByType.ArtifactoryRegistry,
+          disabled: true
+        },
+        {
+          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Nexus3Registry]),
+          value: ENABLED_ARTIFACT_TYPES.Nexus3Registry,
+          iconName: ArtifactIconByType.Nexus3Registry,
+          disabled: true
+        }
+      ]
+    },
+    {
+      categoryLabel: getString('manifestsText'),
+      categoryValue: 'Manifest',
+      items: [
+        {
+          itemLabel: getString(manifestTypeLabels.HelmChart),
+          value: ManifestDataType.HelmChart,
+          iconName: manifestTypeIcons.HelmChart
         }
       ]
     },

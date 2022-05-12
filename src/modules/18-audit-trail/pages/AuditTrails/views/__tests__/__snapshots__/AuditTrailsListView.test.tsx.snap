@@ -2071,6 +2071,7 @@ exports[`Audit trail list view render in org scope 1`] = `
         class="TableV2--cell"
         colspan="1"
         role="columnheader"
+        style="width: 18%;"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -2200,6 +2201,7 @@ exports[`Audit trail list view render in org scope 1`] = `
         <div
           class="TableV2--cell"
           role="cell"
+          style="width: 18%;"
         >
           <p
             class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--padding-right-xlarge"
@@ -2367,6 +2369,7 @@ exports[`Audit trail list view render in org scope 1`] = `
         <div
           class="TableV2--cell"
           role="cell"
+          style="width: 18%;"
         >
           <p
             class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--padding-right-xlarge"
@@ -2508,6 +2511,7 @@ exports[`Audit trail list view render in org scope 1`] = `
         <div
           class="TableV2--cell"
           role="cell"
+          style="width: 18%;"
         >
           <p
             class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--padding-right-xlarge"
@@ -2668,6 +2672,7 @@ exports[`Audit trail list view render in org scope 1`] = `
         <div
           class="TableV2--cell"
           role="cell"
+          style="width: 18%;"
         >
           <p
             class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--padding-right-xlarge"
@@ -2837,6 +2842,7 @@ exports[`Audit trail list view render in org scope 1`] = `
         <div
           class="TableV2--cell"
           role="cell"
+          style="width: 18%;"
         >
           <p
             class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--padding-right-xlarge"
@@ -3012,6 +3018,7 @@ exports[`Audit trail list view render in org scope 1`] = `
         <div
           class="TableV2--cell"
           role="cell"
+          style="width: 18%;"
         >
           <p
             class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--padding-right-xlarge"
@@ -3166,6 +3173,7 @@ exports[`Audit trail list view render in org scope 1`] = `
         <div
           class="TableV2--cell"
           role="cell"
+          style="width: 18%;"
         >
           <p
             class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--padding-right-xlarge"
@@ -3304,6 +3312,7 @@ exports[`Audit trail list view render in org scope 1`] = `
         <div
           class="TableV2--cell"
           role="cell"
+          style="width: 18%;"
         >
           <p
             class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--padding-right-xlarge"
@@ -3464,6 +3473,7 @@ exports[`Audit trail list view render in org scope 1`] = `
         <div
           class="TableV2--cell"
           role="cell"
+          style="width: 18%;"
         >
           <p
             class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--padding-right-xlarge"
@@ -3624,6 +3634,7 @@ exports[`Audit trail list view render in org scope 1`] = `
         <div
           class="TableV2--cell"
           role="cell"
+          style="width: 18%;"
         >
           <p
             class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--padding-right-xlarge"

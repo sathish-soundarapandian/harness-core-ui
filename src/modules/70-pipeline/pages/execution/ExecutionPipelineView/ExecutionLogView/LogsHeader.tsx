@@ -10,7 +10,7 @@ import { Button, Container, Text } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import css from './LogsHeader.module.scss'
 
-interface LogsHeaderProps {
+export interface LogsHeaderProps {
   onNext(searchText: string): void
   onPrev(searchText: string): void
   searchDir: string

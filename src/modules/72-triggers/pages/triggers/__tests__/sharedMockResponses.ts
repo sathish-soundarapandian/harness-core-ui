@@ -501,7 +501,6 @@ export const GetInputSetsResponse: UseGetReturnData<ResponsePageInputSetSummaryR
           pipelineIdentifier: 'pipeline1',
           inputSetType: 'INPUT_SET',
           tags: {},
-          version: 0,
           gitDetails: {
             objectId: null as unknown as undefined,
             branch: null as unknown as undefined,
@@ -536,7 +535,6 @@ export const GetManifestInputSetsResponse: UseGetReturnData<ResponsePageInputSet
           pipelineIdentifier: ' TestPipeline-ABC',
           inputSetType: 'INPUT_SET',
           tags: {},
-          version: 0,
           gitDetails: {
             objectId: null as unknown as undefined,
             branch: null as unknown as undefined,
@@ -571,8 +569,7 @@ export const GetEnvironmentList: UseGetReturnData<ResponseListEnvironmentRespons
           color: '#0063F7',
           type: 'Production',
           deleted: false,
-          tags: {},
-          version: 2
+          tags: {}
         }
       }
     ],

@@ -5,13 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { SeriesLineOptions } from 'highcharts'
+import { Color } from '@harness/design-system'
+import type { SeriesColumnOptions } from 'highcharts'
 
-export default function getLogAnalysisLineChartOptions(series: SeriesLineOptions[]): Highcharts.Options {
+export default function getLogAnalysisLineChartOptions(series: SeriesColumnOptions[]): Highcharts.Options {
   return {
     chart: {
-      renderTo: 'chart',
-      margin: [0, 10, 0, 10],
+      type: 'column',
       backgroundColor: 'transparent',
       style: {
         fontFamily: 'var(--font-family)'
@@ -26,12 +26,14 @@ export default function getLogAnalysisLineChartOptions(series: SeriesLineOptions
     },
     xAxis: {
       labels: { enabled: false },
-      lineWidth: 0,
-      tickLength: 0,
+      tickLength: 1,
       gridLineWidth: 0,
+      min: 0.25,
       title: {
         text: ''
-      }
+      },
+      startOnTick: true,
+      endOnTick: true
     },
     yAxis: {
       labels: { enabled: false },
@@ -44,11 +46,16 @@ export default function getLogAnalysisLineChartOptions(series: SeriesLineOptions
     },
     plotOptions: {
       series: {
-        stickyTracking: false
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        pointWidth: 10
       },
-      line: {
-        marker: {
-          enabled: false
+      column: {},
+      bar: {
+        groupPadding: 0,
+        pointPadding: 0,
+        dataLabels: {
+          enabled: true
         }
       }
     },
@@ -57,7 +64,14 @@ export default function getLogAnalysisLineChartOptions(series: SeriesLineOptions
       useHTML: true,
       formatter: function () {
         return `${this.y}`
-      }
+      },
+      backgroundColor: Color.WHITE,
+      borderColor: Color.GREY_300,
+      borderRadius: 10,
+      shadow: {
+        color: 'rgba(96, 97, 112, 0.56)'
+      },
+      shape: 'square'
     },
     subtitle: undefined,
     series

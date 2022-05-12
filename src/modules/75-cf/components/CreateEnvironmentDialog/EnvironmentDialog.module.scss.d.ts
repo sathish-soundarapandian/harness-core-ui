@@ -7,9 +7,11 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly cardBody: string
   readonly cardSelect: string
   readonly collapse: string
   readonly collapseHeaderFix: string
+  readonly container: string
   readonly dialog: string
 }
 export default styles

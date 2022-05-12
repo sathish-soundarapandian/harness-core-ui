@@ -54,3 +54,32 @@
     width: 18px !important;
   }
 }
+
+.apNameContainer {
+  > div {
+    flex: 1;
+    &:first-child {
+      flex: 0 0 180px;
+    }
+  }
+  .ipBtn {
+    padding: var(--spacing-small);
+    height: var(--font-size-normal) !important;
+    min-height: var(--font-size-normal) !important;
+    font-size: var(--font-size-small) !important;
+    min-width: auto;
+    padding-left: var(--spacing-small) !important;
+    padding-right: var(--spacing-small) !important;
+  }
+}
+
+.accessPointIpTooltip {
+  :global {
+    span.bp3-icon {
+      cursor: pointer;
+      > svg path {
+        fill: var(--primary-4);
+      }
+    }
+  }
+}

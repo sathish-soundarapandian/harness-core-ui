@@ -71,6 +71,7 @@ const CreateSLOForm: React.FC<CreateSLOFormProps> = ({
   const {
     data: monitoredServicesData,
     loading: monitoredServicesLoading,
+    refetch: fetchingMonitoredServices,
     error: monitoredServicesDataError
   } = useGetAllMonitoredServicesWithTimeSeriesHealthSources({
     queryParams: {
@@ -170,6 +171,7 @@ const CreateSLOForm: React.FC<CreateSLOFormProps> = ({
                   identifier={identifier}
                   monitoredServicesOptions={monitoredServicesOptions}
                   monitoredServicesLoading={monitoredServicesLoading}
+                  fetchingMonitoredServices={fetchingMonitoredServices}
                 >
                   <NavButtons />
                 </SLOName>

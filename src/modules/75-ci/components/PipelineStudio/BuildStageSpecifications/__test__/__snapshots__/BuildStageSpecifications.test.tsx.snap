@@ -21,6 +21,7 @@ exports[`BuildStageSpecifications tests renders correctly 1`] = `
           class="bp3-card bp3-elevation-0 Card--card sectionCard"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -209,6 +210,7 @@ exports[`BuildStageSpecifications tests renders correctly 1`] = `
           class="bp3-card bp3-elevation-0 Card--card sectionCard"
         >
           <form
+            action="#"
             class="FormikForm--main fields contentCard"
           >
             <div>

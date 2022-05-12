@@ -1,0 +1,68 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "envGroup": {
+      "accountId": "px7xd_BFRCi-pfWPYXVjvw",
+      "orgIdentifier": "default",
+      "projectIdentifier": "Ashwin",
+      "identifier": "Env_Group_7",
+      "name": "Env Group 7",
+      "description": "Test",
+      "color": "#0063F7",
+      "deleted": false,
+      "tags": { "Tag 1": "" },
+      "version": 12,
+      "envIdentifiers": ["Environment_Ash_3", "Env_Ash_1"],
+      "envResponse": [
+        {
+          "environment": {
+            "accountId": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Ashwin",
+            "identifier": "Env_Ash_1",
+            "name": "Env Ash 1",
+            "description": null,
+            "color": "#0063F7",
+            "type": "Production",
+            "deleted": false,
+            "tags": {},
+            "version": 0,
+            "yaml": "environment:\n  orgIdentifier: \"default\"\n  projectIdentifier: \"Ashwin\"\n  identifier: \"Env_Ash_1\"\n  tags: {}\n  name: \"Env Ash 1\"\n  type: \"Production\"\n"
+          },
+          "createdAt": 1649229276300,
+          "lastModifiedAt": 1649229276300
+        },
+        {
+          "environment": {
+            "accountId": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Ashwin",
+            "identifier": "Environment_Ash_3",
+            "name": "Environment Ash 3",
+            "description": null,
+            "color": "#0063F7",
+            "type": "PreProduction",
+            "deleted": false,
+            "tags": {},
+            "version": 0,
+            "yaml": "environment:\n  orgIdentifier: \"default\"\n  projectIdentifier: \"Ashwin\"\n  identifier: \"Environment_Ash_3\"\n  tags: {}\n  name: \"Environment Ash 3\"\n  type: \"PreProduction\"\n"
+          },
+          "createdAt": 1648795776680,
+          "lastModifiedAt": 1648795776680
+        }
+      ],
+      "gitDetails": {
+        "objectId": null,
+        "branch": null,
+        "repoIdentifier": null,
+        "rootFolder": null,
+        "filePath": null,
+        "repoName": null
+      }
+    },
+    "createdAt": 1649131796008,
+    "lastModifiedAt": 1651024561339
+  },
+  "metaData": null,
+  "correlationId": "8b8042ba-f70d-4fa8-a88d-3da6edfea7f1"
+}

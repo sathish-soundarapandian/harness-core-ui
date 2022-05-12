@@ -13,6 +13,12 @@
 
   .fullHeight {
     height: 100%;
+    &.stepGroup {
+      :global(.graphActions) {
+        position: fixed;
+        right: calc(64px + var(--spacing-large));
+      }
+    }
   }
 
   :global {
@@ -64,6 +70,7 @@
       > [icon='chevron-right'] {
         margin-right: var(--spacing-small) !important;
       }
+      z-index: 2 !important;
     }
 
     .bp3-tab-panel {
@@ -79,10 +86,10 @@
     align-items: center;
     justify-content: center;
 
-    &[data-completed='true'] {
+    &[data-warning='true'] {
       :global {
         .bp3-icon path {
-          fill: var(--primary-7);
+          fill: var(--orange-500);
         }
       }
     }

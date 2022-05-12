@@ -21,6 +21,7 @@ import LandingDashboardDeploymentsWidget from '@pipeline/components/LandingDashb
 import PipelineResourceModal from '@pipeline/components/RbacResourceModals/PipelineResourceModal/PipelineResourceModal'
 import ServiceResourceModal from '@pipeline/components/RbacResourceModals/ServiceResourceModal/ServiceResourceModal'
 import EnvironmentResourceModal from '@pipeline/components/RbacResourceModals/EnvironmentResourceModal/EnvironmentResourceModal'
+import EnvironmentGroupsResourceModal from '@pipeline/components/RbacResourceModals/EnvironmentGroupsResourceModal/EnvironmentGroupsResourceModal'
 import { HarnessApprovalView } from '@pipeline/components/execution/StepDetails/views/HarnessApprovalView/HarnessApprovalView'
 import { JiraApprovalView } from '@pipeline/components/execution/StepDetails/views/JiraApprovalView/JiraApprovalView'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -30,6 +31,7 @@ import type { ResourceDTO } from 'services/audit'
 import AuditTrailFactory, { ResourceScope } from '@audit-trail/factories/AuditTrailFactory'
 import routes from '@common/RouteDefinitions'
 import type { Module } from '@common/interfaces/RouteInterfaces'
+import { ServiceNowCreateUpdateView } from '@pipeline/components/execution/StepDetails/views/ServiceNowCreateUpdateView/ServiceNowCreateUpdateView'
 import PipelineResourceRenderer from './components/RbacResourceModals/PipelineResourceRenderer/PipelineResourceRenderer'
 import { ModuleName } from '../../framework/types/ModuleName'
 import { JiraCreateUpdateView } from './components/execution/StepDetails/views/JiraCreateUpdateView/JiraCreateUpdateView'
@@ -77,6 +79,17 @@ RbacFactory.registerResourceTypeHandler(ResourceType.ENVIRONMENT, {
   addResourceModalBody: props => <EnvironmentResourceModal {...props} />
 })
 
+RbacFactory.registerResourceTypeHandler(ResourceType.ENVIRONMENT_GROUP, {
+  icon: 'environment-group',
+  label: 'common.environmentGroups.label',
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_ENVIRONMENT_GROUP]: <String stringID="rbac.permissionLabels.view" />,
+    [PermissionIdentifier.EDIT_ENVIRONMENT_GROUP]: <String stringID="rbac.permissionLabels.createEdit" />,
+    [PermissionIdentifier.DELETE_ENVIRONMENT_GROUP]: <String stringID="rbac.permissionLabels.delete" />
+  },
+  addResourceModalBody: props => <EnvironmentGroupsResourceModal {...props} />
+})
+
 /**
  * Register execution step detail views
  */
@@ -98,6 +111,13 @@ ExecFactory.registerStepDetails(StepType.JiraApproval, {
 
 ExecFactory.registerStepDetails(StepType.ServiceNowApproval, {
   component: ServiceNowApprovalView
+})
+
+ExecFactory.registerStepDetails(StepType.ServiceNowCreate, {
+  component: ServiceNowCreateUpdateView
+})
+ExecFactory.registerStepDetails(StepType.ServiceNowUpdate, {
+  component: ServiceNowCreateUpdateView
 })
 
 ExecFactory.registerStepDetails(StepType.Policy, {

@@ -1,0 +1,26 @@
+{
+  "name": "cypress-tests",
+  "private": "true",
+  "scripts": {
+    "prepare": "cypress install",
+    "cypress:ci": "cypress run --config videoUploadOnPasses=false --browser chrome",
+    "cypress:open": "cypress open",
+    "server": "node server.js",
+    "cypress:openCoverage": "CYPRESS_COVERAGE=true cypress open",
+    "dev:cypress": "NODE_ENV=development TARGET_LOCALHOST=false CYPRESS=true BASE_URL=https://localhost:8080 NODE_OPTIONS=\"--max-old-space-size=6144\" webpack serve --progress --config configs/webpack.dev.js",
+    "dev:cypressCoverage": "NODE_ENV=development TARGET_LOCALHOST=false CYPRESS=true CYPRESS_COVERAGE=true BASE_URL=https://localhost:8080 NODE_OPTIONS=\"--max-old-space-size=6144\" webpack serve --progress --config configs/webpack.dev.js"
+  },
+  "dependencies": {
+    "@cypress/code-coverage": "^3.9.12",
+    "@istanbuljs/nyc-config-typescript": "^1.0.1",
+    "@testing-library/cypress": "^8.0.0",
+    "cypress": "~9.6.0",
+    "cypress-esbuild-preprocessor": "^1.0.2",
+    "cypress-image-snapshot": "^4.0.1",
+    "esbuild": "^0.14.38",
+    "express": "^4.17.1",
+    "istanbul-lib-coverage": "^3.0.0",
+    "nyc": "^15.1.0",
+    "source-map-support": "^0.5.20"
+  }
+}

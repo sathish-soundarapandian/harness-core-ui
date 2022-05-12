@@ -51,7 +51,7 @@ function EnvironmentCard(props: EnvironmentCardProps) {
       {stageSpec?.infrastructure?.environmentRef && originalSpec?.infrastructure?.environmentRef ? (
         <VariablesListTable
           data={get(stageSpec, 'infrastructure')}
-          className={css.variablePaddingL0}
+          className={css.variablePaddingL1}
           originalData={get(originalSpec, 'infrastructure')}
           metadataMap={metadataMap}
         />

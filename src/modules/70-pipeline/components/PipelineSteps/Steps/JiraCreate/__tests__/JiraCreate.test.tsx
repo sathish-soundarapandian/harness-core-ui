@@ -172,7 +172,7 @@ describe('Jira Create tests', () => {
     )
 
     // Submit with empty form
-    act(() => ref.current?.submitForm())
+    act(() => ref.current?.submitForm()!)
     await waitFor(() => expect(queryByText('pipelineSteps.stepNameRequired')).toBeTruthy())
 
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
@@ -184,7 +184,7 @@ describe('Jira Create tests', () => {
     })
     fireEvent.change(queryByNameAttribute('timeout')!, { target: { value: '' } })
 
-    act(() => ref.current?.submitForm())
+    act(() => ref.current?.submitForm()!)
     await waitFor(() => expect(queryByText('validation.timeout10SecMinimum')).toBeTruthy())
     await waitFor(() => {
       expect(queryByText('pipeline.jiraApprovalStep.validations.project')).toBeTruthy()
@@ -283,7 +283,7 @@ describe('Jira Create tests', () => {
     // the new kv pair should now be visible in the main form
     expect(queryByDisplayValue('issueKey1')).toBeTruthy()
     expect(queryByDisplayValue('issueKey1Value')).toBeTruthy()
-    await act(() => ref.current?.submitForm())
+    await act(() => ref.current?.submitForm()!)
     expect(props.onUpdate).toBeCalledWith({
       identifier: 'jira_createe_step',
       timeout: '1d',

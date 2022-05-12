@@ -17,6 +17,7 @@ exports[`Create LinkToSSOProviderModal should render UnlinkToSSOProviderModalFor
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>
@@ -102,6 +103,7 @@ exports[`Create LinkToSSOProviderModal should render the form with ssoLinked fal
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>

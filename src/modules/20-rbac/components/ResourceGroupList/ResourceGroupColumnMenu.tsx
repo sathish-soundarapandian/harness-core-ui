@@ -12,7 +12,7 @@ import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance } from 'react-table'
 import { useStrings } from 'framework/strings'
-import { ResourceGroupDTO, ResourceGroupResponse, useDeleteResourceGroup } from 'services/resourcegroups'
+import { ResourceGroupV2, ResourceGroupV2Response, useDeleteResourceGroupV2 } from 'services/resourcegroups'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -22,21 +22,21 @@ import css from './ResourceGroupList.module.scss'
 export type CellPropsResourceGroupColumn<D extends Record<string, any>, V = any> = TableInstance<D> & {
   column: ColumnInstance<D> & {
     reload?: () => Promise<void>
-    openResourceGroupModal?: (resourceGroup: ResourceGroupDTO) => void
+    openResourceGroupModal?: (resourceGroup: ResourceGroupV2) => void
   }
   row: Row<D>
   cell: Cell<D, V>
   value: CellValue<V>
 }
 
-const ResourceGroupColumnMenu: Renderer<CellPropsResourceGroupColumn<ResourceGroupResponse>> = ({ row, column }) => {
+const ResourceGroupColumnMenu: Renderer<CellPropsResourceGroupColumn<ResourceGroupV2Response>> = ({ row, column }) => {
   const data = row.original
   const isHarnessManaged = data.harnessManaged
   const [menuOpen, setMenuOpen] = useState(false)
   const { showSuccess, showError } = useToaster()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
-  const { mutate: deleteResourceGroup } = useDeleteResourceGroup({
+  const { mutate: deleteResourceGroup } = useDeleteResourceGroupV2({
     queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier }
   })
   const permissionRequest = {

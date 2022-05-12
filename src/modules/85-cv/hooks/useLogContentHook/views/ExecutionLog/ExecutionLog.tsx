@@ -7,6 +7,7 @@
 
 import React, { Reducer, useCallback } from 'react'
 import cx from 'classnames'
+import { defaultTo } from 'lodash-es'
 import { GroupedVirtuosoHandle, Virtuoso, VirtuosoHandle } from 'react-virtuoso'
 import { Button, ButtonSize, ButtonVariation, Color, Container, Layout, SelectOption, Text } from '@harness/uicore'
 import { useStrings, String as StrTemplate } from 'framework/strings'
@@ -16,8 +17,8 @@ import LogContentToolbar from '../LogContentToolbar/LogContentToolbar'
 import ExecutionLogSearch from './ExecutionLogSearch'
 import { reducer, useActionCreator } from './ExecutionLogState'
 import { defaultReducerState } from './ExecutionLog.constants'
-import { isPositiveNumber } from '../../useLogContentHook.utils'
-import { ExecutionAndAPICallLogProps, LogTypes } from '../../useLogContentHook.types'
+import { isPositiveNumber, isTimeRangeChanged } from '../../useLogContentHook.utils'
+import { ExecutionAndAPICallLogProps, LogTypes, TimeRange } from '../../useLogContentHook.types'
 import { convertLogDataToLogLineData } from './ExecutionLog.utils'
 import type { State, Action, ActionType } from './ExecutionLog.types'
 import css from './ExecutionLog.module.scss'
@@ -53,7 +54,7 @@ const ExecutionLog: React.FC<ExecutionAndAPICallLogProps> = ({
   const { currentIndex, linesWithResults } = state.searchData
   const length = state.data.length
 
-  const { content, totalPages = 0 } = resource ?? {}
+  const { content, totalPages = 0 } = defaultTo(resource, {})
 
   const isMonitoredService = Boolean(monitoredServiceIdentifier)
 
@@ -84,10 +85,12 @@ const ExecutionLog: React.FC<ExecutionAndAPICallLogProps> = ({
     [healthSource, actions, setPageNumber, setHealthSource]
   )
 
-  const handleTimeRange = (_timeRange: SelectOption): void => {
-    actions.resetExecutionLogs()
-    setPageNumber(0)
-    setTimeRange?.(_timeRange)
+  const handleTimeRange = (newTimeRange: TimeRange): void => {
+    if (isTimeRangeChanged(newTimeRange, timeRange)) {
+      actions.resetExecutionLogs()
+      setPageNumber(0)
+      setTimeRange?.(newTimeRange)
+    }
   }
 
   const handleDisplayOnlyErrors = (_errorLogsOnly: boolean): void => {

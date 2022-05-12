@@ -7,6 +7,7 @@ agent: Agent
 agents: Agents
 application: Application
 certificate: Certificate
+subscriptionId: Subscription Id
 repositoryCertificates: Repository Certificates
 notEnabled: 'Not Enabled'
 apiStatus: 'API Status'
@@ -69,6 +70,10 @@ My: My
 ok: OK
 ID: Id
 org: Org
+variables: Variables
+copyVariableName: Copy variable name
+copyFqn: Copy fully qualified name
+selectType: Select Type
 accountSetting:
   connector:
     loading: 'Loading settings...'
@@ -124,6 +129,7 @@ namespace: Namespace
 cluster: Cluster
 clusters: Clusters
 releaseName: Release name
+stage: Stage
 seeDetails: See details
 errorCount: 'Error(s): {{count}}'
 datePickerShortcuts:
@@ -147,6 +153,7 @@ validation:
   yamlFilePath: 'File path can only contain valid file/folder name (should contain alphanumerics, _ and -) separated by / and should end with .yaml.'
   variableAlreadyExists: Variable with same name already exists
   fieldIsRequired: '{{ name }} is required'
+  fieldCanNotHaveWhitespace: '{{ name }} should not contain whitespaces'
   fieldMustStartWithAlphanumericAndCanNotHaveSpace: '{{ name }} must start with alphanumerics and should not contain whitespaces'
   fieldCannotbeLongerThanN: '{{ name }} cannot be longer than {{ n }} characters'
   fieldMustBeAlphanumeric: '{{ name }} can only contain alphanumerics, _ and $'
@@ -166,6 +173,9 @@ validation:
     format: Please input valid email address
   repositoryName: Repository Name is required
   invalidYamlText: 'You have provided invalid or empty YAML. Please provide a valid YAML'
+  environmentIsRequired: 'Environment is required'
+  subscription: 'Subscription is required'
+  repository: 'Repository is required'
 specify: Specify
 role: Role
 projectViewer: Project Viewer
@@ -334,6 +344,7 @@ git:
   saveResourceLabel: 'Save {{resource}} to Git'
   selectRepoLabel: Repository Display Name
   filePath: File Path
+  folderPath: Folder Path
   commitMessage: Commit message
   confirmDelete: Are you sure you want to delete {{entity}} {{name}}
   branchSelectHeader: Select Branch to Commit
@@ -346,7 +357,7 @@ git:
     filePath: '{{$.common.git.filePath}} is required'
     commitMessage: '{{$.common.git.commitMessage}} is required'
     sameBranches: 'Source and target branches cannot be same for a pull request'
-    repoRequired: Repository is required
+    repoRequired: '{{ $.common.validation.repository }}'
     branchRequired: Branch is required
     targetBranch: Target branch is required for a pull request
     baseBranchRequired: Base branch is required
@@ -451,6 +462,7 @@ banners:
     feedbackSuccess: Thanks for sending feedback!
     expired:
       description: Your trial expired {{ expiredDays }} days ago. Contact Sales or extend trial to continue using {{ moduleDescription }}
+      contactSales: Your trial expired {{ expiredDays }} days ago. Contact Sales to continue using {{ moduleDescription }}
       extendTrial: Extend Trial
     contactSales: Contact Sales
     contactSalesForm:
@@ -579,10 +591,9 @@ reportNameRequired: Report name is required
 selectUserGroups: Select User Group(s)
 totalSelected: 'Total Selected'
 accountSettings: Account Settings
-governance: Governance
+governance: Policies
 myProfile: My Profile
 accountResources: Account Resources
-policies: 'Policies'
 policy:
   label: Policy
   policysets: Policy Sets
@@ -653,6 +664,7 @@ comingSoon2: Coming Soon!
 recommended: 'Recommended'
 azure: Azure
 aws: AWS
+gcp: GCP
 module:
   cd: CD
   ci: CI
@@ -662,6 +674,8 @@ module:
   core: CORE
   pms: PMS
   templateService: TEMPLATESERVICE
+  sto: STO
+  governance: GOVERNANCE
 customPricing: for Custom Pricing
 specified: Specified
 file: File
@@ -821,3 +835,30 @@ deleteEnvironment:
 90days: 90 Days
 180days: 180 Days
 noexpiration: No Expiration
+subscriptionPlaceholder: 'Select or add Subscription Id'
+azureConnector: Azure Connector
+environmentList: Environment List
+environment:
+  fetchNext: Fetching Environments
+environmentGroup:
+  label: Environment Group
+  new: New Environment Group
+  createNew: Create new Environment Group
+  created: Environment Group created successfully
+  edit: Select Environment(s) to add to Environment Group
+  updated: Environment Group updated successfully
+  delete: Delete Environment Group
+  deleteConfirmation: Are you sure you want to delete the environment group?
+  deleted: Successfully deleted Environment Group {{ identifier }}
+  validation:
+    oneEnvRequired: Atleast 1 environment is required
+  noEnvironment: You have no Environments in this group
+  filters:
+    environmentGroupNamePlaceholder: Enter Environment Group Name
+environmentGroups:
+  label: Environment Groups
+  noEnvironmentGroups:
+    label: You have No Environment Groups
+    message: Create a new Environment Group to start configuring the deployment
+noSearchResultsFound: No results found for '{{searchTerm}}'.
+searchOther: Please search something else.

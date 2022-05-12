@@ -10,13 +10,31 @@ import { render, RenderResult, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps } from '@common/utils/routeUtils'
-import * as dashboardsContext from '@dashboards/pages/DashboardsContext'
-import * as CustomDashboardsService from '@dashboards/services/CustomDashboardsService'
+import { useDashboardsContext } from '@dashboards/pages/DashboardsContext'
+import {
+  useGetFolderDetail,
+  useGetDashboardDetail,
+  useMutateCreateSignedUrl
+} from '@dashboards/services/CustomDashboardsService'
 import DashboardViewPage from '../DashboardView'
 
 const accountId = 'ggre4325'
 const folderId = 'gh544'
 const viewId = '45udb23'
+
+jest.mock('@dashboards/pages/DashboardsContext', () => ({
+  useDashboardsContext: jest.fn()
+}))
+
+jest.mock('@dashboards/services/CustomDashboardsService', () => ({
+  useGetFolderDetail: jest.fn(),
+  useGetDashboardDetail: jest.fn(),
+  useMutateCreateSignedUrl: jest.fn()
+}))
+const useDashboardsContextMock = useDashboardsContext as jest.Mock
+const useGetFolderDetailMock = useGetFolderDetail as jest.Mock
+const useGetDashboardDetailMock = useGetDashboardDetail as jest.Mock
+const useMutateCreateSignedUrlMock = useMutateCreateSignedUrl as jest.Mock
 
 const renderComponent = (folder = folderId): RenderResult =>
   render(
@@ -29,10 +47,6 @@ const renderComponent = (folder = folderId): RenderResult =>
   )
 
 describe('DashboardView', () => {
-  const useGetFolderDetailMock = jest.spyOn(CustomDashboardsService, 'useGetFolderDetail')
-  const useGetDashboardDetailMock = jest.spyOn(CustomDashboardsService, 'useGetDashboardDetail')
-  const useMutateCreateSignedUrlMock = jest.spyOn(CustomDashboardsService, 'useMutateCreateSignedUrl')
-  const useDashboardsContextMock = jest.spyOn(dashboardsContext, 'useDashboardsContext')
   const includeBreadcrumbs = jest.fn()
 
   beforeEach(() => {

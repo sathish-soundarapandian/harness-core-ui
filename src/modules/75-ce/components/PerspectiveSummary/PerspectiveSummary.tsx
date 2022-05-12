@@ -37,6 +37,7 @@ import { useGetLastMonthCost, useGetForecastCost } from 'services/ce'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { getViewFilterForId } from '@ce/utils/perspectiveUtils'
+import { PAGE_NAMES } from '@ce/TrackingEventsConstants'
 import RecommendationSummaryCard from './RecommendationSummaryCard'
 import css from './PerspectiveSummary.module.scss'
 
@@ -305,7 +306,8 @@ const BudgetCardsCarousel: () => JSX.Element | null = () => {
                 selectedBudget: {
                   lastMonthCost: lmc?.data,
                   forecastCost: fc?.data
-                }
+                },
+                source: PAGE_NAMES.PERSPECTIVE_DETAILS_PAGE
               })
             }}
           >

@@ -43,7 +43,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection isForOverrideSets={false} />
+          <ArtifactsSelection deploymentType="Kubernetes" isForOverrideSets={false} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -55,7 +55,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection isForOverrideSets={false} />
+          <ArtifactsSelection deploymentType="Kubernetes" isForOverrideSets={false} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -67,7 +67,11 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection isForOverrideSets={true} identifierName={'overrideSetIdentifier'} />
+          <ArtifactsSelection
+            deploymentType="Kubernetes"
+            isForOverrideSets={true}
+            identifierName={'overrideSetIdentifier'}
+          />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -84,7 +88,12 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection isForOverrideSets={false} identifierName={'overrideSetIdentifier'} isPropagating={true} />
+          <ArtifactsSelection
+            deploymentType="Kubernetes"
+            isForOverrideSets={false}
+            identifierName={'overrideSetIdentifier'}
+            isPropagating={true}
+          />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -98,6 +107,7 @@ describe('ArtifactsSelection tests', () => {
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
           <ArtifactsSelection
+            deploymentType="Kubernetes"
             isForOverrideSets={false}
             identifierName={'overrideSetIdentifier'}
             isPropagating={false}
@@ -115,6 +125,7 @@ describe('ArtifactsSelection tests', () => {
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
           <ArtifactsSelection
+            deploymentType="Kubernetes"
             isForOverrideSets={false}
             identifierName={'identifierName'}
             isPropagating={false}
@@ -131,7 +142,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection isForOverrideSets={false} isForPredefinedSets={false} />
+          <ArtifactsSelection deploymentType="Kubernetes" isForOverrideSets={false} isForPredefinedSets={false} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -151,7 +162,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection isForOverrideSets={false} isForPredefinedSets={false} />
+          <ArtifactsSelection deploymentType="Kubernetes" isForOverrideSets={false} isForPredefinedSets={false} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -172,7 +183,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection isForOverrideSets={false} />
+          <ArtifactsSelection deploymentType="Kubernetes" isForOverrideSets={false} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -354,7 +365,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection isForOverrideSets={false} />
+          <ArtifactsSelection deploymentType="Kubernetes" isForOverrideSets={false} />
         </PipelineContext.Provider>
       </TestWrapper>
     )

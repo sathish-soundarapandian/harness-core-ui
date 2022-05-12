@@ -15,6 +15,7 @@ declare const styles: {
   readonly logsAnalysisFilters: string
   readonly logsTab: string
   readonly noData: string
+  readonly radarChartTypeIndicator: string
   readonly tableContent: string
 }
 export default styles

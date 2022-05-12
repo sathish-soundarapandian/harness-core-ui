@@ -16,6 +16,10 @@ import { SetUpYourApplicationView } from '../views/SetUpYourApplicationView'
 import { TestYourFlagView } from '../views/TestYourFlagView'
 import { SelectEnvironmentView } from '../views/SelectEnvironmentView'
 
+jest.mock('@common/hooks/useTelemetry', () => ({
+  useTelemetry: () => ({ identifyUser: jest.fn(), trackEvent: jest.fn() })
+}))
+
 describe('OnboardingDetailPage', () => {
   test('OnboardingDetailPage empty state should be rendered properly', () => {
     mockImport('@cf/hooks/useEnvironmentSelectV2', {

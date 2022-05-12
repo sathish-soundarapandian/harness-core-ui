@@ -1,0 +1,90 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AllowedValuesFields render component click submit 1`] = `
+<div>
+  <div
+    class="OverlaySpinner--overlaySpinner"
+  >
+    <form
+      action="#"
+      class="FormikForm--main"
+    >
+      <div>
+        <div
+          class="bp3-form-group"
+          data-id="defaultValue-0"
+        >
+          <label
+            class="bp3-label"
+            for="defaultValue"
+          >
+            <span
+              class="Tooltip--acenter"
+              data-tooltip-id="allowedValueTest_defaultValue"
+            >
+              variables.defaultValue
+            </span>
+             
+            <span
+              class="bp3-text-muted"
+            />
+          </label>
+          <div
+            class="bp3-form-content"
+          >
+            <div
+              class="bp3-input-group"
+            >
+              <input
+                autocomplete="off"
+                class="bp3-input"
+                name="defaultValue"
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="bp3-form-group"
+          data-id="allowedValues-1"
+        >
+          <label
+            class="bp3-label"
+            for="allowedValues"
+          >
+            <span
+              class="Tooltip--acenter"
+              data-tooltip-id="allowedValueTest_allowedValues"
+            >
+              variables.allowedValues
+            </span>
+             
+            <span
+              class="bp3-text-muted"
+            />
+          </label>
+          <div
+            class="bp3-form-content"
+          >
+            <div
+              class="bp3-input bp3-tag-input"
+            >
+              <div
+                class="bp3-tag-input-values"
+              >
+                <input
+                  class="bp3-input-ghost"
+                  data-mentions="kv-tag-input-allowedValues"
+                  placeholder="Type and press enter to create a tag"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+`;

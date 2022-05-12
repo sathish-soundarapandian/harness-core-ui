@@ -8,11 +8,11 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly card: string
+  readonly cardFooter: string
   readonly leftHandle: string
   readonly magnifyingGlass: string
   readonly main: string
   readonly mask: string
-  readonly resetButton: string
   readonly reverseCard: string
   readonly rightHandle: string
   readonly sliderContainer: string

@@ -25,6 +25,7 @@ import { usePermission } from '@rbac/hooks/usePermission'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetSchemaYaml } from 'services/pipeline-ng'
 import { useGetListOfBranchesWithStatus } from 'services/cd-ng'
+import SessionToken from 'framework/utils/SessionToken'
 
 // Due to some typing complexity, governance/App is lazily imported
 // from a .js file for now
@@ -40,6 +41,7 @@ export const GovernanceRemoteComponentMounter = props => {
   const { getString } = useStrings()
   const { path, params } = useRouteMatch()
   const history = useHistory()
+  const { getToken: useGetToken } = SessionToken
 
   return (
     <Suspense fallback={spinner || <Container padding="large">{getString('loading')}</Container>}>
@@ -47,7 +49,6 @@ export const GovernanceRemoteComponentMounter = props => {
         <RemoteGovernanceApp
           baseRoutePath={path}
           accountId={params.accountId}
-          apiToken={AppStorage.get('token')}
           on401={() => {
             AppStorage.clear()
             history.push({
@@ -62,7 +63,8 @@ export const GovernanceRemoteComponentMounter = props => {
             useAppStore,
             useGitSyncStore,
             useSaveToGitDialog,
-            useGetListOfBranchesWithStatus
+            useGetListOfBranchesWithStatus,
+            useGetToken
           }}
           components={{
             NGBreadcrumbs,

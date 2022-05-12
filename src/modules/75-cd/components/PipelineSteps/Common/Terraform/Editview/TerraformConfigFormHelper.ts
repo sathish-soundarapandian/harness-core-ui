@@ -61,8 +61,12 @@ export const formInputNames = (isTerraformPlan: boolean) => ({
     : 'spec.configuration.spec.configFiles.store.spec.commitId',
   folderPath: isTerraformPlan
     ? 'spec.configuration.configFiles.store.spec.folderPath'
-    : 'spec.configuration.spec.configFiles.store.spec.folderPath'
+    : 'spec.configuration.spec.configFiles.store.spec.folderPath',
+  useConnectorCredentials: isTerraformPlan
+    ? 'spec.configuration.configFiles.moduleSource.useConnectorCredentials'
+    : 'spec.configuration.spec.configFiles.moduleSource.useConnectorCredentials'
 })
+
 /* istanbul ignore next */
 export const formikOnChangeNames = (isTerraformPlan: boolean) => ({
   repoName: isTerraformPlan
@@ -76,8 +80,12 @@ export const formikOnChangeNames = (isTerraformPlan: boolean) => ({
     : 'spec.configuration.spec.configFiles.spec.store.spec.commitId',
   folderPath: isTerraformPlan
     ? 'formik.values.spec.configuration.configFiles.store.spec.folderPath'
-    : 'formik.values.spec.configuration.spec.store.spec.folderPath'
+    : 'formik.values.spec.configuration.spec.store.spec.folderPath',
+  useConnectorCredentials: isTerraformPlan
+    ? 'spec.configuration.configFiles.moduleSource.useConnectorCredentials'
+    : 'spec.configuration.spec.configFiles.moduleSource.useConnectorCredentials'
 })
+
 /* istanbul ignore next */
 export const getBuildPayload = (type: ConnectorInfoDTO['type']) => {
   if (type === Connectors.GIT) {

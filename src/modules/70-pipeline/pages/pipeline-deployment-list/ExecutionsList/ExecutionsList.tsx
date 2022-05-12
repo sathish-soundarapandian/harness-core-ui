@@ -18,9 +18,13 @@ import css from './ExecutionList.module.scss'
 
 export interface ExecutionsListProps {
   pipelineExecutionSummary: PipelineExecutionSummary[] | undefined
+  isPipelineInvalid?: boolean
 }
 
-export default function ExecutionsList({ pipelineExecutionSummary }: ExecutionsListProps): React.ReactElement {
+export default function ExecutionsList({
+  pipelineExecutionSummary,
+  isPipelineInvalid
+}: ExecutionsListProps): React.ReactElement {
   const { trackEvent } = useTelemetry()
   const location = useLocation()
   const { orgIdentifier, projectIdentifier, accountId, module } = useParams<
@@ -40,10 +44,15 @@ export default function ExecutionsList({ pipelineExecutionSummary }: ExecutionsL
       trackEvent(NavigatedToPage.DeploymentsPage, {})
     }
   }, [])
+
   return (
     <div className={css.main}>
       {pipelineExecutionSummary?.map(pipelineExecution => (
-        <ExecutionCard pipelineExecution={pipelineExecution} key={pipelineExecution.planExecutionId} />
+        <ExecutionCard
+          pipelineExecution={pipelineExecution}
+          key={pipelineExecution.planExecutionId}
+          isPipelineInvalid={isPipelineInvalid}
+        />
       ))}
     </div>
   )

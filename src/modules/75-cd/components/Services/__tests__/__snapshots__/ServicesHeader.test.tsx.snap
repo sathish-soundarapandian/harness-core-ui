@@ -193,6 +193,7 @@ exports[`ServiceHeader should open and close the Services modal 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

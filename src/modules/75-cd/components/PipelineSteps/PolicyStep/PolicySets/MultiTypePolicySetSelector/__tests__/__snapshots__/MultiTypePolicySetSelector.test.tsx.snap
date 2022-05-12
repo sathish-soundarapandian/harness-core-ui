@@ -65,7 +65,9 @@ exports[`Test Policy Sets Form Field snapshot test and open close modal 1`] = `
           <p
             class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-red800"
             style="--text-line-clamp: 1;"
-          />
+          >
+            
+          </p>
         </div>
         <button
           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
@@ -108,7 +110,9 @@ exports[`Test Policy Sets Form Field snapshot test and open close modal 1`] = `
           <p
             class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-red800"
             style="--text-line-clamp: 1;"
-          />
+          >
+            
+          </p>
         </div>
         <button
           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
@@ -151,7 +155,9 @@ exports[`Test Policy Sets Form Field snapshot test and open close modal 1`] = `
           <p
             class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-red800"
             style="--text-line-clamp: 1;"
-          />
+          >
+            
+          </p>
         </div>
         <button
           class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"

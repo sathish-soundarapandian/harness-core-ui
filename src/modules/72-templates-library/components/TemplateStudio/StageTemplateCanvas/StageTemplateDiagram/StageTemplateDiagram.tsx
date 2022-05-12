@@ -187,7 +187,7 @@ export const StageTemplateDiagram = (): JSX.Element => {
         <Container>
           <Layout.Horizontal className={stageData?.isApproval ? css.approvalLayout : css.normalLayout}>
             <Container data-nodeid={CREATE_NODE_ID}>
-              {selectedStage.stage?.stage ? (
+              {selectedStage.stage?.stage?.type ? (
                 stageData?.isApproval ? (
                   <DiamondNodeWidget node={getDiamondStageNode(selectedStage.stage?.stage)} />
                 ) : (

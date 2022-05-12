@@ -52,7 +52,22 @@ const DefineRule: React.FC<DefineRuleProps> = props => {
           }}
           formName="coGatewayConfig"
           onSubmit={values => alert(JSON.stringify(values))}
-          render={formik => (
+          validationSchema={Yup.object().shape({
+            gatewayName: Yup.string()
+              .trim()
+              .required('Rule Name is required field')
+              .matches(
+                isK8sRule ? /[a-z0-9]([-a-z0-9]*[a-z0-9])?/ : /.*/,
+                'Name should not contain special characters'
+              ),
+            idleTime: Yup.number()
+              .min(CONFIG_IDLE_TIME_CONSTRAINTS.MIN)
+              .max(CONFIG_IDLE_TIME_CONSTRAINTS.MAX)
+              .typeError('Idle time must be a number')
+              .required('Idle Time is required field')
+          })}
+        >
+          {formik => (
             <FormikForm className={css.step1Form}>
               <Layout.Horizontal spacing="xxxlarge">
                 <InputDataContainer
@@ -94,21 +109,7 @@ const DefineRule: React.FC<DefineRuleProps> = props => {
               </Layout.Horizontal>
             </FormikForm>
           )}
-          validationSchema={Yup.object().shape({
-            gatewayName: Yup.string()
-              .trim()
-              .required('Rule Name is required field')
-              .matches(
-                isK8sRule ? /[a-z0-9]([-a-z0-9]*[a-z0-9])?/ : /.*/,
-                'Name should not contain special characters'
-              ),
-            idleTime: Yup.number()
-              .min(CONFIG_IDLE_TIME_CONSTRAINTS.MIN)
-              .max(CONFIG_IDLE_TIME_CONSTRAINTS.MAX)
-              .typeError('Idle time must be a number')
-              .required('Idle Time is required field')
-          })}
-        ></Formik>
+        </Formik>
         {/* </Layout.Vertical> */}
       </Layout.Horizontal>
     </COGatewayConfigStep>

@@ -1302,6 +1302,8 @@ export type K8sDirectInfraYaml = Infrastructure & {
   type: 'KubernetesDirect' | 'UseFromStage' | 'VM'
 }
 
+export type VolumeTypeInterface = 'EmptyDir' | 'HostPath' | 'PersistentVolumeClaim'
+
 export interface K8sDirectInfraYamlSpec {
   annotations?: {
     [key: string]: string
@@ -1313,6 +1315,11 @@ export interface K8sDirectInfraYamlSpec {
   }
   namespace: string
   runAsUser?: number
+  volumes?: {
+    mountPath: string
+    type: VolumeTypeInterface
+    spec?: { medium?: string; size?: string; type?: string; path?: string; claimName?: string; readOnly?: boolean }
+  }
   serviceAccountName?: string
   automountServiceAccountToken?: boolean // hard coded for now
   priorityClassName?: string
@@ -1324,6 +1331,8 @@ export interface K8sDirectInfraYamlSpec {
     readOnlyRootFilesystem?: boolean
     runAsUser?: number
   }
+  tolerations?: { effect?: string; key?: string; operator?: string; value?: string }[]
+  nodeSelector?: { [key: string]: string }
 }
 
 export type KeyValuesCriteriaSpec = CriteriaSpec & {

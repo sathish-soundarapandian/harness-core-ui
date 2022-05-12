@@ -30,6 +30,7 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useGetRepositoriesDetailsForArtifactory } from 'services/cd-ng'
 import {
   formatInitialValues,
@@ -102,6 +103,7 @@ export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = 
   }>()
   const { getString } = useStrings()
   const { showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
   const initialValues = formatInitialValues(isConfig, prevStepData, isTerraformPlan)
   const connectorRef = getConnectorRef(isConfig, isTerraformPlan, prevStepData)
   const { expressions } = useVariablesExpression()
@@ -122,7 +124,7 @@ export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = 
 
   useEffect(() => {
     if (ArtifactRepoError) {
-      showError(ArtifactRepoError.message)
+      showError(getRBACErrorMessage(ArtifactRepoError))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ArtifactRepoError])

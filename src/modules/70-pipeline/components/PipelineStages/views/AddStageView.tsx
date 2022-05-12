@@ -13,12 +13,12 @@ import { useStrings } from 'framework/strings'
 import { ComingSoonIcon } from '@common/components/ComingSoonIcon/ComingSoonIcon'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { StageType } from '@pipeline/utils/stageHelpers'
-import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import RbacButton from '@rbac/components/Button/Button'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { Category, StageActions } from '@common/constants/TrackingConstants'
+import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import type { PipelineStageProps } from '../PipelineStage'
 import EmptyStageView from './EmptyStageView'
 import StageHoverView from './StageHoverView'
@@ -66,7 +66,7 @@ export function AddStageView({
           <Heading level={6} color={Color.GREY_800}>
             {getString('pipeline.addStage.title')}
           </Heading>
-          {contextType === PipelineContextType.Pipeline && isTemplatesEnabled && (
+          {isContextTypeNotStageTemplate(contextType) && isTemplatesEnabled && (
             <RbacButton
               text={getString('common.useTemplate')}
               variation={ButtonVariation.SECONDARY}

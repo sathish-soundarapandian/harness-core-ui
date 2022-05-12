@@ -13,7 +13,8 @@ import type {
   RestResponseBoolean,
   RestResponseSLOErrorBudgetResetDTO,
   SLODashboardWidget,
-  SLOErrorBudgetResetDTO
+  SLOErrorBudgetResetDTO,
+  TimeRangeFilter
 } from 'services/cv'
 import type { SLODetailsPageTabIds } from '../CVSLODetailsPage.types'
 
@@ -22,6 +23,7 @@ export interface DetailsPanelProps {
   errorMessage?: string
   retryOnError: () => Promise<void>
   sloDashboardWidget?: SLODashboardWidget
+  timeRangeFilters?: TimeRangeFilter[]
 }
 
 export interface KeyValuePairProps {

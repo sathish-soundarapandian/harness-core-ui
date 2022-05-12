@@ -77,7 +77,7 @@ describe('Policy Info under Policy Evaluation Content', () => {
           module: 'cd'
         }}
       >
-        <PolicyInfo policy={policy as EvaluatedPolicy} numberInList={1} />
+        <PolicyInfo policy={policy as EvaluatedPolicy} numberInList={1} policyStepEvaluationId={'2980'} />
       </TestWrapper>
     )
 
@@ -98,7 +98,7 @@ describe('Policy Info under Policy Evaluation Content', () => {
           module: 'cd'
         }}
       >
-        <PolicyInfo policy={policy as EvaluatedPolicy} numberInList={1} />
+        <PolicyInfo policy={policy as EvaluatedPolicy} numberInList={1} policyStepEvaluationId={'2980'} />
       </TestWrapper>
     )
 
@@ -119,7 +119,7 @@ describe('Policy Info under Policy Evaluation Content', () => {
           module: 'cd'
         }}
       >
-        <PolicyInfo policy={policy as EvaluatedPolicy} numberInList={1} />
+        <PolicyInfo policy={policy as EvaluatedPolicy} numberInList={1} policyStepEvaluationId={'2980'} />
       </TestWrapper>
     )
 
@@ -140,7 +140,7 @@ describe('Policy Info under Policy Evaluation Content', () => {
           module: 'cd'
         }}
       >
-        <PolicyInfo policy={policy as EvaluatedPolicy} numberInList={1} />
+        <PolicyInfo policy={policy as EvaluatedPolicy} numberInList={1} policyStepEvaluationId={'2980'} />
       </TestWrapper>
     )
 
@@ -161,7 +161,7 @@ describe('Policy Info under Policy Evaluation Content', () => {
           module: 'cd'
         }}
       >
-        <PolicyInfo policy={policy as EvaluatedPolicy} numberInList={1} />
+        <PolicyInfo policy={policy as EvaluatedPolicy} numberInList={1} policyStepEvaluationId={'2980'} />
       </TestWrapper>
     )
 

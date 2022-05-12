@@ -5,11 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Container, TextInput, Heading, Layout, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
 import type { FeatureFlagRequestRequestBody } from 'services/cf'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import { CreateAFlagInfoView } from './CreateAFlagInfoView'
 
 export interface CreateAFlagViewProps {
@@ -21,6 +23,15 @@ export interface CreateAFlagViewProps {
 
 export const CreateAFlagView: React.FC<CreateAFlagViewProps> = ({ flagInfo, setFlagName, isCreated, goNext }) => {
   const { getString } = useStrings()
+
+  const { trackEvent } = useTelemetry()
+
+  useEffect(() => {
+    trackEvent(FeatureActions.CreateAFlagView, {
+      category: Category.FEATUREFLAG
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <Container height="100%">

@@ -263,7 +263,16 @@ const CreateTunnelStep: React.FC<StepProps<any> & Props> = props => {
             accessPoint: accessPoint
           })
         }}
-        render={formik => (
+        validationSchema={Yup.object().shape({
+          cloudConnector: Yup.string().required(getString('ce.co.accessPoint.validation.connector')),
+          accessPointName: Yup.string().required(getString('ce.co.accessPoint.validation.name')),
+          accessPointRegion: Yup.string().required(getString('validation.regionRequired')),
+          vpc: Yup.string().required(getString('ce.co.accessPoint.validation.vpc')),
+          subnets: Yup.array(Yup.string()).min(2, getString('ce.co.accessPoint.validation.subnets')),
+          securityGroups: Yup.array(Yup.string()).min(1, getString('ce.co.accessPoint.validation.securityGroup'))
+        })}
+      >
+        {formik => (
           <FormikForm>
             <Layout.Vertical spacing="medium" height="640px">
               <FormInput.Text
@@ -398,15 +407,7 @@ const CreateTunnelStep: React.FC<StepProps<any> & Props> = props => {
             </Layout.Vertical>
           </FormikForm>
         )}
-        validationSchema={Yup.object().shape({
-          cloudConnector: Yup.string().required(getString('ce.co.accessPoint.validation.connector')),
-          accessPointName: Yup.string().required(getString('ce.co.accessPoint.validation.name')),
-          accessPointRegion: Yup.string().required(getString('validation.regionRequired')),
-          vpc: Yup.string().required(getString('ce.co.accessPoint.validation.vpc')),
-          subnets: Yup.array(Yup.string()).min(2, getString('ce.co.accessPoint.validation.subnets')),
-          securityGroups: Yup.array(Yup.string()).min(1, getString('ce.co.accessPoint.validation.securityGroup'))
-        })}
-      ></Formik>
+      </Formik>
     </Layout.Vertical>
   )
 }

@@ -168,7 +168,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
         <span />
       </div>
       <div
-        class="Layout--horizontal StyledProps--main instancesColumn"
+        class="Layout--horizontal StyledProps--main"
         style="width: 20%;"
       >
         0

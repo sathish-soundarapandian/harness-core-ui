@@ -218,6 +218,7 @@ const pipelineVariablesContextMock = {
     ]
   },
   metadataMap: {},
+  serviceExpressionPropertiesList: [],
   error: null,
   initLoading: false,
   loading: false,
@@ -399,19 +400,6 @@ jest.mock('@blueprintjs/core', () => ({
   )
 }))
 
-jest.mock('framework/exports', () => ({
-  ...(jest.requireActual('framework/exports') as any),
-  useStrings: jest.fn().mockReturnValue({
-    getString: jest.fn().mockImplementation(val => val)
-  }),
-  loggerFor: jest.fn().mockReturnValue({
-    error: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    debug: jest.fn()
-  })
-}))
-
 jest.mock('../../PiplineHooks/useVariablesExpression', () => ({
   ...(jest.requireActual('../../PiplineHooks/useVariablesExpression') as any),
   useVariablesExpression: jest.fn().mockReturnValue({
@@ -564,7 +552,7 @@ describe('Right Drawer tests', () => {
           </TestWrapper>
         </PipelineContext.Provider>
       )
-      const variablesHeader = await findByText('variablesText')
+      const variablesHeader = await findByText('common.variables')
       expect(variablesHeader).toBeInTheDocument()
     })
 
@@ -670,7 +658,7 @@ describe('Right Drawer tests', () => {
       )
 
       const notificationHeader = await findAllByText('notifications.name')
-      expect(notificationHeader).toHaveLength(2)
+      expect(notificationHeader).toHaveLength(1)
     })
   })
 

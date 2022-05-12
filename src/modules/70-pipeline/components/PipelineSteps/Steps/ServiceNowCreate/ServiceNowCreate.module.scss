@@ -1,0 +1,108 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Free Trial 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
+ */
+
+.md {
+  width: 75%;
+}
+
+.connector {
+  margin-bottom: var(--spacing-medium) !important;
+  margin-top: var(--spacing-xsmall) !important;
+
+  :global {
+    input[placeholder='<+input>'] {
+      width: 390px !important;
+    }
+  }
+}
+
+.deploymentViewMedium {
+  width: 50% !important;
+}
+
+.connectorLabel {
+  padding-bottom: 0 !important;
+}
+
+.descriptionField {
+  :global {
+    textarea {
+      min-height: 50px;
+      max-height: 120px;
+      height: 75px !important;
+    }
+
+    .bp3-input {
+      height: 75px !important;
+    }
+
+    .MultiTypeInput--btn {
+      height: 30px !important;
+    }
+  }
+}
+
+.fieldsPopover {
+  padding: var(--spacing-large);
+}
+
+.addFieldsModal {
+  padding: var(--spacing-large);
+  width: 600px;
+}
+
+.fieldsPopoverHeading {
+  font-size: 20px !important;
+  margin-bottom: var(--spacing-small) !important;
+  font-weight: bold !important;
+}
+
+.multiSelect {
+  :global {
+    .bp3-tag-input {
+      height: fit-content !important;
+    }
+  }
+}
+
+.headerRow {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 30px;
+  column-gap: var(--spacing-small);
+  margin-bottom: var(--spacing-small);
+  align-items: center;
+
+  :global(.bp3-form-group) {
+    margin: 0;
+  }
+
+  .label {
+    color: var(--grey-400);
+  }
+
+  :global(.bp3-icon-trash) {
+    color: var(--grey-400) !important;
+  }
+}
+
+.fetching {
+  transform: scale(0.6);
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-medium) 0;
+}
+
+.alignCenter {
+  align-items: center;
+}
+
+.marginTop {
+  margin-top: -10px !important;
+}
+.tooltip {
+  max-width: 420px;
+}

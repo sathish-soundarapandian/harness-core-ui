@@ -7,7 +7,7 @@ helpPagerDuty: Enter the key for a PagerDuty Account/Service to which Harness ca
 infoPagerDuty: For more details, see PagerDutys documentation on Creating Integrations.
 helpSlack: You can receive Harness notifications in your Slack channels. You simply add a Slack Incoming Webhook into a Harness User Group's Notification Settings.
 infoSlack: For more details, see Slack’s documentation Getting Started with Incoming Webhooks.
-helpMSTeams: You can receive Harness notifications in Microsoft Teams channels. You simply create an incoming webhook connector in a Microsoft Teams Channel and copy its URL.Next, paste it here in Microsoft Teams Webhook URL.
+helpMSTeams: You can receive Harness notifications in Microsoft Teams channels. You simply create an incoming webhook connector in a Microsoft Teams Channel and copy its URL. Next, paste it here in Microsoft Teams Webhook URL(s).
 labelEmailUserGroups: Alternatively Notify the individual users in a user group via their respective email addresses
 buttonSend: Send
 labelWebhookUrl: Slack Webhook URL (Optional)
@@ -34,7 +34,7 @@ pagerDutyTestSuccess: Pager Duty test is successfully executed
 userGroupsPlaceholder: Type and press enter to add user group
 emailOrAlias: Email/Alias
 labelPagerDuty: PagerDuty Integration Key
-labelMSTeam: Microsoft Teams Webhook URL
+labelMSTeam: Microsoft Teams Webhook URL(s)
 labelMS: Microsoft Teams
 placeholderMSKeys: Type and press enter to add URL
 errors:

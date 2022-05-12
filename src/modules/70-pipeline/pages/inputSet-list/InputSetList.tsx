@@ -20,6 +20,7 @@ import {
   useGetPipelineSummary,
   useGetTemplateFromPipeline
 } from 'services/pipeline-ng'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { OverlayInputSetForm } from '@pipeline/components/OverlayInputSetForm/OverlayInputSetForm'
 import routes from '@common/RouteDefinitions'
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
@@ -41,6 +42,7 @@ function InputSetList(): React.ReactElement {
     PipelineType<PipelinePathProps> & { accountId: string }
   >()
   const { showSuccess, showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [inputSetToDelete, setInputSetToDelete] = useState<InputSetSummaryResponse>()
 
@@ -93,6 +95,8 @@ function InputSetList(): React.ReactElement {
       branch
     }
   })
+
+  const isPipelineInvalid = pipeline?.data?.entityValidityDetails?.valid === false
 
   const { mutate: deleteInputSet } = useDeleteInputSetForPipeline({
     queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier, pipelineIdentifier }
@@ -203,7 +207,7 @@ function InputSetList(): React.ReactElement {
     } catch (err) {
       setIsLoading(false)
       /* istanbul ignore next */
-      showError(err?.data?.message || err?.message, undefined, 'pipeline.delete.inputset.error')
+      showError(getRBACErrorMessage(err), undefined, 'pipeline.delete.inputset.error')
     }
   }
 
@@ -231,7 +235,7 @@ function InputSetList(): React.ReactElement {
               </Menu>
             }
             position={Position.BOTTOM}
-            disabled={!canUpdateInputSet || !pipelineHasRuntimeInputs}
+            disabled={!canUpdateInputSet || !pipelineHasRuntimeInputs || isPipelineInvalid}
           >
             <RbacButton
               text={getString('inputSets.newInputSet')}
@@ -244,9 +248,11 @@ function InputSetList(): React.ReactElement {
                 },
                 permission: PermissionIdentifier.EDIT_PIPELINE
               }}
-              disabled={!pipelineHasRuntimeInputs}
+              disabled={!pipelineHasRuntimeInputs || isPipelineInvalid}
               tooltip={
-                !pipelineHasRuntimeInputs ? (
+                isPipelineInvalid ? (
+                  getString('pipeline.cannotAddInputSetInvalidPipeline')
+                ) : !pipelineHasRuntimeInputs ? (
                   <Text padding="medium">{getString('pipeline.inputSets.noRuntimeInputsCurrently')}</Text>
                 ) : undefined
               }
@@ -278,8 +284,10 @@ function InputSetList(): React.ReactElement {
           message: getString('pipeline.inputSets.aboutInputSets'),
           buttonText: getString('inputSets.newInputSet'),
           onClick: () => goToInputSetForm(),
-          buttonDisabled: !canUpdateInputSet || !pipelineHasRuntimeInputs,
-          buttonDisabledTooltip: !pipelineHasRuntimeInputs
+          buttonDisabled: !canUpdateInputSet || !pipelineHasRuntimeInputs || isPipelineInvalid,
+          buttonDisabledTooltip: isPipelineInvalid
+            ? getString('pipeline.cannotAddInputSetInvalidPipeline')
+            : !pipelineHasRuntimeInputs
             ? getString('pipeline.inputSets.noRuntimeInputsCurrently')
             : undefined
         }}
@@ -288,6 +296,7 @@ function InputSetList(): React.ReactElement {
           data={inputSet?.data}
           gotoPage={setPage}
           pipelineHasRuntimeInputs={pipelineHasRuntimeInputs}
+          isPipelineInvalid={isPipelineInvalid}
           goToInputSetDetail={inputSetTemp => {
             setSelectedInputSet({
               identifier: inputSetTemp?.identifier,

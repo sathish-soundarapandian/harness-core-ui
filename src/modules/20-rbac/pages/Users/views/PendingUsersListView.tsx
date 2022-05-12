@@ -32,8 +32,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
-import { setPageNumber } from '@common/utils/utils'
-import { isCDCommunity, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { setPageNumber, isCommunityPlan } from '@common/utils/utils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import css from './UserListView.module.scss'
 
@@ -194,11 +193,10 @@ const RenderColumnMenu: Renderer<CellProps<Invite>> = ({ row, column }) => {
 }
 
 const PendingUserListView: React.FC<PendingUserListViewProps> = ({ searchTerm, shouldReload }) => {
-  const { licenseInformation } = useLicenseStore()
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [page, setPage] = useState(0)
-  const isCommunity = isCDCommunity(licenseInformation)
+  const isCommunity = isCommunityPlan()
 
   const { data, loading, error, refetch } = useMutateAsGet(useGetPendingUsersAggregated, {
     body: {},

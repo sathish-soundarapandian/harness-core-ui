@@ -16,11 +16,12 @@ import {
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { isEmpty, get } from 'lodash-es'
-import { connect, FormikContext } from 'formik'
+import { connect, FormikContextType } from 'formik'
 import cx from 'classnames'
 import type { StageElementConfig } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { MultiTypeExecutionCondition } from '@common/components/MultiTypeExecutionCondition/MultiTypeExecutionCondition'
+import DelegateSelectorPanel from '@pipeline/components/PipelineSteps/AdvancedSteps/DelegateSelectorPanel/DelegateSelectorPanel'
 import { useStrings } from 'framework/strings'
 import css from './PipelineInputSetForm.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -31,13 +32,14 @@ interface StageAdvancedInputSetFormProps {
   readonly?: boolean
   stageIdentifier?: string
   allowableTypes?: MultiTypeInputType[]
+  delegateSelectors?: string[] | string
 }
 
 interface ConditionalExecutionFormProps {
   readonly?: boolean
   path: string
   allowableTypes?: MultiTypeInputType[]
-  formik?: FormikContext<any>
+  formik?: FormikContextType<any>
 }
 
 function ConditionalExecutionFormInternal(props: ConditionalExecutionFormProps): React.ReactElement {
@@ -84,13 +86,23 @@ export function StageAdvancedInputSetForm({
   path,
   readonly,
   stageIdentifier,
-  allowableTypes
+  allowableTypes,
+  delegateSelectors = []
 }: StageAdvancedInputSetFormProps): React.ReactElement {
   const { getString } = useStrings()
   return (
     <>
       <div id={`Stage.${stageIdentifier}.Advanced`} className={cx(css.accordionSummary)}>
         <div className={css.inputheader}>{getString('advancedTitle')}</div>
+        {!isEmpty(/* istanbul ignore next */ delegateSelectors) && (
+          <div className={cx(css.nestedAccordions, stepCss.formGroup, stepCss.md)}>
+            <DelegateSelectorPanel
+              isReadonly={readonly || false}
+              allowableTypes={allowableTypes}
+              name={`${path}.delegateSelectors`}
+            />
+          </div>
+        )}
 
         {!isEmpty(/* istanbul ignore next */ deploymentStageTemplate?.when?.condition) && (
           <div className={cx(css.nestedAccordions, stepCss.formGroup, stepCss.md)}>

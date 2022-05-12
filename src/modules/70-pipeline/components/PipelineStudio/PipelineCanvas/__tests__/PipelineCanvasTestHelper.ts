@@ -109,6 +109,9 @@ export const getPipelineContextMockData = (
       splitViewData: { type: 'StageView' },
       drawerData: { type: 'AddCommand' }
     },
+    templateView: {
+      isTemplateDrawerOpened: false
+    },
     selectionState: { selectedStageId: 'ApprovalStep', selectedStepId: 'harnessApproval' },
     isLoading,
     isBEPipelineUpdated: false,

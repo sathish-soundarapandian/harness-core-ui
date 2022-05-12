@@ -1,0 +1,12 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "Kubernetes": ["Rolling", "BlueGreen", "Canary", "Default"],
+    "ServerlessAwsLambda": ["Basic", "Default"],
+    "NativeHelm": ["Rolling", "Default"],
+    "WinRm": ["Default"],
+    "Ssh": ["Default"]
+  },
+  "metaData": null,
+  "correlationId": "59f8fc0e-5e34-4b1f-a5dc-22c1e29762ed"
+}

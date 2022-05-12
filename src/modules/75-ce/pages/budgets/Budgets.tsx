@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Button,
   FlexExpander,
@@ -33,6 +33,8 @@ import BudgetStatusBar from '@ce/components/BudgetStatusBar/BudgetStatusBar'
 import useBudgetModal from '@ce/components/PerspectiveReportsAndBudget/PerspectiveCreateBudget'
 import EmptyView from '@ce/images/empty-state.svg'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { PAGE_NAMES, USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
 import css from './Budgets.module.scss'
 
 interface BudgetMenuProps {
@@ -242,6 +244,7 @@ const Budgets: () => JSX.Element = () => {
   const [{ data, fetching, error }, refetchBudget] = useFetchBudgetQuery()
   const [searchParam, setSearchParam] = useState<string>('')
   const { accountId } = useParams<{ accountId: string }>()
+  const { trackEvent } = useTelemetry()
   const { openModal, hideModal } = useBudgetModal({
     onSuccess: () => {
       hideModal()
@@ -282,11 +285,13 @@ const Budgets: () => JSX.Element = () => {
     openModal({
       isEdit: true,
       perspective: budget.perspectiveId,
-      selectedBudget: budget as unknown as Budget
+      selectedBudget: budget as unknown as Budget,
+      source: PAGE_NAMES.BUDGET_LANDING_PAGE
     })
   }
 
   const navigateToBudgetDetailsPage: (budgetId: string, budgetName: string) => void = (budgetId, budgetName) => {
+    trackEvent(USER_JOURNEY_EVENTS.BUDGETS_LIST_ITEM_CLICK, { budgetId })
     history.push(
       routes.toCEBudgetDetails({
         accountId,
@@ -298,8 +303,14 @@ const Budgets: () => JSX.Element = () => {
 
   const budgetData = (data?.budgetList || []) as unknown as BudgetSummary[]
 
+  useEffect(() => {
+    if (data) {
+      trackEvent(PAGE_NAMES.BUDGET_LANDING_PAGE, { count: budgetData.length })
+    }
+  }, [data])
+
   const filteredBudgetData = budgetData.filter(budget => {
-    if (!budget.name) {
+    if (!budget || !budget.name) {
       return false
     }
     return budget.name?.toLocaleLowerCase().indexOf(searchParam.toLowerCase()) < 0 ? false : true
@@ -308,12 +319,14 @@ const Budgets: () => JSX.Element = () => {
   const HeaderComponent = <Page.Header title={getString('ce.budgets.listPage.title')} breadcrumbs={<NGBreadcrumbs />} />
 
   const openNewBudgetModal = () => {
+    trackEvent(USER_JOURNEY_EVENTS.CREATE_NEW_BUDGET, { pageName: PAGE_NAMES.BUDGET_LANDING_PAGE, isEditMode: false })
     openModal({
       isEdit: false,
       selectedBudget: {
         lastMonthCost: 0,
         forecastCost: 0
-      }
+      },
+      source: PAGE_NAMES.BUDGET_LANDING_PAGE
     })
   }
 

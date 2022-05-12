@@ -65,6 +65,7 @@ declare interface Window {
   refinerFeedbackToken: string
   saberToken: string
   Saber: any
+  hj: any
 }
 
 declare interface WindowEventMap {
@@ -89,6 +90,11 @@ declare module 'gitopsui/MicroFrontendApp' {
 }
 
 declare module 'errortracking/App' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'sto/App' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }

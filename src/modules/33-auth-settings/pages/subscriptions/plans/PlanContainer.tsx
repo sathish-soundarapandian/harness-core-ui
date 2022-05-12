@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { pick } from 'lodash-es'
 import { Layout, PageSpinner, PageError } from '@wings-software/uicore'
@@ -26,6 +26,8 @@ import {
 import { useContactSalesMktoModal } from '@common/modals/ContactSales/useContactSalesMktoModal'
 import routes from '@common/RouteDefinitions'
 import type { Module } from '@common/interfaces/RouteInterfaces'
+import { setUpCI, StartFreeLicenseAndSetupProjectCallback } from '@common/utils/GetStartedWithCIUtil'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ModuleName } from 'framework/types/ModuleName'
 import { ModuleLicenseType, Editions } from '@common/constants/SubscriptionTypes'
 import type { FetchPlansQuery } from 'services/common/services'
@@ -67,6 +69,8 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
   const history = useHistory()
   const moduleType = moduleName as StartTrialDTO['moduleType']
   const module = moduleName.toLowerCase() as Module
+  const { CIE_HOSTED_BUILDS } = useFeatureFlags()
+  const [settingUpCI, setSettingUpCI] = useState<boolean>(false)
   const { accountId } = useParams<{
     accountId: string
   }>()
@@ -197,7 +201,7 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
         isTrial = true
         break
     }
-    const btnLoading = extendingTrial || startingTrial || startingFreePlan
+    const btnLoading = extendingTrial || startingTrial || startingFreePlan || settingUpCI
 
     const handleExtendTrial = async (edition: Editions): Promise<void> => {
       try {
@@ -214,7 +218,37 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
     const btnProps = getBtnProps({
       plan,
       getString,
-      handleStartPlan,
+      handleStartPlan: (edition: Editions) => {
+        if (moduleName === ModuleName.CI && CIE_HOSTED_BUILDS) {
+          setSettingUpCI(true)
+          setUpCI({
+            accountId,
+            edition,
+            onSetUpSuccessCallback: ({ orgId, projectId }: StartFreeLicenseAndSetupProjectCallback) => {
+              setSettingUpCI(false)
+
+              trackEvent(edition === Editions.FREE ? PlanActions.StartFreeClick : TrialActions.StartTrialClick, {
+                category: Category.SIGNUP,
+                module,
+                plan: edition
+              })
+
+              history.push(
+                routes.toGetStartedWithCI({
+                  accountId,
+                  module: 'ci',
+                  orgIdentifier: orgId,
+                  projectIdentifier: projectId
+                })
+              )
+            },
+            licenseInformation,
+            updateLicenseStore
+          })
+        } else {
+          handleStartPlan(edition)
+        }
+      },
       handleContactSales: openMarketoContactSales,
       handleExtendTrial,
       handleManageSubscription,

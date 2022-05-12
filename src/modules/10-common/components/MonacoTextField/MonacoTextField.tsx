@@ -144,4 +144,4 @@ export function MonacoText(props: ConnectedMonacoTextFieldProps): React.ReactEle
   )
 }
 
-export const MonacoTextField = connect<MonacoTextFieldProps>(MonacoText)
+export const MonacoTextField = connect<MonacoTextFieldProps>(MonacoText as any)

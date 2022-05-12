@@ -5,22 +5,24 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { SeriesLineOptions } from 'highcharts'
-import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
+import type { SeriesColumnOptions } from 'highcharts'
+import type { GetDataError } from 'restful-react'
+
 import type {
   LogData,
-  RestResponseListLogAnalysisClusterChartDTO,
-  RestResponsePageLogAnalysisClusterDTO
+  RestResponseListLogAnalysisRadarChartClusterDTO,
+  RestResponseLogAnalysisRadarChartListWithCountDTO
 } from 'services/cv'
 import type { ExecutionNode } from 'services/pipeline-ng'
+import type { MinMaxAngleState } from './LogAnalysisView.container.types'
 
 export type LogAnalysisRowData = {
   clusterType: LogData['tag']
   message: string
   count: number
-  messageFrequency: SeriesLineOptions[]
-  riskScore: number
+  messageFrequency: SeriesColumnOptions[]
   riskStatus: LogData['riskStatus']
+  clusterId?: string
 }
 
 export interface LogAnalysisContainerProps {
@@ -30,13 +32,18 @@ export interface LogAnalysisContainerProps {
 }
 
 export interface LogAnalysisProps {
-  data: RestResponsePageLogAnalysisClusterDTO | null
-  clusterChartData: RestResponseListLogAnalysisClusterChartDTO | null
+  data: RestResponseLogAnalysisRadarChartListWithCountDTO | null
+  clusterChartData: RestResponseListLogAnalysisRadarChartClusterDTO | null
   goToPage(val: number): void
   logsLoading: boolean
   clusterChartLoading: boolean
-  setSelectedClusterType: (clusterType: SelectOption) => void
-  onChangeHealthSource: (selectedHealthSource: string) => void
+  onChangeHealthSource?: (selectedHealthSource: string) => void
   activityId?: string
   isErrorTracking?: boolean
+  handleAngleChange: (value: MinMaxAngleState) => void
+  filteredAngle: MinMaxAngleState
+  logsError?: GetDataError<unknown> | null
+  refetchLogAnalysis?: () => void
+  refetchClusterAnalysis?: () => void
+  clusterChartError?: GetDataError<unknown> | null
 }

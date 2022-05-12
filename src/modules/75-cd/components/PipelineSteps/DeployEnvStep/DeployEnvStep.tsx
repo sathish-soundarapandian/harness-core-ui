@@ -69,8 +69,9 @@ import { usePermission } from '@rbac/hooks/usePermission'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
-import { DeployTabs } from '@cd/components/PipelineStudio/DeployStageSetupShell/DeployStageSetupShellUtils'
+import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { getEnvironmentRefSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, EnvironmentActions, ExitModalActions } from '@common/constants/TrackingConstants'
@@ -269,7 +270,7 @@ export const NewEditEnvironmentModal: React.FC<NewEditEnvironmentModalProps> = (
           })}
         >
           {formikProps => {
-            formikRef.current = formikProps
+            formikRef.current = formikProps as FormikProps<EnvironmentResponseDTO> | undefined
             return (
               <>
                 {selectedView === SelectedView.VISUAL ? (
@@ -334,7 +335,12 @@ export const NewEditEnvironmentModal: React.FC<NewEditEnvironmentModalProps> = (
                         text={getString('save')}
                         onClick={() => {
                           const latestYaml = defaultTo(yamlHandler?.getLatestYaml(), '')
-                          onSubmit(parse(latestYaml)?.environment)
+                          const errorMsg = yamlHandler?.getYAMLValidationErrorMap()
+                          if (errorMsg?.size) {
+                            showError(errorMsg.entries().next().value[1])
+                          } else {
+                            onSubmit(parse(latestYaml)?.environment)
+                          }
                         }}
                       />
                       <Button
@@ -406,6 +412,7 @@ export const DeployEnvironmentWidget: React.FC<DeployEnvironmentProps> = ({
   >()
 
   const { showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
   const {
     data: environmentsResponse,
     loading,
@@ -540,7 +547,7 @@ export const DeployEnvironmentWidget: React.FC<DeployEnvironmentProps> = ({
   }, [loading, environmentsResponse, environmentsResponse?.data?.content?.length])
 
   if (error?.message) {
-    showError(error.message, undefined, 'cd.env.list.error')
+    showError(getRBACErrorMessage(error), undefined, 'cd.env.list.error')
   }
 
   const { expressions } = useVariablesExpression()
@@ -598,7 +605,7 @@ export const DeployEnvironmentWidget: React.FC<DeployEnvironmentProps> = ({
       >
         {formik => {
           window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.INFRASTRUCTURE }))
-          formikRef.current = formik
+          formikRef.current = formik as FormikProps<unknown> | null
           const { values, setFieldValue } = formik
           return (
             <FormikForm>
@@ -703,6 +710,7 @@ const DeployEnvironmentInputStep: React.FC<DeployEnvironmentProps & { formik?: a
   >()
 
   const { showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
   const [state, setState] = React.useState<DeployEnvironmentState>({
     isEdit: false,
     isEnvironment: false,
@@ -793,7 +801,7 @@ const DeployEnvironmentInputStep: React.FC<DeployEnvironmentProps & { formik?: a
     permissions: [PermissionIdentifier.EDIT_ENVIRONMENT]
   })
   if (error?.message) {
-    showError(error.message, undefined, 'cd.env.list.error')
+    showError(getRBACErrorMessage(error), undefined, 'cd.env.list.error')
   }
   return (
     <>

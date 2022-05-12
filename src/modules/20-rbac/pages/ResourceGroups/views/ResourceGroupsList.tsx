@@ -10,7 +10,7 @@ import { Layout, ExpandingSearchInput, ButtonVariation, PageHeader, PageBody } f
 import { useHistory, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { useResourceGroupModal } from '@rbac/modals/ResourceGroupModal/useResourceGroupModal'
-import { useGetResourceGroupList } from 'services/resourcegroups'
+import { useGetResourceGroupListV2 } from 'services/resourcegroups'
 import ResourceGroupListView from '@rbac/components/ResourceGroupList/ResourceGroupListView'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
@@ -29,7 +29,7 @@ const ResourceGroupsList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [page, setPage] = useState(0)
 
-  const { data, loading, error, refetch } = useGetResourceGroupList({
+  const { data, loading, error, refetch } = useGetResourceGroupListV2({
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,

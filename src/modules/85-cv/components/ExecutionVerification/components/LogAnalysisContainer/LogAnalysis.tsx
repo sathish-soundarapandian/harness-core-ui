@@ -5,19 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useMemo } from 'react'
-import { Container, Icon, Pagination, Select, Text, NoDataCard } from '@wings-software/uicore'
-import { useParams } from 'react-router-dom'
+import React, { useCallback, useMemo, useState } from 'react'
+import { Container, Icon, NoDataCard, PageError } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { VerificationType } from '@cv/components/HealthSourceDropDown/HealthSourceDropDown.constants'
-import { useGetHealthSources } from 'services/cv'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import noDataImage from '@cv/assets/noData.svg'
+import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { LogAnalysisRow } from '@cv/components/LogsAnalysis/components/LogAnalysisRow/LogAnalysisRow'
-import ClusterChart from '@cv/components/LogsAnalysis/components/ClusterChart/ClusterChart'
 import type { LogAnalysisProps, LogAnalysisRowData } from './LogAnalysis.types'
-import { getClusterTypes, getLogAnalysisData } from './LogAnalysis.utils'
-import { HealthSourceDropDown } from '../HealthSourcesDropdown/HealthSourcesDropdown'
+import LogAnalysisRadarChartHeader from './components/LogAnalysisRadarChartHeader'
+import LogAnalysisRadarChart from './components/LogAnalysisRadarChart'
+import { getLogAnalysisData } from './LogAnalysis.utils'
 import styles from './LogAnalysis.module.scss'
 
 export default function LogAnalysis(props: LogAnalysisProps): JSX.Element {
@@ -27,35 +25,30 @@ export default function LogAnalysis(props: LogAnalysisProps): JSX.Element {
     goToPage,
     logsLoading,
     clusterChartLoading,
-    setSelectedClusterType,
-    onChangeHealthSource,
+    isErrorTracking,
+    handleAngleChange,
+    filteredAngle,
     activityId,
-    isErrorTracking
+    logsError,
+    refetchLogAnalysis,
+    clusterChartError,
+    refetchClusterAnalysis
   } = props
   const { getString } = useStrings()
-  const { accountId } = useParams<ProjectPathProps>()
-
-  const {
-    data: healthSourcesData,
-    error: healthSourcesError,
-    loading: healthSourcesLoading,
-    refetch: fetchHealthSources
-  } = useGetHealthSources({
-    queryParams: { accountId },
-    activityId: activityId as string,
-    lazy: true
-  })
-
-  useEffect(() => {
-    if (activityId) {
-      fetchHealthSources()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activityId])
 
   const logAnalysisData = useMemo((): LogAnalysisRowData[] => {
     return getLogAnalysisData(data)
   }, [data])
+
+  const [selectedLog, setSelectedLog] = useState<string | null>(null)
+
+  const handleLogSelection = useCallback((logClusterId: string): void => {
+    setSelectedLog(logClusterId)
+  }, [])
+
+  const resetSelectedLog = useCallback(() => {
+    setSelectedLog(null)
+  }, [])
 
   const renderLogsData = useCallback(() => {
     if (logsLoading) {
@@ -64,72 +57,58 @@ export default function LogAnalysis(props: LogAnalysisProps): JSX.Element {
           <Icon name="steps-spinner" color={Color.GREY_400} size={30} />
         </Container>
       )
-    } else if (!logAnalysisData.length) {
+    } else if (logsError) {
       return (
-        <Container className={styles.noData}>
-          <NoDataCard message={getString('pipeline.verification.logs.noAnalysis')} icon="warning-sign" />
+        <Container data-testid="LogAnalysisList_error">
+          <PageError message={getErrorMessage(logsError)} onClick={refetchLogAnalysis} className={styles.noData} />
+        </Container>
+      )
+      // adding clusterChartLoading here inorder to prevent this visible before cluster chart loads
+      // this prevents showing two no data text and then change to one
+    } else if (!logAnalysisData.length && !clusterChartLoading) {
+      return (
+        <Container className={styles.noData} data-testid="LogAnalysisList_NoData">
+          <NoDataCard message={getString('cv.monitoredServices.noMatchingData')} image={noDataImage} />
         </Container>
       )
     } else {
       return (
-        <LogAnalysisRow className={styles.logAnalysisRow} data={logAnalysisData} isErrorTracking={isErrorTracking} />
+        <LogAnalysisRow
+          className={styles.logAnalysisRow}
+          data={logAnalysisData}
+          isErrorTracking={isErrorTracking}
+          logResourceData={data?.resource?.logAnalysisRadarCharts}
+          goToPage={goToPage}
+          selectedLog={selectedLog}
+          resetSelectedLog={resetSelectedLog}
+          activityId={activityId}
+        />
       )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [logsLoading, logAnalysisData.length])
-
-  const renderChartCluster = useCallback(() => {
-    if (clusterChartLoading) {
-      return (
-        <Container className={styles.loading}>
-          <Icon name="steps-spinner" color={Color.GREY_400} size={30} />
-        </Container>
-      )
-    } else if (!clusterChartData?.resource?.length) {
-      return (
-        <Container className={styles.noData}>
-          <NoDataCard message={getString('pipeline.verification.logs.noAnalysis')} icon="warning-sign" />
-        </Container>
-      )
-    } else {
-      return <ClusterChart data={clusterChartData?.resource || []} />
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clusterChartData?.resource?.length, clusterChartLoading])
+  }, [logsLoading, logAnalysisData.length, selectedLog])
 
   return (
     <Container className={styles.logsTab}>
-      <Container className={styles.filters}>
-        <Select
-          items={getClusterTypes(getString)}
-          defaultSelectedItem={getClusterTypes(getString)[0]}
-          className={styles.clusterTypeFilter}
-          inputProps={{ placeholder: getString('pipeline.verification.logs.filterByClusterType') }}
-          onChange={setSelectedClusterType}
-        />
-        <HealthSourceDropDown
-          data={healthSourcesData}
-          loading={healthSourcesLoading}
-          error={healthSourcesError}
-          onChange={onChangeHealthSource}
-          className={styles.logsAnalysisFilters}
-          verificationType={VerificationType.LOG}
-        />
-      </Container>
       <Container className={styles.clusterChart}>
-        <Text font={{ weight: 'bold' }}>{getString('pipeline.verification.logs.logCluster')}</Text>
-        {renderChartCluster()}
+        {!clusterChartLoading && !logsError && (
+          <LogAnalysisRadarChartHeader
+            totalClustersCount={data?.resource?.totalClusters}
+            eventsCount={data?.resource?.eventCounts}
+          />
+        )}
+        <LogAnalysisRadarChart
+          clusterChartLoading={clusterChartLoading}
+          clusterChartData={clusterChartData}
+          handleAngleChange={handleAngleChange}
+          filteredAngle={filteredAngle}
+          onRadarPointClick={handleLogSelection}
+          clusterChartError={clusterChartError}
+          refetchClusterAnalysis={refetchClusterAnalysis}
+          logsLoading={logsLoading}
+        />
       </Container>
       <Container className={styles.tableContent}>{renderLogsData()}</Container>
-      {!!data?.resource?.totalPages && (
-        <Pagination
-          pageSize={data.resource.pageSize as number}
-          pageCount={data.resource.totalPages}
-          itemCount={data.resource.totalItems as number}
-          pageIndex={data.resource.pageIndex}
-          gotoPage={goToPage}
-        />
-      )}
     </Container>
   )
 }

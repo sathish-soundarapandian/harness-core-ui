@@ -21,10 +21,10 @@ import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import { NameIdDescriptionTags, useToaster } from '@common/components'
 import {
-  ResourceGroupDTO,
-  useCreateResourceGroup,
-  ResourceGroupRequestRequestBody,
-  useUpdateResourceGroup
+  ResourceGroupV2,
+  useCreateResourceGroupV2,
+  useUpdateResourceGroupV2,
+  ResourceGroupV2Request
 } from 'services/resourcegroups'
 import { useStrings } from 'framework/strings'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -33,9 +33,9 @@ import { DEFAULT_COLOR } from '@common/constants/Utils'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import css from './ResourceGroupModal.module.scss'
 interface ResourceGroupModalData {
-  data?: ResourceGroupDTO
+  data?: ResourceGroupV2
   editMode: boolean
-  onSubmit?: (resourceGroup: ResourceGroupDTO) => void
+  onSubmit?: (resourceGroup: ResourceGroupV2) => void
   onCancel?: () => void
 }
 
@@ -46,14 +46,14 @@ const ResourceGroupForm: React.FC<ResourceGroupModalData> = props => {
   const { getString } = useStrings()
   const { showSuccess } = useToaster()
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
-  const { mutate: createResourceGroup, loading: saving } = useCreateResourceGroup({
+  const { mutate: createResourceGroup, loading: saving } = useCreateResourceGroupV2({
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier
     }
   })
-  const { mutate: updateResourceGroup, loading: updating } = useUpdateResourceGroup({
+  const { mutate: updateResourceGroup, loading: updating } = useUpdateResourceGroupV2({
     identifier: data?.identifier || '',
     queryParams: {
       accountIdentifier: accountId,
@@ -61,22 +61,22 @@ const ResourceGroupForm: React.FC<ResourceGroupModalData> = props => {
       projectIdentifier
     }
   })
-  const handleSubmit = async (values: ResourceGroupDTO): Promise<void> => {
-    const dataToSubmit: ResourceGroupRequestRequestBody = {
-      resourcegroup: values
+  const handleSubmit = async (values: ResourceGroupV2): Promise<void> => {
+    const dataToSubmit: ResourceGroupV2Request = {
+      resourceGroup: values
     }
     try {
       if (!editMode) {
         const created = await createResourceGroup(dataToSubmit)
         if (created) {
           showSuccess(getString('rbac.resourceGroup.createSuccess'))
-          onSubmit?.(dataToSubmit.resourcegroup)
+          onSubmit?.(dataToSubmit.resourceGroup)
         }
       } else {
         const updated = await updateResourceGroup(dataToSubmit)
         if (updated) {
           showSuccess(getString('rbac.resourceGroup.updateSuccess'))
-          onSubmit?.(dataToSubmit.resourcegroup)
+          onSubmit?.(dataToSubmit.resourceGroup)
         }
       }
     } catch (e) {
@@ -85,7 +85,7 @@ const ResourceGroupForm: React.FC<ResourceGroupModalData> = props => {
     }
   }
   return (
-    <Formik<ResourceGroupDTO>
+    <Formik<ResourceGroupV2>
       initialValues={{
         identifier: '',
         name: '',
@@ -95,6 +95,8 @@ const ResourceGroupForm: React.FC<ResourceGroupModalData> = props => {
         accountIdentifier: accountId,
         orgIdentifier,
         projectIdentifier,
+        includedScopes: [],
+        resourceFilter: {},
         ...(editMode && data)
       }}
       formName="resourceGroupModalForm"

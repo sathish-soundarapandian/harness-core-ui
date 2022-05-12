@@ -50,7 +50,6 @@ describe('ServiceNow Approval tests', () => {
         inputSetData={props.inputSetData}
       />
     )
-
     fireEvent.click(getByText('Submit'))
     await waitFor(() => queryByText('Errors'))
     expect(container).toMatchSnapshot('input set with errors')
@@ -129,7 +128,7 @@ describe('ServiceNow Approval tests', () => {
     )
 
     // Submit with empty form
-    await act(() => ref.current?.submitForm())
+    await act(() => ref.current?.submitForm()!)
     expect(queryByText('pipelineSteps.stepNameRequired')).toBeTruthy()
 
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
@@ -141,10 +140,10 @@ describe('ServiceNow Approval tests', () => {
     })
     fireEvent.change(queryByNameAttribute('timeout')!, { target: { value: '' } })
 
-    await act(() => ref.current?.submitForm())
+    await act(() => ref.current?.submitForm()!)
     expect(queryByText('validation.timeout10SecMinimum')).toBeTruthy()
 
-    await act(() => ref.current?.submitForm())
+    await act(() => ref.current?.submitForm()!)
 
     await waitFor(() => {
       expect(queryByText('pipeline.serviceNowApprovalStep.validations.ticketType')).toBeTruthy()
@@ -200,7 +199,7 @@ describe('ServiceNow Approval tests', () => {
     fireEvent.click(getByText('common.optionalConfig'))
     expect(queryByDisplayValue("<+state> == 'Blocked'")).toBeTruthy()
 
-    await act(() => ref.current?.submitForm())
+    await act(() => ref.current?.submitForm()!)
     expect(props.onUpdate).toBeCalledWith({
       identifier: 'serviceNow_approval_step',
       timeout: '10m',

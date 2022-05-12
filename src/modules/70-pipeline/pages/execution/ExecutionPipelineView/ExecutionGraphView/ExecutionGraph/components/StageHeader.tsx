@@ -21,8 +21,8 @@ export interface StageHeaderProps {
 export default function StageHeader(props: StageHeaderProps): React.ReactElement {
   const { data } = props
   const { getString } = useStrings()
-  let delta = data?.data?.startTs ? Math.abs(data?.data?.startTs - (data?.data?.endTs || Date.now())) : 0
-
+  const stageDetails = data?.data ? data?.data : data
+  let delta = stageDetails?.startTs ? Math.abs(stageDetails?.startTs - (stageDetails?.endTs || Date.now())) : 0
   delta = Math.round(delta / 1000) * 1000
   const timeText = timeToDisplayText(delta)
   return (
@@ -30,17 +30,17 @@ export default function StageHeader(props: StageHeaderProps): React.ReactElement
       <Layout.Horizontal padding="medium">
         <Layout.Vertical style={{ flex: 1 }} flex={{ alignItems: 'flex-start' }} margin={{ right: 'medium' }}>
           <Text width={300} lineClamp={1} font={{ weight: 'semi-bold', size: 'normal' }} color={Color.BLACK}>
-            {data.name}
+            {stageDetails.name}
           </Text>
-          {data.status !== ExecutionStatusEnum.Skipped && (
+          {stageDetails.status !== ExecutionStatusEnum.Skipped && (
             <Layout.Horizontal spacing={'xsmall'}>
-              {!!data?.data?.startTs && (
+              {!!stageDetails?.startTs && (
                 <Container margin={{ right: 'small' }}>
                   <Text inline={true} font={{ size: 'small' }} color={Color.GREY_500}>
                     {getString('pipeline.startTime')}:{' '}
                   </Text>
                   <Text inline={true} font={{ size: 'small' }} color={Color.BLACK}>
-                    {moment(data.data.startTs).format(StringUtils.DEFAULT_DATE_FORMAT)}
+                    {moment(stageDetails.startTs).format(StringUtils.DEFAULT_DATE_FORMAT)}
                   </Text>
                 </Container>
               )}
@@ -57,9 +57,9 @@ export default function StageHeader(props: StageHeaderProps): React.ReactElement
             </Layout.Horizontal>
           )}
         </Layout.Vertical>
-        <ExecutionStatusLabel status={data?.status === 'IgnoreFailed' ? 'Failed' : data?.status} />
+        <ExecutionStatusLabel status={stageDetails?.status === 'IgnoreFailed' ? 'Failed' : stageDetails?.status} />
       </Layout.Horizontal>
-      {data.status === ExecutionStatusEnum.Failed && (
+      {stageDetails.status === ExecutionStatusEnum.Failed && (
         <Layout.Horizontal
           background={Color.RED_100}
           padding={{ right: 'medium', top: 'small', bottom: 'small', left: 'small' }}
@@ -69,7 +69,7 @@ export default function StageHeader(props: StageHeaderProps): React.ReactElement
           </Container>
           <Layout.Vertical spacing={'xsmall'} style={{ flex: 1 }}>
             <Text style={{ fontSize: '12px', wordBreak: 'break-word' }} lineClamp={4} color={Color.RED_500}>
-              {data?.data?.failureInfo?.message || data?.data?.failureInfo?.errorMessage}
+              {stageDetails?.failureInfo?.message || stageDetails?.failureInfo?.errorMessage}
             </Text>
           </Layout.Vertical>
         </Layout.Horizontal>

@@ -39,6 +39,10 @@ const OperatorSelector: React.FC<OperatorSelectorProps> = ({ operator, onOperato
     {
       value: QlceViewFilterOperator.NotNull,
       label: getString('ce.perspectives.createPerspective.operatorLabels.opNotNull')
+    },
+    {
+      value: QlceViewFilterOperator.Like,
+      label: getString('ce.perspectives.createPerspective.operatorLabels.opLike')
     }
   ]
 

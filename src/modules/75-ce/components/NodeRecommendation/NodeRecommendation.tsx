@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useMemo, useReducer, useState } from 'react'
+import React, { useCallback, useMemo, useReducer, useRef, useState } from 'react'
 import {
   Container,
   Layout,
@@ -28,6 +28,7 @@ import type { NodepoolTimeRangeValue } from '@ce/types'
 import { getTimePeriodString, GET_NODEPOOL_DATE_RANGE } from '@ce/utils/momentUtils'
 import type {
   NodeRecommendationDto,
+  RecommendationItemDto,
   RecommendationOverviewStats,
   RecommendNodePoolClusterRequest,
   TotalResourceUsage
@@ -47,6 +48,7 @@ import {
   calculateSavingsPercentage,
   convertStateToRecommendClusterPayload,
   getInstanceFamiliesFromState,
+  getProviderIcon,
   isResourceConsistent
 } from '@ce/utils/recommendationUtils'
 import { InstanceFamiliesModalTab } from '../InstanceFamiliesModalTab/InstanceFamiliesModalTab'
@@ -128,6 +130,7 @@ interface NodeRecommendationDetailsProps {
   timeRange: NodepoolTimeRangeValue
   recommendationName: string
   nodeRecommendationRequestData: RecommendNodePoolClusterRequest
+  nodePoolData: RecommendationItemDto
 }
 
 const NodeRecommendationDetails: React.FC<NodeRecommendationDetailsProps> = ({
@@ -135,7 +138,8 @@ const NodeRecommendationDetails: React.FC<NodeRecommendationDetailsProps> = ({
   recommendationStats,
   timeRange,
   recommendationName,
-  nodeRecommendationRequestData
+  nodeRecommendationRequestData,
+  nodePoolData
 }) => {
   const { getString } = useStrings()
   const { showError } = useToaster()
@@ -212,6 +216,8 @@ const NodeRecommendationDetails: React.FC<NodeRecommendationDetailsProps> = ({
     }
   }
 
+  const currentTimeRange = useRef<NodepoolTimeRangeValue>(timeRange)
+
   useDidMountEffect(() => {
     dispatch({
       type: ACTIONS.UPDATE_TIME_RANGE,
@@ -223,8 +229,13 @@ const NodeRecommendationDetails: React.FC<NodeRecommendationDetailsProps> = ({
         minNodes: +defaultTo(minNodes, 0).toFixed(2)
       }
     })
-    updateRecommendationDetails()
+
+    currentTimeRange.current = timeRange
   }, [timeRange])
+
+  useDidMountEffect(() => {
+    updateRecommendationDetails()
+  }, [currentTimeRange.current])
 
   const [showModal, hideModal] = useModalHook(() => {
     return (
@@ -236,7 +247,10 @@ const NodeRecommendationDetails: React.FC<NodeRecommendationDetailsProps> = ({
         className={css.modalContainer}
       >
         <Layout.Vertical spacing="medium" padding="xxlarge" height="100%">
-          <Text font={{ variation: FontVariation.H4 }} icon="gcp">
+          <Text
+            font={{ variation: FontVariation.H4 }}
+            icon={getProviderIcon(defaultTo(recommendationDetails.recommended?.provider, ''))}
+          >
             {`${recommendationName}: Preferred Instance Families`}
           </Text>
           <Text font={{ variation: FontVariation.SMALL }}>
@@ -317,6 +331,15 @@ const NodeRecommendationDetails: React.FC<NodeRecommendationDetailsProps> = ({
         </Card>
       </Layout.Vertical>
       <Layout.Vertical spacing="large" padding="xlarge">
+        <Text font={{ variation: FontVariation.H5 }}>{getString('ce.recommendation.detailsPage.nodepoolDetails')}</Text>
+        <Container margin={{ bottom: 'large' }}>
+          <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_500}>
+            {getString('common.cluster')}
+          </Text>
+          <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_800}>
+            {nodePoolData.clusterName}
+          </Text>
+        </Container>
         <ResourceUtilizationCharts
           sumCpu={+defaultTo(sumCpu, 0).toFixed(2)}
           sumMem={+defaultTo(sumMem, 0).toFixed(2)}

@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import type { FormikProps } from 'formik'
 import * as Yup from 'yup'
 import {
   Layout,
@@ -108,7 +109,7 @@ const InlineVarFile = (props: InlineVarFileProps) => {
                       return (
                         <TFMonaco
                           name="varFile.spec.content"
-                          formik={formikProps}
+                          formik={formikProps as FormikProps<unknown>}
                           title={getString('pipelineSteps.content')}
                         />
                       )
@@ -117,7 +118,7 @@ const InlineVarFile = (props: InlineVarFileProps) => {
                   >
                     <TFMonaco
                       name="varFile.spec.content"
-                      formik={formikProps}
+                      formik={formikProps as FormikProps<unknown>}
                       title={getString('pipelineSteps.content')}
                     />
                   </MultiTypeFieldSelector>

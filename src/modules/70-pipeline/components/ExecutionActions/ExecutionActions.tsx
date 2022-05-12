@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, Popover, ButtonProps, useConfirmationDialog } from '@harness/uicore'
+import { Button, Popover, ButtonProps, useConfirmationDialog, getErrorInfoFromErrorObject } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, IDialogProps, Intent, Menu, MenuItem } from '@blueprintjs/core'
 import { Link, useLocation, matchPath } from 'react-router-dom'
@@ -63,6 +63,7 @@ export interface ExecutionActionsProps {
   canRetry?: boolean
   modules?: string[]
   showEditButton?: boolean
+  isPipelineInvalid?: boolean
 }
 
 function getValidExecutionActions(canExecute: boolean, executionStatus?: ExecutionStatus) {
@@ -134,7 +135,8 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
     stageName,
     canRetry = false,
     modules,
-    showEditButton = true
+    showEditButton = true,
+    isPipelineInvalid
   } = props
   const {
     orgIdentifier,
@@ -155,7 +157,7 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
     nodeExecutionId: defaultTo(stageId, '')
   })
 
-  const { showSuccess } = useToaster()
+  const { showSuccess, showError, clear } = useToaster()
   const { getString } = useStrings()
   const location = useLocation()
 
@@ -191,6 +193,7 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
   })
 
   async function executeAction(interruptType: HandleInterruptQueryParams['interruptType']): Promise<void> {
+    clear()
     try {
       const successMessage = getSuccessMessage(getString, interruptType, stageId, stageName)
       await interruptMethod({} as never, {
@@ -202,8 +205,9 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
         }
       })
       showSuccess(successMessage)
-    } catch (_) {
-      //
+    } catch (e) {
+      const errorMessage = getErrorInfoFromErrorObject(e)
+      showError(errorMessage)
     }
   }
 
@@ -295,10 +299,10 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
       {!stageId && canRerun ? (
         <RbacButton
           icon="repeat"
-          tooltip={getString(rerunText)}
+          tooltip={isPipelineInvalid ? getString('pipeline.cannotRunInvalidPipeline') : getString(rerunText)}
           onClick={reRunPipeline}
           {...commonButtonProps}
-          disabled={!canExecute}
+          disabled={!canExecute || isPipelineInvalid}
           featuresProps={getFeaturePropsForRunPipelineButton({ modules, getString })}
         />
       ) : null}
@@ -355,7 +359,7 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
               <RbacMenuItem
                 featuresProps={getFeaturePropsForRunPipelineButton({ modules, getString })}
                 text={getString(rerunText)}
-                disabled={!canRerun}
+                disabled={!canRerun || isPipelineInvalid}
                 onClick={reRunPipeline}
               />
             )}
@@ -368,6 +372,7 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
                 text={getString('pipeline.retryPipeline')}
                 onClick={retryPipeline}
                 data-testid="retry-pipeline-menu"
+                disabled={isPipelineInvalid}
               />
             )}
             {/* {stageId ? null : <MenuItem text={getString('pipeline.execution.actions.downloadLogs')} disabled />} */}

@@ -38,7 +38,7 @@ export interface PlanData {
 interface GetBtnPropsProps {
   plan: PlanProp
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
-  handleStartPlan: (planEdition: Editions) => Promise<void>
+  handleStartPlan: (planEdition: Editions) => Promise<void> | void
   handleContactSales: () => void
   handleExtendTrial: (edition: Editions) => Promise<void>
   handleManageSubscription: () => void

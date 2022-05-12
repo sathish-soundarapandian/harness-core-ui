@@ -21,10 +21,30 @@
     }
   }
   .helmAdvancedSteps {
-    margin-bottom: 100px !important;
-  }
-  .commandFlags {
-    margin-top: var(--spacing-large);
+    margin-bottom: 50px !important;
+
+    .commandFlags {
+      margin-top: var(--spacing-large);
+    }
+
+    .commandType {
+      width: 240px;
+      margin-right: var(--spacing-xxlarge);
+      :global {
+        .bp3-label {
+          margin: var(--spacing-small) 0px;
+        }
+      }
+    }
+    .commandFlagType {
+      margin-top: 31px;
+    }
+
+    .helmCommandFlags {
+      :global(.bp3-popover-wrapper) {
+        margin-left: 0 !important;
+      }
+    }
   }
   .delBtn {
     margin-top: var(--spacing-medium) !important;

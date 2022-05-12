@@ -11,6 +11,7 @@ import * as Yup from 'yup'
 import { omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 
+import produce from 'immer'
 import { useStrings } from 'framework/strings'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -23,25 +24,42 @@ import GitContextForm, { IGitContextFormProps } from '@common/components/GitCont
 import type { EntityGitDetails } from 'services/pipeline-ng'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, PipelineActions } from '@common/constants/TrackingConstants'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { DefaultNewPipelineId } from '../PipelineContext/PipelineActions'
 import css from './PipelineCreate.module.scss'
 
 const logger = loggerFor(ModuleName.CD)
 
+interface UseTemplate {
+  useTemplate?: boolean
+}
+
 interface PipelineInfoConfigWithGitDetails extends PipelineInfoConfig {
   repo: string
   branch: string
 }
+
+type CretePipelinesValue = PipelineInfoConfigWithGitDetails & UseTemplate
+
 export interface PipelineCreateProps {
-  afterSave?: (values: PipelineInfoConfig, gitDetails?: EntityGitDetails) => void
-  initialValues?: PipelineInfoConfigWithGitDetails
+  afterSave?: (values: PipelineInfoConfig, gitDetails?: EntityGitDetails, useTemplate?: boolean) => void
+  initialValues?: CretePipelinesValue
   closeModal?: () => void
   gitDetails?: IGitContextFormProps
 }
 
 export default function CreatePipelines({
   afterSave,
-  initialValues = { identifier: '', name: '', description: '', tags: {}, repo: '', branch: '', stages: [] },
+  initialValues = {
+    identifier: DefaultNewPipelineId,
+    name: '',
+    description: '',
+    tags: {},
+    repo: '',
+    branch: '',
+    stages: []
+  },
   closeModal,
   gitDetails
 }: PipelineCreateProps): JSX.Element {
@@ -49,12 +67,19 @@ export default function CreatePipelines({
   const { pipelineIdentifier } = useParams<{ pipelineIdentifier: string }>()
   const { isGitSyncEnabled } = useAppStore()
   const { trackEvent } = useTelemetry()
+  const templatesFeatureFlagEnabled = useFeatureFlag(FeatureFlag.NG_TEMPLATES)
+  const pipelineTemplatesFeatureFlagEnabled = useFeatureFlag(FeatureFlag.NG_PIPELINE_TEMPLATE)
+  const isPipelineTemplateEnabled = templatesFeatureFlagEnabled && pipelineTemplatesFeatureFlagEnabled
 
-  const identifier = initialValues?.identifier
-  if (identifier === DefaultNewPipelineId) {
-    initialValues.identifier = ''
-  }
-  const isEdit = (initialValues?.identifier?.length || '') > 0
+  const newInitialValues = React.useMemo(() => {
+    return produce(initialValues, draft => {
+      if (draft.identifier === DefaultNewPipelineId) {
+        draft.identifier = ''
+      }
+    })
+  }, [initialValues])
+
+  const isEdit = React.useMemo(() => initialValues?.identifier !== DefaultNewPipelineId, [initialValues])
 
   useEffect(() => {
     !isEdit &&
@@ -65,8 +90,8 @@ export default function CreatePipelines({
   }, [isEdit])
 
   return (
-    <Formik<PipelineInfoConfigWithGitDetails>
-      initialValues={initialValues}
+    <Formik<CretePipelinesValue>
+      initialValues={newInitialValues}
       formName="pipelineCreate"
       validationSchema={Yup.object().shape({
         name: NameSchema({ requiredErrorMsg: getString('createPipeline.pipelineNameRequired') }),
@@ -84,7 +109,7 @@ export default function CreatePipelines({
           values.repo && values.repo.trim().length > 0
             ? { repoIdentifier: values.repo, branch: values.branch }
             : undefined
-        afterSave && afterSave(omit(values, 'repo', 'branch'), formGitDetails)
+        afterSave && afterSave(omit(values, 'repo', 'branch', 'useTemplate'), formGitDetails, values.useTemplate)
       }}
     >
       {formikProps => (
@@ -99,10 +124,27 @@ export default function CreatePipelines({
           />
           {isGitSyncEnabled && (
             <GitSyncStoreProvider>
-              <GitContextForm formikProps={formikProps} gitDetails={gitDetails} />
+              <GitContextForm formikProps={formikProps as any} gitDetails={gitDetails} />
             </GitSyncStoreProvider>
           )}
-
+          {!isEdit && isPipelineTemplateEnabled && (
+            <Container padding={{ top: 'xlarge' }}>
+              <Button
+                text={'Start with Template'}
+                icon={'template-library'}
+                iconProps={{
+                  size: 12
+                }}
+                variation={ButtonVariation.SECONDARY}
+                onClick={() => {
+                  formikProps.setFieldValue('useTemplate', true)
+                  window.requestAnimationFrame(() => {
+                    formikProps.submitForm()
+                  })
+                }}
+              />
+            </Container>
+          )}
           <Container padding={{ top: 'xlarge' }}>
             <Button
               variation={ButtonVariation.PRIMARY}

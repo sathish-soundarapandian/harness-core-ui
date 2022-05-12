@@ -26,7 +26,7 @@ import { PageSpinner } from '@common/components'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { TemplateStudioHeader } from '@templates-library/components/TemplateStudio/TemplateStudioHeader/TemplateStudioHeader'
 import type { GitQueryParams, ModulePathParams, TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
-import type { TemplateType } from '@templates-library/utils/templatesUtils'
+import { TemplateType } from '@templates-library/utils/templatesUtils'
 import { DrawerTypes } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateActions'
 
 import GenericErrorHandler from '@common/pages/GenericErrorHandler/GenericErrorHandler'
@@ -306,7 +306,7 @@ export function TemplateStudio(): React.ReactElement {
               </Container>
             </>
           )}
-          <RightBar />
+          {templateType !== TemplateType.Pipeline && <RightBar />}
         </Layout.Vertical>
       </Page.Body>
     </TemplateVariablesContextProvider>

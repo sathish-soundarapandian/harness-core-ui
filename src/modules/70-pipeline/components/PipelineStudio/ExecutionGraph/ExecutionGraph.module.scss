@@ -57,3 +57,13 @@ $dot-space: 10px;
   top: initial !important;
   bottom: 70px !important;
 }
+
+.graphLink {
+  stroke: var(--primary-4);
+}
+
+.portalVisibility {
+  span {
+    z-index: 999 !important;
+  }
+}

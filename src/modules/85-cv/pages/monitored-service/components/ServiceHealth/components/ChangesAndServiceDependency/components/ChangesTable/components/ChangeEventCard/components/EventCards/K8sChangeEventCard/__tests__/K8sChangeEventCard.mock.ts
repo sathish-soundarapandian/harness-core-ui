@@ -13,6 +13,7 @@ export const mockK8sChangeResponse: ChangeEventDTO = {
   orgIdentifier: 'default',
   projectIdentifier: 'k8sBugBash',
   serviceIdentifier: 'shaswat1',
+  monitoredServiceIdentifier: 'monitored_service_identifier',
   serviceName: 'shaswat-1',
   envIdentifier: 'prod',
   environmentName: 'prod',

@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 
-import { Layout, Button } from '@wings-software/uicore'
+import { Layout, Button } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { NavLink, useParams } from 'react-router-dom'
 import { Page } from '@common/exports'

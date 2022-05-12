@@ -23,6 +23,7 @@ exports[`Create Sumo Logic connector Wizard Ensure create flow works 1`] = `
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main form"
       >
         <div>

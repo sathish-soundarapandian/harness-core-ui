@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { Button, Table } from '@wings-software/uicore'
+import { Button, Table } from '@harness/uicore'
 import type { CellProps, Column } from 'react-table'
 import type { ResourceType } from '@rbac/interfaces/ResourceType'
 

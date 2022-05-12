@@ -305,7 +305,10 @@ export default function AddDrawer(props: AddDrawerProps): JSX.Element {
                       flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
                       spacing="small"
                     >
-                      <span>{category.categoryLabel}</span>
+                      <div className={cx({ [css.comingSoonBanner]: category.categoryValue === 'ArtifactComingSoon' })}>
+                        {category.categoryLabel}
+                      </div>
+
                       {category.categoryLabel === getString('secretManagers') && !featureEnabled && (
                         <FeatureWarningWithTooltip featureName={FeatureIdentifier.SECRET_MANAGERS} />
                       )}

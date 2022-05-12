@@ -10,6 +10,7 @@ declare const styles: {
   readonly footer: string
   readonly fullHeight: string
   readonly setupShell: string
+  readonly stepGroup: string
   readonly tab: string
   readonly tabExecution: string
   readonly tabsFullHeight: string

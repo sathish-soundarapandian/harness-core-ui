@@ -24,11 +24,13 @@ import { isEmpty, unset } from 'lodash-es'
 import { Page } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import type { PipelineInfoConfig } from 'services/cd-ng'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '../PiplineHooks/useVariablesExpression'
+import DelegateSelectorPanel from '../../PipelineSteps/AdvancedSteps/DelegateSelectorPanel/DelegateSelectorPanel'
 import css from './AdvancedOptions.module.scss'
 
 interface AdvancedOptionsProps {
@@ -61,7 +63,7 @@ export function AdvancedOptions({ onApplyChanges, onDiscard, pipeline }: Advance
     },
     [onApplyChanges]
   )
-
+  const { isReadonly } = usePipelineContext()
   return (
     <Formik<PipelineInfoConfig>
       formName="pipelineAdvancedOptions"
@@ -140,6 +142,18 @@ export function AdvancedOptions({ onApplyChanges, onDiscard, pipeline }: Advance
                       formikProps?.setFieldValue('allowStageExecutions', currentValue)
                     }}
                   />
+                </Layout.Vertical>
+              </Card>
+            </Layout.Vertical>
+
+            <br></br>
+            <Layout.Vertical spacing="small">
+              <Text font={{ variation: FontVariation.H5 }} data-tooltip-id="delegateSelector">
+                {getString('pipeline.delegate.DelegateSelectorOptional')}
+              </Text>
+              <Card>
+                <Layout.Vertical spacing="small">
+                  <DelegateSelectorPanel isReadonly={isReadonly} />
                 </Layout.Vertical>
               </Card>
             </Layout.Vertical>

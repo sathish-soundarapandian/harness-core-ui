@@ -6,8 +6,9 @@
  */
 
 import React from 'react'
-import { render, waitFor } from '@testing-library/react'
+import { render, waitFor, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import type { LogData } from 'services/cv'
 import { LogAnalysisRiskAndJiraModal } from '../LogAnalysisRiskAndJiraModal'
 import type { LogAnalysisRiskAndJiraModalProps } from '../LogAnalysisRiskAndJiraModal.types'
 
@@ -20,28 +21,49 @@ const WrapperComponent = (props: LogAnalysisRiskAndJiraModalProps): JSX.Element 
 }
 
 describe('Unit tests for LogAnalysisRiskAndJiraModal', () => {
-  const initialProps = {
-    count: 10,
-    activityType: 'Known events',
+  const initialProps: LogAnalysisRiskAndJiraModalProps = {
     onHide: jest.fn(),
-    logMessage: 'Exception-1'
+    rowData: {
+      clusterType: 'UNKNOWN' as LogData['tag'],
+      count: 14,
+      message: 'Sample event text',
+      messageFrequency: [
+        { name: 'testData', type: 'column', color: 'var(--red-400)', data: [14, 10, 8, 20, 4, 5, 5, 4, 5] }
+      ],
+      riskStatus: 'NO_DATA'
+    },
+    isDataLoading: false
   }
   test('Verify if all the fields are rendered correctly inside LogAnalysisRiskAndJiraModal', async () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     const { getByText } = render(<WrapperComponent {...initialProps} />)
 
     await waitFor(() => {
-      // Verify if trendline is rendered
-      expect(getByText('instanceFieldOptions.instanceHolder')).not.toBeNull()
-      expect(getByText('pipeline.verification.logs.trend')).not.toBeNull()
+      expect(getByText('instanceFieldOptions.instanceHolder')).toBeInTheDocument()
+      expect(getByText('Unknown')).toBeInTheDocument()
 
-      // Verify if correct count is rendered
-      expect(getByText(initialProps.count.toString())).not.toBeNull()
+      expect(getByText(initialProps.rowData.count.toString())).toBeInTheDocument()
 
-      // Verify if correct sample event type is rendered
       expect(getByText('pipeline.verification.logs.sampleEvent')).not.toBeNull()
-      expect(getByText(initialProps.activityType)).not.toBeNull()
-
-      expect(getByText('back')).not.toBeNull()
+      expect(getByText('Sample event text')).toBeInTheDocument()
     })
+  })
+
+  test('should verify loading UI is shown if the data is loading', () => {
+    render(<WrapperComponent {...initialProps} isDataLoading />)
+
+    expect(screen.getByTestId('LogAnalysisRiskAndJiraModal_loader')).toBeInTheDocument()
+  })
+
+  test('should verify error UI is shown if the API call fails', () => {
+    const errorObj = {
+      message: 'Failed to fetch: Failed to fetch',
+      data: 'Failed to fetch'
+    }
+
+    render(<WrapperComponent {...initialProps} logsError={errorObj} />)
+
+    expect(screen.getByTestId('LogAnalysisRiskAndJiraModal_error')).toBeInTheDocument()
   })
 })

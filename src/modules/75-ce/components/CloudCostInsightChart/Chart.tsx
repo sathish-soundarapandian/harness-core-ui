@@ -21,6 +21,8 @@ import { useStrings } from 'framework/strings'
 import { CE_DATE_FORMAT_INTERNAL } from '@ce/utils/momentUtils'
 import { generateGroupBy, getCloudProviderFromFields, getFiltersFromEnityMap } from '@ce/utils/anomaliesUtils'
 import { useUpdateQueryParams } from '@common/hooks'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
 import type { ChartConfigType } from './chartUtils'
 import CEChart from '../CEChart/CEChart'
 import ChartLegend from './ChartLegend'
@@ -29,6 +31,7 @@ import css from './Chart.module.scss'
 export const DAYS_FOR_TICK_INTERVAL = 10
 export const ONE_MONTH = 24 * 3600 * 1000 * 30
 
+/* istanbul ignore next */
 function getxAxisFormat(aggregation: QlceViewTimeGroupType, value: number): string {
   switch (aggregation) {
     case QlceViewTimeGroupType.Month:
@@ -75,6 +78,7 @@ const GetChart: React.FC<GetChartProps> = ({
   }>()
   const { getString } = useStrings()
   const { updateQueryParams } = useUpdateQueryParams()
+  const { trackEvent } = useTelemetry()
 
   useEffect(() => {
     // When the chart data changes the legend component is not getting updated due to no deps on data
@@ -112,7 +116,9 @@ const GetChart: React.FC<GetChartProps> = ({
       events: {
         click: function (event: any) {
           const name = event.point.series.userOptions.name as string
-          setFilterUsingChartClick && setFilterUsingChartClick(name)
+          if (chart.length > 1 && setFilterUsingChartClick) {
+            setFilterUsingChartClick(name)
+          }
         }
       },
       stacking
@@ -138,13 +144,13 @@ const GetChart: React.FC<GetChartProps> = ({
     xAxisOptions.tickInterval = ONE_MONTH
   }
 
+  /* istanbul ignore next */
   const redirection = (event: any) => {
     if (event.target.id.includes('navAnomalies')) {
       const anchorElm = event.target.id
       const elmId = anchorElm.split('_')
-
-      const time = moment(Number(elmId[1])).format(CE_DATE_FORMAT_INTERNAL)
-
+      const time = moment(Number(elmId[1])).utc().format(CE_DATE_FORMAT_INTERNAL)
+      trackEvent(USER_JOURNEY_EVENTS.VIEW_ANOMALIES_CLICK, {})
       history.push({
         pathname: routes.toCEAnomalyDetection({
           accountId: accountId
@@ -166,6 +172,7 @@ const GetChart: React.FC<GetChartProps> = ({
       const anomalyData = anomaliesCountData?.find(el => el.timestamp === time)
       const resourceData = anomalyData?.associatedResources as unknown as Array<Record<string, string>>
       if (resourceData?.length && resourceData[0]) {
+        trackEvent(USER_JOURNEY_EVENTS.APPLY_ANOMALY_FILTERS, {})
         const cloudProvider = getCloudProviderFromFields(resourceData[0])
         updateQueryParams({
           groupBy: JSON.stringify(generateGroupBy(resourceData[0].field, cloudProvider)),
@@ -175,6 +182,7 @@ const GetChart: React.FC<GetChartProps> = ({
     }
   }
 
+  /* istanbul ignore next */
   const labelsText = (item: Record<string, any>) => {
     return `
       <div class=${css.anomaliesWrapper}>
@@ -254,9 +262,6 @@ const GetChart: React.FC<GetChartProps> = ({
               labels: anomaliesLabels(),
               draggable: '',
               visible: isAnomaliesEnabled,
-              shapeOptions: {
-                r: 10
-              },
               labelOptions: {
                 crop: false,
                 useHTML: true,
@@ -313,7 +318,7 @@ const Chart: React.FC<CCMChartProps> = ({
             showLegends={showLegends}
             anomaliesCountData={anomaliesCountData}
           />
-        ) : null
+        ) : /* istanbul ignore next */ null
       })}
     </>
   )

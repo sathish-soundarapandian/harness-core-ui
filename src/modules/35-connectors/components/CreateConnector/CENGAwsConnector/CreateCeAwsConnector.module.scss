@@ -13,9 +13,12 @@
   :global {
     span[data-icon='service-azure'] {
       svg > g {
-        fill: white;
+        fill: var(--white);
       }
     }
+  }
+  [class*='StepWizard--stepDetails'] {
+    overflow-y: auto;
   }
   :global(.bp3-popover-target) {
     padding-bottom: 2px;
@@ -30,7 +33,6 @@
   .stepContainer {
     height: 100%;
     position: relative;
-    padding: var(--spacing-medium) !important;
     :global {
       .OverlaySpinner--overlaySpinner {
         height: 100%;
@@ -50,11 +52,6 @@
     }
   }
 
-  .subHeader {
-    padding: var(--spacing-xxxlarge);
-  }
-
-  .subHeader,
   .info,
   .dataFields,
   .launchTemplateSection {
@@ -92,10 +89,6 @@
     line-height: var(--spacing-large) !important;
   }
 
-  .mtblarge {
-    margin: var(--spacing-large) 0 !important;
-  }
-
   .cards {
     display: grid;
     grid-template-columns: 1fr 2fr;
@@ -117,17 +110,15 @@
 
   .launchTemplateBut {
     box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16) !important;
-    border-radius: 8px;
+    border-radius: 4px;
     border: 1px solid var(--primary-7) !important;
   }
 
   .newCurReport {
-    float: right;
     background-color: var(--white);
     box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16);
-    border-radius: 8px;
+    border-radius: 4px;
     border: thin solid var(--primary-7) !important;
-    width: 300px;
     font-size: var(--font-size-small) !important;
     line-height: 16px !important;
   }
@@ -146,6 +137,55 @@
     max-width: 500px;
     left: 0;
     bottom: 0;
+  }
+
+  .existingReportsWrapper {
+    background: var(--primary-1) !important;
+    border-radius: 4px;
+    padding: var(--spacing-xlarge);
+
+    ul {
+      padding: var(--spacing-medium);
+      margin: 0;
+    }
+  }
+
+  .hintsLineItem {
+    padding-bottom: var(--spacing-small);
+  }
+
+  .noAccountLink {
+    font-size: var(--font-size-small);
+  }
+
+  .defaultCard {
+    box-shadow: none;
+    background-color: var(--grey-50);
+    opacity: 80%;
+    cursor: not-allowed;
+    &:hover {
+      box-shadow: none !important;
+    }
+    :global {
+      .Card--badge {
+        opacity: 50%;
+      }
+    }
+  }
+
+  .infoCard {
+    background: var(--blue-50);
+    padding: var(--spacing-small) var(--spacing-medium);
+    margin: var(--spacing-xlarge) 0;
+    align-items: center;
+
+    .infoIcon {
+      margin-right: var(--spacing-medium);
+    }
+  }
+
+  .arnInstructionList {
+    line-height: 20px;
   }
 }
 
@@ -191,8 +231,10 @@
   max-height: 250px;
   line-height: 18px;
   width: 100%;
+  padding-top: var(--spacing-small);
   table {
     width: 100%;
+    background: var(--white);
   }
   thead {
     background: var(--grey-100);
@@ -205,7 +247,7 @@
 
 .featureCard {
   .features {
-    min-height: 140px;
+    // min-height: 140px;
     list-style: none;
     padding-left: var(--spacing-small);
 

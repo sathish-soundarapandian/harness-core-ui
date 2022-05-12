@@ -8,9 +8,10 @@
 import React from 'react'
 import { Drawer } from '@blueprintjs/core'
 
-import { Layout, Button, Text } from '@wings-software/uicore'
+import { Layout, Button, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
+
 interface DrawerProps {
   isOpen: boolean
   setDrawerOpen: (state: boolean) => void
@@ -18,6 +19,10 @@ interface DrawerProps {
 
 export const GetStarted: React.FC<DrawerProps> = props => {
   const { getString } = useStrings()
+
+  const renderEmbeddedVideo = (src: string, title: string) => (
+    <iframe allowFullScreen frameBorder={0} height="250" src={src} scrolling="no" title={title} width="470" />
+  )
 
   return (
     <Drawer
@@ -58,17 +63,10 @@ export const GetStarted: React.FC<DrawerProps> = props => {
             <Text font={{ size: 'normal' }} color={Color.GREY_700}>
               {getString('dashboards.getStarted.subTextVideo1')}
             </Text>
-
-            <iframe
-              src="//fast.wistia.net/embed/iframe/38m8yricif"
-              scrolling="no"
-              allowFullScreen={true}
-              frameBorder={0}
-              className="wistia_embed"
-              name="wistia_embed"
-              width="470"
-              height="250"
-            ></iframe>
+            {renderEmbeddedVideo(
+              '//fast.wistia.net/embed/iframe/38m8yricif',
+              getString('dashboards.getStarted.video1Title')
+            )}
           </Layout.Vertical>
           <Layout.Vertical spacing="large">
             <Text font={{ size: 'medium' }} color={Color.GREY_900}>
@@ -77,17 +75,10 @@ export const GetStarted: React.FC<DrawerProps> = props => {
             <Text font={{ size: 'normal' }} color={Color.GREY_700}>
               {getString('dashboards.getStarted.subTextVideo2')}
             </Text>
-
-            <iframe
-              src="//fast.wistia.net/embed/iframe/xde7qsupzd"
-              scrolling="no"
-              allowFullScreen={true}
-              frameBorder={0}
-              className="wistia_embed"
-              name="wistia_embed"
-              width="470"
-              height="250"
-            ></iframe>
+            {renderEmbeddedVideo(
+              '//fast.wistia.net/embed/iframe/xde7qsupzd',
+              getString('dashboards.getStarted.video2Title')
+            )}
           </Layout.Vertical>
           <Layout.Vertical spacing="large">
             <Text font={{ size: 'medium' }} color={Color.GREY_900}>
@@ -96,17 +87,10 @@ export const GetStarted: React.FC<DrawerProps> = props => {
             <Text font={{ size: 'normal' }} color={Color.GREY_700}>
               {getString('dashboards.getStarted.subTextVideo3')}
             </Text>
-
-            <iframe
-              src="//fast.wistia.net/embed/iframe/ykdmbx7bfg"
-              scrolling="no"
-              allowFullScreen={true}
-              frameBorder={0}
-              className="wistia_embed"
-              name="wistia_embed"
-              width="470"
-              height="250"
-            ></iframe>
+            {renderEmbeddedVideo(
+              '//fast.wistia.net/embed/iframe/ykdmbx7bfg',
+              getString('dashboards.getStarted.video3Title')
+            )}
           </Layout.Vertical>
         </Layout.Vertical>
       </Layout.Vertical>

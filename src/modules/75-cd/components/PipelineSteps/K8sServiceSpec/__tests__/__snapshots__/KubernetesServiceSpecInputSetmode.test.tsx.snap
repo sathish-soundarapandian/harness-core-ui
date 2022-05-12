@@ -22,7 +22,7 @@ exports[`<KubernetesServiceSpecInputSetMode /> tests snapshot test for kubernete
       <div
         class="subheading"
       >
-        variablesText
+        common.variables
       </div>
       <div
         class="nestedAccordions"

@@ -13,7 +13,9 @@ exports[`Kustomizepatch Details tests initial rendering 1`] = `
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="helmGitForm"
         >
@@ -462,7 +464,9 @@ exports[`Kustomizepatch Details tests renders form in edit mode 1`] = `
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="helmGitForm"
         >

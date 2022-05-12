@@ -62,10 +62,11 @@ import { NameIdDescriptionTags, PageSpinner } from '@common/components'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
-import { DeployTabs } from '@cd/components/PipelineStudio/DeployStageSetupShell/DeployStageSetupShellUtils'
+import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { getServiceRefSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
 import css from './DeployServiceStep.module.scss'
@@ -239,7 +240,7 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
         })}
       >
         {formikProps => {
-          formikRef.current = formikProps
+          formikRef.current = formikProps as FormikProps<ServiceResponseDTO> | undefined
           return (
             <>
               {selectedView === SelectedView.VISUAL ? (
@@ -288,7 +289,12 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
                       text={getString('save')}
                       onClick={() => {
                         const latestYaml = defaultTo(yamlHandler?.getLatestYaml(), '')
-                        onSubmit(parse(latestYaml)?.service)
+                        const errorMsg = yamlHandler?.getYAMLValidationErrorMap()
+                        if (errorMsg?.size) {
+                          showError(errorMsg.entries().next().value[1])
+                        } else {
+                          onSubmit(parse(latestYaml)?.service)
+                        }
                       }}
                     />
                     <Button variation={ButtonVariation.TERTIARY} onClick={closeModal} text={getString('cancel')} />
@@ -358,6 +364,7 @@ export const DeployServiceWidget: React.FC<DeployServiceProps> = ({
   >()
 
   const { showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
   const {
     data: serviceResponse,
     error,
@@ -487,7 +494,7 @@ export const DeployServiceWidget: React.FC<DeployServiceProps> = ({
   }, [loading, serviceResponse, serviceResponse?.data?.content?.length])
 
   if (error?.message) {
-    showError(error.message, undefined, 'cd.svc.list.error')
+    showError(getRBACErrorMessage(error), undefined, 'cd.svc.list.error')
   }
 
   const [canEdit] = usePermission({
@@ -527,6 +534,7 @@ export const DeployServiceWidget: React.FC<DeployServiceProps> = ({
       <Formik<DeployServiceData>
         formName="deployServiceStepForm"
         onSubmit={noop}
+        enableReinitialize
         validate={values => {
           if (!isEmpty(values.service)) {
             onUpdate?.({ ...omit(values, 'serviceRef') })
@@ -544,7 +552,7 @@ export const DeployServiceWidget: React.FC<DeployServiceProps> = ({
       >
         {formik => {
           window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.SERVICE }))
-          formikRef.current = formik
+          formikRef.current = formik as FormikProps<unknown> | null
           const { values, setFieldValue } = formik
           return (
             <Layout.Horizontal
@@ -642,6 +650,7 @@ const DeployServiceInputStep: React.FC<DeployServiceProps & { formik?: any }> = 
     }>
   >()
   const { showError, clear } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
   const { expressions } = useVariablesExpression()
   const {
     data: serviceResponse,
@@ -732,7 +741,7 @@ const DeployServiceInputStep: React.FC<DeployServiceProps & { formik?: any }> = 
   }, [hideModal])
   if (error?.message) {
     clear()
-    showError(error.message, undefined, 'cd.svc.list.error')
+    showError(getRBACErrorMessage(error), undefined, 'cd.svc.list.error')
   }
   return (
     <>

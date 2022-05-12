@@ -45,6 +45,7 @@ export function PolicyEvaluationContent({ step }: { step: ExecutionNode }) {
     pass: 0
   })
 
+  const policyStepEvaluationId = defaultTo(/* istanbul ignore next */ step?.outcomes?.output?.evaluationId, '')
   const policySetDetails = defaultTo(/* istanbul ignore next */ step?.outcomes?.output?.policySetDetails, {})
   const policySetIds = Object.keys(policySetDetails)
 
@@ -79,7 +80,13 @@ export function PolicyEvaluationContent({ step }: { step: ExecutionNode }) {
         </Layout.Horizontal>
         <Layout.Vertical padding={{ top: 'medium', bottom: 'medium' }}>
           {policySetIds.map(id => {
-            return <PolicySetInfo key={id} policySet={policySetDetails[id]} />
+            return (
+              <PolicySetInfo
+                key={id}
+                policySet={policySetDetails[id]}
+                policyStepEvaluationId={policyStepEvaluationId as string}
+              />
+            )
           })}
         </Layout.Vertical>
       </Container>
@@ -87,7 +94,13 @@ export function PolicyEvaluationContent({ step }: { step: ExecutionNode }) {
   }
 }
 
-function PolicySetInfo({ policySet }: { policySet: { [key: string]: any } }) {
+function PolicySetInfo({
+  policySet,
+  policyStepEvaluationId
+}: {
+  policySet: { [key: string]: any }
+  policyStepEvaluationId: string
+}) {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const { module } = useModuleInfo()
@@ -140,7 +153,14 @@ function PolicySetInfo({ policySet }: { policySet: { [key: string]: any } }) {
         >
           <Container margin={{ top: 'large' }} border={{ top: true }}>
             {policyIds.map((id, index) => {
-              return <PolicyInfo key={id} policy={policies[id]} numberInList={index + 1} />
+              return (
+                <PolicyInfo
+                  key={id}
+                  policy={policies[id]}
+                  numberInList={index + 1}
+                  policyStepEvaluationId={policyStepEvaluationId}
+                />
+              )
             })}
           </Container>
         </Collapse>
@@ -149,7 +169,15 @@ function PolicySetInfo({ policySet }: { policySet: { [key: string]: any } }) {
   }
 }
 
-export function PolicyInfo({ policy, numberInList }: { policy: EvaluatedPolicy; numberInList: number }) {
+export function PolicyInfo({
+  policy,
+  numberInList,
+  policyStepEvaluationId
+}: {
+  policy: EvaluatedPolicy
+  numberInList: number
+  policyStepEvaluationId: string
+}) {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const { module } = useModuleInfo()
@@ -170,11 +198,11 @@ export function PolicyInfo({ policy, numberInList }: { policy: EvaluatedPolicy; 
         <Text lineClamp={1} width={'400px'} padding={{ right: 'small' }}>
           <Link
             to={{
-              pathname: routes.toGovernanceViewPolicy({
+              pathname: routes.toGovernanceEvaluationDetail({
                 accountId,
-                policyIdentifier: defaultTo(identifier, ''),
                 ...(scope === getString('orgLabel') && { orgIdentifier }),
-                ...(scope === getString('projectLabel') && { module, orgIdentifier, projectIdentifier })
+                ...(scope === getString('projectLabel') && { module, orgIdentifier, projectIdentifier }),
+                evaluationId: policyStepEvaluationId
               })
             }}
           >

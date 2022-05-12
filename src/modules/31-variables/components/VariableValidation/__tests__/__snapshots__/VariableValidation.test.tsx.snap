@@ -1,0 +1,225 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`VariableValidation render component for Fixed 1`] = `
+<div>
+  <div
+    class="OverlaySpinner--overlaySpinner"
+  >
+    <form
+      action="#"
+      class="FormikForm--main"
+    >
+      <div>
+        <div
+          class="bp3-form-group"
+          data-id="valueType-0"
+        >
+          <label
+            class="bp3-label"
+            for="valueType"
+          >
+            <span
+              class="Tooltip--acenter"
+              data-tooltip-id="allowedValueTest_valueType"
+            >
+              common.configureOptions.validation
+            </span>
+             
+            <span
+              class="bp3-text-muted"
+            />
+          </label>
+          <div
+            class="bp3-form-content"
+          >
+            <div
+              class="StyledProps--main"
+            >
+              
+              <div
+                class="RadioButtonGroup--inline"
+              >
+                <label
+                  class="RadioButton--radio StyledProps--main"
+                >
+                  <input
+                    checked=""
+                    class="RadioButton--input"
+                    name="valueType"
+                    type="radio"
+                    value="FIXED"
+                  />
+                  <span
+                    class="RadioButton--radioIcon"
+                  />
+                  inputTypes.FIXED
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bp3-form-group"
+        >
+          <label
+            class="bp3-label"
+            for="fixedValue"
+          >
+            <span
+              class="Tooltip--acenter"
+              data-tooltip-id="allowedValueTest_fixedValue"
+            >
+              Fixed Value
+            </span>
+             
+            <span
+              class="bp3-text-muted"
+            />
+          </label>
+          <div
+            class="bp3-form-content"
+          >
+            <div
+              class="bp3-input-group"
+            >
+              <input
+                autocomplete="off"
+                class="bp3-input"
+                name="fixedValue"
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+`;
+
+exports[`VariableValidation render component for Fixed Set 1`] = `
+<div>
+  <div
+    class="OverlaySpinner--overlaySpinner"
+  >
+    <form
+      action="#"
+      class="FormikForm--main"
+    >
+      <div>
+        <div
+          class="bp3-form-group"
+          data-id="valueType-0"
+        >
+          <label
+            class="bp3-label"
+            for="valueType"
+          >
+            <span
+              class="Tooltip--acenter"
+              data-tooltip-id="allowedValueTest_valueType"
+            >
+              common.configureOptions.validation
+            </span>
+             
+            <span
+              class="bp3-text-muted"
+            />
+          </label>
+          <div
+            class="bp3-form-content"
+          >
+            <div
+              class="StyledProps--main"
+            >
+              
+              <div
+                class="RadioButtonGroup--inline"
+              >
+                <label
+                  class="RadioButton--radio StyledProps--main"
+                >
+                  <input
+                    class="RadioButton--input"
+                    name="valueType"
+                    type="radio"
+                    value="FIXED"
+                  />
+                  <span
+                    class="RadioButton--radioIcon"
+                  />
+                  inputTypes.FIXED
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+`;
+
+exports[`VariableValidation render component for regex 1`] = `
+<div>
+  <div
+    class="OverlaySpinner--overlaySpinner"
+  >
+    <form
+      action="#"
+      class="FormikForm--main"
+    >
+      <div>
+        <div
+          class="bp3-form-group"
+          data-id="valueType-0"
+        >
+          <label
+            class="bp3-label"
+            for="valueType"
+          >
+            <span
+              class="Tooltip--acenter"
+              data-tooltip-id="allowedValueTest_valueType"
+            >
+              common.configureOptions.validation
+            </span>
+             
+            <span
+              class="bp3-text-muted"
+            />
+          </label>
+          <div
+            class="bp3-form-content"
+          >
+            <div
+              class="StyledProps--main"
+            >
+              
+              <div
+                class="RadioButtonGroup--inline"
+              >
+                <label
+                  class="RadioButton--radio StyledProps--main"
+                >
+                  <input
+                    class="RadioButton--input"
+                    name="valueType"
+                    type="radio"
+                    value="FIXED"
+                  />
+                  <span
+                    class="RadioButton--radioIcon"
+                  />
+                  inputTypes.FIXED
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+`;

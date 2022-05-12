@@ -16,6 +16,7 @@ exports[`EXECUTION VIEW should should have the values prefilled and fields as di
           data-testid="runPipelineVisualView"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -230,6 +231,7 @@ exports[`STUDIO MODE Valid input set enables Run button if it was disabled due t
           data-testid="runPipelineVisualView"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -824,6 +826,7 @@ exports[`STUDIO MODE invalid input sets should not be applied 1`] = `
           data-testid="runPipelineVisualView"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -1353,6 +1356,7 @@ exports[`STUDIO MODE should accept values from input sets and submit the form: a
           data-testid="runPipelineVisualView"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>

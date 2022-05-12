@@ -14,7 +14,7 @@ import * as Yup from 'yup'
 import isEmpty from 'lodash/isEmpty'
 import { useStrings } from 'framework/strings'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
-import { DeployTabs } from '@cd/components/PipelineStudio/DeployStageSetupShell/DeployStageSetupShellUtils'
+import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import css from './PropagateWidget.module.scss'
 
 export const setupMode = {
@@ -59,7 +59,7 @@ export default function PropagateWidget(props: PropagateWidgetProps): JSX.Elemen
           is: setupMode.PROPAGATE,
           then: Yup.object().test(
             'selectedPropagatedState',
-            getString('cd.pipelineSteps.serviceTab.propagateStage'),
+            getString('cd.pipelineSteps.infraTab.stageIsRequired'),
             propagatedState => !isEmpty(propagatedState.value)
           )
         })
@@ -72,7 +72,7 @@ export default function PropagateWidget(props: PropagateWidgetProps): JSX.Elemen
     >
       {formik => {
         window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.SERVICE }))
-        formikRef.current = formik
+        formikRef.current = formik as FormikProps<unknown> | null
         const { values } = formik
         return (
           <Container>

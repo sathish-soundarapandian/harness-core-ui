@@ -15,7 +15,8 @@ import {
   Button,
   StepProps,
   Text,
-  ButtonVariation
+  ButtonVariation,
+  SelectOption
 } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
 import { Form } from 'formik'
@@ -36,6 +37,7 @@ import {
   resetTag,
   shouldFetchTags
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type {
   ArtifactType,
@@ -45,7 +47,20 @@ import type {
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import ArtifactImagePathTagView from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import SideCarArtifactIdentifier from '../SideCarArtifactIdentifier'
+import ServerlessArtifactoryRepository from './ServerlessArtifactoryRepository'
 import css from '../../ArtifactConnector.module.scss'
+
+const getRepositoryValue = (
+  formData: ImagePathTypes & { connectorId?: string },
+  isServerlessDeploymentTypeSelected = false
+): string => {
+  if (isServerlessDeploymentTypeSelected) {
+    if ((formData?.repository as SelectOption)?.value) {
+      return (formData?.repository as SelectOption)?.value as string
+    }
+  }
+  return formData?.repository as string
+}
 
 function Artifactory({
   context,
@@ -57,7 +72,8 @@ function Artifactory({
   previousStep,
   artifactIdentifiers,
   isReadonly = false,
-  selectedArtifact
+  selectedArtifact,
+  selectedDeploymentType
 }: StepProps<ConnectorConfigDTO> & ImagePathProps): React.ReactElement {
   const { getString } = useStrings()
   const [lastQueryData, setLastQueryData] = useState({ artifactPath: '', repository: '' })
@@ -65,6 +81,7 @@ function Artifactory({
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const isServerlessDeploymentTypeSelected = isServerlessDeploymentType(selectedDeploymentType)
 
   const schemaObject = {
     artifactPath: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactPath')),
@@ -80,7 +97,26 @@ function Artifactory({
     })
   }
 
+  const serverlessArtifactorySchema = {
+    repository: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
+    artifactDirectory: Yup.string()
+      .trim()
+      .required(getString('pipeline.artifactsSelection.validation.artifactDirectory')),
+    tagType: Yup.string().required(),
+    tagRegex: Yup.string().when('tagType', {
+      is: 'regex',
+      then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactPathFilter'))
+    }),
+    tag: Yup.mixed().when('tagType', {
+      is: 'value',
+      then: Yup.mixed().required(getString('pipeline.artifactsSelection.validation.artifactPath'))
+    })
+  }
+
   const primarySchema = Yup.object().shape(schemaObject)
+
+  const serverlessPrimarySchema = Yup.object().shape(serverlessArtifactorySchema)
+
   const sidecarSchema = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
@@ -103,7 +139,7 @@ function Artifactory({
     queryParams: {
       artifactPath: lastQueryData.artifactPath,
       repository: lastQueryData.repository,
-      repositoryFormat,
+      repositoryFormat: isServerlessDeploymentTypeSelected ? 'generic' : repositoryFormat,
       connectorRef: getConnectorRefQueryData(),
       accountIdentifier: accountId,
       orgIdentifier,
@@ -150,19 +186,42 @@ function Artifactory({
     return !checkIfQueryParamsisNotEmpty([formikValue.artifactPath, formikValue.repository])
   }, [])
 
+  const isArtifactPathDisabled = useCallback((formikValue): boolean => {
+    return !checkIfQueryParamsisNotEmpty([formikValue.artifactDirectory, formikValue.repository])
+  }, [])
+
   const getInitialValues = useCallback((): ImagePathTypes => {
-    return getArtifactFormData(initialValues, selectedArtifact as ArtifactType, context === ModalViewFor.SIDECAR)
+    return getArtifactFormData(
+      initialValues,
+      selectedArtifact as ArtifactType,
+      context === ModalViewFor.SIDECAR,
+      isServerlessDeploymentTypeSelected
+    )
   }, [context, initialValues, selectedArtifact])
 
   const submitFormData = (formData: ImagePathTypes & { connectorId?: string }): void => {
-    const artifactObj = getFinalArtifactFormObj(formData, context === ModalViewFor.SIDECAR)
+    const artifactObj = getFinalArtifactFormObj(
+      formData,
+      context === ModalViewFor.SIDECAR,
+      isServerlessDeploymentTypeSelected
+    )
     merge(artifactObj.spec, {
-      repository: formData?.repository,
+      repository: getRepositoryValue(formData, isServerlessDeploymentTypeSelected),
       repositoryUrl: formData?.repositoryUrl,
-      repositoryFormat
+      repositoryFormat: isServerlessDeploymentTypeSelected ? 'generic' : repositoryFormat
     })
     handleSubmit(artifactObj)
   }
+
+  const getValidationSchema = useCallback(() => {
+    if (context === ModalViewFor.SIDECAR) {
+      return sidecarSchema
+    }
+    if (isServerlessDeploymentTypeSelected) {
+      return serverlessPrimarySchema
+    }
+    return primarySchema
+  }, [context, isServerlessDeploymentTypeSelected, primarySchema, serverlessPrimarySchema, sidecarSchema])
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
@@ -172,7 +231,7 @@ function Artifactory({
       <Formik
         initialValues={getInitialValues()}
         formName="artifactoryArtifact"
-        validationSchema={context === ModalViewFor.SIDECAR ? sidecarSchema : primarySchema}
+        validationSchema={getValidationSchema()}
         onSubmit={formData => {
           submitFormData({
             ...prevStepData,
@@ -186,71 +245,122 @@ function Artifactory({
           <Form>
             <div className={css.connectorForm}>
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
+              {!isServerlessDeploymentTypeSelected && (
+                <div className={css.imagePathContainer}>
+                  <FormInput.MultiTextInput
+                    label={getString('repositoryUrlLabel')}
+                    name="repositoryUrl"
+                    isOptional
+                    placeholder={getString('pipeline.repositoryUrlPlaceholder')}
+                    multiTextInputProps={{
+                      expressions,
+                      allowableTypes
+                    }}
+                  />
 
-              <div className={css.imagePathContainer}>
-                <FormInput.MultiTextInput
-                  label={getString('repositoryUrlLabel')}
-                  name="repositoryUrl"
-                  isOptional
-                  placeholder={getString('pipeline.repositoryUrlPlaceholder')}
-                  multiTextInputProps={{
-                    expressions,
-                    allowableTypes
-                  }}
+                  {getMultiTypeFromValue(formik.values.repositoryUrl) === MultiTypeInputType.RUNTIME && (
+                    <div className={css.configureOptions}>
+                      <ConfigureOptions
+                        style={{ alignSelf: 'center' }}
+                        value={formik.values?.repositoryUrl as string}
+                        type={getString('string')}
+                        variableName="repositoryUrl"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        showAdvanced={true}
+                        onChange={value => {
+                          formik.setFieldValue('repositoryUrl', value)
+                        }}
+                        isReadonly={isReadonly}
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {isServerlessDeploymentTypeSelected ? (
+                <ServerlessArtifactoryRepository
+                  connectorRef={
+                    getMultiTypeFromValue(prevStepData?.connectorId) === MultiTypeInputType.RUNTIME
+                      ? prevStepData?.connectorId
+                      : prevStepData?.connectorId.value
+                  }
+                  isReadonly={isReadonly}
+                  expressions={expressions}
+                  allowableTypes={allowableTypes}
+                  formik={formik}
+                  fieldName={'repository'}
                 />
+              ) : (
+                <div className={css.imagePathContainer}>
+                  <FormInput.MultiTextInput
+                    label={getString('repository')}
+                    name="repository"
+                    placeholder={getString('pipeline.artifactsSelection.repositoryPlaceholder')}
+                    multiTextInputProps={{
+                      expressions,
+                      allowableTypes
+                    }}
+                    onChange={() => {
+                      tagList?.length && setTagList([])
+                      resetTag(formik)
+                    }}
+                  />
 
-                {getMultiTypeFromValue(formik.values.repositoryUrl) === MultiTypeInputType.RUNTIME && (
-                  <div className={css.configureOptions}>
-                    <ConfigureOptions
-                      style={{ alignSelf: 'center' }}
-                      value={formik.values?.repositoryUrl as string}
-                      type={getString('string')}
-                      variableName="repositoryUrl"
-                      showRequiredField={false}
-                      showDefaultField={false}
-                      showAdvanced={true}
-                      onChange={value => {
-                        formik.setFieldValue('repositoryUrl', value)
-                      }}
-                      isReadonly={isReadonly}
-                    />
-                  </div>
-                )}
-              </div>
+                  {getMultiTypeFromValue(formik.values.repository) === MultiTypeInputType.RUNTIME && (
+                    <div className={css.configureOptions}>
+                      <ConfigureOptions
+                        style={{ alignSelf: 'center' }}
+                        value={formik.values?.repository as string}
+                        type={getString('string')}
+                        variableName="repository"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        showAdvanced={true}
+                        onChange={value => {
+                          formik.setFieldValue('repository', value)
+                        }}
+                        isReadonly={isReadonly}
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
 
-              <div className={css.imagePathContainer}>
-                <FormInput.MultiTextInput
-                  label={getString('repository')}
-                  name="repository"
-                  placeholder={getString('pipeline.artifactsSelection.repositoryPlaceholder')}
-                  multiTextInputProps={{
-                    expressions,
-                    allowableTypes
-                  }}
-                  onChange={() => {
-                    tagList?.length && setTagList([])
-                    resetTag(formik)
-                  }}
-                />
+              {isServerlessDeploymentTypeSelected && (
+                <div className={css.imagePathContainer}>
+                  <FormInput.MultiTextInput
+                    label={getString('pipeline.artifactsSelection.artifactDirectory')}
+                    name="artifactDirectory"
+                    placeholder={getString('pipeline.artifactsSelection.artifactDirectoryPlaceholder')}
+                    multiTextInputProps={{
+                      expressions,
+                      allowableTypes
+                    }}
+                    onChange={() => {
+                      resetTag(formik)
+                    }}
+                  />
 
-                {getMultiTypeFromValue(formik.values.repository) === MultiTypeInputType.RUNTIME && (
-                  <div className={css.configureOptions}>
-                    <ConfigureOptions
-                      style={{ alignSelf: 'center' }}
-                      value={formik.values?.repository as string}
-                      type={getString('string')}
-                      variableName="repository"
-                      showRequiredField={false}
-                      showDefaultField={false}
-                      showAdvanced={true}
-                      onChange={value => {
-                        formik.setFieldValue('repository', value)
-                      }}
-                      isReadonly={isReadonly}
-                    />
-                  </div>
-                )}
-              </div>
+                  {getMultiTypeFromValue(formik.values.repository) === MultiTypeInputType.RUNTIME && (
+                    <div className={css.configureOptions}>
+                      <ConfigureOptions
+                        style={{ alignSelf: 'center' }}
+                        value={formik.values?.repository as string}
+                        type={getString('string')}
+                        variableName="artifactDirectory"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        showAdvanced={true}
+                        onChange={value => {
+                          formik.setFieldValue('artifactDirectory', value)
+                        }}
+                        isReadonly={isReadonly}
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
 
               <ArtifactImagePathTagView
                 selectedArtifact={selectedArtifact as ArtifactType}
@@ -259,13 +369,20 @@ function Artifactory({
                 allowableTypes={allowableTypes}
                 isReadonly={isReadonly}
                 connectorIdValue={getConnectorIdValue(prevStepData)}
-                fetchTags={artifactPath => fetchTags(artifactPath, formik?.values?.repository)}
+                fetchTags={artifactPath => {
+                  fetchTags(artifactPath, formik?.values?.repository)
+                }}
                 buildDetailsLoading={artifactoryBuildDetailsLoading}
                 tagError={artifactoryTagError}
                 tagList={tagList}
                 setTagList={setTagList}
-                tagDisabled={isTagDisabled(formik?.values)}
+                tagDisabled={
+                  isServerlessDeploymentTypeSelected
+                    ? isArtifactPathDisabled(formik?.values)
+                    : isTagDisabled(formik?.values)
+                }
                 isArtifactPath={true}
+                isServerlessDeploymentTypeSelected={isServerlessDeploymentTypeSelected}
               />
             </div>
             <Layout.Horizontal spacing="medium">

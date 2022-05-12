@@ -29,7 +29,12 @@ export default function CDInfo(props: CDInfoProps): React.ReactElement {
 
   const primaryArtifactPath = get(data, 'data.moduleInfo.cd.serviceInfo.artifacts.primary', {})
   if (!isEmpty(primaryArtifactPath)) {
-    artifacts.push(primaryArtifactPath.imagePath ?? primaryArtifactPath.version)
+    artifacts.push(
+      primaryArtifactPath.imagePath ??
+        primaryArtifactPath.version ??
+        primaryArtifactPath.artifactPath ??
+        primaryArtifactPath.artifactPathFilter
+    )
   }
   const serviceName = get(data, 'data.moduleInfo.cd.serviceInfo.displayName', null)
   const environment = get(data, 'data.moduleInfo.cd.infraExecutionSummary.name', null)

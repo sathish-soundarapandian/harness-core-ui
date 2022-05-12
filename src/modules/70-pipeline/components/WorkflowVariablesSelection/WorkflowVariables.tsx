@@ -6,20 +6,17 @@
  */
 
 import React from 'react'
-import { Layout, Text } from '@wings-software/uicore'
-import { defaultTo, set, get, isEmpty } from 'lodash-es'
-import { Color } from '@harness/design-system'
+import { Layout } from '@wings-software/uicore'
+import { defaultTo, get, isEmpty } from 'lodash-es'
 import type { AllNGVariables as Variable } from '@pipeline/utils/types'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { PredefinedOverrideSets } from '@pipeline/components/PredefinedOverrideSets/PredefinedOverrideSets'
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import type {
   CustomVariablesData,
   CustomVariableEditableExtraProps
 } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableEditable'
 
-import { useStrings } from 'framework/strings'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import type { StageElementWrapperConfig } from 'services/cd-ng'
 import type { AbstractStepFactory } from '../AbstractSteps/AbstractStepFactory'
@@ -28,10 +25,6 @@ import { StepViewType } from '../AbstractSteps/Step'
 import { StepWidget } from '../AbstractSteps/StepWidget'
 
 export interface WorkflowVariablesProps {
-  isForOverrideSets?: boolean
-  identifierName?: string
-  isForPredefinedSets?: boolean
-  overrideSetIdentifier?: string
   isPropagating?: boolean
   tabName?: string
   formName?: string
@@ -40,10 +33,6 @@ export interface WorkflowVariablesProps {
 }
 
 export default function WorkflowVariables({
-  isForOverrideSets = false,
-  identifierName,
-  isForPredefinedSets = false,
-  overrideSetIdentifier = '',
   isPropagating = false,
   tabName,
   formName,
@@ -59,12 +48,11 @@ export default function WorkflowVariables({
     getStageFromPipeline,
     updatePipeline
   } = usePipelineContext()
-  const { getString } = useStrings()
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const serviceConfig = stage?.stage?.spec?.serviceConfig || {}
   const parentStage = serviceConfig.useFromStage?.stage
-  const { variablesPipeline, metadataMap } = usePipelineVariables()
+  const { metadataMap } = usePipelineVariables()
 
   const [parentStageData, setParentStageData] = React.useState<StageElementWrapperConfig>()
   React.useEffect(() => {
@@ -85,102 +73,28 @@ export default function WorkflowVariables({
         updatePipeline(pipeline)
         return
       }
-      if (!isForOverrideSets) {
-        if (isForPredefinedSets) {
-          predefinedSetsPath.variables = vars
-        } else {
-          stageSpec.variables = vars
-        }
-      } else {
-        const overrideSets = stageSpec.variableOverrideSets || []
-        overrideSets.forEach(variableSet => {
-          if (variableSet?.overrideSet?.identifier === identifierName) {
-            set(variableSet, 'overrideSet.variables', vars)
-          }
-        })
-      }
     }
     updatePipeline(pipeline)
   }
 
-  const getInitialValues = (): Variable[] => {
-    if (isPropagating) {
-      return get(predefinedSetsPath, 'variables', []) as Variable[]
-    }
-    if (!isForOverrideSets) {
-      if (isForPredefinedSets) {
-        return (predefinedSetsPath?.variables || []) as Variable[]
-      }
-      return (stageSpec?.variables || []) as Variable[]
-    }
-    if (isForPredefinedSets) {
-      return (predefinedSetsPath?.variables || []) as Variable[]
-    }
-    const overrideSets = stageSpec.variableOverrideSets
-    return defaultTo(
-      overrideSets
-        ?.map(variableSet => {
-          if (variableSet?.overrideSet?.identifier === identifierName) {
-            return variableSet.overrideSet?.variables
-          }
-        })
-        .filter(x => x !== undefined)[0],
-      []
-    ) as Variable[]
-  }
-
   const getYamlPropertiesForVariables = (): Variable[] => {
-    const { stage: variablesStage } = getStageFromPipeline<DeploymentStageElementConfig>(
-      parentStage || selectedStageId || '',
-      variablesPipeline
-    )
-    const variablesServiceConfig = variablesStage?.stage?.spec?.serviceConfig || {}
-    const variablesStageSpec = variablesServiceConfig.serviceDefinition?.spec
-
     if (isPropagating) {
       return get(predefinedSetsPath, 'variables', []) as Variable[]
     }
-    if (!isForOverrideSets) {
-      if (isForPredefinedSets) {
-        return (predefinedSetsPath?.variables || []) as Variable[]
-      }
-      return (variablesStageSpec?.variables || []) as Variable[]
-    }
-    if (isForPredefinedSets) {
-      return (variablesServiceConfig?.stageOverrides?.variables || []) as Variable[]
-    }
 
-    const overrideSets = variablesStageSpec?.variableOverrideSets
-
-    return defaultTo(
-      overrideSets
-        ?.map(variableSet => {
-          if (variableSet?.overrideSet?.identifier === identifierName) {
-            return variableSet.overrideSet?.variables
-          }
-        })
-        .filter(x => x !== undefined)[0],
-      []
-    ) as Variable[]
+    return []
   }
 
   return (
     <Layout.Vertical style={{ borderRadius: '5px' }}>
-      {isForPredefinedSets && <PredefinedOverrideSets context="VARIABLES" currentStage={stage} />}
-
       <section>
-        {overrideSetIdentifier?.length === 0 && !isForOverrideSets && (
-          <Text color={Color.GREY_500} style={{ fontSize: '13px' }}>
-            {getString('workflowVariableInfo')}
-          </Text>
-        )}
         <StepWidget<CustomVariablesData, CustomVariableEditableExtraProps>
           factory={factory}
           stepViewType={StepViewType.StageVariable}
           initialValues={{
-            variables: getInitialValues(),
+            variables: getYamlPropertiesForVariables(),
             isPropagating,
-            canAddVariable: !overrideSetIdentifier?.length
+            canAddVariable: true
           }}
           allowableTypes={allowableTypes}
           readonly={readonly}

@@ -526,6 +526,25 @@ exports[`test cases for node recommendations details should be able to render no
   <div
     class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--padding-xlarge"
   >
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+    >
+      ce.recommendation.detailsPage.nodepoolDetails
+    </p>
+    <div
+      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-large"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey500"
+      >
+        common.cluster
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey800"
+      >
+        sample-ce-dev
+      </p>
+    </div>
     <div
       class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
     >
@@ -1578,6 +1597,25 @@ exports[`test cases for node recommendations details should be able to render no
   <div
     class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--padding-xlarge"
   >
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+    >
+      ce.recommendation.detailsPage.nodepoolDetails
+    </p>
+    <div
+      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-large"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey500"
+      >
+        common.cluster
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey800"
+      >
+        sample-ce-dev
+      </p>
+    </div>
     <div
       class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
     >
@@ -2644,6 +2682,25 @@ exports[`test cases for node recommendations details should be able to render no
   <div
     class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--padding-xlarge"
   >
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+    >
+      ce.recommendation.detailsPage.nodepoolDetails
+    </p>
+    <div
+      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-large"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey500"
+      >
+        common.cluster
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey800"
+      >
+        sample-ce-dev
+      </p>
+    </div>
     <div
       class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
     >
@@ -3708,6 +3765,25 @@ exports[`test cases for node recommendations details should be able to render no
   <div
     class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--padding-xlarge"
   >
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+    >
+      ce.recommendation.detailsPage.nodepoolDetails
+    </p>
+    <div
+      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-large"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey500"
+      >
+        common.cluster
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey800"
+      >
+        sample-ce-dev
+      </p>
+    </div>
     <div
       class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
     >

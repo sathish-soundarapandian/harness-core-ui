@@ -6,6 +6,7 @@ exports[`AWS Access Point Configuration screen first Import access point flow na
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -282,6 +283,7 @@ exports[`AWS Access Point Configuration screen first render and fill form 1`] = 
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

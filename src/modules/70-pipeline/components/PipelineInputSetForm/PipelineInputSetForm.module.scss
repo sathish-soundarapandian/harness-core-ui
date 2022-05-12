@@ -102,3 +102,9 @@
 .conditionalExecutionTitle {
   font-size: var(--form-input-font-size) !important;
 }
+
+.infraSection {
+  > div:not([data-name*='100width']) {
+    width: 50%;
+  }
+}

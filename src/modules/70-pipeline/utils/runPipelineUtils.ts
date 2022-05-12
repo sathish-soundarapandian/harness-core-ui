@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { cloneDeep, defaultTo } from 'lodash-es'
+import { cloneDeep, defaultTo, set } from 'lodash-es'
 import type { SelectOption } from '@wings-software/uicore'
 
 import { getStageFromPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
@@ -44,7 +44,10 @@ export const mergeTemplateWithInputSetData = (
   inputSetPortion: NgPipelineTemplate
 ): NgPipelineTemplate => {
   // Replace all the matching stages in parsedTemplate with the stages received in input set portion
-  const mergedStages = templatePipeline.pipeline.stages?.map(stage => {
+  const stages = templatePipeline.pipeline.template
+    ? (templatePipeline.pipeline.template.templateInputs as PipelineInfoConfig)?.stages
+    : templatePipeline.pipeline.stages
+  const mergedStages = stages?.map(stage => {
     if (stage.parallel) {
       /*
       This stage is parallel. Now loop over all the children stages, and check if any of them match in input set portion
@@ -65,32 +68,57 @@ export const mergeTemplateWithInputSetData = (
   })
 
   const toBeUpdated = cloneDeep(templatePipeline)
-  toBeUpdated.pipeline.stages = mergedStages
-  if (inputSetPortion.pipeline?.properties?.ci) {
-    if (!toBeUpdated.pipeline.properties) {
-      toBeUpdated.pipeline.properties = {}
+  if (toBeUpdated.pipeline.template) {
+    if (Array.isArray(mergedStages)) {
+      set(toBeUpdated, 'pipeline.template.templateInputs.stages', mergedStages)
     }
-    toBeUpdated.pipeline.properties.ci = inputSetPortion.pipeline.properties.ci
+
+    if ((inputSetPortion.pipeline?.template?.templateInputs as PipelineInfoConfig).properties?.ci) {
+      set(
+        toBeUpdated,
+        'pipeline.template.templateInputs.properties.ci',
+        (inputSetPortion.pipeline?.template?.templateInputs as PipelineInfoConfig).properties?.ci
+      )
+    }
+    if ((inputSetPortion.pipeline?.template?.templateInputs as PipelineInfoConfig).variables) {
+      set(
+        toBeUpdated,
+        'pipeline.template.templateInputs.variables',
+        getMergedVariables(
+          (toBeUpdated.pipeline?.template?.templateInputs as PipelineInfoConfig).variables as AllNGVariables[],
+          (inputSetPortion.pipeline?.template?.templateInputs as PipelineInfoConfig).variables as AllNGVariables[]
+        )
+      )
+    }
+  } else {
+    if (Array.isArray(mergedStages)) {
+      toBeUpdated.pipeline.stages = mergedStages
+    }
+
+    if (inputSetPortion.pipeline?.properties?.ci) {
+      if (!toBeUpdated.pipeline.properties) {
+        toBeUpdated.pipeline.properties = {}
+      }
+      toBeUpdated.pipeline.properties.ci = inputSetPortion.pipeline.properties.ci
+    }
+
+    /*
+    Below portion adds variables to the pipeline.
+    If your input sets has variables, use them.
+    Eventually in run pipeline form -
+    If input sets are selected, we will supply the variables from 'toBeUpdated' pipleine
+    This is why 'toBeUpdated' pipeline should have the variables
+    */
+
+    if (inputSetPortion.pipeline.variables) {
+      // If we have variables saved in input set, pick them and update
+
+      toBeUpdated.pipeline.variables = getMergedVariables(
+        toBeUpdated.pipeline.variables as AllNGVariables[],
+        inputSetPortion.pipeline.variables as AllNGVariables[]
+      ) // inputSetPortion.pipeline.variables
+    }
   }
-
-  /*
-  Below portion adds variables to the pipeline.
-  If your input sets has variables, use them.
-
-  Eventually in run pipeline form -
-  If input sets are selected, we will supply the variables from 'toBeUpdated' pipleine
-  This is why 'toBeUpdated' pipeline should have the variables
-  */
-
-  if (inputSetPortion.pipeline.variables) {
-    // If we have variables saved in input set, pick them and update
-
-    toBeUpdated.pipeline.variables = getMergedVariables(
-      toBeUpdated.pipeline.variables as AllNGVariables[],
-      inputSetPortion.pipeline.variables as AllNGVariables[]
-    ) // inputSetPortion.pipeline.variables
-  }
-
   return toBeUpdated
 }
 

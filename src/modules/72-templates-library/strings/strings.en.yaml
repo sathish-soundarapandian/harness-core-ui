@@ -1,5 +1,4 @@
 templateStudio: TemplateStudio
-stageTemplate: Stage
 addNewTemplate: New Template
 openEditTemplate: Open/Edit Template
 useTemplate: Use Template
@@ -7,7 +6,6 @@ copyToPipeline: Copy to Pipeline
 deleteTemplate: Delete Template
 copyToNewPipeline: Copy to New Pipeline
 templateSettings: Template Settings
-templateInputs: Template Inputs
 referencedBy: Referenced By
 selectTemplateToPreview: Select a template to preview
 templateTitle: '{{ entity }} Template'
@@ -27,8 +25,8 @@ createNewModal:
   versionLabel: Version Label
   label: Label
   nameError: 'Template Name'
-  namePlaceholder: 'New {{entity}} Name'
-  identifierPlaceholder: 'new_{{entity}}_name'
+  namePlaceholder: 'New {{entity}} Template Name'
+  identifierPlaceholder: 'new_{{entity}}_template_name'
   versionPlaceholder: 'Ex: Version1'
   lastPublishedVersion: 'Last published:'
 saveAsNewLabelModal:
@@ -42,6 +40,7 @@ fetchingActivityLogs: Fetching activity logs
 noActivityLogs: This template has no activity logs
 created: created
 updated: updated
+deleted: deleted
 default: set default to
 sampleTemplateAuditComment: --
 setAsStableTitle: Set as Stable?

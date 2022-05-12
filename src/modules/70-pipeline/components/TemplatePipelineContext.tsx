@@ -44,6 +44,7 @@ export interface TemplatePipelineProviderProps {
   queryParams: GetPipelineQueryParams
   initialValue: PipelineInfoConfig
   onUpdatePipeline: (pipeline: PipelineInfoConfig) => void
+  contextType: PipelineContextType
   isReadOnly: boolean
 }
 
@@ -52,9 +53,9 @@ export function TemplatePipelineProvider({
   initialValue,
   onUpdatePipeline,
   isReadOnly,
+  contextType,
   children
 }: React.PropsWithChildren<TemplatePipelineProviderProps>): React.ReactElement {
-  const contextType = PipelineContextType.Template
   const allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
   const { licenseInformation } = useLicenseStore()
   const isCDEnabled = useFeatureFlag(FeatureFlag.CDNG_ENABLED) && !!licenseInformation['CD']
@@ -86,6 +87,7 @@ export function TemplatePipelineProvider({
         {stagesCollection.getStage(StageType.SECURITY, isSTOEnabled, getString)}
         {stagesCollection.getStage(StageType.PIPELINE, false, getString)}
         {stagesCollection.getStage(StageType.CUSTOM, false, getString)}
+        {stagesCollection.getStage(StageType.Template, false, getString)}
       </PipelineStages>
     )
   }

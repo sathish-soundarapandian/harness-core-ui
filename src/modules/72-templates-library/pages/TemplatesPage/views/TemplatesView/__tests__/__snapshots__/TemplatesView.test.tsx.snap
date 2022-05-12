@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<TemplatesView /> tests should match snapshot in grid view 1`] = `
+<div>
+  <div
+    class="template-grid-view-mock"
+  />
+</div>
+`;
+
+exports[`<TemplatesView /> tests should match snapshot in list view 1`] = `
+<div>
+  <div
+    class="template-list-view-mock"
+  />
+</div>
+`;
+
+exports[`<TemplatesView /> tests should match snapshot when git sync is enabled 1`] = `
+<div>
+  <div
+    class="template-grid-view-mock"
+  />
+</div>
+`;

@@ -24,6 +24,9 @@ export enum StepType {
   K8sServiceSpec = 'K8sServiceSpec',
   K8sRollingDeploy = 'K8sRollingDeploy',
   CustomVariable = 'CustomVariable',
+  ServerlessAwsLambda = 'ServerlessAwsLambda',
+  ServerlessGCP = 'ServerlessGCP',
+  ServerlessAzure = 'ServerlessAzure',
   Dependency = 'Service',
   Plugin = 'Plugin',
   Run = 'Run',
@@ -43,6 +46,8 @@ export enum StepType {
   HarnessApproval = 'HarnessApproval',
   JiraApproval = 'JiraApproval',
   ServiceNowApproval = 'ServiceNowApproval',
+  ServiceNowCreate = 'ServiceNowCreate',
+  ServiceNowUpdate = 'ServiceNowUpdate',
   Verify = 'Verify',
   JiraCreate = 'JiraCreate',
   JiraUpdate = 'JiraUpdate',
@@ -56,5 +61,9 @@ export enum StepType {
   FlagConfiguration = 'FlagConfiguration',
   Template = 'Template',
   Policy = 'Policy',
-  ZeroNorth = 'Security'
+  ZeroNorth = 'Security',
+  KubernetesAzure = 'KubernetesAzure',
+  ServerlessAwsLambdaDeploy = 'ServerlessAwsLambdaDeploy',
+  ServerlessAwsLambdaRollback = 'ServerlessAwsLambdaRollback',
+  ServerlessAwsInfra = 'ServerlessAwsInfra'
 }

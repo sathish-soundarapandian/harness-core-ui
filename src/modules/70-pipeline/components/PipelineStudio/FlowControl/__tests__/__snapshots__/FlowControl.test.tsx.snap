@@ -30,26 +30,67 @@ exports[`FlowControl tests should render fine 1`] = `
       </span>
     </button>
     <div
+      class="flowControlPanelHeader"
+    >
+      <div
+        class="flowControlTitle"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main"
+        >
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="pipelineVariables"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-h4"
+            >
+              stage1
+              : 
+              pipeline.barriers.flowControl
+            </p>
+          </div>
+        </div>
+      </div>
+      <div
+        class="mainActions"
+      >
+        <button
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
+          type="button"
+        >
+          <span
+            class="bp3-button-text"
+          >
+            applyChanges
+          </span>
+        </button>
+        <button
+          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--size Button--small"
+          type="button"
+        >
+          <span
+            class="bp3-button-text"
+          >
+            pipeline.discard
+          </span>
+        </button>
+      </div>
+    </div>
+    <div
       class="container"
     >
       <div
-        class="header"
+        class="OverlaySpinner--overlaySpinner"
       >
-        stage1
-        : 
-        pipeline.barriers.flowControl
-      </div>
-      <div
-        class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
-      >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
-        >
-          pipeline.barriers.syncBarriers
-        </p>
         <div
-          class="OverlaySpinner--overlaySpinner"
+          class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
         >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+          >
+            pipeline.barriers.syncBarriers
+          </p>
           <div>
             <div
               class="barrierList"

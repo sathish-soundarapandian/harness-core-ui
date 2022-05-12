@@ -61,8 +61,8 @@ showInstructions: Show instructions
 apiKey: '{{$.common.apikey}}'
 apiKeyOrPassword: Password/Api Key
 costVisibility: Cost Visibility
-chooseMethodForK8sConnection: Choose the method for Harness to use when connecting to the cluster.
-chooseMethodForGCPConnection: Choose the method for Harness to use when connecting to GCP.
+chooseMethodForConnection: 'Choose the method for Harness to use when connecting to {{name}}.'
+k8sConnection: the cluster
 delegateInClusterInfo: 'Use the credentials of a specific Harness Delegate (IAM role, service account, etc)'
 createConnector: 'Create a Connector'
 connectorEmptyState: 'There are no connectors in your project'
@@ -101,13 +101,14 @@ title:
   awsKms: 'AWS Key Management Service'
   awsSecretManager: 'AWS Secrets Manager'
   delegateSelection: 'Delegate Selection'
-  ceAzureConnector: 'Azure Connector'
+  ceAzureConnector: '{{$.common.azureConnector}}'
   datadog: 'Datadog'
   azureKeyVault: 'Azure Key Vault'
   sumologic: 'SumoLogic'
   ceAws: 'AWS Connector '
   gcpKms: GCP Key Management Service
   errorTracking: 'Error Tracking'
+  azure: 'Azure Cloud Provider'
 name_labels:
   Kubernetes: 'Kubernetes Connector Name'
   HttpHelmRepo: 'Helm Http Connector Name'
@@ -255,6 +256,19 @@ GCR:
   artifactServer: 'GCR Server'
   stepTwoName: 'Google Container Registry Details'
   registryHostname: 'GCR Registry URL'
+azure:
+  delegateInClusterInfo: 'Use the credentials of a specific Harness Delegate (IAM role, service account, managed identity, etc)'
+  clientId: '{{ $.common.clientId }}'
+  applicationId: 'Application Id'
+  managedIdentity: 'Managed Identity'
+  managedIdentities:
+    userAssigned: 'User Assigned Managed Identity'
+    systemAssigned: 'System Assigned Managed Identity'
+  environments:
+    azureGlobal: 'Azure Global'
+    usGov: 'US Government'
+  auth:
+    certificate: '{{ $.common.certificate }}'
 GCS:
   name: GCS
   fullName: Google Cloud Storage
@@ -416,9 +430,9 @@ awsKms:
     externalIdLengthError: 'External Id must have between 2 and 1224 characters'
   awsSTS: 'Assume Role using STS on Delegate'
 delegate:
-  configure: Configure what Delegates are allowed to connect to this Connector
-  delegateSelectorAny: Connect via any available Delegate
-  delegateSelectorSelective: Connect only via Delegates with all of the following tags
+  configure: Select the Delegates this Connector will use
+  delegateSelectorAny: Use any available Delegate
+  delegateSelectorSelective: Only use Delegates with all of the following tags
   hearbeat: heartbeat
   matchesSelectors: Matches
   testDelegateConnectivity: Test Delegate Connectivity
@@ -436,8 +450,8 @@ ceK8:
   overview:
     createNewConnectorCta: 'Create a new connector'
   chooseRequirements:
-    heading: '{{ $.connectors.ceAzure.steps.requirements }}'
-    subheading: '{{ $.connectors.ceAzure.chooseRequirements.featureDesc }}'
+    heading: '{{ $.connectors.ceAws.steps.req }}'
+    subheading: '{{ $.connectors.ceAws.crossAccountRoleStep1.description }}'
     description: '(Deep Kubernetes cost Visibility is selected by default. Select the other option to enable Intelligent Cloud AutoStopping for Kubernetes)'
     fixFeaturesDescription: 'Both the options below are required for Kubernetes AutoStopping and are selected by default. Click Continue to proceed.'
     visibility:
@@ -479,18 +493,18 @@ azureKeyVault:
     setupVault: Setup Vault
   validation:
     tenantId: '{{ $.connectors.tenantIdRequired }}'
-    subscription: Subscription is required
+    subscription: '{{ $.common.validation.subscription }}'
     vaultName: Vault Name is required
 ceAws:
   steps:
     overview: '{{ $.overview }}'
     cur: 'Cost and Usage Report'
-    req: 'Choose requirements'
+    req: 'Choose Requirements'
     roleARN: '{{ $.connectors.roleARN }}'
     test: '{{ $.common.labelTestConnection }}'
   overview:
     heading: '{{ $.overview }}'
-    awsAccountId: 'Specify the AWS account Id'
+    awsAccountId: 'Specify the AWS account ID'
     alreadyExist: ' {{ $.connectors.connectorAlreadyExist }} '
     alreadyExistInfo: 'The cloud account {{awsAccountID}} already has a Connector “{{existingConnectorName}}” linked to it. The Connector has permission for {{featureText}}'
     trySuggestion: '{{ $.common.errorHandler.tryTheseSuggestions }}'
@@ -506,15 +520,24 @@ ceAws:
     followInstruction: 'Please follow the instructions to provide access to the Cost and Usage Report'
     launchTemplate: 'Launch AWS console'
     login: 'and login to your account'
-    createNew: '+ Create new Cost and Usage report'
+    createNew: 'Create new Cost and Usage report'
     reportName: 'Cost and Usage Report Name'
-    bucketName: 'Cost and Usage S3 bucket Name'
+    bucketName: 'Cost and Usage S3 Bucket Name'
+    instructions:
+      i1: Login to your AWS account if not logged in already.
+      i2: Follow these
+      i3: ' instructions to create the Cost and Usage Report '
+      i4: Enter Cost and Usage Report name and S3 bucket name below.
     validation:
       reportRequired: '{{ $.common.reportNameRequired }}'
       bucketRequired: 'Bucket name is required'
+    noAccountLink: 'Don’t have access to add an AWS account?'
   curExising:
-    subHeading: 'The following Cost and Usage Reports exist in your Harness account. If the AWS Account Id you entered is covered by any of the below, then click “Continue” to proceed. If not, click on "Create new Cost and Usage Report.'
-    accountID: 'Account Id '
+    subHeading: 'The following {{ reportCount }} Cost and Usage Reports are connected with your Harness Account.'
+    accountID: 'Account ID '
+    nextStepHint1: 'If the AWS Account ID you entered is covered by part of any of the above click “Continue >” to proceed. '
+    nextStepHint2: 'If not, create a new one: '
+    searchCUR: Enter Cost and Usage Report Name
   curExtention:
     heading: 'How to Create Cost and Usage Report?'
     subtext: 'Once logged into the AWS console'
@@ -557,13 +580,12 @@ ceAws:
       step3: 'Creating Cost and Usage Reports'
       step4: 'Billing and Cost Management Policy Examples'
   crossAccountRoleStep1:
-    heading: 'Create Cross Account Role - '
-    choosePermissions: '{{ $.connectors.ceAzure.chooseRequirements.heading }}'
+    heading: '{{ $.connectors.ceAws.steps.req }}'
     subHeading:
       'Harness uses the secure cross-account role to access your AWS account. The role includes a restricted policy to
       access the cost and usage reports and resources for the sole purpose of cost analysis and cost optimization'
-    description: 'Select the Cloud Cost Management features you would like to use on the AWS account.'
-    info: (AWS cost Visibility is available by default. Select the others as per your requirements)
+    description: 'Select the Cloud Cost Management features that you would like to enable.'
+    info: 'Cost visibility of the resources for which you added the CUR in the previous step is enabled by default. Select the others as per your requirements.'
     cost: 'Cost'
     visibility: '{{ $.common.ce.visibility }}'
     optimization: '{{ $.common.ce.optimization }}'
@@ -582,14 +604,20 @@ ceAws:
       prefix: AWS OPTIMIZATION BY
       footer: to IAM role
   crossAccountRoleStep2:
-    heading: ' {{$.connectors.ceAws.crossAccountRoleStep1.heading}} '
-    createRole: 'Create Role'
+    heading: '{{ $.connectors.roleARN }}'
     subHeading: '{{ $.connectors.ceAws.crossAccountRoleStep1.subHeading }}'
-    launchTemplate: 'Launch Template In AWS console'
+    instructions:
+      i1: 'Launch the CloudFormation Template on the AWS console: '
+      i2: '(You can preview the template '
+      templateRedirection: here
+      i3: '{{ $.connectors.ceAws.cur.instructions.i1 }}'
+      i4: ' instructions to create the Cross Account Role '
+      i5: Enter Cross Account Role ARN and External ID below.
+    launchTemplate: 'Launch Template on AWS console'
     followInstructions: 'and follow the instuctions given on the right'
-    roleArn: '{{ $.connectors.awsKms.roleArnLabel }}'
-    extId: 'External Id'
-    dontHaveAccess: 'Don’t have access to add an AWS account?'
+    roleArn: Cross Account Role ARN
+    extId: 'External ID'
+    dontHaveAccess: '{{ $.connectors.ceAws.cur.noAccountLink }}'
     validation:
       roleArnPattern: 'Role ARN does not match the pattern'
       roleArnRequired: 'Role ARN is Required'
@@ -624,13 +652,13 @@ ceAzure:
   steps:
     overview: '{{ $.overview }}'
     billingExports: Azure Billing Exports
-    requirements: Choose Requirements
+    requirements: '{{ $.connectors.ceAws.steps.req }}'
     servicePrincipal: Create Service Principal
     testConnection: '{{ $.common.labelTestConnection }}'
   overview:
     heading: '{{ $.overview }}'
-    tenantId: Specify Azure Tenant Id
-    subscriptionId: Specify Azure Subscription Id
+    tenantId: Azure Tenant ID
+    subscriptionId: Azure Subscription ID
     alreadyExist: '{{ $.connectors.connectorAlreadyExist }}'
     existingConnectorInfo: The cloud account {{accountId}} already has a Connector “{{name}}” linked to it. The Connector has permissions for {{featureText}}.
     trySuggestion: '{{ $.common.errorHandler.tryTheseSuggestions }}'
@@ -638,15 +666,20 @@ ceAzure:
     required: '{{ $.connectors.ifReq }}'
   billing:
     heading: '{{ $.connectors.ceAzure.steps.billingExports }}'
-    subHeading: Billing export is used to get insights into your cloud infrastructure and Azure services such as Storage account, Virtual machines, Containers etc.
-    instruction: Please follow the instructions to provide access to the Billing export for the specified Tenant Id
+    subHeading: Billing Export provides detailed billing data across Azure subscriptions to help you analyze your spend.
+    instruction: Please follow the instructions to provide access to the Billing export for the specified Tenant ID
     login: 'and login to your Azure account'
-    launchAzureConsole: Launch Azure Billing Exports
+    launchAzureConsole: Launch Azure Console
+    instructions:
+      i1: Login to your Azure account if not logged in already.
+      i2: '{{ $.connectors.ceAws.cur.instructions.i2 }}'
+      i3: ' instructions to create the Billing Export '
+      i4: Enter Storage account name, Subscription ID and Storage Container, Directory name below.
     tooltipInstruction: Provided in the delivery options when the template is opened in the Azure console
     tooltipBtn: '{{ $.connectors.showInstructions }}'
     storageAccountName: Storage Account Name
     storageAccountNameRegexError: It must be 3 to 24 characters long, and can contain only lowercase letters and numbers.
-    subscriptionId: Storage Account Subscription Id
+    subscriptionId: Storage Account Subscription ID
     containerName: Storage Container
     directoryName: Storage Directory
     reportName: '{{ $.common.reportName }}'
@@ -676,15 +709,19 @@ ceAzure:
       createExport: Creating a Billing Export
       soon: coming soon
   existingExports:
-    instruction: 'The following Billing Exports exist in your Harness account. If the Azure Subscription Id you entered is covered by any of the below, then click "Continue" to proceed. If not, click on "Create new Billing Export.'
-    createNewExportBtn: '+ Create new Billing Export'
-    subscriptionId: Subscription Id
+    instruction: 'The following {{ reportCount }} Billing Exports are connected with your Harness Account.'
+    createNewExportBtn: 'Create new Billing Export'
+    subscriptionId: '{{ $.common.subscriptionId }}'
     tenantId: '{{ $.connectors.tenantId }}'
+    hints:
+      nextStepHint1: 'If the Azure tenant ID you entered is covered by any of the above, select and click “Continue >” to proceed.'
+      nextStepHint2: '{{ $.connectors.ceAws.curExising.nextStepHint2 }}'
+    searchBillingReports: Enter billing report name
   chooseRequirements:
-    heading: Choose Required Permissions
+    heading: '{{ $.connectors.ceAws.steps.req }}'
     subHeading: Harness uses Multitenant app to sync billing export data from source storage account to Harness. Create a service principal for this app in your Azure account and assign read permissions on that particular storage account.
-    featureDesc: Select the Cloud Cost Management features that you would like to enable.
-    info: (Azure cost Visibility is available by default. Select the other option as per your requirements)
+    featureDesc: '{{ $.connectors.ceAws.crossAccountRoleStep1.description }}'
+    info: Cost visibility of the resources for which you added the Billing Export in the previous step is enabled by default. Select the others as per your requirements.
     visibilityCardDesc: Cost insights, anomaly detection, service insights, creating budgets perspectives and alerts, utilised/wasted resources in clusters.
     optimizationCardDesc: Detection of orphaned resources, recommendations to save costs, scaling/tearing down, turning off in non-work hours, reserving instances.
     visibility:
@@ -704,7 +741,12 @@ ceAzure:
       footer2: to SP
   servicePrincipal:
     heading: '{{ $.connectors.ceAzure.steps.servicePrincipal }}'
-    subHeading: Create service principal and assign permissions by running the following commands in bash terminal or in Azure cloud shell
+    subHeading1: Harness uses a multi-tenant app to sync billing export data from the source storage account to Harness and to perform cost optimization functions.
+    subHeading2: 'Run the following bash commands using your bash terminal or Azure cloud shell:'
+    registerCommand: '# Register the Harness app'
+    costVisibilityCmd: '# Role assignment for enabling Cost Visibility'
+    assignRoleCmd: '# Assign role to the app on the scope fetched above'
+    optimisationCmd: '# Role assignment for enabling Cost Optimization using Autostopping'
   testConnection:
     heading: '{{ $.common.labelTestConnection }}'
     validatePermission: '{{ $.connectors.testConnectionStep.validationText.azure }}'
@@ -745,9 +787,9 @@ ceGcp:
     link1: 'https://cloud.google.com/billing/docs/how-to/export-data-bigquery-setup'
     link2: 'Harness Docs ()'
   chooseRequirements:
-    name: '{{$.connectors.ceAzure.steps.requirements}}'
-    heading: '{{$.connectors.ceAws.crossAccountRoleStep1.heading}}'
-    choosePermissions: '{{$.connectors.ceAzure.chooseRequirements.heading}}'
+    name: '{{ $.connectors.ceAws.steps.req }}'
+    heading: '{{ $.connectors.ceAws.steps.req }}'
+    choosePermissions: Choose Required Permissions
     description: 'Select the Cloud Cost Management features you would like to use on the GCP account.'
     info: (GCP cost Visibility is available by default. Select the others as per your requirements)
     cardDetails:
@@ -797,3 +839,6 @@ pdc:
     step1: 'Validating the PDC hosts connectivity'
 connectorReferenceText: "can't be deleted as it is being referenced by other entities. To see the list of entities referencing this connector,"
 cantDeleteConnector: "Can't Delete Connector"
+policyEvaluations:
+  failedToSave: Connector cannot be saved due to the policy evaluation failures
+  warning: Connector saved with policy warnings

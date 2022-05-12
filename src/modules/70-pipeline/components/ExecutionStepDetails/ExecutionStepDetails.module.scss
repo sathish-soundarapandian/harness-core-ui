@@ -8,6 +8,7 @@
 .main {
   background: var(--white);
   min-height: calc(var(--execution-children-height) - var(--execution-stage-details-height));
+  overflow: auto;
 
   & > :global(.bp3-spinner) {
     flex: 1;

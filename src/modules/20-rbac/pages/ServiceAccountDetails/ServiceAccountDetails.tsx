@@ -26,7 +26,7 @@ import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PrincipalType } from '@rbac/utils/utils'
-import { useLicenseStore, isCDCommunity } from 'framework/LicenseStore/LicenseStoreContext'
+import { isCommunityPlan } from '@common/utils/utils'
 import css from './ServiceAccountDetails.module.scss'
 
 const ServiceAccountDetails: React.FC = () => {
@@ -34,8 +34,7 @@ const ServiceAccountDetails: React.FC = () => {
   const { accountId, orgIdentifier, projectIdentifier, module, serviceAccountIdentifier } = useParams<
     ProjectPathProps & ServiceAccountPathProps & ModulePathParams
   >()
-  const { licenseInformation } = useLicenseStore()
-  const isCommunity = isCDCommunity(licenseInformation)
+  const isCommunity = isCommunityPlan()
 
   const { data, loading, error, refetch } = useListAggregatedServiceAccounts({
     queryParams: {

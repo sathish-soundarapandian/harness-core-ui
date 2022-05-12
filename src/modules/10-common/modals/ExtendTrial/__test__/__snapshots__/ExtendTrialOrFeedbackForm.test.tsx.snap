@@ -6,6 +6,7 @@ exports[`ExtendTrialOrFeedbackForm Validation experience is required for ExtendT
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main extendTrial"
     >
       <div>
@@ -224,6 +225,7 @@ exports[`ExtendTrialOrFeedbackForm Validation experience is required for FeedBac
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

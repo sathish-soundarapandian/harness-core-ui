@@ -55,6 +55,7 @@ import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 
 import RbacButton from '@rbac/components/Button/Button'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { usePermission } from '@rbac/hooks/usePermission'
@@ -100,6 +101,7 @@ function RetryPipeline({
   const { isGitSyncEnabled } = useAppStore()
   const { getString } = useStrings()
   const { showSuccess, showWarning, showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
   const history = useHistory()
 
   const { projectIdentifier, orgIdentifier, pipelineIdentifier, accountId, executionIdentifier, module } =
@@ -346,7 +348,7 @@ function RetryPipeline({
               setCurrentPipeline(toBeUpdated)
             }
           } catch (e) {
-            showError(e?.data?.message || e?.message, undefined, 'pipeline.feth.inputSetTemplateYaml.error')
+            showError(getRBACErrorMessage(e), undefined, 'pipeline.feth.inputSetTemplateYaml.error')
           }
         }
         fetchData()
@@ -440,7 +442,7 @@ function RetryPipeline({
           }
         }
       } catch (error) {
-        showWarning(error?.data?.message || getString('runPipelineForm.runPipelineFailed'))
+        showWarning(getRBACErrorMessage(error) || getString('runPipelineForm.runPipelineFailed'))
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -582,9 +584,7 @@ function RetryPipeline({
   return (
     <Formik<PipelineInfoConfig>
       initialValues={
-        currentPipeline?.pipeline
-          ? clearRuntimeInput(currentPipeline.pipeline)
-          : { name: '', identifier: '', stages: [] }
+        currentPipeline?.pipeline ? clearRuntimeInput(currentPipeline.pipeline) : ({} as PipelineInfoConfig)
       }
       formName="retryPipeline"
       onSubmit={values => {

@@ -37,7 +37,7 @@ describe('Test SCMCheck', () => {
       <GitSyncTestWrapper
         path="/account/:accountId/ci/orgs/:orgIdentifier/projects/:projectIdentifier/admin/git-sync/repos"
         pathParams={pathParams}
-        defaultAppStoreValues={{ currentUserInfo: { name: 'dev', email: 'mail@harness.io' } }}
+        defaultAppStoreValues={{ currentUserInfo: { name: 'dev', email: 'mail@harness.io', uuid: '123' } }}
       >
         <SCMCheck title={title} validateSCM={handlerForSCM} />
       </GitSyncTestWrapper>
@@ -54,7 +54,7 @@ describe('Test SCMCheck', () => {
       <GitSyncTestWrapper
         path="/account/:accountId/ci/orgs/:orgIdentifier/projects/:projectIdentifier/admin/git-sync/repos"
         pathParams={pathParams}
-        defaultAppStoreValues={{ currentUserInfo: { email: 'mail@harness.io' } }}
+        defaultAppStoreValues={{ currentUserInfo: { email: 'mail@harness.io', uuid: '123' } }}
       >
         <SCMCheck title={title} validateSCM={handlerForSCM} />
       </GitSyncTestWrapper>

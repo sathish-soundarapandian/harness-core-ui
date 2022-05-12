@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { Point } from 'highcharts'
 import type { CCM_CHART_TYPES } from '@ce/constants'
 import type { QlceViewTimeGroupType, QlceViewFilterInput, QlceViewFieldInputInput } from 'services/ce/services'
 import type { CostTarget, SharedCost } from 'services/ce'
@@ -16,6 +17,10 @@ export interface ResourceDetails {
 
 export interface ResourceObject {
   limits: ResourceDetails
+  requests: ResourceDetails
+}
+
+export interface ECSResourceObject {
   requests: ResourceDetails
 }
 
@@ -140,4 +145,13 @@ export type CostTargetType = CostTarget & {
 export type SharedCostType = SharedCost & {
   isOpen?: boolean
   isViewerOpen?: boolean
+}
+
+export type CustomPoint = Point & {
+  plotX: number
+  pointWidth: number
+}
+
+export type CustomHighcharts = Highcharts.Chart & {
+  rePlaceMarker: (reqVal: number, limitVal?: number) => void
 }

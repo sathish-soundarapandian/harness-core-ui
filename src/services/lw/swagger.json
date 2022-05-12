@@ -3055,6 +3055,23 @@
         },
         "machine_type": {
           "type": "string"
+        },
+        "certificates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GCPCertificatesData"
+          }
+        }
+      }
+    },
+    "GCPCertificatesData": {
+      "type": "object",
+      "properties": {
+        "cert_secret_id": {
+          "type": "string"
+        },
+        "key_secret_id": {
+          "type": "string"
         }
       }
     },

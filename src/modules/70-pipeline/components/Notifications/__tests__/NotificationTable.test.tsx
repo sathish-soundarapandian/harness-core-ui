@@ -14,10 +14,19 @@ import {
   RenderResult,
   waitFor
 } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import { clickSubmit } from '@common/utils/JestFormHelper'
 import NotificationTable, { NotificationTableProps } from '../NotificationTable'
+import { NotificationTypeSelectOptions } from '../NotificationTypeOptions'
+import NotificationMethods, { NotificationMethodsProps } from '../Steps/NotificationMethods'
+
+const notificationMethodProps: NotificationMethodsProps = {
+  typeOptions: NotificationTypeSelectOptions,
+  nextStep: jest.fn(),
+  previousStep: jest.fn()
+}
 
 const args: NotificationTableProps = {
   data: [
@@ -137,4 +146,131 @@ describe('Notification Table test', () => {
       form = findDialogContainer()
       expect(form).not.toBeTruthy()
     })
+})
+
+describe('testing notification method', () => {
+  test('selecting slack as notification method from dropdown', async () => {
+    const { container, getByText, getByPlaceholderText } = render(
+      <TestWrapper>
+        <NotificationMethods />
+      </TestWrapper>
+    )
+    const notificationMethodDropDown = getByPlaceholderText('- Select -')
+    userEvent.click(notificationMethodDropDown)
+    await waitFor(() => getByText('Slack'))
+    fireEvent.click(getByText('Slack'))
+    expect(container).toMatchSnapshot()
+  })
+
+  test('selecting MsTeams as notification method from dropdown, type a valid url and click on finish', async () => {
+    const { getByText, getByPlaceholderText } = render(
+      <TestWrapper>
+        <NotificationMethods {...notificationMethodProps} />
+      </TestWrapper>
+    )
+    const notificationMethodDropDown = getByPlaceholderText('- Select -')
+    userEvent.click(notificationMethodDropDown)
+    await waitFor(() => getByText('Microsoft Teams'))
+    userEvent.click(getByText('Microsoft Teams'))
+    await waitFor(() => expect(getByText('notifications.helpMSTeams')).toBeTruthy())
+    const urlInput = document.querySelector('input[name="msTeamKeys.0"]')
+    act(() => {
+      fireEvent.change(urlInput!, { target: { value: 'https://docs.microsoft.com/outlook/actionable-messages' } })
+    })
+    expect(urlInput).toBeTruthy()
+    await waitFor(() => getByText('finish'))
+    userEvent.click(getByText('finish'))
+    await waitFor(() =>
+      expect(notificationMethodProps.nextStep).toHaveBeenCalledWith({
+        notificationMethod: {
+          spec: {
+            msTeamKeys: ['https://docs.microsoft.com/outlook/actionable-messages'],
+            userGroups: []
+          },
+          type: 'MsTeams'
+        }
+      })
+    )
+  })
+
+  test('selecting MsTeams as notification method from dropdown and go back', async () => {
+    const { getByText, getByPlaceholderText } = render(
+      <TestWrapper>
+        <NotificationMethods {...notificationMethodProps} />
+      </TestWrapper>
+    )
+    const notificationMethodDropDown = getByPlaceholderText('- Select -')
+    userEvent.click(notificationMethodDropDown)
+    await waitFor(() => getByText('Microsoft Teams'))
+    userEvent.click(getByText('Microsoft Teams'))
+    await waitFor(() => expect(getByText('notifications.helpMSTeams')).toBeTruthy())
+    await waitFor(() => getByText('back'))
+    userEvent.click(getByText('back'))
+    await waitFor(() =>
+      expect(notificationMethodProps.previousStep).toHaveBeenCalledWith({
+        notificationMethod: {
+          spec: {
+            msTeamKeys: [''],
+            userGroups: []
+          },
+          type: 'MsTeams'
+        }
+      })
+    )
+  })
+
+  test('selecting Email as notification method from dropdown, type a valid email and click on finish', async () => {
+    const { getByText, getByPlaceholderText } = render(
+      <TestWrapper>
+        <NotificationMethods {...notificationMethodProps} />
+      </TestWrapper>
+    )
+    const notificationMethodDropDown = getByPlaceholderText('- Select -')
+    userEvent.click(notificationMethodDropDown)
+    await waitFor(() => getByText('Email'))
+    userEvent.click(getByText('Email'))
+    const urlInput = document.querySelector('textarea[name="emailIds"]')
+    act(() => {
+      fireEvent.change(urlInput!, { target: { value: 'xyz@xyz.com' } })
+    })
+    expect(urlInput).toBeTruthy()
+    await waitFor(() => getByText('finish'))
+    userEvent.click(getByText('finish'))
+    await waitFor(() =>
+      expect(notificationMethodProps.nextStep).toHaveBeenCalledWith({
+        notificationMethod: {
+          spec: {
+            recipients: ['xyz@xyz.com'],
+            userGroups: []
+          },
+          type: 'Email'
+        }
+      })
+    )
+  })
+
+  test('selecting Email as notification method from dropdown and go back', async () => {
+    const { getByText, getByPlaceholderText } = render(
+      <TestWrapper>
+        <NotificationMethods {...notificationMethodProps} />
+      </TestWrapper>
+    )
+    const notificationMethodDropDown = getByPlaceholderText('- Select -')
+    userEvent.click(notificationMethodDropDown)
+    await waitFor(() => getByText('Email'))
+    userEvent.click(getByText('Email'))
+    await waitFor(() => getByText('back'))
+    userEvent.click(getByText('back'))
+    await waitFor(() =>
+      expect(notificationMethodProps.previousStep).toHaveBeenCalledWith({
+        notificationMethod: {
+          spec: {
+            recipients: [],
+            userGroups: []
+          },
+          type: 'Email'
+        }
+      })
+    )
+  })
 })

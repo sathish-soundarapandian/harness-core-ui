@@ -5,28 +5,34 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import React from 'react'
 import { Card, Layout, Text, IconName, Container } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import React from 'react'
+import cx from 'classnames'
 import css from './RecommendationSavingsCard.module.scss'
 
 interface RecommendationSavingsCardProps {
   title: string
-  amount: string
+  amount: string | React.ReactElement
   subTitle?: string
   amountSubTitle?: string
   iconName?: IconName
+  cardCssName?: string
+  titleImg?: string
 }
 
 const RecommendationSavingsCard: React.FC<RecommendationSavingsCardProps> = props => {
-  const { title, amount, subTitle, amountSubTitle, iconName } = props
+  const { title, amount, subTitle, amountSubTitle, iconName, cardCssName, titleImg } = props
 
   return (
-    <Card className={css.savingsCard} elevation={1}>
+    <Card className={cx(css.savingsCard, cardCssName)} elevation={1}>
       <Layout.Vertical spacing="small">
-        <Text color={Color.GREY_500} font={{ variation: FontVariation.H6 }}>
-          {title}
-        </Text>
+        <Layout.Horizontal spacing={'small'}>
+          {titleImg && <img src={titleImg} width={20} />}
+          <Text color={Color.GREY_500} font={{ variation: FontVariation.H6 }}>
+            {title}
+          </Text>
+        </Layout.Horizontal>
         <Container>
           <Text
             inline

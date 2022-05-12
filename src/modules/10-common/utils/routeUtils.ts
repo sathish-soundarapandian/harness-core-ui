@@ -32,7 +32,9 @@ import type {
   UserPathProps,
   ServiceAccountPathProps,
   ServicePathProps,
-  TemplateStudioPathProps
+  TemplateStudioPathProps,
+  EnvironmentGroupPathProps,
+  VariablesPathProps
 } from '@common/interfaces/RouteInterfaces'
 
 export const accountPathProps: AccountPathProps = {
@@ -84,6 +86,9 @@ export const verificationPathProps: VerificationPathProps = {
 
 export const secretPathProps: SecretsPathProps = {
   secretId: ':secretId'
+}
+export const variablePathProps: VariablesPathProps = {
+  variableId: ':variableId'
 }
 
 export const rolePathProps: RolePathProps = {
@@ -137,6 +142,10 @@ export const buildPathProps: BuildPathProps = {
 
 export const environmentPathProps: EnvironmentPathProps = {
   environmentIdentifier: ':environmentIdentifier'
+}
+
+export const environmentGroupPathProps: EnvironmentGroupPathProps = {
+  environmentGroupIdentifier: ':environmentGroupIdentifier'
 }
 
 export const segmentPathProps: SegmentPathProps = {

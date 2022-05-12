@@ -11,8 +11,9 @@ import { useToaster, useConfirmationDialog } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import { Project, useDeleteProject } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { useAppStore, SavedProjectDetails } from 'framework/AppStore/AppStoreContext'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 
 interface UseDeleteProjectDialogReturn {
   openDialog: () => void
@@ -22,6 +23,10 @@ const useDeleteProjectDialog = (data: Project, onSuccess: () => void): UseDelete
   const { accountId } = useParams<AccountPathProps>()
   const { updateAppStore } = useAppStore()
   const { getRBACErrorMessage } = useRBACError()
+  const { preference: savedProject, clearPreference: clearSavedProject } = usePreferenceStore<SavedProjectDetails>(
+    PreferenceScope.USER,
+    'savedProject'
+  )
   const { mutate: deleteProject } = useDeleteProject({
     queryParams: {
       accountIdentifier: accountId,
@@ -47,7 +52,10 @@ const useDeleteProjectDialog = (data: Project, onSuccess: () => void): UseDelete
             showSuccess(
               getString('projectCard.successMessage', { projectName: data.name || /* istanbul ignore next */ '' })
             )
-          updateAppStore({ selectedProject: undefined, selectedOrg: undefined })
+          if (savedProject.projectIdentifier === data.identifier) {
+            clearSavedProject()
+            updateAppStore({ selectedProject: undefined, selectedOrg: undefined })
+          }
           onSuccess()
         } catch (err) {
           /* istanbul ignore next */

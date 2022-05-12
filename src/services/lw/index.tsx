@@ -80,6 +80,7 @@ export interface AccessPointMeta {
   app_gateway_id?: string
   certificate?: CertificateData
   certificate_id?: string
+  certificates?: GCPCertificatesData[]
   dns?: {
     others?: string
     route53?: {
@@ -315,6 +316,11 @@ export interface GCPAccessPointCore {
   subnet?: string
   vpc?: string
   zone?: string
+}
+
+export interface GCPCertificatesData {
+  cert_secret_id?: string
+  key_secret_id?: string
 }
 
 export interface GatewaySessionReportResponse {

@@ -17,6 +17,7 @@ import produce from 'immer'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { Error, StageElementConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { PageSpinner } from '@common/components'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
@@ -68,6 +69,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
   const { submitFormsForTab } = useContext(StageErrorContext)
   const { showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
 
   const onChange = React.useCallback(
@@ -127,7 +129,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
         setTemplateInputs(stage.stage, mergedTemplateInputs)
         updateStage(stage.stage)
       } catch (error) {
-        showError(error.message, undefined, 'template.parse.inputSet.error')
+        showError(getRBACErrorMessage(error), undefined, 'template.parse.inputSet.error')
       }
     }
   }, [templateLoading, templateResponse?.data && templateInputSetLoading && templateInputSetYaml?.data])
@@ -202,7 +204,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
         >
           {(formik: FormikProps<TemplateStageValues>) => {
             window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: TemplateTabs.OVERVIEW }))
-            formikRef.current = formik
+            formikRef.current = formik as FormikProps<unknown> | null
             return (
               <FormikForm>
                 <Card className={css.sectionCard}>
@@ -240,7 +242,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
                         spacing={'large'}
                       >
                         <Heading level={5} color={Color.BLACK}>
-                          {getString('templatesLibrary.templateInputs')}
+                          {getString('pipeline.templateInputs')}
                         </Heading>
                         <StageForm
                           key={`${formik.values.template?.templateRef}-${defaultTo(

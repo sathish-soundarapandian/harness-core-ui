@@ -78,4 +78,5 @@ export interface HealthSourceDrawerInterface {
   shouldRenderAtVerifyStep?: boolean
   changeSources: ChangeSourceDTO[]
   metricDetails: HealthSource | null
+  isTemplate?: boolean
 }

@@ -20,7 +20,7 @@ import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import useSwitchAccountModal from '@common/modals/SwitchAccount/useSwitchAccountModal'
-import { useCommunity } from 'framework/LicenseStore/useCommunity'
+import { isCommunityPlan } from '@common/utils/utils'
 import AccountNameForm from './AccountNameForm'
 import css from '../AccountOverview.module.scss'
 
@@ -42,7 +42,7 @@ const AccountDetails: React.FC = () => {
 
   const { openDefaultExperienceModal } = useDefaultExperienceModal({ refetchAcct })
   const { openSwitchAccountModal } = useSwitchAccountModal({})
-  const isCommunity = useCommunity()
+  const isCommunity = isCommunityPlan()
 
   const accountData = data?.data
 

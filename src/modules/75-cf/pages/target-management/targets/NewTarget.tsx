@@ -9,7 +9,8 @@ import React, { useState } from 'react'
 import { get } from 'lodash-es'
 import { useToaster } from '@common/exports'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
-import { CreateTargetQueryParams, useCreateTarget } from 'services/cf'
+import { getErrorMessage } from '@cf/utils/CFUtils'
+import { CreateTargetQueryParams, useCreateTarget, useUploadTargets } from 'services/cf'
 import CreateTargetModal, { TargetData } from './CreateTargetModal'
 
 export interface NewTargetsProps {
@@ -36,6 +37,15 @@ export const NewTargets: React.FC<NewTargetsProps> = ({
     queryParams: { accountIdentifier, orgIdentifier } as CreateTargetQueryParams
   })
   const { activeEnvironment: environmentIdentifier } = useActiveEnvironment()
+
+  const { mutate: uploadTarget, loading: loadingUploadTarget } = useUploadTargets({
+    queryParams: {
+      accountIdentifier,
+      orgIdentifier,
+      projectIdentifier,
+      environmentIdentifier
+    }
+  })
 
   const bulkTargetCreation = (ts: TargetData[]): Promise<SettledTarget[]> => {
     return Promise.all(
@@ -90,23 +100,33 @@ export const NewTargets: React.FC<NewTargetsProps> = ({
       .finally(() => setLoadingBulk(false))
   }
 
-  const handleTargetUpload = (file: File, hideModal: () => void): void => {
-    file
-      .text()
-      .then((str: string) => {
-        return str
-          .split(/\r?\n/)
-          .map(row => row.split(',').map(x => x.trim()))
-          .map(([name, identifier]) => ({ name, identifier } as TargetData))
+  const handleTargetFileCreation = (file: File, hideModal: () => void): void => {
+    uploadTarget(createFormData(file) as any)
+      .then(() => {
+        hideModal()
+        onCreated()
       })
-      .then((ts: TargetData[]) => handleTargetCreation(ts, hideModal))
+      .catch(error => {
+        showError(getErrorMessage(error), 0, 'cf.targets.uploadError')
+      })
+  }
+
+  const createFormData = (file: File): FormData => {
+    const formData = new FormData()
+    formData.append(
+      'fileName',
+      new Blob([file], {
+        type: 'application/octet-stream'
+      })
+    )
+    return formData
   }
 
   return (
     <CreateTargetModal
-      loading={loadingCreateTarget || loadingBulk}
+      loading={loadingCreateTarget || loadingBulk || loadingUploadTarget}
       onSubmitTargets={handleTargetCreation}
-      onSubmitUpload={handleTargetUpload}
+      onSubmitTargetFile={handleTargetFileCreation}
     />
   )
 }

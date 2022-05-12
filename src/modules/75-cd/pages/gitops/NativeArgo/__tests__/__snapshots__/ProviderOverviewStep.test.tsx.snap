@@ -17,6 +17,7 @@ exports[`Connector details step Test for  create  connector step one required fe
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>
@@ -492,6 +493,7 @@ exports[`Connector details step Test for  loading state 1`] = `
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>
@@ -907,6 +909,7 @@ exports[`Connector details step Test for  updating state 1`] = `
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>
@@ -1247,6 +1250,7 @@ exports[`Connector details step Test for Failed response 1`] = `
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>
@@ -1587,6 +1591,7 @@ exports[`Connector details step Test for adding required fields and save 1`] = `
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>
@@ -1927,6 +1932,7 @@ exports[`Connector details step Test for data false 1`] = `
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>
@@ -2307,6 +2313,7 @@ exports[`Connector details step Test for going to next step 1`] = `
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>
@@ -2678,6 +2685,7 @@ exports[`Connector details step test for error in response 1`] = `
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>
@@ -3261,6 +3269,7 @@ exports[`Connector details step test for opening in edit mode 1`] = `
             class="OverlaySpinner--overlaySpinner"
           >
             <form
+              action="#"
               class="FormikForm--main"
             >
               <div>

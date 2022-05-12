@@ -9,6 +9,7 @@ exports[`Test Cases For ConfigureAlerts Should be able to render ConfigureAlerts
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>

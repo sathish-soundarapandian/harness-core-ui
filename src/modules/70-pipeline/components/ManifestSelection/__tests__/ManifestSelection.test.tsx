@@ -8,6 +8,7 @@
 import React from 'react'
 import { render, findByText, fireEvent, findAllByText, waitFor } from '@testing-library/react'
 import { MultiTypeInputType } from '@wings-software/uicore'
+import type { ServiceDefinition } from 'services/cd-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   PipelineContext,
@@ -39,7 +40,7 @@ describe('ManifestSelection tests', () => {
   test(`renders without crashing`, () => {
     const { container } = render(
       <TestWrapper>
-        <ManifestSelection isForOverrideSets={false} isForPredefinedSets={false} />
+        <ManifestSelection deploymentType="Kubernetes" isForOverrideSets={false} isForPredefinedSets={false} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -49,7 +50,7 @@ describe('ManifestSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ManifestSelection isForOverrideSets={false} isForPredefinedSets={false} />
+          <ManifestSelection deploymentType="Kubernetes" isForOverrideSets={false} isForPredefinedSets={false} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -70,7 +71,7 @@ describe('ManifestSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ManifestSelection isForOverrideSets={false} isForPredefinedSets={false} />
+          <ManifestSelection deploymentType="Kubernetes" isForOverrideSets={false} isForPredefinedSets={false} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -95,7 +96,7 @@ describe('ManifestSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ManifestSelection isForOverrideSets={true} isForPredefinedSets={false} />
+          <ManifestSelection deploymentType="Kubernetes" isForOverrideSets={true} isForPredefinedSets={false} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -113,7 +114,7 @@ describe('ManifestSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ManifestSelection isForOverrideSets={false} isForPredefinedSets={true} />
+          <ManifestSelection deploymentType="Kubernetes" isForOverrideSets={false} isForPredefinedSets={true} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -132,6 +133,7 @@ describe('ManifestSelection tests', () => {
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
           <ManifestSelection
+            deploymentType="Kubernetes"
             overrideSetIdentifier={'overrideSetIdentifier'}
             isForOverrideSets={false}
             isForPredefinedSets={false}
@@ -149,6 +151,7 @@ describe('ManifestSelection tests', () => {
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
           <ManifestSelection
+            deploymentType="Kubernetes"
             overrideSetIdentifier={''}
             isForOverrideSets={false}
             isForPredefinedSets={false}
@@ -182,7 +185,7 @@ describe('ManifestSelection tests', () => {
       refetchConnectors: jest.fn(),
       isReadonly: false,
       listOfManifests: [],
-      deploymentType: 'Kubernetes',
+      deploymentType: 'Kubernetes' as ServiceDefinition['type'],
       allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
     }
     const { container } = render(
@@ -207,7 +210,7 @@ describe('ManifestSelection tests', () => {
       refetchConnectors: jest.fn(),
       isReadonly: false,
       listOfManifests: [],
-      deploymentType: 'Kubernetes',
+      deploymentType: 'Kubernetes' as ServiceDefinition['type'],
       allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
     }
     const { container } = render(
@@ -232,7 +235,7 @@ describe('ManifestSelection tests', () => {
       refetchConnectors: jest.fn(),
       isReadonly: false,
       listOfManifests: [],
-      deploymentType: 'Kubernetes',
+      deploymentType: 'Kubernetes' as ServiceDefinition['type'],
       allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
     }
     const { container } = render(
@@ -256,7 +259,7 @@ describe('ManifestSelection tests', () => {
       connectors: connectorsData.data as any,
       refetchConnectors: jest.fn(),
       isReadonly: false,
-      deploymentType: 'Kubernetes',
+      deploymentType: 'Kubernetes' as ServiceDefinition['type'],
       allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
       listOfManifests: [
         {
@@ -305,7 +308,7 @@ describe('ManifestSelection tests', () => {
       connectors: connectorsData.data as any,
       refetchConnectors: jest.fn(),
       isReadonly: false,
-      deploymentType: 'Kubernetes',
+      deploymentType: 'Kubernetes' as ServiceDefinition['type'],
       allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
       listOfManifests: [
         {
@@ -362,7 +365,7 @@ describe('ManifestSelection tests', () => {
       refetchConnectors: jest.fn(),
       isReadonly: false,
       listOfManifests: [],
-      deploymentType: 'Kubernetes',
+      deploymentType: 'Kubernetes' as ServiceDefinition['type'],
       allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
     }
 

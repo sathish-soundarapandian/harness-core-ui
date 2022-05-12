@@ -6,6 +6,7 @@ exports[`WebhookPipelineInputPanel Triggers tests Renders/snapshots Initial Rend
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -15,12 +16,16 @@ exports[`WebhookPipelineInputPanel Triggers tests Renders/snapshots Initial Rend
           <div
             class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--margin-large"
           >
-            <span
-              class="StyledProps--font StyledProps--main formContentTitle StyledProps--inline"
+            <div
+              class="Text--withDocsTooltip"
               data-tooltip-id="pipelineInputLabel"
             >
-              triggers.pipelineInputLabel
-            </span>
+              <span
+                class="StyledProps--font StyledProps--main formContentTitle StyledProps--inline"
+              >
+                triggers.pipelineInputLabel
+              </span>
+            </div>
             <div
               class="Layout--vertical StyledProps--main formContent"
             >
@@ -44,6 +49,7 @@ exports[`WebhookPipelineInputPanel Triggers tests Renders/snapshots Initial Rend
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -53,12 +59,16 @@ exports[`WebhookPipelineInputPanel Triggers tests Renders/snapshots Initial Rend
           <div
             class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--margin-large"
           >
-            <span
-              class="StyledProps--font StyledProps--main formContentTitle StyledProps--inline"
+            <div
+              class="Text--withDocsTooltip"
               data-tooltip-id="pipelineInputLabel"
             >
-              triggers.pipelineInputLabel
-            </span>
+              <span
+                class="StyledProps--font StyledProps--main formContentTitle StyledProps--inline"
+              >
+                triggers.pipelineInputLabel
+              </span>
+            </div>
             <div
               class="Layout--vertical StyledProps--main formContent"
             >
@@ -82,6 +92,7 @@ exports[`WebhookPipelineInputPanel Triggers tests Renders/snapshots Initial Rend
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -91,12 +102,16 @@ exports[`WebhookPipelineInputPanel Triggers tests Renders/snapshots Initial Rend
           <div
             class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--margin-large"
           >
-            <span
-              class="StyledProps--font StyledProps--main formContentTitle StyledProps--inline"
+            <div
+              class="Text--withDocsTooltip"
               data-tooltip-id="pipelineInputLabel"
             >
-              triggers.pipelineInputLabel
-            </span>
+              <span
+                class="StyledProps--font StyledProps--main formContentTitle StyledProps--inline"
+              >
+                triggers.pipelineInputLabel
+              </span>
+            </div>
             <div
               class="Layout--vertical StyledProps--main formContent"
             >
@@ -120,6 +135,7 @@ exports[`WebhookPipelineInputPanel Triggers tests Renders/snapshots Initial Rend
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -129,12 +145,16 @@ exports[`WebhookPipelineInputPanel Triggers tests Renders/snapshots Initial Rend
           <div
             class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--margin-large"
           >
-            <span
-              class="StyledProps--font StyledProps--main formContentTitle StyledProps--inline"
+            <div
+              class="Text--withDocsTooltip"
               data-tooltip-id="pipelineInputLabel"
             >
-              triggers.pipelineInputLabel
-            </span>
+              <span
+                class="StyledProps--font StyledProps--main formContentTitle StyledProps--inline"
+              >
+                triggers.pipelineInputLabel
+              </span>
+            </div>
             <div
               class="Layout--vertical StyledProps--main formContent"
             >
@@ -158,6 +178,7 @@ exports[`WebhookPipelineInputPanel Triggers tests Renders/snapshots Initial Rend
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -167,12 +188,16 @@ exports[`WebhookPipelineInputPanel Triggers tests Renders/snapshots Initial Rend
           <div
             class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--margin-large"
           >
-            <span
-              class="StyledProps--font StyledProps--main formContentTitle StyledProps--inline"
+            <div
+              class="Text--withDocsTooltip"
               data-tooltip-id="pipelineInputLabel"
             >
-              triggers.pipelineInputLabel
-            </span>
+              <span
+                class="StyledProps--font StyledProps--main formContentTitle StyledProps--inline"
+              >
+                triggers.pipelineInputLabel
+              </span>
+            </div>
             <div
               class="Layout--vertical StyledProps--main formContent"
             >

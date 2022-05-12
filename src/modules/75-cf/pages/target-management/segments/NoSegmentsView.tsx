@@ -11,7 +11,7 @@ import { Container } from '@wings-software/uicore'
 import { NoData } from '@cf/components/NoData/NoData'
 import { useStrings } from 'framework/strings'
 import { NewSegmentButton } from './NewSegmentButton'
-import imageURL from './segment.svg'
+import imageURL from '../../../images/segment.svg'
 
 export interface NoSegmentsViewProps {
   hasEnvironment: boolean

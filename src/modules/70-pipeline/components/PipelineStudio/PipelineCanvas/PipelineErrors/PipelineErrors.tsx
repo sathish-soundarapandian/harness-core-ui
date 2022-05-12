@@ -16,10 +16,11 @@ import type { StringsMap } from 'stringTypes'
 import { useStrings } from 'framework/strings'
 import stepFactory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { stageTypeToIconMap } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
+import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import PipelineErrorCard from './PipelineErrorCard'
 import css from './PipelineErrors.module.scss'
 
-type gotoViewWithDetails = (args: { stageId?: string; stepId?: string }) => void
+type gotoViewWithDetails = (args: { stageId?: string; stepId?: string; sectionId?: string }) => void
 
 export interface PropsInterface {
   errors: YamlSchemaErrorDTO[]
@@ -39,11 +40,29 @@ const isStepError = (item: YamlSchemaErrorDTO): boolean => !!item.stageInfo && !
 const getNameFromItem = (item: NodeErrorInfo = {}) => item.name || item.identifier || item.fqn
 const getIdentifierFromItem = (item?: NodeErrorInfo) => item?.identifier || ''
 
+const SECTION_KEY_MAP = {
+  serviceConfig: DeployTabs.SERVICE,
+  infrastructure: DeployTabs.INFRASTRUCTURE,
+  execution: DeployTabs.EXECUTION,
+  failureStrategies: DeployTabs.ADVANCED
+}
+type sectionKeys = 'serviceConfig' | 'infrastructure' | 'execution' | 'failureStrategies'
+
+/**
+ * examples
+ * message1 = '$.pipeline.stages[0].stage.spec.infrastructure.useFromStage: is missing but it is required' - infrastructure
+ * message2 = '$.pipeline.stages[0].stage.spec.infrastructure: is missing but it is required' - infrastructure
+ * message3 = '$.pipeline is missing but it is required' - undefined
+ * message4 = '$.pipeline.stages[0].stage.spec: is missing but it is required' - undefined
+ * */
+const getSectionId = (message = '') => {
+  const sectionKey = message.split('.spec.')[1]?.split(':')[0]?.split('.')[0] || ''
+  return sectionKey ? SECTION_KEY_MAP[sectionKey as sectionKeys] || '' : ''
+}
+
 const addToErrorsByStage = (errorsByStage: Record<string, YamlSchemaErrorDTO[]>, item: YamlSchemaErrorDTO) => {
   const identifier = getIdentifierFromItem(item.stageInfo)
-  return isStageError(item)
-    ? [item, ...(errorsByStage[identifier] || [])]
-    : [...(errorsByStage[identifier] || []), item]
+  return [...(errorsByStage[identifier] || []), item]
 }
 
 const getAdaptedErrors = (schemaErrors: YamlSchemaErrorDTO[]) =>
@@ -119,7 +138,7 @@ function StageErrorCard({
       errors={errors.map(err => err?.message).filter(e => e) as string[]}
       icon={stageTypeToIconMap[errors[0].stageInfo?.type || '']}
       onClick={() => {
-        gotoViewWithDetails({ stageId: errors[0].stageInfo?.identifier })
+        gotoViewWithDetails({ stageId: errors[0].stageInfo?.identifier, sectionId: getSectionId(errors[0].message) })
       }}
       buttonText={getString('pipeline.errorFramework.fixStage')}
     />

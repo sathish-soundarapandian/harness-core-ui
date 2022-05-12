@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom'
 import { Layout, Text, Card, Popover, Container } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Position, Menu, MenuItem } from '@blueprintjs/core'
+import { defaultTo } from 'lodash-es'
 
 import { NodepoolTimeRange, NodepoolTimeRangeType, NodepoolTimeRangeValue } from '@ce/types'
 import { GET_NODEPOOL_DATE_RANGE } from '@ce/utils/momentUtils'
@@ -25,6 +26,7 @@ import {
 } from 'services/ce/services'
 import routes from '@common/RouteDefinitions'
 import { useStrings } from 'framework/strings'
+import { getProviderIcon } from '@ce/utils/recommendationUtils'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { ViewNodepoolTimeRange } from '@ce/components/RecommendationDetails/constants'
 import NodeRecommendationDetails from '@ce/components/NodeRecommendation/NodeRecommendation'
@@ -40,8 +42,8 @@ const NodeRecommendationDetailsPage = () => {
   const { getString } = useStrings()
   const { recommendation, accountId, recommendationName } = useParams<Params>()
   const [timeRange, setTimeRange] = useState<NodepoolTimeRangeValue>({
-    value: NodepoolTimeRangeType.LAST_DAY,
-    label: NodepoolTimeRange.LAST_DAY
+    value: NodepoolTimeRangeType.LAST_7,
+    label: NodepoolTimeRange.LAST_7
   })
   const timeRangeFilter = GET_NODEPOOL_DATE_RANGE[timeRange.value]
 
@@ -84,7 +86,10 @@ const NodeRecommendationDetailsPage = () => {
       <Page.Header
         title={
           <Layout.Horizontal spacing="small">
-            <Text icon="gcp" font={{ variation: FontVariation.BODY1 }}>
+            <Text
+              icon={getProviderIcon(defaultTo(recommendationDetails.recommended?.provider, ''))}
+              font={{ variation: FontVariation.BODY1 }}
+            >
               {getString('ce.recommendation.detailsPage.headerText')}
             </Text>
             <Text font={{ variation: FontVariation.H4 }} style={{ verticalAlign: 'middle' }}>
@@ -144,6 +149,7 @@ const NodeRecommendationDetailsPage = () => {
             nodeRecommendationRequestData={
               nodeRecommendationRequestData?.nodeRecommendationRequest as RecommendNodePoolClusterRequest
             }
+            nodePoolData={nodePoolData as RecommendationItemDto}
           />
         </Container>
       </Page.Body>

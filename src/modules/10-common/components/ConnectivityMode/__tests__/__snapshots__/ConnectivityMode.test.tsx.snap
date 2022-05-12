@@ -5,7 +5,9 @@ exports[`Test ConnectivityMode should render default state for ConnectivityMode 
   <div
     class="OverlaySpinner--overlaySpinner"
   >
-    <form>
+    <form
+      action="#"
+    >
       <div
         class="bp3-form-group"
       >
@@ -68,7 +70,9 @@ exports[`Test ConnectivityMode should render delegate state for ConnectivityMode
   <div
     class="OverlaySpinner--overlaySpinner"
   >
-    <form>
+    <form
+      action="#"
+    >
       <div
         class="bp3-form-group"
       >
@@ -170,7 +174,9 @@ exports[`Test ConnectivityMode should render manager state for ConnectivityMode 
   <div
     class="OverlaySpinner--overlaySpinner"
   >
-    <form>
+    <form
+      action="#"
+    >
       <div
         class="bp3-form-group"
       >

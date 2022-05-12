@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { FormikContext } from 'formik'
+import type { FormikContextType } from 'formik'
 import { isEqual, omit } from 'lodash-es'
 import type { MonitoredServiceDTO } from 'services/cv'
 import { MonitoredServiceType } from './components/MonitoredServiceOverview/MonitoredServiceOverview.constants'
@@ -14,10 +14,27 @@ import type { MonitoredServiceForm } from './Service.types'
 export const getInitFormData = (
   data: MonitoredServiceDTO | undefined,
   defaultMonitoredService: MonitoredServiceDTO | undefined,
-  isEdit: boolean
+  isEdit: boolean,
+  isTemplate = false,
+  templateValue?: any
 ): MonitoredServiceForm => {
   const monitoredServiceData = isEdit ? data : defaultMonitoredService
 
+  if (isTemplate) {
+    return {
+      isEdit: false,
+      name: templateValue?.name,
+      identifier: templateValue?.identifier,
+      description: '',
+      tags: templateValue?.tags,
+      serviceRef: templateValue?.spec?.serviceRef,
+      type: MonitoredServiceType.APPLICATION as MonitoredServiceForm['type'],
+      environmentRef: templateValue?.spec?.environmentRef,
+      environmentRefList: [],
+      sources: templateValue?.spec?.sources,
+      dependencies: []
+    }
+  }
   const {
     name = '',
     identifier = '',
@@ -60,7 +77,7 @@ export const onSave = async ({
   formik,
   onSuccess
 }: {
-  formik: FormikContext<any>
+  formik: FormikContextType<any>
   onSuccess: (val: MonitoredServiceForm) => Promise<void>
 }): Promise<void> => {
   const validResponse = await formik?.validateForm()

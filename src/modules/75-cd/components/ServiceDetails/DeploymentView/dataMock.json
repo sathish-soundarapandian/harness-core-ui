@@ -1,0 +1,49 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "environmentInfoByServiceId": [
+      {
+        "environmentName": "NewEnv",
+        "environmentId": "NewEnv",
+        "artifactImage": "library/nginx",
+        "tag": "perl",
+        "serviceName": "newService",
+        "serviceId": "Serv1",
+        "service_startTs": 1651059655943,
+        "service_endTs": 1651059739615
+      },
+      {
+        "environmentName": "PreProDEnv",
+        "environmentId": "PreProDEnv",
+        "artifactImage": "library/nginx",
+        "tag": "stable",
+        "serviceName": "newService",
+        "serviceId": "Serv1",
+        "service_startTs": 1651059739627,
+        "service_endTs": 1651059835742
+      },
+      {
+        "environmentName": "PreQa",
+        "environmentId": "PreQa",
+        "artifactImage": "library/nginx",
+        "tag": "stable",
+        "serviceName": "Serv1",
+        "serviceId": "Serv1",
+        "service_startTs": 1650954993799,
+        "service_endTs": 1650955065955
+      },
+      {
+        "environmentName": "env",
+        "environmentId": "env",
+        "artifactImage": "library/nginx",
+        "tag": "stable",
+        "serviceName": "Serv1",
+        "serviceId": "Serv1",
+        "service_startTs": 1650954674881,
+        "service_endTs": 1650954993776
+      }
+    ]
+  },
+  "metaData": null,
+  "correlationId": "a8e10905-f5ec-446a-8863-e0947d70b28c"
+}

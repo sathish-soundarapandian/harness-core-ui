@@ -9,8 +9,7 @@ import { Card, Container, Formik, FormikForm, Layout } from '@harness/uicore'
 import React, { ReactElement } from 'react'
 import { useParams } from 'react-router-dom'
 import { v4 as uuid } from 'uuid'
-import * as yup from 'yup'
-import { FieldArray, validateYupSchema, yupToFormErrors } from 'formik'
+import { FieldArray, FieldArrayRenderProps } from 'formik'
 import FlagToggleSwitch from '@cf/components/EditFlagTabs/FlagToggleSwitch'
 import {
   Feature,
@@ -18,26 +17,20 @@ import {
   GetAllTargetsQueryParams,
   useGetAllSegments,
   useGetAllTargets,
-  WeightedVariation
+  Variation
 } from 'services/cf'
 import { FeatureFlagActivationStatus } from '@cf/utils/CFUtils'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
-import { useStrings } from 'framework/strings'
-import { CFVariationColors } from '@cf/constants'
+
 import usePatchFeatureFlag from './hooks/usePatchFeatureFlag'
 import TargetingRulesTabFooter from './components/tab-targeting-footer/TargetingRulesTabFooter'
 
 import FlagEnabledRulesCard from './components/flag-enabled-rules-card/FlagEnabledRulesCard'
-import {
-  FormVariationMap,
-  VariationPercentageRollout,
-  TargetGroup,
-  TargetingRulesFormValues,
-  TargetingRuleItemType,
-  VariationColorMap
-} from './Types.types'
+import { FormVariationMap, VariationPercentageRollout, TargetingRuleItemType, TargetingRuleItemStatus } from './types'
 import useFeatureEnabled from './hooks/useFeatureEnabled'
 import DefaultRules from './components/default-rules/DefaultRules'
+import useTargetingRulesFormValidation from './hooks/useTargetingRulesFormValidation'
+import useTargetingRulesFormData from './hooks/useTargetingRulesFormData'
 import css from './TargetingRulesTab.module.scss'
 export interface TargetingRulesTabProps {
   featureFlagData: Feature
@@ -52,153 +45,137 @@ const TargetingRulesTab = ({
 }: TargetingRulesTabProps): ReactElement => {
   const { orgIdentifier, accountId: accountIdentifier, projectIdentifier } = useParams<Record<string, string>>()
   const { activeEnvironment: environmentIdentifier } = useActiveEnvironment()
-  const { getString } = useStrings()
 
-  const { data: targetsData, loading: targetsLoading } = useGetAllTargets({
-    queryParams: {
-      environmentIdentifier,
-      projectIdentifier,
-      accountIdentifier,
-      orgIdentifier,
-      pageSize: 1000
-    } as GetAllTargetsQueryParams
+  const debounce = 500
+
+  const queryParams = {
+    environmentIdentifier,
+    projectIdentifier,
+    accountIdentifier,
+    orgIdentifier,
+    pageSize: 100
+  }
+
+  const {
+    data: targetsData,
+    loading: targetsLoading,
+    refetch: refetchTargets
+  } = useGetAllTargets({
+    queryParams: queryParams as GetAllTargetsQueryParams,
+    debounce
   })
 
-  const { data: segmentsData, loading: segmentsLoading } = useGetAllSegments({
-    queryParams: {
-      environmentIdentifier,
-      projectIdentifier,
-      accountIdentifier,
-      orgIdentifier,
-      pageSize: 1000
-    } as GetAllSegmentsQueryParams
+  const {
+    data: segmentsData,
+    loading: segmentsLoading,
+    refetch: refetchSegments
+  } = useGetAllSegments({
+    queryParams: queryParams as GetAllSegmentsQueryParams,
+    debounce
   })
 
   const segments = segmentsData?.segments || []
   const targets = targetsData?.targets || []
 
-  // convert variations/targets/target groups into a more UI friendly structure
-  // Individual rules (variations/percentage rollouts) don't have a priority - only target groups do
-  // so we sort the rules initially by target group priority,
-  // and assign a "base priority" to the rule, which the target groups added to a variation will base their priorities off.
-  // This is to maintain the ordering
-  const formVariationMap: FormVariationMap[] = []
-  const variationColorMap: VariationColorMap = {}
-  featureFlagData.variations.forEach((variation, variationIndex) => {
-    variationColorMap[variation.identifier] = CFVariationColors[variationIndex]
-    const variationTargets =
-      featureFlagData.envProperties?.variationMap?.find(
-        variationMapItem => variation.identifier === variationMapItem.variation
-      )?.targets || []
-
-    const variationTargetGroups: TargetGroup[] =
-      featureFlagData.envProperties?.rules
-        ?.filter(rule => rule.serve.variation === variation.identifier)
-        .map(targetGroupRule => ({
-          priority: targetGroupRule.priority,
-          identifier: targetGroupRule.clauses[0].values[0],
-          ruleId: targetGroupRule.ruleId as string,
-          name: segments.find(segment => segment.identifier === targetGroupRule.clauses[0].values[0])?.name as string
-        })) || []
-
-    // highest priority = lowest number
-    const highestPriority =
-      variationTargetGroups?.reduce(
-        (prev: TargetGroup, current: TargetGroup) => (prev.priority < current.priority ? prev : current),
-        {} as TargetGroup
-      ).priority || 0
-
-    // if this variation doesn't contain any targets/target groups we dont display it initially
-    if (variationTargets.length || variationTargetGroups.length) {
-      formVariationMap.push({
-        priority: highestPriority,
-        type: TargetingRuleItemType.VARIATION,
-        variationIdentifier: variation.identifier,
-        variationName: variation.name as string,
-        targets: variationTargets,
-        targetGroups: variationTargetGroups
-      })
-    }
-  })
-
-  const percentageRolloutRules = featureFlagData.envProperties?.rules?.filter(rule => rule.serve.distribution)
-  const variationPercentageRollouts: VariationPercentageRollout[] = percentageRolloutRules
-    ? percentageRolloutRules.map(percentageRollout => ({
-        type: TargetingRuleItemType.PERCENTAGE_ROLLOUT,
-        priority: percentageRollout.priority,
-        variations: percentageRollout.serve.distribution?.variations || [],
-        bucketBy: percentageRollout.serve.distribution?.bucketBy || 'identifier',
-        clauses: percentageRollout.clauses,
-        ruleId: percentageRollout.ruleId as string
-      }))
-    : []
-
-  const targetingRuleItems = [...formVariationMap, ...variationPercentageRollouts].sort(
-    (prev, next) => prev?.priority - next?.priority
-  )
-
-  const initialValues: TargetingRulesFormValues = {
-    state: featureFlagData.envProperties?.state as string,
-    onVariation: featureFlagData.envProperties?.defaultServe.variation
-      ? featureFlagData.envProperties?.defaultServe.variation
-      : featureFlagData.defaultOnVariation,
-    offVariation: featureFlagData.envProperties?.offVariation as string,
-    targetingRuleItems
-  }
-
-  const validate = (values: TargetingRulesFormValues) => {
-    try {
-      validateYupSchema(
-        values,
-        yup.object({
-          targetingRuleItems: yup.array().of(
-            yup.object({
-              clauses: yup.array().of(
-                yup.object({
-                  values: yup
-                    .array()
-                    .of(yup.string().required(getString('cf.featureFlags.rules.validation.selectTargetGroup')))
-                })
-              ),
-              variations: yup.lazy(value => {
-                return yup.array().of(
-                  yup.object({
-                    weight: yup
-                      .number()
-                      .typeError(getString('cf.creationModal.mustBeNumber'))
-                      .required(getString('cf.featureFlags.rules.validation.valueRequired'))
-                      .test('weight-sum-test', getString('cf.featureFlags.rules.validation.valueMustAddTo100'), () => {
-                        const totalWeight = (value as WeightedVariation[])
-                          .map(x => x.weight)
-                          .reduce((previous, current) => previous + current, 0)
-
-                        return totalWeight === 100
-                      })
-                  })
-                )
-              })
-            })
-          )
-        }),
-        true,
-        values
-      )
-    } catch (err) {
-      return yupToFormErrors(err) //for rendering validation errors
-    }
-
-    return {}
-  }
-
+  const { initialValues, getNextPriority, variationColorMap } = useTargetingRulesFormData({ featureFlagData, segments })
+  const { validate } = useTargetingRulesFormValidation()
   const { saveChanges, loading: patchFeatureLoading } = usePatchFeatureFlag({
     initialValues,
     variations: featureFlagData.variations,
     featureFlagIdentifier: featureFlagData.identifier,
+    featureFlagName: featureFlagData.name,
     refetchFlag
   })
 
   const { featureEnabled } = useFeatureEnabled()
   const disabled = patchFeatureLoading || refetchFlagLoading || targetsLoading || segmentsLoading || !featureEnabled
+
+  const handleRefetchSegments = async (searchTerm: string): Promise<void> =>
+    await refetchSegments({
+      queryParams: { ...queryParams, identifier: searchTerm, name: searchTerm },
+      debounce
+    })
+
+  const handleRefetchTargets = async (searchTerm: string): Promise<void> =>
+    await refetchTargets({
+      queryParams: { ...queryParams, targetIdentifier: searchTerm, targetName: searchTerm },
+      debounce
+    })
+
+  const handleAddVariation = (
+    newVariation: Variation,
+    targetingRuleItems: (FormVariationMap | VariationPercentageRollout)[],
+    arrayHelpers: FieldArrayRenderProps
+  ): void => {
+    const priority = getNextPriority(targetingRuleItems)
+    const variation: FormVariationMap = {
+      status: TargetingRuleItemStatus.ADDED,
+      priority: priority,
+      type: TargetingRuleItemType.VARIATION,
+      variationIdentifier: newVariation.identifier,
+      variationName: newVariation.name as string,
+      targets: [],
+      targetGroups: []
+    }
+
+    arrayHelpers.push(variation)
+  }
+
+  const handleRemoveVariation = (
+    removedVariationIndex: number,
+    targetingRuleItems: (FormVariationMap | VariationPercentageRollout)[],
+    arrayHelpers: FieldArrayRenderProps
+  ): void => {
+    const item = targetingRuleItems[removedVariationIndex] as FormVariationMap
+    const variation: FormVariationMap = {
+      ...item,
+      status: TargetingRuleItemStatus.DELETED
+    }
+    arrayHelpers.replace(removedVariationIndex, variation)
+  }
+
+  const handleAddPercentageRollout = (
+    targetingRuleItems: (FormVariationMap | VariationPercentageRollout)[],
+    arrayHelpers: FieldArrayRenderProps
+  ): void => {
+    // need to add with empty fields so the validation messages appear correctly
+    const priority = getNextPriority(targetingRuleItems)
+    const newPercentageRollout: VariationPercentageRollout = {
+      status: TargetingRuleItemStatus.ADDED,
+      ruleId: uuid(),
+      priority: priority,
+      type: TargetingRuleItemType.PERCENTAGE_ROLLOUT,
+      bucketBy: 'identifier',
+      clauses: [
+        {
+          attribute: '',
+          id: '',
+          negate: false,
+          op: '',
+          values: ['']
+        }
+      ],
+      variations: featureFlagData.variations.map(variation => ({
+        variation: variation.identifier,
+        weight: 0
+      }))
+    }
+    arrayHelpers.push(newPercentageRollout)
+  }
+
+  const handleRemovePercentageRollout = (
+    removedPercentageRolloutIndex: number,
+    targetingRuleItems: (FormVariationMap | VariationPercentageRollout)[],
+    arrayHelpers: FieldArrayRenderProps
+  ): void => {
+    const item = targetingRuleItems[removedPercentageRolloutIndex] as VariationPercentageRollout
+
+    const variation: VariationPercentageRollout = {
+      ...item,
+      status: TargetingRuleItemStatus.DELETED
+    }
+    arrayHelpers.replace(removedPercentageRolloutIndex, variation)
+  }
 
   return (
     <Formik
@@ -212,119 +189,81 @@ const TargetingRulesTab = ({
         saveChanges(values)
       }}
     >
-      {formikProps => {
-        return (
-          <FormikForm data-testid="targeting-rules-tab-form" disabled={disabled}>
-            <Container className={css.tabContainer}>
-              <Layout.Vertical
-                spacing="small"
-                padding={{ left: 'xlarge', right: 'xlarge', bottom: 'xlarge' }}
-                className={css.flagRulesSection}
-              >
-                <Card elevation={0}>
-                  <FlagToggleSwitch
+      {formikProps => (
+        <FormikForm data-testid="targeting-rules-tab-form" disabled={disabled}>
+          <Container className={css.tabContainer}>
+            <Layout.Vertical
+              spacing="small"
+              padding={{ left: 'xlarge', right: 'xlarge', bottom: 'xlarge' }}
+              className={css.flagRulesSection}
+            >
+              <Card elevation={0}>
+                <FlagToggleSwitch
+                  disabled={disabled}
+                  currentState={formikProps.values.state}
+                  currentEnvironmentState={featureFlagData.envProperties?.state}
+                  handleToggle={() =>
+                    formikProps.setFieldValue(
+                      'state',
+                      formikProps.values.state === FeatureFlagActivationStatus.OFF
+                        ? FeatureFlagActivationStatus.ON
+                        : FeatureFlagActivationStatus.OFF
+                    )
+                  }
+                />
+              </Card>
+              <FieldArray
+                name="targetingRuleItems"
+                render={arrayHelpers => (
+                  <FlagEnabledRulesCard
+                    variationColorMap={variationColorMap}
+                    targetingRuleItems={formikProps.values.targetingRuleItems}
+                    targets={targets}
+                    segments={segments}
+                    featureFlagVariations={featureFlagData.variations}
                     disabled={disabled}
-                    currentState={formikProps.values.state}
-                    currentEnvironmentState={featureFlagData.envProperties?.state}
-                    handleToggle={() =>
-                      formikProps.setFieldValue(
-                        'state',
-                        formikProps.values.state === FeatureFlagActivationStatus.OFF
-                          ? FeatureFlagActivationStatus.ON
-                          : FeatureFlagActivationStatus.OFF
+                    refetchSegments={handleRefetchSegments}
+                    refetchTargets={handleRefetchTargets}
+                    addVariation={newVariation =>
+                      handleAddVariation(newVariation, formikProps.values.targetingRuleItems, arrayHelpers)
+                    }
+                    removeVariation={removedVariationIndex =>
+                      handleRemoveVariation(removedVariationIndex, formikProps.values.targetingRuleItems, arrayHelpers)
+                    }
+                    addPercentageRollout={() =>
+                      handleAddPercentageRollout(formikProps.values.targetingRuleItems, arrayHelpers)
+                    }
+                    removePercentageRollout={removedPercentageRolloutIndex =>
+                      handleRemovePercentageRollout(
+                        removedPercentageRolloutIndex,
+                        formikProps.values.targetingRuleItems,
+                        arrayHelpers
                       )
                     }
                   />
-                </Card>
-                <FieldArray
-                  name="targetingRuleItems"
-                  render={arrayHelpers => (
-                    <FlagEnabledRulesCard
-                      variationColorMap={variationColorMap}
-                      targetingRuleItems={formikProps.values.targetingRuleItems}
-                      targets={targets}
-                      segments={segments}
-                      featureFlagVariations={featureFlagData.variations}
-                      disabled={disabled}
-                      updateTargetGroups={(index: number, newTargetGroups: TargetGroup[]) => {
-                        const newTargetingRuleItem = {
-                          ...formikProps.values.targetingRuleItems[index],
-                          targetGroups: newTargetGroups
-                        }
-                        arrayHelpers.replace(index, newTargetingRuleItem)
-                      }}
-                      updateTargets={(index: number, newTargets) => {
-                        const newTargetingRuleItem = {
-                          ...formikProps.values.targetingRuleItems[index],
-                          targets: newTargets
-                        }
-                        arrayHelpers.replace(index, newTargetingRuleItem)
-                      }}
-                      addVariation={newVariation => {
-                        const variation: FormVariationMap = {
-                          priority: 100,
-                          type: TargetingRuleItemType.VARIATION,
-                          variationIdentifier: newVariation.identifier,
-                          variationName: newVariation.name as string,
-                          targets: [],
-                          targetGroups: []
-                        }
+                )}
+              />
 
-                        arrayHelpers.push(variation)
-                      }}
-                      removeVariation={removedVariationIndex => {
-                        arrayHelpers.remove(removedVariationIndex)
-                      }}
-                      addPercentageRollout={() => {
-                        // need to add with empty fields so the validation messages appear correctly
-                        const newPercentageRollout = {
-                          type: TargetingRuleItemType.PERCENTAGE_ROLLOUT,
-                          bucketBy: 'identifier',
-                          clauses: [
-                            {
-                              attribute: '',
-                              id: '',
-                              negate: false,
-                              op: '',
-                              values: ['']
-                            }
-                          ],
-                          variations: featureFlagData.variations.map(variation => ({
-                            variation: variation.identifier,
-                            weight: 0
-                          })),
-                          ruleId: uuid()
-                        }
-                        arrayHelpers.push(newPercentageRollout)
-                      }}
-                      removePercentageRollout={index => {
-                        arrayHelpers.remove(index)
-                      }}
-                    />
-                  )}
+              <Card>
+                <DefaultRules
+                  hideSubheading
+                  featureFlagVariations={featureFlagData.variations}
+                  titleStringId="cf.featureFlags.rules.whenFlagDisabled"
+                  inputName="offVariation"
                 />
+              </Card>
+            </Layout.Vertical>
 
-                <Card>
-                  <DefaultRules
-                    hideSubheading
-                    featureFlagVariations={featureFlagData.variations}
-                    titleStringId="cf.featureFlags.rules.whenFlagDisabled"
-                    inputName="offVariation"
-                  />
-                </Card>
-              </Layout.Vertical>
-
-              {formikProps.dirty && (
-                <TargetingRulesTabFooter
-                  isLoading={disabled}
-                  handleSubmit={formikProps.handleSubmit}
-                  handleCancel={formikProps.handleReset}
-                />
-              )}
-            </Container>
-          </FormikForm>
-        )
-      }}
+            {formikProps.dirty && (
+              <TargetingRulesTabFooter
+                isLoading={disabled}
+                handleSubmit={formikProps.handleSubmit}
+                handleCancel={formikProps.handleReset}
+              />
+            )}
+          </Container>
+        </FormikForm>
+      )}
     </Formik>
   )
 }

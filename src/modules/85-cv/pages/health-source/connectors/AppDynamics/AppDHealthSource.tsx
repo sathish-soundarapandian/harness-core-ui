@@ -14,7 +14,6 @@ import {
   Container,
   Formik,
   FormikForm,
-  FormInput,
   Layout,
   SelectOption,
   Utils,
@@ -37,20 +36,14 @@ import MetricsVerificationModal from '@cv/components/MetricsVerificationModal/Me
 import { StatusOfValidation } from '@cv/pages/components/ValidationStatus/ValidationStatus.constants'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import useGroupedSideNaveHook from '@cv/hooks/GroupedSideNaveHook/useGroupedSideNaveHook'
-import {
-  getOptions,
-  getInputGroupProps,
-  validateMetrics,
-  createMetricDataFormik
-} from '../MonitoredServiceConnector.utils'
+import { getOptions, validateMetrics, createMetricDataFormik } from '../MonitoredServiceConnector.utils'
 import { HealthSoureSupportedConnectorTypes } from '../MonitoredServiceConnector.constants'
 import {
   createAppDFormData,
-  getPlaceholder,
   initAppDCustomFormValue,
   initializeNonCustomFields,
-  setAppDynamicsApplication,
-  setAppDynamicsTier,
+  setCustomFieldAndValidation,
+  showValidation,
   submitData,
   validateMapping
 } from './AppDHealthSource.utils'
@@ -58,17 +51,20 @@ import type { AppDynamicsData, AppDynamicsFomikFormInterface } from './AppDHealt
 import MetricPackCustom from '../MetricPackCustom'
 import CustomMetric from '../../common/CustomMetric/CustomMetric'
 import AppDCustomMetricForm from './Components/AppDCustomMetricForm/AppDCustomMetricForm'
-
+import AppDApplications from './Components/AppDApplications/AppDApplications'
+import AppDynamicsTier from './Components/AppDynamicsTier/AppDynamicsTier'
 import css from './AppDHealthSource.module.scss'
 
 export default function AppDMonitoredSource({
   data: appDynamicsData,
   onSubmit,
-  onPrevious
+  onPrevious,
+  isTemplate
 }: {
   data: AppDynamicsData
   onSubmit: (healthSourcePayload: any) => void
   onPrevious: () => void
+  isTemplate?: boolean
 }): JSX.Element {
   const { getString } = useStrings()
   const { showError, clear } = useToaster()
@@ -208,7 +204,8 @@ export default function AppDMonitoredSource({
   const [nonCustomFeilds, setNonCustomFeilds] = useState(initializeNonCustomFields(appDynamicsData))
 
   const initPayload = useMemo(
-    () => createAppDFormData(appDynamicsData, mappedMetrics, selectedMetric, nonCustomFeilds, showCustomMetric),
+    () =>
+      createAppDFormData(appDynamicsData, mappedMetrics, selectedMetric, nonCustomFeilds, showCustomMetric, isTemplate),
     [appDynamicsData, mappedMetrics, selectedMetric, nonCustomFeilds, showCustomMetric]
   )
 
@@ -223,6 +220,13 @@ export default function AppDMonitoredSource({
     tierError && showError(getErrorMessage(tierError))
     applicationError && showError(getErrorMessage(applicationError))
   }, [applicationError, tierError])
+
+  const setCustomField = (tierValue: string): void => {
+    setNonCustomFeilds({
+      ...nonCustomFeilds,
+      appDTier: tierValue
+    })
+  }
 
   return (
     <Formik<AppDynamicsFomikFormInterface>
@@ -257,74 +261,39 @@ export default function AppDMonitoredSource({
             <CardWithOuterTitle title={getString('cv.healthSource.connectors.AppDynamics.applicationsAndTiers')}>
               <Layout.Horizontal spacing={'large'} className={css.horizontalCenterAlign}>
                 <Container margin={{ bottom: 'small' }} width={'300px'} color={Color.BLACK}>
-                  <FormInput.Select
-                    className={css.applicationDropdown}
-                    onChange={item => {
-                      refetchTier({
-                        queryParams: {
-                          appName: item.label.toString(),
-                          accountId,
-                          connectorIdentifier,
-                          orgIdentifier,
-                          projectIdentifier,
-                          offset: 0,
-                          pageSize: 10000
-                        }
-                      })
-                      setNonCustomFeilds({
-                        ...nonCustomFeilds,
-                        appdApplication: item.label
-                      })
-                      setAppDValidation({ status: '', result: [] })
-                    }}
-                    value={setAppDynamicsApplication(formik?.values?.appdApplication, applicationOptions)}
-                    name={'appdApplication'}
-                    placeholder={getPlaceholder(
-                      applicationLoading,
-                      'cv.healthSource.connectors.AppDynamics.applicationPlaceholder',
-                      getString
-                    )}
-                    items={applicationOptions}
-                    label={getString('cv.healthSource.connectors.AppDynamics.applicationLabel')}
-                    {...getInputGroupProps(() =>
-                      setNonCustomFeilds({
-                        ...nonCustomFeilds,
-                        appdApplication: ''
-                      })
-                    )}
+                  <AppDApplications
+                    applicationOptions={applicationOptions}
+                    applicationLoading={applicationLoading}
+                    connectorIdentifier={connectorIdentifier}
+                    formikSetFieldValue={formik.setFieldValue}
+                    formikAppDynamicsValue={formik?.values?.appdApplication}
+                    refetchTier={refetchTier}
+                    setCustomFieldAndValidation={(value: string, validate = false) =>
+                      setCustomFieldAndValidation(
+                        value,
+                        setNonCustomFeilds,
+                        nonCustomFeilds,
+                        setAppDValidation,
+                        validate
+                      )
+                    }
+                    isTemplate={isTemplate}
                   />
                 </Container>
                 {!!formik.values.appdApplication && (
                   <Container margin={{ bottom: 'small' }} width={'300px'} color={Color.BLACK}>
-                    <FormInput.Select
-                      className={css.tierDropdown}
-                      name={'appDTier'}
-                      placeholder={getPlaceholder(
-                        tierLoading,
-                        'cv.healthSource.connectors.AppDynamics.tierPlaceholder',
-                        getString
-                      )}
-                      value={setAppDynamicsTier(tierLoading, formik?.values?.appDTier, tierOptions)}
-                      onChange={async item => {
-                        setNonCustomFeilds({
-                          ...nonCustomFeilds,
-                          appDTier: item.label
-                        })
-                        await onValidate(formik.values.appdApplication, item.label as string, formik.values.metricData)
-                      }}
-                      items={tierOptions}
-                      label={getString('cv.healthSource.connectors.AppDynamics.trierLabel')}
-                      {...getInputGroupProps(() =>
-                        setNonCustomFeilds({
-                          ...nonCustomFeilds,
-                          appDTier: ''
-                        })
-                      )}
+                    <AppDynamicsTier
+                      isTemplate={isTemplate}
+                      tierOptions={tierOptions}
+                      tierLoading={tierLoading}
+                      formikValues={formik?.values}
+                      onValidate={onValidate}
+                      setCustomField={setCustomField}
                     />
                   </Container>
                 )}
                 <Container width={'300px'} color={Color.BLACK}>
-                  {formik.values?.appDTier && formik?.values.appdApplication && (
+                  {showValidation(formik.values?.appDTier, formik?.values.appdApplication) && (
                     <ValidationStatus
                       validationStatus={appDValidation?.status as StatusOfValidation}
                       onClick={
@@ -396,6 +365,7 @@ export default function AppDMonitoredSource({
                     mappedMetrics={mappedMetrics}
                     selectedMetric={selectedMetric}
                     connectorIdentifier={connectorIdentifier}
+                    isTemplate={isTemplate}
                   />
                 </CustomMetric>
               </>

@@ -92,7 +92,7 @@ exports[`<ExecutionGraphView /> tests renders execution graphs with CD data 1`] 
             </div>
           </div>
           <div
-            class="main"
+            class="main stepGroup"
             data-layout="RIGHT"
           >
             <div
@@ -209,7 +209,7 @@ exports[`<ExecutionGraphView /> tests renders execution graphs with CI data 1`] 
             </div>
           </div>
           <div
-            class="main"
+            class="main stepGroup"
             data-layout="RIGHT"
           >
             <div
@@ -367,7 +367,7 @@ exports[`<ExecutionGraphView /> tests step details are shown when step is select
               style="flex: 1; position: sticky; outline: none; overflow: unset;"
             >
               <div
-                class="main"
+                class="main stepGroup"
                 data-layout="RIGHT"
               >
                 <div

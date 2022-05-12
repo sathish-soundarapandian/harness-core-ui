@@ -13,17 +13,24 @@ import { Drawer, Position } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { CcmMetaData, QlceViewTimeFilterOperator, useFetchCcmMetaDataQuery } from 'services/ce/services'
-import { AnomalyData, CCMStringFilter, useGetAnomalyWidgetsData, useListAnomalies } from 'services/ce'
+import { AnomalyData, AnomalySummary, CCMStringFilter, useGetAnomalyWidgetsData, useListAnomalies } from 'services/ce'
 import AnomaliesSummary from '@ce/components/AnomaliesSummary/AnomaliesSummary'
 import AnomalyFilters from '@ce/components/AnomaliesFilter/AnomaliesFilter'
 import AnomaliesListGridView from '@ce/components/AnomaliesListView/AnomaliesListView'
 import AnomaliesSearch from '@ce/components/AnomaliesSearch/AnomaliesSearch'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { DEFAULT_TIME_RANGE, getGMTEndDateTime, getGMTStartDateTime } from '@ce/utils/momentUtils'
+import {
+  CE_DATE_FORMAT_INTERNAL,
+  DATE_RANGE_SHORTCUTS,
+  getGMTEndDateTime,
+  getGMTStartDateTime
+} from '@ce/utils/momentUtils'
 import type { orderType, sortType } from '@common/components/Table/react-table-config'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import type { TimeRangeFilterType } from '@ce/types'
 import AnomaliesSettings from '@ce/components/AnomaliesSettings/AnomaliesSettings'
+import { PAGE_NAMES } from '@ce/TrackingEventsConstants'
+import { useTelemetry } from '@common/hooks/useTelemetry'
 
 const getFilters = (filters: Record<string, Record<string, string>>, searchText: string) => {
   const updatedFilters = Object.values(filters).map(item => {
@@ -67,14 +74,18 @@ const AnomaliesOverviewPage: React.FC = () => {
   const { getString } = useStrings()
   const [searchText, setSearchText] = React.useState('')
   const { accountId } = useParams<AccountPathProps>()
-  const [listData, setListData] = useState<AnomalyData[]>([])
-  const [costData, setCostData] = useState([])
+  const [listData, setListData] = useState<AnomalyData[] | null>(null)
+  const [costData, setCostData] = useState<AnomalySummary | null>(null)
   const [perspectiveAnomaliesData, setPerspectiveANomaliesData] = useState([])
   const [cloudProvidersWiseData, setCloudProvidersWiseData] = useState([])
   const [statusWiseData, setStatusWiseData] = useState([])
   const [filters, setFilters] = useState({})
+  const { trackEvent } = useTelemetry()
 
-  const [timeRange, setTimeRange] = useQueryParamsState<TimeRangeFilterType>('timeRange', DEFAULT_TIME_RANGE)
+  const [timeRange, setTimeRange] = useQueryParamsState<TimeRangeFilterType>('timeRange', {
+    to: DATE_RANGE_SHORTCUTS.LAST_30_DAYS[1].format(CE_DATE_FORMAT_INTERNAL),
+    from: DATE_RANGE_SHORTCUTS.LAST_30_DAYS[0].format(CE_DATE_FORMAT_INTERNAL)
+  })
 
   const [sortByObj, setSortByObj] = useState<SortByObjInterface>({})
 
@@ -107,6 +118,7 @@ const AnomaliesOverviewPage: React.FC = () => {
   const [ccmMetaResult] = useFetchCcmMetaDataQuery()
   const { data: ccmData, fetching: isFetchingCcmMetaData } = ccmMetaResult
 
+  /* istanbul ignore next */
   const setAnomaliesFilters = (fieldName: string, operator: string, value: string) => {
     if (value) {
       setFilters(prevFilters => {
@@ -173,6 +185,18 @@ const AnomaliesOverviewPage: React.FC = () => {
     getSummary()
   }, [filters, getAnomalySummary, searchText, timeRange.from, timeRange.to])
 
+  useEffect(() => {
+    if (listData && costData) {
+      trackEvent(PAGE_NAMES.ANOMALY_LANDING_PAGE, {
+        count: listData.length,
+        totalCostImpact: costData?.anomalousCost,
+        stringFilters: getFilters(filters, searchText) as CCMStringFilter[],
+        timeFilters: getTimeFilters(getGMTStartDateTime(timeRange.from), getGMTEndDateTime(timeRange.to))
+      })
+    }
+  }, [listData, costData])
+
+  /* istanbul ignore next */
   const parseSummaryData = (summaryData: any) => {
     summaryData.forEach((item: any) => {
       switch (item.widgetDescription) {

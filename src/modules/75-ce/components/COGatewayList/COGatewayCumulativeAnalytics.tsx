@@ -9,12 +9,17 @@
 import React from 'react'
 import { isEmpty as _isEmpty, defaultTo as _defaultTo } from 'lodash-es'
 import { Container, HarnessDocTooltip, Heading, Icon, Layout, Text } from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
-import { useStrings } from 'framework/strings'
+import { String, useStrings } from 'framework/strings'
 import type { CumulativeSavings } from 'services/lw'
 import EmptyView from '@ce/images/empty-state.svg'
+import { getEmissionsValue } from '@ce/utils/formatResourceValue'
+import greenLeaf from '@ce/common/images/green-leaf.svg'
+import grayLeaf from '@ce/common/images/gray-leaf.svg'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { geGaugeChartOptionsWithoutLabel, getDay } from './Utils'
 import css from './COGatewayCumulativeAnalytics.module.scss'
 
@@ -135,6 +140,7 @@ function getSavingsPercentage(totalSavings: number, totalPotentialCost: number):
 }
 const COGatewayCumulativeAnalytics: React.FC<COGatewayCumulativeAnalyticsProps> = ({ data, loadingData }) => {
   const { getString } = useStrings()
+  const sustainabilityEnabled = useFeatureFlag(FeatureFlag.CCM_SUSTAINABILITY)
   const hasData = !_isEmpty(data)
 
   return (
@@ -199,8 +205,8 @@ const COGatewayCumulativeAnalytics: React.FC<COGatewayCumulativeAnalyticsProps> 
               <Text style={{ alignSelf: 'center' }}>Rules</Text>
             </Layout.Horizontal>
           </Layout.Vertical>
-          <Layout.Vertical spacing="small" style={{ flex: 1.2 }}>
-            <Layout.Vertical spacing="medium" padding="small">
+          <Layout.Vertical spacing="small" style={{ flex: 1 }}>
+            <Layout.Vertical spacing="large">
               <Container padding="small" style={{ borderRadius: '4px', backgroundColor: 'rgba(71, 213, 223,0.05)' }}>
                 <Layout.Vertical spacing="small">
                   <Text className={css.analyticsColHeader} color={Color.TEAL_800}>
@@ -240,6 +246,40 @@ const COGatewayCumulativeAnalytics: React.FC<COGatewayCumulativeAnalyticsProps> 
               </Container>
             </Layout.Vertical>
           </Layout.Vertical>
+          {sustainabilityEnabled && (
+            <Layout.Vertical spacing={'huge'} style={{ flex: 1 }} padding="small">
+              <Layout.Vertical spacing={'medium'}>
+                <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'center' }} spacing="small">
+                  <img src={greenLeaf} width={20} />
+                  <Text font={{ variation: FontVariation.H6 }} color={Color.GREY_500}>
+                    {getString('ce.co.reducedEmissions')}
+                  </Text>
+                </Layout.Horizontal>
+                <Text font={{ variation: FontVariation.H3 }}>
+                  <String
+                    stringID="ce.common.emissionUnitHTML"
+                    useRichText
+                    vars={{ value: getEmissionsValue(_defaultTo(data?.total_savings, 0)) }}
+                  />
+                </Text>
+              </Layout.Vertical>
+              <Layout.Vertical spacing={'medium'} style={{ paddingTop: 'var(--spacing-large)' }}>
+                <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'center' }} spacing="small">
+                  <img src={grayLeaf} width={20} />
+                  <Text font={{ variation: FontVariation.H6 }} color={Color.GREY_500}>
+                    {getString('ce.co.totalEmissions')}
+                  </Text>
+                </Layout.Horizontal>
+                <Text font={{ variation: FontVariation.H3 }} color={Color.GREY_500}>
+                  <String
+                    stringID="ce.common.emissionUnitHTML"
+                    useRichText
+                    vars={{ value: getEmissionsValue(_defaultTo(data?.total_cost, 0)) }}
+                  />
+                </Text>
+              </Layout.Vertical>
+            </Layout.Vertical>
+          )}
         </Layout.Horizontal>
       </div>
     </Container>

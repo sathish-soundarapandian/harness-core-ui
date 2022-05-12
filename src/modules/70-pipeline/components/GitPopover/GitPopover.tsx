@@ -57,7 +57,7 @@ export function RenderGitPopover(props: GitPopoverProps): React.ReactElement | n
   ]
   const gitPopover = React.useCallback(() => {
     return (
-      <Popover interactionKind={PopoverInteractionKind.HOVER} {...popoverProps}>
+      <Popover interactionKind={PopoverInteractionKind.HOVER} {...popoverProps} autoFocus={false}>
         <Icon
           name={'service-github'}
           color={Color.GREY_700}

@@ -29,7 +29,8 @@ function HealthSourceDrawerContent({
   tableData,
   shouldRenderAtVerifyStep,
   changeSources,
-  metricDetails
+  metricDetails,
+  isTemplate
 }: HealthSourceDrawerInterface): JSX.Element {
   const { getString } = useStrings()
 
@@ -83,6 +84,7 @@ function HealthSourceDrawerContent({
       <CustomiseHealthSource
         key="customiseHealthSource"
         onSuccess={onSuccess}
+        isTemplate={isTemplate}
         shouldRenderAtVerifyStep={shouldRenderAtVerifyStep}
       />
     ]

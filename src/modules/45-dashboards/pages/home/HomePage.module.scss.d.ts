@@ -35,6 +35,5 @@ declare const styles: {
   readonly stepWizard: string
   readonly table: string
   readonly tags: string
-  readonly videoContainer: string
 }
 export default styles

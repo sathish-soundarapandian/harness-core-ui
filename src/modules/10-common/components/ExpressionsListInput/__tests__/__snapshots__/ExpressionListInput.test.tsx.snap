@@ -6,6 +6,7 @@ exports[`ExpressionsListInput tests Should render properly with error 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -163,6 +164,7 @@ exports[`ExpressionsListInput tests Should render properly without error 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

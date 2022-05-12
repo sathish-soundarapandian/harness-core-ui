@@ -11,4 +11,6 @@ export interface ChangeEventServiceHealthProps {
   monitoredServiceIdentifier: string
   startTime: number
   eventType: ChangeEventDTO['type']
+  timeStamps: [number, number]
+  setTimestamps: (timeStamps: [number, number]) => void
 }

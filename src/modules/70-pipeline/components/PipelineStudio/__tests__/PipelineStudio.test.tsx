@@ -30,7 +30,7 @@ jest.mock('services/pipeline-ng', () => ({
   putPipelinePromise: jest.fn().mockImplementation(() => Promise.resolve({ status: 'SUCCESS' })),
   createPipelinePromise: jest.fn().mockImplementation(() => Promise.resolve({ status: 'SUCCESS' })),
   useGetInputsetYaml: jest.fn(() => ({ data: null })),
-  useCreateVariables: jest.fn(() => ({
+  useCreateVariablesV2: jest.fn(() => ({
     mutate: jest.fn(() => Promise.resolve({ data: { yaml: '' } })),
     loading: false,
     cancel: jest.fn()

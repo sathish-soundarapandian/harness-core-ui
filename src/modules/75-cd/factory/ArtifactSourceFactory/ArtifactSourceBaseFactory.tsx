@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { ACRArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/ACRArtifactSource/ACRArtifactSource'
 import { ArtifactoryArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/ArtifactoryArtifactSource/ArtifactoryArtifactSource'
 import { CustomArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/CustomArtifactSource/CustomArtifactSource'
 import { DockerArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/DockerArtifactSource/DockerArtifactSource'
@@ -42,4 +43,5 @@ artifactSourceBaseFactory.registerArtifactSource(new ECRArtifactSource())
 artifactSourceBaseFactory.registerArtifactSource(new NexusArtifactSource())
 artifactSourceBaseFactory.registerArtifactSource(new ArtifactoryArtifactSource())
 artifactSourceBaseFactory.registerArtifactSource(new CustomArtifactSource())
+artifactSourceBaseFactory.registerArtifactSource(new ACRArtifactSource())
 export default artifactSourceBaseFactory

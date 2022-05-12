@@ -15,6 +15,7 @@ import { ProjectSelector } from '@projects-orgs/components/ProjectSelector/Proje
 import type {
   ConnectorPathProps,
   PipelinePathProps,
+  TemplateStudioPathProps,
   ResourceGroupPathProps,
   RolePathProps,
   SecretsPathProps,
@@ -31,11 +32,12 @@ import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMe
 import { returnLaunchUrl } from '@common/utils/routeUtils'
 import { LaunchButton } from '@common/components/LaunchButton/LaunchButton'
 import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
-import { isCDCommunity, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { isCommunityPlan } from '@common/utils/utils'
 
 export default function CDSideNav(): React.ReactElement {
   const params = useParams<
     PipelinePathProps &
+      TemplateStudioPathProps &
       ConnectorPathProps &
       SecretsPathProps &
       UserPathProps &
@@ -48,6 +50,7 @@ export default function CDSideNav(): React.ReactElement {
     projectIdentifier,
     orgIdentifier,
     pipelineIdentifier,
+    templateIdentifier,
     connectorId,
     secretId,
     userIdentifier,
@@ -62,8 +65,7 @@ export default function CDSideNav(): React.ReactElement {
   const { ARGO_PHASE1, ARGO_PHASE2_MANAGED } = useFeatureFlags()
   const { getString } = useStrings()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
-  const { licenseInformation } = useLicenseStore()
-  const isCommunity = isCDCommunity(licenseInformation)
+  const isCommunity = isCommunityPlan()
   return (
     <Layout.Vertical spacing="small">
       <ProjectSelector
@@ -118,6 +120,15 @@ export default function CDSideNav(): React.ReactElement {
           } else if (userGroupIdentifier) {
             history.push(
               routes.toUserGroups({
+                projectIdentifier: data.identifier,
+                orgIdentifier: data.orgIdentifier || /* istanbul ignore next */ '',
+                accountId,
+                module
+              })
+            )
+          } else if (templateIdentifier) {
+            history.push(
+              routes.toTemplates({
                 projectIdentifier: data.identifier,
                 orgIdentifier: data.orgIdentifier || /* istanbul ignore next */ '',
                 accountId,

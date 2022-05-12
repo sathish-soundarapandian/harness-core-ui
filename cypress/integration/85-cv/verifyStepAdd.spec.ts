@@ -1,11 +1,8 @@
 import {
   applyTemplatesCall,
-  applyTemplatesResponse,
   applyTemplatesResponseForServiceRuntime,
   inputSetsCall,
-  inputSetsResponse,
   inputSetsTemplateCall,
-  inputSetsTemplateResponse,
   inputSetTemplateForRuntimeServiceCall,
   inputSetTemplateRuntimeServiceResponse,
   monitoresServices,
@@ -18,17 +15,20 @@ import {
   pipelineSummaryCall,
   pipelineSummaryResponse,
   serviceEnvironmentNoMonitoredServicesResponse,
-  serviceEnvironmentTest1Call,
   serviceEnvironmentTest2Call,
   serviceEnvironmentTest3Call,
   servicesCallV2,
   servicesV2AccessResponse,
-  stagesExecutionList,
-  stagesExecutionListResponse
+  inputSetTemplateNoInput,
+  templateResolvedPipeline,
+  templateResolvedPipelineResponse,
+  savePipelineGetResponse,
+  inputSetsTemplateServiceRunTimeInputResponse,
+  inputSetsTemplateResponse2
 } from '../../support/85-cv/verifyStep/constants'
 
 // eslint-disable-next-line jest/no-disabled-tests
-describe.skip('Verify step add', () => {
+describe('Verify step add', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -42,24 +42,31 @@ describe.skip('Verify step add', () => {
     cy.get('[type="submit"]').click()
   })
 
-  it('should check verify step add inputs are correct as given', () => {
+  it.skip('should check verify step add inputs are correct as given', () => {
     cy.verifyStepInitialSetup()
 
-    cy.intercept('GET', stagesExecutionList, stagesExecutionListResponse).as('stagesExecutionList')
-    cy.intercept('GET', inputSetsCall, inputSetsResponse).as('inputSetsCall')
+    cy.intercept(
+      'POST',
+      '/pipeline/api/inputSets/template?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&pipelineIdentifier=testPipeline_Cypress&projectIdentifier=project1',
+      inputSetTemplateNoInput
+    ).as('inputSetsTemplateCall')
 
-    cy.wait('@service')
+    cy.intercept(
+      'GET',
+      '/ng/api/environmentsV2?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
+    ).as('environmentsV2')
+
+    cy.intercept('POST', '/authz/api/acl?routingId=accountId').as('aclCall')
 
     // service definition
-    cy.wait(1000)
     cy.get('input[name="serviceRef"]').click({ force: true })
     cy.contains('p', 'testService').click({ force: true })
 
     // Infrastructure definition
     cy.contains('span', 'Infrastructure').click({ force: true })
-    cy.wait(1000)
     cy.get('input[name="environmentRef"]').click({ force: true })
     cy.contains('p', 'testEnv').click({ force: true })
+
     cy.wait(1000)
 
     cy.verifyStepSelectConnector()
@@ -82,6 +89,8 @@ describe.skip('Verify step add', () => {
     cy.contains('p', 'High').click({ force: true })
     cy.get('input[name="spec.spec.duration"]').click({ force: true })
     cy.contains('p', '5 min').click({ force: true })
+    cy.intercept('GET', pipelineSummaryCall, pipelineSummaryResponse).as('pipelineSummaryCall')
+    cy.intercept('GET', pipelineDetailsCall, pipelineSaveServiceRuntimeResponse).as('pipelineDetailsCall')
 
     cy.findByRole('button', { name: /Apply Changes/i }).click()
 
@@ -93,7 +102,7 @@ describe.skip('Verify step add', () => {
 
     cy.findByText('Pipeline published successfully').should('be.visible')
 
-    cy.intercept('POST', applyTemplatesCall, applyTemplatesResponse).as('applyTemplatesCall')
+    cy.intercept('GET', templateResolvedPipeline, templateResolvedPipelineResponse).as('templateResolvedPipeline')
 
     cy.wait('@pipelineSave').then(interception => {
       expect(interception.request.body).includes('type: Verify')
@@ -106,22 +115,22 @@ describe.skip('Verify step add', () => {
     cy.findByTestId('card-run-pipeline').click()
 
     cy.wait('@stagesExecutionList')
-    cy.wait('@inputSetsCall')
-    cy.wait('@applyTemplatesCall')
+    cy.wait('@inputSetsTemplateCallResponse')
+    cy.wait('@templateResolvedPipeline')
 
     cy.findByText('No runtime inputs are required for the execution of this Pipeline').should('exist')
   })
 
   it('should show button to create monitored serices, if no monitoired services is present', () => {
     cy.verifyStepInitialSetup()
-    cy.intercept('GET', monitoresServices, serviceEnvironmentNoMonitoredServicesResponse).as('noMonitoredServices')
 
-    cy.wait('@service')
+    cy.intercept('GET', monitoresServices, serviceEnvironmentNoMonitoredServicesResponse).as('noMonitoredServices')
 
     // service definition
     cy.wait(1000)
     cy.get('input[name="serviceRef"]').click({ force: true })
     cy.contains('p', 'testService').click({ force: true })
+    cy.contains('p', 'Kubernetes').click()
 
     // Infrastructure definition
     cy.contains('span', 'Infrastructure').click({ force: true })
@@ -144,13 +153,13 @@ describe.skip('Verify step add', () => {
 
   it('should show monitored service as runtime input, if service and environment is given as runtime', () => {
     cy.verifyStepInitialSetup()
-    cy.intercept('GET', monitoresServices, serviceEnvironmentNoMonitoredServicesResponse).as('noMonitoredServices')
 
-    cy.wait('@service')
+    cy.intercept('GET', monitoresServices, serviceEnvironmentNoMonitoredServicesResponse).as('noMonitoredServices')
 
     // service definition
     cy.wait(1000)
     cy.verifyStepChooseRuntimeInput()
+    cy.contains('p', 'Kubernetes').click()
 
     cy.wait(500)
 
@@ -173,25 +182,32 @@ describe.skip('Verify step add', () => {
   it('should show monitored service as runtime input, if service is runtime and environment is fixed value', () => {
     cy.verifyStepInitialSetup()
 
-    cy.intercept('GET', stagesExecutionList, stagesExecutionListResponse).as('stagesExecutionList')
-    cy.intercept('GET', inputSetsCall, inputSetsResponse).as('inputSetsCall')
+    cy.intercept('POST', inputSetsCall, inputSetsTemplateServiceRunTimeInputResponse).as(
+      'inputSetsTemplateCallResponse'
+    )
+
     cy.intercept('GET', pipelineDetailsCall, pipelineSaveServiceRuntimeResponse).as('pipelineDetailsCall')
     cy.intercept('GET', pipelineDetailsWithRoutingIdCall, pipelineDetailsWithRoutingIDResponse).as(
       'pipelineDetailsWithRoutingIdCall'
     )
     cy.intercept('GET', monitoresServices, serviceEnvironmentNoMonitoredServicesResponse).as('noMonitoredServices')
     cy.intercept('GET', pipelineSummaryCall, pipelineSummaryResponse).as('pipelineSummaryCall')
-    cy.intercept('POST', inputSetsTemplateCall, inputSetsTemplateResponse).as('inputSetsTemplateCall')
+    cy.intercept('POST', inputSetsTemplateCall, inputSetsTemplateResponse2).as('inputSetsTemplateCall')
     cy.intercept('GET', servicesCallV2, servicesV2AccessResponse).as('servicesCallV2')
     cy.intercept('POST', inputSetTemplateForRuntimeServiceCall, inputSetTemplateRuntimeServiceResponse).as(
       'inputSetTemplateForRuntimeServiceCall'
     )
 
-    cy.wait('@service')
+    cy.intercept(
+      'GET',
+      '/pipeline/api/pipelines/testPipeline_Cypress?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&getTemplatesResolvedPipeline=true',
+      savePipelineGetResponse
+    ).as('savePipelineGetResponse')
 
     // service definition
     cy.wait(1000)
     cy.verifyStepChooseRuntimeInput()
+    cy.contains('p', 'Kubernetes').click()
     cy.wait(500)
 
     // Infrastructure definition
@@ -225,9 +241,6 @@ describe.skip('Verify step add', () => {
       'applyTemplatesCallForServiceRuntime'
     )
 
-    cy.intercept('GET', serviceEnvironmentTest1Call, serviceEnvironmentNoMonitoredServicesResponse).as(
-      'emptyMonitoredServiceCall'
-    )
     cy.intercept('GET', serviceEnvironmentTest2Call, monitoresServicesResponse).as('withMonitoredServiceCall')
     cy.intercept('GET', serviceEnvironmentTest3Call, monitoresServicesResponseWithNoHealthSource).as(
       'MonitoredServiceCallWithNoHealthSource'
@@ -243,11 +256,9 @@ describe.skip('Verify step add', () => {
 
     cy.findByTestId('card-run-pipeline').click()
 
+    cy.wait('@inputSetsTemplateCallResponse')
+    cy.wait('@savePipelineGetResponse')
     cy.wait('@stagesExecutionList')
-    cy.wait('@inputSetsCall')
-    cy.wait('@applyTemplatesCallForServiceRuntime')
-    cy.wait('@servicesCallV2')
-    cy.wait('@inputSetTemplateForRuntimeServiceCall')
 
     cy.findByText('Specify Service').should('exist')
 
@@ -256,8 +267,6 @@ describe.skip('Verify step add', () => {
     cy.get('.MultiTypeInput--fixedValueInput input').click()
 
     cy.contains('p', 'testService').click({ force: true })
-
-    cy.wait('@emptyMonitoredServiceCall')
 
     cy.findByText(
       'No Monitored Service is present for selected service and environment. Verify step will be skipped.'
@@ -290,12 +299,11 @@ describe.skip('Verify step add', () => {
 
     cy.intercept('GET', monitoresServices, serviceEnvironmentNoMonitoredServicesResponse).as('noMonitoredServices')
 
-    cy.wait('@service')
-
     // service definition
     cy.wait(1000)
     cy.get('input[name="serviceRef"]').click({ force: true })
     cy.contains('p', 'testService').click({ force: true })
+    cy.contains('p', 'Kubernetes').click()
     cy.wait(500)
 
     // Infrastructure definition
@@ -320,12 +328,11 @@ describe.skip('Verify step add', () => {
 
     cy.intercept('GET', monitoresServices, serviceEnvironmentNoMonitoredServicesResponse).as('noMonitoredServices')
 
-    cy.wait('@service')
-
     // service definition
     cy.wait(1000)
     cy.get('input[name="serviceRef"]').click({ force: true })
     cy.contains('p', 'testService').click({ force: true })
+    cy.contains('p', 'Kubernetes').click()
     cy.wait(500)
 
     // Infrastructure definition
@@ -355,13 +362,12 @@ describe.skip('Verify step add', () => {
 
     cy.intercept('GET', monitoresServices, serviceEnvironmentNoMonitoredServicesResponse).as('noMonitoredServices')
 
-    cy.wait('@service')
-
     // service definition
     cy.wait(1000)
     cy.get('.MultiTypeInput--FIXED').click()
     cy.findByText('Expression').click()
     cy.get('input[name="serviceRef"]').clear().type('<+pipeline>')
+    cy.contains('p', 'Kubernetes').click()
 
     cy.wait(500)
 
@@ -391,13 +397,12 @@ describe.skip('Verify step add', () => {
 
     cy.intercept('GET', monitoresServices, serviceEnvironmentNoMonitoredServicesResponse).as('noMonitoredServices')
 
-    cy.wait('@service')
-
     // service definition
     cy.wait(1000)
     cy.get('.MultiTypeInput--FIXED').click()
     cy.findByText('Expression').click()
     cy.get('input[name="serviceRef"]').clear().type('<+pipeline>')
+    cy.contains('p', 'Kubernetes').click()
 
     cy.wait(500)
 
@@ -425,8 +430,7 @@ describe.skip('Verify step add', () => {
 
   it('should show required fields message, if service and environment values are not filled', () => {
     cy.verifyStepInitialSetup()
-
-    cy.wait('@service')
+    cy.contains('p', 'Kubernetes').click()
 
     // service definition
     cy.wait(1000)

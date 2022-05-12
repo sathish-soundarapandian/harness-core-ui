@@ -13,7 +13,9 @@ exports[`Open shift template with git tests expand advanced section 1`] = `
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="templateForm"
         >
@@ -455,7 +457,9 @@ exports[`Open shift template with git tests renders correctly in edit case 1`] =
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="templateForm"
         >
@@ -830,7 +834,9 @@ exports[`Open shift template with git tests renders without crashing 1`] = `
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="templateForm"
         >

@@ -1,0 +1,527 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "pipelineExecutionSummary": {
+      "pipelineIdentifier": "Pipeline_1304",
+      "planExecutionId": "executionId",
+      "name": "Pipeline 1304",
+      "status": "Failed",
+      "tags": [],
+      "executionTriggerInfo": {
+        "triggerType": "MANUAL",
+        "triggeredBy": {
+          "uuid": "lv0euRhKRCyiXWzS7pOg6g",
+          "identifier": "Admin",
+          "extraInfo": {
+            "email": "admin@harness.io"
+          }
+        },
+        "isRerun": false
+      },
+      "executionErrorInfo": {
+        "message": "No manifests found in stage Stage_1. ServerlessAwsLambdaDeploy step requires a manifest defined in stage service definition"
+      },
+      "governanceMetadata": {
+        "id": "",
+        "deny": false,
+        "details": [],
+        "message": "FF: [OPA_PIPELINE_GOVERNANCE] is disabled for account: [kmpySmUISimoRrJL6NL73w]",
+        "timestamp": "0",
+        "status": "",
+        "accountId": "",
+        "orgId": "",
+        "projectId": "",
+        "entity": "",
+        "type": "",
+        "action": "",
+        "created": "0"
+      },
+      "moduleInfo": {
+        "cd": {
+          "__recast": "io.harness.cdng.pipeline.executions.beans.CDPipelineModuleInfo",
+          "envIdentifiers": ["Env_1"],
+          "environmentTypes": ["PreProduction"],
+          "infrastructureTypes": ["ServerlessAwsLambda"],
+          "serviceDefinitionTypes": ["ServerlessAwsLambda"],
+          "serviceIdentifiers": ["Service_1"]
+        }
+      },
+      "layoutNodeMap": {
+        "nodeId": {
+          "nodeType": "Deployment",
+          "nodeGroup": "STAGE",
+          "nodeIdentifier": "Stage_1",
+          "name": "Stage 1",
+          "nodeUuid": "nodeId",
+          "status": "Failed",
+          "module": "cd",
+          "moduleInfo": {
+            "cd": {
+              "__recast": "io.harness.cdng.pipeline.executions.beans.CDStageModuleInfo",
+              "serviceInfo": {
+                "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary",
+                "identifier": "Service_1",
+                "displayName": "Service 1",
+                "deploymentType": "ServerlessAwsLambda",
+                "artifacts": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary$ArtifactsSummary",
+                  "sidecars": []
+                }
+              },
+              "infraExecutionSummary": {
+                "__recast": "io.harness.cdng.pipeline.executions.beans.InfraExecutionSummary",
+                "identifier": "Env_1",
+                "name": "Env 1",
+                "type": "PreProduction"
+              }
+            }
+          },
+          "startTs": 1649819227654,
+          "endTs": 1649819248743,
+          "edgeLayoutList": { "currentNodeChildren": [], "nextIds": [] },
+          "nodeRunInfo": {
+            "whenCondition": "\u003c+OnPipelineSuccess\u003e",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnPipelineSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "failureInfo": {
+            "message": "No manifests found in stage Stage_1. ServerlessAwsLambdaDeploy step requires a manifest defined in stage service definition"
+          },
+          "failureInfoDTO": {
+            "message": "No manifests found in stage Stage_1. ServerlessAwsLambdaDeploy step requires a manifest defined in stage service definition",
+            "failureTypeList": [],
+            "responseMessages": []
+          }
+        }
+      },
+      "modules": ["cd"],
+      "startingNodeId": "nodeId",
+      "startTs": 1649819224550,
+      "endTs": 1649819249347,
+      "createdAt": 1649819225355,
+      "canRetry": true,
+      "showRetryHistory": false,
+      "runSequence": 1,
+      "successfulStagesCount": 0,
+      "runningStagesCount": 0,
+      "failedStagesCount": 1,
+      "totalStagesCount": 1,
+      "allowStageExecutions": false,
+      "stagesExecution": false
+    },
+    "executionGraph": {
+      "rootNodeId": "CqL54EdOQhCWyMukP9ZGjQ",
+      "nodeMap": {
+        "5uYocl1zRwe_IW35IAdvwg": {
+          "uuid": "5uYocl1zRwe_IW35IAdvwg",
+          "setupId": "yEJnTwZ2Tbq0RzMnJB3EBw",
+          "name": "Serverless Aws Lambda Rollback",
+          "identifier": "ServerlessAwsLambdaRollback",
+          "baseFqn": "pipeline.stages.Stage_1.spec.execution.rollbackSteps.ServerlessAwsLambdaRollback",
+          "outcomes": {
+            "skipOutcome": { "message": "Serverless Aws Lambda Deploy step was not executed. Skipping rollback." }
+          },
+          "stepParameters": {
+            "uuid": null,
+            "identifier": "ServerlessAwsLambdaRollback",
+            "name": "Serverless Aws Lambda Rollback",
+            "description": null,
+            "timeout": "10m",
+            "failureStrategies": null,
+            "skipCondition": null,
+            "type": "ServerlessAwsLambdaRollback",
+            "spec": {
+              "delegateSelectors": null,
+              "serverlessAwsLambdaRollbackFnq": "pipeline.stages.Stage_1.spec.execution.steps.Serverless_Aws_Deploy_Step"
+            },
+            "delegateSelectors": null
+          },
+          "startTs": 1649819245039,
+          "endTs": 1649819246946,
+          "stepType": "ServerlessAwsLambdaRollback",
+          "status": "Skipped",
+          "failureInfo": { "message": "", "failureTypeList": [], "responseMessages": [] },
+          "skipInfo": null,
+          "nodeRunInfo": {
+            "whenCondition": "\u003c+OnStageFailure\u003e",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnStageFailure",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "executableResponses": [
+            {
+              "skipTask": {
+                "message": "Serverless Aws Lambda Deploy step was not executed. Skipping rollback."
+              }
+            }
+          ],
+          "unitProgresses": [],
+          "progressData": null,
+          "delegateInfoList": [],
+          "interruptHistories": [],
+          "stepDetails": null
+        },
+        "bVD-ys-jQUC_TsACTr7W6Q": {
+          "uuid": "bVD-ys-jQUC_TsACTr7W6Q",
+          "setupId": "AJUcEhbcQRGlq57tllswjA",
+          "name": "Serverless Aws Deploy Step",
+          "identifier": "Serverless_Aws_Deploy_Step",
+          "baseFqn": "pipeline.stages.Stage_1.spec.execution.steps.Serverless_Aws_Deploy_Step",
+          "outcomes": {},
+          "stepParameters": {
+            "uuid": null,
+            "identifier": "Serverless_Aws_Deploy_Step",
+            "name": "Serverless Aws Deploy Step",
+            "description": null,
+            "timeout": "10m",
+            "failureStrategies": null,
+            "skipCondition": null,
+            "type": "ServerlessAwsLambdaDeploy",
+            "spec": { "delegateSelectors": null, "commandOptions": "" },
+            "delegateSelectors": null
+          },
+          "startTs": 1649819241235,
+          "endTs": 1649819242642,
+          "stepType": "ServerlessAwsLambdaDeploy",
+          "status": "Failed",
+          "failureInfo": {
+            "message": "No manifests found in stage Stage_1. ServerlessAwsLambdaDeploy step requires a manifest defined in stage service definition",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "skipInfo": null,
+          "nodeRunInfo": {
+            "whenCondition": "\u003c+OnStageSuccess\u003e",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnStageSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "executableResponses": [],
+          "unitProgresses": [],
+          "progressData": null,
+          "delegateInfoList": [],
+          "interruptHistories": [],
+          "stepDetails": null
+        },
+        "CqL54EdOQhCWyMukP9ZGjQ": {
+          "uuid": "CqL54EdOQhCWyMukP9ZGjQ",
+          "setupId": "nodeId",
+          "name": "Stage 1",
+          "identifier": "Stage_1",
+          "baseFqn": "pipeline.stages.Stage_1",
+          "outcomes": {},
+          "stepParameters": {
+            "uuid": "nodeId",
+            "identifier": "Stage_1",
+            "name": "Stage 1",
+            "description": "",
+            "skipCondition": null,
+            "failureStrategies": [
+              { "onFailure": { "errors": ["ALL_ERRORS"], "action": { "type": "STAGE_ROLLBACK" } } }
+            ],
+            "variables": { "__recast": "java.util.LinkedHashMap" },
+            "tags": {},
+            "type": "Deployment",
+            "specConfig": { "childNodeID": null }
+          },
+          "startTs": 1649819227654,
+          "endTs": 1649819248743,
+          "stepType": "DEPLOYMENT_STAGE_STEP",
+          "status": "Failed",
+          "failureInfo": {
+            "message": "No manifests found in stage Stage_1. ServerlessAwsLambdaDeploy step requires a manifest defined in stage service definition",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "skipInfo": null,
+          "nodeRunInfo": {
+            "whenCondition": "\u003c+OnPipelineSuccess\u003e",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnPipelineSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "executableResponses": [
+            {
+              "child": {
+                "childNodeId": "5VCKLgHfTBiVDMTI-f82iw",
+                "logKeys": [],
+                "units": []
+              }
+            }
+          ],
+          "unitProgresses": [],
+          "progressData": null,
+          "delegateInfoList": [],
+          "interruptHistories": [],
+          "stepDetails": null
+        },
+        "UI7EjN-GRPSsgDoWu9vIeg": {
+          "uuid": "UI7EjN-GRPSsgDoWu9vIeg",
+          "setupId": "2ovmebB5SOCjG8Sw8z7xnA",
+          "name": "Infrastructure",
+          "identifier": "spec",
+          "baseFqn": "pipeline.stages.Stage_1.spec.infrastructure.infrastructureDefinition.spec",
+          "outcomes": {
+            "output": {
+              "environment": {
+                "name": "Env 1",
+                "identifier": "Env_1",
+                "description": "",
+                "type": "PreProduction",
+                "tags": {}
+              },
+              "infrastructureKey": "4ab38431d760c9b449e55bdde6f8e9a92562095e",
+              "connectorRef": "account.aws_connector",
+              "region": "region1",
+              "stage": "stage1"
+            }
+          },
+          "stepParameters": { "connectorRef": "account.aws_connector", "region": "region1", "stage": "stage1" },
+          "startTs": 1649819236535,
+          "endTs": 1649819237254,
+          "stepType": "INFRASTRUCTURE",
+          "status": "Success",
+          "failureInfo": { "message": "", "failureTypeList": [], "responseMessages": [] },
+          "skipInfo": null,
+          "nodeRunInfo": null,
+          "executableResponses": [
+            {
+              "sync": {
+                "logKeys": [],
+                "units": []
+              }
+            }
+          ],
+          "unitProgresses": [
+            {
+              "unitName": "Execute",
+              "status": "SUCCESS",
+              "startTime": "1649819236838",
+              "endTime": "1649819237172"
+            }
+          ],
+          "progressData": null,
+          "delegateInfoList": [],
+          "interruptHistories": [],
+          "stepDetails": null
+        },
+        "eeIs1HiTSAmpX9Kd6IQ0vw": {
+          "uuid": "eeIs1HiTSAmpX9Kd6IQ0vw",
+          "setupId": "si_3Z1FdQqCkgJhc-RLwNg",
+          "name": "Service",
+          "identifier": "serviceConfig",
+          "baseFqn": "pipeline.stages.Stage_1.spec.serviceConfig",
+          "outcomes": {
+            "output": {
+              "serviceResult": {
+                "identifier": "Service_1",
+                "name": "Service 1",
+                "description": "Service 1",
+                "type": "ServerlessAwsLambda",
+                "tags": {}
+              },
+              "variablesResult": {},
+              "manifestResults": null
+            }
+          },
+          "stepParameters": { "serviceRef": "Service_1", "childNodeId": null },
+          "startTs": 1649819229648,
+          "endTs": 1649819235239,
+          "stepType": "SERVICE_CONFIG",
+          "status": "Success",
+          "failureInfo": { "message": "", "failureTypeList": [], "responseMessages": [] },
+          "skipInfo": null,
+          "nodeRunInfo": null,
+          "executableResponses": [
+            {
+              "child": {
+                "childNodeId": "service-si_3Z1FdQqCkgJhc-RLwNg",
+                "logKeys": [
+                  "accountId:kmpySmUISimoRrJL6NL73w/orgId:default/projectId:Chetan_Non_Git_Sync/pipelineId:Pipeline_1304/runSequence:1/level0:pipeline/level1:stages/level2:Stage_1/level3:spec/level4:serviceConfig"
+                ],
+                "units": []
+              }
+            }
+          ],
+          "unitProgresses": [],
+          "progressData": null,
+          "delegateInfoList": [],
+          "interruptHistories": [],
+          "stepDetails": null
+        },
+        "y0hzcAIZQEehV1u-Av04dA": {
+          "uuid": "y0hzcAIZQEehV1u-Av04dA",
+          "setupId": "cg-hBnPySt-Yf6EvN0c5eg",
+          "name": "Resource Constraint",
+          "identifier": "rc-qHjocVazTNeQxqMgic11Cw",
+          "baseFqn": "pipeline.stages.Stage_1.spec.rc-qHjocVazTNeQxqMgic11Cw",
+          "outcomes": {
+            "ResourceConstraint": {
+              "name": "Queuing",
+              "capacity": 1,
+              "resourceUnit": "4ab38431d760c9b449e55bdde6f8e9a92562095e",
+              "usage": 1,
+              "alreadyAcquiredPermits": 1
+            }
+          },
+          "stepParameters": {
+            "uuid": null,
+            "identifier": "rc-qHjocVazTNeQxqMgic11Cw",
+            "name": "Resource Constraint",
+            "description": null,
+            "timeout": "1w",
+            "failureStrategies": null,
+            "skipCondition": null,
+            "type": "ResourceConstraint",
+            "spec": {
+              "name": "Queuing",
+              "resourceUnit": "4ab38431d760c9b449e55bdde6f8e9a92562095e",
+              "acquireMode": "ENSURE",
+              "permits": 1,
+              "holdingScope": { "scope": "PLAN", "nodeSetupId": null }
+            },
+            "delegateSelectors": null
+          },
+          "startTs": 1649819238242,
+          "endTs": 1649819239940,
+          "stepType": "ResourceConstraint",
+          "status": "Success",
+          "failureInfo": { "message": "", "failureTypeList": [], "responseMessages": [] },
+          "skipInfo": null,
+          "nodeRunInfo": {
+            "whenCondition": "\u003c+OnStageSuccess\u003e",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnStageSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "executableResponses": [
+            {
+              "sync": {
+                "logKeys": [],
+                "units": []
+              }
+            }
+          ],
+          "unitProgresses": [],
+          "progressData": null,
+          "delegateInfoList": [],
+          "interruptHistories": [],
+          "stepDetails": null
+        },
+        "GqHBDGIVR_iDbuH2j5RKzg": {
+          "uuid": "GqHBDGIVR_iDbuH2j5RKzg",
+          "setupId": "SOWShqgzSoysGTI2Us88bQ",
+          "name": "Execution",
+          "identifier": "execution",
+          "baseFqn": "pipeline.stages.Stage_1.spec.execution",
+          "outcomes": {},
+          "stepParameters": { "childNodeId": "SOWShqgzSoysGTI2Us88bQsteps", "logMessage": "Execution Element" },
+          "startTs": 1649819239950,
+          "endTs": 1649819248339,
+          "stepType": "NG_SECTION_WITH_ROLLBACK_INFO",
+          "status": "Failed",
+          "failureInfo": {
+            "message": "No manifests found in stage Stage_1. ServerlessAwsLambdaDeploy step requires a manifest defined in stage service definition",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "skipInfo": null,
+          "nodeRunInfo": null,
+          "executableResponses": [
+            {
+              "child": {
+                "childNodeId": "SOWShqgzSoysGTI2Us88bQsteps",
+                "logKeys": [],
+                "units": []
+              }
+            }
+          ],
+          "unitProgresses": [],
+          "progressData": null,
+          "delegateInfoList": [],
+          "interruptHistories": [],
+          "stepDetails": null
+        },
+        "4h_kV7xXSB28hQob_Z_trg": {
+          "uuid": "4h_kV7xXSB28hQob_Z_trg",
+          "setupId": "SOWShqgzSoysGTI2Us88bQsteps_combinedRollback",
+          "name": "Execution (Rollback)",
+          "identifier": "rollbackSteps",
+          "baseFqn": "pipeline.stages.Stage_1.spec.execution",
+          "outcomes": {},
+          "stepParameters": {
+            "childNodes": [
+              {
+                "nodeId": "SOWShqgzSoysGTI2Us88bQrollbackSteps_rollbackSteps",
+                "dependentNodeIdentifier": "stages.Stage_1.spec.execution",
+                "shouldAlwaysRun": false
+              }
+            ]
+          },
+          "startTs": 1649819243861,
+          "endTs": 1649819247550,
+          "stepType": "ROLLBACK_OPTIONAL_CHILD_CHAIN",
+          "status": "Success",
+          "failureInfo": { "message": "", "failureTypeList": [], "responseMessages": [] },
+          "skipInfo": null,
+          "nodeRunInfo": null,
+          "executableResponses": [
+            {
+              "childChain": {
+                "nextChildId": "SOWShqgzSoysGTI2Us88bQrollbackSteps_rollbackSteps",
+                "previousChildId": "",
+                "passThroughData": "kxkBAVNlY3Rpb25DaGFpblBhc3NUaHJvdWdoRGF0YS5jaGlsZEluZGX4AQAA",
+                "lastLink": true,
+                "suspend": false
+              }
+            }
+          ],
+          "unitProgresses": [],
+          "progressData": null,
+          "delegateInfoList": [],
+          "interruptHistories": [],
+          "stepDetails": null
+        }
+      },
+      "nodeAdjacencyListMap": {
+        "5uYocl1zRwe_IW35IAdvwg": { "children": [], "nextIds": [] },
+        "bVD-ys-jQUC_TsACTr7W6Q": { "children": [], "nextIds": ["4h_kV7xXSB28hQob_Z_trg"] },
+        "CqL54EdOQhCWyMukP9ZGjQ": { "children": ["eeIs1HiTSAmpX9Kd6IQ0vw"], "nextIds": [] },
+        "UI7EjN-GRPSsgDoWu9vIeg": { "children": [], "nextIds": ["y0hzcAIZQEehV1u-Av04dA"] },
+        "eeIs1HiTSAmpX9Kd6IQ0vw": { "children": [], "nextIds": ["UI7EjN-GRPSsgDoWu9vIeg"] },
+        "y0hzcAIZQEehV1u-Av04dA": { "children": [], "nextIds": ["GqHBDGIVR_iDbuH2j5RKzg"] },
+        "GqHBDGIVR_iDbuH2j5RKzg": { "children": ["bVD-ys-jQUC_TsACTr7W6Q"], "nextIds": [] },
+        "4h_kV7xXSB28hQob_Z_trg": { "children": ["5uYocl1zRwe_IW35IAdvwg"], "nextIds": [] }
+      },
+      "representationStrategy": "camelCase"
+    }
+  },
+  "metaData": null,
+  "correlationId": "2043aa8f-7a95-4c44-a0e8-ef32cb504ea1"
+}

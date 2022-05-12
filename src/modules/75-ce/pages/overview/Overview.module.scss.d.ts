@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly cloudEmissionCard: string
   readonly columnOne: string
   readonly columnTwo: string
   readonly excludeSideNavOverlay: string

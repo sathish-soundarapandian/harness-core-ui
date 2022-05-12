@@ -126,7 +126,7 @@ const RenderColumnMenu: Renderer<CellProps<PipelineDTO>> = ({ row, column }) => 
           <RbacMenuItem
             icon="play"
             text={getString('runPipelineText')}
-            disabled={!canRun}
+            disabled={!canRun || data?.entityValidityDetails?.valid === false}
             onClick={(e: React.MouseEvent) => {
               e.stopPropagation()
               runPipeline()
@@ -218,7 +218,7 @@ const RenderColumnPipeline: Renderer<CellProps<PipelineDTO>> = ({ row }) => {
               {getString('idLabel', { id: data.identifier })}
             </Text>
           </Layout.Vertical>
-          {data.entityValidityDetails?.valid === false && (
+          {data?.entityValidityDetails?.valid === false && (
             <Container padding={{ left: 'large' }}>
               <Badge
                 text={'common.invalid'}
@@ -341,6 +341,8 @@ const RenderRunPipeline: Renderer<CellProps<PipelineDTO>> = ({ row }): JSX.Eleme
         e.stopPropagation()
         runPipeline()
       }}
+      disabled={rowdata?.entityValidityDetails?.valid === false}
+      tooltip={rowdata?.entityValidityDetails?.valid === false ? getString('pipeline.cannotRunInvalidPipeline') : ''}
     />
   )
 }

@@ -24,5 +24,12 @@
 .serviceDetailsCard {
   width: 100%;
   box-shadow: none !important;
-  border: 1px solid rgba(11, 11, 13, 0.1) !important;
+  border: 1px solid var(--grey-100) !important;
+}
+
+.changesCard {
+  width: 100%;
+  padding-bottom: 0 !important;
+  box-shadow: none !important;
+  border: 1px solid var(--grey-100) !important;
 }

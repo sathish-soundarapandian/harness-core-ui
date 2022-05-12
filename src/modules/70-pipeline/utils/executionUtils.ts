@@ -16,7 +16,8 @@ import {
   isExecutionCompletedWithBadState,
   isExecutionRunning,
   isExecutionWaiting,
-  isExecutionSkipped
+  isExecutionSkipped,
+  isExecutionNotStarted
 } from '@pipeline/utils/statusHelpers'
 import type {
   GraphLayoutNode,
@@ -34,13 +35,15 @@ import {
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { stagesCollection } from '@pipeline/components/PipelineStudio/Stages/StagesCollection'
+import { PipelineGraphState, PipelineGraphType } from '@pipeline/components/PipelineDiagram/types'
 import { isApprovalStep } from './stepUtils'
+import { StageType } from './stageHelpers'
 
 export const LITE_ENGINE_TASK = 'liteEngineTask'
 export const STATIC_SERVICE_GROUP_NAME = 'static_service_group'
 export const RollbackIdentifier = 'Rollback'
 export const StepGroupRollbackIdentifier = '(Rollback)'
-
+export const BARRIER_WITH_OPEN_LINKS = 'barrier-open-with-links'
 export const RollbackContainerCss: React.CSSProperties = {
   borderColor: 'var(--red-450)'
 }
@@ -70,7 +73,8 @@ export enum NodeType {
   DEPLOYMENT_STAGE_STEP = 'DEPLOYMENT_STAGE_STEP',
   APPROVAL_STAGE = 'APPROVAL_STAGE',
   NG_SECTION_WITH_ROLLBACK_INFO = 'NG_SECTION_WITH_ROLLBACK_INFO',
-  NG_EXECUTION = 'NG_EXECUTION'
+  NG_EXECUTION = 'NG_EXECUTION',
+  StepGroupNode = 'StepGroupNode'
 }
 
 export const NonSelectableNodes: NodeType[] = [
@@ -99,7 +103,8 @@ export const StepTypeIconsMap: { [key in NodeType]: IconName } = {
   INFRASTRUCTURE: 'infrastructure',
   NG_FORK: 'fork',
   DEPLOYMENT_STAGE_STEP: 'circle',
-  APPROVAL_STAGE: 'approval-stage-icon'
+  APPROVAL_STAGE: 'approval-stage-icon',
+  StepGroupNode: 'step-group'
 }
 
 export const ExecutionStatusIconMap: Record<ExecutionStatus, IconName> = {
@@ -123,7 +128,8 @@ export const ExecutionStatusIconMap: Record<ExecutionStatus, IconName> = {
   ApprovalRejected: 'circle-cross',
   InterventionWaiting: 'waiting',
   ApprovalWaiting: 'waiting',
-  Pausing: 'pause'
+  Pausing: 'pause',
+  Waiting: 'waiting'
 }
 
 /**
@@ -140,8 +146,9 @@ export interface ExecutionPathParams {
 export interface ExecutionQueryParams {
   stage?: string
   step?: string
-  view?: 'log' | 'graph'
+  view?: string
   filterAnomalous?: string
+  type?: string
 }
 
 export function getPipelineStagesMap(
@@ -419,7 +426,7 @@ const addDependencies = (
   }
 }
 
-const processLiteEngineTask = (
+export const processLiteEngineTask = (
   nodeData: ExecutionNode | undefined,
   rootNodes: ExecutionPipelineNode<ExecutionNode>[],
   parentNode?: ExecutionNode
@@ -579,7 +586,7 @@ const processNodeData = (
   return items
 }
 
-const hasOnlyLiteEngineTask = (children?: string[], graph?: ExecutionGraph): boolean => {
+export const hasOnlyLiteEngineTask = (children?: string[], graph?: ExecutionGraph): boolean => {
   return (
     !!children &&
     children.length === 1 &&
@@ -767,4 +774,157 @@ export const addServiceDependenciesFromLiteTaskEngine = (
       nodeMap[liteEngineTask.uuid] = liteEngineTask
     }
   }
+}
+
+export const processLayoutNodeMapV1 = (executionSummary?: PipelineExecutionSummary): PipelineGraphState[] => {
+  const response: PipelineGraphState[] = []
+  if (!executionSummary) {
+    return response
+  }
+  const startingNodeId = executionSummary.startingNodeId
+  const layoutNodeMap = executionSummary.layoutNodeMap
+  if (startingNodeId && layoutNodeMap?.[startingNodeId]) {
+    let nodeDetails: GraphLayoutNode | undefined = layoutNodeMap[startingNodeId]
+
+    while (nodeDetails) {
+      const currentNodeChildren: string[] | undefined = nodeDetails?.edgeLayoutList?.currentNodeChildren
+      const nextIds: string[] | undefined = nodeDetails?.edgeLayoutList?.nextIds
+      if (nodeDetails?.nodeType === NodeTypes.Parallel && currentNodeChildren && currentNodeChildren.length > 1) {
+        const firstParallelNode = layoutNodeMap[currentNodeChildren[0]]
+        const restChildNodes = currentNodeChildren.slice(1) // response?.children?.push({ parallel: currentNodeChildren.map(item => layoutNodeMap[item]) })
+        const parentNode = {
+          id: firstParallelNode?.nodeUuid as string, //string
+          identifier: firstParallelNode?.nodeIdentifier as string, //string
+          type: firstParallelNode?.nodeType as string, //string
+          name: firstParallelNode?.name as string, //string
+          icon: 'cross', //IconName
+          data: firstParallelNode as any, //StageElementWrapperConfig | ExecutionWrapperConfig
+          children: restChildNodes.map(item => {
+            const nodeDataItem = layoutNodeMap[item]
+            return {
+              id: nodeDataItem.nodeUuid as string, //string
+              identifier: nodeDataItem.nodeIdentifier as string, //string
+              type: nodeDataItem.nodeType as string, //string
+              name: nodeDataItem.name as string, //string
+              icon: 'cross', //IconName
+              data: nodeDataItem as any,
+              children: []
+            }
+          })
+        } as PipelineGraphState
+
+        response.push(parentNode)
+        nodeDetails = layoutNodeMap[nodeDetails.edgeLayoutList?.nextIds?.[0] || '']
+      } else if (
+        nodeDetails?.nodeType === NodeTypes.Parallel &&
+        currentNodeChildren &&
+        layoutNodeMap[currentNodeChildren[0]]
+      ) {
+        ;(nodeDetails as any)?.children?.push({ stage: layoutNodeMap[currentNodeChildren[0]] })
+        nodeDetails = layoutNodeMap[nodeDetails.edgeLayoutList?.nextIds?.[0] || '']
+      } else {
+        response.push({
+          id: nodeDetails?.nodeUuid as string, //string
+          identifier: nodeDetails?.nodeIdentifier as string, //string
+          type: nodeDetails?.nodeType as string, //string
+          name: nodeDetails?.name as string, //string
+          icon: 'cross', //IconName
+          data: nodeDetails as any, //StageElementWrapperConfig | ExecutionWrapperConfig
+          children: [] //PipelineGraphState[]
+        })
+        if (nextIds && nextIds.length === 1) {
+          nodeDetails = layoutNodeMap[nextIds[0]]
+        } else {
+          nodeDetails = undefined
+        }
+      }
+    }
+  }
+  return response
+}
+
+export const processExecutionDataForGraph = (stages?: PipelineGraphState[]): PipelineGraphState[] => {
+  const items: PipelineGraphState[] = []
+  stages?.forEach(currentStage => {
+    if (currentStage?.children?.length) {
+      const childNodes: PipelineGraphState[] = []
+      const currentStageData = currentStage.data
+      currentStage = {
+        ...currentStage,
+        icon: getIconFromStageModule(currentStageData?.module, currentStageData?.nodeType),
+        status: currentStageData?.status as any,
+        data: {
+          ...currentStage.data,
+          identifier: currentStageData?.nodeUuid || /* istanbul ignore next */ '',
+          name: currentStageData?.name || currentStageData?.nodeIdentifier || /* istanbul ignore next */ '',
+          status: currentStageData?.status as any,
+          barrierFound: currentStageData?.barrierFound,
+          tertiaryIcon: currentStageData?.barrierFound ? BARRIER_WITH_OPEN_LINKS : undefined,
+          type:
+            currentStageData?.nodeType === StageType.APPROVAL
+              ? ExecutionPipelineNodeType.DIAMOND
+              : ExecutionPipelineNodeType.NORMAL,
+          skipCondition: currentStageData?.skipInfo?.evaluatedCondition
+            ? currentStageData.skipInfo.skipCondition
+            : undefined,
+          disableClick: isExecutionNotStarted(currentStageData?.status) || isExecutionSkipped(currentStageData?.status),
+          when: currentStageData?.nodeRunInfo,
+          graphType: PipelineGraphType.STAGE_GRAPH,
+          isExecutionView: true
+        }
+      }
+      currentStage?.children?.forEach?.(currentNode => {
+        const node = currentNode.data
+        node &&
+          childNodes.push({
+            ...currentNode,
+            icon: getIconFromStageModule(node?.module, node.nodeType),
+            status: node?.status as never,
+            data: {
+              ...node,
+              identifier: node?.nodeUuid || /* istanbul ignore next */ '',
+              name: node?.name || node?.nodeIdentifier || /* istanbul ignore next */ '',
+              status: node?.status as never,
+              barrierFound: node?.barrierFound,
+              tertiaryIcon: currentStageData?.barrierFound ? BARRIER_WITH_OPEN_LINKS : undefined,
+              type:
+                node?.nodeType === StageType.APPROVAL
+                  ? ExecutionPipelineNodeType.DIAMOND
+                  : ExecutionPipelineNodeType.NORMAL,
+              skipCondition: node?.skipInfo?.evaluatedCondition ? node.skipInfo.skipCondition : undefined,
+              disableClick: isExecutionNotStarted(node?.status) || isExecutionSkipped(node?.status),
+              when: node?.nodeRunInfo,
+              graphType: PipelineGraphType.STAGE_GRAPH
+            }
+          })
+      })
+      currentStage.children = childNodes as PipelineGraphState[]
+      items.push(currentStage)
+    } else {
+      const stage = currentStage.data
+      items.push({
+        ...currentStage,
+        icon: getIconFromStageModule(stage?.module, stage?.nodeType),
+        status: stage?.status as any,
+        data: {
+          ...stage,
+          identifier: stage?.nodeUuid || /* istanbul ignore next */ '',
+          name: stage?.name || stage?.nodeIdentifier || /* istanbul ignore next */ '',
+          status: stage?.status as any,
+          barrierFound: stage?.barrierFound,
+          tertiaryIcon: stage?.barrierFound ? BARRIER_WITH_OPEN_LINKS : undefined,
+          type:
+            stage?.nodeType === StageType.APPROVAL
+              ? ExecutionPipelineNodeType.DIAMOND
+              : ExecutionPipelineNodeType.NORMAL,
+          skipCondition: stage?.skipInfo?.evaluatedCondition ? stage.skipInfo.skipCondition : undefined,
+          disableClick: isExecutionNotStarted(stage?.status) || isExecutionSkipped(stage?.status),
+          when: stage?.nodeRunInfo,
+          data: stage,
+          graphType: PipelineGraphType.STAGE_GRAPH
+        }
+      })
+    }
+  })
+  return items
 }

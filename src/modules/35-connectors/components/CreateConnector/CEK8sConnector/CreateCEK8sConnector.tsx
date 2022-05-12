@@ -12,7 +12,7 @@ import { getConnectorIconByType } from '@connectors/pages/connectors/utils/Conne
 import { Connectors, CreateConnectorModalProps } from '@connectors/constants'
 import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
 import DialogExtention from '@connectors/common/ConnectorExtention/DialogExtention'
-import { CCM_CONNECTOR_SAVE_EVENT } from '@connectors/trackingConstants'
+import { CCM_CONNECTOR_SAVE_EVENT, CCM_CONNECTOR_SAVE_SUCCESS } from '@connectors/trackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import OverviewStep from './OverviewStep'
 import ProvidePermissions from './ProvidePermissions'
@@ -51,6 +51,7 @@ const CreateCEK8sConnector: React.FC<CreateConnectorModalProps> = props => {
             trackEvent(CCM_CONNECTOR_SAVE_EVENT, { type: Connectors.CE_KUBERNETES })
             props.onClose()
           }}
+          onTestConnectionSuccess={() => trackEvent(CCM_CONNECTOR_SAVE_SUCCESS, { type: Connectors.CE_KUBERNETES })}
           isStep
           isLastStep
           type={Connectors.CE_KUBERNETES}

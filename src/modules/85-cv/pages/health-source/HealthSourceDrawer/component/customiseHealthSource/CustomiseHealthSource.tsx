@@ -28,10 +28,12 @@ type ExcludedSourceDataKeys = 'isEdit' | 'serviceRef' | 'environmentRef' | 'moni
 
 export default function CustomiseHealthSource({
   onSuccess,
-  shouldRenderAtVerifyStep
+  shouldRenderAtVerifyStep,
+  isTemplate
 }: {
   onSuccess: (data: MonitoredServiceResponse | UpdatedHealthSource) => void
   shouldRenderAtVerifyStep?: boolean
+  isTemplate?: boolean
 }): JSX.Element {
   const params = useParams<ProjectPathProps & { identifier: string }>()
   const { getString } = useStrings()
@@ -95,7 +97,12 @@ export default function CustomiseHealthSource({
 
   return (
     <BGColorWrapper>
-      <LoadSourceByType type={sourceData?.sourceType} data={filteredSourceData} onSubmit={submitData} />
+      <LoadSourceByType
+        isTemplate={isTemplate}
+        type={sourceData?.sourceType}
+        data={filteredSourceData}
+        onSubmit={submitData}
+      />
     </BGColorWrapper>
   )
 }

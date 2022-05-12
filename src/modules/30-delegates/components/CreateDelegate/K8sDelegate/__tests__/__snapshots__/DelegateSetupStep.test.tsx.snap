@@ -12,6 +12,7 @@ exports[`Create DelegateSetup Step render data 1`] = `
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>

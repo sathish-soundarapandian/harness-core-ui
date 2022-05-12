@@ -12,6 +12,7 @@ import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import type { ConnectorRefLabelType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
+import { isServerlessManifestType } from '@pipeline/utils/stageHelpers'
 import { ManifestRepoTypes } from '../ManifestWizardSteps/ManifestRepoTypes'
 import ManifestStore from '../ManifestWizardSteps/ManifestStore'
 import { manifestTypeLabels } from '../Manifesthelper'
@@ -73,7 +74,10 @@ export function ManifestWizard({
       return (
         <div className={css.subtitle} style={{ display: 'flex' }}>
           <Icon {...iconsProps} size={26} />
-          <Text style={{ alignSelf: 'center', marginLeft: 'var(--spacing-small)' }} color={Color.WHITE}>
+          <Text
+            style={{ alignSelf: 'center', marginLeft: 'var(--spacing-small)', wordBreak: 'normal' }}
+            color={Color.WHITE}
+          >
             {stringId}
           </Text>
         </div>
@@ -83,7 +87,12 @@ export function ManifestWizard({
   }
 
   return (
-    <StepWizard className={css.manifestWizard} subtitle={renderSubtitle()} onStepChange={onStepChange}>
+    <StepWizard
+      className={css.manifestWizard}
+      subtitle={renderSubtitle()}
+      onStepChange={onStepChange}
+      initialStep={isServerlessManifestType(selectedManifest) ? 2 : undefined}
+    >
       <ManifestRepoTypes
         manifestTypes={types}
         name={getString('pipeline.manifestType.manifestRepoType')}

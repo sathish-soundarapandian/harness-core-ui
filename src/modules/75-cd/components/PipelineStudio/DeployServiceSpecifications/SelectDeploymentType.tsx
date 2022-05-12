@@ -16,11 +16,12 @@ import { useModalHook } from '@harness/use-modal'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { useStrings, UseStringsReturn } from 'framework/strings'
-import { isCDCommunity, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { isCommunityPlan } from '@common/utils/utils'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
-import { DeployTabs } from '@cd/components/PipelineStudio/DeployStageSetupShell/DeployStageSetupShellUtils'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { ServiceDeploymentType } from '@cd/components/PipelineSteps/PipelineStepsUtil'
+import type { StringsMap } from 'framework/strings/StringsContext'
 import { CDFirstGenTrial } from './CDFirstGenTrial'
 import type { DeploymentTypeItem } from './DeploymentInterface'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
@@ -35,23 +36,28 @@ export function getServiceDeploymentTypeSchema(
 }
 
 interface SelectServiceDeploymentTypeProps {
-  selectedDeploymentType: string
+  selectedDeploymentType?: ServiceDeploymentType
   isReadonly: boolean
-  handleDeploymentTypeChange: (deploymentType: string) => void
+  handleDeploymentTypeChange: (deploymentType: ServiceDeploymentType) => void
 }
 
 interface CardListProps {
   items: DeploymentTypeItem[]
   isReadonly: boolean
-  selectedValue: string
-  onChange: (deploymentType: string) => void
+  selectedValue?: string
+  onChange: (deploymentType: ServiceDeploymentType) => void
   allowDisabledItemClick?: boolean
 }
 
-const CardList = ({ items, isReadonly, selectedValue, onChange, allowDisabledItemClick }: CardListProps) => {
+const CardList = ({
+  items,
+  isReadonly,
+  selectedValue,
+  onChange,
+  allowDisabledItemClick
+}: CardListProps): JSX.Element => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const { value } = e.target
-    onChange(value)
+    onChange(e.target.value as ServiceDeploymentType)
   }
   return (
     <Layout.Horizontal spacing={'medium'} className={stageCss.cardListContainer}>
@@ -69,7 +75,11 @@ const CardList = ({ items, isReadonly, selectedValue, onChange, allowDisabledIte
         )
         return (
           <Utils.WrapOptionalTooltip key={item.value} tooltipProps={item.tooltipProps} tooltip={item.tooltip}>
-            {allowDisabledItemClick ? <div onClick={() => onChange(item.value)}>{itemContent}</div> : itemContent}
+            {allowDisabledItemClick ? (
+              <div onClick={() => onChange(item.value as ServiceDeploymentType)}>{itemContent}</div>
+            ) : (
+              itemContent
+            )}
           </Utils.WrapOptionalTooltip>
         )
       })}
@@ -77,38 +87,80 @@ const CardList = ({ items, isReadonly, selectedValue, onChange, allowDisabledIte
   )
 }
 
+const getServerlessDeploymentTypes = (
+  getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
+  SERVERLESS_SUPPORT = false
+): DeploymentTypeItem[] => {
+  if (SERVERLESS_SUPPORT) {
+    return [
+      {
+        label: getString('pipeline.serviceDeploymentTypes.serverlessAwsLambda'),
+        icon: 'service-serverless-aws',
+        value: ServiceDeploymentType.ServerlessAwsLambda
+      }
+      // Keeping these for now. If we do not support these in near future, we will remove these.
+      //
+      // {
+      //   label: getString('pipeline.serviceDeploymentTypes.serverlessAzureFunctions'),
+      //   icon: 'service-serverless-azure',
+      //   value: ServiceDeploymentType.ServerlessAzureFunctions,
+      //   disabled: true
+      // },
+      // {
+      //   label: getString('pipeline.serviceDeploymentTypes.serverlessGoogleFunctions'),
+      //   icon: 'service-serverless-gcp',
+      //   value: ServiceDeploymentType.ServerlessGoogleFunctions,
+      //   disabled: true
+      // },
+      // {
+      //   label: getString('pipeline.serviceDeploymentTypes.awsSAM'),
+      //   icon: 'service-aws-sam',
+      //   value: ServiceDeploymentType.AmazonSAM,
+      //   disabled: true
+      // },
+      // {
+      //   label: getString('pipeline.serviceDeploymentTypes.azureFunctions'),
+      //   icon: 'service-azure-functions',
+      //   value: ServiceDeploymentType.AzureFunctions,
+      //   disabled: true
+      // }
+    ]
+  }
+  return []
+}
+
 export default function SelectDeploymentType(props: SelectServiceDeploymentTypeProps): JSX.Element {
   const { selectedDeploymentType, isReadonly } = props
   const { getString } = useStrings()
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
-  const { licenseInformation } = useLicenseStore()
-  const { NG_NATIVE_HELM } = useFeatureFlags()
+  const { SERVERLESS_SUPPORT } = useFeatureFlags()
   const { accountId } = useParams<{
     accountId: string
   }>()
   const [selectedDeploymentTypeInCG, setSelectedDeploymentTypeInCG] = React.useState('')
 
-  // Supported in NG
+  // Supported in NG (Next Gen - The one for which you are coding right now)
   const ngSupportedDeploymentTypes: DeploymentTypeItem[] = React.useMemo(
     () => [
       {
         label: getString('pipeline.serviceDeploymentTypes.kubernetes'),
         icon: 'service-kubernetes',
         value: ServiceDeploymentType.Kubernetes
-      }
-    ],
-    [getString]
-  )
-
-  // Suppported in CG
-  const cgSupportedDeploymentTypes: DeploymentTypeItem[] = React.useMemo(
-    () => [
+      },
       {
         label: getString('pipeline.nativeHelm'),
         icon: 'service-helm',
         value: ServiceDeploymentType.NativeHelm
       },
+      ...getServerlessDeploymentTypes(getString, SERVERLESS_SUPPORT)
+    ],
+    [getString, SERVERLESS_SUPPORT]
+  )
+
+  // Suppported in CG (First Gen - Old Version of Harness App)
+  const cgSupportedDeploymentTypes: DeploymentTypeItem[] = React.useMemo(
+    () => [
       {
         label: getString('pipeline.serviceDeploymentTypes.amazonEcs'),
         icon: 'service-ecs',
@@ -150,6 +202,7 @@ export default function SelectDeploymentType(props: SelectServiceDeploymentTypeP
 
   const [cgDeploymentTypes, setCgDeploymentTypes] = React.useState(cgSupportedDeploymentTypes)
   const [ngDeploymentTypes, setNgDeploymentTypes] = React.useState(ngSupportedDeploymentTypes)
+  const isCommunity = isCommunityPlan()
 
   const [showCurrentGenSwitcherModal, hideCurrentGenSwitcherModal] = useModalHook(() => {
     return (
@@ -175,26 +228,14 @@ export default function SelectDeploymentType(props: SelectServiceDeploymentTypeP
   }, [selectedDeploymentTypeInCG])
 
   React.useEffect(() => {
-    if (isCDCommunity(licenseInformation)) {
+    if (isCommunity) {
       cgSupportedDeploymentTypes.forEach(deploymentType => {
         deploymentType['disabled'] = true
-        if (deploymentType.value === 'NativeHelm') {
-          deploymentType['disabled'] = !NG_NATIVE_HELM
-        }
       })
       setCgDeploymentTypes(cgSupportedDeploymentTypes)
     } else {
-      if (NG_NATIVE_HELM) {
-        // If FF enabled - Native Helm will be in NG - left section
-        setNgDeploymentTypes([
-          ...ngSupportedDeploymentTypes,
-          ...cgSupportedDeploymentTypes.filter(deploymentType => deploymentType.value === 'NativeHelm')
-        ])
-      }
-      const cgTypes = NG_NATIVE_HELM
-        ? cgSupportedDeploymentTypes.filter(deploymentType => deploymentType.value !== 'NativeHelm')
-        : cgSupportedDeploymentTypes
-      cgTypes.forEach(deploymentType => {
+      setNgDeploymentTypes(ngSupportedDeploymentTypes)
+      cgSupportedDeploymentTypes.forEach(deploymentType => {
         deploymentType['disabled'] = true
         deploymentType['tooltip'] = (
           <div
@@ -209,9 +250,9 @@ export default function SelectDeploymentType(props: SelectServiceDeploymentTypeP
         )
         deploymentType['tooltipProps'] = { isDark: true }
       })
-      setCgDeploymentTypes(cgTypes)
+      setCgDeploymentTypes(cgSupportedDeploymentTypes)
     }
-  }, [licenseInformation, NG_NATIVE_HELM])
+  }, [])
 
   React.useEffect(() => {
     subscribeForm({ tab: DeployTabs.SERVICE, form: formikRef })
@@ -219,7 +260,7 @@ export default function SelectDeploymentType(props: SelectServiceDeploymentTypeP
   }, [formikRef])
 
   const renderDeploymentTypes = React.useCallback((): JSX.Element => {
-    if (!isCDCommunity(licenseInformation)) {
+    if (!isCommunity) {
       const tooltipContent = (
         <article className={cx(deployServiceCsss.cdGenerationSelectionTooltip, deployServiceCsss.tooltipContainer)}>
           <section className={deployServiceCsss.cdGenerationSwitchContainer}>
@@ -322,27 +363,20 @@ export default function SelectDeploymentType(props: SelectServiceDeploymentTypeP
         selectedValue={selectedDeploymentType}
       />
     )
-  }, [
-    cgDeploymentTypes,
-    ngSupportedDeploymentTypes,
-    getString,
-    isReadonly,
-    licenseInformation,
-    props.handleDeploymentTypeChange
-  ])
+  }, [cgDeploymentTypes, ngSupportedDeploymentTypes, getString, isReadonly, props.handleDeploymentTypeChange])
 
   return (
     <Formik<{ deploymentType: string }>
       onSubmit={noop}
       enableReinitialize={true}
-      initialValues={{ deploymentType: selectedDeploymentType }}
+      initialValues={{ deploymentType: selectedDeploymentType as string }}
       validationSchema={Yup.object().shape({
         deploymentType: getServiceDeploymentTypeSchema(getString)
       })}
     >
       {formik => {
         window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.SERVICE }))
-        formikRef.current = formik
+        formikRef.current = formik as FormikProps<unknown> | null
         return (
           <Card className={stageCss.sectionCard}>
             <div

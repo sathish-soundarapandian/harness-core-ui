@@ -22,7 +22,7 @@
 
   .tfRemoteForm {
     height: 100%;
-    min-height: 400px;
+    min-height: 440px;
   }
   .modal {
     [class*='bp3-dialog-header'] button {
@@ -32,7 +32,6 @@
 }
 
 .formComponent {
-  height: 80%;
   padding-bottom: var(--spacing-10);
 }
 
@@ -56,4 +55,12 @@
 .horizontalFlex {
   justify-content: 'flex-start';
   align-items: 'flex-start';
+}
+
+.sourceModule {
+  margin-bottom: var(--spacing-small);
+}
+
+.checkBox {
+  margin: var(--spacing-none) !important;
 }

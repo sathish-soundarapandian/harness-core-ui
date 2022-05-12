@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { flatMap, findIndex, cloneDeep, set } from 'lodash-es'
+import { flatMap, findIndex, cloneDeep, set, noop, isEmpty } from 'lodash-es'
 import { Utils } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { v4 as uuid } from 'uuid'
@@ -25,9 +25,12 @@ import {
   getScopeFromValue
 } from '@common/components/EntityReference/EntityReference'
 import type { StageType } from '@pipeline/utils/stageHelpers'
-import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
+import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import type { GetTemplateProps, GetTemplateResponse } from '@pipeline/utils/useTemplateSelector'
+import type { DynamicPopoverHandlerBinding } from '@common/components/DynamicPopover/DynamicPopover'
+import { DiagramType, Event } from '@pipeline/components/Diagram'
+import { PipelineOrStageStatus } from '@pipeline/components/PipelineSteps/AdvancedSteps/ConditionalExecutionPanel/ConditionalExecutionPanelUtils'
 import { EmptyStageName } from '../PipelineConstants'
 import type { PipelineContextInterface, StagesMap } from '../PipelineContext/PipelineContext'
 import { getStageFromPipeline } from '../PipelineContext/helpers'
@@ -37,6 +40,29 @@ export interface StageState {
   stage: StageElementWrapperConfig
 }
 
+export enum MoveDirection {
+  AHEAD,
+  BEHIND
+}
+
+export type AddStage = (
+  newStage: StageElementWrapperConfig,
+  isParallel?: boolean,
+  event?: Diagram.DefaultNodeEvent,
+  insertAt?: number,
+  openSetupAfterAdd?: boolean,
+  pipeline?: PipelineInfoConfig
+) => void
+
+export type AddStageNew = (
+  newStage: StageElementWrapper,
+  isParallel?: boolean,
+  droppedOnLink?: boolean,
+  insertAt?: number,
+  openSetupAfterAdd?: boolean,
+  pipelineTemp?: PipelineInfoConfig,
+  destinationNode?: StageElementWrapper
+) => void
 export interface PopoverData {
   data?: StageElementWrapperConfig
   isStageView: boolean
@@ -46,21 +72,16 @@ export interface PopoverData {
   stagesMap: StagesMap
   groupSelectedStageId?: string
   isParallel?: boolean
-  event?: Diagram.DefaultNodeEvent
-  addStage?: (
-    newStage: StageElementWrapperConfig,
-    isParallel?: boolean,
-    event?: Diagram.DefaultNodeEvent,
-    insertAt?: number,
-    openSetupAfterAdd?: boolean,
-    pipeline?: PipelineInfoConfig
-  ) => void
+  event?: any
+  addStage?: AddStage
+  addStageNew?: AddStageNew
   onSubmitPrimaryData?: (values: StageElementWrapperConfig, identifier: string) => void
   onClickGroupStage?: (stageId: string, type: StageType) => void
   renderPipelineStage: PipelineContextInterface['renderPipelineStage']
   isHoverView?: boolean
   getTemplate: (data: GetTemplateProps) => Promise<GetTemplateResponse>
   templateTypes: { [key: string]: string }
+  newPipelineStudioEnabled?: boolean
 }
 
 export const getStageIndexByIdentifier = (
@@ -68,6 +89,9 @@ export const getStageIndexByIdentifier = (
   identifier?: string
 ): { stageIndex: number; parallelStageIndex: number } => {
   const stageDetails = { stageIndex: -1, parallelStageIndex: -1 }
+  if (!identifier) {
+    return stageDetails
+  }
   if (pipeline?.stages) {
     for (const [index, stage] of pipeline.stages.entries()) {
       if (stage?.stage?.identifier === identifier) {
@@ -171,6 +195,29 @@ export const getStageIndexFromPipeline = (data: PipelineInfoConfig, identifier?:
 
   _index = findIndex(stages, o => o.stage?.identifier === identifier)
   return { index: _index }
+}
+
+export const getStageIndexWithParallelNodesFromPipeline = (
+  data: PipelineInfoConfig,
+  identifier?: string
+): { index: number; parIndex: number } => {
+  let _parIndex = 0
+  let _index = 0
+  data?.stages?.forEach((stage: StageElementWrapperConfig, parIndex: number) => {
+    if (stage?.stage && stage?.stage?.identifier === identifier) {
+      _parIndex = parIndex
+      _index = 0
+    } else if (stage?.parallel) {
+      stage?.parallel?.forEach((parallelStageNode: StageElementWrapperConfig, index: number) => {
+        if (parallelStageNode?.stage?.identifier === identifier) {
+          _parIndex = parIndex
+          _index = index
+        }
+      })
+    }
+  })
+
+  return { index: _index, parIndex: _parIndex }
 }
 
 export const getFlattenedStages = (
@@ -311,6 +358,8 @@ export const resetServiceSelectionForStages = (
   const stagesCopy = cloneDeep(pipeline.stages) || []
   stages.forEach(stageId => {
     const { stage, parent = null } = getStageFromPipeline(stageId, pipeline)
+    const parentStageId = (stage?.stage as DeploymentStageElementConfig)?.spec?.serviceConfig?.useFromStage?.stage
+    const { stageIndex: propagatingParentIndex } = getStageIndexByIdentifier(pipeline, parentStageId)
     if (!stage) {
       return
     }
@@ -318,13 +367,15 @@ export const resetServiceSelectionForStages = (
     if (parent) {
       const { parallelStageIndex, stageIndex: parentStageIndex } = getStageIndexByIdentifier(pipeline, stageId)
       const updatedStage = resetStageServiceSpec(stagesCopy?.[parentStageIndex]?.parallel?.[parallelStageIndex] || {})
-      set(stagesCopy, [parentStageIndex, 'parallel', parallelStageIndex], updatedStage)
+      set(stagesCopy, `${parentStageIndex}.parallel.${parallelStageIndex}`, updatedStage)
       return
     }
     let stageIndex = pipeline.stages?.indexOf(stage)
     stageIndex = stageIndex !== undefined ? stageIndex : -1
-    const updatedStage = resetStageServiceSpec(stage)
-    stagesCopy[stageIndex] = updatedStage
+    if (stageIndex <= propagatingParentIndex) {
+      const updatedStage = resetStageServiceSpec(stage)
+      stagesCopy[stageIndex] = updatedStage
+    }
   })
   return stagesCopy
 }
@@ -373,11 +424,474 @@ export const resetStageServiceSpec = (stage: StageElementWrapperConfig): StageEl
           artifacts: {
             sidecars: []
           },
-          manifests: [],
-
-          artifactOverrideSets: [],
-          manifestOverrideSets: []
+          manifests: []
         }
       }
     }
   })
+
+export const getLinkEventListeners = (
+  dynamicPopoverHandler: DynamicPopoverHandlerBinding<PopoverData> | undefined,
+  pipelineContext: PipelineContextInterface,
+  addStageNew: (
+    newStage: StageElementWrapper,
+    isParallel?: boolean,
+    droppedOnLink?: boolean,
+    insertAt?: number,
+    openSetupAfterAdd?: boolean,
+    pipelineTemp?: PipelineInfoConfig,
+    destinationNode?: StageElementWrapper
+  ) => void,
+  updateMoveStageDetails: (moveStageDetails: MoveStageDetailsType) => void,
+  confirmMoveStage: () => void,
+  getTemplate: (data: GetTemplateProps) => Promise<GetTemplateResponse>,
+  stageMap: Map<string, StageState>,
+  newPipelineStudioEnabled?: boolean
+): LinkModelListener => {
+  const {
+    state: { pipeline, templateTypes },
+    contextType = 'Pipeline',
+    stagesMap,
+    renderPipelineStage,
+    getStageFromPipeline: getStageFromPipelineContext
+  } = pipelineContext
+
+  return {
+    [Event.AddLinkClicked]: (event: any) => {
+      event = { ...event, ...event.data }
+      dynamicPopoverHandler?.hide()
+
+      const { setSelection } = pipelineContext
+
+      if (event.identifier) {
+        setSelection({ stageId: undefined, sectionId: undefined })
+
+        dynamicPopoverHandler?.show(
+          `[data-linkid="${event.identifier}"]`,
+          {
+            addStageNew,
+            isStageView: true,
+            event: event,
+            stagesMap,
+            renderPipelineStage,
+            contextType,
+            templateTypes,
+            getTemplate,
+            newPipelineStudioEnabled
+          },
+          { useArrows: false, darkMode: false, fixedPosition: false }
+        )
+      }
+    },
+    [Event.DropLinkEvent]: (event: any) => {
+      event = { ...event, ...event.data }
+      // if user is  dropping same node ahead or behind  itself and is a serial node dont do anything
+      if (event?.node?.identifier === event?.destination?.identifier && !event?.destination?.children) {
+        return
+      }
+      if (event.node?.identifier) {
+        const dropNode = getStageFromPipelineContext(event.node.identifier).stage
+        const destination = getStageFromPipelineContext(event.destination.identifier).stage
+        const parentStageName = (dropNode?.stage as DeploymentStageElementConfig)?.spec?.serviceConfig?.useFromStage
+          ?.stage
+        const dependentStages = getDependantStages(pipeline, dropNode)
+        const { stageIndex: destinationIndex } = getStageIndexByIdentifier(pipeline, event.destination.identifier)
+        if (parentStageName?.length) {
+          const { stageIndex: propagatingParentIndex = -1 } = getStageIndexByIdentifier(pipeline, parentStageName)
+
+          if (destinationIndex <= propagatingParentIndex) {
+            updateMoveStageDetails({
+              event,
+              direction: MoveDirection.AHEAD
+            })
+            confirmMoveStage()
+            return
+          }
+        } else if (dependentStages?.length) {
+          let indexToDropAt = -1
+          const node = event.destination
+          const { stage } = getStageFromPipelineContext(event.destination.identifier)
+          if (!stage) {
+            //  node on sourceport is parallel so split nodeId to get original node identifier
+            const nodeId = node.getIdentifier().split(EmptyNodeSeparator)[1]
+
+            const { stageIndex: nextStageIndex } = getStageIndexByIdentifier(pipeline, nodeId)
+            indexToDropAt = nextStageIndex + 1 // adding 1 as we checked source port that is prev to index where we will move this node
+          } else {
+            indexToDropAt = pipeline?.stages?.indexOf(stage!) || -1
+          }
+
+          const { stageIndex: firstDependentStageIndex = -1 } = getStageIndexByIdentifier(pipeline, dependentStages[0])
+
+          if (indexToDropAt > firstDependentStageIndex) {
+            const stagesTobeUpdated = getAffectedDependentStages(dependentStages, indexToDropAt, pipeline)
+
+            updateMoveStageDetails({
+              event,
+              direction: MoveDirection.BEHIND,
+              dependentStages: stagesTobeUpdated
+            })
+            confirmMoveStage()
+            return
+          }
+        }
+
+        const isRemove = removeNodeFromPipeline(
+          getStageFromPipelineContext(event.node.identifier),
+          pipeline,
+          stageMap,
+          false
+        )
+        if (isRemove && dropNode) {
+          addStageNew(dropNode, false, true, undefined, undefined, undefined, destination)
+        }
+      }
+    }
+  }
+}
+
+export const getNodeEventListerner = (
+  updateStageOnAddLinkNew: (event: any, dropNode: StageElementWrapper | undefined, current: any) => void,
+  setSelectionRef: any,
+  confirmDeleteStage: () => void,
+  updateDeleteId: (id: string | undefined) => void,
+
+  dynamicPopoverHandler: DynamicPopoverHandlerBinding<PopoverData> | undefined,
+  pipelineContext: PipelineContextInterface,
+  addStageNew: (
+    newStage: StageElementWrapper,
+    isParallel?: boolean,
+    droppedOnLink?: boolean,
+    insertAt?: number,
+    openSetupAfterAdd?: boolean,
+    pipelineTemp?: PipelineInfoConfig,
+    destinationNode?: StageElementWrapper
+  ) => void,
+
+  updateMoveStageDetails: (moveStageDetails: MoveStageDetailsType) => void,
+  confirmMoveStage: () => void,
+  getTemplate: (data: GetTemplateProps) => Promise<GetTemplateResponse>,
+  stageMap: Map<string, StageState>,
+  newPipelineStudioEnabled?: boolean
+): NodeModelListener => {
+  const {
+    state: {
+      pipeline,
+      pipelineView: { isSplitViewOpen },
+      pipelineView,
+      templateTypes
+    },
+    contextType = 'Pipeline',
+    stagesMap,
+    updatePipeline,
+    updatePipelineView,
+    renderPipelineStage,
+    getStageFromPipeline: getStageFromPipelineContext
+  } = pipelineContext
+  return {
+    // Can not remove this Any because of React Diagram Issue
+    [Event.ClickNode]: (event: any) => {
+      // const eventTemp = event as DefaultNodeEvent
+      event = { ...event, ...event?.data }
+      dynamicPopoverHandler?.hide()
+      /* istanbul ignore else */ if (event.entityType) {
+        const domTarget = document.querySelector(`[data-nodeid="${event.id}"]`) as Element
+        if (event.entityType === DiagramType.CreateNew) {
+          setSelectionRef.current({ stageId: undefined, sectionId: undefined })
+          dynamicPopoverHandler?.show(
+            domTarget,
+            {
+              addStageNew,
+              isStageView: false,
+              renderPipelineStage,
+              stagesMap,
+              contextType,
+              templateTypes,
+              getTemplate,
+              newPipelineStudioEnabled
+            },
+            { useArrows: true, darkMode: false, fixedPosition: false }
+          )
+        } else if (event.entityType === DiagramType.GroupNode && event?.identifier) {
+          setSelectionRef.current({ stageId: event?.identifier })
+        } /* istanbul ignore else */ else if (event.entityType !== DiagramType.StartNode) {
+          const data = getStageFromPipelineContext(event.identifier).stage
+          if (isSplitViewOpen && data?.stage?.identifier) {
+            if (data?.stage?.name === EmptyStageName) {
+              // TODO: check if this is unused code
+              dynamicPopoverHandler?.show(
+                domTarget,
+                {
+                  isStageView: true,
+                  data,
+                  onSubmitPrimaryData: (node, identifier) => {
+                    updatePipeline(pipeline)
+                    stageMap.set(node.stage?.identifier || '', { isConfigured: true, stage: node })
+                    dynamicPopoverHandler.hide()
+                    setSelectionRef.current({ stageId: identifier })
+                  },
+                  stagesMap,
+                  renderPipelineStage,
+                  contextType,
+                  templateTypes,
+                  getTemplate,
+                  newPipelineStudioEnabled
+                },
+                { useArrows: false, darkMode: false, fixedPosition: false }
+              )
+              setSelectionRef.current({ stageId: undefined, sectionId: undefined })
+            } else {
+              setSelectionRef.current({ stageId: data?.stage?.identifier, sectionId: undefined })
+            }
+          } /* istanbul ignore else */ else if (!isSplitViewOpen) {
+            if (stageMap.has(data?.stage?.identifier || '')) {
+              setSelectionRef.current({ stageId: data?.stage?.identifier })
+            } else {
+              // TODO: check if this is unused code
+              dynamicPopoverHandler?.show(
+                domTarget,
+                {
+                  isStageView: true,
+                  data,
+                  onSubmitPrimaryData: (node, identifier) => {
+                    updatePipeline(pipeline)
+                    stageMap.set(node.stage?.identifier || '', { isConfigured: true, stage: node })
+                    dynamicPopoverHandler.hide()
+                    setSelectionRef.current({ stageId: identifier })
+                  },
+                  stagesMap,
+                  renderPipelineStage,
+                  contextType,
+                  templateTypes,
+                  getTemplate,
+                  newPipelineStudioEnabled
+                },
+                { useArrows: false, darkMode: false, fixedPosition: false }
+              )
+            }
+          }
+        }
+      }
+    },
+    // Can not remove this Any because of React Diagram Issue
+    [Event.RemoveNode]: (event: any) => {
+      event = { ...event, ...event?.data }
+      const stageIdToBeRemoved = event.identifier
+      updateDeleteId(stageIdToBeRemoved)
+      confirmDeleteStage()
+    },
+    [Event.AddParallelNode]: (event: any) => {
+      event = { ...event, ...event?.data }
+      dynamicPopoverHandler?.hide()
+      updatePipelineView({
+        ...pipelineView,
+        isSplitViewOpen: false,
+        splitViewData: {}
+      })
+      setSelectionRef.current({ stageId: undefined, sectionId: undefined })
+
+      if (event.identifier) {
+        dynamicPopoverHandler?.show(
+          `[data-nodeid="${event?.node?.id}"] ~[data-nodeid="add-parallel"]`,
+          {
+            addStageNew,
+            isParallel: true,
+            isStageView: false,
+            event: event,
+            stagesMap,
+            renderPipelineStage,
+            contextType,
+            templateTypes,
+            getTemplate,
+            newPipelineStudioEnabled
+          },
+          { useArrows: false, darkMode: false, fixedPosition: false },
+          event.callback
+        )
+      }
+    },
+    [Event.DropNodeEvent]: (event: any) => {
+      event = { ...event, ...event?.data }
+      if (event.node?.identifier) {
+        const dropNode = getStageFromPipelineContext(event?.node?.identifier).stage
+        const current = getStageFromPipelineContext(event?.destination?.identifier)
+        const dependentStages = getDependantStages(pipeline, dropNode)
+        const parentStageId = (dropNode?.stage as DeploymentStageElementConfig)?.spec?.serviceConfig?.useFromStage
+          ?.stage
+        const isDropNodeParallel = event.node?.isParallelNode || event.node?.isFirstParallelNode
+        const { stageIndex: dropNodeIndex } = getStageIndexByIdentifier(pipeline, dropNode?.stage?.identifier)
+        if (parentStageId?.length) {
+          const { stageIndex: indexToDropAt } = getStageIndexByIdentifier(pipeline, current?.stage?.stage?.identifier)
+
+          const { stageIndex: propagatingParentIndex } = getStageIndexByIdentifier(pipeline, parentStageId)
+          // if dropping last serial node to Add Stage icon , do nothing
+          if (indexToDropAt == -1 && !isDropNodeParallel) {
+            return
+          }
+          // if dropping parallel node  ahead of its index and is not  a  terminal  index(first and last) node
+          const showConfirmation = isDropNodeParallel && dropNodeIndex > indexToDropAt && indexToDropAt !== -1
+          // if dropping last parrallel node to Add Stage icon , do nothing
+          if (indexToDropAt <= propagatingParentIndex && showConfirmation) {
+            updateMoveStageDetails({
+              event,
+              direction: MoveDirection.AHEAD,
+              currentStage: current
+            })
+            confirmMoveStage()
+            return
+          }
+          updateStageOnAddLinkNew(event, dropNode, current)
+          return
+        } else if (dependentStages?.length) {
+          let finalDropIndex = -1
+          let firstDependentStageIndex
+          const { stageIndex: dependentStageIndex, parallelStageIndex: dependentParallelIndex = -1 } =
+            getStageIndexByIdentifier(pipeline, dependentStages[0])
+
+          firstDependentStageIndex = dependentStageIndex
+
+          if (current.parent) {
+            const { stageIndex } = getStageIndexByIdentifier(pipeline, current?.stage?.stage?.identifier)
+            finalDropIndex = stageIndex
+            firstDependentStageIndex = dependentStageIndex
+          } else if (current?.stage) {
+            const { stageIndex } = getStageIndexByIdentifier(pipeline, current?.stage?.stage?.identifier)
+            finalDropIndex = stageIndex
+          }
+
+          finalDropIndex = finalDropIndex === -1 ? pipeline.stages?.length || 0 : finalDropIndex
+          const stagesTobeUpdated = getAffectedDependentStages(
+            dependentStages,
+            finalDropIndex,
+            pipeline,
+            dependentParallelIndex
+          )
+          if (finalDropIndex >= firstDependentStageIndex) {
+            updateMoveStageDetails({
+              event,
+              direction: MoveDirection.BEHIND,
+              dependentStages: stagesTobeUpdated,
+              currentStage: current,
+              isLastAddLink: !current.parent
+            })
+
+            confirmMoveStage()
+            return
+          }
+        }
+        updateStageOnAddLinkNew(event, dropNode, current)
+      }
+    },
+    [Event.MouseEnterNode]: (event: any) => {
+      const eventTemp = { ...event, ...event.data }
+
+      const current = getStageFromPipeline(eventTemp?.identifier, pipeline)
+      if (current.stage?.stage?.when) {
+        const { pipelineStatus, condition } = current.stage.stage.when
+        if (pipelineStatus === PipelineOrStageStatus.SUCCESS && isEmpty(condition)) {
+          return
+        }
+        dynamicPopoverHandler?.show(
+          `[data-nodeid="${eventTemp?.node?.id}"]`,
+          {
+            event: eventTemp,
+            data: current.stage,
+            isStageView: false,
+            isHoverView: true,
+            stagesMap,
+            renderPipelineStage,
+            contextType,
+            templateTypes,
+            getTemplate,
+            newPipelineStudioEnabled
+          },
+          { useArrows: true, darkMode: false, fixedPosition: false, placement: 'top' },
+          noop,
+          true
+        )
+      }
+    },
+    [Event.MouseLeaveNode]: (_event: any) => {
+      if (dynamicPopoverHandler?.isHoverView?.()) {
+        dynamicPopoverHandler?.hide()
+      }
+    }
+  }
+}
+export interface MoveStageDetailsType {
+  direction: MoveDirection
+  event?: any
+  dependentStages?: string[]
+  currentStage?: unknown
+  isLastAddLink?: boolean
+}
+interface MoveStageParams {
+  moveStageDetails: MoveStageDetailsType
+  pipelineContext: PipelineContextInterface
+  updateStageOnAddLink: (event: any, dropNode: StageElementWrapper | undefined, current: any) => void
+  updateStageOnAddLinkNew: (event: any, dropNode: StageElementWrapper | undefined, current: any) => void
+  resetPipelineStages: (stages: StageElementWrapperConfig[]) => void
+  stageMap: Map<string, StageState>
+  addStage: AddStage
+  addStageNew: AddStageNew
+  newPipelineStudioEnabled: boolean
+}
+export const moveStage = ({
+  moveStageDetails,
+  pipelineContext,
+  updateStageOnAddLink,
+  updateStageOnAddLinkNew,
+  resetPipelineStages,
+  addStage,
+  stageMap,
+  addStageNew,
+  newPipelineStudioEnabled
+}: MoveStageParams): void => {
+  const {
+    event,
+    dependentStages = [],
+    currentStage = false,
+    isLastAddLink = false
+  }: { event?: any; dependentStages?: string[]; currentStage?: any; isLastAddLink?: boolean } = moveStageDetails
+
+  const {
+    getStageFromPipeline: getStageFromPipelineData,
+    state: { pipeline }
+  } = pipelineContext
+  const nodeIdentifier = event?.node?.identifier
+  const dropNode = getStageFromPipelineData(nodeIdentifier).stage
+
+  if (currentStage?.parent?.parallel || isLastAddLink) {
+    if (newPipelineStudioEnabled) {
+      if (dropNode && event.node.identifier !== event?.destination?.identifier) {
+        updateStageOnAddLinkNew(event, dropNode, currentStage)
+
+        const updatedStages = resetServiceSelectionForStages(
+          dependentStages.length ? dependentStages : [nodeIdentifier],
+          pipeline
+        )
+        resetPipelineStages(updatedStages)
+      }
+    } else if (dropNode && event.node.identifier !== event?.entity.getIdentifier()) {
+      updateStageOnAddLink(event, dropNode, currentStage)
+
+      const updatedStages = resetServiceSelectionForStages(
+        dependentStages.length ? dependentStages : [nodeIdentifier],
+        pipeline
+      )
+      resetPipelineStages(updatedStages)
+    }
+  } else {
+    const isRemove = removeNodeFromPipeline(getStageFromPipelineData(nodeIdentifier), pipeline, stageMap, false)
+    if (isRemove && dropNode) {
+      newPipelineStudioEnabled
+        ? addStageNew(dropNode, !!currentStage, !currentStage, undefined, undefined, undefined, event.destination)
+        : addStage(dropNode, !!currentStage, event as any)
+      const updatedStages = resetServiceSelectionForStages(
+        dependentStages.length ? dependentStages : [nodeIdentifier],
+        pipeline
+      )
+      resetPipelineStages(updatedStages)
+    }
+  }
+}

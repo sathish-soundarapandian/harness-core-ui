@@ -3,163 +3,167 @@
 exports[`Pipeline Details tests render snapshot view for non pipeline studio route 1`] = `
 <div>
   <div
-    class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
-    data-testid="not-pipeline-studio"
+    class="wrapper"
   >
     <div
-      class="Layout--vertical StyledProps--main"
+      class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+      data-testid="not-pipeline-studio"
     >
       <div
         class="Layout--vertical StyledProps--main"
       >
         <div
-          class="Layout--horizontal StyledProps--main"
+          class="Layout--vertical StyledProps--main"
         >
           <div
-            class="Layout--horizontal StyledProps--main Breadcrumbs--breadcrumbs StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+            class="Layout--horizontal StyledProps--main"
           >
             <div
-              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+              class="Layout--horizontal StyledProps--main Breadcrumbs--breadcrumbs StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
             >
-              <a
-                class="Breadcrumbs--breadcrumb"
-                href="/account/testAcc/cd"
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
               >
+                <a
+                  class="Breadcrumbs--breadcrumb"
+                  href="/account/testAcc/cd"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
+                    data-icon="cd-main"
+                  >
+                    <svg
+                      height="16"
+                      viewBox="0 0 32 32"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M26.427 7.06A5.073 5.073 0 0129 11.52l-.077 8.934a5.073 5.073 0 01-2.537 4.35l-8.002 4.618a5.073 5.073 0 01-5.035.021l-7.776-4.402A5.073 5.073 0 013 20.583l.077-8.935a5.073 5.073 0 012.537-4.35l8.002-4.619a5.073 5.073 0 015.035-.02l7.776 4.402zm-2.83 6.938c-.42 1.586-2.029 2.538-3.601 2.141l-7.489-2.026a4.696 4.696 0 00-3.62.48 4.773 4.773 0 00-2.222 2.925 4.835 4.835 0 00.479 3.664 4.757 4.757 0 002.905 2.251 4.696 4.696 0 003.62-.48 4.773 4.773 0 002.222-2.924l.26-1.047a.25.25 0 00-.177-.302l-1.258-.34a.25.25 0 00-.307.18l-.256 1.025c-.426 1.602-2.064 2.556-3.651 2.127-1.582-.428-2.523-2.073-2.1-3.67.421-1.586 2.03-2.538 3.602-2.142l7.489 2.027a4.696 4.696 0 003.62-.48 4.773 4.773 0 002.222-2.925 4.835 4.835 0 00-.479-3.664 4.757 4.757 0 00-2.905-2.251 4.696 4.696 0 00-3.62.48 4.773 4.773 0 00-2.222 2.924l-.247.828a.25.25 0 00.174.312l1.259.34a.25.25 0 00.304-.169l.248-.827c.426-1.602 2.064-2.557 3.651-2.127 1.582.428 2.523 2.073 2.1 3.67z"
+                        fill="url(#cd-main_svg__a)"
+                        fill-rule="evenodd"
+                      />
+                      <defs>
+                        <lineargradient
+                          gradientUnits="userSpaceOnUse"
+                          id="cd-main_svg__a"
+                          x1="6.774"
+                          x2="21.5"
+                          y1="2"
+                          y2="30"
+                        >
+                          <stop
+                            stop-color="#62F91F"
+                          />
+                          <stop
+                            offset="1"
+                            stop-color="#45BD35"
+                          />
+                        </lineargradient>
+                      </defs>
+                    </svg>
+                  </span>
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+                  >
+                    test
+                  </p>
+                </a>
                 <span
-                  class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
-                  data-icon="cd-main"
+                  class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+                  data-icon="main-chevron-right"
                 >
                   <svg
-                    height="16"
-                    viewBox="0 0 32 32"
-                    width="16"
+                    height="8"
+                    viewBox="0 0 8 14"
+                    width="8"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      clip-rule="evenodd"
-                      d="M26.427 7.06A5.073 5.073 0 0129 11.52l-.077 8.934a5.073 5.073 0 01-2.537 4.35l-8.002 4.618a5.073 5.073 0 01-5.035.021l-7.776-4.402A5.073 5.073 0 013 20.583l.077-8.935a5.073 5.073 0 012.537-4.35l8.002-4.619a5.073 5.073 0 015.035-.02l7.776 4.402zm-2.83 6.938c-.42 1.586-2.029 2.538-3.601 2.141l-7.489-2.026a4.696 4.696 0 00-3.62.48 4.773 4.773 0 00-2.222 2.925 4.835 4.835 0 00.479 3.664 4.757 4.757 0 002.905 2.251 4.696 4.696 0 003.62-.48 4.773 4.773 0 002.222-2.924l.26-1.047a.25.25 0 00-.177-.302l-1.258-.34a.25.25 0 00-.307.18l-.256 1.025c-.426 1.602-2.064 2.556-3.651 2.127-1.582-.428-2.523-2.073-2.1-3.67.421-1.586 2.03-2.538 3.602-2.142l7.489 2.027a4.696 4.696 0 003.62-.48 4.773 4.773 0 002.222-2.925 4.835 4.835 0 00-.479-3.664 4.757 4.757 0 00-2.905-2.251 4.696 4.696 0 00-3.62.48 4.773 4.773 0 00-2.222 2.924l-.247.828a.25.25 0 00.174.312l1.259.34a.25.25 0 00.304-.169l.248-.827c.426-1.602 2.064-2.557 3.651-2.127 1.582.428 2.523 2.073 2.1 3.67z"
-                      fill="url(#cd-main_svg__a)"
-                      fill-rule="evenodd"
+                      d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                      fill="#4d5969"
                     />
-                    <defs>
-                      <lineargradient
-                        gradientUnits="userSpaceOnUse"
-                        id="cd-main_svg__a"
-                        x1="6.774"
-                        x2="21.5"
-                        y1="2"
-                        y2="30"
-                      >
-                        <stop
-                          stop-color="#62F91F"
-                        />
-                        <stop
-                          offset="1"
-                          stop-color="#45BD35"
-                        />
-                      </lineargradient>
-                    </defs>
                   </svg>
                 </span>
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
-                >
-                  test
-                </p>
-              </a>
-              <span
-                class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
-                data-icon="main-chevron-right"
+              </div>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
               >
-                <svg
-                  height="8"
-                  viewBox="0 0 8 14"
-                  width="8"
-                  xmlns="http://www.w3.org/2000/svg"
+                <a
+                  class="Breadcrumbs--breadcrumb"
+                  href="/account/testAcc/cd/orgs/testOrg/projects/test/pipelines"
                 >
-                  <path
-                    d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
-                    fill="#4d5969"
-                  />
-                </svg>
-              </span>
-            </div>
-            <div
-              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
-            >
-              <a
-                class="Breadcrumbs--breadcrumb"
-                href="/account/testAcc/cd/orgs/testOrg/projects/test/pipelines"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+                  >
+                    pipelineBreadcrumb
+                  </p>
+                </a>
+                <span
+                  class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+                  data-icon="main-chevron-right"
                 >
-                  pipelineBreadcrumb
-                </p>
-              </a>
-              <span
-                class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
-                data-icon="main-chevron-right"
-              >
-                <svg
-                  height="8"
-                  viewBox="0 0 8 14"
-                  width="8"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
-                    fill="#4d5969"
-                  />
-                </svg>
-              </span>
+                  <svg
+                    height="8"
+                    viewBox="0 0 8 14"
+                    width="8"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                      fill="#4d5969"
+                    />
+                  </svg>
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-        <div
-          class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-left StyledProps--flex-alignItems-center"
-        >
-          <h2
-            class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold"
-            level="2"
+          <div
+            class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-left StyledProps--flex-alignItems-center"
           >
-            testsdfsdf
-          </h2>
+            <h2
+              class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold"
+              level="2"
+            >
+              testsdfsdf
+            </h2>
+          </div>
         </div>
+      </div>
+      <div
+        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main TabNavigation--container"
+      >
+        <a
+          class="TabNavigation--tags TabNavigation--small"
+          href="/account/testAcc/cd/orgs/testOrg/projects/test/pipelines/pipeline/pipeline-studio/"
+        >
+          pipelineStudio
+        </a>
+        <a
+          class="TabNavigation--tags TabNavigation--small"
+          href="/account/testAcc/cd/orgs/testOrg/projects/test/pipelines/pipeline/input-sets"
+        >
+          inputSetsText
+        </a>
+        <a
+          class="TabNavigation--tags TabNavigation--small"
+          href="/account/testAcc/cd/orgs/testOrg/projects/test/pipelines/pipeline/triggers"
+        >
+          common.triggersLabel
+        </a>
+        <a
+          class="TabNavigation--tags TabNavigation--small"
+          href="/account/testAcc/cd/orgs/testOrg/projects/test/pipelines/pipeline/executions"
+        >
+          executionHeaderText
+        </a>
       </div>
     </div>
     <div
-      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main TabNavigation--container"
-    >
-      <a
-        class="TabNavigation--tags TabNavigation--small"
-        href="/account/testAcc/cd/orgs/testOrg/projects/test/pipelines/pipeline/pipeline-studio/"
-      >
-        pipelineStudio
-      </a>
-      <a
-        class="TabNavigation--tags TabNavigation--small"
-        href="/account/testAcc/cd/orgs/testOrg/projects/test/pipelines/pipeline/input-sets"
-      >
-        inputSetsText
-      </a>
-      <a
-        class="TabNavigation--tags TabNavigation--small"
-        href="/account/testAcc/cd/orgs/testOrg/projects/test/pipelines/pipeline/triggers"
-      >
-        common.triggersLabel
-      </a>
-      <a
-        class="TabNavigation--tags TabNavigation--small"
-        href="/account/testAcc/cd/orgs/testOrg/projects/test/pipelines/pipeline/executions"
-      >
-        executionHeaderText
-      </a>
-    </div>
+      class="StyledProps--font StyledProps--main PageBody--pageBody"
+      data-name="page-body"
+    />
   </div>
-  <div
-    class="StyledProps--font StyledProps--main PageBody--pageBody"
-    data-name="page-body"
-  />
 </div>
 `;

@@ -306,7 +306,7 @@ describe('CVCreateSLO - Edit', () => {
       expect(updateSLO).toBeCalledWith(
         createSLORequestPayload(serviceLevelObjective, pathParams.orgIdentifier, pathParams.projectIdentifier)
       )
-      expect(screen.getByText('cv.slos.sloUpdated')).toBeInTheDocument()
+      expect(screen.getAllByText('cv.slos.sloUpdated')[0]).toBeInTheDocument()
     })
 
     expect(
@@ -362,40 +362,6 @@ describe('CVCreateSLO - Edit', () => {
           getCVMonitoringServicesSearchParam({ tab: MonitoredServiceEnum.SLOs })
       )
     ).toBeInTheDocument()
-  })
-
-  test('+ New Monitored Service should go to Add new monitored service page', () => {
-    jest
-      .spyOn(cvServices, 'useGetServiceLevelObjective')
-      .mockImplementation(() => ({ data: SLOResponse, loading: false, error: null, refetch: jest.fn() } as any))
-
-    render(
-      <TestWrapper
-        {...testWrapperPropsForEdit}
-        queryParams={{
-          monitoredServiceIdentifier: 'monitored_service_identifier'
-        }}
-      >
-        <CVCreateSLO />
-      </TestWrapper>
-    )
-
-    userEvent.click(
-      screen.getByRole('button', {
-        name: /cv.monitoredServices.newMonitoredServices/i
-      })
-    )
-
-    expect(
-      screen.getByText(
-        routes.toCVAddMonitoringServicesSetup({ ...pathParams }) +
-          getCVMonitoringServicesSearchParam({
-            redirectToSLO: true,
-            sloIdentifier: 'SLO5',
-            monitoredServiceIdentifier: 'monitored_service_identifier'
-          })
-      )
-    )
   })
 
   test('+ New Health Source should should open the drawer to add a new health source', () => {

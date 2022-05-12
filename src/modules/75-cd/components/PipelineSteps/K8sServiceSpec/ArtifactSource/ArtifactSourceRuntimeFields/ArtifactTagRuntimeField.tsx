@@ -12,7 +12,7 @@ import { Menu } from '@blueprintjs/core'
 import { Layout, SelectOption, Text, useToaster } from '@wings-software/uicore'
 import type { GetDataError } from 'restful-react'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
-import type { DockerBuildDetailsDTO, Failure, Error } from 'services/cd-ng'
+import type { DockerBuildDetailsDTO, Failure, Error, ArtifactoryBuildDetailsDTO } from 'services/cd-ng'
 
 import { useStrings } from 'framework/strings'
 import type { ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
@@ -21,13 +21,14 @@ import { BuildDetailsDTO, getTagError } from '../artifactSourceUtils'
 import css from '../../K8sServiceSpec.module.scss'
 
 interface TagsRenderContent extends ArtifactSourceRenderProps {
-  isTagsSelectionDisabled: (data: ArtifactSourceRenderProps) => boolean
+  isTagsSelectionDisabled: (data: ArtifactSourceRenderProps, isServerlessDeploymentTypeSelected: boolean) => boolean
   buildDetailsList?: BuildDetailsDTO
-  isFieldDisabled: (fieldName: string, isTag?: boolean) => boolean
+  isFieldDisabled: () => boolean
   fetchingTags: boolean
   fetchTags: () => void
   fetchTagsError: GetDataError<Failure | Error> | null
   expressions: string[]
+  isServerlessDeploymentTypeSelected?: boolean
   isArtifactPath?: boolean
 }
 const ArtifactTagRuntimeField = (props: TagsRenderContent): JSX.Element => {
@@ -44,25 +45,38 @@ const ArtifactTagRuntimeField = (props: TagsRenderContent): JSX.Element => {
     fetchingTags,
     fetchTags,
     fetchTagsError,
-    stageIdentifier
+    stageIdentifier,
+    isServerlessDeploymentTypeSelected = false
   } = props
 
   const { getString } = useStrings()
-  const loadingTags = getString('pipeline.artifactsSelection.loadingTags')
+  const loadingPlaceholderText = isServerlessDeploymentTypeSelected
+    ? getString('pipeline.artifactsSelection.loadingArtifactPaths')
+    : getString('pipeline.artifactsSelection.loadingTags')
   const { showError } = useToaster()
 
   const [tagsList, setTagsList] = useState<SelectOption[]>([])
+
+  const tagsListOptions = React.useMemo((): SelectOption[] | undefined => {
+    if (isServerlessDeploymentTypeSelected) {
+      return buildDetailsList?.map((tag: ArtifactoryBuildDetailsDTO) => ({
+        label: defaultTo(tag.artifactPath, ''),
+        value: defaultTo(tag.artifactPath, '')
+      }))
+    }
+    return buildDetailsList?.map(({ tag }: DockerBuildDetailsDTO) => ({
+      label: defaultTo(tag, ''),
+      value: defaultTo(tag, '')
+    }))
+  }, [isServerlessDeploymentTypeSelected, buildDetailsList])
+
   useEffect(() => {
     if (Array.isArray(buildDetailsList)) {
-      const toBeSetTagsList = buildDetailsList?.map(({ tag }: DockerBuildDetailsDTO) => ({
-        label: defaultTo(tag, ''),
-        value: defaultTo(tag, '')
-      }))
-      if (toBeSetTagsList) {
-        setTagsList(toBeSetTagsList)
+      if (tagsListOptions) {
+        setTagsList(tagsListOptions)
       }
     }
-  }, [buildDetailsList])
+  }, [buildDetailsList, tagsListOptions])
 
   useEffect(() => {
     if (fetchTagsError) {
@@ -87,13 +101,13 @@ const ArtifactTagRuntimeField = (props: TagsRenderContent): JSX.Element => {
   return (
     <ExperimentalInput
       formik={formik}
-      disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.tag`, true)}
+      disabled={isFieldDisabled()}
       selectItems={
         fetchingTags
           ? [
               {
-                label: loadingTags,
-                value: loadingTags
+                label: loadingPlaceholderText,
+                value: loadingPlaceholderText
               }
             ]
           : tagsList
@@ -108,7 +122,7 @@ const ArtifactTagRuntimeField = (props: TagsRenderContent): JSX.Element => {
             return
           }
 
-          if (!isTagsSelectionDisabled(props)) {
+          if (!isTagsSelectionDisabled(props, isServerlessDeploymentTypeSelected)) {
             fetchTags()
           }
         },
@@ -116,13 +130,13 @@ const ArtifactTagRuntimeField = (props: TagsRenderContent): JSX.Element => {
           items: fetchingTags
             ? [
                 {
-                  label: loadingTags,
-                  value: loadingTags
+                  label: loadingPlaceholderText,
+                  value: loadingPlaceholderText
                 }
               ]
             : tagsList,
           usePortal: true,
-          addClearBtn: !(readonly || isTagsSelectionDisabled(props)),
+          addClearBtn: !(readonly || isTagsSelectionDisabled(props, isServerlessDeploymentTypeSelected)),
           noResults: (
             <Text lineClamp={1}>{getTagError(fetchTagsError) || getString('pipelineSteps.deploy.errors.notags')}</Text>
           ),
@@ -133,8 +147,12 @@ const ArtifactTagRuntimeField = (props: TagsRenderContent): JSX.Element => {
         expressions,
         allowableTypes
       }}
-      label={getString('tagLabel')}
-      name={`${path}.artifacts.${artifactPath}.spec.tag`}
+      label={isServerlessDeploymentTypeSelected ? getString('pipeline.artifactPathLabel') : getString('tagLabel')}
+      name={
+        isServerlessDeploymentTypeSelected
+          ? `${path}.artifacts.${artifactPath}.spec.artifactPath`
+          : `${path}.artifacts.${artifactPath}.spec.tag`
+      }
     />
   )
 }

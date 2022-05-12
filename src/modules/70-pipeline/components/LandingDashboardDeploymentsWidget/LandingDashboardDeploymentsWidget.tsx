@@ -238,6 +238,11 @@ const getFormattedNumber = (givenNumber?: number | string): string => {
 }
 
 const summaryCardRenderer = (cardData: SummaryCardData, groupByValue: string): JSX.Element => {
+  let color = cardData.trend.includes('-') ? Color.RED_500 : Color.GREEN_500
+  // Failure should be in Red
+  if (cardData.title === 'Failure Rate') {
+    color = cardData.trend.includes('-') ? Color.GREEN_500 : Color.RED_500
+  }
   return (
     <Container className={css.summaryCard} key={cardData.title}>
       <Text font={{ size: 'medium' }} color={Color.GREY_700} className={css.cardTitle}>
@@ -256,13 +261,9 @@ const summaryCardRenderer = (cardData: SummaryCardData, groupByValue: string): J
         </Layout.Horizontal>
         <Container className={css.trendContainer} flex>
           {isNaN(parseInt(cardData.trend)) ? (
-            handleZeroOrInfinityTrend(cardData.trend, cardData.trend.includes('-') ? Color.RED_500 : Color.GREEN_500)
+            handleZeroOrInfinityTrend(cardData.trend, color)
           ) : (
-            <Container flex>
-              {cardData.trend.includes('-')
-                ? renderTrend(cardData.trend, Color.RED_500)
-                : renderTrend(cardData.trend, Color.GREEN_500)}
-            </Container>
+            <Container flex>{renderTrend(cardData.trend, color)}</Container>
           )}
         </Container>
       </Layout.Horizontal>
@@ -347,7 +348,7 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
   const [selectedView, setSelectedView] = useState<ChartType>(ChartType.BAR)
   const getServiceDetailsLink = (service: ActiveServiceInfo): string => {
     const serviceId = service.serviceInfo?.serviceIdentifier || ''
-    return routes.toServiceDetails({
+    return routes.toServiceStudio({
       accountId,
       orgIdentifier: service.orgInfo?.orgIdentifier || '',
       projectIdentifier: service.projectInfo?.projectIdentifier || '',
@@ -442,6 +443,11 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
           label: defaultTo(defaultTo(service.serviceInfo?.serviceName, service.serviceInfo?.serviceIdentifier), ''),
           labelTooltip: renderTooltipForServiceLabel(service),
           labelLink: getServiceDetailsLink(service),
+          tooltipProps: {
+            isDark: true,
+            fill: false,
+            position: 'bottom'
+          },
           barSectionsData:
             sortByValue === 'INSTANCES'
               ? [
@@ -585,7 +591,7 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
           </Layout.Horizontal>
           <div className={css.mostActiveServicesChartContainer}>
             <StackedSummaryTable
-              barLength={185}
+              // barLength={185}
               columnHeaders={['SERVICES', sortByValue]}
               summaryData={defaultTo(mostActiveServicesData, [])}
               noDataRenderer={noDataRenderer}

@@ -11,6 +11,7 @@ declare const styles: {
   readonly conditionalExecutionTitle: string
   readonly container: string
   readonly header: string
+  readonly infraSection: string
   readonly inputWidth: string
   readonly inputheader: string
   readonly nestedAccordions: string

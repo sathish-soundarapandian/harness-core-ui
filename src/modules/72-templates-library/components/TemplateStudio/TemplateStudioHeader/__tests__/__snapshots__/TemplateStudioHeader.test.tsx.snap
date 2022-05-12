@@ -104,13 +104,13 @@ exports[`TemplateStudioHeader renders Stage templateType correctly 1`] = `
       >
         <path
           d="M20.3896 22.2945L1.10987 0.5H208.932L190.926 22.0853C189.121 24.2491 186.449 25.5 183.631 25.5H27.505C24.7836 25.5 22.1928 24.3328 20.3896 22.2945Z"
-          fill="#D3FCFE"
-          stroke="#C3ECEE"
+          fill="#0BC8D6"
+          stroke="#03C0CD"
         />
       </svg>
       <p
         class="StyledProps--font StyledProps--main title StyledProps--font-size-xsmall StyledProps--font-weight-bold"
-        style="color: rgb(6, 183, 195);"
+        style="color: rgb(232, 232, 255);"
       >
         Stage Template
       </p>

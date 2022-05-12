@@ -73,7 +73,8 @@ const currentUser = {
       uuid: '123',
       createdFromNG: true
     }
-  ]
+  ],
+  uuid: '123'
 }
 const useStartFreeLicenseMock = useStartFreeLicense as jest.MockedFunction<any>
 useStartFreeLicenseMock.mockImplementation(() => {
@@ -148,7 +149,8 @@ describe('CIHomePage', () => {
           uuid: '123',
           createdFromNG: false
         }
-      ]
+      ],
+      uuid: '123'
     }
 
     const { container, getByText } = render(

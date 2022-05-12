@@ -6,6 +6,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot 1`] = `
     class="Layout--vertical StyledProps--main"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -367,6 +368,768 @@ exports[`<DeleteTemplateModal /> tests should match snapshot 1`] = `
                   class="StyledProps--font StyledProps--main badge StyledProps--background-primary7 StyledProps--color StyledProps--color-white"
                 >
                   0
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+`;
+
+exports[`<DeleteTemplateModal /> tests should match snapshot when error occurs in deleteTemplates operation 1`] = `
+<div>
+  <div
+    class="Layout--vertical StyledProps--main"
+  >
+    <form
+      action="#"
+      class="FormikForm--main"
+    >
+      <div>
+        <div
+          class="StyledProps--font StyledProps--main"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main"
+          >
+            <div
+              class="Layout--horizontal StyledProps--main preview preview StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-center StyledProps--padding-top-huge StyledProps--padding-bottom-huge"
+            >
+              <div
+                class="StyledProps--font StyledProps--main container"
+              >
+                <div
+                  class="bp3-card bp3-elevation-0 Card--card templateCard"
+                >
+                  <div />
+                  <div
+                    class="StyledProps--font StyledProps--main StyledProps--margin-right-small"
+                  >
+                    <div
+                      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--margin-bottom-small StyledProps--flex"
+                    >
+                      <span
+                        class="bp3-icon StyledProps--main"
+                        data-icon="harness-with-color"
+                      >
+                        <svg
+                          height="24"
+                          viewBox="0 0 25 25"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M22.974 8.186L16.708 1.88a7.023 7.023 0 00-2.59-1.572C11.98-.409 9.858.154 8.135 1.88L1.868 8.186a7.081 7.081 0 00-1.562 2.606c-.713 2.153-.153 4.289 1.562 6.023l6.266 6.306a7.113 7.113 0 002.589 1.58 5.663 5.663 0 001.808.308c1.503 0 2.946-.64 4.177-1.88l6.266-6.305a7.08 7.08 0 001.562-2.606c.713-2.162.153-4.298-1.562-6.032zm-10.07-4.477c.706.213 1.232.7 1.274.735l1.851 1.862-3.608 3.631-3.608-3.63 1.859-1.872c.5-.496 1.197-1.034 2.233-.726zm-9.219 8.305c.212-.71.696-1.24.73-1.282l1.85-1.863 3.609 3.632-3.608 3.63-1.86-1.87c-.492-.504-1.027-1.214-.721-2.247zm8.252 9.279c-.705-.214-1.231-.701-1.273-.735l-1.851-1.863 3.608-3.631 3.608 3.631-1.86 1.871c-.5.496-1.205 1.034-2.232.726zm9.22-8.305c-.212.709-.696 1.239-.73 1.281l-1.851 1.863-3.608-3.631 3.608-3.632 1.86 1.872c.492.504 1.027 1.204.72 2.247z"
+                            fill="currentColor"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="StyledProps--font StyledProps--main"
+                  >
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                      data-testid="manjutesttemplate"
+                      style="--text-line-clamp: 1;"
+                    >
+                      manju-test-template-qq-12344
+                    </p>
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-small StyledProps--color StyledProps--color-grey400 StyledProps--margin-top-xsmall"
+                      style="--text-line-clamp: 1;"
+                    >
+                      idLabel
+                    </p>
+                  </div>
+                  <div
+                    class="StyledProps--font StyledProps--main container"
+                  >
+                    <div
+                      class="StyledProps--font StyledProps--main"
+                    >
+                      <div
+                        class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main tagsContainer"
+                      >
+                        <span
+                          class="Tag--main"
+                        >
+                          <span
+                            class="bp3-tag tag"
+                            style="max-width: 80px;"
+                          >
+                            <span
+                              class="bp3-text-overflow-ellipsis bp3-fill"
+                            >
+                              QAR
+                            </span>
+                          </span>
+                        </span>
+                        <span
+                          class="Tag--main"
+                        >
+                          <span
+                            class="bp3-tag tag"
+                            style="max-width: 80px;"
+                          >
+                            <span
+                              class="bp3-text-overflow-ellipsis bp3-fill"
+                            >
+                              Internal 1
+                            </span>
+                          </span>
+                        </span>
+                        <span
+                          class="Tag--main"
+                        >
+                          <span
+                            class="bp3-tag tag"
+                            style="max-width: 80px;"
+                          >
+                            <span
+                              class="bp3-text-overflow-ellipsis bp3-fill"
+                            >
+                              Canary 1
+                            </span>
+                          </span>
+                        </span>
+                        <span
+                          class="Tag--main"
+                        >
+                          <span
+                            class="bp3-tag tag"
+                            style="max-width: 80px;"
+                          >
+                            <span
+                              class="bp3-text-overflow-ellipsis bp3-fill"
+                            >
+                              BLUE
+                            </span>
+                          </span>
+                        </span>
+                        <span
+                          class="Tag--main"
+                        >
+                          <span
+                            class="bp3-tag tag"
+                            style="max-width: 80px;"
+                          >
+                            <span
+                              class="bp3-text-overflow-ellipsis bp3-fill"
+                            >
+                              Tag A
+                            </span>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="StyledProps--font StyledProps--main StyledProps--background-grey100"
+                    style="height: 1px;"
+                  />
+                  <div
+                    class="StyledProps--font StyledProps--main"
+                  >
+                    <span
+                      class="Tag--main"
+                    >
+                      <span
+                        class="bp3-tag version"
+                      >
+                        <span
+                          class="bp3-text-overflow-ellipsis bp3-fill"
+                        >
+                          v4
+                        </span>
+                      </span>
+                    </span>
+                  </div>
+                  <div
+                    class="StyledProps--font StyledProps--main"
+                  >
+                    <div
+                      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey800"
+                      >
+                        lastUpdated
+                      </p>
+                      <span
+                        class="bp3-popover-wrapper bp3-dark"
+                      >
+                        <span
+                          class="bp3-popover-target"
+                        >
+                          <span
+                            class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-xsmall StyledProps--color StyledProps--color-grey800"
+                            tabindex="0"
+                          >
+                            dummy date
+                          </span>
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--padding-top-medium"
+                  >
+                    <div
+                      class="templateColor"
+                    >
+                      <div
+                        class="absolutePos"
+                      >
+                        <svg
+                          fill="none"
+                          height="18"
+                          viewBox="0 0 121 18"
+                          width="121"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10.6577 4.36758L0.989019 17.5H120.044L111.076 4.58226C109.301 2.02513 106.385 0.5 103.272 0.5H18.3079C15.288 0.5 12.4481 1.93575 10.6577 4.36758Z"
+                            fill="#EADEFF"
+                            stroke="#E1D0FF"
+                          />
+                        </svg>
+                      </div>
+                      <p
+                        class="StyledProps--font StyledProps--main text absolutePos"
+                        style="color: rgb(89, 43, 170);"
+                      >
+                        STEP
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="StyledProps--font StyledProps--main selectVersions StyledProps--padding-left-xxlarge StyledProps--padding-right-xxlarge"
+            >
+              <div
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+                style="height: 100%;"
+              >
+                <div
+                  class="bp3-input-group ui-search-box ExpandingSearchInput--main   ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+                  data-name=""
+                  style="width: 100%; max-width: 100%;"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+                    data-icon="thinner-search"
+                  >
+                    <svg
+                      fill="none"
+                      height="14"
+                      viewBox="0 0 16 16"
+                      width="14"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </span>
+                  <input
+                    class="bp3-input  ExpandingSearchInput--filter"
+                    dir="auto"
+                    placeholder="Search"
+                    style="padding-right: 38px;"
+                    type="search"
+                    value=""
+                  />
+                </div>
+                <div
+                  class="StyledProps--font StyledProps--main"
+                >
+                  <div
+                    class="Layout--vertical StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-stretch"
+                    style="height: 100%;"
+                  >
+                    <div
+                      class="StyledProps--font StyledProps--main"
+                      style="overflow: auto; height: 300px;"
+                    >
+                      <label
+                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox selected StyledProps--main"
+                      >
+                        <input
+                          type="checkbox"
+                        />
+                        <span
+                          class="bp3-control-indicator"
+                        />
+                        templatesLibrary.stableVersion
+                      </label>
+                    </div>
+                    <div
+                      class="StyledProps--font StyledProps--main"
+                    >
+                      <label
+                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+                      >
+                        <input
+                          checked=""
+                          type="checkbox"
+                        />
+                        <span
+                          class="bp3-control-indicator"
+                        />
+                        Select All
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--padding-top-medium StyledProps--padding-right-xxlarge StyledProps--padding-left-xxlarge StyledProps--border StyledProps--border-top StyledProps--border-color-grey100"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"
+          >
+            <div
+              class="StyledProps--font StyledProps--main"
+            >
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-end StyledProps--flex-justifyContent-flex-start"
+              >
+                <button
+                  class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
+                  type="submit"
+                >
+                  <span
+                    class="bp3-button-text"
+                  >
+                    Delete Selected
+                  </span>
+                </button>
+                <button
+                  class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
+                  type="button"
+                >
+                  <span
+                    class="bp3-button-text"
+                  >
+                    cancel
+                  </span>
+                </button>
+              </div>
+            </div>
+            <div
+              class="StyledProps--font StyledProps--main"
+            >
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600"
+                >
+                  common.totalSelected
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main badge StyledProps--background-primary7 StyledProps--color StyledProps--color-white"
+                >
+                  1
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+`;
+
+exports[`<DeleteTemplateModal /> tests should match snapshot when error occurs in useMutateAsGet 1`] = `
+<div>
+  <div
+    class="Layout--vertical StyledProps--main"
+  />
+</div>
+`;
+
+exports[`<DeleteTemplateModal /> tests should match snapshot when status is failure for deleteTemplates operation 1`] = `
+<div>
+  <div
+    class="Layout--vertical StyledProps--main"
+  >
+    <form
+      action="#"
+      class="FormikForm--main"
+    >
+      <div>
+        <div
+          class="StyledProps--font StyledProps--main"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main"
+          >
+            <div
+              class="Layout--horizontal StyledProps--main preview preview StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-center StyledProps--padding-top-huge StyledProps--padding-bottom-huge"
+            >
+              <div
+                class="StyledProps--font StyledProps--main container"
+              >
+                <div
+                  class="bp3-card bp3-elevation-0 Card--card templateCard"
+                >
+                  <div />
+                  <div
+                    class="StyledProps--font StyledProps--main StyledProps--margin-right-small"
+                  >
+                    <div
+                      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--margin-bottom-small StyledProps--flex"
+                    >
+                      <span
+                        class="bp3-icon StyledProps--main"
+                        data-icon="harness-with-color"
+                      >
+                        <svg
+                          height="24"
+                          viewBox="0 0 25 25"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M22.974 8.186L16.708 1.88a7.023 7.023 0 00-2.59-1.572C11.98-.409 9.858.154 8.135 1.88L1.868 8.186a7.081 7.081 0 00-1.562 2.606c-.713 2.153-.153 4.289 1.562 6.023l6.266 6.306a7.113 7.113 0 002.589 1.58 5.663 5.663 0 001.808.308c1.503 0 2.946-.64 4.177-1.88l6.266-6.305a7.08 7.08 0 001.562-2.606c.713-2.162.153-4.298-1.562-6.032zm-10.07-4.477c.706.213 1.232.7 1.274.735l1.851 1.862-3.608 3.631-3.608-3.63 1.859-1.872c.5-.496 1.197-1.034 2.233-.726zm-9.219 8.305c.212-.71.696-1.24.73-1.282l1.85-1.863 3.609 3.632-3.608 3.63-1.86-1.87c-.492-.504-1.027-1.214-.721-2.247zm8.252 9.279c-.705-.214-1.231-.701-1.273-.735l-1.851-1.863 3.608-3.631 3.608 3.631-1.86 1.871c-.5.496-1.205 1.034-2.232.726zm9.22-8.305c-.212.709-.696 1.239-.73 1.281l-1.851 1.863-3.608-3.631 3.608-3.632 1.86 1.872c.492.504 1.027 1.204.72 2.247z"
+                            fill="currentColor"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="StyledProps--font StyledProps--main"
+                  >
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                      data-testid="manjutesttemplate"
+                      style="--text-line-clamp: 1;"
+                    >
+                      manju-test-template-qq-12344
+                    </p>
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-small StyledProps--color StyledProps--color-grey400 StyledProps--margin-top-xsmall"
+                      style="--text-line-clamp: 1;"
+                    >
+                      idLabel
+                    </p>
+                  </div>
+                  <div
+                    class="StyledProps--font StyledProps--main container"
+                  >
+                    <div
+                      class="StyledProps--font StyledProps--main"
+                    >
+                      <div
+                        class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main tagsContainer"
+                      >
+                        <span
+                          class="Tag--main"
+                        >
+                          <span
+                            class="bp3-tag tag"
+                            style="max-width: 80px;"
+                          >
+                            <span
+                              class="bp3-text-overflow-ellipsis bp3-fill"
+                            >
+                              QAR
+                            </span>
+                          </span>
+                        </span>
+                        <span
+                          class="Tag--main"
+                        >
+                          <span
+                            class="bp3-tag tag"
+                            style="max-width: 80px;"
+                          >
+                            <span
+                              class="bp3-text-overflow-ellipsis bp3-fill"
+                            >
+                              Internal 1
+                            </span>
+                          </span>
+                        </span>
+                        <span
+                          class="Tag--main"
+                        >
+                          <span
+                            class="bp3-tag tag"
+                            style="max-width: 80px;"
+                          >
+                            <span
+                              class="bp3-text-overflow-ellipsis bp3-fill"
+                            >
+                              Canary 1
+                            </span>
+                          </span>
+                        </span>
+                        <span
+                          class="Tag--main"
+                        >
+                          <span
+                            class="bp3-tag tag"
+                            style="max-width: 80px;"
+                          >
+                            <span
+                              class="bp3-text-overflow-ellipsis bp3-fill"
+                            >
+                              BLUE
+                            </span>
+                          </span>
+                        </span>
+                        <span
+                          class="Tag--main"
+                        >
+                          <span
+                            class="bp3-tag tag"
+                            style="max-width: 80px;"
+                          >
+                            <span
+                              class="bp3-text-overflow-ellipsis bp3-fill"
+                            >
+                              Tag A
+                            </span>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="StyledProps--font StyledProps--main StyledProps--background-grey100"
+                    style="height: 1px;"
+                  />
+                  <div
+                    class="StyledProps--font StyledProps--main"
+                  >
+                    <span
+                      class="Tag--main"
+                    >
+                      <span
+                        class="bp3-tag version"
+                      >
+                        <span
+                          class="bp3-text-overflow-ellipsis bp3-fill"
+                        >
+                          v4
+                        </span>
+                      </span>
+                    </span>
+                  </div>
+                  <div
+                    class="StyledProps--font StyledProps--main"
+                  >
+                    <div
+                      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey800"
+                      >
+                        lastUpdated
+                      </p>
+                      <span
+                        class="bp3-popover-wrapper bp3-dark"
+                      >
+                        <span
+                          class="bp3-popover-target"
+                        >
+                          <span
+                            class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-xsmall StyledProps--color StyledProps--color-grey800"
+                            tabindex="0"
+                          >
+                            dummy date
+                          </span>
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--padding-top-medium"
+                  >
+                    <div
+                      class="templateColor"
+                    >
+                      <div
+                        class="absolutePos"
+                      >
+                        <svg
+                          fill="none"
+                          height="18"
+                          viewBox="0 0 121 18"
+                          width="121"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10.6577 4.36758L0.989019 17.5H120.044L111.076 4.58226C109.301 2.02513 106.385 0.5 103.272 0.5H18.3079C15.288 0.5 12.4481 1.93575 10.6577 4.36758Z"
+                            fill="#EADEFF"
+                            stroke="#E1D0FF"
+                          />
+                        </svg>
+                      </div>
+                      <p
+                        class="StyledProps--font StyledProps--main text absolutePos"
+                        style="color: rgb(89, 43, 170);"
+                      >
+                        STEP
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="StyledProps--font StyledProps--main selectVersions StyledProps--padding-left-xxlarge StyledProps--padding-right-xxlarge"
+            >
+              <div
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+                style="height: 100%;"
+              >
+                <div
+                  class="bp3-input-group ui-search-box ExpandingSearchInput--main   ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+                  data-name=""
+                  style="width: 100%; max-width: 100%;"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+                    data-icon="thinner-search"
+                  >
+                    <svg
+                      fill="none"
+                      height="14"
+                      viewBox="0 0 16 16"
+                      width="14"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </span>
+                  <input
+                    class="bp3-input  ExpandingSearchInput--filter"
+                    dir="auto"
+                    placeholder="Search"
+                    style="padding-right: 38px;"
+                    type="search"
+                    value=""
+                  />
+                </div>
+                <div
+                  class="StyledProps--font StyledProps--main"
+                >
+                  <div
+                    class="Layout--vertical StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-stretch"
+                    style="height: 100%;"
+                  >
+                    <div
+                      class="StyledProps--font StyledProps--main"
+                      style="overflow: auto; height: 300px;"
+                    >
+                      <label
+                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox selected StyledProps--main"
+                      >
+                        <input
+                          type="checkbox"
+                        />
+                        <span
+                          class="bp3-control-indicator"
+                        />
+                        templatesLibrary.stableVersion
+                      </label>
+                    </div>
+                    <div
+                      class="StyledProps--font StyledProps--main"
+                    >
+                      <label
+                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+                      >
+                        <input
+                          checked=""
+                          type="checkbox"
+                        />
+                        <span
+                          class="bp3-control-indicator"
+                        />
+                        Select All
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--padding-top-medium StyledProps--padding-right-xxlarge StyledProps--padding-left-xxlarge StyledProps--border StyledProps--border-top StyledProps--border-color-grey100"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"
+          >
+            <div
+              class="StyledProps--font StyledProps--main"
+            >
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-end StyledProps--flex-justifyContent-flex-start"
+              >
+                <button
+                  class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
+                  type="submit"
+                >
+                  <span
+                    class="bp3-button-text"
+                  >
+                    Delete Selected
+                  </span>
+                </button>
+                <button
+                  class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
+                  type="button"
+                >
+                  <span
+                    class="bp3-button-text"
+                  >
+                    cancel
+                  </span>
+                </button>
+              </div>
+            </div>
+            <div
+              class="StyledProps--font StyledProps--main"
+            >
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600"
+                >
+                  common.totalSelected
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main badge StyledProps--background-primary7 StyledProps--color StyledProps--color-white"
+                >
+                  1
                 </p>
               </div>
             </div>

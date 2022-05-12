@@ -16,6 +16,10 @@ export interface OrgPathProps extends AccountPathProps {
   orgIdentifier: string
 }
 
+export interface DashboardPathProps extends AccountPathProps {
+  folderId: string
+}
+
 export interface GitQueryParams {
   branch?: EntityGitDetails['branch']
   repoIdentifier?: EntityGitDetails['repoIdentifier']
@@ -61,6 +65,7 @@ export type TemplateType =
   | 'Infrastructure'
   | 'StepGroup'
   | 'Execution'
+  | 'MonitoredService'
   | ':templateType(Step)'
   | ':templateType(Stage)'
   | ':templateType(Pipeline)'
@@ -68,6 +73,7 @@ export type TemplateType =
   | ':templateType(Infrastructure)'
   | ':templateType(StepGroup)'
   | ':templateType(Execution)'
+  | ':templateType(MonitoredService)'
   | ':templateType'
 
 export interface TemplateStudioPathProps extends ProjectPathProps {
@@ -103,6 +109,10 @@ export interface VerificationPathProps {
 export interface SecretsPathProps {
   secretId: string
 }
+
+export interface VariablesPathProps {
+  variableId: string
+}
 export interface RolePathProps {
   roleIdentifier: string
 }
@@ -130,6 +140,18 @@ export interface TargetPathProps {
 
 export interface EnvironmentPathProps {
   environmentIdentifier: string
+}
+
+export interface EnvironmentQueryParams {
+  sectionId?: 'CONFIGURATION'
+}
+
+export interface EnvironmentGroupPathProps {
+  environmentGroupIdentifier: string
+}
+
+export interface EnvironmentGroupQueryParams {
+  sectionId?: 'CONFIGURATION' | 'ENVIRONMENTS'
 }
 
 export interface CVDataSourceTypePathProps {

@@ -27,24 +27,22 @@
   }
 }
 
-.loading,
-.noData,
-.error {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 170px;
-  padding-top: 25% !important;
-}
-
-.noData > div:first-child {
-  height: unset !important;
-  > div {
-    margin-top: 0 !important;
-  }
+.childContainer {
+  height: 500px;
+  overflow: auto;
 }
 
 .cardContainer {
-  height: 500px;
-  overflow-y: scroll;
+  width: 100%;
+  padding-bottom: 0 !important;
+}
+
+.tableContainer {
+  padding: 2px !important;
+  flex-grow: 1;
+  overflow: auto;
+}
+
+.noDataContainer {
+  height: 100% !important;
 }

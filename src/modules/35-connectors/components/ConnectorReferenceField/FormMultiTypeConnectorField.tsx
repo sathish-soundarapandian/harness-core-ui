@@ -18,7 +18,7 @@ import {
   FormikTooltipContext,
   useToaster
 } from '@wings-software/uicore'
-import { connect, FormikContext } from 'formik'
+import { connect, FormikContextType } from 'formik'
 import { Classes, FormGroup, Intent } from '@blueprintjs/core'
 import { get, isEmpty } from 'lodash-es'
 import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
@@ -64,7 +64,7 @@ export interface MultiTypeConnectorFieldConfigureOptionsProps
 }
 export interface MultiTypeConnectorFieldProps extends Omit<ConnectorReferenceFieldProps, 'onChange'> {
   onChange?: ExpressionAndRuntimeTypeProps['onChange']
-  formik?: FormikContext<any>
+  formik?: FormikContextType<any>
   multiTypeProps?: Omit<MultiTypeReferenceInputProps<ConnectorReferenceDTO>, 'name' | 'referenceSelectProps'>
   isNewConnectorLabelVisible?: boolean
   createNewLabel?: string
@@ -253,7 +253,11 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
         live: data?.status?.status === 'SUCCESS'
       }
       props.onChange?.(val, MultiTypeInputValue.SELECT_OPTION, MultiTypeInputType.FIXED)
-      formik?.setFieldValue(name, val)
+      if (setRefValue) {
+        formik?.setFieldValue(name, val.value)
+      } else {
+        formik?.setFieldValue(name, val)
+      }
       setSelectedValue(val)
       setInlineSelection({
         selected: true,

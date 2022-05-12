@@ -45,6 +45,7 @@ exports[`Inline var file testing click submit for inline var file 1`] = `
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -256,6 +257,7 @@ exports[`Inline var file testing edit view for inline vars 1`] = `
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -467,6 +469,7 @@ exports[`Inline var file testing initial render 1`] = `
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -676,6 +679,7 @@ exports[`Inline var file testing when content is runtime input 1`] = `
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>

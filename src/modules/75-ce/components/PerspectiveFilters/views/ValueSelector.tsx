@@ -7,7 +7,8 @@
 
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, Layout, Text, Icon } from '@wings-software/uicore'
+import { Container, Layout, Text, Icon, TextInput } from '@wings-software/uicore'
+import { Color } from '@wings-software/design-system'
 import { RadioGroup, Radio } from '@blueprintjs/core'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
@@ -50,6 +51,10 @@ const OperatorSelector: React.FC<OperatorSelectorProps> = ({ setOperator, operat
     {
       value: QlceViewFilterOperator.NotNull,
       label: getString('ce.perspectives.createPerspective.operatorLabels.opNotNull')
+    },
+    {
+      value: QlceViewFilterOperator.Like,
+      label: getString('ce.perspectives.createPerspective.operatorLabels.opLike')
     }
   ]
 
@@ -76,14 +81,14 @@ const OperatorSelector: React.FC<OperatorSelectorProps> = ({ setOperator, operat
             setOperator(value)
             if (
               [QlceViewFilterOperator.NotNull, QlceViewFilterOperator.Null].includes(value) &&
-              [QlceViewFilterOperator.In, QlceViewFilterOperator.NotIn].includes(operator)
+              [QlceViewFilterOperator.In, QlceViewFilterOperator.NotIn, QlceViewFilterOperator.Like].includes(operator)
             ) {
               setValues({ ' ': true })
             }
 
             if (
               [QlceViewFilterOperator.NotNull, QlceViewFilterOperator.Null].includes(operator) &&
-              [QlceViewFilterOperator.In, QlceViewFilterOperator.NotIn].includes(value)
+              [QlceViewFilterOperator.In, QlceViewFilterOperator.NotIn, QlceViewFilterOperator.Like].includes(value)
             ) {
               setValues({})
             }
@@ -160,6 +165,8 @@ const ValueSelector: React.FC<ValueSelectorProps> = ({
   setService,
   timeRange
 }) => {
+  const { getString } = useStrings()
+
   const [pageInfo, setPageInfo] = useState<{
     filtersValuesData: string[]
     loadMore: boolean
@@ -248,6 +255,18 @@ const ValueSelector: React.FC<ValueSelectorProps> = ({
                   }
                 }}
                 onInputChange={onInputChange}
+              />
+            </Container>
+          )}
+          {[QlceViewFilterOperator.Like].includes(operator) && (
+            <Container background={Color.BLUE_50} padding="medium">
+              <TextInput
+                placeholder={getString('ce.perspectives.createPerspective.filters.enterCondition')}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setValues(prevValues => ({
+                    [e.target.value]: !prevValues[e.target.value]
+                  }))
+                }
               />
             </Container>
           )}

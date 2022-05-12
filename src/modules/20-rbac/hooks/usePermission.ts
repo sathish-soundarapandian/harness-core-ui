@@ -14,7 +14,7 @@ import type { PermissionCheck, ResourceScope } from 'services/rbac'
 import type { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { ResourceType } from '@rbac/interfaces/ResourceType'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { isCDCommunity, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { isCommunityPlan } from '@common/utils/utils'
 
 export interface Resource {
   resourceType: ResourceType
@@ -48,8 +48,7 @@ export function usePermission(permissionsRequest?: PermissionsRequest, deps: Arr
   const { requestPermission, checkPermission, cancelRequest } = usePermissionsContext()
   const { accountId: accountIdentifier, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const defaultScope = { accountIdentifier, orgIdentifier, projectIdentifier }
-  const { licenseInformation } = useLicenseStore()
-  const isCommunity = isCDCommunity(licenseInformation)
+  const isCommunity = isCommunityPlan()
 
   useDeepCompareEffect(() => {
     // generate PermissionRequest for every action user requested

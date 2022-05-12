@@ -27,6 +27,7 @@ import {
   InputSetSummaryResponse,
   useGetInputSetsListForPipeline
 } from 'services/pipeline-ng'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useToaster } from '@common/exports'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
@@ -107,6 +108,7 @@ export function InputSetSelector({
   }, [repoIdentifier, branch, selectedRepo, selectedBranch, refetch])
 
   const { showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
 
   const onCheckBoxHandler = React.useCallback(
     (
@@ -138,7 +140,7 @@ export function InputSetSelector({
   )
 
   if (error) {
-    showError(error.message, undefined, 'pipeline.get.inputsetlist')
+    showError(getRBACErrorMessage(error), undefined, 'pipeline.get.inputsetlist')
   }
 
   const inputSets = inputSetResponse?.data?.content

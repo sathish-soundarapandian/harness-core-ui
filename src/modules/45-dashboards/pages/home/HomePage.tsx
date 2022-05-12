@@ -11,29 +11,26 @@ import cx from 'classnames'
 import {
   Layout,
   Text,
+  Button,
   Container,
   Card,
-  Button,
   CardBody,
+  Dialog,
   Heading,
   Icon,
-  Formik,
-  FormikForm as Form,
   ExpandingSearchInput,
   Pagination,
   SelectOption,
-  TableV2,
-  FormInput
-} from '@wings-software/uicore'
+  TableV2
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import type { Breadcrumb } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { Select } from '@blueprintjs/select'
 
-import { Classes, Menu, Dialog } from '@blueprintjs/core'
-import * as Yup from 'yup'
-import { useParams, useHistory } from 'react-router-dom'
-import { useGet, useMutate } from 'restful-react'
+import { Classes, Menu } from '@blueprintjs/core'
+import { Link, useParams, useHistory } from 'react-router-dom'
+import { useGet } from 'restful-react'
 import type { CellProps, Renderer, Column } from 'react-table'
 
 import { Page } from '@common/exports'
@@ -47,9 +44,11 @@ import routes from '@common/RouteDefinitions'
 
 import { useStrings } from 'framework/strings'
 
-import { useDeleteDashboard, useCloneDashboard } from '@dashboards/services/CustomDashboardsService'
+import { useCloneDashboard, useDeleteDashboard } from '@dashboards/services/CustomDashboardsService'
 import { useDashboardsContext } from '../DashboardsContext'
 import FilterTagsSideBar from './FilterTagsSideBar'
+import CreateDashboardForm from './CreateDashboardForm'
+import UpdateDashboardForm from './UpdateDashboardForm'
 import moduleTagCss from '@dashboards/common/ModuleTags.module.scss'
 import css from './HomePage.module.scss'
 
@@ -60,12 +59,12 @@ enum LayoutViews {
   GRID
 }
 
-const dashboardType: { [key: string]: string } = {
-  SHARED: 'SHARED',
-  ACCOUNT: 'ACCOUNT'
+export enum DashboardType {
+  SHARED = 'SHARED',
+  ACCOUNT = 'ACCOUNT'
 }
 
-interface DashboardInterface {
+export interface DashboardInterface {
   id: string
   type: string
   description: string
@@ -99,135 +98,11 @@ type CustomColumn<T extends Record<string, any>> = Column<T>
 
 const CustomSelect = Select.ofType<SelectOption>()
 
-const NewDashboardForm = (props: any): JSX.Element => {
-  const { getString } = useStrings()
-  const { accountId, folderId } = useParams<{ accountId: string; folderId: string }>()
-
-  const [errorMessage, setErrorMessage] = React.useState('')
-  const history = useHistory()
-  const folderListItems = [
-    {
-      value: 'shared',
-      label: 'Organization Shared Folder'
-    }
-  ]
-
-  const { data: foldersList } = useGet({
-    // Inferred from RestfulProvider in index.js
-    path: 'gateway/dashboard/folder',
-    queryParams: { accountId: accountId, page: 1, pageSize: 1000 }
-  })
-
-  const { mutate: createDashboard, loading } = useMutate({
-    verb: 'POST',
-    path: folderId ? 'gateway/dashboard/v2/create' : 'gateway/dashboard/create',
-    queryParams: { accountId: accountId }
-  })
-
-  if (foldersList && foldersList?.resource) {
-    foldersList?.resource?.map((folder: { id: string; name: string }) => {
-      const _f = {
-        value: folder?.id,
-        label: folder?.name
-      }
-      folderListItems.push(_f)
-    })
-  }
-
-  const submitForm = async (formData: { name: string; description: string; folderId: string }) => {
-    const description = Object.keys(formData?.description).toString()
-    const cloneFormData = formData
-    cloneFormData['description'] = description
-    const response = await createDashboard(cloneFormData)
-    return response
-  }
-
-  return (
-    <Layout.Horizontal>
-      <Layout.Vertical padding="xxlarge" width="50%">
-        <Heading level={3} font={{ variation: FontVariation.H3 }} padding={{ bottom: 'large' }}>
-          {getString('dashboards.createModal.stepOne')}
-        </Heading>
-        <Formik
-          formName={'createDashboardForm'}
-          initialValues={{ name: '', description: '', folderId: folderId }}
-          validationSchema={Yup.object().shape({
-            name: Yup.string().trim().required(getString('dashboards.createModal.nameValidation'))
-          })}
-          onSubmit={(formData: { name: string; description: string; folderId: string }) => {
-            setErrorMessage('')
-            const response = submitForm(formData)
-            response
-              .then(data => {
-                if (data?.resource) {
-                  history.push({
-                    pathname: routes.toViewCustomDashboard({
-                      viewId: data?.resource,
-                      accountId: accountId,
-                      folderId
-                    })
-                  })
-                  props?.hideModal?.()
-                }
-              })
-              .catch(() => {
-                setErrorMessage(getString('dashboards.createModal.submitFail'))
-              })
-          }}
-        >
-          {() => (
-            <Form>
-              <Layout.Vertical width="100%">
-                <FormInput.Select
-                  name="folderId"
-                  placeholder={getString('dashboards.homePage.chooseTheFolder')}
-                  label={getString('dashboards.homePage.folder')}
-                  items={folderListItems}
-                />
-                <FormInput.Text
-                  name="name"
-                  label={getString('name')}
-                  placeholder={getString('dashboards.createModal.namePlaceholder')}
-                />
-
-                <FormInput.KVTagInput name="description" label={getString('tagsLabel')} />
-                <Layout.Vertical spacing="medium">
-                  <Button
-                    type="submit"
-                    intent="primary"
-                    width="150px"
-                    text={getString('continue')}
-                    disabled={loading}
-                    className={css.button}
-                  />
-                  {errorMessage && <Text intent="danger">{errorMessage}</Text>}
-                </Layout.Vertical>
-              </Layout.Vertical>
-            </Form>
-          )}
-        </Formik>
-      </Layout.Vertical>
-      <Container width="50%" flex={{ align: 'center-center' }} className={css.videoContainer}>
-        <iframe
-          src="//fast.wistia.net/embed/iframe/38m8yricif"
-          scrolling="no"
-          frameBorder={0}
-          allowFullScreen={true}
-          className="wistia_embed"
-          name="wistia_embed"
-          width="350"
-          height="200"
-        ></iframe>
-      </Container>
-    </Layout.Horizontal>
-  )
-}
-
 const TagsRenderer = (data: DashboardInterface) => {
   const { getString } = useStrings()
   return (
     <Container className={css.predefinedTags}>
-      {data.type === dashboardType.SHARED && (
+      {data.type === DashboardType.SHARED && (
         <section className={moduleTagCss.harnessTag}>{getString('dashboards.modules.harness')}</section>
       )}
       {data.data_source.map((tag: string) => {
@@ -249,7 +124,7 @@ const TagsRenderer = (data: DashboardInterface) => {
         return <></>
       })}
       {data?.description &&
-        data.type === dashboardType.ACCOUNT &&
+        data.type === DashboardType.ACCOUNT &&
         data?.description.split(',').map((tag: string, index: number) => {
           return (
             <section className={css.customTag} key={tag + index}>
@@ -264,23 +139,18 @@ const TagsRenderer = (data: DashboardInterface) => {
 const RenderDashboardName: Renderer<CellProps<DashboardInterface>> = ({ row }) => {
   const data = row.original
   const { accountId, folderId } = useParams<{ accountId: string; folderId: string }>()
-  const history = useHistory()
   return (
-    <Text
-      color={Color.BLACK}
-      lineClamp={1}
-      onClick={() => {
-        history.push({
-          pathname: routes.toViewCustomDashboard({
-            viewId: row.id,
-            accountId: accountId,
-            folderId: folderId === 'shared' ? 'shared' : data.resourceIdentifier
-          })
-        })
-      }}
+    <Link
+      to={routes.toViewCustomDashboard({
+        viewId: data.id,
+        accountId: accountId,
+        folderId: folderId === 'shared' ? 'shared' : data.resourceIdentifier
+      })}
     >
-      {data.title}
-    </Text>
+      <Text color={Color.PRIMARY_7} font={{ variation: FontVariation.CARD_TITLE }}>
+        {data.title}
+      </Text>
+    </Link>
   )
 }
 
@@ -314,20 +184,17 @@ export interface DashboardCardInterface {
   dashboard: DashboardInterface
   clone: (dashboardId: string) => Promise<void>
   deleteById: (dashboardId: string) => Promise<void>
+  editDashboard: (dashboard: DashboardInterface) => void
 }
 
-const DashboardCard: React.FC<DashboardCardInterface> = ({ dashboard, clone, deleteById }) => {
+const DashboardCard: React.FC<DashboardCardInterface> = ({ dashboard, clone, deleteById, editDashboard }) => {
   const { getString } = useStrings()
   const { accountId, folderId } = useParams<{ accountId: string; folderId: string }>()
-  const history = useHistory()
   const [menuOpen, setMenuOpen] = useState(false)
 
-  const onCardClick = (): void => {
-    history.push({ pathname: cardPath })
-  }
-
-  const onCardLinkClick = (event: React.MouseEvent<HTMLAnchorElement>): void => {
-    event.preventDefault()
+  const onCardMenuInteraction = (nextOpenState: boolean, e?: React.SyntheticEvent<HTMLElement>): void => {
+    e?.preventDefault()
+    setMenuOpen(nextOpenState)
   }
 
   const onCloneClick = (event: React.MouseEvent<HTMLElement>): void => {
@@ -342,6 +209,12 @@ const DashboardCard: React.FC<DashboardCardInterface> = ({ dashboard, clone, del
     deleteById(dashboard.id)
   }
 
+  const onEditClick = (event: React.MouseEvent<HTMLElement>): void => {
+    event.stopPropagation()
+    setMenuOpen(false)
+    editDashboard(dashboard)
+  }
+
   const cardPath = routes.toViewCustomDashboard({
     viewId: dashboard.id,
     accountId: accountId,
@@ -349,13 +222,27 @@ const DashboardCard: React.FC<DashboardCardInterface> = ({ dashboard, clone, del
   })
 
   return (
-    <a onClick={onCardLinkClick} href={cardPath}>
-      <Card interactive className={cx(css.dashboardCard)} onClick={onCardClick}>
+    <Link to={cardPath}>
+      <Card interactive className={cx(css.dashboardCard)}>
         <Container>
           <CardBody.Menu
             menuContent={
               <Menu>
+                {dashboard?.type === DashboardType.ACCOUNT && (
+                  <RbacMenuItem
+                    icon="edit"
+                    text={getString('edit')}
+                    onClick={onEditClick}
+                    permission={{
+                      permission: PermissionIdentifier.EDIT_DASHBOARD,
+                      resource: {
+                        resourceType: ResourceType.DASHBOARDS
+                      }
+                    }}
+                  />
+                )}
                 <RbacMenuItem
+                  icon="duplicate"
                   text={getString('projectCard.clone')}
                   onClick={onCloneClick}
                   permission={{
@@ -365,34 +252,35 @@ const DashboardCard: React.FC<DashboardCardInterface> = ({ dashboard, clone, del
                     }
                   }}
                 />
-                {dashboard?.type === dashboardType.ACCOUNT && (
-                  <RbacMenuItem
-                    text={getString('delete')}
-                    onClick={onDeleteClick}
-                    permission={{
-                      permission: PermissionIdentifier.EDIT_DASHBOARD,
-                      resource: {
-                        resourceType: ResourceType.DASHBOARDS
-                      }
-                    }}
-                  />
+                {dashboard?.type === DashboardType.ACCOUNT && (
+                  <>
+                    <Menu.Divider />
+                    <RbacMenuItem
+                      icon="trash"
+                      text={getString('delete')}
+                      onClick={onDeleteClick}
+                      permission={{
+                        permission: PermissionIdentifier.EDIT_DASHBOARD,
+                        resource: {
+                          resourceType: ResourceType.DASHBOARDS
+                        }
+                      }}
+                    />
+                  </>
                 )}
               </Menu>
             }
             menuPopoverProps={{
               className: Classes.DARK,
               isOpen: menuOpen,
-              onInteraction: nextOpenState => {
-                setMenuOpen(nextOpenState)
-              }
+              onInteraction: onCardMenuInteraction
             }}
           />
-
           <Layout.Vertical spacing="large">
             <Text font={{ variation: FontVariation.CARD_TITLE }}>{dashboard?.title}</Text>
             {TagsRenderer(dashboard)}
 
-            {dashboard?.type !== dashboardType.SHARED && (
+            {dashboard?.type !== DashboardType.SHARED && (
               <Layout.Horizontal spacing="small">
                 <Text
                   icon="eye-open"
@@ -413,7 +301,7 @@ const DashboardCard: React.FC<DashboardCardInterface> = ({ dashboard, clone, del
           </Layout.Vertical>
         </Container>
       </Card>
-    </a>
+    </Link>
   )
 }
 
@@ -466,7 +354,21 @@ const HomePage: React.FC = () => {
       <CardBody.Menu
         menuContent={
           <Menu>
+            {data?.type === DashboardType.ACCOUNT && (
+              <RbacMenuItem
+                icon="edit"
+                text={getString('edit')}
+                onClick={() => editDashboard(data)}
+                permission={{
+                  permission: PermissionIdentifier.EDIT_DASHBOARD,
+                  resource: {
+                    resourceType: ResourceType.DASHBOARDS
+                  }
+                }}
+              />
+            )}
             <RbacMenuItem
+              icon="duplicate"
               text={getString('projectCard.clone')}
               onClick={() => clone(data.id)}
               permission={{
@@ -476,16 +378,22 @@ const HomePage: React.FC = () => {
                 }
               }}
             />
-            <RbacMenuItem
-              text={getString('delete')}
-              onClick={() => deleteById(data.id)}
-              permission={{
-                permission: PermissionIdentifier.EDIT_DASHBOARD,
-                resource: {
-                  resourceType: ResourceType.DASHBOARDS
-                }
-              }}
-            />
+            {data?.type === DashboardType.ACCOUNT && (
+              <>
+                <Menu.Divider />
+                <RbacMenuItem
+                  icon="trash"
+                  text={getString('delete')}
+                  onClick={() => deleteById(data.id)}
+                  permission={{
+                    permission: PermissionIdentifier.EDIT_DASHBOARD,
+                    resource: {
+                      resourceType: ResourceType.DASHBOARDS
+                    }
+                  }}
+                />
+              </>
+            )}
           </Menu>
         }
         menuPopoverProps={{
@@ -586,7 +494,7 @@ const HomePage: React.FC = () => {
 
   const { mutate: deleteDashboard, loading: deleting } = useDeleteDashboard(accountId)
 
-  const deleteById = async (dashboardId: string) => {
+  const deleteById = async (dashboardId: string): Promise<void> => {
     await deleteDashboard({ dashboardId })
     refetch()
   }
@@ -610,32 +518,26 @@ const HomePage: React.FC = () => {
     setFilteredList(dashboardList?.resource)
   }, [dashboardList])
 
+  const [selectedDashboard, setSelectedDashboard] = useState<DashboardInterface>()
+
+  const [showEditModal, hideEditModal] = useModalHook(
+    () => (
+      <Dialog isOpen={true} enforceFocus={false} onClose={hideEditModal} className={cx(css.dashboardDialog)}>
+        <UpdateDashboardForm formData={selectedDashboard} hideModal={hideEditModal} reloadDashboards={refetch} />
+      </Dialog>
+    ),
+    [selectedDashboard]
+  )
+
+  const editDashboard = (dashboard: DashboardInterface): void => {
+    setSelectedDashboard(dashboard)
+    showEditModal()
+  }
+
   const [showModal, hideModal] = useModalHook(
     () => (
-      <Dialog
-        isOpen={true}
-        enforceFocus={false}
-        onClose={() => {
-          hideModal()
-        }}
-        className={cx(css.dashboardDialog, Classes.DIALOG, css.create)}
-      >
-        <NewDashboardForm
-          formData={{}}
-          handleViewChange={{}}
-          hideModal={hideModal}
-          name={getString('dashboards.createModal.stepOne')}
-        />
-
-        <Button
-          minimal
-          icon="cross"
-          iconProps={{ size: 18 }}
-          onClick={() => {
-            hideModal()
-          }}
-          className={css.crossIcon}
-        />
+      <Dialog isOpen={true} enforceFocus={false} onClose={hideModal} className={cx(css.dashboardDialog, css.create)}>
+        <CreateDashboardForm hideModal={hideModal} />
       </Dialog>
     ),
     []
@@ -670,7 +572,7 @@ const HomePage: React.FC = () => {
           <RbacButton
             intent="primary"
             text={getString('dashboardLabel')}
-            onClick={() => showModal()}
+            onClick={showModal}
             icon="plus"
             className={css.createButton}
             permission={permissionObj}
@@ -771,7 +673,12 @@ const HomePage: React.FC = () => {
               gutter={25}
               items={filteredDashboardList}
               renderItem={(dashboard: DashboardInterface) => (
-                <DashboardCard dashboard={dashboard} clone={clone} deleteById={deleteById} />
+                <DashboardCard
+                  dashboard={dashboard}
+                  clone={clone}
+                  deleteById={deleteById}
+                  editDashboard={editDashboard}
+                />
               )}
               keyOf={dashboard => dashboard?.id}
             />

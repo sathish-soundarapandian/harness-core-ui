@@ -64,7 +64,7 @@ const SignupPage: React.FC = () => {
     try {
       const userInfoResponse = await getUserInfo(dataToSubmit)
       const accountId = userInfoResponse.resource?.defaultAccountId || ''
-      await setToken(userInfoResponse)
+      await setToken(userInfoResponse as RestResponseUserInfo)
       if (module) {
         history.push({ pathname: routes.toModuleHome({ module, accountId }), search: '?source=signup' })
       } else {

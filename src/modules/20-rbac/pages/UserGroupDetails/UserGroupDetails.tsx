@@ -29,15 +29,14 @@ import MemberList from '@rbac/pages/UserGroupDetails/views/MemberList'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
 import NotificationList from '@rbac/components/NotificationList/NotificationList'
-import { useLicenseStore, isCDCommunity } from 'framework/LicenseStore/LicenseStoreContext'
+import { isCommunityPlan } from '@common/utils/utils'
 import css from './UserGroupDetails.module.scss'
 
 const UserGroupDetails: React.FC = () => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, module, userGroupIdentifier } =
     useParams<PipelineType<ProjectPathProps & { userGroupIdentifier: string }>>()
-  const { licenseInformation } = useLicenseStore()
-  const isCommunity = isCDCommunity(licenseInformation)
+  const isCommunity = isCommunityPlan()
 
   const { data, loading, error, refetch } = useGetUserGroupAggregate({
     identifier: userGroupIdentifier,

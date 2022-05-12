@@ -167,8 +167,7 @@ export const serviceListResponse: ResponsePageServiceResponse | null = {
           name: 'dfg',
           orgIdentifier: 'default',
           projectIdentifier: 'Jira',
-          tags: {},
-          version: 1
+          tags: {}
         }
       }
     ],
@@ -196,8 +195,7 @@ export const serviceListResponseWithoutIdentifier: ResponsePageServiceResponse |
           name: 'dfg',
           orgIdentifier: 'default',
           projectIdentifier: 'Jira',
-          tags: {},
-          version: 1
+          tags: {}
         }
       }
     ],

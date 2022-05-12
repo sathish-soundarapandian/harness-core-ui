@@ -65,11 +65,11 @@ module.exports = {
     pathRewrite: { '^/lw/api': '' }
   },
   '/dashboard': {
-    target: targetLocalHost ? 'http://localhost:5000' : baseUrl
+    target: process.env.CUSTOM_DASHBOARDS_API_URL || baseUrl
   },
   '/gateway/dashboard': {
     pathRewrite: { '^/gateway/dashboard': '/dashboard' },
-    target: targetLocalHost ? 'http://localhost:5000' : baseUrl
+    target: process.env.CUSTOM_DASHBOARDS_API_URL || baseUrl
   },
   '/ng-dashboard/api': {
     target: targetLocalHost ? 'http://localhost:7100' : `${baseUrl}/ng-dashboard/api`,

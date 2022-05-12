@@ -4,7 +4,7 @@ import {
   pipelinesExecutionDelegateRoute
 } from '../../support/70-pipeline/constants'
 
-describe('Delegate Selection on Execution View', () => {
+describe.skip('Delegate Selection on Execution View', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -25,7 +25,8 @@ describe('Delegate Selection on Execution View', () => {
 
   it('Able to click Delegate list for both task', () => {
     cy.wait(2000)
-    cy.get('span[data-icon="rolling"]').click({ force: true })
+    cy.wait('@selectedExecution', { timeout: 10000 })
+    cy.get('span[data-icon="rolling"]').should('be.visible').click({ force: true })
     cy.wait(1000)
     cy.findByText('Delegate').next().get('div>div').eq(2).each
     cy.get('p:contains("Delegate selection logs")')
