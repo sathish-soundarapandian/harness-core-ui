@@ -46,11 +46,20 @@ interface RecommendationFiltersProps {
   setFilters: (newValue: K8sRecommendationFilterPropertiesDTO) => void
   filters: K8sRecommendationFilterPropertiesDTO
   filterList: ResponseListFilterStatsDTO
+  costFilters: { minCost: number; minSaving: number }
+  setCostFilters: (newValue: { minCost: number; minSaving: number }) => void
 }
 
 type ExtendedFilterProperties = FilterProperties & CCMRecommendationFilterProperties
 
-const RecommendationFilters: React.FC<RecommendationFiltersProps> = ({ fetching, filters, filterList, setFilters }) => {
+const RecommendationFilters: React.FC<RecommendationFiltersProps> = ({
+  fetching,
+  filters,
+  filterList,
+  setFilters,
+  costFilters,
+  setCostFilters
+}) => {
   const { getString } = useStrings()
   const { accountId } = useParams<{ accountId: string }>()
 
@@ -100,12 +109,10 @@ const RecommendationFilters: React.FC<RecommendationFiltersProps> = ({ fetching,
   const keyToLabelMapping = getLabelMappingForFilters(getString)
 
   const [updatedFilters, setUpdatedFilters] = useState<K8sRecommendationFilterPropertiesDTO>(filters)
-
+  const [updatedCostFilters, setUpdatedCostFilters] = useState<{ minCost: number; minSaving: number }>(costFilters)
   const [filterName, setFilterName] = useState('')
   const [filterVisibility, setFilterVisibility] = useState<'EveryOne' | 'OnlyCreator'>('EveryOne')
-
   const [selectedFilter, setSelectedFilter] = useState<FilterDTO>()
-
   const [filterFlow, setFilterFlow] = useState<'create' | 'edit' | null>()
 
   const [openFilterDrawer, hideFilterDrawer] = useModalHook(() => {
@@ -129,9 +136,9 @@ const RecommendationFilters: React.FC<RecommendationFiltersProps> = ({ fetching,
                     const filteredValues = values.filter(value => value)
                     const multiSelectValues = filteredValues?.map(val => ({ label: val, value: val }))
 
-                    const selectedKey = Object.keys(updatedFilters).filter(item => item === `${key}s`)
+                    const selectedKey = Object.keys(updatedFilters).find(item => item === `${key}s`)
                     const selectedOptions = updatedFilters[
-                      selectedKey[0] as keyof K8sRecommendationFilterPropertiesDTO
+                      selectedKey as keyof K8sRecommendationFilterPropertiesDTO
                     ]?.map((item: string) => ({ label: item, value: item }))
 
                     return (
@@ -161,14 +168,47 @@ const RecommendationFilters: React.FC<RecommendationFiltersProps> = ({ fetching,
                     )
                   }
                 })}
+                <Text
+                  padding={{ bottom: 'small' }}
+                  color={Color.GREY_700}
+                  font={{ variation: FontVariation.SMALL_SEMI }}
+                >
+                  {getString('ce.recommendation.listPage.filters.minCost')}
+                </Text>
+                <TextInput
+                  value={String(updatedCostFilters.minCost)}
+                  onChange={e =>
+                    setUpdatedCostFilters(prevValues => ({
+                      ...prevValues,
+                      minCost: Number((e.target as HTMLInputElement).value)
+                    }))
+                  }
+                />
+                <Text
+                  padding={{ bottom: 'small' }}
+                  color={Color.GREY_700}
+                  font={{ variation: FontVariation.SMALL_SEMI }}
+                >
+                  {getString('ce.recommendation.listPage.filters.minSaving')}
+                </Text>
+                <TextInput
+                  value={String(updatedCostFilters.minSaving)}
+                  onChange={e =>
+                    setUpdatedCostFilters(prevValues => ({
+                      ...prevValues,
+                      minSaving: Number((e.target as HTMLInputElement).value)
+                    }))
+                  }
+                />
               </Container>
               <Container>
                 <Button
                   text={getString('common.apply')}
                   variation={ButtonVariation.PRIMARY}
-                  disabled={isEqual(filters, updatedFilters)}
+                  disabled={isEqual(filters, updatedFilters) && isEqual(costFilters, updatedCostFilters)}
                   onClick={() => {
                     setFilters(updatedFilters)
+                    setCostFilters(updatedCostFilters)
                   }}
                 />
                 <Button
@@ -178,12 +218,15 @@ const RecommendationFilters: React.FC<RecommendationFiltersProps> = ({ fetching,
                   onClick={() => {
                     setFilters({})
                     setUpdatedFilters({})
+                    const costFltrs = { minCost: 0, minSaving: 0 }
+                    setCostFilters(costFltrs)
+                    setUpdatedCostFilters(costFltrs)
                     setSelectedFilter(undefined)
+                    setFilterFlow(null)
                   }}
                 />
               </Container>
             </Layout.Vertical>
-
             <Layout.Vertical width={234} background={Color.PRIMARY_9} className={css.saveFilterContainer}>
               <Container padding={'xlarge'}>
                 <Icon name="ng-filter" size={22} color={Color.WHITE} />
@@ -198,9 +241,10 @@ const RecommendationFilters: React.FC<RecommendationFiltersProps> = ({ fetching,
               ) : (
                 <>
                   <Container
-                    className={css.newFilterBtn}
+                    className={cx(css.newFilterBtn, { [css.selected]: !selectedFilter })}
                     onClick={() => {
                       setFilterFlow('create')
+                      setUpdatedFilters({})
                       setSelectedFilter(undefined)
                     }}
                   >
@@ -236,6 +280,12 @@ const RecommendationFilters: React.FC<RecommendationFiltersProps> = ({ fetching,
                                   (item.filterProperties as ExtendedFilterProperties)
                                     .k8sRecommendationFilterPropertiesDTO || {}
                                 )
+
+                                setUpdatedCostFilters({
+                                  minCost: (item.filterProperties as ExtendedFilterProperties).minCost || 0,
+                                  minSaving: (item.filterProperties as ExtendedFilterProperties).minSaving || 0
+                                })
+                                setFilterFlow(null)
                               }}
                             >
                               {item.name}
@@ -243,6 +293,7 @@ const RecommendationFilters: React.FC<RecommendationFiltersProps> = ({ fetching,
                           </Layout.Horizontal>
                           <Popover
                             position="left"
+                            interactionKind={'hover'}
                             content={
                               <Container>
                                 <Text
@@ -257,6 +308,10 @@ const RecommendationFilters: React.FC<RecommendationFiltersProps> = ({ fetching,
                                       (item.filterProperties as ExtendedFilterProperties)
                                         .k8sRecommendationFilterPropertiesDTO || {}
                                     )
+                                    setUpdatedCostFilters({
+                                      minCost: (item.filterProperties as ExtendedFilterProperties).minCost || 0,
+                                      minSaving: (item.filterProperties as ExtendedFilterProperties).minSaving || 0
+                                    })
                                   }}
                                 >
                                   {getString('edit')}
@@ -315,7 +370,7 @@ const RecommendationFilters: React.FC<RecommendationFiltersProps> = ({ fetching,
                         />
                       </Layout.Vertical>
                       <Button
-                        text={getString('save')}
+                        text={getString(filterFlow === 'create' ? 'save' : 'update')}
                         variation={ButtonVariation.SECONDARY}
                         onClick={async () => {
                           if (filterName) {
@@ -324,19 +379,19 @@ const RecommendationFilters: React.FC<RecommendationFiltersProps> = ({ fetching,
                               filterVisibility,
                               filterProperties: {
                                 filterType: 'CCMRecommendation',
-                                k8sRecommendationFilterPropertiesDTO: updatedFilters
+                                k8sRecommendationFilterPropertiesDTO: updatedFilters,
+                                ...updatedCostFilters
                               } as FilterProperties
                             }
 
                             if (filterFlow === 'create') {
                               await createFilter({ ...payload, identifier: getIdentifierFromName(filterName) })
-                            } else if (filterFlow === 'edit') {
-                              if (selectedFilter?.identifier) {
-                                await updateFilter({ ...payload, identifier: selectedFilter?.identifier })
-                              }
+                            } else if (filterFlow === 'edit' && selectedFilter?.identifier) {
+                              await updateFilter({ ...payload, identifier: selectedFilter?.identifier })
                             }
                           }
 
+                          setFilterFlow(null)
                           refetchSavedFilters()
                         }}
                       />
@@ -365,11 +420,14 @@ const RecommendationFilters: React.FC<RecommendationFiltersProps> = ({ fetching,
     filterList,
     updatedFilters,
     filters,
+    updatedCostFilters,
+    costFilters,
     savedFilters,
     filterName,
     filterVisibility,
     selectedFilter,
     filterFlow,
+    costFilters,
     savedFiltersLoading
   ])
 

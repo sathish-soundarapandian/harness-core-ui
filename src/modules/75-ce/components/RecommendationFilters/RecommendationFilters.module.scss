@@ -32,9 +32,13 @@
       height: 100%;
 
       .newFilterBtn {
-        background-color: rgba(26, 26, 26, 0.4);
         padding: var(--spacing-medium) var(--spacing-xlarge);
         cursor: pointer;
+
+        &:hover,
+        &.selected {
+          background-color: rgba(26, 26, 26, 0.4);
+        }
       }
 
       .radioBtnLabel {

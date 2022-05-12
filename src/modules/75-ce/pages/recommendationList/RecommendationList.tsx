@@ -29,7 +29,7 @@ import routes from '@common/RouteDefinitions'
 import { Page, useToaster } from '@common/exports'
 import { useQueryParams } from '@common/hooks'
 import formatCost from '@ce/utils/formatCost'
-import { GROUP_BY_CLUSTER_NAME } from '@ce/utils/perspectiveUtils'
+import { getViewFilterForId, GROUP_BY_CLUSTER_NAME } from '@ce/utils/perspectiveUtils'
 import EmptyView from '@ce/images/empty-state.svg'
 import OverviewAddCluster from '@ce/components/OverviewPage/OverviewAddCluster'
 import { PAGE_NAMES, USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
@@ -38,6 +38,7 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { CCM_PAGE_TYPE, CloudProvider } from '@ce/types'
 import { calculateSavingsPercentage, getProviderIcon } from '@ce/utils/recommendationUtils'
 import { generateFilters } from '@ce/utils/anomaliesUtils'
+import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import {
   K8sRecommendationFilterPropertiesDTO,
   ResponseInteger,
@@ -363,7 +364,7 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
 }
 
 const RecommendationList: React.FC = () => {
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useQueryParamsState('page', 0)
 
   const { showError } = useToaster()
 
@@ -374,20 +375,26 @@ const RecommendationList: React.FC = () => {
   const {
     perspectiveId,
     perspectiveName,
-    filters: filterQuery = {},
-    origin
+    origin,
+    filters: filterQuery = {}
   } = useQueryParams<{
     perspectiveId: string
     perspectiveName: string
-    filters: K8sRecommendationFilterPropertiesDTO
     origin: string
+    filters: Record<string, any>
   }>()
 
-  const [filters, setFilters] = useState<K8sRecommendationFilterPropertiesDTO>(filterQuery)
+  const [filters, setFilters] = useQueryParamsState<K8sRecommendationFilterPropertiesDTO>('filters', {})
   const [filterList, setFilterList] = useState<ResponseListFilterStatsDTO>()
   const [recommendationStats, setRecommendationStats] = useState<ResponseRecommendationOverviewStats>()
   const [recommendationCount, setRecommendationCount] = useState<ResponseInteger>()
   const [recommendationList, setRecommendationList] = useState<ResponseRecommendationsDTO>()
+  const [costFilters, setCostFilters] = useQueryParamsState<{ minCost: number; minSaving: number }>('costFilters', {
+    minCost: 0,
+    minSaving: 0
+  })
+
+  const perspectiveFilters = perspectiveId ? [getViewFilterForId(perspectiveId)] : []
 
   useEffect(() => {
     trackPage(PAGE_NAMES.RECOMMENDATIONS_PAGE, {})
@@ -472,8 +479,18 @@ const RecommendationList: React.FC = () => {
   const getRecommendationData = async () => {
     try {
       const [stats, count] = await Promise.all([
-        fetchRecommendationStats({ filterType: 'CCMRecommendation', k8sRecommendationFilterPropertiesDTO: filters }),
-        fetchRecommendationCount({ filterType: 'CCMRecommendation', k8sRecommendationFilterPropertiesDTO: filters })
+        fetchRecommendationStats({
+          filterType: 'CCMRecommendation',
+          k8sRecommendationFilterPropertiesDTO: filters,
+          ...costFilters,
+          ...perspectiveFilters
+        }),
+        fetchRecommendationCount({
+          filterType: 'CCMRecommendation',
+          k8sRecommendationFilterPropertiesDTO: filters,
+          ...costFilters,
+          ...perspectiveFilters
+        })
       ])
 
       setRecommendationStats(stats)
@@ -487,6 +504,8 @@ const RecommendationList: React.FC = () => {
     const list = await fetchRecommendationList({
       filterType: 'CCMRecommendation',
       k8sRecommendationFilterPropertiesDTO: filters,
+      ...costFilters,
+      ...perspectiveFilters,
       offset: page * 10,
       limit: 10
     })
@@ -502,11 +521,11 @@ const RecommendationList: React.FC = () => {
 
   useEffect(() => {
     getRecommendationData()
-  }, [JSON.stringify(filters)])
+  }, [JSON.stringify(filters), JSON.stringify(costFilters)])
 
   useEffect(() => {
     getRecommendationList()
-  }, [JSON.stringify(filters), page])
+  }, [JSON.stringify(filters), JSON.stringify(costFilters), page])
 
   const isPageLoading = listLoading || countLoading || statsLoading
 
@@ -544,6 +563,8 @@ const RecommendationList: React.FC = () => {
               setFilters={setFilters}
               filters={filters}
               filterList={(filterList || []) as ResponseListFilterStatsDTO}
+              costFilters={costFilters}
+              setCostFilters={setCostFilters}
             />
           </Layout.Horizontal>
         </Card>
