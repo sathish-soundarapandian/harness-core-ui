@@ -56,6 +56,7 @@ export default function HarnessNextGenEventCard({ data }: { data: ChangeEventDTO
     /* istanbul ignore else */ if (metadata.deploymentStartTime && metadata.deploymentEndTime) {
       return durationAsString(metadata.deploymentEndTime, moment().valueOf())
     }
+    return ''
   }, [metadata.deploymentStartTime, metadata.deploymentEndTime])
 
   const { triggeredBy, triggerType } = defaultTo(pipelineExecutionSummary?.executionTriggerInfo, {})
@@ -84,7 +85,7 @@ export default function HarnessNextGenEventCard({ data }: { data: ChangeEventDTO
                   </Text>
 
                   <Text icon={'calendar'} iconProps={{ size: 12 }} font={{ size: 'small' }}>
-                    {defaultTo(timePassed, 0)}
+                    {timePassed}
                     {getString('cv.changeSource.changeSourceCard.ago')}
                   </Text>
                 </Layout.Horizontal>
