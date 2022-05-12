@@ -431,7 +431,7 @@ export default function DeployInfraSpecifications(props: React.PropsWithChildren
               onUpdateInfrastructureDefinition(
                 {
                   connectorRef: value.connectorRef?.connector?.identifier,
-                  sshKeyRef: value.sshKeyRef,
+                  credentialsRef: value.sshKey?.identifier,
                   attributeFilters: value.attributeFilters,
                   hostFilters: value.hostFilters,
                   hosts: value.hosts,

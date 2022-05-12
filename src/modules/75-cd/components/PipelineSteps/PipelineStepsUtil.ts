@@ -96,7 +96,7 @@ export function getConnectorSchema(getString: UseStringsReturn['getString']): Yu
   return Yup.string().required(getString('fieldRequired', { field: getString('connector') }))
 }
 
-export function getSshKeySchema(getString: UseStringsReturn['getString']): Yup.StringSchema<string | undefined> {
+export function getSshKeyRefSchema(getString: UseStringsReturn['getString']): Yup.StringSchema<string | undefined> {
   return Yup.string().required(getString('fieldRequired', { field: getString('connector') }))
 }
 
@@ -136,7 +136,7 @@ const getInfrastructureDefinitionValidationSchema = (
     }
     if (deploymentType === ServiceDeploymentType.ssh) {
       return Yup.object().shape({
-        sshKeyRef: getSshKeySchema(getString)
+        sshKeyRef: getSshKeyRefSchema(getString)
       })
     } else {
       return getValidationSchema(getString)

@@ -47,6 +47,7 @@ export enum ServiceDeploymentType {
   awsLambda = 'awsLambda',
   pcf = 'pcf',
   ssh = 'Ssh',
+  Pdc = 'Pdc',
   ServerlessAwsLambda = 'ServerlessAwsLambda',
   ServerlessAzureFunctions = 'ServerlessAzureFunctions',
   ServerlessGoogleFunctions = 'ServerlessGoogleFunctions',
@@ -197,7 +198,8 @@ export const isServerlessDeploymentType = (deploymentType: string): boolean => {
 export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessAwsLambda]: 'Amazon Web Services Details',
   [ServiceDeploymentType.ServerlessAzureFunctions]: 'Azure Details',
-  [ServiceDeploymentType.ServerlessGoogleFunctions]: 'GCP Details'
+  [ServiceDeploymentType.ServerlessGoogleFunctions]: 'GCP Details',
+  [ServiceDeploymentType.Pdc]: 'Infrastructure definition'
 }
 
 export const isServerlessManifestType = (selectedManifest: ManifestTypes | null): boolean => {

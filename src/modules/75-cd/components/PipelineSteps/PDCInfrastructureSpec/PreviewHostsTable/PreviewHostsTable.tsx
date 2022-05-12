@@ -1,11 +1,11 @@
-import React, { useMemo, useCallback, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import type { Column } from 'react-table'
 import { useParams } from 'react-router-dom'
 import { Layout, Table, Button, Label, ButtonSize, ButtonVariation, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useToaster } from '@common/exports'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
-import { useValidateSshHosts, HostValidationDTO } from 'services/cd-ng'
+import { useValidateHosts, HostValidationDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import css from '../PDCInfrastructureSpec.module.scss'
 
@@ -27,85 +27,19 @@ const PreviewHostsTable = ({ hosts, secretIdentifier, tags }: PreviewHostsTableP
   const [detailHosts, setDetailHosts] = useState([] as HostValidationDTO[])
   const [errors, setErrors] = useState([])
 
-  const { mutate: validateHosts } = useValidateSshHosts({
+  const { mutate: validateHosts } = useValidateHosts({
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
-      identifier: secretIdentifier || ''
+      identifier: secretIdentifier as string
     }
   })
 
-  const retryConnection = useCallback(
-    async (host: string) => {
-      const retryResult = validateHosts([host])
-      setDetailHosts(detailHosts.map(hostItem => (hostItem.host === '' ? retryResult.data : hostItem)))
-    },
-    [secretIdentifier]
-  )
-
-  const columns: Column<HostValidationDTO>[] = useMemo(
-    () => [
-      {
-        Header: getString('cd.steps.pdcStep.no').toUpperCase(),
-        accessor: 'host',
-        id: 'no',
-        width: '6',
-        Cell: ({ row }) => row.index + 1
-      },
-      {
-        Header: getString('pipelineSteps.hostLabel').toUpperCase(),
-        accessor: 'host',
-        id: 'host',
-        width: '20%',
-        Cell: ({ row }) => row.original.host
-      },
-      {
-        Header: '',
-        accessor: 'status',
-        id: 'status',
-        width: '12%',
-        Cell: ({ row }) => (
-          <Text color={row.original.status === 'SUCCESS' ? Color.GREEN_400 : Color.RED_400}>{row.original.status}</Text>
-        )
-      },
-      {
-        Header: '',
-        accessor: 'status',
-        id: 'action',
-        width: '62%',
-        Cell: ({ row }) =>
-          row.original.status === 'FAILED' ? (
-            <Button
-              onClick={() => retryConnection(row.original.host || '')}
-              size={ButtonSize.SMALL}
-              variation={ButtonVariation.SECONDARY}
-            >
-              {getString('retry')}
-            </Button>
-          ) : null
-      }
-    ],
-    []
-  )
-
-  const refreshHosts = useCallback(() => {
-    setErrors([])
-    setDetailHosts(
-      hosts.map(
-        host =>
-          ({
-            host: host,
-            status: undefined
-          } as HostValidationDTO)
-      )
-    )
-  }, [hosts])
-
-  const testConnection = useCallback(async () => {
+  const testConnection = async (testHost?: string) => {
     setErrors([])
     try {
-      const validationHosts = detailHosts.map(host => host.host || '')
+      const validationHosts = testHost ? [testHost] : detailHosts.map(host => host.host || '')
       const hostResults = await validateHosts({ hosts: validationHosts, tags })
       if (hostResults.status === 'SUCCESS') {
         const tempMap: any = {}
@@ -126,7 +60,73 @@ const PreviewHostsTable = ({ hosts, secretIdentifier, tags }: PreviewHostsTableP
         showError(e.data.message || e.message)
       }
     }
-  }, [detailHosts, secretIdentifier])
+  }
+
+  const columns: Column<HostValidationDTO>[] = [
+    {
+      Header: getString('cd.steps.pdcStep.no').toUpperCase(),
+      accessor: 'host',
+      id: 'no',
+      width: '6',
+      Cell: ({ row }) => row.index + 1
+    },
+    {
+      Header: getString('pipelineSteps.hostLabel').toUpperCase(),
+      accessor: 'host',
+      id: 'host',
+      width: '20%',
+      Cell: ({ row }) => row.original.host
+    },
+    {
+      Header: '',
+      accessor: 'status',
+      id: 'status',
+      width: '12%',
+      Cell: ({ row }) => (
+        <Text color={row.original.status === 'SUCCESS' ? Color.GREEN_400 : Color.RED_400}>{row.original.status}</Text>
+      )
+    },
+    {
+      Header: '',
+      accessor: 'status',
+      id: 'action',
+      width: '22%',
+      Cell: ({ row }) =>
+        row.original.status === 'FAILED' ? (
+          <Button
+            onClick={() => testConnection(row.original.host || '')}
+            size={ButtonSize.SMALL}
+            variation={ButtonVariation.SECONDARY}
+          >
+            {getString('retry')}
+          </Button>
+        ) : null
+    },
+    {
+      Header: '',
+      accessor: 'error',
+      id: 'error',
+      width: '40%',
+      Cell: ({ row }) => (
+        <Text font={{ size: 'small' }} color={Color.RED_400}>
+          {row.original?.error?.message}
+        </Text>
+      )
+    }
+  ]
+
+  const refreshHosts = useCallback(() => {
+    setErrors([])
+    setDetailHosts(
+      hosts.map(
+        host =>
+          ({
+            host: host,
+            status: undefined
+          } as HostValidationDTO)
+      )
+    )
+  }, [hosts])
 
   return (
     <Layout.Vertical>
@@ -159,7 +159,7 @@ const PreviewHostsTable = ({ hosts, secretIdentifier, tags }: PreviewHostsTableP
             </Layout.Horizontal>
             <Layout.Horizontal flex={{ alignItems: 'center' }} margin={{ bottom: 'small' }}>
               <Button
-                onClick={testConnection}
+                onClick={() => testConnection()}
                 size={ButtonSize.SMALL}
                 variation={ButtonVariation.SECONDARY}
                 disabled={detailHosts.length === 0 || !secretIdentifier}
