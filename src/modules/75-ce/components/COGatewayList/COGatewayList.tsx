@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useRef, useState } from 'react'
-import type { CellProps } from 'react-table'
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
+import type { CellProps, Column } from 'react-table'
 import cx from 'classnames'
 import {
   Text,
@@ -74,6 +74,7 @@ import landingPageSVG from './images/AutostoppingRuleIllustration.svg'
 import refreshIcon from './images/refresh.svg'
 import NoDataImage from './images/NoData.svg'
 import css from './COGatewayList.module.scss'
+import type { orderType, serverSortProps, sortType } from '@common/components/Table/react-table-config'
 
 const textColor: { [key: string]: string } = {
   disable: '#6B6D85'
@@ -541,6 +542,49 @@ const useSubmittedRulesStatusUpdate = ({
   }, [data?.response])
 }
 
+interface SortByObjInterface {
+  sort?: sortType
+  order?: orderType
+}
+
+const getServerSortProps = ({
+  enableServerSort,
+  accessor,
+  sortByObj,
+  setSortByObj,
+  refetch
+}: {
+  enableServerSort: boolean
+  accessor: string
+  sortByObj: SortByObjInterface
+  setSortByObj: Dispatch<SetStateAction<SortByObjInterface>>
+  refetch: () => void
+}): serverSortProps => {
+  if (!enableServerSort) {
+    return { enableServerSort: false }
+  } else {
+    let newOrder: orderType | undefined
+    const sortName = accessor
+
+    return {
+      enableServerSort: true,
+      isServerSorted: sortByObj.sort === accessor,
+      isServerSortedDesc: sortByObj.order === 'DESC',
+      getSortedColumn: sortData => {
+        console.log({ sortData })
+        if (sortName === sortByObj.sort && sortByObj.order) {
+          newOrder = sortByObj.order === 'DESC' ? 'ASC' : 'DESC'
+        } else {
+          // no saved state for sortBy of the same sort type
+          newOrder = 'ASC'
+        }
+        setSortByObj({ sort: sortName, order: newOrder })
+        refetch?.()
+      }
+    }
+  }
+}
+
 const RulesTableContainer: React.FC<RulesTableContainerProps> = ({
   rules,
   setRules,
@@ -557,6 +601,8 @@ const RulesTableContainer: React.FC<RulesTableContainerProps> = ({
     pageProps.index * TOTAL_ITEMS_PER_PAGE,
     pageProps.index * TOTAL_ITEMS_PER_PAGE + TOTAL_ITEMS_PER_PAGE
   )
+
+  const [sortByObj, setSortByObj] = useState<SortByObjInterface>({})
 
   useSubmittedRulesStatusUpdate({
     rules: tableData,
@@ -580,6 +626,79 @@ const RulesTableContainer: React.FC<RulesTableContainerProps> = ({
   }
 
   const emptySearchResults = _isEmpty(rules)
+
+  const columns: Column<Service>[] = React.useMemo(
+    () => [
+      {
+        accessor: 'name',
+        Header: getString('ce.co.rulesTableHeaders.name'),
+        width: '18%',
+        Cell: NameCell,
+        serverSortProps: getServerSortProps({
+          enableServerSort: true,
+          accessor: 'name',
+          sortByObj,
+          setSortByObj,
+          refetch: handleRefreshClick
+        })
+      },
+      {
+        accessor: 'idle_time_mins',
+        Header: getString('ce.co.rulesTableHeaders.idleTime'),
+        width: '8%',
+        Cell: TimeCell,
+        serverSortProps: getServerSortProps({
+          enableServerSort: true,
+          accessor: 'idle_time_mins',
+          sortByObj,
+          setSortByObj,
+          refetch: handleRefreshClick
+        })
+      },
+      {
+        accessor: 'fulfilment',
+        Header: getString('ce.co.rulesTableHeaders.fulfilment'),
+        width: '12%',
+        Cell: IconCell,
+        disableSortBy: true
+      },
+      {
+        Header: getString('ce.co.rulesTableHeaders.mangedResources'),
+        width: '22%',
+        Cell: ResourcesCell
+      },
+      {
+        Header: getString('ce.co.rulesTableHeaders.savings').toUpperCase(),
+        width: '15%',
+        Cell: SavingsCell,
+        disableSortBy: true
+      },
+      {
+        Header: getString('ce.co.rulesTableHeaders.lastActivity'),
+        width: '10%',
+        Cell: ActivityCell
+      },
+      {
+        Header: getString('ce.co.rulesTableHeaders.status'),
+        width: '10%',
+        Cell: StatusCell
+      },
+      {
+        Header: '',
+        id: 'menu',
+        accessor: row => row.id,
+        width: '5%',
+        Cell: (cellData: CellProps<Service>) =>
+          RenderColumnMenu(cellData, {
+            onDelete,
+            onEdit,
+            onStateToggle
+          }),
+        disableSortBy: true
+      }
+    ],
+    [tableData]
+  )
 
   return (
     <Container padding={'xlarge'}>
@@ -634,7 +753,7 @@ const RulesTableContainer: React.FC<RulesTableContainerProps> = ({
               <img src={refreshIcon} width={'12px'} height={'12px'} />
               <Text>{getString('common.refresh')}</Text>
             </Layout.Horizontal>
-            <TableV2<Service>
+            <TableV2
               data={tableData}
               pagination={{
                 pageSize: TOTAL_ITEMS_PER_PAGE,
@@ -644,63 +763,8 @@ const RulesTableContainer: React.FC<RulesTableContainerProps> = ({
                 gotoPage: newPageIndex => pageProps.setIndex(newPageIndex)
               }}
               onRowClick={onRowClick}
-              columns={[
-                {
-                  accessor: 'name',
-                  Header: getString('ce.co.rulesTableHeaders.name'),
-                  width: '18%',
-                  Cell: NameCell,
-                  disableSortBy: true
-                },
-                {
-                  accessor: 'idle_time_mins',
-                  Header: getString('ce.co.rulesTableHeaders.idleTime'),
-                  width: '8%',
-                  Cell: TimeCell,
-                  disableSortBy: true
-                },
-                {
-                  accessor: 'fulfilment',
-                  Header: getString('ce.co.rulesTableHeaders.fulfilment'),
-                  width: '12%',
-                  Cell: IconCell,
-                  disableSortBy: true
-                },
-                {
-                  Header: getString('ce.co.rulesTableHeaders.mangedResources'),
-                  width: '22%',
-                  Cell: ResourcesCell
-                },
-                {
-                  Header: getString('ce.co.rulesTableHeaders.savings').toUpperCase(),
-                  width: '15%',
-                  Cell: SavingsCell,
-                  disableSortBy: true
-                },
-                {
-                  Header: getString('ce.co.rulesTableHeaders.lastActivity'),
-                  width: '10%',
-                  Cell: ActivityCell
-                },
-                {
-                  Header: getString('ce.co.rulesTableHeaders.status'),
-                  width: '10%',
-                  Cell: StatusCell
-                },
-                {
-                  Header: '',
-                  id: 'menu',
-                  accessor: row => row.id,
-                  width: '5%',
-                  Cell: (cellData: CellProps<Service>) =>
-                    RenderColumnMenu(cellData, {
-                      onDelete,
-                      onEdit,
-                      onStateToggle
-                    }),
-                  disableSortBy: true
-                }
-              ]}
+              columns={columns}
+              sortable={true}
             />
           </>
         )}
