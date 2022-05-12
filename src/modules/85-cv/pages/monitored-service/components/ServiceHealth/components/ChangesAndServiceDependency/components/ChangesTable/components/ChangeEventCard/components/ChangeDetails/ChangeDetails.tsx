@@ -10,11 +10,11 @@ import cx from 'classnames'
 import { Text, Container } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
+import { ChangeSourceTypes } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 import { createDetailsTitle, getOnClickOptions, statusToColorMapping } from './ChangeDetails.utils'
 import type { ChangeDetailsDataInterface } from '../../ChangeEventCard.types'
 import StatusChip from './components/StatusChip/StatusChip'
 import css from './ChangeDetails.module.scss'
-import { ChangeSourceTypes } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 
 export default function ChangeDetails({
   ChangeDetailsData

@@ -9,10 +9,10 @@ import React from 'react'
 import moment from 'moment'
 import { Container, Layout, Text } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
+import { ChangeSourceTypes } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 import { durationAsString } from './DeploymentTimeDuration.utils'
 import { TIME_FORMAT } from './DeploymentTimeDuration.constant'
 import css from './DeploymentTimeDuration.module.scss'
-import { ChangeSourceTypes } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 
 export default function DeploymentTimeDuration({
   startTime,

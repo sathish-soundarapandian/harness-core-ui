@@ -1,5 +1,7 @@
 import React from 'react'
-import { Color, Container, Icon, Text } from '@wings-software/uicore'
+import { Container, Icon, Text } from '@wings-software/uicore'
+import { Color } from '@harness/design-system'
+
 import type { IconName } from '@blueprintjs/core'
 
 export const IconWithText = ({ icon, text = '' }: { icon?: string; text?: string }) => {

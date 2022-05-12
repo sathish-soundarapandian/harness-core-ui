@@ -10,9 +10,8 @@ import { Text, Container, Layout, Button, ButtonVariation } from '@wings-softwar
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ChangeTitleData } from '../../ChangeEventCard.types'
-import css from '../ChangeTitle/ChangeTitle.module.scss'
-
 import { IconWithText } from '../IconWithText/IconWithText'
+import css from '../ChangeTitle/ChangeTitle.module.scss'
 
 export default function ChangeTitleForHarness({ changeTitleData }: { changeTitleData: ChangeTitleData }): JSX.Element {
   const { getString } = useStrings()
