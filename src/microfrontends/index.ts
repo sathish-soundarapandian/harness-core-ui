@@ -22,6 +22,7 @@ import type { ExtendedMonacoEditorProps } from '@common/components/MonacoEditor/
 import type { ExtendedMonacoDiffEditorProps } from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 import type { YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import type { GitOpsCustomMicroFrontendProps } from '@cd/interfaces/GitOps.types'
+// import type { ChaosCustomMicroFrontendProps } from '@chaos/RouteDestinations'
 
 export interface Scope {
   accountId?: string
@@ -75,4 +76,5 @@ export {
   ResourceType,
   PermissionIdentifier,
   GitOpsCustomMicroFrontendProps
+  // ChaosCustomMicroFrontendProps
 }

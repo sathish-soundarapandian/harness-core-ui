@@ -69,7 +69,7 @@ export default function L1Nav(): React.ReactElement {
                 color={Color.WHITE}
                 className={css.text}
               >
-                <String stringID="common.chaosText" />
+                <String stringID="common.chaos" />
               </Text>
             </Layout.Vertical>
           </Link>

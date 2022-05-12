@@ -864,4 +864,4 @@ noSearchResultsFound: No results found for '{{searchTerm}}'.
 searchOther: Please search something else.
 
 # Chaos Module
-chaosText: Chaos
+chaos: Chaos

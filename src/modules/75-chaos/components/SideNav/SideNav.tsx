@@ -6,6 +6,7 @@ import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import routes from '@common/RouteDefinitions'
 import { ProjectSelector } from '@projects-orgs/components/ProjectSelector/ProjectSelector'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMenu'
 
 export default function ChaosSideNav(): React.ReactElement {
   const params = useParams<ProjectPathProps & ModulePathParams>()
@@ -34,6 +35,7 @@ export default function ChaosSideNav(): React.ReactElement {
           <SidebarLink label="Workflows" to={routes.toChaosWorkflows({ ...params })}></SidebarLink>
           <SidebarLink label="ChaosHubs" to={routes.toChaosHubs({ ...params })}></SidebarLink>
           <SidebarLink label="ChaosAgents" to={routes.toChaosAgents({ ...params })}></SidebarLink>
+          <ProjectSetupMenu module="chaos" />
         </>
       ) : null}
     </Layout.Vertical>
