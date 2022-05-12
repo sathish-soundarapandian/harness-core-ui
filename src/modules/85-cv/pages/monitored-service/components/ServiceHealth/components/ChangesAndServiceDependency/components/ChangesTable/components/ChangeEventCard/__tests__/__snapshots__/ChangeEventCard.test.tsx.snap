@@ -59,7 +59,6 @@ exports[`Validate ChangeCard should render Pager Duty card 1`] = `
     <div
       class="StyledProps--font StyledProps--main"
     >
-      (type) && category ? (
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-size-medium StyledProps--font-weight-bold StyledProps--color StyledProps--color-grey800"
       >
@@ -67,7 +66,6 @@ exports[`Validate ChangeCard should render Pager Duty card 1`] = `
          
         details
       </p>
-      ) : null
       <div
         class="gridContainer"
       >

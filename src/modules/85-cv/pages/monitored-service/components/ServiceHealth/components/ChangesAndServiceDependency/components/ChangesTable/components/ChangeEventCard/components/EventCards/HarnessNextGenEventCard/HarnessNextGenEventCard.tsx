@@ -27,7 +27,6 @@ import ChangeTitleForHarness from '../../ChangeTitleForHarnessCD/ChangePipelineF
 import { useGetExecutionDetailV2 } from 'services/pipeline-ng'
 import type { PipelineType, ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
 import { useParams } from 'react-router'
-import { IconWithText } from '../../IconWithText/IconWithText'
 import { UserLabel } from '@common/exports'
 import { durationAsString } from '../../DeploymentTimeDuration/DeploymentTimeDuration.utils'
 import moment from 'moment'
@@ -37,7 +36,6 @@ export default function HarnessNextGenEventCard({ data }: { data: ChangeEventDTO
   const [timeStamps, setTimestamps] = useState<[number, number]>([0, 0])
   const changeTitleData: ChangeTitleData = useMemo(() => createChangeTitleData(data), [])
   const changeDetailsData: ChangeDetailsDataInterface = useMemo(() => createChangeDetailsData(data), [])
-  console.log('pppppppp', data)
   const metadata: HarnessCDEventMetadata = defaultTo(data.metadata, {})
   const { artifactType = '', artifactTag = '', verifyStepSummaries } = metadata
   const changeInfoData = { artifactType, artifactTag }
@@ -53,13 +51,6 @@ export default function HarnessNextGenEventCard({ data }: { data: ChangeEventDTO
     },
     debounce: 500
   })
-
-  console.log('tttttttt', executionDetails)
-
-  const summary: {
-    name: string
-    verificationStatus: string
-  }[] = verifyStepSummaries
 
   const { type } = data || {}
 
@@ -94,7 +85,7 @@ export default function HarnessNextGenEventCard({ data }: { data: ChangeEventDTO
                   />
                   <Text
                     font={{ size: 'small' }}
-                    margin={{ left: 'medium', right: 'medium' }}
+                    margin={{ left: 'small', right: 'small' }}
                     flex={{ align: 'center-center' }}
                   >
                     {pipelineExecutionSummary?.executionTriggerInfo?.triggerType}

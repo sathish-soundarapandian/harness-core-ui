@@ -9,8 +9,12 @@ import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import type { UseGetReturn } from 'restful-react'
 import * as cvService from 'services/cv'
+import * as pipelineNgService from 'services/pipeline-ng'
 import { TestWrapper } from '@common/utils/testUtils'
-import { mockedHealthScoreData } from '@cv/pages/monitored-service/components/ServiceHealth/components/HealthScoreChart/__tests__/HealthScoreChart.mock'
+import {
+  mockedExecutionSummary,
+  mockedHealthScoreData
+} from '@cv/pages/monitored-service/components/ServiceHealth/components/HealthScoreChart/__tests__/HealthScoreChart.mock'
 import ChangeEventCard from '../ChangeEventCard'
 import { HarnessCDMockData, HarnessNextGenMockData, payload } from './ChangeEventCard.mock'
 
@@ -76,13 +80,19 @@ describe('Validate ChangeCard', () => {
       data: mockedHealthScoreData,
       refetch: jest.fn() as unknown
     } as UseGetReturn<any, any, any, any>)
+
+    jest.spyOn(pipelineNgService, 'useGetExecutionDetailV2').mockReturnValue({
+      data: mockedExecutionSummary,
+      refetch: jest.fn() as unknown
+    } as UseGetReturn<any, any, any, any>)
+
     const { getByText } = render(
       <TestWrapper>
         <ChangeEventCard activityId={'dasda'} />
       </TestWrapper>
     )
     // Card Title is rendered Correctly
-    await waitFor(() => expect(getByText(HarnessNextGenMockData.resource.id)).toBeTruthy())
+    await waitFor(() => expect(getByText(HarnessNextGenMockData.resource.id)).toBeInTheDocument())
     await waitFor(() => expect(getByText(HarnessNextGenMockData.resource.name)).toBeTruthy())
     await waitFor(() => expect(getByText(HarnessNextGenMockData.resource.metadata.status)).toBeTruthy())
 
