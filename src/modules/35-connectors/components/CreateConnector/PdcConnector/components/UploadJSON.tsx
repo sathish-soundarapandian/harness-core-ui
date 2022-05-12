@@ -64,22 +64,26 @@ const UploadJSON = ({ setJsonValue }: UploadJSONInterface) => {
         setDropHighlight(false)
       }}
       onDrop={event => {
-        preventDefaults(event)
-        setDropHighlight(false)
-        if (event.dataTransfer.items) {
-          // Use DataTransferItemList interface to access the file(s)
-          for (let i = 0; i < event.dataTransfer.items.length; i++) {
-            // If dropped items aren't files, reject them
-            if (event.dataTransfer.items[i].kind === 'file') {
-              const file = event.dataTransfer.items[i].getAsFile()
-              handleFileUpload(file as any)
+        try {
+          preventDefaults(event)
+          setDropHighlight(false)
+          if (event.dataTransfer.items) {
+            // Use DataTransferItemList interface to access the file(s)
+            for (let i = 0; i < event.dataTransfer.items.length; i++) {
+              // If dropped items aren't files, reject them
+              if (event.dataTransfer.items[i].kind === 'file') {
+                const file = event.dataTransfer.items[i].getAsFile()
+                handleFileUpload(file as any)
+              }
+            }
+          } else {
+            // Use DataTransfer interface to access the file(s)
+            for (let i = 0; i < event.dataTransfer.files.length; i++) {
+              handleFileUpload(event.dataTransfer.files[i])
             }
           }
-        } else {
-          // Use DataTransfer interface to access the file(s)
-          for (let i = 0; i < event.dataTransfer.files.length; i++) {
-            handleFileUpload(event.dataTransfer.files[i])
-          }
+        } catch (e) {
+          showError(e)
         }
       }}
     >

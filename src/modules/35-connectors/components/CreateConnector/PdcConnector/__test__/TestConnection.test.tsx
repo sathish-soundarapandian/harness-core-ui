@@ -13,10 +13,10 @@ import TestConnection from '@connectors/components/CreateConnector/PdcConnector/
 
 const onCloseFn = jest.fn()
 const gotoStep = jest.fn()
-jest.mock('services/portal', () => ({
-  useGetTestConnectionResult: jest.fn().mockImplementation(() => ({
+jest.mock('services/cd-ng', () => ({
+  useGetTestConnectionResult: jest.fn().mockImplementation(({ queryParams }) => ({
     mutate: jest.fn().mockImplementation(
-      ({ queryParams }) =>
+      () =>
         new Promise(resolve => {
           resolve(
             queryParams?.accountId === 'pass'
@@ -42,12 +42,30 @@ jest.mock('services/portal', () => ({
 }))
 
 describe('Test TestConnection component', () => {
-  test('Render component with pass api request', async () => {
-    const { container } = render(
-      <TestWrapper path="/account/pass" pathParams={{}}>
+  test('Render component with api error', async () => {
+    const { container, queryAllByText } = render(
+      <TestWrapper path="/test" pathParams={{}}>
         <TestConnection onClose={onCloseFn} gotoStep={gotoStep} />
       </TestWrapper>
     )
+
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+
+    const editHostsBtn = queryAllByText('connectors.pdc.editHosts')[0]
+    fireEvent.click(editHostsBtn!)
+
+    expect(gotoStep).toBeCalled()
+  })
+  test('Render component with api pass ok', async () => {
+    const { container } = render(
+      <TestWrapper path="/test" pathParams={{ accountId: 'pass' }}>
+        <TestConnection onClose={onCloseFn} gotoStep={gotoStep} />
+      </TestWrapper>
+    )
+
+    expect(container.innerHTML).toContain('finish')
 
     await act(async () => {
       fireEvent.click(container.querySelector('button[type="submit"]')!)

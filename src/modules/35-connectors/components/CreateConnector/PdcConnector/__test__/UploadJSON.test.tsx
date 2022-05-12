@@ -7,13 +7,27 @@
 
 import React from 'react'
 import { act } from 'react-dom/test-utils'
-import { render, waitFor } from '@testing-library/react'
+import { render, waitFor, fireEvent, createEvent } from '@testing-library/react'
 import user from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import UploadJSON from '@connectors/components/CreateConnector/PdcConnector/components/UploadJSON'
 
 const setJsonValueFn = jest.fn()
+
 const fileValues = [{ hosts: 'localhost' }]
+
+const createBubbledEvent = (type: string, props = {}) => {
+  const event = new Event(type, { bubbles: true })
+  Object.assign(event, props)
+  return event
+}
+
+const showError = jest.fn()
+jest.mock('@common/exports', () => ({
+  useToaster: () => ({
+    showError: showError
+  })
+}))
 
 describe('Test TestConnection component', () => {
   test('Render component with pass api request', async () => {
@@ -32,6 +46,49 @@ describe('Test TestConnection component', () => {
     const input = container.querySelector('input')
     act(() => {
       user.upload(input!, file)
+    })
+
+    waitFor(() => {
+      expect(setJsonValueFn).toBeCalled()
+    })
+  })
+  test('drag and drop test error, missing dataTransfer', () => {
+    const { container } = render(
+      <TestWrapper path="/account/pass" pathParams={{}}>
+        <UploadJSON setJsonValue={setJsonValueFn} />
+      </TestWrapper>
+    )
+    const input = container.querySelector('input')!
+    input.dispatchEvent(createBubbledEvent('dragstart', { clientX: 0, clientY: 0 }))
+
+    input.dispatchEvent(createBubbledEvent('drop', { clientX: 0, clientY: 1 }))
+
+    waitFor(() => {
+      expect(setJsonValueFn).toBeCalled()
+    })
+  })
+  test('drag and drop test - items', () => {
+    const { container } = render(
+      <TestWrapper path="/account/pass" pathParams={{}}>
+        <UploadJSON setJsonValue={setJsonValueFn} />
+      </TestWrapper>
+    )
+    const input = container.querySelector('input')!
+
+    const eventData = { dataTransfer: { items: [new Blob()] } }
+
+    act(() => {
+      const dragStartEvent = Object.assign(createEvent.dragStart(input), eventData)
+
+      fireEvent(input, dragStartEvent)
+      fireEvent.dragEnd(input)
+      fireEvent.dragLeave(input)
+
+      const dropEffectEvent = Object.assign(createEvent.dragOver(input), eventData)
+      fireEvent(input, dropEffectEvent)
+
+      const dropEvent = Object.assign(createEvent.drop(input), eventData)
+      fireEvent(input, dropEvent)
     })
 
     waitFor(() => {
