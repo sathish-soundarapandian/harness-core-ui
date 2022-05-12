@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { HealthSourceTypes } from '../../types'
 import type { SplunkHealthSourcePayload, MapSplunkQueryToService } from './components/MapQueriesToHarnessService/types'
@@ -23,7 +23,9 @@ export function createSplunkHealthSourcePayload(setupSource: SplunkHealthSourceI
     }
   }
 
-  for (const entry of setupSource?.mappedServicesAndEnvs?.entries()) {
+  const entries = defaultTo(setupSource?.mappedServicesAndEnvs?.entries(), [])
+
+  for (const entry of entries) {
     const { metricName, query, serviceInstance }: MapSplunkQueryToService = entry[1]
     splunkHealthSourcePayload.spec.queries.push({
       name: metricName,

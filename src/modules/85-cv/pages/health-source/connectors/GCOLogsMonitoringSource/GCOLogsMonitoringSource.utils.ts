@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { defaultTo } from 'lodash-es'
 import { HealthSourceTypes } from '../../types'
 import type {
   GCOLogsHealthSourcePayload,
@@ -24,7 +25,9 @@ export function createGCOLogsHealthSourcePayload(setupSource: GCOMonitoringSourc
     }
   }
 
-  for (const entry of setupSource?.mappedServicesAndEnvs?.entries()) {
+  const entries = defaultTo(setupSource?.mappedServicesAndEnvs?.entries(), [])
+
+  for (const entry of entries) {
     const { metricName, query, serviceInstance, messageIdentifier }: MapGCOLogsQueryToService = entry[1]
     gcoLogsPayload.spec.queries.push({
       name: metricName,
