@@ -297,12 +297,20 @@ const getParallelNodeLinks = (
   })
 }
 
-const getScaleToFitValue = (elm: HTMLElement, paddingFromBottom = 20): number => {
+const getScaleToFitValue = (
+  elm: HTMLElement,
+  containerEl?: HTMLElement,
+  paddingHorizontal = 0,
+  paddingVertical = 20
+): number => {
+  const width = elm.scrollWidth
+  const height = elm.scrollHeight
+  const container = containerEl ? containerEl : document.body
   return (
     1 /
     Math.max(
-      elm.clientWidth / window.innerWidth,
-      elm.clientHeight / (window.innerHeight - elm.offsetTop - paddingFromBottom)
+      width / (container.offsetWidth - paddingHorizontal),
+      height / (container.offsetHeight - container.offsetTop - paddingVertical)
     )
   )
 }
