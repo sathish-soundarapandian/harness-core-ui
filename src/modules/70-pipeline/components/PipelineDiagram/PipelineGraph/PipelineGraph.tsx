@@ -103,7 +103,7 @@ function PipelineGraph({
 
   useLayoutEffect(() => {
     redrawSVGLinks()
-  }, [state])
+  }, [state, graphScale])
 
   const redrawSVGLinks = (): void => {
     setSVGLinks()
@@ -157,6 +157,7 @@ function PipelineGraph({
   const onDrag = (_e: DraggableEvent, dragData: DraggableData): void => {
     setPosition({ x: dragData.x, y: dragData.y })
     setDragging(false)
+    redrawSVGLinks()
   }
   const resetGraphState = (): void => {
     setGraphScale(INITIAL_ZOOM_LEVEL)
