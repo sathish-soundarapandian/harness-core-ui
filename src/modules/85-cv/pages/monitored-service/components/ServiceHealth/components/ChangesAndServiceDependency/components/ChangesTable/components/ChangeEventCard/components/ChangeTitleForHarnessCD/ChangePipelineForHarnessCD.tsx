@@ -50,7 +50,7 @@ export default function ChangeTitleForHarness({ changeTitleData }: { changeTitle
           </Text>
           <Text font={{ size: 'xsmall' }} color={Color.GREY_800} flex={{ align: 'center-center' }}>
             ({getString('cd.serviceDashboard.executionId')}
-            <span>{executionId})</span>
+            <span>{executionId}</span>)
           </Text>
         </Layout.Horizontal>
         <Container height={7}></Container>

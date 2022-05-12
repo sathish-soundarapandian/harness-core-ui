@@ -42,25 +42,25 @@ export default function HarnessNextGenEventCard({ data }: { data: ChangeEventDTO
   const { orgIdentifier, projectIdentifier, accountId } = useParams<PipelineType<ExecutionPathProps>>()
 
   const { data: executionDetails } = useGetExecutionDetailV2({
-    planExecutionId: metadata?.planExecutionId || '',
+    planExecutionId: defaultTo(metadata.planExecutionId, ''),
     queryParams: {
+      accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      accountIdentifier: accountId,
-      stageNodeId: metadata?.stageStepId
-    },
-    debounce: 500
+      stageNodeId: metadata.stageStepId
+    }
   })
 
-  const { type } = data || {}
-
-  const { pipelineExecutionSummary } = executionDetails?.data || {}
+  const { pipelineExecutionSummary } = defaultTo(executionDetails?.data, {})
   const timePassed = useMemo(() => {
-    if (!metadata?.deploymentStartTime && !metadata?.deploymentEndTime) {
-      return
+    /* istanbul ignore else */ if (metadata.deploymentStartTime && metadata.deploymentEndTime) {
+      return durationAsString(metadata.deploymentEndTime, moment().valueOf())
     }
-    return durationAsString(metadata?.deploymentEndTime!, moment().valueOf())
-  }, [metadata?.deploymentStartTime, metadata?.deploymentEndTime])
+  }, [metadata.deploymentStartTime, metadata.deploymentEndTime])
+
+  const { triggeredBy, triggerType } = defaultTo(pipelineExecutionSummary?.executionTriggerInfo, {})
+  const { identifier, extraInfo } = defaultTo(triggeredBy, {})
+
   return (
     <Card className={css.main}>
       <ChangeTitleForHarness changeTitleData={changeTitleData} />
@@ -74,32 +74,24 @@ export default function HarnessNextGenEventCard({ data }: { data: ChangeEventDTO
             <>
               <Layout.Vertical width="max-content">
                 <Layout.Horizontal flex margin={{ bottom: 'medium' }}>
-                  <UserLabel
-                    name={
-                      pipelineExecutionSummary?.executionTriggerInfo?.triggeredBy?.identifier ||
-                      pipelineExecutionSummary?.executionTriggerInfo?.triggeredBy?.extraInfo?.email ||
-                      ''
-                    }
-                    email={pipelineExecutionSummary?.executionTriggerInfo?.triggeredBy?.extraInfo?.email}
-                    iconProps={{ size: 16 }}
-                  />
+                  <UserLabel name={identifier || extraInfo?.emai} email={extraInfo?.email} iconProps={{ size: 16 }} />
                   <Text
                     font={{ size: 'small' }}
                     margin={{ left: 'small', right: 'small' }}
                     flex={{ align: 'center-center' }}
                   >
-                    {pipelineExecutionSummary?.executionTriggerInfo?.triggerType}
+                    {triggerType}
                   </Text>
 
                   <Text icon={'calendar'} iconProps={{ size: 12 }} font={{ size: 'small' }}>
-                    {timePassed || 0}
+                    {defaultTo(timePassed, 0)}
                     {getString('cv.changeSource.changeSourceCard.ago')}
                   </Text>
                 </Layout.Horizontal>
                 <DeploymentTimeDuration
-                  startTime={data?.metadata?.deploymentStartTime}
-                  endTime={data?.metadata?.deploymentEndTime}
-                  type={type}
+                  startTime={data.metadata.deploymentStartTime}
+                  endTime={data.metadata.deploymentEndTime}
+                  type={data.type}
                 />
               </Layout.Vertical>
             </>

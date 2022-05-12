@@ -21,7 +21,7 @@ export default function DeploymentTimeDuration({
 }: {
   startTime: number
   endTime: number
-  type?: ChangeSourceTypes
+  type?: keyof typeof ChangeSourceTypes
 }) {
   const { getString } = useStrings()
   const durationString = durationAsString(startTime, endTime)
