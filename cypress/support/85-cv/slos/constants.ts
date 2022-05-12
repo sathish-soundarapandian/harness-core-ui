@@ -433,8 +433,8 @@ export const errorResponseSLODuplication = {
 export const errorBudgetResetHistoryResponse = {
   resource: [
     {
-      errorBudgetAtReset: 75,
-      remainingErrorBudgetAtReset: 60,
+      errorBudgetAtReset: 100,
+      remainingErrorBudgetAtReset: 110,
       errorBudgetIncrementPercentage: 50,
       createdAt: 1643328000000,
       reason: 'REASON'

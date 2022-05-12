@@ -81,6 +81,7 @@ import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { deploymentTypeLabel } from '@pipeline/utils/DeploymentTypeUtils'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PipelineGridView } from './views/PipelineGridView'
 import { PipelineListView } from './views/PipelineListView'
 import PipelineFilterForm from '../pipeline-deployment-list/PipelineFilterForm/PipelineFilterForm'
@@ -133,9 +134,13 @@ function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
   const [isRefreshingFilters, setIsRefreshingFilters] = useState<boolean>(false)
   const [gitFilter, setGitFilter] = useState<GitFilterScope | null>(null)
   const [error, setError] = useState<Error | null>(null)
-
+  const { preference: savedPipelineView, setPreference: setSavedPipelineView } = usePreferenceStore<Views | undefined>(
+    PreferenceScope.USER,
+    'pipelineViewType'
+  )
+  const initialSelectedView = savedPipelineView || Views.GRID
   const [page, setPage] = useState(0)
-  const [view, setView] = useState<Views>(Views.GRID)
+  const [view, setView] = useState<Views>(initialSelectedView)
   const [sort, setStort] = useState<string[]>([SortFields.LastUpdatedAt, Sort.DESC])
 
   // Set Default to LastUpdated
@@ -172,6 +177,11 @@ function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
     : isCFModule
     ? flagpipelineIllustration
     : pipelineIllustration
+
+  const setPipelineView = (viewType: Views): void => {
+    setView(viewType)
+    setSavedPipelineView(viewType)
+  }
 
   const goToPipelineDetail = useCallback(
     (/* istanbul ignore next */ pipeline?: PMSPipelineSummaryResponse) => {
@@ -688,7 +698,7 @@ function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
                 </Layout.Horizontal>
               )}
             </>
-            <GridListToggle initialSelectedView={Views.GRID} onViewToggle={setView} />
+            <GridListToggle initialSelectedView={initialSelectedView} onViewToggle={setPipelineView} />
           </Layout.Horizontal>
         </Page.SubHeader>
       )}

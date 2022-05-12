@@ -142,6 +142,10 @@ export interface EnvironmentPathProps {
   environmentIdentifier: string
 }
 
+export interface EnvironmentQueryParams {
+  sectionId?: 'CONFIGURATION'
+}
+
 export interface EnvironmentGroupPathProps {
   environmentGroupIdentifier: string
 }

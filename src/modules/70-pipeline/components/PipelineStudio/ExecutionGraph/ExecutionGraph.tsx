@@ -1145,6 +1145,8 @@ function ExecutionGraphRef<T extends StageElementConfig>(
           hoverShowDelay={200}
           render={renderPopover}
           bind={setDynamicPopoverHandler}
+          usePortal
+          portalClassName={css.portalVisibility}
         />
       </div>
     </div>

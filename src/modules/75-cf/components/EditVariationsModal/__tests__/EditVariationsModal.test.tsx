@@ -43,8 +43,7 @@ const renderComponent = (): void => {
   )
 }
 
-// eslint-disable-next-line jest/no-disabled-tests
-describe.skip('EditVariationsModal', () => {
+describe('EditVariationsModal', () => {
   test('it should render correctly', async () => {
     jest.spyOn(cfServiceMock, 'usePatchFeature').mockReturnValue({ loading: false, mutate: jest.fn() } as any)
 

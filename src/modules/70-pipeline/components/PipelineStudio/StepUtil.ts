@@ -372,9 +372,11 @@ export const validateCICodebase = ({
     (pipelineHasCloneCodebase && !requiresConnectorRuntimeInputValue) || // ci codebase field is hidden until connector is selected
     template?.properties?.ci?.codebase?.build
   const shouldValidate = !Object.keys(viewTypeMetadata || {}).includes('isTemplateBuilder')
+  const isInputSetForm = viewTypeMetadata?.isInputSet // should not require any values
   if (
     shouldValidate &&
     shouldValidateCICodebase &&
+    !isInputSetForm &&
     has(originalPipeline, 'properties') &&
     has(originalPipeline?.properties, 'ci') &&
     isEmpty(get(originalPipeline, 'properties.ci.codebase.build')) &&
@@ -391,6 +393,7 @@ export const validateCICodebase = ({
     // connectorRef required to display build type
     if (
       isEmpty(pipeline?.properties?.ci?.codebase?.build?.type) &&
+      !isInputSetForm &&
       (!requiresConnectorRuntimeInputValue ||
         (requiresConnectorRuntimeInputValue && pipeline?.properties?.ci?.codebase?.connectorRef)) &&
       pipelineHasCloneCodebase
@@ -404,7 +407,8 @@ export const validateCICodebase = ({
 
     if (
       pipeline?.properties?.ci?.codebase?.build?.type === CodebaseTypes.branch &&
-      isEmpty(pipeline?.properties?.ci?.codebase?.build?.spec?.branch)
+      isEmpty(pipeline?.properties?.ci?.codebase?.build?.spec?.branch) &&
+      !isInputSetForm
     ) {
       set(
         errors,
@@ -415,14 +419,16 @@ export const validateCICodebase = ({
 
     if (
       pipeline?.properties?.ci?.codebase?.build?.type === CodebaseTypes.tag &&
-      isEmpty(pipeline?.properties?.ci?.codebase?.build?.spec?.tag)
+      isEmpty(pipeline?.properties?.ci?.codebase?.build?.spec?.tag) &&
+      !isInputSetForm
     ) {
       set(errors, 'properties.ci.codebase.build.spec.tag', getString?.('fieldRequired', { field: getString('gitTag') }))
     }
 
     if (
       pipeline?.properties?.ci?.codebase?.build?.type === CodebaseTypes.PR &&
-      isEmpty(pipeline?.properties?.ci?.codebase?.build?.spec?.number)
+      isEmpty(pipeline?.properties?.ci?.codebase?.build?.spec?.number) &&
+      !isInputSetForm
     ) {
       set(
         errors,
@@ -433,7 +439,7 @@ export const validateCICodebase = ({
   }
 
   if (shouldValidate) {
-    if (requiresConnectorRuntimeInputValue && pipelineHasCloneCodebase) {
+    if (requiresConnectorRuntimeInputValue && pipelineHasCloneCodebase && !isInputSetForm) {
       set(
         errors,
         'properties.ci.codebase.connectorRef',
@@ -441,7 +447,11 @@ export const validateCICodebase = ({
       )
     }
 
-    if (template?.properties?.ci?.codebase?.repoName && pipeline?.properties?.ci?.codebase?.repoName?.trim() === '') {
+    if (
+      template?.properties?.ci?.codebase?.repoName &&
+      pipeline?.properties?.ci?.codebase?.repoName?.trim() === '' &&
+      !isInputSetForm
+    ) {
       // connector with account url type will remove repoName requirement
       set(
         errors,
@@ -462,7 +472,7 @@ export const validateCICodebase = ({
       }
     }
 
-    if (template?.properties?.ci?.codebase?.sslVerify) {
+    if (template?.properties?.ci?.codebase?.sslVerify && pipelineHasCloneCodebase) {
       const sslVerify = pipeline?.properties?.ci?.codebase?.sslVerify
       if (sslVerify === ('' as any) || !isBoolean(sslVerify)) {
         set(errors, 'properties.ci.codebase.sslVerify', getString?.('pipeline.ciCodebase.validation.optionalSslVerify'))

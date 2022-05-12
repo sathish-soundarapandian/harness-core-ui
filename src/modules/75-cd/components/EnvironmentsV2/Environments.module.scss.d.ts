@@ -7,19 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly checkbox: string
-  readonly clearButton: string
-  readonly container: string
-  readonly dragOver: string
-  readonly dragging: string
-  readonly item: string
-  readonly list: string
-  readonly multiple: string
-  readonly order: string
-  readonly orderText: string
-  readonly placeholder: string
-  readonly popoverContainer: string
-  readonly search: string
-  readonly tag: string
+  readonly dialogStylesEnv: string
+  readonly noEnvHeading: string
+  readonly noEnvText: string
 }
 export default styles

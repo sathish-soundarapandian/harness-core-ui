@@ -31,7 +31,8 @@ import {
   serviceAccountProps,
   servicePathProps,
   templatePathProps,
-  environmentGroupPathProps
+  environmentGroupPathProps,
+  environmentPathProps
 } from '@common/utils/routeUtils'
 import type {
   PipelinePathProps,
@@ -121,6 +122,8 @@ import FullPageLogView from '@pipeline/pages/full-page-log-view/FullPageLogView'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import VariablesPage from '@variables/pages/variables/VariablesPage'
 import { Environments } from './components/Environments/Environments'
+import { Environments as EnvironmentsV2 } from './components/EnvironmentsV2/Environments'
+import EnvironmentDetails from './components/EnvironmentsV2/EnvironmentDetails/EnvironmentDetails'
 import EnvironmentGroups from './components/EnvironmentGroups/EnvironmentGroups'
 import EnvironmentGroupDetails from './components/EnvironmentGroups/EnvironmentGroupDetails/EnvironmentGroupDetails'
 
@@ -384,6 +387,16 @@ const RedirectToSubscriptions = (): React.ReactElement => {
   )
 }
 
+const EnvironmentsPage = (): React.ReactElement | null => {
+  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
+
+  if (NG_SVC_ENV_REDESIGN) {
+    return <EnvironmentsV2 />
+  } else {
+    return <Environments />
+  }
+}
+
 const licenseRedirectData: LicenseRedirectProps = {
   licenseStateName: LICENSE_STATE_NAMES.CD_LICENSE_STATE,
   startTrialRedirect: RedirectToModuleTrialHome,
@@ -490,10 +503,19 @@ export default (
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={CDSideNavProps}
-      path={routes.toEnvironment({ ...accountPathProps, ...projectPathProps, ...pipelineModuleParams })}
+      path={routes.toEnvironment({ ...projectPathProps, ...pipelineModuleParams })}
       pageName={PAGE_NAME.Environments}
     >
-      <Environments />
+      <EnvironmentsPage />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CDSideNavProps}
+      path={routes.toEnvironmentDetails({ ...projectPathProps, ...pipelineModuleParams, ...environmentPathProps })}
+      pageName={PAGE_NAME.Environments}
+    >
+      <EnvironmentDetails />
     </RouteWithLayout>
     <RouteWithLayout
       exact

@@ -19,7 +19,7 @@ import {
   DeleteCheckbox,
   EnvironmentName,
   EnvironmentTypes
-} from '@cd/components/Environments/EnvironmentsListColumns/EnvironmentsListColumns'
+} from '@cd/components/EnvironmentsV2/EnvironmentsList/EnvironmentsListColumns'
 
 import { LastUpdatedBy } from '../EnvironmentGroupsList/EnvironmentGroupsListColumns'
 

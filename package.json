@@ -41,7 +41,7 @@
     "strings:genTypes": "node scripts/strings/generateTypesCli.mjs",
     "strings:loaders": "node scripts/strings/generateStrings.mjs",
     "prepare": "husky install && patch-package",
-    "fmt": "prettier --write \"./src/**/*.{ts,tsx,css}\"",
+    "fmt": "prettier --write \"./src/**/*.{ts,tsx,css,scss}\"",
     "generate-merged-coverage": "node mergedCoverage.js",
     "generate-microfrontend-types": "rm -rf src/microfrontends/dist && webpack --config src/microfrontends/webpack.config.js",
     "publish-types": "yarn generate-microfrontend-types; yarn publish src/microfrontends;",
@@ -58,10 +58,11 @@
     "@emotion/core": "^10.0.28",
     "@emotion/styled": "^10.0.27",
     "@harness/design-system": "1.0.0",
+    "@harness/icons": "1.6.0",
     "@harness/monaco-yaml": "^1.0.0",
     "@harness/ng-tooltip": "^1.30.75",
     "@harness/telemetry": "^1.0.37",
-    "@harness/uicore": "2.73.0",
+    "@harness/uicore": "2.77.0",
     "@harness/use-modal": "1.1.0",
     "@popperjs/core": "^2.4.2",
     "@projectstorm/react-diagrams-core": "^6.6.0",
@@ -238,7 +239,7 @@
     "webpack": "5.70.0"
   },
   "engines": {
-    "node": ">=14.16.0"
+    "node": "^16"
   },
   "lint-staged": {
     "*": [

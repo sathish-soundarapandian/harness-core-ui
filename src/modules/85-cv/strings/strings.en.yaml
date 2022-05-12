@@ -452,6 +452,7 @@ monitoredServices:
   editService: Edit service
   deleteMonitoredServiceWarning: Deleting your monitored service ‘{{ name }}’ will also delete its resources.
   deleteService: Delete service
+  copyET: Copy Error Tracking Config
   monitoredServiceDeleted: Monitored service successfully deleted
   monitoredServiceCreated: Monitored Service created
   monitoredServiceUpdated: Monitored Service updated
@@ -783,7 +784,7 @@ updatedRemainingErrorBudget: Updated remaining Error Budget
 minutes: minutes
 noPreviousErrorBudgetResetHistoryAvailable: No previous Error Budget reset history available
 dateAndTime: Date/Time
-increaseWithPercentSign: 'Increase %'
+increaseInMinutes: 'Increase (minutes)'
 errorBudgetIsSuccessfullyReset: Error Budget is successfully reset
 queryTypeService: Service Based  (used for Health Score and SLI)
 queryTypeHost: Host Based (used for CV)

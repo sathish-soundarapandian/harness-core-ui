@@ -21,13 +21,22 @@ import {
 } from '@wings-software/uicore'
 import { Color, Intent } from '@harness/design-system'
 import produce from 'immer'
-import { debounce, defaultTo, get, isEmpty, set, unset, noop } from 'lodash-es'
+import { debounce, defaultTo, get, isEmpty, set, unset, noop, find } from 'lodash-es'
+import { parse } from 'yaml'
+import { Spinner } from '@blueprintjs/core'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ProjectPathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { ServiceConfig, ServiceDefinition, StageElementConfig, useGetServiceList } from 'services/cd-ng'
+import {
+  ServiceConfig,
+  ServiceDefinition,
+  StageElementConfig,
+  StageElementWrapperConfig,
+  TemplateLinkConfig,
+  useGetServiceList
+} from 'services/cd-ng'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import {
@@ -45,7 +54,7 @@ import { useValidationErrors } from '@pipeline/components/PipelineStudio/Pipline
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import SelectDeploymentType from '@cd/components/PipelineStudio/DeployServiceSpecifications/SelectDeploymentType'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import { useDeepCompareEffect } from '@common/hooks'
+import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import {
   deleteStageData,
   doesStageContainOtherData,
@@ -54,7 +63,10 @@ import {
   StageType
 } from '@pipeline/utils/stageHelpers'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
+import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import { useGetTemplate } from 'services/template-ng'
+import { Page } from '@common/exports'
+import { getScopeBasedQueryParams } from '@templates-library/utils/templatesUtils'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 
 export default function DeployServiceSpecifications(props: React.PropsWithChildren<unknown>): JSX.Element {
@@ -104,6 +116,12 @@ export default function DeployServiceSpecifications(props: React.PropsWithChildr
   const { stages } = getFlattenedStages(pipeline)
   const { submitFormsForTab } = useContext(StageErrorContext)
   const { errorMap } = useValidationErrors()
+
+  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+
+  const queryParams = useParams<ProjectPathProps>()
+
+  const [templateToFetch, setTemplateToFetch] = useState<TemplateLinkConfig>()
 
   const { openDialog: openStageDataDeleteWarningDialog } = useConfirmationDialog({
     cancelButtonText: getString('cancel'),
@@ -341,6 +359,64 @@ export default function DeployServiceSpecifications(props: React.PropsWithChildr
     [stage, updateStage]
   )
 
+  const {
+    data: templateDetails,
+    refetch: fetchTemplate,
+    loading: templateDetailsLoading,
+    error: templateDetailsError
+  } = useGetTemplate({
+    templateIdentifier: '',
+    lazy: true
+  })
+
+  const fetchTemplateDetails = (templateData?: TemplateLinkConfig) => {
+    if (templateData) {
+      const templateScope = getScopeFromValue(templateData.templateRef)
+
+      fetchTemplate({
+        queryParams: {
+          ...getScopeBasedQueryParams(queryParams, templateScope),
+          repoIdentifier,
+          branch,
+          getDefaultFromOtherRepo: true,
+          versionLabel: defaultTo(templateData?.versionLabel, '')
+        },
+        pathParams: {
+          templateIdentifier: getIdentifierFromValue(templateData?.templateRef || '')
+        }
+      })
+    }
+  }
+
+  useEffect(() => {
+    if (!isEmpty(templateDetails?.data)) {
+      const templateDeploymentType = get(
+        parse(defaultTo(templateDetails?.data?.yaml, '')),
+        'template.spec.spec.serviceConfig.serviceDefinition.type'
+      )
+      if (templateDeploymentType) {
+        setSelectedDeploymentType(templateDeploymentType)
+      }
+    }
+  }, [templateDetails?.data])
+
+  // Fetches deployment type if current stage is propagated from template based stage
+  useEffect(() => {
+    if (selectedPropagatedState?.value && checkedItems.overrideSetCheckbox) {
+      const stagePropagatedFrom = find(
+        stages,
+        stageData => stageData.stage?.identifier === selectedPropagatedState.value
+      ) as StageElementWrapperConfig
+      const isStagePropagatedFromTemplate = !isEmpty(stagePropagatedFrom.stage?.template?.templateRef)
+
+      if (isStagePropagatedFromTemplate) {
+        setTemplateToFetch((stagePropagatedFrom.stage as StageElementConfig).template)
+        fetchTemplateDetails((stagePropagatedFrom.stage as StageElementConfig).template)
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedPropagatedState?.value, checkedItems.overrideSetCheckbox])
+
   const getScopeBasedDefaultServiceRef = React.useCallback(() => {
     return scope === Scope.PROJECT ? '' : RUNTIME_INPUT_VALUE
   }, [scope])
@@ -423,19 +499,32 @@ export default function DeployServiceSpecifications(props: React.PropsWithChildr
               </>
             ) : (
               checkedItems.overrideSetCheckbox &&
-              selectedPropagatedState?.value && (
+              selectedPropagatedState?.value &&
+              (templateDetailsLoading ? (
+                <Card className={stageCss.sectionCard}>
+                  <Spinner size={Spinner.SIZE_SMALL} />
+                </Card>
+              ) : templateDetailsError ? (
+                <Card className={stageCss.sectionCard}>
+                  <Page.Error
+                    message={(templateDetailsError?.data as Error)?.message}
+                    onClick={() => fetchTemplateDetails(templateToFetch)}
+                  />
+                </Card>
+              ) : (
                 <StepWidget<K8SDirectServiceStep>
                   factory={factory}
                   readonly={isReadonly}
                   initialValues={{
                     stageIndex,
-                    setupModeType
+                    setupModeType,
+                    deploymentType: selectedDeploymentType as ServiceDefinition['type']
                   }}
                   allowableTypes={allowableTypes}
-                  type={StepType.K8sServiceSpec}
+                  type={getStepTypeByDeploymentType(defaultTo(selectedDeploymentType, ''))}
                   stepViewType={StepViewType.Edit}
                 />
-              )
+              ))
             )}
             {((setupModeType === setupMode.PROPAGATE && selectedPropagatedState?.value) ||
               setupModeType === setupMode.DIFFERENT) && (

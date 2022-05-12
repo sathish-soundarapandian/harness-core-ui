@@ -1256,6 +1256,7 @@ export interface StringsMap {
   'variables.confirmDelete': string
   'variables.confirmDeleteTitle': string
   'variables.defaultValue': string
+  'variables.editVar': string
   'variables.editVariable': string
   'variables.inputValidation': string
   'variables.newVariable': string
@@ -3646,12 +3647,17 @@ export interface StringsMap {
   'ce.anomalyDetection.addNewAnomalyAlert': string
   'ce.anomalyDetection.alertReciepients': string
   'ce.anomalyDetection.alertType': string
+  'ce.anomalyDetection.checkLater': string
   'ce.anomalyDetection.createNewAnomalyAlert': string
   'ce.anomalyDetection.filters.groupByCloudProvidersPlaceholder': string
   'ce.anomalyDetection.filters.groupByNoneLabel': string
   'ce.anomalyDetection.filters.groupByNonePlaceholder': string
   'ce.anomalyDetection.filters.groupByNoneValue': string
   'ce.anomalyDetection.filters.groupByPerspectivePlaceholder': string
+  'ce.anomalyDetection.listFetchingError': string
+  'ce.anomalyDetection.listFetchingErrorDesc': string
+  'ce.anomalyDetection.noData': string
+  'ce.anomalyDetection.noSearchResults': string
   'ce.anomalyDetection.notificationAlerts.addAlertSuccessMsg': string
   'ce.anomalyDetection.notificationAlerts.addChannelBtn': string
   'ce.anomalyDetection.notificationAlerts.alertChannelHeading': string
@@ -4276,12 +4282,14 @@ export interface StringsMap {
   'ce.perspectives.confirmDeletePerspectiveTitle': string
   'ce.perspectives.createPerspective.createCustomField': string
   'ce.perspectives.createPerspective.filters.addRuleText': string
+  'ce.perspectives.createPerspective.filters.chooseOperand': string
   'ce.perspectives.createPerspective.filters.enterCondition': string
   'ce.perspectives.createPerspective.filters.operator': string
   'ce.perspectives.createPerspective.filters.rulesText1': string
   'ce.perspectives.createPerspective.filters.rulesText2': string
   'ce.perspectives.createPerspective.filters.rulesTitle': string
   'ce.perspectives.createPerspective.filters.searchText': string
+  'ce.perspectives.createPerspective.filters.selectAll': string
   'ce.perspectives.createPerspective.filters.selectOperator': string
   'ce.perspectives.createPerspective.filters.selectValues': string
   'ce.perspectives.createPerspective.filters.selectValuesText': string
@@ -5384,7 +5392,7 @@ export interface StringsMap {
   'cv.ignore': string
   'cv.increaseErrorBudgetBy': string
   'cv.increaseErrorBudgetByIsRequired': string
-  'cv.increaseWithPercentSign': string
+  'cv.increaseInMinutes': string
   'cv.initiated': string
   'cv.jobNamePlaceholder': string
   'cv.known': string
@@ -5420,6 +5428,7 @@ export interface StringsMap {
   'cv.monitoredServices.changeMonitoredServiceTypeMessage': string
   'cv.monitoredServices.changesTable.impact': string
   'cv.monitoredServices.continuousVerification': string
+  'cv.monitoredServices.copyET': string
   'cv.monitoredServices.deleteMonitoredServiceWarning': string
   'cv.monitoredServices.deleteService': string
   'cv.monitoredServices.dependenciesHealth': string

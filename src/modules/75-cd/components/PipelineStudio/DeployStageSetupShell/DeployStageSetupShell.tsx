@@ -8,7 +8,7 @@
 import React from 'react'
 import { Layout, Tabs, Tab, Button, Icon, ButtonVariation } from '@wings-software/uicore'
 import cx from 'classnames'
-import type { HarnessIconName } from '@wings-software/uicore/dist/icons/HarnessIcons'
+import type { HarnessIconName } from '@harness/icons'
 import { Expander, IconName } from '@blueprintjs/core'
 import { defaultTo, get, isEmpty, set } from 'lodash-es'
 import type { ValidationError } from 'yup'

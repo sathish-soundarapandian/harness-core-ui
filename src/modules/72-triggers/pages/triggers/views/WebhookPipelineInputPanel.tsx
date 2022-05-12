@@ -133,40 +133,13 @@ const getPipelineWithInjectedWithCloneCodebase = ({
   isPipelineFromTemplate: boolean
 }): any => {
   if (isPipelineFromTemplate) {
-    const pipelineTemplateTemplateInputs = pipeline?.template?.templateInputs || {}
-    if (event === eventTypes.PULL_REQUEST) {
-      return {
-        ...pipeline,
-        template: {
-          templateInputs: {
-            ...pipelineTemplateTemplateInputs,
-            properties: {
-              ci: {
-                codebase: {
-                  build: ciCodebaseBuildPullRequest
-                }
-              }
-            }
-          }
-        }
-      }
-    } else {
-      return {
-        ...pipeline,
-        template: {
-          templateInputs: {
-            ...pipelineTemplateTemplateInputs,
-            properties: {
-              ci: {
-                codebase: {
-                  build: ciCodebaseBuild
-                }
-              }
-            }
-          }
-        }
-      }
+    const pipelineFromTemplate = { ...(pipeline || {}) }
+    if (pipelineFromTemplate?.template?.templateInputs?.properties?.ci?.codebase?.build) {
+      pipelineFromTemplate.template.templateInputs.properties.ci.codebase.build =
+        event === eventTypes.PULL_REQUEST ? ciCodebaseBuildPullRequest : ciCodebaseBuild
     }
+
+    return pipelineFromTemplate
   }
   if (event === eventTypes.PULL_REQUEST) {
     return {
