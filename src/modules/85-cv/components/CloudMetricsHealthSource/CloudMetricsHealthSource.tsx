@@ -6,8 +6,8 @@
  */
 
 import React, { useContext, useEffect, useMemo, useState } from 'react'
-import { Color, Container, Heading, Text, useConfirmationDialog } from '@wings-software/uicore'
-
+import { Container, Heading, Text, useConfirmationDialog } from '@wings-software/uicore'
+import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
