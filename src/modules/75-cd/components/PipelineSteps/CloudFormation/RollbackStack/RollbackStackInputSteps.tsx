@@ -26,34 +26,40 @@ export function RollbackStackInputStepRef<T extends RollbackStackData = Rollback
 
   return (
     <FormikForm>
-      {isRuntime(inputSetData?.template?.timeout as string) && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormMultiTypeDurationField
-            label={getString('pipelineSteps.timeoutLabel')}
-            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
-            disabled={readonly}
-            multiTypeDurationProps={{
-              enableConfigureOptions: false,
-              allowableTypes,
-              expressions,
-              disabled: readonly
-            }}
-          />
-        </div>
-      )}
-      {isRuntime(inputSetData?.template?.spec?.configuration?.provisionerIdentifier as string) && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
-            name={`${path}.spec.configuration.provisionerIdentifier`}
-            label={getString('pipelineSteps.provisionerIdentifier')}
-            disabled={readonly}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-          />
-        </div>
-      )}
+      {
+        /* istanbul ignore next */
+        isRuntime(inputSetData?.template?.timeout as string) && (
+          <div className={cx(stepCss.formGroup, stepCss.md)}>
+            <FormMultiTypeDurationField
+              label={getString('pipelineSteps.timeoutLabel')}
+              name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
+              disabled={readonly}
+              multiTypeDurationProps={{
+                enableConfigureOptions: false,
+                allowableTypes,
+                expressions,
+                disabled: readonly
+              }}
+            />
+          </div>
+        )
+      }
+      {
+        /* istanbul ignore next */
+        isRuntime(inputSetData?.template?.spec?.configuration?.provisionerIdentifier as string) && (
+          <div className={cx(stepCss.formGroup, stepCss.md)}>
+            <FormInput.MultiTextInput
+              name={`${path}.spec.configuration.provisionerIdentifier`}
+              label={getString('pipelineSteps.provisionerIdentifier')}
+              disabled={readonly}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+            />
+          </div>
+        )
+      }
     </FormikForm>
   )
 }

@@ -103,8 +103,6 @@ export class CFRollbackStack extends PipelineStep<RollbackStackStepInfo> {
       return (
         <RollbackStackInputStep
           initialValues={initialValues}
-          onUpdate={data => onUpdate?.(this.processFormData(data))}
-          onChange={data => onChange?.(this.processFormData(data))}
           allowableTypes={allowableTypes}
           allValues={inputSetData?.allValues}
           stepViewType={stepViewType}
