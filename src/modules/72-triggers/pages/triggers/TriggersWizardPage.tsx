@@ -18,7 +18,7 @@ import {
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { parse } from 'yaml'
-import { isEmpty, isUndefined, merge, cloneDeep, get, defaultTo, set } from 'lodash-es'
+import { isEmpty, isUndefined, merge, cloneDeep, defaultTo } from 'lodash-es'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { Page, useToaster } from '@common/exports'
 import Wizard from '@common/components/Wizard/Wizard'
@@ -42,7 +42,6 @@ import {
   useGetSchemaYaml
 } from 'services/pipeline-ng'
 import {
-  CodebaseTypes,
   isCloneCodebaseEnabledAtLeastOneStage,
   isCodebaseFieldsRuntimeInputs,
   getPipelineWithoutCodebaseInputs
@@ -1632,59 +1631,6 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     }
   )
 
-  const validateCICodebase = (
-    formData:
-      | FlatValidArtifactFormikValuesInterface
-      | FlatValidWebhookFormikValuesInterface
-      | FlatValidScheduleFormikValuesInterface
-  ): FormikErrors<Record<string, any>> => {
-    const pipeline = get(formData, 'resolvedPipeline') as PipelineInfoConfig
-    const isCloneCodebaseEnabledAtLeastAtOneStage = isCloneCodebaseEnabledAtLeastOneStage(pipeline)
-    if (!isCloneCodebaseEnabledAtLeastAtOneStage) {
-      return {}
-    }
-    if (
-      isEmpty(get(formData, 'pipeline.properties.ci.codebase.build.type')) &&
-      isEmpty(get(formData, 'pipeline.template.templateInputs.properties.ci.codebase.build.type'))
-    ) {
-      return {
-        'pipeline.properties.ci.codebase.build.type': getString(
-          'pipeline.failureStrategies.validation.ciCodebaseRequired'
-        )
-      }
-    }
-    const ciCodeBaseType = get(formData, 'pipeline.properties.ci.codebase.build.type')
-    if (
-      ciCodeBaseType === CodebaseTypes.branch &&
-      isEmpty(get(formData, 'pipeline.properties.ci.codebase.build.spec.branch'))
-    ) {
-      return {
-        'pipeline.properties.ci.codebase.build.spec.branch': getString(
-          'pipeline.failureStrategies.validation.gitBranchRequired'
-        )
-      }
-    } else if (
-      ciCodeBaseType === CodebaseTypes.tag &&
-      isEmpty(get(formData, 'pipeline.properties.ci.codebase.build.spec.tag'))
-    ) {
-      return {
-        'pipeline.properties.ci.codebase.build.spec.tag': getString(
-          'pipeline.failureStrategies.validation.gitTagRequired'
-        )
-      }
-    } else if (
-      ciCodeBaseType === CodebaseTypes.PR &&
-      isEmpty(get(formData, 'pipeline.properties.ci.codebase.build.spec.number'))
-    ) {
-      return {
-        'pipeline.properties.ci.codebase.build.spec.number': getString(
-          'pipeline.failureStrategies.validation.gitPRRequired'
-        )
-      }
-    }
-    return {}
-  }
-
   const renderErrorsStrip = (): JSX.Element => <ErrorsStrip formErrors={formErrors} />
 
   const getTriggerPipelineValues = (
@@ -1737,14 +1683,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     })
     // https://github.com/formium/formik/issues/1392
     const errors: any = await { ...runPipelineFormErrors }
-    const ciCodebaseErrors = validateCICodebase(values)
-    if (!isEmpty(ciCodebaseErrors)) {
-      const [ciCodebaseErrorsEntry] = Object.entries(ciCodebaseErrors)
-      set(errors, ciCodebaseErrorsEntry[0], ciCodebaseErrorsEntry[1])
-      setErrors({ pipeline: errors?.pipeline })
-      setFormErrors({ pipeline: errors?.pipeline }) // error strip
-      return errors
-    } else if (!isEmpty(runPipelineFormErrors)) {
+    if (!isEmpty(runPipelineFormErrors)) {
       setErrors(runPipelineFormErrors)
       // To do: have errors outlines display
       return runPipelineFormErrors

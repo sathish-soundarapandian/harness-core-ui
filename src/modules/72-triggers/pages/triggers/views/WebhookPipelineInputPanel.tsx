@@ -19,6 +19,7 @@ import {
   useGetMergeInputSetFromPipelineTemplateWithListInput
 } from 'services/pipeline-ng'
 import { PipelineInputSetForm } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
+import { isCloneCodebaseEnabledAtLeastOneStage } from '@pipeline/utils/CIUtils'
 import { useStrings } from 'framework/strings'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { clearRuntimeInput } from '@pipeline/components/PipelineStudio/StepUtil'
@@ -36,6 +37,7 @@ import css from './WebhookPipelineInputPanel.module.scss'
 
 interface WebhookPipelineInputPanelPropsInterface {
   formikProps?: any
+  isEdit?: boolean
 }
 
 const applyArtifactToPipeline = (newPipelineObject: any, formikProps: FormikProps<any>): PipelineInfoConfig => {
@@ -166,7 +168,10 @@ const getPipelineWithInjectedWithCloneCodebase = ({
   }
 }
 
-function WebhookPipelineInputPanelForm({ formikProps }: WebhookPipelineInputPanelPropsInterface): React.ReactElement {
+function WebhookPipelineInputPanelForm({
+  formikProps,
+  isEdit
+}: WebhookPipelineInputPanelPropsInterface): React.ReactElement {
   const {
     values: { inputSetSelected, pipeline, resolvedPipeline },
     values
@@ -210,12 +215,9 @@ function WebhookPipelineInputPanelForm({ formikProps }: WebhookPipelineInputPane
   })
 
   useEffect(() => {
-    const shouldInjectCloneCodebase =
-      !isEmpty(resolvedPipeline?.properties?.ci?.codebase) &&
-      (resolvedPipeline?.stages?.some((stage: any) => stage?.stage?.spec?.cloneCodebase) ||
-        resolvedPipeline?.stages?.[0]?.parallel?.some((stage: any) => stage?.stage?.spec?.cloneCodebase))
+    const shouldInjectCloneCodebase = isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline)
 
-    if (!hasEverRendered && shouldInjectCloneCodebase) {
+    if (!hasEverRendered && shouldInjectCloneCodebase && !isEdit) {
       const formikValues = cloneDeep(formikProps.values)
       const isPipelineFromTemplate = !!formikValues?.pipeline?.template
       formikValues.pipeline = getPipelineWithInjectedWithCloneCodebase({
