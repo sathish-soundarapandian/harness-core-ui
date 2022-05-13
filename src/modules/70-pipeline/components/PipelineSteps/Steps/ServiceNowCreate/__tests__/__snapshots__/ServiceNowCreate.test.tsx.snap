@@ -16,7 +16,7 @@ exports[`ServiceNow Create tests Basic snapshot - deploymentform mode: serviceNo
           class="Tooltip--acenter bp3-label"
           data-tooltip-id="stepTestUtilForm_spec.connectorRef"
         >
-          pipeline.jiraApprovalStep.connectorRef
+          pipeline.serviceNowApprovalStep.connectorRef
         </span>
       </div>
       <div
@@ -45,7 +45,7 @@ exports[`ServiceNow Create tests Basic snapshot - deploymentform mode: serviceNo
                   <span
                     class="placeholder"
                   >
-                    pipeline.jiraApprovalStep.jiraConnectorPlaceholder
+                    pipeline.serviceNowApprovalStep.serviceNowConnectorPlaceholder
                   </span>
                 </span>
                 <span
@@ -482,7 +482,7 @@ exports[`ServiceNow Create tests Basic snapshot - inputset mode: input set with 
           class="Tooltip--acenter bp3-label"
           data-tooltip-id="stepTestUtilForm_spec.connectorRef"
         >
-          pipeline.jiraApprovalStep.connectorRef
+          pipeline.serviceNowApprovalStep.connectorRef
         </span>
       </div>
       <div
@@ -511,7 +511,7 @@ exports[`ServiceNow Create tests Basic snapshot - inputset mode: input set with 
                   <span
                     class="placeholder"
                   >
-                    pipeline.jiraApprovalStep.jiraConnectorPlaceholder
+                    pipeline.serviceNowApprovalStep.serviceNowConnectorPlaceholder
                   </span>
                 </span>
                 <span
@@ -590,7 +590,7 @@ exports[`ServiceNow Create tests Basic snapshot - inputset mode: input set with 
                 <span
                   class="FormError--error"
                 >
-                  pipeline.jiraApprovalStep.validations.connectorRef
+                  pipeline.serviceNowApprovalStep.validations.connectorRef
                 </span>
               </div>
             </div>
@@ -874,7 +874,7 @@ exports[`ServiceNow Create tests Basic snapshot - inputset mode: input set with 
     <pre>
       {
   "spec": {
-    "connectorRef": "pipeline.jiraApprovalStep.validations.connectorRef",
+    "connectorRef": "pipeline.serviceNowApprovalStep.validations.connectorRef",
     "ticketType": "pipeline.serviceNowApprovalStep.validations.ticketType"
   }
 }
@@ -909,7 +909,7 @@ exports[`ServiceNow Create tests Deploymentform readonly mode: serviceNow-create
           class="Tooltip--acenter bp3-label"
           data-tooltip-id="stepTestUtilForm_spec.connectorRef"
         >
-          pipeline.jiraApprovalStep.connectorRef
+          pipeline.serviceNowApprovalStep.connectorRef
         </span>
       </div>
       <div
@@ -938,7 +938,7 @@ exports[`ServiceNow Create tests Deploymentform readonly mode: serviceNow-create
                   <span
                     class="placeholder"
                   >
-                    pipeline.jiraApprovalStep.jiraConnectorPlaceholder
+                    pipeline.serviceNowApprovalStep.serviceNowConnectorPlaceholder
                   </span>
                 </span>
                 <span
@@ -1259,6 +1259,7 @@ exports[`ServiceNow Create tests Edit Stage - readonly view: edit-stage-readonly
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

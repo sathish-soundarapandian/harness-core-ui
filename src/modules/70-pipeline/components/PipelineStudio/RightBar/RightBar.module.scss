@@ -85,15 +85,17 @@
     text-align: center;
   }
 }
+
 .predefinedValue {
   font-size: 13px;
   color: var(--grey-500);
-  margin-top: calc(var(--spacing-small) / -1);
   margin-bottom: var(--spacing-medium);
 }
+
 .git-sync-popover {
   background-color: var(--white);
 }
+
 .labelWrapper {
   display: flex;
   align-items: center;
@@ -101,4 +103,24 @@
   :global(.bp3-popover-wrapper) {
     margin-top: 0 !important;
   }
+}
+
+.bottomMargin3 {
+  margin-bottom: var(--spacing-3) !important;
+}
+
+.inpLabel {
+  padding-bottom: var(--spacing-2) !important;
+}
+
+.bottomMargin5 {
+  margin-bottom: var(--spacing-5) !important;
+}
+
+.topMargin5 {
+  margin-top: var(--spacing-5) !important;
+}
+
+.capitalize {
+  text-transform: capitalize;
 }

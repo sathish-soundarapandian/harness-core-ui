@@ -211,6 +211,7 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = props => {
                             readonly={true}
                             viewType={StepViewType.InputSet}
                             allowableTypes={allowableTypes}
+                            viewTypeMetadata={{ isTemplateDetailDrawer: true }}
                           />
                         )}
                         {templateEntityType === TemplateType.Stage && (

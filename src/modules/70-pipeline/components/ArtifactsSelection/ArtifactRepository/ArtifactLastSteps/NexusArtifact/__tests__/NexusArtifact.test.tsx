@@ -253,10 +253,10 @@ describe('Nexus Artifact tests', () => {
 
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
     await act(async () => {
-      fireEvent.change(queryByNameAttribute('identifier')!, { target: { value: 'testidentifier' } })
-      fireEvent.change(queryByNameAttribute('artifactPath')!, { target: { value: 'artifact-path' } })
-      fireEvent.change(queryByNameAttribute('repository')!, { target: { value: 'repository' } })
-      fireEvent.change(queryByNameAttribute('repositoryUrl')!, { target: { value: 'repositoryUrl' } })
+      await fireEvent.change(queryByNameAttribute('identifier')!, { target: { value: 'testidentifier' } })
+      await fireEvent.change(queryByNameAttribute('artifactPath')!, { target: { value: 'artifact-path' } })
+      await fireEvent.change(queryByNameAttribute('repository')!, { target: { value: 'repository' } })
+      await fireEvent.change(queryByNameAttribute('repositoryUrl')!, { target: { value: 'repositoryUrl' } })
     })
     expect(container).toMatchSnapshot()
     fireEvent.click(getByText('Regex'))

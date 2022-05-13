@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { FormikContext } from 'formik'
+import type { FormikContextType } from 'formik'
 import { ThumbnailSelect, ThumbnailSelectProps } from '@wings-software/uicore'
 
 import { useStrings } from 'framework/strings'
@@ -17,7 +17,7 @@ import css from './StrategySelection.module.scss'
 export interface StrategyStepsListProps {
   allowedStrategies: Strategy[]
   name: string
-  formik: FormikContext<Record<string, never>>
+  formik: FormikContextType<Record<string, never>>
   disabled?: boolean
   onChange?(): void
 }

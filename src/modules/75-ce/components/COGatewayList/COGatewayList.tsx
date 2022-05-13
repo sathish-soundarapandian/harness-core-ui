@@ -774,7 +774,7 @@ const COGatewayList: React.FC = () => {
       }
       showSuccess(`Rule ${data.name} ${!data.disabled ? 'enabled' : 'disabled'}`)
     } else {
-      showError(data, undefined, 'ce.svc.stage.toggle.error')
+      showError(_defaultTo(data.data?.errors?.join(', '), ''))
     }
   }
 
@@ -788,7 +788,7 @@ const COGatewayList: React.FC = () => {
       }
       refetchServices()
     } else {
-      showError(data, undefined, 'ce.svc.delete.error')
+      showError(_defaultTo(data.data?.errors?.join(', '), ''))
     }
   }
 

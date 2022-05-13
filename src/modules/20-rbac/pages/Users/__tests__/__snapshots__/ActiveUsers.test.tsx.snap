@@ -41,6 +41,7 @@ exports[`UsersPage Test Add Roles 1`] = `
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -654,6 +655,7 @@ exports[`UsersPage Test Invite a User 1`] = `
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>

@@ -141,6 +141,7 @@ exports[`Testing COGatewayAccess DNS checkbox checks succesfully 1`] = `
                 class="OverlaySpinner--overlaySpinner"
               >
                 <form
+                  action="#"
                   class="FormikForm--main"
                 >
                   <div>

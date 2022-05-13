@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { FormikContext } from 'formik'
+import type { FormikContextType } from 'formik'
 import type { RowData } from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
 import type { HealthSource, MonitoredServiceDTO } from 'services/cv'
 import type { MonitoredServiceForm } from '../../Service.types'
@@ -16,7 +16,7 @@ export function createOpenHealthSourceTableProps({
   isEdit,
   rowData
 }: {
-  formik: FormikContext<MonitoredServiceForm>
+  formik: FormikContextType<MonitoredServiceForm>
   isEdit: boolean
   rowData: RowData | null
   tableData: HealthSource[]

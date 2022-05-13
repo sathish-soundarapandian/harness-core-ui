@@ -85,6 +85,7 @@ exports[`Connector Details Page Edit and save connector via YAML for a git-sync 
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>

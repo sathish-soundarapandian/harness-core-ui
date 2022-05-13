@@ -162,6 +162,7 @@ const renderPopover = ({
             <Button
               minimal
               variation={ButtonVariation.PRIMARY}
+              data-testid="addStepPipeline"
               icon="Edit"
               text={labels.addStep}
               onClick={() => onPopoverSelection?.(false, isParallelNodeClicked, event)}
@@ -1144,6 +1145,8 @@ function ExecutionGraphRef<T extends StageElementConfig>(
           hoverShowDelay={200}
           render={renderPopover}
           bind={setDynamicPopoverHandler}
+          usePortal
+          portalClassName={css.portalVisibility}
         />
       </div>
     </div>

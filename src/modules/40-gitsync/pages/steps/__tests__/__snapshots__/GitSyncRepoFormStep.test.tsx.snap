@@ -22,6 +22,7 @@ exports[`Test GitSyncRepoFormStep Should not allow saving form if folder name is
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -633,6 +634,7 @@ exports[`Test GitSyncRepoFormStep Should not allow saving form if folder name is
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>

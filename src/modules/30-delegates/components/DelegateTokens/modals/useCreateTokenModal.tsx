@@ -21,7 +21,7 @@ import {
 import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { useParams } from 'react-router-dom'
-import type { FormikActions } from 'formik'
+import type { FormikHelpers } from 'formik'
 import * as Yup from 'yup'
 import type { IDialogProps } from '@blueprintjs/core'
 import { NameSchema } from '@common/utils/Validation'
@@ -73,7 +73,7 @@ export const useCreateTokenModal = ({ onSuccess }: CreateTokenModalProps): Creat
 
   const generatedValuePlaceholder = getString('delegates.tokens.generatedValuePlaceholder')
 
-  const onSubmit = async (values: FormikProps, formikActions: FormikActions<any>) => {
+  const onSubmit = async (values: FormikProps, formikActions: FormikHelpers<any>) => {
     try {
       trackEvent(DelegateActions.SaveCreateToken, {
         category: Category.DELEGATE,

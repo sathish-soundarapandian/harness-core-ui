@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react'
 import cx from 'classnames'
-import { connect, FormikContext } from 'formik'
+import { connect, FormikContextType } from 'formik'
 import {
   Layout,
   Container,
@@ -44,7 +44,7 @@ interface MappedUserGroupData {
 }
 
 export interface FormikUserGroupsInput extends UserGroupsInputProps {
-  formik: FormikContext<any>
+  formik: FormikContextType<any>
   tooltipProps?: DataTooltipInterface
   disabled?: boolean
   formGroupClass?: string

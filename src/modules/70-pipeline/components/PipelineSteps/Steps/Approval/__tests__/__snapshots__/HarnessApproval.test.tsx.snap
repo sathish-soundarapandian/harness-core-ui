@@ -1028,6 +1028,7 @@ exports[`Harness Approval tests Edit stage - readonly: edit stage readonly 1`] =
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -1538,6 +1539,7 @@ exports[`Harness Approval tests Edit stage - submit field values as expressions:
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -2511,6 +2513,7 @@ exports[`Harness Approval tests MinimumCount should be greater than 1: minimum c
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -3455,6 +3458,7 @@ exports[`Harness Approval tests On submit call: values populating on edit 1`] = 
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

@@ -600,6 +600,7 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view: expand
           >
             <div>
               <form
+                action="#"
                 class="FormikForm--main"
               >
                 <div>
@@ -1363,6 +1364,7 @@ exports[`Render Forms - Snapshot Testing render Input Set Form view 1`] = `
           >
             <div>
               <form
+                action="#"
                 class="FormikForm--main"
               >
                 <div>
@@ -2181,6 +2183,7 @@ exports[`Render Forms - Snapshot Testing render inputset with no inputSetRespons
           >
             <div>
               <form
+                action="#"
                 class="FormikForm--main"
               >
                 <div>

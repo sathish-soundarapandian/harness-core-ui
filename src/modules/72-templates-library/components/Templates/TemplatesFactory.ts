@@ -16,6 +16,8 @@ const templateFactory = new TemplateFactory()
 // common
 templateFactory.registerTemplate(new StepTemplate())
 templateFactory.registerTemplate(new StageTemplate())
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 templateFactory.registerTemplate(new MonitoredServiceTemplate())
 templateFactory.registerTemplate(new PipelineTemplate())
 

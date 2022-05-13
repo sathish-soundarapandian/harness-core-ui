@@ -8,17 +8,12 @@
 import React from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import { setUpCI } from '@common/utils/GetStartedWithCIUtil'
 import WelcomePage from '../WelcomePage'
 
 jest.mock('services/cd-ng', () => ({
   useUpdateAccountDefaultExperienceNG: jest.fn().mockImplementation(() => {
     return { mutate: () => Promise.resolve({ status: 'SUCCESS', data: { defaultExperience: 'NG' } }) }
   })
-}))
-
-jest.mock('@common/utils/GetStartedWithCIUtil', () => ({
-  setUpCI: jest.fn()
 }))
 
 const featureFlags = {
@@ -50,19 +45,5 @@ describe('Welcome Page', () => {
     fireEvent.click(getByText('continue'))
     await waitFor(() => expect(queryByText('common.purpose.ci.description')).not.toBeInTheDocument())
     expect(container).toMatchSnapshot()
-  })
-
-  test('With CIE_HOSTED_BUILDS feature flag enabled', async () => {
-    ;(setUpCI as jest.Mock).mockImplementation(() => true)
-    const { getByText, getByTestId } = render(
-      <TestWrapper defaultAppStoreValues={{ featureFlags: { ...featureFlags, CIE_HOSTED_BUILDS: true } }}>
-        <WelcomePage />
-      </TestWrapper>
-    )
-    fireEvent.click(getByTestId('ci'))
-    await waitFor(() => {
-      fireEvent.click(getByText('continue'))
-    })
-    expect(setUpCI).toBeCalled()
   })
 })

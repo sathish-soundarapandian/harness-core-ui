@@ -109,7 +109,7 @@ describe('GCR Step', () => {
 
       expect(container).toMatchSnapshot()
 
-      await act(() => ref.current?.submitForm())
+      await act(() => ref.current?.submitForm()!)
       expect(onUpdate).toHaveBeenCalledWith(initialValues)
     })
 
@@ -163,7 +163,7 @@ describe('GCR Step', () => {
 
       expect(container).toMatchSnapshot()
 
-      await act(() => ref.current?.submitForm())
+      await act(() => ref.current?.submitForm()!)
       expect(onUpdate).toHaveBeenCalledWith(initialValues)
     })
   })

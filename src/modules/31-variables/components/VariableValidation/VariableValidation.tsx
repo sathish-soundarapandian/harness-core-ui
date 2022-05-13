@@ -7,13 +7,13 @@
 
 import React from 'react'
 import { FormInput } from '@harness/uicore'
-import type { FormikContext } from 'formik'
+import type { FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
 import { Validation, VariableFormData } from '@variables/utils/VariablesUtils'
 import AllowedValuesField from '../AllowedValues/AllowedValuesField'
 
 interface VariableValidationProps {
-  formik: FormikContext<VariableFormData>
+  formik: FormikContextType<VariableFormData>
 }
 
 const VariableValidation: React.FC<VariableValidationProps> = props => {
@@ -25,9 +25,10 @@ const VariableValidation: React.FC<VariableValidationProps> = props => {
         name="valueType"
         label={getString('common.configureOptions.validation')}
         items={[
-          { label: getString('inputTypes.FIXED'), value: Validation.FIXED },
-          { label: getString('allowedValues'), value: Validation.FIXED_SET, disabled: true },
-          { label: getString('common.configureOptions.regex'), value: Validation.REGEX, disabled: true }
+          { label: getString('inputTypes.FIXED'), value: Validation.FIXED }
+          // enable when BE adds support
+          // { label: getString('allowedValues'), value: Validation.FIXED_SET, disabled: true },
+          // { label: getString('common.configureOptions.regex'), value: Validation.REGEX, disabled: true }
         ]}
       />
       {props.formik.values.valueType === Validation.FIXED ? (

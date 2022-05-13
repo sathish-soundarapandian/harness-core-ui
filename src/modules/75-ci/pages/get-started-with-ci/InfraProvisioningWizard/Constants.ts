@@ -50,7 +50,8 @@ export enum ProvisioningStatus {
 }
 
 export interface SelectBuildLocationProps {
-  selectedBuildLocation: BuildLocationDetails
+  selectedHosting?: Hosting
+  selectedBuildLocation?: BuildLocationDetails
   provisioningStatus?: ProvisioningStatus
 }
 
@@ -62,15 +63,16 @@ export const HostedByHarnessBuildLocation: BuildLocationDetails = {
   approxETAInMins: 2
 }
 
+export const K8sBuildLocation: BuildLocationDetails = {
+  icon: 'app-kubernetes',
+  location: BuildLocation.Kubernetes,
+  label: 'kubernetesText',
+  details: 'ci.getStartedWithCI.k8sBuildLocation',
+  approxETAInMins: 12
+}
+
 export const AllBuildLocationsForOnPrem: BuildLocationDetails[] = [
-  {
-    icon: 'app-kubernetes',
-    location: BuildLocation.Kubernetes,
-    label: 'kubernetesText',
-    details: 'ci.getStartedWithCI.k8sBuildLocation',
-    approxETAInMins: 12,
-    disabled: true
-  },
+  K8sBuildLocation,
   {
     icon: 'docker-step',
     location: BuildLocation.DockerRunner,
@@ -107,10 +109,15 @@ export interface GitProvider {
   disabled?: boolean
 }
 
-export const AllGitProviders: GitProvider[] = [
+export const AllSaaSGitProviders: GitProvider[] = [
   { icon: 'github', label: 'common.repo_provider.githubLabel', type: Connectors.GITHUB },
   { icon: 'gitlab', label: 'common.repo_provider.gitlabLabel', type: Connectors.GITLAB },
   { icon: 'bitbucket-blue', label: 'common.repo_provider.bitbucketLabel', type: Connectors.BITBUCKET }
+]
+
+export const AllOnPremGitProviders: GitProvider[] = [
+  ...AllSaaSGitProviders,
+  { icon: 'service-github', label: 'ci.getStartedWithCI.genericGit', type: Connectors.GIT }
 ]
 
 export enum GitAuthenticationMethod {

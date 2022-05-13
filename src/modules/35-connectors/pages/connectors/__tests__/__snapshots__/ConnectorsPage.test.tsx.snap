@@ -1959,6 +1959,7 @@ exports[`Connectors Page Test Render and check filter panel: New Filter 1`] = `
       tabindex="0"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -2331,6 +2332,7 @@ exports[`Connectors Page Test Render and check filter panel: New Filter 1`] = `
                   class="OverlaySpinner--overlaySpinner"
                 >
                   <form
+                    action="#"
                     class="FormikForm--main"
                   >
                     <div>

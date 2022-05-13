@@ -155,7 +155,7 @@ export function SavePipelinePopover({
 
   const isSaveEnabled = !isReadonly && isUpdated
 
-  const { save } = useSaveAsTemplate({ data: pipeline, type: 'Pipeline' })
+  const { save } = useSaveAsTemplate({ data: pipeline, type: 'Pipeline', fireSuccessEvent: true })
 
   const navigateToLocation = (newPipelineId: string, updatedGitDetails?: SaveToGitFormInterface): void => {
     history.replace(

@@ -376,7 +376,7 @@ export default function SelectDeploymentType(props: SelectServiceDeploymentTypeP
     >
       {formik => {
         window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.SERVICE }))
-        formikRef.current = formik
+        formikRef.current = formik as FormikProps<unknown> | null
         return (
           <Card className={stageCss.sectionCard}>
             <div

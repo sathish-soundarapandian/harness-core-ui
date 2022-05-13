@@ -6,6 +6,7 @@ exports[`InfraProvisioning  click on checkbox- should open up prov popup 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main provisionerForm"
     >
       <div>

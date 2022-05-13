@@ -270,7 +270,7 @@ export const NewEditEnvironmentModal: React.FC<NewEditEnvironmentModalProps> = (
           })}
         >
           {formikProps => {
-            formikRef.current = formikProps
+            formikRef.current = formikProps as FormikProps<EnvironmentResponseDTO> | undefined
             return (
               <>
                 {selectedView === SelectedView.VISUAL ? (
@@ -605,7 +605,7 @@ export const DeployEnvironmentWidget: React.FC<DeployEnvironmentProps> = ({
       >
         {formik => {
           window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.INFRASTRUCTURE }))
-          formikRef.current = formik
+          formikRef.current = formik as FormikProps<unknown> | null
           const { values, setFieldValue } = formik
           return (
             <FormikForm>

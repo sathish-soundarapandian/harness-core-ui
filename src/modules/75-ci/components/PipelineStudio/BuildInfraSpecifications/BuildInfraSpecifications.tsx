@@ -451,6 +451,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
 
   const handleValidate = (values: any): void => {
     if (stage) {
+      const _buildInfraType = values.buildInfraType || buildInfraTypes[0].value
       const errors: { [key: string]: string } = {}
       const stageData = produce(stage, draft => {
         if (currentMode === Modes.Propagate && values.useFromStage) {
@@ -481,7 +482,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             errors.initTimeout = e.message
           }
           const additionalKubernetesFields: { containerSecurityContext?: ContainerSecurityContext } = {}
-          if (buildInfraType === 'KubernetesDirect') {
+          if (_buildInfraType === 'KubernetesDirect') {
             const containerSecurityContext: ContainerSecurityContext = {
               capabilities: {}
             }
@@ -531,7 +532,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           set(
             draft,
             'stage.spec.infrastructure',
-            buildInfraType === 'KubernetesDirect'
+            _buildInfraType === 'KubernetesDirect'
               ? {
                   type: 'KubernetesDirect',
                   spec: {
@@ -553,7 +554,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                     ...additionalKubernetesFields
                   }
                 }
-              : buildInfraType === 'VM'
+              : _buildInfraType === 'VM'
               ? {
                   type: 'VM',
                   spec: {
@@ -1264,7 +1265,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           {formik => {
             const { setFieldValue } = formik
             window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: BuildTabs.INFRASTRUCTURE }))
-            formikRef.current = formik
+            formikRef.current = formik as FormikProps<unknown> | null
             return (
               <Layout.Vertical>
                 <Text font={{ variation: FontVariation.H5 }} id="infrastructureDefinition">

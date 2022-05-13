@@ -9,6 +9,7 @@ exports[`Azure Access Point Form form in edit mode 1`] = `
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -700,6 +701,7 @@ exports[`Azure Access Point Form render and fill azure ap form 1`] = `
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>

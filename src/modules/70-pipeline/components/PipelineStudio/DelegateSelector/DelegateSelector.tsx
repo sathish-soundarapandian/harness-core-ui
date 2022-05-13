@@ -44,7 +44,7 @@ export function DelegateSelector(props: DelegateSelectorProps): React.ReactEleme
       validate={debouncedUpdate}
     >
       {formik => {
-        formikRef.current = formik
+        formikRef.current = formik as FormikProps<unknown> | null
         return <DelegateSelectorPanel isReadonly={isReadonly} />
       }}
     </Formik>

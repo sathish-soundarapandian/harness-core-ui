@@ -5,7 +5,9 @@ exports[`stageinputset tests viewType DeploymentForm initial render 1`] = `
   <div
     class="OverlaySpinner--overlaySpinner"
   >
-    <form>
+    <form
+      action="#"
+    >
       <div
         class="accordionSummary"
         id="Stage.undefined.Service"
@@ -73,12 +75,12 @@ exports[`stageinputset tests viewType DeploymentForm initial render 1`] = `
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      style="width: 385px;"
+                      style="width: 320px;"
                     >
                       <button
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                         data-testid="cr-field-stages[0].stage.spec.infrastructure.spec.connectorRef"
-                        style="width: 385px;"
+                        style="width: 320px;"
                         type="button"
                       >
                         <span
@@ -847,6 +849,7 @@ exports[`stageinputset tests viewType DeploymentForm initial render 1`] = `
             </label>
             <div>
               <form
+                action="#"
                 class="FormikForm--main removeBpPopoverWrapperTopMargin"
               >
                 <div>
@@ -913,7 +916,9 @@ exports[`stageinputset tests viewType DeploymentForm initial render2 1`] = `
   <div
     class="OverlaySpinner--overlaySpinner"
   >
-    <form>
+    <form
+      action="#"
+    >
       <div
         class="accordionSummary"
         id="Stage.undefined.Service"
@@ -981,12 +986,12 @@ exports[`stageinputset tests viewType DeploymentForm initial render2 1`] = `
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      style="width: 385px;"
+                      style="width: 320px;"
                     >
                       <button
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                         data-testid="cr-field-stages[0].stage.spec.infrastructure.spec.connectorRef"
-                        style="width: 385px;"
+                        style="width: 320px;"
                         type="button"
                       >
                         <span
@@ -1755,6 +1760,7 @@ exports[`stageinputset tests viewType DeploymentForm initial render2 1`] = `
             </label>
             <div>
               <form
+                action="#"
                 class="FormikForm--main removeBpPopoverWrapperTopMargin"
               >
                 <div>
@@ -1821,7 +1827,9 @@ exports[`stageinputset tests viewType InputSet initial render 1`] = `
   <div
     class="OverlaySpinner--overlaySpinner"
   >
-    <form>
+    <form
+      action="#"
+    >
       <div
         class="accordionSummary"
         id="Stage.undefined.Service"
@@ -2663,6 +2671,7 @@ exports[`stageinputset tests viewType InputSet initial render 1`] = `
             </label>
             <div>
               <form
+                action="#"
                 class="FormikForm--main removeBpPopoverWrapperTopMargin"
               >
                 <div>
@@ -2729,7 +2738,9 @@ exports[`stageinputset tests viewType InputSet initial render2 1`] = `
   <div
     class="OverlaySpinner--overlaySpinner"
   >
-    <form>
+    <form
+      action="#"
+    >
       <div
         class="accordionSummary"
         id="Stage.undefined.Service"
@@ -3571,6 +3582,7 @@ exports[`stageinputset tests viewType InputSet initial render2 1`] = `
             </label>
             <div>
               <form
+                action="#"
                 class="FormikForm--main removeBpPopoverWrapperTopMargin"
               >
                 <div>

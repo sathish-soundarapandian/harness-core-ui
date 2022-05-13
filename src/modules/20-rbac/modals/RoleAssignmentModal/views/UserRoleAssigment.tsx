@@ -6,6 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
+import type { FormikProps } from 'formik'
 import {
   Button,
   Formik,
@@ -39,6 +40,7 @@ import UserGroupsInput from '@common/components/UserGroupsInput/UserGroupsInput'
 import { isCommunityPlan } from '@common/utils/utils'
 import UserItemRenderer from '@audit-trail/components/UserItemRenderer/UserItemRenderer'
 import UserTagRenderer from '@audit-trail/components/UserTagRenderer/UserTagRenderer'
+import type { RoleAssignmentValues } from './RoleAssignment'
 import RoleAssignmentForm from './RoleAssignmentForm'
 
 interface UserRoleAssignmentData {
@@ -278,7 +280,7 @@ const UserRoleAssignment: React.FC<UserRoleAssignmentData> = props => {
             {!isCommunity && (
               <RoleAssignmentForm
                 noRoleAssignmentsText={getString('rbac.usersPage.noDataText')}
-                formik={formik}
+                formik={formik as FormikProps<UserRoleAssignmentValues | RoleAssignmentValues>}
                 onSuccess={onSuccess}
               />
             )}

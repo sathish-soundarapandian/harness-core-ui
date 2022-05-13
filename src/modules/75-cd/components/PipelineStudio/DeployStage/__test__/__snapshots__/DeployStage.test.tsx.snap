@@ -57,6 +57,7 @@ exports[`Deploy stage test Should match snapshot 1`] = `
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>

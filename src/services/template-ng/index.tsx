@@ -34,7 +34,7 @@ export type AuditFilterProperties = FilterProperties & {
   )[]
   endTime?: number
   environments?: Environment[]
-  modules?: ('CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE')[]
+  modules?: ('CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE')[]
   principals?: Principal[]
   resources?: ResourceDTO[]
   scopes?: ResourceScopeDTO[]
@@ -444,6 +444,7 @@ export interface Error {
     | 'AZURE_AUTHENTICATION_ERROR'
     | 'AZURE_CONFIG_ERROR'
     | 'DATA_PROCESSING_ERROR'
+    | 'INVALID_AZURE_AKS_REQUEST'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -769,6 +770,7 @@ export interface Failure {
     | 'AZURE_AUTHENTICATION_ERROR'
     | 'AZURE_CONFIG_ERROR'
     | 'DATA_PROCESSING_ERROR'
+    | 'INVALID_AZURE_AKS_REQUEST'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -796,33 +798,15 @@ export interface FilterProperties {
     | 'Template'
     | 'EnvironmentGroup'
     | 'FileStore'
+    | 'CCMRecommendation'
+    | 'Anomaly'
   tags?: {
     [key: string]: string
   }
 }
 
 export interface JsonNode {
-  array?: boolean
-  bigDecimal?: boolean
-  bigInteger?: boolean
-  binary?: boolean
-  boolean?: boolean
-  containerNode?: boolean
-  double?: boolean
-  float?: boolean
-  floatingPointNumber?: boolean
-  int?: boolean
-  integralNumber?: boolean
-  long?: boolean
-  missingNode?: boolean
-  nodeType?: 'ARRAY' | 'BINARY' | 'BOOLEAN' | 'MISSING' | 'NULL' | 'NUMBER' | 'OBJECT' | 'POJO' | 'STRING'
-  null?: boolean
-  number?: boolean
-  object?: boolean
-  pojo?: boolean
-  short?: boolean
-  textual?: boolean
-  valueNode?: boolean
+  [key: string]: any
 }
 
 export interface NGTag {
@@ -917,6 +901,10 @@ export interface Principal {
   type: 'USER' | 'SYSTEM' | 'API_KEY' | 'SERVICE_ACCOUNT'
 }
 
+export interface RefreshRequestDTO {
+  type?: 'PIPELINE' | 'TEMPLATE'
+}
+
 export interface ResourceDTO {
   identifier: string
   labels?: {
@@ -945,6 +933,9 @@ export interface ResourceDTO {
     | 'API_KEY'
     | 'TOKEN'
     | 'DELEGATE_TOKEN'
+    | 'GOVERNANCE_POLICY'
+    | 'GOVERNANCE_POLICY_SET'
+    | 'VARIABLE'
 }
 
 export interface ResourceScopeDTO {
@@ -1297,6 +1288,7 @@ export interface ResponseMessage {
     | 'AZURE_AUTHENTICATION_ERROR'
     | 'AZURE_CONFIG_ERROR'
     | 'DATA_PROCESSING_ERROR'
+    | 'INVALID_AZURE_AKS_REQUEST'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -1362,9 +1354,23 @@ export interface ResponseTemplateWrapperResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseValidateTemplateInputsResponseDTO {
+  correlationId?: string
+  data?: ValidateTemplateInputsResponseDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseVariableMergeServiceResponse {
   correlationId?: string
   data?: VariableMergeServiceResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseYamlDiffResponseDTO {
+  correlationId?: string
+  data?: YamlDiffResponseDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -1421,6 +1427,8 @@ export interface TemplateFilterProperties {
     | 'Template'
     | 'EnvironmentGroup'
     | 'FileStore'
+    | 'CCMRecommendation'
+    | 'Anomaly'
   tags?: {
     [key: string]: string
   }
@@ -1513,6 +1521,10 @@ export interface Throwable {
   suppressed?: Throwable[]
 }
 
+export interface ValidateTemplateInputsResponseDTO {
+  [key: string]: any
+}
+
 export interface ValidationError {
   error?: string
   fieldId?: string
@@ -1531,6 +1543,10 @@ export interface VariableResponseMapValue {
   yamlExtraProperties?: YamlExtraProperties
   yamlOutputProperties?: YamlOutputProperties
   yamlProperties?: YamlProperties
+}
+
+export interface YamlDiffResponseDTO {
+  [key: string]: any
 }
 
 export interface YamlExtraProperties {
@@ -1559,7 +1575,9 @@ export type YamlSchemaErrorWrapperDTO = ErrorMetadataDTO & {
 
 export type FilterDTORequestBody = FilterDTO
 
-export type CreateTemplateBodyRequestBody = string
+export type RefreshRequestDTORequestBody = RefreshRequestDTO
+
+export type UpdateExistingTemplateLabelBodyRequestBody = string
 
 export interface GetFilterListQueryParams {
   pageIndex?: number
@@ -1578,6 +1596,8 @@ export interface GetFilterListQueryParams {
     | 'Template'
     | 'EnvironmentGroup'
     | 'FileStore'
+    | 'CCMRecommendation'
+    | 'Anomaly'
 }
 
 export type GetFilterListProps = Omit<
@@ -1740,6 +1760,8 @@ export interface DeleteFilterQueryParams {
     | 'Template'
     | 'EnvironmentGroup'
     | 'FileStore'
+    | 'CCMRecommendation'
+    | 'Anomaly'
 }
 
 export type DeleteFilterProps = Omit<
@@ -1803,6 +1825,8 @@ export interface GetFilterQueryParams {
     | 'Template'
     | 'EnvironmentGroup'
     | 'FileStore'
+    | 'CCMRecommendation'
+    | 'Anomaly'
 }
 
 export interface GetFilterPathParams {
@@ -1885,6 +1909,300 @@ export const getTemplateHealthStatusPromise = (
   signal?: RequestInit['signal']
 ) => getUsingFetch<ResponseString, unknown, void, void>(getConfig('template/api'), `/health`, props, signal)
 
+export interface RefreshAndUpdateTemplateInputsQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+}
+
+export type RefreshAndUpdateTemplateInputsProps = Omit<
+  MutateProps<
+    ResponseBoolean,
+    Failure | Error,
+    RefreshAndUpdateTemplateInputsQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This refreshes and update template inputs in template/pipeline
+ */
+export const RefreshAndUpdateTemplateInputs = (props: RefreshAndUpdateTemplateInputsProps) => (
+  <Mutate<
+    ResponseBoolean,
+    Failure | Error,
+    RefreshAndUpdateTemplateInputsQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >
+    verb="POST"
+    path={`/refresh-template`}
+    base={getConfig('template/api')}
+    {...props}
+  />
+)
+
+export type UseRefreshAndUpdateTemplateInputsProps = Omit<
+  UseMutateProps<
+    ResponseBoolean,
+    Failure | Error,
+    RefreshAndUpdateTemplateInputsQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This refreshes and update template inputs in template/pipeline
+ */
+export const useRefreshAndUpdateTemplateInputs = (props: UseRefreshAndUpdateTemplateInputsProps) =>
+  useMutate<
+    ResponseBoolean,
+    Failure | Error,
+    RefreshAndUpdateTemplateInputsQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >('POST', `/refresh-template`, { base: getConfig('template/api'), ...props })
+
+/**
+ * This refreshes and update template inputs in template/pipeline
+ */
+export const refreshAndUpdateTemplateInputsPromise = (
+  props: MutateUsingFetchProps<
+    ResponseBoolean,
+    Failure | Error,
+    RefreshAndUpdateTemplateInputsQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseBoolean,
+    Failure | Error,
+    RefreshAndUpdateTemplateInputsQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >('POST', getConfig('template/api'), `/refresh-template`, props, signal)
+
+export interface RefreshAllQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+}
+
+export type RefreshAllProps = Omit<
+  MutateProps<ResponseBoolean, Failure | Error, RefreshAllQueryParams, RefreshRequestDTORequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * This does recursive refresh and update template inputs in template/pipeline
+ */
+export const RefreshAll = (props: RefreshAllProps) => (
+  <Mutate<ResponseBoolean, Failure | Error, RefreshAllQueryParams, RefreshRequestDTORequestBody, void>
+    verb="POST"
+    path={`/refresh-template/refresh-all`}
+    base={getConfig('template/api')}
+    {...props}
+  />
+)
+
+export type UseRefreshAllProps = Omit<
+  UseMutateProps<ResponseBoolean, Failure | Error, RefreshAllQueryParams, RefreshRequestDTORequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * This does recursive refresh and update template inputs in template/pipeline
+ */
+export const useRefreshAll = (props: UseRefreshAllProps) =>
+  useMutate<ResponseBoolean, Failure | Error, RefreshAllQueryParams, RefreshRequestDTORequestBody, void>(
+    'POST',
+    `/refresh-template/refresh-all`,
+    { base: getConfig('template/api'), ...props }
+  )
+
+/**
+ * This does recursive refresh and update template inputs in template/pipeline
+ */
+export const refreshAllPromise = (
+  props: MutateUsingFetchProps<
+    ResponseBoolean,
+    Failure | Error,
+    RefreshAllQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseBoolean, Failure | Error, RefreshAllQueryParams, RefreshRequestDTORequestBody, void>(
+    'POST',
+    getConfig('template/api'),
+    `/refresh-template/refresh-all`,
+    props,
+    signal
+  )
+
+export interface GetYamlDiffQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+}
+
+export type GetYamlDiffProps = Omit<
+  MutateProps<ResponseYamlDiffResponseDTO, Failure | Error, GetYamlDiffQueryParams, RefreshRequestDTORequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * This returns original yaml and refresh yaml of template/pipeline
+ */
+export const GetYamlDiff = (props: GetYamlDiffProps) => (
+  <Mutate<ResponseYamlDiffResponseDTO, Failure | Error, GetYamlDiffQueryParams, RefreshRequestDTORequestBody, void>
+    verb="POST"
+    path={`/refresh-template/show-diff`}
+    base={getConfig('template/api')}
+    {...props}
+  />
+)
+
+export type UseGetYamlDiffProps = Omit<
+  UseMutateProps<
+    ResponseYamlDiffResponseDTO,
+    Failure | Error,
+    GetYamlDiffQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This returns original yaml and refresh yaml of template/pipeline
+ */
+export const useGetYamlDiff = (props: UseGetYamlDiffProps) =>
+  useMutate<ResponseYamlDiffResponseDTO, Failure | Error, GetYamlDiffQueryParams, RefreshRequestDTORequestBody, void>(
+    'POST',
+    `/refresh-template/show-diff`,
+    { base: getConfig('template/api'), ...props }
+  )
+
+/**
+ * This returns original yaml and refresh yaml of template/pipeline
+ */
+export const getYamlDiffPromise = (
+  props: MutateUsingFetchProps<
+    ResponseYamlDiffResponseDTO,
+    Failure | Error,
+    GetYamlDiffQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseYamlDiffResponseDTO,
+    Failure | Error,
+    GetYamlDiffQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >('POST', getConfig('template/api'), `/refresh-template/show-diff`, props, signal)
+
+export interface ValidateTemplateInputsQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+}
+
+export type ValidateTemplateInputsProps = Omit<
+  MutateProps<
+    ResponseValidateTemplateInputsResponseDTO,
+    Failure | Error,
+    ValidateTemplateInputsQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This validates whether yaml of template/pipeline is valid or not
+ */
+export const ValidateTemplateInputs = (props: ValidateTemplateInputsProps) => (
+  <Mutate<
+    ResponseValidateTemplateInputsResponseDTO,
+    Failure | Error,
+    ValidateTemplateInputsQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >
+    verb="POST"
+    path={`/refresh-template/validate-template-inputs`}
+    base={getConfig('template/api')}
+    {...props}
+  />
+)
+
+export type UseValidateTemplateInputsProps = Omit<
+  UseMutateProps<
+    ResponseValidateTemplateInputsResponseDTO,
+    Failure | Error,
+    ValidateTemplateInputsQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This validates whether yaml of template/pipeline is valid or not
+ */
+export const useValidateTemplateInputs = (props: UseValidateTemplateInputsProps) =>
+  useMutate<
+    ResponseValidateTemplateInputsResponseDTO,
+    Failure | Error,
+    ValidateTemplateInputsQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >('POST', `/refresh-template/validate-template-inputs`, { base: getConfig('template/api'), ...props })
+
+/**
+ * This validates whether yaml of template/pipeline is valid or not
+ */
+export const validateTemplateInputsPromise = (
+  props: MutateUsingFetchProps<
+    ResponseValidateTemplateInputsResponseDTO,
+    Failure | Error,
+    ValidateTemplateInputsQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseValidateTemplateInputsResponseDTO,
+    Failure | Error,
+    ValidateTemplateInputsQueryParams,
+    RefreshRequestDTORequestBody,
+    void
+  >('POST', getConfig('template/api'), `/refresh-template/validate-template-inputs`, props, signal)
+
 export interface CreateTemplateQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -1907,7 +2225,7 @@ export type CreateTemplateProps = Omit<
     ResponseTemplateWrapperResponse,
     Failure | Error,
     CreateTemplateQueryParams,
-    CreateTemplateBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -1921,7 +2239,7 @@ export const CreateTemplate = (props: CreateTemplateProps) => (
     ResponseTemplateWrapperResponse,
     Failure | Error,
     CreateTemplateQueryParams,
-    CreateTemplateBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     void
   >
     verb="POST"
@@ -1936,7 +2254,7 @@ export type UseCreateTemplateProps = Omit<
     ResponseTemplateWrapperResponse,
     Failure | Error,
     CreateTemplateQueryParams,
-    CreateTemplateBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -1950,7 +2268,7 @@ export const useCreateTemplate = (props: UseCreateTemplateProps) =>
     ResponseTemplateWrapperResponse,
     Failure | Error,
     CreateTemplateQueryParams,
-    CreateTemplateBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     void
   >('POST', `/templates`, { base: getConfig('template/api'), ...props })
 
@@ -1962,7 +2280,7 @@ export const createTemplatePromise = (
     ResponseTemplateWrapperResponse,
     Failure | Error,
     CreateTemplateQueryParams,
-    CreateTemplateBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -1971,7 +2289,7 @@ export const createTemplatePromise = (
     ResponseTemplateWrapperResponse,
     Failure | Error,
     CreateTemplateQueryParams,
-    CreateTemplateBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     void
   >('POST', getConfig('template/api'), `/templates`, props, signal)
 
@@ -2263,6 +2581,9 @@ export interface GetTemplateReferencesQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
 }
 
 export type GetTemplateReferencesProps = Omit<
@@ -2270,7 +2591,7 @@ export type GetTemplateReferencesProps = Omit<
     ResponseListEntityDetailProtoDTO,
     Failure | Error,
     GetTemplateReferencesQueryParams,
-    CreateTemplateBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -2281,7 +2602,7 @@ export const GetTemplateReferences = (props: GetTemplateReferencesProps) => (
     ResponseListEntityDetailProtoDTO,
     Failure | Error,
     GetTemplateReferencesQueryParams,
-    CreateTemplateBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     void
   >
     verb="POST"
@@ -2296,7 +2617,7 @@ export type UseGetTemplateReferencesProps = Omit<
     ResponseListEntityDetailProtoDTO,
     Failure | Error,
     GetTemplateReferencesQueryParams,
-    CreateTemplateBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -2307,7 +2628,7 @@ export const useGetTemplateReferences = (props: UseGetTemplateReferencesProps) =
     ResponseListEntityDetailProtoDTO,
     Failure | Error,
     GetTemplateReferencesQueryParams,
-    CreateTemplateBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     void
   >('POST', `/templates/templateReferences`, { base: getConfig('template/api'), ...props })
 
@@ -2316,7 +2637,7 @@ export const getTemplateReferencesPromise = (
     ResponseListEntityDetailProtoDTO,
     Failure | Error,
     GetTemplateReferencesQueryParams,
-    CreateTemplateBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -2325,7 +2646,7 @@ export const getTemplateReferencesPromise = (
     ResponseListEntityDetailProtoDTO,
     Failure | Error,
     GetTemplateReferencesQueryParams,
-    CreateTemplateBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     void
   >('POST', getConfig('template/api'), `/templates/templateReferences`, props, signal)
 
@@ -2357,7 +2678,7 @@ export type UpdateExistingTemplateLabelProps = Omit<
     ResponseTemplateWrapperResponse,
     Failure | Error,
     UpdateExistingTemplateLabelQueryParams,
-    CreateTemplateBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     UpdateExistingTemplateLabelPathParams
   >,
   'path' | 'verb'
@@ -2376,7 +2697,7 @@ export const UpdateExistingTemplateLabel = ({
     ResponseTemplateWrapperResponse,
     Failure | Error,
     UpdateExistingTemplateLabelQueryParams,
-    CreateTemplateBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     UpdateExistingTemplateLabelPathParams
   >
     verb="PUT"
@@ -2391,7 +2712,7 @@ export type UseUpdateExistingTemplateLabelProps = Omit<
     ResponseTemplateWrapperResponse,
     Failure | Error,
     UpdateExistingTemplateLabelQueryParams,
-    CreateTemplateBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     UpdateExistingTemplateLabelPathParams
   >,
   'path' | 'verb'
@@ -2410,7 +2731,7 @@ export const useUpdateExistingTemplateLabel = ({
     ResponseTemplateWrapperResponse,
     Failure | Error,
     UpdateExistingTemplateLabelQueryParams,
-    CreateTemplateBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     UpdateExistingTemplateLabelPathParams
   >(
     'PUT',
@@ -2431,7 +2752,7 @@ export const updateExistingTemplateLabelPromise = (
     ResponseTemplateWrapperResponse,
     Failure | Error,
     UpdateExistingTemplateLabelQueryParams,
-    CreateTemplateBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     UpdateExistingTemplateLabelPathParams
   > & { templateIdentifier: string; versionLabel: string },
   signal?: RequestInit['signal']
@@ -2440,7 +2761,7 @@ export const updateExistingTemplateLabelPromise = (
     ResponseTemplateWrapperResponse,
     Failure | Error,
     UpdateExistingTemplateLabelQueryParams,
-    CreateTemplateBodyRequestBody,
+    UpdateExistingTemplateLabelBodyRequestBody,
     UpdateExistingTemplateLabelPathParams
   >('PUT', getConfig('template/api'), `/templates/update/${templateIdentifier}/${versionLabel}`, props, signal)
 

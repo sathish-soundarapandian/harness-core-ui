@@ -204,7 +204,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
         >
           {(formik: FormikProps<TemplateStageValues>) => {
             window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: TemplateTabs.OVERVIEW }))
-            formikRef.current = formik
+            formikRef.current = formik as FormikProps<unknown> | null
             return (
               <FormikForm>
                 <Card className={css.sectionCard}>

@@ -5,7 +5,9 @@ exports[`StageAdvancedInputSetForm tests viewType DeploymentForm initial render 
   <div
     class="OverlaySpinner--overlaySpinner"
   >
-    <form>
+    <form
+      action="#"
+    >
       <div
         class="accordionSummary"
         id="Stage.undefined.Advanced"

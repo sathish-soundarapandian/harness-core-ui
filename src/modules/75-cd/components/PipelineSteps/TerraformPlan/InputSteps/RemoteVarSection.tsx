@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
-import { connect, FormikContext } from 'formik'
+import { connect, FormikContextType } from 'formik'
 import { useParams } from 'react-router-dom'
 import { get, map } from 'lodash-es'
 
@@ -37,7 +37,7 @@ function TFRemoteSectionRef(
   props: TerraformPlanProps & {
     remoteVar: any
     index: number
-    formik?: FormikContext<any>
+    formik?: FormikContextType<any>
   }
 ): React.ReactElement {
   const { remoteVar, index, allowableTypes, formik } = props

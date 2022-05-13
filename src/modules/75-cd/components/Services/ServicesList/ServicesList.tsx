@@ -10,21 +10,12 @@ import cx from 'classnames'
 import { useHistory, useParams } from 'react-router-dom'
 import type { CellProps, Renderer } from 'react-table'
 import ReactTimeago from 'react-timeago'
-import {
-  Button,
-  Dialog,
-  Layout,
-  Popover,
-  TagsPopover,
-  Text,
-  useConfirmationDialog,
-  useToaster
-} from '@wings-software/uicore'
-import { useModalHook } from '@harness/use-modal'
+import { Button, Layout, Popover, TagsPopover, Text, useConfirmationDialog, useToaster, Dialog } from '@harness/uicore'
 import { Color, Intent } from '@harness/design-system'
 import { Classes, Menu, Position } from '@blueprintjs/core'
 import { defaultTo, pick } from 'lodash-es'
 import type { TableProps } from '@harness/uicore'
+import { useModalHook } from '@harness/use-modal'
 import routes from '@common/RouteDefinitions'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
@@ -39,9 +30,10 @@ import { ServiceDetailsDTO, useDeleteServiceV2 } from 'services/cd-ng'
 import { DeploymentTypeIcons } from '@cd/components/DeploymentTypeIcons/DeploymentTypeIcons'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/DeployServiceStep'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
-import { ServiceTabs } from '@cd/components/ServiceDetails/ServiceDetailsContent/ServiceDetailsContent'
+import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/DeployServiceStep'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { ServiceTabs } from '../utils/ServiceUtils'
 import css from '@cd/components/Services/ServicesList/ServiceList.module.scss'
 
 export enum DeploymentStatus {
@@ -306,6 +298,7 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const history = useHistory()
+  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
 
   const { mutate: deleteService } = useDeleteServiceV2({
     queryParams: {
@@ -352,7 +345,7 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
       setDeleteError('')
       if (isConfirmed) {
         history.push({
-          pathname: routes.toServiceDetails({
+          pathname: routes.toServiceStudio({
             accountId,
             orgIdentifier,
             projectIdentifier,
@@ -397,7 +390,20 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
   const handleEdit = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {
     e.stopPropagation()
     setMenuOpen(false)
-    showModal()
+    if (NG_SVC_ENV_REDESIGN) {
+      history.push({
+        pathname: routes.toServiceStudio({
+          accountId,
+          orgIdentifier,
+          projectIdentifier,
+          serviceId: data.identifier,
+          module
+        }),
+        search: `tab=${ServiceTabs.Configuration}`
+      })
+    } else {
+      showModal()
+    }
   }
 
   const handleDelete = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {
@@ -540,7 +546,7 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
 
   const goToServiceDetails = useCallback(
     ({ identifier: serviceId }: ServiceListItem): void => {
-      history.push(routes.toServiceDetails({ accountId, orgIdentifier, projectIdentifier, serviceId, module }))
+      history.push(routes.toServiceStudio({ accountId, orgIdentifier, projectIdentifier, serviceId, module }))
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [accountId, orgIdentifier, projectIdentifier, module]

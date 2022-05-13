@@ -31,7 +31,7 @@ import ConditionalExecutionPanel from './ConditionalExecutionPanel/ConditionalEx
 import css from './AdvancedSteps.module.scss'
 
 export type FormValues = Pick<Values, 'delegateSelectors' | 'when'> & {
-  failureStrategies: AllFailureStrategyConfig[]
+  failureStrategies?: AllFailureStrategyConfig[]
 }
 
 export interface AdvancedStepsProps extends Omit<StepCommandsProps, 'onUseTemplate' | 'onRemoveTemplate'> {

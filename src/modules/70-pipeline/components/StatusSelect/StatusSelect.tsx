@@ -48,7 +48,8 @@ const labelMap: Record<AllowedStatus, StringKeys> = {
   Paused: 'pipeline.executionFilters.labels.Paused',
   ApprovalWaiting: 'pipeline.executionFilters.labels.ApprovalWaiting',
   InterventionWaiting: 'pipeline.executionFilters.labels.InterventionWaiting',
-  ResourceWaiting: 'pipeline.executionFilters.labels.Waiting'
+  ResourceWaiting: 'pipeline.executionFilters.labels.Waiting',
+  Waiting: 'pipeline.executionFilters.labels.Waiting'
 }
 
 export interface StatusSelectProps {

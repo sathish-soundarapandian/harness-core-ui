@@ -25,6 +25,8 @@ import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
 import { CE_GCP_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import { useConnectorGovernanceModal } from '@connectors/hooks/useConnectorGovernanceModal'
 import type { CEGcpConnectorDTO } from './OverviewStep'
 import css from '../CreateCeGcpConnector.module.scss'
 
@@ -48,6 +50,10 @@ const GrantPermission: React.FC<StepProps<CEGcpConnectorDTO>> = props => {
     queryParams: { accountIdentifier: accountId }
   })
 
+  const { hideOrShowGovernanceErrorModal } = useConnectorGovernanceModal({
+    errorOutOnGovernanceWarning: false,
+    featureFlag: FeatureFlag.OPA_CONNECTOR_GOVERNANCE
+  })
   const {
     data,
     loading: loadingServiceAccount,
@@ -80,12 +86,13 @@ const GrantPermission: React.FC<StepProps<CEGcpConnectorDTO>> = props => {
         const response = await (prevStepData.isEditMode
           ? updateConnector({ connector: connectorInfo })
           : createConnector({ connector: connectorInfo }))
-
         if (response.status !== 'SUCCESS') {
           throw response as Failure
         }
-
-        nextStep?.({ ...prevStepData, serviceAccount })
+        const { canGoToNextStep } = await hideOrShowGovernanceErrorModal(response)
+        if (canGoToNextStep) {
+          nextStep?.({ ...prevStepData, serviceAccount })
+        }
       }
     } catch (e) {
       modalErrorHandler?.showDanger(e?.data?.message)

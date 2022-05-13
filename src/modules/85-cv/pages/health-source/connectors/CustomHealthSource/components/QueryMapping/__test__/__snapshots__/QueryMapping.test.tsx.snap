@@ -6,6 +6,7 @@ exports[`Validate MapMetricsToServices conponent should render MapMetricsToServi
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -870,6 +871,7 @@ exports[`Validate MapMetricsToServices conponent should render MapMetricsToServi
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

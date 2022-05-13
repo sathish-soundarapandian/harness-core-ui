@@ -428,9 +428,9 @@ awsKms:
     externalIdLengthError: 'External Id must have between 2 and 1224 characters'
   awsSTS: 'Assume Role using STS on Delegate'
 delegate:
-  configure: Configure what Delegates are allowed to connect to this Connector
-  delegateSelectorAny: Connect via any available Delegate
-  delegateSelectorSelective: Connect only via Delegates with all of the following tags
+  configure: Select the Delegates this Connector will use
+  delegateSelectorAny: Use any available Delegate
+  delegateSelectorSelective: Only use Delegates with all of the following tags
   hearbeat: heartbeat
   matchesSelectors: Matches
   testDelegateConnectivity: Test Delegate Connectivity
@@ -828,3 +828,6 @@ ceGcp:
     error: 'Could not verify connectivity'
 connectorReferenceText: "can't be deleted as it is being referenced by other entities. To see the list of entities referencing this connector,"
 cantDeleteConnector: "Can't Delete Connector"
+policyEvaluations:
+  failedToSave: Connector cannot be saved due to the policy evaluation failures
+  warning: Connector saved with policy warnings

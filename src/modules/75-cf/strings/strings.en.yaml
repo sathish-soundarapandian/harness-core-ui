@@ -278,10 +278,10 @@ targetDetail:
   attributes: Attributes ({{ counter }})
   learnMore: To learn how to mark specific target attributes or information as private, read <a href="https://ngdocs.harness.io/category/vjolt35atg-feature-flags" target="_blank" rel="noreferrer">documentation</a>.
   manuallyAdded: MANUALLY ADDED
-  addToSegment: Add to Target Group
+  addToSegment: Add to {{count}} Target Groups
   autoAdded: AUTOMATICALLY ADDED THROUGH CONDITIONS
   exclusionList: EXCLUSION LIST
-  excludeFromSegment: Exclude from Target Group
+  excludeFromSegment: Exclude from {{count}} Target Groups
   removeSegment: Remove from list
   noSegmentAdded: No Target Group added
   noSegmentMatched: No Target Group matched
@@ -297,6 +297,8 @@ targetDetail:
   searchPlaceholder: Search Feature Flags...
   deleteTargetSuccess: Target <strong>{{name}}</strong> deleted.
   flagDisabled: This flag is disabled. The default off value will be served.
+  addTargetToTargetGroup: Add Target to Target Group {{name}}
+  noTargetGroupsAvailable: No Target Groups available
 selectSegmentModal:
   searchSegmentPlaceholder: Search for Target Group by Name or Description
   flagsUsingSegment: '{{ counter }} flag'

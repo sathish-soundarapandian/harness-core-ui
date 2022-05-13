@@ -109,9 +109,9 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
       {getMultiTypeFromValue(template?.spec?.connectorRef) === MultiTypeInputType.RUNTIME ? (
         <FormMultiTypeConnectorField
           name={`${prefix}spec.connectorRef`}
-          label={getString('pipeline.jiraApprovalStep.connectorRef')}
+          label={getString('pipeline.serviceNowApprovalStep.connectorRef')}
           selected={(initialValues?.spec?.connectorRef as string) || ''}
-          placeholder={getString('pipeline.jiraApprovalStep.jiraConnectorPlaceholder')}
+          placeholder={getString('pipeline.serviceNowApprovalStep.serviceNowConnectorPlaceholder')}
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}

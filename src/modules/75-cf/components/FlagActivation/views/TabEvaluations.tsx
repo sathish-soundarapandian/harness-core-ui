@@ -101,7 +101,8 @@ export const TabEvaluations: React.FC<TabEvaluationsProps> = ({ flagData, startD
     const seriesData = categories.map(
       dayFromRanges =>
         metricsGroupedByDay?.find(
-          ({ variationIdentifier, day }) => variationIdentifier === variation.identifier && dayFromRanges === day
+          ({ variationIdentifier, day }) =>
+            variationIdentifier === variation.identifier && dayFromRanges === day.replace(' 0', ' ')
         )?.count || 0
     )
 
@@ -131,11 +132,9 @@ export const TabEvaluations: React.FC<TabEvaluationsProps> = ({ flagData, startD
       data: seriesData,
       tooltips
     }
-
     return variationSeriesItem
   })
   const sum = total?.reduce((_sum, entry) => _sum + (entry.count || 0), 0) || 0
-
   return (
     <Container className={css.contentBody}>
       {loading && <Icon name="spinner" size={16} color="blue500" />}

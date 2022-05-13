@@ -24,8 +24,10 @@ export class MonitoredServiceTemplate extends Template<NGTemplateInfoConfig> {
     type: 'MonitoredService'
   }
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   renderTemplateCanvas(props: TemplateProps<NGTemplateInfoConfig>): JSX.Element {
     const { formikRef } = props
-    return <MonitoredTemplateCanvasWithRef ref={formikRef} />
+    return <MonitoredTemplateCanvasWithRef ref={formikRef as any} />
   }
 }

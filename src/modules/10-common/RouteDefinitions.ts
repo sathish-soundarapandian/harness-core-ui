@@ -45,7 +45,8 @@ import type {
   PipelineLogsPathProps,
   EnvironmentGroupPathProps,
   EnvironmentGroupQueryParams,
-  VariablesPathProps
+  VariablesPathProps,
+  EnvironmentQueryParams
 } from '@common/interfaces/RouteInterfaces'
 
 const CV_HOME = `/cv/home`
@@ -718,13 +719,30 @@ const routes = {
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/services`
   ),
-  toServiceDetails: withAccountId(
+  toServiceStudio: withAccountId(
     ({ orgIdentifier, projectIdentifier, serviceId, module }: PipelineType<ProjectPathProps & ServicePathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/services/${serviceId}`
   ),
   toEnvironment: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment`
+  ),
+  toEnvironmentDetails: withAccountId(
+    ({
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      module,
+      environmentIdentifier,
+      ...rest
+    }: PipelineType<ProjectPathProps & EnvironmentPathProps & EnvironmentQueryParams>) => {
+      const queryString = qs.stringify(rest, { skipNulls: true })
+      if (queryString.length > 0) {
+        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment/${environmentIdentifier}/details?${queryString}`
+      } else {
+        return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment/${environmentIdentifier}/details`
+      }
+    }
   ),
   toEnvironmentGroups: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>

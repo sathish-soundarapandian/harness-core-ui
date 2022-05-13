@@ -123,6 +123,49 @@ const applySelectedArtifactToPipelineObject = (
   return newPipelineObject
 }
 
+const getPipelineWithInjectedWithCloneCodebase = ({
+  event,
+  pipeline,
+  isPipelineFromTemplate
+}: {
+  event: string
+  pipeline: PipelineInfoConfig
+  isPipelineFromTemplate: boolean
+}): any => {
+  if (isPipelineFromTemplate) {
+    const pipelineFromTemplate = { ...(pipeline || {}) }
+    if (pipelineFromTemplate?.template?.templateInputs?.properties?.ci?.codebase?.build) {
+      pipelineFromTemplate.template.templateInputs.properties.ci.codebase.build =
+        event === eventTypes.PULL_REQUEST ? ciCodebaseBuildPullRequest : ciCodebaseBuild
+    }
+
+    return pipelineFromTemplate
+  }
+  if (event === eventTypes.PULL_REQUEST) {
+    return {
+      ...pipeline,
+      properties: {
+        ci: {
+          codebase: {
+            build: ciCodebaseBuildPullRequest
+          }
+        }
+      }
+    }
+  } else {
+    return {
+      ...pipeline,
+      properties: {
+        ci: {
+          codebase: {
+            build: ciCodebaseBuild
+          }
+        }
+      }
+    }
+  }
+}
+
 function WebhookPipelineInputPanelForm({ formikProps }: WebhookPipelineInputPanelPropsInterface): React.ReactElement {
   const {
     values: { inputSetSelected, pipeline, resolvedPipeline },
@@ -174,30 +217,12 @@ function WebhookPipelineInputPanelForm({ formikProps }: WebhookPipelineInputPane
 
     if (!hasEverRendered && shouldInjectCloneCodebase) {
       const formikValues = cloneDeep(formikProps.values)
-
-      if (formikValues.event === eventTypes.PULL_REQUEST) {
-        formikValues.pipeline = {
-          ...formikValues.pipeline,
-          properties: {
-            ci: {
-              codebase: {
-                build: ciCodebaseBuildPullRequest
-              }
-            }
-          }
-        }
-      } else {
-        formikValues.pipeline = {
-          ...formikValues.pipeline,
-          properties: {
-            ci: {
-              codebase: {
-                build: ciCodebaseBuild
-              }
-            }
-          }
-        }
-      }
+      const isPipelineFromTemplate = !!formikValues?.pipeline?.template
+      formikValues.pipeline = getPipelineWithInjectedWithCloneCodebase({
+        event: formikValues.event,
+        pipeline: formikValues.pipeline,
+        isPipelineFromTemplate
+      })
 
       formikProps.setValues(formikValues)
     }
@@ -305,6 +330,7 @@ function WebhookPipelineInputPanelForm({ formikProps }: WebhookPipelineInputPane
               path="pipeline"
               viewType={StepViewType.InputSet}
               maybeContainerClass={css.pipelineInputSetForm}
+              viewTypeMetadata={{ isTrigger: true }}
             />
           </div>
         </div>

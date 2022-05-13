@@ -221,13 +221,11 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
       handleStartPlan: (edition: Editions) => {
         if (moduleName === ModuleName.CI && CIE_HOSTED_BUILDS) {
           setSettingUpCI(true)
-          setUpCI(
+          setUpCI({
             accountId,
             edition,
-            ({ orgId, projectId, data: moduleLicense }: StartFreeLicenseAndSetupProjectCallback) => {
+            onSetUpSuccessCallback: ({ orgId, projectId }: StartFreeLicenseAndSetupProjectCallback) => {
               setSettingUpCI(false)
-
-              handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, module, moduleLicense)
 
               trackEvent(edition === Editions.FREE ? PlanActions.StartFreeClick : TrialActions.StartTrialClick, {
                 category: Category.SIGNUP,
@@ -243,8 +241,10 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
                   projectIdentifier: projectId
                 })
               )
-            }
-          )
+            },
+            licenseInformation,
+            updateLicenseStore
+          })
         } else {
           handleStartPlan(edition)
         }

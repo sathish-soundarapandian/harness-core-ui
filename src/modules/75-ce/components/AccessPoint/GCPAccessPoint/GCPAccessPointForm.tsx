@@ -47,12 +47,25 @@ interface GCPAccessPointFormProps {
   mode: AccessPointScreenMode
 }
 
+type AllFieldsKey = keyof GcpApFormValue
+
+const lbFieldToFormFieldMap: Record<string, AllFieldsKey> = {
+  region: 'region',
+  'metadata.security_groups': 'securityGroups',
+  vpc: 'vpc',
+  'metadata.zone': 'zone',
+  'metadata.machine_type': 'machine_type',
+  'metadata.subnet_name': 'subnet_name',
+  'metadata.certificates.cert_secret_id': 'cert_secret_id',
+  'metadata.certificates.key_secret_id': 'key_secret_id'
+}
+
 const GCPAccessPointForm: React.FC<GCPAccessPointFormProps> = ({
   loadBalancer,
   cloudAccountId,
   handlePreviousClick,
   handleSubmit,
-  // mode,
+  mode,
   isSaving
 }) => {
   const { getString } = useStrings()
@@ -67,11 +80,19 @@ const GCPAccessPointForm: React.FC<GCPAccessPointFormProps> = ({
   const [sgOptions, setSGOptions] = useState<SelectOption[]>([])
   const [machineTypesOptions, setMachineTypesOptions] = useState<SelectOption[]>([])
   const [subnetOptions, setSubnetOptions] = useState<SelectOption[]>([])
-  const { data: regionOptions } = useRegionsForSelection({ cloudAccountId, additionalProps: {} })
+  const [editableFieldsMap, setEditableFieldsMap] = useState<Record<string, boolean>>({})
+  const { data: regionOptions, loading: regionsLoading } = useRegionsForSelection({
+    cloudAccountId,
+    additionalProps: {}
+  })
 
-  // const isEditMode = mode === 'edit' || !_isEmpty(loadBalancer.id)
+  const isEditMode = mode === 'edit' || !_isEmpty(loadBalancer.id)
 
-  const { data: zones, refetch: fetchZones } = useAllZones({
+  const {
+    data: zones,
+    refetch: fetchZones,
+    loading: zonesLoading
+  } = useAllZones({
     account_id: accountId,
     queryParams: {
       cloud_account_id: cloudAccountId,
@@ -81,7 +102,11 @@ const GCPAccessPointForm: React.FC<GCPAccessPointFormProps> = ({
     lazy: true
   })
 
-  const { data: vpcs, refetch: vpcsReload } = useAllVPCs({
+  const {
+    data: vpcs,
+    refetch: vpcsReload,
+    loading: vpcsLoading
+  } = useAllVPCs({
     account_id: accountId, // eslint-disable-line
     queryParams: {
       region: _defaultTo(selectedRegion, ''),
@@ -91,7 +116,11 @@ const GCPAccessPointForm: React.FC<GCPAccessPointFormProps> = ({
     lazy: true
   })
 
-  const { data: machinesData, refetch: fetchMachines } = useGetMachineListForZone({
+  const {
+    data: machinesData,
+    refetch: fetchMachines,
+    loading: machinesLoading
+  } = useGetMachineListForZone({
     account_id: accountId,
     queryParams: {
       accountIdentifier: accountId,
@@ -101,7 +130,11 @@ const GCPAccessPointForm: React.FC<GCPAccessPointFormProps> = ({
     lazy: true
   })
 
-  const { data: securityGroups, refetch: sgsReload } = useAllSecurityGroups({
+  const {
+    data: securityGroups,
+    refetch: sgsReload,
+    loading: sgsLoading
+  } = useAllSecurityGroups({
     account_id: accountId, // eslint-disable-line
     queryParams: {
       region: _defaultTo(selectedRegion, ''),
@@ -112,7 +145,11 @@ const GCPAccessPointForm: React.FC<GCPAccessPointFormProps> = ({
     lazy: true
   })
 
-  const { data: subnets, refetch: subnetsReload } = useAllSubnets({
+  const {
+    data: subnets,
+    refetch: subnetsReload,
+    loading: subnetsLoading
+  } = useAllSubnets({
     account_id: accountId, // eslint-disable-line
     queryParams: {
       cloud_account_id: cloudAccountId,
@@ -121,6 +158,17 @@ const GCPAccessPointForm: React.FC<GCPAccessPointFormProps> = ({
     },
     lazy: true
   })
+
+  useEffect(() => {
+    if (mode !== 'create') {
+      const editMap: Record<string, boolean> = {}
+      loadBalancer.editables?.forEach(field => {
+        const key = lbFieldToFormFieldMap[field]
+        editMap[key as string] = true
+      })
+      setEditableFieldsMap(editMap)
+    }
+  }, [])
 
   useEffect(() => {
     if (selectedRegion) {
@@ -234,7 +282,8 @@ const GCPAccessPointForm: React.FC<GCPAccessPointFormProps> = ({
         enableReinitialize
         formName="lbFormSecond"
         onSubmit={values => handleSubmit?.(values)}
-        render={({ submitForm, setFieldValue, values }) => (
+      >
+        {({ submitForm, setFieldValue, values }) => (
           <FormikForm>
             <Layout.Horizontal className={css.formFieldRow}>
               <FormInput.Select
@@ -245,9 +294,7 @@ const GCPAccessPointForm: React.FC<GCPAccessPointFormProps> = ({
                 onChange={item => {
                   setSelectedRegion(item.value as string)
                 }}
-                // disabled={
-                //   isEditMode ? !editableFieldsMap['accessPointRegion'] : regionsLoading || regionOptions.length === 0
-                // }
+                disabled={isEditMode ? !editableFieldsMap['region'] : regionsLoading}
               />
               <FormInput.Select
                 name="zone"
@@ -257,9 +304,7 @@ const GCPAccessPointForm: React.FC<GCPAccessPointFormProps> = ({
                 onChange={item => {
                   setSelectedZone(item.value as string)
                 }}
-                // disabled={
-                //   isEditMode ? !editableFieldsMap['accessPointRegion'] : regionsLoading || regionOptions.length === 0
-                // }
+                disabled={isEditMode ? !editableFieldsMap['zone'] : zonesLoading}
               />
             </Layout.Horizontal>
             <Layout.Horizontal className={css.formFieldRow}>
@@ -272,7 +317,7 @@ const GCPAccessPointForm: React.FC<GCPAccessPointFormProps> = ({
                   setFieldValue('vpc', e.value)
                   setSelectedVpc(e.value as string)
                 }}
-                // disabled={isEditMode ? !editableFieldsMap['vpc'] : vpcsLoading || vpcOptions.length === 0}
+                disabled={isEditMode ? !editableFieldsMap['vpc'] : vpcsLoading}
               />
               <FormInput.MultiSelect
                 name="securityGroups"
@@ -294,7 +339,7 @@ const GCPAccessPointForm: React.FC<GCPAccessPointFormProps> = ({
                   )
                 }}
                 items={sgOptions}
-                // disabled={isEditMode ? !editableFieldsMap['securityGroups'] : sgsLoading || sgOptions.length === 0}
+                disabled={isEditMode ? !editableFieldsMap['securityGroups'] : sgsLoading}
               />
             </Layout.Horizontal>
             <Layout.Horizontal className={css.formFieldRow}>
@@ -303,22 +348,14 @@ const GCPAccessPointForm: React.FC<GCPAccessPointFormProps> = ({
                 placeholder={getString('ce.co.accessPoint.select.subnet')}
                 name="subnet_name"
                 items={subnetOptions}
-                // disabled={
-                //   isEditMode
-                //     ? !editableFieldsMap['subnet']
-                //     : !_isEmpty(values.subnet)
-                //     ? false
-                //     : subnetsLoading || !selectedVpc
-                // }
+                disabled={isEditMode ? !editableFieldsMap['subnet_name'] : subnetsLoading}
               />
               <FormInput.Select
                 name="machine_type"
                 label={getString('ce.co.accessPoint.machineType')}
                 placeholder={getString('ce.co.accessPoint.select.machineType')}
                 items={machineTypesOptions}
-                // disabled={
-                //   isEditMode ? !editableFieldsMap['accessPointRegion'] : regionsLoading || regionOptions.length === 0
-                // }
+                disabled={isEditMode ? !editableFieldsMap['machine_type'] : machinesLoading}
               />
             </Layout.Horizontal>
             {tlsSupportEnabled && (
@@ -357,7 +394,7 @@ const GCPAccessPointForm: React.FC<GCPAccessPointFormProps> = ({
             </Layout.Horizontal>
           </FormikForm>
         )}
-      ></Formik>
+      </Formik>
     </Container>
   )
 }

@@ -129,6 +129,7 @@ exports[`Create AWS connector Wizard Should edit a connector with delegates 1`] 
             class="OverlaySpinner--overlaySpinner"
           >
             <form
+              action="#"
               class="FormikForm--main"
             >
               <div>
@@ -481,6 +482,7 @@ exports[`Create AWS connector Wizard Should render form 1`] = `
             class="OverlaySpinner--overlaySpinner"
           >
             <form
+              action="#"
               class="FormikForm--main"
             >
               <div>
@@ -1361,6 +1363,7 @@ exports[`Create AWS connector Wizard Should render form for edit  1`] = `
             class="OverlaySpinner--overlaySpinner"
           >
             <form
+              action="#"
               class="FormikForm--main"
             >
               <div>

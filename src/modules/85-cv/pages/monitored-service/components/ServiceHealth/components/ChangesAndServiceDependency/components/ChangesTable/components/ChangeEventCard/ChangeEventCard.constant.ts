@@ -14,3 +14,5 @@ export enum VerificationStatus {
   ABORTED = 'ABORTED',
   IN_PROGRESS = 'IN_PROGRESS'
 }
+
+export const TWO_HOURS_IN_MILLISECONDS = 1000 * 60 * 60 * 2

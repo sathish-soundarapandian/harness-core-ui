@@ -9,7 +9,7 @@ import React, { useCallback, useState } from 'react'
 import { get as _get, defaultTo as _defaultTo, debounce as _debounce, isEmpty as _isEmpty } from 'lodash-es'
 import * as Yup from 'yup'
 import { CardSelect, Container, Formik, FormikForm, FormInput, Layout, Text } from '@wings-software/uicore'
-import type { FormikContext } from 'formik'
+import type { FormikContextType } from 'formik'
 import type { StringsMap } from 'stringTypes'
 import type { GatewayDetails } from '@ce/components/COCreateGateway/models'
 import { CONFIG_STEP_IDS, RESOURCES } from '@ce/constants'
@@ -206,7 +206,7 @@ const GroupResourceCountUpdateSection: React.FC<GroupResourceCountUpdateSectionP
   const { getString } = useStrings()
   const isGcpProvider = Utils.isProviderGcp(gatewayDetails.provider)
 
-  const handleODChange = (formik: FormikContext<any>, val: string) => {
+  const handleODChange = (formik: FormikContextType<any>, val: string) => {
     if (Utils.isNumber(val)) {
       const numericVal = Number(val)
       formik.setFieldValue('odInstance', numericVal)
@@ -230,7 +230,7 @@ const GroupResourceCountUpdateSection: React.FC<GroupResourceCountUpdateSectionP
     }
   }
 
-  const handleSpotChange = (formik: FormikContext<any>, val: string) => {
+  const handleSpotChange = (formik: FormikContextType<any>, val: string) => {
     if (Utils.isNumber(val)) {
       const numericVal = Number(val)
       formik.setFieldValue('spotInstance', numericVal)
@@ -247,7 +247,7 @@ const GroupResourceCountUpdateSection: React.FC<GroupResourceCountUpdateSectionP
     }
   }
 
-  const handleAsgInstancesChange = (formik: FormikContext<any>, val: string, instanceType: 'OD' | 'SPOT') => {
+  const handleAsgInstancesChange = (formik: FormikContextType<any>, val: string, instanceType: 'OD' | 'SPOT') => {
     const instanceTypeHandlerMap: Record<string, () => void> = {
       OD: () => {
         handleODChange(formik, val)
@@ -306,8 +306,25 @@ const GroupResourceCountUpdateSection: React.FC<GroupResourceCountUpdateSectionP
           formName="odInstance"
           onSubmit={_ => {
             return
-          }} // eslint-disable-line
-          render={formik => (
+          }}
+          validationSchema={Yup.object().shape({
+            odInstance: Yup.number()
+              .required()
+              .positive()
+              .when(['isGcpProvider'], {
+                is: _ => !isGcpProvider,
+                then: Yup.number()
+                  .min(0)
+                  .max(gatewayDetails.routing?.instance?.scale_group?.max as number),
+                otherwise: Yup.number().min(1)
+              }),
+            spotInstance: Yup.number()
+              .positive()
+              .min(0)
+              .max(gatewayDetails.routing?.instance?.scale_group?.max as number)
+          })}
+        >
+          {formik => (
             <FormikForm>
               <Layout.Horizontal style={{ justifyContent: 'space-between' }}>
                 <Layout.Vertical className={css.instanceTypeInput}>
@@ -350,23 +367,7 @@ const GroupResourceCountUpdateSection: React.FC<GroupResourceCountUpdateSectionP
               </Layout.Horizontal>
             </FormikForm>
           )}
-          validationSchema={Yup.object().shape({
-            odInstance: Yup.number()
-              .required()
-              .positive()
-              .when(['isGcpProvider'], {
-                is: _ => !isGcpProvider,
-                then: Yup.number()
-                  .min(0)
-                  .max(gatewayDetails.routing?.instance?.scale_group?.max as number),
-                otherwise: Yup.number().min(1)
-              }),
-            spotInstance: Yup.number()
-              .positive()
-              .min(0)
-              .max(gatewayDetails.routing?.instance?.scale_group?.max as number)
-          })}
-        ></Formik>
+        </Formik>
       </div>
     </Layout.Horizontal>
   )

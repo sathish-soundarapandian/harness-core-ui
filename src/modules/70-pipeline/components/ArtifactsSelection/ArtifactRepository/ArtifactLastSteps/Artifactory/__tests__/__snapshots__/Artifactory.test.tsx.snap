@@ -13,7 +13,9 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case 1`] = `
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="connectorForm"
         >
@@ -507,7 +509,9 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="connectorForm"
         >
@@ -1001,7 +1005,9 @@ exports[`Serverless artifact ServerlessArtifactoryRepository while fetching repo
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="connectorForm"
         >
@@ -1471,7 +1477,9 @@ exports[`Serverless artifact ServerlessArtifactoryRepository with repository as 
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="connectorForm"
         >
@@ -1997,7 +2005,9 @@ exports[`Serverless artifact ServerlessArtifactoryRepository with status as erro
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="connectorForm"
         >
@@ -2467,7 +2477,9 @@ exports[`Serverless artifact ServerlessArtifactoryRepository with status as fail
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="connectorForm"
         >
@@ -2937,7 +2949,9 @@ exports[`Serverless artifact renders serverlessArtifactRepository 1`] = `
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="connectorForm"
         >

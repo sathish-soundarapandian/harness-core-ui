@@ -6,6 +6,7 @@ exports[`<AdvancedSteps /> tests snapshot test 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main form"
     >
       <div>

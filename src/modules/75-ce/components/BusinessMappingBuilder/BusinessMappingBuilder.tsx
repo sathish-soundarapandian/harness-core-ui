@@ -167,7 +167,8 @@ const BusinessMappingBuilder: (props: BusinessMappingBuilderProps) => React.Reac
           handleSubmit(values)
         }
       }
-      render={formikProps => {
+    >
+      {formikProps => {
         return (
           <FormikForm>
             <Layout.Horizontal
@@ -244,7 +245,7 @@ const BusinessMappingBuilder: (props: BusinessMappingBuilderProps) => React.Reac
           </FormikForm>
         )
       }}
-    ></Formik>
+    </Formik>
   )
 }
 

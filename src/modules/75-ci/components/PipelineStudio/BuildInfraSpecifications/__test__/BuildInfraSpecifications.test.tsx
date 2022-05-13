@@ -90,7 +90,8 @@ describe('BuildInfraSpecifications snapshot tests for K8s Build Infra', () => {
               getStageFromPipeline: jest.fn(() => {
                 return { stage: contextMock.state.pipeline.stages[0], parent: undefined }
               }),
-              updatePipeline: jest.fn
+              updatePipeline: jest.fn,
+              updateStage: jest.fn
             } as any
           }
         >
@@ -124,7 +125,8 @@ describe('BuildInfraSpecifications snapshot tests for K8s Build Infra', () => {
               getStageFromPipeline: jest.fn(() => {
                 return { stage: contextMock.state.pipeline.stages[0], parent: undefined }
               }),
-              updatePipeline: jest.fn
+              updatePipeline: jest.fn,
+              updateStage: jest.fn
             } as any
           }
         >
@@ -238,7 +240,8 @@ describe('BuildInfraSpecifications snapshot tests for K8s Build Infra', () => {
               getStageFromPipeline: jest.fn(() => {
                 return { stage: contextMock.state.pipeline.stages[0], parent: undefined }
               }),
-              updatePipeline: jest.fn
+              updatePipeline: jest.fn,
+              updateStage: jest.fn
             } as any
           }
         >
@@ -276,9 +279,9 @@ describe('BuildInfraSpecifications snapshot tests for AWS Build Infra', () => {
     const awsTile = buildInfraTypeTiles[1]
     expect(awsTile).toBeTruthy()
     fireEvent.click(awsTile)
+    expect(container).toMatchSnapshot()
     const poolIdInputText = await getByText('pipeline.buildInfra.poolId')
     expect(poolIdInputText).toBeTruthy()
-    expect(container).toMatchSnapshot()
   })
 })
 
@@ -299,7 +302,8 @@ describe('BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build I
               getStageFromPipeline: jest.fn(() => {
                 return { stage: contextMock.state.pipeline.stages[0], parent: undefined }
               }),
-              updatePipeline: jest.fn
+              updatePipeline: jest.fn,
+              updateStage: jest.fn
             } as any
           }
         >
@@ -335,7 +339,8 @@ describe('BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build I
               getStageFromPipeline: jest.fn(() => {
                 return { stage: contextMock.state.pipeline.stages[0], parent: undefined }
               }),
-              updatePipeline: jest.fn
+              updatePipeline: jest.fn,
+              updateStage: jest.fn
             } as any
           }
         >

@@ -337,7 +337,6 @@ export interface EmbeddedUser {
 
 export interface EntityGitDetails {
   branch?: string
-  commitId?: string
   filePath?: string
   objectId?: string
   repoIdentifier?: string
@@ -729,7 +728,7 @@ export interface ExecutionInfo {
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
-    | 'WAITING'
+    | 'Waiting'
   uuid?: string
 }
 
@@ -784,7 +783,7 @@ export interface ExecutionNode {
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
-    | 'WAITING'
+    | 'Waiting'
   stepDetails?: {
     [key: string]: {
       [key: string]: { [key: string]: any }
@@ -1309,7 +1308,7 @@ export interface GraphLayoutNode {
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
-    | 'WAITING'
+    | 'Waiting'
   stepDetails?: {
     [key: string]: {
       [key: string]: { [key: string]: any }
@@ -1394,7 +1393,6 @@ export interface InputSetResponse {
   tags?: {
     [key: string]: string
   }
-  version?: number
 }
 
 export interface InputSetSanitiseResponse {
@@ -1421,7 +1419,6 @@ export interface InputSetSummaryResponse {
   tags?: {
     [key: string]: string
   }
-  version?: number
 }
 
 export interface InputSetTemplateRequest {
@@ -1499,27 +1496,7 @@ export interface JiraIssueKeyNG {
 }
 
 export interface JsonNode {
-  array?: boolean
-  bigDecimal?: boolean
-  bigInteger?: boolean
-  binary?: boolean
-  boolean?: boolean
-  containerNode?: boolean
-  double?: boolean
-  float?: boolean
-  floatingPointNumber?: boolean
-  int?: boolean
-  integralNumber?: boolean
-  long?: boolean
-  missingNode?: boolean
-  nodeType?: 'ARRAY' | 'BINARY' | 'BOOLEAN' | 'MISSING' | 'NULL' | 'NUMBER' | 'OBJECT' | 'POJO' | 'STRING'
-  null?: boolean
-  number?: boolean
-  object?: boolean
-  pojo?: boolean
-  short?: boolean
-  textual?: boolean
-  valueNode?: boolean
+  [key: string]: any
 }
 
 export interface LandingDashboardRequestPMS {
@@ -1643,7 +1620,6 @@ export interface NGTriggerResponse {
   projectIdentifier?: string
   targetIdentifier?: string
   type?: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled'
-  version?: number
   yaml?: string
 }
 
@@ -1736,7 +1712,6 @@ export interface OverlayInputSetResponse {
   tags?: {
     [key: string]: string
   }
-  version?: number
 }
 
 export interface PMSPipelineResponseDTO {
@@ -1745,7 +1720,6 @@ export interface PMSPipelineResponseDTO {
   governanceMetadata?: GovernanceMetadata
   modules?: string[]
   resolvedTemplatesPipelineYaml?: string
-  version?: number
   yamlPipeline?: string
   yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
 }
@@ -1767,7 +1741,6 @@ export interface PMSPipelineSummaryResponse {
   name?: string
   numOfStages?: number
   stageNames?: string[]
-  storeType?: 'INLINE' | 'REMOTE'
   tags?: {
     [key: string]: string
   }
@@ -1913,7 +1886,7 @@ export type PipelineExecutionFilterProperties = FilterProperties & {
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
-    | 'WAITING'
+    | 'Waiting'
   )[]
   timeRange?: TimeRange
 }
@@ -1981,7 +1954,7 @@ export interface PipelineExecutionSummary {
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
-    | 'WAITING'
+    | 'Waiting'
   successfulStagesCount?: number
   tags?: NGTag[]
   totalStagesCount?: number
@@ -2006,6 +1979,11 @@ export interface PipelineHealthInfo {
   medianInfo?: MeanMedianInfo
   success?: SuccessHealthInfo
   total?: TotalHealthInfo
+}
+
+export interface PipelineImportRequest {
+  pipelineDescription?: string
+  pipelineName?: string
 }
 
 export interface PipelineInputResponse {
@@ -2199,6 +2177,7 @@ export interface ResourceDTO {
     | 'GOVERNANCE_POLICY'
     | 'GOVERNANCE_POLICY_SET'
     | 'VARIABLE'
+    | 'CHAOS_HUB'
 }
 
 export interface ResourceScopeDTO {
@@ -3089,7 +3068,7 @@ export interface RetryStageInfo {
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
-    | 'WAITING'
+    | 'Waiting'
 }
 
 export interface RunStageRequestDTO {
@@ -3481,7 +3460,7 @@ export interface ExecutionSummaryInfo {
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
-    | 'WAITING'
+    | 'Waiting'
   lastExecutionTs?: number
   numOfErrors?: number[]
 }
@@ -4469,7 +4448,6 @@ export interface CreateInputSetForPipelineQueryParams {
   baseBranch?: string
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
-  repoName?: string
 }
 
 export type CreateInputSetForPipelineProps = Omit<
@@ -4733,7 +4711,6 @@ export interface CreateOverlayInputSetForPipelineQueryParams {
   baseBranch?: string
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
-  repoName?: string
 }
 
 export type CreateOverlayInputSetForPipelineProps = Omit<
@@ -7335,7 +7312,6 @@ export interface CreatePipelineQueryParams {
   baseBranch?: string
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
-  repoName?: string
 }
 
 export type CreatePipelineProps = Omit<
@@ -7563,7 +7539,7 @@ export interface GetListOfExecutionsQueryParams {
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
-    | 'WAITING'
+    | 'Waiting'
   )[]
   myDeployments?: boolean
   branch?: string
@@ -8130,6 +8106,74 @@ export const getExecutionNodePromise = (
     signal
   )
 
+export interface ImportPipelineQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  connectorRef?: string
+  repoName?: string
+  branch?: string
+  filePath?: string
+}
+
+export interface ImportPipelinePathParams {
+  pipelineIdentifier: string
+}
+
+export type ImportPipelineProps = Omit<
+  GetProps<ResponsePMSPipelineResponseDTO, Failure | Error, ImportPipelineQueryParams, ImportPipelinePathParams>,
+  'path'
+> &
+  ImportPipelinePathParams
+
+/**
+ * Get Pipeline YAML from Git Repository
+ */
+export const ImportPipeline = ({ pipelineIdentifier, ...props }: ImportPipelineProps) => (
+  <Get<ResponsePMSPipelineResponseDTO, Failure | Error, ImportPipelineQueryParams, ImportPipelinePathParams>
+    path={`/pipelines/import/${pipelineIdentifier}`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseImportPipelineProps = Omit<
+  UseGetProps<ResponsePMSPipelineResponseDTO, Failure | Error, ImportPipelineQueryParams, ImportPipelinePathParams>,
+  'path'
+> &
+  ImportPipelinePathParams
+
+/**
+ * Get Pipeline YAML from Git Repository
+ */
+export const useImportPipeline = ({ pipelineIdentifier, ...props }: UseImportPipelineProps) =>
+  useGet<ResponsePMSPipelineResponseDTO, Failure | Error, ImportPipelineQueryParams, ImportPipelinePathParams>(
+    (paramsInPath: ImportPipelinePathParams) => `/pipelines/import/${paramsInPath.pipelineIdentifier}`,
+    { base: getConfig('pipeline/api'), pathParams: { pipelineIdentifier }, ...props }
+  )
+
+/**
+ * Get Pipeline YAML from Git Repository
+ */
+export const importPipelinePromise = (
+  {
+    pipelineIdentifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponsePMSPipelineResponseDTO,
+    Failure | Error,
+    ImportPipelineQueryParams,
+    ImportPipelinePathParams
+  > & { pipelineIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePMSPipelineResponseDTO, Failure | Error, ImportPipelineQueryParams, ImportPipelinePathParams>(
+    getConfig('pipeline/api'),
+    `/pipelines/import/${pipelineIdentifier}`,
+    props,
+    signal
+  )
+
 export interface GetPipelineListQueryParams {
   accountIdentifier: string
   orgIdentifier: string
@@ -8560,7 +8604,6 @@ export interface CreatePipelineV2QueryParams {
   baseBranch?: string
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
-  repoName?: string
 }
 
 export type CreatePipelineV2Props = Omit<
@@ -10603,7 +10646,7 @@ export interface GetSchemaYamlQueryParams {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'POLICY_STEP'
+    | 'Policy'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -10733,7 +10776,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'POLICY_STEP'
+    | 'Policy'
     | 'Run'
     | 'RunTests'
     | 'Plugin'

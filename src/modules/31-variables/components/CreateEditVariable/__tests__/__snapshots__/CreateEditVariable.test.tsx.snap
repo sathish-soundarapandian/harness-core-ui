@@ -6,6 +6,7 @@ exports[`CreateEditVariable render component check validations 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main variableFormWrap"
       data-testid="add-edit-variable"
     >
@@ -297,36 +298,6 @@ exports[`CreateEditVariable render component check validations 1`] = `
                       class="RadioButton--radioIcon"
                     />
                     inputTypes.FIXED
-                  </label>
-                  <label
-                    class="RadioButton--radio StyledProps--main"
-                  >
-                    <input
-                      class="RadioButton--input"
-                      disabled=""
-                      name="valueType"
-                      type="radio"
-                      value="FIXED_SET"
-                    />
-                    <span
-                      class="RadioButton--radioIcon"
-                    />
-                    allowedValues
-                  </label>
-                  <label
-                    class="RadioButton--radio StyledProps--main"
-                  >
-                    <input
-                      class="RadioButton--input"
-                      disabled=""
-                      name="valueType"
-                      type="radio"
-                      value="REGEX"
-                    />
-                    <span
-                      class="RadioButton--radioIcon"
-                    />
-                    common.configureOptions.regex
                   </label>
                 </div>
               </div>

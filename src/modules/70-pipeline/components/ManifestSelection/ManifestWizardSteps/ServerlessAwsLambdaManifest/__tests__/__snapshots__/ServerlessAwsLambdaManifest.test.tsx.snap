@@ -14,7 +14,9 @@ exports[`Manifest Details tests expand advanced section - when type is k8smanife
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="Layout--vertical StyledProps--main manifestForm StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-flex-start"
         >
@@ -547,7 +549,9 @@ exports[`Manifest Details tests initial rendering 1`] = `
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="Layout--vertical StyledProps--main manifestForm StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-flex-start"
         >
@@ -1002,7 +1006,9 @@ exports[`Manifest Details tests renders form in edit mode - when gitfetchtype is
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="Layout--vertical StyledProps--main manifestForm StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-flex-start"
         >
@@ -1457,7 +1463,9 @@ exports[`Manifest Details tests renders form in edit mode 1`] = `
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="Layout--vertical StyledProps--main manifestForm StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-flex-start"
         >
@@ -1912,7 +1920,9 @@ exports[`Manifest Details tests runtime value for connector should make runtime 
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="Layout--vertical StyledProps--main manifestForm StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-flex-start"
         >
@@ -2367,7 +2377,9 @@ exports[`Manifest Details tests when branch is runtime input 1`] = `
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="Layout--vertical StyledProps--main manifestForm StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-flex-start"
         >
@@ -2819,7 +2831,9 @@ exports[`Manifest Details tests when connectionType is of repo 1`] = `
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="Layout--vertical StyledProps--main manifestForm StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-flex-start"
         >
@@ -3274,7 +3288,9 @@ exports[`Manifest Details tests when gitfetchtype is Commit and commitId is Runt
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="Layout--vertical StyledProps--main manifestForm StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-flex-start"
         >
@@ -3767,7 +3783,9 @@ exports[`Manifest Details tests when prevStepData is not passed in props 1`] = `
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="Layout--vertical StyledProps--main manifestForm StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-flex-start"
         >
@@ -4222,7 +4240,9 @@ exports[`Manifest Details tests when prevStepData is passed with connectorRef as
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="Layout--vertical StyledProps--main manifestForm StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-flex-start"
         >
@@ -4677,7 +4697,9 @@ exports[`Manifest Details tests when scope is of account 1`] = `
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="Layout--vertical StyledProps--main manifestForm StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-flex-start"
         >

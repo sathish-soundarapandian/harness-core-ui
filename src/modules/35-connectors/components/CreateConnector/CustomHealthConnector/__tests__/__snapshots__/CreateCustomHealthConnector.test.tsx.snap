@@ -157,6 +157,7 @@ exports[`Create CustomHealth connector Wizard Ensure component renders 3 substep
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>

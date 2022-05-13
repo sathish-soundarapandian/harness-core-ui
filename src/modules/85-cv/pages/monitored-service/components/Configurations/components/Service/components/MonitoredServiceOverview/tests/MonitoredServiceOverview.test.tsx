@@ -91,7 +91,7 @@ describe('Unit tests for MonitoredServiceOverview', () => {
 
   test('Ensure that providing the service and env generates correct name value', async () => {
     const onSubmitMock = jest.fn()
-    const { container } = render(<WrapperComponent onSubmit={onSubmitMock} />)
+    const { container } = render(<WrapperComponent onSubmit={onSubmitMock} initialValues={{}} />)
 
     await waitFor(() => expect(container.querySelector('[class*="monitoredService"]')).not.toBeNull())
     expect(container.querySelectorAll('[class*="dropdown"]').length).toBe(2)

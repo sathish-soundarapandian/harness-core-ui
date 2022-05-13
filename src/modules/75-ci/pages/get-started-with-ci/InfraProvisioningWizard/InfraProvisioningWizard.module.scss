@@ -28,8 +28,8 @@
 }
 
 .gitProviderCard {
-  height: 100px;
-  width: 100px;
+  height: 110px;
+  width: 110px;
   margin-right: var(--spacing-large);
 }
 
@@ -43,6 +43,10 @@
 
 .bitbucketIcon {
   padding: var(--spacing-small) var(--spacing-xsmall) 0 var(--spacing-3) !important;
+}
+
+.genericGitIcon {
+  padding: var(--spacing-xsmall) var(--spacing-xsmall) var(--spacing-xsmall) var(--spacing-3) !important;
 }
 
 .icons {

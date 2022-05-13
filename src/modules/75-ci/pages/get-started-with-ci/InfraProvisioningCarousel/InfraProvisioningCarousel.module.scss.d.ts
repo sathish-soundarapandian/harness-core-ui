@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly bg: string
   readonly centerAlign: string
   readonly fixedMinHeight: string
   readonly main: string

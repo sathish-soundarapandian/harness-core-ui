@@ -101,6 +101,7 @@ exports[`Test FilterCRUD component Add a new filter with visibke to Everyone 1`]
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -461,6 +462,7 @@ exports[`Test FilterCRUD component Add a new filter with visibke to Everyone 2`]
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -697,6 +699,7 @@ exports[`Test FilterCRUD component Add a new filter with visible to OnlyMe 1`] =
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -1057,6 +1060,7 @@ exports[`Test FilterCRUD component Add a new filter with visible to OnlyMe 2`] =
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -1293,6 +1297,7 @@ exports[`Test FilterCRUD component Add a new filter with visible to OnlyMe 3`] =
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -1653,6 +1658,7 @@ exports[`Test FilterCRUD component Add a new filter with visible to OnlyMe 4`] =
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -1889,6 +1895,7 @@ exports[`Test FilterCRUD component Add a new filter with visible to OnlyMe 5`] =
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -2125,6 +2132,7 @@ exports[`Test FilterCRUD component Enable edit mode 1`] = `
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -2485,6 +2493,7 @@ exports[`Test FilterCRUD component Initial render should match snapshot 1`] = `
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>

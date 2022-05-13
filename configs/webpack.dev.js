@@ -20,6 +20,7 @@ const devServerProxyConfig = require('./devServerProxy.config')
 const CONTEXT = process.cwd()
 const isCypressCoverage = process.env.CYPRESS_COVERAGE === 'true'
 const isCypress = process.env.CYPRESS === 'true'
+const isCI = process.env.CI === 'true'
 
 const certificateExists = fs.existsSync(path.join(CONTEXT, 'certificates/localhost.pem'))
 
@@ -31,14 +32,15 @@ const DISABLE_TYPECHECK = process.env.DISABLE_TYPECHECK === 'true'
 console.log('\nDev server env vars')
 console.table({ HARNESS_ENABLE_NG_AUTH_UI, DISABLE_TYPECHECK })
 
-if (!certificateExists) {
+// certificates are required in non CI environments only
+if (!isCI && !certificateExists) {
   throw new Error('The certificate is missing, please run `yarn generate-certificate`')
 }
 
 const config = {
   mode: 'development',
-  devtool: 'cheap-module-source-map',
-  cache: { type: 'filesystem' },
+  devtool: isCI ? false : 'cheap-module-source-map',
+  cache: isCI ? false : { type: 'filesystem' },
   output: {
     path: path.resolve(CONTEXT, 'dist'),
     filename: '[name].js',
@@ -46,26 +48,28 @@ const config = {
     pathinfo: false,
     assetModuleFilename: 'images/[hash:6][ext][query]'
   },
-  devServer: {
-    historyApiFallback: true,
-    port: 8181,
-    client: {
-      overlay: !(isCypress || isCypressCoverage)
-    },
-    server: {
-      type: 'https',
-      options: {
-        key: fs.readFileSync(path.resolve(CONTEXT, 'certificates/localhost-key.pem')),
-        cert: fs.readFileSync(path.resolve(CONTEXT, 'certificates/localhost.pem'))
-      }
-    },
-    proxy: Object.fromEntries(
-      Object.entries(devServerProxyConfig).map(([key, value]) => [
-        key,
-        Object.assign({ logLevel: 'info', secure: false, changeOrigin: true }, value)
-      ])
-    )
-  },
+  devServer: isCI
+    ? undefined
+    : {
+        historyApiFallback: true,
+        port: 8181,
+        client: {
+          overlay: !(isCypress || isCypressCoverage)
+        },
+        server: {
+          type: 'https',
+          options: {
+            key: fs.readFileSync(path.resolve(CONTEXT, 'certificates/localhost-key.pem')),
+            cert: fs.readFileSync(path.resolve(CONTEXT, 'certificates/localhost.pem'))
+          }
+        },
+        proxy: Object.fromEntries(
+          Object.entries(devServerProxyConfig).map(([key, value]) => [
+            key,
+            Object.assign({ logLevel: 'info', secure: false, changeOrigin: true }, value)
+          ])
+        )
+      },
   module: {
     rules: [
       {
@@ -173,7 +177,9 @@ if (isCypress && isCypressCoverage) {
       ]
     }
   })
-} else if (!DISABLE_TYPECHECK) {
+}
+
+if (!(DISABLE_TYPECHECK || isCI || isCypress)) {
   mergedConfig.plugins.push(new ForkTsCheckerWebpackPlugin())
 }
 

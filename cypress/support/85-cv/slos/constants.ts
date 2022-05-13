@@ -55,6 +55,12 @@ export const getChangeEventTimeline = `/cv/api/account/${accountId}/org/${orgIde
 export const getChangeEventList = `/cv/api/account/${accountId}/org/${orgIdentifier}/project/${projectIdentifier}/change-event?routingId=${accountId}&monitoredServiceIdentifiers=cvng_prod&startTime=1641364526709&endTime=1641450926709&pageIndex=0&pageSize=10`
 export const getMonitoredServiceChangeEventSummary = `/cv/api/change-event/monitored-service-summary?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&monitoredServiceIdentifier=cvng_prod&startTime=1641364526709&endTime=1641450926709`
 export const getChangeEventDetail = `/cv/api/account/${accountId}/org/${orgIdentifier}/project/${projectIdentifier}/change-event/_bDpV3daRFm7MYlqidI5Sw?routingId=${accountId}`
+export const getMonitoredServiceOverAllHealthScore = `/cv/api/monitored-service/cvng_prod/overall-health-score?routingId=${accountId}&accountId=${accountId}&projectIdentifier=${projectIdentifier}&orgIdentifier=${orgIdentifier}&duration=FOUR_HOURS&endTime=1651731852793`
+export const getSLODashboardWidgets = `/cv/api/slo-dashboard/widgets?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&monitoredServiceIdentifier=cvng_prod`
+export const getSLODetailsForSLO_1 = `/cv/api/slo-dashboard/widget/SLO_1?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&startTime=1651717500000&endTime=1651731600000`
+export const getSLODetailsForSLO_2 = `/cv/api/slo-dashboard/widget/SLO_2?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&startTime=1651717500000&endTime=1651731600000`
+export const getSLODetailsForSLO_3 = `/cv/api/slo-dashboard/widget/SLO_3?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&startTime=1651717500000&endTime=1651731600000`
+export const getSLODetailsForSLO_4 = `/cv/api/slo-dashboard/widget/SLO_4?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&startTime=1651717500000&endTime=1651731600000`
 
 export const listSLOsCallResponse = {
   status: 'SUCCESS',
@@ -688,7 +694,7 @@ export const monitoredServiceChangeEventSummaryResponse = {
 export const changeEventDetailsResponse = {
   metaData: {},
   resource: {
-    id: '_bDpV3daRFm7MYlqidI5Sw',
+    id: '63QIXm3zSMi5bF56L4tulQ',
     accountId: 'zEaak-FLS425IEO7OLzMUg',
     orgIdentifier: 'CVNG',
     projectIdentifier: 'SRMsanity4thapril',
@@ -699,28 +705,452 @@ export const changeEventDetailsResponse = {
     name: 'Deployment of cvng in prod',
     monitoredServiceIdentifier: 'cvng_prod',
     changeSourceIdentifier: 'harness_cd_next_gen',
-    eventTime: 1641374526709,
+    eventTime: 1651724652793,
     metadata: {
-      deploymentStartTime: 1641364526709,
-      deploymentEndTime: 1641374526709,
-      planExecutionId: '_Hb2PD9oTMaxOKcdJv2kPg',
+      deploymentStartTime: 1651724496512,
+      deploymentEndTime: 1651724652793,
+      planExecutionId: 'FIUabw9tRhqLSHMZY1BcKg',
       pipelineId: 'cvng',
-      stageStepId: 'yJMXenRzRv-ym_GELHE8ug',
+      stageStepId: 'VyUkWiR7T_uXkwajusV88Q',
       stageId: 'multiple_health_sources',
       artifactType: 'DockerRegistry',
       artifactTag: 'praveen-cv-test',
-      status: 'IGNORE_FAILED',
-      verifyStepSummaries: [
-        {
-          name: 'verify_step',
-          verificationStatus: 'VERIFICATION_FAILED'
-        }
-      ],
+      status: 'ABORTED',
+      verifyStepSummaries: null,
       pipelinePath:
-        '/account/zEaak-FLS425IEO7OLzMUg/cd/orgs/CVNG/projects/SRMsanity4thapril/pipelines/cvng/executions/_Hb2PD9oTMaxOKcdJv2kPg/pipeline?stage=yJMXenRzRv-ym_GELHE8ug'
+        '/account/zEaak-FLS425IEO7OLzMUg/cd/orgs/CVNG/projects/SRMsanity4thapril/pipelines/cvng/executions/FIUabw9tRhqLSHMZY1BcKg/pipeline?stage=VyUkWiR7T_uXkwajusV88Q'
     },
     category: 'Deployment',
     type: 'HarnessCDNextGen'
   },
   responseMessages: []
+}
+
+export const getMonitoredServiceOverAllHealthScoreResponse = {
+  status: 'SUCCESS',
+  data: {
+    healthScores: [
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651717500000,
+        endTime: 1651717800000,
+        timeRangeParams: { startTime: 1651717500, endTime: 1651717800 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651717800000,
+        endTime: 1651718100000,
+        timeRangeParams: { startTime: 1651717800, endTime: 1651718100 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651718100000,
+        endTime: 1651718400000,
+        timeRangeParams: { startTime: 1651718100, endTime: 1651718400 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651718400000,
+        endTime: 1651718700000,
+        timeRangeParams: { startTime: 1651718400, endTime: 1651718700 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651718700000,
+        endTime: 1651719000000,
+        timeRangeParams: { startTime: 1651718700, endTime: 1651719000 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651719000000,
+        endTime: 1651719300000,
+        timeRangeParams: { startTime: 1651719000, endTime: 1651719300 }
+      },
+      {
+        healthScore: 6,
+        riskStatus: 'UNHEALTHY',
+        startTime: 1651719300000,
+        endTime: 1651719600000,
+        timeRangeParams: { startTime: 1651719300, endTime: 1651719600 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651719600000,
+        endTime: 1651719900000,
+        timeRangeParams: { startTime: 1651719600, endTime: 1651719900 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651719900000,
+        endTime: 1651720200000,
+        timeRangeParams: { startTime: 1651719900, endTime: 1651720200 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651720200000,
+        endTime: 1651720500000,
+        timeRangeParams: { startTime: 1651720200, endTime: 1651720500 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651720500000,
+        endTime: 1651720800000,
+        timeRangeParams: { startTime: 1651720500, endTime: 1651720800 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651720800000,
+        endTime: 1651721100000,
+        timeRangeParams: { startTime: 1651720800, endTime: 1651721100 }
+      },
+      {
+        healthScore: 0,
+        riskStatus: 'UNHEALTHY',
+        startTime: 1651721100000,
+        endTime: 1651721400000,
+        timeRangeParams: { startTime: 1651721100, endTime: 1651721400 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651721400000,
+        endTime: 1651721700000,
+        timeRangeParams: { startTime: 1651721400, endTime: 1651721700 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651721700000,
+        endTime: 1651722000000,
+        timeRangeParams: { startTime: 1651721700, endTime: 1651722000 }
+      },
+      {
+        healthScore: 12,
+        riskStatus: 'UNHEALTHY',
+        startTime: 1651722000000,
+        endTime: 1651722300000,
+        timeRangeParams: { startTime: 1651722000, endTime: 1651722300 }
+      },
+      {
+        healthScore: 9,
+        riskStatus: 'UNHEALTHY',
+        startTime: 1651722300000,
+        endTime: 1651722600000,
+        timeRangeParams: { startTime: 1651722300, endTime: 1651722600 }
+      },
+      {
+        healthScore: 3,
+        riskStatus: 'UNHEALTHY',
+        startTime: 1651722600000,
+        endTime: 1651722900000,
+        timeRangeParams: { startTime: 1651722600, endTime: 1651722900 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651722900000,
+        endTime: 1651723200000,
+        timeRangeParams: { startTime: 1651722900, endTime: 1651723200 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651723200000,
+        endTime: 1651723500000,
+        timeRangeParams: { startTime: 1651723200, endTime: 1651723500 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651723500000,
+        endTime: 1651723800000,
+        timeRangeParams: { startTime: 1651723500, endTime: 1651723800 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651723800000,
+        endTime: 1651724100000,
+        timeRangeParams: { startTime: 1651723800, endTime: 1651724100 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651724100000,
+        endTime: 1651724400000,
+        timeRangeParams: { startTime: 1651724100, endTime: 1651724400 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651724400000,
+        endTime: 1651724700000,
+        timeRangeParams: { startTime: 1651724400, endTime: 1651724700 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651724700000,
+        endTime: 1651725000000,
+        timeRangeParams: { startTime: 1651724700, endTime: 1651725000 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651725000000,
+        endTime: 1651725300000,
+        timeRangeParams: { startTime: 1651725000, endTime: 1651725300 }
+      },
+      {
+        healthScore: 70,
+        riskStatus: 'OBSERVE',
+        startTime: 1651725300000,
+        endTime: 1651725600000,
+        timeRangeParams: { startTime: 1651725300, endTime: 1651725600 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651725600000,
+        endTime: 1651725900000,
+        timeRangeParams: { startTime: 1651725600, endTime: 1651725900 }
+      },
+      {
+        healthScore: 0,
+        riskStatus: 'UNHEALTHY',
+        startTime: 1651725900000,
+        endTime: 1651726200000,
+        timeRangeParams: { startTime: 1651725900, endTime: 1651726200 }
+      },
+      {
+        healthScore: 17,
+        riskStatus: 'UNHEALTHY',
+        startTime: 1651726200000,
+        endTime: 1651726500000,
+        timeRangeParams: { startTime: 1651726200, endTime: 1651726500 }
+      },
+      {
+        healthScore: 6,
+        riskStatus: 'UNHEALTHY',
+        startTime: 1651726500000,
+        endTime: 1651726800000,
+        timeRangeParams: { startTime: 1651726500, endTime: 1651726800 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651726800000,
+        endTime: 1651727100000,
+        timeRangeParams: { startTime: 1651726800, endTime: 1651727100 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651727100000,
+        endTime: 1651727400000,
+        timeRangeParams: { startTime: 1651727100, endTime: 1651727400 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651727400000,
+        endTime: 1651727700000,
+        timeRangeParams: { startTime: 1651727400, endTime: 1651727700 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651727700000,
+        endTime: 1651728000000,
+        timeRangeParams: { startTime: 1651727700, endTime: 1651728000 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651728000000,
+        endTime: 1651728300000,
+        timeRangeParams: { startTime: 1651728000, endTime: 1651728300 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651728300000,
+        endTime: 1651728600000,
+        timeRangeParams: { startTime: 1651728300, endTime: 1651728600 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651728600000,
+        endTime: 1651728900000,
+        timeRangeParams: { startTime: 1651728600, endTime: 1651728900 }
+      },
+      {
+        healthScore: 51,
+        riskStatus: 'OBSERVE',
+        startTime: 1651728900000,
+        endTime: 1651729200000,
+        timeRangeParams: { startTime: 1651728900, endTime: 1651729200 }
+      },
+      {
+        healthScore: 59,
+        riskStatus: 'OBSERVE',
+        startTime: 1651729200000,
+        endTime: 1651729500000,
+        timeRangeParams: { startTime: 1651729200, endTime: 1651729500 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651729500000,
+        endTime: 1651729800000,
+        timeRangeParams: { startTime: 1651729500, endTime: 1651729800 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651729800000,
+        endTime: 1651730100000,
+        timeRangeParams: { startTime: 1651729800, endTime: 1651730100 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651730100000,
+        endTime: 1651730400000,
+        timeRangeParams: { startTime: 1651730100, endTime: 1651730400 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651730400000,
+        endTime: 1651730700000,
+        timeRangeParams: { startTime: 1651730400, endTime: 1651730700 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651730700000,
+        endTime: 1651731000000,
+        timeRangeParams: { startTime: 1651730700, endTime: 1651731000 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651731000000,
+        endTime: 1651731300000,
+        timeRangeParams: { startTime: 1651731000, endTime: 1651731300 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651731300000,
+        endTime: 1651731600000,
+        timeRangeParams: { startTime: 1651731300, endTime: 1651731600 }
+      },
+      {
+        healthScore: 100,
+        riskStatus: 'HEALTHY',
+        startTime: 1651731600000,
+        endTime: 1651731900000,
+        timeRangeParams: { startTime: 1651731600, endTime: 1651731900 }
+      }
+    ]
+  },
+  metaData: null,
+  correlationId: '076d7031-79a9-4e9c-8fe7-bffbade29a75'
+}
+
+export const getSLODashboardWidgetsResponse = {
+  data: {
+    totalItems: 4,
+    totalPages: 1,
+    pageIndex: 0,
+    pageItemCount: 4,
+    content: [
+      { title: 'SLO 1', sloIdentifier: 'SLO_1' },
+      { title: 'SLO 2', sloIdentifier: 'SLO_2' },
+      { title: 'SLO 3', sloIdentifier: 'SLO_3' },
+      { title: 'SLO 4', sloIdentifier: 'SLO_4' }
+    ]
+  }
+}
+
+export const getSLODashboardWidgetsEmptyResponse = {
+  data: {
+    totalItems: 0,
+    totalPages: 0,
+    pageIndex: 0,
+    pageItemCount: 0,
+    content: []
+  }
+}
+
+export const getSLODetailsForSLO_1Response = {
+  status: 'SUCCESS',
+  data: {
+    sloDashboardWidget: {
+      ...updatedListSLOsCallResponse.data.content[0],
+      currentPeriodStartTime: 1651717500000,
+      currentPeriodEndTime: 1651731900000,
+      sloPerformanceTrend: [
+        { timestamp: 1651717552141, value: 98.96753061805754 },
+        { timestamp: 1651720552141, value: 98.97119341563786 },
+        { timestamp: 1651723552141, value: 98.97483031674209 },
+        { timestamp: 1651726552141, value: 98.97844159504015 },
+        { timestamp: 1651729552141, value: 98.98202752035945 },
+        { timestamp: 1651730992141, value: 98.98373983739837 }
+      ],
+      errorBudgetBurndown: [
+        { timestamp: 1651717552141, value: -0.6944444444444444 },
+        { timestamp: 1651720552141, value: -0.6944444444444444 },
+        { timestamp: 1651723552141, value: -0.6944444444444444 },
+        { timestamp: 1651726552141, value: -0.6944444444444444 },
+        { timestamp: 1651729552141, value: -0.6944444444444444 },
+        { timestamp: 1651730992141, value: -0.6944444444444444 }
+      ]
+    }
+  }
+}
+
+export const getSLODetailResponseSLOOutRange = {
+  status: 'SUCCESS',
+  data: {
+    sloDashboardWidget: {
+      ...updatedListSLOsCallResponse.data.content[0],
+      sloPerformanceTrend: [],
+      errorBudgetBurndown: []
+    }
+  }
+}
+
+export const getSLODetailResponseSLIRecalculation = {
+  status: 'SUCCESS',
+  data: {
+    sloDashboardWidget: {
+      ...updatedListSLOsCallResponse.data.content[0],
+      recalculatingSLI: true,
+      currentPeriodStartTime: 1651717500000,
+      currentPeriodEndTime: 1651731900000,
+      sloPerformanceTrend: [
+        { timestamp: 1651717552141, value: 98.96753061805754 },
+        { timestamp: 1651730992141, value: 98.98373983739837 }
+      ],
+      errorBudgetBurndown: [
+        { timestamp: 1651717552141, value: -0.6944444444444444 },
+        { timestamp: 1651730992141, value: -0.6944444444444444 }
+      ]
+    }
+  }
 }

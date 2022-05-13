@@ -259,13 +259,14 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
                         value === true &&
                         formikProps.values
                       ) {
-                        formikProps.values.prometheusMetric = undefined
-                        formikProps.values.serviceFilter = undefined
-                        formikProps.values.envFilter = undefined
-                        formikProps.values.additionalFilter = undefined
-                        formikProps.values.prometheusMetric = undefined
-                        formikProps.values.aggregator = undefined
-                        formikProps.setValues({ ...formikProps.values, isManualQuery: true })
+                        const valuesToSet = {
+                          prometheusMetric: undefined,
+                          serviceFilter: undefined,
+                          envFilter: undefined,
+                          additionalFilter: undefined,
+                          aggregator: undefined
+                        }
+                        formikProps.setValues({ ...formikProps.values, ...valuesToSet, isManualQuery: true })
                       } else {
                         formikProps.setFieldValue(fieldName, value)
                       }

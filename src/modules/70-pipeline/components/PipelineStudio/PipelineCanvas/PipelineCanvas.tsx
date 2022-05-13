@@ -25,7 +25,7 @@ import {
 import { useModalHook } from '@harness/use-modal'
 import { useHistory, useParams, matchPath } from 'react-router-dom'
 import { parse } from 'yaml'
-import { defaultTo, isEmpty, isEqual, merge, omit, set } from 'lodash-es'
+import { defaultTo, isEmpty, isEqual, merge, omit } from 'lodash-es'
 import produce from 'immer'
 import type { PipelineInfoConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -51,7 +51,7 @@ import {
   InputSetSummaryResponse,
   useGetInputsetYaml
 } from 'services/pipeline-ng'
-import { useGlobalEventListener, useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import { useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { TagsPopover } from '@common/components'
 import type { IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
@@ -62,13 +62,11 @@ import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import { getFeaturePropsForRunPipelineButton } from '@pipeline/utils/runPipelineUtils'
 import { RunPipelineForm } from '@pipeline/components/RunPipelineModal/RunPipelineForm'
 import { createTemplate } from '@pipeline/utils/templateUtils'
-import { getStepFromStage } from '@pipeline/components/PipelineStudio/StepUtil'
-import { updateStepWithinStage } from '@pipeline/components/PipelineStudio/RightDrawer/RightDrawer'
-import type { TemplateSummaryResponse } from 'services/template-ng'
 import StageBuilder from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilder'
 import { TemplatePipelineBuilder } from '@pipeline/components/PipelineStudio/PipelineTemplateBuilder/TemplatePipelineBuilder/TemplatePipelineBuilder'
 import { SavePipelinePopover } from '@pipeline/components/PipelineStudio/SavePipelinePopover/SavePipelinePopover'
 import { useTemplateSelector } from '@pipeline/utils/useTemplateSelector'
+import { useSaveTemplateListener } from '@pipeline/components/PipelineStudio/hooks/useSaveTemplateListener'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import CreatePipelines from '../CreateModal/PipelineCreate'
 import { DefaultNewPipelineId, DrawerTypes } from '../PipelineContext/PipelineActions'
@@ -130,11 +128,6 @@ export function PipelineCanvas({
   const { isGitSyncEnabled } = React.useContext(AppStoreContext)
   const {
     state,
-    state: {
-      selectionState: { selectedStageId },
-      templateTypes,
-      pipelineView: { drawerData }
-    },
     updatePipeline,
     updatePipelineStoreMetadata,
     updateGitDetails,
@@ -143,12 +136,9 @@ export function PipelineCanvas({
     view,
     setView,
     isReadonly,
-    updateStage,
     updatePipelineView,
     setSelectedStageId,
-    setSelectedSectionId,
-    getStageFromPipeline,
-    setTemplateTypes
+    setSelectedSectionId
   } = usePipelineContext()
   const {
     repoIdentifier,
@@ -226,7 +216,6 @@ export function PipelineCanvas({
   const [isYamlError, setYamlError] = React.useState(false)
   const [blockNavigation, setBlockNavigation] = React.useState(false)
   const [selectedBranch, setSelectedBranch] = React.useState(branch || '')
-  const [savedTemplate, setSavedTemplate] = React.useState<TemplateSummaryResponse>()
   const [disableVisualView, setDisableVisualView] = React.useState(entityValidityDetails?.valid === false)
   const [useTemplate, setUseTemplate] = React.useState<boolean>(false)
 
@@ -285,74 +274,7 @@ export function PipelineCanvas({
     return true
   }
 
-  useGlobalEventListener('TEMPLATE_SAVED', event => {
-    const { detail: newTemplate } = event
-    if (newTemplate) {
-      setSavedTemplate(newTemplate)
-      window.requestAnimationFrame(() => {
-        openUseTemplateDialog()
-      })
-    }
-  })
-
-  const { openDialog: openUseTemplateDialog } = useConfirmationDialog({
-    intent: Intent.WARNING,
-    cancelButtonText: getString('no'),
-    contentText: getString('pipeline.templateSaved', {
-      name: savedTemplate?.name,
-      entity: savedTemplate?.templateEntityType?.toLowerCase()
-    }),
-    titleText: `Use Template ${savedTemplate?.name}?`,
-    confirmButtonText: getString('yes'),
-    onCloseDialog: async isConfirmed => {
-      if (isConfirmed) {
-        onUseTemplateConfirm()
-      }
-    }
-  })
-
-  const onUseTemplateConfirm = async () => {
-    if (savedTemplate?.templateEntityType === 'Pipeline') {
-      const processNode = createTemplate(pipeline, savedTemplate)
-      await updatePipeline(processNode)
-    } else if (selectedStageId) {
-      const { stage: selectedStage } = getStageFromPipeline(selectedStageId)
-      if (savedTemplate?.templateEntityType === 'Stage') {
-        if (selectedStage?.stage) {
-          const processNode = createTemplate(selectedStage.stage, savedTemplate)
-          await updateStage(processNode)
-        }
-      } else if (savedTemplate?.templateEntityType === 'Step') {
-        const selectedStepId = drawerData.data?.stepConfig?.node.identifier
-        if (selectedStepId) {
-          const selectedStep = getStepFromStage(selectedStepId, [
-            ...defaultTo(selectedStage?.stage?.spec?.execution?.steps, []),
-            ...defaultTo(selectedStage?.stage?.spec?.execution?.rollbackSteps, [])
-          ])
-          if (selectedStep?.step) {
-            const processNode = createTemplate(selectedStep?.step, savedTemplate)
-            const newPipelineView = produce(pipelineView, draft => {
-              set(draft, 'drawerData.data.stepConfig.node', processNode)
-            })
-            updatePipelineView(newPipelineView)
-            const stageData = produce(selectedStage, draft => {
-              if (draft?.stage?.spec?.execution) {
-                updateStepWithinStage(draft.stage.spec.execution, selectedStepId, processNode as any)
-              }
-            })
-            if (stageData?.stage) {
-              await updateStage(stageData.stage)
-            }
-            drawerData.data?.stepConfig?.onUpdate?.(processNode)
-          }
-        }
-      }
-      if (savedTemplate?.identifier && savedTemplate?.childType) {
-        templateTypes[savedTemplate.identifier] = savedTemplate.childType
-        setTemplateTypes(templateTypes)
-      }
-    }
-  }
+  useSaveTemplateListener()
 
   const [showModal, hideModal] = useModalHook(() => {
     if (getOtherModal) {

@@ -13,7 +13,9 @@ exports[`Open shift params with git tests renders form in edit mode 1`] = `
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="templateForm"
         >
@@ -389,7 +391,9 @@ exports[`Open shift params with git tests renders without crashing 1`] = `
     <div
       class="OverlaySpinner--overlaySpinner"
     >
-      <form>
+      <form
+        action="#"
+      >
         <div
           class="templateForm"
         >

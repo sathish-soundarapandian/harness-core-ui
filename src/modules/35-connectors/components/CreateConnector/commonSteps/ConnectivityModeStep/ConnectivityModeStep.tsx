@@ -30,6 +30,7 @@ import type {
 import { PageSpinner } from '@common/components'
 import ConnectivityMode, {
   ConnectivityCardItem,
+  ConnectivityModeForm,
   ConnectivityModeType
 } from '@common/components/ConnectivityMode/ConnectivityMode'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -116,7 +117,7 @@ const ConnectivityModeStep: React.FC<StepProps<ConnectorConfigDTO> & Connectivit
       ) : null}
       <Layout.Vertical>
         <ModalErrorHandler bind={setModalErrorHandler} />
-        <Formik
+        <Formik<ConnectivityModeForm>
           initialValues={{
             ...defaultInitialValues,
             ...prevStepData

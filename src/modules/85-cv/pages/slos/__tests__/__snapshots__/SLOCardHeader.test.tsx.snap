@@ -331,6 +331,7 @@ exports[`SLOCardHeader it should successfully reset the error budget 1`] = `
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>

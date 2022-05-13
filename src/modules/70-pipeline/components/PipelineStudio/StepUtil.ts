@@ -14,6 +14,7 @@ import set from 'lodash-es/set'
 import reduce from 'lodash-es/reduce'
 import isObject from 'lodash-es/isObject'
 import memoize from 'lodash-es/memoize'
+import isBoolean from 'lodash-es/isBoolean'
 import get from 'lodash-es/get'
 import type {
   StageElementConfig,
@@ -29,6 +30,8 @@ import type { UseStringsReturn } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { getPrCloneStrategyOptions } from '@pipeline/utils/constants'
+import { CodebaseTypes } from '@pipeline/utils/CIUtils'
 import factory from '../PipelineSteps/PipelineStepFactory'
 import { StepType } from '../PipelineSteps/PipelineStepInterface'
 // eslint-disable-next-line no-restricted-imports
@@ -39,6 +42,7 @@ import '@ci/components/PipelineSteps'
 import '@sto-steps/components/PipelineSteps'
 import { StepViewType } from '../AbstractSteps/Step'
 
+const cloneCodebaseKeyRef = 'stage.spec.cloneCodebase'
 export const clearRuntimeInput = (template: PipelineInfoConfig): PipelineInfoConfig => {
   return JSON.parse(
     JSON.stringify(template || {}).replace(/"<\+input>.?(?:allowedValues\((.*?)\)|regex\((.*?)\))?"/g, '""')
@@ -341,8 +345,10 @@ interface ValidatePipelineProps {
   template?: PipelineInfoConfig
   viewType: StepViewType
   originalPipeline?: PipelineInfoConfig
+  resolvedPipeline?: PipelineInfoConfig
   getString?: UseStringsReturn['getString']
   path?: string
+  viewTypeMetadata?: { [key: string]: boolean }
 }
 
 /**
@@ -352,15 +358,25 @@ export const validateCICodebase = ({
   pipeline,
   template,
   originalPipeline,
-  getString
+  resolvedPipeline, // used when originalPipeline is a template and we need to check clone codebase
+  getString,
+  viewTypeMetadata
 }: ValidatePipelineProps): FormikErrors<PipelineInfoConfig> => {
   const errors = {}
-  const shouldValidateCICodebase = originalPipeline?.stages?.some(stage =>
-    Object.is(get(stage, 'stage.spec.cloneCodebase'), true)
+  const requiresConnectorRuntimeInputValue =
+    template?.properties?.ci?.codebase?.connectorRef && !pipeline?.properties?.ci?.codebase?.connectorRef
+  const pipelineHasCloneCodebase = (resolvedPipeline || originalPipeline)?.stages?.some(stage =>
+    Object.is(get(stage, cloneCodebaseKeyRef), true)
   )
-
+  const shouldValidateCICodebase =
+    (pipelineHasCloneCodebase && !requiresConnectorRuntimeInputValue) || // ci codebase field is hidden until connector is selected
+    template?.properties?.ci?.codebase?.build
+  const shouldValidate = !Object.keys(viewTypeMetadata || {}).includes('isTemplateBuilder')
+  const isInputSetForm = viewTypeMetadata?.isInputSet // should not require any values
   if (
+    shouldValidate &&
     shouldValidateCICodebase &&
+    !isInputSetForm &&
     has(originalPipeline, 'properties') &&
     has(originalPipeline?.properties, 'ci') &&
     isEmpty(get(originalPipeline, 'properties.ci.codebase.build')) &&
@@ -374,17 +390,25 @@ export const validateCICodebase = ({
     getMultiTypeFromValue((template as PipelineInfoConfig)?.properties?.ci?.codebase?.build as unknown as string) ===
       MultiTypeInputType.RUNTIME
   ) {
-    if (isEmpty(pipeline?.properties?.ci?.codebase?.build?.type)) {
+    // connectorRef required to display build type
+    if (
+      isEmpty(pipeline?.properties?.ci?.codebase?.build?.type) &&
+      !isInputSetForm &&
+      (!requiresConnectorRuntimeInputValue ||
+        (requiresConnectorRuntimeInputValue && pipeline?.properties?.ci?.codebase?.connectorRef)) &&
+      pipelineHasCloneCodebase
+    ) {
       set(
         errors,
         'properties.ci.codebase.build.type',
-        getString?.('fieldRequired', { field: getString?.('pipeline.ciCodebase.buildType') })
+        getString?.('fieldRequired', { field: getString?.('pipeline.ciCodebase.ciCodebaseBuildType') })
       )
     }
 
     if (
-      pipeline?.properties?.ci?.codebase?.build?.type === 'branch' &&
-      isEmpty(pipeline?.properties?.ci?.codebase?.build?.spec?.branch)
+      pipeline?.properties?.ci?.codebase?.build?.type === CodebaseTypes.branch &&
+      isEmpty(pipeline?.properties?.ci?.codebase?.build?.spec?.branch) &&
+      !isInputSetForm
     ) {
       set(
         errors,
@@ -394,21 +418,111 @@ export const validateCICodebase = ({
     }
 
     if (
-      pipeline?.properties?.ci?.codebase?.build?.type === 'tag' &&
-      isEmpty(pipeline?.properties?.ci?.codebase?.build?.spec?.tag)
+      pipeline?.properties?.ci?.codebase?.build?.type === CodebaseTypes.tag &&
+      isEmpty(pipeline?.properties?.ci?.codebase?.build?.spec?.tag) &&
+      !isInputSetForm
     ) {
       set(errors, 'properties.ci.codebase.build.spec.tag', getString?.('fieldRequired', { field: getString('gitTag') }))
     }
 
     if (
-      pipeline?.properties?.ci?.codebase?.build?.type === 'PR' &&
-      isEmpty(pipeline?.properties?.ci?.codebase?.build?.spec?.number)
+      pipeline?.properties?.ci?.codebase?.build?.type === CodebaseTypes.PR &&
+      isEmpty(pipeline?.properties?.ci?.codebase?.build?.spec?.number) &&
+      !isInputSetForm
     ) {
       set(
         errors,
         'properties.ci.codebase.build.spec.number',
         getString?.('fieldRequired', { field: getString?.('pipeline.gitPullRequestNumber') })
       )
+    }
+  }
+
+  if (shouldValidate) {
+    if (requiresConnectorRuntimeInputValue && pipelineHasCloneCodebase && !isInputSetForm) {
+      set(
+        errors,
+        'properties.ci.codebase.connectorRef',
+        getString?.('fieldRequired', { field: getString?.('connector') })
+      )
+    }
+
+    if (
+      template?.properties?.ci?.codebase?.repoName &&
+      pipeline?.properties?.ci?.codebase?.repoName?.trim() === '' &&
+      !isInputSetForm
+    ) {
+      // connector with account url type will remove repoName requirement
+      set(
+        errors,
+        'properties.ci.codebase.repoName',
+        getString?.('fieldRequired', { field: getString?.('common.repositoryName') })
+      )
+    }
+
+    if (template?.properties?.ci?.codebase?.depth) {
+      const depth = pipeline?.properties?.ci?.codebase?.depth
+      if (
+        (depth || depth === ('' as any) || depth === 0) &&
+        ((typeof depth === 'number' && depth < 1) ||
+          typeof depth !== 'number' ||
+          (typeof depth === 'string' && parseInt(depth) < 1))
+      ) {
+        set(errors, 'properties.ci.codebase.depth', getString?.('pipeline.ciCodebase.validation.optionalDepth'))
+      }
+    }
+
+    if (template?.properties?.ci?.codebase?.sslVerify && pipelineHasCloneCodebase) {
+      const sslVerify = pipeline?.properties?.ci?.codebase?.sslVerify
+      if (sslVerify === ('' as any) || !isBoolean(sslVerify)) {
+        set(errors, 'properties.ci.codebase.sslVerify', getString?.('pipeline.ciCodebase.validation.optionalSslVerify'))
+      }
+    }
+
+    if (template?.properties?.ci?.codebase?.prCloneStrategy) {
+      // error will appear in yaml view
+      const prCloneStrategy = pipeline?.properties?.ci?.codebase?.prCloneStrategy
+      const prCloneStrategyOptions = (getString && getPrCloneStrategyOptions(getString)) || []
+      const prCloneStrategyOptionsValues = prCloneStrategyOptions.map(option => option.value)
+      if (
+        prCloneStrategy === ('' as any) ||
+        (prCloneStrategy && !prCloneStrategyOptionsValues.some(value => value === prCloneStrategy))
+      ) {
+        set(
+          errors,
+          'properties.ci.codebase.prCloneStrategy',
+          getString?.('pipeline.ciCodebase.validation.optionalPrCloneStrategy', {
+            values: prCloneStrategyOptionsValues.join(', ')
+          })
+        )
+      }
+    }
+
+    if (template?.properties?.ci?.codebase?.resources?.limits?.memory) {
+      const memoryLimit = pipeline?.properties?.ci?.codebase?.resources?.limits?.memory
+      const pattern = /^\d+(\.\d+)?$|^\d+(\.\d+)?(G|M|Gi|Mi|MiB)$|^$/
+      if (
+        memoryLimit === '' ||
+        (memoryLimit && (!pattern.test(memoryLimit) || !isNaN(memoryLimit as unknown as number)))
+      ) {
+        set(
+          errors,
+          'properties.ci.codebase.resources.limits.memory',
+          getString?.('pipeline.ciCodebase.validation.optionalLimitMemory')
+        )
+      }
+    }
+
+    if (template?.properties?.ci?.codebase?.resources?.limits?.cpu) {
+      const cpuLimit = pipeline?.properties?.ci?.codebase?.resources?.limits?.cpu
+      const pattern = /^\d+(\.\d+)?$|^\d+m$|^$/
+      if (cpuLimit === '' || (cpuLimit && (!pattern.test(cpuLimit) || !isNaN(cpuLimit as unknown as number)))) {
+        set(
+          errors,
+          'properties.ci.codebase.resources.limits.cpu',
+          getString?.('pipeline.ciCodebase.validation.optionalLimitCPU')
+        )
+      }
     }
   }
   return errors
@@ -418,9 +532,11 @@ export const validatePipeline = ({
   pipeline,
   template,
   originalPipeline,
+  resolvedPipeline,
   viewType,
   getString,
-  path
+  path,
+  viewTypeMetadata
 }: ValidatePipelineProps): FormikErrors<PipelineInfoConfig> => {
   if (template?.template) {
     const errors = validatePipeline({
@@ -428,7 +544,9 @@ export const validatePipeline = ({
       template: template.template?.templateInputs as PipelineInfoConfig,
       viewType,
       originalPipeline: originalPipeline?.template?.templateInputs as PipelineInfoConfig,
-      getString
+      resolvedPipeline,
+      getString,
+      viewTypeMetadata
     })
     if (!isEmpty(errors)) {
       return set({}, 'template.templateInputs', errors)
@@ -440,9 +558,11 @@ export const validatePipeline = ({
       pipeline,
       template,
       originalPipeline,
+      resolvedPipeline,
       viewType,
       getString,
-      path
+      path,
+      viewTypeMetadata
     })
 
     if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {
@@ -553,8 +673,8 @@ export const getErrorsList = memoize((errors: any): { errorStrings: string[]; er
 export const validateCICodebaseConfiguration = ({ pipeline, getString }: Partial<ValidatePipelineProps>): string => {
   const shouldValidateCICodebase = pipeline?.stages?.some(
     stage =>
-      Object.is(get(stage, 'stage.spec.cloneCodebase'), true) ||
-      stage.parallel?.some(parallelStage => Object.is(get(parallelStage, 'stage.spec.cloneCodebase'), true))
+      Object.is(get(stage, cloneCodebaseKeyRef), true) ||
+      stage.parallel?.some(parallelStage => Object.is(get(parallelStage, cloneCodebaseKeyRef), true))
   )
   if (
     shouldValidateCICodebase &&

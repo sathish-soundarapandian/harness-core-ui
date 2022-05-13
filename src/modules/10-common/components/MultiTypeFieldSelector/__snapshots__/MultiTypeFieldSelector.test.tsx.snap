@@ -2,7 +2,9 @@
 
 exports[`<MultiTypeFieldSelector /> tests "Fixed value" renders children: Fixed value 1`] = `
 <div>
-  <form>
+  <form
+    action="#"
+  >
     <div
       class="bp3-form-group"
     >
@@ -76,7 +78,9 @@ exports[`<MultiTypeFieldSelector /> tests "Fixed value" renders children: Fixed 
 
 exports[`<MultiTypeFieldSelector /> tests "disableTypeSelection" does not render type selector 1`] = `
 <div>
-  <form>
+  <form
+    action="#"
+  >
     <div
       class="bp3-form-group formGroup"
     >
@@ -117,7 +121,9 @@ exports[`<MultiTypeFieldSelector /> tests "disableTypeSelection" does not render
 
 exports[`<MultiTypeFieldSelector /> tests Change from "Fixed value" to "Runtime input" updates value: Runtime input 1`] = `
 <div>
-  <form>
+  <form
+    action="#"
+  >
     <div
       class="bp3-form-group formGroup"
     >
@@ -205,7 +211,9 @@ exports[`<MultiTypeFieldSelector /> tests Change from "Fixed value" to "Runtime 
 
 exports[`<MultiTypeFieldSelector /> tests Change from "Runtime input" to "Fixed value" updates value: inputTypes.FIXED 1`] = `
 <div>
-  <form>
+  <form
+    action="#"
+  >
     <div
       class="bp3-form-group"
     >
@@ -279,7 +287,9 @@ exports[`<MultiTypeFieldSelector /> tests Change from "Runtime input" to "Fixed 
 
 exports[`<MultiTypeFieldSelector /> tests Detects "Runtime input" correctly: inputTypes.RUNTIME 1`] = `
 <div>
-  <form>
+  <form
+    action="#"
+  >
     <div
       class="bp3-form-group formGroup"
     >

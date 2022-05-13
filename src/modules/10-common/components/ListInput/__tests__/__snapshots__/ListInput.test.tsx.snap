@@ -6,6 +6,7 @@ exports[`ListInput tests Should render properly 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

@@ -2,7 +2,9 @@
 
 exports[`<MultiTypeMap /> tests Renders ok with minimal UI 1`] = `
 <div>
-  <form>
+  <form
+    action="#"
+  >
     <div
       class="group withoutSpacing"
     >
@@ -81,7 +83,9 @@ exports[`<MultiTypeMap /> tests Renders ok with minimal UI 1`] = `
 
 exports[`<MultiTypeMap /> tests Should render properly 1`] = `
 <div>
-  <form>
+  <form
+    action="#"
+  >
     <div
       class="group withoutSpacing"
     >

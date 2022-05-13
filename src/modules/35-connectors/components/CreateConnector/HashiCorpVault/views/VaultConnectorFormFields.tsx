@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { FormInput, Icon, ModalErrorHandler, ModalErrorHandlerBinding, SelectOption } from '@wings-software/uicore'
-import type { FormikContext } from 'formik'
+import type { FormikContextType } from 'formik'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { StringKeys, useStrings } from 'framework/strings'
@@ -18,7 +18,7 @@ import type { OrgPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 interface VaultConnectorFormFieldsProps {
-  formik: FormikContext<VaultConfigFormData>
+  formik: FormikContextType<VaultConfigFormData>
 }
 type AccessType = {
   [key in HashiCorpVaultAccessTypes]: StringKeys

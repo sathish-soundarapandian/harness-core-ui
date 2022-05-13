@@ -41,6 +41,8 @@ import {
   setupAzureKeyVaultNameFormData
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { FeatureFlag } from '@common/featureFlags'
+import { useConnectorGovernanceModal } from '@connectors/hooks/useConnectorGovernanceModal'
 
 export interface SetupVaultFormData {
   vaultName?: string
@@ -76,7 +78,10 @@ const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> 
   const { mutate: updateConnector, loading: updating } = useUpdateConnector({
     queryParams: { accountIdentifier: accountId }
   })
-
+  const { hideOrShowGovernanceErrorModal } = useConnectorGovernanceModal({
+    errorOutOnGovernanceWarning: false,
+    featureFlag: FeatureFlag.OPA_CONNECTOR_GOVERNANCE
+  })
   useEffect(() => {
     if (isEditMode && connectorInfo) {
       setupAzureKeyVaultNameFormData(connectorInfo).then(data => {
@@ -136,16 +141,14 @@ const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> 
       const data: ConnectorRequestBody = buildAzureKeyVaultPayload({ ...prevStepData, ...formData })
 
       try {
-        if (isEditMode) {
-          const response = await updateConnector(data)
+        const response = isEditMode ? await updateConnector(data) : await createConnector(data)
+        const { canGoToNextStep } = await hideOrShowGovernanceErrorModal(response)
+        if (canGoToNextStep) {
           nextStep?.({ ...prevStepData, ...formData })
           onConnectorCreated?.(response.data)
-          showSuccess(getString('secretManager.editmessageSuccess'))
-        } else {
-          const response = await createConnector(data)
-          nextStep?.({ ...prevStepData, ...formData })
-          onConnectorCreated?.(response.data)
-          showSuccess(getString('secretManager.createmessageSuccess'))
+          isEditMode
+            ? showSuccess(getString('secretManager.editmessageSuccess'))
+            : showSuccess(getString('secretManager.createmessageSuccess'))
         }
       } catch (err) {
         /* istanbul ignore next */

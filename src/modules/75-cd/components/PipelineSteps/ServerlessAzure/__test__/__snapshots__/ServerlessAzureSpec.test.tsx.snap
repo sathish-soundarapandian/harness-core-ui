@@ -207,6 +207,7 @@ exports[`Test ServerlessAzureSpec snapshot should render edit view with empty in
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -477,6 +478,7 @@ exports[`Test ServerlessAzureSpec snapshot should render edit view with runtime 
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -749,6 +751,7 @@ exports[`Test ServerlessAzureSpec snapshot should render edit view with values  
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>

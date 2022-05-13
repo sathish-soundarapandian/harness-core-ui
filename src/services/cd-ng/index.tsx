@@ -299,6 +299,7 @@ export interface AccessControlCheckError {
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
     | 'DATA'
     | 'CONTEXT'
@@ -572,7 +573,6 @@ export interface ActivityDetail {
 export interface ActivitySummary {
   endTime?: number
   failedActivitiesCount?: number
-  get_id?: number
   heartBeatFailuresCount?: number
   startTime?: number
   successfulActivitiesCount?: number
@@ -1613,6 +1613,7 @@ export interface ConnectorResponse {
   createdAt?: number
   entityValidityDetails?: EntityValidityDetails
   gitDetails?: EntityGitDetails
+  governanceMetadata?: GovernanceMetadata
   harnessManaged?: boolean
   lastModifiedAt?: number
   status?: ConnectorConnectivityDetails
@@ -1749,7 +1750,6 @@ export interface CreatePRDTO {
 }
 
 export interface CreatePRRequest {
-  accountIdentifier?: string
   connectorRef?: string
   orgIdentifier?: string
   projectIdentifier?: string
@@ -1805,6 +1805,10 @@ export type CustomPolicyStepSpec = PolicySpec & {
 export type CustomRestrictionDTO = RestrictionDTO & { [key: string]: any }
 
 export type CustomRestrictionMetadataDTO = RestrictionMetadataDTO & {}
+
+export type CustomStageConfig = StageInfoConfig & {
+  steps: ExecutionWrapperConfig[]
+}
 
 export interface DOMConfiguration {
   parameterNames?: DOMStringList
@@ -2319,6 +2323,11 @@ export interface EmbeddedUserDetails {
   uuid?: string
 }
 
+export interface EmbeddedUserDetailsDTO {
+  email?: string
+  name?: string
+}
+
 export interface EntityDetail {
   entityRef?: EntityReference
   name?: string
@@ -2379,7 +2388,7 @@ export interface EntityDetail {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'POLICY_STEP'
+    | 'Policy'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -2505,7 +2514,6 @@ export interface EnvironmentGroupResponseDTO {
   tags?: {
     [key: string]: string
   }
-  version?: number
 }
 
 export interface EnvironmentInfoByServiceId {
@@ -2530,6 +2538,7 @@ export interface EnvironmentRequestDTO {
     [key: string]: string
   }
   type: 'PreProduction' | 'Production'
+  yaml?: string
 }
 
 export interface EnvironmentResponse {
@@ -2551,7 +2560,6 @@ export interface EnvironmentResponseDTO {
     [key: string]: string
   }
   type?: 'PreProduction' | 'Production'
-  version?: number
   yaml?: string
 }
 
@@ -2850,6 +2858,7 @@ export interface Error {
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
     | 'DATA'
     | 'CONTEXT'
@@ -3238,6 +3247,7 @@ export interface Failure {
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
     | 'DATA'
     | 'CONTEXT'
@@ -3525,11 +3535,12 @@ export interface FieldValues {
 
 export interface FileDTO {
   accountIdentifier: string
-  createdBy?: string
+  createdBy?: EmbeddedUserDetailsDTO
   description?: string
   draft?: boolean
   fileUsage?: 'MANIFEST_FILE' | 'CONFIG' | 'SCRIPT'
   identifier: string
+  lastUpdatedBy?: EmbeddedUserDetailsDTO
   mimeType?: string
   name: string
   orgIdentifier?: string
@@ -3548,7 +3559,7 @@ export type FileNodeDTO = FileStoreNodeDTO & {
 export interface FileStoreNodeDTO {
   identifier: string
   lastModifiedAt?: number
-  lastModifiedBy?: string
+  lastModifiedBy?: EmbeddedUserDetailsDTO
   name: string
   type: 'FILE' | 'FOLDER'
 }
@@ -3625,7 +3636,7 @@ export interface FolderNodeDTO {
   children?: FileStoreNodeDTO[]
   identifier: string
   lastModifiedAt?: number
-  lastModifiedBy?: string
+  lastModifiedBy?: EmbeddedUserDetailsDTO
   name: string
   type: 'FILE' | 'FOLDER'
 }
@@ -3822,7 +3833,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'POLICY_STEP'
+    | 'Policy'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -3902,7 +3913,7 @@ export interface GitEntityFilterProperties {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'POLICY_STEP'
+    | 'Policy'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -4015,7 +4026,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'POLICY_STEP'
+    | 'Policy'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -4103,7 +4114,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'POLICY_STEP'
+    | 'Policy'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -4208,7 +4219,6 @@ export interface GitSyncConfig {
 }
 
 export interface GitSyncEntityDTO {
-  accountId?: string
   branch?: string
   entityGitPath?: string
   entityIdentifier?: string
@@ -4271,7 +4281,7 @@ export interface GitSyncEntityDTO {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'POLICY_STEP'
+    | 'Policy'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -4291,8 +4301,6 @@ export interface GitSyncEntityDTO {
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
-  lastCommitId?: string
-  repoProvider?: 'github' | 'gitlab' | 'bitbucket' | 'azure' | 'unknown'
   repoUrl?: string
 }
 
@@ -4355,7 +4363,7 @@ export interface GitSyncEntityListDTO {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'POLICY_STEP'
+    | 'Policy'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -4454,7 +4462,7 @@ export interface GitSyncErrorDTO {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'POLICY_STEP'
+    | 'Policy'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -4474,7 +4482,6 @@ export interface GitSyncErrorDTO {
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
-  repoProvider?: 'github' | 'gitlab' | 'bitbucket' | 'azure' | 'unknown'
   repoUrl?: string
   scopes?: Scope[]
   status?: 'ACTIVE' | 'DISCARDED' | 'EXPIRED' | 'RESOLVED' | 'OVERRIDDEN'
@@ -4657,6 +4664,10 @@ export interface GitopsProviderResponse {
   tags?: {
     [key: string]: string
   }
+}
+
+export interface GovernanceMetadata {
+  [key: string]: any
 }
 
 export type HarnessApprovalStepInfo = StepSpecType & {
@@ -4889,6 +4900,39 @@ export interface InfrastructureDetails {
   [key: string]: any
 }
 
+export interface InfrastructureRequestDTO {
+  description?: string
+  envIdentifier?: string
+  identifier?: string
+  name?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  tags?: {
+    [key: string]: string
+  }
+  yaml?: string
+}
+
+export interface InfrastructureResponse {
+  createdAt?: number
+  infrastructure?: InfrastructureResponseDTO
+  lastModifiedAt?: number
+}
+
+export interface InfrastructureResponseDTO {
+  accountId?: string
+  description?: string
+  envIdentifier?: string
+  identifier?: string
+  name?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  tags?: {
+    [key: string]: string
+  }
+  yaml?: string
+}
+
 export type InlineTerraformBackendConfigSpec = TerraformBackendConfigSpec & {
   content?: string
 }
@@ -5081,27 +5125,7 @@ export type JiraUpdateStepInfo = StepSpecType & {
 }
 
 export interface JsonNode {
-  array?: boolean
-  bigDecimal?: boolean
-  bigInteger?: boolean
-  binary?: boolean
-  boolean?: boolean
-  containerNode?: boolean
-  double?: boolean
-  float?: boolean
-  floatingPointNumber?: boolean
-  int?: boolean
-  integralNumber?: boolean
-  long?: boolean
-  missingNode?: boolean
-  nodeType?: 'ARRAY' | 'BINARY' | 'BOOLEAN' | 'MISSING' | 'NULL' | 'NUMBER' | 'OBJECT' | 'POJO' | 'STRING'
-  null?: boolean
-  number?: boolean
-  object?: boolean
-  pojo?: boolean
-  short?: boolean
-  textual?: boolean
-  valueNode?: boolean
+  [key: string]: any
 }
 
 export type K8SDirectInfrastructure = Infrastructure & {
@@ -5327,14 +5351,94 @@ export interface LastWorkloadInfo {
 }
 
 export interface LdapConnectionSettings {
+  accountId?: string
   bindDN?: string
   bindPassword?: string
+  bindSecret?: string[]
   connectTimeout?: number
   host: string
   maxReferralHops?: number
+  passwordType?: string
   port?: number
   referralsEnabled?: boolean
   responseTimeout?: number
+  settingType?:
+    | 'HOST_CONNECTION_ATTRIBUTES'
+    | 'BASTION_HOST_CONNECTION_ATTRIBUTES'
+    | 'SMTP'
+    | 'SFTP'
+    | 'JENKINS'
+    | 'BAMBOO'
+    | 'STRING'
+    | 'SPLUNK'
+    | 'ELK'
+    | 'LOGZ'
+    | 'SUMO'
+    | 'DATA_DOG'
+    | 'APM_VERIFICATION'
+    | 'BUG_SNAG'
+    | 'LOG_VERIFICATION'
+    | 'APP_DYNAMICS'
+    | 'NEW_RELIC'
+    | 'DYNA_TRACE'
+    | 'INSTANA'
+    | 'DATA_DOG_LOG'
+    | 'CLOUD_WATCH'
+    | 'SCALYR'
+    | 'ELB'
+    | 'SLACK'
+    | 'AWS'
+    | 'GCS'
+    | 'GCP'
+    | 'AZURE'
+    | 'PCF'
+    | 'RANCHER'
+    | 'DIRECT'
+    | 'KUBERNETES_CLUSTER'
+    | 'DOCKER'
+    | 'ECR'
+    | 'GCR'
+    | 'ACR'
+    | 'PHYSICAL_DATA_CENTER'
+    | 'KUBERNETES'
+    | 'NEXUS'
+    | 'ARTIFACTORY'
+    | 'SMB'
+    | 'AMAZON_S3'
+    | 'GIT'
+    | 'SSH_SESSION_CONFIG'
+    | 'SERVICE_VARIABLE'
+    | 'CONFIG_FILE'
+    | 'KMS'
+    | 'GCP_KMS'
+    | 'JIRA'
+    | 'SERVICENOW'
+    | 'SECRET_TEXT'
+    | 'YAML_GIT_SYNC'
+    | 'VAULT'
+    | 'VAULT_SSH'
+    | 'AWS_SECRETS_MANAGER'
+    | 'CYBERARK'
+    | 'WINRM_CONNECTION_ATTRIBUTES'
+    | 'WINRM_SESSION_CONFIG'
+    | 'PROMETHEUS'
+    | 'INFRASTRUCTURE_MAPPING'
+    | 'HTTP_HELM_REPO'
+    | 'AMAZON_S3_HELM_REPO'
+    | 'GCS_HELM_REPO'
+    | 'SPOT_INST'
+    | 'AZURE_ARTIFACTS_PAT'
+    | 'CUSTOM'
+    | 'CE_AWS'
+    | 'CE_GCP'
+    | 'CE_AZURE'
+    | 'AZURE_VAULT'
+    | 'KUBERNETES_CLUSTER_NG'
+    | 'GIT_NG'
+    | 'SSO_SAML'
+    | 'LDAP'
+    | 'GCP_SECRETS_MANAGER'
+    | 'TRIGGER'
   sslEnabled?: boolean
   useRecursiveGroupMembershipSearch?: boolean
 }
@@ -5523,8 +5627,31 @@ export interface NGAuthSettings {
   settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
+export interface NGEnvironmentConfig {
+  environment?: NGEnvironmentInfoConfig
+}
+
+export interface NGEnvironmentInfoConfig {
+  description?: string
+  identifier: string
+  name: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  serviceOverrides?: NGServiceOverrides[]
+  tags?: {
+    [key: string]: string
+  }
+  type: 'PreProduction' | 'Production'
+  variables?: NGVariable[]
+}
+
 export interface NGProperties {
   ci?: CIProperties
+}
+
+export interface NGServiceOverrides {
+  serviceRef: string
+  variables: NGVariable[]
 }
 
 export interface NGTag {
@@ -6007,6 +6134,16 @@ export interface PageHostDTO {
   totalPages?: number
 }
 
+export interface PageInfrastructureResponse {
+  content?: InfrastructureResponse[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
 export interface PageInvite {
   content?: Invite[]
   empty?: boolean
@@ -6307,10 +6444,10 @@ export type PdcInfrastructure = Infrastructure & {
     [key: string]: string
   }
   connectorRef?: string
+  credentialsRef: string
   delegateSelectors?: string[]
   hostFilters?: string[]
   hosts?: string[]
-  sshKeyRef: string
 }
 
 export type PercentageInstanceSelection = InstanceSelectionBase & {
@@ -6610,6 +6747,7 @@ export interface ResourceDTO {
     | 'GOVERNANCE_POLICY'
     | 'GOVERNANCE_POLICY_SET'
     | 'VARIABLE'
+    | 'CHAOS_HUB'
 }
 
 export interface ResourceGroup {
@@ -7087,6 +7225,13 @@ export interface ResponseHealthDeploymentDashboard {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseInfrastructureResponse {
+  correlationId?: string
+  data?: InfrastructureResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseInstanceCountDetailsByEnvTypeAndServiceId {
   correlationId?: string
   data?: InstanceCountDetailsByEnvTypeAndServiceId
@@ -7230,7 +7375,7 @@ export interface ResponseListEntityType {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'POLICY_STEP'
+    | 'Policy'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -7287,7 +7432,7 @@ export interface ResponseListExecutionStatus {
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
-    | 'WAITING'
+    | 'Waiting'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -7784,6 +7929,7 @@ export interface ResponseMessage {
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
     | 'DATA'
     | 'CONTEXT'
@@ -7832,6 +7978,13 @@ export interface ResponseMessage {
 export interface ResponseModuleLicenseDTO {
   correlationId?: string
   data?: ModuleLicenseDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseNGEnvironmentConfig {
+  correlationId?: string
+  data?: NGEnvironmentConfig
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -7993,6 +8146,13 @@ export interface ResponsePageGitopsProviderResponse {
 export interface ResponsePageHostDTO {
   correlationId?: string
   data?: PageHostDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePageInfrastructureResponse {
+  correlationId?: string
+  data?: PageInfrastructureResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -8193,6 +8353,13 @@ export interface ResponseScmCommitFileResponseDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseScmConnectorResponse {
+  correlationId?: string
+  data?: ScmConnectorResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseScmGetFileResponseDTO {
   correlationId?: string
   data?: ScmGetFileResponseDTO
@@ -8305,6 +8472,13 @@ export interface ResponseServicesDashboardInfo {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseSetEmbeddedUserDetailsDTO {
+  correlationId?: string
+  data?: EmbeddedUserDetailsDTO[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseSetHelmCommandFlagType {
   correlationId?: string
   data?: (
@@ -8319,13 +8493,6 @@ export interface ResponseSetHelmCommandFlagType {
     | 'Uninstall'
     | 'List'
   )[]
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponseSetString {
-  correlationId?: string
-  data?: string[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -8888,6 +9055,7 @@ export type SamlSettings = SSOSettings & {
     | 'KUBERNETES_CLUSTER_NG'
     | 'GIT_NG'
     | 'SSO_SAML'
+    | 'LDAP'
     | 'GCP_SECRETS_MANAGER'
     | 'TRIGGER'
   userIdAttr?: string
@@ -8927,6 +9095,17 @@ export interface ScimUser {
 export interface ScmCommitFileResponseDTO {
   blobId?: string
   commitId?: string
+}
+
+export interface ScmConnectorDTO {
+  connector?: ConnectorInfoDTO
+  secret?: SecretDTOV2
+}
+
+export interface ScmConnectorResponse {
+  connectorResponseDTO?: ConnectorResponse
+  connectorValidationResult?: ConnectorValidationResult
+  secretResponseWrapper?: SecretResponseWrapper
 }
 
 export type ScmErrorMetadataDTO = ErrorMetadataDTO & {
@@ -9389,6 +9568,7 @@ export interface ServiceRequestDTO {
   tags?: {
     [key: string]: string
   }
+  yaml?: string
 }
 
 export interface ServiceResponse {
@@ -9408,16 +9588,12 @@ export interface ServiceResponseDTO {
   tags?: {
     [key: string]: string
   }
-  version?: number
   yaml?: string
 }
 
 export interface ServiceSpec {
-  artifactOverrideSets?: ArtifactOverrideSetWrapper[]
   artifacts?: ArtifactListConfig
-  manifestOverrideSets?: ManifestOverrideSetWrapper[]
   manifests?: ManifestConfigWrapper[]
-  variableOverrideSets?: NGVariableOverrideSetWrapper[]
   variables?: NGVariable[]
 }
 
@@ -9634,9 +9810,6 @@ export interface StageInfoConfig {
 export interface StageOverridesConfig {
   artifacts?: ArtifactListConfig
   manifests?: ManifestConfigWrapper[]
-  useArtifactOverrideSets?: string[]
-  useManifestOverrideSets?: string[]
-  useVariableOverrideSets?: string[]
   variables?: NGVariable[]
 }
 
@@ -10379,7 +10552,11 @@ export type WinRmCredentialsValidationMetadata = SecretValidationMetaData & {
   host: string
 }
 
-export type WinRmServiceSpec = ServiceSpec & {}
+export type WinRmServiceSpec = ServiceSpec & {
+  artifactOverrideSets?: ArtifactOverrideSetWrapper[]
+  manifestOverrideSets?: ManifestOverrideSetWrapper[]
+  variableOverrideSets?: NGVariableOverrideSetWrapper[]
+}
 
 export type WorkflowFilter = Filter & {
   filterTypes?: string[]
@@ -10493,6 +10670,8 @@ export type GitOpsProviderRequestBody = GitOpsProvider
 export type GitSyncConfigRequestBody = GitSyncConfig
 
 export type GitSyncSettingsDTORequestBody = GitSyncSettingsDTO
+
+export type InfrastructureRequestDTORequestBody = InfrastructureRequestDTO
 
 export type LandingDashboardRequestCDRequestBody = LandingDashboardRequestCD
 
@@ -11079,7 +11258,7 @@ export interface ListActivitiesQueryParams {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'POLICY_STEP'
+    | 'Policy'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -11153,7 +11332,7 @@ export interface ListActivitiesQueryParams {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'POLICY_STEP'
+    | 'Policy'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -11331,7 +11510,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'POLICY_STEP'
+    | 'Policy'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -11405,7 +11584,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'POLICY_STEP'
+    | 'Policy'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -13069,8 +13248,8 @@ export interface GetBuildDetailsForDockerQueryParams {
   imagePath?: string
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -19772,7 +19951,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'POLICY_STEP'
+    | 'Policy'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -20478,6 +20657,50 @@ export const updateEnvironmentPromise = (
     EnvironmentRequestDTORequestBody,
     void
   >('PUT', getConfig('ng/api'), `/environments`, props, signal)
+
+export type DummyNGEnvironmentConfigApiProps = Omit<
+  GetProps<ResponseNGEnvironmentConfig, Failure | Error, void, void>,
+  'path'
+>
+
+/**
+ * This is dummy api to expose NGEnvironmentConfig
+ */
+export const DummyNGEnvironmentConfigApi = (props: DummyNGEnvironmentConfigApiProps) => (
+  <Get<ResponseNGEnvironmentConfig, Failure | Error, void, void>
+    path={`/environments/dummy-env-api`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseDummyNGEnvironmentConfigApiProps = Omit<
+  UseGetProps<ResponseNGEnvironmentConfig, Failure | Error, void, void>,
+  'path'
+>
+
+/**
+ * This is dummy api to expose NGEnvironmentConfig
+ */
+export const useDummyNGEnvironmentConfigApi = (props: UseDummyNGEnvironmentConfigApiProps) =>
+  useGet<ResponseNGEnvironmentConfig, Failure | Error, void, void>(`/environments/dummy-env-api`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * This is dummy api to expose NGEnvironmentConfig
+ */
+export const dummyNGEnvironmentConfigApiPromise = (
+  props: GetUsingFetchProps<ResponseNGEnvironmentConfig, Failure | Error, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseNGEnvironmentConfig, Failure | Error, void, void>(
+    getConfig('ng/api'),
+    `/environments/dummy-env-api`,
+    props,
+    signal
+  )
 
 export interface UpsertEnvironmentQueryParams {
   accountId?: string
@@ -21474,7 +21697,7 @@ export interface GetCreatedByListQueryParams {
 }
 
 export type GetCreatedByListProps = Omit<
-  GetProps<ResponseSetString, Failure | Error, GetCreatedByListQueryParams, void>,
+  GetProps<ResponseSetEmbeddedUserDetailsDTO, Failure | Error, GetCreatedByListQueryParams, void>,
   'path'
 >
 
@@ -21482,7 +21705,7 @@ export type GetCreatedByListProps = Omit<
  * Get list of created by usernames
  */
 export const GetCreatedByList = (props: GetCreatedByListProps) => (
-  <Get<ResponseSetString, Failure | Error, GetCreatedByListQueryParams, void>
+  <Get<ResponseSetEmbeddedUserDetailsDTO, Failure | Error, GetCreatedByListQueryParams, void>
     path={`/file-store/files/createdBy`}
     base={getConfig('ng/api')}
     {...props}
@@ -21490,7 +21713,7 @@ export const GetCreatedByList = (props: GetCreatedByListProps) => (
 )
 
 export type UseGetCreatedByListProps = Omit<
-  UseGetProps<ResponseSetString, Failure | Error, GetCreatedByListQueryParams, void>,
+  UseGetProps<ResponseSetEmbeddedUserDetailsDTO, Failure | Error, GetCreatedByListQueryParams, void>,
   'path'
 >
 
@@ -21498,19 +21721,19 @@ export type UseGetCreatedByListProps = Omit<
  * Get list of created by usernames
  */
 export const useGetCreatedByList = (props: UseGetCreatedByListProps) =>
-  useGet<ResponseSetString, Failure | Error, GetCreatedByListQueryParams, void>(`/file-store/files/createdBy`, {
-    base: getConfig('ng/api'),
-    ...props
-  })
+  useGet<ResponseSetEmbeddedUserDetailsDTO, Failure | Error, GetCreatedByListQueryParams, void>(
+    `/file-store/files/createdBy`,
+    { base: getConfig('ng/api'), ...props }
+  )
 
 /**
  * Get list of created by usernames
  */
 export const getCreatedByListPromise = (
-  props: GetUsingFetchProps<ResponseSetString, Failure | Error, GetCreatedByListQueryParams, void>,
+  props: GetUsingFetchProps<ResponseSetEmbeddedUserDetailsDTO, Failure | Error, GetCreatedByListQueryParams, void>,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseSetString, Failure | Error, GetCreatedByListQueryParams, void>(
+  getUsingFetch<ResponseSetEmbeddedUserDetailsDTO, Failure | Error, GetCreatedByListQueryParams, void>(
     getConfig('ng/api'),
     `/file-store/files/createdBy`,
     props,
@@ -21758,7 +21981,7 @@ export interface GetReferencedByInScopeQueryParams {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'POLICY_STEP'
+    | 'Policy'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -21821,38 +22044,48 @@ export const getReferencedByInScopePromise = (
     signal
   )
 
-export type GetEntityTypesProps = Omit<GetProps<ResponseListEntityType, Failure | Error, void, void>, 'path'>
+export interface GetEntityTypesQueryParams {
+  accountIdentifier?: string
+}
+
+export type GetEntityTypesProps = Omit<
+  GetProps<ResponseListEntityType, Failure | Error, GetEntityTypesQueryParams, void>,
+  'path'
+>
 
 /**
  * Get entity types
  */
 export const GetEntityTypes = (props: GetEntityTypesProps) => (
-  <Get<ResponseListEntityType, Failure | Error, void, void>
+  <Get<ResponseListEntityType, Failure | Error, GetEntityTypesQueryParams, void>
     path={`/file-store/supported-entity-types`}
     base={getConfig('ng/api')}
     {...props}
   />
 )
 
-export type UseGetEntityTypesProps = Omit<UseGetProps<ResponseListEntityType, Failure | Error, void, void>, 'path'>
+export type UseGetEntityTypesProps = Omit<
+  UseGetProps<ResponseListEntityType, Failure | Error, GetEntityTypesQueryParams, void>,
+  'path'
+>
 
 /**
  * Get entity types
  */
 export const useGetEntityTypes = (props: UseGetEntityTypesProps) =>
-  useGet<ResponseListEntityType, Failure | Error, void, void>(`/file-store/supported-entity-types`, {
-    base: getConfig('ng/api'),
-    ...props
-  })
+  useGet<ResponseListEntityType, Failure | Error, GetEntityTypesQueryParams, void>(
+    `/file-store/supported-entity-types`,
+    { base: getConfig('ng/api'), ...props }
+  )
 
 /**
  * Get entity types
  */
 export const getEntityTypesPromise = (
-  props: GetUsingFetchProps<ResponseListEntityType, Failure | Error, void, void>,
+  props: GetUsingFetchProps<ResponseListEntityType, Failure | Error, GetEntityTypesQueryParams, void>,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseListEntityType, Failure | Error, void, void>(
+  getUsingFetch<ResponseListEntityType, Failure | Error, GetEntityTypesQueryParams, void>(
     getConfig('ng/api'),
     `/file-store/supported-entity-types`,
     props,
@@ -22189,7 +22422,7 @@ export interface GetReferencedByQueryParams {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'POLICY_STEP'
+    | 'Policy'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -23470,7 +23703,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'POLICY_STEP'
+    | 'Policy'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -23612,7 +23845,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'ServiceNowCreate'
       | 'ServiceNowUpdate'
       | 'GovernancePolicies'
-      | 'POLICY_STEP'
+      | 'Policy'
       | 'Run'
       | 'RunTests'
       | 'Plugin'
@@ -24643,59 +24876,53 @@ export const getNGManagerHealthStatusPromise = (
   signal?: RequestInit['signal']
 ) => getUsingFetch<ResponseString, unknown, void, void>(getConfig('ng/api'), `/health`, props, signal)
 
-export interface ValidateSshHostsQueryParams {
+export interface ValidateHostsQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
   identifier: string
 }
 
-export type ValidateSshHostsProps = Omit<
-  MutateProps<ResponseListHostValidationDTO, Failure | Error, ValidateSshHostsQueryParams, HostValidationParams, void>,
+export type ValidateHostsProps = Omit<
+  MutateProps<ResponseListHostValidationDTO, Failure | Error, ValidateHostsQueryParams, HostValidationParams, void>,
   'path' | 'verb'
 >
 
 /**
- * Validate SSH hosts connectivity
+ * Validate hosts connectivity
  */
-export const ValidateSshHosts = (props: ValidateSshHostsProps) => (
-  <Mutate<ResponseListHostValidationDTO, Failure | Error, ValidateSshHostsQueryParams, HostValidationParams, void>
+export const ValidateHosts = (props: ValidateHostsProps) => (
+  <Mutate<ResponseListHostValidationDTO, Failure | Error, ValidateHostsQueryParams, HostValidationParams, void>
     verb="POST"
-    path={`/host-validation/ssh`}
+    path={`/host-validation`}
     base={getConfig('ng/api')}
     {...props}
   />
 )
 
-export type UseValidateSshHostsProps = Omit<
-  UseMutateProps<
-    ResponseListHostValidationDTO,
-    Failure | Error,
-    ValidateSshHostsQueryParams,
-    HostValidationParams,
-    void
-  >,
+export type UseValidateHostsProps = Omit<
+  UseMutateProps<ResponseListHostValidationDTO, Failure | Error, ValidateHostsQueryParams, HostValidationParams, void>,
   'path' | 'verb'
 >
 
 /**
- * Validate SSH hosts connectivity
+ * Validate hosts connectivity
  */
-export const useValidateSshHosts = (props: UseValidateSshHostsProps) =>
-  useMutate<ResponseListHostValidationDTO, Failure | Error, ValidateSshHostsQueryParams, HostValidationParams, void>(
+export const useValidateHosts = (props: UseValidateHostsProps) =>
+  useMutate<ResponseListHostValidationDTO, Failure | Error, ValidateHostsQueryParams, HostValidationParams, void>(
     'POST',
-    `/host-validation/ssh`,
+    `/host-validation`,
     { base: getConfig('ng/api'), ...props }
   )
 
 /**
- * Validate SSH hosts connectivity
+ * Validate hosts connectivity
  */
-export const validateSshHostsPromise = (
+export const validateHostsPromise = (
   props: MutateUsingFetchProps<
     ResponseListHostValidationDTO,
     Failure | Error,
-    ValidateSshHostsQueryParams,
+    ValidateHostsQueryParams,
     HostValidationParams,
     void
   >,
@@ -24704,10 +24931,10 @@ export const validateSshHostsPromise = (
   mutateUsingFetch<
     ResponseListHostValidationDTO,
     Failure | Error,
-    ValidateSshHostsQueryParams,
+    ValidateHostsQueryParams,
     HostValidationParams,
     void
-  >('POST', getConfig('ng/api'), `/host-validation/ssh`, props, signal)
+  >('POST', getConfig('ng/api'), `/host-validation`, props, signal)
 
 export interface FilterHostsByConnectorQueryParams {
   pageIndex?: number
@@ -24771,6 +24998,500 @@ export const filterHostsByConnectorPromise = (
     props,
     signal
   )
+
+export interface GetInfrastructureListQueryParams {
+  page?: number
+  size?: number
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  environmentIdentifier?: string
+  searchTerm?: string
+  infraIdentifiers?: string[]
+  sort?: string[]
+}
+
+export type GetInfrastructureListProps = Omit<
+  GetProps<ResponsePageInfrastructureResponse, Failure | Error, GetInfrastructureListQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets Infrastructure list
+ */
+export const GetInfrastructureList = (props: GetInfrastructureListProps) => (
+  <Get<ResponsePageInfrastructureResponse, Failure | Error, GetInfrastructureListQueryParams, void>
+    path={`/infrastructures`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetInfrastructureListProps = Omit<
+  UseGetProps<ResponsePageInfrastructureResponse, Failure | Error, GetInfrastructureListQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets Infrastructure list
+ */
+export const useGetInfrastructureList = (props: UseGetInfrastructureListProps) =>
+  useGet<ResponsePageInfrastructureResponse, Failure | Error, GetInfrastructureListQueryParams, void>(
+    `/infrastructures`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets Infrastructure list
+ */
+export const getInfrastructureListPromise = (
+  props: GetUsingFetchProps<
+    ResponsePageInfrastructureResponse,
+    Failure | Error,
+    GetInfrastructureListQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePageInfrastructureResponse, Failure | Error, GetInfrastructureListQueryParams, void>(
+    getConfig('ng/api'),
+    `/infrastructures`,
+    props,
+    signal
+  )
+
+export interface CreateInfrastructureQueryParams {
+  accountIdentifier: string
+}
+
+export type CreateInfrastructureProps = Omit<
+  MutateProps<
+    ResponseInfrastructureResponse,
+    Failure | Error,
+    CreateInfrastructureQueryParams,
+    InfrastructureRequestDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Create an Infrastructure in an Environment
+ */
+export const CreateInfrastructure = (props: CreateInfrastructureProps) => (
+  <Mutate<
+    ResponseInfrastructureResponse,
+    Failure | Error,
+    CreateInfrastructureQueryParams,
+    InfrastructureRequestDTORequestBody,
+    void
+  >
+    verb="POST"
+    path={`/infrastructures`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseCreateInfrastructureProps = Omit<
+  UseMutateProps<
+    ResponseInfrastructureResponse,
+    Failure | Error,
+    CreateInfrastructureQueryParams,
+    InfrastructureRequestDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Create an Infrastructure in an Environment
+ */
+export const useCreateInfrastructure = (props: UseCreateInfrastructureProps) =>
+  useMutate<
+    ResponseInfrastructureResponse,
+    Failure | Error,
+    CreateInfrastructureQueryParams,
+    InfrastructureRequestDTORequestBody,
+    void
+  >('POST', `/infrastructures`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Create an Infrastructure in an Environment
+ */
+export const createInfrastructurePromise = (
+  props: MutateUsingFetchProps<
+    ResponseInfrastructureResponse,
+    Failure | Error,
+    CreateInfrastructureQueryParams,
+    InfrastructureRequestDTORequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseInfrastructureResponse,
+    Failure | Error,
+    CreateInfrastructureQueryParams,
+    InfrastructureRequestDTORequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/infrastructures`, props, signal)
+
+export interface UpdateInfrastructureQueryParams {
+  accountIdentifier: string
+}
+
+export type UpdateInfrastructureProps = Omit<
+  MutateProps<
+    ResponseInfrastructureResponse,
+    Failure | Error,
+    UpdateInfrastructureQueryParams,
+    InfrastructureRequestDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Update an Infrastructure by identifier
+ */
+export const UpdateInfrastructure = (props: UpdateInfrastructureProps) => (
+  <Mutate<
+    ResponseInfrastructureResponse,
+    Failure | Error,
+    UpdateInfrastructureQueryParams,
+    InfrastructureRequestDTORequestBody,
+    void
+  >
+    verb="PUT"
+    path={`/infrastructures`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateInfrastructureProps = Omit<
+  UseMutateProps<
+    ResponseInfrastructureResponse,
+    Failure | Error,
+    UpdateInfrastructureQueryParams,
+    InfrastructureRequestDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Update an Infrastructure by identifier
+ */
+export const useUpdateInfrastructure = (props: UseUpdateInfrastructureProps) =>
+  useMutate<
+    ResponseInfrastructureResponse,
+    Failure | Error,
+    UpdateInfrastructureQueryParams,
+    InfrastructureRequestDTORequestBody,
+    void
+  >('PUT', `/infrastructures`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Update an Infrastructure by identifier
+ */
+export const updateInfrastructurePromise = (
+  props: MutateUsingFetchProps<
+    ResponseInfrastructureResponse,
+    Failure | Error,
+    UpdateInfrastructureQueryParams,
+    InfrastructureRequestDTORequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseInfrastructureResponse,
+    Failure | Error,
+    UpdateInfrastructureQueryParams,
+    InfrastructureRequestDTORequestBody,
+    void
+  >('PUT', getConfig('ng/api'), `/infrastructures`, props, signal)
+
+export interface CreateInfrastructuresQueryParams {
+  accountIdentifier: string
+}
+
+export type CreateInfrastructuresProps = Omit<
+  MutateProps<
+    ResponsePageInfrastructureResponse,
+    Failure | Error,
+    CreateInfrastructuresQueryParams,
+    InfrastructureRequestDTO[],
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Create Infrastructures
+ */
+export const CreateInfrastructures = (props: CreateInfrastructuresProps) => (
+  <Mutate<
+    ResponsePageInfrastructureResponse,
+    Failure | Error,
+    CreateInfrastructuresQueryParams,
+    InfrastructureRequestDTO[],
+    void
+  >
+    verb="POST"
+    path={`/infrastructures/batch`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseCreateInfrastructuresProps = Omit<
+  UseMutateProps<
+    ResponsePageInfrastructureResponse,
+    Failure | Error,
+    CreateInfrastructuresQueryParams,
+    InfrastructureRequestDTO[],
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Create Infrastructures
+ */
+export const useCreateInfrastructures = (props: UseCreateInfrastructuresProps) =>
+  useMutate<
+    ResponsePageInfrastructureResponse,
+    Failure | Error,
+    CreateInfrastructuresQueryParams,
+    InfrastructureRequestDTO[],
+    void
+  >('POST', `/infrastructures/batch`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Create Infrastructures
+ */
+export const createInfrastructuresPromise = (
+  props: MutateUsingFetchProps<
+    ResponsePageInfrastructureResponse,
+    Failure | Error,
+    CreateInfrastructuresQueryParams,
+    InfrastructureRequestDTO[],
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePageInfrastructureResponse,
+    Failure | Error,
+    CreateInfrastructuresQueryParams,
+    InfrastructureRequestDTO[],
+    void
+  >('POST', getConfig('ng/api'), `/infrastructures/batch`, props, signal)
+
+export interface UpsertInfrastructureQueryParams {
+  accountIdentifier: string
+}
+
+export type UpsertInfrastructureProps = Omit<
+  MutateProps<
+    ResponseInfrastructureResponse,
+    Failure | Error,
+    UpsertInfrastructureQueryParams,
+    InfrastructureRequestDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Upsert an Infrastructure by identifier
+ */
+export const UpsertInfrastructure = (props: UpsertInfrastructureProps) => (
+  <Mutate<
+    ResponseInfrastructureResponse,
+    Failure | Error,
+    UpsertInfrastructureQueryParams,
+    InfrastructureRequestDTORequestBody,
+    void
+  >
+    verb="PUT"
+    path={`/infrastructures/upsert`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseUpsertInfrastructureProps = Omit<
+  UseMutateProps<
+    ResponseInfrastructureResponse,
+    Failure | Error,
+    UpsertInfrastructureQueryParams,
+    InfrastructureRequestDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Upsert an Infrastructure by identifier
+ */
+export const useUpsertInfrastructure = (props: UseUpsertInfrastructureProps) =>
+  useMutate<
+    ResponseInfrastructureResponse,
+    Failure | Error,
+    UpsertInfrastructureQueryParams,
+    InfrastructureRequestDTORequestBody,
+    void
+  >('PUT', `/infrastructures/upsert`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Upsert an Infrastructure by identifier
+ */
+export const upsertInfrastructurePromise = (
+  props: MutateUsingFetchProps<
+    ResponseInfrastructureResponse,
+    Failure | Error,
+    UpsertInfrastructureQueryParams,
+    InfrastructureRequestDTORequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseInfrastructureResponse,
+    Failure | Error,
+    UpsertInfrastructureQueryParams,
+    InfrastructureRequestDTORequestBody,
+    void
+  >('PUT', getConfig('ng/api'), `/infrastructures/upsert`, props, signal)
+
+export interface DeleteInfrastructureQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  environmentIdentifier?: string
+}
+
+export type DeleteInfrastructureProps = Omit<
+  MutateProps<ResponseBoolean, Failure | Error, DeleteInfrastructureQueryParams, string, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Delete an infrastructure by identifier
+ */
+export const DeleteInfrastructure = (props: DeleteInfrastructureProps) => (
+  <Mutate<ResponseBoolean, Failure | Error, DeleteInfrastructureQueryParams, string, void>
+    verb="DELETE"
+    path={`/infrastructures`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseDeleteInfrastructureProps = Omit<
+  UseMutateProps<ResponseBoolean, Failure | Error, DeleteInfrastructureQueryParams, string, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Delete an infrastructure by identifier
+ */
+export const useDeleteInfrastructure = (props: UseDeleteInfrastructureProps) =>
+  useMutate<ResponseBoolean, Failure | Error, DeleteInfrastructureQueryParams, string, void>(
+    'DELETE',
+    `/infrastructures`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Delete an infrastructure by identifier
+ */
+export const deleteInfrastructurePromise = (
+  props: MutateUsingFetchProps<ResponseBoolean, Failure | Error, DeleteInfrastructureQueryParams, string, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseBoolean, Failure | Error, DeleteInfrastructureQueryParams, string, void>(
+    'DELETE',
+    getConfig('ng/api'),
+    `/infrastructures`,
+    props,
+    signal
+  )
+
+export interface GetInfrastructureQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  environmentIdentifier: string
+  deleted?: boolean
+}
+
+export interface GetInfrastructurePathParams {
+  infraIdentifier: string
+}
+
+export type GetInfrastructureProps = Omit<
+  GetProps<ResponseInfrastructureResponse, Failure | Error, GetInfrastructureQueryParams, GetInfrastructurePathParams>,
+  'path'
+> &
+  GetInfrastructurePathParams
+
+/**
+ * Gets an Infrastructure by identifier
+ */
+export const GetInfrastructure = ({ infraIdentifier, ...props }: GetInfrastructureProps) => (
+  <Get<ResponseInfrastructureResponse, Failure | Error, GetInfrastructureQueryParams, GetInfrastructurePathParams>
+    path={`/infrastructures/${infraIdentifier}`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetInfrastructureProps = Omit<
+  UseGetProps<
+    ResponseInfrastructureResponse,
+    Failure | Error,
+    GetInfrastructureQueryParams,
+    GetInfrastructurePathParams
+  >,
+  'path'
+> &
+  GetInfrastructurePathParams
+
+/**
+ * Gets an Infrastructure by identifier
+ */
+export const useGetInfrastructure = ({ infraIdentifier, ...props }: UseGetInfrastructureProps) =>
+  useGet<ResponseInfrastructureResponse, Failure | Error, GetInfrastructureQueryParams, GetInfrastructurePathParams>(
+    (paramsInPath: GetInfrastructurePathParams) => `/infrastructures/${paramsInPath.infraIdentifier}`,
+    { base: getConfig('ng/api'), pathParams: { infraIdentifier }, ...props }
+  )
+
+/**
+ * Gets an Infrastructure by identifier
+ */
+export const getInfrastructurePromise = (
+  {
+    infraIdentifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseInfrastructureResponse,
+    Failure | Error,
+    GetInfrastructureQueryParams,
+    GetInfrastructurePathParams
+  > & { infraIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseInfrastructureResponse,
+    Failure | Error,
+    GetInfrastructureQueryParams,
+    GetInfrastructurePathParams
+  >(getConfig('ng/api'), `/infrastructures/${infraIdentifier}`, props, signal)
 
 export interface GetInstanceNGDataQueryParams {
   accountIdentifier: string
@@ -27042,7 +27763,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'POLICY_STEP'
+    | 'Policy'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -29187,8 +29908,12 @@ export const createFilePromise = (
     signal
   )
 
+export interface CreatePRV2QueryParams {
+  accountIdentifier: string
+}
+
 export type CreatePRV2Props = Omit<
-  MutateProps<ResponseCreatePRResponse, Failure | Error, void, CreatePRRequest, void>,
+  MutateProps<ResponseCreatePRResponse, Failure | Error, CreatePRV2QueryParams, CreatePRRequest, void>,
   'path' | 'verb'
 >
 
@@ -29196,7 +29921,7 @@ export type CreatePRV2Props = Omit<
  * creates a pull request
  */
 export const CreatePRV2 = (props: CreatePRV2Props) => (
-  <Mutate<ResponseCreatePRResponse, Failure | Error, void, CreatePRRequest, void>
+  <Mutate<ResponseCreatePRResponse, Failure | Error, CreatePRV2QueryParams, CreatePRRequest, void>
     verb="POST"
     path={`/scm/create-pull-request`}
     base={getConfig('ng/api')}
@@ -29205,7 +29930,7 @@ export const CreatePRV2 = (props: CreatePRV2Props) => (
 )
 
 export type UseCreatePRV2Props = Omit<
-  UseMutateProps<ResponseCreatePRResponse, Failure | Error, void, CreatePRRequest, void>,
+  UseMutateProps<ResponseCreatePRResponse, Failure | Error, CreatePRV2QueryParams, CreatePRRequest, void>,
   'path' | 'verb'
 >
 
@@ -29213,7 +29938,7 @@ export type UseCreatePRV2Props = Omit<
  * creates a pull request
  */
 export const useCreatePRV2 = (props: UseCreatePRV2Props) =>
-  useMutate<ResponseCreatePRResponse, Failure | Error, void, CreatePRRequest, void>(
+  useMutate<ResponseCreatePRResponse, Failure | Error, CreatePRV2QueryParams, CreatePRRequest, void>(
     'POST',
     `/scm/create-pull-request`,
     { base: getConfig('ng/api'), ...props }
@@ -29223,10 +29948,10 @@ export const useCreatePRV2 = (props: UseCreatePRV2Props) =>
  * creates a pull request
  */
 export const createPRV2Promise = (
-  props: MutateUsingFetchProps<ResponseCreatePRResponse, Failure | Error, void, CreatePRRequest, void>,
+  props: MutateUsingFetchProps<ResponseCreatePRResponse, Failure | Error, CreatePRV2QueryParams, CreatePRRequest, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponseCreatePRResponse, Failure | Error, void, CreatePRRequest, void>(
+  mutateUsingFetch<ResponseCreatePRResponse, Failure | Error, CreatePRV2QueryParams, CreatePRRequest, void>(
     'POST',
     getConfig('ng/api'),
     `/scm/create-pull-request`,
@@ -29341,7 +30066,6 @@ export interface GetFileQueryParams {
   RepoName: string
   branch?: string
   filePath: string
-  commitId?: string
   ConnectorRef?: string
 }
 
@@ -32618,6 +33342,77 @@ export const updateTokenPromise = (
     UpdateTokenPathParams
   >('PUT', getConfig('ng/api'), `/token/${identifier}`, props, signal)
 
+export interface CreateDefaultScmConnectorQueryParams {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type CreateDefaultScmConnectorProps = Omit<
+  MutateProps<
+    ResponseScmConnectorResponse,
+    Failure | Error,
+    CreateDefaultScmConnectorQueryParams,
+    ScmConnectorDTO,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Creates default scm Connector
+ */
+export const CreateDefaultScmConnector = (props: CreateDefaultScmConnectorProps) => (
+  <Mutate<ResponseScmConnectorResponse, Failure | Error, CreateDefaultScmConnectorQueryParams, ScmConnectorDTO, void>
+    verb="POST"
+    path={`/trial-signup/create-scm-connector`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseCreateDefaultScmConnectorProps = Omit<
+  UseMutateProps<
+    ResponseScmConnectorResponse,
+    Failure | Error,
+    CreateDefaultScmConnectorQueryParams,
+    ScmConnectorDTO,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Creates default scm Connector
+ */
+export const useCreateDefaultScmConnector = (props: UseCreateDefaultScmConnectorProps) =>
+  useMutate<ResponseScmConnectorResponse, Failure | Error, CreateDefaultScmConnectorQueryParams, ScmConnectorDTO, void>(
+    'POST',
+    `/trial-signup/create-scm-connector`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Creates default scm Connector
+ */
+export const createDefaultScmConnectorPromise = (
+  props: MutateUsingFetchProps<
+    ResponseScmConnectorResponse,
+    Failure | Error,
+    CreateDefaultScmConnectorQueryParams,
+    ScmConnectorDTO,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseScmConnectorResponse,
+    Failure | Error,
+    CreateDefaultScmConnectorQueryParams,
+    ScmConnectorDTO,
+    void
+  >('POST', getConfig('ng/api'), `/trial-signup/create-scm-connector`, props, signal)
+
 export interface GetDelegateInstallStatusQueryParams {
   accountIdentifier: string
 }
@@ -32667,8 +33462,10 @@ export const getDelegateInstallStatusPromise = (
   )
 
 export interface GetAllUserReposQueryParams {
-  accountIdentifier: string
-  repoRef: string
+  connectorRef?: string
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type GetAllUserReposProps = Omit<
@@ -36755,7 +37552,7 @@ export interface GetVariablesListQueryParams {
 }
 
 export type GetVariablesListProps = Omit<
-  GetProps<ResponsePageVariableResponseDTO, unknown, GetVariablesListQueryParams, void>,
+  GetProps<ResponsePageVariableResponseDTO, Failure | Error, GetVariablesListQueryParams, void>,
   'path'
 >
 
@@ -36763,7 +37560,7 @@ export type GetVariablesListProps = Omit<
  * Gets Variable list
  */
 export const GetVariablesList = (props: GetVariablesListProps) => (
-  <Get<ResponsePageVariableResponseDTO, unknown, GetVariablesListQueryParams, void>
+  <Get<ResponsePageVariableResponseDTO, Failure | Error, GetVariablesListQueryParams, void>
     path={`/variables`}
     base={getConfig('ng/api')}
     {...props}
@@ -36771,7 +37568,7 @@ export const GetVariablesList = (props: GetVariablesListProps) => (
 )
 
 export type UseGetVariablesListProps = Omit<
-  UseGetProps<ResponsePageVariableResponseDTO, unknown, GetVariablesListQueryParams, void>,
+  UseGetProps<ResponsePageVariableResponseDTO, Failure | Error, GetVariablesListQueryParams, void>,
   'path'
 >
 
@@ -36779,7 +37576,7 @@ export type UseGetVariablesListProps = Omit<
  * Gets Variable list
  */
 export const useGetVariablesList = (props: UseGetVariablesListProps) =>
-  useGet<ResponsePageVariableResponseDTO, unknown, GetVariablesListQueryParams, void>(`/variables`, {
+  useGet<ResponsePageVariableResponseDTO, Failure | Error, GetVariablesListQueryParams, void>(`/variables`, {
     base: getConfig('ng/api'),
     ...props
   })
@@ -36788,10 +37585,10 @@ export const useGetVariablesList = (props: UseGetVariablesListProps) =>
  * Gets Variable list
  */
 export const getVariablesListPromise = (
-  props: GetUsingFetchProps<ResponsePageVariableResponseDTO, unknown, GetVariablesListQueryParams, void>,
+  props: GetUsingFetchProps<ResponsePageVariableResponseDTO, Failure | Error, GetVariablesListQueryParams, void>,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponsePageVariableResponseDTO, unknown, GetVariablesListQueryParams, void>(
+  getUsingFetch<ResponsePageVariableResponseDTO, Failure | Error, GetVariablesListQueryParams, void>(
     getConfig('ng/api'),
     `/variables`,
     props,
@@ -36803,7 +37600,13 @@ export interface CreateVariableQueryParams {
 }
 
 export type CreateVariableProps = Omit<
-  MutateProps<ResponseVariableResponseDTO, unknown, CreateVariableQueryParams, VariableRequestDTORequestBody, void>,
+  MutateProps<
+    ResponseVariableResponseDTO,
+    Failure | Error,
+    CreateVariableQueryParams,
+    VariableRequestDTORequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -36811,7 +37614,7 @@ export type CreateVariableProps = Omit<
  * Create a Variable
  */
 export const CreateVariable = (props: CreateVariableProps) => (
-  <Mutate<ResponseVariableResponseDTO, unknown, CreateVariableQueryParams, VariableRequestDTORequestBody, void>
+  <Mutate<ResponseVariableResponseDTO, Failure | Error, CreateVariableQueryParams, VariableRequestDTORequestBody, void>
     verb="POST"
     path={`/variables`}
     base={getConfig('ng/api')}
@@ -36820,7 +37623,13 @@ export const CreateVariable = (props: CreateVariableProps) => (
 )
 
 export type UseCreateVariableProps = Omit<
-  UseMutateProps<ResponseVariableResponseDTO, unknown, CreateVariableQueryParams, VariableRequestDTORequestBody, void>,
+  UseMutateProps<
+    ResponseVariableResponseDTO,
+    Failure | Error,
+    CreateVariableQueryParams,
+    VariableRequestDTORequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -36828,11 +37637,13 @@ export type UseCreateVariableProps = Omit<
  * Create a Variable
  */
 export const useCreateVariable = (props: UseCreateVariableProps) =>
-  useMutate<ResponseVariableResponseDTO, unknown, CreateVariableQueryParams, VariableRequestDTORequestBody, void>(
-    'POST',
-    `/variables`,
-    { base: getConfig('ng/api'), ...props }
-  )
+  useMutate<
+    ResponseVariableResponseDTO,
+    Failure | Error,
+    CreateVariableQueryParams,
+    VariableRequestDTORequestBody,
+    void
+  >('POST', `/variables`, { base: getConfig('ng/api'), ...props })
 
 /**
  * Create a Variable
@@ -36840,7 +37651,7 @@ export const useCreateVariable = (props: UseCreateVariableProps) =>
 export const createVariablePromise = (
   props: MutateUsingFetchProps<
     ResponseVariableResponseDTO,
-    unknown,
+    Failure | Error,
     CreateVariableQueryParams,
     VariableRequestDTORequestBody,
     void
@@ -36849,7 +37660,7 @@ export const createVariablePromise = (
 ) =>
   mutateUsingFetch<
     ResponseVariableResponseDTO,
-    unknown,
+    Failure | Error,
     CreateVariableQueryParams,
     VariableRequestDTORequestBody,
     void
@@ -36860,7 +37671,13 @@ export interface UpdateVariableQueryParams {
 }
 
 export type UpdateVariableProps = Omit<
-  MutateProps<ResponseVariableResponseDTO, unknown, UpdateVariableQueryParams, VariableRequestDTORequestBody, void>,
+  MutateProps<
+    ResponseVariableResponseDTO,
+    Failure | Error,
+    UpdateVariableQueryParams,
+    VariableRequestDTORequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -36868,7 +37685,7 @@ export type UpdateVariableProps = Omit<
  * Update a Variable
  */
 export const UpdateVariable = (props: UpdateVariableProps) => (
-  <Mutate<ResponseVariableResponseDTO, unknown, UpdateVariableQueryParams, VariableRequestDTORequestBody, void>
+  <Mutate<ResponseVariableResponseDTO, Failure | Error, UpdateVariableQueryParams, VariableRequestDTORequestBody, void>
     verb="PUT"
     path={`/variables`}
     base={getConfig('ng/api')}
@@ -36877,7 +37694,13 @@ export const UpdateVariable = (props: UpdateVariableProps) => (
 )
 
 export type UseUpdateVariableProps = Omit<
-  UseMutateProps<ResponseVariableResponseDTO, unknown, UpdateVariableQueryParams, VariableRequestDTORequestBody, void>,
+  UseMutateProps<
+    ResponseVariableResponseDTO,
+    Failure | Error,
+    UpdateVariableQueryParams,
+    VariableRequestDTORequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -36885,11 +37708,13 @@ export type UseUpdateVariableProps = Omit<
  * Update a Variable
  */
 export const useUpdateVariable = (props: UseUpdateVariableProps) =>
-  useMutate<ResponseVariableResponseDTO, unknown, UpdateVariableQueryParams, VariableRequestDTORequestBody, void>(
-    'PUT',
-    `/variables`,
-    { base: getConfig('ng/api'), ...props }
-  )
+  useMutate<
+    ResponseVariableResponseDTO,
+    Failure | Error,
+    UpdateVariableQueryParams,
+    VariableRequestDTORequestBody,
+    void
+  >('PUT', `/variables`, { base: getConfig('ng/api'), ...props })
 
 /**
  * Update a Variable
@@ -36897,7 +37722,7 @@ export const useUpdateVariable = (props: UseUpdateVariableProps) =>
 export const updateVariablePromise = (
   props: MutateUsingFetchProps<
     ResponseVariableResponseDTO,
-    unknown,
+    Failure | Error,
     UpdateVariableQueryParams,
     VariableRequestDTORequestBody,
     void
@@ -36906,7 +37731,7 @@ export const updateVariablePromise = (
 ) =>
   mutateUsingFetch<
     ResponseVariableResponseDTO,
-    unknown,
+    Failure | Error,
     UpdateVariableQueryParams,
     VariableRequestDTORequestBody,
     void
@@ -36919,7 +37744,7 @@ export interface DeleteVariableQueryParams {
 }
 
 export type DeleteVariableProps = Omit<
-  MutateProps<ResponseBoolean, unknown, DeleteVariableQueryParams, string, void>,
+  MutateProps<ResponseBoolean, Failure | Error, DeleteVariableQueryParams, string, void>,
   'path' | 'verb'
 >
 
@@ -36927,7 +37752,7 @@ export type DeleteVariableProps = Omit<
  * Delete a Variable
  */
 export const DeleteVariable = (props: DeleteVariableProps) => (
-  <Mutate<ResponseBoolean, unknown, DeleteVariableQueryParams, string, void>
+  <Mutate<ResponseBoolean, Failure | Error, DeleteVariableQueryParams, string, void>
     verb="DELETE"
     path={`/variables`}
     base={getConfig('ng/api')}
@@ -36936,7 +37761,7 @@ export const DeleteVariable = (props: DeleteVariableProps) => (
 )
 
 export type UseDeleteVariableProps = Omit<
-  UseMutateProps<ResponseBoolean, unknown, DeleteVariableQueryParams, string, void>,
+  UseMutateProps<ResponseBoolean, Failure | Error, DeleteVariableQueryParams, string, void>,
   'path' | 'verb'
 >
 
@@ -36944,7 +37769,7 @@ export type UseDeleteVariableProps = Omit<
  * Delete a Variable
  */
 export const useDeleteVariable = (props: UseDeleteVariableProps) =>
-  useMutate<ResponseBoolean, unknown, DeleteVariableQueryParams, string, void>('DELETE', `/variables`, {
+  useMutate<ResponseBoolean, Failure | Error, DeleteVariableQueryParams, string, void>('DELETE', `/variables`, {
     base: getConfig('ng/api'),
     ...props
   })
@@ -36953,10 +37778,10 @@ export const useDeleteVariable = (props: UseDeleteVariableProps) =>
  * Delete a Variable
  */
 export const deleteVariablePromise = (
-  props: MutateUsingFetchProps<ResponseBoolean, unknown, DeleteVariableQueryParams, string, void>,
+  props: MutateUsingFetchProps<ResponseBoolean, Failure | Error, DeleteVariableQueryParams, string, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponseBoolean, unknown, DeleteVariableQueryParams, string, void>(
+  mutateUsingFetch<ResponseBoolean, Failure | Error, DeleteVariableQueryParams, string, void>(
     'DELETE',
     getConfig('ng/api'),
     `/variables`,
@@ -36975,7 +37800,7 @@ export interface GetVariablePathParams {
 }
 
 export type GetVariableProps = Omit<
-  GetProps<ResponseVariableResponseDTO, unknown, GetVariableQueryParams, GetVariablePathParams>,
+  GetProps<ResponseVariableResponseDTO, Failure | Error, GetVariableQueryParams, GetVariablePathParams>,
   'path'
 > &
   GetVariablePathParams
@@ -36984,7 +37809,7 @@ export type GetVariableProps = Omit<
  * Get a Variable
  */
 export const GetVariable = ({ identifier, ...props }: GetVariableProps) => (
-  <Get<ResponseVariableResponseDTO, unknown, GetVariableQueryParams, GetVariablePathParams>
+  <Get<ResponseVariableResponseDTO, Failure | Error, GetVariableQueryParams, GetVariablePathParams>
     path={`/variables/${identifier}`}
     base={getConfig('ng/api')}
     {...props}
@@ -36992,7 +37817,7 @@ export const GetVariable = ({ identifier, ...props }: GetVariableProps) => (
 )
 
 export type UseGetVariableProps = Omit<
-  UseGetProps<ResponseVariableResponseDTO, unknown, GetVariableQueryParams, GetVariablePathParams>,
+  UseGetProps<ResponseVariableResponseDTO, Failure | Error, GetVariableQueryParams, GetVariablePathParams>,
   'path'
 > &
   GetVariablePathParams
@@ -37001,7 +37826,7 @@ export type UseGetVariableProps = Omit<
  * Get a Variable
  */
 export const useGetVariable = ({ identifier, ...props }: UseGetVariableProps) =>
-  useGet<ResponseVariableResponseDTO, unknown, GetVariableQueryParams, GetVariablePathParams>(
+  useGet<ResponseVariableResponseDTO, Failure | Error, GetVariableQueryParams, GetVariablePathParams>(
     (paramsInPath: GetVariablePathParams) => `/variables/${paramsInPath.identifier}`,
     { base: getConfig('ng/api'), pathParams: { identifier }, ...props }
   )
@@ -37013,12 +37838,12 @@ export const getVariablePromise = (
   {
     identifier,
     ...props
-  }: GetUsingFetchProps<ResponseVariableResponseDTO, unknown, GetVariableQueryParams, GetVariablePathParams> & {
+  }: GetUsingFetchProps<ResponseVariableResponseDTO, Failure | Error, GetVariableQueryParams, GetVariablePathParams> & {
     identifier: string
   },
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseVariableResponseDTO, unknown, GetVariableQueryParams, GetVariablePathParams>(
+  getUsingFetch<ResponseVariableResponseDTO, Failure | Error, GetVariableQueryParams, GetVariablePathParams>(
     getConfig('ng/api'),
     `/variables/${identifier}`,
     props,
@@ -37133,7 +37958,7 @@ export interface GetYamlSchemaQueryParams {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'POLICY_STEP'
+    | 'Policy'
     | 'Run'
     | 'RunTests'
     | 'Plugin'

@@ -3,6 +3,7 @@
 exports[`Test SLOName component should render SLOName component 1`] = `
 <div>
   <form
+    action="#"
     class="FormikForm--main"
   >
     <div>

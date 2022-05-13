@@ -101,7 +101,9 @@ exports[`Artifact WizardStep tests last step data without initial values 1`] = `
         <div
           class="OverlaySpinner--overlaySpinner"
         >
-          <form>
+          <form
+            action="#"
+          >
             <div
               class="headerContainer"
             >
@@ -416,7 +418,9 @@ exports[`Artifact WizardStep tests new connector view works correctly 1`] = `
         <div
           class="OverlaySpinner--overlaySpinner"
         >
-          <form>
+          <form
+            action="#"
+          >
             <div
               class="connectorForm"
             >
@@ -958,6 +962,7 @@ exports[`Artifact WizardStep tests new connector view works correctly in select 
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -1283,7 +1288,9 @@ exports[`Artifact WizardStep tests renders correctly with connector Data 1`] = `
         <div
           class="OverlaySpinner--overlaySpinner"
         >
-          <form>
+          <form
+            action="#"
+          >
             <div
               class="headerContainer"
             >
@@ -1499,7 +1506,9 @@ exports[`Artifact WizardStep tests renders correctly with differnet artifact typ
         <div
           class="OverlaySpinner--overlaySpinner"
         >
-          <form>
+          <form
+            action="#"
+          >
             <div
               class="headerContainer"
             >
@@ -1831,7 +1840,9 @@ exports[`Artifact WizardStep tests renders without crashing 1`] = `
         <div
           class="OverlaySpinner--overlaySpinner"
         >
-          <form>
+          <form
+            action="#"
+          >
             <div
               class="headerContainer"
             >

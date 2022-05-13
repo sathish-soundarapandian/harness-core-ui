@@ -18,7 +18,7 @@ import { FetchPerspectiveListDocument } from 'services/ce/services'
 import type { CCMPerspectiveNotificationChannelsDTO } from 'services/ce'
 import PerspectiveList from './PerspectiveList.json'
 import PerspectiveSelection from '../PerspectiveSelection'
-import NotificationMethod from '../NotificationMethod'
+import NotificationMethod, { NotificationValues } from '../NotificationMethod'
 import useAnomaliesAlertDialog from '../AnomaliesAlertDialog'
 
 const selectedAlert: CCMPerspectiveNotificationChannelsDTO = {
@@ -92,16 +92,15 @@ const Wrapped = (): React.ReactElement => {
     <>
       <button className="opnModal" onClick={onBtnClick} />
       <Dialog {...modalPropsLight} onClose={hideAnomaliesAlertModal}>
-        <Formik
+        <Formik<NotificationValues>
           initialValues={{
             perspective: defaultTo(selectedAlert.perspectiveId, ''),
-            channelName: '',
-            channelUrl: '',
             alertList: []
           }}
           formName={'createNotificationAlert'}
           onSubmit={data => handleSubmit(data)}
-          render={formikProps => {
+        >
+          {formikProps => {
             return (
               <StepWizard>
                 <PerspectiveSelection
@@ -114,7 +113,7 @@ const Wrapped = (): React.ReactElement => {
               </StepWizard>
             )
           }}
-        ></Formik>
+        </Formik>
       </Dialog>
     </>
   )

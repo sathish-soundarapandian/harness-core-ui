@@ -6,6 +6,7 @@ exports[`Unit tests for DefineYourMonitoringSource Ensure card renders passed in
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

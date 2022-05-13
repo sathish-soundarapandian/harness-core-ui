@@ -6,6 +6,7 @@ exports[`<List /> tests Readonly mode works 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -54,6 +55,7 @@ exports[`<List /> tests Should render properly 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

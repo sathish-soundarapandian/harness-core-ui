@@ -7,7 +7,7 @@
 
 import React, { useState, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import type { FormikActions } from 'formik'
+import type { FormikHelpers } from 'formik'
 import set from 'lodash-es/set'
 import {
   Layout,
@@ -79,7 +79,7 @@ const Step1Setup: React.FC<StepProps<DockerDelegateWizardData> & DelegateSetupSt
 
   const validateName = async (
     values: DockerDelegateWizardData,
-    formikActions: FormikActions<DockerDelegateWizardData>
+    formikActions: FormikHelpers<DockerDelegateWizardData>
   ) => {
     const response = (await validateDockerDelegatePromise({
       queryParams: {
@@ -126,7 +126,7 @@ const Step1Setup: React.FC<StepProps<DockerDelegateWizardData> & DelegateSetupSt
     }
   }, [defaultToken])
 
-  const onSubmit = (values: DockerDelegateWizardData, formikActions: FormikActions<DockerDelegateWizardData>) => {
+  const onSubmit = (values: DockerDelegateWizardData, formikActions: FormikHelpers<DockerDelegateWizardData>) => {
     setInitValues(values)
     validateName(values, formikActions)
   }

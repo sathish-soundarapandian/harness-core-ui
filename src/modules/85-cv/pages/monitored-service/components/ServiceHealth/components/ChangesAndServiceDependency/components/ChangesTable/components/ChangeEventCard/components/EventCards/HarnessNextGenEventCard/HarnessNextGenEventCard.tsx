@@ -5,35 +5,35 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
+import { defaultTo } from 'lodash-es'
 import { Divider } from '@blueprintjs/core'
 import { Card, Container, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import type { ChangeEventDTO, VerifyStepSummary } from 'services/cv'
+import type { ChangeEventDTO, HarnessCDEventMetadata, VerifyStepSummary } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import { verificationResultToIcon } from '@cv/components/ActivitiesTimelineView/TimelineTooltip'
 import VerificationStatusCard from '@cv/components/ExecutionVerification/components/DeploymentProgressAndNodes/components/VerificationStatusCard/VerificationStatusCard'
 import type { EventData } from '@cv/components/ActivitiesTimelineView/ActivitiesTimelineView'
 import ChangeEventServiceHealth from '@cv/pages/monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/components/ChangeCard/components/ChangeEventServiceHealth/ChangeEventServiceHealth'
+import SLOAndErrorBudget from '@cv/pages/monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/components/ChangeCard/components/SLOAndErrorBudget/SLOAndErrorBudget'
 import type { ChangeTitleData, ChangeDetailsDataInterface } from '../../../ChangeEventCard.types'
 import { createChangeTitleData, createChangeDetailsData } from '../../../ChangeEventCard.utils'
 import ChangeDetails from '../../ChangeDetails/ChangeDetails'
 import ChangeTitle from '../../ChangeTitle/ChangeTitle'
 import DeploymentTimeDuration from '../../DeploymentTimeDuration/DeploymentTimeDuration'
+import { TWO_HOURS_IN_MILLISECONDS } from '../../../ChangeEventCard.constant'
 import css from '../../../ChangeEventCard.module.scss'
 
 export default function HarnessNextGenEventCard({ data }: { data: ChangeEventDTO }): JSX.Element {
   const { getString } = useStrings()
+  const [timeStamps, setTimestamps] = useState<[number, number]>([0, 0])
   const changeTitleData: ChangeTitleData = useMemo(() => createChangeTitleData(data), [])
   const changeDetailsData: ChangeDetailsDataInterface = useMemo(() => createChangeDetailsData(data), [])
 
-  const { artifactType = '', artifactTag = '', verifyStepSummaries = [] } = data?.metadata || {}
+  const metadata: HarnessCDEventMetadata = defaultTo(data.metadata, {})
+  const { artifactType = '', artifactTag = '', verifyStepSummaries } = metadata
   const changeInfoData = { artifactType, artifactTag }
-
-  const summary: {
-    name: string
-    verificationStatus: string
-  }[] = verifyStepSummaries
 
   return (
     <Card className={css.main}>
@@ -47,18 +47,18 @@ export default function HarnessNextGenEventCard({ data }: { data: ChangeEventDTO
         </Text>
         <ChangeDetails ChangeDetailsData={{ details: changeInfoData }} />
         <DeploymentTimeDuration
-          startTime={data?.metadata?.deploymentStartTime}
-          endTime={data?.metadata?.deploymentEndTime}
+          startTime={data.metadata?.deploymentStartTime}
+          endTime={data.metadata?.deploymentEndTime}
         />
       </Container>
       <Divider className={css.divider} />
-      {summary?.length ? (
+      {!!verifyStepSummaries?.length && (
         <Container margin={{ bottom: 'var(--spacing-small)' }}>
           <Text font={{ size: 'medium', weight: 'bold' }} color={Color.GREY_800}>
             {getString('cv.changeSource.changeSourceCard.deploymentHealth')}
           </Text>
           <Container className={css.verificationContainer}>
-            {summary?.map(item => {
+            {verifyStepSummaries.map(item => {
               const icon = verificationResultToIcon(item.verificationStatus as EventData['verificationResult'])
               return (
                 <Container className={css.flexColumn} key={item.name}>
@@ -71,13 +71,24 @@ export default function HarnessNextGenEventCard({ data }: { data: ChangeEventDTO
             })}
           </Container>
         </Container>
-      ) : null}
-      {data?.eventTime && data.monitoredServiceIdentifier && (
-        <ChangeEventServiceHealth
-          monitoredServiceIdentifier={data.monitoredServiceIdentifier}
-          startTime={data.eventTime}
-          eventType={data.type}
-        />
+      )}
+      {data.eventTime && data.monitoredServiceIdentifier && (
+        <>
+          <ChangeEventServiceHealth
+            monitoredServiceIdentifier={data.monitoredServiceIdentifier}
+            startTime={data.eventTime}
+            eventType={data.type}
+            timeStamps={timeStamps}
+            setTimestamps={setTimestamps}
+          />
+          <SLOAndErrorBudget
+            monitoredServiceIdentifier={data.monitoredServiceIdentifier}
+            startTime={timeStamps[0] || data.eventTime}
+            endTime={timeStamps[1] || data.eventTime + TWO_HOURS_IN_MILLISECONDS}
+            eventTime={data.eventTime}
+            eventType={data.type}
+          />
+        </>
       )}
     </Card>
   )

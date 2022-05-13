@@ -127,7 +127,7 @@ export const InfraProvisioningCarousel: React.FC<InfraProvisioningCarouselProps>
     switch (provisioningStatus) {
       case ProvisioningStatus.IN_PROGRESS:
         return (
-          <Layout.Horizontal padding={{ top: 'xxxlarge', left: 'xxxlarge', right: 'xxxlarge' }} flex>
+          <Layout.Horizontal padding={{ top: 'xlarge', left: 'xxxlarge', right: 'xxxlarge' }} flex>
             <Layout.Vertical padding="xlarge" style={{ flex: 1 }} className={css.centerAlign}>
               <Icon name="harness" size={34} padding="large" />
               <Text font={{ variation: FontVariation.H4 }} className={css.centerAlign}>
@@ -143,7 +143,7 @@ export const InfraProvisioningCarousel: React.FC<InfraProvisioningCarouselProps>
                 })}
               </Text>
             </Layout.Vertical>
-            <Layout.Vertical padding="xxlarge" style={{ flex: 1 }} className={css.centerAlign}>
+            <Layout.Vertical padding="xxlarge" style={{ flex: 1 }} className={cx(css.bg, css.centerAlign)}>
               <Layout.Vertical spacing="medium">
                 <Container padding={{ top: 'large' }}>
                   <Container

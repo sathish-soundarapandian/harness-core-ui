@@ -115,7 +115,7 @@ function FormContent(formContentProps: ServiceNowUpdateDeploymentModeFormContent
           name={`${prefix}spec.connectorRef`}
           label={getString('pipeline.serviceNowApprovalStep.connectorRef')}
           selected={(initialValues?.spec?.connectorRef as string) || ''}
-          placeholder={getString('connectors.selectConnector')}
+          placeholder={getString('pipeline.serviceNowApprovalStep.serviceNowConnectorPlaceholder')}
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}

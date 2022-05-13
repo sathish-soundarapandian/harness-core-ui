@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { FormGroup, IFormGroupProps, Intent, InputGroup, IInputGroupProps, HTMLInputProps } from '@blueprintjs/core'
-import { connect, FormikContext } from 'formik'
+import { connect, FormikContextType } from 'formik'
 import {
   ExpressionAndRuntimeType,
   ExpressionAndRuntimeTypeProps,
@@ -120,8 +120,8 @@ export interface FormMultiTypeDurationProps extends Omit<IFormGroupProps, 'label
   label: string | React.ReactElement
   name: string
   placeholder?: string
-  formik?: FormikContext<unknown>
-  skipErrorsIf?(formik?: FormikContext<unknown>): boolean
+  formik?: FormikContextType<unknown>
+  skipErrorsIf?(formik?: FormikContextType<unknown>): boolean
   multiTypeDurationProps?: Omit<MultiTypeDurationProps, 'name' | 'onChange' | 'value'>
   onChange?: MultiTypeDurationProps['onChange']
   tooltipProps?: DataTooltipInterface
@@ -161,14 +161,14 @@ export function FormMultiTypeDuration(props: FormMultiTypeDurationProps): React.
           ? val.replace(DurationInputHelpers.TEXT_LIMIT_REGEX, '')
           : val
       formik?.setFieldValue(name, correctVal)
-      formik?.setFieldTouched(name, true)
+      formik?.setFieldTouched(name, true, false)
       onChange?.(correctVal, valueType, type)
     },
     [formik?.setFieldTouched, formik?.setFieldValue, name, onChange]
   )
 
   const handleBlur = (): void => {
-    formik?.setFieldTouched(name, true)
+    formik?.setFieldTouched(name, true, false)
 
     if (getMultiTypeFromValue(value) !== MultiTypeInputType.FIXED || !isValidTimeString(value)) {
       return
@@ -280,7 +280,7 @@ export interface DurationInputForInputSetProps extends Omit<IFormGroupProps, 'la
 
 export interface ConnectedDurationInputForInputSetProps extends DurationInputForInputSetProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  formik: FormikContext<any>
+  formik: FormikContextType<any>
 }
 
 export function DurationInputForInputSet(props: ConnectedDurationInputForInputSetProps): React.ReactElement {

@@ -306,7 +306,7 @@ describe('CVCreateSLO - Edit', () => {
       expect(updateSLO).toBeCalledWith(
         createSLORequestPayload(serviceLevelObjective, pathParams.orgIdentifier, pathParams.projectIdentifier)
       )
-      expect(screen.getByText('cv.slos.sloUpdated')).toBeInTheDocument()
+      expect(screen.getAllByText('cv.slos.sloUpdated')[0]).toBeInTheDocument()
     })
 
     expect(

@@ -126,7 +126,7 @@ describe('ServiceNow Update tests', () => {
     )
 
     // Submit with empty form
-    act(() => ref.current?.submitForm())
+    act(() => ref.current?.submitForm()!)
     await waitFor(() => expect(queryByText('pipelineSteps.stepNameRequired')).toBeTruthy())
 
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
@@ -138,7 +138,7 @@ describe('ServiceNow Update tests', () => {
     })
     fireEvent.change(queryByNameAttribute('timeout')!, { target: { value: '' } })
 
-    act(() => ref.current?.submitForm())
+    act(() => ref.current?.submitForm()!)
     await waitFor(() => expect(queryByText('validation.timeout10SecMinimum')).toBeTruthy())
     await waitFor(() => expect(queryByText('pipeline.serviceNowApprovalStep.validations.ticketType')).toBeTruthy())
   })

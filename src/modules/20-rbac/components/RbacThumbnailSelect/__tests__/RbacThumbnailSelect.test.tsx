@@ -6,6 +6,8 @@
  */
 
 import React from 'react'
+import { Formik } from '@wings-software/uicore'
+import { noop } from 'lodash-es'
 import { act, render, fireEvent, waitFor } from '@testing-library/react'
 import * as useFeaturesLib from '@common/hooks/useFeatures'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -24,7 +26,11 @@ const getRbacSampleItems = (): RbacThumbnailItem[] => [
 
 describe('RBAC ThumbnailSelect', () => {
   test('renders items without RBAC restrictions', () => {
-    const { container } = render(<RbacThumbnailSelect items={getNonRbacSampleItems()} name="nonRbacThumbnail" />)
+    const { container } = render(
+      <Formik initialValues={{}} onSubmit={noop} formName="test">
+        <RbacThumbnailSelect items={getNonRbacSampleItems()} name="nonRbacThumbnail" />
+      </Formik>
+    )
     expect(container).toMatchSnapshot('non rbac items')
   })
 
@@ -32,7 +38,9 @@ describe('RBAC ThumbnailSelect', () => {
     jest.spyOn(useFeaturesLib, 'useFeature').mockReturnValue({ enabled: false })
     const { container, queryByText } = render(
       <TestWrapper>
-        <RbacThumbnailSelect items={getRbacSampleItems()} name="rRbacThumbnail" />
+        <Formik initialValues={{}} onSubmit={noop} formName="rbacThumnNailSelect">
+          <RbacThumbnailSelect items={getRbacSampleItems()} name="rRbacThumbnail" />
+        </Formik>
       </TestWrapper>
     )
     expect(container).toMatchSnapshot('rbac items should be disabled')

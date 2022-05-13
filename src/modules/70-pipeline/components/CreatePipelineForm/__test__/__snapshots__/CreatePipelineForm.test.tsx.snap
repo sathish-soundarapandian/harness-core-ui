@@ -6,6 +6,7 @@ exports[`CreatePipelineForm Rendering should closeModal when click Setup Later 1
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -264,6 +265,7 @@ exports[`CreatePipelineForm Rendering should render CreatePipelineForm 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -522,6 +524,7 @@ exports[`CreatePipelineForm Rendering should validate inputs 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

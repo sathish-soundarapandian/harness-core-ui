@@ -10,7 +10,7 @@ import cx from 'classnames'
 
 import { useParams } from 'react-router-dom'
 import { get, map } from 'lodash-es'
-import { connect, FormikContext } from 'formik'
+import { connect, FormikContextType } from 'formik'
 import {
   getMultiTypeFromValue,
   MultiTypeInputType,
@@ -37,7 +37,7 @@ function TFRemoteSectionRef<T extends TerraformData = TerraformData>(
   props: TerraformProps<T> & {
     remoteVar: any
     index: number
-    formik?: FormikContext<any>
+    formik?: FormikContextType<any>
   }
 ): React.ReactElement {
   const { remoteVar, index, allowableTypes, formik } = props

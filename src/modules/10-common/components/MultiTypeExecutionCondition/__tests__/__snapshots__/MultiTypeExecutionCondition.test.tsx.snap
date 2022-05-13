@@ -5,7 +5,9 @@ exports[`MultiTypeExecutionCondition test input disabled and only fixed multi ty
   <div
     class="OverlaySpinner--overlaySpinner"
   >
-    <form>
+    <form
+      action="#"
+    >
       <div
         class="StyledProps--font StyledProps--main conditionInputContainer"
       >
@@ -31,7 +33,9 @@ exports[`MultiTypeExecutionCondition test input enabled and fixed, runtime multi
   <div
     class="OverlaySpinner--overlaySpinner"
   >
-    <form>
+    <form
+      action="#"
+    >
       <div
         class="StyledProps--font StyledProps--main conditionInputContainer"
       >

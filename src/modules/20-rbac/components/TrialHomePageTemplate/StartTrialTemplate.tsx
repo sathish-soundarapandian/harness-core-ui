@@ -5,12 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
 import { Heading, Layout, Text, Container, Button } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useParams, useHistory, Link } from 'react-router-dom'
 import { useToaster } from '@common/components'
-import { setUpCI, StartFreeLicenseAndSetupProjectCallback } from '@common/utils/GetStartedWithCIUtil'
 import { useStrings } from 'framework/strings'
 import { useLicenseStore, handleUpdateLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import {
@@ -52,12 +51,10 @@ interface StartTrialProps {
   startTrial: () => Promise<ResponseModuleLicenseDTO>
   module: Module
   loading: boolean
-  setLoading?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const StartTrialComponent: React.FC<StartTrialProps> = startTrialProps => {
-  const { description, learnMore, startBtn, shouldShowStartTrialModal, startTrial, module, loading, setLoading } =
-    startTrialProps
+  const { description, learnMore, startBtn, shouldShowStartTrialModal, startTrial, module, loading } = startTrialProps
   const history = useHistory()
   const { accountId } = useParams<{
     accountId: string
@@ -66,7 +63,7 @@ const StartTrialComponent: React.FC<StartTrialProps> = startTrialProps => {
   const { getString } = useStrings()
   const { showModal } = useStartTrialModal({ module, handleStartTrial })
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
-  const { FREE_PLAN_ENABLED, PLANS_ENABLED, CIE_HOSTED_BUILDS } = useFeatureFlags()
+  const { FREE_PLAN_ENABLED, PLANS_ENABLED } = useFeatureFlags()
   const clickEvent = FREE_PLAN_ENABLED ? PlanActions.StartFreeClick : TrialActions.StartTrialClick
   const experience = FREE_PLAN_ENABLED ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL
   const modal = FREE_PLAN_ENABLED ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL
@@ -78,35 +75,14 @@ const StartTrialComponent: React.FC<StartTrialProps> = startTrialProps => {
       edition: FREE_PLAN_ENABLED ? Editions.FREE : Editions.ENTERPRISE
     })
     try {
-      if (module === 'ci' && CIE_HOSTED_BUILDS) {
-        setLoading?.(true)
-        return setUpCI(
-          accountId,
-          Editions.FREE,
-          ({ orgId, projectId, data }: StartFreeLicenseAndSetupProjectCallback) => {
-            setLoading?.(false)
-            handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, module, data)
+      const data = await startTrial()
 
-            history.push(
-              routes.toGetStartedWithCI({
-                accountId,
-                module: 'ci',
-                orgIdentifier: orgId,
-                projectIdentifier: projectId
-              })
-            )
-          }
-        )
-      } else {
-        const data = await startTrial()
+      handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, module, data?.data)
 
-        handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, module, data?.data)
-
-        history.push({
-          pathname: routes.toModuleHome({ accountId, module }),
-          search: `?modal=${modal}&&experience=${experience}`
-        })
-      }
+      history.push({
+        pathname: routes.toModuleHome({ accountId, module }),
+        search: `?modal=${modal}&&experience=${experience}`
+      })
     } catch (error) {
       showError(error.data?.message)
     }
@@ -152,7 +128,6 @@ export const StartTrialTemplate: React.FC<StartTrialTemplateProps> = ({
   startTrialProps,
   module
 }) => {
-  const [loading, setLoading] = useState<boolean>(false)
   const { accountId } = useParams<AccountPathProps>()
 
   const isFreeEnabled = useFeatureFlag(FeatureFlag.FREE_PLAN_ENABLED)
@@ -197,8 +172,7 @@ export const StartTrialTemplate: React.FC<StartTrialTemplateProps> = ({
           {...startTrialProps}
           startTrial={handleStartTrial}
           module={module}
-          loading={startingTrial || startingFree || loading}
-          setLoading={setLoading}
+          loading={startingTrial || startingFree}
         />
       </Layout.Vertical>
     </Container>

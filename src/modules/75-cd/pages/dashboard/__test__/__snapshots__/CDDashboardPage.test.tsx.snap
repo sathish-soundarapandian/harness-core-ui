@@ -322,9 +322,8 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
                 class="StyledProps--font StyledProps--main title"
               >
                 services
-                 (
-                1
-                )
+                 
+                (1)
               </p>
             </div>
           </div>
@@ -536,9 +535,8 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
                 class="StyledProps--font StyledProps--main title"
               >
                 pipeline.dashboards.failedDeployments
-                 (
-                1
-                )
+                 
+                
               </p>
             </div>
           </div>
@@ -768,9 +766,8 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
                 class="StyledProps--font StyledProps--main title"
               >
                 pipeline.dashboards.activeDeployments
-                 (
-                2
-                )
+                 
+                
               </p>
             </div>
           </div>

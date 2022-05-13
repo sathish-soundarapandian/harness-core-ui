@@ -349,6 +349,9 @@ exports[`Validate ChangeCard should render Pager Duty card 1`] = `
         </div>
       </div>
     </div>
+    <div
+      data-testid="SLO-and-errorBudget"
+    />
   </div>
 </div>
 `;

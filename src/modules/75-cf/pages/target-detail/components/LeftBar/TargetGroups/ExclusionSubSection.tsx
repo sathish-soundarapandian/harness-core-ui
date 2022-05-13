@@ -44,6 +44,7 @@ const ExclusionSubSection: FC<ExclusionSubSectionProps> = ({
       modalTitle="cf.targetDetail.excludeTargetFromSegment"
       addButtonText="cf.targetDetail.excludeFromSegment"
       noDataMessage="cf.targetDetail.noSegmentExcluded"
+      instructionKind="addToExcludeList"
     />
   )
 }

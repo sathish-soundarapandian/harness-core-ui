@@ -66,6 +66,7 @@ export interface TemplateContextMetadata {
   view?: string
   isPipelineStudio?: boolean
   stableVersion?: string
+  fireSuccessEvent?: boolean
 }
 
 export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata): UseSaveTemplateReturnType {
@@ -78,7 +79,8 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
     deleteTemplateCache,
     view,
     isPipelineStudio,
-    stableVersion
+    stableVersion,
+    fireSuccessEvent
   } = TemplateContextMetadata
   const { isGitSyncEnabled } = React.useContext(AppStoreContext)
   const { templateIdentifier, templateType, projectIdentifier, orgIdentifier, accountId, module } = useParams<
@@ -169,7 +171,9 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
     updatedGitDetails?: SaveToGitFormInterface,
     lastObject?: { lastObjectId?: string }
   ): Promise<UseSaveSuccessResponse> => {
-    setLoading?.(true)
+    if (!isGitSyncEnabled) {
+      setLoading?.(true)
+    }
     if (isEdit) {
       return updateExistingLabel(comments, updatedGitDetails, lastObject)
     } else {
@@ -186,10 +190,12 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
           },
           requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
         })
-        setLoading?.(false)
+        if (!isGitSyncEnabled) {
+          setLoading?.(false)
+        }
         if (response && response.status === 'SUCCESS') {
-          if (response.data?.templateResponseDTO) {
-            window.dispatchEvent(new CustomEvent('TEMPLATE_SAVED', { detail: response.data?.templateResponseDTO }))
+          if (fireSuccessEvent && response.data?.templateResponseDTO) {
+            window.dispatchEvent(new CustomEvent('TEMPLATE_SAVED', { detail: response.data.templateResponseDTO }))
           }
           if (!isGitSyncEnabled) {
             clear()

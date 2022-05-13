@@ -259,6 +259,7 @@ exports[`Create Azure connector Wizard should render create new billing exports 
                 class="OverlaySpinner--overlaySpinner"
               >
                 <form
+                  action="#"
                   class="FormikForm--main"
                   style="padding: 10px 0px 25px;"
                 >
@@ -710,6 +711,7 @@ exports[`Create Azure connector Wizard should render existing billing exports fo
                 class="OverlaySpinner--overlaySpinner"
               >
                 <form
+                  action="#"
                   class="FormikForm--main"
                   style="padding: 10px 0px 25px;"
                 >
@@ -1273,6 +1275,7 @@ exports[`Create Azure connector Wizard should render feature cards, render servi
                 class="OverlaySpinner--overlaySpinner"
               >
                 <form
+                  action="#"
                   class="FormikForm--main"
                 >
                   <div>
@@ -2045,7 +2048,7 @@ exports[`Create Azure connector Wizard should render feature cards, render servi
                   class="StyledProps--font StyledProps--main command"
                 >
                   <pre>
-                    SCOPE=\`az storage account show --name &lt;insert_storage_account_name&gt; --query "id" | xargs\`
+                    SCOPE=\`az storage account show --name abcd --query "id" | xargs\`
                   </pre>
                   <span
                     class="bp3-popover-wrapper"
@@ -2710,6 +2713,7 @@ exports[`Create Azure connector Wizard should render overview step 1`] = `
               class="OverlaySpinner--overlaySpinner"
             >
               <form
+                action="#"
                 class="FormikForm--main"
               >
                 <div>
@@ -3175,6 +3179,7 @@ exports[`Create Azure connector Wizard should throw an error when connectors alr
               class="OverlaySpinner--overlaySpinner"
             >
               <form
+                action="#"
                 class="FormikForm--main"
               >
                 <div>

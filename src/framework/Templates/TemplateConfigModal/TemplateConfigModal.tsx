@@ -270,7 +270,7 @@ const BasicTemplateDetails = (props: BasicDetailsInterface): JSX.Element => {
                     </Container>
                     {isGitSyncEnabled && showGitFields && (
                       <GitSyncStoreProvider>
-                        <GitContextForm formikProps={formik} gitDetails={gitDetails} />
+                        <GitContextForm formikProps={formik as any} gitDetails={gitDetails} />
                       </GitSyncStoreProvider>
                     )}
                   </Layout.Vertical>

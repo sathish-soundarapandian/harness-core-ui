@@ -10,7 +10,7 @@ import { Color } from '@wings-software/design-system'
 import { Template, TemplateProps } from '@templates-library/components/AbstractTemplate/Template'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import type { NGTemplateInfoConfig } from 'services/template-ng'
-import { PipelineTemplateCanvasWithRef } from '@templates-library/components/TemplateStudio/PipelineTemplateCanvas/PipelineTemplateCanvas'
+import { PipelineTemplateCanvasWrapperWithRef } from '@templates-library/components/TemplateStudio/PipelineTemplateCanvas/PipelineTemplateCanvasWrapper'
 
 export class PipelineTemplate extends Template<NGTemplateInfoConfig> {
   protected type = TemplateType.Pipeline
@@ -25,6 +25,6 @@ export class PipelineTemplate extends Template<NGTemplateInfoConfig> {
   }
 
   renderTemplateCanvas(props: TemplateProps<NGTemplateInfoConfig>): JSX.Element {
-    return <PipelineTemplateCanvasWithRef ref={props.formikRef} />
+    return <PipelineTemplateCanvasWrapperWithRef ref={props.formikRef} />
   }
 }

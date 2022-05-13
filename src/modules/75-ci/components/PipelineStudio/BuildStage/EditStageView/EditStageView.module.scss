@@ -49,7 +49,7 @@
 }
 
 .configureCodebase {
-  border-top: 1px solid rgba(#000, 0.1);
+  border-top: 1px solid rgba(var(--black), 0.1);
   padding-top: var(--spacing-xlarge);
   margin-top: var(--spacing-xlarge);
 }
@@ -76,4 +76,8 @@
   color: var(--grey-800) !important;
   font-weight: 600 !important;
   line-height: 24px;
+}
+
+.bottomMargin3 {
+  margin-bottom: var(--spacing-3) !important;
 }

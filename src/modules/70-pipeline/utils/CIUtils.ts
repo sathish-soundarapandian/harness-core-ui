@@ -13,12 +13,19 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import { RegExAllowedInputExpression } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
+import type { PipelineInfoConfig } from 'services/cd-ng'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { ConnectorRefWidth } from './constants'
 
 // Returns first 7 letters of commit ID
 export function getShortCommitId(commitId: string): string {
   return commitId.slice(0, 7)
+}
+
+export enum CodebaseTypes {
+  branch = 'branch',
+  tag = 'tag',
+  PR = 'PR'
 }
 
 // TODO: Add singular forms, better using i18n because they have support for it
@@ -99,5 +106,33 @@ export const shouldRenderRunTimeInputViewWithAllowedValues = (
   return shouldRenderRunTimeInputView(allowedValues) && RegExAllowedInputExpression.test(allowedValues)
 }
 
-export const getConnectorRefWidth = (viewType: StepViewType): number =>
+export const getConnectorRefWidth = (viewType: StepViewType | string): number =>
   Object.entries(ConnectorRefWidth).find(key => key[0] === viewType)?.[1] || ConnectorRefWidth.DefaultView
+
+export const isRuntimeInput = (str: unknown): boolean => typeof str === 'string' && str?.includes(RUNTIME_INPUT_VALUE)
+
+export const isCloneCodebaseEnabledAtLeastOneStage = (pipeline: PipelineInfoConfig): boolean =>
+  !!pipeline?.stages?.some(stage => get(stage, 'stage.spec.cloneCodebase'))
+
+export const isCodebaseFieldsRuntimeInputs = (template?: PipelineInfoConfig): boolean =>
+  Object.keys(template?.properties?.ci?.codebase || {}).filter(x => x !== 'build')?.length > 0 // show codebase when more fields needed
+
+export const getPipelineWithoutCodebaseInputs = (values: { [key: string]: any }): { [key: string]: any } => {
+  if (values?.pipeline) {
+    const newPipeline: any = {
+      ...values.pipeline
+    }
+    if (newPipeline?.template?.templateInputs?.properties) {
+      delete newPipeline.template.templateInputs.properties
+    }
+    return newPipeline
+  } else {
+    const newValues: any = {
+      ...values
+    }
+    if (newValues?.template?.templateInputs?.properties) {
+      delete newValues.template.templateInputs.properties
+    }
+    return newValues
+  }
+}

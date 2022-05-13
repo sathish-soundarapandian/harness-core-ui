@@ -285,6 +285,7 @@ exports[`BuildStageSetupShell snapshot test initializes ok 1`] = `
                 class="bp3-card bp3-elevation-0 Card--card sectionCard"
               >
                 <form
+                  action="#"
                   class="FormikForm--main"
                 >
                   <div>
@@ -473,6 +474,7 @@ exports[`BuildStageSetupShell snapshot test initializes ok 1`] = `
                 class="bp3-card bp3-elevation-0 Card--card sectionCard"
               >
                 <form
+                  action="#"
                   class="FormikForm--main fields contentCard"
                 >
                   <div>

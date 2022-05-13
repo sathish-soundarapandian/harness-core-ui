@@ -66,7 +66,7 @@ import { TFMonaco } from './TFMonacoEditor'
 
 import TfVarFileList from './TFVarFileList'
 import { TFArtifactoryForm } from './TerraformArtifactoryForm'
-import { ConfigurationTypes, TerraformProps, TFFormData } from '../TerraformInterfaces'
+import { ConfigurationTypes, TerraformData, TerraformProps, TFFormData } from '../TerraformInterfaces'
 import { TerraformConfigStepOne } from './TerraformConfigFormStepOne'
 import { TerraformConfigStepTwo } from './TerraformConfigFormStepTwo'
 import { ConnectorTypes, ConnectorMap, getBuildPayload } from './TerraformConfigFormHelper'
@@ -464,7 +464,7 @@ export default function TerraformEditView(
                           )}
                           <div className={css.divider} />
                           <TfVarFileList
-                            formik={formik}
+                            formik={formik as FormikProps<TerraformData>}
                             isReadonly={readonly}
                             allowableTypes={allowableTypes}
                             setSelectedConnector={setSelectedConnector}
@@ -490,7 +490,7 @@ export default function TerraformEditView(
                                 return (
                                   <TFMonaco
                                     name="spec.configuration.spec.backendConfig.spec.content"
-                                    formik={formik}
+                                    formik={formik as FormikProps<unknown>}
                                     expressions={expressions}
                                     title={getString('cd.backEndConfig')}
                                   />
@@ -499,7 +499,7 @@ export default function TerraformEditView(
                             >
                               <TFMonaco
                                 name="spec.configuration.spec.backendConfig.spec.content"
-                                formik={formik}
+                                formik={formik as FormikProps<unknown>}
                                 expressions={expressions}
                                 title={getString('cd.backEndConfig')}
                               />

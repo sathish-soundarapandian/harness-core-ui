@@ -6,6 +6,7 @@ exports[`SelectOrCreatePipelineForm Rendering should open create pipeline modal 
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -127,6 +128,7 @@ exports[`SelectOrCreatePipelineForm Rendering should render SelectOrCreatePipeli
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

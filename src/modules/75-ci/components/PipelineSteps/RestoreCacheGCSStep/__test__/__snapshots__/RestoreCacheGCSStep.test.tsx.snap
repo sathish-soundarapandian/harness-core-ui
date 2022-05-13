@@ -6,6 +6,7 @@ exports[`Restore Cache GCS Step Edit View edit mode works 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -473,6 +474,7 @@ exports[`Restore Cache GCS Step Edit View renders runtime inputs 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -940,6 +942,7 @@ exports[`Restore Cache GCS Step Edit View should render edit view as new step 1`
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -1354,6 +1357,7 @@ exports[`Restore Cache GCS Step InputSet View should not render any fields 1`] =
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main removeBpPopoverWrapperTopMargin"
     >
       <div>
@@ -1390,6 +1394,7 @@ exports[`Restore Cache GCS Step InputSet View should render all fields 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main removeBpPopoverWrapperTopMargin"
     >
       <div>
@@ -2153,6 +2158,7 @@ exports[`Restore Cache GCS Step InputSet View should render properly 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main removeBpPopoverWrapperTopMargin"
     >
       <div>

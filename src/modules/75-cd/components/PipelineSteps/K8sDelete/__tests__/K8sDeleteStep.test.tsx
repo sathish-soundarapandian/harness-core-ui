@@ -179,7 +179,7 @@ describe('Test K8sDeleteStep', () => {
         ref={ref}
       />
     )
-    await act(() => ref.current?.submitForm())
+    await act(() => ref.current?.submitForm()!)
     expect(onUpdate).toHaveBeenCalledWith({
       identifier: 'Test_A',
       name: 'Test A',
@@ -198,7 +198,7 @@ describe('Test K8sDeleteStep', () => {
     //timeout validation on submit
     fireEvent.change(container.querySelector('input[value="12m"]') as HTMLElement, { target: { value: '' } })
 
-    await act(() => ref.current?.submitForm())
+    await act(() => ref.current?.submitForm()!)
     expect(queryByText('validation.timeout10SecMinimum')).toBeTruthy()
   })
 

@@ -6,8 +6,9 @@
  */
 
 import React from 'react'
-import { fireEvent, render } from '@testing-library/react'
+import { fireEvent, render, waitFor } from '@testing-library/react'
 import { Formik, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
 import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import connector from '@connectors/pages/connectors/__tests__/mocks/get-connector-mock.json'
 import type { AllNGVariables } from '@pipeline/utils/types'
@@ -32,8 +33,12 @@ jest.mock('services/cd-ng', () => ({
   })
 }))
 
-const getCommonProps = () => ({
-  path: '/dummypath',
+const getCommonProps = ({
+  path
+}: {
+  path?: string
+}): { path?: string; readonly?: boolean; viewType: StepViewType; maybeContainerClass?: string } => ({
+  path: path || '/dummypath',
   readonly: false,
   viewType: StepViewType.InputSet,
   maybeContainerClass: ''
@@ -63,18 +68,41 @@ const getPropsForVariables = (): PipelineInputSetFormProps => ({
     ] as AllNGVariables[],
     stages: []
   },
-  ...getCommonProps()
+  ...getCommonProps({})
 })
 
-const getPropsForCIStage = (): PipelineInputSetFormProps => ({
+const getPropsForCIStage = ({
+  connectorRefAsRuntime,
+  repoNameAsRuntime,
+  depthAsRuntime,
+  sslVerifyAsRuntime,
+  prCloneStrategyAsRuntime,
+  limitMemoryAndLimitCPUAsRuntime,
+  path
+}: {
+  connectorRefAsRuntime?: boolean
+  repoNameAsRuntime?: boolean
+  depthAsRuntime?: boolean
+  sslVerifyAsRuntime?: boolean
+  prCloneStrategyAsRuntime?: boolean
+  limitMemoryAndLimitCPUAsRuntime?: boolean
+  path?: string
+}): PipelineInputSetFormProps => ({
   originalPipeline: {
     name: 'TestPipeline',
     identifier: 'TestPipeline',
     properties: {
       ci: {
         codebase: {
-          connectorRef: 'testConnectorRef',
-          build: RUNTIME_INPUT_VALUE as any
+          connectorRef: connectorRefAsRuntime ? RUNTIME_INPUT_VALUE : 'testConnectorRef',
+          repoName: repoNameAsRuntime ? RUNTIME_INPUT_VALUE : 'repo',
+          build: RUNTIME_INPUT_VALUE as any,
+          ...(depthAsRuntime ? { depth: RUNTIME_INPUT_VALUE as any } : {}),
+          ...(sslVerifyAsRuntime ? { sslVerify: RUNTIME_INPUT_VALUE as any } : {}),
+          ...(prCloneStrategyAsRuntime ? { prCloneStrategy: RUNTIME_INPUT_VALUE as any } : {}),
+          ...(limitMemoryAndLimitCPUAsRuntime
+            ? { resources: { limits: { memory: RUNTIME_INPUT_VALUE, cpu: RUNTIME_INPUT_VALUE } } }
+            : {})
         }
       }
     },
@@ -97,15 +125,22 @@ const getPropsForCIStage = (): PipelineInputSetFormProps => ({
     properties: {
       ci: {
         codebase: {
-          connectorRef: 'testConnectorRef',
-          build: RUNTIME_INPUT_VALUE as any
-        }
+          ...(connectorRefAsRuntime ? { connectorRef: RUNTIME_INPUT_VALUE } : {}),
+          ...(repoNameAsRuntime ? { repoName: RUNTIME_INPUT_VALUE } : {}),
+          build: RUNTIME_INPUT_VALUE as any,
+          ...(depthAsRuntime ? { depth: RUNTIME_INPUT_VALUE } : {}),
+          ...(sslVerifyAsRuntime ? { sslVerify: RUNTIME_INPUT_VALUE } : {}),
+          ...(prCloneStrategyAsRuntime ? { prCloneStrategy: RUNTIME_INPUT_VALUE } : {}),
+          ...(limitMemoryAndLimitCPUAsRuntime
+            ? { resources: { limits: { memory: RUNTIME_INPUT_VALUE, cpu: RUNTIME_INPUT_VALUE } } }
+            : {})
+        } as any // codebase in template does not require connectorRef if connectorRef is not a runtime input
       }
     },
     stages: [],
     delegateSelectors: ['random']
   },
-  ...getCommonProps()
+  ...getCommonProps({ path })
 })
 
 const getPropsForCDStage = (
@@ -258,7 +293,7 @@ const getPropsForCDStage = (
       }
     ]
   },
-  ...getCommonProps()
+  ...getCommonProps({})
 })
 
 describe('PIPELINE VARIABLES', () => {
@@ -300,7 +335,7 @@ const TEST_PATH = routes.toTriggersWizardPage({ ...accountPathProps, ...triggerP
 
 describe('CI enabled', () => {
   test('CI present in one of the stages', () => {
-    const props = getPropsForCIStage()
+    const props = getPropsForCIStage({})
     const { container, getByText } = render(
       <Formik initialValues={{}} formName="pipelineInputSetFormTest" onSubmit={jest.fn()}>
         {() => (
@@ -350,9 +385,20 @@ describe('CI enabled', () => {
   })
 
   test('CI present with triggers', async () => {
-    const props = getPropsForCIStage()
+    connector.data.connector.type = 'Gitlab'
+    jest.mock('services/cd-ng', () => ({
+      useGetConnector: jest.fn().mockImplementation(() => {
+        return { data: connector, refetch: jest.fn(), error: null, loading: false }
+      })
+    }))
+
+    const props = getPropsForCIStage({})
     const { container, getByText } = render(
-      <Formik initialValues={{}} formName="pipelineInputSetFormTest" onSubmit={jest.fn()}>
+      <Formik
+        initialValues={{ properties: { ci: { codebase: { connectorRef: 'account.test' } } } }}
+        formName="pipelineInputSetFormTest"
+        onSubmit={jest.fn()}
+      >
         {() => (
           <TestWrapper
             // path params for giving triggerIdentifier
@@ -387,7 +433,7 @@ describe('CI enabled', () => {
     expect(container).toMatchSnapshot('CI codebase input set form with triggers')
   })
   test('CI READONLY mode', () => {
-    const props = getPropsForCIStage()
+    const props = getPropsForCIStage({})
     const { container } = render(
       <Formik initialValues={{}} formName="pipelineInputSetFormTest" onSubmit={jest.fn()}>
         {() => (
@@ -401,6 +447,93 @@ describe('CI enabled', () => {
     expect(container).toMatchSnapshot('CI stage readonly mode')
   })
 
+  test('CI with ConnectorRef as runtime input', () => {
+    // with connectoRef as runtime input, we will prompt for Git Branch, Git Tag, and Git Pull Request
+
+    const props = getPropsForCIStage({ connectorRefAsRuntime: true })
+    const { container } = render(
+      <Formik initialValues={{}} formName="pipelineInputSetFormTest" onSubmit={jest.fn()}>
+        {() => (
+          <TestWrapper>
+            <PipelineInputSetForm {...props} readonly={true} />
+          </TestWrapper>
+        )}
+      </Formik>
+    )
+    expect(container).toMatchSnapshot('CI stage expects Connector and Repo Name')
+  })
+
+  test('Update repoName runtime input with values', async () => {
+    connector.data.connector.type = 'Gitlab'
+    jest.mock('services/cd-ng', () => ({
+      useGetConnector: jest.fn().mockImplementation(() => {
+        return { data: connector, refetch: jest.fn(), error: null, loading: false }
+      })
+    }))
+    // with connectoRef as runtime input, we will prompt for Git Branch, Git Tag, and Git Pull Request
+    const props = getPropsForCIStage({ connectorRefAsRuntime: true, repoNameAsRuntime: true, path: 'pipeline' })
+    const { container } = render(
+      <Formik
+        initialValues={{ pipeline: { properties: { ci: { codebase: { connectorRef: 'account.gitlab' } } } } }}
+        formName="pipelineInputSetFormTest"
+        onSubmit={jest.fn()}
+      >
+        {() => (
+          <TestWrapper>
+            <PipelineInputSetForm {...props} readonly={true} />
+          </TestWrapper>
+        )}
+      </Formik>
+    )
+
+    setFieldValue({
+      container,
+      type: InputTypes.TEXTFIELD,
+      fieldId: 'pipeline.properties.ci.codebase.repoName',
+      value: 'reponamevalue'
+    })
+
+    // since the connector is not an account type due to the dummy connector, we should not see the whole repo below
+    // Need to refactor so that each test takes its own connector
+    await waitFor(() => expect(container.querySelector('[class*="predefinedValue"')).toBeFalsy())
+  })
+
+  test('Render CI Codebase all runtime inputs', async () => {
+    connector.data.connector.type = 'Gitlab'
+    jest.mock('services/cd-ng', () => ({
+      useGetConnector: jest.fn().mockImplementation(() => {
+        return { data: connector, refetch: jest.fn(), error: null, loading: false }
+      })
+    }))
+    // with connectoRef as runtime input, we will prompt for Git Branch, Git Tag, and Git Pull Request
+    const props = getPropsForCIStage({
+      connectorRefAsRuntime: true,
+      repoNameAsRuntime: true,
+      depthAsRuntime: true,
+      sslVerifyAsRuntime: true,
+      prCloneStrategyAsRuntime: true,
+      limitMemoryAndLimitCPUAsRuntime: true,
+      path: 'pipeline'
+    })
+    const { container } = render(
+      <Formik
+        initialValues={{ pipeline: { properties: { ci: { codebase: { connectorRef: 'account.gitlab' } } } } }}
+        formName="pipelineInputSetFormTest"
+        onSubmit={jest.fn()}
+      >
+        {() => (
+          <TestWrapper>
+            <PipelineInputSetForm {...props} readonly={true} />
+          </TestWrapper>
+        )}
+      </Formik>
+    )
+
+    // since the connector is not an account type due to the dummy connector, we should not see the whole repo below
+    // Need to refactor so that each test takes its own connector
+    expect(container).toMatchSnapshot('all inputs as runtime inputs and prompts for values')
+  })
+
   test('PR Number build radio option should not be visible for CodeCommit type connector', () => {
     connector.data.connector.type = 'Codecommit'
     jest.mock('services/cd-ng', () => ({
@@ -408,7 +541,7 @@ describe('CI enabled', () => {
         return { data: connector, refetch: jest.fn(), error: null, loading: false }
       })
     }))
-    const props = getPropsForCIStage()
+    const props = getPropsForCIStage({})
     const { container } = render(
       <Formik initialValues={{}} formName="pipelineInputSetFormTest" onSubmit={jest.fn()}>
         {() => (
@@ -428,7 +561,7 @@ describe('CI enabled', () => {
     jest.spyOn(cdngServices, 'useGetConnector').mockImplementation((): any => {
       return { data: {}, error: null, loading: true, refetch: jest.fn() }
     })
-    const props = getPropsForCIStage()
+    const props = getPropsForCIStage({})
     const { container } = render(
       <Formik initialValues={{}} formName="pipelineInputSetFormTest" onSubmit={jest.fn()}>
         {() => (

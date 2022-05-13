@@ -62,7 +62,7 @@ describe('<Map /> tests', () => {
   })
 
   test('Readonly mode works', async () => {
-    const { container, getByTestId } = render(<TestComponent readonly={true} />)
+    const { container, getByTestId } = render(<TestComponent readonly={true} initialValues={{}} />)
     expect(container.querySelector('[data-testid="add-test"]')).toBeNull()
     expect(container.querySelector('[data-testid="remove-test-[0]"]')).toBeNull()
     expect((getByTestId('key-test-[0]') as HTMLInputElement).disabled).toBeTruthy()
@@ -71,7 +71,7 @@ describe('<Map /> tests', () => {
   })
 
   test('Should render properly', () => {
-    const { container } = render(<TestComponent />)
+    const { container } = render(<TestComponent initialValues={{}} />)
     expect(container).toMatchSnapshot()
   })
 })

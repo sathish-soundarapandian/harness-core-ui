@@ -141,8 +141,7 @@ describe('EnvironmentDialog', () => {
             color: '#0063F7',
             type: 'PreProduction',
             deleted: false,
-            tags: {},
-            version: 1
+            tags: {}
           }
         ]
       })

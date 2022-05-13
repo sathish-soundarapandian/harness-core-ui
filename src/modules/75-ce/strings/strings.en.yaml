@@ -695,6 +695,8 @@ perspectives:
       addRuleText: 'Add rule'
       selectOperator: 'SELECT OPERATOR'
       selectValuesText: 'SELECT VALUES'
+      selectAll: 'Select all'
+      chooseOperand: 'Choose Operand'
     preview:
       groupBy: 'Group By'
       title: '{{$.executionStrategy.preview}}'

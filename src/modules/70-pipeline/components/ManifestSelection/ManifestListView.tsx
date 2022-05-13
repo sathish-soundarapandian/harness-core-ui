@@ -162,6 +162,9 @@ function ManifestListView({
 
   const addNewManifest = (): void => {
     setEditIndex(listOfManifests.length)
+    setSelectedManifest(
+      allowedManifestTypes[deploymentType]?.length === 1 ? allowedManifestTypes[deploymentType][0] : null
+    )
     showConnectorModal()
   }
 

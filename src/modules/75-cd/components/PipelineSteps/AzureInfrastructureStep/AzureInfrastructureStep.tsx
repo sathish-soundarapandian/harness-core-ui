@@ -30,6 +30,7 @@ import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/compon
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import {
+  AzureSubscriptionDTO,
   getAzureClustersPromise,
   getAzureResourceGroupsBySubscriptionPromise,
   getAzureSubscriptionsPromise,
@@ -134,12 +135,18 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
   })
 
   useEffect(() => {
-    const subscriptionValues = [] as SelectOption[]
-    defaultTo(subscriptionsData?.data?.subscriptions, []).map(sub =>
-      subscriptionValues.push({ label: `${sub.subscriptionName}: ${sub.subscriptionId}`, value: sub.subscriptionId })
+    setSubscriptions(
+      defaultTo(subscriptionsData?.data?.subscriptions, []).reduce(
+        (subscriptionValues: SelectOption[], subscription: AzureSubscriptionDTO) => {
+          subscriptionValues.push({
+            label: `${subscription.subscriptionName}: ${subscription.subscriptionId}`,
+            value: subscription.subscriptionId
+          })
+          return subscriptionValues
+        },
+        []
+      )
     )
-
-    setSubscriptions(subscriptionValues as SelectOption[])
   }, [subscriptionsData])
 
   useEffect(() => {
@@ -544,18 +551,19 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
   })
 
   React.useEffect(() => {
-    /* istanbul ignore else */
-    if (!loadingSubscriptions) {
-      const subscriptionValues = [] as SelectOption[]
-      defaultTo(subscriptionsData?.data?.subscriptions, []).map(sub =>
-        subscriptionValues.push({ label: `${sub.subscriptionName}: ${sub.subscriptionId}`, value: sub.subscriptionId })
-      )
+    const subscriptionValues = [] as SelectOption[]
+    defaultTo(subscriptionsData?.data?.subscriptions, []).map(sub =>
+      subscriptionValues.push({ label: `${sub.subscriptionName}: ${sub.subscriptionId}`, value: sub.subscriptionId })
+    )
 
-      setSubscriptions(subscriptionValues as SelectOption[])
-      formikRef?.current?.setFieldValue('subscriptionId', getSubscription(initialValues))
-    }
+    setSubscriptions(subscriptionValues as SelectOption[])
+  }, [subscriptionsData])
+
+  useEffect(() => {
+    formikRef?.current?.setFieldValue('subscriptionId', getSubscription(initialValues))
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [subscriptionsData, loadingSubscriptions])
+  }, [subscriptions])
 
   React.useEffect(() => {
     if (initialValues.connectorRef && getMultiTypeFromValue(initialValues.connectorRef) === MultiTypeInputType.FIXED) {
@@ -706,8 +714,15 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
 
   React.useEffect(() => {
-    subscribeForm({ tab: DeployTabs.INFRASTRUCTURE, form: formikRef })
-    return () => unSubscribeForm({ tab: DeployTabs.INFRASTRUCTURE, form: formikRef })
+    subscribeForm({
+      tab: DeployTabs.INFRASTRUCTURE,
+      form: formikRef as React.MutableRefObject<FormikProps<unknown> | null>
+    })
+    return () =>
+      unSubscribeForm({
+        tab: DeployTabs.INFRASTRUCTURE,
+        form: formikRef as React.MutableRefObject<FormikProps<unknown> | null>
+      })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

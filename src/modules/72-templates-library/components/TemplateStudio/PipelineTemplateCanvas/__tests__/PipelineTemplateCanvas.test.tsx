@@ -6,74 +6,21 @@
  */
 
 import React from 'react'
-import { act, fireEvent, render } from '@testing-library/react'
-import produce from 'immer'
-import { set } from 'lodash-es'
+import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
-import { TemplateType } from '@templates-library/utils/templatesUtils'
-import { getTemplateContextMock } from '@templates-library/components/TemplateStudio/__tests__/stateMock'
-import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
-import { DrawerTypes as TemplateDrawerTypes } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateActions'
-import { PipelineTemplateCanvasWithRef } from '../PipelineTemplateCanvas'
+import { PipelineTemplateCanvasWithRef } from '@templates-library/components/TemplateStudio/PipelineTemplateCanvas/PipelineTemplateCanvas'
 
 jest.mock('@pipeline/components/PipelineStudio/StageBuilder/StageBuilder', () => () => {
-  const {
-    state: { pipeline },
-    updatePipeline
-  } = usePipelineContext()
-  return (
-    <div className="stage-builder-mock">
-      <button
-        onClick={() => {
-          const updatedPipeline = produce(pipeline, draft => {
-            set(draft, 'stages[0].stage.spec.serviceConfig.serviceRef', 'Pipeline')
-          })
-          updatePipeline(updatedPipeline)
-        }}
-      >
-        Update Pipeline
-      </button>
-    </div>
-  )
+  return <div className="stage-builder-mock" />
 })
 
-describe('<PipelineTemplateCanvas/> tests', () => {
-  test('should call updateTemplate with updated template', async () => {
-    const templateContext = getTemplateContextMock(TemplateType.Pipeline)
-    const { container, getByRole } = render(
+describe('<PipelineTemplateCanvasWrapper/> tests', () => {
+  test('should match snapshot', () => {
+    const { container } = render(
       <TestWrapper>
-        <TemplateContext.Provider value={templateContext}>
-          <PipelineTemplateCanvasWithRef />
-        </TemplateContext.Provider>
+        <PipelineTemplateCanvasWithRef />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
-    const updatePipelineButton = getByRole('button', { name: 'Update Pipeline' })
-    await act(async () => {
-      fireEvent.click(updatePipelineButton)
-    })
-    const updatedTemplate = produce(templateContext.state.template, draft => {
-      set(draft, 'spec.stages[0].stage.spec.serviceConfig.serviceRef', 'Pipeline')
-    })
-    expect(templateContext.updateTemplate).toBeCalledWith(updatedTemplate)
-  })
-
-  test('should open templates variables drawer on a custom window event', async () => {
-    const templateContext = getTemplateContextMock(TemplateType.Pipeline)
-    render(
-      <TestWrapper>
-        <TemplateContext.Provider value={templateContext}>
-          <PipelineTemplateCanvasWithRef />
-        </TemplateContext.Provider>
-      </TestWrapper>
-    )
-    window.dispatchEvent(new CustomEvent('OPEN_PIPELINE_TEMPLATE_RIGHT_DRAWER', { detail: DrawerTypes.TemplateInputs }))
-    expect(templateContext.updateTemplateView).toBeCalledWith({
-      drawerData: { type: TemplateDrawerTypes.TemplateInputs },
-      isDrawerOpened: true,
-      isYamlEditable: false
-    })
   })
 })

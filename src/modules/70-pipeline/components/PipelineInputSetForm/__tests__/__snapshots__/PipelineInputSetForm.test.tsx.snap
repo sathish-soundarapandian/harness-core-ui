@@ -240,10 +240,21 @@ exports[`CI enabled CI READONLY mode: CI stage readonly mode 1`] = `
               class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
             >
               <div
-                class="Layout--horizontal Layout--layout-spacing-huge StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-start StyledProps--padding-top-small StyledProps--padding-left-xsmall StyledProps--padding-bottom-xsmall StyledProps--margin-left-large"
+                class="Text--withDocsTooltip"
+                data-tooltip-id="ciCodebaseBuildType"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                >
+                  filters.executions.buildType
+                </p>
+              </div>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-start StyledProps--padding-top-small StyledProps--padding-left-xsmall StyledProps--padding-bottom-xsmall StyledProps--margin-left-large"
               >
                 <label
                   class="bp3-control bp3-radio bp3-disabled StyledProps--font Radio--radio StyledProps--main StyledProps--font-variation-form-label"
+                  style="width: 110px;"
                 >
                   <input
                     disabled=""
@@ -255,7 +266,8 @@ exports[`CI enabled CI READONLY mode: CI stage readonly mode 1`] = `
                   gitBranch
                 </label>
                 <label
-                  class="bp3-control bp3-radio bp3-disabled StyledProps--font Radio--radio StyledProps--main StyledProps--font-variation-form-label"
+                  class="bp3-control bp3-radio bp3-disabled StyledProps--font Radio--radio StyledProps--main StyledProps--margin-left-huge StyledProps--font-variation-form-label"
+                  style="width: 90px;"
                 >
                   <input
                     disabled=""
@@ -267,7 +279,8 @@ exports[`CI enabled CI READONLY mode: CI stage readonly mode 1`] = `
                   gitTag
                 </label>
                 <label
-                  class="bp3-control bp3-radio bp3-disabled StyledProps--font Radio--radio StyledProps--main StyledProps--font-variation-form-label"
+                  class="bp3-control bp3-radio bp3-disabled StyledProps--font Radio--radio StyledProps--main StyledProps--margin-left-huge StyledProps--font-variation-form-label"
+                  style="width: 110px;"
                 >
                   <input
                     disabled=""
@@ -328,10 +341,21 @@ exports[`CI enabled CI present in one of the stages: CI codebase input set form 
               class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
             >
               <div
-                class="Layout--horizontal Layout--layout-spacing-huge StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-start StyledProps--padding-top-small StyledProps--padding-left-xsmall StyledProps--padding-bottom-xsmall StyledProps--margin-left-large"
+                class="Text--withDocsTooltip"
+                data-tooltip-id="ciCodebaseBuildType"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                >
+                  filters.executions.buildType
+                </p>
+              </div>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-start StyledProps--padding-top-small StyledProps--padding-left-xsmall StyledProps--padding-bottom-xsmall StyledProps--margin-left-large"
               >
                 <label
                   class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--font-variation-form-label"
+                  style="width: 110px;"
                 >
                   <input
                     type="radio"
@@ -342,7 +366,8 @@ exports[`CI enabled CI present in one of the stages: CI codebase input set form 
                   gitBranch
                 </label>
                 <label
-                  class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--font-variation-form-label"
+                  class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--margin-left-huge StyledProps--font-variation-form-label"
+                  style="width: 90px;"
                 >
                   <input
                     type="radio"
@@ -353,7 +378,8 @@ exports[`CI enabled CI present in one of the stages: CI codebase input set form 
                   gitTag
                 </label>
                 <label
-                  class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--font-variation-form-label"
+                  class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--margin-left-huge StyledProps--font-variation-form-label"
+                  style="width: 110px;"
                 >
                   <input
                     type="radio"
@@ -511,10 +537,21 @@ exports[`CI enabled CI present with triggers: CI codebase input set form with tr
               class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
             >
               <div
-                class="Layout--horizontal Layout--layout-spacing-huge StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-start StyledProps--padding-top-small StyledProps--padding-left-xsmall StyledProps--padding-bottom-xsmall StyledProps--margin-left-large"
+                class="Text--withDocsTooltip"
+                data-tooltip-id="ciCodebaseBuildType"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                >
+                  filters.executions.buildType
+                </p>
+              </div>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-start StyledProps--padding-top-small StyledProps--padding-left-xsmall StyledProps--padding-bottom-xsmall StyledProps--margin-left-large"
               >
                 <label
                   class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--font-variation-form-label"
+                  style="width: 110px;"
                 >
                   <input
                     type="radio"
@@ -525,7 +562,8 @@ exports[`CI enabled CI present with triggers: CI codebase input set form with tr
                   gitBranch
                 </label>
                 <label
-                  class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--font-variation-form-label"
+                  class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--margin-left-huge StyledProps--font-variation-form-label"
+                  style="width: 90px;"
                 >
                   <input
                     type="radio"
@@ -536,7 +574,8 @@ exports[`CI enabled CI present with triggers: CI codebase input set form with tr
                   gitTag
                 </label>
                 <label
-                  class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--font-variation-form-label"
+                  class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--margin-left-huge StyledProps--font-variation-form-label"
+                  style="width: 110px;"
                 >
                   <input
                     type="radio"
@@ -658,6 +697,129 @@ exports[`CI enabled CI present with triggers: CI codebase input set form with tr
 </div>
 `;
 
+exports[`CI enabled CI with ConnectorRef as runtime input: CI stage expects Connector and Repo Name 1`] = `
+<div>
+  <div
+    class="OverlaySpinner--overlaySpinner"
+  >
+    <div
+      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container"
+    >
+      <div
+        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-medium StyledProps--padding-left-large"
+      >
+        <div
+          class="Text--withDocsTooltip"
+          data-tooltip-id="ciCodebase"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black100 StyledProps--font-weight-semi-bold"
+            data-name="ci-codebase-title"
+          >
+            ciCodebase
+          </p>
+        </div>
+      </div>
+      <div
+        class="topAccordion"
+      >
+        <div
+          class="accordionSummary"
+        >
+          <div
+            class="nestedAccordions"
+          >
+            <div
+              class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+            >
+              <div
+                class="StyledProps--font StyledProps--main"
+                style="width: 50%;"
+              >
+                <div
+                  class="connectorLabel"
+                >
+                  <div
+                    class="StyledProps--font StyledProps--main"
+                    style="margin-bottom: 5px;"
+                  >
+                    <span
+                      class="Tooltip--acenter bp3-label"
+                      data-tooltip-id="pipelineInputSetFormTest_/dummypath.properties.ci.codebase.connectorRef"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
+                      >
+                        connector
+                      </p>
+                    </span>
+                  </div>
+                  <div
+                    style="display: flex; align-items: center;"
+                  >
+                    <div
+                      class="bp3-form-group"
+                      style="margin-bottom: 0px;"
+                    >
+                      <div
+                        class="bp3-form-content"
+                      >
+                        <div
+                          class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
+                          style="width: 385px;"
+                        >
+                          <button
+                            class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
+                            data-testid="cr-field-/dummypath.properties.ci.codebase.connectorRef"
+                            disabled=""
+                            style="width: 385px;"
+                            tabindex="-1"
+                            type="button"
+                          >
+                            <span
+                              class="bp3-button-text"
+                            >
+                              <span
+                                class="placeholder"
+                              >
+                                connectors.selectConnector
+                              </span>
+                            </span>
+                            <span
+                              class="bp3-icon bp3-icon-chevron-down StyledProps--main"
+                              icon="chevron-down"
+                            >
+                              <svg
+                                data-icon="chevron-down"
+                                height="14"
+                                viewBox="0 0 16 16"
+                                width="14"
+                              >
+                                <desc>
+                                  chevron-down
+                                </desc>
+                                <path
+                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`CI enabled PR Number build radio option should not be visible for CodeCommit type connector: PR Number build radio option should not be visible for CodeCommit type connector 1`] = `
 <div>
   <div
@@ -694,10 +856,21 @@ exports[`CI enabled PR Number build radio option should not be visible for CodeC
               class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
             >
               <div
-                class="Layout--horizontal Layout--layout-spacing-huge StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-start StyledProps--padding-top-small StyledProps--padding-left-xsmall StyledProps--padding-bottom-xsmall StyledProps--margin-left-large"
+                class="Text--withDocsTooltip"
+                data-tooltip-id="ciCodebaseBuildType"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                >
+                  filters.executions.buildType
+                </p>
+              </div>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-start StyledProps--padding-top-small StyledProps--padding-left-xsmall StyledProps--padding-bottom-xsmall StyledProps--margin-left-large"
               >
                 <label
                   class="bp3-control bp3-radio bp3-disabled StyledProps--font Radio--radio StyledProps--main StyledProps--font-variation-form-label"
+                  style="width: 110px;"
                 >
                   <input
                     disabled=""
@@ -709,7 +882,8 @@ exports[`CI enabled PR Number build radio option should not be visible for CodeC
                   gitBranch
                 </label>
                 <label
-                  class="bp3-control bp3-radio bp3-disabled StyledProps--font Radio--radio StyledProps--main StyledProps--font-variation-form-label"
+                  class="bp3-control bp3-radio bp3-disabled StyledProps--font Radio--radio StyledProps--main StyledProps--margin-left-huge StyledProps--font-variation-form-label"
+                  style="width: 90px;"
                 >
                   <input
                     disabled=""
@@ -725,6 +899,638 @@ exports[`CI enabled PR Number build radio option should not be visible for CodeC
                 class="StyledProps--font StyledProps--main"
                 style="width: 50%;"
               />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`CI enabled Render CI Codebase all runtime inputs: all inputs as runtime inputs and prompts for values 1`] = `
+<div>
+  <div
+    class="OverlaySpinner--overlaySpinner"
+  >
+    <div
+      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container"
+    >
+      <div
+        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-medium StyledProps--padding-left-large"
+      >
+        <div
+          class="Text--withDocsTooltip"
+          data-tooltip-id="ciCodebase"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black100 StyledProps--font-weight-semi-bold"
+            data-name="ci-codebase-title"
+          >
+            ciCodebase
+          </p>
+        </div>
+      </div>
+      <div
+        class="topAccordion"
+      >
+        <div
+          class="accordionSummary"
+        >
+          <div
+            class="nestedAccordions"
+          >
+            <div
+              class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+            >
+              <div
+                class="StyledProps--font StyledProps--main"
+                style="width: 50%;"
+              >
+                <div
+                  class="connectorLabel"
+                >
+                  <div
+                    class="StyledProps--font StyledProps--main"
+                    style="margin-bottom: 5px;"
+                  >
+                    <span
+                      class="Tooltip--acenter bp3-label"
+                      data-tooltip-id="pipelineInputSetFormTest_pipeline.properties.ci.codebase.connectorRef"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
+                      >
+                        connector
+                      </p>
+                    </span>
+                  </div>
+                  <div
+                    style="display: flex; align-items: center;"
+                  >
+                    <div
+                      class="bp3-form-group"
+                      style="margin-bottom: 0px;"
+                    >
+                      <div
+                        class="bp3-form-content"
+                      >
+                        <div
+                          class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
+                          style="width: 385px;"
+                        >
+                          <button
+                            class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
+                            data-testid="cr-field-pipeline.properties.ci.codebase.connectorRef"
+                            disabled=""
+                            style="width: 385px;"
+                            tabindex="-1"
+                            type="button"
+                          >
+                            <span
+                              class="bp3-button-text"
+                            >
+                              <div
+                                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main selectWrapper StyledProps--flex StyledProps--flex-distribution-space-between"
+                              >
+                                <span
+                                  class="bp3-popover-wrapper"
+                                >
+                                  <span
+                                    class="bp3-popover-target Text--targetClass"
+                                  >
+                                    <p
+                                      class="StyledProps--font StyledProps--main label StyledProps--color StyledProps--color-grey800"
+                                      tabindex="0"
+                                    >
+                                      Sample
+                                    </p>
+                                  </span>
+                                </span>
+                                <div
+                                  class="rightStatus"
+                                >
+                                  <span
+                                    class="bp3-icon bp3-icon-full-circle StyledProps--main status redStatus"
+                                    data-testid="crf-status"
+                                    icon="full-circle"
+                                  >
+                                    <svg
+                                      data-icon="full-circle"
+                                      height="6"
+                                      viewBox="0 0 16 16"
+                                      width="6"
+                                    >
+                                      <desc>
+                                        full-circle
+                                      </desc>
+                                      <path
+                                        d="M8 0a8 8 0 100 16A8 8 0 108 0z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                  <span
+                                    class="Tag--main"
+                                  >
+                                    <span
+                                      class="bp3-tag bp3-minimal"
+                                      id="tag"
+                                    >
+                                      <span
+                                        class="bp3-text-overflow-ellipsis bp3-fill"
+                                      >
+                                        account
+                                      </span>
+                                    </span>
+                                  </span>
+                                </div>
+                              </div>
+                            </span>
+                            <span
+                              class="bp3-icon bp3-icon-chevron-down StyledProps--main"
+                              icon="chevron-down"
+                            >
+                              <svg
+                                data-icon="chevron-down"
+                                height="14"
+                                viewBox="0 0 16 16"
+                                width="14"
+                              >
+                                <desc>
+                                  chevron-down
+                                </desc>
+                                <path
+                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="StyledProps--font StyledProps--main"
+                style="width: 50%;"
+              >
+                <div>
+                  <div
+                    class="Text--withDocsTooltip"
+                    data-tooltip-id="rightBarForm_repoName"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main inpLabel StyledProps--font-variation-form-label"
+                    >
+                      common.repositoryName
+                    </p>
+                  </div>
+                  <div
+                    style="display: flex; align-items: center;"
+                  >
+                    <div
+                      class="bp3-form-group bp3-disabled"
+                      style="margin-bottom: 0px; flex-grow: 1;"
+                    >
+                      
+                      <div
+                        class="bp3-form-content"
+                      >
+                        <div
+                          class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
+                        >
+                          <div
+                            class="bp3-input-group bp3-disabled MultiTypeInput--input"
+                          >
+                            <input
+                              autocomplete="off"
+                              class="bp3-input"
+                              disabled=""
+                              name="pipeline.properties.ci.codebase.repoName"
+                              type="text"
+                              value=""
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="ciCodebaseBuildType"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                >
+                  filters.executions.buildType
+                </p>
+              </div>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-start StyledProps--padding-top-small StyledProps--padding-left-xsmall StyledProps--padding-bottom-xsmall StyledProps--margin-left-large"
+              >
+                <label
+                  class="bp3-control bp3-radio bp3-disabled StyledProps--font Radio--radio StyledProps--main StyledProps--font-variation-form-label"
+                  style="width: 110px;"
+                >
+                  <input
+                    disabled=""
+                    type="radio"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  gitBranch
+                </label>
+                <label
+                  class="bp3-control bp3-radio bp3-disabled StyledProps--font Radio--radio StyledProps--main StyledProps--margin-left-huge StyledProps--font-variation-form-label"
+                  style="width: 90px;"
+                >
+                  <input
+                    disabled=""
+                    type="radio"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  gitTag
+                </label>
+                <label
+                  class="bp3-control bp3-radio bp3-disabled StyledProps--font Radio--radio StyledProps--main StyledProps--margin-left-huge StyledProps--font-variation-form-label"
+                  style="width: 110px;"
+                >
+                  <input
+                    disabled=""
+                    type="radio"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  pipeline.gitPullRequest
+                </label>
+              </div>
+              <div
+                class="StyledProps--font StyledProps--main"
+                style="width: 50%;"
+              />
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="advanced"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                >
+                  advancedTitle
+                </p>
+              </div>
+              <div
+                class="StyledProps--font StyledProps--main bottomMargin3"
+                style="width: 50%;"
+              >
+                <div>
+                  <div
+                    class="Layout--horizontal StyledProps--main inpLabel"
+                    style="display: flex; align-items: baseline;"
+                  >
+                    <div
+                      class="Text--withDocsTooltip"
+                      data-tooltip-id="depth"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
+                      >
+                        pipeline.depth
+                      </p>
+                    </div>
+                     
+                  </div>
+                  <div
+                    style="display: flex; align-items: center;"
+                  >
+                    <div
+                      class="bp3-form-group bp3-disabled"
+                      style="margin-bottom: 0px; flex-grow: 1;"
+                    >
+                      
+                      <div
+                        class="bp3-form-content"
+                      >
+                        <div
+                          class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
+                        >
+                          <div
+                            class="bp3-input-group bp3-disabled MultiTypeInput--input"
+                          >
+                            <input
+                              autocomplete="off"
+                              class="bp3-input"
+                              disabled=""
+                              name="pipeline.properties.ci.codebase.depth"
+                              type="number"
+                              value=""
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="StyledProps--font StyledProps--main bottomMargin3"
+                style="width: 50%;"
+              >
+                <div>
+                  <div
+                    class="Layout--horizontal StyledProps--main inpLabel"
+                    style="display: flex; align-items: baseline;"
+                  >
+                    <div
+                      class="Text--withDocsTooltip"
+                      data-tooltip-id="sslVerify"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                      >
+                        pipeline.sslVerify
+                      </p>
+                    </div>
+                     
+                  </div>
+                  <div
+                    style="display: flex; align-items: center;"
+                  >
+                    <div
+                      class="bp3-form-group bp3-disabled"
+                      style="margin-bottom: 0px; flex-grow: 1;"
+                    >
+                      
+                      <div
+                        class="bp3-form-content"
+                      >
+                        <div
+                          class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
+                        >
+                          <div
+                            class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
+                          >
+                            <div
+                              class="bp3-popover-target"
+                            >
+                              <div
+                                class="bp3-input-group bp3-disabled"
+                              >
+                                <input
+                                  autocomplete="off"
+                                  class="bp3-input"
+                                  disabled=""
+                                  name="pipeline.properties.ci.codebase.sslVerify"
+                                  placeholder="select"
+                                  style="padding-right: 0px;"
+                                  type="text"
+                                  value=""
+                                />
+                                <span
+                                  class="bp3-input-action"
+                                >
+                                  <span
+                                    class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                                    icon="chevron-down"
+                                  >
+                                    <svg
+                                      data-icon="chevron-down"
+                                      height="14"
+                                      viewBox="0 0 16 16"
+                                      width="14"
+                                    >
+                                      <desc>
+                                        chevron-down
+                                      </desc>
+                                      <path
+                                        d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="StyledProps--font StyledProps--main bottomMargin3"
+                style="width: 50%;"
+              >
+                <div>
+                  <div
+                    class="Layout--horizontal StyledProps--main inpLabel"
+                    style="display: flex; align-items: baseline;"
+                  >
+                    <div
+                      class="Text--withDocsTooltip"
+                      data-tooltip-id="prCloneStrategy"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                      >
+                        pipeline.ciCodebase.prCloneStrategy
+                      </p>
+                    </div>
+                     
+                  </div>
+                  <div
+                    style="display: flex; align-items: center;"
+                  >
+                    <div
+                      class="bp3-form-group bp3-disabled"
+                      style="margin-bottom: 0px; flex-grow: 1;"
+                    >
+                      
+                      <div
+                        class="bp3-form-content"
+                      >
+                        <div
+                          class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
+                        >
+                          <div
+                            class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
+                          >
+                            <div
+                              class="bp3-popover-target"
+                            >
+                              <div
+                                class="bp3-input-group bp3-disabled"
+                              >
+                                <input
+                                  autocomplete="off"
+                                  class="bp3-input"
+                                  disabled=""
+                                  name="pipeline.properties.ci.codebase.prCloneStrategy"
+                                  placeholder="select"
+                                  style="padding-right: 0px;"
+                                  type="text"
+                                  value=""
+                                />
+                                <span
+                                  class="bp3-input-action"
+                                >
+                                  <span
+                                    class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                                    icon="chevron-down"
+                                  >
+                                    <svg
+                                      data-icon="chevron-down"
+                                      height="14"
+                                      viewBox="0 0 16 16"
+                                      width="14"
+                                    >
+                                      <desc>
+                                        chevron-down
+                                      </desc>
+                                      <path
+                                        d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                        fill-rule="evenodd"
+                                      />
+                                    </svg>
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main bottomMargin3"
+                style="width: 50%;"
+              >
+                <div
+                  class="Text--withDocsTooltip"
+                  data-tooltip-id="setContainerResources"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  >
+                    pipelineSteps.setContainerResources
+                  </p>
+                </div>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                >
+                  <div
+                    style="flex-grow: 1; flex-basis: 50%;"
+                  >
+                    <div
+                      class="Layout--horizontal StyledProps--main"
+                      style="display: flex; align-items: baseline;"
+                    >
+                      <div
+                        class="Text--withDocsTooltip"
+                        data-tooltip-id="limitMemory"
+                      >
+                        <p
+                          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                        >
+                          pipelineSteps.limitMemoryLabel
+                        </p>
+                      </div>
+                       
+                    </div>
+                    <div
+                      style="display: flex; align-items: center;"
+                    >
+                      <div
+                        class="bp3-form-group bp3-disabled"
+                        style="margin-bottom: 0px; flex-grow: 1;"
+                      >
+                        
+                        <div
+                          class="bp3-form-content"
+                        >
+                          <div
+                            class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
+                          >
+                            <div
+                              class="bp3-input-group bp3-disabled MultiTypeInput--input"
+                            >
+                              <input
+                                autocomplete="off"
+                                class="bp3-input"
+                                disabled=""
+                                name="pipeline.properties.ci.codebase.resources.limits.memory"
+                                type="text"
+                                value=""
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style="flex-grow: 1; flex-basis: 50%;"
+                  >
+                    <div
+                      class="Layout--horizontal StyledProps--main"
+                      style="display: flex; align-items: baseline;"
+                    >
+                      <div
+                        class="Text--withDocsTooltip"
+                        data-tooltip-id="limitCPULabel"
+                      >
+                        <p
+                          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                        >
+                          pipelineSteps.limitCPULabel
+                        </p>
+                      </div>
+                       
+                    </div>
+                    <div
+                      style="display: flex; align-items: center;"
+                    >
+                      <div
+                        class="bp3-form-group bp3-disabled"
+                        style="margin-bottom: 0px; flex-grow: 1;"
+                      >
+                        
+                        <div
+                          class="bp3-form-content"
+                        >
+                          <div
+                            class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
+                          >
+                            <div
+                              class="bp3-input-group bp3-disabled MultiTypeInput--input"
+                            >
+                              <input
+                                autocomplete="off"
+                                class="bp3-input"
+                                disabled=""
+                                name="pipeline.properties.ci.codebase.resources.limits.cpu"
+                                type="text"
+                                value=""
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

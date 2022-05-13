@@ -7,7 +7,7 @@
 
 import React, { useEffect, useRef, useState } from 'react'
 import * as Yup from 'yup'
-import type { FormikContext, FormikProps } from 'formik'
+import type { FormikContextType, FormikProps } from 'formik'
 import cx from 'classnames'
 import {
   Text,
@@ -32,7 +32,8 @@ import { joinAsASentence } from '@common/utils/StringUtils'
 import { TestStatus } from '@common/components/TestConnectionWidget/TestConnectionWidget'
 import { Connectors } from '@connectors/constants'
 import {
-  AllGitProviders,
+  AllSaaSGitProviders,
+  AllOnPremGitProviders,
   GitAuthenticationMethod,
   GitProvider,
   GitProviderTypeToAuthenticationMethodMapping,
@@ -82,7 +83,7 @@ const SelectGitProviderRef = (
   const [gitProvider, setGitProvider] = useState<GitProvider | undefined>()
   const [authMethod, setAuthMethod] = useState<GitAuthenticationMethod>()
   const [testConnectionStatus, setTestConnectionStatus] = useState<TestStatus>(TestStatus.NOT_INITIATED)
-  const formikRef = useRef<FormikContext<SelectGitProviderInterface>>()
+  const formikRef = useRef<FormikContextType<SelectGitProviderInterface>>()
 
   useEffect(() => {
     if (authMethod === GitAuthenticationMethod.AccessToken) {
@@ -93,17 +94,21 @@ const SelectGitProviderRef = (
 
   useEffect(() => {
     if (gitProvider) {
-      if (authMethod === GitAuthenticationMethod.AccessToken) {
+      if (selectedHosting === Hosting.SaaS) {
+        if (authMethod === GitAuthenticationMethod.AccessToken) {
+          if (testConnectionStatus === TestStatus.SUCCESS) {
+            enableNextBtn()
+          } else {
+            disableNextBtn()
+          }
+        }
+      } else {
         if (testConnectionStatus === TestStatus.SUCCESS) {
           enableNextBtn()
         } else {
           disableNextBtn()
         }
-      } else {
-        enableNextBtn()
       }
-    } else {
-      enableNextBtn()
     }
   }, [gitProvider, authMethod, testConnectionStatus])
 
@@ -225,7 +230,7 @@ const SelectGitProviderRef = (
           style={{ width: '40%' }}
           label={<Text font={{ variation: FontVariation.FORM_LABEL }}>{getString(label)}</Text>}
           tooltipProps={{ dataTooltipId: tooltipId }}
-          disabled={[TestStatus.FAILED, TestStatus.IN_PROGRESS].includes(testConnectionStatus)}
+          disabled={testConnectionStatus === TestStatus.IN_PROGRESS}
           inputGroup={{
             type: inputGroupType ?? 'text'
           }}
@@ -237,17 +242,16 @@ const SelectGitProviderRef = (
 
   const renderNonOAuthView = React.useCallback(
     (_formikProps: FormikProps<SelectGitProviderInterface>): JSX.Element => {
+      const apiUrlField = renderTextField({
+        name: 'url',
+        label: 'ci.getStartedWithCI.apiUrlLabel',
+        tooltipId: 'url'
+      })
       switch (gitProvider?.type) {
         case Connectors.GITHUB:
           return (
             <Layout.Vertical width="100%">
-              {selectedHosting === Hosting.OnPrem
-                ? renderTextField({
-                    name: 'url',
-                    label: 'UrlLabel',
-                    tooltipId: 'url'
-                  })
-                : null}
+              {selectedHosting === Hosting.OnPrem ? apiUrlField : null}
               {renderTextField({
                 name: 'accessToken',
                 label: 'ci.getStartedWithCI.accessTokenLabel',
@@ -259,13 +263,7 @@ const SelectGitProviderRef = (
         case Connectors.BITBUCKET:
           return (
             <Layout.Vertical width="100%">
-              {selectedHosting === Hosting.OnPrem
-                ? renderTextField({
-                    name: 'url',
-                    label: 'ci.getStartedWithCI.apiUrlLabel',
-                    tooltipId: 'url'
-                  })
-                : null}
+              {selectedHosting === Hosting.OnPrem ? apiUrlField : null}
               {renderTextField({
                 name: 'username',
                 label: 'username',
@@ -282,13 +280,7 @@ const SelectGitProviderRef = (
         case Connectors.GITLAB:
           return (
             <Layout.Vertical width="100%">
-              {selectedHosting === Hosting.OnPrem
-                ? renderTextField({
-                    name: 'url',
-                    label: 'ci.getStartedWithCI.apiUrlLabel',
-                    tooltipId: 'url'
-                  })
-                : null}
+              {selectedHosting === Hosting.OnPrem ? apiUrlField : null}
               {renderTextField({
                 name: 'accessKey',
                 label: 'common.accessKey',
@@ -301,7 +293,7 @@ const SelectGitProviderRef = (
           return <></>
       }
     },
-    [gitProvider, selectedHosting]
+    [gitProvider, selectedHosting, testConnectionStatus]
   )
 
   //#endregion
@@ -338,36 +330,55 @@ const SelectGitProviderRef = (
   const validateGitProviderSetup = React.useCallback((): boolean => {
     let isSetupValid = false
     const { accessToken, accessKey, applicationPassword, username, url } = formikRef.current?.values || {}
-    switch (gitProvider?.type) {
-      case Connectors.GITHUB:
-        isSetupValid =
-          gitProvider?.type === Connectors.GITHUB && authMethod === GitAuthenticationMethod.AccessToken && !!accessToken
-        break
-      case Connectors.GITLAB:
-        isSetupValid =
-          gitProvider?.type === Connectors.GITLAB && authMethod === GitAuthenticationMethod.AccessKey && !!accessKey
-        break
-      case Connectors.BITBUCKET:
-        isSetupValid =
-          gitProvider?.type === Connectors.BITBUCKET &&
-          authMethod === GitAuthenticationMethod.UserNameAndApplicationPassword &&
-          !!username &&
-          !!applicationPassword
-        break
+    if (selectedHosting === Hosting.SaaS) {
+      switch (gitProvider?.type) {
+        case Connectors.GITHUB:
+          isSetupValid = authMethod === GitAuthenticationMethod.AccessToken && !!accessToken
+          break
+        case Connectors.GITLAB:
+          isSetupValid = authMethod === GitAuthenticationMethod.AccessKey && !!accessKey
+          break
+        case Connectors.BITBUCKET:
+          isSetupValid =
+            authMethod === GitAuthenticationMethod.UserNameAndApplicationPassword && !!username && !!applicationPassword
+          break
+      }
+    } else if (selectedHosting === Hosting.OnPrem) {
+      switch (gitProvider?.type) {
+        case Connectors.GITHUB:
+          isSetupValid = !!accessToken && !!url
+          break
+        case Connectors.GITLAB:
+          isSetupValid = !!accessKey && !!url
+          break
+        case Connectors.BITBUCKET:
+          isSetupValid = !!username && !!applicationPassword && !!url
+          break
+      }
     }
-    return selectedHosting === Hosting.SaaS ? isSetupValid : isSetupValid && !!url
+    return isSetupValid
   }, [gitProvider, authMethod, selectedHosting])
 
   //#endregion
 
-  const isNonOAuthMethodSelected = React.useCallback((): boolean => {
-    return (
-      (gitProvider?.type === Connectors.GITHUB && authMethod === GitAuthenticationMethod.AccessToken) ||
-      (gitProvider?.type === Connectors.GITLAB && authMethod === GitAuthenticationMethod.AccessKey) ||
-      (gitProvider?.type === Connectors.BITBUCKET &&
-        authMethod === GitAuthenticationMethod.UserNameAndApplicationPassword)
-    )
-  }, [gitProvider, authMethod])
+  const shouldRenderAuthFormFields = React.useCallback((): boolean => {
+    if (gitProvider?.type) {
+      if (selectedHosting === Hosting.SaaS) {
+        return (
+          (gitProvider.type === Connectors.GITHUB && authMethod === GitAuthenticationMethod.AccessToken) ||
+          (gitProvider.type === Connectors.GITLAB && authMethod === GitAuthenticationMethod.AccessKey) ||
+          (gitProvider.type === Connectors.BITBUCKET &&
+            authMethod === GitAuthenticationMethod.UserNameAndApplicationPassword)
+        )
+      } else if (selectedHosting === Hosting.OnPrem) {
+        return (
+          [Connectors.GITHUB, Connectors.GITLAB, Connectors.BITBUCKET].includes(gitProvider.type) &&
+          selectedHosting === Hosting.OnPrem
+        )
+      }
+    }
+    return false
+  }, [gitProvider, authMethod, selectedHosting])
 
   //#region formik related
 
@@ -393,7 +404,7 @@ const SelectGitProviderRef = (
         .trim()
         .required(
           getString('fieldRequired', {
-            field: getString(selectedHosting === Hosting.SaaS ? 'UrlLabel' : 'ci.getStartedWithCI.apiUrlLabel')
+            field: getString('ci.getStartedWithCI.apiUrlLabel')
           })
         )
     })
@@ -490,7 +501,7 @@ const SelectGitProviderRef = (
                 className={cx({ [css.borderBottom]: gitProvider })}
               >
                 <CardSelect
-                  data={AllGitProviders}
+                  data={selectedHosting === Hosting.SaaS ? AllSaaSGitProviders : AllOnPremGitProviders}
                   cornerSelected={true}
                   className={css.icons}
                   cardClassName={css.gitProviderCard}
@@ -503,10 +514,11 @@ const SelectGitProviderRef = (
                         className={cx(
                           { [css.githubIcon]: item.icon === 'github' },
                           { [css.gitlabIcon]: item.icon === 'gitlab' },
-                          { [css.bitbucketIcon]: item.icon === 'bitbucket-blue' }
+                          { [css.bitbucketIcon]: item.icon === 'bitbucket-blue' },
+                          { [css.genericGitIcon]: item.icon === 'service-github' }
                         )}
                       />
-                      <Text font={{ variation: FontVariation.BODY2 }} padding={{ top: 'small' }}>
+                      <Text font={{ variation: FontVariation.SMALL_SEMI }} padding={{ top: 'small' }}>
                         {getString(item.label)}
                       </Text>
                     </Layout.Vertical>
@@ -534,60 +546,66 @@ const SelectGitProviderRef = (
               {gitProvider ? (
                 <Layout.Vertical>
                   <Container
-                    className={cx({ [css.borderBottom]: isNonOAuthMethodSelected() })}
+                    className={cx({ [css.borderBottom]: shouldRenderAuthFormFields() })}
                     padding={{ bottom: 'xxlarge' }}
                   >
                     <Text font={{ variation: FontVariation.H5 }} padding={{ top: 'xlarge', bottom: 'small' }}>
-                      {getString('ci.getStartedWithCI.authMethod')}
+                      {getString(
+                        selectedHosting === Hosting.SaaS
+                          ? 'ci.getStartedWithCI.authMethod'
+                          : 'ci.getStartedWithCI.setUpAuth'
+                      )}
                     </Text>
-                    <Layout.Vertical padding={{ top: 'medium' }}>
-                      <Layout.Horizontal spacing="small">
-                        <Button
-                          className={css.authMethodBtn}
-                          round
-                          text={getString('ci.getStartedWithCI.oAuthLabel')}
-                          onClick={() => {
-                            const oAuthProviderDetails = OAuthProviders.filter(
-                              (oAuthProvider: OAuthProviderType) =>
-                                gitProvider && gitProvider.type.toUpperCase() === oAuthProvider.name.toUpperCase()
-                            )[0]
-                            if (oAuthProviderDetails) {
-                              const redirectionUrl = `${OAUTH_REDIRECT_URL_PREFIX}api/users/${oAuthProviderDetails.url}`
-                              window.open(redirectionUrl, '_blank')
-                            }
-                            formikProps.setFieldValue('gitAuthenticationMethod', GitAuthenticationMethod.OAuth)
-                            setAuthMethod(GitAuthenticationMethod.OAuth)
-                          }}
-                          intent={authMethod === GitAuthenticationMethod.OAuth ? 'primary' : 'none'}
-                        />
-                        <Button
-                          className={css.authMethodBtn}
-                          round
-                          text={getButtonLabel()}
-                          onClick={() => {
-                            resetFormFields()
-                            if (gitProvider?.type) {
-                              const gitAuthMethod = GitProviderTypeToAuthenticationMethodMapping.get(gitProvider.type)
-                              formikProps.setFieldValue('gitAuthenticationMethod', gitAuthMethod)
-                              setAuthMethod(gitAuthMethod)
-                            }
-                          }}
-                          intent={isNonOAuthMethodSelected() ? 'primary' : 'none'}
-                        />
-                      </Layout.Horizontal>
-                      {formikProps.touched.gitAuthenticationMethod && !formikProps.values.gitAuthenticationMethod ? (
-                        <Container padding={{ top: 'xsmall' }}>
-                          <FormError
-                            name={'gitAuthenticationMethod'}
-                            errorMessage={getString('fieldRequired', {
-                              field: getString('ci.getStartedWithCI.authMethodLabel')
-                            })}
+                    {selectedHosting === Hosting.SaaS ? (
+                      <Layout.Vertical padding={{ top: 'medium' }}>
+                        <Layout.Horizontal spacing="small">
+                          <Button
+                            className={css.authMethodBtn}
+                            round
+                            text={getString('ci.getStartedWithCI.oAuthLabel')}
+                            onClick={() => {
+                              const oAuthProviderDetails = OAuthProviders.filter(
+                                (oAuthProvider: OAuthProviderType) =>
+                                  gitProvider && gitProvider.type.toUpperCase() === oAuthProvider.name.toUpperCase()
+                              )[0]
+                              if (oAuthProviderDetails) {
+                                const redirectionUrl = `${OAUTH_REDIRECT_URL_PREFIX}api/users/${oAuthProviderDetails.url}`
+                                window.open(redirectionUrl, '_blank')
+                              }
+                              formikProps.setFieldValue('gitAuthenticationMethod', GitAuthenticationMethod.OAuth)
+                              setAuthMethod(GitAuthenticationMethod.OAuth)
+                            }}
+                            intent={authMethod === GitAuthenticationMethod.OAuth ? 'primary' : 'none'}
                           />
-                        </Container>
-                      ) : null}
-                    </Layout.Vertical>
-                    {isNonOAuthMethodSelected() ? (
-                      <Layout.Vertical padding={{ top: 'xlarge' }} flex={{ alignItems: 'flex-start' }}>
+                          <Button
+                            className={css.authMethodBtn}
+                            round
+                            text={getButtonLabel()}
+                            onClick={() => {
+                              resetFormFields()
+                              if (gitProvider?.type) {
+                                const gitAuthMethod = GitProviderTypeToAuthenticationMethodMapping.get(gitProvider.type)
+                                formikProps.setFieldValue('gitAuthenticationMethod', gitAuthMethod)
+                                setAuthMethod(gitAuthMethod)
+                              }
+                            }}
+                            intent={shouldRenderAuthFormFields() ? 'primary' : 'none'}
+                          />
+                        </Layout.Horizontal>
+                        {formikProps.touched.gitAuthenticationMethod && !formikProps.values.gitAuthenticationMethod ? (
+                          <Container padding={{ top: 'xsmall' }}>
+                            <FormError
+                              name={'gitAuthenticationMethod'}
+                              errorMessage={getString('fieldRequired', {
+                                field: getString('ci.getStartedWithCI.authMethodLabel')
+                              })}
+                            />
+                          </Container>
+                        ) : null}
+                      </Layout.Vertical>
+                    ) : null}
+                    {shouldRenderAuthFormFields() ? (
+                      <Layout.Vertical padding={{ top: 'medium' }} flex={{ alignItems: 'flex-start' }}>
                         <Container padding={{ top: formikProps.errors.url ? 'xsmall' : 'xlarge' }} width="100%">
                           {renderNonOAuthView(formikProps)}
                         </Container>
@@ -614,7 +632,7 @@ const SelectGitProviderRef = (
                       </Layout.Vertical>
                     ) : null}
                   </Container>
-                  {isNonOAuthMethodSelected() ? (
+                  {shouldRenderAuthFormFields() ? (
                     <Layout.Vertical padding={{ top: formikProps.errors.url ? 'xsmall' : 'large' }} spacing="small">
                       <Text font={{ variation: FontVariation.H5 }}>{getString('common.smtp.testConnection')}</Text>
                       <Text>{getString('ci.getStartedWithCI.verifyConnection')}</Text>

@@ -3,100 +3,104 @@
 exports[`RBAC ThumbnailSelect renders items with RBAC restrictions: rbac items should be disabled 1`] = `
 <div>
   <div
-    class="bp3-form-group ThumbnailSelect--mainContainer"
+    class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="bp3-form-content"
+      class="bp3-form-group ThumbnailSelect--mainContainer"
     >
       <div
-        class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+        class="bp3-form-content"
       >
-        <span
-          class="bp3-popover-wrapper"
+        <div
+          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
         >
           <span
-            class="bp3-popover-target"
+            class="bp3-popover-wrapper"
           >
-            <label
-              class="Thumbnail--squareCardContainer"
+            <span
+              class="bp3-popover-target"
             >
-              <div
-                class="bp3-card bp3-elevation-0 Card--card Thumbnail--squareCard Card--disabled"
+              <label
+                class="Thumbnail--squareCardContainer"
               >
-                <span
-                  class="bp3-icon StyledProps--main"
-                  data-icon="nav-organization-hover"
+                <div
+                  class="bp3-card bp3-elevation-0 Card--card Thumbnail--squareCard Card--disabled"
                 >
-                  <svg
-                    height="26"
-                    viewBox="0 0 16 16"
-                    width="26"
-                    xmlns="http://www.w3.org/2000/svg"
+                  <span
+                    class="bp3-icon StyledProps--main"
+                    data-icon="nav-organization-hover"
                   >
-                    <filter
-                      id="nav-organization-hover_svg__a"
+                    <svg
+                      height="26"
+                      viewBox="0 0 16 16"
+                      width="26"
+                      xmlns="http://www.w3.org/2000/svg"
                     >
-                      <fecolormatrix
-                        in="SourceGraphic"
-                        values="0 0 0 0 1.000000 0 0 0 0 1.000000 0 0 0 0 1.000000 0 0 0 1.000000 0"
-                      />
-                    </filter>
-                    <filter
-                      id="nav-organization-hover_svg__b"
-                    >
-                      <fecolormatrix
-                        in="SourceGraphic"
-                        values="0 0 0 0 1.000000 0 0 0 0 1.000000 0 0 0 0 1.000000 0 0 0 1.000000 0"
-                      />
-                    </filter>
-                    <filter
-                      height="100%"
-                      id="nav-organization-hover_svg__c"
-                      width="100%"
-                      x="0%"
-                      y="0%"
-                    >
-                      <fegaussianblur
-                        in="SourceGraphic"
-                      />
-                    </filter>
-                    <g
-                      fill="none"
-                      fill-rule="evenodd"
-                      filter="url(#nav-organization-hover_svg__a)"
-                      opacity="0.6"
-                      transform="translate(-418 -707)"
-                    >
-                      <g
-                        filter="url(#nav-organization-hover_svg__b)"
-                        opacity="0.6"
-                        transform="translate(418 707)"
+                      <filter
+                        id="nav-organization-hover_svg__a"
                       >
-                        <path
-                          d="M14.5 10.033h-2V8.5h1c.267 0 .5-.233.5-.5s-.233-.5-.5-.5h-5V5.967h2c.267 0 .5-.234.5-.5V1.5c0-.267-.233-.5-.5-.5h-5c-.267 0-.5.233-.5.5v3.967c0 .266.233.5.5.5h2V7.5h-5c-.267 0-.5.233-.5.5s.233.5.5.5h1v1.533h-2c-.267 0-.5.234-.5.5V14.5c0 .267.233.5.5.5h5c.267 0 .5-.233.5-.5v-3.967c0-.266-.233-.5-.5-.5h-2V8.5h7v1.533h-2c-.267 0-.5.234-.5.5V14.5c0 .267.233.5.5.5h5c.267 0 .5-.233.5-.5v-3.967c0-.266-.233-.5-.5-.5zM6 2h4v2.967H6zm0 12H2v-2.967h4zm8 0h-4v-2.967h4z"
-                          fill="#dbdbdb"
-                          fill-rule="nonzero"
-                          filter="url(#nav-organization-hover_svg__c)"
+                        <fecolormatrix
+                          in="SourceGraphic"
+                          values="0 0 0 0 1.000000 0 0 0 0 1.000000 0 0 0 0 1.000000 0 0 0 1.000000 0"
                         />
+                      </filter>
+                      <filter
+                        id="nav-organization-hover_svg__b"
+                      >
+                        <fecolormatrix
+                          in="SourceGraphic"
+                          values="0 0 0 0 1.000000 0 0 0 0 1.000000 0 0 0 0 1.000000 0 0 0 1.000000 0"
+                        />
+                      </filter>
+                      <filter
+                        height="100%"
+                        id="nav-organization-hover_svg__c"
+                        width="100%"
+                        x="0%"
+                        y="0%"
+                      >
+                        <fegaussianblur
+                          in="SourceGraphic"
+                        />
+                      </filter>
+                      <g
+                        fill="none"
+                        fill-rule="evenodd"
+                        filter="url(#nav-organization-hover_svg__a)"
+                        opacity="0.6"
+                        transform="translate(-418 -707)"
+                      >
+                        <g
+                          filter="url(#nav-organization-hover_svg__b)"
+                          opacity="0.6"
+                          transform="translate(418 707)"
+                        >
+                          <path
+                            d="M14.5 10.033h-2V8.5h1c.267 0 .5-.233.5-.5s-.233-.5-.5-.5h-5V5.967h2c.267 0 .5-.234.5-.5V1.5c0-.267-.233-.5-.5-.5h-5c-.267 0-.5.233-.5.5v3.967c0 .266.233.5.5.5h2V7.5h-5c-.267 0-.5.233-.5.5s.233.5.5.5h1v1.533h-2c-.267 0-.5.234-.5.5V14.5c0 .267.233.5.5.5h5c.267 0 .5-.233.5-.5v-3.967c0-.266-.233-.5-.5-.5h-2V8.5h7v1.533h-2c-.267 0-.5.234-.5.5V14.5c0 .267.233.5.5.5h5c.267 0 .5-.233.5-.5v-3.967c0-.266-.233-.5-.5-.5zM6 2h4v2.967H6zm0 12H2v-2.967h4zm8 0h-4v-2.967h4z"
+                            fill="#dbdbdb"
+                            fill-rule="nonzero"
+                            filter="url(#nav-organization-hover_svg__c)"
+                          />
+                        </g>
                       </g>
-                    </g>
-                  </svg>
-                </span>
-              </div>
-              <p
-                class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey500 StyledProps--margin-top-small"
-              >
-                I1
-              </p>
-              <input
-                disabled=""
-                name="rRbacThumbnail"
-                type="checkbox"
-                value="i1"
-              />
-            </label>
+                    </svg>
+                  </span>
+                </div>
+                <p
+                  class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey500 StyledProps--margin-top-small"
+                >
+                  I1
+                </p>
+                <input
+                  disabled=""
+                  name="rRbacThumbnail"
+                  type="checkbox"
+                  value="i1"
+                />
+              </label>
+            </span>
           </span>
-        </span>
+        </div>
       </div>
     </div>
   </div>
@@ -106,92 +110,96 @@ exports[`RBAC ThumbnailSelect renders items with RBAC restrictions: rbac items s
 exports[`RBAC ThumbnailSelect renders items without RBAC restrictions: non rbac items 1`] = `
 <div>
   <div
-    class="bp3-form-group ThumbnailSelect--mainContainer"
+    class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="bp3-form-content"
+      class="bp3-form-group ThumbnailSelect--mainContainer"
     >
       <div
-        class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+        class="bp3-form-content"
       >
-        <label
-          class="Thumbnail--squareCardContainer"
+        <div
+          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
         >
-          <div
-            class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
-            tabindex="0"
+          <label
+            class="Thumbnail--squareCardContainer"
           >
-            <span
-              class="bp3-icon StyledProps--main"
-              data-icon="nav-organization-hover"
+            <div
+              class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
+              tabindex="0"
             >
-              <svg
-                height="26"
-                viewBox="0 0 16 16"
-                width="26"
-                xmlns="http://www.w3.org/2000/svg"
+              <span
+                class="bp3-icon StyledProps--main"
+                data-icon="nav-organization-hover"
               >
-                <filter
-                  id="nav-organization-hover_svg__a"
+                <svg
+                  height="26"
+                  viewBox="0 0 16 16"
+                  width="26"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <fecolormatrix
-                    in="SourceGraphic"
-                    values="0 0 0 0 1.000000 0 0 0 0 1.000000 0 0 0 0 1.000000 0 0 0 1.000000 0"
-                  />
-                </filter>
-                <filter
-                  id="nav-organization-hover_svg__b"
-                >
-                  <fecolormatrix
-                    in="SourceGraphic"
-                    values="0 0 0 0 1.000000 0 0 0 0 1.000000 0 0 0 0 1.000000 0 0 0 1.000000 0"
-                  />
-                </filter>
-                <filter
-                  height="100%"
-                  id="nav-organization-hover_svg__c"
-                  width="100%"
-                  x="0%"
-                  y="0%"
-                >
-                  <fegaussianblur
-                    in="SourceGraphic"
-                  />
-                </filter>
-                <g
-                  fill="none"
-                  fill-rule="evenodd"
-                  filter="url(#nav-organization-hover_svg__a)"
-                  opacity="0.6"
-                  transform="translate(-418 -707)"
-                >
-                  <g
-                    filter="url(#nav-organization-hover_svg__b)"
-                    opacity="0.6"
-                    transform="translate(418 707)"
+                  <filter
+                    id="nav-organization-hover_svg__a"
                   >
-                    <path
-                      d="M14.5 10.033h-2V8.5h1c.267 0 .5-.233.5-.5s-.233-.5-.5-.5h-5V5.967h2c.267 0 .5-.234.5-.5V1.5c0-.267-.233-.5-.5-.5h-5c-.267 0-.5.233-.5.5v3.967c0 .266.233.5.5.5h2V7.5h-5c-.267 0-.5.233-.5.5s.233.5.5.5h1v1.533h-2c-.267 0-.5.234-.5.5V14.5c0 .267.233.5.5.5h5c.267 0 .5-.233.5-.5v-3.967c0-.266-.233-.5-.5-.5h-2V8.5h7v1.533h-2c-.267 0-.5.234-.5.5V14.5c0 .267.233.5.5.5h5c.267 0 .5-.233.5-.5v-3.967c0-.266-.233-.5-.5-.5zM6 2h4v2.967H6zm0 12H2v-2.967h4zm8 0h-4v-2.967h4z"
-                      fill="#dbdbdb"
-                      fill-rule="nonzero"
-                      filter="url(#nav-organization-hover_svg__c)"
+                    <fecolormatrix
+                      in="SourceGraphic"
+                      values="0 0 0 0 1.000000 0 0 0 0 1.000000 0 0 0 0 1.000000 0 0 0 1.000000 0"
                     />
+                  </filter>
+                  <filter
+                    id="nav-organization-hover_svg__b"
+                  >
+                    <fecolormatrix
+                      in="SourceGraphic"
+                      values="0 0 0 0 1.000000 0 0 0 0 1.000000 0 0 0 0 1.000000 0 0 0 1.000000 0"
+                    />
+                  </filter>
+                  <filter
+                    height="100%"
+                    id="nav-organization-hover_svg__c"
+                    width="100%"
+                    x="0%"
+                    y="0%"
+                  >
+                    <fegaussianblur
+                      in="SourceGraphic"
+                    />
+                  </filter>
+                  <g
+                    fill="none"
+                    fill-rule="evenodd"
+                    filter="url(#nav-organization-hover_svg__a)"
+                    opacity="0.6"
+                    transform="translate(-418 -707)"
+                  >
+                    <g
+                      filter="url(#nav-organization-hover_svg__b)"
+                      opacity="0.6"
+                      transform="translate(418 707)"
+                    >
+                      <path
+                        d="M14.5 10.033h-2V8.5h1c.267 0 .5-.233.5-.5s-.233-.5-.5-.5h-5V5.967h2c.267 0 .5-.234.5-.5V1.5c0-.267-.233-.5-.5-.5h-5c-.267 0-.5.233-.5.5v3.967c0 .266.233.5.5.5h2V7.5h-5c-.267 0-.5.233-.5.5s.233.5.5.5h1v1.533h-2c-.267 0-.5.234-.5.5V14.5c0 .267.233.5.5.5h5c.267 0 .5-.233.5-.5v-3.967c0-.266-.233-.5-.5-.5h-2V8.5h7v1.533h-2c-.267 0-.5.234-.5.5V14.5c0 .267.233.5.5.5h5c.267 0 .5-.233.5-.5v-3.967c0-.266-.233-.5-.5-.5zM6 2h4v2.967H6zm0 12H2v-2.967h4zm8 0h-4v-2.967h4z"
+                        fill="#dbdbdb"
+                        fill-rule="nonzero"
+                        filter="url(#nav-organization-hover_svg__c)"
+                      />
+                    </g>
                   </g>
-                </g>
-              </svg>
-            </span>
-          </div>
-          <p
-            class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
-          >
-            I1
-          </p>
-          <input
-            name="nonRbacThumbnail"
-            type="checkbox"
-            value="i1"
-          />
-        </label>
+                </svg>
+              </span>
+            </div>
+            <p
+              class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
+            >
+              I1
+            </p>
+            <input
+              name="nonRbacThumbnail"
+              type="checkbox"
+              value="i1"
+            />
+          </label>
+        </div>
       </div>
     </div>
   </div>

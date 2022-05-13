@@ -44,6 +44,7 @@ const InclusionSubSection: FC<InclusionSubSectionProps> = ({
       modalTitle="cf.targetDetail.addTargetToSegment"
       addButtonText="cf.targetDetail.addToSegment"
       noDataMessage="cf.targetDetail.noSegmentAdded"
+      instructionKind="addToIncludeList"
     />
   )
 }

@@ -45,6 +45,8 @@ import { Entities } from '@common/interfaces/GitSyncInterface'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { FeatureFlag } from '@common/featureFlags'
+import { useConnectorGovernanceModal } from '@connectors/hooks/useConnectorGovernanceModal'
 import { isSMConnector } from '../connectors/utils/ConnectorUtils'
 import css from './CreateConnectorFromYamlPage.module.scss'
 
@@ -56,6 +58,10 @@ const CreateConnectorFromYamlPage: React.FC = () => {
   const { showError, showSuccess } = useToaster()
   const { mutate: createConnector, loading: creating } = useCreateConnector({
     queryParams: { accountIdentifier: accountId }
+  })
+  const { hideOrShowGovernanceErrorModal, doesGovernanceHasError } = useConnectorGovernanceModal({
+    errorOutOnGovernanceWarning: false,
+    featureFlag: FeatureFlag.OPA_CONNECTOR_GOVERNANCE
   })
   const [editorContent, setEditorContent] = React.useState<Record<string, any>>()
   const { getString } = useStrings()
@@ -111,9 +117,17 @@ const CreateConnectorFromYamlPage: React.FC = () => {
       ? { accountIdentifier: accountId, ...gitData, baseBranch: gitResourceDetails.gitDetails?.branch }
       : {}
     const response = await createConnector(connectorJSON, { queryParams })
+    const hasAnyGovernnanceError = doesGovernanceHasError(response)
+
+    const { canGoToNextStep } = await hideOrShowGovernanceErrorModal(response)
     return {
-      status: response.status,
-      nextCallback: rerouteBasedOnContext
+      status: !hasAnyGovernnanceError ? response.status : 'FAILURE',
+      governanceMetaData: response.data?.governanceMetadata,
+      nextCallback: async () => {
+        if (canGoToNextStep) {
+          rerouteBasedOnContext()
+        }
+      }
     }
   }
 
@@ -216,7 +230,7 @@ const CreateConnectorFromYamlPage: React.FC = () => {
                     />
                     <GitSyncStoreProvider>
                       <GitContextForm
-                        formikProps={formikProps}
+                        formikProps={formikProps as any}
                         gitDetails={{ ...pick(initialValues, ['repo', 'branch']), getDefaultFromOtherRepo: false }}
                       />
                     </GitSyncStoreProvider>
@@ -306,8 +320,10 @@ const CreateConnectorFromYamlPage: React.FC = () => {
                     : handleCreate() /* Handling non-git flow */
                         .then(res => {
                           if (res.status === 'SUCCESS') {
-                            showSuccess(getString('connectors.createdSuccessfully'))
-                            res.nextCallback?.()
+                            if (!(res.governanceMetaData && res.governanceMetaData.status === 'error')) {
+                              showSuccess(getString('connectors.createdSuccessfully'))
+                              res.nextCallback?.()
+                            }
                           } else {
                             /* TODO handle error with API status 200 */
                           }

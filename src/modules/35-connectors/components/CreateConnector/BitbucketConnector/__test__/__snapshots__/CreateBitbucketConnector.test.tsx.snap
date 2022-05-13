@@ -135,6 +135,7 @@ exports[`Create Bitbucketconnector Wizard Creating Bitbucket connector step one 
             class="OverlaySpinner--overlaySpinner"
           >
             <form
+              action="#"
               class="FormikForm--main"
             >
               <div>
@@ -569,6 +570,7 @@ exports[`Create Bitbucketconnector Wizard Creating Bitbucket connector step one 
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main connectorForm fullHeight fullHeightDivsWithFlex"
           >
             <div>
@@ -1037,6 +1039,7 @@ exports[`Create Bitbucketconnector Wizard Creating Bitbucket connector step one 
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main connectorForm fullHeight fullHeightDivsWithFlex"
           >
             <div>
@@ -1536,6 +1539,7 @@ exports[`Create Bitbucketconnector Wizard Creating Bitbucket connector step two 
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main connectorForm fullHeight fullHeightDivsWithFlex"
           >
             <div>
@@ -2004,6 +2008,7 @@ exports[`Create Bitbucketconnector Wizard Creating Bitbucket connector step two 
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main connectorForm fullHeight fullHeightDivsWithFlex"
           >
             <div>
@@ -2517,6 +2522,7 @@ exports[`Create Bitbucketconnector Wizard should be able to edit  usernamePasswo
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main fullHeight fullHeightDivsWithFlex"
           >
             <div>
@@ -3075,6 +3081,7 @@ exports[`Create Bitbucketconnector Wizard should form for edit http and authtype
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main fullHeight fullHeightDivsWithFlex"
           >
             <div>

@@ -6,6 +6,7 @@ exports[`GitContextForm test GitContextForm for create with deafault restriction
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main wrapperForm"
     >
       <div>
@@ -127,7 +128,7 @@ exports[`GitContextForm test GitContextForm for create with deafault restriction
                         placeholder="- Select -"
                         style="padding-right: 0px;"
                         type="text"
-                        value=""
+                        value="feature"
                       />
                       <span
                         class="bp3-input-action"
@@ -175,6 +176,7 @@ exports[`GitContextForm test GitContextForm for create without deafult restricti
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main wrapperForm"
     >
       <div>
@@ -295,7 +297,7 @@ exports[`GitContextForm test GitContextForm for create without deafult restricti
                         placeholder="- Select -"
                         style="padding-right: 0px;"
                         type="text"
-                        value=""
+                        value="feature"
                       />
                       <span
                         class="bp3-input-action"
@@ -343,6 +345,7 @@ exports[`GitContextForm test GitContextForm for edit should have repo and branch
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main wrapperForm"
     >
       <div>

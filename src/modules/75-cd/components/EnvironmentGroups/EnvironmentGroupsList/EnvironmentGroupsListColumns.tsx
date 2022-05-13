@@ -22,7 +22,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { EnvironmentType } from '@common/constants/EnvironmentType'
 
 import css from '../EnvironmentGroups.module.scss'
-import environmentCss from '../../Environments/EnvironmentsListColumns/EnvironmentsListColumns.module.scss'
+import environmentCss from '../../EnvironmentsV2/EnvironmentsList/EnvironmentsList.module.scss'
 
 function EnvironmentGroupName({
   name,

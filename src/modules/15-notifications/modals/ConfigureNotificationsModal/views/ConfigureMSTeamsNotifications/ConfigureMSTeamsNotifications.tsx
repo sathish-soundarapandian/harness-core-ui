@@ -23,7 +23,7 @@ import * as Yup from 'yup'
 import cx from 'classnames'
 import { FormGroup } from '@blueprintjs/core'
 import { get, isEmpty } from 'lodash-es'
-import { connect, FormikContext, FormikErrors } from 'formik'
+import { connect, FormikContextType, FormikErrors } from 'formik'
 import { useToaster } from '@common/exports'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { MSTeamsNotificationConfiguration, NotificationType, TestStatus } from '@notifications/interfaces/Notifications'
@@ -106,7 +106,7 @@ export const TestMSTeamsNotifications: React.FC<{
 interface TeamsUrlListInputProps {
   name: string
   label: string
-  formik?: FormikContext<any>
+  formik?: FormikContextType<any>
 }
 
 function TeamsUrlListInputInternal(props: TeamsUrlListInputProps) {

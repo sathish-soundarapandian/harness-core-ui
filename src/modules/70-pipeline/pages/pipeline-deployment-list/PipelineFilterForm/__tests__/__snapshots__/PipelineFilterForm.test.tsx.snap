@@ -6,6 +6,7 @@ exports[`<PipelineFilterForm /> test snapshot testing 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

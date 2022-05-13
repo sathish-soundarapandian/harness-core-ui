@@ -27,9 +27,15 @@ interface TemplateActionsReturnType {
   save: () => void
 }
 
-type SaveAsTemplateProps = Omit<SaveTemplateButtonProps, 'buttonProps'>
+interface SaveAsTemplateProps extends Omit<SaveTemplateButtonProps, 'buttonProps'> {
+  fireSuccessEvent?: boolean
+}
 
-export function useSaveAsTemplate({ data, type }: SaveAsTemplateProps): TemplateActionsReturnType {
+export function useSaveAsTemplate({
+  data,
+  type,
+  fireSuccessEvent = false
+}: SaveAsTemplateProps): TemplateActionsReturnType {
   const { orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [template, setTemplate] = React.useState<NGTemplateInfoConfig>()
@@ -53,7 +59,8 @@ export function useSaveAsTemplate({ data, type }: SaveAsTemplateProps): Template
   const { saveAndPublish } = useSaveTemplate({
     template: template as NGTemplateInfoConfig,
     gitDetails: { repoIdentifier, branch },
-    isPipelineStudio: true
+    isPipelineStudio: true,
+    fireSuccessEvent
   })
 
   const onSaveAsTemplate = async () => {

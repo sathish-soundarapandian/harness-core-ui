@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { connect, FormikContext } from 'formik'
+import { connect, FormikContextType } from 'formik'
 import cx from 'classnames'
 import {
   Button,
@@ -67,7 +67,7 @@ export interface MultiTypeSecretInputProps extends IFormGroupProps {
 
 export interface ConnectedMultiTypeSecretInputProps extends MultiTypeSecretInputProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  formik: FormikContext<any>
+  formik: FormikContextType<any>
 }
 
 export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps): React.ReactElement {

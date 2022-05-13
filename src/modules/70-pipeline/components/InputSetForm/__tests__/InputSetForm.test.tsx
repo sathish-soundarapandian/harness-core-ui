@@ -442,7 +442,7 @@ describe('Render Forms - Snapshot Testing', () => {
     act(() => {
       fireEvent.change(container.querySelector('input[name="name"]')!, { target: { value: 'asd56' } })
     })
-    await act(() => ref.current?.submitForm())
+    await act(() => ref.current?.submitForm()!)
     expect(handleSubmit).toHaveBeenCalledWith(
       {
         branch: '',

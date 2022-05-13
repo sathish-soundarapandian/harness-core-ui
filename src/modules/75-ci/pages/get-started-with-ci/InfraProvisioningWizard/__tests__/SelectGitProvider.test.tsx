@@ -13,7 +13,7 @@ import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import { TestWrapper } from '@common/utils/testUtils'
 import { SelectGitProvider } from '../SelectGitProvider'
 import { InfraProvisioningWizard } from '../InfraProvisioningWizard'
-import { AllGitProviders, Hosting, InfraProvisiongWizardStepId } from '../Constants'
+import { AllBuildLocationsForSaaS, Hosting, InfraProvisiongWizardStepId } from '../Constants'
 
 jest.useFakeTimers()
 
@@ -27,7 +27,7 @@ describe('Test SelectGitProvider component', () => {
       </StringsContext.Provider>
     )
     const gitProviderCards = Array.from(container.querySelectorAll('div[class*="bp3-card"]')) as HTMLElement[]
-    expect(gitProviderCards.length).toBe(AllGitProviders.length)
+    expect(gitProviderCards.length).toBe(AllBuildLocationsForSaaS.length)
   })
 
   test('User clicks on Github Provider card', async () => {
@@ -151,10 +151,9 @@ describe('Test SelectGitProvider component', () => {
       fireEvent.click(nextBtn)
     })
 
-    // Schema validation error should show up for if Git Authentication method is not selected
+    // Schema validation error should not show up for if Git Authentication method is not selected if hosting is onprem
     expect(
       container.querySelector('div[class*="FormError--errorDiv"][data-name="gitAuthenticationMethod"]')
-    ).toBeInTheDocument()
-    expect(getByText('fieldRequired')).toBeTruthy()
+    ).not.toBeInTheDocument()
   })
 })

@@ -24,7 +24,7 @@ import {
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
 import PerspectiveSelection from './PerspectiveSelection'
-import NotificationMethod from './NotificationMethod'
+import NotificationMethod, { NotificationValues } from './NotificationMethod'
 import css from './AnomaliesAlertDialog.module.scss'
 
 const modalPropsLight: IDialogProps = {
@@ -111,17 +111,16 @@ export const AnomalyAlertDialog: React.FC<AlertDialogProps> = ({
 
   return (
     <Dialog onClose={hideAnomaliesAlertModal} {...modalPropsLight} canOutsideClickClose={true}>
-      <Formik
+      <Formik<NotificationValues>
         onSubmit={data => handleSubmit(data)}
         formName={'createNotificationAlert'}
         initialValues={{
           perspective: notificationData?.perspectiveId || '',
-          channelName: '',
-          channelUrl: '',
           alertList: channelsData || /* istanbul ignore next */ []
         }}
         validationSchema={validationSchema}
-        render={formikProps => {
+      >
+        {formikProps => {
           return (
             <FormikForm>
               <StepWizard
@@ -148,7 +147,7 @@ export const AnomalyAlertDialog: React.FC<AlertDialogProps> = ({
             </FormikForm>
           )
         }}
-      />
+      </Formik>
     </Dialog>
   )
 }

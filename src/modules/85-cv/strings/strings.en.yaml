@@ -452,6 +452,7 @@ monitoredServices:
   editService: Edit service
   deleteMonitoredServiceWarning: Deleting your monitored service ‘{{ name }}’ will also delete its resources.
   deleteService: Delete service
+  copyET: Copy Error Tracking Config
   monitoredServiceDeleted: Monitored service successfully deleted
   monitoredServiceCreated: Monitored Service created
   monitoredServiceUpdated: Monitored Service updated
@@ -854,3 +855,7 @@ serviceDetails: Service Details
 theTrendIsDeterminedForTheSelectedPeriodOverPeriod: The trend % is determined for the selected period over period.
 zoom: Zoom
 selectTimeRange: Select time range
+aMaximumOfThreeSLOCanBeComparedWithTheServiceHealth: A maximum of three SLO’s can be compared with the Service Health.
+pleaseSelectSLOToGetTheData: Please select a SLO to get the data.
+noSLOHasBeenCreated: No SLO has been created
+noDataAvailableForTheCurrentSLOCycle: No data available for the current SLO cycle

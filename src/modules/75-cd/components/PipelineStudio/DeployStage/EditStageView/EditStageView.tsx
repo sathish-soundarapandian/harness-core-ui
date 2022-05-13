@@ -215,7 +215,7 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
           >
             {formikProps => {
               window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.OVERVIEW }))
-              formikRef.current = formikProps
+              formikRef.current = formikProps as FormikProps<unknown> | null
               return (
                 <FormikForm>
                   {isContextTypeNotStageTemplate(contextType) && (

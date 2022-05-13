@@ -73,6 +73,7 @@ exports[`Manifest Trigger Tests Check chartVersion to be disabled and default va
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -1312,6 +1313,7 @@ exports[`Manifest Trigger Tests function getArtifactSpecObj by displaying select
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -2021,6 +2023,7 @@ exports[`Manifest Trigger Tests on click of edit - submits thru the right payloa
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -3330,6 +3333,7 @@ exports[`Manifest Trigger Tests on click of edit artifact - submits thru the rig
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -4299,6 +4303,7 @@ exports[`Manifest Trigger Tests on edit -with event conditions payload 1`] = `
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -4749,6 +4754,7 @@ exports[`Manifest Trigger Tests throws validation error when select artifact/man
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>

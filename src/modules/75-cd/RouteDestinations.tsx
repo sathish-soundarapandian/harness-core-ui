@@ -31,7 +31,8 @@ import {
   serviceAccountProps,
   servicePathProps,
   templatePathProps,
-  environmentGroupPathProps
+  environmentGroupPathProps,
+  environmentPathProps
 } from '@common/utils/routeUtils'
 import type {
   PipelinePathProps,
@@ -81,7 +82,6 @@ import { EnhancedInputSetForm } from '@pipeline/components/InputSetForm/InputSet
 import TriggersDetailPage from '@triggers/pages/triggers/TriggersDetailPage'
 import CreateConnectorFromYamlPage from '@connectors/pages/createConnectorFromYaml/CreateConnectorFromYamlPage'
 import CreateSecretFromYamlPage from '@secrets/pages/createSecretFromYaml/CreateSecretFromYamlPage'
-import ServiceDetails from '@cd/components/ServiceDetails/ServiceDetails'
 import { Services } from '@cd/components/Services/Services'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 
@@ -122,6 +122,8 @@ import FullPageLogView from '@pipeline/pages/full-page-log-view/FullPageLogView'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import VariablesPage from '@variables/pages/variables/VariablesPage'
 import { Environments } from './components/Environments/Environments'
+import { Environments as EnvironmentsV2 } from './components/EnvironmentsV2/Environments'
+import EnvironmentDetails from './components/EnvironmentsV2/EnvironmentDetails/EnvironmentDetails'
 import EnvironmentGroups from './components/EnvironmentGroups/EnvironmentGroups'
 import EnvironmentGroupDetails from './components/EnvironmentGroups/EnvironmentGroupDetails/EnvironmentGroupDetails'
 
@@ -147,6 +149,7 @@ import {
 } from './components/PipelineSteps/DeployEnvStep/DeployEnvStep'
 import type { GitOpsCustomMicroFrontendProps } from './interfaces/GitOps.types'
 import { getBannerText } from './utils/renderMessageUtils'
+import ServiceStudio from './components/Services/ServiceStudio/ServiceStudio'
 
 // eslint-disable-next-line import/no-unresolved
 const GitOpsServersList = React.lazy(() => import('gitopsui/MicroFrontendApp'))
@@ -384,6 +387,16 @@ const RedirectToSubscriptions = (): React.ReactElement => {
   )
 }
 
+const EnvironmentsPage = (): React.ReactElement | null => {
+  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
+
+  if (NG_SVC_ENV_REDESIGN) {
+    return <EnvironmentsV2 />
+  } else {
+    return <Environments />
+  }
+}
+
 const licenseRedirectData: LicenseRedirectProps = {
   licenseStateName: LICENSE_STATE_NAMES.CD_LICENSE_STATE,
   startTrialRedirect: RedirectToModuleTrialHome,
@@ -468,7 +481,7 @@ export default (
       licenseRedirectData={licenseRedirectData}
       sidebarProps={CDSideNavProps}
       path={routes.toServices({ ...accountPathProps, ...projectPathProps, ...pipelineModuleParams })}
-      pageName={PAGE_NAME.ServiceDetailPage}
+      pageName={PAGE_NAME.Services}
     >
       <Services />
     </RouteWithLayout>
@@ -476,24 +489,33 @@ export default (
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={CDSideNavProps}
-      path={routes.toServiceDetails({
+      path={routes.toServiceStudio({
         ...accountPathProps,
         ...projectPathProps,
         ...pipelineModuleParams,
         ...servicePathProps
       })}
-      pageName={PAGE_NAME.ServiceDetails}
+      pageName={PAGE_NAME.ServiceStudio}
     >
-      <ServiceDetails />
+      <ServiceStudio />
     </RouteWithLayout>
     <RouteWithLayout
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={CDSideNavProps}
-      path={routes.toEnvironment({ ...accountPathProps, ...projectPathProps, ...pipelineModuleParams })}
+      path={routes.toEnvironment({ ...projectPathProps, ...pipelineModuleParams })}
       pageName={PAGE_NAME.Environments}
     >
-      <Environments />
+      <EnvironmentsPage />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CDSideNavProps}
+      path={routes.toEnvironmentDetails({ ...projectPathProps, ...pipelineModuleParams, ...environmentPathProps })}
+      pageName={PAGE_NAME.Environments}
+    >
+      <EnvironmentDetails />
     </RouteWithLayout>
     <RouteWithLayout
       exact

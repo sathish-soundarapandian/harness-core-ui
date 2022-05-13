@@ -16,7 +16,7 @@ import {
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { isEmpty, get } from 'lodash-es'
-import { connect, FormikContext } from 'formik'
+import { connect, FormikContextType } from 'formik'
 import cx from 'classnames'
 import type { StageElementConfig } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -39,7 +39,7 @@ interface ConditionalExecutionFormProps {
   readonly?: boolean
   path: string
   allowableTypes?: MultiTypeInputType[]
-  formik?: FormikContext<any>
+  formik?: FormikContextType<any>
 }
 
 function ConditionalExecutionFormInternal(props: ConditionalExecutionFormProps): React.ReactElement {

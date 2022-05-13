@@ -12,6 +12,7 @@ exports[`Create Docker Step1Setup render step1 initial 1`] = `
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>

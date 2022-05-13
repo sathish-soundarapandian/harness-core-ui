@@ -11,7 +11,14 @@ import {
   triggersRoute
 } from '../../support/70-pipeline/constants'
 
-describe.skip('Triggers for Pipeline', () => {
+describe('Triggers for Pipeline', () => {
+  const visitTriggersPageWithAssertion = (): void => {
+    cy.visit(triggersRoute, {
+      timeout: 30000
+    })
+    cy.wait(2000)
+    cy.visitPageAssertion()
+  }
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -25,13 +32,22 @@ describe.skip('Triggers for Pipeline', () => {
     cy.intercept('GET', pipelineSummaryCallAPI, { fixture: '/ng/api/pipelineSummary' }).as('pipelineSummary')
     cy.intercept('GET', triggersAPI, { fixture: 'ng/api/triggers/triggersList.empty.json' }).as('emptyTriggersList')
 
-    cy.visit(triggersRoute, {
-      timeout: 30000
-    })
+    switch (Cypress.currentTest.title) {
+      case 'Pipeline Trigger List assertion': {
+        cy.intercept('GET', triggersAPI, { fixture: 'ng/api/triggers/triggerList.json' }).as('triggerList')
+        visitTriggersPageWithAssertion()
+        break
+      }
+      default: {
+        visitTriggersPageWithAssertion()
+        break
+      }
+    }
   })
 
   it('Triggers Drawer & List Assertion', () => {
-    cy.wait('@emptyTriggersList').wait(1000)
+    cy.wait(1000)
+    cy.wait('@emptyTriggersList')
     cy.contains('span', '+ New Trigger').should('be.visible')
     cy.contains('span', 'Add New Trigger').should('be.visible').click()
 
@@ -62,6 +78,7 @@ describe.skip('Triggers for Pipeline', () => {
   })
 
   it('Cron Trigger Flow', () => {
+    cy.wait(1000)
     cy.wait('@emptyTriggersList')
     cy.contains('span', 'Add New Trigger').should('be.visible').click()
     cy.intercept('POST', inputSetsTemplateCall, { fixture: '/ng/api/triggers/triggerInputSet' }).as('triggerInputSet')
@@ -142,9 +159,8 @@ describe.skip('Triggers for Pipeline', () => {
   })
 
   it('Pipeline Trigger List assertion', () => {
-    cy.intercept('GET', triggersAPI, { fixture: 'ng/api/triggers/triggerList.json' }).as('triggerList')
-    cy.wait('@triggerList')
-
+    cy.wait(1000)
+    cy.wait('@triggerList', { timeout: 30000 })
     cy.wait(1000)
     cy.contains('p', 'testTrigger').should('be.visible')
 

@@ -6,6 +6,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot 1`] = `
     class="Layout--vertical StyledProps--main"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -384,6 +385,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot when error occurs i
     class="Layout--vertical StyledProps--main"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -768,6 +770,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot when status is fail
     class="Layout--vertical StyledProps--main"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

@@ -49,6 +49,7 @@ exports[`Git Sync - entity tab rendering landing view 1`] = `
                   class="OverlaySpinner--overlaySpinner"
                 >
                   <form
+                    action="#"
                     class="FormikForm--main"
                   >
                     <div>
@@ -189,6 +190,7 @@ exports[`Git Sync - entity tab rendering landing view 1`] = `
                   class="OverlaySpinner--overlaySpinner"
                 >
                   <form
+                    action="#"
                     class="FormikForm--main"
                   >
                     <div>

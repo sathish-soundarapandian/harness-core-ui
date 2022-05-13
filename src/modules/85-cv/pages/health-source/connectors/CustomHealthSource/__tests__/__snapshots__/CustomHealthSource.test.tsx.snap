@@ -6,6 +6,7 @@ exports[`Verify CustomHealthSource should render CustomHealthSource 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main formFullheight"
     >
       <div>

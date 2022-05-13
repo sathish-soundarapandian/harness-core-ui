@@ -15,6 +15,7 @@ exports[`Azure DNS setup render azure dns setup page 1`] = `
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -290,6 +291,7 @@ exports[`Load balancer advanced config remove health check data and add again wi
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -556,6 +558,7 @@ exports[`Load balancer advanced config remove health check data and add again wi
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -1003,6 +1006,7 @@ exports[`Load balancer advanced config show error 1`] = `
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -1278,6 +1282,7 @@ exports[`Load balancer advanced config show routing table in case of empty selec
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -1582,6 +1587,7 @@ exports[`Resource Access url selector tests hosted zone id is present 1`] = `
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -1962,6 +1968,7 @@ exports[`Use DNS for Setup No Access Point is available 1`] = `
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -2237,6 +2244,7 @@ exports[`Use DNS for Setup No hosted zone is available 1`] = `
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -2512,6 +2520,7 @@ exports[`Use DNS for Setup option for creating new ALB should not be available f
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -2690,6 +2699,7 @@ exports[`Use DNS for Setup renders without crashing 1`] = `
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>

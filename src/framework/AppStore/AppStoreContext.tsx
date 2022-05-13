@@ -190,9 +190,14 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
 
   // update gitSyncEnabled when selectedProject changes
   useEffect(() => {
-    if (projectIdentifier) {
+    // For gitSync, using path params instead of project/org from PreferenceFramework
+    if (projectIdentifierFromPath) {
       isGitSyncEnabledPromise({
-        queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier: orgIdentifierFromPath,
+          projectIdentifier: projectIdentifierFromPath
+        }
       }).then((response: GitEnabledDTO) => {
         setState(prevState => ({
           ...prevState,
@@ -208,7 +213,7 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
       }))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.selectedProject, projectIdentifier, orgIdentifier, state.isGitSyncEnabled])
+  }, [state.selectedProject, projectIdentifierFromPath, orgIdentifierFromPath, state.isGitSyncEnabled])
 
   // set selectedOrg when orgDetails are fetched
   useEffect(() => {

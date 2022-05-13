@@ -6,13 +6,13 @@
  */
 
 import React from 'react'
-import { connect, FormikContext } from 'formik'
+import { connect, FormikContextType } from 'formik'
 import { get } from 'lodash-es'
 import { errorCheck } from '@common/utils/formikHelpers'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { ConnectorReferenceFieldProps, ConnectorReferenceField } from './ConnectorReferenceField'
 export interface FormConnectorFieldProps extends Omit<ConnectorReferenceFieldProps, 'onChange' | 'error'> {
-  formik?: FormikContext<any>
+  formik?: FormikContextType<any>
 }
 
 const FormConnectorReference = (props: FormConnectorFieldProps): React.ReactElement => {

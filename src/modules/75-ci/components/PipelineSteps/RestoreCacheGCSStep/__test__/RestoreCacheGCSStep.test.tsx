@@ -119,7 +119,7 @@ describe('Restore Cache GCS Step', () => {
 
       expect(container).toMatchSnapshot()
 
-      await act(() => ref.current?.submitForm())
+      await act(() => ref.current?.submitForm()!)
       expect(onUpdate).toHaveBeenCalledWith(fixedValues)
     })
 
@@ -138,7 +138,7 @@ describe('Restore Cache GCS Step', () => {
 
       expect(container).toMatchSnapshot()
 
-      await act(() => ref.current?.submitForm())
+      await act(() => ref.current?.submitForm()!)
       expect(onUpdate).toHaveBeenCalledWith(fixedValues)
     })
   })

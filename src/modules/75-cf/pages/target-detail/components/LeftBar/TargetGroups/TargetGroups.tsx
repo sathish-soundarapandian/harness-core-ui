@@ -10,8 +10,7 @@ import { useParams } from 'react-router-dom'
 import { Container, Layout, PageError } from '@harness/uicore'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { getErrorMessage } from '@cf/utils/CFUtils'
-import { useAddTargetsToExcludeList, useAddTargetsToIncludeList } from '@cf/utils/SegmentUtils'
-import { GetTargetSegmentsQueryParams, Segment, Target, useGetTargetSegments } from 'services/cf'
+import { GetTargetSegmentsQueryParams, Target, useGetTargetSegments } from 'services/cf'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import InclusionSubSection from './InclusionSubSection'
 import ExclusionSubSection from './ExclusionSubSection'
@@ -28,12 +27,6 @@ const TargetGroups: React.FC<TargetGroupsProps> = ({ target }) => {
     targetIdentifier
   } = useParams<Record<string, string>>()
   const { activeEnvironment: environmentIdentifier } = useActiveEnvironment()
-  const patchParams = {
-    accountIdentifier,
-    orgIdentifier,
-    projectIdentifier,
-    environmentIdentifier
-  }
   const { loading, error, data, refetch } = useGetTargetSegments({
     identifier: targetIdentifier,
     queryParams: {
@@ -43,27 +36,6 @@ const TargetGroups: React.FC<TargetGroupsProps> = ({ target }) => {
       environmentIdentifier
     } as GetTargetSegmentsQueryParams
   })
-  const _useAddTargetsToIncludeList = useAddTargetsToIncludeList(patchParams)
-  const _useAddTargetsToExcludeList = useAddTargetsToExcludeList(patchParams)
-
-  const addTargetToSegments = async (segments: Segment[]): Promise<void> => {
-    // Note: Due to https://harness.atlassian.net/browse/FFM-603 not done, we make
-    // multiple patch APIs instead of one
-    return Promise.all(
-      segments.map(segment => _useAddTargetsToIncludeList(segment.identifier, [targetIdentifier]))
-    ).then(() => {
-      refetch()
-    })
-  }
-  const excludeTargetFromSegments = async (segments: Segment[]): Promise<void> => {
-    // Note: Due to https://harness.atlassian.net/browse/FFM-603 not done, we make
-    // multiple patch APIs instead of one
-    return Promise.all(
-      segments.map(segment => _useAddTargetsToExcludeList(segment.identifier, [targetIdentifier]))
-    ).then(() => {
-      refetch()
-    })
-  }
 
   if (error) {
     return (
@@ -94,14 +66,14 @@ const TargetGroups: React.FC<TargetGroupsProps> = ({ target }) => {
       <InclusionSubSection
         target={target as Target}
         targetGroups={data?.includedSegments || []}
-        onAddTargetGroups={addTargetToSegments}
+        onAddTargetGroups={refetch}
         onRemoveTargetGroup={refetch}
       />
 
       <ExclusionSubSection
         target={target as Target}
         targetGroups={data?.excludedSegments || []}
-        onAddTargetGroups={excludeTargetFromSegments}
+        onAddTargetGroups={refetch}
         onRemoveTargetGroup={refetch}
       />
     </Layout.Vertical>

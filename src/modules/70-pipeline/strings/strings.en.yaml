@@ -63,6 +63,7 @@ selectStage: Select Stage
 stepNamePlaceholder: 'Enter Step Name'
 rightBar:
   editCodebaseConfiguration: Edit Codebase Configuration
+  mergeCommit: Merge Commit
 barrierStep:
   barrierReference: Barrier Reference
   barrierReferenceRequired: Barrier Reference is required
@@ -227,7 +228,7 @@ serviceNowCreateStep:
     templateName: Template Name is required
 serviceNowUpdateStep:
   fieldType:
-    applyFromTemplate: Apply standard change from template
+    applyFromTemplate: Apply from template
     updateFields: Update Fields
 manifestType:
   manifestTyperequired: Manifest Type is required
@@ -761,8 +762,15 @@ stepCommonFields:
     invalidLimitCPU: Invalid Limit CPU. To learn more, hover over the Set Container Resources tooltip.
 ciCodebase:
   prCloneStrategy: Pull Request Clone Strategy
-  buildType: CI Codebase Build Type
+  ciCodebaseBuildType: CI Codebase Build Type
   pullRequestNumber: Pull Request Number
+  validation:
+    oneOfValues: Value must be one of these values [{{values}}]
+    optionalDepth: Only positive integer values. You may use the default value provided.
+    optionalSslVerify: SSL Verify must be a boolean value. You may use the default value provided.
+    optionalPrCloneStrategy: Value must be one of these values [{{values}}]. You may use the default value provided.
+    optionalLimitMemory: Invalid Limit Memory. To learn more, hover over the Set Container Resources tooltip. You may use the default value provided.
+    optionalLimitCPU: Invalid Limit CPU. To learn more, hover over the Set Container Resources tooltip. You may use the default value provided.
 tagDependencyRequired: required to fetch the tags
 artifactPathDependencyRequired: required to fetch the artifact paths
 artifactRepositoryDependencyRequired: 'Artifactory Connector is required to fetch repositories. You can make this field Runtime input otherwise.'
@@ -948,8 +956,8 @@ buildInfra:
   priorityClassName: Priority Class
   containerSecurityContext: Container Security Context
   allowPrivilegeEscalation: Allow Privilege Escalation
-  addCapabilities: ADD Capabilities
-  dropCapabilities: DROP Capabilities
+  addCapabilities: Add Capabilities
+  dropCapabilities: Drop Capabilities
   runAsNonRoot: Run as Non Root
   readOnlyRootFilesystem: Read-only Root Filesystem
   privileged: Privileged

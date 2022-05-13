@@ -6,8 +6,9 @@
  */
 
 import React from 'react'
+import { noop } from 'lodash-es'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { MultiTypeInputType, Formik } from '@wings-software/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import TfVarFileList from '../TfPlanVarFileList'
 
@@ -34,7 +35,9 @@ const defaultProps = {
 const renderComponent = (props: any): void => {
   render(
     <TestWrapper>
-      <TfVarFileList {...props} />
+      <Formik formName="TfPlanVarFileList" onSubmit={noop} initialValues={{}}>
+        <TfVarFileList {...props} />
+      </Formik>
     </TestWrapper>
   )
 }

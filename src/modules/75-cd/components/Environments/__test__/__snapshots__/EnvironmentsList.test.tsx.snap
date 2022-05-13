@@ -1181,6 +1181,7 @@ exports[`EnvironmentList Should open Add Environment Modal on click 1`] = `
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>

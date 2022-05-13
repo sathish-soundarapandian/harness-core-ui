@@ -2,7 +2,9 @@
 
 exports[`<Volumes /> tests All onEdit values render 1`] = `
 <div>
-  <form>
+  <form
+    action="#"
+  >
     <div
       class="bp3-form-group"
       style="flex-grow: 1; margin-bottom: 0px;"
@@ -1070,7 +1072,9 @@ exports[`<Volumes /> tests All onEdit values render 1`] = `
 
 exports[`<Volumes /> tests Initial Default render 1`] = `
 <div>
-  <form>
+  <form
+    action="#"
+  >
     <div
       class="bp3-form-group"
       style="flex-grow: 1; margin-bottom: 0px;"
@@ -1157,7 +1161,9 @@ exports[`<Volumes /> tests Initial Default render 1`] = `
 
 exports[`<Volumes /> tests Should render runtime input properly 1`] = `
 <div>
-  <form>
+  <form
+    action="#"
+  >
     <div
       class="bp3-form-group"
       style="width: 300px; margin-bottom: 0px;"

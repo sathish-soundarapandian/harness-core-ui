@@ -1256,6 +1256,7 @@ export interface StringsMap {
   'variables.confirmDelete': string
   'variables.confirmDeleteTitle': string
   'variables.defaultValue': string
+  'variables.editVar': string
   'variables.editVariable': string
   'variables.inputValidation': string
   'variables.newVariable': string
@@ -1998,6 +1999,8 @@ export interface StringsMap {
   'connectors.nexus.nexusServerUrl': string
   'connectors.pagerDutyConnectorDetails': string
   'connectors.parameters': string
+  'connectors.policyEvaluations.failedToSave': string
+  'connectors.policyEvaluations.warning': string
   'connectors.prometheus.urlValidation': string
   'connectors.prometheusConnectorDetails': string
   'connectors.prometheusLabel': string
@@ -2525,9 +2528,15 @@ export interface StringsMap {
   'pipeline.ci.validations.pathRequiredForHostPath': string
   'pipeline.ci.validations.port': string
   'pipeline.ci.validations.serviceDependencyIdentifier': string
-  'pipeline.ciCodebase.buildType': string
+  'pipeline.ciCodebase.ciCodebaseBuildType': string
   'pipeline.ciCodebase.prCloneStrategy': string
   'pipeline.ciCodebase.pullRequestNumber': string
+  'pipeline.ciCodebase.validation.oneOfValues': string
+  'pipeline.ciCodebase.validation.optionalDepth': string
+  'pipeline.ciCodebase.validation.optionalLimitCPU': string
+  'pipeline.ciCodebase.validation.optionalLimitMemory': string
+  'pipeline.ciCodebase.validation.optionalPrCloneStrategy': string
+  'pipeline.ciCodebase.validation.optionalSslVerify': string
   'pipeline.clickHere': string
   'pipeline.clickToExpandErrorDetails': string
   'pipeline.closeStepConfig': string
@@ -2994,6 +3003,7 @@ export interface StringsMap {
   'pipeline.retryHistoryDescription': string
   'pipeline.retryPipeline': string
   'pipeline.rightBar.editCodebaseConfiguration': string
+  'pipeline.rightBar.mergeCommit': string
   'pipeline.runAPipeline': string
   'pipeline.runAllParallelstages': string
   'pipeline.runFailedStages': string
@@ -4267,12 +4277,14 @@ export interface StringsMap {
   'ce.perspectives.confirmDeletePerspectiveTitle': string
   'ce.perspectives.createPerspective.createCustomField': string
   'ce.perspectives.createPerspective.filters.addRuleText': string
+  'ce.perspectives.createPerspective.filters.chooseOperand': string
   'ce.perspectives.createPerspective.filters.enterCondition': string
   'ce.perspectives.createPerspective.filters.operator': string
   'ce.perspectives.createPerspective.filters.rulesText1': string
   'ce.perspectives.createPerspective.filters.rulesText2': string
   'ce.perspectives.createPerspective.filters.rulesTitle': string
   'ce.perspectives.createPerspective.filters.searchText': string
+  'ce.perspectives.createPerspective.filters.selectAll': string
   'ce.perspectives.createPerspective.filters.selectOperator': string
   'ce.perspectives.createPerspective.filters.selectValues': string
   'ce.perspectives.createPerspective.filters.selectValuesText': string
@@ -4926,6 +4938,7 @@ export interface StringsMap {
   'cf.shared.variation': string
   'cf.shared.variations': string
   'cf.targetDetail.addTargetToSegment': string
+  'cf.targetDetail.addTargetToTargetGroup': string
   'cf.targetDetail.addToSegment': string
   'cf.targetDetail.attribute': string
   'cf.targetDetail.attributes': string
@@ -4945,6 +4958,7 @@ export interface StringsMap {
   'cf.targetDetail.noSegmentAdded': string
   'cf.targetDetail.noSegmentExcluded': string
   'cf.targetDetail.noSegmentMatched': string
+  'cf.targetDetail.noTargetGroupsAvailable': string
   'cf.targetDetail.removeFromExcludeList': string
   'cf.targetDetail.removeFromExcludeListTitle': string
   'cf.targetDetail.removeFromIncludeList': string
@@ -5066,6 +5080,7 @@ export interface StringsMap {
   'ci.getStartedWithCI.firstPipeline': string
   'ci.getStartedWithCI.flexibleInfra': string
   'ci.getStartedWithCI.flexibleInfraHelpText': string
+  'ci.getStartedWithCI.genericGit': string
   'ci.getStartedWithCI.hostedByHarness': string
   'ci.getStartedWithCI.hostedByHarnessBuildLocation': string
   'ci.getStartedWithCI.hosting': string
@@ -5094,6 +5109,7 @@ export interface StringsMap {
   'ci.getStartedWithCI.selectInfra': string
   'ci.getStartedWithCI.selectRepo': string
   'ci.getStartedWithCI.selectYourRepo': string
+  'ci.getStartedWithCI.setUpAuth': string
   'ci.getStartedWithCI.startSamplePipeline': string
   'ci.getStartedWithCI.takeToTheNextLevel': string
   'ci.getStartedWithCI.ti': string
@@ -5146,6 +5162,7 @@ export interface StringsMap {
   'cv.SLOPerformanceTrend': string
   'cv.SLOTarget': string
   'cv.SLOWithName': string
+  'cv.aMaximumOfThreeSLOCanBeComparedWithTheServiceHealth': string
   'cv.abbreviatedCategories.errors': string
   'cv.abbreviatedCategories.infrastructure': string
   'cv.abbreviatedCategories.performance': string
@@ -5406,6 +5423,7 @@ export interface StringsMap {
   'cv.monitoredServices.changeMonitoredServiceTypeMessage': string
   'cv.monitoredServices.changesTable.impact': string
   'cv.monitoredServices.continuousVerification': string
+  'cv.monitoredServices.copyET': string
   'cv.monitoredServices.deleteMonitoredServiceWarning': string
   'cv.monitoredServices.deleteService': string
   'cv.monitoredServices.dependenciesHealth': string
@@ -5666,7 +5684,9 @@ export interface StringsMap {
   'cv.newMetric': string
   'cv.noAnalysis': string
   'cv.noAnomalies': string
+  'cv.noDataAvailableForTheCurrentSLOCycle': string
   'cv.noPreviousErrorBudgetResetHistoryAvailable': string
+  'cv.noSLOHasBeenCreated': string
   'cv.nonAnomalous': string
   'cv.objectiveValue': string
   'cv.onboarding.activitySources.addMoreSources': string
@@ -5723,6 +5743,7 @@ export interface StringsMap {
   'cv.periodLengthIsRequired': string
   'cv.pinABaseline': string
   'cv.pleaseFillTheRequiredFieldsToSeeTheSLIData': string
+  'cv.pleaseSelectSLOToGetTheData': string
   'cv.postDeployment': string
   'cv.preProductionTests': string
   'cv.previousErrorBudgetResetHistory': string

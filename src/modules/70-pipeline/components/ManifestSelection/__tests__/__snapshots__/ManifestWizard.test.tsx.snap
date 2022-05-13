@@ -88,7 +88,9 @@ exports[`ManifestSelection tests can change artifact input type  without crashin
         <div
           class="OverlaySpinner--overlaySpinner"
         >
-          <form>
+          <form
+            action="#"
+          >
             <div
               class="Layout--vertical StyledProps--main manifestForm StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-flex-start"
             >
@@ -306,7 +308,9 @@ exports[`ManifestSelection tests last step data with proper initial values 1`] =
         <div
           class="OverlaySpinner--overlaySpinner"
         >
-          <form>
+          <form
+            action="#"
+          >
             <div
               class="Layout--vertical StyledProps--main manifestForm StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-flex-start"
             >
@@ -588,7 +592,9 @@ exports[`ManifestSelection tests last step data without initial values 1`] = `
         <div
           class="OverlaySpinner--overlaySpinner"
         >
-          <form>
+          <form
+            action="#"
+          >
             <div
               class="Layout--vertical StyledProps--main manifestForm StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-flex-start"
             >
@@ -874,6 +880,7 @@ exports[`ManifestSelection tests new connector view works correctly 1`] = `
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -1318,6 +1325,7 @@ exports[`ManifestSelection tests new connector view works inside select dialog c
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -1743,7 +1751,9 @@ exports[`ManifestSelection tests renders correctly with differnet manifest types
         <div
           class="OverlaySpinner--overlaySpinner"
         >
-          <form>
+          <form
+            action="#"
+          >
             <div
               class="Layout--vertical StyledProps--main manifestForm StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-flex-start"
             >
@@ -2010,7 +2020,9 @@ exports[`ManifestSelection tests renders without crashing 1`] = `
         <div
           class="OverlaySpinner--overlaySpinner"
         >
-          <form>
+          <form
+            action="#"
+          >
             <div
               class="Layout--vertical StyledProps--main manifestForm StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-flex-start"
             >

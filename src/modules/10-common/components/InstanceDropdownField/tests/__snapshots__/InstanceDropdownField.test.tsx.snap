@@ -2,7 +2,9 @@
 
 exports[`Unit tests for InstanceDropdownField Component render the Formik component 1`] = `
 <div>
-  <form>
+  <form
+    action="#"
+  >
     <div
       class="bp3-form-group formGroup"
     >

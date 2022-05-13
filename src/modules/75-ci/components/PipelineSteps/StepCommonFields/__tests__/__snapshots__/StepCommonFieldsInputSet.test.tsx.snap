@@ -6,6 +6,7 @@ exports[`<StepCommonFieldsInputSet /> tests Readonly mode works 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -292,6 +293,7 @@ exports[`<StepCommonFieldsInputSet /> tests Should render properly 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

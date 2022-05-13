@@ -11,13 +11,17 @@ import { render } from '@testing-library/react'
 import { Formik } from '@wings-software/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 
-import ConnectivityMode, { ConnectivityModeType } from '../ConnectivityMode'
+import ConnectivityMode, { ConnectivityModeForm, ConnectivityModeType } from '../ConnectivityMode'
 
 describe('Test ConnectivityMode', () => {
   test('should render default state for ConnectivityMode', async () => {
     const { container, getByText } = render(
       <TestWrapper>
-        <Formik formName="test-form" initialValues={{ connectivityMode: undefined }} onSubmit={jest.fn()}>
+        <Formik<ConnectivityModeForm>
+          formName="test-form"
+          initialValues={{ connectivityMode: undefined }}
+          onSubmit={jest.fn()}
+        >
           {formik => (
             <Form>
               <ConnectivityMode onChange={jest.fn()} formik={formik} />
@@ -34,7 +38,7 @@ describe('Test ConnectivityMode', () => {
   test('should render manager state for ConnectivityMode', async () => {
     const { container, getByText } = render(
       <TestWrapper>
-        <Formik
+        <Formik<ConnectivityModeForm>
           formName="test-form"
           initialValues={{ connectivityMode: ConnectivityModeType.Manager }}
           onSubmit={jest.fn()}
@@ -56,7 +60,7 @@ describe('Test ConnectivityMode', () => {
   test('should render delegate state for ConnectivityMode', async () => {
     const { container, getByText } = render(
       <TestWrapper>
-        <Formik
+        <Formik<ConnectivityModeForm>
           formName="test-form"
           initialValues={{ connectivityMode: ConnectivityModeType.Delegate }}
           onSubmit={jest.fn()}

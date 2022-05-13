@@ -8,6 +8,7 @@
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
+import type { FormikProps } from 'formik'
 import {
   Layout,
   Button,
@@ -23,7 +24,10 @@ import type { ConnectorInfoDTO, ConnectorConfigDTO } from 'services/cd-ng'
 import { validateTheIdentifierIsUniquePromise, Failure } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { StringUtils } from '@common/exports'
-import { AddDescriptionAndKVTagsWithIdentifier } from '@common/components/AddDescriptionAndTags/AddDescriptionAndTags'
+import {
+  AddDescriptionAndKVTagsWithIdentifier,
+  FormikForAddDescriptionandKVTags
+} from '@common/components/AddDescriptionAndTags/AddDescriptionAndTags'
 import type { permission as PermissionType } from '../constants'
 import { CO_PERMISSION, CE_PERMISSION, COCE_PERMISSION } from '../constants'
 import css from './Steps.module.scss'
@@ -148,7 +152,7 @@ const OverviewStep: React.FC<StepProps<ConnectorConfigDTO> & OverviewStepProps> 
               <ModalErrorHandler bind={setModalErrorHandler} />
               <Container padding={{ top: 'large', bottom: 'large' }} className={css.fullHeight}>
                 <AddDescriptionAndKVTagsWithIdentifier
-                  formikProps={formikProps}
+                  formikProps={formikProps as FormikProps<FormikForAddDescriptionandKVTags>}
                   identifierProps={{ inputName: 'name', inputLabel: getString('ce.connector.AWS.overview.label') }}
                 />
               </Container>

@@ -7,6 +7,7 @@ exports[`<FilterDrawer /> render filter drawer 1`] = `
   tabindex="0"
 >
   <form
+    action="#"
     class="FormikForm--main"
   >
     <div>
@@ -394,6 +395,7 @@ exports[`<FilterDrawer /> render filter drawer 1`] = `
               class="OverlaySpinner--overlaySpinner"
             >
               <form
+                action="#"
                 class="FormikForm--main"
               >
                 <div>

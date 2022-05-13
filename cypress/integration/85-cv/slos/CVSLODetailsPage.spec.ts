@@ -26,10 +26,22 @@ import {
   getSLORiskCountWithCVNGProd,
   getChangeEventDetail,
   changeEventDetailsResponse,
+  getSLODashboardWidgets,
   getSLOExecutionLogs,
   getSLOExecutionLogsResponse,
   getSLO_APICallLogs,
-  getSLO_APICallLogsResponse
+  getSLO_APICallLogsResponse,
+  getSLODetailsForSLO_1,
+  getSLODetailsForSLO_1Response,
+  getMonitoredServiceOverAllHealthScore,
+  getMonitoredServiceOverAllHealthScoreResponse,
+  getSLODashboardWidgetsResponse,
+  getSLODetailsForSLO_2,
+  getSLODetailsForSLO_3,
+  getSLODetailsForSLO_4,
+  getSLODashboardWidgetsEmptyResponse,
+  getSLODetailResponseSLOOutRange,
+  getSLODetailResponseSLIRecalculation
 } from '../../../support/85-cv/slos/constants'
 
 describe('CVSLODetailsPage', () => {
@@ -156,7 +168,7 @@ describe('CVSLODetailsPage', () => {
     cy.findByRole('button', { name: /Custom/i }).should('not.have.class', 'Button--variation-secondary')
   })
 
-  it('should open the Change details drawer by clicking on the Change', () => {
+  it('should open the Change details drawer by clicking on the Change and ensure the SLO and Error budget charts functionality', () => {
     cy.intercept('GET', getSLODetails, responseSLODashboardDetailOfCalendarType)
     cy.intercept('GET', getMonitoredServiceChangeEventSummary, monitoredServiceChangeEventSummaryResponse)
     cy.intercept('GET', getChangeEventList, changeEventListResponse)
@@ -168,8 +180,106 @@ describe('CVSLODetailsPage', () => {
     cy.get('.bp3-card').contains('p', 'Changes').scrollIntoView().should('be.visible')
 
     cy.intercept('GET', getChangeEventDetail, changeEventDetailsResponse)
+    cy.intercept('GET', getMonitoredServiceOverAllHealthScore, getMonitoredServiceOverAllHealthScoreResponse)
+    cy.intercept('GET', getSLODashboardWidgets, getSLODashboardWidgetsResponse)
+    cy.intercept('GET', getSLODetailsForSLO_1, getSLODetailsForSLO_1Response)
+    cy.intercept('GET', getSLODetailsForSLO_2, errorResponse)
+    cy.intercept('GET', getSLODetailsForSLO_3, getSLODetailsForSLO_1Response)
     cy.get('.TableV2--body').children().first().click()
 
-    cy.contains('p', 'Deployment of cvng in prod').should('be.visible')
+    cy.contains('p', 'A maximum of three SLO’s can be compared with the Service Health.').should('be.visible')
+
+    cy.contains('p', 'Oops, something went wrong on our end. Please contact Harness Support.')
+      .scrollIntoView()
+      .should('be.visible')
+
+    cy.intercept('GET', getSLODetailsForSLO_2, getSLODetailsForSLO_1Response)
+    cy.contains('span', 'Retry').click()
+
+    cy.contains('p', 'Oops, something went wrong on our end. Please contact Harness Support.').should('not.exist')
+
+    cy.findByRole('button', { name: /SLO 4/i }).should('be.disabled')
+
+    cy.findByRole('button', { name: /SLO 3/i }).click()
+
+    cy.findByRole('button', { name: /SLO 4/i }).should('not.be.disabled')
+
+    cy.intercept('GET', getSLODetailsForSLO_4, getSLODetailsForSLO_1Response)
+    cy.findByRole('button', { name: /SLO 4/i }).click()
+
+    cy.findByRole('button', { name: /SLO 3/i }).should('be.disabled')
+    cy.contains('h2', 'SLO 4').scrollIntoView().should('be.visible')
+  })
+
+  it('should handle the no data state for SLO charts', () => {
+    cy.intercept('GET', getSLODetails, responseSLODashboardDetailOfCalendarType)
+    cy.intercept('GET', getMonitoredServiceChangeEventSummary, monitoredServiceChangeEventSummaryResponse)
+    cy.intercept('GET', getChangeEventList, changeEventListResponse)
+
+    cy.contains('p', 'SLOs').click()
+    cy.contains('h2', 'SLO-1').click()
+
+    cy.contains('p', 'Service Details').should('be.visible')
+    cy.get('.bp3-card').contains('p', 'Changes').scrollIntoView().should('be.visible')
+
+    cy.intercept('GET', getChangeEventDetail, changeEventDetailsResponse)
+    cy.intercept('GET', getMonitoredServiceOverAllHealthScore, getMonitoredServiceOverAllHealthScoreResponse)
+    cy.intercept('GET', getSLODashboardWidgets, getSLODashboardWidgetsEmptyResponse)
+
+    cy.get('.TableV2--body').children().first().click()
+
+    cy.contains('p', 'No SLO has been created').should('be.visible')
+  })
+
+  it('should handle the no data for out of SLO cycle', () => {
+    cy.intercept('GET', getSLODetails, responseSLODashboardDetailOfCalendarType)
+    cy.intercept('GET', getMonitoredServiceChangeEventSummary, monitoredServiceChangeEventSummaryResponse)
+    cy.intercept('GET', getChangeEventList, changeEventListResponse)
+
+    cy.contains('p', 'SLOs').click()
+    cy.contains('h2', 'SLO-1').click()
+
+    cy.contains('p', 'Service Details').should('be.visible')
+    cy.get('.bp3-card').contains('p', 'Changes').scrollIntoView().should('be.visible')
+
+    cy.intercept('GET', getChangeEventDetail, changeEventDetailsResponse)
+    cy.intercept('GET', getMonitoredServiceOverAllHealthScore, getMonitoredServiceOverAllHealthScoreResponse)
+    cy.intercept('GET', getSLODashboardWidgets, getSLODashboardWidgetsResponse)
+    cy.intercept('GET', getSLODetailsForSLO_1, getSLODetailResponseSLOOutRange)
+    cy.intercept('GET', getSLODetailsForSLO_2, getSLODetailResponseSLOOutRange)
+    cy.intercept('GET', getSLODetailsForSLO_3, getSLODetailResponseSLOOutRange)
+
+    cy.get('.TableV2--body').children().first().click()
+
+    cy.contains('p', 'A maximum of three SLO’s can be compared with the Service Health.').should('be.visible')
+
+    cy.findAllByText('No data available for the current SLO cycle').should('have.length', 3)
+    cy.findAllByText('No data available for the current SLO cycle').last().scrollIntoView()
+  })
+
+  it('should handle the SLI recalculation', () => {
+    cy.intercept('GET', getSLODetails, responseSLODashboardDetailOfCalendarType)
+    cy.intercept('GET', getMonitoredServiceChangeEventSummary, monitoredServiceChangeEventSummaryResponse)
+    cy.intercept('GET', getChangeEventList, changeEventListResponse)
+
+    cy.contains('p', 'SLOs').click()
+    cy.contains('h2', 'SLO-1').click()
+
+    cy.contains('p', 'Service Details').should('be.visible')
+    cy.get('.bp3-card').contains('p', 'Changes').scrollIntoView().should('be.visible')
+
+    cy.intercept('GET', getChangeEventDetail, changeEventDetailsResponse)
+    cy.intercept('GET', getMonitoredServiceOverAllHealthScore, getMonitoredServiceOverAllHealthScoreResponse)
+    cy.intercept('GET', getSLODashboardWidgets, getSLODashboardWidgetsResponse)
+    cy.intercept('GET', getSLODetailsForSLO_1, getSLODetailResponseSLIRecalculation)
+    cy.intercept('GET', getSLODetailsForSLO_2, getSLODetailResponseSLIRecalculation)
+    cy.intercept('GET', getSLODetailsForSLO_3, getSLODetailResponseSLIRecalculation)
+
+    cy.get('.TableV2--body').children().first().click()
+
+    cy.contains('p', 'A maximum of three SLO’s can be compared with the Service Health.').should('be.visible')
+
+    cy.findAllByText('SLO recalculation in progress').should('have.length', 3)
+    cy.findAllByText('SLO recalculation in progress').last().scrollIntoView()
   })
 })

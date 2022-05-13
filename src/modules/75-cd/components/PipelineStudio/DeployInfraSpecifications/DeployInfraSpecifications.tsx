@@ -324,7 +324,7 @@ export default function DeployInfraSpecifications(props: React.PropsWithChildren
               onUpdateInfrastructureDefinition(
                 {
                   connectorRef: value.connectorRef,
-                  subscription: value.subscription,
+                  subscriptionId: value.subscriptionId,
                   resourceGroup: value.resourceGroup,
                   cluster: value.cluster,
                   namespace: value.namespace,

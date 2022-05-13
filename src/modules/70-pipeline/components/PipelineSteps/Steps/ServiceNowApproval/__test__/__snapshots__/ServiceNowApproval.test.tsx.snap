@@ -772,6 +772,7 @@ exports[`ServiceNow Approval tests Edit stage - readonly: edit stage view readon
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

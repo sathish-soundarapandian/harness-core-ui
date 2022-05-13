@@ -348,7 +348,7 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
   const [selectedView, setSelectedView] = useState<ChartType>(ChartType.BAR)
   const getServiceDetailsLink = (service: ActiveServiceInfo): string => {
     const serviceId = service.serviceInfo?.serviceIdentifier || ''
-    return routes.toServiceDetails({
+    return routes.toServiceStudio({
       accountId,
       orgIdentifier: service.orgInfo?.orgIdentifier || '',
       projectIdentifier: service.projectInfo?.projectIdentifier || '',

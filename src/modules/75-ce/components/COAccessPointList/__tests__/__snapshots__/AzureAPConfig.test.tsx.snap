@@ -16,6 +16,7 @@ exports[`Azure Access Point Configuration Name field should be disabled and shou
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>
@@ -214,6 +215,7 @@ exports[`Azure Access Point Configuration render configuration dialog and fill d
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>
@@ -401,6 +403,7 @@ exports[`Azure Access Point Configuration render configuration dialog and fill d
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>

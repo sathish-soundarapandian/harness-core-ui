@@ -11,10 +11,8 @@ import {
   Container,
   Formik,
   FormikForm,
-  FormInput,
   Button,
   Switch,
-  TextInput,
   RUNTIME_INPUT_VALUE,
   IconName
 } from '@wings-software/uicore'
@@ -29,10 +27,7 @@ import type { PipelineInfoConfig } from 'services/cd-ng'
 import { ConnectorInfoDTO, useGetConnector } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
-import {
-  ConnectorReferenceField,
-  ConnectorReferenceFieldProps
-} from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { ConnectorReferenceFieldProps } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { NameId, NameIdDescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import {
   getIdentifierFromValue,
@@ -42,15 +37,21 @@ import {
 import { IdentifierSchemaWithoutHook, NameSchemaWithoutHook } from '@common/utils/Validation'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import { useGitScope } from '@pipeline/utils/CIUtils'
+import { useGitScope, isRuntimeInput } from '@pipeline/utils/CIUtils'
 import type { BuildStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { createTemplate, getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, StageActions } from '@common/constants/TrackingConstants'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
+
+import {
+  renderConnectorAndRepoName,
+  CodebaseRuntimeInputsInterface
+} from '@pipeline/components/PipelineStudio/RightBar/RightBarUtils'
 import css from './EditStageView.module.scss'
 
 export interface EditStageView {
@@ -83,6 +84,7 @@ export const EditStageView: React.FC<EditStageView> = ({
   moduleIcon
 }): JSX.Element => {
   const { getString } = useStrings()
+  const { expressions } = useVariablesExpression()
   const [connectionType, setConnectionType] = React.useState('')
   const [connectorUrl, setConnectorUrl] = React.useState('')
   const gitScope = useGitScope()
@@ -120,6 +122,10 @@ export const EditStageView: React.FC<EditStageView> = ({
 
   const connectorId = getIdentifierFromValue((codebase?.connectorRef as string) || '')
   const initialScope = getScopeFromValue((codebase?.connectorRef as string) || '')
+
+  const [codebaseRuntimeInputs, setCodebaseRuntimeInputs] = React.useState<CodebaseRuntimeInputsInterface>({
+    ...(isRuntimeInput(codebase?.connectorRef) && { connectorRef: true, repoName: true })
+  })
 
   const {
     data: connector,
@@ -310,60 +316,27 @@ export const EditStageView: React.FC<EditStageView> = ({
                   <Text margin={{ bottom: 'medium' }}>
                     {getString('pipelineSteps.build.create.configureCodebaseHelperText')}
                   </Text>
-                  <ConnectorReferenceField
-                    className={css.connector}
-                    error={
-                      formikProps.submitCount && formikProps.errors.connectorRef
-                        ? formikProps.errors.connectorRef
-                        : undefined
-                    }
-                    name="connectorRef"
-                    type={['Git', 'Github', 'Gitlab', 'Bitbucket', 'Codecommit']}
-                    selected={formikProps.values.connectorRef}
-                    label={getString('connector')}
-                    width={366}
-                    placeholder={loading ? getString('loading') : getString('connectors.selectConnector')}
-                    disabled={loading || isReadonly}
-                    accountIdentifier={accountId}
-                    projectIdentifier={projectIdentifier}
-                    orgIdentifier={orgIdentifier}
-                    onChange={(value, scope) => {
-                      setConnectionType(value.type === 'Git' ? value.spec.connectionType : value.spec.type)
-                      setConnectorUrl(value.spec.url)
-
-                      formikProps.setFieldValue('connectorRef', {
-                        label: value.name || '',
-                        value: `${scope !== Scope.PROJECT ? `${scope}.` : ''}${value.identifier}`,
-                        scope: scope,
-                        live: value?.status?.status === 'SUCCESS',
-                        connector: value
-                      })
-                    }}
-                    gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-                  />
-                  {connectionType === 'Repo' ? (
-                    <>
-                      <Text margin={{ bottom: 'xsmall' }}>{repositoryNameLabel}</Text>
-                      <TextInput name="repoName" value={connectorUrl} style={{ flexGrow: 1 }} disabled />
-                    </>
-                  ) : (
-                    <>
-                      <FormInput.Text
-                        className={css.repositoryUrl}
-                        label={repositoryNameLabel}
-                        name="repoName"
-                        style={{ flexGrow: 1 }}
-                        disabled={isReadonly}
-                        placeholder={getString('pipeline.manifestType.repoNamePlaceholder')}
-                      />
-                      {connectorUrl.length > 0 ? (
-                        <Text className={css.predefinedValue} width={380} lineClamp={1}>
-                          {(connectorUrl[connectorUrl.length - 1] === '/' ? connectorUrl : connectorUrl + '/') +
-                            (formikProps.values.repoName ? formikProps.values.repoName : '')}
-                        </Text>
-                      ) : null}
-                    </>
-                  )}
+                  {renderConnectorAndRepoName({
+                    values: formikProps.values,
+                    setFieldValue: formikProps.setFieldValue,
+                    connectorUrl,
+                    connectionType,
+                    setConnectionType,
+                    setConnectorUrl,
+                    getString,
+                    errors: formikProps.errors,
+                    loading,
+                    accountId,
+                    projectIdentifier,
+                    orgIdentifier,
+                    repoIdentifier,
+                    branch,
+                    expressions,
+                    isReadonly,
+                    setCodebaseRuntimeInputs,
+                    codebaseRuntimeInputs,
+                    connectorWidth: 366
+                  })}
                 </div>
               )}
               <Button

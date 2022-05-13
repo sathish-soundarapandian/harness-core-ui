@@ -1111,6 +1111,7 @@ exports[`Test GatewayDetails renders review screen 2`] = `
                         class="OverlaySpinner--overlaySpinner"
                       >
                         <form
+                          action="#"
                           class="FormikForm--main step1Form"
                         >
                           <div>
@@ -2913,6 +2914,7 @@ exports[`Test GatewayDetails renders setup access screen and move to previous st
                         class="OverlaySpinner--overlaySpinner"
                       >
                         <form
+                          action="#"
                           class="FormikForm--main step1Form"
                         >
                           <div>
@@ -3985,6 +3987,7 @@ exports[`Test GatewayDetails renders without crashing 1`] = `
                         class="OverlaySpinner--overlaySpinner"
                       >
                         <form
+                          action="#"
                           class="FormikForm--main step1Form"
                         >
                           <div>

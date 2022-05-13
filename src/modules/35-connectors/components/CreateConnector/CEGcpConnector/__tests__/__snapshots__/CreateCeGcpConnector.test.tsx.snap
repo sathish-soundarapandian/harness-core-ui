@@ -199,6 +199,7 @@ exports[`Create Secret Manager Wizard should render form 1`] = `
                 class="OverlaySpinner--overlaySpinner"
               >
                 <form
+                  action="#"
                   class="FormikForm--main"
                 >
                   <div>
@@ -771,6 +772,7 @@ exports[`Create Secret Manager Wizard should render form 2`] = `
                 class="OverlaySpinner--overlaySpinner"
               >
                 <form
+                  action="#"
                   class="FormikForm--main"
                 >
                   <div>
@@ -2992,6 +2994,7 @@ exports[`Create Secret Manager Wizard should throw an error when connectors alre
                 class="OverlaySpinner--overlaySpinner"
               >
                 <form
+                  action="#"
                   class="FormikForm--main"
                 >
                   <div>

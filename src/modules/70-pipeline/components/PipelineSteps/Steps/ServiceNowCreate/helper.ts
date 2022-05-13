@@ -10,9 +10,13 @@ import type { FormikProps } from 'formik'
 import { isEmpty } from 'lodash-es'
 import type { ServiceNowFieldAllowedValueNG, ServiceNowFieldNG, ServiceNowFieldValueNG } from 'services/cd-ng'
 import type { ServiceNowCreateData, ServiceNowCreateFieldType, ServiceNowFieldNGWithValue } from './types'
+import type { ServiceNowUpdateData } from '../ServiceNowUpdate/types'
 import { FieldType, ServiceNowStaticFields } from './types'
 
-export const resetForm = (formik: FormikProps<ServiceNowCreateData>, parent: string) => {
+export const resetForm = (
+  formik: FormikProps<ServiceNowCreateData> | FormikProps<ServiceNowUpdateData>,
+  parent: string
+) => {
   if (parent === 'connectorRef') {
     formik.setFieldValue('spec.ticketType', '')
     formik.setFieldValue('spec.fields', [])

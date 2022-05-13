@@ -219,6 +219,7 @@ exports[`Approval Stage readonly view if readonly view works: readonly view appr
               id="stageOverview"
             >
               <form
+                action="#"
                 class="FormikForm--main"
               >
                 <div>

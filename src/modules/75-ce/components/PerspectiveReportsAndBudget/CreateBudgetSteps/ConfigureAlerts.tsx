@@ -346,7 +346,7 @@ const Threshold = (props: ThresholdProps): JSX.Element => {
           values={value.emailAddresses || []}
         />
         <Text font={{ variation: FontVariation.FORM_MESSAGE_DANGER }}>
-          {(formikProps.errors.alertThresholds || [])[idx]?.emailAddresses}
+          {((formikProps.errors.alertThresholds || [])[idx] as any)?.emailAddresses}
         </Text>
       </Container>
       <Icon

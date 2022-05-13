@@ -381,6 +381,7 @@ exports[`Test GcpInfrastructureSpec snapshot should render edit view with empty 
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -788,6 +789,7 @@ exports[`Test GcpInfrastructureSpec snapshot should render edit view with runtim
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -1203,6 +1205,7 @@ exports[`Test GcpInfrastructureSpec snapshot should render edit view with values
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>

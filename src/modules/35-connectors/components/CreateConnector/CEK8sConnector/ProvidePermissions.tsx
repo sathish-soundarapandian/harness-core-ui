@@ -31,6 +31,8 @@ import { CE_K8S_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
 import { useMutateAsGet } from '@common/hooks'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { FeatureFlag } from '@common/featureFlags'
+import { useConnectorGovernanceModal } from '@connectors/hooks/useConnectorGovernanceModal'
 import CopyCodeSection from './components/CopyCodeSection'
 import PermissionYAMLPreview from './PermissionYAMLPreview'
 import css from './CEK8sConnector.module.scss'
@@ -64,6 +66,10 @@ const ProvidePermissions: React.FC<StepProps<StepSecretManagerProps> & ProvidePe
   const { mutate: createConnector } = useCreateConnector({ queryParams: { accountIdentifier: accountId } })
   const { mutate: updateConnector } = useUpdateConnector({
     queryParams: { accountIdentifier: accountId }
+  })
+  const { hideOrShowGovernanceErrorModal } = useConnectorGovernanceModal({
+    errorOutOnGovernanceWarning: false,
+    featureFlag: FeatureFlag.OPA_CONNECTOR_GOVERNANCE
   })
   const { data: permissionsYaml } = useMutateAsGet(useCloudCostK8sClusterSetup, {
     queryParams: {
@@ -99,8 +105,11 @@ const ProvidePermissions: React.FC<StepProps<StepSecretManagerProps> & ProvidePe
         } as ConnectorInfoDTO
       }
       const response = props.isEditMode ? await updateConnector(connector) : await createConnector(connector)
-      props.onSuccess?.(response?.data as ConnectorRequestBody)
-      props.nextStep?.({ ...props.prevStepData } as ConnectorInfoDTO)
+      const { canGoToNextStep } = await hideOrShowGovernanceErrorModal(response)
+      if (canGoToNextStep) {
+        props.onSuccess?.(response?.data as ConnectorRequestBody)
+        props.nextStep?.({ ...props.prevStepData } as ConnectorInfoDTO)
+      }
     } catch (e) {
       modalErrorHandler?.showDanger(getRBACErrorMessage(e))
     } finally {

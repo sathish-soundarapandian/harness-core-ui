@@ -28,7 +28,7 @@ export interface SaveTemplateButtonProps {
 
 export function SaveTemplateButton({ data, buttonProps, type }: SaveTemplateButtonProps): JSX.Element {
   const { getString } = useStrings()
-  const { save } = useSaveAsTemplate({ data, type })
+  const { save } = useSaveAsTemplate({ data, type, fireSuccessEvent: true })
 
   return (
     <RbacButton

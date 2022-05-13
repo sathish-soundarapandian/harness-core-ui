@@ -199,6 +199,7 @@ export const scrollZoom = (
   container.onwheel = scrolled
 
   function scrolled(e: any): void {
+    if (!e.ctrlKey) return
     e.preventDefault()
     let delta = e.delta || e.wheelDelta
     if (delta === undefined) {

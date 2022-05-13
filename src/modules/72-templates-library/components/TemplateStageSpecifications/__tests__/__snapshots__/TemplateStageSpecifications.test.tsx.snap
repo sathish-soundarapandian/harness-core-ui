@@ -16,6 +16,7 @@ exports[`<TemplateStageSpecifications /> tests snapshot test with error 1`] = `
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>
@@ -176,6 +177,7 @@ exports[`<TemplateStageSpecifications /> tests snapshot test with no template in
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>
@@ -286,6 +288,7 @@ exports[`<TemplateStageSpecifications /> tests snapshot test with template input
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>

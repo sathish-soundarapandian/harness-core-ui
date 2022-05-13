@@ -442,7 +442,7 @@ const AzureAccessPointForm: React.FC<AzureAccessPointFormProps> = props => {
           func_region: Yup.string().required()
         })}
       >
-        {({ submitForm, isValid, values }) => (
+        {({ submitForm, isValid, dirty, values }) => (
           <FormikForm>
             <div className={css.formFieldRow}>
               <FormInput.Select
@@ -610,7 +610,7 @@ const AzureAccessPointForm: React.FC<AzureAccessPointFormProps> = props => {
                 Back
               </Button>
               {!lbCreationInProgress && (
-                <Button intent={'primary'} onClick={submitForm} disabled={!isFormValid(isValid)}>
+                <Button intent={'primary'} onClick={submitForm} disabled={!isFormValid(!(!isValid || !dirty))}>
                   Save
                 </Button>
               )}

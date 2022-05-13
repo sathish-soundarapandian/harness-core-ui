@@ -79,8 +79,6 @@ jest.spyOn(cdng, 'useGetSourceCodeManagers').mockImplementation((): any => {
   return { data: sourceCodeManagers, refetch: jest.fn(), loading: false }
 })
 
-const mockUpdate = jest.fn().mockReturnValue(Promise.resolve({ data: {}, status: {} }))
-
 const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
   <TestWrapper>{children}</TestWrapper>
 )
@@ -109,6 +107,8 @@ describe('Artifact Trigger Tests', () => {
     })
   })
   test('Artifact Trigger - submit on edit with right payload', async () => {
+    const mockUpdate = jest.fn().mockReturnValue(Promise.resolve({ data: {}, status: {} }))
+
     jest.spyOn(pipelineNg, 'useGetSchemaYaml').mockImplementation(() => {
       return {
         data: GetSchemaYaml as any,
@@ -162,6 +162,8 @@ describe('Artifact Trigger Tests', () => {
   })
 
   test('Artifact Trigger - submit clears undefined artifact identifier in parallel stage', async () => {
+    const mockUpdate = jest.fn().mockReturnValue(Promise.resolve({ data: {}, status: {} }))
+
     jest.spyOn(pipelineNg, 'useGetSchemaYaml').mockImplementation(() => {
       return {
         data: GetSchemaYaml as any,

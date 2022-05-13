@@ -99,7 +99,7 @@ export const getInfrastructureDefaultValue = (
     }
     case InfraDeploymentType.KubernetesAzure: {
       const connectorRef = infrastructure?.spec?.connectorRef
-      const subscription = infrastructure?.spec?.subscription
+      const subscriptionId = infrastructure?.spec?.subscriptionId
       const resourceGroup = infrastructure?.spec?.resourceGroup
       const cluster = infrastructure?.spec?.cluster
       const namespace = infrastructure?.spec?.namespace
@@ -108,7 +108,7 @@ export const getInfrastructureDefaultValue = (
       return {
         connectorRef,
         namespace,
-        subscription,
+        subscriptionId,
         resourceGroup,
         cluster,
         releaseName,

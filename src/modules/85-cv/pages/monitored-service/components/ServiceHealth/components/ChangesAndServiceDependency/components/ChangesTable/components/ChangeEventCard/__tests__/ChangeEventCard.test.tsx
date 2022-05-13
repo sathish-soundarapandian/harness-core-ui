@@ -20,6 +20,16 @@ jest.mock('@cv/components/TimelineView/TimelineBar', () => ({
   }
 }))
 
+jest.mock(
+  '@cv/pages/monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/components/ChangeCard/components/SLOAndErrorBudget/SLOAndErrorBudget',
+  () => ({
+    __esModule: true,
+    default: function SLOAndErrorBudget() {
+      return <div data-testid="SLO-and-errorBudget" />
+    }
+  })
+)
+
 describe('Validate ChangeCard', () => {
   test('should render Pager Duty card', async () => {
     jest.spyOn(cvService, 'useGetChangeEventDetail').mockImplementation(
@@ -63,7 +73,7 @@ describe('Validate ChangeCard', () => {
         } as any)
     )
     jest.spyOn(cvService, 'useGetMonitoredServiceOverAllHealthScore').mockReturnValue({
-      data: {},
+      data: mockedHealthScoreData,
       refetch: jest.fn() as unknown
     } as UseGetReturn<any, any, any, any>)
     const { getByText } = render(
@@ -91,7 +101,7 @@ describe('Validate ChangeCard', () => {
         } as any)
     )
     jest.spyOn(cvService, 'useGetMonitoredServiceOverAllHealthScore').mockReturnValue({
-      data: {},
+      data: mockedHealthScoreData,
       refetch: jest.fn() as unknown
     } as UseGetReturn<any, any, any, any>)
     const { getByText } = render(

@@ -73,6 +73,7 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -459,7 +460,7 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                           class="bp3-input"
                                           name="pipeline.variables[1].value"
                                           type="text"
-                                          value="1"
+                                          value=""
                                         />
                                       </div>
                                       <span
@@ -537,7 +538,7 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                               placeholder="Search..."
                                               style="padding-right: 0px;"
                                               type="text"
-                                              value="val1"
+                                              value=""
                                             />
                                             <span
                                               class="bp3-input-action"
@@ -627,12 +628,24 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                   class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
                                 >
                                   <div
-                                    class="Layout--horizontal Layout--layout-spacing-huge StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-start StyledProps--padding-top-small StyledProps--padding-left-xsmall StyledProps--padding-bottom-xsmall StyledProps--margin-left-large"
+                                    class="Text--withDocsTooltip"
+                                    data-tooltip-id="ciCodebaseBuildType"
+                                  >
+                                    <p
+                                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                                    >
+                                      filters.executions.buildType
+                                    </p>
+                                  </div>
+                                  <div
+                                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-start StyledProps--padding-top-small StyledProps--padding-left-xsmall StyledProps--padding-bottom-xsmall StyledProps--margin-left-large"
                                   >
                                     <label
                                       class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--font-variation-form-label"
+                                      style="width: 110px;"
                                     >
                                       <input
+                                        checked=""
                                         type="radio"
                                       />
                                       <span
@@ -641,7 +654,8 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                       gitBranch
                                     </label>
                                     <label
-                                      class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--font-variation-form-label"
+                                      class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--margin-left-huge StyledProps--font-variation-form-label"
+                                      style="width: 90px;"
                                     >
                                       <input
                                         type="radio"
@@ -652,7 +666,8 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                       gitTag
                                     </label>
                                     <label
-                                      class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--font-variation-form-label"
+                                      class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--margin-left-huge StyledProps--font-variation-form-label"
+                                      style="width: 110px;"
                                     >
                                       <input
                                         type="radio"
@@ -934,6 +949,7 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                       </label>
                                       <div>
                                         <form
+                                          action="#"
                                           class="FormikForm--main removeBpPopoverWrapperTopMargin"
                                         >
                                           <div>
@@ -1295,6 +1311,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -2317,6 +2334,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -3298,6 +3316,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Sch
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -3796,6 +3815,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Sch
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>

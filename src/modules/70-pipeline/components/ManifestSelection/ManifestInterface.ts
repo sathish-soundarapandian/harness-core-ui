@@ -51,7 +51,7 @@ export interface ManifestListViewProps {
   refetchConnectors: () => void
   listOfManifests: Array<any>
   isReadonly: boolean
-  deploymentType: string
+  deploymentType: ServiceDefinition['type']
   allowableTypes: MultiTypeInputType[]
   allowOnlyOne?: boolean
 }

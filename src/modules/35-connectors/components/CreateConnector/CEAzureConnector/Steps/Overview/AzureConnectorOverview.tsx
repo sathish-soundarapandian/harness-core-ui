@@ -258,7 +258,7 @@ const Overview: React.FC<StepProps<CEAzureDTO> & OverviewProps> = props => {
                 {isGitSyncEnabled && (
                   <GitSyncStoreProvider>
                     <GitContextForm
-                      formikProps={formikProps}
+                      formikProps={formikProps as any}
                       gitDetails={props.gitDetails}
                       className={'gitDetailsContainer'}
                     />

@@ -44,13 +44,14 @@ export const useGovernance = (): UseGovernancePayload => {
     showErrorModal()
   }
 
-  const [showErrorModal] = useModalHook(
+  const [showErrorModal, hideErrorModal] = useModalHook(
     () => (
       <EvaluationModal
         accountId={accountIdentifier}
         key={governanceError.id}
         module="cf"
         metadata={governanceError}
+        closeModal={hideErrorModal}
         headingErrorMessage={getString('cf.policyEvaluations.failedToSave')}
         headingWarningMessage={getString('cf.policyEvaluations.warning')}
       />

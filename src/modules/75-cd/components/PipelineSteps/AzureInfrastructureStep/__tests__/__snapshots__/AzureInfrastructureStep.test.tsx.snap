@@ -502,6 +502,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with em
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -980,6 +981,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with ru
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -1548,6 +1550,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with va
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>

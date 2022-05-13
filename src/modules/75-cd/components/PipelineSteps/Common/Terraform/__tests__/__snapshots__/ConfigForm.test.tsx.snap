@@ -11,7 +11,9 @@ exports[`TF Config Form tests edit view loads correctly 1`] = `
       <div
         class="Layout--vertical StyledProps--main"
       >
-        <form>
+        <form
+          action="#"
+        >
           <div
             class="formGroup md"
           >
@@ -458,7 +460,9 @@ exports[`TF Config Form tests initial render 1`] = `
       <div
         class="Layout--vertical StyledProps--main"
       >
-        <form>
+        <form
+          action="#"
+        >
           <div
             class="formGroup md"
           >
@@ -795,7 +799,9 @@ exports[`TF Config Form tests should render runtime correctly 1`] = `
       <div
         class="Layout--vertical StyledProps--main"
       >
-        <form>
+        <form
+          action="#"
+        >
           <div
             class="formGroup md"
           >

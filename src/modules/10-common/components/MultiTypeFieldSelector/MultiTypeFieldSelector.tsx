@@ -17,7 +17,7 @@ import {
   FormInput
 } from '@wings-software/uicore'
 import { IFormGroupProps, Intent, FormGroup } from '@blueprintjs/core'
-import { FormikContext, connect } from 'formik'
+import { FormikContextType, connect } from 'formik'
 import { get } from 'lodash-es'
 import { errorCheck } from '@common/utils/formikHelpers'
 import MultiTypeSelectorButton from '../MultiTypeSelectorButton/MultiTypeSelectorButton'
@@ -44,7 +44,7 @@ export interface MultiTypeFieldSelectorProps extends Omit<IFormGroupProps, 'labe
 }
 
 export interface ConnectedMultiTypeFieldSelectorProps extends MultiTypeFieldSelectorProps {
-  formik: FormikContext<any>
+  formik: FormikContextType<any>
 }
 
 export function MultiTypeFieldSelector(props: ConnectedMultiTypeFieldSelectorProps): React.ReactElement | null {

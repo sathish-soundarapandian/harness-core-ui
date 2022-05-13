@@ -46,7 +46,7 @@ describe('Barrier tests', () => {
       />
     )
     // Submit empty form
-    await act(() => ref.current?.submitForm())
+    await act(() => ref.current?.submitForm()!)
     expect(getByText('pipelineSteps.stepNameRequired')).toBeTruthy()
 
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
@@ -55,9 +55,9 @@ describe('Barrier tests', () => {
     })
     fireEvent.change(queryByNameAttribute('timeout')!, { target: { value: '' } })
 
-    await act(() => ref.current?.submitForm())
+    await act(() => ref.current?.submitForm()!)
     expect(queryByText('validation.timeout10SecMinimum')).toBeTruthy()
-    await act(() => ref.current?.submitForm())
+    await act(() => ref.current?.submitForm()!)
 
     await waitFor(() => expect(queryByText('pipeline.barrierStep.barrierReferenceRequired')).toBeTruthy())
   })
@@ -82,7 +82,7 @@ describe('Barrier tests', () => {
         onUpdate={onUpdate}
       />
     )
-    await act(() => ref.current?.submitForm())
+    await act(() => ref.current?.submitForm()!)
     expect(onUpdate).toHaveBeenCalled()
     expect(container).toMatchSnapshot()
   })

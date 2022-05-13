@@ -31,7 +31,7 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 import '@testing-library/cypress/add-commands'
-import { addMatchImageSnapshotCommand } from '../../node_modules/cypress-image-snapshot/command'
+import { addMatchImageSnapshotCommand } from 'cypress-image-snapshot/command'
 import { getConnectorIconByType } from '../utils/connctors-utils'
 import {
   servicesCall,
@@ -66,6 +66,7 @@ declare global {
     /* eslint-disable @typescript-eslint/no-unused-vars  */
     interface Chainable<Subject> {
       login(username: string, pass: string): void
+      visitPageAssertion(): void
       createDeploymentStage(): void
       visitCreatePipeline(): void
       visitPipelinesList(): void
@@ -123,6 +124,13 @@ Cypress.Commands.add('login', (emailValue: string, password: string) => {
   cy.get('[data-id="email-0"] input').clear().type(emailValue)
   cy.get('[data-id="password-1"] input').clear().type(password)
   cy.clickSubmit()
+})
+
+Cypress.Commands.add('visitPageAssertion', () => {
+  cy.get('.TabNavigation--active', {
+    timeout: 30000
+  }).should('be.visible')
+  cy.wait(1000)
 })
 
 Cypress.Commands.add('createDeploymentStage', () => {

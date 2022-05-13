@@ -110,13 +110,18 @@ describe('Acr Artifact tests', () => {
 
   test('Should render correctly in edit case', async () => {
     const initialValues = {
-      identifier: 'Identifier1',
+      spec: {
+        connectorRef: 'validnonaks',
+        tag: '<+input>',
+        subscriptionId: '20d6a917-99fa-4b1b-9b2e-a3d624e9dcf0',
+        registry: 'reg1',
+        repository: 'rep1'
+      },
+      identifier: 'S3',
       tag: '<+input>',
       tagRegex: '',
-      repository: 'rep1',
-      subscriptionId: 'sub1',
-      registry: 'reg1',
-      tagType: TagTypes.Value
+      tagType: TagTypes.Value,
+      type: 'Acr'
     }
 
     const { container } = render(
@@ -141,13 +146,18 @@ describe('Acr Artifact tests', () => {
 
   test('Should render correctly in edit case for runtime fields', async () => {
     const initialValues = {
-      identifier: 'Identifier1',
+      spec: {
+        connectorRef: 'validnonaks',
+        tag: '<+input>',
+        subscriptionId: '<+input>',
+        registry: '<+input>',
+        repository: '<+input>'
+      },
+      identifier: 'S3',
       tag: '<+input>',
       tagRegex: '',
-      repository: '<+input>',
-      subscriptionId: '<+input>',
-      registry: '<+input>',
-      tagType: TagTypes.Value
+      tagType: TagTypes.Value,
+      type: 'Acr'
     }
 
     const { container, getByText } = render(
@@ -176,13 +186,18 @@ describe('Acr Artifact tests', () => {
 
   test('Should render correctly in edit case for runtime fields regex', async () => {
     const initialValues = {
-      identifier: 'Identifier1',
+      spec: {
+        connectorRef: 'validnonaks',
+        subscriptionId: '<+input>',
+        registry: '<+input>',
+        repository: '<+input>',
+        tagRegex: '<+input>'
+      },
+      identifier: 'S3',
       tag: '',
       tagRegex: '<+input>',
-      repository: '<+input>',
-      subscriptionId: '<+input>',
-      registry: '<+input>',
-      tagType: TagTypes.Regex
+      tagType: TagTypes.Regex,
+      type: 'Acr'
     }
 
     const { container } = render(
@@ -195,6 +210,7 @@ describe('Acr Artifact tests', () => {
         />
       </TestWrapper>
     )
+
     expect(container.querySelector('input[name="subscriptionId"]')!).toBeInTheDocument()
     expect(container.querySelector('input[name="registry"]')!).toBeInTheDocument()
     expect(container.querySelector('input[name="repository"]')!).toBeInTheDocument()

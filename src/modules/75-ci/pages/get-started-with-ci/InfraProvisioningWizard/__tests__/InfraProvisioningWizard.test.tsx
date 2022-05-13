@@ -53,7 +53,9 @@ describe('Render and test InfraProvisioningWizard', () => {
     expect(buildInfraCards[0].className).toContain('Card--selected')
 
     // Docker Runner build infra card should be disabled by default
-    buildInfraCards.map((card, index) => index !== 0 && expect(card.className).toContain('Card--disabled'))
+    buildInfraCards.map(
+      (card, index) => index === buildInfraCards.length - 1 && expect(card.className).toContain('Card--disabled')
+    )
 
     // Only one build infra type card should marked as selected at all times
     expect(container.querySelectorAll('[data-icon="main-tick"]').length).toBe(1)

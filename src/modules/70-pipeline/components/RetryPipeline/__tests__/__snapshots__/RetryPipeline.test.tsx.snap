@@ -46,6 +46,7 @@ exports[`Retry Pipeline tests should not allow submit if form is incomplete 1`] 
         class="runModalFormContent"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>

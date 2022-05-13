@@ -27,6 +27,7 @@ import { PipelineActions } from '@pipeline/factories/PubSubPipelineAction/types'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDeepCompareEffect } from '@common/hooks'
 import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
+import { isCodebaseFieldsRuntimeInputs } from '@pipeline/utils/CIUtils'
 import { StageInputSetForm } from './StageInputSetForm'
 import { StageAdvancedInputSetForm } from './StageAdvancedInputSetForm'
 import { CICodebaseInputSetForm } from './CICodebaseInputSetForm'
@@ -55,6 +56,7 @@ export interface PipelineInputSetFormProps {
   listOfSelectedStages?: string[]
   isRetryFormStageSelected?: boolean
   allowableTypes?: MultiTypeInputType[]
+  viewTypeMetadata?: Record<string, boolean>
 }
 
 export const stageTypeToIconMap: Record<string, IconName> = {
@@ -203,10 +205,10 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
     viewType,
     maybeContainerClass = '',
     executionIdentifier,
+    viewTypeMetadata,
     allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
   } = props
   const { getString } = useStrings()
-
   const isTemplatePipeline = !!template.template
   const finalTemplate = isTemplatePipeline ? (template?.template?.templateInputs as PipelineInfoConfig) : template
   const finalPath = isTemplatePipeline
@@ -220,7 +222,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
       Object.is(get(stage, 'stage.spec.cloneCodebase'), true) ||
       stage.parallel?.some(parallelStage => Object.is(get(parallelStage, 'stage.spec.cloneCodebase'), true))
   )
-
+  const codebaseHasRuntimeInputs = isCodebaseFieldsRuntimeInputs(template)
   const { expressions } = useVariablesExpression()
 
   const isInputStageDisabled = (stageId: string): boolean => {
@@ -293,7 +295,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
           />
         </>
       )}
-      {isCloneCodebaseEnabledAtLeastAtOneStage &&
+      {(isCloneCodebaseEnabledAtLeastAtOneStage || codebaseHasRuntimeInputs) &&
         getMultiTypeFromValue(finalTemplate?.properties?.ci?.codebase?.build as unknown as string) ===
           MultiTypeInputType.RUNTIME && (
           <>
@@ -314,6 +316,9 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                     path={finalPath}
                     readonly={readonly}
                     originalPipeline={props.originalPipeline}
+                    template={template}
+                    viewType={viewType}
+                    viewTypeMetadata={viewTypeMetadata}
                   />
                 </div>
               </div>

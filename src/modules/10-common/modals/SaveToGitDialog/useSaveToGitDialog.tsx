@@ -22,6 +22,7 @@ import { getEntityNameFromType } from '@common/utils/StringUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { EntityGitDetails, ResponseMessage, useCreatePR, useCreatePRV2 } from 'services/cd-ng'
 import { String, useStrings } from 'framework/strings'
+import type { GovernanceMetadata } from 'services/cd-ng'
 import { ProgressOverlay, StepStatus } from '../ProgressOverlay/ProgressOverlay'
 import { useGitDiffEditorDialog } from '../GitDiffEditor/useGitDiffEditorDialog'
 import css from './useSaveToGitDialog.module.scss'
@@ -29,6 +30,7 @@ import css from './useSaveToGitDialog.module.scss'
 export interface UseSaveSuccessResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
   nextCallback?: () => void
+  governanceMetaData?: GovernanceMetadata
 }
 
 export interface UseSaveToGitDialogProps<T> {

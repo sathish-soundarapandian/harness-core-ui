@@ -159,6 +159,85 @@ export const stageMockTemplateVersion2InputYaml: ResponseString = {
   status: 'SUCCESS'
 }
 
+export const pipelineTemplate: ResponseTemplateResponse = {
+  status: 'SUCCESS',
+  data: {
+    accountId: 'px7xd_BFRCi-pfWPYXVjvw',
+    description: '',
+    identifier: 'Test_Pipeline_Template',
+    lastUpdatedAt: 1637668359934,
+    name: 'Test Pipeline Template',
+    orgIdentifier: 'default',
+    projectIdentifier: 'Yogesh_Test',
+    stableTemplate: true,
+    tags: {},
+    templateEntityType: 'Pipeline',
+    templateScope: 'project',
+    version: 3,
+    versionLabel: 'v1',
+    yaml:
+      'template:' +
+      '\n    name: New Pipeline Template Name' +
+      '\n    identifier: new_pipeline_template_name' +
+      '\n    versionLabel: v2' +
+      '\n    type: Pipeline' +
+      '\n    projectIdentifier: Yogesh_Test' +
+      '\n    orgIdentifier: default' +
+      '\n    spec:' +
+      '\n        stages:' +
+      '\n            - stage:' +
+      '\n                  name: Stage 1' +
+      '\n                  identifier: Stage_1' +
+      '\n                  description: ""' +
+      '\n                  type: Deployment' +
+      '\n                  spec:' +
+      '\n                      serviceConfig:' +
+      '\n                          serviceRef: <+input>' +
+      '\n                          serviceDefinition:' +
+      '\n                              type: Kubernetes' +
+      '\n                              spec:' +
+      '\n                                  variables:' +
+      '\n                                      - name: var' +
+      '\n                                        type: String' +
+      '\n                                        value: <+input>' +
+      '\n                      infrastructure:' +
+      '\n                          environmentRef: Some_Environment' +
+      '\n                          infrastructureDefinition:' +
+      '\n                              type: KubernetesDirect' +
+      '\n                              spec:' +
+      '\n                                  connectorRef: account.testarpit' +
+      '\n                                  namespace: default' +
+      '\n                                  releaseName: release-<+INFRA_KEY>' +
+      '\n                          allowSimultaneousDeployments: false' +
+      '\n                      execution:' +
+      '\n                          steps:' +
+      '\n                              - step:' +
+      '\n                                    type: ShellScript' +
+      '\n                                    name: Step 1' +
+      '\n                                    identifier: Step_1' +
+      '\n                                    spec:' +
+      '\n                                        shell: Bash' +
+      '\n                                        onDelegate: true' +
+      '\n                                        source:' +
+      '\n                                            type: Inline' +
+      '\n                                            spec:' +
+      '\n                                                script: <+input>' +
+      '\n                                        environmentVariables: []' +
+      '\n                                        outputVariables: []' +
+      '\n                                        executionTarget: {}' +
+      '\n                                    timeout: 10m' +
+      '\n                          rollbackSteps: []' +
+      '\n                  tags: {}' +
+      '\n                  failureStrategies:' +
+      '\n                      - onFailure:' +
+      '\n                            errors:' +
+      '\n                                - AllErrors' +
+      '\n                            action:' +
+      '\n                                type: StageRollback' +
+      '\n'
+  }
+}
+
 export const stepTemplate: ResponseTemplateResponse = {
   status: 'SUCCESS',
   data: {

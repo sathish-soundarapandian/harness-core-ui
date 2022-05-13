@@ -19,6 +19,7 @@ exports[`<ExecutionInputsView /> tests snapshot test 1`] = `
             data-testid="runPipelineVisualView"
           >
             <form
+              action="#"
               class="FormikForm--main"
             >
               <div>

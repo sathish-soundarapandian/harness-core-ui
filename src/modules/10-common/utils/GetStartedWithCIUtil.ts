@@ -16,11 +16,13 @@ import {
   startTrialLicensePromise,
   ModuleLicenseDTO
 } from 'services/cd-ng'
+import { LicenseStoreContextProps, handleUpdateLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import {
   DEFAULT_ORG_ID,
   DEFAULT_ORG_NAME,
   DEFAULT_PROJECT_ID,
   DEFAULT_PROJECT_NAME,
+  Status,
   UNIQUE_ORG_ID
 } from '@common/utils/CIConstants'
 import { Editions } from '@common/constants/SubscriptionTypes'
@@ -28,7 +30,19 @@ import { Editions } from '@common/constants/SubscriptionTypes'
 export interface StartFreeLicenseAndSetupProjectCallback {
   orgId: string
   projectId: string
-  data?: ModuleLicenseDTO
+}
+
+export interface SetUpCIInterface {
+  accountId: string
+  edition: Editions
+  onSetUpSuccessCallback: ({ orgId, projectId }: StartFreeLicenseAndSetupProjectCallback) => void
+  onSetupFailureCallback?: (error: any) => void
+  licenseInformation:
+    | {
+        [key: string]: ModuleLicenseDTO
+      }
+    | Record<string, undefined>
+  updateLicenseStore: (data: Partial<Pick<LicenseStoreContextProps, 'licenseInformation'>>) => void
 }
 
 function startPlanByEdition(accountId: string, edition: Editions): Promise<ResponseModuleLicenseDTO> {
@@ -72,80 +86,117 @@ const startPlanAndSetupProject = ({
   accountId,
   orgId: organizationId,
   onSetUpSuccessCallback,
-  edition
+  edition,
+  onSetupFailureCallback,
+  licenseInformation,
+  updateLicenseStore
 }: {
   accountId: string
   orgId: string
-  onSetUpSuccessCallback: ({ orgId, projectId, data }: StartFreeLicenseAndSetupProjectCallback) => void
+  onSetUpSuccessCallback: ({ orgId, projectId }: StartFreeLicenseAndSetupProjectCallback) => void
   edition: Editions
+  onSetupFailureCallback?: (error?: any) => void
+  licenseInformation:
+    | {
+        [key: string]: ModuleLicenseDTO
+      }
+    | Record<string, undefined>
+  updateLicenseStore: (data: Partial<Pick<LicenseStoreContextProps, 'licenseInformation'>>) => void
 }) => {
-  startPlanByEdition(accountId, edition).then((startPlanResponse: ResponseModuleLicenseDTO) => {
-    const { data: startPlanData, status: startPlanStatus } = startPlanResponse
-    /* istanbul ignore else */ if (startPlanStatus === 'SUCCESS') {
-      postProjectPromise({
-        body: {
-          project: {
-            identifier: DEFAULT_PROJECT_ID,
-            name: DEFAULT_PROJECT_NAME,
-            orgIdentifier: organizationId
-          }
-        },
-        queryParams: { accountIdentifier: accountId, orgIdentifier: organizationId }
-      }).then((createProjectResponse: ResponseProjectResponse) => {
-        const { data: projectData, status: createProjectResponseStatus } = createProjectResponse
-        /* istanbul ignore else */ if (
-          createProjectResponseStatus === 'SUCCESS' &&
-          projectData?.project.identifier &&
-          startPlanData
-        ) {
-          onSetUpSuccessCallback({
-            orgId: organizationId,
-            projectId: projectData.project.identifier,
-            data: startPlanData
+  startPlanByEdition(accountId, edition)
+    .then((startPlanResponse: ResponseModuleLicenseDTO) => {
+      const { data: startPlanData, status: startPlanStatus } = startPlanResponse
+      /* istanbul ignore else */ if (startPlanStatus === Status.SUCCESS) {
+        handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, 'ci', startPlanData)
+        postProjectPromise({
+          body: {
+            project: {
+              identifier: DEFAULT_PROJECT_ID,
+              name: DEFAULT_PROJECT_NAME,
+              orgIdentifier: organizationId
+            }
+          },
+          queryParams: { accountIdentifier: accountId, orgIdentifier: organizationId }
+        })
+          .then((createProjectResponse: ResponseProjectResponse) => {
+            const { data: projectData, status: createProjectResponseStatus } = createProjectResponse
+            /* istanbul ignore else */ if (
+              createProjectResponseStatus === 'SUCCESS' &&
+              projectData?.project.identifier &&
+              startPlanData
+            ) {
+              onSetUpSuccessCallback({
+                orgId: organizationId,
+                projectId: projectData.project.identifier
+              })
+            }
           })
-        }
-      })
-    }
-  })
+          .catch(e => onSetupFailureCallback?.(e))
+      } else if (startPlanStatus === Status.ERROR || startPlanStatus === Status.FAILURE) {
+        onSetupFailureCallback?.()
+      }
+    })
+    .catch(e => onSetupFailureCallback?.(e))
 }
 
-export const setUpCI = (
-  accountId: string,
-  edition: Editions,
-  onSetUpSuccessCallback: ({ orgId, projectId, data }: StartFreeLicenseAndSetupProjectCallback) => void
-): void => {
-  getOrganizationPromise({
-    identifier: DEFAULT_ORG_ID,
-    queryParams: {
-      accountIdentifier: accountId
-    }
-  }).then((fetchOrgResponse: ResponseOrganizationResponse) => {
-    const { data: orgData, status: fetchOrgResponseStatus } = fetchOrgResponse
-    if (fetchOrgResponseStatus === 'SUCCESS' && orgData?.organization.identifier === DEFAULT_ORG_ID) {
-      startPlanAndSetupProject({ accountId, orgId: DEFAULT_ORG_ID, onSetUpSuccessCallback, edition })
-    } else {
-      // Org with id "default" doesn't exist. We need to create an org in this case.
-      postOrganizationPromise({
-        body: {
-          organization: {
-            identifier: UNIQUE_ORG_ID,
-            name: DEFAULT_ORG_NAME
-          }
-        },
-        queryParams: {
-          accountIdentifier: accountId
-        }
-      }).then((createOrgResponse: ResponseOrganizationResponse) => {
-        const { status: createOrgStatus, data: createOrgData } = createOrgResponse
-        /* istanbul ignore else */ if (createOrgStatus === 'SUCCESS' && createOrgData?.organization?.identifier) {
+export const setUpCI = ({
+  accountId,
+  edition,
+  onSetUpSuccessCallback,
+  onSetupFailureCallback,
+  licenseInformation,
+  updateLicenseStore
+}: SetUpCIInterface): void => {
+  try {
+    getOrganizationPromise({
+      identifier: DEFAULT_ORG_ID,
+      queryParams: {
+        accountIdentifier: accountId
+      }
+    })
+      .then((fetchOrgResponse: ResponseOrganizationResponse) => {
+        const { data: orgData, status: fetchOrgResponseStatus } = fetchOrgResponse
+        if (fetchOrgResponseStatus === Status.SUCCESS && orgData?.organization.identifier === DEFAULT_ORG_ID) {
           startPlanAndSetupProject({
             accountId,
-            orgId: createOrgData?.organization?.identifier,
+            orgId: DEFAULT_ORG_ID,
             onSetUpSuccessCallback,
-            edition
+            edition,
+            onSetupFailureCallback,
+            licenseInformation,
+            updateLicenseStore
           })
+        } else {
+          // Org with id "default" doesn't exist. We need to create an org in this case.
+          postOrganizationPromise({
+            body: {
+              organization: {
+                identifier: UNIQUE_ORG_ID,
+                name: DEFAULT_ORG_NAME
+              }
+            },
+            queryParams: {
+              accountIdentifier: accountId
+            }
+          })
+            .then((createOrgResponse: ResponseOrganizationResponse) => {
+              const { status: createOrgStatus, data: createOrgData } = createOrgResponse
+              /* istanbul ignore else */ if (createOrgStatus === 'SUCCESS' && createOrgData?.organization?.identifier) {
+                startPlanAndSetupProject({
+                  accountId,
+                  orgId: createOrgData?.organization?.identifier,
+                  onSetUpSuccessCallback,
+                  edition,
+                  licenseInformation,
+                  updateLicenseStore
+                })
+              }
+            })
+            .catch(e => onSetupFailureCallback?.(e))
         }
       })
-    }
-  })
+      .catch(e => onSetupFailureCallback?.(e))
+  } catch (e) {
+    onSetupFailureCallback?.(e)
+  }
 }

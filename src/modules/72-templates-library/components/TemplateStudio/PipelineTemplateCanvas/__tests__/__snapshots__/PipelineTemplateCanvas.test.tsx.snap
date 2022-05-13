@@ -1,52 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<PipelineTemplateCanvas/> tests should call updateTemplate with updated template 1`] = `
+exports[`<PipelineTemplateCanvasWrapper/> tests should match snapshot 1`] = `
 <div>
   <div
     class="stage-builder-mock"
-  >
-    <button>
-      Update Pipeline
-    </button>
-  </div>
+  />
   <div
     class="rightBar"
   >
-    <button
-      class="bp3-button Button--button StyledProps--font StyledProps--main iconButton StyledProps--font StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall Button--withLeftIcon Button--variation Button--variation-tertiary"
-      data-testid="template-inputs"
-      type="button"
-    >
-      <span
-        class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
-        data-icon="template-inputs"
-      >
-        <svg
-          height="28"
-          viewBox="0 0 32 32"
-          width="28"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            clip-rule="evenodd"
-            d="M2.987 7.02a3 3 0 013-3h20.025a3 3 0 013 3v17.96a3 3 0 01-3 3H5.987a3 3 0 01-3-3v-5.638h2v5.639a1 1 0 001 1h20.025a1 1 0 001-1V7.02a1 1 0 00-1-1H5.987a1 1 0 00-1 1v5.673h-2V7.02z"
-            fill="currentColor"
-            fill-rule="evenodd"
-          />
-          <path
-            clip-rule="evenodd"
-            d="M12.184 12.446a1 1 0 011.399-.21l4.02 2.968a1 1 0 01.006 1.604l-4.02 3.016a1 1 0 11-1.2-1.6l1.62-1.216H2.988v-2h10.984l-1.576-1.164a1 1 0 01-.21-1.398z"
-            fill="currentColor"
-            fill-rule="evenodd"
-          />
-        </svg>
-      </span>
-      <span
-        class="bp3-button-text"
-      >
-        pipeline.templateInputs
-      </span>
-    </button>
     <button
       class="bp3-button Button--button StyledProps--font StyledProps--main iconButton StyledProps--font StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall Button--withLeftIcon Button--variation Button--variation-tertiary"
       data-testid="input-variable"

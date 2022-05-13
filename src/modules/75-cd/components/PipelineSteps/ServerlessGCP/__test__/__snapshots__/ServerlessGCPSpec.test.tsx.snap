@@ -207,6 +207,7 @@ exports[`Test ServerlessGCPSpec snapshot should render edit view with empty init
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -477,6 +478,7 @@ exports[`Test ServerlessGCPSpec snapshot should render edit view with runtime va
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -749,6 +751,7 @@ exports[`Test ServerlessGCPSpec snapshot should render edit view with values  1`
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>

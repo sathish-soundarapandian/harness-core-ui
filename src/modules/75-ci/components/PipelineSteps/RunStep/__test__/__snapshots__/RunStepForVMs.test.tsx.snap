@@ -6,6 +6,7 @@ exports[`Run Step view Edit View should render properly for AWS VMs build infra 
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>

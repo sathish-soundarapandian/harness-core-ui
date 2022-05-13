@@ -237,6 +237,7 @@ exports[`Terraform Var Store tests initial render 1`] = `
         </div>
       </div>
       <form
+        action="#"
         class="formComponent"
       >
         <div
@@ -574,6 +575,7 @@ exports[`Terraform Var Store tests on edit mode for tf var store  1`] = `
         </div>
       </div>
       <form
+        action="#"
         class="formComponent"
       >
         <div
@@ -1025,6 +1027,7 @@ exports[`Terraform Var Store tests on edit mode for tf var store  2`] = `
         </div>
       </div>
       <form
+        action="#"
         class="formComponent"
       >
         <div
@@ -1476,6 +1479,7 @@ exports[`Terraform Var Store tests select one of the types 1`] = `
         </div>
       </div>
       <form
+        action="#"
         class="formComponent"
       >
         <div

@@ -122,7 +122,7 @@ describe('Test Policy Step', () => {
       })
     })
 
-    await act(() => ref.current?.submitForm())
+    await act(() => ref.current?.submitForm()!)
 
     expect(onUpdate).toHaveBeenCalledWith({
       name: 'Policy Step',

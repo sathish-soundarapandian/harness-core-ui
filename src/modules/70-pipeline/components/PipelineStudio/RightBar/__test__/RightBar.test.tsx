@@ -7,10 +7,11 @@
 
 import React from 'react'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
-import { MultiTypeInputType } from '@wings-software/uicore'
-import { TestWrapper } from '@common/utils/testUtils'
+import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 import { factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { isRuntimeInput } from '@pipeline/utils/CIUtils'
 import { RightBar } from '../RightBar'
 import { PipelineContext, PipelineContextInterface } from '../../PipelineContext/PipelineContext'
 
@@ -69,7 +70,7 @@ const stateMock = {
       ci: {
         codebase: {
           connectorRef: 'Git5',
-          build: '<+input>'
+          build: RUNTIME_INPUT_VALUE
         }
       }
     },
@@ -278,5 +279,192 @@ describe('RightBar', () => {
       isSplitViewOpen: false,
       splitViewData: {}
     })
+  })
+
+  test('Renders all ci codebase on edit values', async () => {
+    const newPipelineContext = { ...pipelineContext }
+    if (newPipelineContext?.state?.pipeline?.properties?.ci?.codebase) {
+      newPipelineContext.state.pipeline.properties.ci.codebase = {
+        connectorRef: 'Git5',
+        repoName: 'reponame',
+        build: RUNTIME_INPUT_VALUE as any,
+        depth: '50' as any,
+        sslVerify: true as any,
+        prCloneStrategy: 'MergeCommit' as any,
+        resources: {
+          limits: {
+            memory: '500Mi',
+            cpu: '400m'
+          }
+        }
+      }
+    }
+    const { getByText } = render(
+      <TestWrapper>
+        <PipelineContext.Provider value={newPipelineContext}>
+          <RightBar />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    const codebaseConfigurationBtn = getByText('codebase')
+    act(() => {
+      fireEvent.click(codebaseConfigurationBtn)
+    })
+    await waitFor(() => expect(pipelineContext.updatePipelineView).toHaveBeenCalled())
+    expect(pipelineContext.updatePipelineView).toHaveBeenCalledWith({
+      drawerData: {
+        type: 'AddCommand'
+      },
+      isDrawerOpened: false,
+      isSplitViewOpen: false,
+      splitViewData: {}
+    })
+    let dialog
+    await waitFor(() => {
+      dialog = findDialogContainer()
+      if (!dialog) {
+        throw Error('cannot find dialogue')
+      }
+    })
+    const advancedTitle = getByText('advancedTitle')
+    act(() => {
+      fireEvent.click(advancedTitle)
+    })
+    expect(dialog).toMatchSnapshot()
+    const applyBtn = getByText('applyChanges')
+    act(() => {
+      fireEvent.click(applyBtn)
+    })
+    expect(dialog).toMatchSnapshot()
+  })
+
+  test('Renders validation errors', async () => {
+    const newPipelineContext = { ...pipelineContext }
+    if (newPipelineContext?.state?.pipeline?.properties?.ci?.codebase) {
+      newPipelineContext.state.pipeline.properties.ci.codebase = {
+        connectorRef: 'Git5',
+        repoName: 'reponame',
+        build: RUNTIME_INPUT_VALUE as any,
+        depth: 'invalid' as any,
+        sslVerify: true as any,
+        prCloneStrategy: 'MergeCommit' as any,
+        resources: {
+          limits: {
+            memory: 'invalid',
+            cpu: 'invalid'
+          }
+        }
+      }
+    }
+    const { getByText } = render(
+      <TestWrapper>
+        <PipelineContext.Provider value={newPipelineContext}>
+          <RightBar />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    const codebaseConfigurationBtn = getByText('codebase')
+    act(() => {
+      fireEvent.click(codebaseConfigurationBtn)
+    })
+    await waitFor(() => expect(pipelineContext.updatePipelineView).toHaveBeenCalled())
+    expect(pipelineContext.updatePipelineView).toHaveBeenCalledWith({
+      drawerData: {
+        type: 'AddCommand'
+      },
+      isDrawerOpened: false,
+      isSplitViewOpen: false,
+      splitViewData: {}
+    })
+    let dialog
+    await waitFor(() => {
+      dialog = findDialogContainer()
+      if (!dialog) {
+        throw Error('cannot find dialogue')
+      }
+    })
+    const advancedTitle = getByText('advancedTitle')
+    act(() => {
+      fireEvent.click(advancedTitle)
+    })
+    expect(dialog).toMatchSnapshot()
+    const applyBtn = getByText('applyChanges')
+    act(() => {
+      fireEvent.click(applyBtn)
+    })
+    await waitFor(() => expect(getByText('pipeline.onlyPositiveInteger')).toBeInTheDocument())
+  })
+
+  test('Renders all ci codebase inputs as runtime inputs', async () => {
+    const newPipelineContext = { ...pipelineContext }
+    if (newPipelineContext?.state?.pipeline?.properties?.ci?.codebase) {
+      newPipelineContext.state.pipeline.properties.ci.codebase = {
+        connectorRef: RUNTIME_INPUT_VALUE,
+        repoName: RUNTIME_INPUT_VALUE,
+        build: RUNTIME_INPUT_VALUE as any,
+        depth: RUNTIME_INPUT_VALUE as any,
+        sslVerify: RUNTIME_INPUT_VALUE as any,
+        prCloneStrategy: RUNTIME_INPUT_VALUE as any,
+        resources: {
+          limits: {
+            memory: RUNTIME_INPUT_VALUE,
+            cpu: RUNTIME_INPUT_VALUE
+          }
+        }
+      }
+    }
+    const { getByText } = render(
+      <TestWrapper>
+        <PipelineContext.Provider value={newPipelineContext}>
+          <RightBar />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    const codebaseConfigurationBtn = getByText('codebase')
+    act(() => {
+      fireEvent.click(codebaseConfigurationBtn)
+    })
+    await waitFor(() => expect(pipelineContext.updatePipelineView).toHaveBeenCalled())
+    expect(pipelineContext.updatePipelineView).toHaveBeenCalledWith({
+      drawerData: {
+        type: 'AddCommand'
+      },
+      isDrawerOpened: false,
+      isSplitViewOpen: false,
+      splitViewData: {}
+    })
+    let dialog
+    await waitFor(() => {
+      dialog = findDialogContainer()
+      if (!dialog) {
+        throw Error('cannot find dialogue')
+      }
+    })
+    const advancedTitle = getByText('advancedTitle')
+    act(() => {
+      fireEvent.click(advancedTitle)
+    })
+    expect(dialog).toMatchSnapshot()
+  })
+})
+
+describe('RightBarUtils', () => {
+  test('str value with <+input> returns true', () => {
+    const res = isRuntimeInput(RUNTIME_INPUT_VALUE)
+    expect(res).toBeTruthy
+  })
+  test('str value with expression value returns false', () => {
+    const res = isRuntimeInput('<+expression>')
+    expect(res).toBeFalsy
+  })
+
+  test('number value returns false', () => {
+    const res = isRuntimeInput(4)
+    expect(res).toBeFalsy
+  })
+
+  test('undefined value returns false', () => {
+    const res = isRuntimeInput(undefined)
+    expect(res).toBeFalsy
   })
 })

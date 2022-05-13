@@ -5,23 +5,65 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useHistory, useParams } from 'react-router-dom'
+import { PageSpinner } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { StartTrialTemplate } from '@rbac/components/TrialHomePageTemplate/StartTrialTemplate'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { PageNames } from '@ci/constants/TrackingConstants'
 import { Category } from '@common/constants/TrackingConstants'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import routes from '@common/RouteDefinitions'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { Editions } from '@common/constants/SubscriptionTypes'
+import { setUpCI, StartFreeLicenseAndSetupProjectCallback } from '@common/utils/GetStartedWithCIUtil'
 import bgImageURL from './images/ci.svg'
+
+import css from './CITrialHomePage.module.scss'
 
 const CITrialHomePage: React.FC = () => {
   const { getString } = useStrings()
+  const { CIE_HOSTED_BUILDS, FREE_PLAN_ENABLED } = useFeatureFlags()
+  const history = useHistory()
+  const { accountId } = useParams<AccountPathProps>()
+  const { licenseInformation, updateLicenseStore } = useLicenseStore()
+  const [loading, setLoading] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (CIE_HOSTED_BUILDS) {
+      setLoading(true)
+      try {
+        setUpCI({
+          accountId,
+          edition: Editions.FREE,
+          onSetUpSuccessCallback: ({ orgId, projectId }: StartFreeLicenseAndSetupProjectCallback) => {
+            setLoading(false)
+            history.push(
+              routes.toGetStartedWithCI({
+                accountId,
+                module: 'ci',
+                orgIdentifier: orgId,
+                projectIdentifier: projectId
+              })
+            )
+          },
+          licenseInformation,
+          updateLicenseStore,
+          onSetupFailureCallback: () => {
+            setLoading(false)
+          }
+        })
+      } catch (e) {
+        setLoading(false)
+      }
+    }
+  }, [])
 
   useTelemetry({ pageName: PageNames.CIStartTrial, category: Category.SIGNUP })
 
-  const isFreeEnabled = useFeatureFlag(FeatureFlag.FREE_PLAN_ENABLED)
-  const startBtnDescription = isFreeEnabled
+  const startBtnDescription = FREE_PLAN_ENABLED
     ? getString('common.startFreePlan', { module: 'CI' })
     : getString('ci.ciTrialHomePage.startTrial.startBtn.description')
 
@@ -36,7 +78,11 @@ const CITrialHomePage: React.FC = () => {
     }
   }
 
-  return (
+  return loading ? (
+    <div className={css.loading}>
+      <PageSpinner />
+    </div>
+  ) : (
     <StartTrialTemplate
       title={getString('ci.continuous')}
       bgImageUrl={bgImageURL}

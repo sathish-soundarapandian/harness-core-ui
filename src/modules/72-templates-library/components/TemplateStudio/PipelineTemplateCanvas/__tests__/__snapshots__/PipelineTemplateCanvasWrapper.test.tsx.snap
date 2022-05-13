@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<PipelineTemplateCanvasWrapper/> tests should call updateTemplate with updated template 1`] = `
+<div>
+  <div
+    class="pipeline-template-canvas-mock"
+  >
+    <button>
+      Update Pipeline
+    </button>
+  </div>
+</div>
+`;

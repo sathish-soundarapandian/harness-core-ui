@@ -153,10 +153,11 @@ export interface ArtifactImagePathTagViewProps {
 
 export interface ACRArtifactType {
   identifier: string
-  tag: any
-  tagRegex: any
+  tag: SelectOption | string
+  tagRegex: SelectOption | string
   tagType: TagTypes
-  repository?: any
-  subscriptionId?: any
-  registry?: any
+  repository?: SelectOption | string
+  subscriptionId?: SelectOption | string
+  registry?: SelectOption | string
+  spec?: any
 }

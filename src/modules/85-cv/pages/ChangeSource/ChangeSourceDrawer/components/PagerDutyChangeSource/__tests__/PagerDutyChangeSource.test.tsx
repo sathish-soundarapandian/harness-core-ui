@@ -12,6 +12,7 @@ import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cvServices from 'services/cv'
 import PagerDutyChangeSource from '../PagerDutyChangeSource'
+import type { UpdatedChangeSourceDTO } from '../../../ChangeSourceDrawer.types'
 
 jest.mock('services/cd-ng', () => ({
   ...jest.requireActual('services/cd-ng'),
@@ -39,7 +40,7 @@ interface InitValue {
 
 const TestComponent = ({ initialValues }: { initialValues: InitValue }): React.ReactElement => (
   <TestWrapper>
-    <Formik initialValues={{ spec: initialValues.spec }} onSubmit={noop}>
+    <Formik<UpdatedChangeSourceDTO> initialValues={{ spec: initialValues.spec }} onSubmit={noop}>
       {formik => {
         return <PagerDutyChangeSource formik={formik} isEdit={initialValues.isEdit} />
       }}

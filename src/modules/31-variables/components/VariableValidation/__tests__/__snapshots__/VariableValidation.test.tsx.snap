@@ -6,6 +6,7 @@ exports[`VariableValidation render component for Fixed 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -52,36 +53,6 @@ exports[`VariableValidation render component for Fixed 1`] = `
                     class="RadioButton--radioIcon"
                   />
                   inputTypes.FIXED
-                </label>
-                <label
-                  class="RadioButton--radio StyledProps--main"
-                >
-                  <input
-                    class="RadioButton--input"
-                    disabled=""
-                    name="valueType"
-                    type="radio"
-                    value="FIXED_SET"
-                  />
-                  <span
-                    class="RadioButton--radioIcon"
-                  />
-                  allowedValues
-                </label>
-                <label
-                  class="RadioButton--radio StyledProps--main"
-                >
-                  <input
-                    class="RadioButton--input"
-                    disabled=""
-                    name="valueType"
-                    type="radio"
-                    value="REGEX"
-                  />
-                  <span
-                    class="RadioButton--radioIcon"
-                  />
-                  common.configureOptions.regex
                 </label>
               </div>
             </div>
@@ -133,6 +104,7 @@ exports[`VariableValidation render component for Fixed Set 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -179,108 +151,6 @@ exports[`VariableValidation render component for Fixed Set 1`] = `
                   />
                   inputTypes.FIXED
                 </label>
-                <label
-                  class="RadioButton--radio StyledProps--main"
-                >
-                  <input
-                    checked=""
-                    class="RadioButton--input"
-                    disabled=""
-                    name="valueType"
-                    type="radio"
-                    value="FIXED_SET"
-                  />
-                  <span
-                    class="RadioButton--radioIcon"
-                  />
-                  allowedValues
-                </label>
-                <label
-                  class="RadioButton--radio StyledProps--main"
-                >
-                  <input
-                    class="RadioButton--input"
-                    disabled=""
-                    name="valueType"
-                    type="radio"
-                    value="REGEX"
-                  />
-                  <span
-                    class="RadioButton--radioIcon"
-                  />
-                  common.configureOptions.regex
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="bp3-form-group"
-        >
-          <label
-            class="bp3-label"
-            for="defaultValue"
-          >
-            <span
-              class="Tooltip--acenter"
-              data-tooltip-id="allowedValueTest_defaultValue"
-            >
-              variables.defaultValue
-            </span>
-             
-            <span
-              class="bp3-text-muted"
-            />
-          </label>
-          <div
-            class="bp3-form-content"
-          >
-            <div
-              class="bp3-input-group"
-            >
-              <input
-                autocomplete="off"
-                class="bp3-input"
-                name="defaultValue"
-                type="text"
-                value=""
-              />
-            </div>
-          </div>
-        </div>
-        <div
-          class="bp3-form-group"
-        >
-          <label
-            class="bp3-label"
-            for="allowedValues"
-          >
-            <span
-              class="Tooltip--acenter"
-              data-tooltip-id="allowedValueTest_allowedValues"
-            >
-              variables.allowedValues
-            </span>
-             
-            <span
-              class="bp3-text-muted"
-            />
-          </label>
-          <div
-            class="bp3-form-content"
-          >
-            <div
-              class="bp3-input bp3-tag-input"
-            >
-              <div
-                class="bp3-tag-input-values"
-              >
-                <input
-                  class="bp3-input-ghost"
-                  data-mentions="kv-tag-input-allowedValues"
-                  placeholder="Type and press enter to create a tag"
-                  value=""
-                />
               </div>
             </div>
           </div>
@@ -297,6 +167,7 @@ exports[`VariableValidation render component for regex 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -343,68 +214,8 @@ exports[`VariableValidation render component for regex 1`] = `
                   />
                   inputTypes.FIXED
                 </label>
-                <label
-                  class="RadioButton--radio StyledProps--main"
-                >
-                  <input
-                    class="RadioButton--input"
-                    disabled=""
-                    name="valueType"
-                    type="radio"
-                    value="FIXED_SET"
-                  />
-                  <span
-                    class="RadioButton--radioIcon"
-                  />
-                  allowedValues
-                </label>
-                <label
-                  class="RadioButton--radio StyledProps--main"
-                >
-                  <input
-                    checked=""
-                    class="RadioButton--input"
-                    disabled=""
-                    name="valueType"
-                    type="radio"
-                    value="REGEX"
-                  />
-                  <span
-                    class="RadioButton--radioIcon"
-                  />
-                  common.configureOptions.regex
-                </label>
               </div>
             </div>
-          </div>
-        </div>
-        <div
-          class="bp3-form-group"
-        >
-          <label
-            class="bp3-label"
-            for="regExValues"
-          >
-            <span
-              class="Tooltip--acenter"
-              data-tooltip-id="allowedValueTest_regExValues"
-            >
-              common.configureOptions.regex
-            </span>
-             
-            <span
-              class="bp3-text-muted"
-            />
-          </label>
-          <div
-            class="bp3-form-content"
-          >
-            <textarea
-              autocomplete="off"
-              class="bp3-input bp3-fill"
-              maxlength="1024"
-              name="regExValues"
-            />
           </div>
         </div>
       </div>

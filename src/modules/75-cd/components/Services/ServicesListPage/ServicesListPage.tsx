@@ -50,7 +50,7 @@ export const ServicesListPage: React.FC = () => {
     (selectedService: ServiceResponseDTO): void => {
       if (selectedService?.identifier) {
         history.push(
-          routes.toServiceDetails({
+          routes.toServiceStudio({
             accountId,
             orgIdentifier,
             projectIdentifier,

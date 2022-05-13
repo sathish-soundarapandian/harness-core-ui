@@ -8,7 +8,7 @@
 import React, { MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { v4 as uuid } from 'uuid'
-import type { FormikActions } from 'formik'
+import type { FormikHelpers } from 'formik'
 import { cloneDeep, get, isEqual } from 'lodash-es'
 import {
   Button,
@@ -168,7 +168,7 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
   const [isGitSyncOpenModal, setIsGitSyncModalOpen] = useState(false)
 
   const onSaveChanges = useCallback(
-    (values: FlagActivationFormValues, formikActions: FormikActions<FlagActivationFormValues>): void => {
+    (values: FlagActivationFormValues, formikActions: FormikHelpers<FlagActivationFormValues>): void => {
       // handle flag state changed - e.g. toggled from off to on
       if (values.state !== initialValues.state) {
         patch.feature.addInstruction(patch.creators.setFeatureFlagState(values?.state as FeatureState))
@@ -476,7 +476,7 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
   }
 
   return (
-    <Formik
+    <Formik<FlagActivationFormValues>
       enableReinitialize={true}
       validateOnChange={false}
       validateOnBlur={false}

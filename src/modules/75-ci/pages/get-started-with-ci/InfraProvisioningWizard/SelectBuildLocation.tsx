@@ -25,14 +25,16 @@ import {
   BuildLocationDetails,
   AllBuildLocationsForSaaS,
   AllBuildLocationsForOnPrem,
-  ProvisioningStatus
+  ProvisioningStatus,
+  HostedByHarnessBuildLocation,
+  K8sBuildLocation
 } from './Constants'
 
 import css from './InfraProvisioningWizard.module.scss'
 
 export interface SelectBuildLocationRef {
   hosting: Hosting
-  buildInfra: BuildLocationDetails
+  buildLocation: BuildLocationDetails
 }
 
 export type SelectBuildLocationForwardRef =
@@ -44,9 +46,9 @@ const SelectBuildLocationRef = (
   props: SelectBuildLocationProps,
   forwardRef: SelectBuildLocationForwardRef
 ): React.ReactElement => {
-  const { selectedBuildLocation, provisioningStatus } = props
-  const [buildInfra, setBuildInfra] = useState<BuildLocationDetails>()
-  const [hosting, setHosting] = useState<Hosting>(Hosting.SaaS)
+  const { selectedHosting, selectedBuildLocation, provisioningStatus } = props
+  const [buildLocation, setBuildLocation] = useState<BuildLocationDetails>()
+  const [hosting, setHosting] = useState<Hosting>()
 
   useEffect(() => {
     if (!forwardRef) {
@@ -56,42 +58,60 @@ const SelectBuildLocationRef = (
       return
     }
 
-    if (buildInfra) {
+    if (hosting && buildLocation) {
       forwardRef.current = {
         hosting,
-        buildInfra
+        buildLocation
       }
     }
-  }, [hosting, buildInfra])
+  }, [hosting, buildLocation])
 
   useEffect(() => {
-    setBuildInfra(selectedBuildLocation)
+    if (hosting === Hosting.OnPrem) {
+      setBuildLocation(K8sBuildLocation)
+    } else if (hosting === Hosting.SaaS) {
+      setBuildLocation(selectedBuildLocation ?? HostedByHarnessBuildLocation)
+    }
+  }, [hosting])
+
+  useEffect(() => {
+    setBuildLocation(selectedBuildLocation)
   }, [selectedBuildLocation])
+
+  useEffect(() => {
+    if (selectedHosting) {
+      setHosting(selectedHosting)
+    } else {
+      setHosting(Hosting.SaaS)
+    }
+  }, [selectedHosting])
 
   const { getString } = useStrings()
   return (
     <Layout.Vertical>
       <Text font={{ variation: FontVariation.H4 }}>{getString('ci.getStartedWithCI.buildLocation')}</Text>
       <Container padding={{ top: 'xlarge', bottom: 'xxlarge' }}>
-        <PillToggle
-          options={[
-            {
-              label: getString('ci.getStartedWithCI.hosting', {
-                hosting: getString('ci.getStartedWithCI.onCloudLabel')
-              }),
-              value: Hosting.SaaS
-            },
-            {
-              label: getString('ci.getStartedWithCI.hosting', {
-                hosting: getString('ci.getStartedWithCI.onPremLabel').toLowerCase()
-              }),
-              value: Hosting.OnPrem
-            }
-          ]}
-          selectedView={hosting}
-          onChange={(item: Hosting) => setHosting(item)}
-          className={css.hostingToggle}
-        />
+        {hosting ? (
+          <PillToggle
+            options={[
+              {
+                label: getString('ci.getStartedWithCI.hosting', {
+                  hosting: getString('ci.getStartedWithCI.onCloudLabel')
+                }),
+                value: Hosting.SaaS
+              },
+              {
+                label: getString('ci.getStartedWithCI.hosting', {
+                  hosting: getString('ci.getStartedWithCI.onPremLabel').toLowerCase()
+                }),
+                value: Hosting.OnPrem
+              }
+            ]}
+            selectedView={hosting}
+            onChange={(item: Hosting) => setHosting(item)}
+            className={css.hostingToggle}
+          />
+        ) : null}
       </Container>
       <Text font={{ variation: FontVariation.H5 }} padding={{ bottom: 'medium' }}>
         {getString('ci.getStartedWithCI.selectInfra')}
@@ -115,7 +135,7 @@ const SelectBuildLocationRef = (
                 flex={{
                   justifyContent:
                     disabled ||
-                    (item.location === selectedBuildLocation.location &&
+                    (item.location === selectedBuildLocation?.location &&
                       provisioningStatus === ProvisioningStatus.FAILURE)
                       ? 'space-between'
                       : 'flex-end'
@@ -129,7 +149,8 @@ const SelectBuildLocationRef = (
                     </Text>
                   </Container>
                 ) : null}
-                {item.location === selectedBuildLocation.location &&
+                {item.location === selectedBuildLocation?.location &&
+                selectedBuildLocation?.location === HostedByHarnessBuildLocation.location &&
                 provisioningStatus === ProvisioningStatus.FAILURE ? (
                   <Layout.Vertical padding={{ top: 'large' }}>
                     <Layout.Horizontal
@@ -160,8 +181,8 @@ const SelectBuildLocationRef = (
             </Layout.Vertical>
           )
         }}
-        selected={buildInfra}
-        onChange={(item: BuildLocationDetails) => setBuildInfra(item)}
+        selected={buildLocation}
+        onChange={(item: BuildLocationDetails) => setBuildLocation(item)}
       />
     </Layout.Vertical>
   )

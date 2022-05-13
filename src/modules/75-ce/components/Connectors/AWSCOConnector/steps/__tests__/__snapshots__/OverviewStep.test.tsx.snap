@@ -16,6 +16,7 @@ exports[`Test Step 1 renders without crashing 1`] = `
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main fullHeight"
       >
         <div>

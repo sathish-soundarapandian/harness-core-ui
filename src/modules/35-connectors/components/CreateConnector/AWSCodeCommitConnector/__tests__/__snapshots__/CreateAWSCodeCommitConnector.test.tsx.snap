@@ -202,6 +202,7 @@ exports[`CreateAWSCodeCommitConnector matches snapshot and goes through steps co
             class="OverlaySpinner--overlaySpinner"
           >
             <form
+              action="#"
               class="FormikForm--main"
             >
               <div>

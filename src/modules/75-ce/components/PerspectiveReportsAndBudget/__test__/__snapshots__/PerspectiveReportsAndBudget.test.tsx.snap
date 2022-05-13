@@ -9,6 +9,7 @@ exports[`test case for Perspective anomaly alerts should be able to open create 
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -386,6 +387,7 @@ exports[`test cases for Perspective Create Budgets should be able to open create
             class="OverlaySpinner--overlaySpinner"
           >
             <form
+              action="#"
               class="FormikForm--main"
             >
               <div>
@@ -722,6 +724,7 @@ exports[`test cases for Perspective Create Report should be able to open create 
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -1043,6 +1046,7 @@ exports[`test cases for Perspective Create Report should be able to open create 
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>

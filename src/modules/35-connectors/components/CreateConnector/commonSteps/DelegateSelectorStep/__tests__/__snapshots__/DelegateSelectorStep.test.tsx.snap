@@ -30,6 +30,7 @@ exports[`DelegateSelectorStep should open Git Sync modal on clicking Save and Co
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>
@@ -579,6 +580,7 @@ exports[`DelegateSelectorStep should render DelegateSelectorStep component 1`] =
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>

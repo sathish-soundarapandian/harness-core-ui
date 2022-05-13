@@ -33,14 +33,26 @@ jest.mock('services/cd-ng', () => ({
 describe('Test GetStartedWithCIUtil', () => {
   test('Test setUpCI when default org is present', () => {
     const mock = jest.fn()
-    setUpCI('accountId', Editions.FREE, mock)
+    setUpCI({
+      accountId: 'accountId',
+      edition: Editions.FREE,
+      onSetUpSuccessCallback: mock,
+      licenseInformation: {},
+      updateLicenseStore: jest.fn()
+    })
     expect(mock.mock.calls.length).toBe(0)
   })
 
   test('Test setUpCI when default org is not present', () => {
     getOrgResponse = { status: 'FAILURE', data: { organization: { identifier: '' } } }
     const mock = jest.fn()
-    setUpCI('accountId', Editions.TEAM, mock)
+    setUpCI({
+      accountId: 'accountId',
+      edition: Editions.TEAM,
+      onSetUpSuccessCallback: mock,
+      licenseInformation: {},
+      updateLicenseStore: jest.fn()
+    })
     expect(mock.mock.calls.length).toBe(0)
   })
 })

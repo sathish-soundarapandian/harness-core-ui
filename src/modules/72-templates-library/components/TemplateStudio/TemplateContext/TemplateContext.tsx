@@ -653,7 +653,13 @@ export const TemplateProvider: React.FC<{
 
   React.useEffect(() => {
     fetchTemplate({ forceFetch: true, forceUpdate: true })
-  }, [templateIdentifier, versionLabel, repoIdentifier, branch])
+  }, [templateIdentifier, versionLabel])
+
+  React.useEffect(() => {
+    if (templateIdentifier !== DefaultNewTemplateId) {
+      fetchTemplate({ forceFetch: true, forceUpdate: true })
+    }
+  }, [repoIdentifier, branch])
 
   React.useEffect(() => {
     if (state.isDBInitialized) {

@@ -33,6 +33,8 @@ import { CE_AWS_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
 import ConnectorInstructionList from '@connectors/common/ConnectorCreationInstructionList/ConnectorCreationInstructionList'
 import { connectorHelperUrls } from '@connectors/constants'
+import { FeatureFlag } from '@common/featureFlags'
+import { useConnectorGovernanceModal } from '@connectors/hooks/useConnectorGovernanceModal'
 import type { FeaturesString } from './CrossAccountRoleStep1'
 import type { CEAwsConnectorDTO } from './OverviewStep'
 import css from '../CreateCeAwsConnector.module.scss'
@@ -52,6 +54,10 @@ const CrossAccountRoleStep2: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
   })
   const { mutate: updateConnector } = useUpdateConnector({
     queryParams: { accountIdentifier: accountId }
+  })
+  const { hideOrShowGovernanceErrorModal } = useConnectorGovernanceModal({
+    errorOutOnGovernanceWarning: false,
+    featureFlag: FeatureFlag.OPA_CONNECTOR_GOVERNANCE
   })
   const { data: awsUrlTemplateData, loading: awsUrlTemplateLoading } = useAwsaccountconnectiondetail({
     queryParams: { accountIdentifier: accountId }
@@ -101,18 +107,17 @@ const CrossAccountRoleStep2: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
         const connectorInfo: CEAwsConnectorDTO = {
           ...pick(prevStepData, ['name', 'identifier', 'description', 'tags', 'spec', 'type'])
         }
-        if (prevStepData.isEditMode) {
-          const response = await updateConnector({ connector: connectorInfo })
-          if (response.status != 'SUCCESS') {
-            throw response as Failure
-          }
-        } else {
-          const response = await createConnector({ connector: connectorInfo })
-          if (response.status != 'SUCCESS') {
-            throw response as Failure
-          }
+
+        const response = prevStepData.isEditMode
+          ? await updateConnector({ connector: connectorInfo })
+          : await createConnector({ connector: connectorInfo })
+        if (response.status != 'SUCCESS') {
+          throw response as Failure
         }
-        nextStep?.(prevStepData)
+        const { canGoToNextStep } = await hideOrShowGovernanceErrorModal(response)
+        if (canGoToNextStep) {
+          nextStep?.(prevStepData)
+        }
       }
     } catch (e) {
       modalErrorHandler?.showDanger(getErrorInfoFromErrorObject(e))

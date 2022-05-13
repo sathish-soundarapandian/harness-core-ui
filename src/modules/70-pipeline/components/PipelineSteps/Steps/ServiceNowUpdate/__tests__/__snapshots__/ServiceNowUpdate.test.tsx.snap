@@ -45,7 +45,7 @@ exports[`ServiceNow Update tests Basic snapshot - deploymentform mode: serviceNo
                   <span
                     class="placeholder"
                   >
-                    connectors.selectConnector
+                    pipeline.serviceNowApprovalStep.serviceNowConnectorPlaceholder
                   </span>
                 </span>
                 <span
@@ -439,7 +439,7 @@ exports[`ServiceNow Update tests Basic snapshot - inputset mode: input set with 
                   <span
                     class="placeholder"
                   >
-                    connectors.selectConnector
+                    pipeline.serviceNowApprovalStep.serviceNowConnectorPlaceholder
                   </span>
                 </span>
                 <span
@@ -518,7 +518,7 @@ exports[`ServiceNow Update tests Basic snapshot - inputset mode: input set with 
                 <span
                   class="FormError--error"
                 >
-                  pipeline.jiraApprovalStep.validations.connectorRef
+                  pipeline.serviceNowApprovalStep.validations.connectorRef
                 </span>
               </div>
             </div>
@@ -730,7 +730,7 @@ exports[`ServiceNow Update tests Basic snapshot - inputset mode: input set with 
     <pre>
       {
   "spec": {
-    "connectorRef": "pipeline.jiraApprovalStep.validations.connectorRef",
+    "connectorRef": "pipeline.serviceNowApprovalStep.validations.connectorRef",
     "ticketType": "pipeline.serviceNowApprovalStep.validations.ticketType"
   }
 }
@@ -755,6 +755,7 @@ exports[`ServiceNow Update tests Edit stage - readony view: editstage-readonly 1
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
@@ -1494,7 +1495,7 @@ exports[`ServiceNow Update tests deploymentform readonly mode: serviceNow-update
                   <span
                     class="placeholder"
                   >
-                    connectors.selectConnector
+                    pipeline.serviceNowApprovalStep.serviceNowConnectorPlaceholder
                   </span>
                 </span>
                 <span

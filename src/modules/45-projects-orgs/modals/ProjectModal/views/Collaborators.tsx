@@ -189,7 +189,7 @@ const Collaborators: React.FC<CollaboratorModalData> = props => {
         modalErrorHandler?.hide()
         SendInvitation(values.collaborators)
         setRole(getDefaultRole({ accountIdentifier: accountId, orgIdentifier, projectIdentifier }, getString))
-        resetForm({ collaborators: [] })
+        resetForm({ values: { collaborators: [] } })
       }}
       enableReinitialize={true}
     >

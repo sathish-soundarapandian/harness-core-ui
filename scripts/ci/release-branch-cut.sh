@@ -23,7 +23,7 @@ echo $NEW_BRANCH
 
 # updating the jira tickets
 chmod 700 scripts/ci/*.*
-scripts/ci/release-branch-update-jiras-ng.sh
+scripts/ci/release-branch-update-jiras.sh
 
 # commit to develop
 git commit -nm "Branching to $NEW_BRANCH"

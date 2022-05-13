@@ -43,6 +43,7 @@ exports[`open and close CITrial Modal Rendering should open and default as Creat
             class="OverlaySpinner--overlaySpinner"
           >
             <form
+              action="#"
               class="FormikForm--main"
             >
               <div>

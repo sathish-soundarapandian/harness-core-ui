@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { set, cloneDeep, omit } from 'lodash-es'
+import { cloneDeep, omit, set } from 'lodash-es'
 import type { Feature } from 'services/cf'
 import * as CFUtils from '../CFUtils'
 
@@ -26,6 +26,11 @@ describe('CFUtils', () => {
     expect(CFUtils.featureFlagHasCustomRules({ envProperties: { variationMap: [] } } as unknown as Feature)).toEqual(
       false
     )
+    expect(CFUtils.formatNumber(1)).toEqual('1')
+    expect(CFUtils.formatNumber(1.25, true)).toEqual('1.25')
+    expect(CFUtils.formatNumber(1234)).toEqual('1.23K')
+    expect(CFUtils.formatNumber(1234567)).toEqual('1.23M')
+    expect(CFUtils.formatNumber(1234567890)).toEqual('1.23B')
   })
 
   describe('formatToCompactNumber', () => {

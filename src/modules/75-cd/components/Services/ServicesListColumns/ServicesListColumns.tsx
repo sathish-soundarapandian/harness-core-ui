@@ -7,32 +7,33 @@
 
 import React, { useState } from 'react'
 import {
-  Dialog,
   Button,
+  Container,
   Layout,
   TagsPopover,
   Text,
   useConfirmationDialog,
   useToaster,
-  Container
+  Dialog
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, pick } from 'lodash-es'
-import { useModalHook } from '@harness/use-modal'
 import { Classes, Intent, Menu, Popover, Position } from '@blueprintjs/core'
+import { useModalHook } from '@harness/use-modal'
 import routes from '@common/RouteDefinitions'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ServiceTabs } from '@cd/components/ServiceDetails/ServiceDetailsContent/ServiceDetailsContent'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { useDeleteServiceV2 } from 'services/cd-ng'
 
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/DeployServiceStep'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { ServiceTabs } from '../utils/ServiceUtils'
 import css from './ServicesListColumns.module.scss'
 
 interface ServiceRow {
@@ -57,6 +58,7 @@ const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const history = useHistory()
+  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
 
   const { mutate: deleteService } = useDeleteServiceV2({
     queryParams: {
@@ -109,7 +111,7 @@ const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
       setDeleteError('')
       if (isConfirmed) {
         history.push({
-          pathname: routes.toServiceDetails({
+          pathname: routes.toServiceStudio({
             accountId,
             orgIdentifier,
             projectIdentifier,
@@ -154,7 +156,20 @@ const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
   const handleEdit = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {
     e.stopPropagation()
     setMenuOpen(false)
-    showModal()
+    if (NG_SVC_ENV_REDESIGN) {
+      history.push({
+        pathname: routes.toServiceStudio({
+          accountId,
+          orgIdentifier,
+          projectIdentifier,
+          serviceId: service?.identifier,
+          module
+        }),
+        search: `tab=${ServiceTabs.Configuration}`
+      })
+    } else {
+      showModal()
+    }
   }
 
   const handleDelete = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {

@@ -278,6 +278,7 @@ exports[`Test ServerlessAwsLambdaSpec snapshot should render edit view with empt
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -620,6 +621,7 @@ exports[`Test ServerlessAwsLambdaSpec snapshot should render edit view with runt
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>
@@ -1002,6 +1004,7 @@ exports[`Test ServerlessAwsLambdaSpec snapshot should render edit view with valu
       class="OverlaySpinner--overlaySpinner"
     >
       <form
+        action="#"
         class="FormikForm--main"
       >
         <div>

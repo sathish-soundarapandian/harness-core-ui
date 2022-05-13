@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import { noop } from 'lodash-es'
 import { render, act, fireEvent, queryByAttribute, waitFor } from '@testing-library/react'
 import { Formik, Form } from 'formik'
 import { MultiTypeInputType } from '@wings-software/uicore'
@@ -22,7 +23,7 @@ interface TestProps {
 function TestComponent({ initialValues }: TestProps): React.ReactElement {
   return (
     <TestWrapper>
-      <Formik initialValues={initialValues} onSubmit={() => null}>
+      <Formik initialValues={initialValues} onSubmit={noop}>
         {formik => (
           <Form>
             <Volumes

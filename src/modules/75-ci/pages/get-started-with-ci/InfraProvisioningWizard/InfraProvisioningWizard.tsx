@@ -9,6 +9,7 @@ import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Container, Button, ButtonVariation, Layout, MultiStepProgressIndicator } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
+import { useSideNavContext } from 'framework/SideNavStore/SideNavContext'
 import routes from '@common/RouteDefinitions'
 import { ResponseSetupStatus, useGetDelegateInstallStatus, useProvisionResourcesForCI } from 'services/cd-ng'
 import { createPipelineV2Promise, ResponsePipelineSaveResponse } from 'services/pipeline-ng'
@@ -19,12 +20,12 @@ import { InfraProvisioningCarousel } from '../InfraProvisioningCarousel/InfraPro
 import {
   InfraProvisioningWizardProps,
   WizardStep,
-  HostedByHarnessBuildLocation,
   InfraProvisiongWizardStepId,
   StepStatus,
   GitAuthenticationMethod,
   BuildLocation,
-  ProvisioningStatus
+  ProvisioningStatus,
+  Hosting
 } from './Constants'
 import { SelectBuildLocation, SelectBuildLocationRef } from './SelectBuildLocation'
 import { SelectGitProvider, SelectGitProviderRef } from './SelectGitProvider'
@@ -49,6 +50,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const history = useHistory()
   const [startPolling, setStartPolling] = useState<boolean>(false)
   const [ciProvisioningStatus, setCIProvisioningStatus] = useState<ProvisioningStatus>()
+  const { setShowGetStartedTab } = useSideNavContext()
 
   const { mutate: startProvisioning } = useProvisionResourcesForCI({
     queryParams: {
@@ -70,10 +72,10 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
 
   useEffect(() => {
     const { status, data } = provisioningStatus || {}
-    if (status === 'SUCCESS') {
+    if (status === ProvisioningStatus[ProvisioningStatus.SUCCESS]) {
       setCIProvisioningStatus(ProvisioningStatus.SUCCESS)
     }
-    if (data === 'SUCCESS') {
+    if (data === ProvisioningStatus[ProvisioningStatus.SUCCESS]) {
       setStartPolling(false)
     }
   }, [provisioningStatus])
@@ -114,6 +116,12 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     }
   }, [projectIdentifier, orgIdentifier])
 
+  const goToSelectGitProviderStepAfterBuildLocationSelection = React.useCallback(() => {
+    updateStepStatus([InfraProvisiongWizardStepId.SelectBuildLocation], StepStatus.Success)
+    updateStepStatus([InfraProvisiongWizardStepId.SelectGitProvider], StepStatus.InProgress)
+    setCurrentWizardStepId(InfraProvisiongWizardStepId.SelectGitProvider)
+  }, [])
+
   const WizardSteps: Map<InfraProvisiongWizardStepId, WizardStep> = new Map([
     [
       InfraProvisiongWizardStepId.SelectBuildLocation,
@@ -121,12 +129,13 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         stepRender: (
           <SelectBuildLocation
             ref={selectBuildLocationRef}
-            selectedBuildLocation={HostedByHarnessBuildLocation}
+            selectedHosting={selectBuildLocationRef.current?.hosting}
+            selectedBuildLocation={selectBuildLocationRef.current?.buildLocation}
             provisioningStatus={ciProvisioningStatus}
           />
         ),
         onClickNext: () => {
-          if (selectBuildLocationRef.current?.buildInfra.location === BuildLocation.HostedByHarness) {
+          if (selectBuildLocationRef.current?.buildLocation.location === BuildLocation.HostedByHarness) {
             setShowDialog(true)
             setCIProvisioningStatus(ProvisioningStatus.IN_PROGRESS)
             updateStepStatus([InfraProvisiongWizardStepId.SelectBuildLocation], StepStatus.InProgress)
@@ -146,6 +155,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
               .catch(() => {
                 setCIProvisioningStatus(ProvisioningStatus.FAILURE)
               })
+          } else {
+            goToSelectGitProviderStepAfterBuildLocationSelection()
           }
         },
         stepFooterLabel: 'ci.getStartedWithCI.configInfra'
@@ -177,8 +188,9 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             setFieldTouched?.('accessToken', true)
           }
           if (
-            (gitAuthenticationMethod === GitAuthenticationMethod.AccessToken && accessToken && gitProvider) ||
-            (gitAuthenticationMethod === GitAuthenticationMethod.OAuth && gitProvider)
+            selectBuildLocationRef.current?.hosting === Hosting.SaaS &&
+            ((gitAuthenticationMethod === GitAuthenticationMethod.AccessToken && accessToken && gitProvider) ||
+              (gitAuthenticationMethod === GitAuthenticationMethod.OAuth && gitProvider))
           ) {
             setCurrentWizardStepId(InfraProvisiongWizardStepId.SelectRepository)
             updateStepStatus([InfraProvisiongWizardStepId.SelectGitProvider], StepStatus.Success)
@@ -226,6 +238,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                 setDisable(false)
                 const { status, data } = createPipelineResponse
                 if (status === 'SUCCESS' && data?.identifier) {
+                  setShowGetStartedTab(false)
                   history.push(
                     routes.toPipelineStudio({
                       accountId: accountId,
@@ -285,9 +298,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           onClose={() => {
             setShowDialog(false)
             if (ciProvisioningStatus === ProvisioningStatus.SUCCESS) {
-              updateStepStatus([InfraProvisiongWizardStepId.SelectBuildLocation], StepStatus.Success)
-              updateStepStatus([InfraProvisiongWizardStepId.SelectGitProvider], StepStatus.InProgress)
-              setCurrentWizardStepId(InfraProvisiongWizardStepId.SelectGitProvider)
+              goToSelectGitProviderStepAfterBuildLocationSelection()
             } else if (ciProvisioningStatus === ProvisioningStatus.FAILURE) {
               updateStepStatus([InfraProvisiongWizardStepId.SelectBuildLocation], StepStatus.Failed)
             }

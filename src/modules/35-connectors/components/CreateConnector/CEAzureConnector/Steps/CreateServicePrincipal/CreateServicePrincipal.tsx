@@ -25,6 +25,8 @@ import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
 import { CE_AZURE_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { FeatureFlag } from '@common/featureFlags'
+import { useConnectorGovernanceModal } from '@connectors/hooks/useConnectorGovernanceModal'
 import type { CEAzureDTO } from '../Overview/AzureConnectorOverview'
 import css from '../../CreateCeAzureConnector_new.module.scss'
 
@@ -45,7 +47,10 @@ const CreateServicePrincipal: React.FC<StepProps<CEAzureDTO>> = (props): JSX.Ele
 
   const { mutate: createConnector } = useCreateConnector({ queryParams: { accountIdentifier: accountId } })
   const { mutate: updateConnector } = useUpdateConnector({ queryParams: { accountIdentifier: accountId } })
-
+  const { hideOrShowGovernanceErrorModal } = useConnectorGovernanceModal({
+    errorOutOnGovernanceWarning: false,
+    featureFlag: FeatureFlag.OPA_CONNECTOR_GOVERNANCE
+  })
   useStepLoadTelemetry(CE_AZURE_CONNECTOR_CREATION_EVENTS.LOAD_SERVICE_PRINCIPAL)
 
   const saveAndContinue = async () => {
@@ -68,12 +73,13 @@ const CreateServicePrincipal: React.FC<StepProps<CEAzureDTO>> = (props): JSX.Ele
         const response = await (prevStepData.isEditMode
           ? updateConnector({ connector: payload })
           : createConnector({ connector: payload }))
-
         if ('SUCCESS' !== response.status) {
           throw response as Failure
         }
-
-        nextStep?.(prevStepData)
+        const { canGoToNextStep } = await hideOrShowGovernanceErrorModal(response)
+        if (canGoToNextStep) {
+          nextStep?.(prevStepData)
+        }
       }
     } catch (e) {
       modalErrorHandler?.showDanger(getRBACErrorMessage(e))

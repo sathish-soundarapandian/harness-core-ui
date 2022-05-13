@@ -10,15 +10,12 @@ import { useHistory, useParams } from 'react-router-dom'
 import type { IconName } from '@wings-software/uicore'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import routes from '@common/RouteDefinitions'
-import { useUpdateAccountDefaultExperienceNG, ResponseAccountDTO } from 'services/cd-ng'
+import { useUpdateAccountDefaultExperienceNG } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { Experiences } from '@common/constants/Utils'
 import { useToaster } from '@common/components'
 import { Category, PurposeActions } from '@common/constants/TrackingConstants'
 import type { Module, AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { Editions } from '@common/constants/SubscriptionTypes'
-import { setUpCI, StartFreeLicenseAndSetupProjectCallback } from '@common/utils/GetStartedWithCIUtil'
 import ModuleCard from './ModuleCard'
 import css from './WelcomePage.module.scss'
 
@@ -37,7 +34,6 @@ interface SelectModuleListProps {
 
 const SelectModuleList: React.FC<SelectModuleListProps> = ({ onModuleClick, moduleList }) => {
   const [selected, setSelected] = useState<Module>()
-  const { CIE_HOSTED_BUILDS } = useFeatureFlags()
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const { trackEvent } = useTelemetry()
@@ -45,7 +41,6 @@ const SelectModuleList: React.FC<SelectModuleListProps> = ({ onModuleClick, modu
   const { mutate: updateDefaultExperience, loading: updatingDefaultExperience } = useUpdateAccountDefaultExperienceNG({
     accountIdentifier: accountId
   })
-  const [setupInProgress, setSetupInProgress] = useState<boolean>(false)
   const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: innerHeight })
   const ref = useRef<HTMLDivElement>(null)
 
@@ -59,37 +54,6 @@ const SelectModuleList: React.FC<SelectModuleListProps> = ({ onModuleClick, modu
   const getButtonProps = (buttonType: string): { clickHandle?: () => void; disabled?: boolean } => {
     switch (buttonType) {
       case 'ci':
-        return {
-          clickHandle: () => {
-            trackEvent(PurposeActions.ModuleContinue, { category: Category.SIGNUP, module: buttonType })
-            try {
-              updateDefaultExperience({
-                defaultExperience: Experiences.NG
-              }).then((response: ResponseAccountDTO) => {
-                const { status, data } = response
-                if (CIE_HOSTED_BUILDS && status === 'SUCCESS' && data?.defaultExperience === Experiences.NG) {
-                  setSetupInProgress(true)
-                  setUpCI(accountId, Editions.FREE, ({ orgId, projectId }: StartFreeLicenseAndSetupProjectCallback) => {
-                    setSetupInProgress(false)
-                    history.push(
-                      routes.toGetStartedWithCI({
-                        accountId,
-                        module: 'ci',
-                        orgIdentifier: orgId,
-                        projectIdentifier: projectId
-                      })
-                    )
-                  })
-                } else {
-                  history.push(routes.toModuleHome({ accountId, module: buttonType, source: 'purpose' }))
-                }
-              })
-            } catch (error) {
-              showError(error.data?.message || getString('somethingWentWrong'))
-            }
-          },
-          disabled: CIE_HOSTED_BUILDS ? updatingDefaultExperience || setupInProgress : updatingDefaultExperience
-        }
       case 'cd':
       case 'ce':
       case 'cv':

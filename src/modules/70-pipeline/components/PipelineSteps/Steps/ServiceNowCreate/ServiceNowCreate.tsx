@@ -70,7 +70,7 @@ export class ServiceNowCreate extends PipelineStep<ServiceNowCreateData> {
       isEmpty(data?.spec?.connectorRef)
     ) {
       errors.spec = {
-        connectorRef: getString?.('pipeline.jiraApprovalStep.validations.connectorRef')
+        connectorRef: getString?.('pipeline.serviceNowApprovalStep.validations.connectorRef')
       }
     }
 

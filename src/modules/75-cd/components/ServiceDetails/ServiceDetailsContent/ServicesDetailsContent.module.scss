@@ -6,6 +6,7 @@
  */
 
 .tabsContainer {
+  position: relative !important;
   & > :global(.bp3-tabs > .bp3-tab-list) {
     border-bottom: 1px solid var(--grey-200);
   }
@@ -30,6 +31,14 @@
   :global {
     .bp3-tab-panel {
       margin-top: 0;
+    }
+  }
+  .btnContainer {
+    position: absolute !important;
+    top: var(--spacing-small);
+    right: var(--spacing-medium);
+    .discardBtn {
+      margin-left: var(--spacing-3) !important;
     }
   }
 }

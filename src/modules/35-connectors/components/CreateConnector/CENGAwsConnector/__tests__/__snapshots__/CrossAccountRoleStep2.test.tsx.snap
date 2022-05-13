@@ -133,6 +133,7 @@ exports[`Create CE AWS Connector Create Cross Account Role Step should render fo
         class="OverlaySpinner--overlaySpinner"
       >
         <form
+          action="#"
           class="FormikForm--main"
         >
           <div>

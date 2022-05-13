@@ -44,6 +44,8 @@ import {
   UseSaveToGitDialogReturn
 } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
+import { FeatureFlag } from '@common/featureFlags'
+import { useConnectorGovernanceModal } from '@connectors/hooks/useConnectorGovernanceModal'
 import css from './ConnectorYAMLEditor.module.scss'
 
 interface ConnectorYAMLEditorProp {
@@ -105,8 +107,8 @@ const saveYamlhandler = (handler: SaveYamlhandlerProps): void => {
     handleSaveYaml()
       .then(res => {
         if (res.status === 'SUCCESS') {
-          showSuccess(successText)
           res.nextCallback?.()
+          showSuccess(successText)
         } else {
           /* Todo handle error with API status 200 */
         }
@@ -169,6 +171,10 @@ const ConnectorYAMLEditor: React.FC<ConnectorYAMLEditorProp> = props => {
 
   const { mutate: updateConnector, loading: updating } = useUpdateConnector({
     queryParams: { accountIdentifier: accountId }
+  })
+  const { hideOrShowGovernanceErrorModal, doesGovernanceHasError } = useConnectorGovernanceModal({
+    errorOutOnGovernanceWarning: false,
+    featureFlag: FeatureFlag.OPA_CONNECTOR_GOVERNANCE
   })
 
   const { openSaveToGitDialog } = useSaveToGitDialog<Connector>({
@@ -244,14 +250,21 @@ const ConnectorYAMLEditor: React.FC<ConnectorYAMLEditorProp> = props => {
           baseBranch: responsedata.gitDetails?.branch
         }
       })
-      if (response.status === 'SUCCESS' && response?.data?.connector) {
+      const hasAnyGovernnanceError = doesGovernanceHasError(response)
+      const { canGoToNextStep } = await hideOrShowGovernanceErrorModal(response)
+      if (response.status === 'SUCCESS' && response?.data?.connector && !hasAnyGovernnanceError) {
         setEnableEdit(false)
         setConnector(response?.data?.connector)
         setConnectorForYaml(response?.data?.connector)
       }
       return {
-        status: response.status,
-        nextCallback: () => refetchConnector()
+        status: !hasAnyGovernnanceError ? response.status : 'FAILURE',
+        nextCallback: async () => {
+          if (canGoToNextStep) {
+            refetchConnector()
+          }
+        },
+        governanceMetaData: response.data?.governanceMetadata
       }
     }
   }

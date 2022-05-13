@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { FormikContext } from 'formik'
+import type { FormikContextType } from 'formik'
 import { get, isPlainObject } from 'lodash-es'
 
 /* _formSubmitCount is custom state var used to track submitCount.
@@ -14,7 +14,7 @@ import { get, isPlainObject } from 'lodash-es'
  * Or use this custom var for error checks.
  */
 
-export const errorCheck = (name: string, formik?: FormikContext<any> | any): boolean => {
+export const errorCheck = (name: string, formik?: FormikContextType<any> | any): boolean => {
   if (formik) {
     const { touched, submitCount, errors, _formSubmitCount } = formik
 

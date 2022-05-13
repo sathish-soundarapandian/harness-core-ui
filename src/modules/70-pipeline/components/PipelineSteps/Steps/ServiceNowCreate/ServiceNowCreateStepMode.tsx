@@ -105,6 +105,8 @@ function FormContent({
     []
   )
   const [connectorValueType, setConnectorValueType] = useState<MultiTypeInputType>(MultiTypeInputType.FIXED)
+  const [ticketValueType, setTicketValueType] = useState<MultiTypeInputType>(MultiTypeInputType.FIXED)
+
   const commonParams = {
     accountIdentifier: accountId,
     projectIdentifier,
@@ -134,6 +136,7 @@ function FormContent({
       })
     } else if (connectorRefFixedValue !== undefined) {
       formik.setFieldValue('spec.selectedFields', [])
+      setTicketFieldList([])
     }
   }, [connectorRefFixedValue])
 
@@ -151,7 +154,9 @@ function FormContent({
   useEffect(() => {
     if (
       connectorRefFixedValue &&
+      connectorValueType === MultiTypeInputType.FIXED &&
       ticketTypeKeyFixedValue &&
+      ticketValueType === MultiTypeInputType.FIXED &&
       getMultiTypeFromValue(templateName) === MultiTypeInputType.FIXED
     ) {
       refetchServiceNowTemplate({
@@ -167,7 +172,7 @@ function FormContent({
     }
   }, [connectorRefFixedValue, ticketTypeKeyFixedValue, templateName])
   useDeepCompareEffect(() => {
-    if (connectorRefFixedValue && ticketTypeKeyFixedValue) {
+    if (connectorRefFixedValue && ticketTypeKeyFixedValue && ticketValueType === MultiTypeInputType.FIXED) {
       refetchServiceNowMetadata({
         queryParams: {
           ...commonParams,
@@ -206,6 +211,7 @@ function FormContent({
         // Flush the selected additional fields, and move everything to key value fields
         // formik.setFieldValue('spec.fields', getKVFields(formik.values))
         formik.setFieldValue('spec.selectedFields', [])
+        setTicketFieldList([])
       }
     }
   }, [serviceNowMetadataResponse?.data])
@@ -223,6 +229,14 @@ function FormContent({
       }
     }
   }, [serviceNowTemplateResponse?.data])
+  useEffect(() => {
+    // Clear field list to be diaplyed under dynamic field selector if fixed ticket type is not chosen
+    if (ticketValueType !== MultiTypeInputType.FIXED) {
+      formik.setFieldValue('spec.selectedFields', [])
+      setTicketFieldList([])
+    }
+  }, [ticketValueType])
+
   const [showDynamicFieldsModal, hideDynamicFieldsModal] = useModalHook(() => {
     return (
       <Dialog
@@ -243,7 +257,7 @@ function FormContent({
               'spec.selectedFields',
               getSelectedFieldsToBeAddedInForm(
                 fieldsToBeAdded,
-                formik.values.spec.selectedFields,
+                formik.values.spec.selectedFields || [],
                 formik.values.spec.fields
               )
             )
@@ -399,6 +413,7 @@ function FormContent({
               allowableTypes,
               expressions,
               onChange: (value: unknown, _valueType, type) => {
+                setTicketValueType(type)
                 // Clear dependent fields
                 if (
                   type === MultiTypeInputType.FIXED &&

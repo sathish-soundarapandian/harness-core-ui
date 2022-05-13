@@ -217,7 +217,7 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
           {formik => {
             const { values: formValues, setFieldValue } = formik
             window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: BuildTabs.OVERVIEW }))
-            formikRef.current = formik
+            formikRef.current = formik as FormikProps<unknown> | null
             return (
               <>
                 <div className={css.tabHeading} id="stageDetails">

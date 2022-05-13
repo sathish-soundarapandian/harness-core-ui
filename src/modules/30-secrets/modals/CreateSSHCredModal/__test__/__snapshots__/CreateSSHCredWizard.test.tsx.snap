@@ -132,6 +132,7 @@ exports[`Create SSH Cred Wizard should render form 1`] = `
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -507,6 +508,7 @@ exports[`Create SSH Cred Wizard should render form 2`] = `
           class="OverlaySpinner--overlaySpinner"
         >
           <form
+            action="#"
             class="FormikForm--main"
           >
             <div>
@@ -1070,6 +1072,7 @@ exports[`Create SSH Cred Wizard should render form 3`] = `
             class="OverlaySpinner--overlaySpinner"
           >
             <form
+              action="#"
               class="FormikForm--main"
             >
               <div>

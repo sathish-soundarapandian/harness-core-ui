@@ -36,7 +36,7 @@ export default function WorkloadCard({
   username,
   workload,
   serviceId = ''
-}: WorkloadCardProps) {
+}: WorkloadCardProps): React.ReactElement {
   const history = useHistory()
 
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
@@ -52,7 +52,7 @@ export default function WorkloadCard({
   }, [workload])
 
   const gotoServices = (): void => {
-    history.push(routes.toServiceDetails({ accountId, orgIdentifier, projectIdentifier, serviceId, module }))
+    history.push(routes.toServiceStudio({ accountId, orgIdentifier, projectIdentifier, serviceId, module }))
   }
   return (
     <RepositoryCard

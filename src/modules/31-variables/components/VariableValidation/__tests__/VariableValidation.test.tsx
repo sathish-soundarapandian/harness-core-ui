@@ -18,7 +18,7 @@ import { Validation } from '@variables/utils/VariablesUtils'
 import VariableValidation from '../VariableValidation'
 
 describe('VariableValidation', () => {
-  test('render component for Fixed', async () => {
+  test.only('render component for Fixed', async () => {
     const { container } = render(
       <TestWrapper>
         <Formik initialValues={{}} onSubmit={noop} formName="allowedValueTest">

@@ -71,3 +71,9 @@ export const DEFAULT_PIPELINE_PAYLOAD = {
     ]
   }
 }
+
+export enum Status {
+  SUCCESS = 'SUCCESS',
+  ERROR = 'ERROR',
+  FAILURE = 'FAILURE'
+}

@@ -167,7 +167,7 @@ describe('Test K8sBlueGreenDeployStep', () => {
     //timeout validation on submit
     fireEvent.change(container.querySelector('input[value="5s"]') as HTMLElement, { target: { value: '' } })
 
-    await act(() => ref.current?.submitForm())
+    await act(() => ref.current?.submitForm()!)
     expect(queryByText('validation.timeout10SecMinimum')).toBeTruthy()
   })
   test('should render null for StepviewType.template', () => {

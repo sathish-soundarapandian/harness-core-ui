@@ -112,7 +112,7 @@ export const ServerlessSpecEditable: React.FC<ServerlessSpecEditableProps> = ({
       >
         {formik => {
           window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.INFRASTRUCTURE }))
-          formikRef.current = formik
+          formikRef.current = formik as FormikProps<unknown> | null
           return (
             <FormikForm>
               <Layout.Horizontal className={css.formRow} spacing="medium">

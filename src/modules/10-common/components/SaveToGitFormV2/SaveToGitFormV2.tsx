@@ -55,6 +55,7 @@ export interface SaveToGitFormV2Interface {
   isNewBranch: boolean
   branch: string
   targetBranch?: string
+  filePath?: string
   commitMsg: string
   createPr: boolean
 }

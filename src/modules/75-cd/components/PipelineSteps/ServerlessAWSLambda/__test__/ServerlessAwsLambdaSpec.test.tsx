@@ -322,7 +322,7 @@ describe('Test ServerlessAwsLambdaSpec behavior', () => {
 
     await act(async () => {
       const stageInput = container.querySelector('[placeholder="cd.steps.serverless.stagePlaceholder"]')
-      fireEvent.change(stageInput!, { target: { value: 'stage changed' } })
+      await fireEvent.change(stageInput!, { target: { value: 'stage changed' } })
 
       const regionInput = container.querySelector('[placeholder="cd.steps.serverless.regionPlaceholder"]')
       fireEvent.change(regionInput!, { target: { value: 'region changed' } })

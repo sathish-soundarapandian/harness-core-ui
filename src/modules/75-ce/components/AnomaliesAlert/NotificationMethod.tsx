@@ -40,7 +40,7 @@ interface Alerts {
   channelUrl?: string | string[]
 }
 
-interface NotificationValues {
+export interface NotificationValues {
   perspective: string
   alertList: Alerts[]
 }

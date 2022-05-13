@@ -21,13 +21,13 @@ const SampleComponent: React.FC<Omit<QueryMappingInterface, 'formValue'>> = (
 ) => {
   return (
     <TestWrapper>
-      <Formik formName="test" initialValues={{}} onSubmit={jest.fn()} validationSchema={{}}>
+      <Formik formName="test" initialValues={{}} onSubmit={jest.fn()}>
         {formikProps => (
           <FormikForm>
             <QueryMapping
               {...{
                 ...props,
-                onFieldChange: formikProps.setFieldValue,
+                // onFieldChange: formikProps.setFieldValue,
                 onValueChange: formikProps.setValues,
                 formValue: formikProps.values as any
               }}
@@ -52,51 +52,45 @@ describe('Validate MapMetricsToServices conponent', () => {
 
   test('should render MapMetricsToServices', () => {
     const { container } = render(
-      <TestWrapper>
-        <SampleComponent
-          connectorIdentifier={'customConn'}
-          onFetchRecordsSuccess={onFetchRecordsSuccess}
-          isQueryExecuted={true}
-          recordsData={mocksampledata as any}
-          setLoading={setLoading}
-          onFieldChange={jest.fn()}
-          onValueChange={jest.fn()}
-        />
-      </TestWrapper>
+      <SampleComponent
+        connectorIdentifier={'customConn'}
+        onFetchRecordsSuccess={onFetchRecordsSuccess}
+        isQueryExecuted={true}
+        recordsData={mocksampledata as any}
+        setLoading={setLoading}
+        onFieldChange={jest.fn()}
+        onValueChange={jest.fn()}
+      />
     )
     expect(container).toMatchSnapshot()
   })
 
   test('should render MapMetricsToServices in editMode', () => {
     const { container } = render(
-      <TestWrapper>
-        <SampleComponent
-          connectorIdentifier={'customConn'}
-          onFetchRecordsSuccess={onFetchRecordsSuccess}
-          isQueryExecuted={true}
-          recordsData={mocksampledata as any}
-          setLoading={setLoading}
-          onFieldChange={jest.fn()}
-          onValueChange={jest.fn()}
-        />
-      </TestWrapper>
+      <SampleComponent
+        connectorIdentifier={'customConn'}
+        onFetchRecordsSuccess={onFetchRecordsSuccess}
+        isQueryExecuted={true}
+        recordsData={mocksampledata as any}
+        setLoading={setLoading}
+        onFieldChange={jest.fn()}
+        onValueChange={jest.fn()}
+      />
     )
     expect(container).toMatchSnapshot()
   })
 
   test('ensure behavior is correct whhen changing queryType', async () => {
     const { container } = render(
-      <TestWrapper>
-        <SampleComponent
-          connectorIdentifier={'customConn'}
-          onFetchRecordsSuccess={onFetchRecordsSuccess}
-          isQueryExecuted={true}
-          recordsData={mocksampledata as any}
-          setLoading={setLoading}
-          onFieldChange={jest.fn()}
-          onValueChange={jest.fn()}
-        />
-      </TestWrapper>
+      <SampleComponent
+        connectorIdentifier={'customConn'}
+        onFetchRecordsSuccess={onFetchRecordsSuccess}
+        isQueryExecuted={true}
+        recordsData={mocksampledata as any}
+        setLoading={setLoading}
+        onFieldChange={jest.fn()}
+        onValueChange={jest.fn()}
+      />
     )
 
     await waitFor(() => expect(container.querySelector(`[value="${QueryType.HOST_BASED}"]`)).not.toBeNull())

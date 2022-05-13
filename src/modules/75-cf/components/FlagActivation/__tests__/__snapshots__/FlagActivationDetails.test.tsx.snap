@@ -2,6 +2,7 @@
 
 exports[`FlagActivationDetails it should render edit flag modal correctly 1`] = `
 <form
+  action="#"
   class="FormikForm--main"
   data-testid="edit-flag-form"
 >

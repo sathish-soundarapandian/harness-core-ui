@@ -7,7 +7,7 @@
 
 import React, { useEffect, useRef } from 'react'
 import { Spinner } from '@blueprintjs/core'
-import { Field, FormikContext, FormikProps } from 'formik'
+import { Field, FormikContextType, FormikProps } from 'formik'
 import { Container, Formik, FormikForm, FormInput } from '@wings-software/uicore'
 import { cloneDeep, defaultTo, get, isEmpty, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
@@ -66,7 +66,7 @@ export const InfraProvisioningBase = (
   const executionRef = React.useRef<ExecutionGraphRefObj | null>(null)
   const { getTemplate } = useTemplateSelector()
   const { accountId } = useParams<ProjectPathProps>()
-  const formikRef = useRef<FormikContext<InfraProvisioningDataUI>>()
+  const formikRef = useRef<FormikContextType<InfraProvisioningDataUI>>()
 
   const newPipelineStudioEnabled: boolean = useFeatureFlag(FeatureFlag.NEW_PIPELINE_STUDIO)
   const { showModal } = useChooseProvisioner({
