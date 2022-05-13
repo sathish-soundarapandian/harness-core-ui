@@ -17,6 +17,9 @@ import type {
   TemplateStudioPathProps,
   TemplateStudioQueryParams
 } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { StoreType } from 'services/pipeline-ng'
+import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import noEntityFoundImage from './images/no-entity-found.svg'
 import css from './NoEntityFound.module.scss'
 
@@ -27,9 +30,15 @@ interface NoEntityFoundProps {
 
 function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
   const { identifier, entityType } = props
+  const { repoIdentifier, branch, versionLabel, connectorRef, storeType, repoName } =
+    useQueryParams<TemplateStudioQueryParams>()
 
   const { getString } = useStrings()
   const history = useHistory()
+
+  const { GIT_SIMPLIFICATION } = useFeatureFlags()
+  const isPipelineRemote = GIT_SIMPLIFICATION && storeType === StoreType.REMOTE
+
   const { accountId, projectIdentifier, orgIdentifier, module, templateType } = useParams<
     PipelineType<{
       orgIdentifier: string
@@ -39,7 +48,6 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
     }> &
       TemplateStudioPathProps
   >()
-  const { repoIdentifier, branch, versionLabel } = useQueryParams<TemplateStudioQueryParams>()
 
   const onGitBranchChange = React.useMemo(
     () => (selectedFilter: GitFilterScope) => {
@@ -53,7 +61,14 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
               accountId,
               module,
               branch: selectedFilter.branch,
-              repoIdentifier: selectedFilter.repo
+              repoIdentifier: selectedFilter.repo,
+              ...(isPipelineRemote
+                ? {
+                    repoName,
+                    connectorRef,
+                    storeType
+                  }
+                : {})
             })
           )
           location.reload()
@@ -88,12 +103,23 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
         <Text className={css.selectDiffBranch} margin={{ top: 'xsmall', bottom: 'xlarge' }}>
           {getString('pipeline.gitExperience.selectDiffBranch')}
         </Text>
-        <GitFilters
-          onChange={onGitBranchChange}
-          showRepoSelector={false}
-          defaultValue={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-          branchSelectClassName={css.branchSelector}
-        />
+        {isPipelineRemote && connectorRef && branch && (
+          <GitRemoteDetails
+            connectorRef={connectorRef}
+            repoName={repoName}
+            branch={branch}
+            flags={{ borderless: false, showRepo: false, normalInputStyle: true }}
+            onBranchChange={onGitBranchChange}
+          />
+        )}
+        {!isPipelineRemote && (
+          <GitFilters
+            onChange={onGitBranchChange}
+            showRepoSelector={false}
+            defaultValue={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+            branchSelectClassName={css.branchSelector}
+          />
+        )}
       </Layout.Vertical>
     </div>
   )

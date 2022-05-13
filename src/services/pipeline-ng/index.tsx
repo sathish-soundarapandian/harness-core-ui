@@ -1724,6 +1724,11 @@ export interface PMSPipelineResponseDTO {
   yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
 }
 
+export enum StoreType {
+  INLINE = 'INLINE',
+  REMOTE = 'REMOTE'
+}
+
 export interface PMSPipelineSummaryResponse {
   createdAt?: number
   description?: string
@@ -1734,6 +1739,7 @@ export interface PMSPipelineSummaryResponse {
       [key: string]: { [key: string]: any }
     }
   }
+  connectorRef?: string
   gitDetails?: EntityGitDetails
   identifier?: string
   lastUpdatedAt?: number
@@ -1741,6 +1747,7 @@ export interface PMSPipelineSummaryResponse {
   name?: string
   numOfStages?: number
   stageNames?: string[]
+  storeType?: StoreType
   tags?: {
     [key: string]: string
   }

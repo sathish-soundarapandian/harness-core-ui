@@ -22,7 +22,7 @@ import { useToaster } from '@common/exports'
 import css from './GitFilters.module.scss'
 
 export interface GitFilterScope {
-  repo: string
+  repo?: string
   branch: GitBranchDTO['branchName']
   getDefaultFromOtherRepo?: boolean
 }

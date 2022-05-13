@@ -49,7 +49,8 @@ import {
   EntityGitDetails,
   useGetTemplateFromPipeline,
   InputSetSummaryResponse,
-  useGetInputsetYaml
+  useGetInputsetYaml,
+  StoreType
 } from 'services/pipeline-ng'
 import { useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
@@ -67,6 +68,8 @@ import { TemplatePipelineBuilder } from '@pipeline/components/PipelineStudio/Pip
 import { SavePipelinePopover } from '@pipeline/components/PipelineStudio/SavePipelinePopover/SavePipelinePopover'
 import { useTemplateSelector } from '@pipeline/utils/useTemplateSelector'
 import { useSaveTemplateListener } from '@pipeline/components/PipelineStudio/hooks/useSaveTemplateListener'
+import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import CreatePipelines from '../CreateModal/PipelineCreate'
 import { DefaultNewPipelineId, DrawerTypes } from '../PipelineContext/PipelineActions'
@@ -150,7 +153,10 @@ export function PipelineCanvas({
     inputSetLabel,
     inputSetRepoIdentifier,
     inputSetBranch,
-    stagesExecuted
+    stagesExecuted,
+    repoName,
+    connectorRef,
+    storeType
   } = useQueryParams<GitQueryParams & RunPipelineQueryParams>()
   const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<PipelineStudioQueryParams>()
   const {
@@ -218,6 +224,8 @@ export function PipelineCanvas({
   const [selectedBranch, setSelectedBranch] = React.useState(branch || '')
   const [disableVisualView, setDisableVisualView] = React.useState(entityValidityDetails?.valid === false)
   const [useTemplate, setUseTemplate] = React.useState<boolean>(false)
+  const { GIT_SIMPLIFICATION } = useFeatureFlags()
+  const isPipelineRemote = GIT_SIMPLIFICATION && storeType === StoreType.REMOTE
 
   const { openDialog: openUnsavedChangesDialog } = useConfirmationDialog({
     cancelButtonText: getString('cancel'),
@@ -537,6 +545,13 @@ export function PipelineCanvas({
     }
   }, [runPipeline])
 
+  React.useEffect(() => {
+    isPipelineRemote &&
+      gitDetails.repoIdentifier &&
+      gitDetails.branch &&
+      updatePipelineStoreMetadata({ connectorRef, storeType }, gitDetails)
+  }, [gitDetails.repoIdentifier, gitDetails.branch, isPipelineRemote, gitDetails])
+
   const [openRunPipelineModal, closeRunPipelineModal] = useModalHook(
     () =>
       loading ? (
@@ -601,7 +616,14 @@ export function PipelineCanvas({
                 accountId,
                 module,
                 branch: selectedFilter.branch,
-                repoIdentifier: selectedFilter.repo
+                repoIdentifier: selectedFilter.repo,
+                ...(isPipelineRemote
+                  ? {
+                      repoName,
+                      connectorRef,
+                      storeType
+                    }
+                  : {})
               })
             )
             location.reload()
@@ -622,6 +644,8 @@ export function PipelineCanvas({
   }
 
   const getPipelineNameTextContainerWidth = (): number | undefined => {
+    if (isPipelineRemote) return 100
+
     if (isGitSyncEnabled) {
       if (pipelineIdentifier === DefaultNewPipelineId) {
         if (!isEmpty(pipeline?.tags)) {
@@ -637,7 +661,7 @@ export function PipelineCanvas({
     return 400
   }
 
-  if (templateError?.data && !isGitSyncEnabled) {
+  if (templateError?.data && !isGitSyncEnabled && !isPipelineRemote) {
     return (
       <GenericErrorHandler
         errStatusCode={templateError?.status}
@@ -646,7 +670,7 @@ export function PipelineCanvas({
     )
   }
 
-  if (templateError?.data && isEmpty(pipeline) && isGitSyncEnabled) {
+  if (templateError?.data && isEmpty(pipeline) && (isGitSyncEnabled || isPipelineRemote)) {
     return <NoEntityFound identifier={pipelineIdentifier} entityType={'pipeline'} />
   }
 
@@ -748,6 +772,17 @@ export function PipelineCanvas({
                 </Layout.Horizontal>
               </div>
             </div>
+            {isPipelineRemote && connectorRef && (
+              <div className={css.gitRemoteDetailsWrapper}>
+                <GitRemoteDetails
+                  connectorRef={connectorRef}
+                  repoName={repoName || ''}
+                  filePath={gitDetails.filePath || ''}
+                  branch={selectedBranch}
+                  onBranchChange={onGitBranchChange}
+                />
+              </div>
+            )}
             <VisualYamlToggle
               className={css.visualYamlToggle}
               selectedView={isYaml || disableVisualView ? SelectedView.YAML : SelectedView.VISUAL}

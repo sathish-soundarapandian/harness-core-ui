@@ -140,7 +140,8 @@ export const getPipelineByIdentifier = (
         accountIdentifier: params.accountIdentifier,
         orgIdentifier: params.orgIdentifier,
         projectIdentifier: params.projectIdentifier,
-        ...(params.repoIdentifier ? { repoIdentifier: params.repoIdentifier, branch: params.branch } : {})
+        ...(params.branch ? { branch: params.branch } : {}),
+        ...(params.repoIdentifier ? { repoIdentifier: params.repoIdentifier } : {})
       },
       requestOptions: {
         headers: {
@@ -384,7 +385,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
 
   if ((!data || forceFetch) && pipelineId !== DefaultNewPipelineId) {
     const pipelineWithGitDetails: PipelineInfoConfigWithGitDetails = await getPipelineByIdentifier(
-      { ...queryParams, ...(repoIdentifier && branch ? { repoIdentifier, branch } : {}) },
+      { ...queryParams, ...(repoIdentifier ? { repoIdentifier } : {}), ...(branch ? { branch } : {}) },
       pipelineId,
       signal
     )

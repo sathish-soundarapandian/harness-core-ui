@@ -37,6 +37,7 @@ import {
   PipelineFilterProperties,
   PMSPipelineSummaryResponse,
   ResponsePagePMSPipelineSummaryResponse,
+  StoreType,
   useDeleteFilter,
   useGetFilterList,
   useGetPipelineList,
@@ -82,6 +83,7 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { deploymentTypeLabel } from '@pipeline/utils/DeploymentTypeUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { PipelineGridView } from './views/PipelineGridView'
 import { PipelineListView } from './views/PipelineListView'
 import PipelineFilterForm from '../pipeline-deployment-list/PipelineFilterForm/PipelineFilterForm'
@@ -109,6 +111,7 @@ export interface CDPipelinesPageProps {
 
 function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
   const { getString } = useStrings()
+  const { GIT_SIMPLIFICATION } = useFeatureFlags()
   const sortOptions: SelectOption[] = [
     {
       label: getString('recentActivity'),
@@ -202,6 +205,8 @@ function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
 
   const goToPipeline = useCallback(
     (pipeline?: PMSPipelineSummaryResponse) => {
+      const isRemotePipeline = GIT_SIMPLIFICATION && pipeline?.storeType === StoreType.REMOTE
+
       history.push(
         routes.toPipelineStudio({
           projectIdentifier,
@@ -209,8 +214,12 @@ function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
           pipelineIdentifier: pipeline?.identifier || '-1',
           accountId,
           module,
-          branch: pipeline?.gitDetails?.branch,
-          repoIdentifier: pipeline?.gitDetails?.repoIdentifier
+          // Hard corded main branch for now until API provides default branch
+          branch: isRemotePipeline ? 'main' : pipeline?.gitDetails?.branch,
+          repoIdentifier: pipeline?.gitDetails?.repoIdentifier,
+          repoName: isRemotePipeline ? pipeline?.gitDetails?.repoName : undefined,
+          connectorRef: isRemotePipeline ? pipeline?.connectorRef : undefined,
+          storeType: isRemotePipeline ? StoreType.REMOTE : undefined
         })
       )
     },

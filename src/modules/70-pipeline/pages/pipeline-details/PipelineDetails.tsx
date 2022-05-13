@@ -25,6 +25,7 @@ import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/Pipeli
 import GitPopover from '@pipeline/components/GitPopover/GitPopover'
 import GenericErrorHandler from '@common/pages/GenericErrorHandler/GenericErrorHandler'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import NoEntityFound from '../utils/NoEntityFound/NoEntityFound'
 import css from './PipelineDetails.module.scss'
 // add custom event to the global scope
@@ -38,6 +39,7 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
   const { orgIdentifier, projectIdentifier, pipelineIdentifier, accountId, module } =
     useParams<PipelineType<PipelinePathProps>>()
   const { isGitSyncEnabled } = useAppStore()
+  const { GIT_SIMPLIFICATION } = useFeatureFlags()
   const location = useLocation()
   const { trackEvent } = useTelemetry()
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
@@ -166,11 +168,11 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
     })
   ) || { isExact: false }
 
-  if (error?.data && !isGitSyncEnabled) {
+  if (error?.data && !isGitSyncEnabled && !(GIT_SIMPLIFICATION && branch)) {
     return <GenericErrorHandler errStatusCode={error?.status} errorMessage={(error?.data as Error)?.message} />
   }
 
-  if (error?.data && isEmpty(pipeline) && isGitSyncEnabled) {
+  if (error?.data && isEmpty(pipeline) && (isGitSyncEnabled || (GIT_SIMPLIFICATION && branch))) {
     return <NoEntityFound identifier={pipelineIdentifier} entityType={'pipeline'} />
   }
 

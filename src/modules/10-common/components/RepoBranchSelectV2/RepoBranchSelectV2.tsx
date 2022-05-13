@@ -38,7 +38,7 @@ export interface RepoBranchSelectProps {
   onChange?: (selected: SelectOption, options?: SelectOption[]) => void
 }
 
-const getBranchSelectOptions = (data: GitBranchDetailsDTO[] = []) => {
+export const getBranchSelectOptions = (data: GitBranchDetailsDTO[] = []): SelectOption[] => {
   return data.map((branch: GitBranchDetailsDTO) => {
     return {
       label: defaultTo(branch.name, ''),

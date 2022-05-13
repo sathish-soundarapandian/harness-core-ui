@@ -54,13 +54,13 @@ import { useSaveAsTemplate } from '@pipeline/components/PipelineStudio/SaveTempl
 import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
 import type { PipelineInfoConfig } from 'services/cd-ng'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
-import type { GovernanceMetadata } from 'services/pipeline-ng'
+import { GovernanceMetadata, StoreType } from 'services/pipeline-ng'
 import PipelineErrors from '@pipeline/components/PipelineStudio/PipelineCanvas/PipelineErrors/PipelineErrors'
 import type { AccessControlCheckError } from 'services/rbac'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { EvaluationModal } from '@governance/EvaluationModal'
-import css from './SavePipelinePopover.module.scss'
 import type { SaveToGitFormV2Interface } from '@common/components/SaveToGitFormV2/SaveToGitFormV2'
+import css from './SavePipelinePopover.module.scss'
 
 export interface SavePipelinePopoverProps extends PopoverProps {
   className?: string
@@ -99,13 +99,13 @@ export function SavePipelinePopover({
     updatePipelineView
   } = usePipelineContext()
   const [loading, setLoading] = React.useState<boolean>()
-  const { branch } = useQueryParams<GitQueryParams>()
+  const { branch, repoName, connectorRef, storeType } = useQueryParams<GitQueryParams>()
   const { trackEvent } = useTelemetry()
   const { pipelineSchema } = usePipelineSchema()
   const { showSuccess, showError, clear } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
-  const { OPA_PIPELINE_GOVERNANCE } = useFeatureFlags()
+  const { OPA_PIPELINE_GOVERNANCE, GIT_SIMPLIFICATION } = useFeatureFlags()
   const history = useHistory()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } =
     useParams<PipelineType<PipelinePathProps>>()
@@ -115,6 +115,8 @@ export function SavePipelinePopover({
   const pipelineTemplatesFeatureFlagEnabled = useFeatureFlag(FeatureFlag.NG_PIPELINE_TEMPLATE)
   const [updatePipelineAPIResponse, setUpdatePipelineAPIResponse] = React.useState<any>()
   const [governanceMetadata, setGovernanceMetadata] = React.useState<GovernanceMetadata>()
+
+  const isPipelineRemote = GIT_SIMPLIFICATION && storeType === StoreType.REMOTE
 
   const [showOPAErrorModal, closeOPAErrorModal] = useModalHook(
     () => (
@@ -166,7 +168,14 @@ export function SavePipelinePopover({
         accountId,
         module,
         repoIdentifier: updatedGitDetails?.repoIdentifier,
-        branch: updatedGitDetails?.branch
+        branch: updatedGitDetails?.branch,
+        ...(isPipelineRemote
+          ? {
+              repoName: updatedGitDetails?.repoName || repoName,
+              connectorRef,
+              storeType
+            }
+          : {})
       })
     )
   }
