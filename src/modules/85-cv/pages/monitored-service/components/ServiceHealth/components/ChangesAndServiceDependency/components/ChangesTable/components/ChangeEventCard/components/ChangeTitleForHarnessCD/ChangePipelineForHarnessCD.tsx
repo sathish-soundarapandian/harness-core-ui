@@ -29,9 +29,7 @@ export default function ChangeTitleForHarness({ changeTitleData }: { changeTitle
 
   const openPipelineInNewTab = useCallback(() => {
     const pipelineURL = `${window.location.origin}${window.location.pathname}#${url}`
-    if (url) {
-      window.open(pipelineURL, '_blank')
-    }
+    window.open(pipelineURL, '_blank')
   }, [url])
 
   return (
