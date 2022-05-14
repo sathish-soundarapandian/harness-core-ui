@@ -67,8 +67,8 @@ const getFinalSVGArrowPath = (id1 = '', id2 = '', options?: DrawSVGPathOptions):
   const startPoint = `${getScaledValue(node1.right, scalingFactor)},${node1VerticalMid}`
   const horizontalMid = Math.abs((node1.right + node2.left) / 2)
   const endPoint = `${getScaledValue(node2.left, scalingFactor)},${node2VerticalMid}`
-  const node1Y = Math.round(node1.y * 10) / 10
-  const node2Y = Math.round(node2.y * 10) / 10
+  const node1Y = Math.round(node1.y)
+  const node2Y = Math.round(node2.y)
 
   if (node2Y < node1Y) {
     //  child node is at top
@@ -297,12 +297,20 @@ const getParallelNodeLinks = (
   })
 }
 
-const getScaleToFitValue = (elm: HTMLElement, paddingFromBottom = 20): number => {
+const getScaleToFitValue = (
+  elm: HTMLElement,
+  containerEl?: HTMLElement,
+  paddingHorizontal = 0,
+  paddingVertical = 20
+): number => {
+  const width = elm.scrollWidth
+  const height = elm.scrollHeight
+  const container = containerEl ? containerEl : document.body
   return (
     1 /
     Math.max(
-      elm.clientWidth / window.innerWidth,
-      elm.clientHeight / (window.innerHeight - elm.offsetTop - paddingFromBottom)
+      width / (container.offsetWidth - paddingHorizontal),
+      height / (container.offsetHeight - container.offsetTop - paddingVertical)
     )
   )
 }
