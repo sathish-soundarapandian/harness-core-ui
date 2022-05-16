@@ -10,6 +10,7 @@ declare const styles: {
   readonly addEllipsis: string
   readonly horizontalMargin: string
   readonly main: string
+  readonly padding: string
   readonly redirectButton: string
   readonly redirectButtonPipeline: string
 }

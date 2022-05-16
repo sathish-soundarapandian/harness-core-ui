@@ -33,8 +33,7 @@ export default function DeploymentTimeDuration({
       <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
         {type === ChangeSourceTypes.HarnessCDNextGen && (
           <Text icon={'time'} iconProps={{ size: 12 }} font={{ size: 'small' }} margin={marginals}>
-            {'start '}
-            {moment(startTime).format(TIME_FORMAT)}
+            {`Start: ${moment(startTime).format(TIME_FORMAT)}`}
           </Text>
         )}
         <Text icon={'time'} iconProps={{ size: 12 }} font={{ size: 'small' }} margin={marginals}>
@@ -47,7 +46,7 @@ export default function DeploymentTimeDuration({
         </Text>
         {type !== ChangeSourceTypes.HarnessCDNextGen && (
           <Text icon={'calendar'} iconProps={{ size: 12 }} font={{ size: 'small' }} margin={marginals}>
-            {timePassed || 0}
+            {timePassed || 0} &nbsp;
             {getString('cv.changeSource.changeSourceCard.ago')}
           </Text>
         )}

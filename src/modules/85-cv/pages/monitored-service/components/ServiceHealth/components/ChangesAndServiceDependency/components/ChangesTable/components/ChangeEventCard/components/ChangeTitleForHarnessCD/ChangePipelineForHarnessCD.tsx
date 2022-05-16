@@ -8,6 +8,7 @@
 import React, { useMemo, useCallback } from 'react'
 import { Text, Container, Layout, Button, ButtonVariation } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
+import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import type { ChangeTitleData } from '../../ChangeEventCard.types'
 import { IconWithText } from '../IconWithText/IconWithText'
@@ -33,7 +34,7 @@ export default function ChangeTitleForHarness({ changeTitleData }: { changeTitle
   }, [url])
 
   return (
-    <Container padding={{ top: 'medium', bottom: 'medium' }} className={css.main}>
+    <Container className={cx(css.main, css.padding)}>
       <Layout.Vertical>
         <Layout.Horizontal>
           <Text

@@ -38,5 +38,10 @@
 }
 
 .horizontalMargin {
-  margin-top: 6px !important;
+  margin-top: (--spacing-xsmall) !important;
+}
+
+.padding {
+  padding-top: var(--spacing-medium);
+  padding-bottom: var(--spacing-medium);
 }
