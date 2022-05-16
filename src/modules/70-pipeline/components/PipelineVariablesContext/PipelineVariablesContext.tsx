@@ -16,6 +16,7 @@ import type { UseMutateAsGetReturn } from '@common/hooks/useMutateAsGet'
 import { useCreateVariablesV2 } from 'services/pipeline-ng'
 import type { GitQueryParams, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
+import { isCommunityPlan } from '@common/utils/utils'
 import { useGetYamlWithTemplateRefsResolved } from 'services/template-ng'
 import { getRegexForSearch } from '../LogsContent/LogsState/utils'
 
@@ -134,6 +135,8 @@ export function PipelineVariablesContextProvider(
     debounce: 1300
   })
 
+  const isCommunity = isCommunityPlan()
+
   const {
     data: resolvedPipelineResponse,
     initLoading: initLoadingResolvedPipeline,
@@ -151,7 +154,7 @@ export function PipelineVariablesContextProvider(
     body: {
       originalEntityYaml: enablePipelineTemplatesResolution ? yamlStringify(originalPipeline) : ''
     },
-    lazy: !(enablePipelineTemplatesResolution && !isEmpty(originalPipeline))
+    lazy: !(enablePipelineTemplatesResolution && !isEmpty(originalPipeline)) || isCommunity
   })
 
   React.useEffect(() => {
