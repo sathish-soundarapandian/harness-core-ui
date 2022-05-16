@@ -27,6 +27,7 @@ import css from '../CreatePdcConnector.module.scss'
 interface PdcDetailsProps {
   name: string
   isEditMode: boolean
+  onConnectorCreated: (data?: ConnectorConfigDTO) => void | Promise<void>
 }
 
 export interface uploadHostItem {
