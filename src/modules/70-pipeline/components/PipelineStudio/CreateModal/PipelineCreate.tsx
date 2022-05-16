@@ -18,14 +18,14 @@ import {
   Layout,
   Icon
 } from '@wings-software/uicore'
-import { Color, FontVariation } from '@wings-software/design-system'
+import { FontVariation } from '@wings-software/design-system'
 import * as Yup from 'yup'
 import { noop, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import produce from 'immer'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 
-import produce from 'immer'
 import { useStrings } from 'framework/strings'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -38,9 +38,11 @@ import GitContextForm, { IGitContextFormProps } from '@common/components/GitCont
 import type { EntityGitDetails } from 'services/pipeline-ng'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, PipelineActions } from '@common/constants/TrackingConstants'
+import { GitSyncForm } from '@common/components/GitSyncForm/GitSyncForm'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { DefaultNewPipelineId } from '../PipelineContext/PipelineActions'
 import css from './PipelineCreate.module.scss'
-import { GitSyncForm } from '@common/components/GitSyncForm/GitSyncForm'
 
 const logger = loggerFor(ModuleName.CD)
 
@@ -96,9 +98,10 @@ export default function CreatePipelines({
 }: PipelineCreateProps): JSX.Element {
   const { getString } = useStrings()
   const { pipelineIdentifier } = useParams<{ pipelineIdentifier: string }>()
+  const { storeType: storeTypeParam } = useQueryParams<GitQueryParams>()
+  const { updateQueryParams } = useUpdateQueryParams()
   const { isGitSyncEnabled } = useAppStore()
   const gitSimplification: boolean = useFeatureFlag(FeatureFlag.GIT_SIMPLIFICATION)
-  const [storeType, setStoreType] = useState<CardInterface | undefined>()
   const { trackEvent } = useTelemetry()
   const templatesFeatureFlagEnabled = useFeatureFlag(FeatureFlag.NG_TEMPLATES)
   const pipelineTemplatesFeatureFlagEnabled = useFeatureFlag(FeatureFlag.NG_PIPELINE_TEMPLATE)
@@ -127,6 +130,10 @@ export default function CreatePipelines({
     }
   ]
 
+  const [storeType, setStoreType] = useState<CardInterface | undefined>(() =>
+    PipelineModeCards.find(card => card.type === storeTypeParam)
+  )
+
   const identifier = initialValues?.identifier
   if (identifier === DefaultNewPipelineId) {
     initialValues.identifier = ''
@@ -141,6 +148,10 @@ export default function CreatePipelines({
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit])
+
+  useEffect(() => {
+    !!storeType?.type && updateQueryParams({ storeType: storeType?.type })
+  }, [storeType])
 
   return (
     <Container className={css.pipelineCreateForm}>
@@ -210,7 +221,7 @@ export default function CreatePipelines({
             {gitSimplification ? (
               <CardSelect
                 data={PipelineModeCards}
-                cornerSelected={true}
+                cornerSelected
                 cardClassName={css.pipelineModeCard}
                 renderItem={(item: CardInterface) => (
                   <Layout.Horizontal flex spacing={'small'}>
@@ -234,7 +245,11 @@ export default function CreatePipelines({
               </GitSyncStoreProvider>
             ) : null}
             {storeType?.type === 'REMOTE' ? (
-              <GitSyncForm formikProps={formikProps} handleSubmit={noop}></GitSyncForm>
+              <GitSyncForm
+                formikProps={formikProps}
+                handleSubmit={noop}
+                isEdit={isEdit && pipelineIdentifier !== DefaultNewPipelineId}
+              ></GitSyncForm>
             ) : null}
 
             <Container padding={{ top: 'xlarge' }}>

@@ -11,7 +11,7 @@ import type { GitFilterScope } from '../GitFilters/GitFilters'
 import css from './GitRemoteDetails.module.scss'
 
 interface GitRemoteDetailsProps {
-  connectorRef: string
+  connectorRef?: string
   repoName?: string
   filePath?: string
   branch: string
@@ -20,6 +20,7 @@ interface GitRemoteDetailsProps {
     borderless?: boolean
     showRepo?: boolean
     normalInputStyle?: boolean
+    readOnly?: boolean
   }
 }
 
@@ -29,7 +30,7 @@ const GitRemoteDetails = ({
   filePath,
   branch,
   onBranchChange,
-  flags: { borderless = true, showRepo = true, normalInputStyle = false } = {}
+  flags: { borderless = true, showRepo = true, normalInputStyle = false, readOnly = false } = {}
 }: GitRemoteDetailsProps): React.ReactElement => {
   const { accountId: accountIdentifier, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [branchSelectOptions, setBranchSelectOptions] = useState<SelectOption[]>([])
@@ -56,8 +57,8 @@ const GitRemoteDetails = ({
   const defaultBranch = response?.data?.defaultBranch?.name
 
   useEffect(() => {
-    refetch()
-  }, [refetch])
+    connectorRef && repoName && !readOnly && refetch()
+  }, [connectorRef, readOnly, refetch, repoName])
 
   useEffect(() => {
     if (loading || error) {
@@ -109,28 +110,34 @@ const GitRemoteDetails = ({
           right: 'small'
         }}
       />
-      <Formik
-        onSubmit={noop}
-        formName="remoteBranchSelectForm"
-        initialValues={{
-          remoteBranch: { label: branch === defaultBranch ? `${branch} (default)` : branch, value: branch }
-        }}
-      >
-        <FormInput.Select
-          disabled={loading}
-          placeholder={loading ? 'Loading' : 'Select'}
-          className={css.branchSelector}
-          items={branchSelectOptions}
-          name="remoteBranch"
-          selectProps={{ borderless }}
-          onChange={(selected: SelectOption): void => {
-            onBranchChange({
-              branch: selected.value as string
-            })
+      {readOnly ? (
+        <Text lineClamp={1} className={css.repoDetails}>
+          {branch}
+        </Text>
+      ) : (
+        <Formik
+          onSubmit={noop}
+          formName="remoteBranchSelectForm"
+          initialValues={{
+            remoteBranch: { label: branch === defaultBranch ? `${branch} (default)` : branch, value: branch }
           }}
-          value={{ label: branch === defaultBranch ? `${branch} (default)` : branch, value: branch }}
-        />
-      </Formik>
+        >
+          <FormInput.Select
+            disabled={loading}
+            placeholder={loading ? 'Loading' : 'Select'}
+            className={css.branchSelector}
+            items={branchSelectOptions}
+            name="remoteBranch"
+            selectProps={{ borderless }}
+            onChange={(selected: SelectOption): void => {
+              onBranchChange({
+                branch: selected.value as string
+              })
+            }}
+            value={{ label: branch === defaultBranch ? `${branch} (default)` : branch, value: branch }}
+          />
+        </Formik>
+      )}
     </div>
   )
 }

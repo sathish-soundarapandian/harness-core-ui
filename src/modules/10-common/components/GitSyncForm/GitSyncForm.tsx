@@ -1,22 +1,24 @@
 import React, { useEffect } from 'react'
-import { useStrings } from 'framework/strings'
 import { Container, FormInput, SelectOption } from '@harness/uicore'
 import cx from 'classnames'
 import type { FormikContext } from 'formik'
+import { useParams } from 'react-router-dom'
+import { defaultTo } from 'lodash-es'
+import { useStrings } from 'framework/strings'
 import {
   ConnectorReferenceField,
   ConnectorSelectedValue
 } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
-import { useParams } from 'react-router'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { defaultTo } from 'lodash-es'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import RepositorySelect from '../RepositorySelect/RepositorySelect'
 import RepoBranchSelectV2 from '../RepoBranchSelectV2/RepoBranchSelectV2'
 
 interface GitSyncFormProps<T> {
   identifier?: string
   formikProps: FormikContext<T>
+  isEdit: boolean
   defaultValue?: any
   modalErrorHandler?: any
   handleSubmit: () => void
@@ -37,12 +39,16 @@ const getConnectorIdentifierWithScope = (scope: Scope, identifier: string): stri
 }
 
 export function GitSyncForm(props: GitSyncFormProps<GitSyncFormFields>): React.ReactElement {
-  const { formikProps, modalErrorHandler } = props
+  const { formikProps, modalErrorHandler, isEdit } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { branch, connectorRef, repoName } = useQueryParams<GitQueryParams>()
+  const { updateQueryParams } = useUpdateQueryParams()
   const { getString } = useStrings()
 
   useEffect(() => {
     formikProps.setFieldValue('remoteType', 'create')
+
+    formikProps?.values?.identifier && formikProps.setFieldValue('filePath', `${formikProps.values.identifier}.yaml`)
   }, [])
 
   return (
@@ -52,7 +58,7 @@ export function GitSyncForm(props: GitSyncFormProps<GitSyncFormFields>): React.R
         radioGroup={{ inline: true }}
         items={[
           { label: 'Use Existing Yaml', value: 'import', disabled: true },
-          { label: 'Create New Yaml', value: 'create' }
+          { label: 'Create New Yaml', value: 'create', checked: true }
         ]}
         onChange={elm => {
           formikProps.setFieldValue(
@@ -65,7 +71,7 @@ export function GitSyncForm(props: GitSyncFormProps<GitSyncFormFields>): React.R
         name="connectorRef"
         width={350}
         type={['Github', 'Bitbucket']}
-        selected={formikProps.values.connectorRef}
+        selected={formikProps.values.connectorRef || connectorRef}
         label={'Select Git Connector'}
         placeholder={getString('select')}
         accountIdentifier={accountId}
@@ -81,7 +87,9 @@ export function GitSyncForm(props: GitSyncFormProps<GitSyncFormFields>): React.R
             connector: value
           })
           formikProps.setFieldValue?.('repository', '')
+          updateQueryParams({ connectorRef: value?.identifier })
         }}
+        disabled={isEdit}
       />
 
       <RepositorySelect
@@ -93,8 +101,10 @@ export function GitSyncForm(props: GitSyncFormProps<GitSyncFormFields>): React.R
           if (!options?.find(repo => repo.value === selected.value)) {
             formikProps.setFieldValue?.('repository', '')
           }
+          updateQueryParams({ repoName: selected.value as string })
         }}
-        selectedValue={formikProps.values.repoName}
+        selectedValue={formikProps.values.repoName || repoName}
+        disabled={isEdit}
       />
       <RepoBranchSelectV2
         key={formikProps.values.repoName} // Branch select must be reset if repositoryURL changes
@@ -105,10 +115,12 @@ export function GitSyncForm(props: GitSyncFormProps<GitSyncFormFields>): React.R
           if (!options?.find(branch => branch.value === selected.value)) {
             formikProps.setFieldValue?.('branch', '')
           }
+          updateQueryParams({ branch: selected.value as string })
         }}
-        selectedValue={formikProps.values.branch}
+        selectedValue={formikProps.values.branch || branch}
+        disabled={isEdit}
       />
-      <FormInput.Text name="filePath" label={'Yaml Path'} placeholder={'Enter Yaml path'} />
+      <FormInput.Text name="filePath" label={'Yaml Path'} placeholder={'Enter Yaml path'} disabled={isEdit} />
     </Container>
   )
 }

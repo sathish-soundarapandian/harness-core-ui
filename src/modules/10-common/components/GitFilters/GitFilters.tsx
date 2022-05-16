@@ -112,7 +112,7 @@ const GitFilters: React.FC<GitFiltersProps> = props => {
   }, [branchSelectOptions, selectedGitBranch])
 
   useEffect(() => {
-    setSelectedGitRepo(defaultValue.repo)
+    setSelectedGitRepo(defaultValue.repo || '')
     setSelectedGitBranch(defaultValue.branch || '')
   }, [defaultValue.repo, defaultValue.branch])
 

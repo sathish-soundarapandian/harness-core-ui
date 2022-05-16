@@ -171,7 +171,8 @@ export function PipelineCanvas({
     isBEPipelineUpdated,
     gitDetails,
     entityValidityDetails,
-    templateError
+    templateError,
+    storeMetadata
   } = state
 
   const { getString } = useStrings()
@@ -772,14 +773,17 @@ export function PipelineCanvas({
                 </Layout.Horizontal>
               </div>
             </div>
-            {isPipelineRemote && connectorRef && (
+            {((isPipelineRemote && connectorRef) || storeMetadata.storeType === StoreType.REMOTE) && (
               <div className={css.gitRemoteDetailsWrapper}>
                 <GitRemoteDetails
                   connectorRef={connectorRef}
-                  repoName={repoName || ''}
+                  repoName={repoName || gitDetails.repoName || gitDetails.repoIdentifier || ''}
                   filePath={gitDetails.filePath || ''}
-                  branch={selectedBranch}
+                  branch={selectedBranch || gitDetails.branch || ''}
                   onBranchChange={onGitBranchChange}
+                  flags={{
+                    readOnly: pipelineIdentifier === DefaultNewPipelineId
+                  }}
                 />
               </div>
             )}
