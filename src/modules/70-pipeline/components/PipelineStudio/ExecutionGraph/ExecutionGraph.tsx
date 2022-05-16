@@ -993,9 +993,9 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     [Event.MouseLeaveNode]: mouseLeaveNodeListener,
     [Event.DragStart]: dragStart,
     [Event.StepGroupClicked]: (event: any) => {
-      const eventTemp = event as DefaultNodeEvent
-      eventTemp.stopPropagation()
-      const node = getStepFromNode(state.stepsData, eventTemp.entity).node
+      const eventTemp = event
+
+      const node = getStepFromNode(state.stepsData, eventTemp.data, undefined, undefined, event.data.identifier).node
       if (node) {
         editStep({
           node: node,

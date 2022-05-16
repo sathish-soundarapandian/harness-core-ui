@@ -219,3 +219,8 @@ artifactRepoTooltip: Enter the name of the repository where the artifact source 
 serverlessDeployCommandOptions: Serverless Deploy Command Options
 artifactVersion: ARTIFACT VERSION
 useConnectorCredentials: 'Use Connector Credentials'
+serviceOverrides: Service Overrides
+serviceOverridesHelperText: Override existing variables or defined new variables based on the selected service
+configurationVariable: Configuration Variable
+overrideValue: Override Value
+overrideType: Override Type

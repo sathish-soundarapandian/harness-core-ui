@@ -7,8 +7,8 @@
 
 import React, { useEffect, useState } from 'react'
 import YAML from 'yaml'
-import { Card, Accordion, Container, Text, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
-import { get, isEmpty, isNil, omit, debounce, set, defaultTo } from 'lodash-es'
+import { Accordion, Card, Container, RUNTIME_INPUT_VALUE, Text } from '@wings-software/uicore'
+import { debounce, defaultTo, get, isEmpty, isNil, omit, set } from 'lodash-es'
 import produce from 'immer'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import {
@@ -37,12 +37,12 @@ import SelectInfrastructureType from '@cd/components/PipelineStudio/DeployInfraS
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { AzureInfrastructureSpec } from '@cd/components/PipelineSteps/AzureInfrastructureStep/AzureInfrastructureStep'
 import {
+  detailsHeaderName,
+  getCustomStepProps,
   getSelectedDeploymentType,
   isServerlessDeploymentType,
-  StageType,
-  detailsHeaderName,
   ServerlessInfraTypes,
-  getCustomStepProps
+  StageType
 } from '@pipeline/utils/stageHelpers'
 import { InfraDeploymentType } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import type { ServerlessAwsLambdaSpec } from '@cd/components/PipelineSteps/ServerlessAWSLambda/ServerlessAwsLambdaSpec'
@@ -101,7 +101,7 @@ export default function DeployInfraSpecifications(props: React.PropsWithChildren
     debounce(
       (changedStage?: StageElementConfig) =>
         changedStage ? updateStage(changedStage) : /* instanbul ignore next */ Promise.resolve(),
-      100
+      300
     ),
     [updateStage]
   )
@@ -125,8 +125,21 @@ export default function DeployInfraSpecifications(props: React.PropsWithChildren
         }
       })
       debounceUpdateStage(stageData?.stage)
+    } else if (
+      scope !== Scope.PROJECT &&
+      stage?.stage?.spec?.infrastructure &&
+      stage?.stage?.spec?.infrastructure?.environmentRef !== RUNTIME_INPUT_VALUE
+    ) {
+      const stageData = produce(stage, draft => {
+        if (draft) {
+          set(draft, 'stage.spec.infrastructure.environmentRef', RUNTIME_INPUT_VALUE)
+        }
+      })
+      if (stageData?.stage) {
+        debounceUpdateStage(stageData?.stage)
+      }
     }
-  }, [stage?.stage])
+  }, [])
 
   const stageRef = React.useRef(stage)
   stageRef.current = stage
@@ -443,14 +456,13 @@ export default function DeployInfraSpecifications(props: React.PropsWithChildren
         <Card className={stageCss.sectionCard}>
           <StepWidget
             type={StepType.DeployEnvironment}
-            readonly={isReadonly || scope === Scope.ORG || scope === Scope.ACCOUNT}
+            readonly={isReadonly || scope !== Scope.PROJECT}
             initialValues={{
               environment: get(stage, 'stage.spec.infrastructure.environment', {}),
-              environmentRef: get(
-                stage,
-                'stage.spec.infrastructure.environmentRef',
-                getScopeBasedDefaultEnvironmentRef()
-              )
+              environmentRef:
+                scope === Scope.PROJECT
+                  ? get(stage, 'stage.spec.infrastructure.environmentRef', '')
+                  : RUNTIME_INPUT_VALUE
             }}
             allowableTypes={allowableTypes}
             onUpdate={val => updateEnvStep(val)}

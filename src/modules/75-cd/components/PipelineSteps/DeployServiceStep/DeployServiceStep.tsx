@@ -380,7 +380,7 @@ export const DeployServiceWidget: React.FC<DeployServiceProps> = ({
 
   const [state, setState] = React.useState<DeployServiceState>({ isEdit: false, isService: false })
 
-  const updateServicesList = (value: ServiceRequestDTO) => {
+  const updateServicesList = (value: ServiceRequestDTO): void => {
     formikRef.current?.setValues({ serviceRef: value.identifier, ...(state.isService && { service: {} }) })
     if (!isNil(services)) {
       const newService = {
@@ -534,7 +534,6 @@ export const DeployServiceWidget: React.FC<DeployServiceProps> = ({
       <Formik<DeployServiceData>
         formName="deployServiceStepForm"
         onSubmit={noop}
-        enableReinitialize
         validate={values => {
           if (!isEmpty(values.service)) {
             onUpdate?.({ ...omit(values, 'serviceRef') })

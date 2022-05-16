@@ -149,7 +149,7 @@ function Service(
       {formik => {
         serviceTabformRef.current = formik
         ref.current = formik
-        const { serviceRef, environmentRef } = formik?.values
+        const { serviceRef, environmentRef } = formik.values
         if (formik.dirty && !isTemplate) {
           setDBData?.(formik.values)
         }

@@ -14,9 +14,12 @@ import {
   Text,
   Switch,
   PageSpinner,
-  VisualYamlSelectedView as SelectedView
+  VisualYamlSelectedView as SelectedView,
+  useConfirmationDialog,
+  ButtonVariation,
+  Button
 } from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
+import { Color, Intent } from '@harness/design-system'
 import { parse } from 'yaml'
 import { isEmpty, isUndefined, merge, cloneDeep, defaultTo } from 'lodash-es'
 import { CompletionItemKind } from 'vscode-languageserver-types'
@@ -455,12 +458,33 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       }
   >({ triggerType: triggerTypeOnNew })
 
+  const { openDialog, closeDialog } = useConfirmationDialog({
+    contentText: getString('triggers.updateTriggerDetails'),
+    intent: Intent.WARNING,
+    titleText: getString('triggers.updateTrigger'),
+    customButtons: (
+      <>
+        <Button variation={ButtonVariation.PRIMARY} text={getString('close')} onClick={() => closeDialog()} />
+      </>
+    )
+  })
+
   useEffect(() => {
     if (onEditInitialValues?.pipeline && template?.data?.inputSetTemplateYaml && mergedPipelineKey < 1) {
-      const newOnEditPipeline = merge(
+      let newOnEditPipeline = merge(
         parse(template?.data?.inputSetTemplateYaml || '')?.pipeline,
         onEditInitialValues.pipeline || {}
       )
+
+      /*this check is needed as when trigger is already present with 1 stage and then tries to add parallel stage,
+      we need to have correct yaml with both stages as a part of parallel*/
+      if (
+        newOnEditPipeline?.stages?.some((stages: { stage: any; parallel: any }) => stages?.stage && stages?.parallel)
+      ) {
+        openDialog() // give warning to update trigger
+        newOnEditPipeline = parse(template?.data?.inputSetTemplateYaml || '')?.pipeline
+      }
+
       const newPipeline = clearRuntimeInput(newOnEditPipeline)
       setOnEditInitialValues({
         ...onEditInitialValues,

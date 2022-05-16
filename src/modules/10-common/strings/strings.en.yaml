@@ -862,3 +862,9 @@ environmentGroups:
     message: Create a new Environment Group to start configuring the deployment
 noSearchResultsFound: No results found for '{{searchTerm}}'.
 searchOther: Please search something else.
+plusAddName: + Add {{name}}
+addName: Add {{name}}
+editName: Edit {{name}}
+selectName: Select {{name}}
+override: Override
+plusNewName: + New {{name}}

@@ -40,6 +40,7 @@ export interface StringsMap {
   'common.accountSettings': string
   'common.accountSetup': string
   'common.addAccountName': string
+  'common.addName': string
   'common.addVariable': string
   'common.advanced': string
   'common.agent': string
@@ -194,6 +195,7 @@ export interface StringsMap {
   'common.duration.month': string
   'common.duration.year': string
   'common.durationPrefix': string
+  'common.editName': string
   'common.editVariable': string
   'common.editVariableType': string
   'common.editYaml': string
@@ -442,6 +444,7 @@ export interface StringsMap {
   'common.orgViewer': string
   'common.other': string
   'common.overSubscribed': string
+  'common.override': string
   'common.overuse': string
   'common.pagerDuty': string
   'common.paste': string
@@ -459,6 +462,8 @@ export interface StringsMap {
   'common.plans.manageSubscription': string
   'common.plans.subscription': string
   'common.plans.title': string
+  'common.plusAddName': string
+  'common.plusNewName': string
   'common.plusNumber': string
   'common.plusNumberNoSpace': string
   'common.policiesSets.addOrModifyPolicySet': string
@@ -597,6 +602,7 @@ export interface StringsMap {
   'common.selectAVersion.title': string
   'common.selectBranch': string
   'common.selectDefaultExperience': string
+  'common.selectName': string
   'common.selectType': string
   'common.selectUserGroups': string
   'common.selectVersion': string
@@ -913,7 +919,6 @@ export interface StringsMap {
   'rbac.planEnforcement.ff.teamEnterprisePlan.approachingLimit': string
   'rbac.planEnforcement.ff.teamEnterprisePlan.upgradeRequired': string
   'rbac.project': string
-  'rbac.resourceGroup.add': string
   'rbac.resourceGroup.all': string
   'rbac.resourceGroup.builtInResourceGroup': string
   'rbac.resourceGroup.color': string
@@ -1918,6 +1923,7 @@ export interface StringsMap {
   'connectors.hashiCorpVault.fetchEngines': string
   'connectors.hashiCorpVault.k8s_auth': string
   'connectors.hashiCorpVault.manuallyConfigureEngine': string
+  'connectors.hashiCorpVault.preventDefaultWhenReadOnly': string
   'connectors.hashiCorpVault.readOnly': string
   'connectors.hashiCorpVault.readOnlyVault': string
   'connectors.hashiCorpVault.renewal': string
@@ -3431,6 +3437,7 @@ export interface StringsMap {
   'triggers.triggerOverviewPanel.title': string
   'triggers.triggersSubLabel': string
   'triggers.updateTrigger': string
+  'triggers.updateTriggerDetails': string
   'triggers.validation.actions': string
   'triggers.validation.connector': string
   'triggers.validation.cronExpression': string
@@ -3485,6 +3492,7 @@ export interface StringsMap {
   'cd.configFileStoreTitle': string
   'cd.configIdentifer': string
   'cd.configurationFile': string
+  'cd.configurationVariable': string
   'cd.confirmDeleteTitle': string
   'cd.confirmGitOpsServerDelete': string
   'cd.confirmGitOpsServerDeleteTitle': string
@@ -3542,6 +3550,8 @@ export interface StringsMap {
   'cd.noEnvironment.title': string
   'cd.noGitOpsServerText': string
   'cd.notReachable': string
+  'cd.overrideType': string
+  'cd.overrideValue': string
   'cd.pathCannotBeEmpty': string
   'cd.pipelineSteps.environmentTab.environmentIsRequired': string
   'cd.pipelineSteps.environmentTab.newEnvironment': string
@@ -3608,6 +3618,8 @@ export interface StringsMap {
   'cd.serviceDashboard.totalPipelines': string
   'cd.serviceDashboard.totalServices': string
   'cd.serviceList.noIdentifier': string
+  'cd.serviceOverrides': string
+  'cd.serviceOverridesHelperText': string
   'cd.serviceUpdated': string
   'cd.setUpProvisionerBtnText': string
   'cd.setupGitOpsServerStep': string
@@ -5013,6 +5025,7 @@ export interface StringsMap {
   'ci.advancedLabel': string
   'ci.annotations': string
   'ci.artifactoryConnectorLabel': string
+  'ci.baseConnectorImage': string
   'ci.buildInfra.awsHelpText': string
   'ci.buildInfra.awsVM.architecture': string
   'ci.buildInfra.awsVM.isRequiredWhen': string

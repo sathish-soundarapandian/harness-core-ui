@@ -196,7 +196,7 @@ export const getSelectionType = (resourceGroup?: ResourceGroupV2): SelectionType
 }
 export const getScopeType = (resourceGroup?: ResourceGroupV2): SelectorScope => {
   if (resourceGroup?.includedScopes?.length) {
-    for (const scope of resourceGroup?.includedScopes) {
+    for (const scope of resourceGroup?.includedScopes || {}) {
       if (getScopeFromDTO(resourceGroup) === getScopeFromDTO(scope)) {
         return scope.filter === 'INCLUDING_CHILD_SCOPES' ? SelectorScope.INCLUDE_CHILD_SCOPES : SelectorScope.CURRENT
       } else {
