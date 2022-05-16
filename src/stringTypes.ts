@@ -5014,6 +5014,7 @@ export interface StringsMap {
   'ci.advancedLabel': string
   'ci.annotations': string
   'ci.artifactoryConnectorLabel': string
+  'ci.baseConnectorImage': string
   'ci.buildInfra.awsHelpText': string
   'ci.buildInfra.awsVM.architecture': string
   'ci.buildInfra.awsVM.isRequiredWhen': string
