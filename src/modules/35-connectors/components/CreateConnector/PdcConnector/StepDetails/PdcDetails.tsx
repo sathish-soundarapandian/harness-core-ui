@@ -18,7 +18,7 @@ import {
   FormInput
 } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
-import type { ConnectorConfigDTO } from 'services/cd-ng'
+import type { ConnectorConfigDTO, ConnectorInfoDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import UploadJSON from '../components/UploadJSON'
 
@@ -28,6 +28,7 @@ interface PdcDetailsProps {
   name: string
   isEditMode: boolean
   onConnectorCreated: (data?: ConnectorConfigDTO) => void | Promise<void>
+  connectorInfo: ConnectorInfoDTO | void
 }
 
 export interface uploadHostItem {
