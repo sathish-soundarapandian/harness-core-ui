@@ -525,18 +525,22 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     eventTemp.stopPropagation?.()
     dynamicPopoverHandler?.hide()
     const node = getStepFromNode(state.stepsData, eventTemp.entity).node as StepElementConfig
-    const whenCondition = defaultTo(get(eventTemp, 'data.data.step.when'), node?.when)
+    const stepCondition = get(eventTemp, 'data.data.step.when')
+    const stepGroupCondition = get(eventTemp, 'data.data.stepGroup.when')
+    const whenCondition = defaultTo(stepCondition || stepGroupCondition, node?.when)
     if (whenCondition) {
       const { stageStatus, condition } = whenCondition
       if (stageStatus === PipelineOrStageStatus.SUCCESS && isEmpty(condition)) {
         return
       }
+      const stepData = get(eventTemp, 'data.data.step')
+      const stepGroupData = get(eventTemp, 'data.data.stepGroup')
       dynamicPopoverHandler?.show(
         eventTemp.target,
         {
           event: defaultTo(get(eventTemp, 'data.data'), eventTemp),
           isHoverView: true,
-          data: defaultTo(get(eventTemp, 'data.data.step'), node)
+          data: defaultTo(stepData || stepGroupData, node)
         },
         { useArrows: true, darkMode: false, fixedPosition: false, placement: 'top' }
       )
@@ -1143,6 +1147,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
           className={css.addStepPopover}
           darkMode={true}
           hoverShowDelay={200}
+          closeOnMouseOut
           render={renderPopover}
           bind={setDynamicPopoverHandler}
           usePortal

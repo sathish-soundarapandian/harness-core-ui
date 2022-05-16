@@ -533,7 +533,7 @@ const transformStepsData = (
       const updatedStagetPath = `${parentPath}.${index}.stepGroup.steps`
       const hasErrors =
         errorMap && [...errorMap.keys()].some(key => updatedStagetPath && key.startsWith(updatedStagetPath))
-
+      const isExecutionView = get(step, 'stepGroup.status', false)
       finalData.push({
         id: getuniqueIdForStep(step),
         identifier: step.stepGroup?.identifier as string,
@@ -543,6 +543,11 @@ const transformStepsData = (
         icon: iconName,
         data: {
           ...step,
+          conditionalExecutionEnabled: isExecutionView
+            ? getConditionalExecutionFlag(step.stepGroup?.when)
+            : step.stepGroup?.when
+            ? step.stepGroup?.when?.stageStatus !== 'Success' || !!step.stepGroup?.when?.condition?.trim()
+            : false,
           graphType,
           isInComplete: isCustomGeneratedString(step.stepGroup?.identifier as string) || hasErrors
         }
