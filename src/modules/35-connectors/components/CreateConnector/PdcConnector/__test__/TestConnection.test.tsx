@@ -9,33 +9,51 @@ import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
 import { TestWrapper } from '@common/utils/testUtils'
+import routes from '@common/RouteDefinitions'
 import TestConnection from '@connectors/components/CreateConnector/PdcConnector/StepDetails/TestConnection'
 
 const onCloseFn = jest.fn()
 const gotoStep = jest.fn()
+const previousStep = jest.fn()
+const mockAccountId = 'accountId1'
+
+const prevStepData = {
+  identifier: '',
+  name: 'testConnection',
+  isStep: true,
+  isLastStep: false,
+  type: 'pdcTest',
+  previousStep,
+  stepIndex: 1,
+  sshKeyRef: 'sshKey1',
+  hosts: 'localhost'
+}
+
 jest.mock('services/cd-ng', () => ({
-  useGetTestConnectionResult: jest.fn().mockImplementation(({ queryParams }) => ({
+  useGetTestConnectionResult: jest.fn().mockImplementation(({ queryParams, identifier }) => ({
     mutate: jest.fn().mockImplementation(
       () =>
-        new Promise(resolve => {
-          resolve(
-            queryParams?.accountId === 'pass'
-              ? {
-                  data: {
-                    status: 'SUCCESS'
-                  }
-                }
-              : {
-                  data: {
-                    errors: [
-                      {
-                        reason: 'Failed',
-                        message: 'Error connectiong'
+        new Promise((resolve, reject) => {
+          identifier === ''
+            ? reject({ data: { responseMessages: [] } })
+            : resolve(
+                queryParams?.accountId === mockAccountId
+                  ? {
+                      data: {
+                        status: 'SUCCESS'
                       }
-                    ]
-                  }
-                }
-          )
+                    }
+                  : {
+                      data: {
+                        errors: [
+                          {
+                            reason: 'Failed',
+                            message: 'Error connectiong'
+                          }
+                        ]
+                      }
+                    }
+              )
         })
     )
   }))
@@ -44,8 +62,12 @@ jest.mock('services/cd-ng', () => ({
 describe('Test TestConnection component', () => {
   test('Render component with api error', async () => {
     const { container, queryAllByText } = render(
-      <TestWrapper path="/test" pathParams={{}}>
-        <TestConnection onClose={onCloseFn} gotoStep={gotoStep} />
+      <TestWrapper path="/test" pathParams={{ accountId: 'test1' }}>
+        <TestConnection
+          onClose={onCloseFn}
+          gotoStep={gotoStep}
+          prevStepData={{ ...prevStepData, identifier: 'identifier1' }}
+        />
       </TestWrapper>
     )
 
@@ -60,8 +82,27 @@ describe('Test TestConnection component', () => {
   })
   test('Render component with api pass ok', async () => {
     const { container } = render(
-      <TestWrapper path="/test" pathParams={{ accountId: 'pass' }}>
-        <TestConnection onClose={onCloseFn} gotoStep={gotoStep} />
+      <TestWrapper path={routes.toProjects({ accountId: mockAccountId })} pathParams={{ accountId: mockAccountId }}>
+        <TestConnection
+          onClose={onCloseFn}
+          gotoStep={gotoStep}
+          prevStepData={{ ...prevStepData, identifier: 'identifier2' }}
+        />
+      </TestWrapper>
+    )
+
+    expect(container.innerHTML).toContain('finish')
+
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+
+    expect(onCloseFn).toBeCalled()
+  })
+  test('Render component, throw error on testconnection', async () => {
+    const { container } = render(
+      <TestWrapper path={routes.toProjects({ accountId: mockAccountId })} pathParams={{ accountId: mockAccountId }}>
+        <TestConnection onClose={onCloseFn} gotoStep={gotoStep} prevStepData={prevStepData} />
       </TestWrapper>
     )
 

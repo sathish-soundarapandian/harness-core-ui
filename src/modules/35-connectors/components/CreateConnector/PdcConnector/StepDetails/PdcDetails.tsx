@@ -18,7 +18,7 @@ import {
   FormInput
 } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
-import type { ConnectorConfigDTO, ConnectorInfoDTO } from 'services/cd-ng'
+import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import UploadJSON from '../components/UploadJSON'
 
@@ -27,13 +27,6 @@ import css from '../CreatePdcConnector.module.scss'
 interface PdcDetailsProps {
   name: string
   isEditMode: boolean
-  setIsEditMode: (val: boolean) => void
-  setFormData?: (formData: ConnectorConfigDTO) => void
-  onConnectorCreated: (data?: ConnectorConfigDTO) => void | Promise<void>
-  connectorInfo: ConnectorInfoDTO | void
-  accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
 }
 
 export interface uploadHostItem {
@@ -46,7 +39,7 @@ interface StepConfigureProps {
   spec?: { hosts: string }
 }
 
-const PdcDetails: React.FC<StepProps<StepConfigureProps> & PdcDetailsProps> = props => {
+const PdcDetails: React.FC<StepProps<StepConfigureProps> & Partial<PdcDetailsProps>> = props => {
   const { prevStepData, nextStep, isEditMode } = props
   const { getString } = useStrings()
 
