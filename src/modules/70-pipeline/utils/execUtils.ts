@@ -7,7 +7,7 @@
 
 import type { IconName } from '@harness/uicore'
 import { get, isEmpty } from 'lodash-es'
-import type { PipelineGraphState } from '@pipeline/components/PipelineDiagram/types'
+import { PipelineGraphState, PipelineGraphType } from '@pipeline/components/PipelineDiagram/types'
 import type { ExecutionGraph, ExecutionNode, NodeRunInfo } from 'services/pipeline-ng'
 import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
@@ -81,7 +81,9 @@ const addDependencies = (dependencies: ServiceDependency[], stepsPipelineNodes: 
           nodeType: NodeType.STEP_GROUP,
           type: NodeType.STEP_GROUP,
           data: {},
-          steps: [{ parallel: items.map(stepData => ({ step: { ...stepData } })) }] // processStepGroupSteps({ nodeAdjacencyListMap, id: parentNodeId, nodeMap, rootNodes })
+          steps: [
+            { parallel: items.map(stepData => ({ step: { ...stepData, graphType: PipelineGraphType.STEP_GRAPH } })) }
+          ] // processStepGroupSteps({ nodeAdjacencyListMap, id: parentNodeId, nodeMap, rootNodes })
         }
       }
     }
@@ -196,10 +198,16 @@ const processStepGroupSteps = ({ nodeAdjacencyListMap, id, nodeMap, rootNodes }:
       )
       if (nodeMap?.[childId].name === 'parallel') {
         steps.push({
-          parallel: childrenNodes.map(node => ({ step: { ...node, ...getNodeConditions(node as ExecutionNode) } }))
+          parallel: childrenNodes.map(node => ({
+            step: { ...node, ...getNodeConditions(node as ExecutionNode), graphType: PipelineGraphType.STEP_GRAPH }
+          }))
         })
       } else {
-        steps.push(...childrenNodes.map(node => ({ step: { ...node, ...getNodeConditions(node as ExecutionNode) } })))
+        steps.push(
+          ...childrenNodes.map(node => ({
+            step: { ...node, ...getNodeConditions(node as ExecutionNode), graphType: PipelineGraphType.STEP_GRAPH }
+          }))
+        )
       }
     } else {
       steps.push({ step: nodeMap?.[childId] })
@@ -236,6 +244,7 @@ const processSingleItem = ({
   if (!nodeData) {
     return
   }
+
   const iconData = getIconDataBasedOnType(nodeData)
   const item = {
     name: nodeData?.name || /* istanbul ignore next */ '',
@@ -245,7 +254,7 @@ const processSingleItem = ({
     when: nodeData?.nodeRunInfo,
     status: nodeData?.status as ExecutionStatus,
     type: nodeData?.stepType,
-    data: nodeData,
+    data: { ...nodeData },
     showInLabel
   }
   const finalItem = {
@@ -258,7 +267,7 @@ const processSingleItem = ({
     status: nodeData?.status as ExecutionStatus,
     data: {
       ...iconData,
-
+      graphType: PipelineGraphType.STEP_GRAPH,
       ...(nodeData?.stepType === NodeType.STEP_GROUP
         ? {
             stepGroup: {
@@ -343,7 +352,11 @@ ProcessGroupItemArgs): void => {
       const stepGroupChildrenNodes = nodeAdjacencyListMap?.[childStep?.uuid as string]?.children
       steps.push({
         parallel: stepGroupChildrenNodes?.map(childItemId => ({
-          step: { ...nodeMap?.[childItemId], ...getNodeConditions(nodeMap?.[childItemId] as ExecutionNode) }
+          step: {
+            ...nodeMap?.[childItemId],
+            ...getNodeConditions(nodeMap?.[childItemId] as ExecutionNode),
+            graphType: PipelineGraphType.STEP_GRAPH
+          }
         }))
       } as ParallelStepPipelineGraphState)
     } else {
@@ -364,7 +377,7 @@ ProcessGroupItemArgs): void => {
           when: childStep?.nodeRunInfo,
           status: childStep?.status as ExecutionStatus,
           type: childStep?.stepType as string,
-          data: { ...childStep, ...childSecondaryIconProps }
+          data: { ...childStep, ...childSecondaryIconProps, graphType: PipelineGraphType.STEP_GRAPH }
         }
       })
     }
@@ -375,7 +388,9 @@ ProcessGroupItemArgs): void => {
       nextIds: nodeAdjacencyListMap?.[childStep?.uuid as string]?.nextIds || [],
       isNestedGroup: true
     })
-    processedNodes = processedNodes.map(stepData => ({ step: stepData })) as StepPipelineGraphState[]
+    processedNodes = processedNodes.map(stepData => ({
+      step: { ...stepData, graphType: PipelineGraphType.STEP_GRAPH }
+    })) as StepPipelineGraphState[]
     steps.push(...processedNodes)
   })
 
@@ -404,6 +419,7 @@ ProcessGroupItemArgs): void => {
     data: {
       ...(nodeData?.stepType === NodeType.STEP_GROUP || nodeData.stepType === NodeType.ROLLBACK_OPTIONAL_CHILD_CHAIN
         ? {
+            graphType: PipelineGraphType.STEP_GRAPH,
             isNestedGroup,
             ...iconData,
             stepGroup: {
