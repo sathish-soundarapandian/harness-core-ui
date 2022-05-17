@@ -386,7 +386,7 @@ describe('ArtifactsSelection tests', () => {
         }}
       >
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection deploymentType="Kubernetes" isForOverrideSets={false} isForPredefinedSets={false} />
+          <ArtifactsSelection deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -412,7 +412,7 @@ describe('ArtifactsSelection tests', () => {
         }}
       >
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection deploymentType="NativeHelm" isForOverrideSets={false} isForPredefinedSets={false} />
+          <ArtifactsSelection deploymentType="NativeHelm" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -438,7 +438,7 @@ describe('ArtifactsSelection tests', () => {
         }}
       >
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection deploymentType="NativeHelm" isForOverrideSets={false} isForPredefinedSets={false} />
+          <ArtifactsSelection deploymentType="NativeHelm" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -471,11 +471,7 @@ describe('ArtifactsSelection tests', () => {
         }}
       >
         <PipelineContext.Provider value={context}>
-          <ArtifactsSelection
-            deploymentType="ServerlessAwsLambda"
-            isForOverrideSets={false}
-            isForPredefinedSets={false}
-          />
+          <ArtifactsSelection deploymentType="ServerlessAwsLambda" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
