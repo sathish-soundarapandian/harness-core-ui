@@ -391,6 +391,7 @@ export interface Opts {
   access_details?: { [key: string]: any }
   always_use_private_ip?: boolean
   delete_cloud_resources?: boolean
+  dry_run?: boolean
   hide_progress_page?: boolean
   preserve_private_ip?: boolean
 }
@@ -772,6 +773,10 @@ export interface TimeSchedule {
      */
     start?: string
   }
+}
+
+export interface ToggleRuleModeDetails {
+  id?: number
 }
 
 export interface ValidateSchedulesBody {
@@ -1300,6 +1305,7 @@ export const useAccessPointRules = ({ account_id, lb_id, ...props }: UseAccessPo
 export interface GetServicesQueryParams {
   accountIdentifier: string
   value?: string
+  dry_run?: boolean
 }
 
 export interface GetServicesPathParams {
@@ -1386,6 +1392,7 @@ export const useSaveService = ({ account_id, ...props }: UseSaveServiceProps) =>
 
 export interface CumulativeServiceSavingsQueryParams {
   accountIdentifier: string
+  dry_run?: boolean
 }
 
 export interface CumulativeServiceSavingsPathParams {
@@ -1869,6 +1876,54 @@ export const useGetServiceStats = ({ account_id, rule_id, ...props }: UseGetServ
   useGet<ServiceStatsResponse, void, GetServiceStatsQueryParams, GetServiceStatsPathParams>(
     (paramsInPath: GetServiceStatsPathParams) =>
       `/accounts/${paramsInPath.account_id}/autostopping/rules/${paramsInPath.rule_id}/stats`,
+    { base: getConfig('lw/api'), pathParams: { account_id, rule_id }, ...props }
+  )
+
+export interface ToggleRuleModeQueryParams {
+  accountIdentifier: string
+}
+
+export interface ToggleRuleModePathParams {
+  account_id: string
+  rule_id: number
+}
+
+export type ToggleRuleModeProps = Omit<
+  MutateProps<void, void, ToggleRuleModeQueryParams, ToggleRuleModeDetails, ToggleRuleModePathParams>,
+  'path' | 'verb'
+> &
+  ToggleRuleModePathParams
+
+/**
+ * Toggle rule mode from/to dryn_run_mode
+ *
+ * Toggle rule mode from/to dryn_run_mode
+ */
+export const ToggleRuleMode = ({ account_id, rule_id, ...props }: ToggleRuleModeProps) => (
+  <Mutate<void, void, ToggleRuleModeQueryParams, ToggleRuleModeDetails, ToggleRuleModePathParams>
+    verb="POST"
+    path={`/accounts/${account_id}/autostopping/rules/${rule_id}/toggle_dry_run`}
+    base={getConfig('lw/api')}
+    {...props}
+  />
+)
+
+export type UseToggleRuleModeProps = Omit<
+  UseMutateProps<void, void, ToggleRuleModeQueryParams, ToggleRuleModeDetails, ToggleRuleModePathParams>,
+  'path' | 'verb'
+> &
+  ToggleRuleModePathParams
+
+/**
+ * Toggle rule mode from/to dryn_run_mode
+ *
+ * Toggle rule mode from/to dryn_run_mode
+ */
+export const useToggleRuleMode = ({ account_id, rule_id, ...props }: UseToggleRuleModeProps) =>
+  useMutate<void, void, ToggleRuleModeQueryParams, ToggleRuleModeDetails, ToggleRuleModePathParams>(
+    'POST',
+    (paramsInPath: ToggleRuleModePathParams) =>
+      `/accounts/${paramsInPath.account_id}/autostopping/rules/${paramsInPath.rule_id}/toggle_dry_run`,
     { base: getConfig('lw/api'), pathParams: { account_id, rule_id }, ...props }
   )
 

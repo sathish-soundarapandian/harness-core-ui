@@ -97,25 +97,17 @@ import KustomizePatchDetails from './ManifestWizardSteps/KustomizePatchesDetails
 import ServerlessAwsLambdaManifest from './ManifestWizardSteps/ServerlessAwsLambdaManifest/ServerlessAwsLambdaManifest'
 import css from './ManifestSelection.module.scss'
 
-const showAddManifestBtn = (
-  isReadonly: boolean,
-  allowOnlyOne: boolean,
-  listOfManifests: Array<any>,
-  overrideSetIdentifier?: string
-): boolean => {
+const showAddManifestBtn = (isReadonly: boolean, allowOnlyOne: boolean, listOfManifests: Array<any>): boolean => {
   if (allowOnlyOne && listOfManifests.length === 1) {
     return false
   }
-  return !overrideSetIdentifier?.length && !isReadonly
+  return !isReadonly
 }
 
 function ManifestListView({
   updateStage,
-  identifierName,
-  isForOverrideSets,
   stage,
   isPropagating,
-  overrideSetIdentifier,
   connectors,
   refetchConnectors,
   listOfManifests,
@@ -212,18 +204,10 @@ function ManifestListView({
         listOfManifests.push(manifestObj)
       }
     } else {
-      if (!isForOverrideSets) {
-        if (listOfManifests?.length > 0) {
-          listOfManifests.splice(manifestIndex, 1, manifestObj)
-        } else {
-          listOfManifests.push(manifestObj)
-        }
+      if (listOfManifests?.length > 0) {
+        listOfManifests.splice(manifestIndex, 1, manifestObj)
       } else {
-        listOfManifests.map(overrideSets => {
-          if (overrideSets.overrideSet.identifier === identifierName) {
-            overrideSets.overrideSet.manifests.push(manifestObj)
-          }
-        })
+        listOfManifests.push(manifestObj)
       }
     }
 
@@ -734,7 +718,7 @@ function ManifestListView({
                       </span>
                     )}
 
-                    {!overrideSetIdentifier?.length && !isReadonly && (
+                    {!isReadonly && (
                       <span>
                         <Layout.Horizontal>
                           <Button
@@ -766,7 +750,7 @@ function ManifestListView({
         </Layout.Vertical>
       </Layout.Vertical>
       <Layout.Vertical spacing={'medium'} flex={{ alignItems: 'flex-start' }}>
-        {showAddManifestBtn(isReadonly, allowOnlyOne, listOfManifests, overrideSetIdentifier) && (
+        {showAddManifestBtn(isReadonly, allowOnlyOne, listOfManifests) && (
           <Button
             className={css.addManifest}
             id="add-manifest"

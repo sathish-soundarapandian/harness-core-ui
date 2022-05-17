@@ -40,6 +40,12 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "dry_run",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
           }
         ],
         "tags": ["services"],
@@ -483,6 +489,46 @@
         }
       }
     },
+    "/accounts/{account_id}/autostopping/rules/{rule_id}/toggle_dry_run": {
+      "parameters": [
+        {
+          "name": "account_id",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "rule_id",
+          "in": "path",
+          "required": true,
+          "type": "number"
+        },
+        {
+          "name": "accountIdentifier",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "post": {
+        "tags": ["toggleRuleMode"],
+        "summary": "Toggle rule mode from/to dryn_run_mode",
+        "description": "Toggle rule mode from/to dryn_run_mode",
+        "operationId": "ToggleRuleMode",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Toggle rule mode",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ToggleRuleModeDetails"
+            }
+          }
+        ]
+      }
+    },
     "/accounts/{account_id}/autostopping/rules/savings/cumulative": {
       "parameters": [
         {
@@ -496,6 +542,12 @@
           "in": "query",
           "required": true,
           "type": "string"
+        },
+        {
+          "name": "dry_run",
+          "in": "query",
+          "required": false,
+          "type": "boolean"
         }
       ],
       "get": {
@@ -2336,6 +2388,14 @@
         }
       }
     },
+    "ToggleRuleModeDetails": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        }
+      }
+    },
     "FirewallRule": {
       "type": "object",
       "properties": {
@@ -2736,6 +2796,9 @@
           "type": "object"
         },
         "hide_progress_page": {
+          "type": "boolean"
+        },
+        "dry_run": {
           "type": "boolean"
         }
       }

@@ -1650,8 +1650,11 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                                         )
                                       }
                                     })
-                                    setFieldValue('buildInfraType', buildInfraType)
-                                    setFieldValue('useFromStage', '')
+                                    formik.setValues({
+                                      ...formik.values,
+                                      buildInfraType: buildInfraType,
+                                      useFromStage: ''
+                                    })
                                     if (newStageData?.stage) {
                                       updateStage(newStageData.stage)
                                     }
@@ -1718,13 +1721,13 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                                     isReadonly={isReadonly}
                                     onChange={val => {
                                       const infraType = val as K8sDirectInfraYaml['type']
-                                      setFieldValue('buildInfraType', infraType)
                                       setBuildInfraType(val as K8sDirectInfraYaml['type'])
-                                      if (infraType === 'KubernetesDirect') {
-                                        setFieldValue('automountServiceAccountToken', true)
-                                      } else {
-                                        setFieldValue('automountServiceAccountToken', undefined)
-                                      }
+                                      formik.setValues({
+                                        ...formik.values,
+                                        buildInfraType: infraType,
+                                        automountServiceAccountToken:
+                                          infraType === 'KubernetesDirect' ? true : undefined
+                                      })
                                     }}
                                   />
                                 </>

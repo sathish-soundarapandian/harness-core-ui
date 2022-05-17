@@ -213,6 +213,11 @@ const mockedZonesData = { response: ['us-container-1'] }
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
+jest.mock('@common/hooks/useFeatureFlag', () => ({
+  useFeatureFlag: jest.fn(() => true),
+  useFeatureFlags: jest.fn(() => ({}))
+}))
+
 jest.mock('services/lw', () => ({
   useAllResourcesOfAccount: jest.fn().mockImplementation(() => ({
     mutate: jest.fn(() =>

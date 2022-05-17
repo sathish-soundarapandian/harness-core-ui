@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { Layout, Text } from '@wings-software/uicore'
+import { Layout } from '@wings-software/uicore'
 
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
@@ -17,22 +17,13 @@ import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
 
-import { useStrings } from 'framework/strings'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { useDeepCompareEffect } from '@common/hooks'
 import type { ManifestSelectionProps } from './ManifestInterface'
 import ManifestListView from './ManifestListView'
-import { getFlattenedStages, getStageIndexFromPipeline } from '../PipelineStudio/StageBuilder/StageBuilderUtil'
 
-export default function ManifestSelection({
-  isForOverrideSets = false,
-  identifierName,
-  isForPredefinedSets = false,
-  isPropagating,
-  overrideSetIdentifier,
-  deploymentType
-}: ManifestSelectionProps): JSX.Element {
+export default function ManifestSelection({ isPropagating, deploymentType }: ManifestSelectionProps): JSX.Element {
   const {
     state: {
       pipeline,
@@ -46,7 +37,6 @@ export default function ManifestSelection({
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const [fetchedConnectorResponse, setFetchedConnectorResponse] = React.useState<PageConnectorResponse | undefined>()
-  const { getString } = useStrings()
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<
     PipelineType<{
@@ -69,42 +59,12 @@ export default function ManifestSelection({
   })
 
   const listOfManifests = useMemo(() => {
-    if (overrideSetIdentifier?.length) {
-      const parentStageName = stage?.stage?.spec?.serviceConfig?.useFromStage?.stage
-      const { index } = getStageIndexFromPipeline(pipeline, parentStageName)
-      const { stages } = getFlattenedStages(pipeline)
-      const overrideSets = get(
-        stages[index],
-        'stage.spec.serviceConfig.serviceDefinition.spec.manifestOverrideSets',
-        []
-      )
-      const selectedOverrideSet = overrideSets.find(
-        ({ overrideSet }: { overrideSet: { identifier: string } }) => overrideSet.identifier === overrideSetIdentifier
-      )
-      return get(selectedOverrideSet, 'overrideSet.manifests', [])
-    }
-
     if (isPropagating) {
       return get(stage, 'stage.spec.serviceConfig.stageOverrides.manifests', [])
     }
 
-    if (isForOverrideSets) {
-      const listValue = get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.manifestOverrideSets', [])
-      return listValue
-        .map((overrideSets: { overrideSet: { identifier: string; manifests: [any] } }) => {
-          if (overrideSets?.overrideSet?.identifier === identifierName) {
-            return overrideSets.overrideSet?.manifests
-          }
-        })
-        .filter((x: { overrideSet: { identifier: string; manifests: [any] } }) => x !== undefined)[0]
-    } else {
-      if (isForPredefinedSets) {
-        return get(stage, 'stage.spec.serviceConfig.stageOverrides.manifests', [])
-      } else {
-        return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests', [])
-      }
-    }
-  }, [overrideSetIdentifier, isPropagating, stage, isForOverrideSets, isForPredefinedSets, pipeline])
+    return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests', [])
+  }, [isPropagating, stage])
 
   useDeepCompareEffect(() => {
     refetchConnectorList()
@@ -131,20 +91,11 @@ export default function ManifestSelection({
 
   return (
     <Layout.Vertical>
-      {/* {isForPredefinedSets && <PredefinedOverrideSets context="MANIFEST" currentStage={stage} />} //disabled for now */}
-      {overrideSetIdentifier?.length === 0 && !isForOverrideSets && (
-        <Text style={{ color: 'var(--grey-500)', lineHeight: '24px' }}>{getString('manifestSelectionInfo')}</Text>
-      )}
-
       <ManifestListView
         isPropagating={isPropagating}
         pipeline={pipeline}
         updateStage={updateStage}
         stage={stage}
-        isForOverrideSets={isForOverrideSets}
-        identifierName={identifierName}
-        isForPredefinedSets={isForPredefinedSets}
-        overrideSetIdentifier={overrideSetIdentifier}
         connectors={fetchedConnectorResponse}
         refetchConnectors={refetchConnectorList}
         listOfManifests={listOfManifests}

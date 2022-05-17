@@ -38,6 +38,7 @@ import { FeaturesProvider } from 'framework/featureStore/FeaturesContext'
 import { ThirdPartyIntegrations } from '3rd-party/ThirdPartyIntegrations'
 import { useGlobalEventListener } from '@common/hooks'
 import { global401HandlerUtils } from '@common/utils/global401HandlerUtils'
+import HelpPanelProvider from 'framework/utils/HelpPanelProvider'
 
 const RouteDestinations = React.lazy(() => import('modules/RouteDestinations'))
 
@@ -194,18 +195,20 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
               <AppErrorBoundary>
                 <FeaturesProvider>
                   <LicenseStoreProvider>
-                    <PermissionsProvider>
-                      <SideNavProvider>
-                        <Suspense fallback={<PageSpinner />}>
-                          <RouteDestinations />
-                        </Suspense>
-                        <NGTooltipEditorPortal
-                          showTooltipEditor={showTooltipEditor}
-                          onEditorClose={onEditorClose}
-                          setPreviewDatasetFromLocalStorage={onPreviewDatasetFromLocalStorage}
-                        />
-                      </SideNavProvider>
-                    </PermissionsProvider>
+                    <HelpPanelProvider>
+                      <PermissionsProvider>
+                        <SideNavProvider>
+                          <Suspense fallback={<PageSpinner />}>
+                            <RouteDestinations />
+                          </Suspense>
+                          <NGTooltipEditorPortal
+                            showTooltipEditor={showTooltipEditor}
+                            onEditorClose={onEditorClose}
+                            setPreviewDatasetFromLocalStorage={onPreviewDatasetFromLocalStorage}
+                          />
+                        </SideNavProvider>
+                      </PermissionsProvider>
+                    </HelpPanelProvider>
                     <ThirdPartyIntegrations />
                   </LicenseStoreProvider>
                 </FeaturesProvider>

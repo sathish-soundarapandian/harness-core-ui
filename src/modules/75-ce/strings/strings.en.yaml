@@ -45,6 +45,8 @@ co:
   totalEmissions: 'TOTAL EMISSIONS'
   reducedEmissions: 'EMISSIONS REDUCED'
   rules: 'rules'
+  activeMode: 'ACTIVE MODE'
+  dryRunMode: 'DRY RUN MODE'
   landingPageText:
     '<b>AutoStopping Rules</b> dynamically make sure that your <i>non-production workloads</i> are <b>running (and costing you)
     only when you’re using them</b>, and never when they are idle. Additionally, run your workloads on fully
@@ -188,6 +190,8 @@ co:
       serviceDetails: 'Service details'
       rdsDetails: 'RDS details'
       hideProgressPage: 'Hide progress page'
+      activeMode: 'Active mode'
+      dryRunMode: 'Dry run mode'
       setupAccessDetails: 'Setup Access details'
       dnsLinkMapping: 'DNS Link mapping'
       instanceFulfilment: 'Instance fulfilment'

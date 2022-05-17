@@ -3859,6 +3859,7 @@ export interface StringsMap {
   'ce.co.accessPoint.validation.vpc': string
   'ce.co.accessPoint.vpcLabel': string
   'ce.co.accessPoint.zone': string
+  'ce.co.activeMode': string
   'ce.co.autoStopping': string
   'ce.co.autoStoppingRule.configuration.addSelectedBtnText': string
   'ce.co.autoStoppingRule.configuration.asgModal.title': string
@@ -3959,9 +3960,11 @@ export interface StringsMap {
   'ce.co.autoStoppingRule.limitWarningMessage': string
   'ce.co.autoStoppingRule.providerSelector.description': string
   'ce.co.autoStoppingRule.providerSelector.helpText.selectProvider': string
+  'ce.co.autoStoppingRule.review.activeMode': string
   'ce.co.autoStoppingRule.review.cloudAccountDetails': string
   'ce.co.autoStoppingRule.review.configDetails': string
   'ce.co.autoStoppingRule.review.dnsLinkMapping': string
+  'ce.co.autoStoppingRule.review.dryRunMode': string
   'ce.co.autoStoppingRule.review.hideProgressPage': string
   'ce.co.autoStoppingRule.review.idleTimeMins': string
   'ce.co.autoStoppingRule.review.instanceDetails': string
@@ -4031,6 +4034,7 @@ export interface StringsMap {
   'ce.co.dnsSetup.autoURL': string
   'ce.co.dnsSetup.customURL': string
   'ce.co.dnsSetup.isURLaccessible': string
+  'ce.co.dryRunMode': string
   'ce.co.emptyResultText': string
   'ce.co.gatewayAccess.accessDescription': string
   'ce.co.gatewayAccess.backgroundTasks': string

@@ -30,23 +30,15 @@ export type ManifestTypes =
 export type ManifestStores = 'Git' | 'Github' | 'GitLab' | 'Bitbucket' | 'Http' | 'S3' | 'Gcs'
 export type HelmVersionOptions = 'V2' | 'V3'
 export interface ManifestSelectionProps {
-  isForOverrideSets?: boolean
-  identifierName?: string
-  isForPredefinedSets?: boolean
   isPropagating?: boolean
-  overrideSetIdentifier?: string
   deploymentType: ServiceDefinition['type']
 }
 
 export interface ManifestListViewProps {
   pipeline: PipelineInfoConfig
-  isForOverrideSets: boolean
   updateStage: (stage: StageElementConfig) => Promise<void>
-  identifierName?: string
   stage: StageElementWrapper | undefined
-  isForPredefinedSets: boolean
   isPropagating?: boolean
-  overrideSetIdentifier?: string
   connectors: PageConnectorResponse | undefined
   refetchConnectors: () => void
   listOfManifests: Array<any>
