@@ -136,7 +136,7 @@ const getInfrastructureDefinitionValidationSchema = (
     }
     if (deploymentType === ServiceDeploymentType.ssh) {
       return Yup.object().shape({
-        sshKeyRef: getSshKeyRefSchema(getString)
+        credentialsRef: getSshKeyRefSchema(getString)
       })
     } else {
       return getValidationSchema(getString)

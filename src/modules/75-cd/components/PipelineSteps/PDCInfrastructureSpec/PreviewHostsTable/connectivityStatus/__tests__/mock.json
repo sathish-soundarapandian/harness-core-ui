@@ -1,0 +1,149 @@
+{
+  "failure": {
+    "connector": {
+      "name": "fdsfdsfdsfdsf",
+      "identifier": "fdsfdsfdsfdsf",
+      "description": "",
+      "orgIdentifier": null,
+      "projectIdentifier": null,
+      "tags": {},
+      "type": "Vault",
+      "spec": {
+        "authToken": null,
+        "basePath": "/harness",
+        "vaultUrl": "https://dfafdfdf.harness.io",
+        "renewalIntervalMinutes": 10,
+        "secretEngineManuallyConfigured": true,
+        "secretEngineName": "xcvdvdsfd",
+        "secretId": null,
+        "secretEngineVersion": 2,
+        "delegateSelectors": [],
+        "namespace": "errwre",
+        "useVaultAgent": false,
+        "useAwsIam": false,
+        "xvaultAwsIamServerId": null,
+        "default": false,
+        "accessType": "TOKEN",
+        "readOnly": false
+      }
+    },
+    "createdAt": 1644234034911,
+    "lastModifiedAt": 1644234034907,
+    "status": {
+      "status": "FAILURE",
+      "errorSummary": "Invalid Credentials ",
+      "errors": [{ "reason": "Invalid Credentials", "message": "fdfdsfdfdfd", "code": 450 }],
+      "testedAt": 1644847933282,
+      "lastTestedAt": 0,
+      "lastConnectedAt": 0
+    },
+    "activityDetails": { "lastActivityTime": 1644234034937 },
+    "harnessManaged": false,
+    "gitDetails": {
+      "objectId": null,
+      "branch": null,
+      "repoIdentifier": null,
+      "rootFolder": null,
+      "filePath": null,
+      "repoName": null
+    },
+    "entityValidityDetails": { "valid": true, "invalidYaml": null }
+  },
+  "unknownType": {
+    "connector": {
+      "name": "fdsfdsfdsfdsf",
+      "identifier": "fdsfdsfdsfdsf",
+      "description": "",
+      "orgIdentifier": null,
+      "projectIdentifier": null,
+      "tags": {},
+      "type": "Vault",
+      "spec": {
+        "authToken": null,
+        "basePath": "/harness",
+        "vaultUrl": "https://dfafdfdf.harness.io",
+        "renewalIntervalMinutes": 10,
+        "secretEngineManuallyConfigured": true,
+        "secretEngineName": "xcvdvdsfd",
+        "secretId": null,
+        "secretEngineVersion": 2,
+        "delegateSelectors": [],
+        "namespace": "errwre",
+        "useVaultAgent": false,
+        "useAwsIam": false,
+        "xvaultAwsIamServerId": null,
+        "default": false,
+        "accessType": "TOKEN",
+        "readOnly": false
+      }
+    },
+    "createdAt": 1644234034911,
+    "lastModifiedAt": 1644234034907,
+    "status": {
+      "status": "UNKNOWN",
+      "errorSummary": "Invalid Credentials ",
+      "errors": [{ "reason": "Invalid Credentials", "message": "fdfdsfdfdfd", "code": 450 }],
+      "testedAt": 1644847933282,
+      "lastTestedAt": 0,
+      "lastConnectedAt": 0
+    },
+    "activityDetails": { "lastActivityTime": 1644234034937 },
+    "harnessManaged": false,
+    "gitDetails": {
+      "objectId": null,
+      "branch": null,
+      "repoIdentifier": null,
+      "rootFolder": null,
+      "filePath": null,
+      "repoName": null
+    },
+    "entityValidityDetails": { "valid": true, "invalidYaml": null }
+  },
+  "success": {
+    "connector": {
+      "name": "Bfdfdsfsf",
+      "identifier": "fdfdsfdsf",
+      "description": "",
+      "orgIdentifier": null,
+      "projectIdentifier": null,
+      "tags": {},
+      "type": "Github",
+      "spec": {
+        "url": "https://github.com/fdsfdsf",
+        "validationRepo": null,
+        "authentication": {
+          "type": "Http",
+          "spec": {
+            "type": "UsernameToken",
+            "spec": { "username": "fdfdsfdfdsf", "usernameRef": null, "tokenRef": "account.dfdfdfd" }
+          }
+        },
+        "apiAccess": { "type": "Token", "spec": { "tokenRef": "account.dfdfdsfdsffdfd" } },
+        "delegateSelectors": [],
+        "executeOnDelegate": false,
+        "type": "Repo"
+      }
+    },
+    "createdAt": 1644571271766,
+    "lastModifiedAt": 1644574502931,
+    "status": {
+      "status": "SUCCESS",
+      "errorSummary": null,
+      "errors": null,
+      "testedAt": 1644574505207,
+      "lastTestedAt": 0,
+      "lastConnectedAt": 1644574505207
+    },
+    "activityDetails": { "lastActivityTime": 1644574502974 },
+    "harnessManaged": false,
+    "gitDetails": {
+      "objectId": null,
+      "branch": null,
+      "repoIdentifier": null,
+      "rootFolder": null,
+      "filePath": null,
+      "repoName": null
+    },
+    "entityValidityDetails": { "valid": true, "invalidYaml": null }
+  }
+}

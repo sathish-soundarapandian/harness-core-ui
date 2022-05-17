@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import type { Column } from 'react-table'
 import { useParams } from 'react-router-dom'
 import { Layout, Table, Button, Label, ButtonSize, ButtonVariation, Text } from '@harness/uicore'
@@ -7,15 +7,16 @@ import { useToaster } from '@common/exports'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { useValidateHosts, HostValidationDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
+import ConnectivityStatus from './connectivityStatus/ConnectivityStatus'
 import css from '../PDCInfrastructureSpec.module.scss'
 
 interface PreviewHostsTableProps {
-  hosts: string[]
+  fetchHosts: () => string[]
   secretIdentifier?: string
   tags?: string[]
 }
 
-const PreviewHostsTable = ({ hosts, secretIdentifier, tags }: PreviewHostsTableProps) => {
+const PreviewHostsTable = ({ fetchHosts, secretIdentifier, tags }: PreviewHostsTableProps) => {
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
@@ -23,8 +24,8 @@ const PreviewHostsTable = ({ hosts, secretIdentifier, tags }: PreviewHostsTableP
     orgIdentifier: string
     accountId: string
   }>()
-  const [showPreviewHostBtn, setShowPreviewHostBtn] = useState(true)
-  const [detailHosts, setDetailHosts] = useState([] as HostValidationDTO[])
+  const [detailHosts, setDetailHosts] = useState<HostValidationDTO[]>([])
+  const [isLoading, setIsLoading] = useState(false)
   const [errors, setErrors] = useState([])
 
   const { mutate: validateHosts } = useValidateHosts({
@@ -85,6 +86,8 @@ const PreviewHostsTable = ({ hosts, secretIdentifier, tags }: PreviewHostsTableP
       Cell: ({ row }) => (
         <Text color={row.original.status === 'SUCCESS' ? Color.GREEN_400 : Color.RED_400}>{row.original.status}</Text>
       )
+      // TODO *************************************
+      //Cell: ({ row }) => <ConnectivityStatus {...row.original} />
     },
     {
       Header: '',
@@ -115,68 +118,64 @@ const PreviewHostsTable = ({ hosts, secretIdentifier, tags }: PreviewHostsTableP
     }
   ]
 
-  const refreshHosts = useCallback(() => {
+  const getHosts = () => {
+    setIsLoading(true)
     setErrors([])
-    setDetailHosts(
-      hosts.map(
-        host =>
-          ({
-            host: host,
-            status: undefined
-          } as HostValidationDTO)
+    const getData = async () => {
+      const hosts = await fetchHosts()
+      setDetailHosts(
+        hosts?.map((host: string) => ({
+          host,
+          error: undefined
+        }))
       )
-    )
-  }, [hosts])
+      setIsLoading(false)
+    }
+    getData()
+  }
+
+  useEffect(() => {
+    getHosts()
+  }, [])
 
   return (
     <Layout.Vertical>
-      {showPreviewHostBtn ? (
-        <Button
-          onClick={() => {
-            setShowPreviewHostBtn(false)
-            refreshHosts()
-          }}
-          size={ButtonSize.SMALL}
-          variation={ButtonVariation.SECONDARY}
-          width={140}
-        >
-          Preview Hosts
-        </Button>
+      <Layout.Horizontal spacing="normal" flex={{ justifyContent: 'space-between' }}>
+        <Layout.Horizontal flex={{ alignItems: 'center' }} margin={{ bottom: 'small' }}>
+          <Label className={'bp3-label ' + css.previewHostsLabel}>Preview Hosts</Label>
+          <Button
+            rightIcon="refresh"
+            iconProps={{ size: 16 }}
+            onClick={getHosts}
+            style={{ border: 'none !important' }}
+            size={ButtonSize.SMALL}
+            variation={ButtonVariation.SECONDARY}
+          >
+            {getString('common.refresh')}
+          </Button>
+        </Layout.Horizontal>
+        <Layout.Horizontal flex={{ alignItems: 'center' }} margin={{ bottom: 'small' }}>
+          <Button
+            onClick={() => testConnection()}
+            size={ButtonSize.SMALL}
+            variation={ButtonVariation.SECONDARY}
+            disabled={detailHosts.length === 0 || !secretIdentifier}
+          >
+            {getString('common.smtp.testConnection')}
+          </Button>
+        </Layout.Horizontal>
+      </Layout.Horizontal>
+      {errors.length > 0 && <ErrorHandler responseMessages={errors} />}
+      {isLoading ? (
+        <Label className={'bp3-label'} style={{ margin: 'auto' }}>
+          Loading...
+        </Label>
+      ) : detailHosts.length > 0 ? (
+        <Table columns={columns} data={detailHosts} />
       ) : (
-        <>
-          <Layout.Horizontal spacing="normal" flex={{ justifyContent: 'space-between' }}>
-            <Layout.Horizontal flex={{ alignItems: 'center' }} margin={{ bottom: 'small' }}>
-              <Label className={'bp3-label ' + css.previewHostsLabel}>Preview Hosts</Label>
-              <Button
-                rightIcon="refresh"
-                iconProps={{ size: 16 }}
-                onClick={refreshHosts}
-                size={ButtonSize.SMALL}
-                variation={ButtonVariation.SECONDARY}
-              >
-                {getString('common.refresh')}
-              </Button>
-            </Layout.Horizontal>
-            <Layout.Horizontal flex={{ alignItems: 'center' }} margin={{ bottom: 'small' }}>
-              <Button
-                onClick={() => testConnection()}
-                size={ButtonSize.SMALL}
-                variation={ButtonVariation.SECONDARY}
-                disabled={detailHosts.length === 0 || !secretIdentifier}
-              >
-                {getString('common.smtp.testConnection')}
-              </Button>
-            </Layout.Horizontal>
-          </Layout.Horizontal>
-          {errors.length > 0 && <ErrorHandler responseMessages={errors} />}
-          {detailHosts.length > 0 ? (
-            <Table columns={columns} data={detailHosts} />
-          ) : (
-            <Label className={'bp3-label'} style={{ margin: 'auto' }}>
-              No hosts provided
-            </Label>
-          )}
-        </>
+        <Label className={'bp3-label'} style={{ margin: 'auto' }}>
+          No hosts provided
+        </Label>
       )}
     </Layout.Vertical>
   )

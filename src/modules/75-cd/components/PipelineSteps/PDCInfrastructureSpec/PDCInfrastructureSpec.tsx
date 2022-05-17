@@ -14,7 +14,10 @@ import {
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  Select
+  Select,
+  Button,
+  ButtonSize,
+  ButtonVariation
 } from '@wings-software/uicore'
 import { Radio, RadioGroup } from '@blueprintjs/core'
 import { parse } from 'yaml'
@@ -26,7 +29,12 @@ import { CompletionItemKind } from 'vscode-languageserver-types'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useStrings, UseStringsReturn } from 'framework/strings'
-import { PdcInfrastructure, getConnectorListV2Promise, listSecretsV2Promise } from 'services/cd-ng'
+import {
+  PdcInfrastructure,
+  getConnectorListV2Promise,
+  listSecretsV2Promise,
+  useFilterHostsByConnector
+} from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { useToaster } from '@common/exports'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
@@ -124,6 +132,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
   const delayedOnUpdate = React.useRef(debounce(onUpdate || noop, 300)).current
   const { getString } = useStrings()
   const { showError } = useToaster()
+  const [showPreviewHostBtn, setShowPreviewHostBtn] = useState(true)
   const [formikInitialValues, setFormikInitialValues] = useState()
   const [isPreconfiguredHosts, setIsPreconfiguredHosts] = useState(
     initialValues.connectorRef ? PreconfiguredHosts.TRUE : PreconfiguredHosts.FALSE
@@ -134,7 +143,16 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
   const [hostSpecifics, setHostSpecifics] = useState(
     initialValues.attributeFilters ? SpecificHostOption.ATTRIBUTES : SpecificHostOption.HOST_NAME
   )
-  const [pdcConnectorHosts, setPdcConnectorHosts] = useState([])
+
+  const { mutate: getFilteredHosts } = useFilterHostsByConnector({
+    queryParams: {
+      pageIndex: 0,
+      pageSize: 100,
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    }
+  })
 
   useEffect(() => {
     const setInitial = async () => {
@@ -180,6 +198,26 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
     ],
     []
   )
+
+  const fetchHosts = async (formikValues: PDCInfrastructureUI) => {
+    if (isPreconfiguredHosts === PreconfiguredHosts.FALSE) {
+      return new Promise(resolve => resolve(parseHosts(formikValues.hosts)))
+    }
+    let filterData = {}
+    if (hostsScope === HostScope.SPECIFIC) {
+      if (hostSpecifics === SpecificHostOption.HOST_NAME) {
+        filterData = { type: 'HOST_NAMES', filter: formikValues.hostFilters }
+      } else {
+        filterData = { type: 'HOST_ATTRIBUTES', filter: formikValues.attributeFilters }
+      }
+    }
+    const identifier =
+      typeof formikValues.connectorRef === 'string'
+        ? formikValues.connectorRef
+        : get(formikValues, 'connectorRef.connector.identifier', '')
+    const hostsResponse = await getFilteredHosts(filterData, { queryParams: { identifier } })
+    return hostsResponse.data?.content?.map(item => item.hostname) || []
+  }
 
   return (
     <Layout.Vertical spacing="medium">
@@ -260,8 +298,6 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                               live: value?.status?.status === 'SUCCESS',
                               connector: value
                             })
-                            //TODO
-                            setPdcConnectorHosts([])
                           }}
                         />
                         <Layout.Horizontal className={css.hostSpecificContainer}>
@@ -339,17 +375,24 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                     <div className={css.inputWidth}>
                       <DelegateSelectorPanel isReadonly={false} formikProps={formik} />
                     </div>
-                    <PreviewHostsTable
-                      hosts={
-                        isPreconfiguredHosts === PreconfiguredHosts.FALSE
-                          ? parseHosts(formik.values.hosts)
-                          : hostSpecifics === SpecificHostOption.HOST_NAME
-                          ? parseHosts(formik.values.hostFilters)
-                          : pdcConnectorHosts
-                      }
-                      tags={formik.values.delegateSelectors}
-                      secretIdentifier={formik.values.sshKey?.identifier}
-                    />
+                    {showPreviewHostBtn ? (
+                      <Button
+                        onClick={() => {
+                          setShowPreviewHostBtn(false)
+                        }}
+                        size={ButtonSize.SMALL}
+                        variation={ButtonVariation.SECONDARY}
+                        width={140}
+                      >
+                        Preview Hosts
+                      </Button>
+                    ) : (
+                      <PreviewHostsTable
+                        fetchHosts={async () => await fetchHosts(formik.values)}
+                        tags={formik.values.delegateSelectors}
+                        secretIdentifier={formik.values.sshKey?.identifier}
+                      />
+                    )}
                   </Layout.Vertical>
 
                   <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }} className={css.lastRow}>
