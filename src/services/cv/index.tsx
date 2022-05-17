@@ -149,6 +149,14 @@ export interface AnalyzedLogDataDTO {
   serviceIdentifier?: string
 }
 
+export interface AnalyzedRadarChartLogDataDTO {
+  environmentIdentifier?: string
+  logData?: RadarChartLogData
+  orgIdentifier?: string
+  projectIdentifier?: string
+  serviceIdentifier?: string
+}
+
 export interface AnomaliesSummaryDTO {
   logsAnomalies?: number
   timeSeriesAnomalies?: number
@@ -451,8 +459,9 @@ export type AzureRepoConnector = ConnectorConfigDTO & {
   apiAccess?: AzureRepoApiAccess
   authentication: AzureRepoAuthentication
   delegateSelectors?: string[]
-  type: 'Organization' | 'Repo'
+  type: 'Account' | 'Repo'
   url: string
+  validationProject?: string
   validationRepo?: string
 }
 
@@ -611,7 +620,15 @@ export interface CVConfig {
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
   uuid?: string
+  verificationTaskTags?: {
+    [key: string]: string
+  }
   verificationType: 'TIME_SERIES' | 'LOG'
+}
+
+export type CVNGEmailChannelSpec = CVNGNotificationChannelSpec & {
+  recipients?: string[]
+  userGroups?: string[]
 }
 
 export interface CVNGLog {
@@ -631,6 +648,7 @@ export interface CVNGLogDTO {
   createdAt?: number
   endTime?: number
   startTime?: number
+  tags?: CVNGLogTag[]
   traceableId?: string
   traceableType?: 'ONBOARDING' | 'VERIFICATION_TASK'
   type?: 'ApiCallLog' | 'ExecutionLog'
@@ -639,6 +657,37 @@ export interface CVNGLogDTO {
 export interface CVNGLogRecord {
   createdAt?: number
   errorLog?: boolean
+  tags?: CVNGLogTag[]
+}
+
+export interface CVNGLogTag {
+  key?: string
+  type?: 'TIMESTAMP' | 'STRING' | 'DEBUG'
+  value?: string
+}
+
+export type CVNGMSTeamsChannelSpec = CVNGNotificationChannelSpec & {
+  msTeamKeys?: string[]
+  userGroups?: string[]
+}
+
+export interface CVNGNotificationChannel {
+  spec: CVNGNotificationChannelSpec
+  type?: 'Email' | 'Slack' | 'Pagerduty' | 'Msteams'
+}
+
+export interface CVNGNotificationChannelSpec {
+  [key: string]: any
+}
+
+export type CVNGPagerDutyChannelSpec = CVNGNotificationChannelSpec & {
+  integrationKey?: string
+  userGroups?: string[]
+}
+
+export type CVNGSlackChannelSpec = CVNGNotificationChannelSpec & {
+  userGroups?: string[]
+  webhookUrl?: string
 }
 
 export interface CVNGStepTask {
@@ -695,6 +744,16 @@ export interface ChangeEventDTO {
 
 export interface ChangeEventMetadata {
   [key: string]: any
+}
+
+export type ChangeImpactConditionSpec = NotificationRuleConditionSpec & {
+  changeEventTypes?: ('Deployment' | 'Infrastructure' | 'Incident')[]
+  period?: string
+  threshold?: number
+}
+
+export type ChangeObservedConditionSpec = NotificationRuleConditionSpec & {
+  changeEventTypes?: ('Deployment' | 'Infrastructure' | 'Incident')[]
 }
 
 export interface ChangeSourceDTO {
@@ -754,7 +813,6 @@ export interface ClusteredLog {
   log?: string
   timestamp?: number
   uuid?: string
-  validUntil?: string
   verificationTaskId?: string
 }
 
@@ -1206,7 +1264,6 @@ export interface EnvironmentResponseDTO {
     [key: string]: string
   }
   type?: 'PreProduction' | 'Production'
-  version?: number
   yaml?: string
 }
 
@@ -1523,6 +1580,7 @@ export interface Error {
     | 'AZURE_AUTHENTICATION_ERROR'
     | 'AZURE_CONFIG_ERROR'
     | 'DATA_PROCESSING_ERROR'
+    | 'INVALID_AZURE_AKS_REQUEST'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1534,6 +1592,19 @@ export interface Error {
 export interface ErrorAnalysisSummary {
   anomalousClusterCount?: number
   totalClusterCount?: number
+}
+
+export type ErrorBudgetBurnRateConditionSpec = NotificationRuleConditionSpec & {
+  lookBackDuration?: string
+  threshold?: number
+}
+
+export type ErrorBudgetRemainingMinutesConditionSpec = NotificationRuleConditionSpec & {
+  threshold?: number
+}
+
+export type ErrorBudgetRemainingPercentageConditionSpec = NotificationRuleConditionSpec & {
+  threshold?: number
 }
 
 export interface ErrorMetadataDTO {
@@ -1884,6 +1955,7 @@ export interface Failure {
     | 'AZURE_AUTHENTICATION_ERROR'
     | 'AZURE_CONFIG_ERROR'
     | 'DATA_PROCESSING_ERROR'
+    | 'INVALID_AZURE_AKS_REQUEST'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2134,6 +2206,11 @@ export interface HealthMonitoringFlagResponse {
   projectIdentifier?: string
 }
 
+export type HealthScoreConditionSpec = NotificationRuleConditionSpec & {
+  period?: string
+  threshold?: number
+}
+
 export interface HealthScoreDTO {
   currentHealthScore?: RiskData
   dependentHealthScore?: RiskData
@@ -2276,27 +2353,7 @@ export type JiraConnector = ConnectorConfigDTO & {
 }
 
 export interface JsonNode {
-  array?: boolean
-  bigDecimal?: boolean
-  bigInteger?: boolean
-  binary?: boolean
-  boolean?: boolean
-  containerNode?: boolean
-  double?: boolean
-  float?: boolean
-  floatingPointNumber?: boolean
-  int?: boolean
-  integralNumber?: boolean
-  long?: boolean
-  missingNode?: boolean
-  nodeType?: 'ARRAY' | 'BINARY' | 'BOOLEAN' | 'MISSING' | 'NULL' | 'NUMBER' | 'OBJECT' | 'POJO' | 'STRING'
-  null?: boolean
-  number?: boolean
-  object?: boolean
-  pojo?: boolean
-  short?: boolean
-  textual?: boolean
-  valueNode?: boolean
+  [key: string]: any
 }
 
 export interface KubernetesAuthCredentialDTO {
@@ -2410,7 +2467,6 @@ export interface LearningEngineTask {
     | 'SERVICE_GUARD_FEEDBACK_ANALYSIS'
     | 'TIME_SERIES_LOAD_TEST'
   uuid?: string
-  validUntil?: string
   verificationTaskId?: string
 }
 
@@ -2424,6 +2480,15 @@ export interface LiveMonitoringLogAnalysisClusterDTO {
   text?: string
   x?: number
   y?: number
+}
+
+export interface LiveMonitoringLogAnalysisRadarChartClusterDTO {
+  angle?: number
+  clusterId?: string
+  clusterType?: 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
+  radius?: number
+  risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  text?: string
 }
 
 export type LocalConnectorDTO = ConnectorConfigDTO & {
@@ -2451,7 +2516,6 @@ export interface LogAnalysisCluster {
   lastUpdatedAt?: number
   text?: string
   uuid?: string
-  validUntil?: string
   verificationTaskId?: string
   x?: number
   y?: number
@@ -2509,7 +2573,6 @@ export interface LogAnalysisRadarChartClusterDTO {
 }
 
 export interface LogAnalysisRadarChartListDTO {
-  angle?: number
   baseline?: LogAnalysisRadarChartListDTO
   clusterId?: string
   clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
@@ -2518,7 +2581,6 @@ export interface LogAnalysisRadarChartListDTO {
   hasControlData?: boolean
   label?: number
   message?: string
-  radius?: number
   risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
 }
 
@@ -2544,7 +2606,6 @@ export interface LogAnalysisRecord {
   unknownClusters?: LogAnalysisCluster[]
   unknownEvents?: LogAnalysisCluster[][]
   uuid?: string
-  validUntil?: string
   verificationTaskId?: string
 }
 
@@ -2557,7 +2618,6 @@ export interface LogAnalysisResult {
   logAnalysisResults?: AnalysisResult[]
   overallRisk?: number
   uuid?: string
-  validUntil?: string
   verificationTaskId?: string
 }
 
@@ -2746,6 +2806,7 @@ export interface MonitoredServiceDTO {
   environmentRefList?: string[]
   identifier: string
   name: string
+  notificationRuleRefs?: NotificationRuleRefDTO[]
   orgIdentifier: string
   projectIdentifier: string
   serviceRef: string
@@ -2870,24 +2931,45 @@ export interface NodeRiskCountDTO {
   totalNodeCount?: number
 }
 
+export interface NotificationRuleCondition {
+  spec: NotificationRuleConditionSpec
+  type?:
+    | 'ErrorBudgetRemainingPercentage'
+    | 'ErrorBudgetRemainingMinutes'
+    | 'ErrorBudgetBurnRate'
+    | 'ChangeImpact'
+    | 'HealthScore'
+    | 'ChangeObserved'
+}
+
+export interface NotificationRuleConditionSpec {
+  [key: string]: any
+}
+
 export interface NotificationRuleDTO {
-  enabled?: boolean
+  conditions: NotificationRuleCondition[]
   identifier: string
   name: string
+  notificationMethod: CVNGNotificationChannel
   orgIdentifier: string
   projectIdentifier: string
-  spec: NotificationRuleSpec
-  type: 'monitoredService' | 'slo'
+  type: 'MonitoredService' | 'ServiceLevelObjective'
+}
+
+export interface NotificationRuleRef {
+  enabled: boolean
+  notificationRuleRef: string
+}
+
+export interface NotificationRuleRefDTO {
+  enabled: boolean
+  notificationRuleRef: string
 }
 
 export interface NotificationRuleResponse {
   createdAt?: number
   lastModifiedAt?: number
   notificationRule: NotificationRuleDTO
-}
-
-export interface NotificationRuleSpec {
-  type?: 'monitoredService' | 'slo'
 }
 
 export interface OnboardingRequestDTO {
@@ -2920,6 +3002,16 @@ export interface Page {
 
 export interface PageAnalyzedLogDataDTO {
   content?: AnalyzedLogDataDTO[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
+export interface PageAnalyzedRadarChartLogDataDTO {
+  content?: AnalyzedRadarChartLogDataDTO[]
   empty?: boolean
   pageIndex?: number
   pageItemCount?: number
@@ -3157,7 +3249,7 @@ export interface PagerDutyWebhookEventDTO {
 }
 
 export interface PartialSchemaDTO {
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE'
+  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
   namespace?: string
   nodeName?: string
   nodeType?: string
@@ -3168,7 +3260,6 @@ export interface PartialSchemaDTO {
 export type PhysicalDataCenterConnectorDTO = ConnectorConfigDTO & {
   delegateSelectors?: string[]
   hosts?: HostDTO[]
-  sshKeyRef: string
 }
 
 export interface Point {
@@ -3239,6 +3330,17 @@ export interface QueryDTO {
   name: string
   query: string
   serviceInstanceIdentifier: string
+}
+
+export interface RadarChartLogData {
+  clusterId?: string
+  clusterType?: 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
+  count?: number
+  label?: number
+  riskScore?: number
+  riskStatus?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  text?: string
+  trend?: FrequencyDTO[]
 }
 
 export type RatioSLIMetricSpec = SLIMetricSpec & {
@@ -3720,6 +3822,7 @@ export interface ResponseMessage {
     | 'AZURE_AUTHENTICATION_ERROR'
     | 'AZURE_CONFIG_ERROR'
     | 'DATA_PROCESSING_ERROR'
+    | 'INVALID_AZURE_AKS_REQUEST'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4027,6 +4130,14 @@ export interface RestResponseListLiveMonitoringLogAnalysisClusterDTO {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseListLiveMonitoringLogAnalysisRadarChartClusterDTO {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: LiveMonitoringLogAnalysisRadarChartClusterDTO[]
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseListLogAnalysisCluster {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -4260,6 +4371,14 @@ export interface RestResponsePageAnalyzedLogDataDTO {
     [key: string]: { [key: string]: any }
   }
   resource?: PageAnalyzedLogDataDTO
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponsePageAnalyzedRadarChartLogDataDTO {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: PageAnalyzedRadarChartLogDataDTO
   responseMessages?: ResponseMessage[]
 }
 
@@ -4547,6 +4666,7 @@ export interface SLODebugResponse {
 export interface SLOErrorBudgetResetDTO {
   createdAt?: number
   errorBudgetAtReset?: number
+  errorBudgetIncrementMinutes?: number
   errorBudgetIncrementPercentage?: number
   reason?: string
   remainingErrorBudgetAtReset?: number
@@ -4557,6 +4677,8 @@ export interface SLOErrorBudgetResetDTO {
 export interface SLOHealthIndicator {
   accountId?: string
   createdAt?: number
+  errorBudgetBurnRate?: number
+  errorBudgetRemainingMinutes?: number
   errorBudgetRemainingPercentage?: number
   errorBudgetRisk?: 'EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY'
   lastComputedAt?: number
@@ -4566,10 +4688,6 @@ export interface SLOHealthIndicator {
   projectIdentifier?: string
   serviceLevelObjectiveIdentifier?: string
   uuid?: string
-}
-
-export type SLONotificationRuleSpec = NotificationRuleSpec & {
-  errorBudgetRemainingPercentageThreshold?: number
 }
 
 export interface SLORiskCountResponse {
@@ -4670,6 +4788,9 @@ export interface ServiceLevelIndicator {
   slimetricType?: 'Threshold' | 'Ratio'
   type?: 'Availability' | 'Latency'
   uuid?: string
+  verificationTaskTags?: {
+    [key: string]: string
+  }
   version?: number
 }
 
@@ -4696,6 +4817,8 @@ export interface ServiceLevelObjective {
   lastUpdatedAt?: number
   monitoredServiceIdentifier?: string
   name?: string
+  nextNotificationIteration?: number
+  notificationRuleRefs?: NotificationRuleRef[]
   orgIdentifier?: string
   projectIdentifier?: string
   serviceLevelIndicators?: string[]
@@ -4715,6 +4838,7 @@ export interface ServiceLevelObjectiveDTO {
   identifier: string
   monitoredServiceRef: string
   name: string
+  notificationRuleRefs?: NotificationRuleRefDTO[]
   orgIdentifier: string
   projectIdentifier: string
   serviceLevelIndicators: ServiceLevelIndicatorDTO[]
@@ -4986,9 +5110,9 @@ export interface TimeSeriesMetricDataDTO {
 }
 
 export interface TimeSeriesMetricDefinition {
-  action?: 'FAIL_IMMEDIATELY' | 'FAIL_AFTER_OCCURRENCES' | 'FAIL_AFTER_CONSECUTIVE_OCCURRENCES'
-  actionType?: 'IGNORE' | 'FAIL'
-  comparisonType?: 'RATIO' | 'DELTA' | 'ABSOLUTE'
+  action?: 'fail-immediately' | 'fail-after-multiple-occurrences' | 'fail-after-consecutive-occurrences'
+  actionType?: 'ignore' | 'fail'
+  comparisonType?: 'ratio' | 'delta' | 'absolute-value'
   metricGroupName?: string
   metricIdentifier?: string
   metricName?: string
@@ -5051,7 +5175,7 @@ export interface TimeSeriesTestDataDTO {
 
 export interface TimeSeriesThreshold {
   accountId: string
-  action: 'IGNORE' | 'FAIL'
+  action: 'ignore' | 'fail'
   createdAt?: number
   criteria: TimeSeriesThresholdCriteria
   dataSourceType:
@@ -5080,15 +5204,15 @@ export interface TimeSeriesThreshold {
 }
 
 export interface TimeSeriesThresholdCriteria {
-  action?: 'FAIL_IMMEDIATELY' | 'FAIL_AFTER_OCCURRENCES' | 'FAIL_AFTER_CONSECUTIVE_OCCURRENCES'
+  action?: 'fail-immediately' | 'fail-after-multiple-occurrences' | 'fail-after-consecutive-occurrences'
   criteria?: string
   occurrenceCount?: number
-  type?: 'RATIO' | 'DELTA' | 'ABSOLUTE'
+  type?: 'ratio' | 'delta' | 'absolute-value'
 }
 
 export interface TimeSeriesThresholdDTO {
   accountId?: string
-  action?: 'IGNORE' | 'FAIL'
+  action?: 'ignore' | 'fail'
   criteria?: TimeSeriesThresholdCriteria
   dataSourceType?:
     | 'APP_DYNAMICS'
@@ -5410,7 +5534,7 @@ export type YamlSchemaErrorWrapperDTO = ErrorMetadataDTO & {
 export interface YamlSchemaMetadata {
   featureFlags?: string[]
   featureRestrictions?: string[]
-  modulesSupported?: ('CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE')[]
+  modulesSupported?: ('CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE')[]
   namespace?: string
   yamlGroup: YamlGroup
 }
@@ -5419,7 +5543,7 @@ export interface YamlSchemaWithDetails {
   availableAtAccountLevel?: boolean
   availableAtOrgLevel?: boolean
   availableAtProjectLevel?: boolean
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE'
+  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
   schema?: JsonNode
   schemaClassName?: string
   yamlSchemaMetadata?: YamlSchemaMetadata
@@ -5489,6 +5613,8 @@ export type ServiceLevelIndicatorDTORequestBody = ServiceLevelIndicatorDTO
 export type ServiceLevelObjectiveDTORequestBody = ServiceLevelObjectiveDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
+
+export type SaveMonitoredServiceFromYamlBodyRequestBody = string
 
 export interface ChangeEventListQueryParams {
   serviceIdentifiers?: string[]

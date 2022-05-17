@@ -6,11 +6,15 @@
  */
 
 import React from 'react'
-import { Icon, Text, Button, ButtonVariation } from '@wings-software/uicore'
+import { Icon, Text, Button, ButtonVariation, IconName } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
+import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
+import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
+import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
+import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import { PipelineGraphType, NodeType } from '../../types'
 import SVGMarker from '../SVGMarker'
 import { getPositionOfAddIcon } from '../utils'
@@ -21,7 +25,11 @@ export function DiamondNodeWidget(props: any): JSX.Element {
   const { getString } = useStrings()
   const isSelected = props?.isSelected || props?.selectedNodeId === props?.id
   const [showAddLink, setShowAddLink] = React.useState(false)
-
+  const stepStatus = defaultTo(props?.status, props?.data?.step?.status as ExecutionStatus)
+  const { secondaryIconProps, secondaryIcon, secondaryIconStyle } = getStatusProps(
+    stepStatus as ExecutionStatus,
+    ExecutionPipelineNodeType.DIAMOND
+  )
   return (
     <div
       className={cssDefault.defaultNode}
@@ -32,10 +40,9 @@ export function DiamondNodeWidget(props: any): JSX.Element {
           return
         }
         props?.fireEvent?.({
-          type: Event.ClickNode,
+          ...props,
           entityType: DiagramType.Default,
-          identifier: props?.identifier,
-          parentIdentifier: props?.parentIdentifier
+          type: Event.ClickNode
         })
       }}
       onMouseDown={e => e.stopPropagation()}
@@ -67,6 +74,23 @@ export function DiamondNodeWidget(props: any): JSX.Element {
           data-nodeid={props.id}
           className={css.horizontalBar}
           style={{ height: props.data.graphType === PipelineGraphType.STAGE_GRAPH ? 40 : 64 }}
+          onMouseEnter={event => {
+            event.stopPropagation()
+
+            props?.fireEvent?.({
+              type: Event.MouseEnterNode,
+              target: event.target,
+              data: { ...props }
+            })
+          }}
+          onMouseLeave={event => {
+            event.stopPropagation()
+            props?.fireEvent?.({
+              type: Event.MouseLeaveNode,
+              target: event.target,
+              data: { ...props }
+            })
+          }}
         >
           <div
             className={cx(cssDefault.markerStart, cssDefault.diamondStageLeft, {
@@ -106,13 +130,13 @@ export function DiamondNodeWidget(props: any): JSX.Element {
             {...props.tertiaryIconProps}
           />
         )}
-        {props.secondaryIcon && (
+        {secondaryIcon && (
           <Icon
+            name={secondaryIcon as IconName}
+            style={secondaryIconStyle}
+            size={13}
             className={css.secondaryIcon}
-            size={8}
-            name={props.secondaryIcon}
-            style={props.secondaryIconStyle}
-            {...props.secondaryIconProps}
+            {...secondaryIconProps}
           />
         )}
         {props.skipCondition && (

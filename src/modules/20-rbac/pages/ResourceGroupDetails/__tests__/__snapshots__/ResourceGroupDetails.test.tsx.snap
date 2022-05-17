@@ -608,7 +608,7 @@ exports[`Resource Groups Page render data 1`] = `
                         <span
                           class="bp3-button-text"
                         >
-                          rbac.resourceGroup.add
+                          plusAdd
                         </span>
                       </button>
                     </div>

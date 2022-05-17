@@ -33,12 +33,4 @@
       margin-top: 0;
     }
   }
-  .btnContainer {
-    position: absolute !important;
-    top: var(--spacing-small);
-    right: var(--spacing-medium);
-    .discardBtn {
-      margin-left: var(--spacing-3) !important;
-    }
-  }
 }

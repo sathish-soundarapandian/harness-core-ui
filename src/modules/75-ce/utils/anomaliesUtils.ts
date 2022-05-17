@@ -77,7 +77,7 @@ export function getCloudProviderFromFields(entityMap: Record<string, string | nu
   if (entityMap.gcpProjectId) {
     return CloudProvider.GCP
   }
-  if (entityMap.awsAccount) {
+  if (entityMap.awsUsageAccountId) {
     return CloudProvider.AWS
   }
   return CloudProvider.CLUSTER

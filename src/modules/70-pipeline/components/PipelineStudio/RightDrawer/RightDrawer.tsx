@@ -8,7 +8,7 @@
 import React, { SyntheticEvent } from 'react'
 import { Drawer, Intent, Position } from '@blueprintjs/core'
 import { Button, useConfirmationDialog } from '@wings-software/uicore'
-import { cloneDeep, defaultTo, get, isEmpty, isEqual, isNil, set } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
 import cx from 'classnames'
 import produce from 'immer'
 import { parse } from 'yaml'
@@ -38,6 +38,7 @@ import type { TemplateStepNode } from 'services/pipeline-ng'
 import type { StringsMap } from 'stringTypes'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import type { TemplateSummaryResponse } from 'services/template-ng'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerData, DrawerSizes, DrawerTypes, PipelineViewData } from '../PipelineContext/PipelineActions'
 import { StepCommandsWithRef as StepCommands, StepFormikRef } from '../StepCommands/StepCommands'
@@ -648,7 +649,7 @@ export function RightDrawer(): React.ReactElement {
     drawerData.data?.stepConfig?.onUpdate?.(processNode)
   }
 
-  const addOrUpdateTemplate = async () => {
+  const addOrUpdateTemplate = async (selectedTemplate?: TemplateSummaryResponse) => {
     try {
       const stepType =
         (data?.stepConfig?.node as StepElementConfig)?.type ||
@@ -656,21 +657,9 @@ export function RightDrawer(): React.ReactElement {
       const { template, isCopied } = await getTemplate({
         templateType: 'Step',
         selectedChildType: stepType,
-        ...((data?.stepConfig?.node as TemplateStepNode)?.template && {
-          selectedTemplateRef: getIdentifierFromValue(
-            (data?.stepConfig?.node as TemplateStepNode).template.templateRef
-          ),
-          selectedVersionLabel: (data?.stepConfig?.node as TemplateStepNode).template.versionLabel
-        })
+        selectedTemplate
       })
       const node = drawerData.data?.stepConfig?.node as StepOrStepGroupOrTemplateStepData
-      if (
-        !isCopied &&
-        isEqual((node as TemplateStepNode)?.template?.templateRef, template.identifier) &&
-        isEqual((node as TemplateStepNode)?.template?.versionLabel, template.versionLabel)
-      ) {
-        return
-      }
       const processNode = isCopied
         ? produce(defaultTo(parse(defaultTo(template?.yaml, '')).template.spec, {}) as StepElementConfig, draft => {
             draft.name = defaultTo(node?.name, '')

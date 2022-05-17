@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 /*
  * Copyright 2022 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
@@ -15,11 +16,16 @@ import * as cfServicesMock from 'services/cf'
 import { FFGitSyncProvider } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import type { GitRepo } from 'services/cf'
 import * as useFeatureFlagMock from '@common/hooks/useFeatureFlag'
+import { GIT_SYNC_ERROR_CODE } from '@cf/hooks/useGitSync'
 import type { TargetingRulesTabProps } from '../TargetingRulesTab'
 import TargetingRulesTab from '../TargetingRulesTab'
 import mockSegment from './data/mockSegments'
 import mockTargets from './data/mockTargets'
 import mockFeature from './data/mockFeature'
+
+jest.mock('@governance/EvaluationModal', () => ({
+  EvaluationModal: () => <div>GOVERNANCE MODAL</div>
+}))
 
 jest.mock('uuid')
 
@@ -182,6 +188,30 @@ describe('TargetingRulesTab GitSync', () => {
         ]
       })
     )
+  })
+
+  test('it should show error modal', async () => {
+    setUseGitRepoMock({ autoCommit: true })
+
+    patchFeatureMock.mockRejectedValue({
+      status: GIT_SYNC_ERROR_CODE,
+      data: { message: 'error with git sync service' }
+    })
+
+    renderComponent()
+
+    // toggle flag off
+    const flagToggle = screen.getByTestId('flag-status-switch')
+    expect(flagToggle).toBeChecked()
+    userEvent.click(flagToggle)
+    expect(flagToggle).not.toBeChecked()
+
+    // click save
+    const saveButton = screen.getByText('save')
+    expect(saveButton).toBeInTheDocument()
+    userEvent.click(saveButton)
+
+    await waitFor(() => expect(screen.getByText('cf.gitSync.gitErrorModalTitle')).toBeInTheDocument())
   })
 
   test('it should show invalid yaml modal', async () => {

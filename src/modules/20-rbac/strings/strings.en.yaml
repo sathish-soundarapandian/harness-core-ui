@@ -187,7 +187,6 @@ resourceGroup:
   deletedMessage: 'Resource Group {{name}} deleted'
   limitAccess: 'To limit access to specific set of {{name}}, add them as a list.'
   selectResourceGroup: 'Select Resource Group'
-  add: '+ Add {{name}}'
   all: 'All {{name}}'
   noResourceGroupTypes: 'No Resource Group types available'
   builtInResourceGroup: 'Built in resource-group'

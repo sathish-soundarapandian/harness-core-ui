@@ -26,7 +26,7 @@ import cx from 'classnames'
 import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
 import { get, set } from 'lodash-es'
 
-import type { IconProps } from '@wings-software/uicore/dist/icons/Icon'
+import type { IconProps } from '@harness/icons'
 import produce from 'immer'
 import { useStrings } from 'framework/strings'
 

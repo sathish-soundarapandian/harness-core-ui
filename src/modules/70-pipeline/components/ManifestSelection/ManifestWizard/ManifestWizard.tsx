@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Text, Icon, StepWizard, StepProps, MultiTypeInputType } from '@wings-software/uicore'
-import type { IconProps } from '@wings-software/uicore/dist/icons/Icon'
+import type { IconProps } from '@harness/icons'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'

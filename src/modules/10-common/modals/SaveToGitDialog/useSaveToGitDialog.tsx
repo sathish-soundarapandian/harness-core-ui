@@ -240,7 +240,7 @@ export function useSaveToGitDialog<T = Record<string, string>>(
     )
   }, [createUpdateStatus, error])
 
-  const createPR = (data: SaveToGitFormInterface | SaveToGitFormV2Interface): void => {
+  const createPR = (data: SaveToGitFormInterface & SaveToGitFormV2Interface): void => {
     const params = resource?.storeMetadata?.storeType
       ? {
           accountIdentifier: accountId,
@@ -248,9 +248,12 @@ export function useSaveToGitDialog<T = Record<string, string>>(
           projectIdentifier,
           connectorRef: resource?.storeMetadata?.connectorRef,
           repoName: resource?.gitDetails?.repoName,
+          sourceBranch: defaultTo(data?.branch, ''),
+          targetBranch: defaultTo(data?.targetBranch, ''),
           sourceBranchName: defaultTo(data?.branch, ''),
           targetBranchName: defaultTo(data?.targetBranch, ''),
-          title: defaultTo(data?.commitMsg, '')
+          title: defaultTo(data?.commitMsg, ''),
+          yamlGitConfigRef: defaultTo(data?.repoIdentifier, '')
         }
       : {
           accountIdentifier: accountId,
@@ -263,7 +266,6 @@ export function useSaveToGitDialog<T = Record<string, string>>(
           yamlGitConfigRef: defaultTo(data?.repoIdentifier, '')
         }
 
-    console.log('cretae pr params', params)
     const cretePrPromise = resource?.storeMetadata?.storeType ? createPullRequestV2(params) : createPullRequest(params)
 
     cretePrPromise

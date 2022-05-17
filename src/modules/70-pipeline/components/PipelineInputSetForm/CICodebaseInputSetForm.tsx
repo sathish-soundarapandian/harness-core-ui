@@ -555,7 +555,9 @@ function CICodebaseInputSetFormInternal({
                   ) : null}
                 </Layout.Horizontal>
               )}
-              {codebaseTypeError && formik.submitCount > 0 && <Text color={Color.RED_600}>{codebaseTypeError}</Text>}
+              {codebaseTypeError && (formik.submitCount > 0 || viewTypeMetadata?.isTrigger) && (
+                <Text color={Color.RED_600}>{codebaseTypeError}</Text>
+              )}
               <Container width={containerWidth}>
                 {codeBaseType === CodebaseTypes.branch ? renderCodeBaseTypeInput('branch') : null}
                 {codeBaseType === CodebaseTypes.tag ? renderCodeBaseTypeInput('tag') : null}

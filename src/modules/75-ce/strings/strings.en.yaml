@@ -924,8 +924,13 @@ anomalyDetection:
     status: '{{ $.ce.co.accessPoint.status }}'
   tableMenu:
     whitelistResource: Whitelist resource
-    falseAnomaly: This is false anomaly
+    falseAnomaly: This is a false anomaly
+  noSearchResults: The value you have searched for has no anomalies.
+  noData: There are no anomalies yet in the selected time range.
+  checkLater: Check after some time or select a longer time range to see older anomalies.
   userFeedbackSuccessMsg: 'Thanks for your feedback!'
+  listFetchingError: Error in showing anomalies
+  listFetchingErrorDesc: Come back and check later.
   trend: '(+{{ trend }}%)'
   tooltip:
     countText: '{{ count }} Anomalies'

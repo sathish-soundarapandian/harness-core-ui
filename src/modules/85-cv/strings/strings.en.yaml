@@ -784,7 +784,7 @@ updatedRemainingErrorBudget: Updated remaining Error Budget
 minutes: minutes
 noPreviousErrorBudgetResetHistoryAvailable: No previous Error Budget reset history available
 dateAndTime: Date/Time
-increaseWithPercentSign: 'Increase %'
+increaseInMinutes: 'Increase (minutes)'
 errorBudgetIsSuccessfullyReset: Error Budget is successfully reset
 queryTypeService: Service Based  (used for Health Score and SLI)
 queryTypeHost: Host Based (used for CV)

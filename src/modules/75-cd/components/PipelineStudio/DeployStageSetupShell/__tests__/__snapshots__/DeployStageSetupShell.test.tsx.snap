@@ -363,7 +363,7 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
                           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-flex-start"
                         >
                           <div
-                            class="bp3-form-group"
+                            class="bp3-form-group bp3-disabled"
                           >
                             <label
                               class="bp3-label"
@@ -403,34 +403,27 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
                                     />
                                   </div>
                                 </div>
-                                <span
-                                  class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                                <button
+                                  class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                                  disabled=""
                                 >
                                   <span
-                                    class="bp3-popover-target"
+                                    class="bp3-icon StyledProps--main"
+                                    data-icon="runtime-input"
                                   >
-                                    <button
-                                      class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                                    <svg
+                                      height="12"
+                                      viewBox="0 0 10 7.97"
+                                      width="12"
+                                      xmlns="http://www.w3.org/2000/svg"
                                     >
-                                      <span
-                                        class="bp3-icon StyledProps--main"
-                                        data-icon="runtime-input"
-                                      >
-                                        <svg
-                                          height="12"
-                                          viewBox="0 0 10 7.97"
-                                          width="12"
-                                          xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                          <path
-                                            d="M8.14 4L8 3.72a2.53 2.53 0 01-.12-.3l-.16-.35c-.11-.25-.22-.38-.32-.38s-.28.15-.37.44C7 3.1 7 3.07 7 3a.73.73 0 01.24-.46.66.66 0 01.42-.26c.25 0 .5.35.76 1.05l.07.17.07-.12c.47-.73.86-1.1 1.18-1.1a.71.71 0 01.29.07l-.4.42h-.11c-.24 0-.52.28-.86.83l-.09.16.07.2c.29.79.53 1.18.71 1.18s.31-.12.4-.36q.09.06.09.12t-.27.39a.74.74 0 01-.45.23c-.25 0-.51-.36-.77-1.07l-.12-.25-.1.17c-.44.76-.87 1.14-1.28 1.14a.65.65 0 01-.39-.12L6.84 5a.32.32 0 00.23.1c.25 0 .53-.25.83-.74l.17-.28zm-4-.32L1.7.59h2.47S5 .52 5.35 1a3.28 3.28 0 01.42 1.14h.31L5.94 0H0v.31l3.06 3.74L0 7.62V8h6.08l.38-2.36-.31-.07a2.43 2.43 0 01-.52 1c-.42.48-2 .41-2 .41H1.39z"
-                                            fill="current-color"
-                                          />
-                                        </svg>
-                                      </span>
-                                    </button>
+                                      <path
+                                        d="M8.14 4L8 3.72a2.53 2.53 0 01-.12-.3l-.16-.35c-.11-.25-.22-.38-.32-.38s-.28.15-.37.44C7 3.1 7 3.07 7 3a.73.73 0 01.24-.46.66.66 0 01.42-.26c.25 0 .5.35.76 1.05l.07.17.07-.12c.47-.73.86-1.1 1.18-1.1a.71.71 0 01.29.07l-.4.42h-.11c-.24 0-.52.28-.86.83l-.09.16.07.2c.29.79.53 1.18.71 1.18s.31-.12.4-.36q.09.06.09.12t-.27.39a.74.74 0 01-.45.23c-.25 0-.51-.36-.77-1.07l-.12-.25-.1.17c-.44.76-.87 1.14-1.28 1.14a.65.65 0 01-.39-.12L6.84 5a.32.32 0 00.23.1c.25 0 .53-.25.83-.74l.17-.28zm-4-.32L1.7.59h2.47S5 .52 5.35 1a3.28 3.28 0 01.42 1.14h.31L5.94 0H0v.31l3.06 3.74L0 7.62V8h6.08l.38-2.36-.31-.07a2.43 2.43 0 01-.52 1c-.42.48-2 .41-2 .41H1.39z"
+                                        fill="current-color"
+                                      />
+                                    </svg>
                                   </span>
-                                </span>
+                                </button>
                               </div>
                             </div>
                           </div>

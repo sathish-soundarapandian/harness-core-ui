@@ -20,7 +20,7 @@ import { Position, Intent, PopoverInteractionKind } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
-import type { IconProps } from '@wings-software/uicore/dist/icons/Icon'
+import type { IconProps } from '@harness/icons'
 import defaultTo from 'lodash-es/defaultTo'
 import { useStrings } from 'framework/strings'
 import {

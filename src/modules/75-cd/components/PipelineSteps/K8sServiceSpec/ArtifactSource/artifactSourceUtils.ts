@@ -104,7 +104,7 @@ export const getPrimaryInitialValues = (
 ): { type: ArtifactType; spec: ArtifactConfig } | undefined => {
   if (stageIdentifier === formik?.values?.stageId) {
     const initialArtifactValue = get(initialValues, `artifacts.${artifactPath}`)
-    const { selectedArtifact } = formik?.values
+    const { selectedArtifact } = formik?.values || {}
 
     if (initialArtifactValue && isEmpty(selectedArtifact.identifier)) {
       /*
@@ -131,7 +131,7 @@ export const getSidecarInitialValues = (
 ): { identifier: string; type: ArtifactType; spec: ArtifactConfig } | undefined => {
   if (stageIdentifier === formik?.values?.stageId) {
     const initialArtifactValue = get(initialValues, `artifacts.${artifactPath}`)
-    const { selectedArtifact } = formik?.values
+    const { selectedArtifact } = formik?.values || {}
 
     if (initialArtifactValue && selectedArtifact.identifier === initialArtifactValue.identifier) {
       /*

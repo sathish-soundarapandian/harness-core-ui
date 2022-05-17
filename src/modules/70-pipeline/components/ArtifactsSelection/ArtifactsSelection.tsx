@@ -17,7 +17,7 @@ import get from 'lodash-es/get'
 import set from 'lodash-es/set'
 
 import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
-import type { IconProps } from '@wings-software/uicore/dist/icons/Icon'
+import type { IconProps } from '@harness/icons'
 import { merge } from 'lodash-es'
 import {
   useGetConnectorListV2,
