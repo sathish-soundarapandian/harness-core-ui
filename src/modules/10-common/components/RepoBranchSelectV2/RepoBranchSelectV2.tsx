@@ -7,7 +7,6 @@
 
 import React, { useState, useEffect } from 'react'
 import {
-  Dialog,
   FormInput,
   getErrorInfoFromErrorObject,
   Icon,
@@ -23,7 +22,6 @@ import { defaultTo, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { Error, GitBranchDetailsDTO, useGetListOfBranchesByRefConnectorV2 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import css from '@common/components/RepositorySelect/RepositorySelect.module.scss'
 
 export interface RepoBranchSelectProps {
@@ -81,7 +79,7 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
     lazy: true
   })
 
-  const { isOpen, open, close } = useToggleOpen()
+  const { open } = useToggleOpen()
 
   useEffect(() => {
     setBranchSelectOptions([])
@@ -122,7 +120,6 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading])
 
-  const responseMessages = (error?.data as Error)?.responseMessages
   return (
     <Layout.Horizontal>
       <FormInput.Select
@@ -138,7 +135,7 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
       {loading ? (
         <Layout.Horizontal spacing="small" flex padding={{ top: 'xsmall', left: 'xsmall' }}>
           <Icon name="steps-spinner" size={18} color={Color.PRIMARY_7} />
-          <Text>{getString('gitsync.fetchingBranches').concat('...')}</Text>
+          <Text>{getString('common.fetchingBranches').concat('...')}</Text>
         </Layout.Horizontal>
       ) : null}
       {/* <Dialog isOpen={isOpen} enforceFocus={false} title={getString('gitsync.branchFetchFailed')} onClose={close}>

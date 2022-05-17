@@ -256,6 +256,7 @@ export interface StringsMap {
   'common.feature.upgradeRequired.pleaseUpgrade': string
   'common.feature.upgradeRequired.requiredPlans': string
   'common.feature.upgradeRequired.title': string
+  'common.fetchingBranches': string
   'common.file': string
   'common.files': string
   'common.filters.clearFilters': string
@@ -2199,7 +2200,6 @@ export interface StringsMap {
   'gitsync.entitiesByRepositories': string
   'gitsync.errorFixed': string
   'gitsync.failedToLoadData': string
-  'gitsync.fetchingBranches': string
   'gitsync.fileContent': string
   'gitsync.folderDetails': string
   'gitsync.fullSyncSubTitle': string

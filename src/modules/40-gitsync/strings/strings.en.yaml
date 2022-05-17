@@ -28,7 +28,6 @@ selectHarnessFolder: Select Harness Folder
 selectDefaultBranch: Select Default Branch
 successfullySavedConnectivityMode: Successfully saved Connectivity Mode
 pathToHarnessFolder: Path to the Harness folder
-fetchingBranches: Fetching branches
 gitEnabledBlockedTooltip: Git Experience cannot be enabled if you have already created Pipelines or Feature Flags
 errorFixed: Error is Fixed by
 fileContent: File Content
