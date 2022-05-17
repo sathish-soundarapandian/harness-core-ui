@@ -94,6 +94,51 @@
         }
       }
     },
+    "/accounts/{account_id}/autostoppping/rules/list": {
+      "parameters": [
+        {
+          "name": "account_id",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "accountIdentifier",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "post": {
+        "tags": ["rules"],
+        "summary": "Fetch Autostopping rules",
+        "description": "Fetch all Autostopping rules based on parameters like search, sort and filters.",
+        "operationId": "fetchRules",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Fetch rules definition",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FetchRulesBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/FetchRulesResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid status value"
+          }
+        }
+      }
+    },
     "/accounts/{account_id}/autostopping/rules/{rule_id}/stats": {
       "parameters": [
         {
@@ -2444,6 +2489,59 @@
         }
       }
     },
+    "FetchRulesBody": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "Fetch rules based on search query"
+        },
+        "page": {
+          "type": "number"
+        },
+        "limit": {
+          "type": "number"
+        },
+        "sort": {
+          "type": "object",
+          "$ref": "#/definitions/FetchRulesSortObj"
+        },
+        "filters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FetchRulesFilterObj"
+          }
+        }
+      }
+    },
+    "FetchRulesSortObj": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
+    "FetchRulesFilterObj": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "type": "string"
+        },
+        "operator": {
+          "type": "string"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "SaveServiceRequest": {
       "type": "object",
       "properties": {
@@ -2735,6 +2833,17 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/Account"
+          }
+        }
+      }
+    },
+    "FetchRulesResponse": {
+      "type": "object",
+      "properties": {
+        "records": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Service"
           }
         }
       }

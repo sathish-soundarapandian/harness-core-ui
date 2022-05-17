@@ -301,6 +301,32 @@ export interface ExecutionRule {
   name?: string
 }
 
+export interface FetchRulesBody {
+  filters?: FetchRulesFilterObj[]
+  limit?: number
+  page?: number
+  /**
+   * Fetch rules based on search query
+   */
+  query?: string
+  sort?: FetchRulesSortObj
+}
+
+export interface FetchRulesFilterObj {
+  field?: string
+  operator?: string
+  values?: string[]
+}
+
+export interface FetchRulesResponse {
+  records?: Service[]
+}
+
+export interface FetchRulesSortObj {
+  field?: string
+  type?: string
+}
+
 export interface FirewallRule {
   from?: string
   protocol?: string
@@ -1983,6 +2009,52 @@ export const useToggleAutostoppingRule = ({ account_id, rule_id, ...props }: Use
     (paramsInPath: ToggleAutostoppingRulePathParams) =>
       `/accounts/${paramsInPath.account_id}/autostopping/rules/${paramsInPath.rule_id}/toggle_state`,
     { base: getConfig('lw/api'), pathParams: { account_id, rule_id }, ...props }
+  )
+
+export interface FetchRulesQueryParams {
+  accountIdentifier: string
+}
+
+export interface FetchRulesPathParams {
+  account_id: string
+}
+
+export type FetchRulesProps = Omit<
+  MutateProps<FetchRulesResponse, void, FetchRulesQueryParams, FetchRulesBody, FetchRulesPathParams>,
+  'path' | 'verb'
+> &
+  FetchRulesPathParams
+
+/**
+ * Fetch Autostopping rules
+ *
+ * Fetch all Autostopping rules based on parameters like search, sort and filters.
+ */
+export const FetchRules = ({ account_id, ...props }: FetchRulesProps) => (
+  <Mutate<FetchRulesResponse, void, FetchRulesQueryParams, FetchRulesBody, FetchRulesPathParams>
+    verb="POST"
+    path={`/accounts/${account_id}/autostoppping/rules/list`}
+    base={getConfig('lw/api')}
+    {...props}
+  />
+)
+
+export type UseFetchRulesProps = Omit<
+  UseMutateProps<FetchRulesResponse, void, FetchRulesQueryParams, FetchRulesBody, FetchRulesPathParams>,
+  'path' | 'verb'
+> &
+  FetchRulesPathParams
+
+/**
+ * Fetch Autostopping rules
+ *
+ * Fetch all Autostopping rules based on parameters like search, sort and filters.
+ */
+export const useFetchRules = ({ account_id, ...props }: UseFetchRulesProps) =>
+  useMutate<FetchRulesResponse, void, FetchRulesQueryParams, FetchRulesBody, FetchRulesPathParams>(
+    'POST',
+    (paramsInPath: FetchRulesPathParams) => `/accounts/${paramsInPath.account_id}/autostoppping/rules/list`,
+    { base: getConfig('lw/api'), pathParams: { account_id }, ...props }
   )
 
 export interface AllCertificatesQueryParams {
