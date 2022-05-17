@@ -74,7 +74,7 @@ export function GitSyncForm(props: GitSyncFormProps<GitSyncFormFields>): React.R
         type={['Github', 'Bitbucket']}
         selected={formikProps.values.connectorRef || connectorRef}
         label={'Select Git Connector'}
-        placeholder={getString('select')}
+        placeholder={`- ${getString('select')} -`}
         accountIdentifier={accountId}
         projectIdentifier={projectIdentifier}
         orgIdentifier={orgIdentifier}
