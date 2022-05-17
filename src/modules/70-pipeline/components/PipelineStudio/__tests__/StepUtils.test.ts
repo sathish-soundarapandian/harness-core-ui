@@ -17,7 +17,11 @@ import {
   pipelineWithBranchBuild,
   pipelineWithTagBuild,
   pipelineWithDeploymentStage,
-  templateWithRuntimeTimeout
+  templateWithRuntimeTimeout,
+  pipelineTemplatePipeline,
+  pipelineTemplateOriginalPipeline,
+  pipelineTemplateTemplate,
+  pipelineTemplateResolvedPipeline
 } from './mock'
 
 jest.mock('@common/utils/YamlUtils', () => ({
@@ -144,127 +148,11 @@ describe('Test StepUtils', () => {
           }
         }
       } as any,
-      originalPipeline: {
-        name: 'ci-codebase-all-fields-runtime',
-        identifier: 'cicodebaseallfieldsruntime',
-        template: {
-          templateRef: 'cicodebaseallfields',
-          versionLabel: 'v1',
-          templateInputs: {
-            properties: {
-              ci: {
-                codebase: {
-                  connectorRef: '<+input>',
-                  repoName: '<+input>',
-                  build: '<+input>',
-                  depth: '<+input>',
-                  sslVerify: '<+input>',
-                  prCloneStrategy: '<+input>',
-                  resources: {
-                    limits: {
-                      memory: '<+input>',
-                      cpu: '<+input>'
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        tags: {},
-        projectIdentifier: 'mtran',
-        orgIdentifier: 'default'
-      } as PipelineInfoConfig,
+      originalPipeline: pipelineTemplateOriginalPipeline as PipelineInfoConfig,
       // eslint-disable-next-line
       // @ts-ignore
-      template: {
-        identifier: 'cicodebaseallfieldsruntime',
-        template: {
-          templateInputs: {
-            properties: {
-              ci: {
-                codebase: {
-                  connectorRef: '<+input>',
-                  repoName: '<+input>',
-                  build: '<+input>',
-                  depth: '<+input>',
-                  sslVerify: '<+input>',
-                  prCloneStrategy: '<+input>',
-                  resources: {
-                    limits: {
-                      memory: '<+input>',
-                      cpu: '<+input>'
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      } as PipelineInfoConfig,
-      resolvedPipeline: {
-        name: 'ci-codebase-all-fields-runtime',
-        identifier: 'cicodebaseallfieldsruntime',
-        properties: {
-          ci: {
-            codebase: {
-              connectorRef: '<+input>',
-              repoName: '<+input>',
-              build: '<+input>',
-              depth: '<+input>',
-              sslVerify: '<+input>',
-              prCloneStrategy: '<+input>',
-              resources: {
-                limits: {
-                  memory: '<+input>',
-                  cpu: '<+input>'
-                }
-              }
-            }
-          }
-        },
-        stages: [
-          {
-            stage: {
-              identifier: 'stage1',
-              type: 'CI',
-              name: 'stage1',
-              spec: {
-                cloneCodebase: true,
-                infrastructure: {
-                  type: 'KubernetesDirect',
-                  spec: {
-                    connectorRef: 'account.CItestK8sConnectorYL1agYpudC',
-                    namespace: 'default',
-                    automountServiceAccountToken: true,
-                    nodeSelector: {}
-                  }
-                },
-                execution: {
-                  steps: [
-                    {
-                      step: {
-                        identifier: 'run_step',
-                        type: 'Run',
-                        name: 'run step',
-                        spec: {
-                          connectorRef: 'account.CItestDockerConnectorBNcmp5A5Ml',
-                          image: 'alpine',
-                          shell: 'Sh',
-                          command: "echo 'hi'"
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        ],
-        tags: {},
-        projectIdentifier: 'mtran',
-        orgIdentifier: 'default'
-      },
+      template: pipelineTemplateTemplate as PipelineInfoConfig,
+      resolvedPipeline: pipelineTemplateResolvedPipeline as any,
       viewType: StepViewType.DeploymentForm
     })
 
@@ -272,7 +160,7 @@ describe('Test StepUtils', () => {
     expect(errorKeys).toContain('connectorRef')
     expect(errorKeys).toContain('repoName')
   })
-  test('Test requires Connector and RepoName only when all CI Codebase fields are runtime inputs', () => {
+  test('Test pipeline template requires Connector and RepoName only when all CI Codebase fields are runtime inputs', () => {
     const errors = validatePipeline({
       pipeline: {
         identifier: 'cicodebaseallfieldsruntime',
@@ -301,127 +189,11 @@ describe('Test StepUtils', () => {
           }
         }
       } as any,
-      originalPipeline: {
-        name: 'ci-codebase-all-fields-runtime',
-        identifier: 'cicodebaseallfieldsruntime',
-        template: {
-          templateRef: 'cicodebaseallfields',
-          versionLabel: 'v1',
-          templateInputs: {
-            properties: {
-              ci: {
-                codebase: {
-                  connectorRef: '<+input>',
-                  repoName: '<+input>',
-                  build: '<+input>',
-                  depth: '<+input>',
-                  sslVerify: '<+input>',
-                  prCloneStrategy: '<+input>',
-                  resources: {
-                    limits: {
-                      memory: '<+input>',
-                      cpu: '<+input>'
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        tags: {},
-        projectIdentifier: 'mtran',
-        orgIdentifier: 'default'
-      } as PipelineInfoConfig,
+      originalPipeline: pipelineTemplateOriginalPipeline as PipelineInfoConfig,
       // eslint-disable-next-line
       // @ts-ignore
-      template: {
-        identifier: 'cicodebaseallfieldsruntime',
-        template: {
-          templateInputs: {
-            properties: {
-              ci: {
-                codebase: {
-                  connectorRef: '<+input>',
-                  repoName: '<+input>',
-                  build: '<+input>',
-                  depth: '<+input>',
-                  sslVerify: '<+input>',
-                  prCloneStrategy: '<+input>',
-                  resources: {
-                    limits: {
-                      memory: '<+input>',
-                      cpu: '<+input>'
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      } as PipelineInfoConfig,
-      resolvedPipeline: {
-        name: 'ci-codebase-all-fields-runtime',
-        identifier: 'cicodebaseallfieldsruntime',
-        properties: {
-          ci: {
-            codebase: {
-              connectorRef: '<+input>',
-              repoName: '<+input>',
-              build: '<+input>',
-              depth: '<+input>',
-              sslVerify: '<+input>',
-              prCloneStrategy: '<+input>',
-              resources: {
-                limits: {
-                  memory: '<+input>',
-                  cpu: '<+input>'
-                }
-              }
-            }
-          }
-        },
-        stages: [
-          {
-            stage: {
-              identifier: 'stage1',
-              type: 'CI',
-              name: 'stage1',
-              spec: {
-                cloneCodebase: true,
-                infrastructure: {
-                  type: 'KubernetesDirect',
-                  spec: {
-                    connectorRef: 'account.CItestK8sConnectorYL1agYpudC',
-                    namespace: 'default',
-                    automountServiceAccountToken: true,
-                    nodeSelector: {}
-                  }
-                },
-                execution: {
-                  steps: [
-                    {
-                      step: {
-                        identifier: 'run_step',
-                        type: 'Run',
-                        name: 'run step',
-                        spec: {
-                          connectorRef: 'account.CItestDockerConnectorBNcmp5A5Ml',
-                          image: 'alpine',
-                          shell: 'Sh',
-                          command: "echo 'hi'"
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        ],
-        tags: {},
-        projectIdentifier: 'mtran',
-        orgIdentifier: 'default'
-      },
+      template: pipelineTemplateTemplate as PipelineInfoConfig,
+      resolvedPipeline: pipelineTemplateResolvedPipeline as any,
       viewType: StepViewType.DeploymentForm
     })
 
