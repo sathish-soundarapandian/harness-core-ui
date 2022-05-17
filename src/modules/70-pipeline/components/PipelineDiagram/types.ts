@@ -141,7 +141,7 @@ export interface BaseReactComponentProps {
   setSelectedNode?(identifier: string): void
   getDefaultNode?: GetNodeMethod
   updateGraphLinks?(): void
-  onMouseOver?(): void
+  onMouseOver?(event: MouseEvent): void
   onMouseLeave?(): void
   isFirstParallelNode?: boolean
   className?: string

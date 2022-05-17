@@ -171,6 +171,7 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
             startEndNodeNeeded={false}
             readonly={props.readonly}
             optimizeRender={false}
+            updateGraphLinks={props.updateGraphLinks}
           />
         </>
       ) : (

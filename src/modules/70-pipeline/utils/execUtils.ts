@@ -504,27 +504,42 @@ export const processExecutionDataV1 = (graph?: ExecutionGraph): any => {
               )
               items.push(...exec)
             } else {
+              const steps = processStepGroupSteps({
+                nodeAdjacencyListMap,
+                id: nodeId,
+                nodeMap: graph?.nodeMap,
+                rootNodes: []
+              })
               items.push({
-                group: {
-                  name: nodeData.name || /* istanbul ignore next */ '',
-                  identifier: nodeId,
-                  id: nodeData.uuid as string,
-                  data: nodeData,
-                  skipCondition: nodeData.skipInfo?.evaluatedCondition ? nodeData.skipInfo.skipCondition : undefined,
-                  when: nodeData.nodeRunInfo,
-                  containerCss: {
-                    ...(RollbackIdentifier === nodeData.identifier || isRollback ? RollbackContainerCss : {})
-                  },
-                  status: nodeData.status as ExecutionStatus,
-                  isOpen: true,
-                  ...getIconDataBasedOnType(nodeData),
-                  items: processNodeDataV1(
-                    nodeAdjacencyListMap[nodeId].children || /* istanbul ignore next */ [],
-                    graph?.nodeMap,
-                    graph?.nodeAdjacencyListMap,
-                    items
-                  )
-                }
+                name: nodeData.name || /* istanbul ignore next */ '',
+                identifier: nodeId,
+                id: nodeData.uuid as string,
+                data: {
+                  graphType: PipelineGraphType.STEP_GRAPH,
+
+                  type: 'STEP_GROUP',
+                  nodeType: 'STEP_GROUP',
+                  icon: StepTypeIconsMap.STEP_GROUP,
+                  stepGroup: {
+                    ...nodeData,
+                    type: 'STEP_GROUP',
+                    nodeType: 'STEP_GROUP',
+                    icon: StepTypeIconsMap.STEP_GROUP,
+                    steps,
+                    status: nodeData?.status as ExecutionStatus
+                  }
+                },
+                skipCondition: nodeData.skipInfo?.evaluatedCondition ? nodeData.skipInfo.skipCondition : undefined,
+                when: nodeData.nodeRunInfo,
+                type: 'STEP_GROUP',
+                nodeType: 'STEP_GROUP',
+                containerCss: {
+                  ...(RollbackIdentifier === nodeData.identifier || isRollback ? RollbackContainerCss : {})
+                },
+                status: nodeData.status as ExecutionStatus,
+                isOpen: true,
+                ...getIconDataBasedOnType(nodeData),
+                steps
               })
             }
           }

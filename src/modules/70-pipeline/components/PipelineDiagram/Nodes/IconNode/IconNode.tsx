@@ -76,23 +76,6 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
           }
         })
       }}
-      onMouseEnter={event => {
-        event.stopPropagation()
-        props?.fireEvent?.({
-          type: Event.MouseEnterNode,
-          target: event.target,
-          data: { ...props }
-        })
-      }}
-      onMouseLeave={event => {
-        event.stopPropagation()
-
-        props?.fireEvent?.({
-          type: Event.MouseLeaveNode,
-          target: event.target,
-          data: { ...props }
-        })
-      }}
     >
       <div
         id={props.id}
@@ -114,9 +97,28 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
           event.preventDefault()
           event.stopPropagation()
         }}
+        onMouseEnter={event => {
+          event.stopPropagation()
+          props?.fireEvent?.({
+            type: Event.MouseEnterNode,
+            target: event.target,
+            data: { ...props }
+          })
+        }}
+        onMouseLeave={event => {
+          event.stopPropagation()
+
+          props?.fireEvent?.({
+            type: Event.MouseLeaveNode,
+            target: event.target,
+            data: { ...props }
+          })
+        }}
       >
         <div>
-          {props.isInComplete && <Icon className={css.inComplete} size={12} name={'warning-sign'} color="orange500" />}
+          {props.data.isInComplete && (
+            <Icon className={css.inComplete} size={12} name={'warning-sign'} color="orange500" />
+          )}
           {!props.readonly && (
             <Button
               className={cx(cssDefault.closeNode)}

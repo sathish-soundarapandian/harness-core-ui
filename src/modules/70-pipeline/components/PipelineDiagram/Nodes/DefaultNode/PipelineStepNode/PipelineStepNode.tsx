@@ -57,7 +57,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
 
   const stepIcon = defaultTo(defaultTo(stepData?.icon, props?.icon), props?.data?.step?.icon)
   // const isPrevNodeParallel = !!defaultTo(props.prevNode?.children?.length, 1)
-  const isTemplateNode = props.data.isTemplateNode
+  const isTemplateNode = props?.data?.isTemplateNode
   return (
     <div
       className={cx(defaultCss.defaultNode, 'default-node', {
@@ -175,7 +175,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
         }}
       >
         <div className="execution-running-animation" />
-        {props.data.isInComplete && (
+        {props?.data?.isInComplete && (
           <Icon className={defaultCss.inComplete} size={12} name={'warning-sign'} color="orange500" />
         )}
         {stepIcon && (
