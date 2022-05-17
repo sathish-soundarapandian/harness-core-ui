@@ -14,6 +14,7 @@ import {
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import ArtifactsSelection from '../ArtifactsSelection'
 import pipelineContextMock from './pipelineContext.json'
+import pipelineContextWithoutArtifactsMock from './pipelineContextWithoutArtifacts.json'
 import connectorsData from './connectors_mock.json'
 import ArtifactListView from '../ArtifactListView/ArtifactListView'
 import type { ArtifactListViewProps } from '../ArtifactInterface'
@@ -375,5 +376,121 @@ describe('ArtifactsSelection tests', () => {
     const remove = container.querySelectorAll('[data-icon="main-trash"]')[1]
 
     expect(remove).toBeDefined()
+  })
+
+  test('is artifacts type list containing all types for Kubernetes for activated NG_AZURE, NG_NEXUS_ARTIFACTORY and CUSTOM_ARTIFACT_NG', async () => {
+    const { container } = render(
+      <TestWrapper
+        defaultAppStoreValues={{
+          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+        }}
+      >
+        <PipelineContext.Provider value={getContextValue()}>
+          <ArtifactsSelection deploymentType="Kubernetes" isForOverrideSets={false} isForPredefinedSets={false} />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    const addFileButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    expect(addFileButton).toBeDefined()
+    fireEvent.click(addFileButton)
+    const portal = document.getElementsByClassName('bp3-dialog')[0]
+    const artifactLabel = await waitFor(() => findByText(portal as HTMLElement, 'connectors.specifyArtifactRepoType'))
+    expect(artifactLabel).toBeDefined()
+    const nexus = await container.querySelector('input[value="Nexus3Registry"]')
+    expect(nexus).toBeDefined()
+    const artifactory = await container.querySelector('input[value="ArtifactoryRegistry"]')
+    expect(artifactory).toBeDefined()
+    const acr = await container.querySelector('input[value="Acr"]')
+    expect(acr).toBeDefined()
+  })
+
+  test('is artifacts type list containing all types for NativeHelm for activated NG_AZURE, NG_NEXUS_ARTIFACTORY and CUSTOM_ARTIFACT_NG', async () => {
+    const { container } = render(
+      <TestWrapper
+        defaultAppStoreValues={{
+          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+        }}
+      >
+        <PipelineContext.Provider value={getContextValue()}>
+          <ArtifactsSelection deploymentType="NativeHelm" isForOverrideSets={false} isForPredefinedSets={false} />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    const addSidecarButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    expect(addSidecarButton).toBeDefined()
+    fireEvent.click(addSidecarButton)
+    const portal = document.getElementsByClassName('bp3-dialog')[0]
+    const artifactLabel = await waitFor(() => findByText(portal as HTMLElement, 'connectors.specifyArtifactRepoType'))
+    expect(artifactLabel).toBeDefined()
+    const nexus = await container.querySelector('input[value="Nexus3Registry"]')
+    expect(nexus).toBeDefined()
+    const artifactory = await container.querySelector('input[value="ArtifactoryRegistry"]')
+    expect(artifactory).toBeDefined()
+    const acr = await container.querySelector('input[value="Acr"]')
+    expect(acr).toBeDefined()
+  })
+
+  test('is artifacts type list containing all types for NativeHelm for activated NG_AZURE, NG_NEXUS_ARTIFACTORY and CUSTOM_ARTIFACT_NG', async () => {
+    const { container } = render(
+      <TestWrapper
+        defaultAppStoreValues={{
+          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+        }}
+      >
+        <PipelineContext.Provider value={getContextValue()}>
+          <ArtifactsSelection deploymentType="NativeHelm" isForOverrideSets={false} isForPredefinedSets={false} />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    const addSidecarButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    expect(addSidecarButton).toBeDefined()
+    fireEvent.click(addSidecarButton)
+    const portal = document.getElementsByClassName('bp3-dialog')[0]
+    const artifactLabel = await waitFor(() => findByText(portal as HTMLElement, 'connectors.specifyArtifactRepoType'))
+    expect(artifactLabel).toBeDefined()
+    const nexus = await container.querySelector('input[value="Nexus3Registry"]')
+    expect(nexus).toBeDefined()
+    const artifactory = await container.querySelector('input[value="ArtifactoryRegistry"]')
+    expect(artifactory).toBeDefined()
+    const acr = await container.querySelector('input[value="Acr"]')
+    expect(acr).toBeDefined()
+  })
+
+  test('is artifacts type list containing all types for ServerlessAwsLambda for activated NG_AZURE, NG_NEXUS_ARTIFACTORY and CUSTOM_ARTIFACT_NG', async () => {
+    const context = {
+      ...pipelineContextWithoutArtifactsMock,
+      getStageFromPipeline: jest.fn(() => {
+        return { stage: pipelineContextWithoutArtifactsMock.state.pipeline.stages[0], parent: undefined }
+      })
+    } as any
+
+    const { container } = render(
+      <TestWrapper
+        defaultAppStoreValues={{
+          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+        }}
+      >
+        <PipelineContext.Provider value={context}>
+          <ArtifactsSelection
+            deploymentType="ServerlessAwsLambda"
+            isForOverrideSets={false}
+            isForPredefinedSets={false}
+          />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    const addPrimaryButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addPrimary')
+    expect(addPrimaryButton).toBeDefined()
+    fireEvent.click(addPrimaryButton)
+    const portal = document.getElementsByClassName('bp3-dialog')[0]
+    const artifactLabel = await waitFor(() => findByText(portal as HTMLElement, 'connectors.specifyArtifactRepoType'))
+    expect(artifactLabel).toBeDefined()
+    const artifactory = await container.querySelector('input[value="ArtifactoryRegistry"]')
+    expect(artifactory).toBeDefined()
+    const nexus = await container.querySelector('input[value="Nexus3Registry"]')
+    expect(nexus).toBeNull()
+    const acr = await container.querySelector('input[value="Acr"]')
+    expect(acr).toBeNull()
   })
 })
