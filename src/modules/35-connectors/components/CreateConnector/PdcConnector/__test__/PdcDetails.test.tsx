@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, waitFor } from '@testing-library/react'
+import { render, waitFor, act } from '@testing-library/react'
+import user from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import PdcDetails from '@connectors/components/CreateConnector/PdcConnector/StepDetails/PdcDetails'
 
@@ -16,15 +17,50 @@ jest.mock('@common/exports', () => ({
   })
 }))
 
-const prevStepData = { spec: { hosts: 'localhost, 1.2.3.4' } }
+const fileValues = [{ hosts: 'localhost' }]
+const prevStepDataSpecHosts = { spec: { hosts: 'localhost, 1.2.3.4' } }
+const prevStepDataHosts = { hosts: 'localhost' }
 
-describe('Test PdcDetails component', () => {
+describe('Test PdcDetails component with spec.hosts', () => {
   test('Render component', async () => {
     const { container } = render(
       <TestWrapper path="/account/pass" pathParams={{ accountId: 'account1' }}>
-        <PdcDetails prevStepData={prevStepData} isEditMode={false} name="pdc-details" />
+        <PdcDetails prevStepData={prevStepDataSpecHosts} isEditMode={false} name="pdc-details" />
       </TestWrapper>
     )
+
+    waitFor(() => {
+      expect(container.querySelector('localhost')).toBeDefined()
+    })
+  })
+  test('Render component with hosts', async () => {
+    const { container } = render(
+      <TestWrapper path="/account/pass" pathParams={{ accountId: 'account1' }}>
+        <PdcDetails prevStepData={prevStepDataHosts} isEditMode={false} name="pdc-details" />
+      </TestWrapper>
+    )
+
+    waitFor(() => {
+      expect(container.querySelector('localhost')).toBeDefined()
+    })
+  })
+  test('Render component and try upload file', async () => {
+    const { container } = render(
+      <TestWrapper path="/account/pass" pathParams={{ accountId: 'account1' }}>
+        <PdcDetails prevStepData={prevStepDataHosts} isEditMode={false} name="pdc-details" />
+      </TestWrapper>
+    )
+
+    const str = JSON.stringify(fileValues)
+    const blob = new Blob([str])
+    const file = new File([blob], 'values.json', {
+      type: 'application/JSON'
+    })
+    File.prototype.text = jest.fn().mockResolvedValueOnce(str)
+    const input = container.querySelector('input')
+    act(() => {
+      user.upload(input!, file)
+    })
 
     waitFor(() => {
       expect(container.querySelector('localhost')).toBeDefined()
