@@ -59,7 +59,7 @@ describe('Test TestConnection component', () => {
       </TestWrapper>
     )
 
-    const fileErrorContent = '[{hosts: localhost}, }]'
+    const fileErrorContent = '[{hosts: localhost},}]'
     const blob = new Blob([fileErrorContent])
     const file = new File([blob], 'values.json', {
       type: 'application/JSON'
@@ -84,35 +84,6 @@ describe('Test TestConnection component', () => {
     input.dispatchEvent(createBubbledEvent('dragstart', { clientX: 0, clientY: 0 }))
 
     input.dispatchEvent(createBubbledEvent('drop', { clientX: 0, clientY: 1 }))
-
-    waitFor(() => {
-      expect(setJsonValueFn).toBeCalled()
-    })
-  })
-  test('drag and drop test - items', () => {
-    const { container } = render(
-      <TestWrapper path="/account/pass" pathParams={{}}>
-        <UploadJSON setJsonValue={setJsonValueFn} />
-      </TestWrapper>
-    )
-    const input = container.querySelector('input')!
-
-    const eventData = { dataTransfer: { items: [new Blob()] } }
-
-    act(() => {
-      const dragStartEvent = Object.assign(createEvent.dragStart(input), eventData)
-
-      fireEvent(input, dragStartEvent)
-      fireEvent.dragEnter(input)
-      fireEvent.dragEnd(input)
-      fireEvent.dragLeave(input)
-
-      const dropEffectEvent = Object.assign(createEvent.dragOver(input), eventData)
-      fireEvent(input, dropEffectEvent)
-
-      const dropEvent = Object.assign(createEvent.drop(input), eventData)
-      fireEvent(input, dropEvent)
-    })
 
     waitFor(() => {
       expect(setJsonValueFn).toBeCalled()
