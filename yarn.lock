@@ -1743,6 +1743,11 @@
   resolved "https://npm.pkg.github.com/download/@harness/design-system/1.0.0/4961fc151ffa0dd1f3d86b37572f9a5cd575d592c646cd5e68d508e1045c9d96#e463410da2c7ad9bff84eaa43fbe4ba9ba347da1"
   integrity sha512-sMsLP5Rxg08t87dJamTgpzEfRAef06C14bZO92SGqiXYtXsK01evjnXaOAiUS4gO36gMGi5cYJAqkJ0XBkERIg==
 
+"@harness/icons@^1.9.0":
+  version "1.9.0"
+  resolved "https://npm.pkg.github.com/download/@harness/icons/1.9.0/18cef6e05a0d17140b6cd8728dba9ba377b65924989a54f5463996e23c5ae06b#33bd2fb558130a8e18e0157c438f6a3d1aaac335"
+  integrity sha512-8G2z6Z9KuhsU++YvziRRCR3W+ardlbr/dfZSUkntJkFmOkAMinxiaA25h51CS9RLs8XCIkYV0xPsOI79Y/TYUg==
+
 "@harness/jarvis@0.16.0":
   version "0.16.0"
   resolved "https://npm.pkg.github.com/download/@harness/jarvis/0.16.0/c7e3798237e08bade2c62465c40cd354a61ad390c321ca583603617f1a453691#f3c86b042adae53f6f5e302163f709fca164f495"
@@ -1783,10 +1788,10 @@
   resolved "https://npm.pkg.github.com/download/@harness/telemetry/1.0.37/fbc5025fb5969920627473304e041288420f44d63aa9cce82e1d06416bb2cf07#800efb2a98fc01bde907543f2509f7009573a1d7"
   integrity sha512-oUwcx7FSbKD0VTs/5Ng/mrYLEGj8FDtpsDhLniVgnsY02i15HszImvAEx6o32Pur3TcF1BKL/MRFu4W6lSKiPA==
 
-"@harness/uicore@2.73.0":
-  version "2.73.0"
-  resolved "https://npm.pkg.github.com/download/@harness/uicore/2.73.0/b1cb1f0fad5117fd0fc7849425b6a3688a5d7c3525bc38c586672fa6f6cd4dcd#01f3c31f90c0e4b1512fa66c61bbd32c23a6b587"
-  integrity sha512-qz0mz8uKpFCGStyzgwMWBZUgf9Jrs3s/ZQN/CmmFhjRCwTX/tOoKacJTfkDCeut+p4hsKSoaCss8KkxfmFDu+A==
+"@harness/uicore@^2.80.0":
+  version "2.80.0"
+  resolved "https://npm.pkg.github.com/download/@harness/uicore/2.80.0/f219fe7a882f1e6e92466fb5ecb7c2124b4439cf97cac13e255322cf2d6aa603#9d76683154e35a71f2a9d79e80fc13f07bc794e3"
+  integrity sha512-YzesNlCozJLHFJ9nZUVPI8TDrY91KJtF1i06wOt2AAz3myB1WNWj+e82Q4avqjA13enQnBknSIny2XaxWQ32Ow==
 
 "@harness/use-modal@1.1.0":
   version "1.1.0"

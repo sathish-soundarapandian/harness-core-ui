@@ -62,7 +62,7 @@ export default function L1Nav(): React.ReactElement {
         <li className={css.navItem}>
           <Link {...commonLinkProps} to={paths.toChaos(params)}>
             <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-              <Icon name="harness" size={30} />
+              <Icon name="chaos-logo" size={30} />
               <Text
                 font={{ weight: 'semi-bold', align: 'center' }}
                 padding={{ bottom: 'xsmall' }}
