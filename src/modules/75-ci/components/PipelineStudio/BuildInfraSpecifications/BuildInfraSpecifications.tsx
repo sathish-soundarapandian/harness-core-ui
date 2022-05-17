@@ -473,7 +473,23 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             : values.tolerations
 
           const filteredVolumes = Array.isArray(values.volumes)
-            ? values.volumes.filter((volume: VolumesInterface) => volume.mountPath && volume.type)
+            ? values.volumes
+                .filter((volume: VolumesInterface) => volume.mountPath && volume.type)
+                .map((vol: VolumesInterface) => {
+                  const newVol = { ...vol }
+                  if (typeof newVol.spec !== 'undefined') {
+                    if (newVol.spec?.size === '') {
+                      delete newVol.spec.size
+                    }
+                    if (newVol.spec?.medium === '') {
+                      delete newVol.spec.medium
+                    }
+                    if (newVol.spec?.type === '') {
+                      delete newVol.spec.type
+                    }
+                  }
+                  return newVol
+                })
             : values.volumes
 
           try {
@@ -541,7 +557,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                       values?.connectorRef ||
                       (draft.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.connectorRef,
                     namespace: values.namespace,
-                    volumes: filteredVolumes,
+                    ...(filteredVolumes?.length ? { volumes: filteredVolumes } : {}),
                     serviceAccountName: values.serviceAccountName,
                     runAsUser: values.runAsUser,
                     initTimeout: errors.initTimeout ? undefined : values.initTimeout,
@@ -549,7 +565,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                     labels: !isEmpty(filteredLabels) ? filteredLabels : undefined,
                     automountServiceAccountToken: values.automountServiceAccountToken,
                     priorityClassName: values.priorityClassName,
-                    tolerations: filteredTolerations,
+                    ...(filteredTolerations?.length ? { tolerations: filteredTolerations } : {}),
                     nodeSelector: getMapValues(values.nodeSelector),
                     ...additionalKubernetesFields
                   }
