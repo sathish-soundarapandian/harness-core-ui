@@ -7,6 +7,7 @@
 
 import isMatch from 'lodash-es/isMatch'
 import has from 'lodash-es/has'
+import { get } from 'lodash-es'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { PipelineInfoConfig } from 'services/cd-ng'
 import { validateCICodebase, getErrorsList, validatePipeline } from '../StepUtil'
@@ -113,5 +114,322 @@ describe('Test StepUtils', () => {
     const { errorStrings, errorCount } = getErrorsList(errors)
     expect(errorStrings.length).toBe(3)
     expect(errorCount).toBe(3)
+  })
+  test('Test requires Connector and RepoName only when all CI Codebase fields are runtime inputs', () => {
+    const errors = validatePipeline({
+      pipeline: {
+        identifier: 'cicodebaseallfieldsruntime',
+        template: {
+          templateInputs: {
+            properties: {
+              ci: {
+                codebase: {
+                  connectorRef: '',
+                  repoName: '',
+                  build: {
+                    spec: {}
+                  },
+                  depth: 50,
+                  sslVerify: true,
+                  prCloneStrategy: 'MergeCommit',
+                  resources: {
+                    limits: {
+                      memory: '500Mi',
+                      cpu: '400m'
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      } as any,
+      originalPipeline: {
+        name: 'ci-codebase-all-fields-runtime',
+        identifier: 'cicodebaseallfieldsruntime',
+        template: {
+          templateRef: 'cicodebaseallfields',
+          versionLabel: 'v1',
+          templateInputs: {
+            properties: {
+              ci: {
+                codebase: {
+                  connectorRef: '<+input>',
+                  repoName: '<+input>',
+                  build: '<+input>',
+                  depth: '<+input>',
+                  sslVerify: '<+input>',
+                  prCloneStrategy: '<+input>',
+                  resources: {
+                    limits: {
+                      memory: '<+input>',
+                      cpu: '<+input>'
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        tags: {},
+        projectIdentifier: 'mtran',
+        orgIdentifier: 'default'
+      } as PipelineInfoConfig,
+      // eslint-disable-next-line
+      // @ts-ignore
+      template: {
+        identifier: 'cicodebaseallfieldsruntime',
+        template: {
+          templateInputs: {
+            properties: {
+              ci: {
+                codebase: {
+                  connectorRef: '<+input>',
+                  repoName: '<+input>',
+                  build: '<+input>',
+                  depth: '<+input>',
+                  sslVerify: '<+input>',
+                  prCloneStrategy: '<+input>',
+                  resources: {
+                    limits: {
+                      memory: '<+input>',
+                      cpu: '<+input>'
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      } as PipelineInfoConfig,
+      resolvedPipeline: {
+        name: 'ci-codebase-all-fields-runtime',
+        identifier: 'cicodebaseallfieldsruntime',
+        properties: {
+          ci: {
+            codebase: {
+              connectorRef: '<+input>',
+              repoName: '<+input>',
+              build: '<+input>',
+              depth: '<+input>',
+              sslVerify: '<+input>',
+              prCloneStrategy: '<+input>',
+              resources: {
+                limits: {
+                  memory: '<+input>',
+                  cpu: '<+input>'
+                }
+              }
+            }
+          }
+        },
+        stages: [
+          {
+            stage: {
+              identifier: 'stage1',
+              type: 'CI',
+              name: 'stage1',
+              spec: {
+                cloneCodebase: true,
+                infrastructure: {
+                  type: 'KubernetesDirect',
+                  spec: {
+                    connectorRef: 'account.CItestK8sConnectorYL1agYpudC',
+                    namespace: 'default',
+                    automountServiceAccountToken: true,
+                    nodeSelector: {}
+                  }
+                },
+                execution: {
+                  steps: [
+                    {
+                      step: {
+                        identifier: 'run_step',
+                        type: 'Run',
+                        name: 'run step',
+                        spec: {
+                          connectorRef: 'account.CItestDockerConnectorBNcmp5A5Ml',
+                          image: 'alpine',
+                          shell: 'Sh',
+                          command: "echo 'hi'"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        tags: {},
+        projectIdentifier: 'mtran',
+        orgIdentifier: 'default'
+      },
+      viewType: StepViewType.DeploymentForm
+    })
+
+    const errorKeys = Object.keys(get(errors, 'template.templateInputs.properties.ci.codebase') || {})
+    expect(errorKeys).toContain('connectorRef')
+    expect(errorKeys).toContain('repoName')
+  })
+  test('Test requires Connector and RepoName only when all CI Codebase fields are runtime inputs', () => {
+    const errors = validatePipeline({
+      pipeline: {
+        identifier: 'cicodebaseallfieldsruntime',
+        template: {
+          templateInputs: {
+            properties: {
+              ci: {
+                codebase: {
+                  connectorRef: 'githubconnector',
+                  repoName: 'repo',
+                  build: {
+                    spec: {}
+                  },
+                  depth: 50,
+                  sslVerify: true,
+                  prCloneStrategy: 'abc',
+                  resources: {
+                    limits: {
+                      memory: 'abc',
+                      cpu: 'abc'
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      } as any,
+      originalPipeline: {
+        name: 'ci-codebase-all-fields-runtime',
+        identifier: 'cicodebaseallfieldsruntime',
+        template: {
+          templateRef: 'cicodebaseallfields',
+          versionLabel: 'v1',
+          templateInputs: {
+            properties: {
+              ci: {
+                codebase: {
+                  connectorRef: '<+input>',
+                  repoName: '<+input>',
+                  build: '<+input>',
+                  depth: '<+input>',
+                  sslVerify: '<+input>',
+                  prCloneStrategy: '<+input>',
+                  resources: {
+                    limits: {
+                      memory: '<+input>',
+                      cpu: '<+input>'
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        tags: {},
+        projectIdentifier: 'mtran',
+        orgIdentifier: 'default'
+      } as PipelineInfoConfig,
+      // eslint-disable-next-line
+      // @ts-ignore
+      template: {
+        identifier: 'cicodebaseallfieldsruntime',
+        template: {
+          templateInputs: {
+            properties: {
+              ci: {
+                codebase: {
+                  connectorRef: '<+input>',
+                  repoName: '<+input>',
+                  build: '<+input>',
+                  depth: '<+input>',
+                  sslVerify: '<+input>',
+                  prCloneStrategy: '<+input>',
+                  resources: {
+                    limits: {
+                      memory: '<+input>',
+                      cpu: '<+input>'
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      } as PipelineInfoConfig,
+      resolvedPipeline: {
+        name: 'ci-codebase-all-fields-runtime',
+        identifier: 'cicodebaseallfieldsruntime',
+        properties: {
+          ci: {
+            codebase: {
+              connectorRef: '<+input>',
+              repoName: '<+input>',
+              build: '<+input>',
+              depth: '<+input>',
+              sslVerify: '<+input>',
+              prCloneStrategy: '<+input>',
+              resources: {
+                limits: {
+                  memory: '<+input>',
+                  cpu: '<+input>'
+                }
+              }
+            }
+          }
+        },
+        stages: [
+          {
+            stage: {
+              identifier: 'stage1',
+              type: 'CI',
+              name: 'stage1',
+              spec: {
+                cloneCodebase: true,
+                infrastructure: {
+                  type: 'KubernetesDirect',
+                  spec: {
+                    connectorRef: 'account.CItestK8sConnectorYL1agYpudC',
+                    namespace: 'default',
+                    automountServiceAccountToken: true,
+                    nodeSelector: {}
+                  }
+                },
+                execution: {
+                  steps: [
+                    {
+                      step: {
+                        identifier: 'run_step',
+                        type: 'Run',
+                        name: 'run step',
+                        spec: {
+                          connectorRef: 'account.CItestDockerConnectorBNcmp5A5Ml',
+                          image: 'alpine',
+                          shell: 'Sh',
+                          command: "echo 'hi'"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        tags: {},
+        projectIdentifier: 'mtran',
+        orgIdentifier: 'default'
+      },
+      viewType: StepViewType.DeploymentForm
+    })
+
+    const errorKeys = Object.keys(get(errors, 'template.templateInputs.properties.ci.codebase') || {})
+    expect(errorKeys).not.toContain('connectorRef')
+    expect(errorKeys).not.toContain('repoName')
+    expect(errorKeys).toContain('build')
+    expect(errorKeys).toContain('prCloneStrategy')
+    expect(errorKeys).toContain('resources')
   })
 })
