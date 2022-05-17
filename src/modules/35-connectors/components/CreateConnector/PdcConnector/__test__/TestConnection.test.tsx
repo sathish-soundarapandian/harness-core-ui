@@ -8,6 +8,7 @@
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
+import * as cdNg from 'services/cd-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import TestConnection from '@connectors/components/CreateConnector/PdcConnector/StepDetails/TestConnection'
@@ -81,6 +82,21 @@ describe('Test TestConnection component', () => {
     expect(gotoStep).toBeCalled()
   })
   test('Render component with api pass ok', async () => {
+    jest.spyOn(cdNg, 'useGetTestConnectionResult').mockImplementation(
+      () =>
+        ({
+          mutate: jest.fn(
+            () =>
+              new Promise(resolve =>
+                resolve({
+                  data: {
+                    status: 'SUCCESS'
+                  }
+                })
+              )
+          )
+        } as any)
+    )
     const { container } = render(
       <TestWrapper path={routes.toProjects({ accountId: mockAccountId })} pathParams={{ accountId: mockAccountId }}>
         <TestConnection

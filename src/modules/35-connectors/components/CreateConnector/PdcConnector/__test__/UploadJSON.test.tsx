@@ -104,7 +104,7 @@ describe('Test TestConnection component', () => {
     )
     const input = container.querySelector('input')!
 
-    const eventData = { dataTransfer: { files: [{ name: 'fileName' }] } }
+    const eventData = { dataTransfer: { files: [new File([], 'file1')] } }
 
     act(() => {
       const dragStartEvent = Object.assign(createEvent.dragStart(input), eventData)

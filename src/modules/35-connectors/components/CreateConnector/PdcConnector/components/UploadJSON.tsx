@@ -29,12 +29,8 @@ const UploadJSON = ({ setJsonValue }: UploadJSONInterface) => {
     try {
       const fr = new FileReader()
       fr.onload = () => {
-        try {
-          setJsonValue(JSON.parse(fr.result as string))
-          setFileName(file.name)
-        } catch (e) {
-          showError(e.message)
-        }
+        setJsonValue(JSON.parse(fr.result as string))
+        setFileName(file.name)
       }
       fr.readAsText(file)
     } catch (e) {
