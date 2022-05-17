@@ -84,10 +84,9 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
   const { isOpen, open, close } = useToggleOpen()
 
   useEffect(() => {
+    setBranchSelectOptions([])
     if (connectorIdentifierRef && repoName) {
       refetch()
-    } else {
-      setBranchSelectOptions([])
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connectorIdentifierRef, repoName])
@@ -142,9 +141,9 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
           <Text>{getString('gitsync.fetchingBranches').concat('...')}</Text>
         </Layout.Horizontal>
       ) : null}
-      <Dialog isOpen={isOpen} enforceFocus={false} title={getString('gitsync.branchFetchFailed')} onClose={close}>
+      {/* <Dialog isOpen={isOpen} enforceFocus={false} title={getString('gitsync.branchFetchFailed')} onClose={close}>
         {responseMessages ? <ErrorHandler responseMessages={responseMessages} /> : undefined}
-      </Dialog>
+      </Dialog> */}
     </Layout.Horizontal>
   )
 }

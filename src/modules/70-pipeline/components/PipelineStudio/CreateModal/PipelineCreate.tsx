@@ -120,13 +120,15 @@ export default function CreatePipelines({
       type: 'INLINE',
       title: 'Inline',
       info: 'Pipeline content is stored in Harness',
-      icon: 'repository'
+      icon: 'repository',
+      disabled: pipelineIdentifier !== DefaultNewPipelineId && storeTypeParam === 'REMOTE'
     },
     {
       type: 'REMOTE',
       title: 'Remote',
       info: 'Pipeline content is stored in a Git repository',
-      icon: 'pipeline'
+      icon: 'remote-setup',
+      disabled: pipelineIdentifier !== DefaultNewPipelineId && !storeTypeParam
     }
   ]
 
@@ -234,9 +236,11 @@ export default function CreatePipelines({
                 )}
                 selected={storeType}
                 onChange={(item: CardInterface) => {
-                  formikProps?.setFieldValue('storeType', item.type)
-                  formikProps?.setFieldValue('remoteType', item.type === 'remote' ? 'new' : '')
-                  setStoreType(item)
+                  if (pipelineIdentifier === DefaultNewPipelineId) {
+                    formikProps?.setFieldValue('storeType', item.type)
+                    formikProps?.setFieldValue('remoteType', item.type === 'remote' ? 'new' : '')
+                    setStoreType(item)
+                  }
                 }}
               />
             ) : isGitSyncEnabled ? (
