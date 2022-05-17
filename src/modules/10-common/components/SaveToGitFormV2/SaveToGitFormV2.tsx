@@ -6,6 +6,9 @@
  */
 
 import React, { useRef, useState } from 'react'
+import * as Yup from 'yup'
+import { pick, defaultTo } from 'lodash-es'
+import type { FormikContextType } from 'formik'
 import {
   Container,
   Text,
@@ -19,16 +22,13 @@ import {
   Icon,
   ModalErrorHandler,
   ModalErrorHandlerBinding
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import * as Yup from 'yup'
-import { pick, defaultTo } from 'lodash-es'
-import type { FormikContext } from 'formik'
 import type { GitSyncEntityDTO, EntityGitDetails } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { getEntityNameFromType } from '@common/utils/StringUtils'
-import css from './SaveToGitFormV2.module.scss'
 import RepoBranchSelectV2 from '../RepoBranchSelectV2/RepoBranchSelectV2'
+import css from './SaveToGitFormV2.module.scss'
 
 export interface GitResourceInterface {
   type: GitSyncEntityDTO['entityType']
@@ -65,7 +65,7 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
   const { getString } = useStrings()
   const [isNewBranch, setIsNewBranch] = React.useState(false)
   const [modalErrorHandler, setModalErrorHandler] = React.useState<ModalErrorHandlerBinding>()
-  const formikRef = useRef<FormikContext<SaveToGitFormV2Interface>>()
+  const formikRef = useRef<FormikContextType<SaveToGitFormV2Interface>>()
   const [targetBranch, setTargetBranch] = useState<string>('')
   const [disableBranchSelection, setDisableBranchSelection] = useState<boolean>(true)
 
@@ -81,7 +81,7 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
     targetBranch: ''
   }
 
-  const handleBranchTypeChange = (isNew: boolean, formik: FormikContext<SaveToGitFormV2Interface>): void => {
+  const handleBranchTypeChange = (isNew: boolean, formik: FormikContextType<SaveToGitFormV2Interface>): void => {
     if (isNewBranch !== isNew) {
       setIsNewBranch(isNew)
       formik.setFieldValue('branch', `${resource.gitDetails?.branch}-patch`)

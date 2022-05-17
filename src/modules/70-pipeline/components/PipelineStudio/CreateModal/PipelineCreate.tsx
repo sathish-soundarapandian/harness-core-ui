@@ -6,6 +6,10 @@
  */
 
 import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { noop, omit } from 'lodash-es'
+import produce from 'immer'
+import * as Yup from 'yup'
 import {
   Container,
   Formik,
@@ -18,14 +22,10 @@ import {
   Layout,
   Icon
 } from '@wings-software/uicore'
-import { Color, FontVariation } from '@wings-software/design-system'
-import * as Yup from 'yup'
-import { noop, omit } from 'lodash-es'
-import { useParams } from 'react-router-dom'
+import { FontVariation } from '@wings-software/design-system'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 
-import produce from 'immer'
 import { useStrings } from 'framework/strings'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -38,9 +38,9 @@ import GitContextForm, { IGitContextFormProps } from '@common/components/GitCont
 import type { EntityGitDetails } from 'services/pipeline-ng'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, PipelineActions } from '@common/constants/TrackingConstants'
+import { GitSyncForm } from '@common/components/GitSyncForm/GitSyncForm'
 import { DefaultNewPipelineId } from '../PipelineContext/PipelineActions'
 import css from './PipelineCreate.module.scss'
-import { GitSyncForm } from '@common/components/GitSyncForm/GitSyncForm'
 
 const logger = loggerFor(ModuleName.CD)
 

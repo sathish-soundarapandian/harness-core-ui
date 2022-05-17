@@ -228,25 +228,23 @@ export function SavePipelinePopover({
 
   const saveAndPublishPipeline = async (
     latestPipeline: PipelineInfoConfig,
-    storeMetadata: any,
+    currStoreMetadata: any,
     updatedGitDetails?: SaveToGitFormInterface,
     lastObject?: { lastObjectId?: string }
   ): Promise<UseSaveSuccessResponse> => {
     setLoading(true)
     setSchemaErrorView(false)
     const isEdit = pipelineIdentifier !== DefaultNewPipelineId
-    console.log('saveAndPublishPipeline: storeMetadata', storeMetadata)
-    console.log('saveAndPublishPipeline: updatedGitDetails', updatedGitDetails)
     const response = await savePipeline(
       {
         accountIdentifier: accountId,
         projectIdentifier,
         orgIdentifier,
-        ...(storeMetadata.storeType ? { storeType: storeMetadata.storeType } : {}),
-        ...(storeMetadata.storeType === 'REMOTE' ? { connectorRef: storeMetadata.connectorRef } : {}),
+        ...(currStoreMetadata.storeType ? { storeType: currStoreMetadata.storeType } : {}),
+        ...(currStoreMetadata.storeType === 'REMOTE' ? { connectorRef: currStoreMetadata.connectorRef } : {}),
         ...(updatedGitDetails ?? {}),
         ...(lastObject ?? {}),
-        ...(updatedGitDetails && storeMetadata.storeType !== 'REMOTE' && updatedGitDetails.isNewBranch
+        ...(updatedGitDetails && currStoreMetadata.storeType !== 'REMOTE' && updatedGitDetails.isNewBranch
           ? { baseBranch: branch }
           : {})
       },
@@ -313,9 +311,6 @@ export function SavePipelinePopover({
       }
     }
 
-    console.log('saveAngPublishWithGitInfo store gitDetails', gitDetails)
-    console.log('saveAngPublishWithGitInfo updatedGitDetails', updatedGitDetails)
-    console.log('saveAngPublishWithGitInfo storeMetadata', storeMetadata)
     const response = await saveAndPublishPipeline(
       latestPipeline,
       storeMetadata,
@@ -367,8 +362,6 @@ export function SavePipelinePopover({
     }
 
     // if Git sync enabled then display modal
-    console.log('SavePipelinePopover: storeMetadata', storeMetadata)
-    console.log('SavePipelinePopover: gitDetails', gitDetails)
     if (isGitSyncEnabled || storeMetadata.storeType === 'REMOTE') {
       if ((storeMetadata.storeType !== 'REMOTE' && isEmpty(gitDetails.repoIdentifier)) || isEmpty(gitDetails.branch)) {
         clear()

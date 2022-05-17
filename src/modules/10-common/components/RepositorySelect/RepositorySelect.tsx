@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
+import type { FormikContextType } from 'formik'
+import { defaultTo, isEmpty } from 'lodash-es'
+
 import {
-  Dialog,
   FormInput,
   getErrorInfoFromErrorObject,
   Icon,
@@ -12,17 +14,13 @@ import {
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
-import { defaultTo, isEmpty } from 'lodash-es'
-import { useStrings } from 'framework/strings'
 import { Error, GitRepositoryResponseDTO, useGetListOfReposByRefConnector } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import css from './RepositorySelect.module.scss'
-import type { FormikContext } from 'formik'
 
 export interface RepositorySelectProps<T> {
   modalErrorHandler?: ModalErrorHandlerBinding
-  formikProps: FormikContext<T>
+  formikProps: FormikContextType<T>
   connectorRef?: string
   selectedValue?: string
   onChange?: (selected: SelectOption, options?: SelectOption[]) => void
@@ -40,7 +38,6 @@ const getRepoSelectOptions = (data: GitRepositoryResponseDTO[] = []) => {
 
 const RepositorySelect: React.FC<RepositorySelectProps<any>> = props => {
   const { modalErrorHandler, connectorRef, selectedValue, formikProps } = props
-  const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [repoSelectOptions, setRepoSelectOptions] = useState<SelectOption[]>([])
 
@@ -61,7 +58,7 @@ const RepositorySelect: React.FC<RepositorySelectProps<any>> = props => {
     lazy: true
   })
 
-  const { isOpen, open, close } = useToggleOpen()
+  const { open } = useToggleOpen()
 
   useEffect(() => {
     if (connectorRef) {
@@ -94,7 +91,6 @@ const RepositorySelect: React.FC<RepositorySelectProps<any>> = props => {
     if (response?.status !== 'SUCCESS') {
       response && handleError(getErrorInfoFromErrorObject(response))
     } else {
-      console.log('response', response)
       if (!isEmpty(response?.data)) {
         const selectOptions = getRepoSelectOptions(response?.data)
         setRepoSelectOptions(selectOptions)
@@ -109,7 +105,6 @@ const RepositorySelect: React.FC<RepositorySelectProps<any>> = props => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading])
 
-  const responseMessages = (error?.data as Error)?.responseMessages
   return (
     <Layout.Horizontal>
       <FormInput.Select

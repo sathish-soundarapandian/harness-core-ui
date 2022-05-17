@@ -10,7 +10,7 @@ import { SelectOption, Layout, Icon, Select, Button, Text, Container } from '@wi
 import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { useParams } from 'react-router-dom'
-import { isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 
 import cx from 'classnames'
 import { Menu, Dialog } from '@blueprintjs/core'
@@ -112,8 +112,8 @@ const GitFilters: React.FC<GitFiltersProps> = props => {
   }, [branchSelectOptions, selectedGitBranch])
 
   useEffect(() => {
-    setSelectedGitRepo(defaultValue.repo)
-    setSelectedGitBranch(defaultValue.branch || '')
+    setSelectedGitRepo(defaultTo(defaultValue.repo, ''))
+    setSelectedGitBranch(defaultTo(defaultValue.branch, ''))
   }, [defaultValue.repo, defaultValue.branch])
 
   useEffect(() => {

@@ -414,11 +414,9 @@ export function PipelineCanvas({
       delete (pipeline as PipelineWithGitContextFormProps).branch
       updatePipeline(pipeline)
       if (storeMetadata.storeType) {
-        console.log('pipelinecanvas storeMetadata.storeType', storeMetadata.storeType)
         updatePipelineStoreMetadata(storeMetadata, gitDetails)
       }
 
-      console.log('updatedGitDetails', updatedGitDetails)
       if (updatedGitDetails) {
         if (gitDetails?.objectId) {
           updatedGitDetails = { ...gitDetails, ...updatedGitDetails }

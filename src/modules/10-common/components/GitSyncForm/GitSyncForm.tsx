@@ -1,22 +1,23 @@
 import React, { useEffect } from 'react'
-import { useStrings } from 'framework/strings'
-import { Container, FormInput, SelectOption } from '@harness/uicore'
+import type { FormikContextType } from 'formik'
 import cx from 'classnames'
-import type { FormikContext } from 'formik'
+import { defaultTo } from 'lodash-es'
+import { useParams } from 'react-router-dom'
+
+import { Container, FormInput, SelectOption } from '@harness/uicore'
+import { useStrings } from 'framework/strings'
 import {
   ConnectorReferenceField,
   ConnectorSelectedValue
 } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
-import { useParams } from 'react-router'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { defaultTo } from 'lodash-es'
 import RepositorySelect from '../RepositorySelect/RepositorySelect'
 import RepoBranchSelectV2 from '../RepoBranchSelectV2/RepoBranchSelectV2'
 
 interface GitSyncFormProps<T> {
   identifier?: string
-  formikProps: FormikContext<T>
+  formikProps: FormikContextType<T>
   defaultValue?: any
   modalErrorHandler?: any
   handleSubmit: () => void
