@@ -186,6 +186,32 @@ export default function DeployServiceSpecifications(props: React.PropsWithChildr
   }, [selectedServiceResponse])
 
   useEffect(() => {
+    const serviceData = selectedServiceResponse?.data?.service as ServiceResponseDTO
+    if (!isEmpty(serviceData?.yaml)) {
+      const parsedYaml = yamlParse<NGServiceConfig>(defaultTo(serviceData.yaml, ''))
+      const serviceInfo = parsedYaml.service?.serviceDefinition
+      if (serviceInfo) {
+        const stageData = produce(stage, draft => {
+          if (draft) {
+            set(draft, 'stage.spec', {
+              deploymentType: serviceInfo?.type,
+              service: {
+                serviceRef: parsedYaml.service?.identifier
+              }
+            })
+          }
+        })
+        if (stageData?.stage) {
+          debounceUpdateStage(stageData?.stage)
+        }
+        setSelectedDeploymentType(serviceInfo.type as ServiceDeploymentType)
+        setIsReadOnlyView(true)
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedServiceResponse])
+
+  useEffect(() => {
     if (
       !stage?.stage?.spec?.serviceConfig?.serviceDefinition &&
       !stage?.stage?.spec?.serviceConfig?.useFromStage?.stage &&
