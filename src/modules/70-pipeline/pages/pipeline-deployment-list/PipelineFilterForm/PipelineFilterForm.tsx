@@ -5,8 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import type { FormikProps } from 'formik'
+import type { DateRange } from '@blueprintjs/datetime'
+import { DateRangePickerButton, ButtonSize, ButtonVariation } from '@harness/uicore'
 import { FormInput, SelectOption, Text } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -179,6 +181,11 @@ export default function PipelineFilterForm<
       </>
     )
   }
+  const [customTimeFilter, setCustomTimeFilter] = useState(false)
+  const [chartTimeRange, setChartTimeRange] = useState<{ startTime: number; endTime: number }>()
+  const getValue = (): DateRange | undefined => {
+    return [new Date(chartTimeRange?.startTime || 0), new Date(chartTimeRange?.endTime || 0)]
+  }
 
   const getPipelineFormCommonFields = (): React.ReactElement => {
     const isPipeSetupType = type === 'PipelineSetup'
@@ -211,6 +218,31 @@ export default function PipelineFilterForm<
             multiSelectProps={{
               allowCreatingNewItems: false
             }}
+          />
+        ) : null}
+        {type === 'PipelineExecution' ? (
+          <DateRangePickerButton
+            key={'timeRange'}
+            initialButtonText={getString('common.repo_provider.customLabel')}
+            renderButtonText={/* istanbul ignore next */ () => getString('common.repo_provider.customLabel')}
+            onChange={
+              /* istanbul ignore next */
+              selectedDate => {
+                // resetSlider()
+                setCustomTimeFilter(true)
+                setChartTimeRange?.({ startTime: selectedDate[0].getTime(), endTime: selectedDate[1].getTime() })
+              }
+            }
+            dateRangePickerProps={{
+              shortcuts: true,
+              defaultValue: getValue(),
+              minDate: new Date(0),
+              maxDate: new Date()
+              // value: getValue()
+            }}
+            rightIcon={undefined}
+            size={ButtonSize.SMALL}
+            variation={customTimeFilter ? ButtonVariation.SECONDARY : ButtonVariation.LINK}
           />
         ) : null}
       </>
