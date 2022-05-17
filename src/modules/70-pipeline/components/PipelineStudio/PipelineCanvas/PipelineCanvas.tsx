@@ -403,7 +403,7 @@ export function PipelineCanvas({
   const onSubmit = React.useCallback(
     (
       values: PipelineInfoConfig,
-      storeMetadata: { connectorRef?: string; storeType?: string },
+      currStoreMetadata: { connectorRef?: string; storeType?: string },
       updatedGitDetails?: EntityGitDetails,
       shouldUseTemplate = false
     ) => {
@@ -414,8 +414,8 @@ export function PipelineCanvas({
       delete (pipeline as PipelineWithGitContextFormProps).repo
       delete (pipeline as PipelineWithGitContextFormProps).branch
       updatePipeline(pipeline)
-      if (storeMetadata.storeType) {
-        updatePipelineStoreMetadata(storeMetadata, gitDetails)
+      if (currStoreMetadata.storeType) {
+        updatePipelineStoreMetadata(currStoreMetadata, gitDetails)
       }
 
       if (updatedGitDetails) {
@@ -423,7 +423,7 @@ export function PipelineCanvas({
           updatedGitDetails = { ...gitDetails, ...updatedGitDetails }
         }
         updateGitDetails(updatedGitDetails).then(() => {
-          if (updatedGitDetails && !storeMetadata.storeType) {
+          if (updatedGitDetails && !currStoreMetadata.storeType) {
             updateQueryParams(
               { repoIdentifier: updatedGitDetails.repoIdentifier, branch: updatedGitDetails.branch },
               { skipNulls: true }
