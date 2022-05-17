@@ -57,7 +57,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
 
   const stepIcon = defaultTo(defaultTo(stepData?.icon, props?.icon), props?.data?.step?.icon)
   // const isPrevNodeParallel = !!defaultTo(props.prevNode?.children?.length, 1)
-  const isTemplateNode = props.data.isTemplateNode
+  const isTemplateNode = props?.data?.isTemplateNode
   return (
     <div
       className={cx(defaultCss.defaultNode, 'default-node', {
