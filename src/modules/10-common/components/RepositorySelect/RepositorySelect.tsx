@@ -25,6 +25,7 @@ export interface RepositorySelectProps<T> {
   selectedValue?: string
   onChange?: (selected: SelectOption, options?: SelectOption[]) => void
   formik?: any
+  disabled?: boolean
 }
 
 const getRepoSelectOptions = (data: GitRepositoryResponseDTO[] = []) => {
@@ -37,7 +38,7 @@ const getRepoSelectOptions = (data: GitRepositoryResponseDTO[] = []) => {
 }
 
 const RepositorySelect: React.FC<RepositorySelectProps<any>> = props => {
-  const { modalErrorHandler, connectorRef, selectedValue, formikProps } = props
+  const { modalErrorHandler, connectorRef, selectedValue, formikProps, disabled } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [repoSelectOptions, setRepoSelectOptions] = useState<SelectOption[]>([])
 
@@ -61,10 +62,12 @@ const RepositorySelect: React.FC<RepositorySelectProps<any>> = props => {
   const { open } = useToggleOpen()
 
   useEffect(() => {
-    if (connectorRef) {
-      refetch()
-    } else {
-      setRepoSelectOptions([])
+    if (!disabled) {
+      if (connectorRef) {
+        refetch()
+      } else {
+        setRepoSelectOptions([])
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connectorRef])
@@ -74,7 +77,7 @@ const RepositorySelect: React.FC<RepositorySelectProps<any>> = props => {
   }
 
   useEffect(() => {
-    if (loading) {
+    if (loading || disabled) {
       return
     }
     modalErrorHandler?.hide()
@@ -111,7 +114,7 @@ const RepositorySelect: React.FC<RepositorySelectProps<any>> = props => {
         name="repoName"
         label={'Select Repository'}
         placeholder={loading ? 'Loading...' : 'Select'}
-        disabled={loading}
+        disabled={loading || disabled}
         items={repoSelectOptions}
         value={{ label: selectedValue || '', value: selectedValue || '' }}
         onChange={selected => props.onChange?.(selected, repoSelectOptions)}

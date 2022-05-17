@@ -42,7 +42,7 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
   const { GIT_SIMPLIFICATION } = useFeatureFlags()
   const location = useLocation()
   const { trackEvent } = useTelemetry()
-  const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
+  const { branch, repoIdentifier, storeType } = useQueryParams<GitQueryParams>()
   const {
     data: pipeline,
     refetch,
@@ -75,7 +75,7 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
   const [triggerTabDisabled, setTriggerTabDisabled] = React.useState(false)
 
   React.useEffect(() => {
-    if (repoIdentifier) {
+    if (repoIdentifier && !storeType) {
       getDefaultBranchName()
     }
   }, [repoIdentifier])
