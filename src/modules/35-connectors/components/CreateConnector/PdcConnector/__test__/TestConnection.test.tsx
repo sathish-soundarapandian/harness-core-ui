@@ -115,7 +115,22 @@ describe('Test TestConnection component', () => {
 
     expect(onCloseFn).toBeCalled()
   })
-  test('Render component, throw error on testconnection', async () => {
+  test.only('Render component, throw error on testconnection', async () => {
+    jest.spyOn(cdNg, 'useGetTestConnectionResult').mockImplementation(
+      () =>
+        ({
+          mutate: jest.fn(
+            () =>
+              new Promise((_resolve, reject) =>
+                reject({
+                  data: {
+                    responseMessages: []
+                  }
+                })
+              )
+          )
+        } as any)
+    )
     const { container } = render(
       <TestWrapper path={routes.toProjects({ accountId: mockAccountId })} pathParams={{ accountId: mockAccountId }}>
         <TestConnection onClose={onCloseFn} gotoStep={gotoStep} prevStepData={prevStepData} />
