@@ -8,7 +8,8 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly card: string
-  readonly fullWidth: string
-  readonly timeRangeContainer: string
+  readonly dropdown: string
+  readonly projectSelection: string
+  readonly projectTags: string
 }
 export default styles

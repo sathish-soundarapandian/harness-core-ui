@@ -8,7 +8,16 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { StepsProgress, Layout, Button, Text, StepProps, Container, ButtonVariation } from '@wings-software/uicore'
+import {
+  StepsProgress,
+  Layout,
+  Button,
+  Text,
+  StepProps,
+  Container,
+  ButtonVariation,
+  ButtonSize
+} from '@wings-software/uicore'
 import { Color, FontVariation, Intent } from '@harness/design-system'
 import { useGetDelegateFromId } from 'services/portal'
 import {
@@ -315,6 +324,7 @@ const VerifyOutOfClusterDelegate: React.FC<StepProps<VerifyOutOfClusterStepProps
                 <Button
                   text={getString('editCredentials')}
                   variation={ButtonVariation.SECONDARY}
+                  size={ButtonSize.SMALL}
                   onClick={() => {
                     const isTransitionToCredentialsStepSuccessful = props.gotoStep?.({
                       stepIdentifier: CONNECTOR_CREDENTIALS_STEP_IDENTIFIER,
