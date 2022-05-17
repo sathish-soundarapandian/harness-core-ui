@@ -715,6 +715,7 @@ const routes = {
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/gitops`
   ),
+  toAccountResourcesGitOps: withAccountId(() => `/gitops`),
   toServices: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/services`

@@ -1,3 +1,4 @@
+/* eslint-disable strings-restrict-modules */
 /*
  * Copyright 2021 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
@@ -5,10 +6,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { Button, ButtonSize, Card, Icon, IconName, Layout, Text } from '@wings-software/uicore'
+import { Button, ButtonSize, Card, Layout, Text } from '@wings-software/uicore'
+import { Icon, IconName } from '@harness/icons'
 import { FontVariation, Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
 import type { OrgPathProps } from '@common/interfaces/RouteInterfaces'
@@ -22,7 +24,7 @@ export interface ResourceOption {
   label: JSX.Element
   icon: IconName
   route?: string
-  colorClass: string
+  colorClass?: string
   onClick?: () => void
   subLabel?: JSX.Element
   disabled?: boolean
@@ -36,6 +38,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   const history = useHistory()
   const { getString } = useStrings()
   const { NG_TEMPLATES, NG_VARIABLES } = useFeatureFlags()
+  const [showGitOpsEntities, setShowGitOpsEntities] = useState<boolean>(false)
   const { loading, data, refetch } = useGetSmtpConfig({ queryParams: { accountId } })
   const refetchSmtpData = (): void => {
     refetch()
@@ -44,7 +47,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   const smtpResource: ResourceOption[] = [
     {
       label: <String stringID="common.smtp.conifg" />,
-      icon: 'smtp',
+      icon: 'smtp-configuration-blue',
       disabled: loading,
       onClick: () => {
         if (!loading) {
@@ -55,7 +58,6 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
           }
         }
       },
-      colorClass: css.smtp,
       subLabel: (
         <>
           {loading ? (
@@ -77,33 +79,39 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       )
     }
   ]
+  const gitOpsCard: ResourceOption[] = [
+    {
+      label: <String stringID="cd.gitOps" />,
+      icon: 'gitops-blue',
+      colorClass: cx(css.card),
+      onClick: () => {
+        setShowGitOpsEntities(prev => !prev)
+      }
+    } as ResourceOption
+  ]
   const options: ResourceOption[] = items || [
     {
       label: <String stringID="connectorsLabel" />,
-      icon: 'connectors-icon',
-      route: routes.toConnectors({ accountId, orgIdentifier }),
-      colorClass: css.connectors
+      icon: 'connectors-blue',
+      route: routes.toConnectors({ accountId, orgIdentifier })
     },
     {
       label: <String stringID="delegate.delegates" />,
-      icon: 'delegates-icon' as IconName,
-      route: routes.toDelegates({ accountId, orgIdentifier }),
-      colorClass: css.delegates
+      icon: 'delegates-blue' as IconName,
+      route: routes.toDelegates({ accountId, orgIdentifier })
     },
     {
       label: <String stringID="common.secrets" />,
-      icon: 'secrets-icon',
-      route: routes.toSecrets({ accountId, orgIdentifier }),
-      colorClass: css.secrets
+      icon: 'secrets-blue',
+      route: routes.toSecrets({ accountId, orgIdentifier })
     },
     ...(!orgIdentifier ? smtpResource : []),
     ...(NG_TEMPLATES
       ? [
           {
             label: <String stringID="common.templates" />,
-            icon: 'templates-icon',
-            route: routes.toTemplates({ accountId, orgIdentifier }),
-            colorClass: css.templates
+            icon: 'templates-blue',
+            route: routes.toTemplates({ accountId, orgIdentifier })
           } as ResourceOption
         ]
       : []),
@@ -111,38 +119,81 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       ? [
           {
             label: <String stringID="common.variables" />,
-            icon: 'variable',
-            route: routes.toVariables({ accountId, orgIdentifier }),
-            colorClass: css.variables
+            icon: 'variables-blue',
+            route: routes.toVariables({ accountId, orgIdentifier })
           } as ResourceOption
         ]
-      : [])
+      : []),
+    // eslint-disable-next-line no-constant-condition
+    ...(false ? gitOpsCard : [])
+  ]
+
+  const gitOpsEntities = [
+    {
+      label: <String stringID="common.agents" />,
+      icon: 'gitops-agent-blue',
+      route: routes.toAccountResourcesGitOps({ accountId })
+    } as ResourceOption
   ]
 
   return (
-    <Layout.Horizontal spacing="xxlarge">
-      {options.map(option => (
-        <Card
-          key={option.icon}
-          className={cx(css.card, option.colorClass)}
-          disabled={option.disabled}
-          onClick={() => {
-            option?.onClick?.()
-            if (option.route) {
-              history.push(option.route)
-            }
-          }}
-        >
-          <Layout.Vertical flex spacing="small">
-            <Icon name={option.icon} size={70} />
-            <Text color={Color.BLACK} font={{ weight: 'semi-bold' }}>
-              {option.label}
-            </Text>
-            {option.subLabel}
-          </Layout.Vertical>
-        </Card>
-      ))}
-    </Layout.Horizontal>
+    <>
+      <div className={css.cardsWrapper}>
+        {options.map(option => (
+          <Card
+            key={option.icon}
+            className={cx(css.card, {
+              [`${css.selected}`]: showGitOpsEntities && option.icon.includes('gitops')
+            })}
+            disabled={option.disabled}
+            onClick={() => {
+              option?.onClick?.()
+              if (option.route) {
+                history.push(option.route)
+              }
+            }}
+          >
+            <Layout.Vertical flex spacing="small">
+              <Icon name={option.icon} size={70} />
+              <Text color={Color.BLACK} font={{ weight: 'semi-bold' }}>
+                {option.label}
+              </Text>
+              {option.subLabel}
+            </Layout.Vertical>
+            {showGitOpsEntities && option.icon.includes('gitops') && <div className={css.arrowDown} />}
+          </Card>
+        ))}
+      </div>
+      {showGitOpsEntities && (
+        <div className={css.gitOpsEntities}>
+          <Text color={Color.BLACK} font={{ size: 'medium', weight: 'semi-bold' }} margin={{ bottom: 'medium' }}>
+            {getString('cd.gitOps')}
+          </Text>
+          <div className={css.cardsWrapper}>
+            {gitOpsEntities.map(gitOpsEntity => (
+              <Card
+                key={gitOpsEntity.icon}
+                className={cx(css.card)}
+                onClick={() => {
+                  gitOpsEntity?.onClick?.()
+                  if (gitOpsEntity.route) {
+                    history.push(gitOpsEntity.route)
+                  }
+                }}
+              >
+                <Layout.Vertical flex spacing="small">
+                  <Icon name={gitOpsEntity.icon} size={70} />
+                  <Text color={Color.BLACK} font={{ weight: 'semi-bold' }}>
+                    {gitOpsEntity.label}
+                  </Text>
+                  {gitOpsEntity.subLabel}
+                </Layout.Vertical>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 

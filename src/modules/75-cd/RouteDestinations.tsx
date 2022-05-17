@@ -122,6 +122,7 @@ import FullPageLogView from '@pipeline/pages/full-page-log-view/FullPageLogView'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import type { ModuleListCardProps } from '@projects-orgs/components/ModuleListCard/ModuleListCard'
 import VariablesPage from '@variables/pages/variables/VariablesPage'
+import { AccountSideNavProps } from '@common/RouteDestinations'
 import { Environments } from './components/Environments/Environments'
 import { Environments as EnvironmentsV2 } from './components/EnvironmentsV2/Environments'
 import EnvironmentDetails from './components/EnvironmentsV2/EnvironmentDetails/EnvironmentDetails'
@@ -1131,6 +1132,14 @@ export default (
     <RouteWithLayout
       sidebarProps={CDSideNavProps}
       path={[routes.toGitOps({ ...accountPathProps, ...projectPathProps, ...pipelineModuleParams })]}
+      pageName={PAGE_NAME.GitOpsPage}
+    >
+      <GitOpsPage />
+    </RouteWithLayout>
+
+    <RouteWithLayout
+      sidebarProps={AccountSideNavProps}
+      path={[routes.toAccountResourcesGitOps({ ...accountPathProps, ...projectPathProps, ...pipelineModuleParams })]}
       pageName={PAGE_NAME.GitOpsPage}
     >
       <GitOpsPage />
