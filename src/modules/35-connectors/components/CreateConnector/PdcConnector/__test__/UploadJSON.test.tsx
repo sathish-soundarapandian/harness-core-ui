@@ -52,6 +52,28 @@ describe('Test TestConnection component', () => {
       expect(setJsonValueFn).toBeCalled()
     })
   })
+  test('Render component with test file error parsing', async () => {
+    const { container } = render(
+      <TestWrapper path="/account/pass" pathParams={{}}>
+        <UploadJSON setJsonValue={setJsonValueFn} />
+      </TestWrapper>
+    )
+
+    const fileErrorContent = '[{hosts: localhost}, }]'
+    const blob = new Blob([fileErrorContent])
+    const file = new File([blob], 'values.json', {
+      type: 'application/JSON'
+    })
+    File.prototype.text = jest.fn().mockResolvedValueOnce(fileErrorContent)
+    const input = container.querySelector('input')
+    act(() => {
+      user.upload(input!, file)
+    })
+
+    waitFor(() => {
+      expect(setJsonValueFn).toBeCalled()
+    })
+  })
   test('drag and drop test error, missing dataTransfer', () => {
     const { container } = render(
       <TestWrapper path="/account/pass" pathParams={{}}>

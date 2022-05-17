@@ -82,7 +82,7 @@ describe('Test TestConnection component', () => {
     expect(gotoStep).toBeCalled()
   })
   test('Render component with api pass ok', async () => {
-    jest.spyOn(cdNg, 'useGetTestConnectionResult').mockImplementation(
+    jest.spyOn(cdNg, 'useGetTestConnectionResult').mockImplementationOnce(
       () =>
         ({
           mutate: jest.fn(
@@ -116,7 +116,7 @@ describe('Test TestConnection component', () => {
     expect(onCloseFn).toBeCalled()
   })
   test.only('Render component, throw error on testconnection', async () => {
-    jest.spyOn(cdNg, 'useGetTestConnectionResult').mockImplementation(
+    jest.spyOn(cdNg, 'useGetTestConnectionResult').mockImplementationOnce(
       () =>
         ({
           mutate: jest.fn(
