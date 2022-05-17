@@ -63,10 +63,9 @@ const RepositorySelect: React.FC<RepositorySelectProps<any>> = props => {
 
   useEffect(() => {
     if (!disabled) {
+      setRepoSelectOptions([])
       if (connectorRef) {
         refetch()
-      } else {
-        setRepoSelectOptions([])
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

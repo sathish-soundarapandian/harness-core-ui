@@ -6,7 +6,7 @@
  */
 
 // const baseUrl = process.env.BASE_URL ?? 'https://qa.harness.io/gateway'
-const baseUrl = process.env.BASE_URL ?? 'https://pr.harness.io/pl-24528'
+const baseUrl = process.env.BASE_URL ?? 'https://pr.harness.io/pl-24528-2'
 const targetLocalHost = (process.env.TARGET_LOCALHOST && JSON.parse(process.env.TARGET_LOCALHOST)) ?? false // set to false to target baseUrl environment instead of localhost
 
 console.log('\nProxy env vars')

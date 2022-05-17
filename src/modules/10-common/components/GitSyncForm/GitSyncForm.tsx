@@ -87,14 +87,14 @@ export function GitSyncForm(props: GitSyncFormProps<GitSyncFormFields>): React.R
             live: value?.status?.status === 'SUCCESS',
             connector: value
           })
-          formikProps.setFieldValue?.('repository', '')
-          updateQueryParams({ connectorRef: value?.identifier })
+          formikProps.setFieldValue?.('repoName', '')
+          formikProps.setFieldValue?.('branch', '')
+          updateQueryParams({ connectorRef: value?.identifier, repoName: [] as any, branch: [] as any })
         }}
         disabled={isEdit}
       />
 
       <RepositorySelect
-        key={formikProps.values.connectorRef?.value} // Branch select must be reset if repositoryURL changes
         formikProps={formikProps}
         connectorRef={formikProps.values.connectorRef?.value}
         //modalErrorHandler={modalErrorHandler}
@@ -102,13 +102,13 @@ export function GitSyncForm(props: GitSyncFormProps<GitSyncFormFields>): React.R
           if (!options?.find(repo => repo.value === selected.value)) {
             formikProps.setFieldValue?.('repository', '')
           }
-          updateQueryParams({ repoName: selected.value as string })
+          formikProps.setFieldValue?.('branch', '')
+          updateQueryParams({ repoName: selected.value as string, branch: [] as any })
         }}
         selectedValue={formikProps.values.repoName || repoName}
         disabled={isEdit}
       />
       <RepoBranchSelectV2
-        key={formikProps.values.repoName} // Branch select must be reset if repositoryURL changes
         connectorIdentifierRef={formikProps.values.connectorRef?.value}
         repoName={formikProps.values.repoName}
         modalErrorHandler={modalErrorHandler}
