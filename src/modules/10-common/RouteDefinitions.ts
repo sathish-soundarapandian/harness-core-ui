@@ -1528,10 +1528,12 @@ const routes = {
 
   /****************** Chaos Module ************************************************************************************/
   toChaos: withAccountId(() => `/chaos`),
-  toChaosHome: withAccountId(
+  toChaosMicroFrontend: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/`
   ),
+
+  // These RoutesDestinations are defined in the MicroFrontend
   toChaosWorkflows: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/workflows`

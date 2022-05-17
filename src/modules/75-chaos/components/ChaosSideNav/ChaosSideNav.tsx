@@ -1,15 +1,16 @@
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Layout } from '@harness/uicore'
-import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import routes from '@common/RouteDefinitions'
 import { ProjectSelector } from '@projects-orgs/components/ProjectSelector/ProjectSelector'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMenu'
 
 export default function ChaosSideNav(): React.ReactElement {
-  const params = useParams<ProjectPathProps & ModulePathParams>()
-  const { accountId, projectIdentifier, orgIdentifier, module } = params
+  const params = useParams<ProjectPathProps>()
+  const { accountId, projectIdentifier, orgIdentifier } = params
 
   const { updateAppStore } = useAppStore()
   const history = useHistory()
@@ -20,20 +21,22 @@ export default function ChaosSideNav(): React.ReactElement {
         onSelect={data => {
           updateAppStore({ selectedProject: data })
           history.push(
-            routes.toChaosHome({
+            routes.toProjectOverview({
               projectIdentifier: data.identifier,
               orgIdentifier: data.orgIdentifier || /* istanbul ignore next */ '',
               accountId,
-              module: module ?? 'chaos'
+              module: 'chaos'
             })
           )
         }}
       />
       {projectIdentifier && orgIdentifier ? (
         <>
+          <SidebarLink label="Overview" to={routes.toProjectOverview({ ...params, module: 'chaos' })}></SidebarLink>
           <SidebarLink label="Workflows" to={routes.toChaosWorkflows({ ...params })}></SidebarLink>
           <SidebarLink label="ChaosHubs" to={routes.toChaosHubs({ ...params })}></SidebarLink>
           <SidebarLink label="ChaosAgents" to={routes.toChaosAgents({ ...params })}></SidebarLink>
+          <ProjectSetupMenu module="chaos" />
         </>
       ) : null}
     </Layout.Vertical>

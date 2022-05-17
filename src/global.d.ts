@@ -90,7 +90,6 @@ declare module 'gitopsui/MicroFrontendApp' {
 }
 
 declare module 'chaos/MicroFrontendApp' {
-  // import type { ChildAppComponent } from './microfrontends'
   const ChildApp: ChildAppComponent
   export default ChildApp
 }

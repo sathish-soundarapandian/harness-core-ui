@@ -31,7 +31,8 @@ import ResourceGroupDetails from '@rbac/pages/ResourceGroupDetails/ResourceGroup
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import SideNav from './components/SideNav/SideNav'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import ChaosSideNav from './components/ChaosSideNav/ChaosSideNav'
 import ChaosHomePage from './pages/home/ChaosHomePage'
 
 // eslint-disable-next-line import/no-unresolved
@@ -61,7 +62,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_HUB, {
 })
 
 const chaosSideNavProps: SidebarContext = {
-  navComponent: SideNav,
+  navComponent: ChaosSideNav,
   subtitle: 'Chaos',
   title: 'Engineering',
   icon: 'cd-main'
@@ -70,11 +71,31 @@ const chaosSideNavProps: SidebarContext = {
 const chaosModuleParams: ModulePathParams = {
   module: ':module(chaos)'
 }
+const module = 'chaos'
 
 const RedirectToAccessControlHome = (): React.ReactElement => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
-  return <Redirect to={routes.toUsers({ accountId, projectIdentifier, orgIdentifier, module: 'chaos' })} />
+  return <Redirect to={routes.toUsers({ accountId, projectIdentifier, orgIdentifier, module })} />
+}
+
+const RedirectToChaosProject = (): React.ReactElement => {
+  const { accountId } = useParams<ProjectPathProps>()
+  const { selectedProject } = useAppStore()
+  if (selectedProject) {
+    return (
+      <Redirect
+        to={routes.toProjectOverview({
+          accountId,
+          orgIdentifier: selectedProject.orgIdentifier || '',
+          projectIdentifier: selectedProject.identifier,
+          module
+        })}
+      />
+    )
+  } else {
+    return <Redirect to={routes.toModuleHome({ accountId, module })} />
+  }
 }
 
 export default (
@@ -86,30 +107,25 @@ export default (
       exact
       // pageName={PAGE_NAME.ChaosHomePage}
     >
+      <RedirectToChaosProject />
+    </RouteWithLayout>
+
+    {/* Chaos Routes */}
+    <RouteWithLayout
+      // licenseRedirectData={licenseRedirectData}
+      sidebarProps={chaosSideNavProps}
+      path={routes.toModuleHome({ ...projectPathProps, ...chaosModuleParams })}
+      exact
+      // pageName={PAGE_NAME.ChaosHomePage}
+    >
       <ChaosHomePage />
     </RouteWithLayout>
 
-    <RouteWithLayout
-      // licenseRedirectData={licenseRedirectData}
-      sidebarProps={chaosSideNavProps}
-      path={routes.toChaosWorkflows({ ...projectPathProps, ...chaosModuleParams })}
-      // pageName={PAGE_NAME.ChaosHomePage}
-    />
-    <RouteWithLayout
-      // licenseRedirectData={licenseRedirectData}
-      sidebarProps={chaosSideNavProps}
-      path={routes.toChaosHubs({ ...projectPathProps, ...chaosModuleParams })}
-      // pageName={PAGE_NAME.ChaosHomePage}
-    />
-    <RouteWithLayout
-      // licenseRedirectData={licenseRedirectData}
-      sidebarProps={chaosSideNavProps}
-      path={routes.toChaosAgents({ ...projectPathProps, ...chaosModuleParams })}
-      // pageName={PAGE_NAME.ChaosHomePage}
-    />
+    {/* Access Control */}
+
     <RouteWithLayout
       sidebarProps={chaosSideNavProps}
-      path={[routes.toAccessControl({ ...projectPathProps, ...chaosModuleParams })]}
+      path={routes.toAccessControl({ ...projectPathProps, ...chaosModuleParams })}
       exact
     >
       <RedirectToAccessControlHome />
@@ -203,10 +219,11 @@ export default (
       <ResourceGroupDetails />
     </RouteWithLayout>
 
+    {/* Loading the Chaos MicroFrontend */}
     <RouteWithLayout
       // licenseRedirectData={licenseRedirectData}
       sidebarProps={chaosSideNavProps}
-      path={routes.toChaosHome({ ...projectPathProps, ...chaosModuleParams })}
+      path={routes.toChaosMicroFrontend({ ...projectPathProps, ...chaosModuleParams })}
       // pageName={PAGE_NAME.ChaosHomePage}
     >
       <ChildAppMounter<ChaosCustomMicroFrontendProps>
