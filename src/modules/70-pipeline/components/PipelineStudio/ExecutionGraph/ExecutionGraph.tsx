@@ -9,6 +9,7 @@ import React, { useEffect } from 'react'
 import { cloneDeep, set, isEmpty, get, defaultTo } from 'lodash-es'
 import type { NodeModelListener, LinkModelListener } from '@projectstorm/react-diagrams-core'
 import type { BaseModelListener } from '@projectstorm/react-canvas-core'
+import { Color } from '@harness/design-system'
 import { Button, ButtonVariation, Layout, Text } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
@@ -550,7 +551,6 @@ function ExecutionGraphRef<T extends StageElementConfig>(
   const mouseLeaveNodeListener = (event: any): void => {
     const eventTemp = event as DefaultNodeEvent
     eventTemp.stopPropagation?.()
-    dynamicPopoverHandler?.hide()
   }
 
   const nodeListeners: NodeModelListener = {
@@ -785,7 +785,8 @@ function ExecutionGraphRef<T extends StageElementConfig>(
       event = { ...event, ...event?.data }
       // event.stopPropagation()
       dynamicPopoverHandler?.hide()
-      const linkRender = document.querySelector(`[data-linkid="${event.identifier}"]`)
+      const targetEl = event?.target
+      const linkRender = targetEl || document.querySelector(`[data-linkid="${event.identifier}"]`)
       // check if the link is under step group then directly show add Step
       if (event?.node?.parentIdentifier && linkRender) {
         handleAdd(false, linkRender, false, { entity: { ...event } })
@@ -1119,7 +1120,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
             />
             {hasRollback && (
               <RollbackToggleSwitch
-                style={{ top: 62, ...rollBackPropsStyle }}
+                style={{ top: 62, ...rollBackPropsStyle, background: Color.WHITE }}
                 active={state.isRollback ? StepsType.Rollback : StepsType.Normal}
                 onChange={type => onRollbackToggleSwitchClick(type)}
               />
@@ -1147,7 +1148,6 @@ function ExecutionGraphRef<T extends StageElementConfig>(
           className={css.addStepPopover}
           darkMode={true}
           hoverShowDelay={200}
-          closeOnMouseOut
           render={renderPopover}
           bind={setDynamicPopoverHandler}
           usePortal

@@ -143,6 +143,8 @@ export interface BaseReactComponentProps {
   updateGraphLinks?(): void
   onMouseOver?(event: MouseEvent): void
   onMouseLeave?(): void
+  onDragOver?(): void
+  onDrop?(event: React.DragEvent): void
   isFirstParallelNode?: boolean
   className?: string
   name?: string

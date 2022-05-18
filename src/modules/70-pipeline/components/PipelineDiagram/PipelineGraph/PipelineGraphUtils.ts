@@ -82,7 +82,7 @@ const getFinalSVGArrowPath = (id1 = '', id2 = '', options?: DrawSVGPathOptions):
       const startPointLeft = `${node1.left},${node1VerticalMid}`
       finalSVGPath = `M${startPointLeft}  L${endPoint}`
     } else if (options?.direction === 'rtr') {
-      const endPointRight = `${node2.right},${node2VerticalMid}`
+      const endPointRight = `${getScaledValue(node2.right, scalingFactor)},${node2VerticalMid}`
       finalSVGPath = `M${startPoint}  L${endPointRight}`
     } else {
       finalSVGPath = `M${startPoint}  L${endPoint}`
