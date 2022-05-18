@@ -6,7 +6,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Button, ButtonSize, Card, Layout, Text } from '@wings-software/uicore'
@@ -44,6 +44,8 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
     refetch()
   }
   const { openCreateSmtpModal } = useCreateSmtpModal({ onCloseModal: refetchSmtpData })
+  // showGitOpsCard defaults to false for now while the feature is being developed
+  const showGitOpsCard = useMemo(() => history?.location?.pathname.includes('resources') && false, [history])
   const smtpResource: ResourceOption[] = [
     {
       label: <String stringID="common.smtp.conifg" />,
@@ -124,8 +126,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
           } as ResourceOption
         ]
       : []),
-    // eslint-disable-next-line no-constant-condition
-    ...(false ? gitOpsCard : [])
+    ...(showGitOpsCard ? gitOpsCard : [])
   ]
 
   const gitOpsEntities = [
