@@ -125,7 +125,6 @@ const StepOne: React.FC<StepProps<any> & StepOneProps> = ({
       })
     })
   }
-
   const templateSchema = {
     spec: Yup.object().shape({
       configuration: Yup.object().shape({
@@ -148,6 +147,7 @@ const StepOne: React.FC<StepProps<any> & StepOneProps> = ({
         enableReinitialize={true}
         onSubmit={data => {
           setSelectedConnector('')
+          /* istanbul ignore next */
           nextStep?.({ ...data, selectedConnector })
         }}
         initialValues={FormatRemoteValues(initialValues, index)}
@@ -177,9 +177,9 @@ const StepOne: React.FC<StepProps<any> & StepOneProps> = ({
                       data-testid={`connector-${item}`}
                       onClick={() => {
                         setSelectedConnector(item as ConnectorTypes)
-                        if (isFixedValue) {
-                          setFieldValue(name, '')
-                        }
+                        // if (isFixedValue) {
+                        //   setFieldValue(name, '')
+                        // }
                       }}
                     >
                       <Icon name={ConnectorIcons[item]} size={26} />
@@ -224,7 +224,10 @@ const StepOne: React.FC<StepProps<any> & StepOneProps> = ({
                         text={newConnectorLabel}
                         icon="plus"
                         iconProps={{ size: 12 }}
-                        onClick={() => setShowNewConnector(true)}
+                        onClick={() => {
+                          /* istanbul ignore next */
+                          setShowNewConnector(true)
+                        }}
                       />
                     )}
                   </Layout.Horizontal>
@@ -240,6 +243,7 @@ const StepOne: React.FC<StepProps<any> & StepOneProps> = ({
                           width={300}
                           value={find(regions, ['value', region]) || region}
                           onChange={(reg: any) => {
+                            /* istanbul ignore next */
                             setFieldValue('spec.configuration.parameters.store.spec.region', reg?.value || reg)
                           }}
                         />
@@ -254,6 +258,7 @@ const StepOne: React.FC<StepProps<any> & StepOneProps> = ({
                     text={getString('continue')}
                     rightIcon="chevron-right"
                     disabled={disabled}
+                    data-testid="submit"
                   />
                 </Layout.Horizontal>
               </Form>

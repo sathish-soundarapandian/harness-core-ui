@@ -53,39 +53,36 @@ export class CFCreateStack extends PipelineStep<CreateStackStepInfo> {
       }
     }
   }
-
+  /* istanbul ignore next */
   validateInputSet({
     data,
     template,
     getString,
     viewType
   }: ValidateInputSetProps<CreateStackStepInfo>): FormikErrors<CreateStackStepInfo> {
-    /* istanbul ignore next */
     const errors = {} as any
-    /* istanbul ignore next */
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
-    /* istanbul ignore next */
+
     if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {
       let timeoutSchema = getDurationValidationSchema({ minimum: '10s' })
-      /* istanbul ignore next */
+
       if (isRequired) {
         timeoutSchema = timeoutSchema.required(getString?.('validation.timeout10SecMinimum'))
       }
       const timeout = Yup.object().shape({
         timeout: timeoutSchema
       })
-      /* istanbul ignore next */
+
       try {
         timeout.validateSync(data)
-      } /* istanbul ignore next */ catch (e) {
+      } catch (e) {
         if (e instanceof Yup.ValidationError) {
           const err = yupToFormErrors(e)
-
           Object.assign(errors, err)
         }
       }
     }
-    /* istanbul ignore next */
+
     if (isEmpty(errors.spec)) {
       delete errors.spec
     }

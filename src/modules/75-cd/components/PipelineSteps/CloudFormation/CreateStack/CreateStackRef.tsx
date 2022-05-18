@@ -602,21 +602,31 @@ export const CreateStack = (
                         selectItems={awsRoles}
                       />
                     </Layout.Vertical>
-                    <FormInput.MultiSelectTypeInput
-                      className={css.selectInputs}
-                      label={getString('optionalField', { name: getString('cd.cloudFormation.specifyCapabilities') })}
+                    <MultiTypeFieldSelector
                       name="spec.configuration.capabilities"
-                      selectItems={capabilities}
-                      placeholder={capabilitiesLoading ? getString('loading') : ''}
-                      multiSelectTypeInputProps={{
-                        allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.EXPRESSION),
-                        multiSelectProps: {
-                          items: capabilities,
-                          allowCreatingNewItems: false
-                        }
-                      }}
+                      label={
+                        <Text style={{ color: 'rgb(11, 11, 13)' }}>
+                          {getString('optionalField', { name: getString('cd.cloudFormation.specifyCapabilities') })}
+                        </Text>
+                      }
+                      defaultValueToReset=""
+                      allowedTypes={allowableTypes.filter(item => item !== MultiTypeInputType.EXPRESSION)}
+                      skipRenderValueInExpressionLabel
                       disabled={readonly}
-                    />
+                    >
+                      <FormInput.MultiSelect
+                        className={css.selectInputs}
+                        label=""
+                        name="spec.configuration.capabilities"
+                        items={capabilities}
+                        placeholder={capabilitiesLoading ? getString('loading') : ''}
+                        multiSelectProps={{
+                          allowCreatingNewItems: false
+                        }}
+                        disabled={readonly}
+                      />
+                    </MultiTypeFieldSelector>
+
                     <div className={css.divider} />
                     <div className={cx(stepCss.formGroup, stepCss.alignStart, css.addMarginTop, css.addMarginBottom)}>
                       <MultiTypeFieldSelector
@@ -650,21 +660,30 @@ export const CreateStack = (
                         />
                       )}
                     </div>
-                    <FormInput.MultiSelectTypeInput
-                      className={css.selectInputs}
-                      label={getString('optionalField', { name: getString('cd.cloudFormation.continueStatus') })}
+                    <MultiTypeFieldSelector
                       name="spec.configuration.skipOnStackStatuses"
-                      selectItems={awsStates}
-                      placeholder={statesLoading ? getString('loading') : ''}
-                      multiSelectTypeInputProps={{
-                        allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.EXPRESSION),
-                        multiSelectProps: {
-                          items: awsStates,
-                          allowCreatingNewItems: false
-                        }
-                      }}
+                      label={
+                        <Text style={{ color: 'rgb(11, 11, 13)' }}>
+                          {getString('optionalField', { name: getString('cd.cloudFormation.continueStatus') })}
+                        </Text>
+                      }
+                      defaultValueToReset=""
+                      allowedTypes={allowableTypes.filter(item => item !== MultiTypeInputType.EXPRESSION)}
+                      skipRenderValueInExpressionLabel
                       disabled={readonly}
-                    />
+                    >
+                      <FormInput.MultiSelect
+                        className={css.selectInputs}
+                        label=''
+                        name="spec.configuration.skipOnStackStatuses"
+                        items={awsStates}
+                        placeholder={statesLoading ? getString('loading') : ''}
+                        multiSelectProps={{
+                          allowCreatingNewItems: false
+                        }}
+                        disabled={readonly}
+                      />
+                    </MultiTypeFieldSelector>
                   </div>
                 }
               />

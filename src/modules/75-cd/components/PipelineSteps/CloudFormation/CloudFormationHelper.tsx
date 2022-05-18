@@ -243,5 +243,5 @@ export const FormatRemoteValues = (initialValues: any, paramIndex?: number) => {
   }
   return { ...initialValues }
 }
-
+/* istanbul ignore next */
 export const isRuntime = (value: string): boolean => getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME

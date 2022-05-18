@@ -18,7 +18,9 @@ import {
   MultiSelectTypeInput,
   Label,
   Layout,
-  useToaster
+  useToaster,
+  MultiTypeInputType,
+  getMultiTypeFromValue
 } from '@harness/uicore'
 import { connect, FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
@@ -54,6 +56,7 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
   const [awsRef, setAwsRef] = useState(get(allValues, 'spec.configuration.connectorRef'))
 
   useEffect(() => {
+    /* istanbul ignore next */
     if (selectedCapabilities.length > 0) {
       formik?.setFieldValue(
         `${path}.spec.configuration.capabilities`,
@@ -63,6 +66,7 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
   }, [selectedCapabilities])
 
   useEffect(() => {
+    /* istanbul ignore next */
     if (selectedStackStatus.length > 0) {
       formik?.setFieldValue(
         `${path}.spec.configuration.skipOnStackStatuses`,
@@ -78,7 +82,7 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
       const capabilitiesValues = map(capabilitiesData?.data, cap => ({ label: cap, value: cap }))
       setCapabilities(capabilitiesValues as MultiSelectOption[])
     }
-
+    /* istanbul ignore next */
     if (!capabilitiesData && capabilitiesRequired) {
       getAwsCapabilities()
     }
@@ -91,7 +95,7 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
       const awsStatesValues = map(awsStatusData?.data, cap => ({ label: cap, value: cap }))
       setAwsStates(awsStatesValues as MultiSelectOption[])
     }
-
+    /* istanbul ignore next */
     if (!awsStatusData && awsStatusRequired) {
       getAwsStatuses()
     }
@@ -110,6 +114,7 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
   })
 
   useEffect(() => {
+    /* istanbul ignore next */
     if (error) {
       showError(error?.message)
     }
@@ -121,7 +126,7 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
       const regionValues = map(regionData?.resource, reg => ({ label: reg.name, value: reg.value }))
       setRegions(regionValues as MultiSelectOption[])
     }
-
+    /* istanbul ignore next */
     if (!regionData && regionRequired) {
       getRegions()
     }
@@ -152,6 +157,7 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
       }
       setAwsRoles(roles)
     }
+    /* istanbul ignore next */
     if (!roleData && roleRequired && awsRef) {
       getRoles()
     }
@@ -203,7 +209,9 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
             width={300}
             setRefValue
             onChange={(value: any, _unused, _notUsed) => {
+              /* istanbul ignore next */
               setAwsRef(value?.record?.identifier || value)
+              /* istanbul ignore next */
               formik?.setFieldValue(`${path}.spec.configuration.connectorRef`, value?.record?.identifier || value)
             }}
           />
@@ -276,7 +284,10 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
             }}
             width={500}
             value={selectedCapabilities}
-            onChange={values => setSelectedCapabilities(values as MultiSelectOption[])}
+            onChange={values => {
+              /* istanbul ignore next */
+              setSelectedCapabilities(values as MultiSelectOption[])
+            }}
           />
         </Layout.Vertical>
       )}
@@ -307,7 +318,8 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
           </MultiTypeFieldSelector>
         </div>
       )}
-      {isRuntime(inputSetData?.template?.spec?.configuration?.skipOnStackStatuses as string) && (
+      {getMultiTypeFromValue(inputSetData?.template?.spec?.configuration?.skipOnStackStatuses as string) ===
+        MultiTypeInputType.RUNTIME && (
         <Layout.Vertical>
           <Label style={{ color: Color.GREY_900 }}>{getString('cd.cloudFormation.continueStatus')}</Label>
           <MultiSelectTypeInput
@@ -319,7 +331,10 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
             }}
             width={500}
             value={selectedStackStatus}
-            onChange={values => setSelectedStackStatus(values as MultiSelectOption[])}
+            onChange={values => {
+              /* istanbul ignore next */
+              setSelectedStackStatus(values as MultiSelectOption[])
+            }}
           />
         </Layout.Vertical>
       )}

@@ -80,6 +80,7 @@ const CFRemoteWizard = ({
   const [selectedConnector, setSelectedConnector] = useState('')
   const connectorStepTitle = getString(ConnectorStepTitle(isNumber(index)))
   const fileStoreTitle = getString(FileStoreTitle(isNumber(index)))
+  /* istanbul ignore next */
   const close = () => {
     setShowNewConnector(false)
     onClose()
@@ -127,7 +128,7 @@ const CFRemoteWizard = ({
       </StepWizard>
     )
   }
-
+  /* istanbul ignore next */
   const onSubmit = (values: any) => {
     const config = values?.spec?.configuration
     if (isNumber(index)) {
@@ -158,14 +159,14 @@ const CFRemoteWizard = ({
     }
     close()
   }
-
   return (
     <Dialog
       {...(DIALOG_PROPS as IDialogProps)}
       isOpen={showModal}
-      isCloseButtonShown
+      isCloseButtonShown={true}
       onClose={close}
       className={cx(css.modal, Classes.DIALOG)}
+      title=""
     >
       <div className={css.wizard}>
         <StepWizard

@@ -186,8 +186,14 @@ const StepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
                                   onDragEnd={onDragEnd}
                                   onDragOver={onDragOver}
                                   onDragLeave={onDragLeave}
-                                  onDragStart={event => onDragStart(event, i)}
-                                  onDrop={event => onDrop(event, arrayHelpers, i)}
+                                  onDragStart={event => {
+                                    /* istanbul ignore next */
+                                    onDragStart(event, i)
+                                  }}
+                                  onDrop={event => {
+                                    /* istanbul ignore next */
+                                    onDrop(event, arrayHelpers, i)
+                                  }}
                                 >
                                   <Icon name="drag-handle-vertical" className={css.drag} />
                                   <Text width={12}>{`${i + 1}.`}</Text>
@@ -230,14 +236,18 @@ const StepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
                   text={getString('back')}
                   variation={ButtonVariation.SECONDARY}
                   icon="chevron-left"
-                  onClick={() => previousStep?.()}
-                  data-name="tf-remote-back-btn"
+                  onClick={() => {
+                    /* istanbul ignore next */
+                    previousStep?.()
+                  }}
+                  data-testid="back"
                 />
                 <Button
                   type="submit"
                   variation={ButtonVariation.PRIMARY}
                   text={getString('submit')}
                   rightIcon="chevron-right"
+                  data-testid="submit"
                 />
               </Layout.Horizontal>
             </Form>

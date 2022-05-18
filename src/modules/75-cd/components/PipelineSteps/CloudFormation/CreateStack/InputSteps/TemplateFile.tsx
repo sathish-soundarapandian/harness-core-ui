@@ -28,7 +28,9 @@ export default function TemplateFileInputs<T extends CreateStackData = CreateSta
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [isAccount, setIsAccount] = useState<boolean>(false)
+  /* istanbul ignore next */
   const templateConnectorType = inputSetData?.template?.spec?.configuration?.templateFile?.spec?.store?.type
+  /* istanbul ignore next */
   const newConnectorLabel = `${
     !!templateConnectorType && getString(ConnectorLabelMap[templateConnectorType as ConnectorTypes])
   } ${getString('connector')}`
@@ -37,127 +39,143 @@ export default function TemplateFileInputs<T extends CreateStackData = CreateSta
       <Container flex width={120} padding={{ bottom: 'small' }}>
         <Text font={{ weight: 'bold' }}>{getString('cd.cloudFormation.templateFile')}</Text>
       </Container>
-      {inputSetData?.template?.spec?.configuration?.templateFile?.type === 'Remote' &&
-        isRuntime(
-          inputSetData?.template?.spec?.configuration?.templateFile?.spec?.store?.spec?.connectorRef as string
-        ) && (
-          <div className={cx(stepCss.formGroup, stepCss.sm)}>
-            <FormMultiTypeConnectorField
-              label={<Text color={Color.GREY_900}>{newConnectorLabel}</Text>}
-              type={ConnectorMap[templateConnectorType as string]}
-              name={`${path}.spec.configuration.templateFile.spec.store.spec.connectorRef`}
-              placeholder={getString('select')}
-              accountIdentifier={accountId}
-              projectIdentifier={projectIdentifier}
-              orgIdentifier={orgIdentifier}
-              style={{ marginBottom: 10 }}
-              multiTypeProps={{ expressions, allowableTypes }}
-              disabled={readonly}
-              onChange={(value: any, _unused, _notUsed) => {
-                setIsAccount(value?.record?.spec?.type === 'Account')
-                formik?.setFieldValue(
-                  `${path}.spec.configuration.templateFile.spec.store.spec.connectorRef`,
-                  value?.record?.identifier
-                )
-              }}
-              setRefValue
-            />
-          </div>
-        )}
+      {
+        /* istanbul ignore next */ inputSetData?.template?.spec?.configuration?.templateFile?.type === 'Remote' &&
+          isRuntime(
+            inputSetData?.template?.spec?.configuration?.templateFile?.spec?.store?.spec?.connectorRef as string
+          ) && (
+            <div className={cx(stepCss.formGroup, stepCss.sm)}>
+              <FormMultiTypeConnectorField
+                label={<Text color={Color.GREY_900}>{newConnectorLabel}</Text>}
+                type={ConnectorMap[templateConnectorType as string]}
+                name={`${path}.spec.configuration.templateFile.spec.store.spec.connectorRef`}
+                placeholder={getString('select')}
+                accountIdentifier={accountId}
+                projectIdentifier={projectIdentifier}
+                orgIdentifier={orgIdentifier}
+                style={{ marginBottom: 10 }}
+                multiTypeProps={{ expressions, allowableTypes }}
+                disabled={readonly}
+                onChange={(value: any, _unused, _notUsed) => {
+                    /* istanbul ignore next */
+                    setIsAccount(value?.record?.spec?.type === 'Account')
+                    /* istanbul ignore next */
+                    formik?.setFieldValue(
+                      `${path}.spec.configuration.templateFile.spec.store.spec.connectorRef`,
+                      value?.record?.identifier
+                    )
+                  }}
+                setRefValue
+              />
+            </div>
+          )
+      }
       {/*
         *
         If a connector type of account is chosen 
         we need to get the repo name to access the files
         *
         */}
-      {inputSetData?.template?.spec?.configuration?.templateFile?.type === 'Remote' &&
-        (isAccount ||
+      {
+        /* istanbul ignore next */ inputSetData?.template?.spec?.configuration?.templateFile?.type === 'Remote' &&
+          (isAccount ||
+            isRuntime(
+              inputSetData?.template?.spec?.configuration?.templateFile?.spec?.store?.spec?.repoName as string
+            )) && (
+            <div className={cx(stepCss.formGroup, stepCss.sm)}>
+              <FormInput.MultiTextInput
+                name={`${path}.spec.configuration.templateFile.spec.store.spec.repoName`}
+                label={getString('pipelineSteps.repoName')}
+                disabled={readonly}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes
+                }}
+              />
+            </div>
+          )
+      }
+      {
+        /* istanbul ignore next */ inputSetData?.template?.spec?.configuration?.templateFile?.type === 'Remote' &&
+          isRuntime(inputSetData?.template?.spec?.configuration?.templateFile?.spec?.store?.spec?.branch as string) && (
+            <div className={cx(stepCss.formGroup, stepCss.sm)}>
+              <FormInput.MultiTextInput
+                name={`${path}.spec.configuration.templateFile.spec.store.spec.branch`}
+                label={getString('pipelineSteps.deploy.inputSet.branch')}
+                disabled={readonly}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes
+                }}
+              />
+            </div>
+          )
+      }
+      {
+        /* istanbul ignore next */ inputSetData?.template?.spec?.configuration?.templateFile?.type === 'Remote' &&
           isRuntime(
-            inputSetData?.template?.spec?.configuration?.templateFile?.spec?.store?.spec?.repoName as string
-          )) && (
-          <div className={cx(stepCss.formGroup, stepCss.sm)}>
-            <FormInput.MultiTextInput
-              name={`${path}.spec.configuration.templateFile.spec.store.spec.repoName`}
-              label={getString('pipelineSteps.repoName')}
+            inputSetData?.template?.spec?.configuration?.templateFile?.spec?.store?.spec?.commitId as string
+          ) && (
+            <div className={cx(stepCss.formGroup, stepCss.sm)}>
+              <FormInput.MultiTextInput
+                name={`${path}.spec.configuration.templateFile.spec.store.spec.commitId`}
+                label={getString('pipeline.manifestType.commitId')}
+                disabled={readonly}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes
+                }}
+              />
+            </div>
+          )
+      }
+      {
+        /* istanbul ignore next */ inputSetData?.template?.spec?.configuration?.templateFile?.type === 'Remote' &&
+          isRuntime(inputSetData?.template?.spec?.configuration?.templateFile?.spec?.store?.spec?.paths as string) && (
+            <div className={cx(stepCss.formGroup, stepCss.sm)}>
+              <FormInput.MultiTextInput
+                name={`${path}.spec.configuration.templateFile.spec.store.spec.paths[0]`}
+                label={getString('common.git.filePath')}
+                disabled={readonly}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes
+                }}
+              />
+            </div>
+          )
+      }
+      {
+        /* istanbul ignore next */ isRuntime(
+          (inputSetData?.template as CreateStackData)?.spec?.configuration?.templateFile?.spec?.templateBody as string
+        ) && (
+          <div className={cx(stepCss.formGroup, stepCss.md)}>
+            <MultiTypeFieldSelector
+              name={`${path}.spec.configuration.templateFile.spec.templateBody`}
+              label={getString('tagsLabel')}
+              defaultValueToReset=""
+              allowedTypes={allowableTypes}
+              skipRenderValueInExpressionLabel
               disabled={readonly}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-            />
-          </div>
-        )}
-      {inputSetData?.template?.spec?.configuration?.templateFile?.type === 'Remote' &&
-        isRuntime(inputSetData?.template?.spec?.configuration?.templateFile?.spec?.store?.spec?.branch as string) && (
-          <div className={cx(stepCss.formGroup, stepCss.sm)}>
-            <FormInput.MultiTextInput
-              name={`${path}.spec.configuration.templateFile.spec.store.spec.branch`}
-              label={getString('pipelineSteps.deploy.inputSet.branch')}
-              disabled={readonly}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-            />
-          </div>
-        )}
-      {inputSetData?.template?.spec?.configuration?.templateFile?.type === 'Remote' &&
-        isRuntime(inputSetData?.template?.spec?.configuration?.templateFile?.spec?.store?.spec?.commitId as string) && (
-          <div className={cx(stepCss.formGroup, stepCss.sm)}>
-            <FormInput.MultiTextInput
-              name={`${path}.spec.configuration.templateFile.spec.store.spec.commitId`}
-              label={getString('pipeline.manifestType.commitId')}
-              disabled={readonly}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-            />
-          </div>
-        )}
-      {inputSetData?.template?.spec?.configuration?.templateFile?.type === 'Remote' &&
-        isRuntime(inputSetData?.template?.spec?.configuration?.templateFile?.spec?.store?.spec?.paths as string) && (
-          <div className={cx(stepCss.formGroup, stepCss.sm)}>
-            <FormInput.MultiTextInput
-              name={`${path}.spec.configuration.templateFile.spec.store.spec.paths[0]`}
-              label={getString('common.git.filePath')}
-              disabled={readonly}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-            />
-          </div>
-        )}
-      {isRuntime(
-        (inputSetData?.template as CreateStackData)?.spec?.configuration?.templateFile?.spec?.templateBody as string
-      ) && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <MultiTypeFieldSelector
-            name={`${path}.spec.configuration.templateFile.spec.templateBody`}
-            label={getString('tagsLabel')}
-            defaultValueToReset=""
-            allowedTypes={allowableTypes}
-            skipRenderValueInExpressionLabel
-            disabled={readonly}
-            expressionRender={() => (
+              expressionRender={() => (
+                <TFMonaco
+                  name={`${path}.spec.configuration.templateFile.spec.templateBody`}
+                  formik={formik!}
+                  expressions={expressions}
+                  title={getString('tagsLabel')}
+                />
+              )}
+            >
               <TFMonaco
                 name={`${path}.spec.configuration.templateFile.spec.templateBody`}
                 formik={formik!}
                 expressions={expressions}
                 title={getString('tagsLabel')}
               />
-            )}
-          >
-            <TFMonaco
-              name={`${path}.spec.configuration.templateFile.spec.templateBody`}
-              formik={formik!}
-              expressions={expressions}
-              title={getString('tagsLabel')}
-            />
-          </MultiTypeFieldSelector>
-        </div>
-      )}
+            </MultiTypeFieldSelector>
+          </div>
+        )
+      }
     </>
   )
 }

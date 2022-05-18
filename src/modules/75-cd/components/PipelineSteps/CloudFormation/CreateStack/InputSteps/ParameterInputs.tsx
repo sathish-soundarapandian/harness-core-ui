@@ -36,6 +36,7 @@ export default function ParameterFileInputs<T extends CreateStackData = CreateSt
   props: CreateStackProps<T> & { formik?: FormikContextType<any> }
 ): React.ReactElement {
   const { inputSetData, readonly, path, allowableTypes, formik } = props
+
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -60,18 +61,16 @@ export default function ParameterFileInputs<T extends CreateStackData = CreateSt
       setRegions(regionValues as MultiSelectOption[])
     }
 
-    if (!regionData && regionRequired) {
+    if (!regionData && regionRequired && !regionsLoading) {
       getRegions()
     }
-  }, [regionData, regionRequired])
+  }, [regionData, regionRequired, regionsLoading])
 
   return (
     <>
-      {inputSetData?.template?.spec?.configuration?.parameters && (
-        <Container flex width={120} padding={{ bottom: 'small' }}>
-          <Text font={{ weight: 'bold' }}>{getString('cd.cloudFormation.parameterFileDetails')}</Text>
-        </Container>
-      )}
+      <Container flex width={120} padding={{ bottom: 'small' }}>
+        <Text font={{ weight: 'bold' }}>{getString('cd.cloudFormation.parameterFileDetails')}</Text>
+      </Container>
       {map(inputSetData?.template?.spec?.configuration?.parameters, (param, i) => {
         const pathNeeded = param?.store?.spec?.paths
         const urlsNeeded = param?.store?.spec?.urls
@@ -80,7 +79,7 @@ export default function ParameterFileInputs<T extends CreateStackData = CreateSt
         const type = param?.store?.type === 'S3Url' ? 'S3' : param?.store?.type
         const newConnectorLabel = `${getString(ConnectorLabelMap[type as ConnectorTypes])} ${getString('connector')}`
         return (
-          <>
+          <div key={`param${i}`}>
             {isRuntime(param?.store?.spec?.connectorRef as string) && (
               <div className={cx(stepCss.formGroup, stepCss.sm)}>
                 <FormMultiTypeConnectorField
@@ -95,7 +94,9 @@ export default function ParameterFileInputs<T extends CreateStackData = CreateSt
                   multiTypeProps={{ expressions, allowableTypes }}
                   disabled={readonly}
                   onChange={(value: any, _unused, _notUsed) => {
+                    /* istanbul ignore next */
                     setIsAccount(value?.record?.spec?.type === 'Account')
+                    /* istanbul ignore next */
                     formik?.setFieldValue(
                       `${path}.spec.configuration.parameters[${i}].store.spec.connectorRef`,
                       value?.record?.identifier
@@ -170,69 +171,76 @@ export default function ParameterFileInputs<T extends CreateStackData = CreateSt
                 />
               </div>
             )}
-            {isRuntime(pathNeeded as string) || isRuntime(urlsNeeded as string) ? (
-              <div className={cx(stepCss.formGroup, stepCss.md)}>
-                <Layout.Vertical>
-                  <Container padding={{ bottom: 'small' }}>
-                    <Text font={{ weight: 'bold' }}>{getString('filePaths')}</Text>
-                  </Container>
-                  <FieldArray
-                    name={pathName}
-                    render={arrayHelpers => (
-                      <>
-                        {map(filePaths, (_: string, n: number) => (
-                          <Layout.Horizontal
-                            key={`filePath-${n}`}
-                            flex={{ distribution: 'space-between' }}
-                            style={{ alignItems: 'end' }}
-                          >
+            {isRuntime(pathNeeded as string) ||
+              (isRuntime(urlsNeeded as string) && (
+                <div className={cx(stepCss.formGroup, stepCss.md)}>
+                  <Layout.Vertical>
+                    <Container padding={{ bottom: 'small' }}>
+                      <Text font={{ weight: 'bold' }}>{getString('filePaths')}</Text>
+                    </Container>
+                    <FieldArray
+                      name={pathName}
+                      render={arrayHelpers => (
+                        <>
+                          {map(filePaths, (_: string, n: number) => (
                             <Layout.Horizontal
-                              spacing="medium"
-                              style={{ alignItems: 'baseline' }}
-                              className={css.formContainer}
                               key={`filePath-${n}`}
-                              draggable={true}
-                              onDragEnd={onDragEnd}
-                              onDragOver={onDragOver}
-                              onDragLeave={onDragLeave}
-                              onDragStart={event => onDragStart(event, n)}
-                              onDrop={event => onDrop(event, arrayHelpers, n)}
+                              flex={{ distribution: 'space-between' }}
+                              style={{ alignItems: 'end' }}
                             >
-                              <Icon name="drag-handle-vertical" className={css.drag} />
-                              <Text width={12}>{`${n + 1}.`}</Text>
-                              <FormInput.MultiTextInput
-                                name={`${pathName}[${n}]`}
-                                label=""
-                                multiTextInputProps={{
-                                  expressions,
-                                  allowableTypes
+                              <Layout.Horizontal
+                                spacing="medium"
+                                style={{ alignItems: 'baseline' }}
+                                className={css.formContainer}
+                                key={`filePath-${n}`}
+                                draggable={true}
+                                onDragEnd={onDragEnd}
+                                onDragOver={onDragOver}
+                                onDragLeave={onDragLeave}
+                                onDragStart={event => {
+                                  /* istanbul ignore next */
+                                  onDragStart(event, n)
                                 }}
-                                style={{ width: 320 }}
-                              />
-                              <Button
-                                minimal
-                                icon="main-trash"
-                                data-testid={`remove-header-${n}`}
-                                onClick={() => arrayHelpers.remove(n)}
-                              />
+                                onDrop={event => {
+                                  /* istanbul ignore next */
+                                  onDrop(event, arrayHelpers, n)
+                                }}
+                              >
+                                <Icon name="drag-handle-vertical" className={css.drag} />
+                                <Text width={12}>{`${n + 1}.`}</Text>
+                                <FormInput.MultiTextInput
+                                  name={`${pathName}[${n}]`}
+                                  label=""
+                                  multiTextInputProps={{
+                                    expressions,
+                                    allowableTypes
+                                  }}
+                                  style={{ width: 320 }}
+                                />
+                                <Button
+                                  minimal
+                                  icon="main-trash"
+                                  data-testid={`remove-header-${n}`}
+                                  onClick={() => arrayHelpers.remove(n)}
+                                />
+                              </Layout.Horizontal>
                             </Layout.Horizontal>
-                          </Layout.Horizontal>
-                        ))}
-                        <Button
-                          icon="plus"
-                          variation={ButtonVariation.LINK}
-                          data-testid="add-header"
-                          onClick={() => arrayHelpers.push('')}
-                        >
-                          {getString('cd.addTFVarFileLabel')}
-                        </Button>
-                      </>
-                    )}
-                  />
-                </Layout.Vertical>
-              </div>
-            ) : null}
-          </>
+                          ))}
+                          <Button
+                            icon="plus"
+                            variation={ButtonVariation.LINK}
+                            data-testid="add-header"
+                            onClick={() => arrayHelpers.push('')}
+                          >
+                            {getString('cd.addTFVarFileLabel')}
+                          </Button>
+                        </>
+                      )}
+                    />
+                  </Layout.Vertical>
+                </div>
+              ))}
+          </div>
         )
       })}
     </>

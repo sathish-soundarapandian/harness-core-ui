@@ -35,6 +35,7 @@ export const ParameterRepoDetails: React.FC<StepProps<any> & CFFileStoreProps> =
   const template = values?.spec?.configuration?.templateFile
   const connector = values?.connector
   let param
+
   if (index !== undefined) {
     param = values?.spec?.configuration?.parameters
   }
@@ -97,7 +98,8 @@ export const ParameterRepoDetails: React.FC<StepProps<any> & CFFileStoreProps> =
             multiTextInputProps={{ expressions, allowableTypes }}
           />
 
-          {getMultiTypeFromValue(param?.store?.spec?.branch) === MultiTypeInputType.RUNTIME && (
+          {getMultiTypeFromValue(param?.store?.spec?.branch || template?.spec?.store?.spec?.branch) ===
+            MultiTypeInputType.RUNTIME && (
             <ConfigureOptions
               style={{ alignSelf: 'center', marginTop: 1 }}
               value={param?.store?.spec?.branch as string}
@@ -121,7 +123,8 @@ export const ParameterRepoDetails: React.FC<StepProps<any> & CFFileStoreProps> =
             multiTextInputProps={{ expressions, allowableTypes }}
           />
 
-          {getMultiTypeFromValue(param?.store?.spec?.commitId) === MultiTypeInputType.RUNTIME && (
+          {getMultiTypeFromValue(param?.store?.spec?.commitId || template?.spec?.store?.spec?.commitId) ===
+            MultiTypeInputType.RUNTIME && (
             <ConfigureOptions
               style={{ alignSelf: 'center', marginTop: 1 }}
               value={param?.store?.spec?.commitId as string}

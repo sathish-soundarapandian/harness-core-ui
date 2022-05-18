@@ -10,7 +10,7 @@ import { render } from '@testing-library/react'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
 import { TestWrapper } from '@common/utils/testUtils'
-import { CreateStackVariableStep } from '../VariableView/VariableView'
+import { CreateStackVariableStep } from '../VariableView'
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 const renderComponent = (props: any) => {
@@ -55,8 +55,7 @@ describe('Create stack Variable view ', () => {
       },
       variablesData: values
     }
-    const { container, debug } = renderComponent(data)
-    debug()
+    const { container } = renderComponent(data)
     expect(container).toMatchSnapshot()
   })
 
