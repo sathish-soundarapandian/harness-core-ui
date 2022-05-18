@@ -37,6 +37,7 @@ import {
 } from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelector/DelegateSelector'
 import { CredTypeValues, HashiCorpVaultAccessTypes } from '@connectors/interfaces/ConnectorInterface'
 import useCreateEditConnector, { BuildPayloadProps } from '@connectors/hooks/useCreateEditConnector'
+import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import css from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelector/DelegateSelector.module.scss'
 
 interface DelegateSelectorStepData extends BuildPayloadProps {
@@ -158,7 +159,9 @@ const DelegateSelectorStep: React.FC<StepProps<ConnectorConfigDTO> & DelegateSel
     afterSuccessHandler,
     gitDetails: props.gitDetails
   })
-
+  useConnectorWizard({
+    helpPanel: undefined
+  })
   const isSaveButtonDisabled =
     (isDelegateSelectorMandatory(prevStepData) && delegateSelectors.length === 0) ||
     (mode === DelegateOptions.DelegateOptionsSelective && delegateSelectors.length === 0) ||

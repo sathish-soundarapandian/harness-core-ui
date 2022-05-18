@@ -17,7 +17,7 @@ import { PageSpinner } from '@common/components'
 import type { ConnectorConfigDTO, ConnectorInfoDTO, AwsCredential } from 'services/cd-ng'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
 import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
-
+import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import type { ConnectorDetailsProps } from '@connectors/interfaces/ConnectorInterface'
 import css from './StepAWSAuthentication.module.scss'
 interface StepAWSAuthenticationProps extends ConnectorInfoDTO {
@@ -48,7 +48,7 @@ const StepAWSAuthentication: React.FC<StepProps<StepAWSAuthenticationProps> & Co
   const { getString } = useStrings()
   const [initialValues, setInitialValues] = useState(defaultInitialFormData)
   const [loadingConnectorSecrets, setLoadingConnectorSecrets] = useState(props.isEditMode)
-
+  useConnectorWizard({ helpPanel: { referenceId: 'AwsConnectorCredentials', contentWidth: 900 } })
   useEffect(() => {
     if (loadingConnectorSecrets) {
       if (props.isEditMode) {

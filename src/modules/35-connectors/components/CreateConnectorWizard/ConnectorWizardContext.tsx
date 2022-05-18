@@ -42,12 +42,10 @@ export const ConnectorWizardContextProvider: React.FC = props => {
   }
 
   const renderContent = () => {
-    return helpPanel ? (
-      <div className={css.contentContainer} style={{ width: helpPanel.contentWidth }}>
+    return (
+      <div className={css.contentContainer} style={{ width: helpPanel?.contentWidth || '100%' }}>
         {props.children}
       </div>
-    ) : (
-      props.children
     )
   }
 

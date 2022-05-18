@@ -36,7 +36,9 @@ import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext
 import GitContextForm, { GitContextProps, IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
 import { saveCurrentStepData } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
+import { Connectors } from '@connectors/constants'
 import { getHeadingIdByType } from '../../../pages/connectors/utils/ConnectorHelper'
+import { useConnectorWizard } from '../../CreateConnectorWizard/ConnectorWizardContext'
 import css from './ConnectorDetailsStep.module.scss'
 
 export type DetailsForm = Pick<ConnectorInfoDTO, 'name' | 'identifier' | 'description' | 'tags'> & GitContextProps
@@ -60,7 +62,7 @@ type Params = {
 }
 
 const ConnectorDetailsStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectorDetailsStepProps> = props => {
-  const { prevStepData, nextStep, disableGitSync, connectorInfo } = props
+  const { prevStepData, nextStep, disableGitSync, connectorInfo, type } = props
   const {
     accountId,
     projectIdentifier: projectIdentifierFromUrl,
@@ -134,6 +136,31 @@ const ConnectorDetailsStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectorDe
       }
     }
   }
+
+  const findConnectorType = () => {
+    switch (type) {
+      case Connectors.AWS:
+        return 'AwsConnectorOverview'
+      case Connectors.GCP:
+        return 'GoogleCloudProviderOverview'
+      case Connectors.KUBERNETES_CLUSTER:
+        return 'KubernetesConnectorOverview'
+      case Connectors.ARTIFACTORY:
+        return 'KubernetesConnectorOverview'
+      case Connectors.DOCKER:
+        return 'DockerConnectorOverview'
+      case Connectors.Jira:
+        return 'JiraConnectorOverview'
+      case Connectors.SERVICE_NOW:
+        return 'ServiceNowConnectorOverview'
+      default:
+        return ''
+    }
+  }
+
+  useConnectorWizard({
+    helpPanel: findConnectorType() !== '' ? { referenceId: findConnectorType(), contentWidth: 900 } : undefined
+  })
 
   return (
     <Layout.Vertical spacing="xxlarge" className={css.firstep}>
