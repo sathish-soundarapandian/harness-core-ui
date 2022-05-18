@@ -541,7 +541,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                       values?.connectorRef ||
                       (draft.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.connectorRef,
                     namespace: values.namespace,
-                    volumes: filteredVolumes,
+                    ...(filteredVolumes?.length ? { volumes: filteredVolumes } : {}),
                     serviceAccountName: values.serviceAccountName,
                     runAsUser: values.runAsUser,
                     initTimeout: errors.initTimeout ? undefined : values.initTimeout,
@@ -549,7 +549,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                     labels: !isEmpty(filteredLabels) ? filteredLabels : undefined,
                     automountServiceAccountToken: values.automountServiceAccountToken,
                     priorityClassName: values.priorityClassName,
-                    tolerations: filteredTolerations,
+                    ...(filteredTolerations?.length ? { tolerations: filteredTolerations } : {}),
                     nodeSelector: getMapValues(values.nodeSelector),
                     ...additionalKubernetesFields
                   }

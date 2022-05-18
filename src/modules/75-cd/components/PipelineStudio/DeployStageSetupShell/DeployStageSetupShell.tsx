@@ -235,7 +235,11 @@ export default function DeployStageSetupShell(): JSX.Element {
           const openExecutionStrategy = stageType ? stagesMap[stageType].openExecutionStrategy : true
           const isServerlessDeploymentTypeSelected = isServerlessDeploymentType(selectedDeploymentType)
           // Show executiomn strategies when openExecutionStrategy is true and deployment type is not serverless
-          if (openExecutionStrategy && !isServerlessDeploymentTypeSelected) {
+          if (
+            openExecutionStrategy &&
+            !isServerlessDeploymentTypeSelected &&
+            selectedSectionId === DeployTabs.EXECUTION
+          ) {
             updatePipelineView({
               ...pipelineView,
               isDrawerOpened: true,
@@ -261,7 +265,7 @@ export default function DeployStageSetupShell(): JSX.Element {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedStage, selectedTabId, selectedStageId, selectedDeploymentType])
+  }, [selectedStage, selectedTabId, selectedStageId, selectedDeploymentType, selectedSectionId])
 
   React.useEffect(() => {
     validate()

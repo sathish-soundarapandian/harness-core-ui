@@ -778,6 +778,7 @@ export interface StringsMap {
   'common.valuePlaceholder': string
   'common.variables': string
   'common.videoNotSupportedError': string
+  'common.viewAndExecutePermissions': string
   'common.viewContent': string
   'common.viewLatest': string
   'common.viewReferences': string

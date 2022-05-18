@@ -388,6 +388,7 @@ totalLines: 'Total lines'
 newLines: 'New lines'
 unsavedChanges: You may have unsaved changes
 readonlyPermissions: You have read-only permissions
+viewAndExecutePermissions: You have View and Execute permission only
 newVersion: There is a new version of this branch
 confictOccured: '{{name}} has committed since you started editing.'
 resolveConflict: Resolve the conflicts before Saving.
