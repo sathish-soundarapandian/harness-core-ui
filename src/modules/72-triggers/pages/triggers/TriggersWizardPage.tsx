@@ -261,16 +261,25 @@ const getArtifactManifestTriggerYaml = ({
     pipeline: clearNullUndefined(newPipeline)
   })
 
-  // clears any runtime inputs
-  const artifactSourceSpec = clearRuntimeInputValue(
-    cloneDeep(
-      parse(
-        JSON.stringify({
-          spec: selectedArtifact?.spec
-        }) || ''
-      )
+  const x = val?.resolvedPipeline?.stages?.map(st =>
+    st?.stage?.spec?.serviceConfig?.serviceDefinition?.spec?.manifests?.find(
+      s => s?.manifest?.identifier === selectedArtifact?.identifier
     )
   )
+
+  // console.log(x?.[0]?.manifest?.spec?.store)
+  const storeVal = parse(JSON.stringify(x?.[0]?.manifest?.spec?.store))
+  // clears any runtime inputs
+  const artifactSourceSpec = cloneDeep(
+    parse(
+      JSON.stringify({
+        spec: { ...selectedArtifact?.spec, store: storeVal?.store }
+      }) || ''
+    )
+  )
+
+  console.log('storeVal', storeVal)
+  console.log('artifactSourceSpec', artifactSourceSpec)
   const triggerYaml: NGTriggerConfigV2 = {
     name,
     identifier,
@@ -286,6 +295,7 @@ const getArtifactManifestTriggerYaml = ({
         stageIdentifier: stageId,
         manifestRef: selectedArtifact?.identifier,
         type: onEditManifestType ? onEditManifestType : artifactType,
+
         ...artifactSourceSpec
       }
     },
