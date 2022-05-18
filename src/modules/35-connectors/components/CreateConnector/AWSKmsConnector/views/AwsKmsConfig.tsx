@@ -29,6 +29,7 @@ import {
   StepDetailsProps
 } from '@connectors/interfaces/ConnectorInterface'
 import { PageSpinner } from '@common/components'
+import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 import AwsKmsAccessKeyForm from './AwsKmsAccessKeyForm'
 
 const externalIdRegExpression = /^\S*$/
@@ -66,7 +67,7 @@ const AwsKmsConfig: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps
 
   const [initialValues, setInitialValues] = useState(defaultInitialFormData)
   const [loadingConnectorSecrets, setLoadingConnectorSecrets] = useState(props.isEditMode)
-
+  useConnectorWizard({ helpPanel: { referenceId: 'AWSKMSDetails', contentWidth: 900 } })
   React.useEffect(() => {
     if (loadingConnectorSecrets) {
       if (props.isEditMode) {
@@ -86,7 +87,7 @@ const AwsKmsConfig: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps
   return loadingConnectorSecrets ? (
     <PageSpinner />
   ) : (
-    <Container padding={{ top: 'medium' }} width="64%">
+    <Container padding={{ top: 'medium' }}>
       <Text font={{ variation: FontVariation.H3 }} padding={{ bottom: 'xlarge' }}>
         {getString('details')}
       </Text>

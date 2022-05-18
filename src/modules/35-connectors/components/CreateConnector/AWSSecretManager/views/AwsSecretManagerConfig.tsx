@@ -31,6 +31,7 @@ import {
   StepDetailsProps
 } from '@connectors/interfaces/ConnectorInterface'
 import { PageSpinner } from '@common/components'
+import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 import AwsSecretManagerAccessKeyForm from './AwsSecretManagerAccessKeyForm'
 import css from '../CreateAwsSecretManagerConnector.module.scss'
 
@@ -75,7 +76,8 @@ const AwsSecretManagerConfig: React.FC<StepProps<StepDetailsProps> & ConnectorDe
 
   const [initialValues, setInitialValues] = useState(defaultInitialFormData)
   const [loadingFormData, setLoadingFormData] = useState(isEditMode)
-
+  useConnectorWizard({ helpPanel: { referenceId: 'AWSKMSDetails', contentWidth: 900 } })
+ 
   React.useEffect(() => {
     if (isEditMode && connectorInfo) {
       setupAwsSecretManagerFormData(connectorInfo, accountId).then(data => {

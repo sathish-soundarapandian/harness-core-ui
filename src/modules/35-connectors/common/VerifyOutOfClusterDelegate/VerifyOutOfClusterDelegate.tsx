@@ -42,6 +42,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { connectorsTrackEventMap } from '@connectors/utils/connectorEvents'
+import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 import Suggestions from '../ErrorSuggestions/ErrorSuggestionsCe'
 import css from './VerifyOutOfClusterDelegate.module.scss'
 
@@ -175,6 +176,7 @@ const VerifyOutOfClusterDelegate: React.FC<StepProps<VerifyOutOfClusterStepProps
       intent: Intent.WARNING,
       status: 'PROCESS'
     })
+    useConnectorWizard({ helpPanel: { referenceId: 'AWSKMSDetails', contentWidth: 900 } })
 
     const ceConnectors: string[] = [Connectors.CE_KUBERNETES, Connectors.CEAWS, Connectors.CE_AZURE, Connectors.CE_GCP]
     const isCeConnector = ceConnectors.includes(props.type)
