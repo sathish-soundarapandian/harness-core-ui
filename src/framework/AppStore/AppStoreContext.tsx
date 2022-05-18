@@ -253,8 +253,10 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
             selectedOrg: undefined,
             selectedProject: undefined
           }))
-          // if user is on a URL with projectId and orgId in path, show toast error & redirect
-          showErrorAndRedirect(response as Error)
+          if (LOCAL_FF_PREFERENCE_STORE_ENABLED) {
+            // if user is on a URL with projectId and orgId in path, show toast error & redirect
+            showErrorAndRedirect(response as Error)
+          }
         }
       })
     }
