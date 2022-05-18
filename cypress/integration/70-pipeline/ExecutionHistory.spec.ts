@@ -24,6 +24,8 @@ describe('Pipeline Execution History', () => {
   })
 
   it('loads a pipeline with no executions', () => {
+    cy.wait(3000) // page load sometimes takes time
+
     cy.findByText('There are no deployments in your project').should('exist')
     cy.findByText('Your Pipeline does not have any executions yet. Click the button below to run a pipeline.').should(
       'exist'
