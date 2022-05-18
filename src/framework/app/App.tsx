@@ -90,12 +90,20 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
   })
 
   useEffect(() => {
-    const token = SessionToken.getToken()
-    if (!token) {
+    const redirectToLoginPage = (): void => {
       history.push({
         pathname: routes.toRedirect(),
         search: returnUrlParams(getLoginPageURL({ returnUrl: window.location.href }))
       })
+    }
+
+    try {
+      const token = SessionToken.getToken()
+      if (!token) {
+        redirectToLoginPage()
+      }
+    } catch (event) {
+      redirectToLoginPage()
     }
   }, [history])
 

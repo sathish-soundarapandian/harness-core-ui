@@ -20,12 +20,6 @@ import { PREFERENCES_TOP_LEVEL_KEY } from 'framework/PreferenceStore/PreferenceS
 const SecureStorageConstructor = SecureStorage.default
 const keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
 
-const buildLoginUrlFrom401Response = () => {
-  const { href } = window.location
-  const prefix = window.HARNESS_ENABLE_NG_AUTH_UI ? '/auth/#/signin?returnUrl=' : '#/login?returnUrl='
-  return href.includes(prefix) ? href : prefix + encodeURIComponent(href)
-}
-
 function encode64(input) {
   input = escape(input)
   let output = ''
@@ -126,11 +120,7 @@ export default class AppStorage {
   }
 
   static get(name) {
-    try {
-      return secureStorage.getItem(name)
-    } catch (event) {
-      window.location = buildLoginUrlFrom401Response()
-    }
+    return secureStorage.getItem(name)
   }
 
   static getAll() {
