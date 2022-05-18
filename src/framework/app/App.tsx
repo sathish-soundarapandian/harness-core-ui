@@ -23,7 +23,6 @@ import { LicenseStoreProvider } from 'framework/LicenseStore/LicenseStoreContext
 import RouteDestinationsWithoutAuth from 'modules/RouteDestinationsWithoutAuth'
 import AppErrorBoundary from 'framework/utils/AppErrorBoundary/AppErrorBoundary'
 import { StringsContextProvider } from 'framework/strings/StringsContextProvider'
-import { getLoginPageURL } from 'framework/utils/SessionUtils'
 import { NGTooltipEditorPortal } from 'framework/tooltip/TooltipEditor'
 import AppStorage from 'framework/utils/AppStorage'
 import { SideNavProvider } from 'framework/SideNavStore/SideNavContext'
@@ -31,8 +30,6 @@ import { useRefreshToken } from 'services/portal'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 
 import './App.scss'
-import routes from '@common/RouteDefinitions'
-import { returnUrlParams } from '@common/utils/routeUtils'
 import { PermissionsProvider } from 'framework/rbac/PermissionsContext'
 import { FeaturesProvider } from 'framework/featureStore/FeaturesContext'
 import { ThirdPartyIntegrations } from '3rd-party/ThirdPartyIntegrations'
@@ -90,20 +87,13 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
   })
 
   useEffect(() => {
-    const redirectToLoginPage = (): void => {
-      history.push({
-        pathname: routes.toRedirect(),
-        search: returnUrlParams(getLoginPageURL({ returnUrl: window.location.href }))
-      })
-    }
-
     try {
       const token = SessionToken.getToken()
       if (!token) {
-        redirectToLoginPage()
+        global401HandlerUtils(history)
       }
     } catch (event) {
-      redirectToLoginPage()
+      global401HandlerUtils(history)
     }
   }, [history])
 
