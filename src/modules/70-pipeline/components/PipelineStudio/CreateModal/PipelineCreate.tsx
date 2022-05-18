@@ -38,7 +38,7 @@ import GitContextForm, { IGitContextFormProps } from '@common/components/GitCont
 import type { EntityGitDetails } from 'services/pipeline-ng'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, PipelineActions } from '@common/constants/TrackingConstants'
-import { GitSyncForm } from '@common/components/GitSyncForm/GitSyncForm'
+import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { DefaultNewPipelineId } from '../PipelineContext/PipelineActions'

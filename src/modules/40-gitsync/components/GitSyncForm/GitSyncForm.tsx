@@ -13,8 +13,8 @@ import {
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
-import RepositorySelect from '../RepositorySelect/RepositorySelect'
-import RepoBranchSelectV2 from '../RepoBranchSelectV2/RepoBranchSelectV2'
+import RepositorySelect from '@common/components/RepositorySelect/RepositorySelect'
+import RepoBranchSelectV2 from '@common/components/RepoBranchSelectV2/RepoBranchSelectV2'
 
 interface GitSyncFormProps<T> {
   identifier?: string
