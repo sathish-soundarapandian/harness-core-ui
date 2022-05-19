@@ -15,11 +15,16 @@ import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
 import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
-import { PipelineGraphType, NodeType } from '../../types'
+import { PipelineGraphType, NodeType, BaseReactComponentProps } from '../../types'
 import SVGMarker from '../SVGMarker'
 import { getPositionOfAddIcon } from '../utils'
+import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
 import cssDefault from '../DefaultNode/DefaultNode.module.scss'
 import css from './DiamondNode.module.scss'
+
+interface PipelineStepNodeProps extends BaseReactComponentProps {
+  status: string
+}
 
 export function DiamondNodeWidget(props: any): JSX.Element {
   const { getString } = useStrings()
@@ -30,6 +35,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
     stepStatus as ExecutionStatus,
     ExecutionPipelineNodeType.DIAMOND
   )
+  const isTemplateNode = props?.data?.isTemplateNode
   return (
     <div
       className={cssDefault.defaultNode}
@@ -49,6 +55,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
     >
       <div
         className={cx(
+          'diamond-node',
           cssDefault.defaultCard,
           css.diamond,
           { [cssDefault.selected]: isSelected },
@@ -108,7 +115,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
           </div>
         </div>
         <div className="execution-running-animation" />
-        {props.data.isInComplete && (
+        {props?.data?.isInComplete && (
           <Icon className={css.inComplete} size={12} name={'warning-sign'} color="orange500" />
         )}
         {props.icon && (
@@ -120,7 +127,6 @@ export function DiamondNodeWidget(props: any): JSX.Element {
             color={isSelected ? Color.WHITE : Color.PRIMARY_7}
           />
         )}
-        {props.isInComplete && <Icon className={css.inComplete} size={12} name={'warning-sign'} color="orange500" />}
         {props?.tertiaryIcon && (
           <Icon
             className={css.tertiaryIcon}
@@ -163,7 +169,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
             </Text>
           </div>
         )}
-        {props.isTemplate && (
+        {isTemplateNode && (
           <Icon
             size={8}
             className={css.template}
@@ -204,39 +210,15 @@ export function DiamondNodeWidget(props: any): JSX.Element {
         </div>
       )}
       {!props.isParallelNode && (
-        <div
-          data-linkid={props?.identifier}
-          onClick={event => {
-            event.stopPropagation()
-            props?.fireEvent?.({
-              type: Event.AddLinkClicked,
-              entityType: DiagramType.Link,
-              node: props,
-              prevNodeIdentifier: props?.prevNodeIdentifier,
-              parentIdentifier: props?.parentIdentifier,
-              identifier: props?.identifier
-            })
-          }}
-          onDragOver={event => {
-            event.stopPropagation()
-            event.preventDefault()
-            setShowAddLink(true)
-          }}
-          onDragLeave={event => {
-            event.stopPropagation()
-            event.preventDefault()
-            setShowAddLink(false)
-          }}
-          onDrop={event => {
-            event.stopPropagation()
-            props?.fireEvent?.({
-              type: Event.DropLinkEvent,
-              linkBeforeStepGroup: false,
-              entityType: DiagramType.Link,
-              node: JSON.parse(event.dataTransfer.getData(DiagramDrag.NodeDrag)),
-              destination: props
-            })
-          }}
+        <AddLinkNode<PipelineStepNodeProps>
+          nextNode={props?.nextNode}
+          parentIdentifier={props?.parentIdentifier}
+          isParallelNode={props.isParallelNode}
+          readonly={props.readonly}
+          data={props}
+          fireEvent={props?.fireEvent}
+          identifier={props?.identifier}
+          prevNodeIdentifier={props.prevNodeIdentifier as string}
           style={{ left: getPositionOfAddIcon(props) }}
           className={cx(
             cssDefault.addNodeIcon,
@@ -250,41 +232,22 @@ export function DiamondNodeWidget(props: any): JSX.Element {
               [cssDefault.stageAddIcon]: props.data.graphType === PipelineGraphType.STAGE_GRAPH
             }
           )}
-        >
-          <Icon name="plus" color={Color.WHITE} />
-        </div>
+          setShowAddLink={setShowAddLink}
+        />
       )}
       {(props?.nextNode?.nodeType === NodeType.StepGroupNode || (!props?.nextNode && props?.parentIdentifier)) &&
         !props.isParallelNode && (
-          <div
-            data-linkid={props?.identifier}
-            onClick={event => {
-              event.stopPropagation()
-              props?.fireEvent?.({
-                type: Event.AddLinkClicked,
-                linkBeforeStepGroup: true,
-                prevNodeIdentifier: props?.prevNodeIdentifier,
-                parentIdentifier: props?.parentIdentifier,
-                entityType: DiagramType.Link,
-                identifier: props?.identifier,
-                node: props
-              })
-            }}
-            onDragOver={event => {
-              event.stopPropagation()
-              event.preventDefault()
-            }}
-            style={{ left: getPositionOfAddIcon(props) }}
-            onDrop={event => {
-              event.stopPropagation()
-              props?.fireEvent?.({
-                type: Event.DropLinkEvent,
-                linkBeforeStepGroup: true,
-                entityType: DiagramType.Link,
-                node: JSON.parse(event.dataTransfer.getData(DiagramDrag.NodeDrag)),
-                destination: props
-              })
-            }}
+          <AddLinkNode<PipelineStepNodeProps>
+            nextNode={props?.nextNode}
+            parentIdentifier={props?.parentIdentifier}
+            isParallelNode={props.isParallelNode}
+            readonly={props.readonly}
+            data={props}
+            fireEvent={props?.fireEvent}
+            identifier={props?.identifier}
+            prevNodeIdentifier={props.prevNodeIdentifier as string}
+            style={{ right: getPositionOfAddIcon(props, true) }}
+            isRightAddIcon={true}
             className={cx(
               cssDefault.addNodeIcon,
               {
@@ -294,9 +257,8 @@ export function DiamondNodeWidget(props: any): JSX.Element {
                 [cssDefault.stageAddIcon]: props.data.graphType === PipelineGraphType.STAGE_GRAPH
               }
             )}
-          >
-            <Icon name="plus" color={Color.WHITE} />
-          </div>
+            setShowAddLink={setShowAddLink}
+          />
         )}
     </div>
   )

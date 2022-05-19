@@ -163,6 +163,9 @@ export default function DeployStageSetupShell(): JSX.Element {
     ) {
       updateStage(
         produce(selectedStage, draft => {
+          if (!draft.stage?.spec?.execution) {
+            draft = set(draft, 'stage.spec', { ...draft.stage?.spec, execution: {} })
+          }
           const jsonFromYaml = YAML.parse(defaultTo(yamlSnippet?.data, '{}')) as StageElementConfig
           set(draft, 'stage.failureStrategies', jsonFromYaml.failureStrategies)
           set(draft, 'stage.spec.execution', defaultTo((jsonFromYaml.spec as DeploymentStageConfig)?.execution, {}))

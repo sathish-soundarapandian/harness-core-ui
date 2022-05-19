@@ -389,7 +389,6 @@ export interface StringsMap {
   'common.link': string
   'common.loading': string
   'common.local': string
-  'common.location': string
   'common.logs.delegateSelectionLogs': string
   'common.logs.noLogsText': string
   'common.manage': string
@@ -2463,13 +2462,14 @@ export interface StringsMap {
   'pipeline.artifactTriggerConfigPanel.artifact': string
   'pipeline.artifactTriggerConfigPanel.artifactReferenceUnique': string
   'pipeline.artifactTriggerConfigPanel.artifactRepository': string
-  'pipeline.artifactTriggerConfigPanel.buildTag': string
+  'pipeline.artifactTriggerConfigPanel.buildTagArtifactPath': string
   'pipeline.artifactTriggerConfigPanel.chartVersionRuntimeInput': string
   'pipeline.artifactTriggerConfigPanel.configureArtifactRuntimeInputs': string
   'pipeline.artifactTriggerConfigPanel.configureInput': string
   'pipeline.artifactTriggerConfigPanel.configureInputs': string
   'pipeline.artifactTriggerConfigPanel.hasRuntimeInputs': string
   'pipeline.artifactTriggerConfigPanel.listenOnNewArtifact': string
+  'pipeline.artifactTriggerConfigPanel.locationRepoPath': string
   'pipeline.artifactTriggerConfigPanel.noArtifacts': string
   'pipeline.artifactTriggerConfigPanel.noSelectableArtifactsFound': string
   'pipeline.artifactTriggerConfigPanel.plusSelect': string
@@ -4618,6 +4618,7 @@ export interface StringsMap {
   'cf.environments.delete.message': string
   'cf.environments.delete.title': string
   'cf.environments.empty': string
+  'cf.environments.environmentID': string
   'cf.environments.modifiedBy': string
   'cf.environments.title': string
   'cf.featureFlagDetail.variationCount': string
@@ -5939,6 +5940,14 @@ export interface StringsMap {
   'cv.windowsEndIsRequired': string
   'cv.yourExistingErrorBudgetIs': string
   'cv.zoom': string
+  'stoSteps.Critical': string
+  'stoSteps.Info': string
+  'stoSteps.Unassigned': string
+  'stoSteps.failedToGetIssueCounts': string
+  'stoSteps.noScansRunPipelineText': string
+  'stoSteps.noScansText': string
+  'stoSteps.noSecurityIssues': string
+  'stoSteps.noSecurityTests': string
   'stoSteps.securityStage.description': string
   'stoSteps.stepDescription.ZeroNorth': string
   'stoSteps.targets.testTargets': string

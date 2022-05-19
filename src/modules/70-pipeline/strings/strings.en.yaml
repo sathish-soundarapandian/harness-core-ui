@@ -482,7 +482,8 @@ pipelineInputPanel:
 artifactTriggerConfigPanel:
   artifact: 'Artifact'
   artifactRepository: '{{artifact}} Repository'
-  buildTag: 'Build/Tag'
+  buildTagArtifactPath: 'Build/Tag/ Artifact Path'
+  locationRepoPath: Location/Repo Path
   configureInput: 'Configure Input'
   listenOnNewArtifact: 'Listen on New {{artifact}}'
   plusSelect: '+ Select {{artifact}}'

@@ -44,7 +44,7 @@ const RenderCellAction: Renderer<CellProps<AuditTrail>> = ({ row }) => {
   const data = row.original
   let text = getString('cf.auditLogs.unknown')
   let icon: IconName | HarnessIconName = 'audit-log-created'
-  let color = 'var(--purple-500)'
+  let color = 'var(--purple-600)'
   const eventStrings = translateEvents(data.instructionSet, getString)
 
   switch (data.action) {

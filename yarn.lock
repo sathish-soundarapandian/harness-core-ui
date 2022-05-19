@@ -8514,11 +8514,6 @@ gauge@^3.0.0:
     strip-ansi "^6.0.1"
     wide-align "^1.1.2"
 
-generate-js@^3.1.2:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/generate-js/-/generate-js-3.1.2.tgz#25ff8dd4c38090a938f648887d536bad46b47b62"
-  integrity "sha1-Jf+N1MOAkKk49kiIfVNrrUa0e2I= sha512-L4IHpPfl9vhDtevoXZGQhQbC376ogHnVGrEr2zMxODsmLSGQGCX/NTd0AzokzSYgBDCKduV690tcqcba10Xo3g=="
-
 gensync@^1.0.0-beta.1, gensync@^1.0.0-beta.2:
   version "1.0.0-beta.2"
   resolved "https://registry.yarnpkg.com/gensync/-/gensync-1.0.0-beta.2.tgz#32a6ee76c3d7f52d46b2b1ae5d93fea8580a25e0"
@@ -14962,13 +14957,6 @@ scuid@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/scuid/-/scuid-1.1.0.tgz#d3f9f920956e737a60f72d0e4ad280bf324d5dab"
   integrity "sha1-0/n5IJVuc3pg9y0OStKAvzJNXas= sha512-MuCAyrGZcTLfQoH2XoBlQ8C6bzwN88XT/0slOGz0pn8+gIP85BOAfYa44ZXQUTOwRwPU0QvgU+V+OSajl/59Xg=="
-
-secure-web-storage@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/secure-web-storage/-/secure-web-storage-1.0.2.tgz#7309c35c3685f0a9e63a8c4964c6ecdc0f83839c"
-  integrity "sha1-cwnDXDaF8KnmOoxJZMbs3A+Dg5w= sha512-Jxlit0lkdspgrcyzYjgJ59MNUuK2t1T6berjU1ttJc0Uht1u8l031aczsp8R4KW+rt4WdKrt3zAopwhqaodCHQ=="
-  dependencies:
-    generate-js "^3.1.2"
 
 select-hose@^2.0.0:
   version "2.0.0"

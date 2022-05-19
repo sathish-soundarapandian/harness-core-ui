@@ -212,14 +212,15 @@ const processStepGroupSteps = ({ nodeAdjacencyListMap, id, nodeMap, rootNodes }:
     } else {
       steps.push({ step: nodeMap?.[childId] })
     }
-    const processedNodes = processNextNodes({
+    const processChildNodes = processNextNodes({
       nodeMap,
       nodeAdjacencyListMap,
       nextIds: nodeAdjacencyListMap?.[childId].nextIds || [],
-      rootNodes
+      rootNodes,
+      isNestedGroup: true
     })
 
-    steps.push(...processedNodes.map(step => ({ step })))
+    steps.push(...processChildNodes.map(step => ({ step })))
   })
   return steps
 }
@@ -298,7 +299,15 @@ export const processNodeDataV1 = (
       nodeData?.stepType === NodeType.NG_SECTION ||
       (nodeData && isRollback)
     ) {
-      processGroupItem({ items, id: item, isRollbackNext: isRollback, nodeMap, nodeAdjacencyListMap, rootNodes })
+      processGroupItem({
+        items,
+        id: item,
+        isRollbackNext: isRollback,
+        nodeMap,
+        nodeAdjacencyListMap,
+        rootNodes,
+        isNestedGroup: true
+      })
     } else {
       if (nodeData?.stepType === LITE_ENGINE_TASK) {
         const parentNodeId =
@@ -366,21 +375,50 @@ ProcessGroupItemArgs): void => {
         childStep?.status as ExecutionStatus,
         ExecutionPipelineNodeType.NORMAL
       )
-
-      steps.push({
-        step: {
-          name: childStep?.name || /* istanbul ignore next */ '',
-          ...childStepIconData,
-          identifier: childStep?.identifier as string,
-          uuid: childStep?.uuid as string,
-          skipCondition: childStep?.skipInfo?.evaluatedCondition ? childStep.skipInfo.skipCondition : undefined,
-          when: childStep?.nodeRunInfo,
-          status: childStep?.status as ExecutionStatus,
-          type: childStep?.stepType as string,
-          data: { ...childStep, ...childSecondaryIconProps, graphType: PipelineGraphType.STEP_GRAPH }
-        }
-      })
+      if (childStep?.stepType === NodeType.STEP_GROUP) {
+        steps.push({
+          step: {
+            name: childStep?.name || /* istanbul ignore next */ '',
+            ...childStepIconData,
+            identifier: childStep?.identifier as string,
+            uuid: childStep?.uuid as string,
+            skipCondition: childStep?.skipInfo?.evaluatedCondition ? childStep.skipInfo.skipCondition : undefined,
+            when: childStep?.nodeRunInfo,
+            status: childStep?.status as ExecutionStatus,
+            type: childStep?.stepType as string,
+            data: {
+              isNestedGroup: true,
+              stepGroup: {
+                ...childStep,
+                ...childSecondaryIconProps,
+                graphType: PipelineGraphType.STEP_GRAPH,
+                steps: processStepGroupSteps({
+                  nodeAdjacencyListMap,
+                  id: childStep?.uuid as string,
+                  nodeMap,
+                  rootNodes
+                })
+              }
+            }
+          }
+        })
+      } else {
+        steps.push({
+          step: {
+            name: childStep?.name || /* istanbul ignore next */ '',
+            ...childStepIconData,
+            identifier: childStep?.identifier as string,
+            uuid: childStep?.uuid as string,
+            skipCondition: childStep?.skipInfo?.evaluatedCondition ? childStep.skipInfo.skipCondition : undefined,
+            when: childStep?.nodeRunInfo,
+            status: childStep?.status as ExecutionStatus,
+            type: childStep?.stepType as string,
+            data: { ...childStep, ...childSecondaryIconProps, graphType: PipelineGraphType.STEP_GRAPH }
+          }
+        })
+      }
     }
+
     let processedNodes: PipelineGraphState[] | StepPipelineGraphState[] = processNextNodes({
       nodeAdjacencyListMap,
       nodeMap,
@@ -504,27 +542,42 @@ export const processExecutionDataV1 = (graph?: ExecutionGraph): any => {
               )
               items.push(...exec)
             } else {
+              const steps = processStepGroupSteps({
+                nodeAdjacencyListMap,
+                id: nodeId,
+                nodeMap: graph?.nodeMap,
+                rootNodes: []
+              })
               items.push({
-                group: {
-                  name: nodeData.name || /* istanbul ignore next */ '',
-                  identifier: nodeId,
-                  id: nodeData.uuid as string,
-                  data: nodeData,
-                  skipCondition: nodeData.skipInfo?.evaluatedCondition ? nodeData.skipInfo.skipCondition : undefined,
-                  when: nodeData.nodeRunInfo,
-                  containerCss: {
-                    ...(RollbackIdentifier === nodeData.identifier || isRollback ? RollbackContainerCss : {})
-                  },
-                  status: nodeData.status as ExecutionStatus,
-                  isOpen: true,
-                  ...getIconDataBasedOnType(nodeData),
-                  items: processNodeDataV1(
-                    nodeAdjacencyListMap[nodeId].children || /* istanbul ignore next */ [],
-                    graph?.nodeMap,
-                    graph?.nodeAdjacencyListMap,
-                    items
-                  )
-                }
+                name: nodeData.name || /* istanbul ignore next */ '',
+                identifier: nodeId,
+                id: nodeData.uuid as string,
+                data: {
+                  graphType: PipelineGraphType.STEP_GRAPH,
+
+                  type: 'STEP_GROUP',
+                  nodeType: 'STEP_GROUP',
+                  icon: StepTypeIconsMap.STEP_GROUP,
+                  stepGroup: {
+                    ...nodeData,
+                    type: 'STEP_GROUP',
+                    nodeType: 'STEP_GROUP',
+                    icon: StepTypeIconsMap.STEP_GROUP,
+                    steps,
+                    status: nodeData?.status as ExecutionStatus
+                  }
+                },
+                skipCondition: nodeData.skipInfo?.evaluatedCondition ? nodeData.skipInfo.skipCondition : undefined,
+                when: nodeData.nodeRunInfo,
+                type: 'STEP_GROUP',
+                nodeType: 'STEP_GROUP',
+                containerCss: {
+                  ...(RollbackIdentifier === nodeData.identifier || isRollback ? RollbackContainerCss : {})
+                },
+                status: nodeData.status as ExecutionStatus,
+                isOpen: true,
+                ...getIconDataBasedOnType(nodeData),
+                steps
               })
             }
           }

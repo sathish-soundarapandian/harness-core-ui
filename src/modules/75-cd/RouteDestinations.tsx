@@ -140,16 +140,14 @@ import { KubernetesArtifacts } from './components/PipelineSteps/K8sServiceSpec/K
 import { KubernetesManifests } from './components/PipelineSteps/K8sServiceSpec/KubernetesManifests/KubernetesManifests'
 import manifestSourceBaseFactory from './factory/ManifestSourceFactory/ManifestSourceBaseFactory'
 import {
-  DeployServiceWidget,
-  NewEditServiceModal
-} from './components/PipelineSteps/DeployServiceStep/DeployServiceStep'
-import {
   DeployEnvironmentWidget,
   NewEditEnvironmentModal
 } from './components/PipelineSteps/DeployEnvStep/DeployEnvStep'
 import type { GitOpsCustomMicroFrontendProps } from './interfaces/GitOps.types'
 import { getBannerText } from './utils/renderMessageUtils'
 import ServiceStudio from './components/Services/ServiceStudio/ServiceStudio'
+import { DeployServiceWidget } from './components/PipelineSteps/DeployServiceStep/DeployServiceWidget'
+import { NewEditServiceModal } from './components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
 
 // eslint-disable-next-line import/no-unresolved
 const GitOpsServersList = React.lazy(() => import('gitopsui/MicroFrontendApp'))
