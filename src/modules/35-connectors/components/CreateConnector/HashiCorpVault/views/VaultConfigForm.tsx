@@ -21,6 +21,7 @@ import {
   HashiCorpVaultAccessTypes
 } from '@connectors/interfaces/ConnectorInterface'
 import VaultConnectorFormFields from './VaultConnectorFormFields'
+import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 
 const VaultConfigForm: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> = ({
   prevStepData,
@@ -50,6 +51,7 @@ const VaultConfigForm: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsPr
 
   const [initialValues, setInitialValues] = useState(defaultInitialFormData)
   const [loadingFormData, setLoadingFormData] = useState(isEditMode)
+  useConnectorWizard({ helpPanel: { referenceId: 'HashiCorpVaultDetails', contentWidth: 900 } })
 
   React.useEffect(() => {
     if (isEditMode && connectorInfo) {
@@ -63,7 +65,7 @@ const VaultConfigForm: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsPr
   return loadingFormData ? (
     <PageSpinner />
   ) : (
-    <Container padding={{ top: 'medium' }} width="64%">
+    <Container padding={{ top: 'medium' }}>
       <Text font={{ variation: FontVariation.H3 }} padding={{ bottom: 'xlarge' }}>
         {getString('connectors.hashiCorpVault.stepTwoName')}
       </Text>

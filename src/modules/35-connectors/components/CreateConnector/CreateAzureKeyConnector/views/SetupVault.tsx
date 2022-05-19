@@ -43,6 +43,7 @@ import {
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { FeatureFlag } from '@common/featureFlags'
 import { useConnectorGovernanceModal } from '@connectors/hooks/useConnectorGovernanceModal'
+import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 
 export interface SetupVaultFormData {
   vaultName?: string
@@ -90,6 +91,7 @@ const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> 
       })
     }
   }, [isEditMode, connectorInfo])
+  useConnectorWizard({ helpPanel: undefined })
 
   const handleFetchEngines = async (formData: ConnectorConfigDTO): Promise<void> => {
     modalErrorHandler?.hide()

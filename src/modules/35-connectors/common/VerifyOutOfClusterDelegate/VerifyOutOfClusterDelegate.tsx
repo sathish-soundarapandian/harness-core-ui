@@ -61,6 +61,7 @@ interface VerifyOutOfClusterDelegateProps {
   isLastStep?: boolean
   name?: string
   connectorInfo: ConnectorInfoDTO | void
+  helpPanelReferenceId?: string
   gitDetails?: EntityGitDetails
   stepIndex?: number // will make this mandatory once all usages sends the value
 }
@@ -176,7 +177,9 @@ const VerifyOutOfClusterDelegate: React.FC<StepProps<VerifyOutOfClusterStepProps
       intent: Intent.WARNING,
       status: 'PROCESS'
     })
-    useConnectorWizard({ helpPanel: { referenceId: 'AWSKMSDetails', contentWidth: 900 } })
+    useConnectorWizard({
+      helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 900 } : undefined
+    })
 
     const ceConnectors: string[] = [Connectors.CE_KUBERNETES, Connectors.CEAWS, Connectors.CE_AZURE, Connectors.CE_GCP]
     const isCeConnector = ceConnectors.includes(props.type)

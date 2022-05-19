@@ -73,6 +73,7 @@ const CreateAWSConnector: React.FC<CreateConnectorModalProps> = props => {
           isLastStep={true}
           type={Connectors.AWS}
           onClose={props.onClose}
+          helpPanelReferenceId="AWSKMSDetails"
           stepIndex={TESTCONNECTION_STEP_INDEX}
         />
       </StepWizard>

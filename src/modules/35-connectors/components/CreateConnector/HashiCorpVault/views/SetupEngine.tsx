@@ -51,6 +51,7 @@ import { useToaster } from '@common/exports'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { FeatureFlag } from '@common/featureFlags'
 import { useConnectorGovernanceModal } from '@connectors/hooks/useConnectorGovernanceModal'
+import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 
 const defaultInitialFormData: SetupEngineFormData = {
   secretEngine: '',
@@ -87,6 +88,7 @@ const SetupEngine: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps>
   const { mutate: updateConnector, loading: updating } = useUpdateConnector({
     queryParams: { accountIdentifier: accountId }
   })
+  useConnectorWizard({ helpPanel: { referenceId: 'HashiCorpVaultEngineSetup', contentWidth: 900 } })
 
   const engineTypeOptions: IOptionProps[] = [
     {
@@ -221,7 +223,7 @@ const SetupEngine: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps>
   return loadingFormData || savingDataInProgress ? (
     <PageSpinner message={savingDataInProgress ? getString('connectors.hashiCorpVault.saveInProgress') : undefined} />
   ) : (
-    <Container padding={{ top: 'medium' }} width="64%">
+    <Container padding={{ top: 'medium' }}>
       <Text font={{ variation: FontVariation.H3 }} padding={{ bottom: 'xlarge' }} color={Color.BLACK}>
         {getString('connectors.hashiCorpVault.setupEngine')}
       </Text>

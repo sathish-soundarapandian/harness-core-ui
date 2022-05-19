@@ -52,6 +52,7 @@ interface ConnectorDetailsStepProps extends StepProps<ConnectorInfoDTO> {
   gitDetails?: IGitContextFormProps
   mock?: ResponseBoolean
   disableGitSync?: boolean
+  helpPanelReferenceId?: string
 }
 
 type Params = {
@@ -78,7 +79,9 @@ const ConnectorDetailsStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectorDe
   const [loading, setLoading] = useState(false)
   const isEdit = props.isEditMode || prevStepData?.isEdit
   const { getString } = useStrings()
-  useConnectorWizard({ helpPanel: { referenceId: 'AWSKMSDetails', contentWidth: 900 } })
+  useConnectorWizard({
+    helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 900 } : undefined
+  })
 
   const handleSubmit = async (formData: ConnectorConfigDTO): Promise<void> => {
     mounted.current = true

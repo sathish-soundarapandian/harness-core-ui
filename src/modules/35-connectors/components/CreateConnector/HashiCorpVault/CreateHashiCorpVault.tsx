@@ -39,6 +39,7 @@ const CreateHashiCorpVault: React.FC<CreateConnectorModalProps> = props => {
         mock={props.mock}
         gitDetails={props.gitDetails}
         disableGitSync={true}
+        helpPanelReferenceId="HashiCorpVaultOverview"
       />
       <VaultConfigForm
         name={getString('connectors.hashiCorpVault.stepTwoName')}
@@ -60,6 +61,7 @@ const CreateHashiCorpVault: React.FC<CreateConnectorModalProps> = props => {
         gitDetails={props.gitDetails}
         disableGitSync={true}
         submitOnNextStep
+        helpPanelReferenceId="ConnectorDelegatesSetup"
       />
       <SetupEngine
         name={getString('connectors.hashiCorpVault.setupEngine')}
