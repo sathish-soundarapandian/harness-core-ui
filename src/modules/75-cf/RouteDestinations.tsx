@@ -534,8 +534,10 @@ const CFRoutes: FC = () => {
           <GitSyncConfigTab />
         </GitSyncPage>
       </RouteWithLayout>
-      <AdminRouteDestinations />
-      {FF_PIPELINE && <PipelineRouteDestinations />}
+
+      {AdminRouteDestinations({})?.props.children}
+
+      {FF_PIPELINE && PipelineRouteDestinations({})?.props.children}
 
       {GovernanceRouteDestinations({
         sidebarProps: CFSideNavProps,

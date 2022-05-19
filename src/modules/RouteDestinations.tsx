@@ -92,7 +92,7 @@ export default function RouteDestinations(): React.ReactElement {
       {CDNG_ENABLED ? CDRoutes.props.children : null}
       {CVNG_ENABLED ? CVRoutes.props.children : null}
       {GitOpsRoutes.props.children}
-      {SECURITY && STORoutes.props.children}
+      {SECURITY ? STORoutes.props.children : null}
       <Route path="/account/:accountId/settings">
         <AuthSettingsRoutes />
       </Route>
