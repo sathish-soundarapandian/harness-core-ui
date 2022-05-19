@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { Layout } from '@wings-software/uicore'
+import { Layout, useToaster } from '@wings-software/uicore'
 
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
@@ -20,6 +20,7 @@ import { isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { useDeepCompareEffect } from '@common/hooks'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { ManifestSelectionProps } from './ManifestInterface'
 import ManifestListView from './ManifestListView/ManifestListView'
 
@@ -37,6 +38,8 @@ export default function ManifestSelection({ isPropagating, deploymentType }: Man
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const [fetchedConnectorResponse, setFetchedConnectorResponse] = React.useState<PageConnectorResponse | undefined>()
+  const { showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<
     PipelineType<{
@@ -80,12 +83,16 @@ export default function ManifestSelection({ isPropagating, deploymentType }: Man
   }
 
   const refetchConnectorList = async (): Promise<void> => {
-    const connectorList = getConnectorList()
-    const connectorIdentifiers = connectorList.map((item: { scope: string; identifier: string }) => item.identifier)
-    const response = await fetchConnectors({ filterType: 'Connector', connectorIdentifiers })
-    if (response?.data) {
-      const { data: connectorResponse } = response
-      setFetchedConnectorResponse(connectorResponse)
+    try {
+      const connectorList = getConnectorList()
+      const connectorIdentifiers = connectorList.map((item: { scope: string; identifier: string }) => item.identifier)
+      const response = await fetchConnectors({ filterType: 'Connector', connectorIdentifiers })
+      if (response?.data) {
+        const { data: connectorResponse } = response
+        setFetchedConnectorResponse(connectorResponse)
+      }
+    } catch (e) {
+      showError(getRBACErrorMessage(e))
     }
   }
 

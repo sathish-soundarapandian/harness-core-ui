@@ -179,6 +179,16 @@ function OpenShiftTemplateWithGit({
               return true
             }
             return !isEmpty(value) && value?.length > 0
+          }),
+          paramsPaths: Yup.lazy((value): Yup.Schema<unknown> => {
+            if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
+              return Yup.array().of(
+                Yup.object().shape({
+                  path: Yup.string().min(1).required(getString('pipeline.manifestType.pathRequired'))
+                })
+              )
+            }
+            return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
           })
         })}
         onSubmit={formData => {
@@ -308,14 +318,16 @@ function OpenShiftTemplateWithGit({
                   )}
                 </div>
               </Layout.Horizontal>
-              <DragnDropPaths
-                formik={formik}
-                expressions={expressions}
-                allowableTypes={allowableTypes}
-                fieldPath="paramsPaths"
-                pathLabel={getString('pipeline.manifestType.paramsYamlPath')}
-                placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
-              />
+              <div className={templateCss.halfWidth}>
+                <DragnDropPaths
+                  formik={formik}
+                  expressions={expressions}
+                  allowableTypes={allowableTypes}
+                  fieldPath="paramsPaths"
+                  pathLabel={getString('pipeline.manifestType.paramsYamlPath')}
+                  placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                />
+              </div>
               <Accordion
                 activeId={isActiveAdvancedStep ? getString('advancedTitle') : ''}
                 className={cx(templateCss.advancedStepOpen)}

@@ -282,9 +282,8 @@ manifestType:
   repoNamePlaceholder: Enter Repository Name
   serverlessConfigFilePath: Serverless Config File Path
   serverlessConfigFilePathPlaceholder: Enter Serverless Config File Path
-  valuesYamlPath: Values.yaml path
-  paramsYamlPath: Params.yaml path
-  patchesYamlPath: Patches.yaml path
+  valuesYamlPath: Values.yaml
+  paramsYamlPath: Openshift Parameters
   http:
     chartName: 'Chart Name'
     chartVersion: 'Chart Version'

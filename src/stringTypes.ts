@@ -2932,7 +2932,6 @@ export interface StringsMap {
   'pipeline.manifestType.osTemplatePathPlaceHolder': string
   'pipeline.manifestType.osTemplatePathRequired': string
   'pipeline.manifestType.paramsYamlPath': string
-  'pipeline.manifestType.patchesYamlPath': string
   'pipeline.manifestType.path': string
   'pipeline.manifestType.pathPlaceholder': string
   'pipeline.manifestType.pathRequired': string
@@ -3506,6 +3505,29 @@ export interface StringsMap {
   'cd.cdTrialHomePage.startTrial.description': string
   'cd.cdTrialHomePage.startTrial.startBtn.description': string
   'cd.chooseProvisionerText': string
+  'cd.cloudFormation.awsURL': string
+  'cd.cloudFormation.cfTemplateFile': string
+  'cd.cloudFormation.continueStatus': string
+  'cd.cloudFormation.errors.awsURL': string
+  'cd.cloudFormation.errors.getParam': string
+  'cd.cloudFormation.errors.name': string
+  'cd.cloudFormation.errors.region': string
+  'cd.cloudFormation.errors.stackName': string
+  'cd.cloudFormation.errors.templateBody': string
+  'cd.cloudFormation.errors.value': string
+  'cd.cloudFormation.inlineParameterFiles': string
+  'cd.cloudFormation.paramFileConnector': string
+  'cd.cloudFormation.parameterFileDetails': string
+  'cd.cloudFormation.parameterFiles': string
+  'cd.cloudFormation.retrieveNames': string
+  'cd.cloudFormation.specifyCapabilities': string
+  'cd.cloudFormation.specifyInlineParameterFiles': string
+  'cd.cloudFormation.specifyParameterFiles': string
+  'cd.cloudFormation.specifyTemplateFile': string
+  'cd.cloudFormation.stackName': string
+  'cd.cloudFormation.templateFile': string
+  'cd.cloudFormation.templateFileConnector': string
+  'cd.cloudFormation.templateFileStore': string
   'cd.componentsInstalled': string
   'cd.configFileDetails': string
   'cd.configFilePlaceHolder': string
@@ -3875,6 +3897,7 @@ export interface StringsMap {
   'ce.co.autoStoppingRule.configuration.asgModal.title': string
   'ce.co.autoStoppingRule.configuration.asgSelectionInfoText': string
   'ce.co.autoStoppingRule.configuration.ecsModal.emptyDescription': string
+  'ce.co.autoStoppingRule.configuration.ecsModal.labels.selectCluster': string
   'ce.co.autoStoppingRule.configuration.ecsModal.title': string
   'ce.co.autoStoppingRule.configuration.igModal.gcpFiltersNotSelectedDescription': string
   'ce.co.autoStoppingRule.configuration.igModal.title': string
@@ -3882,8 +3905,17 @@ export interface StringsMap {
   'ce.co.autoStoppingRule.configuration.instanceModal.gcpEmptyInstancesDescription': string
   'ce.co.autoStoppingRule.configuration.instanceModal.gcpFiltersNotSelectedDescription': string
   'ce.co.autoStoppingRule.configuration.instanceModal.gcpZoneFilterNotSelectedDescription': string
+  'ce.co.autoStoppingRule.configuration.instanceModal.header': string
+  'ce.co.autoStoppingRule.configuration.instanceModal.labels.selectRegion': string
+  'ce.co.autoStoppingRule.configuration.instanceModal.labels.selectTagKey': string
+  'ce.co.autoStoppingRule.configuration.instanceModal.labels.selectTagVal': string
+  'ce.co.autoStoppingRule.configuration.instanceModal.labels.selectTags': string
   'ce.co.autoStoppingRule.configuration.instanceModal.rgEmptyDescription': string
   'ce.co.autoStoppingRule.configuration.instanceModal.rgEmptyInstancesDescription': string
+  'ce.co.autoStoppingRule.configuration.kubernetesModal.createNewConnectorBtn': string
+  'ce.co.autoStoppingRule.configuration.kubernetesModal.infoText1': string
+  'ce.co.autoStoppingRule.configuration.kubernetesModal.infoText2': string
+  'ce.co.autoStoppingRule.configuration.kubernetesModal.title': string
   'ce.co.autoStoppingRule.configuration.rdsModal.emptyDescription': string
   'ce.co.autoStoppingRule.configuration.rdsModal.title': string
   'ce.co.autoStoppingRule.configuration.step1.form.idleTime.label': string
@@ -4134,6 +4166,7 @@ export interface StringsMap {
   'ce.common.emissionUnitHTML': string
   'ce.common.newBudget': string
   'ce.common.or': string
+  'ce.common.refresh': string
   'ce.common.spendTillDate': string
   'ce.common.totalCount': string
   'ce.connector.AWS.crossAccountRole.arn': string
@@ -5963,6 +5996,7 @@ export interface StringsMap {
   'stoSteps.Critical': string
   'stoSteps.Info': string
   'stoSteps.Unassigned': string
+  'stoSteps.continuous': string
   'stoSteps.failedToGetIssueCounts': string
   'stoSteps.noScansRunPipelineText': string
   'stoSteps.noScansText': string

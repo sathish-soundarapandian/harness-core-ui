@@ -13,3 +13,4 @@ noSecurityIssues: No Security Issues
 Critical: Critical
 Info: Info
 Unassigned: Unassigned
+continuous: '{{$.common.purpose.sto.continuous}}'

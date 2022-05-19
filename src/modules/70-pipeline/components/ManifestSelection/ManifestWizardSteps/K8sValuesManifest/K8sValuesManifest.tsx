@@ -195,6 +195,16 @@ function K8sValuesManifest({
             }
             return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
           }),
+          valuesPaths: Yup.lazy((value): Yup.Schema<unknown> => {
+            if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
+              return Yup.array().of(
+                Yup.object().shape({
+                  path: Yup.string().min(1).required(getString('pipeline.manifestType.pathRequired'))
+                })
+              )
+            }
+            return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
+          }),
           repoName: Yup.string().test('repoName', getString('common.validation.repositoryName'), value => {
             if (
               connectionType === GitRepoName.Repo ||
@@ -312,24 +322,26 @@ function K8sValuesManifest({
                       </div>
                     )}
                   </Layout.Horizontal>
-                  <DragnDropPaths
-                    formik={formik}
-                    expressions={expressions}
-                    allowableTypes={allowableTypes}
-                    fieldPath="paths"
-                    pathLabel={getString('fileFolderPathText')}
-                    placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
-                  />
-                  {selectedManifest === ManifestDataType.K8sManifest && (
+                  <div className={css.halfWidth}>
                     <DragnDropPaths
                       formik={formik}
                       expressions={expressions}
                       allowableTypes={allowableTypes}
-                      fieldPath="valuesPaths"
-                      pathLabel={getString('pipeline.manifestType.valuesYamlPath')}
+                      fieldPath="paths"
+                      pathLabel={getString('fileFolderPathText')}
                       placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
                     />
-                  )}
+                    {selectedManifest === ManifestDataType.K8sManifest && (
+                      <DragnDropPaths
+                        formik={formik}
+                        expressions={expressions}
+                        allowableTypes={allowableTypes}
+                        fieldPath="valuesPaths"
+                        pathLabel={getString('pipeline.manifestType.valuesYamlPath')}
+                        placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                      />
+                    )}
+                  </div>
 
                   {showAdvancedSection(selectedManifest) && (
                     <Accordion

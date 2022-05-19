@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, findByText, fireEvent, waitFor, findAllByText } from '@testing-library/react'
+import { render, findByText, fireEvent, waitFor, findAllByText, getByText } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   PipelineContext,
@@ -33,9 +34,14 @@ const fetchConnectors = (): Promise<unknown> => Promise.resolve({})
 
 jest.mock('services/cd-ng', () => ({
   useGetConnectorListV2: jest.fn().mockImplementation(() => ({ mutate: fetchConnectors })),
-
   useGetConnector: jest.fn().mockImplementation(() => {
     return { data: {}, refetch: jest.fn(), error: null }
+  }),
+  useGetBuildDetailsForArtifactoryArtifact: jest.fn().mockImplementation(() => {
+    return { data: {}, refetch: jest.fn(), error: null, loading: false }
+  }),
+  useGetRepositoriesDetailsForArtifactory: jest.fn().mockImplementation(() => {
+    return { data: {}, refetch: jest.fn(), error: null, loading: false }
   })
 }))
 
@@ -451,5 +457,49 @@ describe('ArtifactsSelection tests', () => {
     expect(nexus).toBeNull()
     const acr = await container.querySelector('input[value="Acr"]')
     expect(acr).toBeNull()
+  })
+
+  test('clicking on Create Artifactory Connector should open create dialog properly', async () => {
+    const context = {
+      ...pipelineContextWithoutArtifactsMock,
+      getStageFromPipeline: jest.fn(() => {
+        return { stage: pipelineContextWithoutArtifactsMock.state.pipeline.stages[0], parent: undefined }
+      })
+    } as any
+
+    const { container } = render(
+      <TestWrapper
+        defaultAppStoreValues={{
+          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+        }}
+      >
+        <PipelineContext.Provider value={context}>
+          <ArtifactsSelection deploymentType="ServerlessAwsLambda" />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    const addPrimaryButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addPrimary')
+    expect(addPrimaryButton).toBeDefined()
+    fireEvent.click(addPrimaryButton)
+
+    const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
+    const firstStepTitle = await waitFor(() => findByText(portal, 'connectors.specifyArtifactRepoType'))
+    expect(firstStepTitle).toBeDefined()
+    const artifactoryTileText = getByText(portal, 'connectors.artifactory.artifactoryLabel')
+    expect(artifactoryTileText).toBeDefined()
+    userEvent.click(artifactoryTileText!)
+    const continueButton = getByText(portal, 'continue').parentElement as HTMLElement
+    await waitFor(() => expect(continueButton).not.toBeDisabled())
+    userEvent.click(continueButton)
+
+    const artifactRepoLabel = await findByText(portal, 'Artifactory connector')
+    expect(artifactRepoLabel).toBeDefined()
+    const newConnectorButton = getByText(portal, 'newLabel Artifactory connector')
+    userEvent.click(newConnectorButton!)
+
+    const overviewTitle = await findAllByText(portal, 'overview')
+    expect(overviewTitle).toHaveLength(2)
+    expect(getByText(portal, 'name')).toBeDefined()
   })
 })

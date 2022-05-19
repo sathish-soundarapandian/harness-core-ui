@@ -224,3 +224,28 @@ serviceOverridesHelperText: Override existing variables or defined new variables
 configurationVariable: Configuration Variable
 overrideValue: Override Value
 overrideType: Override Type
+cloudFormation:
+  cfTemplateFile: Cloud Formation Template File
+  templateFile: Template File
+  specifyTemplateFile: Specify Template File
+  stackName: Stack Name
+  specifyCapabilities: Specify Capabilities
+  parameterFiles: Cloud Formation Parameter Files
+  parameterFileDetails: Parameter File Details
+  specifyParameterFiles: Specify Parameter Files...
+  inlineParameterFiles: CloudFormation Parameters Overrides
+  specifyInlineParameterFiles: Specify Inline Parameters...
+  continueStatus: Continue Based on Stack Statuses
+  paramFileConnector: Parameter File Connector
+  templateFileConnector: Template File Connector
+  templateFileStore: Template File Store
+  retrieveNames: Retrieve Names from template
+  awsURL: S3 URL
+  errors:
+    region: AWS Region is required
+    stackName: Stack Name is required
+    name: Name cannot be empty
+    value: Value cannot be empty
+    templateBody: Template body required
+    awsURL: S3 url required
+    getParam: AWS Connector, Region and Template File are required to retrieve parameters

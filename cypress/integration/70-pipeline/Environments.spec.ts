@@ -1,4 +1,4 @@
-import { environmentRoute, environmentsCall, envUpsertCall, envUpdateList } from '../../support/70-pipeline/constants'
+import { environmentRoute, environmentsCall, envUpsertCall } from '../../support/70-pipeline/constants'
 
 describe('Environment for Pipeline', () => {
   const visitEnvironmentsPageWithAssertion = (): void => {
@@ -100,12 +100,12 @@ describe('Environment for Pipeline', () => {
 
     //upsert call
     cy.intercept('GET', envUpsertCall, { fixture: 'ng/api/environments/upsertCall.json' })
+    cy.intercept('GET', environmentsCall, { fixture: 'ng/api/environments/environmentListUpdate.json' }).as(
+      'environmentListUpdate'
+    )
     cy.contains('span', 'Save').click()
 
     //Updated list
-    cy.intercept('GET', envUpdateList, { fixture: 'ng/api/environments/environmentListUpdate.json' }).as(
-      'environmentListUpdate'
-    )
     cy.wait('@environmentListUpdate')
 
     //check if list updated

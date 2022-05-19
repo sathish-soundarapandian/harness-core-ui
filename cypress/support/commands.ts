@@ -33,6 +33,7 @@
 import '@testing-library/cypress/add-commands'
 import { addMatchImageSnapshotCommand } from 'cypress-image-snapshot/command'
 import { getConnectorIconByType } from '../utils/connctors-utils'
+import { activeTabClassName } from './70-pipeline/constants'
 import {
   servicesCall,
   servicesResponse,
@@ -66,7 +67,7 @@ declare global {
     /* eslint-disable @typescript-eslint/no-unused-vars  */
     interface Chainable<Subject> {
       login(username: string, pass: string): void
-      visitPageAssertion(): void
+      visitPageAssertion(className?: string): void
       createDeploymentStage(): void
       visitCreatePipeline(): void
       visitPipelinesList(): void
@@ -126,8 +127,8 @@ Cypress.Commands.add('login', (emailValue: string, password: string) => {
   cy.clickSubmit()
 })
 
-Cypress.Commands.add('visitPageAssertion', () => {
-  cy.get('.TabNavigation--active', {
+Cypress.Commands.add('visitPageAssertion', (className = activeTabClassName) => {
+  cy.get(className, {
     timeout: 30000
   }).should('be.visible')
   cy.wait(1000)
@@ -142,16 +143,16 @@ Cypress.Commands.add('createDeploymentStage', () => {
 })
 
 Cypress.Commands.add('visitPipelinesList', () => {
+  cy.visitPageAssertion('[class^=SideNav-module_main]')
   cy.contains('p', 'Projects').click()
+  cy.visitPageAssertion('.PageBody--pageBody')
   cy.contains('p', 'Project 1').click()
   cy.contains('p', 'Delivery').click()
   cy.contains('p', 'Pipelines').click()
 })
 
 Cypress.Commands.add('visitExecutionsList', () => {
-  cy.contains('p', 'Projects').click()
-  cy.contains('p', 'Project 1').click()
-  cy.contains('p', 'Delivery').click()
+  cy.visitPipelinesList()
   cy.contains('p', 'Deployments').click()
 })
 
@@ -169,10 +170,7 @@ Cypress.Commands.add('initializeRoute', () => {
 })
 
 Cypress.Commands.add('visitVerifyStepInPipeline', () => {
-  cy.contains('p', 'Projects', { timeout: 10000 }).click()
-  cy.contains('p', 'Project 1').click()
-  cy.contains('p', 'Delivery').click()
-  cy.contains('p', 'Pipelines').click()
+  cy.visitPipelinesList()
   cy.contains('span', 'Create a Pipeline').click()
 })
 

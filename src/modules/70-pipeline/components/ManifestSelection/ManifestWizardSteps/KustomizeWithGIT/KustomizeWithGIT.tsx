@@ -181,6 +181,16 @@ function KustomizeWithGIT({
               return true
             }
             return !isEmpty(value) && value?.length > 0
+          }),
+          patchesPaths: Yup.lazy((value): Yup.Schema<unknown> => {
+            if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
+              return Yup.array().of(
+                Yup.object().shape({
+                  path: Yup.string().min(1).required(getString('pipeline.manifestType.pathRequired'))
+                })
+              )
+            }
+            return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
           })
         })}
         onSubmit={formData => {
@@ -348,14 +358,16 @@ function KustomizeWithGIT({
                   )}
                 </div>
               </Layout.Horizontal>
-              <DragnDropPaths
-                formik={formik}
-                expressions={expressions}
-                allowableTypes={allowableTypes}
-                fieldPath="patchesPaths"
-                pathLabel={getString('pipeline.manifestType.patchesYamlPath')}
-                placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
-              />
+              <div className={helmcss.halfWidth}>
+                <DragnDropPaths
+                  formik={formik}
+                  expressions={expressions}
+                  allowableTypes={allowableTypes}
+                  fieldPath="patchesPaths"
+                  pathLabel={getString('pipeline.manifestTypeLabels.KustomizePatches')}
+                  placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                />
+              </div>
               <Accordion
                 activeId={isActiveAdvancedStep ? getString('advancedTitle') : ''}
                 className={cx({

@@ -141,9 +141,7 @@ function AttachPathYamlFlow({
           size={ButtonSize.SMALL}
           variation={ButtonVariation.LINK}
           onClick={showModal}
-          text={getString('pipeline.manifestType.attachPath', {
-            manifestPath: ManifestToPathMap[manifestType]
-          })}
+          text={`${getString('pipeline.manifestType.attachPath')}  ${getString(ManifestToPathLabelMap[manifestType])}`}
         />
       </section>
     )

@@ -179,6 +179,16 @@ function HelmWithGcs({
           chartName: Yup.string().trim().required(getString('pipeline.manifestType.http.chartNameRequired')),
           helmVersion: Yup.string().trim().required(getString('pipeline.manifestType.helmVersionRequired')),
           bucketName: Yup.mixed().required(getString('pipeline.manifestType.bucketNameRequired')),
+          valuesPaths: Yup.lazy((value): Yup.Schema<unknown> => {
+            if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
+              return Yup.array().of(
+                Yup.object().shape({
+                  path: Yup.string().min(1).required(getString('pipeline.manifestType.pathRequired'))
+                })
+              )
+            }
+            return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
+          }),
           commandFlags: Yup.array().of(
             Yup.object().shape({
               flag: Yup.string().when('commandType', {
@@ -380,14 +390,16 @@ function HelmWithGcs({
                   />
                 </div>
               </Layout.Horizontal>
-              <DragnDropPaths
-                formik={formik}
-                expressions={expressions}
-                allowableTypes={allowableTypes}
-                fieldPath="valuesPaths"
-                pathLabel={getString('pipeline.manifestType.valuesYamlPath')}
-                placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
-              />
+              <div className={helmcss.halfWidth}>
+                <DragnDropPaths
+                  formik={formik}
+                  expressions={expressions}
+                  allowableTypes={allowableTypes}
+                  fieldPath="valuesPaths"
+                  pathLabel={getString('pipeline.manifestType.valuesYamlPath')}
+                  placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                />
+              </div>
 
               <Accordion
                 activeId={isActiveAdvancedStep ? getString('advancedTitle') : ''}

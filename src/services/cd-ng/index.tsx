@@ -1481,6 +1481,32 @@ export interface CloudformationTemplateFileSpec {
   type?: string
 }
 
+export interface ClusterBasicDTO {
+  identifier?: string
+  name?: string
+}
+
+export interface ClusterBatchRequest {
+  clusters?: ClusterBasicDTO[]
+  envRef?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface ClusterRequest {
+  envRef?: string
+  identifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface ClusterResponse {
+  clusterRef?: string
+  envRef?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
 export interface CodeBase {
   build: Build
   connectorRef: string
@@ -3664,6 +3690,7 @@ export interface FileDTO {
 export type FileNodeDTO = FileStoreNodeDTO & {
   description?: string
   fileUsage: 'MANIFEST_FILE' | 'CONFIG' | 'SCRIPT'
+  mimeType?: string
   tags?: NGTag[]
 }
 
@@ -3672,6 +3699,7 @@ export interface FileStoreNodeDTO {
   lastModifiedAt?: number
   lastModifiedBy?: EmbeddedUserDetailsDTO
   name: string
+  parentIdentifier?: string
   type: 'FILE' | 'FOLDER'
 }
 
@@ -3680,7 +3708,7 @@ export interface FileStoreRequest {
 }
 
 export interface FilesFilterProperties {
-  createdBy?: string
+  createdBy?: EmbeddedUserDetailsDTO
   fileUsage?: 'MANIFEST_FILE' | 'CONFIG' | 'SCRIPT'
   filterType?:
     | 'Connector'
@@ -3695,7 +3723,7 @@ export interface FilesFilterProperties {
     | 'FileStore'
     | 'CCMRecommendation'
     | 'Anomaly'
-  referencedBy?: string
+  referencedBy?: EntityDetail
   tags?: {
     [key: string]: string
   }
@@ -3749,6 +3777,7 @@ export interface FolderNodeDTO {
   lastModifiedAt?: number
   lastModifiedBy?: EmbeddedUserDetailsDTO
   name: string
+  parentIdentifier?: string
   type: 'FILE' | 'FOLDER'
 }
 
@@ -4848,6 +4877,7 @@ export type HelmChartManifest = ManifestAttributes & {
   metadata?: string
   skipResourceVersioning?: boolean
   store?: StoreConfigWrapper
+  valuesPaths?: string[]
 }
 
 export type HelmDeployStepInfo = StepSpecType & {
@@ -5092,6 +5122,10 @@ export interface InfrastructureResponseDTO {
   yaml?: string
 }
 
+export type InheritFromManifestStoreConfig = StoreConfig & {
+  paths?: string[]
+}
+
 export type InheritedCloudformationDeleteStackStepConfiguration = CloudformationDeleteStackStepConfigurationSpec & {
   provisionerIdentifier: string
 }
@@ -5109,6 +5143,10 @@ export type InlineCloudformationTagsFileSpec = CloudformationTagsFileSpec & {
 
 export type InlineCloudformationTemplateFileSpec = CloudformationTemplateFileSpec & {
   templateBody: string
+}
+
+export type InlineStoreConfig = StoreConfig & {
+  content: string
 }
 
 export type InlineTerraformBackendConfigSpec = TerraformBackendConfigSpec & {
@@ -5315,6 +5353,7 @@ export type K8SDirectInfrastructure = Infrastructure & {
 export type K8sApplyStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   filePaths?: string[]
+  overrides?: ManifestConfigWrapper[]
   skipDryRun?: boolean
   skipSteadyStateCheck?: boolean
 }
@@ -5392,6 +5431,7 @@ export type K8sManifest = ManifestAttributes & {
   metadata?: string
   skipResourceVersioning?: ParameterFieldBoolean
   store?: StoreConfigWrapper
+  valuesPaths?: string[]
 }
 
 export type K8sRollingRollbackStepInfo = StepSpecType & {
@@ -5500,6 +5540,7 @@ export type KubernetesUserNamePasswordDTO = KubernetesAuthCredentialDTO & {
 
 export type KustomizeManifest = ManifestAttributes & {
   metadata?: string
+  patchesPaths?: string[]
   pluginPath?: string
   skipResourceVersioning?: ParameterFieldBoolean
   store?: StoreConfigWrapper
@@ -6084,6 +6125,7 @@ export interface OnTimeoutConfig {
 
 export type OpenshiftManifest = ManifestAttributes & {
   metadata?: string
+  paramsPaths?: string[]
   skipResourceVersioning?: ParameterFieldBoolean
   store?: StoreConfigWrapper
 }
@@ -6173,6 +6215,16 @@ export interface PageActivitySummary {
 
 export interface PageApiKeyAggregateDTO {
   content?: ApiKeyAggregateDTO[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
+export interface PageClusterResponse {
+  content?: ClusterResponse[]
   empty?: boolean
   pageIndex?: number
   pageItemCount?: number
@@ -7123,6 +7175,13 @@ export interface ResponseCDPipelineModuleInfo {
 export interface ResponseCDStageModuleInfo {
   correlationId?: string
   data?: CDStageModuleInfo
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseClusterResponse {
+  correlationId?: string
+  data?: ClusterResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -8285,6 +8344,13 @@ export interface ResponsePageActivitySummary {
 export interface ResponsePageApiKeyAggregateDTO {
   correlationId?: string
   data?: PageApiKeyAggregateDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePageClusterResponse {
+  correlationId?: string
+  data?: PageClusterResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -10164,7 +10230,18 @@ export interface StoreConfig {
 export interface StoreConfigWrapper {
   metadata?: string
   spec: StoreConfig
-  type: 'Git' | 'Github' | 'Bitbucket' | 'GitLab' | 'Http' | 'S3' | 'Gcs' | 'Artifactory' | 'S3Url'
+  type:
+    | 'Git'
+    | 'Github'
+    | 'Bitbucket'
+    | 'GitLab'
+    | 'Http'
+    | 'S3'
+    | 'Gcs'
+    | 'Inline'
+    | 'Artifactory'
+    | 'S3Url'
+    | 'InheritFromManifest'
 }
 
 export type StringNGVariable = NGVariable & {
@@ -10897,6 +10974,8 @@ export type ApiKeyDTORequestBody = ApiKeyDTO
 
 export type CFParametersForAwsBodyRequestBody = string
 
+export type ClusterRequestRequestBody = ClusterRequest
+
 export type ConnectorRequestBody = Connector
 
 export type DelegateGroupTagsRequestBody = DelegateGroupTags
@@ -10973,11 +11052,9 @@ export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
-export type ProcessPollingResultNgBodyRequestBody = string[]
-
 export type GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody = string
 
-export type SubscribeBodyRequestBody = string[]
+export type ProcessPollingResultNgBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -24991,6 +25068,349 @@ export const putGitSyncDefaultPromise = (
     signal
   )
 
+export interface GetClusterListQueryParams {
+  page?: number
+  size?: number
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  environmentIdentifier?: string
+  searchTerm?: string
+  identifiers?: string[]
+  sort?: string[]
+}
+
+export type GetClusterListProps = Omit<
+  GetProps<ResponsePageClusterResponse, Failure | Error, GetClusterListQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets cluster list
+ */
+export const GetClusterList = (props: GetClusterListProps) => (
+  <Get<ResponsePageClusterResponse, Failure | Error, GetClusterListQueryParams, void>
+    path={`/gitops/clusters`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetClusterListProps = Omit<
+  UseGetProps<ResponsePageClusterResponse, Failure | Error, GetClusterListQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets cluster list
+ */
+export const useGetClusterList = (props: UseGetClusterListProps) =>
+  useGet<ResponsePageClusterResponse, Failure | Error, GetClusterListQueryParams, void>(`/gitops/clusters`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Gets cluster list
+ */
+export const getClusterListPromise = (
+  props: GetUsingFetchProps<ResponsePageClusterResponse, Failure | Error, GetClusterListQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePageClusterResponse, Failure | Error, GetClusterListQueryParams, void>(
+    getConfig('ng/api'),
+    `/gitops/clusters`,
+    props,
+    signal
+  )
+
+export interface CreateClusterQueryParams {
+  accountIdentifier: string
+}
+
+export type CreateClusterProps = Omit<
+  MutateProps<ResponseClusterResponse, Failure | Error, CreateClusterQueryParams, ClusterRequestRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Create a Cluster
+ */
+export const CreateCluster = (props: CreateClusterProps) => (
+  <Mutate<ResponseClusterResponse, Failure | Error, CreateClusterQueryParams, ClusterRequestRequestBody, void>
+    verb="POST"
+    path={`/gitops/clusters`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseCreateClusterProps = Omit<
+  UseMutateProps<ResponseClusterResponse, Failure | Error, CreateClusterQueryParams, ClusterRequestRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Create a Cluster
+ */
+export const useCreateCluster = (props: UseCreateClusterProps) =>
+  useMutate<ResponseClusterResponse, Failure | Error, CreateClusterQueryParams, ClusterRequestRequestBody, void>(
+    'POST',
+    `/gitops/clusters`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Create a Cluster
+ */
+export const createClusterPromise = (
+  props: MutateUsingFetchProps<
+    ResponseClusterResponse,
+    Failure | Error,
+    CreateClusterQueryParams,
+    ClusterRequestRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseClusterResponse, Failure | Error, CreateClusterQueryParams, ClusterRequestRequestBody, void>(
+    'POST',
+    getConfig('ng/api'),
+    `/gitops/clusters`,
+    props,
+    signal
+  )
+
+export interface UpdateClusterQueryParams {
+  accountIdentifier: string
+}
+
+export type UpdateClusterProps = Omit<
+  MutateProps<ResponseClusterResponse, Failure | Error, UpdateClusterQueryParams, ClusterRequestRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Update a cluster by identifier
+ */
+export const UpdateCluster = (props: UpdateClusterProps) => (
+  <Mutate<ResponseClusterResponse, Failure | Error, UpdateClusterQueryParams, ClusterRequestRequestBody, void>
+    verb="PUT"
+    path={`/gitops/clusters`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateClusterProps = Omit<
+  UseMutateProps<ResponseClusterResponse, Failure | Error, UpdateClusterQueryParams, ClusterRequestRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Update a cluster by identifier
+ */
+export const useUpdateCluster = (props: UseUpdateClusterProps) =>
+  useMutate<ResponseClusterResponse, Failure | Error, UpdateClusterQueryParams, ClusterRequestRequestBody, void>(
+    'PUT',
+    `/gitops/clusters`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Update a cluster by identifier
+ */
+export const updateClusterPromise = (
+  props: MutateUsingFetchProps<
+    ResponseClusterResponse,
+    Failure | Error,
+    UpdateClusterQueryParams,
+    ClusterRequestRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseClusterResponse, Failure | Error, UpdateClusterQueryParams, ClusterRequestRequestBody, void>(
+    'PUT',
+    getConfig('ng/api'),
+    `/gitops/clusters`,
+    props,
+    signal
+  )
+
+export interface CreateClustersQueryParams {
+  accountIdentifier: string
+}
+
+export type CreateClustersProps = Omit<
+  MutateProps<ResponsePageClusterResponse, Failure | Error, CreateClustersQueryParams, ClusterBatchRequest, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Create Clusters
+ */
+export const CreateClusters = (props: CreateClustersProps) => (
+  <Mutate<ResponsePageClusterResponse, Failure | Error, CreateClustersQueryParams, ClusterBatchRequest, void>
+    verb="POST"
+    path={`/gitops/clusters/batch`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseCreateClustersProps = Omit<
+  UseMutateProps<ResponsePageClusterResponse, Failure | Error, CreateClustersQueryParams, ClusterBatchRequest, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Create Clusters
+ */
+export const useCreateClusters = (props: UseCreateClustersProps) =>
+  useMutate<ResponsePageClusterResponse, Failure | Error, CreateClustersQueryParams, ClusterBatchRequest, void>(
+    'POST',
+    `/gitops/clusters/batch`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Create Clusters
+ */
+export const createClustersPromise = (
+  props: MutateUsingFetchProps<
+    ResponsePageClusterResponse,
+    Failure | Error,
+    CreateClustersQueryParams,
+    ClusterBatchRequest,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponsePageClusterResponse, Failure | Error, CreateClustersQueryParams, ClusterBatchRequest, void>(
+    'POST',
+    getConfig('ng/api'),
+    `/gitops/clusters/batch`,
+    props,
+    signal
+  )
+
+export interface DeleteClusterQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  environmentIdentifier?: string
+}
+
+export type DeleteClusterProps = Omit<
+  MutateProps<ResponseBoolean, Failure | Error, DeleteClusterQueryParams, string, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Delete a Cluster by identifier
+ */
+export const DeleteCluster = (props: DeleteClusterProps) => (
+  <Mutate<ResponseBoolean, Failure | Error, DeleteClusterQueryParams, string, void>
+    verb="DELETE"
+    path={`/gitops/clusters`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseDeleteClusterProps = Omit<
+  UseMutateProps<ResponseBoolean, Failure | Error, DeleteClusterQueryParams, string, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Delete a Cluster by identifier
+ */
+export const useDeleteCluster = (props: UseDeleteClusterProps) =>
+  useMutate<ResponseBoolean, Failure | Error, DeleteClusterQueryParams, string, void>('DELETE', `/gitops/clusters`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Delete a Cluster by identifier
+ */
+export const deleteClusterPromise = (
+  props: MutateUsingFetchProps<ResponseBoolean, Failure | Error, DeleteClusterQueryParams, string, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseBoolean, Failure | Error, DeleteClusterQueryParams, string, void>(
+    'DELETE',
+    getConfig('ng/api'),
+    `/gitops/clusters`,
+    props,
+    signal
+  )
+
+export interface GetClusterQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  environmentIdentifier?: string
+  deleted?: boolean
+}
+
+export interface GetClusterPathParams {
+  identifier: string
+}
+
+export type GetClusterProps = Omit<
+  GetProps<ResponseClusterResponse, Failure | Error, GetClusterQueryParams, GetClusterPathParams>,
+  'path'
+> &
+  GetClusterPathParams
+
+/**
+ * Gets a Cluster by identifier
+ */
+export const GetCluster = ({ identifier, ...props }: GetClusterProps) => (
+  <Get<ResponseClusterResponse, Failure | Error, GetClusterQueryParams, GetClusterPathParams>
+    path={`/gitops/clusters/${identifier}`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetClusterProps = Omit<
+  UseGetProps<ResponseClusterResponse, Failure | Error, GetClusterQueryParams, GetClusterPathParams>,
+  'path'
+> &
+  GetClusterPathParams
+
+/**
+ * Gets a Cluster by identifier
+ */
+export const useGetCluster = ({ identifier, ...props }: UseGetClusterProps) =>
+  useGet<ResponseClusterResponse, Failure | Error, GetClusterQueryParams, GetClusterPathParams>(
+    (paramsInPath: GetClusterPathParams) => `/gitops/clusters/${paramsInPath.identifier}`,
+    { base: getConfig('ng/api'), pathParams: { identifier }, ...props }
+  )
+
+/**
+ * Gets a Cluster by identifier
+ */
+export const getClusterPromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<ResponseClusterResponse, Failure | Error, GetClusterQueryParams, GetClusterPathParams> & {
+    identifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseClusterResponse, Failure | Error, GetClusterQueryParams, GetClusterPathParams>(
+    getConfig('ng/api'),
+    `/gitops/clusters/${identifier}`,
+    props,
+    signal
+  )
+
 export interface CreateGitOpsProviderQueryParams {
   accountIdentifier?: string
   orgIdentifier?: string
@@ -29023,7 +29443,7 @@ export type ProcessPollingResultNgProps = Omit<
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >,
   'path' | 'verb'
@@ -29035,7 +29455,7 @@ export const ProcessPollingResultNg = ({ perpetualTaskId, ...props }: ProcessPol
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >
     verb="POST"
@@ -29050,7 +29470,7 @@ export type UseProcessPollingResultNgProps = Omit<
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >,
   'path' | 'verb'
@@ -29062,7 +29482,7 @@ export const useProcessPollingResultNg = ({ perpetualTaskId, ...props }: UseProc
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >(
     'POST',
@@ -29078,7 +29498,7 @@ export const processPollingResultNgPromise = (
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   > & { perpetualTaskId: string },
   signal?: RequestInit['signal']
@@ -29087,17 +29507,17 @@ export const processPollingResultNgPromise = (
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >('POST', getConfig('ng/api'), `/polling/delegate-response/${perpetualTaskId}`, props, signal)
 
 export type SubscribeProps = Omit<
-  MutateProps<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  MutateProps<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const Subscribe = (props: SubscribeProps) => (
-  <Mutate<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>
+  <Mutate<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>
     verb="POST"
     path={`/polling/subscribe`}
     base={getConfig('ng/api')}
@@ -29106,22 +29526,28 @@ export const Subscribe = (props: SubscribeProps) => (
 )
 
 export type UseSubscribeProps = Omit<
-  UseMutateProps<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  UseMutateProps<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const useSubscribe = (props: UseSubscribeProps) =>
-  useMutate<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>(
+  useMutate<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
     'POST',
     `/polling/subscribe`,
     { base: getConfig('ng/api'), ...props }
   )
 
 export const subscribePromise = (
-  props: MutateUsingFetchProps<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  props: MutateUsingFetchProps<
+    ResponsePollingResponseDTO,
+    Failure | Error,
+    void,
+    ProcessPollingResultNgBodyRequestBody,
+    void
+  >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>(
+  mutateUsingFetch<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
     'POST',
     getConfig('ng/api'),
     `/polling/subscribe`,
@@ -29130,12 +29556,12 @@ export const subscribePromise = (
   )
 
 export type UnsubscribeProps = Omit<
-  MutateProps<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  MutateProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const Unsubscribe = (props: UnsubscribeProps) => (
-  <Mutate<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>
+  <Mutate<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>
     verb="POST"
     path={`/polling/unsubscribe`}
     base={getConfig('ng/api')}
@@ -29144,21 +29570,22 @@ export const Unsubscribe = (props: UnsubscribeProps) => (
 )
 
 export type UseUnsubscribeProps = Omit<
-  UseMutateProps<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  UseMutateProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const useUnsubscribe = (props: UseUnsubscribeProps) =>
-  useMutate<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>('POST', `/polling/unsubscribe`, {
-    base: getConfig('ng/api'),
-    ...props
-  })
+  useMutate<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
+    'POST',
+    `/polling/unsubscribe`,
+    { base: getConfig('ng/api'), ...props }
+  )
 
 export const unsubscribePromise = (
-  props: MutateUsingFetchProps<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  props: MutateUsingFetchProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>(
+  mutateUsingFetch<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
     'POST',
     getConfig('ng/api'),
     `/polling/unsubscribe`,
@@ -30758,60 +31185,6 @@ export const getFileContentPromise = (
   getUsingFetch<ResponseGitFileContent, Failure | Error, GetFileContentQueryParams, void>(
     getConfig('ng/api'),
     `/scm/fileContent`,
-    props,
-    signal
-  )
-
-export interface GetFileQueryParams {
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  RepoName: string
-  branch?: string
-  filePath: string
-  ConnectorRef?: string
-}
-
-export type GetFileProps = Omit<
-  GetProps<ResponseScmGetFileResponseDTO, Failure | Error, GetFileQueryParams, void>,
-  'path'
->
-
-/**
- * get file
- */
-export const GetFile = (props: GetFileProps) => (
-  <Get<ResponseScmGetFileResponseDTO, Failure | Error, GetFileQueryParams, void>
-    path={`/scm/get-file`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetFileProps = Omit<
-  UseGetProps<ResponseScmGetFileResponseDTO, Failure | Error, GetFileQueryParams, void>,
-  'path'
->
-
-/**
- * get file
- */
-export const useGetFile = (props: UseGetFileProps) =>
-  useGet<ResponseScmGetFileResponseDTO, Failure | Error, GetFileQueryParams, void>(`/scm/get-file`, {
-    base: getConfig('ng/api'),
-    ...props
-  })
-
-/**
- * get file
- */
-export const getFilePromise = (
-  props: GetUsingFetchProps<ResponseScmGetFileResponseDTO, Failure | Error, GetFileQueryParams, void>,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<ResponseScmGetFileResponseDTO, Failure | Error, GetFileQueryParams, void>(
-    getConfig('ng/api'),
-    `/scm/get-file`,
     props,
     signal
   )

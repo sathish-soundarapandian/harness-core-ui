@@ -192,6 +192,16 @@ function HelmWithGIT({
             return !isEmpty(value) && value?.length > 0
           }),
           helmVersion: Yup.string().trim().required(getString('pipeline.manifestType.helmVersionRequired')),
+          valuesPaths: Yup.lazy((value): Yup.Schema<unknown> => {
+            if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
+              return Yup.array().of(
+                Yup.object().shape({
+                  path: Yup.string().min(1).required(getString('pipeline.manifestType.pathRequired'))
+                })
+              )
+            }
+            return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
+          }),
           commandFlags: Yup.array().of(
             Yup.object().shape({
               flag: Yup.string().when('commandType', {
@@ -334,14 +344,16 @@ function HelmWithGIT({
                   <FormInput.Select name="helmVersion" label={getString('helmVersion')} items={helmVersions} />
                 </div>
               </Layout.Horizontal>
-              <DragnDropPaths
-                formik={formik}
-                expressions={expressions}
-                allowableTypes={allowableTypes}
-                fieldPath="valuesPaths"
-                pathLabel={getString('pipeline.manifestType.valuesYamlPath')}
-                placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
-              />
+              <div className={helmcss.halfWidth}>
+                <DragnDropPaths
+                  formik={formik}
+                  expressions={expressions}
+                  allowableTypes={allowableTypes}
+                  fieldPath="valuesPaths"
+                  pathLabel={getString('pipeline.manifestType.valuesYamlPath')}
+                  placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                />
+              </div>
               <Accordion
                 activeId={isActiveAdvancedStep ? getString('advancedTitle') : ''}
                 className={cx({

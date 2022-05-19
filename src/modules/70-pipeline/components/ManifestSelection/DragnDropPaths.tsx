@@ -100,7 +100,7 @@ function DragnDropPaths({
     >
       <Droppable droppableId="droppable">
         {(provided, _snapshot) => (
-          <div className={css.halfWidth} {...provided.droppableProps} ref={provided.innerRef}>
+          <div {...provided.droppableProps} ref={provided.innerRef}>
             <MultiTypeFieldSelector
               defaultValueToReset={defaultValueToReset}
               allowedTypes={allowableTypes.filter(allowedType => allowedType !== MultiTypeInputType.EXPRESSION)}

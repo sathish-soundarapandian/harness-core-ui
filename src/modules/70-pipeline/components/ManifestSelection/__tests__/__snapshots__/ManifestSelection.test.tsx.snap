@@ -251,7 +251,7 @@ exports[`ManifestSelection tests delete manifest list works correctly 1`] = `
                 <span
                   class="bp3-button-text"
                 >
-                  pipeline.manifestType.attachPath
+                  pipeline.manifestType.attachPath  pipeline.manifestType.valuesYamlPath
                 </span>
               </button>
             </section>
@@ -562,7 +562,7 @@ exports[`ManifestSelection tests edit manifest list works correctly 1`] = `
                 <span
                   class="bp3-button-text"
                 >
-                  pipeline.manifestType.attachPath
+                  pipeline.manifestType.attachPath  pipeline.manifestTypeLabels.KustomizePatches
                 </span>
               </button>
             </section>
@@ -902,7 +902,7 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                   <span
                     class="bp3-button-text"
                   >
-                    pipeline.manifestType.attachPath
+                    pipeline.manifestType.attachPath  pipeline.manifestType.valuesYamlPath
                   </span>
                 </button>
               </section>
@@ -1073,7 +1073,7 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                   <span
                     class="bp3-button-text"
                   >
-                    pipeline.manifestType.attachPath
+                    pipeline.manifestType.attachPath  pipeline.manifestType.valuesYamlPath
                   </span>
                 </button>
               </section>
@@ -1244,7 +1244,7 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                   <span
                     class="bp3-button-text"
                   >
-                    pipeline.manifestType.attachPath
+                    pipeline.manifestType.attachPath  pipeline.manifestType.valuesYamlPath
                   </span>
                 </button>
               </section>
@@ -1415,7 +1415,7 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                   <span
                     class="bp3-button-text"
                   >
-                    pipeline.manifestType.attachPath
+                    pipeline.manifestType.attachPath  pipeline.manifestType.valuesYamlPath
                   </span>
                 </button>
               </section>
@@ -1651,7 +1651,7 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                   <span
                     class="bp3-button-text"
                   >
-                    pipeline.manifestType.attachPath
+                    pipeline.manifestType.attachPath  pipeline.manifestType.valuesYamlPath
                   </span>
                 </button>
               </section>
@@ -1822,7 +1822,7 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                   <span
                     class="bp3-button-text"
                   >
-                    pipeline.manifestType.attachPath
+                    pipeline.manifestType.attachPath  pipeline.manifestType.valuesYamlPath
                   </span>
                 </button>
               </section>
@@ -1993,7 +1993,7 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                   <span
                     class="bp3-button-text"
                   >
-                    pipeline.manifestType.attachPath
+                    pipeline.manifestType.attachPath  pipeline.manifestType.valuesYamlPath
                   </span>
                 </button>
               </section>
@@ -2164,7 +2164,7 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                   <span
                     class="bp3-button-text"
                   >
-                    pipeline.manifestType.attachPath
+                    pipeline.manifestType.attachPath  pipeline.manifestType.valuesYamlPath
                   </span>
                 </button>
               </section>

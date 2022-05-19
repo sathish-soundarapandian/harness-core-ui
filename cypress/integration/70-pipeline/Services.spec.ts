@@ -2,7 +2,7 @@ import {
   servicesRoute,
   servicesCall,
   servicesUpsertCall,
-  servicesUpdateList
+  pageHeaderClassName
 } from '../../support/70-pipeline/constants'
 
 describe('Services for Pipeline', () => {
@@ -21,6 +21,7 @@ describe('Services for Pipeline', () => {
   it('Service Addition & YAML/visual parity', () => {
     cy.intercept('GET', servicesCall, { fixture: 'ng/api/servicesV2/service.empty.json' }).as('emptyServicesList')
     cy.wait(1000)
+    cy.visitPageAssertion(pageHeaderClassName)
     cy.contains('div', 'Manage Service').should('be.visible')
     cy.contains('div', 'Manage Service').click()
     cy.wait('@emptyServicesList')
@@ -56,6 +57,7 @@ describe('Services for Pipeline', () => {
   it('Services Assertion and Edit', () => {
     cy.intercept('GET', servicesCall, { fixture: 'ng/api/servicesV2/batch.post.json' }).as('servicesList')
     cy.wait(1000)
+    cy.visitPageAssertion(pageHeaderClassName)
     cy.contains('div', 'Manage Service').should('be.visible')
     cy.contains('div', 'Manage Service').click()
     cy.wait('@servicesList')
@@ -88,12 +90,10 @@ describe('Services for Pipeline', () => {
 
     //upsert call
     cy.intercept('GET', servicesUpsertCall, { fixture: 'ng/api/servicesV2/servicesUpdate.json' })
+    cy.intercept('GET', servicesCall, { fixture: 'ng/api/servicesV2/batch.post.update.json' }).as('serviceListUpdate')
     cy.contains('span', 'Save').click()
 
     //Updated list
-    cy.intercept('GET', servicesUpdateList, { fixture: 'ng/api/servicesV2/servicesListUpdate.json' }).as(
-      'serviceListUpdate'
-    )
     cy.wait('@serviceListUpdate')
 
     //check if list updated
@@ -104,6 +104,7 @@ describe('Services for Pipeline', () => {
   it('Services Assertion and Deletion', () => {
     cy.intercept('GET', servicesCall, { fixture: 'ng/api/servicesV2/batch.post.json' }).as('servicesList')
     cy.wait(1000)
+    cy.visitPageAssertion(pageHeaderClassName)
     cy.contains('div', 'Manage Service').should('be.visible')
     cy.contains('div', 'Manage Service').click()
     cy.wait('@servicesList')

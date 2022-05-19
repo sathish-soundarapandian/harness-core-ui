@@ -34,7 +34,7 @@ export const ManifestToPathLabelMap: Record<PrimaryManifestType, StringKeys> = {
   K8sManifest: 'pipeline.manifestType.valuesYamlPath',
   HelmChart: 'pipeline.manifestType.valuesYamlPath',
   OpenshiftTemplate: 'pipeline.manifestType.paramsYamlPath',
-  Kustomize: 'pipeline.manifestType.patchesYamlPath'
+  Kustomize: 'pipeline.manifestTypeLabels.KustomizePatches'
 }
 export const ManifestToPathKeyMap: Record<PrimaryManifestType, string> = {
   K8sManifest: 'valuesPaths',
