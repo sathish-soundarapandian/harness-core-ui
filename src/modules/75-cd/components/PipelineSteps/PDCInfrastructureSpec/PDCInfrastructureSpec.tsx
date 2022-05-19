@@ -9,6 +9,7 @@ import React, { useState, useMemo, useEffect } from 'react'
 import {
   IconName,
   Layout,
+  Label,
   Formik,
   FormikForm,
   FormInput,
@@ -17,8 +18,12 @@ import {
   Select,
   Button,
   ButtonSize,
-  ButtonVariation
+  ButtonVariation,
+  Table,
+  Text
 } from '@wings-software/uicore'
+import { Color } from '@harness/design-system'
+import type { Column } from 'react-table'
 import { Radio, RadioGroup } from '@blueprintjs/core'
 import { parse } from 'yaml'
 import * as Yup from 'yup'
@@ -33,10 +38,13 @@ import {
   PdcInfrastructure,
   getConnectorListV2Promise,
   listSecretsV2Promise,
-  useFilterHostsByConnector
+  useFilterHostsByConnector,
+  useValidateHosts,
+  HostValidationDTO
 } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { useToaster } from '@common/exports'
+import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { SecretReferenceInterface, setSecretField } from '@secrets/utils/SecretField'
@@ -49,7 +57,8 @@ import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import DelegateSelectorPanel from '@pipeline/components/PipelineSteps/AdvancedSteps/DelegateSelectorPanel/DelegateSelectorPanel'
 import SSHSecretInput from '@secrets/components/SSHSecretInput/SSHSecretInput'
-import PreviewHostsTable from './PreviewHostsTable/PreviewHostsTable'
+import ConnectivityStatus from './connectivityStatus/ConnectivityStatus'
+
 import css from './PDCInfrastructureSpec.module.scss'
 
 const logger = loggerFor(ModuleName.CD)
@@ -144,6 +153,11 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
     initialValues.attributeFilters ? SpecificHostOption.ATTRIBUTES : SpecificHostOption.HOST_NAME
   )
 
+  //table states
+  const [detailHosts, setDetailHosts] = useState<HostValidationDTO[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [errors, setErrors] = useState([])
+
   const { mutate: getFilteredHosts } = useFilterHostsByConnector({
     queryParams: {
       pageIndex: 0,
@@ -151,6 +165,15 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier
+    }
+  })
+
+  const { mutate: validateHosts } = useValidateHosts({
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier,
+      identifier: ''
     }
   })
 
@@ -199,7 +222,8 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
     []
   )
 
-  const fetchHosts = async (formikValues: PDCInfrastructureUI) => {
+  const fetchHosts = async () => {
+    const formikValues = formikRef.current?.values as any
     if (isPreconfiguredHosts === PreconfiguredHosts.FALSE) {
       return new Promise(resolve => resolve(parseHosts(formikValues.hosts)))
     }
@@ -217,6 +241,99 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
         : get(formikValues, 'connectorRef.connector.identifier', '')
     const hostsResponse = await getFilteredHosts(filterData, { queryParams: { identifier } })
     return hostsResponse.data?.content?.map(item => item.hostname) || []
+  }
+
+  const getHosts = () => {
+    setIsLoading(true)
+    setErrors([])
+    const getData = async () => {
+      const hosts = await fetchHosts()
+      setDetailHosts(
+        hosts?.map((host: string) => ({
+          host,
+          error: undefined
+        }))
+      )
+      setIsLoading(false)
+    }
+    getData()
+  }
+
+  const columns: Column<HostValidationDTO>[] = [
+    {
+      Header: getString('cd.steps.pdcStep.no').toUpperCase(),
+      accessor: 'host',
+      id: 'no',
+      width: '6',
+      Cell: ({ row }) => row.index + 1
+    },
+    {
+      Header: getString('pipelineSteps.hostLabel').toUpperCase(),
+      accessor: 'host',
+      id: 'host',
+      width: '20%',
+      Cell: ({ row }) => row.original.host
+    },
+    {
+      Header: '',
+      accessor: 'status',
+      id: 'status',
+      width: '12%',
+      Cell: ({ row }) => <ConnectivityStatus {...row.original} />
+    },
+    {
+      Header: '',
+      accessor: 'status',
+      id: 'action',
+      width: '22%',
+      Cell: ({ row }) =>
+        row.original.status === 'FAILED' ? (
+          <Button
+            onClick={() => testConnection(row.original.host || '')}
+            size={ButtonSize.SMALL}
+            variation={ButtonVariation.SECONDARY}
+          >
+            {getString('retry')}
+          </Button>
+        ) : null
+    },
+    {
+      Header: '',
+      accessor: 'error',
+      id: 'error',
+      width: '40%',
+      Cell: ({ row }) => (
+        <Text font={{ size: 'small' }} color={Color.RED_400}>
+          {row.original?.error?.message}
+        </Text>
+      )
+    }
+  ]
+
+  const testConnection = async (testHost?: string) => {
+    setErrors([])
+    try {
+      const validationHosts = testHost ? [testHost] : detailHosts.map(host => host.host || '')
+      const hostResults = await validateHosts({ hosts: validationHosts, tags })
+      if (hostResults.status === 'SUCCESS') {
+        const tempMap: any = {}
+        detailHosts.forEach(hostItem => {
+          tempMap[hostItem.host || ''] = hostItem
+        }, {})
+        hostResults.data?.forEach(hostRes => {
+          tempMap[hostRes.host || ''] = hostRes
+        })
+        setDetailHosts(Object.values(tempMap) as [])
+      } else {
+        setErrors(hostResults?.responseMessages || [])
+      }
+    } catch (e: any) {
+      if (e.data?.responseMessages) {
+        setErrors(e.data?.responseMessages)
+      } else {
+        showError(e.data.message || e.message)
+      }
+    }
   }
 
   return (
@@ -387,11 +504,45 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                         Preview Hosts
                       </Button>
                     ) : (
-                      <PreviewHostsTable
-                        fetchHosts={async () => await fetchHosts(formik.values)}
-                        tags={formik.values.delegateSelectors}
-                        secretIdentifier={formik.values.sshKey?.identifier}
-                      />
+                      <Layout.Vertical>
+                        <Layout.Horizontal spacing="normal" flex={{ justifyContent: 'space-between' }}>
+                          <Layout.Horizontal flex={{ alignItems: 'center' }} margin={{ bottom: 'small' }}>
+                            <Label className={'bp3-label ' + css.previewHostsLabel}>Preview Hosts</Label>
+                            <Button
+                              rightIcon="refresh"
+                              iconProps={{ size: 16 }}
+                              onClick={() => getHosts()}
+                              style={{ border: 'none !important' }}
+                              size={ButtonSize.SMALL}
+                              variation={ButtonVariation.SECONDARY}
+                            >
+                              {getString('common.refresh')}
+                            </Button>
+                          </Layout.Horizontal>
+                          <Layout.Horizontal flex={{ alignItems: 'center' }} margin={{ bottom: 'small' }}>
+                            <Button
+                              onClick={() => testConnection()}
+                              size={ButtonSize.SMALL}
+                              variation={ButtonVariation.SECONDARY}
+                              disabled={detailHosts.length === 0 || !formikRef?.current?.values?.credentialsRef}
+                            >
+                              {getString('common.smtp.testConnection')}
+                            </Button>
+                          </Layout.Horizontal>
+                        </Layout.Horizontal>
+                        {errors.length > 0 && <ErrorHandler responseMessages={errors} />}
+                        {isLoading ? (
+                          <Label className={'bp3-label'} style={{ margin: 'auto' }}>
+                            Loading...
+                          </Label>
+                        ) : detailHosts.length > 0 ? (
+                          <Table columns={columns} data={detailHosts} />
+                        ) : (
+                          <Label className={'bp3-label'} style={{ margin: 'auto' }}>
+                            No hosts provided
+                          </Label>
+                        )}
+                      </Layout.Vertical>
                     )}
                   </Layout.Vertical>
 
