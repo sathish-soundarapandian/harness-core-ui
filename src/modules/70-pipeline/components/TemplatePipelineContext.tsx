@@ -213,6 +213,7 @@ export function TemplatePipelineProvider({
         renderPipelineStage,
         fetchPipeline: Promise.resolve,
         updateGitDetails: Promise.resolve,
+        updatePipelineStoreMetadata: Promise.resolve,
         updateEntityValidityDetails: Promise.resolve,
         updatePipeline,
         updateStage,

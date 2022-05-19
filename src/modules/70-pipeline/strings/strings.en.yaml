@@ -361,6 +361,7 @@ createPipeline:
   setupSubtitle: Let’s get you started on your pipeline.
   setupLater: Setup Later
   learnMore: Learn More
+  choosePipelineSetupHeader: How do you want to setup your pipeline?
 selectOrCreateForm:
   description: '{{$.common.selectAVersion.description}}'
 execution:

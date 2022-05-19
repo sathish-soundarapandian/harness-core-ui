@@ -27,6 +27,7 @@ import { Color } from '@harness/design-system'
 import type { GitSyncEntityDTO, EntityGitDetails } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { getEntityNameFromType } from '@common/utils/StringUtils'
+import type { StoreMetaData } from '@common/constants/GitSyncTypes'
 import RepoBranchSelectV2 from '../RepoBranchSelectV2/RepoBranchSelectV2'
 import css from './SaveToGitFormV2.module.scss'
 
@@ -35,7 +36,7 @@ export interface GitResourceInterface {
   name: string
   identifier: string
   gitDetails?: EntityGitDetails
-  storeMetadata?: { connectorRef?: string; storeType?: string }
+  storeMetadata?: StoreMetaData
 }
 
 interface SaveToGitFormV2Props {

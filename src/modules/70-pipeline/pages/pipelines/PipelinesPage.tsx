@@ -273,7 +273,7 @@ function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
           module,
           // Hard corded main branch for now until API provides default branch
           branch: isRemotePipeline ? 'main' : pipeline?.gitDetails?.branch,
-          repoIdentifier: pipeline?.gitDetails?.repoIdentifier,
+          repoIdentifier: isRemotePipeline ? pipeline?.gitDetails?.repoName : pipeline?.gitDetails?.repoIdentifier,
           repoName: isRemotePipeline ? pipeline?.gitDetails?.repoName : undefined,
           connectorRef: isRemotePipeline ? pipeline?.connectorRef : undefined,
           storeType: isRemotePipeline ? StoreType.REMOTE : undefined

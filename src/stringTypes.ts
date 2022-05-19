@@ -2575,6 +2575,7 @@ export interface StringsMap {
   'pipeline.conditionalExecution.toolTip.stepTitle': string
   'pipeline.copyTemplate': string
   'pipeline.createANewPipeline': string
+  'pipeline.createPipeline.choosePipelineSetupHeader': string
   'pipeline.createPipeline.learnMore': string
   'pipeline.createPipeline.setupHeader': string
   'pipeline.createPipeline.setupLater': string

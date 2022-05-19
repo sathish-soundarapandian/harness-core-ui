@@ -31,7 +31,8 @@ jest.mock('services/cd-ng', () => ({
   useGetSourceCodeManagers: () => ({
     data: []
   }),
-  useCreatePR: () => ({
+  useCreatePR: () => ({ data: [], mutate: jest.fn() }),
+  useCreatePRV2: () => ({
     data: [],
     mutate: jest.fn()
   }),
