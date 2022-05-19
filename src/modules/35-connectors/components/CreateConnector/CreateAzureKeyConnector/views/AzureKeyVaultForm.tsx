@@ -15,9 +15,9 @@ import { PageSpinner } from '@common/components'
 import { setupAzureKeyVaultFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import type { SecretReference } from '@secrets/components/CreateOrSelectSecret/CreateOrSelectSecret'
 import type { StepDetailsProps, ConnectorDetailsProps } from '@connectors/interfaces/ConnectorInterface'
+import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 import AzureKeyVaultFormFields from './AzureKeyVaultFormFields'
 import css from '../CreateAzureKeyVaultConnector.module.scss'
-import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 
 export interface AzureKeyVaultFormData {
   clientId?: string

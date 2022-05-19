@@ -18,8 +18,8 @@ import { PageSpinner } from '@common/components'
 import { useStrings } from 'framework/strings'
 import { setupGcpKmsFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { Connectors } from '@connectors/constants'
-import css from '../CreateGcpKmsConnector.module.scss'
 import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
+import css from '../CreateGcpKmsConnector.module.scss'
 
 const defaultInitialFormData: GcpKmsConfigFormData = {
   projectId: '',

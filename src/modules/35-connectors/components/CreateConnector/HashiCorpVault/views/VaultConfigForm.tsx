@@ -20,8 +20,8 @@ import {
   VaultConfigFormData,
   HashiCorpVaultAccessTypes
 } from '@connectors/interfaces/ConnectorInterface'
-import VaultConnectorFormFields from './VaultConnectorFormFields'
 import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
+import VaultConnectorFormFields from './VaultConnectorFormFields'
 
 const VaultConfigForm: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> = ({
   prevStepData,
