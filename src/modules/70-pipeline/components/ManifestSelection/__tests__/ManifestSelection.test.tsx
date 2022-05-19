@@ -15,7 +15,7 @@ import {
   PipelineContextInterface
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import ManifestSelection from '../ManifestSelection'
-import ManifestListView from '../ManifestListView'
+import ManifestListView from '../ManifestListView/ManifestListView'
 import pipelineContextMock from './pipeline_mock.json'
 import connectorsData from './connectors_mock.json'
 

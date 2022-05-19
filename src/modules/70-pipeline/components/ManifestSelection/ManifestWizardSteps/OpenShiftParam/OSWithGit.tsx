@@ -285,6 +285,8 @@ function OpenShiftParamWithGit({
                   expressions={expressions}
                   allowableTypes={allowableTypes}
                   pathLabel={getString('pipelineSteps.paths')}
+                  fieldPath="paths"
+                  placeholder={getString('pipeline.manifestType.pathPlaceholder')}
                 />
 
                 {getMultiTypeFromValue(formik.values.paths) === MultiTypeInputType.RUNTIME && (

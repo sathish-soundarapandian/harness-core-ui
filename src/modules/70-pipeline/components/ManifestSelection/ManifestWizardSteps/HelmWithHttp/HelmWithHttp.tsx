@@ -33,6 +33,7 @@ import HelmAdvancedStepSection from '../HelmAdvancedStepSection'
 
 import { helmVersions, ManifestDataType, ManifestIdentifierValidation } from '../../Manifesthelper'
 import { handleCommandFlagsSubmitData } from '../ManifestUtils'
+import DragnDropPaths from '../../DragnDropPaths'
 import css from '../ManifestWizardSteps.module.scss'
 import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
 
@@ -75,6 +76,10 @@ function HelmWithHttp({
         chartName: initialValues.spec?.chartName,
         chartVersion: initialValues.spec?.chartVersion,
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
+        valuesPaths:
+          typeof initialValues?.spec?.valuesPaths === 'string'
+            ? initialValues?.spec?.valuesPaths
+            : initialValues?.spec?.valuesPaths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) })),
         commandFlags: initialValues.spec?.commandFlags?.map((commandFlag: { commandType: string; flag: string }) => ({
           commandType: commandFlag.commandType,
           flag: commandFlag.flag
@@ -103,6 +108,10 @@ function HelmWithHttp({
               connectorRef: formData?.connectorRef
             }
           },
+          valuesPaths:
+            typeof formData?.valuesPaths === 'string'
+              ? formData?.valuesPaths
+              : formData?.valuesPaths?.map((path: { path: string }) => path.path),
           chartName: formData?.chartName,
           chartVersion: formData?.chartVersion,
           helmVersion: formData?.helmVersion,
@@ -236,6 +245,14 @@ function HelmWithHttp({
                   />
                 </div>
               </Layout.Horizontal>
+              <DragnDropPaths
+                formik={formik}
+                expressions={expressions}
+                allowableTypes={allowableTypes}
+                fieldPath="valuesPaths"
+                pathLabel={getString('pipeline.manifestType.valuesYamlPath')}
+                placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+              />
 
               <Accordion
                 activeId={isActiveAdvancedStep ? getString('advancedTitle') : ''}

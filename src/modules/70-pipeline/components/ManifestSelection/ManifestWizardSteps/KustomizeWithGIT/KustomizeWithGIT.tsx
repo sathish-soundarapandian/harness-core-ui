@@ -22,6 +22,7 @@ import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import { Form } from 'formik'
 import * as Yup from 'yup'
+import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { get, isEmpty, set } from 'lodash-es'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
@@ -39,6 +40,7 @@ import {
 } from '../../Manifesthelper'
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
 import { getRepositoryName } from '../ManifestUtils'
+import DragnDropPaths from '../../DragnDropPaths'
 import css from '../ManifestWizardSteps.module.scss'
 import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
 
@@ -84,15 +86,18 @@ function KustomizeWithGIT({
     const specValues = get(initialValues, 'spec.store.spec', null)
 
     if (specValues) {
-      const values = {
+      return {
         ...specValues,
         identifier: initialValues.identifier,
         folderPath: specValues.folderPath,
         repoName: getRepositoryName(prevStepData, initialValues),
         pluginPath: initialValues.spec?.pluginPath,
+        patchesPaths:
+          typeof initialValues?.spec?.patchesPaths === 'string'
+            ? initialValues?.spec?.patchesPaths
+            : initialValues?.spec?.patchesPaths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) })),
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning
       }
-      return values
     }
     return {
       identifier: '',
@@ -120,6 +125,10 @@ function KustomizeWithGIT({
               folderPath: formData?.folderPath
             }
           },
+          patchesPaths:
+            typeof formData?.patchesPaths === 'string'
+              ? formData?.patchesPaths
+              : formData?.patchesPaths?.map((path: { path: string }) => path.path),
           pluginPath: formData?.pluginPath,
           skipResourceVersioning: formData?.skipResourceVersioning
         }
@@ -339,6 +348,14 @@ function KustomizeWithGIT({
                   )}
                 </div>
               </Layout.Horizontal>
+              <DragnDropPaths
+                formik={formik}
+                expressions={expressions}
+                allowableTypes={allowableTypes}
+                fieldPath="patchesPaths"
+                pathLabel={getString('pipeline.manifestType.patchesYamlPath')}
+                placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+              />
               <Accordion
                 activeId={isActiveAdvancedStep ? getString('advancedTitle') : ''}
                 className={cx({

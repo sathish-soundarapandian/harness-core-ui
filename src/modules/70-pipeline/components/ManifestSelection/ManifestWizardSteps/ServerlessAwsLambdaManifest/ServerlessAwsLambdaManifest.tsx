@@ -292,12 +292,15 @@ function ServerlessAwsLambdaManifest({
                       </div>
                     )}
                   </Layout.Horizontal>
+
                   <DragnDropPaths
                     formik={formik}
-                    selectedManifest={selectedManifest}
                     expressions={expressions}
                     allowableTypes={allowableTypes}
                     allowOnlyOneFilePath={true}
+                    fieldPath="paths"
+                    pathLabel={getString('common.git.folderPath')}
+                    placeholder={getString('pipeline.manifestType.folderPathPlaceholder')}
                   />
                   <Accordion className={css.advancedStepOpen}>
                     <Accordion.Panel

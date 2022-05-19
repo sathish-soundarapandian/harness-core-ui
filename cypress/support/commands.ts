@@ -269,10 +269,9 @@ Cypress.Commands.add('populateDefineHealthSource', (connectorType, connectorName
   cy.contains('span', 'Next').click()
   cy.contains('span', 'Source selection is required').should('be.visible')
   cy.get(`span[data-icon=${getConnectorIconByType(connectorType)}]`).click()
-  cy.contains('span', 'Source selection is required').should('not.exist')
-
   cy.contains('span', 'Name is required.').should('be.visible')
   cy.get('input[name="healthSourceName"]').type(healthSourceName)
+  cy.contains('span', 'Source selection is required').should('not.exist')
   cy.contains('span', 'Name is required.').should('not.exist')
 
   cy.contains('span', 'Connector Selection is required.').should('be.visible')

@@ -312,7 +312,7 @@ exports[`Manifest Details tests expand advanced section - when type is k8smanife
                                   autocomplete="off"
                                   class="bp3-input"
                                   name="paths[0].path"
-                                  placeholder="pipeline.manifestType.pathPlaceholder"
+                                  placeholder="pipeline.manifestType.folderPathPlaceholder"
                                   type="text"
                                   value=""
                                 />
@@ -847,7 +847,7 @@ exports[`Manifest Details tests initial rendering 1`] = `
                                   autocomplete="off"
                                   class="bp3-input"
                                   name="paths[0].path"
-                                  placeholder="pipeline.manifestType.pathPlaceholder"
+                                  placeholder="pipeline.manifestType.folderPathPlaceholder"
                                   type="text"
                                   value=""
                                 />
@@ -1304,7 +1304,7 @@ exports[`Manifest Details tests renders form in edit mode - when gitfetchtype is
                                   autocomplete="off"
                                   class="bp3-input"
                                   name="paths[0].path"
-                                  placeholder="pipeline.manifestType.pathPlaceholder"
+                                  placeholder="pipeline.manifestType.folderPathPlaceholder"
                                   type="text"
                                   value="test-path"
                                 />
@@ -1761,7 +1761,7 @@ exports[`Manifest Details tests renders form in edit mode 1`] = `
                                   autocomplete="off"
                                   class="bp3-input"
                                   name="paths[0].path"
-                                  placeholder="pipeline.manifestType.pathPlaceholder"
+                                  placeholder="pipeline.manifestType.folderPathPlaceholder"
                                   type="text"
                                   value="test-path"
                                 />
@@ -2218,7 +2218,7 @@ exports[`Manifest Details tests runtime value for connector should make runtime 
                                   autocomplete="off"
                                   class="bp3-input"
                                   name="paths[0].path"
-                                  placeholder="pipeline.manifestType.pathPlaceholder"
+                                  placeholder="pipeline.manifestType.folderPathPlaceholder"
                                   type="text"
                                   value="test-path"
                                 />
@@ -3129,7 +3129,7 @@ exports[`Manifest Details tests when connectionType is of repo 1`] = `
                                   autocomplete="off"
                                   class="bp3-input"
                                   name="paths[0].path"
-                                  placeholder="pipeline.manifestType.pathPlaceholder"
+                                  placeholder="pipeline.manifestType.folderPathPlaceholder"
                                   type="text"
                                   value="test-path"
                                 />
@@ -3624,7 +3624,7 @@ exports[`Manifest Details tests when gitfetchtype is Commit and commitId is Runt
                                   autocomplete="off"
                                   class="bp3-input"
                                   name="paths[0].path"
-                                  placeholder="pipeline.manifestType.pathPlaceholder"
+                                  placeholder="pipeline.manifestType.folderPathPlaceholder"
                                   type="text"
                                   value="test-path"
                                 />
@@ -4081,7 +4081,7 @@ exports[`Manifest Details tests when prevStepData is not passed in props 1`] = `
                                   autocomplete="off"
                                   class="bp3-input"
                                   name="paths[0].path"
-                                  placeholder="pipeline.manifestType.pathPlaceholder"
+                                  placeholder="pipeline.manifestType.folderPathPlaceholder"
                                   type="text"
                                   value="test-path"
                                 />
@@ -4538,7 +4538,7 @@ exports[`Manifest Details tests when prevStepData is passed with connectorRef as
                                   autocomplete="off"
                                   class="bp3-input"
                                   name="paths[0].path"
-                                  placeholder="pipeline.manifestType.pathPlaceholder"
+                                  placeholder="pipeline.manifestType.folderPathPlaceholder"
                                   type="text"
                                   value="test-path"
                                 />
@@ -4995,7 +4995,7 @@ exports[`Manifest Details tests when scope is of account 1`] = `
                                   autocomplete="off"
                                   class="bp3-input"
                                   name="paths[0].path"
-                                  placeholder="pipeline.manifestType.pathPlaceholder"
+                                  placeholder="pipeline.manifestType.folderPathPlaceholder"
                                   type="text"
                                   value="test-path"
                                 />

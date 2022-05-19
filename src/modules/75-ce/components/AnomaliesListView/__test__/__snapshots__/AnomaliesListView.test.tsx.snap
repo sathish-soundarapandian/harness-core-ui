@@ -386,7 +386,7 @@ exports[`test case for anomalies detection overview page should be able to rende
               class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
             >
               <a
-                href="/account/undefined/ce/perspectives/undefined/name/undefined?filters=%5B%7B%22field%22%3A%7B%22fieldId%22%3A%22clusterId%22%2C%22fieldName%22%3A%22%22%2C%22identifier%22%3A%22CLUSTER%22%2C%22identifierName%22%3A%22CLUSTER%22%7D%2C%22operator%22%3A%22IN%22%2C%22type%22%3A%22VIEW_ID_CONDITION%22%2C%22values%22%3A%5B%22clusterId%22%5D%7D%5D&groupBy=%7B%22fieldId%22%3A%22gcpProduct%22%2C%22fieldName%22%3A%22Product%22%2C%22identifier%22%3A%22CLUSTER%22%2C%22identifierName%22%3A%22CLUSTER%22%7D&timeRange=%7B%22to%22%3A%222022-03-09%22%2C%22from%22%3A%222022-03-03%22%7D"
+                href="/account/undefined/ce/perspectives/undefined/name/undefined?filters=%5B%5D&groupBy=%7B%22fieldId%22%3A%22gcpProduct%22%2C%22fieldName%22%3A%22Product%22%2C%22identifier%22%3A%22CLUSTER%22%2C%22identifierName%22%3A%22CLUSTER%22%7D&timeRange=%7B%22to%22%3A%222022-03-09%22%2C%22from%22%3A%222022-03-03%22%7D"
               >
                 <span
                   class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--inline StyledProps--color StyledProps--color-primary7"
@@ -1258,7 +1258,7 @@ exports[`test case for anomalies detection overview page should be able to rende
               class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
             >
               <a
-                href="/account/undefined/ce/perspectives/undefined/name/undefined?filters=%5B%7B%22field%22%3A%7B%22fieldId%22%3A%22clusterId%22%2C%22fieldName%22%3A%22%22%2C%22identifier%22%3A%22CLUSTER%22%2C%22identifierName%22%3A%22CLUSTER%22%7D%2C%22operator%22%3A%22IN%22%2C%22type%22%3A%22VIEW_ID_CONDITION%22%2C%22values%22%3A%5B%22clusterId%22%5D%7D%5D&groupBy=%7B%22fieldId%22%3A%22gcpProduct%22%2C%22fieldName%22%3A%22Product%22%2C%22identifier%22%3A%22CLUSTER%22%2C%22identifierName%22%3A%22CLUSTER%22%7D&timeRange=%7B%22to%22%3A%222022-03-09%22%2C%22from%22%3A%222022-03-03%22%7D"
+                href="/account/undefined/ce/perspectives/undefined/name/undefined?filters=%5B%5D&groupBy=%7B%22fieldId%22%3A%22gcpProduct%22%2C%22fieldName%22%3A%22Product%22%2C%22identifier%22%3A%22CLUSTER%22%2C%22identifierName%22%3A%22CLUSTER%22%7D&timeRange=%7B%22to%22%3A%222022-03-09%22%2C%22from%22%3A%222022-03-03%22%7D"
               >
                 <span
                   class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--inline StyledProps--color StyledProps--color-primary7"

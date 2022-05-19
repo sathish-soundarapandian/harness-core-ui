@@ -2245,6 +2245,8 @@ export interface StringsMap {
   'dashboards.createModal.submitFail': string
   'dashboards.createModal.success': string
   'dashboards.createModal.view': string
+  'dashboards.dashboardList.headerFavoriteCount': string
+  'dashboards.dashboardList.headerViewCount': string
   'dashboards.deleteFolder.confirmDeleteText': string
   'dashboards.deleteFolder.confirmDeleteTitle': string
   'dashboards.deleteFolder.success': string
@@ -2476,6 +2478,7 @@ export interface StringsMap {
   'pipeline.artifactTriggerConfigPanel.runtimeInput': string
   'pipeline.artifactTriggerConfigPanel.selectAManifest': string
   'pipeline.artifactTriggerConfigPanel.selectAnArtifact': string
+  'pipeline.artifactTriggerConfigPanel.tagArtifactPath': string
   'pipeline.artifactsSelection.artifactDetails': string
   'pipeline.artifactsSelection.artifactDirectory': string
   'pipeline.artifactsSelection.artifactDirectoryPlaceholder': string
@@ -2880,6 +2883,8 @@ export interface StringsMap {
   'pipeline.logs.retry': string
   'pipeline.logs.sectionName': string
   'pipeline.manifestToConnectorLabelMap.AWSLabel': string
+  'pipeline.manifestType.InheritFromManifest': string
+  'pipeline.manifestType.attachPath': string
   'pipeline.manifestType.bitBucketLabel': string
   'pipeline.manifestType.branchPlaceholder': string
   'pipeline.manifestType.bucketName': string
@@ -2925,6 +2930,8 @@ export interface StringsMap {
   'pipeline.manifestType.osTemplatePath': string
   'pipeline.manifestType.osTemplatePathPlaceHolder': string
   'pipeline.manifestType.osTemplatePathRequired': string
+  'pipeline.manifestType.paramsYamlPath': string
+  'pipeline.manifestType.patchesYamlPath': string
   'pipeline.manifestType.path': string
   'pipeline.manifestType.pathPlaceholder': string
   'pipeline.manifestType.pathRequired': string
@@ -2935,6 +2942,7 @@ export interface StringsMap {
   'pipeline.manifestType.serverlessConfigFilePathPlaceholder': string
   'pipeline.manifestType.specifyManifestRepoType': string
   'pipeline.manifestType.specifyManifestStore': string
+  'pipeline.manifestType.valuesYamlPath': string
   'pipeline.manifestTypeLabels.AwsSAM': string
   'pipeline.manifestTypeLabels.AzureFunctions': string
   'pipeline.manifestTypeLabels.HelmChartLabel': string
@@ -5504,6 +5512,7 @@ export interface StringsMap {
   'cv.monitoredServices.serviceHealth.serviceDependencies.states.needsAttention': string
   'cv.monitoredServices.serviceHealth.serviceDependencies.states.observe': string
   'cv.monitoredServices.serviceHealth.serviceDependencies.states.unhealthy': string
+  'cv.monitoredServices.serviceHealth.userMessage': string
   'cv.monitoredServices.serviceHealthScoreDataNotAvailable': string
   'cv.monitoredServices.serviceValidation': string
   'cv.monitoredServices.showingAllServices': string
@@ -5724,6 +5733,16 @@ export interface StringsMap {
   'cv.noPreviousErrorBudgetResetHistoryAvailable': string
   'cv.noSLOHasBeenCreated': string
   'cv.nonAnomalous': string
+  'cv.notifications.condition': string
+  'cv.notifications.configureAlertConditions': string
+  'cv.notifications.deleteNotification': string
+  'cv.notifications.deleteNotificationWarning': string
+  'cv.notifications.errorBudgetPolicies': string
+  'cv.notifications.newNotificationRule': string
+  'cv.notifications.notificationName': string
+  'cv.notifications.serviceHealth': string
+  'cv.notifications.serviceHealthDescription': string
+  'cv.notifications.sloDescription': string
   'cv.objectiveValue': string
   'cv.onboarding.activitySources.addMoreSources': string
   'cv.onboarding.activitySources.addedStatus': string

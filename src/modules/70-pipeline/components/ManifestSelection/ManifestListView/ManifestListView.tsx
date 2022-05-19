@@ -64,8 +64,9 @@ import { useQueryParams } from '@common/hooks'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { ManifestActions } from '@common/constants/TrackingConstants'
 
-import { ManifestWizard } from './ManifestWizard/ManifestWizard'
-import { getStatus, getConnectorNameFromValue } from '../PipelineStudio/StageBuilder/StageBuilderUtil'
+import { ManifestWizard } from '../ManifestWizard/ManifestWizard'
+import { getStatus, getConnectorNameFromValue } from '../../PipelineStudio/StageBuilder/StageBuilderUtil'
+import { useVariablesExpression } from '../../PipelineStudio/PiplineHooks/useVariablesExpression'
 import {
   ManifestIconByType,
   ManifestDataType,
@@ -74,28 +75,31 @@ import {
   manifestTypeIcons,
   manifestTypeLabels,
   allowedManifestTypes,
-  manifestStoreTypes
-} from './Manifesthelper'
-import K8sValuesManifest from './ManifestWizardSteps/K8sValuesManifest/K8sValuesManifest'
-import type { ConnectorRefLabelType } from '../ArtifactsSelection/ArtifactInterface'
+  ManifestTypetoStoreMap,
+  ManifestToPathKeyMap
+} from '../Manifesthelper'
+import type { ConnectorRefLabelType } from '../../ArtifactsSelection/ArtifactInterface'
 import type {
   ManifestStepInitData,
   ManifestTypes,
   ManifestListViewProps,
   ManifestLastStepProps,
-  ManifestStores
-} from './ManifestInterface'
-import HelmWithGIT from './ManifestWizardSteps/HelmWithGIT/HelmWithGIT'
-import HelmWithHttp from './ManifestWizardSteps/HelmWithHttp/HelmWithHttp'
-import OpenShiftTemplateWithGit from './ManifestWizardSteps/OSTemplateWithGit/OSTemplateWithGit'
-import HelmWithGcs from './ManifestWizardSteps/HelmWithGcs/HelmWithGcs'
-import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
-import HelmWithS3 from './ManifestWizardSteps/HelmWithS3/HelmWithS3'
-import KustomizeWithGIT from './ManifestWizardSteps/KustomizeWithGIT/KustomizeWithGIT'
-import OpenShiftParamWithGit from './ManifestWizardSteps/OpenShiftParam/OSWithGit'
-import KustomizePatchDetails from './ManifestWizardSteps/KustomizePatchesDetails/KustomizePatchesDetails'
-import ServerlessAwsLambdaManifest from './ManifestWizardSteps/ServerlessAwsLambdaManifest/ServerlessAwsLambdaManifest'
-import css from './ManifestSelection.module.scss'
+  ManifestStores,
+  PrimaryManifestType
+} from '../ManifestInterface'
+import K8sValuesManifest from '../ManifestWizardSteps/K8sValuesManifest/K8sValuesManifest'
+import HelmWithGIT from '../ManifestWizardSteps/HelmWithGIT/HelmWithGIT'
+import HelmWithHttp from '../ManifestWizardSteps/HelmWithHttp/HelmWithHttp'
+import OpenShiftTemplateWithGit from '../ManifestWizardSteps/OSTemplateWithGit/OSTemplateWithGit'
+import HelmWithGcs from '../ManifestWizardSteps/HelmWithGcs/HelmWithGcs'
+import HelmWithS3 from '../ManifestWizardSteps/HelmWithS3/HelmWithS3'
+import KustomizeWithGIT from '../ManifestWizardSteps/KustomizeWithGIT/KustomizeWithGIT'
+import OpenShiftParamWithGit from '../ManifestWizardSteps/OpenShiftParam/OSWithGit'
+import KustomizePatchDetails from '../ManifestWizardSteps/KustomizePatchesDetails/KustomizePatchesDetails'
+import ServerlessAwsLambdaManifest from '../ManifestWizardSteps/ServerlessAwsLambdaManifest/ServerlessAwsLambdaManifest'
+import AttachPathYamlFlow from './AttachPathYamlFlow'
+import InheritFromManifest from '../ManifestWizardSteps/InheritFromManifest/InheritFromManifest'
+import css from '../ManifestSelection.module.scss'
 
 const showAddManifestBtn = (isReadonly: boolean, allowOnlyOne: boolean, listOfManifests: Array<any>): boolean => {
   if (allowOnlyOne && listOfManifests.length === 1) {
@@ -195,6 +199,20 @@ function ManifestListView({
     }
   }
 
+  const updateStageData = (): void => {
+    const path = isPropagating
+      ? 'stage.spec.serviceConfig.stageOverrides.manifests'
+      : 'stage.spec.serviceConfig.serviceDefinition.spec.manifests'
+
+    if (stage) {
+      updateStage(
+        produce(stage, draft => {
+          set(draft, path, listOfManifests)
+        }).stage as StageElementConfig
+      )
+    }
+  }
+
   const handleSubmit = (manifestObj: ManifestConfigWrapper): void => {
     const isNewManifest = manifestIndex === listOfManifests.length
     if (isPropagating) {
@@ -211,10 +229,7 @@ function ManifestListView({
       }
     }
 
-    const path = isPropagating
-      ? 'stage.spec.serviceConfig.stageOverrides.manifests'
-      : 'stage.spec.serviceConfig.serviceDefinition.spec.manifests'
-
+    updateStageData()
     trackEvent(
       isNewManifest ? ManifestActions.SaveManifestOnPipelinePage : ManifestActions.UpdateManifestOnPipelinePage,
       {
@@ -222,19 +237,31 @@ function ManifestListView({
         storeType: manifestObj?.manifest?.spec?.store?.type || ''
       }
     )
-    if (stage) {
-      updateStage(
-        produce(stage, draft => {
-          set(draft, path, listOfManifests)
-        }).stage as StageElementConfig
-      )
-    }
+
     hideConnectorModal()
     setConnectorView(false)
     setSelectedManifest(null)
     setManifestStore('')
     refetchConnectors()
   }
+
+  const attachPathYaml = useCallback(
+    (manifestPathData: any, manifestId: string, manifestType: PrimaryManifestType): void => {
+      const manifestData = listOfManifests.find(manifestObj => manifestObj.manifest.identifier === manifestId)
+      set(manifestData, `manifest.spec.${ManifestToPathKeyMap[manifestType]}`, manifestPathData)
+      updateStageData()
+    },
+    []
+  )
+
+  const removeValuesYaml = useCallback(
+    (valuesYamlIndex: number, manifestId: string, manifestType: PrimaryManifestType): void => {
+      const manifestData = listOfManifests.find(manifestObj => manifestObj.manifest.identifier === manifestId)
+      manifestData.manifest.spec[ManifestToPathKeyMap[manifestType]].splice(valuesYamlIndex, 1)
+      updateStageData()
+    },
+    []
+  )
 
   const changeManifestType = (selected: ManifestTypes | null): void => {
     setSelectedManifest(selected)
@@ -313,7 +340,6 @@ function ManifestListView({
         ):
         manifestDetailStep = <HelmWithGIT {...lastStepProps()} />
         break
-
       case selectedManifest === ManifestDataType.HelmChart && manifestStore === ManifestStoreMap.Http:
         manifestDetailStep = <HelmWithHttp {...lastStepProps()} />
         break
@@ -324,18 +350,10 @@ function ManifestListView({
       case selectedManifest === ManifestDataType.HelmChart && manifestStore === ManifestStoreMap.Gcs:
         manifestDetailStep = <HelmWithGcs {...lastStepProps()} />
         break
-
-      case selectedManifest === ManifestDataType.OpenshiftTemplate &&
-        [ManifestStoreMap.Git, ManifestStoreMap.Github, ManifestStoreMap.GitLab, ManifestStoreMap.Bitbucket].includes(
-          manifestStore as ManifestStores
-        ):
+      case selectedManifest === ManifestDataType.OpenshiftTemplate:
         manifestDetailStep = <OpenShiftTemplateWithGit {...lastStepProps()} />
         break
-
-      case selectedManifest === ManifestDataType.Kustomize &&
-        [ManifestStoreMap.Git, ManifestStoreMap.Github, ManifestStoreMap.GitLab, ManifestStoreMap.Bitbucket].includes(
-          manifestStore as ManifestStores
-        ):
+      case selectedManifest === ManifestDataType.Kustomize:
         manifestDetailStep = <KustomizeWithGIT {...lastStepProps()} />
         break
       case selectedManifest === ManifestDataType.OpenshiftParam &&
@@ -354,13 +372,20 @@ function ManifestListView({
       case selectedManifest === ManifestDataType.ServerlessAwsLambda:
         manifestDetailStep = <ServerlessAwsLambdaManifest {...lastStepProps()} />
         break
+      case selectedManifest === ManifestDataType.Values && manifestStore === ManifestStoreMap.InheritFromManifest:
+        manifestDetailStep = <InheritFromManifest {...lastStepProps()} />
+        break
+      case [ManifestDataType.Values, ManifestDataType.OpenshiftParam, ManifestDataType.KustomizePatches].includes(
+        selectedManifest as ManifestTypes
+      ) && manifestStore === ManifestStoreMap.InheritFromManifest:
+        manifestDetailStep = <InheritFromManifest {...lastStepProps()} />
+        break
       case [ManifestDataType.K8sManifest, ManifestDataType.Values].includes(selectedManifest as ManifestTypes) &&
         [ManifestStoreMap.Git, ManifestStoreMap.Github, ManifestStoreMap.GitLab, ManifestStoreMap.Bitbucket].includes(
           manifestStore as ManifestStores
         ):
       default:
         manifestDetailStep = <K8sValuesManifest {...lastStepProps()} />
-
         break
     }
 
@@ -587,16 +612,13 @@ function ManifestListView({
       setIsEditMode(false)
       setSelectedManifest(null)
     }
-    const storeTypes =
-      selectedManifest === ManifestDataType.HelmChart
-        ? [...manifestStoreTypes, ManifestStoreMap.Http, ManifestStoreMap.S3, ManifestStoreMap.Gcs]
-        : manifestStoreTypes
+
     return (
       <Dialog onClose={onClose} {...DIALOG_PROPS} className={cx(css.modal, Classes.DIALOG)}>
         <div className={css.createConnectorWizard}>
           <ManifestWizard
             types={allowedManifestTypes[deploymentType]}
-            manifestStoreTypes={storeTypes}
+            manifestStoreTypes={ManifestTypetoStoreMap[selectedManifest as ManifestTypes]}
             labels={getLabels()}
             selectedManifest={selectedManifest}
             newConnectorView={connectorView}
@@ -652,98 +674,130 @@ function ManifestListView({
                 const connectorName = getConnectorNameFromValue(manifest?.spec?.store?.spec?.connectorRef, connectors)
 
                 return (
-                  <section className={cx(css.manifestList, css.rowItem)} key={`${manifest?.identifier}-${index}`}>
-                    <div className={css.columnId}>
-                      <Icon inline name={manifestTypeIcons[manifest?.type as ManifestTypes]} size={20} />
-                      <Text inline width={150} className={css.type} color={Color.BLACK} lineClamp={1}>
-                        {manifest?.identifier}
-                      </Text>
-                    </div>
-                    <div>{getString(manifestTypeLabels[manifest?.type as ManifestTypes])}</div>
-                    <div className={css.connectorNameField}>
-                      <Icon
-                        padding={{ right: 'small' }}
-                        name={ManifestIconByType[manifest?.spec?.store.type as ManifestStores]}
-                        size={18}
-                      />
-                      <Text
-                        tooltip={
-                          <Container className={css.borderRadius} padding="medium">
-                            <div>
-                              <Text font="small" color={Color.GREY_100}>
-                                {connectorName}
-                              </Text>
-                              <Text font="small" color={Color.GREY_300}>
-                                {manifest?.spec?.store.spec.connectorRef}
-                              </Text>
-                            </div>
-                          </Container>
-                        }
-                        tooltipProps={{ isDark: true }}
-                        alwaysShowTooltip
-                        className={css.connectorName}
-                        lineClamp={1}
-                      >
-                        {connectorName ?? manifest?.spec?.store.spec.connectorRef}
-                      </Text>
-                      {getMultiTypeFromValue(manifest?.spec?.store.spec.connectorRef) === MultiTypeInputType.FIXED && (
-                        <Icon name="full-circle" size={8} color={color} />
+                  <div className={css.rowItem} key={`${manifest?.identifier}-${index}`}>
+                    <section className={css.manifestList}>
+                      <div className={css.columnId}>
+                        <Icon inline name={manifestTypeIcons[manifest?.type as ManifestTypes]} size={20} />
+                        <Text inline width={150} className={css.type} color={Color.BLACK} lineClamp={1}>
+                          {manifest?.identifier}
+                        </Text>
+                      </div>
+                      <div>{getString(manifestTypeLabels[manifest?.type as ManifestTypes])}</div>
+                      <div className={css.connectorNameField}>
+                        {!!manifest?.spec?.store?.spec.connectorRef && (
+                          <>
+                            <Icon
+                              padding={{ right: 'small' }}
+                              name={ManifestIconByType[manifest?.spec?.store.type as ManifestStores]}
+                              size={18}
+                            />
+                            <Text
+                              tooltip={
+                                <Container className={css.borderRadius} padding="medium">
+                                  <div>
+                                    <Text font="small" color={Color.GREY_100}>
+                                      {connectorName}
+                                    </Text>
+                                    <Text font="small" color={Color.GREY_300}>
+                                      {manifest?.spec?.store?.spec.connectorRef}
+                                    </Text>
+                                  </div>
+                                </Container>
+                              }
+                              tooltipProps={{ isDark: true }}
+                              alwaysShowTooltip
+                              className={css.connectorName}
+                              lineClamp={1}
+                            >
+                              {connectorName ?? manifest?.spec?.store?.spec.connectorRef}
+                            </Text>
+                            {getMultiTypeFromValue(manifest?.spec?.store?.spec.connectorRef) ===
+                              MultiTypeInputType.FIXED && <Icon name="full-circle" size={8} color={color} />}
+                          </>
+                        )}
+                      </div>
+
+                      {!!manifest?.spec?.store?.spec.paths?.length && (
+                        <span>
+                          <Text lineClamp={1} width={200}>
+                            <span className={css.noWrap}>
+                              {typeof manifest?.spec?.store?.spec.paths === 'string'
+                                ? manifest?.spec?.store?.spec.paths
+                                : manifest?.spec?.store?.spec.paths.join(', ')}
+                            </span>
+                          </Text>
+                        </span>
                       )}
-                    </div>
+                      {!!manifest?.spec?.paths?.length && (
+                        <span>
+                          <Text lineClamp={1} width={200}>
+                            <span className={css.noWrap}>
+                              {typeof manifest?.spec.paths === 'string'
+                                ? manifest?.spec.paths
+                                : manifest?.spec.paths.join(', ')}
+                            </span>
+                          </Text>
+                        </span>
+                      )}
+                      {!!manifest?.spec?.store?.spec.folderPath && (
+                        <span>
+                          <Text lineClamp={1} width={200}>
+                            <span className={css.noWrap}>{manifest.spec.store?.spec?.folderPath}</span>
+                          </Text>
+                        </span>
+                      )}
 
-                    {!!manifest?.spec?.store.spec.paths?.length && (
-                      <span>
-                        <Text lineClamp={1} width={200}>
-                          <span className={css.noWrap}>
-                            {typeof manifest?.spec?.store.spec.paths === 'string'
-                              ? manifest?.spec?.store.spec.paths
-                              : manifest?.spec?.store.spec.paths.join(', ')}
-                          </span>
-                        </Text>
-                      </span>
-                    )}
-                    {!!manifest?.spec?.store.spec.folderPath && (
-                      <span>
-                        <Text lineClamp={1} width={200}>
-                          <span className={css.noWrap}>{manifest.spec.store?.spec?.folderPath}</span>
-                        </Text>
-                      </span>
-                    )}
+                      {!!(manifest?.spec?.chartName && !manifest?.spec?.store?.spec.folderPath) && (
+                        <span>
+                          <Text lineClamp={1} width={200}>
+                            <span className={css.noWrap}>{manifest.spec.chartName}</span>
+                          </Text>
+                        </span>
+                      )}
 
-                    {!!(manifest?.spec?.chartName && !manifest?.spec?.store.spec.folderPath) && (
-                      <span>
-                        <Text lineClamp={1} width={200}>
-                          <span className={css.noWrap}>{manifest.spec.chartName}</span>
-                        </Text>
-                      </span>
-                    )}
+                      {!isReadonly && (
+                        <span>
+                          <Layout.Horizontal>
+                            <Button
+                              icon="Edit"
+                              iconProps={{ size: 18 }}
+                              onClick={() =>
+                                editManifest(
+                                  manifest?.type as ManifestTypes,
+                                  manifest?.spec?.store?.type as ManifestStores,
+                                  index
+                                )
+                              }
+                              minimal
+                            />
 
-                    {!isReadonly && (
-                      <span>
-                        <Layout.Horizontal>
-                          <Button
-                            icon="Edit"
-                            iconProps={{ size: 18 }}
-                            onClick={() =>
-                              editManifest(
-                                manifest?.type as ManifestTypes,
-                                manifest?.spec?.store.type as ManifestStores,
-                                index
-                              )
-                            }
-                            minimal
-                          />
-
-                          <Button
-                            iconProps={{ size: 18 }}
-                            icon="main-trash"
-                            onClick={() => removeManifestConfig(index)}
-                            minimal
-                          />
-                        </Layout.Horizontal>
-                      </span>
-                    )}
-                  </section>
+                            <Button
+                              iconProps={{ size: 18 }}
+                              icon="main-trash"
+                              onClick={() => removeManifestConfig(index)}
+                              minimal
+                            />
+                          </Layout.Horizontal>
+                        </span>
+                      )}
+                    </section>
+                    <AttachPathYamlFlow
+                      manifestType={manifest?.type as PrimaryManifestType}
+                      valuesPaths={manifest?.spec[ManifestToPathKeyMap[manifest?.type as PrimaryManifestType]]}
+                      expressions={expressions}
+                      allowableTypes={allowableTypes}
+                      attachPathYaml={formData =>
+                        attachPathYaml(formData, manifest?.identifier as string, manifest?.type as PrimaryManifestType)
+                      }
+                      removeValuesYaml={valuesYamlIndex =>
+                        removeValuesYaml(
+                          valuesYamlIndex,
+                          manifest?.identifier as string,
+                          manifest?.type as PrimaryManifestType
+                        )
+                      }
+                    />
+                  </div>
                 )
               })}
           </section>

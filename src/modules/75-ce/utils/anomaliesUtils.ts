@@ -12,7 +12,7 @@ import { DEFAULT_GROUP_BY } from './perspectiveUtils'
 const gcpEntities = ['gcpProduct', 'gcpProjectId', 'gcpSKUDescription']
 const awsEntities = ['awsUsageAccountId', 'awsServiceCode', 'awsInstancetype', 'awsUsageType']
 const azureEntities: string[] = []
-const clusterEntities = ['clusterName', 'clusterId', 'namespace', 'workloadName', 'workloadType']
+const clusterEntities = ['clusterName', 'namespace', 'workloadName', 'workloadType']
 
 const cloudProviderToEntityMapping = {
   [CloudProvider.GCP]: gcpEntities,
