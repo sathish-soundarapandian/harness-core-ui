@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, act, queryByAttribute } from '@testing-library/react'
+import { render, act, queryByAttribute, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Formik, FormikForm, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -55,7 +55,7 @@ const rolesMock = {
   }
 }
 
-const renderComponent = (data: any) => {
+const renderComponent = (data: any, path?: string) => {
   return render(
     <TestWrapper
       path="/account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier"
@@ -70,7 +70,7 @@ const renderComponent = (data: any) => {
             inputSetData={{
               template: data
             }}
-            path="test"
+            path={'test'}
             allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
           />
         </FormikForm>
@@ -80,6 +80,9 @@ const renderComponent = (data: any) => {
 }
 
 describe('Test cloudformation create stack template input set', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
   test('should render with no data', () => {
     const data = {
       type: StepType.CloudFormationCreateStack,
@@ -158,7 +161,7 @@ describe('Test cloudformation create stack template input set', () => {
   test('should render with runtime data and make connector api request', () => {
     jest
       .spyOn(cdServices, 'useGetConnector')
-      .mockImplementation(() => ({ loading: false, error: null, data: {} } as any))
+      .mockImplementation(() => ({ loading: false, data: { data: {} }, mutate: jest.fn(), refetch: jest.fn() } as any))
     const data = {
       type: StepType.CloudFormationCreateStack,
       name: 'testCreate',
@@ -181,10 +184,10 @@ describe('Test cloudformation create stack template input set', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('should render with runtime data and make region api request', () => {
+  test('should render with runtime data and make region api request', async () => {
     jest
       .spyOn(Portal, 'useListAwsRegions')
-      .mockImplementation(() => ({ loading: false, error: null, data: regionMock, refetch: jest.fn() } as any))
+      .mockImplementation(() => ({ loading: false, data: regionMock, mutate: jest.fn(), refetch: jest.fn() } as any))
     const data = {
       type: StepType.CloudFormationCreateStack,
       name: 'testCreate',
@@ -205,7 +208,8 @@ describe('Test cloudformation create stack template input set', () => {
     }
     const { container, getByPlaceholderText, getByText } = renderComponent(data)
 
-    const region = getByPlaceholderText('pipeline.regionPlaceholder')
+    const region = await getByPlaceholderText('pipeline.regionPlaceholder')
+    await waitFor(() => expect(region).toBeTruthy())
     act(() => {
       userEvent.click(region)
     })
@@ -219,7 +223,7 @@ describe('Test cloudformation create stack template input set', () => {
   test('should render with runtime data and make role api request', () => {
     jest
       .spyOn(cdServices, 'useGetIamRolesForAws')
-      .mockReturnValue({ loading: false, error: null, data: rolesMock, refetch: jest.fn() } as any)
+      .mockImplementation(() => ({ loading: false, data: rolesMock, mutate: jest.fn(), refetch: jest.fn() } as any))
     const data = {
       type: StepType.CloudFormationCreateStack,
       name: 'testCreate',
@@ -244,6 +248,9 @@ describe('Test cloudformation create stack template input set', () => {
   })
 
   test('should render with runtime data and make capabilities api request', () => {
+    jest
+      .spyOn(cdServices, 'useCFCapabilitiesForAws')
+      .mockReturnValue({ loading: false, data: { data: ['test'] }, mutate: jest.fn(), refetch: jest.fn() } as any)
     const data = {
       type: StepType.CloudFormationCreateStack,
       name: 'testCreate',
@@ -263,12 +270,6 @@ describe('Test cloudformation create stack template input set', () => {
         }
       }
     }
-    jest.spyOn(cdServices, 'useCFCapabilitiesForAws').mockReturnValue({
-      data: { data: ['TEST', 'TEST-TWO'] },
-      loading: false,
-      error: null,
-      refetch: jest.fn()
-    } as any)
     const { container } = renderComponent(data)
 
     expect(container).toMatchSnapshot()
@@ -307,13 +308,10 @@ describe('Test cloudformation create stack template input set', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('should render with runtime data and make aws states api request', async () => {
-    jest.spyOn(cdServices, 'useCFStatesForAws').mockReturnValue({
-      loading: false,
-      error: null,
-      data: { data: ['WAIT_FOR_ERROR', 'WAIT_FOR_ROLLBACK'] },
-      refetch: jest.fn()
-    } as any)
+  test('should render with runtime data and make aws statues api request', async () => {
+    jest
+      .spyOn(cdServices, 'useCFStatesForAws')
+      .mockReturnValue({ loading: false, data: ['test'], mutate: jest.fn(), refetch: jest.fn() } as any)
     const data = {
       type: StepType.CloudFormationCreateStack,
       name: 'testCreate',

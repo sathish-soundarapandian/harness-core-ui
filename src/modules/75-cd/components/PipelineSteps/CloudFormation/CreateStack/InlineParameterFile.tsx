@@ -95,6 +95,7 @@ export const InlineParameterFile = ({
     } else {
       try {
         const result = await getParamsFromAWS(git ? '' : body)
+        console.log('result: ', result)
         if (result?.data) {
           setRemoteParams(map(result?.data, param => ({ label: param.paramKey!, value: param.paramKey! })))
         }

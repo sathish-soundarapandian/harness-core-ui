@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, queryByAttribute, act } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'

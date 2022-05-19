@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test cloudformation inline parameter with no data should render with git data 1`] = `
+<div>
+  <div
+    class="OverlaySpinner--overlaySpinner"
+  >
+    <form
+      action="#"
+      class="FormikForm--main"
+    >
+      <div />
+    </form>
+  </div>
+</div>
+`;
+
+exports[`Test cloudformation inline parameter with no data should render with git data and making an api request 1`] = `
+<div>
+  <div
+    class="OverlaySpinner--overlaySpinner"
+  >
+    <form
+      action="#"
+      class="FormikForm--main"
+    >
+      <div />
+    </form>
+  </div>
+</div>
+`;
+
+exports[`Test cloudformation inline parameter with no data should render with no data 1`] = `
+<div>
+  <div
+    class="OverlaySpinner--overlaySpinner"
+  >
+    <form
+      action="#"
+      class="FormikForm--main"
+    >
+      <div />
+    </form>
+  </div>
+</div>
+`;

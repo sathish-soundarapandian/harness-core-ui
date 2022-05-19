@@ -313,7 +313,7 @@ exports[`Test cloudformation create stack template input set should render with 
 </div>
 `;
 
-exports[`Test cloudformation create stack template input set should render with runtime data and make aws states api request 1`] = `
+exports[`Test cloudformation create stack template input set should render with runtime data and make aws statues api request 1`] = `
 <div>
   <div
     class="OverlaySpinner--overlaySpinner"

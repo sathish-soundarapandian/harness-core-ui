@@ -77,11 +77,13 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
 
   const capabilitiesRequired = isRuntime(inputSetData?.template?.spec?.configuration?.capabilities as string)
   const { data: capabilitiesData, refetch: getAwsCapabilities } = useCFCapabilitiesForAws({ lazy: true })
+
   useEffect(() => {
     if (capabilitiesData) {
       const capabilitiesValues = map(capabilitiesData?.data, cap => ({ label: cap, value: cap }))
       setCapabilities(capabilitiesValues as MultiSelectOption[])
     }
+
     /* istanbul ignore next */
     if (!capabilitiesData && capabilitiesRequired) {
       getAwsCapabilities()
@@ -90,11 +92,13 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
 
   const awsStatusRequired = isRuntime(inputSetData?.template?.spec?.configuration?.skipOnStackStatuses as string)
   const { data: awsStatusData, refetch: getAwsStatuses } = useCFStatesForAws({ lazy: true })
+
   useEffect(() => {
     if (awsStatusData) {
       const awsStatesValues = map(awsStatusData?.data, cap => ({ label: cap, value: cap }))
       setAwsStates(awsStatesValues as MultiSelectOption[])
     }
+
     /* istanbul ignore next */
     if (!awsStatusData && awsStatusRequired) {
       getAwsStatuses()
@@ -114,8 +118,8 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
   })
 
   useEffect(() => {
-    /* istanbul ignore next */
     if (error) {
+      /* istanbul ignore next */
       showError(error?.message)
     }
   }, [error])
@@ -126,8 +130,9 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
       const regionValues = map(regionData?.resource, reg => ({ label: reg.name, value: reg.value }))
       setRegions(regionValues as MultiSelectOption[])
     }
-    /* istanbul ignore next */
+
     if (!regionData && regionRequired) {
+      /* istanbul ignore next */
       getRegions()
     }
   }, [regionData, regionRequired])
@@ -148,7 +153,6 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
   })
 
   const roleRequired = isRuntime(inputSetData?.template?.spec?.configuration?.roleArn as string)
-
   useEffect(() => {
     if (roleData) {
       const roles = []
@@ -165,21 +169,24 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
 
   return (
     <FormikForm>
-      {isRuntime(inputSetData?.template?.timeout as string) && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeDurationField
-            label={getString('pipelineSteps.timeoutLabel')}
-            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
-            disabled={readonly}
-            multiTypeDurationProps={{
-              enableConfigureOptions: false,
-              allowableTypes,
-              expressions,
-              disabled: readonly
-            }}
-          />
-        </div>
-      )}
+      {
+        /* istanbul ignore next */
+        isRuntime(inputSetData?.template?.timeout as string) && (
+          <div className={cx(stepCss.formGroup, stepCss.sm)}>
+            <FormMultiTypeDurationField
+              label={getString('pipelineSteps.timeoutLabel')}
+              name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
+              disabled={readonly}
+              multiTypeDurationProps={{
+                enableConfigureOptions: false,
+                allowableTypes,
+                expressions,
+                disabled: readonly
+              }}
+            />
+          </div>
+        )
+      }
       {isRuntime(inputSetData?.template?.spec?.provisionerIdentifier as string) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormInput.MultiTextInput
@@ -272,72 +279,83 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
           />
         </div>
       )}
-      {isRuntime(inputSetData?.template?.spec?.configuration?.capabilities as string) && (
-        <Layout.Vertical>
-          <Label style={{ color: Color.GREY_900 }}>{getString('cd.cloudFormation.specifyCapabilities')}</Label>
-          <MultiSelectTypeInput
-            name={`${path}.spec.configuration.capabilities`}
-            disabled={readonly}
-            multiSelectProps={{
-              items: capabilities,
-              allowCreatingNewItems: false
-            }}
-            width={500}
-            value={selectedCapabilities}
-            onChange={values => {
-              /* istanbul ignore next */
-              setSelectedCapabilities(values as MultiSelectOption[])
-            }}
-          />
-        </Layout.Vertical>
-      )}
-      {isRuntime((inputSetData?.template?.spec?.configuration?.tags as Tags)?.spec?.content) && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <MultiTypeFieldSelector
-            name={`${path}.spec.configuration.tags.spec.content`}
-            label={getString('tagsLabel')}
-            defaultValueToReset=""
-            allowedTypes={allowableTypes}
-            skipRenderValueInExpressionLabel
-            disabled={readonly}
-            expressionRender={() => (
+      {
+        /* istanbul ignore next */
+        isRuntime(inputSetData?.template?.spec?.configuration?.capabilities as string) && (
+          <Layout.Vertical>
+            <Label style={{ color: Color.GREY_900 }}>{getString('cd.cloudFormation.specifyCapabilities')}</Label>
+            <MultiSelectTypeInput
+              name={`${path}.spec.configuration.capabilities`}
+              disabled={readonly}
+              multiSelectProps={{
+                items: capabilities,
+                allowCreatingNewItems: false
+              }}
+              width={500}
+              value={selectedCapabilities}
+              onChange={values => {
+                /* istanbul ignore next */
+                setSelectedCapabilities(values as MultiSelectOption[])
+              }}
+            />
+          </Layout.Vertical>
+        )
+      }
+      {
+        /* istanbul ignore next */
+        isRuntime((inputSetData?.template?.spec?.configuration?.tags as Tags)?.spec?.content) && (
+          <div className={cx(stepCss.formGroup, stepCss.md)}>
+            <MultiTypeFieldSelector
+              name={`${path}.spec.configuration.tags.spec.content`}
+              label={getString('tagsLabel')}
+              defaultValueToReset=""
+              allowedTypes={allowableTypes}
+              skipRenderValueInExpressionLabel
+              disabled={readonly}
+              expressionRender={() => {
+                /* istanbul ignore next */
+                return (
+                  <TFMonaco
+                    name={`${path}.spec.configuration.tags.spec.content`}
+                    formik={formik!}
+                    expressions={expressions}
+                    title={getString('tagsLabel')}
+                  />
+                )
+              }}
+            >
               <TFMonaco
                 name={`${path}.spec.configuration.tags.spec.content`}
                 formik={formik!}
                 expressions={expressions}
                 title={getString('tagsLabel')}
               />
-            )}
-          >
-            <TFMonaco
-              name={`${path}.spec.configuration.tags.spec.content`}
-              formik={formik!}
-              expressions={expressions}
-              title={getString('tagsLabel')}
+            </MultiTypeFieldSelector>
+          </div>
+        )
+      }
+      {
+        /* istanbul ignore next */
+        isRuntime(inputSetData?.template?.spec?.configuration?.skipOnStackStatuses as string) && (
+          <Layout.Vertical>
+            <Label style={{ color: Color.GREY_900 }}>{getString('cd.cloudFormation.continueStatus')}</Label>
+            <MultiSelectTypeInput
+              name={`${path}.spec.configuration.skipOnStackStatuses`}
+              disabled={readonly}
+              multiSelectProps={{
+                items: awsStatuses,
+                allowCreatingNewItems: false
+              }}
+              width={500}
+              value={selectedStackStatus}
+              onChange={values => {
+                /* istanbul ignore next */
+                setSelectedStackStatus(values as MultiSelectOption[])
+              }}
             />
-          </MultiTypeFieldSelector>
-        </div>
-      )}
-      {getMultiTypeFromValue(inputSetData?.template?.spec?.configuration?.skipOnStackStatuses as string) ===
-        MultiTypeInputType.RUNTIME && (
-        <Layout.Vertical>
-          <Label style={{ color: Color.GREY_900 }}>{getString('cd.cloudFormation.continueStatus')}</Label>
-          <MultiSelectTypeInput
-            name={`${path}.spec.configuration.skipOnStackStatuses`}
-            disabled={readonly}
-            multiSelectProps={{
-              items: awsStatuses,
-              allowCreatingNewItems: false
-            }}
-            width={500}
-            value={selectedStackStatus}
-            onChange={values => {
-              /* istanbul ignore next */
-              setSelectedStackStatus(values as MultiSelectOption[])
-            }}
-          />
-        </Layout.Vertical>
-      )}
+          </Layout.Vertical>
+        )
+      }
     </FormikForm>
   )
 }

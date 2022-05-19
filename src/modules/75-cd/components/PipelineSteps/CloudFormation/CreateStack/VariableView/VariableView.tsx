@@ -23,8 +23,8 @@ export function CreateStackVariableStep({
   return (
     <>
       <VariablesListTable
-        data={variablesData.spec}
-        originalData={initialValues.spec}
+        data={variablesData.spec?.configuration}
+        originalData={initialValues.spec?.configuration}
         metadataMap={metadataMap}
         className={pipelineVariableCss.variablePaddingL3}
       />
