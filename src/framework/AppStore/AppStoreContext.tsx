@@ -225,14 +225,19 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
 
   // When projectIdentifier in URL changes, fetch projectDetails, and update selectedProject & savedProject-preference
   useEffect(() => {
+    const controller = new AbortController()
+    const { signal } = controller
     if (projectIdentifier && orgIdentifier) {
-      getProjectPromise({
-        identifier: projectIdentifier,
-        queryParams: {
-          accountIdentifier: accountId,
-          orgIdentifier
-        }
-      }).then(response => {
+      getProjectPromise(
+        {
+          identifier: projectIdentifier,
+          queryParams: {
+            accountIdentifier: accountId,
+            orgIdentifier
+          }
+        },
+        signal
+      ).then(response => {
         const project = response?.data?.project
 
         if (project) {
@@ -259,6 +264,9 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
           }
         }
       })
+    }
+    return () => {
+      controller.abort()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectIdentifier, orgIdentifier])
