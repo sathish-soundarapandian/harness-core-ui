@@ -32,7 +32,7 @@ import {
   UserMetadataDTO,
   RoleAssignmentMetadataDTO
 } from 'services/cd-ng'
-import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
+import { getPrincipalScopeFromDTO, getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useStrings, String } from 'framework/strings'
 import RoleBindingsList from '@rbac/components/RoleBindingsList/RoleBindingsList'
 import {
@@ -305,12 +305,12 @@ const RenderColumnMenu: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, col
     orgIdentifier: p_orgIdentifier,
     projectIdentifier: p_projectIdentifier
   } = useParams<ProjectPathProps>()
-  const Scope = getScopeFromDTO({
+  const scope = getScopeFromDTO({
     accountIdentifier: p_accountId,
     orgIdentifier: p_orgIdentifier,
     projectIdentifier: p_projectIdentifier
   })
-  const userGroupInherited = isUserGroupInherited(Scope, data)
+  const userGroupInherited = isUserGroupInherited(scope, data)
   const renderMenuItem = (
     icon: IconName,
     text: string,
@@ -454,15 +454,16 @@ const UserGroupsListView: React.FC<UserGroupsListViewProps> = props => {
       name="UserGroupsListView"
       data={data?.data?.content || []}
       onRowClick={userGroup => {
-        history.push(
-          routes.toUserGroupDetails({
+        history.push({
+          pathname: routes.toUserGroupDetails({
             accountId,
             orgIdentifier,
             projectIdentifier,
             module,
             userGroupIdentifier: userGroup.userGroupDTO.identifier
-          })
-        )
+          }),
+          search: `?parentScope=${getPrincipalScopeFromDTO(userGroup.userGroupDTO)}`
+        })
       }}
       pagination={{
         itemCount: data?.data?.totalItems || 0,

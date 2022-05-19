@@ -12,13 +12,12 @@ import {
   FormikForm as Form,
   Layout,
   ModalErrorHandlerBinding,
-  SelectOption,
   ModalErrorHandler,
   ButtonVariation
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
-import { defaultTo } from 'lodash-es'
+import type { FormikProps } from 'formik'
 import { useToaster } from '@common/components'
 import { usePostRoleAssignments, RoleAssignment as RBACRoleAssignment } from 'services/rbac'
 import { useStrings } from 'framework/strings'
@@ -31,12 +30,19 @@ import {
 } from '@common/components/EntityReference/EntityReference'
 import UserGroupsInput from '@common/components/UserGroupsInput/UserGroupsInput'
 import { isCommunityPlan } from '@common/utils/utils'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import RoleAssignmentForm from './RoleAssignmentForm'
+import type { RoleAssignmentValues } from './RoleAssignment'
+import type { Assignment, UserRoleAssignmentValues } from './UserRoleAssigment'
 
 interface UserGroupRoleAssignmentData {
   onSubmit?: () => void
   onSuccess?: () => void
   onCancel?: () => void
+}
+export interface UserGroupRoleAssignmentValues {
+  assignments: Assignment[]
+  userGroups: string[]
 }
 
 interface FormData {
@@ -45,33 +51,12 @@ interface FormData {
   label: string
   userGroupField?: React.ReactElement
 }
-
-export interface RoleOption extends SelectOption {
-  managed: boolean
-  managedRoleAssignment: boolean
-  assignmentIdentifier?: string
-}
-
-export interface ResourceGroupOption extends SelectOption {
-  managedRoleAssignment: boolean
-  assignmentIdentifier?: string
-}
-
-export interface Assignment {
-  role: RoleOption
-  resourceGroup: ResourceGroupOption
-}
-
-export interface UserGroupRoleAssignmentValues {
-  assignments: Assignment[]
-  userGroups: string[]
-}
-
-const UserRoleAssignment: React.FC<UserGroupRoleAssignmentData> = props => {
+const AssignRoles: React.FC<UserGroupRoleAssignmentData> = props => {
   const { onSubmit, onSuccess, onCancel } = props
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const scope = getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
   const { getString } = useStrings()
+  const { getRBACErrorMessage } = useRBACError()
   const isCommunity = isCommunityPlan()
   const { showSuccess } = useToaster()
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
@@ -109,7 +94,7 @@ const UserRoleAssignment: React.FC<UserGroupRoleAssignmentData> = props => {
       onSubmit?.()
     } catch (err) {
       /* istanbul ignore next */
-      modalErrorHandler?.showDanger(defaultTo(err?.data?.message, err?.message))
+      modalErrorHandler?.showDanger(getRBACErrorMessage(err))
     }
   }
 
@@ -135,7 +120,6 @@ const UserRoleAssignment: React.FC<UserGroupRoleAssignmentData> = props => {
       formName="UserGroupRoleAssignmentForm"
       validationSchema={Yup.object().shape({
         userGroups: Yup.array().min(1, getString('rbac.userGroupRequired')),
-        // assignments: Yup.array().min(1, getString()),
         ...(isCommunity
           ? {}
           : {
@@ -160,7 +144,9 @@ const UserRoleAssignment: React.FC<UserGroupRoleAssignmentData> = props => {
             {!isCommunity && (
               <RoleAssignmentForm
                 noRoleAssignmentsText={getString('rbac.usersPage.noDataText')}
-                formik={formik}
+                formik={
+                  formik as FormikProps<UserGroupRoleAssignmentValues | UserRoleAssignmentValues | RoleAssignmentValues>
+                }
                 onSuccess={onSuccess}
               />
             )}
@@ -180,4 +166,4 @@ const UserRoleAssignment: React.FC<UserGroupRoleAssignmentData> = props => {
   )
 }
 
-export default UserRoleAssignment
+export default AssignRoles

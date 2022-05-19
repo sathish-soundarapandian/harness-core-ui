@@ -15,7 +15,8 @@ import type {
   UserMetadataDTO,
   Scope as CDScope,
   UserGroupDTO,
-  Failure
+  Failure,
+  GetUserGroupAggregateQueryParams
 } from 'services/cd-ng'
 import { Scope, PrincipalScope } from '@common/interfaces/SecretsInterface'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
@@ -33,7 +34,6 @@ import { FeatureWarningTooltip } from '@common/components/FeatureWarning/Feature
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import type { ProjectSelectOption } from '@audit-trail/components/FilterDrawer/FilterDrawer'
 import type { RbacMenuItemProps } from '@rbac/components/MenuItem/MenuItem'
-import { data } from '@audit-trail/pages/AuditTrails/views/__tests__/mockData'
 
 export const DEFAULT_RG = '_all_resources_including_child_scopes'
 export const PROJECT_DEFAULT_RG = '_all_project_level_resources'
@@ -387,4 +387,30 @@ export const isUserGroupInherited = (scope: Scope, userGroupDTO?: UserGroupDTO):
     return true
   }
   return false
+}
+
+export const getUserGroupQueryParams = (
+  accountIdentifier: string,
+  orgIdentifier: string,
+  projectIdentifier: string,
+  parentScope?: PrincipalScope
+): Pick<GetUserGroupAggregateQueryParams, 'accountIdentifier' | 'orgIdentifier' | 'projectIdentifier'> => {
+  const params = {
+    accountIdentifier
+  }
+  switch (parentScope) {
+    case PrincipalScope.ORG:
+      return {
+        ...params,
+        orgIdentifier
+      }
+    case PrincipalScope.PROJECT:
+      return {
+        ...params,
+        orgIdentifier,
+        projectIdentifier
+      }
+    default:
+      return params
+  }
 }

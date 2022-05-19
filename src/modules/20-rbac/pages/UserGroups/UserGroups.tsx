@@ -22,7 +22,6 @@ import { PrincipalType } from '@rbac/utils/utils'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
 import { setPageNumber } from '@common/utils/utils'
 import UserGroupEmptyState from './user-group-empty-state.png'
-import { userGroupsAggregate } from './__tests__/UserGroupsMock'
 import css from './UserGroups.module.scss'
 
 interface UserGroupBtnProp {
@@ -45,7 +44,6 @@ const UserGroupsPage: React.FC = () => {
       searchTerm: searchTerm,
       filterType: 'INCLUDE_INHERITED_GROUPS'
     },
-    // mock: { data: userGroupsAggregate, loading: false },
     debounce: 300
   })
 

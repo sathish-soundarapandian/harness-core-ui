@@ -11,6 +11,7 @@ import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
 import cx from 'classnames'
+import { pick } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useGetUserGroupAggregate, UserGroupAggregateDTO } from 'services/cd-ng'
 import { Page } from '@common/exports'
@@ -22,12 +23,15 @@ import RoleBindingsList from '@rbac/components/RoleBindingsList/RoleBindingsList
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRoleAssignmentModal'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
+import { useQueryParams } from '@common/hooks'
+import type { PrincipalScope } from '@common/interfaces/SecretsInterface'
 import {
   getUserGroupActionTooltipText,
   PrincipalType,
   isUserGroupInherited,
   getScopeFromUserGroupDTO,
-  mapfromScopetoPrincipalScope
+  mapfromScopetoPrincipalScope,
+  getUserGroupQueryParams
 } from '@rbac/utils/utils'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useUserGroupModal } from '@rbac/modals/UserGroupModal/useUserGroupModal'
@@ -37,26 +41,29 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
 import NotificationList from '@rbac/components/NotificationList/NotificationList'
 import { isCommunityPlan } from '@common/utils/utils'
-import { userGroupCheckingInfo } from './__tests__/mock'
 import css from './UserGroupDetails.module.scss'
-import { string } from 'yup'
 
 const UserGroupDetails: React.FC = () => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, module, userGroupIdentifier } =
     useParams<PipelineType<ProjectPathProps & { userGroupIdentifier: string }>>()
+  const scope = getScopeFromDTO({
+    accountIdentifier: accountId,
+    orgIdentifier,
+    projectIdentifier
+  })
+  const { parentScope } = useQueryParams<{ parentScope: PrincipalScope }>()
   const isCommunity = isCommunityPlan()
 
   const { data, loading, error, refetch } = useGetUserGroupAggregate({
     identifier: userGroupIdentifier,
     queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier
-    },
-    mock: { data: userGroupCheckingInfo, loading: false }
+      ...getUserGroupQueryParams(accountId, orgIdentifier, projectIdentifier, parentScope),
+      roleAssignmentScopeOrgIdentifier: orgIdentifier,
+      roleAssignmentScopeProjectIdentifier: projectIdentifier
+    }
   })
-  console.log(data)
+
   const { openRoleAssignmentModal } = useRoleAssignmentModal({
     onSuccess: refetch
   })
@@ -71,36 +78,20 @@ const UserGroupDetails: React.FC = () => {
 
   const userGroupAggregateResponse: UserGroupAggregateDTO | undefined = data?.data
   const userGroup = userGroupAggregateResponse?.userGroupDTO
-  const resourceScope = {
-    accountId: userGroup?.accountIdentifier,
-    orgIdentifier: userGroup?.orgIdentifier,
-    projectIdentifier: userGroup?.projectIdentifier
-  }
+
   useDocumentTitle([userGroup?.name || '', getString('common.userGroups')])
 
-  const {
-    accountId: p_accountId,
-    orgIdentifier: p_orgIdentifier,
-    projectIdentifier: p_projectIdentifier
-  } = useParams<ProjectPathProps>()
-  const Scope = getScopeFromDTO({
-    accountIdentifier: p_accountId,
-    orgIdentifier: p_orgIdentifier,
-    projectIdentifier: p_projectIdentifier
-  })
-  const userGroupInherited = isUserGroupInherited(Scope, userGroup)
+  const userGroupInherited = isUserGroupInherited(scope, userGroup)
   const membersBtnTooltipTextId = userGroup ? getUserGroupActionTooltipText(userGroup, userGroupInherited) : undefined
   let membersBtnTooltipText = ''
   if (membersBtnTooltipTextId === 'rbac.unableToEditInheritedMembershipDetailed') {
     membersBtnTooltipText = getString(membersBtnTooltipTextId, {
       parentScope: mapfromScopetoPrincipalScope(getScopeFromUserGroupDTO(userGroup)),
-      childScope: mapfromScopetoPrincipalScope(Scope)
+      childScope: mapfromScopetoPrincipalScope(scope)
     })
   } else if (membersBtnTooltipTextId !== undefined) {
     membersBtnTooltipText = getString(membersBtnTooltipTextId)
   }
-
-  // const membersBtnTooltipText = membersBtnTooltipTextId ? getString(membersBtnTooltipTextId) : undefined
 
   if (loading) return <PageSpinner />
   if (error) return <PageError message={(error.data as Error)?.message || error.message} onClick={() => refetch()} />
@@ -154,14 +145,6 @@ const UserGroupDetails: React.FC = () => {
           </Layout.Horizontal>
         </Card>
       ) : null}
-
-      {/* <div className={cx(css.banner)}>
-          <Container width="100%" padding={{ bottom: 'large' }} className={css.membersContainer}>
-            <Layout.Horizontal flex={{ alignItems: 'baseline' }} spacing="medium">
-              <Text color={Color.BLACK}>{'fgvbhjn fghjk fghj fgh fgvbhjn fghjk fghj fgh jk ghjk ghjk ghj hgjk'}</Text>
-            </Layout.Horizontal>
-          </Container>
-        </div> */}
 
       <Page.Body className={css.body}>
         <Container width="50%" padding={{ bottom: 'large' }} className={css.membersContainer}>
@@ -248,7 +231,7 @@ const UserGroupDetails: React.FC = () => {
                   }}
                   resourceType={ResourceType.USERGROUP}
                   resourceIdentifier={userGroupIdentifier}
-                  resourceScope={resourceScope}
+                  resourceScope={pick(userGroup, 'accountIdentifier', 'orgIdentifier', 'projectIdentifier')}
                 />
               </Layout.Horizontal>
             </Layout.Vertical>

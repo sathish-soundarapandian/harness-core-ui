@@ -25,7 +25,9 @@ import type { ProjectPathProps, UserGroupPathProps } from '@common/interfaces/Ro
 import { useGetUsersInUserGroup, useRemoveMember, UserInfo } from 'services/cd-ng'
 import { useToaster } from '@common/components'
 import { useStrings } from 'framework/strings'
-import { useMutateAsGet } from '@common/hooks'
+import { useMutateAsGet, useQueryParams } from '@common/hooks'
+import type { PrincipalScope } from '@common/interfaces/SecretsInterface'
+import { getUserGroupQueryParams } from '@rbac/utils/utils'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -107,7 +109,9 @@ const RenderColumnMenu: Renderer<CellProps<UserInfo>> = ({ row, column }) => {
     openDialog()
   }
 
-  return (column as any).ssoLinked || (column as any).userGroupIdentifier ? null : (
+  return (column as any).ssoLinked ||
+    (column as any).userGroupInherited ||
+    (column as any).userGroupIdentifier ? null : (
     <Layout.Horizontal flex={{ justifyContent: 'flex-end' }}>
       <Popover
         isOpen={menuOpen}
@@ -183,14 +187,13 @@ const MemberList: React.FC<{ ssoLinked?: boolean; userGroupInherited?: boolean }
   const { accountId, orgIdentifier, projectIdentifier, userGroupIdentifier } = useParams<
     ProjectPathProps & UserGroupPathProps
   >()
+  const { parentScope } = useQueryParams<{ parentScope: PrincipalScope }>()
 
   const { data, refetch } = useMutateAsGet(useGetUsersInUserGroup, {
     body: {},
     identifier: userGroupIdentifier,
     queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
+      ...getUserGroupQueryParams(accountId, orgIdentifier, projectIdentifier, parentScope),
       pageIndex: page,
       pageSize: 10
     }
@@ -223,7 +226,8 @@ const MemberList: React.FC<{ ssoLinked?: boolean; userGroupInherited?: boolean }
         refetchMembers: refetch,
         userGroupIdentifier: userGroupIdentifier,
         disableSortBy: true,
-        ssoLinked: ssoLinked
+        ssoLinked,
+        userGroupInherited
       }
     ]
   }, [refetch])

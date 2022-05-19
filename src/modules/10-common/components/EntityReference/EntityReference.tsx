@@ -52,6 +52,15 @@ export function getScopeFromDTO<T extends ScopedObjectDTO>(obj: T): Scope {
   return Scope.ACCOUNT
 }
 
+export function getPrincipalScopeFromDTO<T extends ScopedObjectDTO>(obj: T): PrincipalScope {
+  if (obj.projectIdentifier) {
+    return PrincipalScope.PROJECT
+  } else if (obj.orgIdentifier) {
+    return PrincipalScope.ORG
+  }
+  return PrincipalScope.ACCOUNT
+}
+
 export const getScopeBasedProjectPathParams = (
   { accountId, projectIdentifier, orgIdentifier }: ProjectPathProps,
   scope: Scope

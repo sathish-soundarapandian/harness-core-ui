@@ -306,6 +306,7 @@ export interface AccessControlCheckError {
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
     | 'DATA'
     | 'CONTEXT'
@@ -640,12 +641,6 @@ export interface AddUsersResponse {
       | 'USER_ALREADY_INVITED'
       | 'FAIL'
   }
-}
-
-export interface AggregateACLRequest {
-  resourceGroupFilter?: string[]
-  roleFilter?: string[]
-  searchTerm?: string
 }
 
 export interface ApiKeyAggregateDTO {
@@ -2937,6 +2932,7 @@ export interface Error {
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
     | 'DATA'
     | 'CONTEXT'
@@ -3327,6 +3323,7 @@ export interface Failure {
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
     | 'DATA'
     | 'CONTEXT'
@@ -3646,6 +3643,7 @@ export interface FileDTO {
 export type FileNodeDTO = FileStoreNodeDTO & {
   description?: string
   fileUsage: 'MANIFEST_FILE' | 'CONFIG' | 'SCRIPT'
+  mimeType?: string
   tags?: NGTag[]
 }
 
@@ -3654,6 +3652,7 @@ export interface FileStoreNodeDTO {
   lastModifiedAt?: number
   lastModifiedBy?: EmbeddedUserDetailsDTO
   name: string
+  parentIdentifier?: string
   type: 'FILE' | 'FOLDER'
 }
 
@@ -3662,7 +3661,7 @@ export interface FileStoreRequest {
 }
 
 export interface FilesFilterProperties {
-  createdBy?: string
+  createdBy?: EmbeddedUserDetailsDTO
   fileUsage?: 'MANIFEST_FILE' | 'CONFIG' | 'SCRIPT'
   filterType?:
     | 'Connector'
@@ -3677,7 +3676,7 @@ export interface FilesFilterProperties {
     | 'FileStore'
     | 'CCMRecommendation'
     | 'Anomaly'
-  referencedBy?: string
+  referencedBy?: EntityDetail
   tags?: {
     [key: string]: string
   }
@@ -3731,6 +3730,7 @@ export interface FolderNodeDTO {
   lastModifiedAt?: number
   lastModifiedBy?: EmbeddedUserDetailsDTO
   name: string
+  parentIdentifier?: string
   type: 'FILE' | 'FOLDER'
 }
 
@@ -5096,6 +5096,10 @@ export type InlineCloudformationTemplateFileSpec = CloudformationTemplateFileSpe
   templateBody: string
 }
 
+export type InlineStoreConfig = StoreConfig & {
+  content: string
+}
+
 export type InlineTerraformBackendConfigSpec = TerraformBackendConfigSpec & {
   content?: string
 }
@@ -5300,6 +5304,7 @@ export type K8SDirectInfrastructure = Infrastructure & {
 export type K8sApplyStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   filePaths?: string[]
+  overrides?: ManifestConfigWrapper[]
   skipDryRun?: boolean
   skipSteadyStateCheck?: boolean
 }
@@ -6015,9 +6020,10 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export type OAuthSettings = NGAuthSettings & {
+export interface OAuthSettings {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
@@ -7736,6 +7742,13 @@ export interface ResponseListRoleAssignmentResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseListScopeName {
+  correlationId?: string
+  data?: ScopeName[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseListServiceAccountDTO {
   correlationId?: string
   data?: ServiceAccountDTO[]
@@ -7788,13 +7801,6 @@ export interface ResponseListSourceCodeManagerDTO {
 export interface ResponseListString {
   correlationId?: string
   data?: string[]
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponseListUserGroupAggregateDTO {
-  correlationId?: string
-  data?: UserGroupAggregateDTO[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -8134,6 +8140,7 @@ export interface ResponseMessage {
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
     | 'DATA'
     | 'CONTEXT'
@@ -9331,6 +9338,14 @@ export interface Scope {
   projectIdentifier?: string
 }
 
+export interface ScopeName {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  orgName?: string
+  projectIdentifier?: string
+  projectName?: string
+}
+
 export interface ScopingRuleDetailsNg {
   description?: string
   environmentIds?: string[]
@@ -10122,7 +10137,7 @@ export interface StoreConfig {
 export interface StoreConfigWrapper {
   metadata?: string
   spec: StoreConfig
-  type: 'Git' | 'Github' | 'Bitbucket' | 'GitLab' | 'Http' | 'S3' | 'Gcs' | 'Artifactory' | 'S3Url'
+  type: 'Git' | 'Github' | 'Bitbucket' | 'GitLab' | 'Http' | 'S3' | 'Gcs' | 'Inline' | 'Artifactory' | 'S3Url'
 }
 
 export type StringNGVariable = NGVariable & {
@@ -10543,6 +10558,7 @@ export interface UserGroupEntityReference {
 export interface UserGroupFilterDTO {
   accountIdentifier?: string
   databaseIdFilter?: string[]
+  filterType?: 'INCLUDE_INHERITED_GROUPS' | 'EXCLUDE_INHERITED_GROUPS'
   identifierFilter?: string[]
   orgIdentifier?: string
   projectIdentifier?: string
@@ -10903,9 +10919,9 @@ export type ScimUserRequestBody = ScimUser
 
 export type ScopingRuleDetailsNgArrayRequestBody = ScopingRuleDetailsNg[]
 
-export type SecretRequestWrapperRequestBody = SecretRequestWrapper
+export type SecretRequestWrapperRequestBody = void
 
-export type SecretRequestWrapper2RequestBody = void
+export type SecretRequestWrapper2RequestBody = SecretRequestWrapper
 
 export type ServiceAccountDTORequestBody = ServiceAccountDTO
 
@@ -10933,7 +10949,7 @@ export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody = string
 
-export type SubscribeBodyRequestBody = string[]
+export type ProcessPollingResultNgBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -11931,6 +11947,7 @@ export interface GetUserGroupAggregateListQueryParams {
   pageSize?: number
   sortOrders?: string[]
   searchTerm?: string
+  filterType?: 'INCLUDE_INHERITED_GROUPS' | 'EXCLUDE_INHERITED_GROUPS'
   userSize?: number
 }
 
@@ -11983,89 +12000,12 @@ export const getUserGroupAggregateListPromise = (
     signal
   )
 
-export interface GetUserGroupAggregateListsWithFilterQueryParams {
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-}
-
-export type GetUserGroupAggregateListsWithFilterProps = Omit<
-  MutateProps<
-    ResponseListUserGroupAggregateDTO,
-    Failure | Error,
-    GetUserGroupAggregateListsWithFilterQueryParams,
-    AggregateACLRequest,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get Aggregated User Group list with filter
- */
-export const GetUserGroupAggregateListsWithFilter = (props: GetUserGroupAggregateListsWithFilterProps) => (
-  <Mutate<
-    ResponseListUserGroupAggregateDTO,
-    Failure | Error,
-    GetUserGroupAggregateListsWithFilterQueryParams,
-    AggregateACLRequest,
-    void
-  >
-    verb="POST"
-    path={`/aggregate/acl/usergroups/filter`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetUserGroupAggregateListsWithFilterProps = Omit<
-  UseMutateProps<
-    ResponseListUserGroupAggregateDTO,
-    Failure | Error,
-    GetUserGroupAggregateListsWithFilterQueryParams,
-    AggregateACLRequest,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get Aggregated User Group list with filter
- */
-export const useGetUserGroupAggregateListsWithFilter = (props: UseGetUserGroupAggregateListsWithFilterProps) =>
-  useMutate<
-    ResponseListUserGroupAggregateDTO,
-    Failure | Error,
-    GetUserGroupAggregateListsWithFilterQueryParams,
-    AggregateACLRequest,
-    void
-  >('POST', `/aggregate/acl/usergroups/filter`, { base: getConfig('ng/api'), ...props })
-
-/**
- * Get Aggregated User Group list with filter
- */
-export const getUserGroupAggregateListsWithFilterPromise = (
-  props: MutateUsingFetchProps<
-    ResponseListUserGroupAggregateDTO,
-    Failure | Error,
-    GetUserGroupAggregateListsWithFilterQueryParams,
-    AggregateACLRequest,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    ResponseListUserGroupAggregateDTO,
-    Failure | Error,
-    GetUserGroupAggregateListsWithFilterQueryParams,
-    AggregateACLRequest,
-    void
-  >('POST', getConfig('ng/api'), `/aggregate/acl/usergroups/filter`, props, signal)
-
 export interface GetUserGroupAggregateQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
+  roleAssignmentScopeOrgIdentifier?: string
+  roleAssignmentScopeProjectIdentifier?: string
 }
 
 export interface GetUserGroupAggregatePathParams {
@@ -28976,7 +28916,7 @@ export type ProcessPollingResultNgProps = Omit<
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >,
   'path' | 'verb'
@@ -28988,7 +28928,7 @@ export const ProcessPollingResultNg = ({ perpetualTaskId, ...props }: ProcessPol
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >
     verb="POST"
@@ -29003,7 +28943,7 @@ export type UseProcessPollingResultNgProps = Omit<
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >,
   'path' | 'verb'
@@ -29015,7 +28955,7 @@ export const useProcessPollingResultNg = ({ perpetualTaskId, ...props }: UseProc
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >(
     'POST',
@@ -29031,7 +28971,7 @@ export const processPollingResultNgPromise = (
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   > & { perpetualTaskId: string },
   signal?: RequestInit['signal']
@@ -29040,17 +28980,17 @@ export const processPollingResultNgPromise = (
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >('POST', getConfig('ng/api'), `/polling/delegate-response/${perpetualTaskId}`, props, signal)
 
 export type SubscribeProps = Omit<
-  MutateProps<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  MutateProps<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const Subscribe = (props: SubscribeProps) => (
-  <Mutate<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>
+  <Mutate<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>
     verb="POST"
     path={`/polling/subscribe`}
     base={getConfig('ng/api')}
@@ -29059,22 +28999,28 @@ export const Subscribe = (props: SubscribeProps) => (
 )
 
 export type UseSubscribeProps = Omit<
-  UseMutateProps<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  UseMutateProps<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const useSubscribe = (props: UseSubscribeProps) =>
-  useMutate<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>(
+  useMutate<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
     'POST',
     `/polling/subscribe`,
     { base: getConfig('ng/api'), ...props }
   )
 
 export const subscribePromise = (
-  props: MutateUsingFetchProps<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  props: MutateUsingFetchProps<
+    ResponsePollingResponseDTO,
+    Failure | Error,
+    void,
+    ProcessPollingResultNgBodyRequestBody,
+    void
+  >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>(
+  mutateUsingFetch<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
     'POST',
     getConfig('ng/api'),
     `/polling/subscribe`,
@@ -29083,12 +29029,12 @@ export const subscribePromise = (
   )
 
 export type UnsubscribeProps = Omit<
-  MutateProps<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  MutateProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const Unsubscribe = (props: UnsubscribeProps) => (
-  <Mutate<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>
+  <Mutate<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>
     verb="POST"
     path={`/polling/unsubscribe`}
     base={getConfig('ng/api')}
@@ -29097,21 +29043,22 @@ export const Unsubscribe = (props: UnsubscribeProps) => (
 )
 
 export type UseUnsubscribeProps = Omit<
-  UseMutateProps<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  UseMutateProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const useUnsubscribe = (props: UseUnsubscribeProps) =>
-  useMutate<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>('POST', `/polling/unsubscribe`, {
-    base: getConfig('ng/api'),
-    ...props
-  })
+  useMutate<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
+    'POST',
+    `/polling/unsubscribe`,
+    { base: getConfig('ng/api'), ...props }
+  )
 
 export const unsubscribePromise = (
-  props: MutateUsingFetchProps<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  props: MutateUsingFetchProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>(
+  mutateUsingFetch<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
     'POST',
     getConfig('ng/api'),
     `/polling/unsubscribe`,
@@ -34310,6 +34257,7 @@ export interface GetUserGroupListQueryParams {
   orgIdentifier?: string
   projectIdentifier?: string
   searchTerm?: string
+  filterType?: 'INCLUDE_INHERITED_GROUPS' | 'EXCLUDE_INHERITED_GROUPS'
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
@@ -35066,6 +35014,91 @@ export const addMemberPromise = (
     void,
     AddMemberPathParams
   >('PUT', getConfig('ng/api'), `/user-groups/${identifier}/member/${userIdentifier}`, props, signal)
+
+export interface GetInheritingChildScopeListQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface GetInheritingChildScopeListPathParams {
+  identifier: string
+}
+
+export type GetInheritingChildScopeListProps = Omit<
+  GetProps<
+    ResponseListScopeName,
+    Failure | AccessControlCheckError | Error,
+    GetInheritingChildScopeListQueryParams,
+    GetInheritingChildScopeListPathParams
+  >,
+  'path'
+> &
+  GetInheritingChildScopeListPathParams
+
+/**
+ * Get Inheriting Child Scope List
+ */
+export const GetInheritingChildScopeList = ({ identifier, ...props }: GetInheritingChildScopeListProps) => (
+  <Get<
+    ResponseListScopeName,
+    Failure | AccessControlCheckError | Error,
+    GetInheritingChildScopeListQueryParams,
+    GetInheritingChildScopeListPathParams
+  >
+    path={`/user-groups/${identifier}/scopes`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetInheritingChildScopeListProps = Omit<
+  UseGetProps<
+    ResponseListScopeName,
+    Failure | AccessControlCheckError | Error,
+    GetInheritingChildScopeListQueryParams,
+    GetInheritingChildScopeListPathParams
+  >,
+  'path'
+> &
+  GetInheritingChildScopeListPathParams
+
+/**
+ * Get Inheriting Child Scope List
+ */
+export const useGetInheritingChildScopeList = ({ identifier, ...props }: UseGetInheritingChildScopeListProps) =>
+  useGet<
+    ResponseListScopeName,
+    Failure | AccessControlCheckError | Error,
+    GetInheritingChildScopeListQueryParams,
+    GetInheritingChildScopeListPathParams
+  >((paramsInPath: GetInheritingChildScopeListPathParams) => `/user-groups/${paramsInPath.identifier}/scopes`, {
+    base: getConfig('ng/api'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * Get Inheriting Child Scope List
+ */
+export const getInheritingChildScopeListPromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseListScopeName,
+    Failure | AccessControlCheckError | Error,
+    GetInheritingChildScopeListQueryParams,
+    GetInheritingChildScopeListPathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseListScopeName,
+    Failure | AccessControlCheckError | Error,
+    GetInheritingChildScopeListQueryParams,
+    GetInheritingChildScopeListPathParams
+  >(getConfig('ng/api'), `/user-groups/${identifier}/scopes`, props, signal)
 
 export interface GetUsersInUserGroupQueryParams {
   accountIdentifier: string
@@ -37155,7 +37188,7 @@ export type PostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -37165,7 +37198,7 @@ export type PostSecretProps = Omit<
  * Create a secret
  */
 export const PostSecret = (props: PostSecretProps) => (
-  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapperRequestBody, void>
+  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapper2RequestBody, void>
     verb="POST"
     path={`/v2/secrets`}
     base={getConfig('ng/api')}
@@ -37178,7 +37211,7 @@ export type UsePostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -37192,7 +37225,7 @@ export const usePostSecret = (props: UsePostSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', `/v2/secrets`, { base: getConfig('ng/api'), ...props })
 
@@ -37204,7 +37237,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -37213,7 +37246,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets`, props, signal)
 
@@ -37606,7 +37639,7 @@ export type PostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -37620,7 +37653,7 @@ export const PostSecretViaYaml = (props: PostSecretViaYamlProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >
     verb="POST"
@@ -37635,7 +37668,7 @@ export type UsePostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -37649,7 +37682,7 @@ export const usePostSecretViaYaml = (props: UsePostSecretViaYamlProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', `/v2/secrets/yaml`, { base: getConfig('ng/api'), ...props })
 
@@ -37661,7 +37694,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -37670,7 +37703,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets/yaml`, props, signal)
 
@@ -37805,7 +37838,7 @@ export type PutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -37820,7 +37853,7 @@ export const PutSecret = ({ identifier, ...props }: PutSecretProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >
     verb="PUT"
@@ -37835,7 +37868,7 @@ export type UsePutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -37850,7 +37883,7 @@ export const usePutSecret = ({ identifier, ...props }: UsePutSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', (paramsInPath: PutSecretPathParams) => `/v2/secrets/${paramsInPath.identifier}`, {
     base: getConfig('ng/api'),
@@ -37869,7 +37902,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -37878,7 +37911,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}`, props, signal)
 
@@ -37897,7 +37930,7 @@ export type PutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -37912,7 +37945,7 @@ export const PutSecretViaYaml = ({ identifier, ...props }: PutSecretViaYamlProps
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >
     verb="PUT"
@@ -37927,7 +37960,7 @@ export type UsePutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -37942,7 +37975,7 @@ export const usePutSecretViaYaml = ({ identifier, ...props }: UsePutSecretViaYam
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', (paramsInPath: PutSecretViaYamlPathParams) => `/v2/secrets/${paramsInPath.identifier}/yaml`, {
     base: getConfig('ng/api'),
@@ -37961,7 +37994,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -37970,7 +38003,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}/yaml`, props, signal)
 
