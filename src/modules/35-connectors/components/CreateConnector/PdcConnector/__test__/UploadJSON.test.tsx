@@ -118,4 +118,33 @@ describe('Test TestConnection component', () => {
       expect(setJsonValueFn).toBeCalled()
     })
   })
+  test('drag and drop test - incorrect files', () => {
+    const { container } = render(
+      <TestWrapper path="/account/pass" pathParams={{}}>
+        <UploadJSON setJsonValue={setJsonValueFn} />
+      </TestWrapper>
+    )
+    const input = container.querySelector('input')!
+
+    const eventData = { dataTransfer: { files: [''] } }
+
+    act(() => {
+      const dragStartEvent = Object.assign(createEvent.dragStart(input), eventData)
+
+      fireEvent(input, dragStartEvent)
+      fireEvent.dragEnter(input)
+      fireEvent.dragEnd(input)
+      fireEvent.dragLeave(input)
+
+      const dropEffectEvent = Object.assign(createEvent.dragOver(input), eventData)
+      fireEvent(input, dropEffectEvent)
+
+      const dropEvent = Object.assign(createEvent.drop(input), eventData)
+      fireEvent(input, dropEvent)
+    })
+
+    waitFor(() => {
+      expect(setJsonValueFn).toBeCalled()
+    })
+  })
 })
