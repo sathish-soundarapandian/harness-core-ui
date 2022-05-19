@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, waitFor, act } from '@testing-library/react'
+import { render, waitFor, act, getAllByText } from '@testing-library/react'
 import user from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import PdcDetails from '@connectors/components/CreateConnector/PdcConnector/StepDetails/PdcDetails'
@@ -17,9 +17,11 @@ jest.mock('@common/exports', () => ({
   })
 }))
 
-const fileValues = [{ hosts: 'localhost' }]
-const prevStepDataSpecHosts = { spec: { hosts: 'localhost, 1.2.3.4' } }
-const prevStepDataHosts = { hosts: 'localhost' }
+const nextStep = jest.fn()
+
+const fileValues = [{ hosts: 'localhost1' }]
+const prevStepDataSpecHosts = { spec: { hosts: [{ hostname: 'localhost2' }, { hostname: '1.2.3.4' }] } }
+const prevStepDataHosts = { hosts: 'localhost3\nlocalhost5' }
 
 describe('Test PdcDetails component with spec.hosts', () => {
   test('Render component', async () => {
@@ -30,7 +32,7 @@ describe('Test PdcDetails component with spec.hosts', () => {
     )
 
     waitFor(() => {
-      expect(container.querySelector('localhost')).toBeDefined()
+      expect(container.querySelector('localhost2')).toBeDefined()
     })
   })
   test('Render component with hosts', async () => {
@@ -41,13 +43,13 @@ describe('Test PdcDetails component with spec.hosts', () => {
     )
 
     waitFor(() => {
-      expect(container.querySelector('localhost')).toBeDefined()
+      expect(container.querySelector('localhost3')).toBeDefined()
     })
   })
   test('Render component and try upload file', async () => {
-    const { container } = render(
+    const { container, queryByText } = render(
       <TestWrapper path="/account/pass" pathParams={{ accountId: 'account1' }}>
-        <PdcDetails prevStepData={prevStepDataHosts} isEditMode={false} name="pdc-details" />
+        <PdcDetails prevStepData={prevStepDataHosts} isEditMode={false} name="pdc-details" nextStep={nextStep} />
       </TestWrapper>
     )
 
@@ -58,12 +60,22 @@ describe('Test PdcDetails component with spec.hosts', () => {
     })
     File.prototype.text = jest.fn().mockResolvedValueOnce(str)
     const input = container.querySelector('input')
+
     act(() => {
       user.upload(input!, file)
     })
 
     waitFor(() => {
-      expect(container.querySelector('localhost')).toBeDefined()
+      expect(container.innerHTML).toContain('localhost5')
+    })
+
+    act(async () => {
+      const continueBtn = getAllByText(container, 'continue')[0]
+      await user.click(continueBtn!)
+    })
+
+    waitFor(() => {
+      expect(nextStep).toBeCalled()
     })
   })
 })

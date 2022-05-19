@@ -38,7 +38,7 @@ interface StepConfigureProps {
   closeModal?: () => void
   onSuccess?: () => void
   hosts?: string | string[]
-  spec?: { hosts: string | [] }
+  spec?: { hosts: string | any[] }
 }
 
 const PdcDetails: React.FC<StepProps<StepConfigureProps> & Partial<PdcDetailsProps>> = props => {
