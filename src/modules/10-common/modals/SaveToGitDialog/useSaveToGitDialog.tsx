@@ -91,7 +91,9 @@ export function useSaveToGitDialog<T = Record<string, string>>(
   const [createUpdateStatus, setCreateUpdateStatus] = useState<StepStatus>()
   const { mutate: createPullRequest, loading: creatingPR } = useCreatePR({})
   const { mutate: createPullRequestV2, loading: creatingPRV2 } = useCreatePRV2({
-    queryParams: { accountIdentifier: accountId }
+    queryParams: {
+      accountIdentifier: accountId
+    }
   })
 
   /* Stages for an entity updated/created and/or saved to git */
@@ -245,7 +247,6 @@ export function useSaveToGitDialog<T = Record<string, string>>(
   const createPR = (data: SaveToGitFormInterface & SaveToGitFormV2Interface): void => {
     const params = resource?.storeMetadata?.storeType
       ? {
-          accountIdentifier: accountId,
           orgIdentifier,
           projectIdentifier,
           connectorRef: resource?.storeMetadata?.connectorRef,
