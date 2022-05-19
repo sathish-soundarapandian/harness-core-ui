@@ -1,0 +1,78 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+import React from 'react'
+import { render, waitFor, fireEvent, screen } from '@testing-library/react'
+import { TestWrapper } from '@common/utils/testUtils'
+import ChaosSideNav from '../ChaosSideNav'
+
+jest.mock('@projects-orgs/components/ProjectSelector/ProjectSelector', () => ({
+  ProjectSelector: function ProjectSelectorComp(props: any) {
+    return (
+      <button
+        onClick={() => props.onSelect({ identifier: 'project', orgIdentifier: 'org' })}
+        id="projectSelectorId"
+      ></button>
+    )
+  }
+}))
+
+describe('Chaos Sidenav Render', () => {
+  test('render the chaos sidenav', () => {
+    const { container } = render(
+      <TestWrapper
+        path="/account/:accountId/chaos/orgs/:orgIdentifier/projects/:projectIdentifier"
+        pathParams={{ accountId: 'dummyAccID', orgIdentifier: 'dummyOrgID', projectIdentifier: 'dummyProjID' }}
+      >
+        <ChaosSideNav />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should go to chaos dashboard when project is selected', async () => {
+    const { container, getByTestId } = render(
+      <TestWrapper path="/account/:accountId/chaos/home" pathParams={{ accountId: 'dummy' }}>
+        <ChaosSideNav />
+      </TestWrapper>
+    )
+
+    const projectButtonSel = '#projectSelectorId'
+    const projectButton = await waitFor(() => container.querySelector(projectButtonSel))
+    fireEvent.click(projectButton!)
+
+    expect(getByTestId('location')).toMatchInlineSnapshot(`
+      <div
+        data-testid="location"
+      >
+        /account/dummy/chaos/orgs/org/projects/project/dashboard
+      </div>
+    `)
+  })
+
+  test('should go to access control when selected from the sidebar', async () => {
+    render(
+      <TestWrapper
+        path="/account/:accountId/chaos/orgs/:orgIdentifier/projects/:projectIdentifier"
+        pathParams={{ accountId: 'dummyAccID', orgIdentifier: 'dummyOrgID', projectIdentifier: 'dummyProjID' }}
+      >
+        <ChaosSideNav />
+      </TestWrapper>
+    )
+
+    fireEvent.mouseOver(screen.getByText('common.projectSetup'))
+    await waitFor(() => screen.getByText('accessControl'))
+    fireEvent.click(screen.getByText('accessControl'))
+    expect(screen.getByTestId('location')).toMatchInlineSnapshot(`
+      <div
+        data-testid="location"
+      >
+        /account/dummyAccID/chaos/orgs/dummyOrgID/projects/dummyProjID/setup/access-control
+      </div>
+    `)
+  })
+})
