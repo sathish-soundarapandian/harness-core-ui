@@ -11,6 +11,5 @@ declare const styles: {
   readonly card: string
   readonly cardsWrapper: string
   readonly gitOpsEntities: string
-  readonly selected: string
 }
 export default styles

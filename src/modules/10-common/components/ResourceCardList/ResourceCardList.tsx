@@ -6,10 +6,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { Button, ButtonSize, Card, Layout, Text } from '@wings-software/uicore'
+import { Button, ButtonSize, Card, Layout, Text, useToggleOpen } from '@wings-software/uicore'
 import { Icon, IconName } from '@harness/icons'
 import { FontVariation, Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
@@ -28,6 +28,7 @@ export interface ResourceOption {
   onClick?: () => void
   subLabel?: JSX.Element
   disabled?: boolean
+  selectable?: boolean
 }
 interface ResourceCardListProps {
   items?: ResourceOption[]
@@ -38,14 +39,17 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   const history = useHistory()
   const { getString } = useStrings()
   const { NG_TEMPLATES, NG_VARIABLES } = useFeatureFlags()
-  const [showGitOpsEntities, setShowGitOpsEntities] = useState<boolean>(false)
+  const { isOpen: showGitOpsEntities, toggle: toggleShowGitOpsEntities } = useToggleOpen()
   const { loading, data, refetch } = useGetSmtpConfig({ queryParams: { accountId } })
   const refetchSmtpData = (): void => {
     refetch()
   }
   const { openCreateSmtpModal } = useCreateSmtpModal({ onCloseModal: refetchSmtpData })
   // showGitOpsCard defaults to false for now while the feature is being developed
-  const showGitOpsCard = useMemo(() => history?.location?.pathname.includes('resources') && false, [history])
+  const showGitOpsCard = useMemo(
+    () => history?.location?.pathname.includes('resources') && true,
+    [history?.location?.pathname]
+  )
   const smtpResource: ResourceOption[] = [
     {
       label: <String stringID="common.smtp.conifg" />,
@@ -85,10 +89,8 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
     {
       label: <String stringID="cd.gitOps" />,
       icon: 'gitops-blue',
-      colorClass: cx(css.card),
-      onClick: () => {
-        setShowGitOpsEntities(prev => !prev)
-      }
+      onClick: toggleShowGitOpsEntities,
+      selectable: true
     } as ResourceOption
   ]
   const options: ResourceOption[] = items || [
@@ -143,9 +145,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
         {options.map(option => (
           <Card
             key={option.icon}
-            className={cx(css.card, {
-              [`${css.selected}`]: showGitOpsEntities && option.icon.includes('gitops')
-            })}
+            className={cx(css.card, option.colorClass)}
             disabled={option.disabled}
             onClick={() => {
               option?.onClick?.()
@@ -153,6 +153,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
                 history.push(option.route)
               }
             }}
+            selected={option.selectable && showGitOpsEntities}
           >
             <Layout.Vertical flex spacing="small">
               <Icon name={option.icon} size={70} />

@@ -463,7 +463,7 @@ exports[`Organization Details Render 1`] = `
           class="cardsWrapper"
         >
           <div
-            class="bp3-card bp3-elevation-0 Card--card card"
+            class="bp3-card bp3-elevation-0 Card--card card accessControl"
           >
             <div
               class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex"

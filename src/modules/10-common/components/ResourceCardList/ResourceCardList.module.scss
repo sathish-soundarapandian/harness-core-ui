@@ -32,11 +32,6 @@
   &:not(:last-of-type) {
     margin-right: var(--spacing-xlarge);
   }
-
-  &.selected {
-    background-color: var(--primary-1);
-    border: 1px solid var(--primary-7);
-  }
 }
 
 .arrowDown {
