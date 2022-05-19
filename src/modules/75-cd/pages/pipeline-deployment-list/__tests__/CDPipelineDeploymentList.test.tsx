@@ -102,6 +102,7 @@ jest.mock('services/cd-ng', () => ({
     return { data: sourceCodeManagers, refetch: jest.fn() }
   }),
   useCreatePR: jest.fn(() => noop),
+  useCreatePRV2: jest.fn(() => noop),
   useGetFileContent: jest.fn(() => noop)
 }))
 

@@ -56,6 +56,7 @@ import type { PipelineInfoConfig } from 'services/cd-ng'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { GovernanceMetadata, StoreType } from 'services/pipeline-ng'
 import PipelineErrors from '@pipeline/components/PipelineStudio/PipelineCanvas/PipelineErrors/PipelineErrors'
+import type { StoreMetaData } from '@common/constants/GitSyncTypes'
 import type { AccessControlCheckError } from 'services/rbac'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { EvaluationModal } from '@governance/EvaluationModal'
@@ -228,7 +229,7 @@ export function SavePipelinePopover({
 
   const saveAndPublishPipeline = async (
     latestPipeline: PipelineInfoConfig,
-    currStoreMetadata: any,
+    currStoreMetadata?: StoreMetaData,
     updatedGitDetails?: SaveToGitFormInterface,
     lastObject?: { lastObjectId?: string }
   ): Promise<UseSaveSuccessResponse> => {
@@ -240,11 +241,11 @@ export function SavePipelinePopover({
         accountIdentifier: accountId,
         projectIdentifier,
         orgIdentifier,
-        ...(currStoreMetadata.storeType ? { storeType: currStoreMetadata.storeType } : {}),
-        ...(currStoreMetadata.storeType === 'REMOTE' ? { connectorRef: currStoreMetadata.connectorRef } : {}),
+        ...(currStoreMetadata?.storeType ? { storeType: currStoreMetadata?.storeType } : {}),
+        ...(currStoreMetadata?.storeType === 'REMOTE' ? { connectorRef: currStoreMetadata?.connectorRef } : {}),
         ...(updatedGitDetails ?? {}),
         ...(lastObject ?? {}),
-        ...(updatedGitDetails && currStoreMetadata.storeType !== 'REMOTE' && updatedGitDetails.isNewBranch
+        ...(updatedGitDetails && currStoreMetadata?.storeType !== 'REMOTE' && updatedGitDetails?.isNewBranch
           ? { baseBranch: branch }
           : {})
       },
@@ -317,7 +318,7 @@ export function SavePipelinePopover({
       {
         ...updatedGitDetails,
         repoName: gitDetails.repoName,
-        filePath: defaultTo(gitDetails.filePath, '')
+        filePath: isGitSyncEnabled ? updatedGitDetails.filePath : defaultTo(gitDetails.filePath, '')
       },
       pipelineIdentifier !== DefaultNewPipelineId ? { lastObjectId: objectId } : {}
     )
@@ -362,8 +363,8 @@ export function SavePipelinePopover({
     }
 
     // if Git sync enabled then display modal
-    if (isGitSyncEnabled || storeMetadata.storeType === 'REMOTE') {
-      if ((storeMetadata.storeType !== 'REMOTE' && isEmpty(gitDetails.repoIdentifier)) || isEmpty(gitDetails.branch)) {
+    if (isGitSyncEnabled || storeMetadata?.storeType === 'REMOTE') {
+      if ((storeMetadata?.storeType !== 'REMOTE' && isEmpty(gitDetails.repoIdentifier)) || isEmpty(gitDetails.branch)) {
         clear()
         showError(getString('pipeline.gitExperience.selectRepoBranch'))
         return
@@ -386,7 +387,7 @@ export function SavePipelinePopover({
           name: latestPipeline.name,
           identifier: latestPipeline.identifier,
           gitDetails: gitDetails ?? {},
-          storeMetadata: storeMetadata.storeType ? storeMetadata : undefined
+          storeMetadata: storeMetadata?.storeType ? storeMetadata : undefined
         },
         payload: { pipeline: omit(latestPipeline, 'repo', 'branch') }
       })

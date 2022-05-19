@@ -11,6 +11,7 @@ import type { GetDataError } from 'restful-react'
 import type { YamlSnippetMetaData, PipelineInfoConfig } from 'services/cd-ng'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import type * as Diagram from '@pipeline/components/Diagram'
+import type { StoreMetaData } from '@common/constants/GitSyncTypes'
 import type { EntityGitDetails, EntityValidityDetails, Failure } from 'services/pipeline-ng'
 import type { DependencyElement } from 'services/ci'
 import type { TemplateType } from '@common/interfaces/RouteInterfaces'
@@ -151,7 +152,7 @@ export interface PipelineReducerState {
   error?: string
   schemaErrors: boolean
   templateTypes: { [key: string]: string }
-  storeMetadata?: any
+  storeMetadata?: StoreMetaData
   gitDetails: EntityGitDetails
   entityValidityDetails: EntityValidityDetails
   isDBInitialized: boolean
@@ -173,7 +174,7 @@ export interface ActionResponse {
   error?: string
   schemaErrors?: boolean
   isUpdated?: boolean
-  storeMetadata?: any
+  storeMetadata?: StoreMetaData
   gitDetails?: EntityGitDetails
   entityValidityDetails?: EntityValidityDetails
   pipeline?: PipelineInfoConfig

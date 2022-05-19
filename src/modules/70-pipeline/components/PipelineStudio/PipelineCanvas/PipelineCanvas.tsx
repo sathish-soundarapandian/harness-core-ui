@@ -68,6 +68,7 @@ import { TemplatePipelineBuilder } from '@pipeline/components/PipelineStudio/Pip
 import { SavePipelinePopover } from '@pipeline/components/PipelineStudio/SavePipelinePopover/SavePipelinePopover'
 import { useTemplateSelector } from '@pipeline/utils/useTemplateSelector'
 import { useSaveTemplateListener } from '@pipeline/components/PipelineStudio/hooks/useSaveTemplateListener'
+import type { StoreMetaData } from '@common/constants/GitSyncTypes'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
@@ -113,11 +114,7 @@ export interface PipelineCanvasProps {
   toPipelineList: PathFn<PipelineType<ProjectPathProps>>
   toPipelineProject: PathFn<PipelineType<ProjectPathProps>>
   getOtherModal?: (
-    onSubmit: (
-      values: PipelineInfoConfig,
-      storeMetadata: { connectorRef?: string; storeType?: string },
-      gitDetails?: EntityGitDetails
-    ) => void,
+    onSubmit: (values: PipelineInfoConfig, storeMetadata?: StoreMetaData, gitDetails?: EntityGitDetails) => void,
     onClose: () => void
   ) => React.ReactElement<OtherModalProps>
 }
@@ -171,8 +168,7 @@ export function PipelineCanvas({
     isBEPipelineUpdated,
     gitDetails,
     entityValidityDetails,
-    templateError,
-    storeMetadata
+    templateError
   } = state
 
   const { getString } = useStrings()
@@ -403,7 +399,7 @@ export function PipelineCanvas({
   const onSubmit = React.useCallback(
     (
       values: PipelineInfoConfig,
-      currStoreMetadata: { connectorRef?: string; storeType?: string },
+      currStoreMetadata?: StoreMetaData,
       updatedGitDetails?: EntityGitDetails,
       shouldUseTemplate = false
     ) => {
@@ -414,7 +410,7 @@ export function PipelineCanvas({
       delete (pipeline as PipelineWithGitContextFormProps).repo
       delete (pipeline as PipelineWithGitContextFormProps).branch
       updatePipeline(pipeline)
-      if (currStoreMetadata.storeType) {
+      if (currStoreMetadata?.storeType) {
         updatePipelineStoreMetadata(currStoreMetadata, gitDetails)
       }
 
@@ -423,7 +419,7 @@ export function PipelineCanvas({
           updatedGitDetails = { ...gitDetails, ...updatedGitDetails }
         }
         updateGitDetails(updatedGitDetails).then(() => {
-          if (updatedGitDetails && !currStoreMetadata.storeType) {
+          if (updatedGitDetails && !currStoreMetadata?.storeType) {
             updateQueryParams(
               { repoIdentifier: updatedGitDetails.repoIdentifier, branch: updatedGitDetails.branch },
               { skipNulls: true }
@@ -549,7 +545,7 @@ export function PipelineCanvas({
       gitDetails.repoIdentifier &&
       gitDetails.branch &&
       updatePipelineStoreMetadata({ connectorRef, storeType }, gitDetails)
-  }, [gitDetails.repoIdentifier, gitDetails.branch, isPipelineRemote, gitDetails])
+  }, [isPipelineRemote, gitDetails])
 
   const [openRunPipelineModal, closeRunPipelineModal] = useModalHook(
     () =>
@@ -618,6 +614,7 @@ export function PipelineCanvas({
                 repoIdentifier: selectedFilter.repo,
                 ...(isPipelineRemote
                   ? {
+                      repoIdentifier: repoName,
                       repoName,
                       connectorRef,
                       storeType
@@ -771,7 +768,7 @@ export function PipelineCanvas({
                 </Layout.Horizontal>
               </div>
             </div>
-            {((isPipelineRemote && connectorRef) || storeMetadata.storeType === StoreType.REMOTE) && (
+            {isPipelineRemote && (
               <div className={css.gitRemoteDetailsWrapper}>
                 <GitRemoteDetails
                   connectorRef={connectorRef}

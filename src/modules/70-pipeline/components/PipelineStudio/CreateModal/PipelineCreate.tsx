@@ -22,7 +22,8 @@ import {
   Layout,
   Icon
 } from '@wings-software/uicore'
-import { FontVariation } from '@wings-software/design-system'
+import { Color, FontVariation } from '@wings-software/design-system'
+import { Divider } from '@blueprintjs/core'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 
@@ -41,6 +42,7 @@ import { Category, PipelineActions } from '@common/constants/TrackingConstants'
 import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import type { StoreMetaData } from '@common/constants/GitSyncTypes'
 import { DefaultNewPipelineId } from '../PipelineContext/PipelineActions'
 import css from './PipelineCreate.module.scss'
 
@@ -72,7 +74,7 @@ type CretePipelinesValue = PipelineInfoConfigWithGitDetails & UseTemplate
 export interface PipelineCreateProps {
   afterSave?: (
     values: PipelineInfoConfig,
-    storeMetadata: { connectorRef?: string; storeType?: string },
+    storeMetadata: StoreMetaData,
     gitDetails?: EntityGitDetails,
     useTemplate?: boolean
   ) => void
@@ -136,11 +138,6 @@ export default function CreatePipelines({
     PipelineModeCards.find(card => card.type === storeTypeParam)
   )
 
-  const identifier = initialValues?.identifier
-  if (identifier === DefaultNewPipelineId) {
-    initialValues.identifier = ''
-  }
-
   const isEdit = React.useMemo(() => initialValues?.identifier !== DefaultNewPipelineId, [initialValues])
 
   useEffect(() => {
@@ -181,7 +178,7 @@ export default function CreatePipelines({
           afterSave &&
             afterSave(
               omit(values, 'repo', 'branch', 'storeType', 'connectorRef', 'useTemplate'),
-              { storeType: values.storeType, connectorRef: values.connectorRef?.value },
+              { storeType: values.storeType as StoreMetaData['storeType'], connectorRef: values.connectorRef?.value },
               formGitDetails,
               values.useTemplate
             )
@@ -198,7 +195,7 @@ export default function CreatePipelines({
             />
             {isGitSyncEnabled && (
               <GitSyncStoreProvider>
-                <GitContextForm formikProps={formikProps} gitDetails={gitDetails} />
+                <GitContextForm formikProps={formikProps as any} gitDetails={gitDetails} />
               </GitSyncStoreProvider>
             )}
             {!isEdit && isPipelineTemplateEnabled && (
@@ -220,37 +217,44 @@ export default function CreatePipelines({
               </Container>
             )}
 
-            {gitSimplification ? (
-              <CardSelect
-                data={PipelineModeCards}
-                cornerSelected
-                cardClassName={css.pipelineModeCard}
-                renderItem={(item: CardInterface) => (
-                  <Layout.Horizontal flex spacing={'small'}>
-                    <Icon name={item.icon} />
-                    <Container>
-                      <Text font={{ variation: FontVariation.FORM_TITLE }}>{item.title}</Text>
-                      <Text>{item.info}</Text>
-                    </Container>
-                  </Layout.Horizontal>
-                )}
-                selected={storeType}
-                onChange={(item: CardInterface) => {
-                  if (pipelineIdentifier === DefaultNewPipelineId) {
-                    formikProps?.setFieldValue('storeType', item.type)
-                    formikProps?.setFieldValue('remoteType', item.type === 'remote' ? 'new' : '')
-                    setStoreType(item)
-                  }
-                }}
-              />
-            ) : isGitSyncEnabled ? (
-              <GitSyncStoreProvider>
-                <GitContextForm formikProps={formikProps} gitDetails={gitDetails} />
-              </GitSyncStoreProvider>
+            {gitSimplification && !isGitSyncEnabled ? (
+              <>
+                <Divider />
+                <Text font={{ variation: FontVariation.H6 }} className={css.choosePipelineSetupHeader}>
+                  {getString('pipeline.createPipeline.choosePipelineSetupHeader')}
+                </Text>
+                <CardSelect
+                  data={PipelineModeCards}
+                  cornerSelected
+                  cardClassName={css.pipelineModeCard}
+                  renderItem={(item: CardInterface) => (
+                    <Layout.Horizontal flex spacing={'small'}>
+                      <Icon name={item.icon} />
+                      <Container>
+                        <Text
+                          font={{ variation: FontVariation.FORM_TITLE }}
+                          color={storeType?.type === item.type ? Color.PRIMARY_7 : Color.GREY_800}
+                        >
+                          {item.title}
+                        </Text>
+                        <Text>{item.info}</Text>
+                      </Container>
+                    </Layout.Horizontal>
+                  )}
+                  selected={storeType}
+                  onChange={(item: CardInterface) => {
+                    if (pipelineIdentifier === DefaultNewPipelineId) {
+                      formikProps?.setFieldValue('storeType', item.type)
+                      formikProps?.setFieldValue('remoteType', item.type === 'remote' ? 'new' : '')
+                      setStoreType(item)
+                    }
+                  }}
+                />
+              </>
             ) : null}
             {storeType?.type === 'REMOTE' ? (
               <GitSyncForm
-                formikProps={formikProps}
+                formikProps={formikProps as any}
                 handleSubmit={noop}
                 isEdit={isEdit && pipelineIdentifier !== DefaultNewPipelineId}
               ></GitSyncForm>

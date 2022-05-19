@@ -143,6 +143,7 @@ describe('PipelineCreate test', () => {
         name: 'pipeline',
         stages: []
       },
+      { connectorRef: undefined, storeType: undefined },
       undefined,
       undefined
     )
@@ -209,6 +210,10 @@ describe('PipelineCreate test', () => {
         name: 'Pipeline 1',
         description: 'abc',
         stages: []
+      },
+      {
+        connectorRef: undefined,
+        storeType: undefined
       },
       {
         repoIdentifier: 'identifier',
