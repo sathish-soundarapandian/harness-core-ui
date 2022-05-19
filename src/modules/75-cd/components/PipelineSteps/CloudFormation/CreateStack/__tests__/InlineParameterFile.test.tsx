@@ -6,8 +6,8 @@
  */
 
 import React from 'react'
-import { render, act, queryByAttribute, fireEvent } from '@testing-library/react'
-import { Formik, FormikForm } from '@harness/uicore'
+import { render, act } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cdServices from 'services/cd-ng'
 
@@ -19,11 +19,7 @@ const renderComponent = (props: any) => {
       path="/account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier"
       pathParams={{ accountId: 'account', orgIdentifier: 'org', projectIdentifier: 'project' }}
     >
-      <Formik initialValues={{}} onSubmit={() => undefined} formName="wrapperComponentTestForm">
-        <FormikForm>
-          <InlineParameterFile {...props} />
-        </FormikForm>
-      </Formik>
+      <InlineParameterFile {...props} />
     </TestWrapper>
   )
 }
@@ -36,7 +32,7 @@ describe('Test cloudformation inline parameter with no data', () => {
     const props = {
       onClose: () => undefined,
       onSubmit: () => undefined,
-      isOpen: () => undefined,
+      isOpen: true,
       initialValues: {}
     }
     const { container } = renderComponent(props)
@@ -47,7 +43,7 @@ describe('Test cloudformation inline parameter with no data', () => {
     const props = {
       onClose: () => undefined,
       onSubmit: () => undefined,
-      isOpen: () => undefined,
+      isOpen: true,
       initialValues: {},
       awsConnectorRef: 'test',
       type: 'git',
@@ -63,8 +59,8 @@ describe('Test cloudformation inline parameter with no data', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('should render with git data and making an api request', async () => {
-    jest.spyOn(cdServices, 'useCFParametersForAws').mockImplementation({
+  test('should render with git data and make an api request', async () => {
+    jest.spyOn(cdServices, 'useCFParametersForAws').mockReturnValue({
       loading: false,
       refetch: jest.fn(),
       mutate: jest.fn().mockResolvedValue({
@@ -77,7 +73,7 @@ describe('Test cloudformation inline parameter with no data', () => {
     const props = {
       onClose: () => undefined,
       onSubmit: () => undefined,
-      isOpen: () => undefined,
+      isOpen: true,
       initialValues: {},
       awsConnectorRef: 'test',
       type: 'git',
@@ -89,12 +85,132 @@ describe('Test cloudformation inline parameter with no data', () => {
         branch: 'main'
       }
     }
-    const { container, debug, getByText } = renderComponent(props)
+    const { container, getByText } = renderComponent(props)
     const getParams = getByText('cd.cloudFormation.retrieveNames')
     act(() => {
-      fireEvent.click(getParams)
+      userEvent.click(getParams)
     })
-    debug()
+    expect(container).toMatchSnapshot()
+  })
+
+  test('api request errors', async () => {
+    jest.spyOn(cdServices, 'useCFParametersForAws').mockReturnValue({
+      loading: false,
+      refetch: jest.fn(),
+      mutate: jest.fn(),
+      error: {
+        message: 'this errored'
+      }
+    } as any)
+    const props = {
+      onClose: () => undefined,
+      onSubmit: () => undefined,
+      isOpen: true,
+      initialValues: {},
+      awsConnectorRef: 'test',
+      type: 'git',
+      region: 'ireland',
+      git: {
+        gitConnectorRef: 'test',
+        isBranch: true,
+        filePath: 'file/path',
+        branch: 'main'
+      }
+    }
+    const { container, getByText } = renderComponent(props)
+    const getParams = getByText('cd.cloudFormation.retrieveNames')
+    act(() => {
+      userEvent.click(getParams)
+    })
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should render with git data and render existing values', async () => {
+    const props = {
+      onClose: () => undefined,
+      onSubmit: () => undefined,
+      isOpen: true,
+      initialValues: [
+        {
+          name: 'test',
+          value: 'test'
+        }
+      ],
+      awsConnectorRef: 'test',
+      type: 'git',
+      region: 'ireland',
+      git: {
+        gitConnectorRef: 'test',
+        isBranch: true,
+        filePath: 'file/path',
+        branch: 'main'
+      }
+    }
+    const { container } = renderComponent(props)
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should error when trying to retrieve data with no git values', async () => {
+    const props = {
+      onClose: () => undefined,
+      onSubmit: () => undefined,
+      isOpen: true,
+      initialValues: [
+        {
+          name: 'test',
+          value: 'test'
+        }
+      ],
+      awsConnectorRef: '',
+      type: '',
+      region: '',
+      git: {
+        gitConnectorRef: 'test',
+        isBranch: true,
+        filePath: 'file/path',
+        branch: 'main'
+      }
+    }
+    const { container, getByText } = renderComponent(props)
+    const getParams = getByText('cd.cloudFormation.retrieveNames')
+    act(() => {
+      userEvent.click(getParams)
+    })
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should render and remove/add values', async () => {
+    const props = {
+      onClose: () => undefined,
+      onSubmit: () => undefined,
+      isOpen: true,
+      initialValues: [
+        {
+          name: 'test',
+          value: 'test'
+        }
+      ],
+      awsConnectorRef: 'test',
+      type: 'git',
+      region: 'ireland',
+      git: {
+        gitConnectorRef: 'test',
+        isBranch: true,
+        filePath: 'file/path',
+        branch: 'main'
+      }
+    }
+    const { container, getByTestId } = renderComponent(props)
+    const remove = getByTestId('remove-header-0')
+    act(() => {
+      userEvent.click(remove)
+    })
+    expect(container).toMatchSnapshot()
+
+    const add = getByTestId('add-header')
+    act(() => {
+      userEvent.click(add)
+    })
     expect(container).toMatchSnapshot()
   })
 })

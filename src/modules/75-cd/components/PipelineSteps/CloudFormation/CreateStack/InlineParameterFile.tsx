@@ -95,7 +95,6 @@ export const InlineParameterFile = ({
     } else {
       try {
         const result = await getParamsFromAWS(git ? '' : body)
-        console.log('result: ', result)
         if (result?.data) {
           setRemoteParams(map(result?.data, param => ({ label: param.paramKey!, value: param.paramKey! })))
         }
@@ -177,6 +176,7 @@ export const InlineParameterFile = ({
                         >
                           <Select
                             onChange={({ value }) => {
+                              /* istanbul ignore next */
                               setFieldValue(`parameterOverrides[${index}].name`, value)
                             }}
                             items={remoteParams || []}
@@ -191,7 +191,7 @@ export const InlineParameterFile = ({
                           <Button
                             minimal
                             icon="main-trash"
-                            data-testid={`remove-header-`}
+                            data-testid={`remove-header-${index}`}
                             onClick={() => arrayHelpers.remove(index)}
                           />
                         </Layout.Horizontal>
@@ -213,6 +213,7 @@ export const InlineParameterFile = ({
                     variation={ButtonVariation.PRIMARY}
                     text={getString('submit')}
                     rightIcon="chevron-right"
+                    data-testid="submit"
                   />
                   <Button onClick={onClose} variation={ButtonVariation.TERTIARY} text={getString('cancel')} />
                 </Layout.Horizontal>

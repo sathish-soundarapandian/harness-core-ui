@@ -1,46 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test cloudformation inline parameter with no data should render with git data 1`] = `
-<div>
-  <div
-    class="OverlaySpinner--overlaySpinner"
-  >
-    <form
-      action="#"
-      class="FormikForm--main"
-    >
-      <div />
-    </form>
-  </div>
-</div>
-`;
+exports[`Test cloudformation inline parameter with no data api request errors 1`] = `<div />`;
 
-exports[`Test cloudformation inline parameter with no data should render with git data and making an api request 1`] = `
-<div>
-  <div
-    class="OverlaySpinner--overlaySpinner"
-  >
-    <form
-      action="#"
-      class="FormikForm--main"
-    >
-      <div />
-    </form>
-  </div>
-</div>
-`;
+exports[`Test cloudformation inline parameter with no data should error when trying to retrieve data with no git values 1`] = `<div />`;
 
-exports[`Test cloudformation inline parameter with no data should render with no data 1`] = `
-<div>
-  <div
-    class="OverlaySpinner--overlaySpinner"
-  >
-    <form
-      action="#"
-      class="FormikForm--main"
-    >
-      <div />
-    </form>
-  </div>
-</div>
-`;
+exports[`Test cloudformation inline parameter with no data should render delete existing value 1`] = `<div />`;
+
+exports[`Test cloudformation inline parameter with no data should render delete existing value 2`] = `<div />`;
+
+exports[`Test cloudformation inline parameter with no data should render with git data 1`] = `<div />`;
+
+exports[`Test cloudformation inline parameter with no data should render with git data and make an api request 1`] = `<div />`;
+
+exports[`Test cloudformation inline parameter with no data should render with git data and render existing values 1`] = `<div />`;
+
+exports[`Test cloudformation inline parameter with no data should render with no data 1`] = `<div />`;
