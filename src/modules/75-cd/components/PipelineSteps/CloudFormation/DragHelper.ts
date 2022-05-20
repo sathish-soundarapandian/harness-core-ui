@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import type React from 'react'
 import type { FieldArrayRenderProps } from 'formik'
 import css from './DragHelper.module.scss'

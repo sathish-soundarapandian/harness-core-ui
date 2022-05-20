@@ -26,7 +26,7 @@ import {
   Icon,
   useToaster
 } from '@harness/uicore'
-import { map, get } from 'lodash-es'
+import { map, get, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
@@ -78,7 +78,7 @@ export const CreateStack = (
   const [capabilities, setCapabilities] = useState<SelectOption[]>([])
   const [awsStates, setAwsStates] = useState<SelectOption[]>([])
   const [awsRoles, setAwsRoles] = useState<MultiSelectOption[]>([])
-  const [awsRef, setAwsRef] = useState<string>('')
+  const [awsRef, setAwsRef] = useState<string>(initialValues?.spec?.configuration?.connectorRef)
   const { showError } = useToaster()
 
   const {
@@ -92,7 +92,7 @@ export const CreateStack = (
   })
 
   useEffect(() => {
-    if (regionData) {
+    if (regionData && !regions.length) {
       const regionValues = map(regionData?.resource, reg => ({ label: reg.name, value: reg.value }))
       setRegions(regionValues as MultiSelectOption[])
     }
@@ -101,7 +101,7 @@ export const CreateStack = (
   const { data: capabilitiesData, loading: capabilitiesLoading, error: capabilitiesError } = useCFCapabilitiesForAws({})
 
   useEffect(() => {
-    if (capabilitiesData) {
+    if (capabilitiesData && !isEmpty(capabilities)) {
       const capabilitiesValues = map(capabilitiesData?.data, cap => ({ label: cap, value: cap }))
       setCapabilities(capabilitiesValues as SelectOption[])
     }
@@ -110,7 +110,7 @@ export const CreateStack = (
   const { data: awsStatesData, loading: statesLoading, error: statesError } = useCFStatesForAws({})
 
   useEffect(() => {
-    if (awsStatesData) {
+    if (awsStatesData && !isEmpty(awsStates)) {
       const awsStatesValues = map(awsStatesData?.data, cap => ({ label: cap, value: cap }))
       setAwsStates(awsStatesValues as SelectOption[])
     }
@@ -268,9 +268,6 @@ export const CreateStack = (
         setFormikRef(formikRef, formik)
         const { values, setFieldValue, errors } = formik
         const awsConnector = values?.spec?.configuration?.connectorRef
-        if (awsConnector !== awsRef) {
-          setAwsRef(awsConnector)
-        }
         const config = values?.spec?.configuration
         const templateFileType = config?.templateFile?.type
         const inlineTemplateFile = config?.templateFile?.spec?.templateBody
@@ -674,7 +671,7 @@ export const CreateStack = (
                     >
                       <FormInput.MultiSelect
                         className={css.selectInputs}
-                        label=''
+                        label=""
                         name="spec.configuration.skipOnStackStatuses"
                         items={awsStates}
                         placeholder={statesLoading ? getString('loading') : ''}
