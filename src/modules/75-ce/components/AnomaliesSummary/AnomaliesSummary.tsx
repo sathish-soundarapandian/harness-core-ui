@@ -39,7 +39,8 @@ interface AnomaliesOverviewProps {
 const map: Record<string, string> = {
   AZURE: 'defaultAzurePerspectiveId',
   AWS: 'defaultAwsPerspectiveId',
-  GCP: 'defaultGcpPerspectiveId'
+  GCP: 'defaultGcpPerspectiveId',
+  CLUSTER: 'defaultClusterPerspectiveId'
 }
 
 const transformCloudCost = (data: Record<string, any>[], providers: Record<string, any>): Stats[] => {

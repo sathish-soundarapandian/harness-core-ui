@@ -82,7 +82,7 @@ const getFinalSVGArrowPath = (id1 = '', id2 = '', options?: DrawSVGPathOptions):
       const startPointLeft = `${node1.left},${node1VerticalMid}`
       finalSVGPath = `M${startPointLeft}  L${endPoint}`
     } else if (options?.direction === 'rtr') {
-      const endPointRight = `${node2.right},${node2VerticalMid}`
+      const endPointRight = `${getScaledValue(node2.right, scalingFactor)},${node2VerticalMid}`
       finalSVGPath = `M${startPoint}  L${endPointRight}`
     } else {
       finalSVGPath = `M${startPoint}  L${endPoint}`
@@ -533,7 +533,7 @@ const transformStepsData = (
       const updatedStagetPath = `${parentPath}.${index}.stepGroup.steps`
       const hasErrors =
         errorMap && [...errorMap.keys()].some(key => updatedStagetPath && key.startsWith(updatedStagetPath))
-
+      const isExecutionView = get(step, 'stepGroup.status', false)
       finalData.push({
         id: getuniqueIdForStep(step),
         identifier: step.stepGroup?.identifier as string,
@@ -543,6 +543,11 @@ const transformStepsData = (
         icon: iconName,
         data: {
           ...step,
+          conditionalExecutionEnabled: isExecutionView
+            ? getConditionalExecutionFlag(step.stepGroup?.when)
+            : step.stepGroup?.when
+            ? step.stepGroup?.when?.stageStatus !== 'Success' || !!step.stepGroup?.when?.condition?.trim()
+            : false,
           graphType,
           isInComplete: isCustomGeneratedString(step.stepGroup?.identifier as string) || hasErrors
         }

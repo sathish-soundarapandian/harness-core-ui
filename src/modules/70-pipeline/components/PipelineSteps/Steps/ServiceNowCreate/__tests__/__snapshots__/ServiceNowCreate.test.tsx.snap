@@ -205,11 +205,11 @@ exports[`ServiceNow Create tests Basic snapshot - deploymentform mode: serviceNo
     >
       <label
         class="bp3-label"
-        for="spec.description"
+        for="spec.fields[0].value"
       >
         <span
           class="Tooltip--acenter"
-          data-tooltip-id="stepTestUtilForm_spec.description"
+          data-tooltip-id="stepTestUtilForm_spec.fields[0].value"
         >
           description
         </span>
@@ -233,7 +233,7 @@ exports[`ServiceNow Create tests Basic snapshot - deploymentform mode: serviceNo
             >
               <textarea
                 class="bp3-input input"
-                name="spec.description"
+                name="spec.fields[0].value"
                 placeholder="common.descriptionPlaceholder"
               />
               <span
@@ -274,11 +274,11 @@ exports[`ServiceNow Create tests Basic snapshot - deploymentform mode: serviceNo
     >
       <label
         class="bp3-label"
-        for="spec.shortDescription"
+        for="spec.fields[1].value"
       >
         <span
           class="Tooltip--acenter"
-          data-tooltip-id="stepTestUtilForm_spec.shortDescription"
+          data-tooltip-id="stepTestUtilForm_spec.fields[1].value"
         >
           pipeline.serviceNowCreateStep.shortDescription
         </span>
@@ -302,7 +302,7 @@ exports[`ServiceNow Create tests Basic snapshot - deploymentform mode: serviceNo
             >
               <textarea
                 class="bp3-input input"
-                name="spec.shortDescription"
+                name="spec.fields[1].value"
                 placeholder="pipeline.serviceNowCreateStep.shortDescriptionPlaceholder"
               />
               <span
@@ -733,11 +733,11 @@ exports[`ServiceNow Create tests Basic snapshot - inputset mode: input set with 
     >
       <label
         class="bp3-label"
-        for="spec.description"
+        for="spec.fields[0].value"
       >
         <span
           class="Tooltip--acenter"
-          data-tooltip-id="stepTestUtilForm_spec.description"
+          data-tooltip-id="stepTestUtilForm_spec.fields[0].value"
         >
           description
         </span>
@@ -761,7 +761,7 @@ exports[`ServiceNow Create tests Basic snapshot - inputset mode: input set with 
             >
               <textarea
                 class="bp3-input input"
-                name="spec.description"
+                name="spec.fields[0].value"
                 placeholder="common.descriptionPlaceholder"
               />
               <span
@@ -802,11 +802,11 @@ exports[`ServiceNow Create tests Basic snapshot - inputset mode: input set with 
     >
       <label
         class="bp3-label"
-        for="spec.shortDescription"
+        for="spec.fields[1].value"
       >
         <span
           class="Tooltip--acenter"
-          data-tooltip-id="stepTestUtilForm_spec.shortDescription"
+          data-tooltip-id="stepTestUtilForm_spec.fields[1].value"
         >
           pipeline.serviceNowCreateStep.shortDescription
         </span>
@@ -830,7 +830,7 @@ exports[`ServiceNow Create tests Basic snapshot - inputset mode: input set with 
             >
               <textarea
                 class="bp3-input input"
-                name="spec.shortDescription"
+                name="spec.fields[1].value"
                 placeholder="pipeline.serviceNowCreateStep.shortDescriptionPlaceholder"
               />
               <span
@@ -1098,11 +1098,11 @@ exports[`ServiceNow Create tests Deploymentform readonly mode: serviceNow-create
     >
       <label
         class="bp3-label"
-        for="spec.description"
+        for="spec.fields[0].value"
       >
         <span
           class="Tooltip--acenter"
-          data-tooltip-id="stepTestUtilForm_spec.description"
+          data-tooltip-id="stepTestUtilForm_spec.fields[0].value"
         >
           description
         </span>
@@ -1126,7 +1126,7 @@ exports[`ServiceNow Create tests Deploymentform readonly mode: serviceNow-create
             >
               <textarea
                 class="bp3-input input"
-                name="spec.description"
+                name="spec.fields[0].value"
                 placeholder="common.descriptionPlaceholder"
               />
               <span
@@ -1167,11 +1167,11 @@ exports[`ServiceNow Create tests Deploymentform readonly mode: serviceNow-create
     >
       <label
         class="bp3-label"
-        for="spec.shortDescription"
+        for="spec.fields[1].value"
       >
         <span
           class="Tooltip--acenter"
-          data-tooltip-id="stepTestUtilForm_spec.shortDescription"
+          data-tooltip-id="stepTestUtilForm_spec.fields[1].value"
         >
           pipeline.serviceNowCreateStep.shortDescription
         </span>
@@ -1195,7 +1195,7 @@ exports[`ServiceNow Create tests Deploymentform readonly mode: serviceNow-create
             >
               <textarea
                 class="bp3-input input"
-                name="spec.shortDescription"
+                name="spec.fields[1].value"
                 placeholder="pipeline.serviceNowCreateStep.shortDescriptionPlaceholder"
               />
               <span

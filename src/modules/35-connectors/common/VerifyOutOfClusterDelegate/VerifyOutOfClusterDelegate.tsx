@@ -8,7 +8,16 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { StepsProgress, Layout, Button, Text, StepProps, Container, ButtonVariation } from '@wings-software/uicore'
+import {
+  StepsProgress,
+  Layout,
+  Button,
+  Text,
+  StepProps,
+  Container,
+  ButtonVariation,
+  ButtonSize
+} from '@wings-software/uicore'
 import { Color, FontVariation, Intent } from '@harness/design-system'
 import { useGetDelegateFromId } from 'services/portal'
 import {
@@ -27,7 +36,9 @@ import { useStrings } from 'framework/strings'
 import {
   GetTestConnectionValidationTextByType,
   removeErrorCode,
-  DelegateTypes
+  DelegateTypes,
+  showCustomErrorSuggestion,
+  showEditAndViewPermission
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
@@ -167,8 +178,8 @@ const VerifyOutOfClusterDelegate: React.FC<StepProps<VerifyOutOfClusterStepProps
       status: 'PROCESS'
     })
 
-    const ceConnectors: string[] = [Connectors.CE_KUBERNETES, Connectors.CEAWS, Connectors.CE_AZURE, Connectors.CE_GCP]
-    const isCeConnector = ceConnectors.includes(props.type)
+    const showCustomErrorHints = showCustomErrorSuggestion(props.type)
+    const showEditAndPermission = showEditAndViewPermission(props.type)
 
     const { trackEvent } = useTelemetry()
 
@@ -293,7 +304,7 @@ const VerifyOutOfClusterDelegate: React.FC<StepProps<VerifyOutOfClusterStepProps
               responseMessages={responseMessages}
               className={css.errorHandler}
               errorHintsRenderer={
-                isCeConnector
+                showCustomErrorHints
                   ? hints => (
                       <Suggestions
                         items={hints as ResponseMessage[]}
@@ -309,12 +320,13 @@ const VerifyOutOfClusterDelegate: React.FC<StepProps<VerifyOutOfClusterStepProps
             genericHandler
           )}
           {/* TODO: when install delegate behaviour is known {testConnectionResponse?.data?.delegateId ? ( */}
-          {!isCeConnector ? (
+          {!showEditAndPermission ? (
             <Layout.Horizontal spacing="small">
               {props.isStep ? (
                 <Button
                   text={getString('editCredentials')}
                   variation={ButtonVariation.SECONDARY}
+                  size={ButtonSize.SMALL}
                   onClick={() => {
                     const isTransitionToCredentialsStepSuccessful = props.gotoStep?.({
                       stepIdentifier: CONNECTOR_CREDENTIALS_STEP_IDENTIFIER,

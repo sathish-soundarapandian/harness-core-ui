@@ -344,7 +344,7 @@ describe('Execution Stages', () => {
   })
 })
 
-describe('ServerlessAwsLambda as deployment type', () => {
+describe.only('ServerlessAwsLambda as deployment type', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -376,6 +376,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
 
   it(`fixed values to region and stage in infrastructure tab`, () => {
     cy.visit(pipelineStudioRoute, { timeout: 30000 })
+    cy.visitPageAssertion()
     cy.get(`div[data-testid="pipeline-studio"]`, {
       timeout: 5000
     }).should('be.visible')
@@ -399,6 +400,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
 
   it(`runtime values to region, stage in infrastructure tab`, () => {
     cy.visit(pipelineStudioRoute, { timeout: 30000 })
+    cy.visitPageAssertion()
     cy.get(`div[data-testid="pipeline-studio"]`, {
       timeout: 5000
     }).should('be.visible')
@@ -433,6 +435,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
 
     // Visit Pipeline Studio
     cy.visit(pipelineStudioRoute, { timeout: 30000 })
+    cy.visitPageAssertion()
     cy.get(`div[data-testid="pipeline-studio"]`, {
       timeout: 5000
     }).should('be.visible')
@@ -495,6 +498,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
 
     // Visit Pipeline Studio
     cy.visit(pipelineStudioRoute, { timeout: 30000 })
+    cy.visitPageAssertion()
     cy.get(`div[data-testid="pipeline-studio"]`, {
       timeout: 5000
     }).should('be.visible')
@@ -550,6 +554,7 @@ describe('Input Sets', () => {
   })
 
   it('Input Set Creation & Deletion', () => {
+    cy.visitPageAssertion()
     cy.wait('@emptyInputSetList')
     cy.wait(1000)
     cy.contains('span', '+ New Input Set').should('be.visible')

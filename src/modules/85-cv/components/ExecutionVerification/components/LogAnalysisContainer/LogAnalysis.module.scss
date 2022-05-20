@@ -58,6 +58,10 @@
     max-width: 250px;
     padding: var(--spacing-medium) var(--spacing-none);
   }
+
+  &.logsTab-serviceScreen {
+    display: block !important;
+  }
 }
 
 .radarChartTypeIndicator {

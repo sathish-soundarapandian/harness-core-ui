@@ -150,11 +150,20 @@ export interface AnalyzedLogDataDTO {
 }
 
 export interface AnalyzedRadarChartLogDataDTO {
-  environmentIdentifier?: string
-  logData?: RadarChartLogData
-  orgIdentifier?: string
-  projectIdentifier?: string
-  serviceIdentifier?: string
+  clusterId?: string
+  clusterType?: 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
+  count?: number
+  frequencyData?: FrequencyDTO[]
+  label?: number
+  message?: string
+  risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  riskScore?: number
+}
+
+export interface AnalyzedRadarChartLogDataWithCountDTO {
+  eventCounts?: LiveMonitoringEventCount[]
+  logAnalysisRadarCharts?: PageAnalyzedRadarChartLogDataDTO
+  totalClusters?: number
 }
 
 export interface AnomaliesSummaryDTO {
@@ -179,6 +188,8 @@ export interface ApiCallLogDTOField {
 export interface AppDMetricDefinitions {
   analysis?: AnalysisDTO
   baseFolder?: string
+  completeMetricPath?: string
+  completeServiceInstanceMetricPath?: string
   groupName?: string
   identifier: string
   metricName: string
@@ -583,7 +594,7 @@ export type CEKubernetesClusterConfig = ConnectorConfigDTO & {
 
 export interface CVConfig {
   accountId: string
-  category: 'PERFORMANCE' | 'ERRORS' | 'INFRASTRUCTURE'
+  category: 'Performance' | 'Errors' | 'Infrastructure'
   connectorIdentifier: string
   createNextTaskIteration?: number
   createdAt?: number
@@ -1581,6 +1592,8 @@ export interface Error {
     | 'AZURE_CONFIG_ERROR'
     | 'DATA_PROCESSING_ERROR'
     | 'INVALID_AZURE_AKS_REQUEST'
+    | 'AWS_IAM_ERROR'
+    | 'AWS_CF_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1956,6 +1969,8 @@ export interface Failure {
     | 'AZURE_CONFIG_ERROR'
     | 'DATA_PROCESSING_ERROR'
     | 'INVALID_AZURE_AKS_REQUEST'
+    | 'AWS_IAM_ERROR'
+    | 'AWS_CF_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2474,6 +2489,12 @@ export interface LiveMonitoringDTO {
   enabled?: boolean
 }
 
+export interface LiveMonitoringEventCount {
+  clusterType?: 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
+  count?: number
+  displayName?: string
+}
+
 export interface LiveMonitoringLogAnalysisClusterDTO {
   risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
   tag?: 'KNOWN' | 'UNEXPECTED' | 'UNKNOWN'
@@ -2486,9 +2507,9 @@ export interface LiveMonitoringLogAnalysisRadarChartClusterDTO {
   angle?: number
   clusterId?: string
   clusterType?: 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
+  message?: string
   radius?: number
   risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
-  text?: string
 }
 
 export type LocalConnectorDTO = ConnectorConfigDTO & {
@@ -2713,7 +2734,7 @@ export interface MetricHistory {
 
 export interface MetricPack {
   accountId?: string
-  category: 'PERFORMANCE' | 'ERRORS' | 'INFRASTRUCTURE'
+  category: 'Performance' | 'Errors' | 'Infrastructure'
   createdAt?: number
   dataSourceType:
     | 'APP_DYNAMICS'
@@ -2739,7 +2760,7 @@ export interface MetricPack {
 
 export interface MetricPackDTO {
   accountId?: string
-  category?: 'PERFORMANCE' | 'ERRORS' | 'INFRASTRUCTURE'
+  category?: 'Performance' | 'Errors' | 'Infrastructure'
   dataSourceType?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
@@ -2799,6 +2820,12 @@ export interface MetricValidationResponse {
   value?: number
 }
 
+export interface MonitoredServiceChangeDetailSLO {
+  identifier?: string
+  name?: string
+  outOfRange?: boolean
+}
+
 export interface MonitoredServiceDTO {
   dependencies?: ServiceDependencyDTO[]
   description?: string
@@ -2814,6 +2841,8 @@ export interface MonitoredServiceDTO {
   tags: {
     [key: string]: string
   }
+  templateIdentifier?: string
+  templateVersionLabel?: string
   type: 'Application' | 'Infrastructure'
 }
 
@@ -2958,6 +2987,7 @@ export interface NotificationRuleDTO {
 
 export interface NotificationRuleRef {
   enabled: boolean
+  lastSuccessFullNotificationSent: number
   notificationRuleRef: string
 }
 
@@ -2968,6 +2998,7 @@ export interface NotificationRuleRefDTO {
 
 export interface NotificationRuleResponse {
   createdAt?: number
+  enabled?: boolean
   lastModifiedAt?: number
   notificationRule: NotificationRuleDTO
 }
@@ -3330,17 +3361,6 @@ export interface QueryDTO {
   name: string
   query: string
   serviceInstanceIdentifier: string
-}
-
-export interface RadarChartLogData {
-  clusterId?: string
-  clusterType?: 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
-  count?: number
-  label?: number
-  riskScore?: number
-  riskStatus?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
-  text?: string
-  trend?: FrequencyDTO[]
 }
 
 export type RatioSLIMetricSpec = SLIMetricSpec & {
@@ -3823,6 +3843,8 @@ export interface ResponseMessage {
     | 'AZURE_CONFIG_ERROR'
     | 'DATA_PROCESSING_ERROR'
     | 'INVALID_AZURE_AKS_REQUEST'
+    | 'AWS_IAM_ERROR'
+    | 'AWS_CF_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4005,6 +4027,14 @@ export interface RestResponse {
     [key: string]: { [key: string]: any }
   }
   resource?: { [key: string]: any }
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseAnalyzedRadarChartLogDataWithCountDTO {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: AnalyzedRadarChartLogDataWithCountDTO
   responseMessages?: ResponseMessage[]
 }
 
@@ -4202,6 +4232,14 @@ export interface RestResponseListMetricPackDTO {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseListMonitoredServiceChangeDetailSLO {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: MonitoredServiceChangeDetailSLO[]
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseListPagerDutyServiceDetail {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -4371,14 +4409,6 @@ export interface RestResponsePageAnalyzedLogDataDTO {
     [key: string]: { [key: string]: any }
   }
   resource?: PageAnalyzedLogDataDTO
-  responseMessages?: ResponseMessage[]
-}
-
-export interface RestResponsePageAnalyzedRadarChartLogDataDTO {
-  metaData?: {
-    [key: string]: { [key: string]: any }
-  }
-  resource?: PageAnalyzedRadarChartLogDataDTO
   responseMessages?: ResponseMessage[]
 }
 
@@ -4565,7 +4595,7 @@ export interface RiskData {
 }
 
 export interface RiskProfile {
-  category?: 'PERFORMANCE' | 'ERRORS' | 'INFRASTRUCTURE'
+  category?: 'Performance' | 'Errors' | 'Infrastructure'
   metricType?: 'INFRA' | 'RESP_TIME' | 'THROUGHPUT' | 'ERROR' | 'APDEX' | 'OTHER'
   thresholdTypes?: ('ACT_WHEN_LOWER' | 'ACT_WHEN_HIGHER')[]
 }
@@ -5083,7 +5113,7 @@ export interface TimeSeriesDataRecordMetricValue {
 }
 
 export interface TimeSeriesMetricDataDTO {
-  category?: 'PERFORMANCE' | 'ERRORS' | 'INFRASTRUCTURE'
+  category?: 'Performance' | 'Errors' | 'Infrastructure'
   dataSourceType?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
@@ -8098,6 +8128,153 @@ export const getAllLogsDataPromise = (
     signal
   )
 
+export interface GetAllRadarChartLogsClusterDataQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  monitoredServiceIdentifier?: string
+  filter?: string
+  healthSources?: string[]
+  clusterTypes?: ('KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT')[]
+  startTime: number
+  endTime: number
+  minAngle?: number
+  maxAngle?: number
+  clusterId?: string
+}
+
+export type GetAllRadarChartLogsClusterDataProps = Omit<
+  GetProps<
+    RestResponseListLiveMonitoringLogAnalysisRadarChartClusterDTO,
+    unknown,
+    GetAllRadarChartLogsClusterDataQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * get all log cluster data for a time range and filters
+ */
+export const GetAllRadarChartLogsClusterData = (props: GetAllRadarChartLogsClusterDataProps) => (
+  <Get<
+    RestResponseListLiveMonitoringLogAnalysisRadarChartClusterDTO,
+    unknown,
+    GetAllRadarChartLogsClusterDataQueryParams,
+    void
+  >
+    path={`/log-dashboard/logs-radar-chart-cluster`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetAllRadarChartLogsClusterDataProps = Omit<
+  UseGetProps<
+    RestResponseListLiveMonitoringLogAnalysisRadarChartClusterDTO,
+    unknown,
+    GetAllRadarChartLogsClusterDataQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * get all log cluster data for a time range and filters
+ */
+export const useGetAllRadarChartLogsClusterData = (props: UseGetAllRadarChartLogsClusterDataProps) =>
+  useGet<
+    RestResponseListLiveMonitoringLogAnalysisRadarChartClusterDTO,
+    unknown,
+    GetAllRadarChartLogsClusterDataQueryParams,
+    void
+  >(`/log-dashboard/logs-radar-chart-cluster`, { base: getConfig('cv/api'), ...props })
+
+/**
+ * get all log cluster data for a time range and filters
+ */
+export const getAllRadarChartLogsClusterDataPromise = (
+  props: GetUsingFetchProps<
+    RestResponseListLiveMonitoringLogAnalysisRadarChartClusterDTO,
+    unknown,
+    GetAllRadarChartLogsClusterDataQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    RestResponseListLiveMonitoringLogAnalysisRadarChartClusterDTO,
+    unknown,
+    GetAllRadarChartLogsClusterDataQueryParams,
+    void
+  >(getConfig('cv/api'), `/log-dashboard/logs-radar-chart-cluster`, props, signal)
+
+export interface GetAllRadarChartLogsDataQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  monitoredServiceIdentifier?: string
+  filter?: string
+  healthSources?: string[]
+  clusterTypes?: ('KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT')[]
+  startTime: number
+  endTime: number
+  minAngle?: number
+  maxAngle?: number
+  clusterId?: string
+  pageNumber?: number
+  pageSize?: number
+}
+
+export type GetAllRadarChartLogsDataProps = Omit<
+  GetProps<RestResponseAnalyzedRadarChartLogDataWithCountDTO, unknown, GetAllRadarChartLogsDataQueryParams, void>,
+  'path'
+>
+
+/**
+ * get all log data for a time range and filters
+ */
+export const GetAllRadarChartLogsData = (props: GetAllRadarChartLogsDataProps) => (
+  <Get<RestResponseAnalyzedRadarChartLogDataWithCountDTO, unknown, GetAllRadarChartLogsDataQueryParams, void>
+    path={`/log-dashboard/logs-radar-chart-data`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetAllRadarChartLogsDataProps = Omit<
+  UseGetProps<RestResponseAnalyzedRadarChartLogDataWithCountDTO, unknown, GetAllRadarChartLogsDataQueryParams, void>,
+  'path'
+>
+
+/**
+ * get all log data for a time range and filters
+ */
+export const useGetAllRadarChartLogsData = (props: UseGetAllRadarChartLogsDataProps) =>
+  useGet<RestResponseAnalyzedRadarChartLogDataWithCountDTO, unknown, GetAllRadarChartLogsDataQueryParams, void>(
+    `/log-dashboard/logs-radar-chart-data`,
+    { base: getConfig('cv/api'), ...props }
+  )
+
+/**
+ * get all log data for a time range and filters
+ */
+export const getAllRadarChartLogsDataPromise = (
+  props: GetUsingFetchProps<
+    RestResponseAnalyzedRadarChartLogDataWithCountDTO,
+    unknown,
+    GetAllRadarChartLogsDataQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponseAnalyzedRadarChartLogDataWithCountDTO, unknown, GetAllRadarChartLogsDataQueryParams, void>(
+    getConfig('cv/api'),
+    `/log-dashboard/logs-radar-chart-data`,
+    props,
+    signal
+  )
+
 export interface GetMetricPacksQueryParams {
   accountId: string
   orgIdentifier: string
@@ -9199,6 +9376,99 @@ export const setHealthMonitoringFlagPromise = (
     SetHealthMonitoringFlagPathParams
   >('PUT', getConfig('cv/api'), `/monitored-service/${identifier}/health-monitoring-flag`, props, signal)
 
+export interface GetNotificationRulesForMonitoredServiceQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  pageNumber?: number
+  pageSize?: number
+}
+
+export interface GetNotificationRulesForMonitoredServicePathParams {
+  identifier: string
+}
+
+export type GetNotificationRulesForMonitoredServiceProps = Omit<
+  GetProps<
+    ResponsePageNotificationRuleResponse,
+    unknown,
+    GetNotificationRulesForMonitoredServiceQueryParams,
+    GetNotificationRulesForMonitoredServicePathParams
+  >,
+  'path'
+> &
+  GetNotificationRulesForMonitoredServicePathParams
+
+/**
+ * get notification rules for MonitoredService
+ */
+export const GetNotificationRulesForMonitoredService = ({
+  identifier,
+  ...props
+}: GetNotificationRulesForMonitoredServiceProps) => (
+  <Get<
+    ResponsePageNotificationRuleResponse,
+    unknown,
+    GetNotificationRulesForMonitoredServiceQueryParams,
+    GetNotificationRulesForMonitoredServicePathParams
+  >
+    path={`/monitored-service/${identifier}/notification-rules`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetNotificationRulesForMonitoredServiceProps = Omit<
+  UseGetProps<
+    ResponsePageNotificationRuleResponse,
+    unknown,
+    GetNotificationRulesForMonitoredServiceQueryParams,
+    GetNotificationRulesForMonitoredServicePathParams
+  >,
+  'path'
+> &
+  GetNotificationRulesForMonitoredServicePathParams
+
+/**
+ * get notification rules for MonitoredService
+ */
+export const useGetNotificationRulesForMonitoredService = ({
+  identifier,
+  ...props
+}: UseGetNotificationRulesForMonitoredServiceProps) =>
+  useGet<
+    ResponsePageNotificationRuleResponse,
+    unknown,
+    GetNotificationRulesForMonitoredServiceQueryParams,
+    GetNotificationRulesForMonitoredServicePathParams
+  >(
+    (paramsInPath: GetNotificationRulesForMonitoredServicePathParams) =>
+      `/monitored-service/${paramsInPath.identifier}/notification-rules`,
+    { base: getConfig('cv/api'), pathParams: { identifier }, ...props }
+  )
+
+/**
+ * get notification rules for MonitoredService
+ */
+export const getNotificationRulesForMonitoredServicePromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponsePageNotificationRuleResponse,
+    unknown,
+    GetNotificationRulesForMonitoredServiceQueryParams,
+    GetNotificationRulesForMonitoredServicePathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponsePageNotificationRuleResponse,
+    unknown,
+    GetNotificationRulesForMonitoredServiceQueryParams,
+    GetNotificationRulesForMonitoredServicePathParams
+  >(getConfig('cv/api'), `/monitored-service/${identifier}/notification-rules`, props, signal)
+
 export interface GetMonitoredServiceOverAllHealthScoreQueryParams {
   accountId: string
   orgIdentifier: string
@@ -10010,6 +10280,280 @@ export const getNewRelicMetricDataPromise = (
     MetricPackDTOArrayRequestBody,
     void
   >('POST', getConfig('cv/api'), `/newrelic/metric-data`, props, signal)
+
+export interface GetNotificationRuleDataQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  pageNumber: number
+  pageSize: number
+}
+
+export type GetNotificationRuleDataProps = Omit<
+  GetProps<ResponsePageNotificationRuleResponse, unknown, GetNotificationRuleDataQueryParams, void>,
+  'path'
+>
+
+/**
+ * get notificationRule data
+ */
+export const GetNotificationRuleData = (props: GetNotificationRuleDataProps) => (
+  <Get<ResponsePageNotificationRuleResponse, unknown, GetNotificationRuleDataQueryParams, void>
+    path={`/notification-rule`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetNotificationRuleDataProps = Omit<
+  UseGetProps<ResponsePageNotificationRuleResponse, unknown, GetNotificationRuleDataQueryParams, void>,
+  'path'
+>
+
+/**
+ * get notificationRule data
+ */
+export const useGetNotificationRuleData = (props: UseGetNotificationRuleDataProps) =>
+  useGet<ResponsePageNotificationRuleResponse, unknown, GetNotificationRuleDataQueryParams, void>(
+    `/notification-rule`,
+    { base: getConfig('cv/api'), ...props }
+  )
+
+/**
+ * get notificationRule data
+ */
+export const getNotificationRuleDataPromise = (
+  props: GetUsingFetchProps<ResponsePageNotificationRuleResponse, unknown, GetNotificationRuleDataQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePageNotificationRuleResponse, unknown, GetNotificationRuleDataQueryParams, void>(
+    getConfig('cv/api'),
+    `/notification-rule`,
+    props,
+    signal
+  )
+
+export interface SaveNotificationRuleDataQueryParams {
+  accountId: string
+}
+
+export type SaveNotificationRuleDataProps = Omit<
+  MutateProps<
+    RestResponseNotificationRuleResponse,
+    unknown,
+    SaveNotificationRuleDataQueryParams,
+    NotificationRuleDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * saves notificationRule data
+ */
+export const SaveNotificationRuleData = (props: SaveNotificationRuleDataProps) => (
+  <Mutate<
+    RestResponseNotificationRuleResponse,
+    unknown,
+    SaveNotificationRuleDataQueryParams,
+    NotificationRuleDTORequestBody,
+    void
+  >
+    verb="POST"
+    path={`/notification-rule`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseSaveNotificationRuleDataProps = Omit<
+  UseMutateProps<
+    RestResponseNotificationRuleResponse,
+    unknown,
+    SaveNotificationRuleDataQueryParams,
+    NotificationRuleDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * saves notificationRule data
+ */
+export const useSaveNotificationRuleData = (props: UseSaveNotificationRuleDataProps) =>
+  useMutate<
+    RestResponseNotificationRuleResponse,
+    unknown,
+    SaveNotificationRuleDataQueryParams,
+    NotificationRuleDTORequestBody,
+    void
+  >('POST', `/notification-rule`, { base: getConfig('cv/api'), ...props })
+
+/**
+ * saves notificationRule data
+ */
+export const saveNotificationRuleDataPromise = (
+  props: MutateUsingFetchProps<
+    RestResponseNotificationRuleResponse,
+    unknown,
+    SaveNotificationRuleDataQueryParams,
+    NotificationRuleDTORequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseNotificationRuleResponse,
+    unknown,
+    SaveNotificationRuleDataQueryParams,
+    NotificationRuleDTORequestBody,
+    void
+  >('POST', getConfig('cv/api'), `/notification-rule`, props, signal)
+
+export interface DeleteNotificationRuleDataQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type DeleteNotificationRuleDataProps = Omit<
+  MutateProps<RestResponseBoolean, unknown, DeleteNotificationRuleDataQueryParams, string, void>,
+  'path' | 'verb'
+>
+
+/**
+ * delete notificationRule data
+ */
+export const DeleteNotificationRuleData = (props: DeleteNotificationRuleDataProps) => (
+  <Mutate<RestResponseBoolean, unknown, DeleteNotificationRuleDataQueryParams, string, void>
+    verb="DELETE"
+    path={`/notification-rule`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseDeleteNotificationRuleDataProps = Omit<
+  UseMutateProps<RestResponseBoolean, unknown, DeleteNotificationRuleDataQueryParams, string, void>,
+  'path' | 'verb'
+>
+
+/**
+ * delete notificationRule data
+ */
+export const useDeleteNotificationRuleData = (props: UseDeleteNotificationRuleDataProps) =>
+  useMutate<RestResponseBoolean, unknown, DeleteNotificationRuleDataQueryParams, string, void>(
+    'DELETE',
+    `/notification-rule`,
+    { base: getConfig('cv/api'), ...props }
+  )
+
+/**
+ * delete notificationRule data
+ */
+export const deleteNotificationRuleDataPromise = (
+  props: MutateUsingFetchProps<RestResponseBoolean, unknown, DeleteNotificationRuleDataQueryParams, string, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseBoolean, unknown, DeleteNotificationRuleDataQueryParams, string, void>(
+    'DELETE',
+    getConfig('cv/api'),
+    `/notification-rule`,
+    props,
+    signal
+  )
+
+export interface UpdateNotificationRuleDataQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export interface UpdateNotificationRuleDataPathParams {
+  identifier: string
+}
+
+export type UpdateNotificationRuleDataProps = Omit<
+  MutateProps<
+    RestResponseNotificationRuleResponse,
+    unknown,
+    UpdateNotificationRuleDataQueryParams,
+    NotificationRuleDTORequestBody,
+    UpdateNotificationRuleDataPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateNotificationRuleDataPathParams
+
+/**
+ * update notificationRule data
+ */
+export const UpdateNotificationRuleData = ({ identifier, ...props }: UpdateNotificationRuleDataProps) => (
+  <Mutate<
+    RestResponseNotificationRuleResponse,
+    unknown,
+    UpdateNotificationRuleDataQueryParams,
+    NotificationRuleDTORequestBody,
+    UpdateNotificationRuleDataPathParams
+  >
+    verb="PUT"
+    path={`/notification-rule/${identifier}`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateNotificationRuleDataProps = Omit<
+  UseMutateProps<
+    RestResponseNotificationRuleResponse,
+    unknown,
+    UpdateNotificationRuleDataQueryParams,
+    NotificationRuleDTORequestBody,
+    UpdateNotificationRuleDataPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateNotificationRuleDataPathParams
+
+/**
+ * update notificationRule data
+ */
+export const useUpdateNotificationRuleData = ({ identifier, ...props }: UseUpdateNotificationRuleDataProps) =>
+  useMutate<
+    RestResponseNotificationRuleResponse,
+    unknown,
+    UpdateNotificationRuleDataQueryParams,
+    NotificationRuleDTORequestBody,
+    UpdateNotificationRuleDataPathParams
+  >('PUT', (paramsInPath: UpdateNotificationRuleDataPathParams) => `/notification-rule/${paramsInPath.identifier}`, {
+    base: getConfig('cv/api'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * update notificationRule data
+ */
+export const updateNotificationRuleDataPromise = (
+  {
+    identifier,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseNotificationRuleResponse,
+    unknown,
+    UpdateNotificationRuleDataQueryParams,
+    NotificationRuleDTORequestBody,
+    UpdateNotificationRuleDataPathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseNotificationRuleResponse,
+    unknown,
+    UpdateNotificationRuleDataQueryParams,
+    NotificationRuleDTORequestBody,
+    UpdateNotificationRuleDataPathParams
+  >('PUT', getConfig('cv/api'), `/notification-rule/${identifier}`, props, signal)
 
 export interface GetServicesFromPagerDutyQueryParams {
   accountId: string
@@ -11116,6 +11660,93 @@ export const getServiceLevelObjectiveLogsPromise = (
     GetServiceLevelObjectiveLogsQueryParams,
     GetServiceLevelObjectiveLogsPathParams
   >(getConfig('cv/api'), `/slo/${identifier}/logs`, props, signal)
+
+export interface GetNotificationRulesForSLOQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  pageNumber?: number
+  pageSize?: number
+}
+
+export interface GetNotificationRulesForSLOPathParams {
+  identifier: string
+}
+
+export type GetNotificationRulesForSLOProps = Omit<
+  GetProps<
+    ResponsePageNotificationRuleResponse,
+    unknown,
+    GetNotificationRulesForSLOQueryParams,
+    GetNotificationRulesForSLOPathParams
+  >,
+  'path'
+> &
+  GetNotificationRulesForSLOPathParams
+
+/**
+ * get notification rules for SLO
+ */
+export const GetNotificationRulesForSLO = ({ identifier, ...props }: GetNotificationRulesForSLOProps) => (
+  <Get<
+    ResponsePageNotificationRuleResponse,
+    unknown,
+    GetNotificationRulesForSLOQueryParams,
+    GetNotificationRulesForSLOPathParams
+  >
+    path={`/slo/${identifier}/notification-rules`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetNotificationRulesForSLOProps = Omit<
+  UseGetProps<
+    ResponsePageNotificationRuleResponse,
+    unknown,
+    GetNotificationRulesForSLOQueryParams,
+    GetNotificationRulesForSLOPathParams
+  >,
+  'path'
+> &
+  GetNotificationRulesForSLOPathParams
+
+/**
+ * get notification rules for SLO
+ */
+export const useGetNotificationRulesForSLO = ({ identifier, ...props }: UseGetNotificationRulesForSLOProps) =>
+  useGet<
+    ResponsePageNotificationRuleResponse,
+    unknown,
+    GetNotificationRulesForSLOQueryParams,
+    GetNotificationRulesForSLOPathParams
+  >((paramsInPath: GetNotificationRulesForSLOPathParams) => `/slo/${paramsInPath.identifier}/notification-rules`, {
+    base: getConfig('cv/api'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * get notification rules for SLO
+ */
+export const getNotificationRulesForSLOPromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponsePageNotificationRuleResponse,
+    unknown,
+    GetNotificationRulesForSLOQueryParams,
+    GetNotificationRulesForSLOPathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponsePageNotificationRuleResponse,
+    unknown,
+    GetNotificationRulesForSLOQueryParams,
+    GetNotificationRulesForSLOPathParams
+  >(getConfig('cv/api'), `/slo/${identifier}/notification-rules`, props, signal)
 
 export interface ResetErrorBudgetQueryParams {
   accountId: string
