@@ -276,7 +276,7 @@ export function SavePipelinePopover({
       clear()
       setSchemaErrorView(true)
       // This is done because when git sync is enabled, errors are displayed in a modal
-      if (!isGitSyncEnabled) {
+      if (!isGitSyncEnabled && currStoreMetadata?.storeType !== StoreType.REMOTE) {
         // eslint-disable-next-line
         // @ts-ignore
         if (response?.metadata?.schemaErrors?.length) {

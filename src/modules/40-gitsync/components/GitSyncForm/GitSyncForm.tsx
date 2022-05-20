@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { useEffect } from 'react'
 import type { FormikContextType } from 'formik'
 import cx from 'classnames'
@@ -48,9 +55,8 @@ export function GitSyncForm(props: GitSyncFormProps<GitSyncFormFields>): React.R
 
   useEffect(() => {
     formikProps.setFieldValue('remoteType', 'create')
-
     formikProps?.values?.identifier && formikProps.setFieldValue('filePath', `${formikProps.values.identifier}.yaml`)
-  }, [])
+  }, [formikProps?.values?.identifier])
 
   return (
     <Container padding={{ top: 'large' }} className={cx()}>
@@ -59,7 +65,7 @@ export function GitSyncForm(props: GitSyncFormProps<GitSyncFormFields>): React.R
         radioGroup={{ inline: true }}
         items={[
           { label: 'Use Existing Yaml', value: 'import', disabled: true },
-          { label: 'Create New Yaml', value: 'create', checked: true }
+          { label: 'Create New Yaml', value: 'create' }
         ]}
         onChange={elm => {
           formikProps.setFieldValue(
