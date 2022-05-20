@@ -40,7 +40,7 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
   const { orgIdentifier, projectIdentifier, pipelineIdentifier, accountId, module } =
     useParams<PipelineType<PipelinePathProps>>()
   const ciGitAwareForTriggerEnabled =
-    useFeatureFlag(FeatureFlag.CI_GIT_AWARE_FOR_TRIGGER) || !!localStorage.CI_GIT_AWARE_FOR_TRIGGER
+    useFeatureFlag(FeatureFlag.GIT_AWARE_FOR_TRIGGER) || !!localStorage.GIT_AWARE_FOR_TRIGGER
   const { isGitSyncEnabled } = useAppStore()
   const location = useLocation()
   const { trackEvent } = useTelemetry()

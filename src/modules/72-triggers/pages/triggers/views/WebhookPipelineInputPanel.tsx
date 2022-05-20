@@ -7,7 +7,15 @@
 
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Layout, Text, NestedAccordionProvider, HarnessDocTooltip, PageSpinner } from '@wings-software/uicore'
+import {
+  Container,
+  FormInput,
+  Layout,
+  Text,
+  NestedAccordionProvider,
+  HarnessDocTooltip,
+  PageSpinner
+} from '@wings-software/uicore'
 import { parse } from 'yaml'
 import { pick, merge, cloneDeep, isEmpty, defaultTo } from 'lodash-es'
 import type { FormikProps } from 'formik'
@@ -38,6 +46,7 @@ import css from './WebhookPipelineInputPanel.module.scss'
 interface WebhookPipelineInputPanelPropsInterface {
   formikProps?: any
   isEdit?: boolean
+  gitAwareForTriggerEnabled?: boolean
 }
 
 const applyArtifactToPipeline = (newPipelineObject: any, formikProps: FormikProps<any>): PipelineInfoConfig => {
@@ -170,7 +179,8 @@ const getPipelineWithInjectedWithCloneCodebase = ({
 
 function WebhookPipelineInputPanelForm({
   formikProps,
-  isEdit
+  isEdit,
+  gitAwareForTriggerEnabled
 }: WebhookPipelineInputPanelPropsInterface): React.ReactElement {
   const {
     values: { inputSetSelected, pipeline, resolvedPipeline },
@@ -316,6 +326,13 @@ function WebhookPipelineInputPanelForm({
                   pipelineIdentifier={pipelineIdentifier}
                   onChange={value => {
                     setSelectedInputSets(value)
+                    if (gitAwareForTriggerEnabled) {
+                      formikProps.setValues({
+                        ...formikProps.values,
+                        inputSetRefs: (value || []).map(v => v.value)
+                      })
+                      // console.log('INPUT SET', { gitAwareForTriggerEnabled, value })
+                    }
                   }}
                   value={selectedInputSets}
                   selectedValueClass={css.inputSetSelectedValue}
@@ -323,6 +340,23 @@ function WebhookPipelineInputPanelForm({
               </GitSyncStoreProvider>
               <div className={css.divider} />
             </div>
+            {gitAwareForTriggerEnabled && (
+              <Container padding={{ top: 'medium' }}>
+                <Text className={css.formContentTitle} inline={true}>
+                  {getString('triggers.pipelineReferenceBranch')}
+                </Text>
+                <Container className={css.refBranchOuter}>
+                  <FormInput.Text
+                    name="pipelineBranchName"
+                    placeholder="<+trigger.branch>"
+                    tooltipProps={{
+                      dataTooltipId: 'triggerGitPipelineBranchName'
+                    }}
+                  />
+                </Container>
+                <div className={css.divider} />
+              </Container>
+            )}
             <PipelineInputSetForm
               originalPipeline={resolvedPipeline}
               template={
@@ -333,6 +367,7 @@ function WebhookPipelineInputPanelForm({
               viewType={StepViewType.InputSet}
               maybeContainerClass={css.pipelineInputSetForm}
               viewTypeMetadata={{ isTrigger: true }}
+              readonlyStageInputs={gitAwareForTriggerEnabled}
             />
           </div>
         </div>

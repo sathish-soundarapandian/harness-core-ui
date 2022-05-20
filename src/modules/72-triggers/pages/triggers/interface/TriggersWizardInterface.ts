@@ -89,6 +89,8 @@ export interface FlatOnEditValuesInterface {
   versionOperator?: string
   buildValue?: string
   buildOperator?: string
+  pipelineBranchName?: string
+  inputSetRefs?: string[]
 }
 
 export interface FlatValidWebhookFormikValuesInterface {
@@ -121,6 +123,8 @@ export interface FlatValidWebhookFormikValuesInterface {
   headerConditions?: AddConditionInterface[]
   payloadConditions?: AddConditionInterface[]
   jexlCondition?: string
+  pipelineBranchName?: string
+  inputSetRefs?: string[]
 }
 
 export interface FlatValidScheduleFormikValuesInterface {

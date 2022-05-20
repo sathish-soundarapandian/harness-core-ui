@@ -49,6 +49,7 @@ export interface PipelineInputSetFormProps {
   template: PipelineInfoConfig
   path?: string
   executionIdentifier?: string
+  readonlyStageInputs?: boolean
   readonly?: boolean
   maybeContainerClass?: string
   viewType: StepViewType
@@ -71,6 +72,7 @@ export function StageFormInternal({
   allValues,
   path,
   template,
+  readonlyStageInputs,
   readonly,
   viewType,
   stageClassName = '',
@@ -81,6 +83,7 @@ export function StageFormInternal({
   template?: StageElementWrapperConfig
   path: string
   readonly?: boolean
+  readonlyStageInputs?: boolean
   viewType: StepViewType
   stageClassName?: string
   allowableTypes: MultiTypeInputType[]
@@ -121,7 +124,7 @@ export function StageFormInternal({
           path={`${path}.spec`}
           deploymentStageTemplate={template?.stage?.spec as DeploymentStageConfig}
           deploymentStage={allValues?.stage?.spec as DeploymentStageConfig}
-          readonly={readonly}
+          readonly={readonlyStageInputs || readonly}
           viewType={viewType}
           executionIdentifier={executionIdentifier}
           allowableTypes={allowableTypes}
@@ -145,6 +148,7 @@ export function StageForm({
   allValues,
   path,
   template,
+  readonlyStageInputs,
   readonly,
   viewType,
   hideTitle = false,
@@ -155,6 +159,7 @@ export function StageForm({
   allValues?: StageElementWrapperConfig
   template?: StageElementWrapperConfig
   path: string
+  readonlyStageInputs?: boolean
   readonly?: boolean
   viewType: StepViewType
   hideTitle?: boolean
@@ -186,6 +191,7 @@ export function StageForm({
             : allValues
         }
         path={isTemplateStage ? `${path}.${TEMPLATE_INPUT_PATH}` : path}
+        readonlyStageInputs={readonlyStageInputs}
         readonly={readonly}
         viewType={viewType}
         allowableTypes={allowableTypes}
@@ -201,6 +207,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
     originalPipeline,
     template,
     path = '',
+    readonlyStageInputs,
     readonly,
     viewType,
     maybeContainerClass = '',
@@ -337,6 +344,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                   template={stageObj}
                   allValues={allValues}
                   path={`${pathPrefix}stages[${index}].stage`}
+                  readonlyStageInputs={readonlyStageInputs}
                   readonly={isInputStageDisabled(stageObj?.stage?.identifier)}
                   viewType={viewType}
                   allowableTypes={allowableTypes}

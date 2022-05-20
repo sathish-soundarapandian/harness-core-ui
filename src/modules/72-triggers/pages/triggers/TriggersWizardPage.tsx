@@ -24,6 +24,8 @@ import { Page, useToaster } from '@common/exports'
 import Wizard from '@common/components/Wizard/Wizard'
 import { connectorUrlType } from '@connectors/constants'
 import routes from '@common/RouteDefinitions'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import {
   PipelineInfoConfig,
   useGetConnector,
@@ -121,6 +123,8 @@ import type {
   FlatValidFormikValuesInterface
 } from './interface/TriggersWizardInterface'
 import css from './TriggersWizardPage.module.scss'
+
+export const DEFAULT_TRIGGER_BRANCH = '<+trigger.branch>'
 
 const replaceRunTimeVariables = ({
   manifestType,
@@ -389,7 +393,6 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       })
     }
   })
-
   const convertFormikValuesToYaml = (values: any): { trigger: TriggerConfigDTO } | undefined => {
     if (values.triggerType === TriggerTypes.WEBHOOK) {
       const res = getWebhookTriggerYaml({ values, persistIncomplete: true })
@@ -492,6 +495,12 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       getTemplatesResolvedPipeline: true
     }
   })
+  const isGitSyncEnabled = useMemo(() => !!pipelineResponse?.data?.gitDetails?.branch, [pipelineResponse])
+  const gitAwareForTriggerFeatureFlag =
+    useFeatureFlag(FeatureFlag.GIT_AWARE_FOR_TRIGGER) || !!localStorage.GIT_AWARE_FOR_TRIGGER
+  const gitAwareForTriggerEnabled = isGitSyncEnabled && gitAwareForTriggerFeatureFlag
+
+  // console.info({ pipelineResponse, isGitSyncEnabled, gitAwareForTriggerEnabled })
 
   const originalPipeline: PipelineInfoConfig | undefined = parse(
     (pipelineResponse?.data?.yamlPipeline as any) || ''
@@ -576,7 +585,9 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       payloadConditions = [],
       jexlCondition,
       secureToken,
-      autoAbortPreviousExecutions = false
+      autoAbortPreviousExecutions = false,
+      pipelineBranchName,
+      inputSetRefs
     } = val
 
     const stringifyPipelineRuntimeInput = yamlStringify({
@@ -658,8 +669,10 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
             }
           }
         },
-        inputYaml: stringifyPipelineRuntimeInput
-      }
+        inputYaml: stringifyPipelineRuntimeInput,
+        pipelineBranchName: gitAwareForTriggerEnabled ? pipelineBranchName : null,
+        inputSetRefs: gitAwareForTriggerEnabled ? inputSetRefs : null
+      } as NGTriggerConfigV2
       if (triggerYaml.source?.spec?.spec) {
         triggerYaml.source.spec.spec.spec.payloadConditions = persistIncomplete
           ? payloadConditions
@@ -702,8 +715,10 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
             }
           }
         },
-        inputYaml: stringifyPipelineRuntimeInput
-      }
+        inputYaml: stringifyPipelineRuntimeInput,
+        pipelineBranchName: gitAwareForTriggerEnabled ? pipelineBranchName : null,
+        inputSetRefs: gitAwareForTriggerEnabled ? inputSetRefs : null
+      } as NGTriggerConfigV2
 
       if (secureToken && triggerYaml.source?.spec) {
         triggerYaml.source.spec.spec = {
@@ -762,6 +777,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
             description,
             tags,
             inputYaml,
+            pipelineBranchName = DEFAULT_TRIGGER_BRANCH,
+            inputSetRefs = [],
             source: {
               spec: {
                 type: sourceRepo,
@@ -849,7 +866,9 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
               payloadCondition.key !== PayloadConditionTypes.CHANGED_FILES &&
               payloadCondition.key !== PayloadConditionTypes.TAG
           ),
-          jexlCondition
+          jexlCondition,
+          pipelineBranchName,
+          inputSetRefs
         }
 
         // connectorRef in Visual UI is an object (with the label), but in YAML is a string
@@ -895,6 +914,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
             description,
             tags,
             inputYaml,
+            pipelineBranchName = DEFAULT_TRIGGER_BRANCH,
+            inputSetRefs = [],
             source: {
               spec: {
                 type: sourceRepo,
@@ -930,7 +951,9 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
           secureToken: authToken?.spec?.value,
           headerConditions,
           payloadConditions,
-          jexlCondition
+          jexlCondition,
+          pipelineBranchName,
+          inputSetRefs
         }
 
         return triggerValues
@@ -1736,7 +1759,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       >
         <WebhookTriggerConfigPanel />
         <WebhookConditionsPanel />
-        <WebhookPipelineInputPanel />
+        <WebhookPipelineInputPanel gitAwareForTriggerEnabled={gitAwareForTriggerEnabled} />
       </Wizard>
     )
   }
