@@ -47,7 +47,6 @@ const UploadJSON = ({ setJsonValue }: UploadJSONInterface) => {
     e.stopPropagation()
   }
 
-  console.log('dropHighlight: ', dropHighlight)
   return (
     <div
       className={`${css.uploadComponent} ${dropHighlight ? css.highlightedDrop : ''}`}
