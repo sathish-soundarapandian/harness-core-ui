@@ -32,7 +32,7 @@ import {
   UserMetadataDTO,
   RoleAssignmentMetadataDTO
 } from 'services/cd-ng'
-import { getPrincipalScopeFromDTO, getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
+import { getPrincipalScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useStrings, String } from 'framework/strings'
 import RoleBindingsList from '@rbac/components/RoleBindingsList/RoleBindingsList'
 import {
@@ -40,7 +40,8 @@ import {
   PrincipalType,
   isUserGroupInherited,
   mapfromScopetoPrincipalScope,
-  getScopeFromUserGroupDTO
+  getScopeFromUserGroupDTO,
+  getUserGroupMenuOptionText
 } from '@rbac/utils/utils'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
@@ -66,6 +67,8 @@ interface UserGroupsListViewProps {
 }
 
 export const UserGroupColumn = (data: UserGroupDTO): React.ReactElement => {
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const userGroupInherited = isUserGroupInherited(accountId, orgIdentifier, projectIdentifier, data)
   const { getString } = useStrings()
   return (
     <Layout.Vertical>
@@ -97,11 +100,13 @@ export const UserGroupColumn = (data: UserGroupDTO): React.ReactElement => {
         <Text color={Color.GREY_600} lineClamp={1} font={{ variation: FontVariation.SMALL }}>
           {getString('idLabel', { id: data.identifier })}
         </Text>
-        <Text color={Color.PURPLE_500} lineClamp={1} font={{ variation: FontVariation.SMALL }}>
-          {getString('rbac.unableToEditInheritedMembership', {
-            parentScope: mapfromScopetoPrincipalScope(getScopeFromUserGroupDTO(data))
-          })}
-        </Text>
+        {userGroupInherited ? (
+          <Text color={Color.PURPLE_500} lineClamp={1} font={{ variation: FontVariation.SMALL }}>
+            {getString('rbac.unableToEditInheritedMembership', {
+              parentScope: mapfromScopetoPrincipalScope(getScopeFromUserGroupDTO(data))
+            })}
+          </Text>
+        ) : null}
       </Layout.Vertical>
     </Layout.Vertical>
   )
@@ -114,7 +119,12 @@ const RenderColumnUserGroup: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row
 
 const RenderColumnMembers: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, column }) => {
   const data = row.original
-  const { accountIdentifier, orgIdentifier, projectIdentifier, identifier } = data.userGroupDTO
+  const { orgIdentifier, projectIdentifier, identifier } = data.userGroupDTO
+  const {
+    accountId: accountIdentifier,
+    orgIdentifier: childOrgIdentifier,
+    projectIdentifier: childProjectIdentifier
+  } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const avatars =
     data.users?.map(user => {
@@ -125,30 +135,20 @@ const RenderColumnMembers: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, 
     e.stopPropagation()
     ;(column as any).openUserGroupModal(data.userGroupDTO, true)
   }
-  const {
-    accountId: p_accountId,
-    orgIdentifier: p_orgIdentifier,
-    projectIdentifier: p_projectIdentifier
-  } = useParams<ProjectPathProps>()
-  const Scope = getScopeFromDTO({
-    accountIdentifier: p_accountId,
-    orgIdentifier: p_orgIdentifier,
-    projectIdentifier: p_projectIdentifier
-  })
-  const userGroupInherited = isUserGroupInherited(Scope, data.userGroupDTO)
+  const userGroupInherited = isUserGroupInherited(
+    accountIdentifier,
+    childOrgIdentifier,
+    childProjectIdentifier,
+    data.userGroupDTO
+  )
   const disabled = data.userGroupDTO.ssoLinked || data.userGroupDTO.externallyManaged || userGroupInherited
-  const disableTooltipTextId = data.userGroupDTO
-    ? getUserGroupActionTooltipText(data.userGroupDTO, userGroupInherited)
-    : undefined
-  let disableTooltipText = ''
-  if (disableTooltipTextId === 'rbac.unableToEditInheritedMembershipDetailed') {
-    disableTooltipText = getString(disableTooltipTextId, {
-      parentScope: mapfromScopetoPrincipalScope(getScopeFromUserGroupDTO(data.userGroupDTO)),
-      childScope: mapfromScopetoPrincipalScope(Scope)
-    })
-  } else if (disableTooltipTextId !== undefined) {
-    disableTooltipText = getString(disableTooltipTextId)
-  }
+  const disableTooltipText = getUserGroupActionTooltipText(
+    accountIdentifier,
+    childOrgIdentifier,
+    childProjectIdentifier,
+    data.userGroupDTO,
+    userGroupInherited
+  )
 
   const avatarTooltip = disableTooltipText ? <Text padding="medium">{disableTooltipText}</Text> : undefined
 
@@ -191,11 +191,8 @@ const RenderColumnMembers: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, 
 const RenderColumnRoleAssignments: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, column }) => {
   const data = row.original.roleAssignmentsMetadataDTO
   const { getString } = useStrings()
-  const resourceScope = {
-    accountId: row.original.userGroupDTO?.accountIdentifier,
-    orgIdentifier: row.original.userGroupDTO?.orgIdentifier,
-    projectIdentifier: row.original.userGroupDTO?.projectIdentifier
-  }
+  const { accountId: accountIdentifier, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+
   return (
     <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
       <RoleBindingsList data={data} length={2} />
@@ -214,7 +211,11 @@ const RenderColumnRoleAssignments: Renderer<CellProps<UserGroupAggregateDTO>> = 
         }}
         resourceType={ResourceType.USERGROUP}
         resourceIdentifier={row.original.userGroupDTO.identifier}
-        resourceScope={resourceScope}
+        resourceScope={{
+          accountIdentifier,
+          orgIdentifier,
+          projectIdentifier
+        }}
       />
     </Layout.Horizontal>
   )
@@ -222,7 +223,12 @@ const RenderColumnRoleAssignments: Renderer<CellProps<UserGroupAggregateDTO>> = 
 
 const RenderColumnMenu: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, column }) => {
   const data = row.original.userGroupDTO
-  const { accountIdentifier, orgIdentifier, projectIdentifier, identifier } = data
+  const { orgIdentifier, projectIdentifier, identifier } = data
+  const {
+    accountId: accountIdentifier,
+    orgIdentifier: childOrgIdentifier,
+    projectIdentifier: childProjectIdentifier
+  } = useParams<ProjectPathProps>()
   const [menuOpen, setMenuOpen] = useState(false)
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
@@ -300,22 +306,12 @@ const RenderColumnMenu: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, col
     openCopyGroupModal()
   }
 
-  const {
-    accountId: p_accountId,
-    orgIdentifier: p_orgIdentifier,
-    projectIdentifier: p_projectIdentifier
-  } = useParams<ProjectPathProps>()
-  const scope = getScopeFromDTO({
-    accountIdentifier: p_accountId,
-    orgIdentifier: p_orgIdentifier,
-    projectIdentifier: p_projectIdentifier
-  })
-  const userGroupInherited = isUserGroupInherited(scope, data)
+  const userGroupInherited = isUserGroupInherited(accountIdentifier, childOrgIdentifier, childProjectIdentifier, data)
   const renderMenuItem = (
     icon: IconName,
     text: string,
     clickHandler: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void,
-    tooltipText: string
+    tooltipText: React.ReactElement | undefined
   ): React.ReactElement => {
     if (data.externallyManaged || userGroupInherited) {
       return (
@@ -369,31 +365,15 @@ const RenderColumnMenu: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, col
             'edit',
             getString('edit'),
             handleEdit,
-            userGroupInherited
-              ? getString('rbac.manageInheritedGroupText', {
-                  action: 'edit',
-                  parentScope: mapfromScopetoPrincipalScope(getScopeFromUserGroupDTO(data))
-                })
-              : getString('rbac.manageSCIMText', {
-                  action: getString('edit').toLowerCase(),
-                  target: getString('rbac.group').toLowerCase()
-                })
+            getUserGroupMenuOptionText(getString('edit'), getString('rbac.group'), data, userGroupInherited)
           )}
           {renderMenuItem(
             'trash',
             getString('delete'),
             handleDelete,
-            userGroupInherited
-              ? getString('rbac.manageInheritedGroupText', {
-                  action: 'delete',
-                  parentScope: mapfromScopetoPrincipalScope(getScopeFromUserGroupDTO(data))
-                })
-              : getString('rbac.manageSCIMText', {
-                  action: getString('edit').toLowerCase(),
-                  target: getString('rbac.group').toLowerCase()
-                })
+            getUserGroupMenuOptionText(getString('delete'), getString('rbac.group'), data, userGroupInherited)
           )}
-          {/* to do */}
+          {/* IMP TO VERIFY */}
           {data.externallyManaged && !userGroupInherited ? (
             <MenuItem icon="duplicate" text={getString('common.copy')} onClick={handleCopyUserGroup} />
           ) : undefined}

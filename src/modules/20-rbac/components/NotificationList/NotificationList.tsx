@@ -276,19 +276,21 @@ const ChannelRow: React.FC<ChannelRow> = ({
                         onClick={() => handleTest(formikProps)}
                       />
                     ) : null}
-                    {enableEdit && !inherited ? (
-                      <Button text={getString('save')} minimal type="submit" disabled={loading} />
-                    ) : (
-                      <>
-                        <Button icon="edit" minimal onClick={() => setEdit(true)} className={css.button} />
-                        <Button
-                          icon="trash"
-                          minimal
-                          onClick={() => handleDelete(formikProps.values)}
-                          className={css.button}
-                        />
-                      </>
-                    )}
+                    {!inherited ? (
+                      enableEdit ? (
+                        <Button text={getString('save')} minimal type="submit" disabled={loading} />
+                      ) : (
+                        <>
+                          <Button icon="edit" minimal onClick={() => setEdit(true)} className={css.button} />
+                          <Button
+                            icon="trash"
+                            minimal
+                            onClick={() => handleDelete(formikProps.values)}
+                            className={css.button}
+                          />
+                        </>
+                      )
+                    ) : null}
                     {isCreate && !inherited ? (
                       <Button icon="trash" minimal onClick={() => onRowDelete?.()} className={css.button} />
                     ) : null}

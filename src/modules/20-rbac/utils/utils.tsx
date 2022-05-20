@@ -19,6 +19,7 @@ import type {
   GetUserGroupAggregateQueryParams
 } from 'services/cd-ng'
 import { Scope, PrincipalScope } from '@common/interfaces/SecretsInterface'
+import { String } from 'framework/strings'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type {
   Assignment,
@@ -31,7 +32,7 @@ import type { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier
 import type { FeatureRequest } from 'framework/featureStore/featureStoreUtil'
 import type { PermissionsRequest } from '@rbac/hooks/usePermission'
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
-import type { StringKeys, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings'
 import type { ProjectSelectOption } from '@audit-trail/components/FilterDrawer/FilterDrawer'
 import type { RbacMenuItemProps } from '@rbac/components/MenuItem/MenuItem'
 
@@ -344,21 +345,59 @@ export const generateScopeList = (org: string, projects: ProjectSelectOption[], 
 }
 
 export const getUserGroupActionTooltipText = (
-  userGroup: UserGroupDTO,
+  accountId: string,
+  orgIdentifier: string,
+  projectIdentifier: string,
+  userGroup: UserGroupDTO | undefined,
   userGroupInherited?: boolean
-): StringKeys | undefined => {
+): React.ReactElement | undefined => {
+  if (userGroup === undefined) {
+    return undefined
+  }
   const { ssoLinked, externallyManaged } = userGroup
-
+  const scope = getScopeFromDTO({
+    accountId,
+    orgIdentifier,
+    projectIdentifier
+  })
   if (userGroupInherited) {
-    return 'rbac.unableToEditInheritedMembershipDetailed'
+    const vars = {
+      parentScope: mapfromScopetoPrincipalScope(getScopeFromUserGroupDTO(userGroup)),
+      childScope: mapfromScopetoPrincipalScope(scope)
+    }
+    return <String stringID="rbac.unableToEditInheritedMembershipDetailed" vars={vars} />
   }
 
   if (ssoLinked) {
-    return 'rbac.userDetails.linkToSSOProviderModal.btnDisabledTooltipText'
+    return <String stringID="rbac.userDetails.linkToSSOProviderModal.btnDisabledTooltipText" />
   }
 
   if (externallyManaged) {
-    return 'rbac.unableToEditSCIMMembership'
+    return <String stringID="rbac.unableToEditSCIMMembership" />
+  }
+}
+
+export const getUserGroupMenuOptionText = (
+  action: string,
+  target: string,
+  userGroup: UserGroupDTO,
+  userGroupInherited?: boolean
+): React.ReactElement | undefined => {
+  if (userGroup === undefined) return undefined
+  const { externallyManaged } = userGroup
+  if (userGroupInherited) {
+    const vars = {
+      action: action.toLowerCase(),
+      parentScope: mapfromScopetoPrincipalScope(getScopeFromUserGroupDTO(userGroup))
+    }
+    return <String stringID="rbac.manageInheritedGroupText" vars={vars} />
+  }
+  if (externallyManaged) {
+    const vars = {
+      action: action.toLowerCase(),
+      target: target.toLowerCase()
+    }
+    return <String stringID="rbac.manageSCIMText" vars={vars} />
   }
 }
 
@@ -378,7 +417,17 @@ export const mapfromScopetoPrincipalScope = (scope?: Scope): PrincipalScope | un
   if (scope === Scope.PROJECT) return PrincipalScope.PROJECT
 }
 
-export const isUserGroupInherited = (scope: Scope, userGroupDTO?: UserGroupDTO): boolean => {
+export const isUserGroupInherited = (
+  accountId: string,
+  orgIdentifier: string,
+  projectIdentifier: string,
+  userGroupDTO?: UserGroupDTO
+): boolean => {
+  const scope = getScopeFromDTO({
+    accountId,
+    orgIdentifier,
+    projectIdentifier
+  })
   if (userGroupDTO === undefined) {
     return false
   }

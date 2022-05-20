@@ -109,9 +109,7 @@ const RenderColumnMenu: Renderer<CellProps<UserInfo>> = ({ row, column }) => {
     openDialog()
   }
 
-  return (column as any).ssoLinked ||
-    (column as any).userGroupInherited ||
-    (column as any).userGroupIdentifier ? null : (
+  return (column as any).ssoLinked || (column as any).userGroupInherited ? null : (
     <Layout.Horizontal flex={{ justifyContent: 'flex-end' }}>
       <Popover
         isOpen={menuOpen}

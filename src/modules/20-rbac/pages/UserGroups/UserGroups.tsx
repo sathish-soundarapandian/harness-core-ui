@@ -93,7 +93,7 @@ const UserGroupsPage: React.FC = () => {
       {data?.data?.content?.length || searchTerm || loading || error ? (
         <PageHeader
           title={
-            <Layout.Horizontal>
+            <Layout.Horizontal spacing="small" flex={{ justifyContent: 'start' }}>
               <UserGroupBtn />
               <AssignRolesBtn />
             </Layout.Horizontal>

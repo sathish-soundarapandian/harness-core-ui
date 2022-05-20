@@ -11,7 +11,6 @@ import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
 import cx from 'classnames'
-import { pick } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useGetUserGroupAggregate, UserGroupAggregateDTO } from 'services/cd-ng'
 import { Page } from '@common/exports'
@@ -22,15 +21,13 @@ import { PageSpinner } from '@common/components'
 import RoleBindingsList from '@rbac/components/RoleBindingsList/RoleBindingsList'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRoleAssignmentModal'
-import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useQueryParams } from '@common/hooks'
 import type { PrincipalScope } from '@common/interfaces/SecretsInterface'
 import {
   getUserGroupActionTooltipText,
   PrincipalType,
   isUserGroupInherited,
-  getScopeFromUserGroupDTO,
-  mapfromScopetoPrincipalScope,
+  getUserGroupMenuOptionText,
   getUserGroupQueryParams
 } from '@rbac/utils/utils'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
@@ -47,11 +44,6 @@ const UserGroupDetails: React.FC = () => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, module, userGroupIdentifier } =
     useParams<PipelineType<ProjectPathProps & { userGroupIdentifier: string }>>()
-  const scope = getScopeFromDTO({
-    accountIdentifier: accountId,
-    orgIdentifier,
-    projectIdentifier
-  })
   const { parentScope } = useQueryParams<{ parentScope: PrincipalScope }>()
   const isCommunity = isCommunityPlan()
 
@@ -81,17 +73,14 @@ const UserGroupDetails: React.FC = () => {
 
   useDocumentTitle([userGroup?.name || '', getString('common.userGroups')])
 
-  const userGroupInherited = isUserGroupInherited(scope, userGroup)
-  const membersBtnTooltipTextId = userGroup ? getUserGroupActionTooltipText(userGroup, userGroupInherited) : undefined
-  let membersBtnTooltipText = ''
-  if (membersBtnTooltipTextId === 'rbac.unableToEditInheritedMembershipDetailed') {
-    membersBtnTooltipText = getString(membersBtnTooltipTextId, {
-      parentScope: mapfromScopetoPrincipalScope(getScopeFromUserGroupDTO(userGroup)),
-      childScope: mapfromScopetoPrincipalScope(scope)
-    })
-  } else if (membersBtnTooltipTextId !== undefined) {
-    membersBtnTooltipText = getString(membersBtnTooltipTextId)
-  }
+  const userGroupInherited = isUserGroupInherited(accountId, orgIdentifier, projectIdentifier, userGroup)
+  const membersBtnTooltipText = getUserGroupActionTooltipText(
+    accountId,
+    orgIdentifier,
+    projectIdentifier,
+    userGroup,
+    userGroupInherited
+  )
 
   if (loading) return <PageSpinner />
   if (error) return <PageError message={(error.data as Error)?.message || error.message} onClick={() => refetch()} />
@@ -181,15 +170,12 @@ const UserGroupDetails: React.FC = () => {
                 onClick={() => {
                   openLinkToSSOProviderModal(userGroup)
                 }}
-                tooltip={
-                  userGroup.externallyManaged
-                    ? getString('rbac.unableToEditSCIMMembership')
-                    : userGroupInherited
-                    ? getString('rbac.unableToEditInheritedMembership', {
-                        parentScope: mapfromScopetoPrincipalScope(getScopeFromUserGroupDTO(userGroup))
-                      })
-                    : undefined
-                }
+                tooltip={getUserGroupMenuOptionText(
+                  getString('edit'),
+                  getString('rbac.group'),
+                  userGroup,
+                  userGroupInherited
+                )}
                 resourceType={ResourceType.USERGROUP}
                 resourceIdentifier={userGroupIdentifier}
               />
@@ -231,7 +217,7 @@ const UserGroupDetails: React.FC = () => {
                   }}
                   resourceType={ResourceType.USERGROUP}
                   resourceIdentifier={userGroupIdentifier}
-                  resourceScope={pick(userGroup, 'accountIdentifier', 'orgIdentifier', 'projectIdentifier')}
+                  resourceScope={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier }}
                 />
               </Layout.Horizontal>
             </Layout.Vertical>
