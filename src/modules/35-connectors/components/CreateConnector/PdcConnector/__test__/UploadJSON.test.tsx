@@ -107,9 +107,11 @@ describe('Test TestConnection component', () => {
 
     act(() => {
       const dragStartEvent = Object.assign(createEvent.dragStart(input), eventData)
-
       fireEvent(input, dragStartEvent)
       fireEvent.dragEnter(input)
+    })
+
+    act(() => {
       fireEvent.dragEnd(input)
       fireEvent.dragLeave(input)
 
