@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, waitFor, act, getAllByText } from '@testing-library/react'
+import { render, waitFor, act, getAllByText, fireEvent, createEvent } from '@testing-library/react'
 import user from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import PdcDetails from '@connectors/components/CreateConnector/PdcConnector/StepDetails/PdcDetails'
@@ -47,26 +47,40 @@ describe('Test PdcDetails component with spec.hosts', () => {
     })
   })
   test('Render component and try upload file', async () => {
-    const { container } = render(
+    const { container, getByText } = render(
       <TestWrapper path="/account/pass" pathParams={{ accountId: 'account1' }}>
-        <PdcDetails prevStepData={prevStepDataHosts} isEditMode={false} name="pdc-details" nextStep={nextStep} />
+        <PdcDetails isEditMode={false} name="pdc-details" nextStep={nextStep} />
       </TestWrapper>
     )
 
+    const fileName = 'values.json'
     const str = JSON.stringify(fileValues)
     const blob = new Blob([str])
-    const file = new File([blob], 'values.json', {
+    const file = new File([blob], fileName, {
       type: 'application/JSON'
     })
-    File.prototype.text = jest.fn().mockResolvedValueOnce(str)
+
     const input = container.querySelector('input')
 
+    const eventData = { dataTransfer: { files: [file] } }
+
     act(() => {
-      user.upload(input!, file)
+      const dragStartEvent = Object.assign(createEvent.dragStart(input!), eventData)
+
+      fireEvent(input!, dragStartEvent)
+      fireEvent.dragEnter(input!)
+      fireEvent.dragEnd(input!)
+      fireEvent.dragLeave(input!)
+
+      const dropEffectEvent = Object.assign(createEvent.dragOver(input!), eventData)
+      fireEvent(input!, dropEffectEvent)
+
+      const dropEvent = Object.assign(createEvent.drop(input!), eventData)
+      fireEvent(input!, dropEvent)
     })
 
-    waitFor(() => {
-      expect(container.innerHTML).toContain('localhost5')
+    await waitFor(() => {
+      expect(getByText(fileName)).toBeDefined()
     })
 
     act(async () => {

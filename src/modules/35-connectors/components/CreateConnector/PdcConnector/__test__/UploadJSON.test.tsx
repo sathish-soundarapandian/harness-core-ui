@@ -89,15 +89,21 @@ describe('Test TestConnection component', () => {
       expect(setJsonValueFn).toBeCalled()
     })
   })
-  test('drag and drop test - files', () => {
-    const { container } = render(
+  test('drag and drop test - files', async () => {
+    const { container, queryByText } = render(
       <TestWrapper path="/account/pass" pathParams={{}}>
         <UploadJSON setJsonValue={setJsonValueFn} />
       </TestWrapper>
     )
     const input = container.querySelector('input')!
 
-    const eventData = { dataTransfer: { files: [new File([], 'file1')] } }
+    const fileName = 'file1'
+    const fileContent = JSON.stringify([{ hosts: 'localhost' }])
+    const blob = new Blob([fileContent])
+    const file = new File([blob], fileName, {
+      type: 'application/JSON'
+    })
+    const eventData = { dataTransfer: { files: [file] } }
 
     act(() => {
       const dragStartEvent = Object.assign(createEvent.dragStart(input), eventData)
@@ -114,8 +120,8 @@ describe('Test TestConnection component', () => {
       fireEvent(input, dropEvent)
     })
 
-    waitFor(() => {
-      expect(setJsonValueFn).toBeCalled()
+    await waitFor(() => {
+      expect(queryByText(fileName)).toBeDefined()
     })
   })
   test('drag and drop test - incorrect files', () => {
@@ -145,6 +151,22 @@ describe('Test TestConnection component', () => {
 
     waitFor(() => {
       expect(setJsonValueFn).toBeCalled()
+    })
+  })
+  test('test on click component', () => {
+    const { container, queryByText } = render(
+      <TestWrapper path="/account/pass" pathParams={{}}>
+        <UploadJSON setJsonValue={setJsonValueFn} />
+      </TestWrapper>
+    )
+    const parentContainer = container.querySelector('div')!
+
+    act(() => {
+      fireEvent.click(parentContainer!)
+    })
+
+    waitFor(() => {
+      expect(queryByText('connectors.pdc.hostsUpload1')).not.toBeDefined()
     })
   })
 })
