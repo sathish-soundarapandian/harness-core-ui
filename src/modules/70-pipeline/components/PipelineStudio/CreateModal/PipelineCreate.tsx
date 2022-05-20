@@ -36,7 +36,7 @@ import { NameIdDescriptionTags } from '@common/components'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import GitContextForm, { IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
-import type { EntityGitDetails } from 'services/pipeline-ng'
+import { EntityGitDetails, StoreType } from 'services/pipeline-ng'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, PipelineActions } from '@common/constants/TrackingConstants'
 import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
@@ -229,7 +229,11 @@ export default function CreatePipelines({
                   cardClassName={css.pipelineModeCard}
                   renderItem={(item: CardInterface) => (
                     <Layout.Horizontal flex spacing={'small'}>
-                      <Icon name={item.icon} />
+                      <Icon
+                        size={16}
+                        name={item.icon}
+                        color={storeType?.type === item.type ? Color.PRIMARY_7 : Color.GREY_600}
+                      />
                       <Container>
                         <Text
                           font={{ variation: FontVariation.FORM_TITLE }}
@@ -245,7 +249,7 @@ export default function CreatePipelines({
                   onChange={(item: CardInterface) => {
                     if (pipelineIdentifier === DefaultNewPipelineId) {
                       formikProps?.setFieldValue('storeType', item.type)
-                      formikProps?.setFieldValue('remoteType', item.type === 'remote' ? 'new' : '')
+                      formikProps?.setFieldValue('remoteType', item.type === StoreType.REMOTE ? 'create' : '')
                       setStoreType(item)
                     }
                   }}
