@@ -5,10 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import { TextInput } from '@wings-software/uicore'
 import { Popover, PopoverInteractionKind, Position, TagInput } from '@blueprintjs/core'
-import { debounce } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { QlceViewFilterOperator, Maybe } from 'services/ce/services'
 import PerspectiveBuilderMultiValueSelector from '@ce/components/MultiValueSelectorComponent/PerspectiveBuilderMultiValueSelector'
@@ -47,8 +46,6 @@ const ValuesSelector: React.FC<ValuesSelectorProps> = ({
 
   const { getString } = useStrings()
 
-  const debouncedInputChange = useCallback(debounce(onInputChange, 500), [])
-
   useEffect(() => {
     const newSelectedVals: Record<string, boolean> = {}
     selectedVal?.forEach(val => {
@@ -73,7 +70,7 @@ const ValuesSelector: React.FC<ValuesSelectorProps> = ({
       ...prevVal,
       ...customValues
     }))
-    debouncedInputChange('')
+    onInputChange('')
   }
 
   const handleRemoveTag = (value: string): void => {
@@ -129,7 +126,7 @@ const ValuesSelector: React.FC<ValuesSelectorProps> = ({
         placeholder={getString('ce.perspectives.createPerspective.filters.selectValues')}
         onAdd={handleAddNewTag}
         onRemove={handleRemoveTag}
-        onInputChange={e => debouncedInputChange((e.target as HTMLInputElement).value)}
+        onInputChange={e => onInputChange((e.target as HTMLInputElement).value)}
         className={css.tagInput}
         disabled={isDisabled}
         tagProps={{ className: css.valueTag, onClick: e => e.stopPropagation() }}

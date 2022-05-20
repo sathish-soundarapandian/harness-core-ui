@@ -176,6 +176,15 @@ const PerspectiveBuilderFilter: React.FC<FilterPillProps> = ({
     }
   }, [data?.perspectiveFilters?.values])
 
+  useEffect(() => {
+    if (!pageInfo.searchValue) {
+      setPageInfo(prevInfo => ({
+        ...prevInfo,
+        filtersValuesData: (data?.perspectiveFilters?.values?.filter(e => e) || []) as string[]
+      }))
+    }
+  }, [pageInfo.searchValue])
+
   const onInputChange: (val: string) => void = val => {
     setPageInfo({
       filtersValuesData: [],
