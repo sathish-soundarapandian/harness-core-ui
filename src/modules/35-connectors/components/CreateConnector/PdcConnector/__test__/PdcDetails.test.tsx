@@ -47,7 +47,7 @@ describe('Test PdcDetails component with spec.hosts', () => {
     })
   })
   test('Render component and try upload file', async () => {
-    const { container, queryByText } = render(
+    const { container } = render(
       <TestWrapper path="/account/pass" pathParams={{ accountId: 'account1' }}>
         <PdcDetails prevStepData={prevStepDataHosts} isEditMode={false} name="pdc-details" nextStep={nextStep} />
       </TestWrapper>
