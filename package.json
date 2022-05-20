@@ -62,7 +62,7 @@
     "@harness/help-panel": "1.5.0",
     "@harness/monaco-yaml": "^1.0.0",
     "@harness/ng-tooltip": "^1.30.75",
-    "@harness/telemetry": "^1.0.37",
+    "@harness/telemetry": "^1.0.41",
     "@harness/uicore": "2.79.0",
     "@harness/use-modal": "1.1.0",
     "@popperjs/core": "^2.4.2",

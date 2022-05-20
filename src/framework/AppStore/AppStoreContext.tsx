@@ -164,7 +164,7 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
   const telemetry = useTelemetryInstance()
   useEffect(() => {
     if (userInfo?.data?.email && telemetry.initialized) {
-      telemetry.identify(userInfo?.data?.email)
+      telemetry.identify({ userId: userInfo?.data?.email })
     }
     updatePreferenceStore({ currentUserInfo: userInfo?.data })
     // eslint-disable-next-line react-hooks/exhaustive-deps

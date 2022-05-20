@@ -147,8 +147,8 @@ const processNodeImpl = (
   item: Partial<Values>,
   data: any,
   trackEvent: TrackEvent
-): StepElementConfig & TemplateStepNode => {
-  return produce(data.stepConfig.node as StepElementConfig & TemplateStepNode, node => {
+): StepElementConfig & TemplateStepNode & StepGroupElementConfig => {
+  return produce(data.stepConfig.node as StepElementConfig & TemplateStepNode & StepGroupElementConfig, node => {
     // Add/replace values only if they are presented
     addReplace(item, node)
 
@@ -161,8 +161,10 @@ const processNodeImpl = (
       }))
       telemetryData.length && trackEvent(StepActions.AddEditFailureStrategy, { data: JSON.stringify(telemetryData) })
     }
-    if (item.delegateSelectors && item.tab === TabTypes.Advanced) {
+    if (!data.stepConfig?.isStepGroup && item.delegateSelectors && item.tab === TabTypes.Advanced) {
       set(node, 'spec.delegateSelectors', item.delegateSelectors)
+    } else if (data.stepConfig?.isStepGroup && item.delegateSelectors && item.tab === TabTypes.Advanced) {
+      set(node, 'delegateSelectors', item.delegateSelectors)
     }
     if ((item as StepElementConfig)?.spec?.commandOptions && item.tab !== TabTypes.Advanced) {
       set(node, 'spec.commandOptions', (item as StepElementConfig)?.spec?.commandOptions)
@@ -175,11 +177,20 @@ const processNodeImpl = (
     if (node.failureStrategies && !item.failureStrategies && item.tab === TabTypes.Advanced)
       delete node.failureStrategies
     if (
+      !data.stepConfig?.isStepGroup &&
       node.spec?.delegateSelectors &&
       (!item.delegateSelectors || item.delegateSelectors?.length === 0) &&
       item.tab === TabTypes.Advanced
     ) {
       delete node.spec.delegateSelectors
+    }
+    if (
+      data.stepConfig?.isStepGroup &&
+      node.delegateSelectors &&
+      (!item.delegateSelectors || item.delegateSelectors?.length === 0) &&
+      item.tab === TabTypes.Advanced
+    ) {
+      delete node.delegateSelectors
     }
     if (
       node.spec?.commandOptions &&
