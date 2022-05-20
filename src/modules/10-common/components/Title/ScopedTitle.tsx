@@ -18,7 +18,7 @@ import { useStrings } from 'framework/strings'
 import { TitleWithToolTipId } from './TitleWithToolTipId'
 import css from './ScopedTitle.module.scss'
 
-interface TitleProps {
+export interface TitleProps {
   title: string | Record<Scope, string>
   overrideScope?: ScopedObjectDTO
   toolTipId?: string

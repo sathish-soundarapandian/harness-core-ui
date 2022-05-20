@@ -22,6 +22,7 @@ import type { ExtendedMonacoEditorProps } from '@common/components/MonacoEditor/
 import type { ExtendedMonacoDiffEditorProps } from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 import type { PageParams, TelemetryReturnType } from '@common/hooks/useTelemetry'
 import type { YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
+import type { TitleProps } from '@common/components/Title/ScopedTitle'
 import type { GitOpsCustomMicroFrontendProps } from '@cd/interfaces/GitOps.types'
 import type { STOAppCustomProps } from '@pipeline/interfaces/STOApp'
 import type { CCMUIAppCustomProps } from '@ce/interface/CCMUIApp.types'
@@ -40,6 +41,7 @@ export interface CommonComponents {
   RbacMenuItem: React.ComponentType<RbacMenuItemProps>
   MonacoEditor: React.ForwardRefExoticComponent<ExtendedMonacoEditorProps & React.RefAttributes<ReactMonacoEditor>>
   YAMLBuilder: React.FC<YamlBuilderProps>
+  ScopedTitle: React.FC<TitleProps>
   MonacoDiffEditor: React.ForwardRefExoticComponent<
     ExtendedMonacoDiffEditorProps & React.RefAttributes<MonacoDiffEditor>
   >
