@@ -115,7 +115,7 @@ describe('Test TestConnection component', () => {
 
     expect(onCloseFn).toBeCalled()
   })
-  test.only('Render component, throw error on testconnection', async () => {
+  test('Render component, throw error on testconnection', async () => {
     jest.spyOn(cdNg, 'useGetTestConnectionResult').mockImplementationOnce(
       () =>
         ({
