@@ -17,6 +17,40 @@
     height: 100%;
 
     .formContainer {
+      overflow: scroll;
+
+      .label {
+        padding-bottom: var(--spacing-small);
+        color: var(--grey-700);
+
+        &.cpLabel {
+          padding-bottom: 0;
+        }
+      }
+
+      .tagInput {
+        box-shadow: none;
+        border: 1px solid var(--grey-200);
+        border-radius: var(--spacing-2);
+        margin-bottom: var(--spacing-4);
+      }
+
+      .filterCard {
+        padding: var(--spacing-small) var(--spacing-medium) !important;
+        margin-bottom: var(--spacing-medium);
+        margin-top: var(--spacing-small);
+
+        .cpFilters {
+          border-left: 1px solid var(--grey-300);
+          padding-left: var(--spacing-medium);
+          margin-top: var(--spacing-medium);
+        }
+
+        &.expanded {
+          background-color: var(--primary-bg);
+        }
+      }
+
       .formHeader {
         padding-bottom: var(--spacing-small);
         border-bottom: 1px solid var(--grey-200);
@@ -65,6 +99,12 @@
 .popoverOption {
   cursor: pointer;
   padding: var(--spacing-medium) var(--spacing-large) !important;
+}
+
+.header {
+  padding: var(--spacing-medium) var(--spacing-large) !important;
+  border-bottom: 1px solid var(--grey-200);
+  background: var(--white) !important;
 }
 
 .pointer {

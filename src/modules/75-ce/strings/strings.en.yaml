@@ -944,6 +944,12 @@ anomalyDetection:
     groupByNoneValue: none
     groupByPerspectivePlaceholder: All Perspectives
     groupByCloudProvidersPlaceholder: All Cloud Providers
+    awsFilters: AWS Filters
+    clusterFilters: Cluster Filters
+    gcpFilters: GCP Filters
+    azureFilters: Azure Filters
+    actualSpend: Actual Spend
+    anomalousSpend: Anomalous Spend
   summary:
     totalCountText: Anomalies Detected
     costImpacted: Total Cost Impact

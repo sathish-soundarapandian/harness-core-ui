@@ -21,7 +21,7 @@ const cloudProviderToEntityMapping = {
   [CloudProvider.AZURE]: azureEntities
 }
 
-const fieldToFieldNameMapping: Record<string, string> = {
+export const fieldToFieldNameMapping: Record<string, string> = {
   gcpProduct: 'Product',
   gcpProjectId: 'Project',
   gcpSKUDescription: 'SKUs',
@@ -34,6 +34,30 @@ const fieldToFieldNameMapping: Record<string, string> = {
   awsUsageType: 'Usage Type',
   workloadType: 'Workload Type',
   gcpSkuDescription: 'SKUs'
+}
+
+export const filterKeyToKeyMapping: Record<string, string> = {
+  gcpproduct: 'gcpProduct',
+  gcpproject: 'gcpProjects',
+  gcpskudescription: 'gcpSKUDescriptions',
+  clustername: 'k8sClusterNames',
+  namespace: 'k8sNamespaces',
+  workloadname: 'k8sWorkloadNames',
+  awsaccount: 'awsAccounts',
+  awsservice: 'awsServices',
+  awsusagetype: 'awsUsageTypes'
+}
+
+export const filterKeyToLabelMapping: Record<string, string> = {
+  gcpproduct: 'GCP Product',
+  gcpproject: 'GCP Project',
+  gcpskudescription: 'GCP SKU Description',
+  clustername: 'Cluster Name',
+  namespace: 'Namespace',
+  workloadname: 'Workload',
+  awsaccount: 'AWS Account',
+  awsservice: 'AWS Service',
+  awsusagetype: 'AWS Usage Type'
 }
 
 export function generateFilters(

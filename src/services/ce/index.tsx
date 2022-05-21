@@ -3558,6 +3558,42 @@ export const useReportAnomalyFeedback = (props: UseReportAnomalyFeedbackProps) =
     { base: getConfig('ccm/api'), ...props }
   )
 
+export interface AnomalyFilterValuesQueryParams {
+  accountIdentifier: string
+}
+
+export type AnomalyFilterValuesProps = Omit<
+  MutateProps<ResponseListFilterStatsDTO, unknown, AnomalyFilterValuesQueryParams, string[], void>,
+  'path' | 'verb'
+>
+
+/**
+ * Filter Values available for given Anomaly-Filter fields
+ */
+export const AnomalyFilterValues = (props: AnomalyFilterValuesProps) => (
+  <Mutate<ResponseListFilterStatsDTO, unknown, AnomalyFilterValuesQueryParams, string[], void>
+    verb="POST"
+    path={`/anomaly/filter-values`}
+    base={getConfig('ccm/api')}
+    {...props}
+  />
+)
+
+export type UseAnomalyFilterValuesProps = Omit<
+  UseMutateProps<ResponseListFilterStatsDTO, unknown, AnomalyFilterValuesQueryParams, string[], void>,
+  'path' | 'verb'
+>
+
+/**
+ * Filter Values available for given Anomaly-Filter fields
+ */
+export const useAnomalyFilterValues = (props: UseAnomalyFilterValuesProps) =>
+  useMutate<ResponseListFilterStatsDTO, unknown, AnomalyFilterValuesQueryParams, string[], void>(
+    'POST',
+    `/anomaly/filter-values`,
+    { base: getConfig('ccm/api'), ...props }
+  )
+
 export interface ListPerspectiveAnomaliesQueryParams {
   accountIdentifier: string
 }

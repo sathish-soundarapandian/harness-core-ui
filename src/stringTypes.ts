@@ -3708,6 +3708,12 @@ export interface StringsMap {
   'ce.anomalyDetection.alertType': string
   'ce.anomalyDetection.checkLater': string
   'ce.anomalyDetection.createNewAnomalyAlert': string
+  'ce.anomalyDetection.filters.actualSpend': string
+  'ce.anomalyDetection.filters.anomalousSpend': string
+  'ce.anomalyDetection.filters.awsFilters': string
+  'ce.anomalyDetection.filters.azureFilters': string
+  'ce.anomalyDetection.filters.clusterFilters': string
+  'ce.anomalyDetection.filters.gcpFilters': string
   'ce.anomalyDetection.filters.groupByCloudProvidersPlaceholder': string
   'ce.anomalyDetection.filters.groupByNoneLabel': string
   'ce.anomalyDetection.filters.groupByNonePlaceholder': string

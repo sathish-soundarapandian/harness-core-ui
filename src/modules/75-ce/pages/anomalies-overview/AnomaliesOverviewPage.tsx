@@ -13,7 +13,16 @@ import { Drawer, Position } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { CcmMetaData, QlceViewTimeFilterOperator, useFetchCcmMetaDataQuery } from 'services/ce/services'
-import { AnomalyData, AnomalySummary, CCMStringFilter, useGetAnomalyWidgetsData, useListAnomalies } from 'services/ce'
+import {
+  AnomalyData,
+  AnomalyFilterProperties,
+  AnomalySummary,
+  CCMStringFilter,
+  FilterStatsDTO,
+  useAnomalyFilterValues,
+  useGetAnomalyWidgetsData,
+  useListAnomalies
+} from 'services/ce'
 import AnomaliesSummary from '@ce/components/AnomaliesSummary/AnomaliesSummary'
 import AnomalyFilters from '@ce/components/AnomaliesFilter/AnomaliesFilter'
 import AnomaliesListGridView from '@ce/components/AnomaliesListView/AnomaliesListView'
@@ -32,12 +41,12 @@ import AnomaliesSettings from '@ce/components/AnomaliesSettings/AnomaliesSetting
 import { PAGE_NAMES } from '@ce/TrackingEventsConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 
-const getFilters = (filters: Record<string, Record<string, string>>, searchText: string) => {
-  const updatedFilters = Object.values(filters).map(item => {
+const getFilters = (filters: AnomalyFilterProperties, searchText: string) => {
+  const updatedFilters = Object.keys(filters).map(item => {
     return {
-      field: item.field,
-      operator: item.operator,
-      values: [item.value]
+      field: item,
+      operator: 'IN',
+      values: filters[item as keyof AnomalyFilterProperties]
     }
   })
 
@@ -76,10 +85,11 @@ const AnomaliesOverviewPage: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
   const [listData, setListData] = useState<AnomalyData[] | null>(null)
   const [costData, setCostData] = useState<AnomalySummary | null>(null)
+  const [filterValues, setFilterValues] = useState<FilterStatsDTO[] | null>(null)
   const [perspectiveAnomaliesData, setPerspectiveANomaliesData] = useState([])
   const [cloudProvidersWiseData, setCloudProvidersWiseData] = useState([])
   const [statusWiseData, setStatusWiseData] = useState([])
-  const [filters, setFilters] = useState({})
+  const [filters, setFilters] = useQueryParamsState<AnomalyFilterProperties>('filters', {})
   const { trackEvent } = useTelemetry()
 
   const [timeRange, setTimeRange] = useQueryParamsState<TimeRangeFilterType>('timeRange', {
@@ -122,49 +132,24 @@ const AnomaliesOverviewPage: React.FC = () => {
     }
   })
 
+  const { mutate: getAnomalyFilters, loading: isFilterDataFetching } = useAnomalyFilterValues({
+    queryParams: {
+      accountIdentifier: accountId
+    }
+  })
+
   // Fetch the default workload ID's for redirections
   const [ccmMetaResult] = useFetchCcmMetaDataQuery()
   const { data: ccmData, fetching: isFetchingCcmMetaData } = ccmMetaResult
-
-  /* istanbul ignore next */
-  const setAnomaliesFilters = (fieldName: string, operator: string, value: string) => {
-    if (value) {
-      setFilters(prevFilters => {
-        return {
-          ...prevFilters,
-          [fieldName]: {
-            field: fieldName,
-            operator,
-            value
-          }
-        }
-      })
-    } else {
-      setFilters(prevFilters => {
-        const updatedFilters = { ...prevFilters }
-        delete updatedFilters[fieldName as keyof typeof updatedFilters]
-        return updatedFilters
-      })
-    }
-  }
 
   useEffect(() => {
     const getList = async () => {
       try {
         const response = await getAnomaliesList({
-          filter: {
-            stringFilters: getFilters(filters, searchText) as CCMStringFilter[],
-            timeFilters: getTimeFilters(getGMTStartDateTime(timeRange.from), getGMTEndDateTime(timeRange.to))
-          },
-          groupBy: [],
-          orderBy: [
-            {
-              field: sortByObj.sort || 'ACTUAL_COST',
-              order: sortByObj.order === 'ASC' ? 'ASCENDING' : 'DESCENDING'
-            }
-          ],
+          timeFilters: getTimeFilters(getGMTStartDateTime(timeRange.from), getGMTEndDateTime(timeRange.to)),
           limit: 100,
-          offset: 0
+          offset: 0,
+          ...filters
         })
         setListData(response?.data as AnomalyData[])
       } catch (error) {
@@ -173,16 +158,14 @@ const AnomaliesOverviewPage: React.FC = () => {
     }
 
     getList()
-  }, [filters, sortByObj, getAnomaliesList, searchText, timeRange.from, timeRange.to])
+  }, [JSON.stringify(filters), sortByObj, getAnomaliesList, searchText, timeRange.from, timeRange.to])
 
   useEffect(() => {
     const getSummary = async () => {
       try {
         const response = await getAnomalySummary({
-          filter: {
-            stringFilters: getFilters(filters, searchText) as CCMStringFilter[],
-            timeFilters: getTimeFilters(getGMTStartDateTime(timeRange.from), getGMTEndDateTime(timeRange.to))
-          }
+          timeFilters: getTimeFilters(getGMTStartDateTime(timeRange.from), getGMTEndDateTime(timeRange.to)),
+          ...filters
         })
         const { data } = response
         parseSummaryData(data)
@@ -191,7 +174,31 @@ const AnomaliesOverviewPage: React.FC = () => {
       }
     }
     getSummary()
-  }, [filters, getAnomalySummary, searchText, timeRange.from, timeRange.to])
+  }, [JSON.stringify(filters), getAnomalySummary, searchText, timeRange.from, timeRange.to])
+
+  useEffect(() => {
+    const getList = async () => {
+      try {
+        const response = await getAnomalyFilters([
+          'clustername',
+          'namespace',
+          'workloadname',
+          'gcpproject',
+          'gcpproduct',
+          'gcpskudescription',
+          'awsaccount',
+          'awsservice',
+          'awsusagetype'
+        ])
+
+        setFilterValues(response.data as FilterStatsDTO[])
+      } catch (error) {
+        // console.log('AnomaliesOverviewPage: Error in fetching the anomalies list', error)
+      }
+    }
+
+    getList()
+  }, [])
 
   useEffect(() => {
     if (listData && costData) {
@@ -256,7 +263,9 @@ const AnomaliesOverviewPage: React.FC = () => {
       />
       <AnomalyFilters
         filters={filters}
-        setFilters={setAnomaliesFilters}
+        setFilters={setFilters}
+        fetching={isFilterDataFetching}
+        fetchedFilterValues={filterValues}
         timeRange={timeRange}
         setTimeRange={setTimeRange}
       />

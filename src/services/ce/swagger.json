@@ -137,6 +137,43 @@
         }
       }
     },
+    "/anomaly/filter-values": {
+      "post": {
+        "tags": ["anomaly"],
+        "summary": "Filter Values available for given Anomaly-Filter fields",
+        "description": "",
+        "operationId": "anomalyFilterValues",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListFilterStatsDTO"
+            }
+          }
+        }
+      }
+    },
     "/anomaly/feedback": {
       "put": {
         "tags": ["anomaly"],

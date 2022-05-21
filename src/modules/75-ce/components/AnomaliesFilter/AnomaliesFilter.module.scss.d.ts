@@ -7,11 +7,17 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly cpFilters: string
+  readonly cpLabel: string
   readonly drawerContent: string
   readonly exitIcon: string
+  readonly expanded: string
+  readonly filterCard: string
   readonly filterDrawer: string
   readonly formContainer: string
   readonly formHeader: string
+  readonly header: string
+  readonly label: string
   readonly multiSelect: string
   readonly newFilterBtn: string
   readonly pointer: string
@@ -20,5 +26,6 @@ declare const styles: {
   readonly saveFilterContainer: string
   readonly savedFilter: string
   readonly selected: string
+  readonly tagInput: string
 }
 export default styles
