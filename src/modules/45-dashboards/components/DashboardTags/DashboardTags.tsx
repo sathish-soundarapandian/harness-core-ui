@@ -6,11 +6,8 @@
  */
 
 import React from 'react'
-
 import { Container } from '@harness/uicore'
-
 import { useStrings } from 'framework/strings'
-
 import { DashboardTag, DashboardType, IDashboard } from '@dashboards/types/DashboardTypes'
 import moduleTagCss from '@dashboards/common/ModuleTags.module.scss'
 
@@ -23,35 +20,60 @@ const DashboardTags: React.FC<DashboardTagProps> = ({ dashboard }) => {
   return (
     <Container className={moduleTagCss.predefinedTags}>
       {dashboard?.type === DashboardType.SHARED && (
-        <section className={moduleTagCss.harnessTag}>{getString('dashboards.modules.harness')}</section>
+        <section key={`harness-tag-${dashboard.id}`} className={moduleTagCss.harnessTag}>
+          {getString('dashboards.modules.harness')}
+        </section>
       )}
       {dashboard?.data_source.map((tag: DashboardTag | string) => {
         if (tag === DashboardTag.CE) {
-          return <section className={moduleTagCss.ceTag}>{getString('common.purpose.ce.cloudCost')}</section>
+          return (
+            <section key={`tag-${DashboardTag.CE.toLowerCase()}-${dashboard.id}`} className={moduleTagCss.ceTag}>
+              {getString('common.purpose.ce.cloudCost')}
+            </section>
+          )
         }
         if (tag === DashboardTag.CI) {
-          return <section className={moduleTagCss.ciTag}>{getString('buildsText')}</section>
+          return (
+            <section key={`tag-${DashboardTag.CI.toLowerCase()}-${dashboard.id}`} className={moduleTagCss.ciTag}>
+              {getString('buildsText')}
+            </section>
+          )
         }
         if (tag === DashboardTag.CD) {
-          return <section className={moduleTagCss.cdTag}>{getString('deploymentsText')}</section>
+          return (
+            <section key={`tag-${DashboardTag.CD.toLowerCase()}-${dashboard.id}`} className={moduleTagCss.cdTag}>
+              {getString('deploymentsText')}
+            </section>
+          )
         }
         if (tag === DashboardTag.CF) {
-          return <section className={moduleTagCss.cfTag}>{getString('common.purpose.cf.continuous')}</section>
+          return (
+            <section key={`tag-${DashboardTag.CF.toLowerCase()}-${dashboard.id}`} className={moduleTagCss.cfTag}>
+              {getString('common.purpose.cf.continuous')}
+            </section>
+          )
         }
         if (tag === DashboardTag.CG_CD) {
-          return <section className={moduleTagCss.cgCdTag}>{getString('dashboards.modules.cgDeployments')}</section>
+          return (
+            <section key={`tag-${DashboardTag.CG_CD.toLowerCase()}-${dashboard.id}`} className={moduleTagCss.cgCdTag}>
+              {getString('dashboards.modules.cgDeployments')}
+            </section>
+          )
         }
         return <></>
       })}
       {dashboard?.description &&
         dashboard.type === DashboardType.ACCOUNT &&
-        dashboard?.description.split(',').map((tag: string, index: number) => {
-          return (
-            <section className={moduleTagCss.customTag} key={tag + index}>
-              {tag}
-            </section>
-          )
-        })}
+        dashboard?.description
+          .split(',')
+          .filter((tag: string) => !!tag)
+          .map((tag: string) => {
+            return (
+              <section className={moduleTagCss.customTag} key={`custom-tag-${tag.toLowerCase()}-${dashboard.id}`}>
+                {tag}
+              </section>
+            )
+          })}
     </Container>
   )
 }

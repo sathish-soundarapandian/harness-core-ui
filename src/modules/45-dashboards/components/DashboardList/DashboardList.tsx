@@ -22,7 +22,7 @@ import css from '@dashboards/pages/home/HomePage.module.scss'
 
 export interface DashboardListProps {
   dashboards: IDashboard[]
-  cloneDashboard: (dashboardId: string) => void
+  cloneDashboard: (dashboard: IDashboard) => void
   deleteDashboard: (dashboardId: string) => void
   editDashboard: (dashboard: IDashboard) => void
 }
@@ -83,7 +83,7 @@ const DashboardList: React.FC<DashboardListProps> = ({
             <RbacMenuItem
               icon="duplicate"
               text={getString('projectCard.clone')}
-              onClick={() => cloneDashboard(data.id)}
+              onClick={() => cloneDashboard(data)}
               permission={{
                 permission: PermissionIdentifier.EDIT_DASHBOARD,
                 resource: {

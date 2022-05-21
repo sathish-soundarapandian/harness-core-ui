@@ -15,7 +15,6 @@ import Dashboards, { DashboardsProps } from '../Dashboards'
 
 const defaultProps: DashboardsProps = {
   dashboards: [],
-  cloneDashboard: jest.fn(),
   deleteDashboard: jest.fn(),
   triggerRefresh: jest.fn(),
   view: DashboardLayoutViews.GRID
@@ -152,16 +151,17 @@ describe('Dashboards', () => {
     expect(mockCallback).toHaveBeenCalled()
   })
 
-  test('it should trigger clone callback when cloneDashboard triggered', () => {
-    const mockCallback = jest.fn()
+  test('it should trigger clone callback when cloneDashboard triggered', async () => {
+    jest
+      .spyOn(customDashboardServices, 'useGetFolder')
+      .mockImplementation(() => ({ data: mockEmptyGetFolderResponse, loading: false } as any))
     const testDashboard: IDashboard = {
       ...defaultTestDashboard,
       type: DashboardType.ACCOUNT
     }
     const testProps: DashboardsProps = {
       ...defaultProps,
-      dashboards: [testDashboard],
-      cloneDashboard: mockCallback
+      dashboards: [testDashboard]
     }
     renderComponent(testProps)
 
@@ -175,6 +175,7 @@ describe('Dashboards', () => {
       fireEvent.click(cloneButton)
     })
 
-    expect(mockCallback).toHaveBeenCalled()
+    const cloneFormTitle: StringKeys = 'dashboards.cloneDashboardModal.title'
+    await waitFor(() => expect(screen.getByText(cloneFormTitle)).toBeInTheDocument())
   })
 })

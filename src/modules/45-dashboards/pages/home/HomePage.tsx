@@ -24,7 +24,7 @@ import { Color } from '@harness/design-system'
 import { Select } from '@blueprintjs/select'
 
 import { Menu } from '@blueprintjs/core'
-import { useHistory, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useGet } from 'restful-react'
 
 import { Page } from '@common/exports'
@@ -37,7 +37,7 @@ import routes from '@common/RouteDefinitions'
 
 import { DashboardLayoutViews } from '@dashboards/types/DashboardTypes'
 import { useStrings } from 'framework/strings'
-import { useCloneDashboard, useDeleteDashboard } from '@dashboards/services/CustomDashboardsService'
+import { useDeleteDashboard } from '@dashboards/services/CustomDashboardsService'
 import Dashboards from './Dashboards'
 import { useDashboardsContext } from '../DashboardsContext'
 import FilterTagsSideBar from './FilterTagsSideBar'
@@ -89,7 +89,6 @@ const getBreadcrumbLinks = (
 
 const HomePage: React.FC = () => {
   const { getString } = useStrings()
-  const history = useHistory()
   const { accountId, folderId } = useParams<{ accountId: string; folderId: string }>()
 
   const { includeBreadcrumbs } = useDashboardsContext()
@@ -174,8 +173,6 @@ const HomePage: React.FC = () => {
     queryParams: { accountId: accountId, folderId: folderIdOrBlank() }
   })
 
-  const { mutate: cloneDashboard, loading: cloning } = useCloneDashboard(accountId)
-
   const { mutate: deleteDashboard, loading: deleting } = useDeleteDashboard(accountId)
 
   React.useEffect(() => {
@@ -212,20 +209,6 @@ const HomePage: React.FC = () => {
     includeBreadcrumbs(getBreadcrumbLinks(folderDetail, accountId, folderId, getString('dashboards.homePage.folders')))
   }, [folderDetail, accountId, folderId])
 
-  const onCloneDashboard = (dashboardId: string): void => {
-    cloneDashboard({ dashboardId }).then(clonedDashboard => {
-      if (clonedDashboard) {
-        history.push({
-          pathname: routes.toViewCustomDashboard({
-            viewId: clonedDashboard.id,
-            accountId: accountId,
-            folderId: clonedDashboard.folder_id
-          })
-        })
-      }
-    })
-  }
-
   const onDeleteDashboard = (dashboardId: string): void => {
     deleteDashboard({ dashboardId }).then(() => {
       refetchDashboards()
@@ -233,7 +216,7 @@ const HomePage: React.FC = () => {
   }
 
   return (
-    <Page.Body loading={loading || cloning || deleting} error={error?.data?.message}>
+    <Page.Body loading={loading || deleting} error={error?.data?.message}>
       <Layout.Horizontal>
         <Layout.Horizontal
           padding="large"
@@ -344,7 +327,6 @@ const HomePage: React.FC = () => {
         <Dashboards
           dashboards={dashboardList}
           loading={loading}
-          cloneDashboard={onCloneDashboard}
           deleteDashboard={onDeleteDashboard}
           triggerRefresh={refetchDashboards}
           view={layoutView}

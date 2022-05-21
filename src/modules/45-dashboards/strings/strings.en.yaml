@@ -43,6 +43,10 @@ editModal:
   editDashboard: 'Edit Dashboard'
   submitFail: 'Edit dashboard failed, Please try again.'
   success: 'Successfully updated the dashboard'
+cloneDashboardModal:
+  title: 'Clone Dashboard'
+  submitFail: 'Clone dashboard failed, Please try again.'
+  success: 'Successfully cloned the dashboard'
 folderForm:
   stepOne: 'About the Folder'
   folderPlaceholder: 'Name your folder'

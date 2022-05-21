@@ -20,8 +20,8 @@ import { ProvisionerTypes } from '../Common/ProvisionerConstants'
 import css from './InfraProvisioning.module.scss'
 
 interface ProvDialogProps {
-  onSubmit: any
-  onClose: any
+  onSubmit: (data: any) => void
+  onClose: () => void
   hideModal: () => void
   provData: any
 }
@@ -35,7 +35,7 @@ const ProvDialog = ({ onClose, hideModal, provData, onSubmit }: ProvDialogProps)
     canEscapeKeyClose: true,
     canOutsideClickClose: true
   }
-  const provisionerTypes: { name: string; icon: IconName; iconColor?: string; enabled: boolean }[] = [
+  const provisionerTypes: { name: ProvisionerTypes; icon: IconName; iconColor?: string; enabled: boolean }[] = [
     {
       name: ProvisionerTypes.Terraform,
       icon: 'terraform-apply-new',

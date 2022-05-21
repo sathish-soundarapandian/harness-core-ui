@@ -39,6 +39,7 @@ import { ServerlessAzureSpec } from './ServerlessAzure/ServerlessAzureSpec'
 import { ServerlessGCPSpec } from './ServerlessGCP/ServerlessGCPSpec'
 import { ServerlessAwsLambdaServiceSpec } from './ServerlessAwsLambdaServiceSpec/ServerlessAwsLambdaServiceSpec'
 import { CFRollbackStack } from './CloudFormation/RollbackStack/RollbackStack'
+import { CFDeleteStack } from './CloudFormation/DeleteStack/DeleteStack'
 
 factory.registerStep(new HttpStep())
 factory.registerStep(new K8RolloutDeployStep())
@@ -72,3 +73,4 @@ factory.registerStep(new ServerlessLambdaDeployStep())
 factory.registerStep(new ServerlessLambdaRollbackStep())
 factory.registerStep(new AzureInfrastructureSpec())
 factory.registerStep(new CFRollbackStack())
+factory.registerStep(new CFDeleteStack())

@@ -235,27 +235,33 @@ const AnomaliesListGridView: React.FC<ListProps> = ({
 
   const CostCell: Renderer<CellProps<AnomalyData>> = ({ row }) => {
     const actualAmount = row.original.anomalousSpend as number
+
+    return (
+      <Text font={{ variation: FontVariation.BODY2 }} color={Color.BLACK}>
+        {formatCost(actualAmount)}
+      </Text>
+    )
+  }
+
+  const VariantCell: Renderer<CellProps<AnomalyData>> = ({ row }) => {
     const trend = row.original.anomalousSpendPercentage
 
     return (
-      <Layout.Horizontal style={{ alignItems: 'baseline' }} spacing="small">
-        <Text font={{ variation: FontVariation.BODY2 }} color={Color.BLACK}>
-          {formatCost(actualAmount)}
-        </Text>
+      <>
         {trend ? (
-          <Text font={{ variation: FontVariation.TINY }} color={Color.RED_600}>
+          <Text font={{ variation: FontVariation.BODY }} color={Color.RED_600}>
             {getString('ce.anomalyDetection.trend', {
               trend: trend
             })}
           </Text>
         ) : (
           <Text
-            font={{ variation: FontVariation.TINY }}
+            font={{ variation: FontVariation.BODY }}
             color={Color.GREY_500}
             tooltipProps={{ dataTooltipId: 'trendNotApplicable' }}
           >{`(${getString('na')})`}</Text>
         )}
-      </Layout.Horizontal>
+      </>
     )
   }
 
@@ -314,22 +320,6 @@ const AnomaliesListGridView: React.FC<ListProps> = ({
     )
   }
 
-  const StatusCell: Renderer<CellProps<AnomalyData>> = ({ row }) => {
-    const status = row.original.status
-    const stausRelativeTime = row.original.statusRelativeTime
-
-    return (
-      <Layout.Vertical spacing="small">
-        <Text font={{ variation: FontVariation.BODY }} color={Color.ORANGE_700}>
-          {status}
-        </Text>
-        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
-          {stausRelativeTime}
-        </Text>
-      </Layout.Vertical>
-    )
-  }
-
   const MenuCell: Renderer<CellProps<AnomalyData>> = ({ row }) => {
     return <AnomaliesMenu anomalyId={row.original.id || /* istanbul ignore next */ ''} />
   }
@@ -380,6 +370,16 @@ const AnomaliesListGridView: React.FC<ListProps> = ({
       },
       {
         Header: (
+          <Text font={{ variation: FontVariation.TABLE_HEADERS }} tooltipProps={{ dataTooltipId: 'anomalousVariant' }}>
+            {getString('ce.anomalyDetection.tableHeaders.anomalousVariant')}
+          </Text>
+        ),
+        accessor: 'anomalousSpendPercentage',
+        Cell: VariantCell,
+        width: '20%'
+      },
+      {
+        Header: (
           <Text font={{ variation: FontVariation.TABLE_HEADERS }} tooltipProps={{ dataTooltipId: 'anomalyResource' }}>
             {getString('ce.anomalyDetection.tableHeaders.resource')}
           </Text>
@@ -387,22 +387,6 @@ const AnomaliesListGridView: React.FC<ListProps> = ({
         accessor: 'resourceName',
         Cell: ResourceCell,
         width: '35%'
-      },
-      {
-        Header: (
-          <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
-            {getString('ce.anomalyDetection.tableHeaders.status')}
-          </Text>
-        ),
-        accessor: 'status',
-        Cell: StatusCell,
-        width: '20%',
-        serverSortProps: getServerSortProps({
-          enableServerSort: true,
-          accessor: 'STATUS',
-          sortByObj,
-          setSortByObj
-        })
       },
       {
         Header: ' ',

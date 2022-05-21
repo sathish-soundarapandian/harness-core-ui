@@ -123,6 +123,7 @@ const AnomaliesSummary: React.FC<AnomaliesOverviewProps> = ({
               data={perspectiveWiseChartData.slice(0, LEGEND_LIMIT)}
               type={ListType.KEY_VALUE}
               classNames={css.rowGap8}
+              showCount={false}
             />
           }
           strokeSize={'65%'}

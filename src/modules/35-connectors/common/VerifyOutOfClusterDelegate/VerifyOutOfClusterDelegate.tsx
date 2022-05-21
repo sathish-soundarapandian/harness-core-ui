@@ -232,6 +232,8 @@ const VerifyOutOfClusterDelegate: React.FC<StepProps<VerifyOutOfClusterStepProps
           return 'https://ngdocs.harness.io/article/s65mzbyags-add-hashicorp-vault#permissions'
         case Connectors.AWS_KMS:
           return 'https://ngdocs.harness.io/article/pt52h8sb6z-add-an-aws-kms-secrets-manager'
+        case Connectors.AZURE:
+          return 'https://ngdocs.harness.io/article/9epdx5m9ae'
         default:
           return ''
       }

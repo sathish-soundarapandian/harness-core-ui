@@ -286,7 +286,7 @@ exports[`RDS DB Selector Modal should fill in region display list of databases 1
                   style="position: absolute; top: 0px; left: 0px; opacity: 0; pointer-events: none;"
                 >
                   <div
-                    class="bp3-popover bp3-minimal bp3-select-popover"
+                    class="bp3-popover bp3-minimal bp3-select-popover Select--popover"
                   >
                     <div
                       class="bp3-popover-content"

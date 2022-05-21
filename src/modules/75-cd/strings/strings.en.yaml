@@ -243,6 +243,7 @@ cloudFormation:
   awsURL: S3 URL
   errors:
     region: AWS Region is required
+    role: Role ARN required
     stackName: Stack Name is required
     name: Name cannot be empty
     value: Value cannot be empty

@@ -35,3 +35,10 @@ export enum DashboardLayoutViews {
   LIST,
   GRID
 }
+
+export interface IDashboardFormData {
+  id: string
+  resourceIdentifier: string
+  title: string
+  description: string
+}

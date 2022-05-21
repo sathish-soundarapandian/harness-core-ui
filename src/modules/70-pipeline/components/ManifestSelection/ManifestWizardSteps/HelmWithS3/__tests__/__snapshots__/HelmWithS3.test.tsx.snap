@@ -1019,35 +1019,6 @@ exports[`helm with S3 tests bucketname is null 1`] = `
                           </span>
                         </div>
                       </div>
-                      <div
-                        class="bp3-overlay bp3-overlay-open bp3-overlay-inline"
-                      >
-                        <div
-                          class="bp3-transition-container bp3-popover-appear bp3-popover-appear-active"
-                          style="position: absolute; top: 0px; left: 0px; opacity: 0; pointer-events: none;"
-                        >
-                          <div
-                            class="bp3-popover bp3-minimal bp3-select-popover"
-                          >
-                            <div
-                              class="bp3-popover-content"
-                            >
-                              <div>
-                                <ul
-                                  class="bp3-menu"
-                                >
-                                  <p
-                                    class="StyledProps--font Text--lineclamp StyledProps--main"
-                                    style="--text-line-clamp: 1;"
-                                  >
-                                    pipeline.noBuckets
-                                  </p>
-                                </ul>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
                     </div>
                     <span
                       class="bp3-popover-wrapper MultiTypeInput--wrapper"

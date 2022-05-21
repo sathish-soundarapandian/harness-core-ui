@@ -309,7 +309,7 @@ exports[`Auto stopping Rule creation Tests Advanced configuration section should
                 <span
                   class="bp3-button-text"
                 >
-                   Add dependency
+                  ce.co.gatewayConfig.addDependency
                 </span>
               </button>
             </div>
@@ -1037,7 +1037,7 @@ exports[`Auto stopping Rule creation Tests Config screen renders without crashin
                       <span
                         class="bp3-button-text"
                       >
-                         Add dependency
+                        ce.co.gatewayConfig.addDependency
                       </span>
                     </button>
                   </div>
@@ -1821,7 +1821,7 @@ exports[`Auto stopping Rule creation Tests Fill remaining form for INSTANCES 1`]
                       <span
                         class="bp3-button-text"
                       >
-                         Add dependency
+                        ce.co.gatewayConfig.addDependency
                       </span>
                     </button>
                   </div>
@@ -2587,7 +2587,7 @@ exports[`Auto stopping Rule creation Tests fill remaining form for ASGs 1`] = `
                       <span
                         class="bp3-button-text"
                       >
-                         Add dependency
+                        ce.co.gatewayConfig.addDependency
                       </span>
                     </button>
                   </div>
@@ -3353,7 +3353,7 @@ exports[`Auto stopping Rule creation Tests fill remaining form for ASGs 2`] = `
                       <span
                         class="bp3-button-text"
                       >
-                         Add dependency
+                        ce.co.gatewayConfig.addDependency
                       </span>
                     </button>
                   </div>
@@ -3855,7 +3855,7 @@ exports[`Auto stopping Rule creation Tests kubernestes config edit 1`] = `
                       <span
                         class="bp3-button-text"
                       >
-                         Add dependency
+                        ce.co.gatewayConfig.addDependency
                       </span>
                     </button>
                   </div>

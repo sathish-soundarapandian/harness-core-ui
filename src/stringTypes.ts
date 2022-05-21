@@ -2232,6 +2232,9 @@ export interface StringsMap {
   'gitsync.syncFailed': string
   'gitsync.syncStatus': string
   'gitsync.syncSucessToaster': string
+  'dashboards.cloneDashboardModal.submitFail': string
+  'dashboards.cloneDashboardModal.success': string
+  'dashboards.cloneDashboardModal.title': string
   'dashboards.createFolder.folderSubmitFail': string
   'dashboards.createModal.dataSource': string
   'dashboards.createModal.descriptionPlaceholder': string
@@ -3512,6 +3515,7 @@ export interface StringsMap {
   'cd.cloudFormation.errors.getParam': string
   'cd.cloudFormation.errors.name': string
   'cd.cloudFormation.errors.region': string
+  'cd.cloudFormation.errors.role': string
   'cd.cloudFormation.errors.stackName': string
   'cd.cloudFormation.errors.templateBody': string
   'cd.cloudFormation.errors.value': string
@@ -3746,6 +3750,7 @@ export interface StringsMap {
   'ce.anomalyDetection.summary.statusWise': string
   'ce.anomalyDetection.summary.totalCountText': string
   'ce.anomalyDetection.tableHeaders.anomalousSpend': string
+  'ce.anomalyDetection.tableHeaders.anomalousVariant': string
   'ce.anomalyDetection.tableHeaders.date': string
   'ce.anomalyDetection.tableHeaders.details': string
   'ce.anomalyDetection.tableHeaders.resource': string
@@ -4102,6 +4107,7 @@ export interface StringsMap {
   'ce.co.gatewayConfig.healthCheck': string
   'ce.co.gatewayConfig.healthCheckDescription': string
   'ce.co.gatewayConfig.info': string
+  'ce.co.gatewayConfig.invalidInputError': string
   'ce.co.gatewayConfig.k8sroutingDescription': string
   'ce.co.gatewayConfig.name': string
   'ce.co.gatewayConfig.routingDescription': string

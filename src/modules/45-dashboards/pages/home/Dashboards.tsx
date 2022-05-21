@@ -14,13 +14,13 @@ import { useStrings } from 'framework/strings'
 import DashboardCard from '@dashboards/components/DashboardCard/DashboardCard'
 import { DashboardLayoutViews, IDashboard } from '@dashboards/types/DashboardTypes'
 import DashboardList from '@dashboards/components/DashboardList/DashboardList'
+import CloneDashboardForm from './CloneDashboardForm'
 import UpdateDashboardForm from './UpdateDashboardForm'
 import css from './HomePage.module.scss'
 
 export interface DashboardsProps {
   dashboards: IDashboard[]
   loading?: boolean
-  cloneDashboard: (dashboardId: string) => void
   deleteDashboard: (dashboardId: string) => void
   triggerRefresh: () => void
   view: DashboardLayoutViews
@@ -29,12 +29,20 @@ export interface DashboardsProps {
 const Dashboards: React.FC<DashboardsProps> = ({
   dashboards,
   loading,
-  cloneDashboard,
   deleteDashboard,
   triggerRefresh,
   view
 }): React.ReactElement => {
   const [selectedDashboard, setSelectedDashboard] = useState<IDashboard>()
+
+  const [showCloneModal, hideCloneModal] = useModalHook(
+    () => (
+      <Dialog isOpen={true} enforceFocus={false} onClose={hideCloneModal} className={cx(css.dashboardDialog)}>
+        <CloneDashboardForm formData={selectedDashboard} hideModal={hideCloneModal} reloadDashboards={triggerRefresh} />
+      </Dialog>
+    ),
+    [selectedDashboard]
+  )
 
   const [showEditModal, hideEditModal] = useModalHook(
     () => (
@@ -46,6 +54,11 @@ const Dashboards: React.FC<DashboardsProps> = ({
   )
 
   const { getString } = useStrings()
+
+  const cloneDashboard = (dashboard: IDashboard): void => {
+    setSelectedDashboard(dashboard)
+    showCloneModal()
+  }
 
   const editDashboard = (dashboard: IDashboard): void => {
     setSelectedDashboard(dashboard)

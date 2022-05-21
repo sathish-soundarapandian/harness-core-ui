@@ -1798,7 +1798,7 @@ exports[`Test GatewayDetails renders review screen 2`] = `
                               <span
                                 class="bp3-button-text"
                               >
-                                 Add dependency
+                                ce.co.gatewayConfig.addDependency
                               </span>
                             </button>
                           </div>
@@ -3619,7 +3619,7 @@ exports[`Test GatewayDetails renders setup access screen and move to previous st
                               <span
                                 class="bp3-button-text"
                               >
-                                 Add dependency
+                                ce.co.gatewayConfig.addDependency
                               </span>
                             </button>
                           </div>
@@ -4710,7 +4710,7 @@ exports[`Test GatewayDetails renders without crashing 1`] = `
                               <span
                                 class="bp3-button-text"
                               >
-                                 Add dependency
+                                ce.co.gatewayConfig.addDependency
                               </span>
                             </button>
                           </div>

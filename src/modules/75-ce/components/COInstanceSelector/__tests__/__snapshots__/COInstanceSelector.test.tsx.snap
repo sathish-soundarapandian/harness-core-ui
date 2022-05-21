@@ -1437,7 +1437,7 @@ exports[`Instance Selector Modal search and select/unselect instances successful
                   style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(NaNpx, NaNpx, 0);"
                 >
                   <div
-                    class="bp3-popover bp3-minimal bp3-select-popover"
+                    class="bp3-popover bp3-minimal bp3-select-popover Select--popover"
                     style="transform-origin: center top;"
                   >
                     <div
@@ -2046,7 +2046,7 @@ exports[`Instance Selector Modal should show data 1`] = `
                   style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(NaNpx, NaNpx, 0);"
                 >
                   <div
-                    class="bp3-popover bp3-minimal bp3-select-popover"
+                    class="bp3-popover bp3-minimal bp3-select-popover Select--popover"
                     style="transform-origin: center top;"
                   >
                     <div
@@ -2893,7 +2893,7 @@ exports[`Instance Selector Modal should show message when data is empty for sele
                   style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(NaNpx, NaNpx, 0);"
                 >
                   <div
-                    class="bp3-popover bp3-minimal bp3-select-popover"
+                    class="bp3-popover bp3-minimal bp3-select-popover Select--popover"
                     style="transform-origin: center top;"
                   >
                     <div

@@ -26,7 +26,7 @@ import moduleTagCss from '@dashboards/common/ModuleTags.module.scss'
 
 export interface DashboardCardProps {
   dashboard: IDashboard
-  cloneDashboard: (dashboardId: string) => void
+  cloneDashboard: (dashboard: IDashboard) => void
   deleteDashboard: (dashboardId: string) => void
   editDashboard: (dashboard: IDashboard) => void
 }
@@ -49,7 +49,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
   const onCloneClick = (event: React.MouseEvent<HTMLElement>): void => {
     event.stopPropagation()
     setMenuOpen(false)
-    cloneDashboard(dashboard.id)
+    cloneDashboard(dashboard)
   }
 
   const onDeleteClick = (event: React.MouseEvent<HTMLElement>): void => {

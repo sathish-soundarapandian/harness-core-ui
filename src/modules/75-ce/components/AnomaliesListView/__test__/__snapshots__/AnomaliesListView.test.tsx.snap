@@ -91,6 +91,27 @@ exports[`test case for anomalies detection overview page should be able to rende
         class="TableV2--cell"
         colspan="1"
         role="columnheader"
+        style="width: 20%;"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+        >
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="anomalousVariant"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+            >
+              ce.anomalyDetection.tableHeaders.anomalousVariant
+            </p>
+          </div>
+        </p>
+      </div>
+      <div
+        class="TableV2--cell"
+        colspan="1"
+        role="columnheader"
         style="width: 35%;"
       >
         <p
@@ -106,22 +127,6 @@ exports[`test case for anomalies detection overview page should be able to rende
               ce.anomalyDetection.tableHeaders.resource
             </p>
           </div>
-        </p>
-      </div>
-      <div
-        class="TableV2--cell"
-        colspan="1"
-        role="columnheader"
-        style="width: 20%;"
-      >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-        >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-          >
-            ce.anomalyDetection.tableHeaders.status
-          </p>
         </p>
       </div>
       <div
@@ -169,21 +174,22 @@ exports[`test case for anomalies detection overview page should be able to rende
           role="cell"
           style="width: 20%;"
         >
-          <div
-            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-            style="align-items: baseline;"
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-body2 StyledProps--color StyledProps--color-black"
           >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2 StyledProps--color StyledProps--color-black"
-            >
-              
-            </p>
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny StyledProps--color StyledProps--color-red600"
-            >
-              ce.anomalyDetection.trend
-            </p>
-          </div>
+            
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          role="cell"
+          style="width: 20%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-red600"
+          >
+            ce.anomalyDetection.trend
+          </p>
         </div>
         <div
           class="TableV2--cell"
@@ -250,26 +256,6 @@ exports[`test case for anomalies detection overview page should be able to rende
         <div
           class="TableV2--cell"
           role="cell"
-          style="width: 20%;"
-        >
-          <div
-            class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-orange700"
-            >
-              Open
-            </p>
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey600"
-            >
-              6 days ago
-            </p>
-          </div>
-        </div>
-        <div
-          class="TableV2--cell"
-          role="cell"
           style="width: 5%;"
         >
           <span
@@ -335,21 +321,22 @@ exports[`test case for anomalies detection overview page should be able to rende
           role="cell"
           style="width: 20%;"
         >
-          <div
-            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-            style="align-items: baseline;"
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-body2 StyledProps--color StyledProps--color-black"
           >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2 StyledProps--color StyledProps--color-black"
-            >
-              
-            </p>
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny StyledProps--color StyledProps--color-red600"
-            >
-              ce.anomalyDetection.trend
-            </p>
-          </div>
+            
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          role="cell"
+          style="width: 20%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-red600"
+          >
+            ce.anomalyDetection.trend
+          </p>
         </div>
         <div
           class="TableV2--cell"
@@ -406,26 +393,6 @@ exports[`test case for anomalies detection overview page should be able to rende
         <div
           class="TableV2--cell"
           role="cell"
-          style="width: 20%;"
-        >
-          <div
-            class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-orange700"
-            >
-              Open
-            </p>
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey600"
-            >
-              6 days ago
-            </p>
-          </div>
-        </div>
-        <div
-          class="TableV2--cell"
-          role="cell"
           style="width: 5%;"
         >
           <span
@@ -491,21 +458,22 @@ exports[`test case for anomalies detection overview page should be able to rende
           role="cell"
           style="width: 20%;"
         >
-          <div
-            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-            style="align-items: baseline;"
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-body2 StyledProps--color StyledProps--color-black"
           >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2 StyledProps--color StyledProps--color-black"
-            >
-              
-            </p>
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny StyledProps--color StyledProps--color-red600"
-            >
-              ce.anomalyDetection.trend
-            </p>
-          </div>
+            
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          role="cell"
+          style="width: 20%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-red600"
+          >
+            ce.anomalyDetection.trend
+          </p>
         </div>
         <div
           class="TableV2--cell"
@@ -566,26 +534,6 @@ exports[`test case for anomalies detection overview page should be able to rende
         <div
           class="TableV2--cell"
           role="cell"
-          style="width: 20%;"
-        >
-          <div
-            class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-orange700"
-            >
-              Open
-            </p>
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey600"
-            >
-              6 days ago
-            </p>
-          </div>
-        </div>
-        <div
-          class="TableV2--cell"
-          role="cell"
           style="width: 5%;"
         >
           <span
@@ -651,21 +599,22 @@ exports[`test case for anomalies detection overview page should be able to rende
           role="cell"
           style="width: 20%;"
         >
-          <div
-            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-            style="align-items: baseline;"
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-body2 StyledProps--color StyledProps--color-black"
           >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2 StyledProps--color StyledProps--color-black"
-            >
-              
-            </p>
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny StyledProps--color StyledProps--color-red600"
-            >
-              ce.anomalyDetection.trend
-            </p>
-          </div>
+            
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          role="cell"
+          style="width: 20%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-red600"
+          >
+            ce.anomalyDetection.trend
+          </p>
         </div>
         <div
           class="TableV2--cell"
@@ -714,26 +663,6 @@ exports[`test case for anomalies detection overview page should be able to rende
                 gcpProjectId/gcpProduct
               </p>
             </div>
-          </div>
-        </div>
-        <div
-          class="TableV2--cell"
-          role="cell"
-          style="width: 20%;"
-        >
-          <div
-            class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-orange700"
-            >
-              Open
-            </p>
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey600"
-            >
-              6 days ago
-            </p>
           </div>
         </div>
         <div
@@ -871,6 +800,27 @@ exports[`test case for anomalies detection overview page should be able to rende
         class="TableV2--cell"
         colspan="1"
         role="columnheader"
+        style="width: 20%;"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+        >
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="anomalousVariant"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+            >
+              ce.anomalyDetection.tableHeaders.anomalousVariant
+            </p>
+          </div>
+        </p>
+      </div>
+      <div
+        class="TableV2--cell"
+        colspan="1"
+        role="columnheader"
         style="width: 35%;"
       >
         <p
@@ -886,22 +836,6 @@ exports[`test case for anomalies detection overview page should be able to rende
               ce.anomalyDetection.tableHeaders.resource
             </p>
           </div>
-        </p>
-      </div>
-      <div
-        class="TableV2--cell"
-        colspan="1"
-        role="columnheader"
-        style="width: 20%;"
-      >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-        >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-          >
-            ce.anomalyDetection.tableHeaders.status
-          </p>
         </p>
       </div>
       <div
@@ -949,21 +883,22 @@ exports[`test case for anomalies detection overview page should be able to rende
           role="cell"
           style="width: 20%;"
         >
-          <div
-            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-            style="align-items: baseline;"
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-body2 StyledProps--color StyledProps--color-black"
           >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2 StyledProps--color StyledProps--color-black"
-            >
-              
-            </p>
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny StyledProps--color StyledProps--color-red600"
-            >
-              ce.anomalyDetection.trend
-            </p>
-          </div>
+            
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          role="cell"
+          style="width: 20%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-red600"
+          >
+            ce.anomalyDetection.trend
+          </p>
         </div>
         <div
           class="TableV2--cell"
@@ -1025,26 +960,6 @@ exports[`test case for anomalies detection overview page should be able to rende
                 gcpProjectId/gcpProduct
               </p>
             </div>
-          </div>
-        </div>
-        <div
-          class="TableV2--cell"
-          role="cell"
-          style="width: 20%;"
-        >
-          <div
-            class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-orange700"
-            >
-              Open
-            </p>
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey600"
-            >
-              6 days ago
-            </p>
           </div>
         </div>
         <div
@@ -1207,21 +1122,22 @@ exports[`test case for anomalies detection overview page should be able to rende
           role="cell"
           style="width: 20%;"
         >
-          <div
-            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-            style="align-items: baseline;"
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-body2 StyledProps--color StyledProps--color-black"
           >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2 StyledProps--color StyledProps--color-black"
-            >
-              
-            </p>
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny StyledProps--color StyledProps--color-red600"
-            >
-              ce.anomalyDetection.trend
-            </p>
-          </div>
+            
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          role="cell"
+          style="width: 20%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-red600"
+          >
+            ce.anomalyDetection.trend
+          </p>
         </div>
         <div
           class="TableV2--cell"
@@ -1273,26 +1189,6 @@ exports[`test case for anomalies detection overview page should be able to rende
                 gcpProjectId/gcpProduct
               </p>
             </div>
-          </div>
-        </div>
-        <div
-          class="TableV2--cell"
-          role="cell"
-          style="width: 20%;"
-        >
-          <div
-            class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-orange700"
-            >
-              Open
-            </p>
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey600"
-            >
-              6 days ago
-            </p>
           </div>
         </div>
         <div
@@ -1363,21 +1259,22 @@ exports[`test case for anomalies detection overview page should be able to rende
           role="cell"
           style="width: 20%;"
         >
-          <div
-            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-            style="align-items: baseline;"
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-body2 StyledProps--color StyledProps--color-black"
           >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2 StyledProps--color StyledProps--color-black"
-            >
-              
-            </p>
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny StyledProps--color StyledProps--color-red600"
-            >
-              ce.anomalyDetection.trend
-            </p>
-          </div>
+            
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          role="cell"
+          style="width: 20%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-red600"
+          >
+            ce.anomalyDetection.trend
+          </p>
         </div>
         <div
           class="TableV2--cell"
@@ -1438,26 +1335,6 @@ exports[`test case for anomalies detection overview page should be able to rende
         <div
           class="TableV2--cell"
           role="cell"
-          style="width: 20%;"
-        >
-          <div
-            class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-orange700"
-            >
-              Open
-            </p>
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey600"
-            >
-              6 days ago
-            </p>
-          </div>
-        </div>
-        <div
-          class="TableV2--cell"
-          role="cell"
           style="width: 5%;"
         >
           <span
@@ -1523,21 +1400,22 @@ exports[`test case for anomalies detection overview page should be able to rende
           role="cell"
           style="width: 20%;"
         >
-          <div
-            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-            style="align-items: baseline;"
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-body2 StyledProps--color StyledProps--color-black"
           >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-body2 StyledProps--color StyledProps--color-black"
-            >
-              
-            </p>
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny StyledProps--color StyledProps--color-red600"
-            >
-              ce.anomalyDetection.trend
-            </p>
-          </div>
+            
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          role="cell"
+          style="width: 20%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-red600"
+          >
+            ce.anomalyDetection.trend
+          </p>
         </div>
         <div
           class="TableV2--cell"
@@ -1586,26 +1464,6 @@ exports[`test case for anomalies detection overview page should be able to rende
                 gcpProjectId/gcpProduct
               </p>
             </div>
-          </div>
-        </div>
-        <div
-          class="TableV2--cell"
-          role="cell"
-          style="width: 20%;"
-        >
-          <div
-            class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-orange700"
-            >
-              Open
-            </p>
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey600"
-            >
-              6 days ago
-            </p>
           </div>
         </div>
         <div
