@@ -6,12 +6,34 @@
  */
 
 import React from 'react'
-import { queryByText, render, fireEvent } from '@testing-library/react'
-import { Provider } from 'urql'
-import { fromValue } from 'wonka'
+import { queryByText, render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import AnomaliesFilter from '../AnomaliesFilter'
+
+jest.mock('services/ce', () => ({
+  useGetFilterList: jest.fn().mockImplementation(() => {
+    return {
+      data: [],
+      refetch: jest.fn(),
+      loading: false
+    }
+  }),
+  usePostFilter: jest.fn().mockImplementation(() => {
+    return {
+      mutate: jest.fn()
+    }
+  }),
+  useUpdateFilter: jest.fn().mockImplementation(() => {
+    return {
+      mutate: jest.fn()
+    }
+  }),
+  useDeleteFilter: jest.fn().mockImplementation(() => {
+    return {
+      mutate: jest.fn()
+    }
+  })
+}))
 
 const params = {
   accountId: 'TEST_ACC',
@@ -21,36 +43,23 @@ const params = {
 
 describe('test case for anomalies detection overview page', () => {
   test('should be able to render the overview dashboard', async () => {
-    jest.spyOn(FeatureFlag, 'useFeatureFlag').mockReturnValue(true)
-    const responseState = {
-      executeQuery: () => {
-        return fromValue({})
-      }
-    }
-
     const setFilters = jest.fn()
     const { container } = render(
       <TestWrapper pathParams={params}>
-        <Provider value={responseState as any}>
-          <AnomaliesFilter
-            filters={{}}
-            setFilters={setFilters}
-            timeRange={{
-              to: '2022-10-02',
-              from: '2022-10-02'
-            }}
-            setTimeRange={jest.fn}
-          />
-        </Provider>
+        <AnomaliesFilter
+          filters={{}}
+          setFilters={setFilters}
+          timeRange={{
+            to: '2022-10-02',
+            from: '2022-10-02'
+          }}
+          setTimeRange={jest.fn}
+          fetchedFilterValues={[{ key: 'key1', values: ['val1'] }]}
+          fetching={false}
+        />
       </TestWrapper>
     )
 
-    const cloudProvider = queryByText(container, 'ce.anomalyDetection.filters.groupByCloudProvidersPlaceholder')
-
-    fireEvent.click(cloudProvider!)
-
-    fireEvent.click(queryByText(container, 'GCP')!)
-
-    expect(setFilters).toBeCalledWith('CLOUD_PROVIDER', 'IN', 'gcp')
+    expect(queryByText(container, 'filters.selectFilter')).toBeDefined()
   })
 })

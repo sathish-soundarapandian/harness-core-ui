@@ -55,6 +55,7 @@ import greenLeafImg from '@ce/common/images/green-leaf.svg'
 import grayLeafImg from '@ce/common/images/gray-leaf.svg'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import resizingIcon from '@ce/common/images/resizing-icon.svg'
 import type { StringsMap } from 'stringTypes'
 import RecommendationSavingsCard from '../../components/RecommendationSavingsCard/RecommendationSavingsCard'
 import RecommendationFilters from '../../components/RecommendationFilters'
@@ -279,9 +280,12 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
     const rowData = row.original
     const { resourceType } = rowData
     return (
-      <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }}>
-        {resourceTypeMap[resourceType]}
-      </Text>
+      <Layout.Horizontal spacing={'small'}>
+        <img src={resizingIcon} />
+        <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }}>
+          {resourceTypeMap[resourceType]}
+        </Text>
+      </Layout.Horizontal>
     )
   }
 
@@ -363,7 +367,7 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
   ) : null
 }
 
-const RecommendationList: React.FC = () => {
+const RecommendationListPage: React.FC = () => {
   const [page, setPage] = useQueryParamsState('page', 0)
 
   const { showError } = useToaster()
@@ -643,4 +647,4 @@ const RecommendationList: React.FC = () => {
   )
 }
 
-export default RecommendationList
+export default RecommendationListPage

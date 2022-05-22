@@ -265,7 +265,7 @@ const AnomaliesOverviewPage: React.FC = () => {
         filters={filters}
         setFilters={setFilters}
         fetching={isFilterDataFetching}
-        fetchedFilterValues={filterValues}
+        fetchedFilterValues={filterValues || []}
         timeRange={timeRange}
         setTimeRange={setTimeRange}
       />

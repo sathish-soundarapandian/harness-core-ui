@@ -29,6 +29,14 @@ jest.mock('services/ce', () => ({
       }
     }
   })),
+  useAnomalyFilterValues: jest.fn().mockImplementation(() => ({
+    mutate: async () => {
+      return {
+        status: 'SUCCESS',
+        data: []
+      }
+    }
+  })),
   useReportAnomalyFeedback: jest.fn().mockImplementation(() => ({
     mutate: async () => {
       return {
@@ -44,7 +52,29 @@ jest.mock('services/ce', () => ({
         data: {}
       }
     }
-  }))
+  })),
+  useGetFilterList: jest.fn().mockImplementation(() => {
+    return {
+      data: [],
+      refetch: jest.fn(),
+      loading: false
+    }
+  }),
+  usePostFilter: jest.fn().mockImplementation(() => {
+    return {
+      mutate: jest.fn()
+    }
+  }),
+  useUpdateFilter: jest.fn().mockImplementation(() => {
+    return {
+      mutate: jest.fn()
+    }
+  }),
+  useDeleteFilter: jest.fn().mockImplementation(() => {
+    return {
+      mutate: jest.fn()
+    }
+  })
 }))
 
 const params = {

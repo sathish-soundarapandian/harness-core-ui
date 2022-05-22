@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { queryByText, render, waitFor, fireEvent, getByText } from '@testing-library/react'
+import { queryByText, render } from '@testing-library/react'
 import { Provider } from 'urql'
 import { fromValue } from 'wonka'
 import type { DocumentNode } from 'graphql'
@@ -19,6 +19,63 @@ import ResponseData from './ListData.json'
 import FilterResponseData from './FiltersData.json'
 
 const params = { accountId: 'TEST_ACC', orgIdentifier: 'TEST_ORG', projectIdentifier: 'TEST_PROJECT' }
+
+jest.mock('services/ce', () => ({
+  useListRecommendations: jest.fn().mockImplementation(() => ({
+    mutate: async () => {
+      return {
+        status: 'SUCCESS',
+        data: { items: ResponseData.data.recommendationsV2.items }
+      }
+    }
+  })),
+  useRecommendationStats: jest.fn().mockImplementation(() => ({
+    mutate: async () => {
+      return {
+        status: 'SUCCESS',
+        data: { ...ResponseData.data.recommendationStatsV2 }
+      }
+    }
+  })),
+  useRecommendationsCount: jest.fn().mockImplementation(() => ({
+    mutate: async () => {
+      return {
+        status: 'SUCCESS',
+        data: 42
+      }
+    }
+  })),
+  useRecommendationFilterValues: jest.fn().mockImplementation(() => ({
+    mutate: async () => {
+      return {
+        status: 'SUCCESS',
+        data: []
+      }
+    }
+  })),
+  useGetFilterList: jest.fn().mockImplementation(() => {
+    return {
+      data: [],
+      refetch: jest.fn(),
+      loading: false
+    }
+  }),
+  usePostFilter: jest.fn().mockImplementation(() => {
+    return {
+      mutate: jest.fn()
+    }
+  }),
+  useUpdateFilter: jest.fn().mockImplementation(() => {
+    return {
+      mutate: jest.fn()
+    }
+  }),
+  useDeleteFilter: jest.fn().mockImplementation(() => {
+    return {
+      mutate: jest.fn()
+    }
+  })
+}))
 
 describe('test cases for Recommendation List Page', () => {
   test('should be able to render the list page', async () => {
@@ -42,11 +99,7 @@ describe('test cases for Recommendation List Page', () => {
     )
     expect(container).toMatchSnapshot()
 
-    const filterHereText = queryByText(container, 'ce.recommendation.listPage.filterHereText')
-    fireEvent.click(filterHereText!)
-    await waitFor(() => {
-      expect(getByText(container, 'ce.recommendation.listPage.filters.namespace')).toBeInTheDocument()
-    })
+    expect(queryByText(container, 'filters.selectFilter')).toBeDefined()
   })
 
   test('should be able to render empty page', async () => {
