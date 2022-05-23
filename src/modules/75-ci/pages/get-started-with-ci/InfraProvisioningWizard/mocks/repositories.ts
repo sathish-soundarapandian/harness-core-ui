@@ -7,45 +7,23 @@
 
 export const repos = [
   {
+    namespace: 'wings-software',
     name: 'wings-software/someverylongnameforarepothatisprobablymeantotestoverflowwhileselectinguserrepotostartusingciasaproduct'
   },
   {
+    namespace: 'harness',
     name: 'wings-software/nextgenui'
   },
   {
+    namespace: 'wings-software',
     name: 'wings-software/learning'
   },
   {
+    namespace: 'user1',
     name: 'wings-software/portal'
   },
   {
+    namespace: 'community',
     name: 'wings-software/wingsui'
-  },
-  {
-    name: 'wings-software/uicore'
-  },
-  {
-    name: 'wings-software/harnessui'
-  },
-  {
-    name: 'wings-software/chaos'
-  },
-  {
-    name: 'wings-software/monaco'
-  },
-  {
-    name: 'wings-software/react'
-  },
-  {
-    name: 'wings-software/blueprint'
-  },
-  {
-    name: 'wings-software/tooltip'
-  },
-  {
-    name: 'wings-software/pipeline'
-  },
-  {
-    name: 'wings-software/python'
   }
 ]

@@ -2,7 +2,6 @@ import {
   servicesRoute,
   servicesCall,
   servicesUpsertCall,
-  servicesUpdateList,
   pageHeaderClassName
 } from '../../support/70-pipeline/constants'
 

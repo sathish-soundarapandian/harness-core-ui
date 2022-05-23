@@ -182,8 +182,8 @@
 }
 
 .helptext {
-  height: 260px;
-  width: 350px;
+  height: fit-content;
+  width: 30%;
   border-radius: 8px;
   background-color: var(--primary-1) !important;
 }

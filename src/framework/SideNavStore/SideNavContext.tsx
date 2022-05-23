@@ -8,13 +8,13 @@
 import React, { createContext, useContext, useState } from 'react'
 
 export interface SideNavContextProps {
-  showGetStartedTab: boolean
-  setShowGetStartedTab: (shouldShow: boolean) => void
+  showGetStartedTabInMainMenu: boolean
+  setShowGetStartedTabInMainMenu: (shouldShow: boolean) => void
 }
 
 export const SideNavContext = createContext<SideNavContextProps>({
-  showGetStartedTab: false,
-  setShowGetStartedTab: (_shouldShow: boolean) => void 0
+  showGetStartedTabInMainMenu: false,
+  setShowGetStartedTabInMainMenu: (_shouldShow: boolean) => void 0
 })
 
 export function useSideNavContext(): SideNavContextProps {
@@ -26,8 +26,8 @@ export function SideNavProvider(props: React.PropsWithChildren<unknown>): React.
   return (
     <SideNavContext.Provider
       value={{
-        showGetStartedTab: show,
-        setShowGetStartedTab: (shouldShow: boolean) => setShow(shouldShow)
+        showGetStartedTabInMainMenu: show,
+        setShowGetStartedTabInMainMenu: (shouldShow: boolean) => setShow(shouldShow)
       }}
     >
       {props.children}

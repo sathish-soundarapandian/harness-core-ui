@@ -110,39 +110,34 @@ containerPort: Container Port
 baseConnectorImage: Base Image Connector
 getStartedWithCI:
   firstPipeline: 'Let’s get you started with your first Pipeline!'
-  chooseAnOption: Choose an option below to get started with your first Pipeline.
-  tryASamplePipeline: Try a Sample Pipeline
   buildyourOwnPipeline: Build your own Pipeline
   quicklyCreate: Quickly create a Pipeline using your own codebase and our intuitive visual editor.
-  startSamplePipeline: Start with a sample Pipeline that builds an open source project.
   configInfra: Configure Infrastructure
-  connectSCM: Connect your SCM
+  connectRepo: Connect your Code Repository
   selectRepo: Select Repository
   buildPipeline: Build Pipeline
-  codebaseRepoLabel: Codebase Repo
-  javaLabel: Java
   hostedByHarness: Hosted by Harness
-  takeToTheNextLevel: Take your software build process to the next level using our Harness Continuous Integration.
+  takeToTheNextLevel: Take your software build process to the next level using our Harness Continuous Integration
   ti: Test Intelligence
   languageAgnostic: Language Agnostic
   parameterization: Flexible Parametrization & Template Library
-  parallelization: Parallel execution and Automatic failure strategy
-  flexibleInfra: Flexible infrastructure support
+  parallelization: Parallel Execution and Automatic Failure Strategy
+  flexibleInfra: Flexible Infrastructure Support
   devFriendly: Developer Friendly Experience
   security: Governance and Security
-  integratedCICD: Integrated CI and CD pipelines
+  integratedCICD: Integrated CI and CD Pipelines
   tiHelpText: Reduce test cycle time without compromising on quality. Using our ML model, test cycles can be up to 98% faster, by eliminating irrelevant test execution. This will help you to innovate faster, with the same confidence that your changes are tested thoroughly.
   languageAgnosticHelpText: Harness CI can work with any language of your choice - Java, C++, .NET. This gives you the flexibility to use one CI solution for any language and framework, so you don’t need to change anything in your build process when adopting a new technology.
   parameterizationHelpText: Enforce best practices and reuse pipelines between different teams and projects. Creating generic pipelines and templates make it easy for different teams to onboard and spend less time on configuration (and more on development)
   parallelizationHelpText: Build the pipeline anyway you’d like, to make sure it is working for you - run steps in parallel to speed up execution, or in sequential, when there are dependencies. Group steps together for better visibility and management, add conditional execution at any level, and define failure strategy to automate remediation.
   flexibleInfraHelpText: Developers can choose which infrastructure to use to run their build in the most efficient way, according to their technology of choice - from k8s to VMs and macstadium.
-  devFriendlyHelpText: Manage your pipelines the same way you manage your code - stored in git, located with your codebase, written in YAML (using built-in YAML editor, with auto-complete and schema validation), and handle changes using pull requests.
+  devFriendlyHelpText: Manage your pipelines the same way you manage your code - stored in Git, located with your codebase, written in YAML (using built-in YAML editor, with auto-complete and schema validation), and handle changes using pull requests.
   securityHelpText: Avoid security issues and make sure your code and processes are always within compliance. CI Enterprise comes with full Audit capabilities, flexible and granular RBAC, allowing your team to create custom roles and OPA-backed policies that make sure all your pipelines are safe and secured.
   integratedCICDHelpText: Using one platform for both CI and CD streamline the delivery process, reduce manual steps and friction and help teams to move forward faster without learning and onboarding on multiple products.
   provisionSecureEnv: Provisioning a secure environment for your Builds
   duration: 'This can take up to {{count}} {{unit}}'
   infraProvisioningFailed: Infrastructure Provisioning failed
-  troubleShootFailedProvisioning: We were unable to set up the hosted infrastructure. Click <b>Choose a different infrastructure</b> to use your own infrastructure or click <b>Contact Support</b> and we will resolve the issue.
+  troubleShootFailedProvisioning: We were unable to set up the hosted infrastructure. Click <b>Choose a different infrastructure</b> to use your own infrastructure.
   chooseDiffInfra: Choose a different Infrastructure
   buildLocation: Where would you like to run your Builds?
   hostedByHarnessBuildLocation: Run builds for free during trial on Linux based infrastructure provided by Harness.
@@ -172,6 +167,11 @@ getStartedWithCI:
   provisioningFailed: Provisioning failed
   setUpAuth: Set up Authentication
   genericGit: Generic Git
+  fetchingRepos: Please wait while we fetch repositories...
+  plsChoose: 'Please choose {{field}}'
+  fieldIsMissing: '{{field}} is missing'
+  startProvisioning: Start Provisioning
+  provisioningHelpText: Provision the '{{ $.ci.getStartedWithCI.hostedByHarness }}' Infrastructure (~2 mins)
   carousel:
     labels:
       harnessCIFeatures: Harness CI

@@ -26,11 +26,11 @@ describe('Test SideNavContext', () => {
 
     const { result } = renderHook(() => useSideNavContext(), { wrapper })
     expect(result.current).toBeTruthy()
-    const { showGetStartedTab, setShowGetStartedTab } = result.current
-    expect(showGetStartedTab).toBe(false)
+    const { showGetStartedTabInMainMenu, setShowGetStartedTabInMainMenu } = result.current
+    expect(showGetStartedTabInMainMenu).toBe(false)
     await act(async () => {
-      setShowGetStartedTab(true)
+      setShowGetStartedTabInMainMenu(true)
     })
-    expect(showGetStartedTab).toBe(false)
+    expect(showGetStartedTabInMainMenu).toBe(false)
   })
 })

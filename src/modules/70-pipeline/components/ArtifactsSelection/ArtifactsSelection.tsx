@@ -131,7 +131,11 @@ export default function ArtifactsSelection({
       )
     }
 
-    if (CUSTOM_ARTIFACT_NG && !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.CustomArtifact)) {
+    if (
+      CUSTOM_ARTIFACT_NG &&
+      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.CustomArtifact) &&
+      !isServerlessDeploymentType(deploymentType)
+    ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.CustomArtifact)
     }
 

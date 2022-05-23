@@ -24,7 +24,7 @@
   }
 
   :global(.bp3-tab-list) {
-    border-bottom: 1px solid #e4e4eb !important;
+    border-bottom: 1px solid --var(--grey-0) !important;
     padding-left: var(--spacing-huge);
 
     [class='bp3-tab'] {
@@ -35,7 +35,7 @@
 
   [aria-selected='true'] {
     font-weight: 600 !important;
-    color: #22272d !important;
+    color: var(--grey-800) !important;
   }
 }
 
@@ -48,14 +48,6 @@
     height: calc(100% - 150px);
     padding: 0 var(--spacing-medium) 0 0 !important;
     overflow: auto;
-  }
-
-  .paginationContainer {
-    background: #fdfdfd;
-
-    > div {
-      border-top: none !important;
-    }
   }
 }
 

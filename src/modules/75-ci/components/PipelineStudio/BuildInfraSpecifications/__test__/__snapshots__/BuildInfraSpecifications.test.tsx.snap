@@ -38,7 +38,7 @@ exports[`BuildInfraSpecifications snapshot tests for AWS Build Infra Render AWS 
                       class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
                     >
                       <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-variation-form-help StyledProps--padding-bottom-medium"
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-form-input-text StyledProps--padding-bottom-medium"
                       >
                         ci.buildInfra.selectInfra
                       </p>
@@ -216,7 +216,7 @@ exports[`BuildInfraSpecifications snapshot tests for AWS Build Infra Render AWS 
                   </div>
                 </div>
                 <div
-                  class="StyledProps--font StyledProps--main helptext StyledProps--margin-top-medium StyledProps--padding-large"
+                  class="StyledProps--font StyledProps--main helptext StyledProps--margin-top-medium StyledProps--padding-top-xlarge StyledProps--padding-bottom-xlarge StyledProps--padding-left-large StyledProps--padding-right-large"
                 >
                   <div
                     class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-start"
@@ -336,7 +336,7 @@ exports[`BuildInfraSpecifications snapshot tests for AWS Build Infra initializes
                       class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
                     >
                       <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-variation-form-help StyledProps--padding-bottom-medium"
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-form-input-text StyledProps--padding-bottom-medium"
                       >
                         ci.buildInfra.selectInfra
                       </p>
@@ -439,11 +439,22 @@ exports[`BuildInfraSpecifications snapshot tests for AWS Build Infra initializes
                           </div>
                         </div>
                       </div>
+                      <div>
+                        <div
+                          style="min-height: 10px;"
+                        />
+                        <div
+                          class="separator"
+                        />
+                        <div
+                          style="min-height: 24px;"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
                 <div
-                  class="StyledProps--font StyledProps--main helptext StyledProps--margin-top-medium StyledProps--padding-large"
+                  class="StyledProps--font StyledProps--main helptext StyledProps--margin-top-medium StyledProps--padding-top-xlarge StyledProps--padding-bottom-xlarge StyledProps--padding-left-large StyledProps--padding-right-large"
                 >
                   <div
                     class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-start"

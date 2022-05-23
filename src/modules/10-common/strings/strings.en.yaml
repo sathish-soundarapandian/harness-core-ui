@@ -329,6 +329,7 @@ git:
   gitLabUrlPlaceholder: 'https://www.gitlab.com/account/'
   gitLabUrlPlaceholderSSH: 'git@gitlab.com:account/'
   bitbucketUrlPlaceholder: 'https://www.bitbucket.com/account/'
+  bitbucketOrgUrlPlaceholder: 'https://www.bitbucket.org/'
   bitbucketPlaceholderSSH: 'git@bitbucket.com:account/'
   enableAPIAccess: 'Enable API access (recommended)'
   APIAccessDescription: 'API Access is required for using “Git Experience”, for creation of Git based triggers, Webhooks management and updating Git statuses'

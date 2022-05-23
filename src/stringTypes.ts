@@ -276,6 +276,7 @@ export interface StringsMap {
   'common.git.addUserCredentialLabel': string
   'common.git.applicationId': string
   'common.git.bitbucketAccountUrl': string
+  'common.git.bitbucketOrgUrlPlaceholder': string
   'common.git.bitbucketPlaceholderSSH': string
   'common.git.bitbucketRepoUrl': string
   'common.git.bitbucketUrlPlaceholder': string
@@ -2371,6 +2372,7 @@ export interface StringsMap {
   'projectsOrgs.pendingUsers': string
   'projectsOrgs.placeholder': string
   'projectsOrgs.projectCreateSuccess': string
+  'projectsOrgs.projectDeleteErrorMessage': string
   'projectsOrgs.projectDeleteSuccess': string
   'projectsOrgs.projectEdit': string
   'projectsOrgs.projectEditSuccess': string
@@ -4682,6 +4684,7 @@ export interface StringsMap {
   'cf.environments.apiKeys.addKey': string
   'cf.environments.apiKeys.addKeyTitle': string
   'cf.environments.apiKeys.clientType': string
+  'cf.environments.apiKeys.create': string
   'cf.environments.apiKeys.deleteMessage': string
   'cf.environments.apiKeys.deleteSuccess': string
   'cf.environments.apiKeys.deleteTitle': string
@@ -5182,20 +5185,20 @@ export interface StringsMap {
   'ci.getStartedWithCI.carousel.labels.integration': string
   'ci.getStartedWithCI.carousel.labels.useCaching': string
   'ci.getStartedWithCI.carousel.labels.usePlugins': string
-  'ci.getStartedWithCI.chooseAnOption': string
   'ci.getStartedWithCI.chooseDiffInfra': string
   'ci.getStartedWithCI.codeRepo': string
   'ci.getStartedWithCI.codeRepoLabel': string
   'ci.getStartedWithCI.codebaseHelptext': string
-  'ci.getStartedWithCI.codebaseRepoLabel': string
   'ci.getStartedWithCI.configInfra': string
-  'ci.getStartedWithCI.connectSCM': string
+  'ci.getStartedWithCI.connectRepo': string
   'ci.getStartedWithCI.createPipeline': string
   'ci.getStartedWithCI.devFriendly': string
   'ci.getStartedWithCI.devFriendlyHelpText': string
   'ci.getStartedWithCI.dockerRunner': string
   'ci.getStartedWithCI.dockerRunnerBuildLocation': string
   'ci.getStartedWithCI.duration': string
+  'ci.getStartedWithCI.fetchingRepos': string
+  'ci.getStartedWithCI.fieldIsMissing': string
   'ci.getStartedWithCI.firstPipeline': string
   'ci.getStartedWithCI.flexibleInfra': string
   'ci.getStartedWithCI.flexibleInfraHelpText': string
@@ -5206,7 +5209,6 @@ export interface StringsMap {
   'ci.getStartedWithCI.infraProvisioningFailed': string
   'ci.getStartedWithCI.integratedCICD': string
   'ci.getStartedWithCI.integratedCICDHelpText': string
-  'ci.getStartedWithCI.javaLabel': string
   'ci.getStartedWithCI.k8sBuildLocation': string
   'ci.getStartedWithCI.languageAgnostic': string
   'ci.getStartedWithCI.languageAgnosticHelpText': string
@@ -5218,8 +5220,10 @@ export interface StringsMap {
   'ci.getStartedWithCI.parallelizationHelpText': string
   'ci.getStartedWithCI.parameterization': string
   'ci.getStartedWithCI.parameterizationHelpText': string
+  'ci.getStartedWithCI.plsChoose': string
   'ci.getStartedWithCI.provisionSecureEnv': string
   'ci.getStartedWithCI.provisioningFailed': string
+  'ci.getStartedWithCI.provisioningHelpText': string
   'ci.getStartedWithCI.provisioningSuccessful': string
   'ci.getStartedWithCI.quicklyCreate': string
   'ci.getStartedWithCI.searchRepo': string
@@ -5229,12 +5233,11 @@ export interface StringsMap {
   'ci.getStartedWithCI.selectRepo': string
   'ci.getStartedWithCI.selectYourRepo': string
   'ci.getStartedWithCI.setUpAuth': string
-  'ci.getStartedWithCI.startSamplePipeline': string
+  'ci.getStartedWithCI.startProvisioning': string
   'ci.getStartedWithCI.takeToTheNextLevel': string
   'ci.getStartedWithCI.ti': string
   'ci.getStartedWithCI.tiHelpText': string
   'ci.getStartedWithCI.troubleShootFailedProvisioning': string
-  'ci.getStartedWithCI.tryASamplePipeline': string
   'ci.getStartedWithCI.verifyConnection': string
   'ci.gradleNote1': string
   'ci.gradleNote2': string

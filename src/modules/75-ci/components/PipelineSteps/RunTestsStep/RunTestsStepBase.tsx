@@ -23,7 +23,6 @@ import { Color } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import get from 'lodash/get'
 import cx from 'classnames'
-import type { K8sDirectInfraYaml } from 'services/ci'
 import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -54,6 +53,7 @@ import {
 } from '../CIStep/StepUtils'
 import { CIStep } from '../CIStep/CIStep'
 import { ConnectorRefWithImage } from '../CIStep/ConnectorRefWithImage'
+import { CIBuildInfrastructureType } from '../../../constants/Constants'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 interface FieldRenderProps {
@@ -103,14 +103,14 @@ export const RunTestsStepBase = (
 
   const [mavenSetupQuestionAnswer, setMavenSetupQuestionAnswer] = React.useState('yes')
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
-  const buildInfrastructureType = get(currentStage, 'stage.spec.infrastructure.type') as K8sDirectInfraYaml['type']
+  const buildInfrastructureType: CIBuildInfrastructureType = get(currentStage, 'stage.spec.infrastructure.type')
   const [languageOptions, setLanguageOptions] = React.useState<SelectOption[]>([
     { label: 'Csharp', value: Language.Csharp },
     { label: 'Java', value: Language.Java }
   ])
 
   React.useEffect(() => {
-    if (buildInfrastructureType !== 'VM') {
+    if (buildInfrastructureType !== CIBuildInfrastructureType.VM) {
       setLanguageOptions([{ label: 'Java', value: Language.Java }])
     }
   }, [buildInfrastructureType])
@@ -246,7 +246,7 @@ export const RunTestsStepBase = (
       )}
       formName="ciRunTests"
       validate={valuesToValidate => {
-        if (buildInfrastructureType === 'VM') {
+        if (buildInfrastructureType === CIBuildInfrastructureType.VM) {
           return validateConnectorRefAndImageDepdendency(
             get(valuesToValidate, 'spec.connectorRef', ''),
             get(valuesToValidate, 'spec.image', ''),
@@ -294,7 +294,7 @@ export const RunTestsStepBase = (
                 description: {}
               }}
             />
-            {buildInfrastructureType !== 'VM' ? (
+            {buildInfrastructureType !== CIBuildInfrastructureType.VM ? (
               <ConnectorRefWithImage showOptionalSublabel={false} readonly={readonly} stepViewType={stepViewType} />
             ) : null}
             <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
@@ -407,7 +407,7 @@ gradle.projectsEvaluated {
                 summary={getString('common.optionalConfig')}
                 details={
                   <Container margin={{ top: 'medium' }}>
-                    {buildInfrastructureType === 'VM' ? (
+                    {buildInfrastructureType === CIBuildInfrastructureType.VM ? (
                       <ConnectorRefWithImage
                         showOptionalSublabel={true}
                         readonly={readonly}

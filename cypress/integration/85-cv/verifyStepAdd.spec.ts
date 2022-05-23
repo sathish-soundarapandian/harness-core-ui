@@ -357,7 +357,7 @@ describe('Verify step add', () => {
     )
   })
 
-  it('should show monitored service as <+service.identifier>_<+enviroment.identifier>, if service is expression and environment is fixed value', () => {
+  it.skip('should show monitored service as <+service.identifier>_<+enviroment.identifier>, if service is expression and environment is fixed value', () => {
     cy.verifyStepInitialSetup()
 
     cy.intercept('GET', monitoresServices, serviceEnvironmentNoMonitoredServicesResponse).as('noMonitoredServices')

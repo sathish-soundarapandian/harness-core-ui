@@ -336,6 +336,7 @@ environments:
     nameLabel: 'Name of your environment'
     duplicateName: 'Environment with this name already exists. Try another name'
   apiKeys:
+    create: 'Key created'
     addKeyTitle: Create SDK Key
     message: 'Secrets are only visible right after creation and redacted once you leave the page. Please make sure to copy and store your secret somewhere safe'
     title: 'SDK Keys'
@@ -343,8 +344,8 @@ environments:
     addKey: '+ New SDK Key'
     clientType: '{{ $.cf.testTheFlag.sdkClient }}'
     serverType: '{{ $.cf.testTheFlag.sdkServer }}'
-    deleteTitle: 'Confirm Key Delete'
-    deleteMessage: 'Are you sure you want to delete Key: {{keyName}}? You cannot recover it afterwards'
+    deleteTitle: 'Confirm Key Delete?'
+    deleteMessage: 'Are you sure you want to delete Key: <strong>{{keyName}}</strong>? You cannot recover it afterwards'
     deleteSuccess: 'Successfully deleted Key: {{keyName}}'
     keyType: 'Key Type'
     noKeysFoundTitle: There are no SDK keys for this environment

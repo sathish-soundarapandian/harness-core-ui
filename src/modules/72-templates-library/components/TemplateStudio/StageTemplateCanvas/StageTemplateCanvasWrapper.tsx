@@ -26,27 +26,32 @@ import { PipelineContextType } from '@pipeline/components/PipelineStudio/Pipelin
 
 const StageTemplateCanvasWrapper = (_props: unknown, formikRef: TemplateFormRef) => {
   const {
-    state: { template },
+    state: { template, isLoading, isUpdated },
     updateTemplate,
     isReadonly
   } = React.useContext(TemplateContext)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
 
-  const pipeline = React.useMemo(
-    () =>
-      produce({ ...DefaultPipeline }, draft => {
-        set(
-          draft,
-          'stages[0].stage',
-          merge({}, template.spec as StageElementConfig, {
-            name: DefaultNewStageName,
-            identifier: DefaultNewStageId
-          })
-        )
-      }),
-    [template.spec]
-  )
+  const createPipelineFromTemplate = () =>
+    produce({ ...DefaultPipeline }, draft => {
+      set(
+        draft,
+        'stages[0].stage',
+        merge({}, template.spec as StageElementConfig, {
+          name: DefaultNewStageName,
+          identifier: DefaultNewStageId
+        })
+      )
+    })
+
+  const [pipeline, setPipeline] = React.useState<PipelineInfoConfig>(createPipelineFromTemplate())
+
+  React.useEffect(() => {
+    if (!isLoading && !isUpdated) {
+      setPipeline(createPipelineFromTemplate())
+    }
+  }, [isLoading, isUpdated])
 
   const onUpdatePipeline = async (pipelineConfig: PipelineInfoConfig) => {
     const stage = get(pipelineConfig, 'stages[0].stage')
@@ -59,7 +64,7 @@ const StageTemplateCanvasWrapper = (_props: unknown, formikRef: TemplateFormRef)
   return (
     <TemplatePipelineProvider
       queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier, repoIdentifier, branch }}
-      initialValue={pipeline as PipelineInfoConfig}
+      initialValue={pipeline}
       onUpdatePipeline={onUpdatePipeline}
       contextType={PipelineContextType.StageTemplate}
       isReadOnly={isReadonly}
