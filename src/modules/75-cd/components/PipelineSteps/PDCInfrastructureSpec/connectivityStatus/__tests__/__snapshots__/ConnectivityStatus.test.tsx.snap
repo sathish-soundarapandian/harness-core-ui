@@ -42,16 +42,11 @@ exports[`connectivity status fail render should match snapshot 1`] = `
                   />
                 </svg>
               </span>
-              failed
+              na
             </span>
           </span>
         </span>
       </div>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey400"
-      >
-        dummy date
-      </p>
     </div>
     <button
       class="bp3-button Button--button StyledProps--font StyledProps--main testBtn Button--with-current-color Button--without-shadow Button--variation Button--variation-secondary Button--size Button--small"
@@ -136,37 +131,51 @@ exports[`connectivity status success render should match snapshot 1`] = `
         class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
       >
         <span
-          class="StyledProps--font StyledProps--main StyledProps--inline"
-          style="display: inline-flex; align-items: center;"
+          class="bp3-popover-wrapper"
         >
           <span
-            class="bp3-icon bp3-icon-full-circle StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-green500"
-            icon="full-circle"
+            class="bp3-popover-target Text--targetClass"
           >
-            <svg
-              data-icon="full-circle"
-              height="6"
-              viewBox="0 0 16 16"
-              width="6"
+            <span
+              class="StyledProps--font StyledProps--main StyledProps--inline"
+              style="display: inline-flex; align-items: center;"
+              tabindex="0"
             >
-              <desc>
-                full-circle
-              </desc>
-              <path
-                d="M8 0a8 8 0 100 16A8 8 0 108 0z"
-                fill-rule="evenodd"
-              />
-            </svg>
+              <span
+                class="bp3-icon bp3-icon-warning-sign StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-red500"
+                icon="warning-sign"
+              >
+                <svg
+                  data-icon="warning-sign"
+                  height="12"
+                  viewBox="0 0 16 16"
+                  width="12"
+                >
+                  <desc>
+                    warning-sign
+                  </desc>
+                  <path
+                    d="M15.84 13.5l.01-.01-7-12-.01.01c-.17-.3-.48-.5-.85-.5s-.67.2-.85.5l-.01-.01-7 12 .01.01c-.09.15-.15.31-.15.5 0 .55.45 1 1 1h14c.55 0 1-.45 1-1 0-.19-.06-.35-.15-.5zm-6.85-.51h-2v-2h2v2zm0-3h-2v-5h2v5z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              na
+            </span>
           </span>
-          success
         </span>
       </div>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey400"
-      >
-        dummy date
-      </p>
     </div>
+    <button
+      class="bp3-button Button--button StyledProps--font StyledProps--main testBtn Button--with-current-color Button--without-shadow Button--variation Button--variation-secondary Button--size Button--small"
+      type="button"
+    >
+      <span
+        class="bp3-button-text"
+      >
+        test
+      </span>
+    </button>
   </div>
 </div>
 `;
@@ -218,11 +227,6 @@ exports[`connectivity status unknown render should match snapshot 1`] = `
           </span>
         </span>
       </div>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey400"
-      >
-        dummy date
-      </p>
     </div>
     <button
       class="bp3-button Button--button StyledProps--font StyledProps--main testBtn Button--with-current-color Button--without-shadow Button--variation Button--variation-secondary Button--size Button--small"

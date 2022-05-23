@@ -10,8 +10,23 @@ import { act, fireEvent, render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import ConnectivityStatus from '../ConnectivityStatus'
 import mock from './mock.json'
+
 const { failure, success, unknownType } = mock
+
 jest.mock('services/cd-ng', () => ({
+  useValidateHosts: jest.fn().mockImplementation(() => {
+    return {
+      cancel: jest.fn(),
+      loading: false,
+      mutate: jest.fn().mockImplementation(() => {
+        return {
+          data: {
+            status: 'SUCCESS'
+          }
+        }
+      })
+    }
+  }),
   useGetTestConnectionResult: jest.fn().mockImplementation(() => {
     return {
       cancel: jest.fn(),
@@ -26,6 +41,7 @@ jest.mock('services/cd-ng', () => ({
     }
   })
 }))
+
 describe('connectivity status', () => {
   const setup = (data: any) =>
     render(
