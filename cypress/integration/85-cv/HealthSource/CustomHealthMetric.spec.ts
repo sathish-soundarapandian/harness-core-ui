@@ -59,7 +59,7 @@ function populateMetricValues() {
   cy.wait(1000)
 }
 
-describe('Configure Datadog health source', () => {
+describe.skip('Configure Datadog health source', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       return false
