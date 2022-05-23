@@ -22,6 +22,7 @@ import HomeSideNav from './components/HomeSideNav/HomeSideNav'
 import AccountSideNav from './components/AccountSideNav/AccountSideNav'
 import AccountResources from './pages/AccountResources/AccountResources'
 import SmtpDetails from './components/Smtp/SmtpDetails'
+import OAuthRedirect from './pages/OAuthRedirect/OAuthRedirect'
 
 const RedirectToHome = (): React.ReactElement => {
   const { accountId } = useParams<AccountPathProps>()
@@ -54,7 +55,9 @@ export default (
     <Route exact path={[justAccountPath({ ...accountPathProps }), routes.toHome({ ...accountPathProps })]}>
       <RedirectToHome />
     </Route>
-
+    <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toOauthRedirect({ ...accountPathProps })} exact>
+      <OAuthRedirect />
+    </RouteWithLayout>
     <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toAccountResources({ ...accountPathProps })} exact>
       <AccountResources />
     </RouteWithLayout>

@@ -200,6 +200,7 @@ const routes = {
 
   toLogin: (): string => '/login',
   toRedirect: (): string => `/redirect`,
+  toOauthRedirect: withAccountId(() => '/oauth-redirect'),
   toSignup: (): string => '/signup',
   toPurpose: withAccountId(() => '/purpose'),
   //user profile

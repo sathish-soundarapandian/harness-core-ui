@@ -20,6 +20,10 @@ export interface DashboardPathProps extends AccountPathProps {
   folderId: string
 }
 
+export interface OAuthRedirectParams {
+  code: string
+}
+
 export interface GitQueryParams {
   branch?: EntityGitDetails['branch']
   repoIdentifier?: EntityGitDetails['repoIdentifier']
