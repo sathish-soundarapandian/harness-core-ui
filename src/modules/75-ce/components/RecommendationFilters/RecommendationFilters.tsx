@@ -9,7 +9,7 @@ import React from 'react'
 import { Text, Layout, Icon, DropDown, SelectOption } from '@wings-software/uicore'
 import { Color } from '@wings-software/design-system'
 import { useStrings } from 'framework/strings'
-import type { K8sRecommendationFilterPropertiesDTO, ResponseListFilterStatsDTO } from 'services/ce'
+import type { FilterStatsDTO, K8sRecommendationFilterPropertiesDTO } from 'services/ce'
 import useRecommendationFilterPanel from './RecommendationFilterPanel'
 
 import css from './RecommendationFilters.module.scss'
@@ -18,7 +18,7 @@ interface RecommendationFiltersProps {
   fetching: boolean
   setFilters: (newValue: K8sRecommendationFilterPropertiesDTO) => void
   filters: K8sRecommendationFilterPropertiesDTO
-  filterList: ResponseListFilterStatsDTO
+  fetchedFilterValues: FilterStatsDTO[]
   costFilters: { minCost: number; minSaving: number }
   setCostFilters: (newValue: { minCost: number; minSaving: number }) => void
 }
@@ -26,7 +26,7 @@ interface RecommendationFiltersProps {
 const RecommendationFilters: React.FC<RecommendationFiltersProps> = ({
   fetching,
   filters,
-  filterList,
+  fetchedFilterValues,
   setFilters,
   costFilters,
   setCostFilters
@@ -34,7 +34,7 @@ const RecommendationFilters: React.FC<RecommendationFiltersProps> = ({
   const { getString } = useStrings()
 
   const { openFilterDrawer, savedFilters, setSavedFilter, selectedFilter } = useRecommendationFilterPanel({
-    fetchedFilterValues: filterList,
+    fetchedFilterValues,
     filters,
     setFilters,
     costFilters,
@@ -54,7 +54,7 @@ const RecommendationFilters: React.FC<RecommendationFiltersProps> = ({
         placeholder={getString(savedFilters.length > 0 ? 'filters.selectFilter' : 'common.filters.noFilterSaved')}
         filterable={false}
         disabled={savedFilters.length === 0}
-        onChange={option => setSavedFilter(option)}
+        onChange={/* istanbul ignore next */ option => setSavedFilter(option)}
         addClearBtn={true}
         value={selectedFilter?.identifier}
         items={savedFilterOptions}

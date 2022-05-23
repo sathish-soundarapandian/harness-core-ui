@@ -29,8 +29,8 @@ import {
   CCMRecommendationFilterProperties,
   FilterDTO,
   FilterProperties,
+  FilterStatsDTO,
   K8sRecommendationFilterPropertiesDTO,
-  ResponseListFilterStatsDTO,
   useDeleteFilter,
   useGetFilterList,
   usePostFilter,
@@ -42,7 +42,7 @@ import { getLabelMappingForFilters } from './constants'
 import css from './RecommendationFilters.module.scss'
 
 interface RecommendationFilterPanelProps {
-  fetchedFilterValues: ResponseListFilterStatsDTO
+  fetchedFilterValues: FilterStatsDTO[]
   filters: K8sRecommendationFilterPropertiesDTO
   setFilters: (newState: K8sRecommendationFilterPropertiesDTO) => void
   costFilters: { minCost: number; minSaving: number }
@@ -153,7 +153,7 @@ const useRecommendationFilterPanel = ({
               </Text>
             </Container>
             <Container height={'100%'} padding={{ top: 'xlarge' }}>
-              {fetchedFilterValues?.data?.map(filter => {
+              {fetchedFilterValues?.map(filter => {
                 const key = filter.key as keyof K8sRecommendationFilterPropertiesDTO
                 const values = filter.values
 

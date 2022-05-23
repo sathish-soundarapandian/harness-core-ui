@@ -24,7 +24,7 @@ import qs from 'qs'
 import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo, get } from 'lodash-es'
 import { String, useStrings } from 'framework/strings'
-import { RecommendationItemDto, ResourceType, useFetchCcmMetaDataQuery, CcmMetaData, Maybe } from 'services/ce/services'
+import { ResourceType, useFetchCcmMetaDataQuery, CcmMetaData, Maybe } from 'services/ce/services'
 import routes from '@common/RouteDefinitions'
 import { Page, useToaster } from '@common/exports'
 import { useQueryParams } from '@common/hooks'
@@ -40,11 +40,10 @@ import { calculateSavingsPercentage, getProviderIcon } from '@ce/utils/recommend
 import { generateFilters } from '@ce/utils/anomaliesUtils'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import {
+  FilterStatsDTO,
   K8sRecommendationFilterPropertiesDTO,
-  ResponseInteger,
-  ResponseListFilterStatsDTO,
-  ResponseRecommendationOverviewStats,
-  ResponseRecommendationsDTO,
+  RecommendationItemDTO,
+  RecommendationOverviewStats,
   useListRecommendations,
   useRecommendationFilterValues,
   useRecommendationsCount,
@@ -71,7 +70,7 @@ type RouteFn = (
 ) => string
 
 interface RecommendationListProps {
-  data: Array<RecommendationItemDto>
+  data: RecommendationItemDTO[]
   fetching: boolean
   ccmData: Maybe<CcmMetaData> | undefined
   pagination: {
@@ -154,7 +153,7 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
     count: data.length
   })
 
-  const NameCell: Renderer<CellProps<RecommendationItemDto>> = cell => {
+  const NameCell: Renderer<CellProps<RecommendationItemDTO>> = cell => {
     const originalRowData = cell.row.original
     const { clusterName, namespace, resourceType } = originalRowData
 
@@ -276,7 +275,7 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
     )
   }
 
-  const RecommendationTypeCell: Renderer<CellProps<RecommendationItemDto>> = ({ row }) => {
+  const RecommendationTypeCell: Renderer<CellProps<RecommendationItemDTO>> = ({ row }) => {
     const rowData = row.original
     const { resourceType } = rowData
     return (
@@ -289,7 +288,7 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
     )
   }
 
-  const CostCell: Renderer<CellProps<RecommendationItemDto>> = cell => {
+  const CostCell: Renderer<CellProps<RecommendationItemDTO>> = cell => {
     return cell.value ? (
       <Text color={Color.GREY_600} font={{ variation: FontVariation.H6 }}>
         {formatCost(cell.value)}
@@ -297,7 +296,7 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
     ) : null
   }
 
-  const SavingCell: Renderer<CellProps<RecommendationItemDto>> = cell => {
+  const SavingCell: Renderer<CellProps<RecommendationItemDTO>> = cell => {
     return !isNaN(cell.value) ? (
       <Container>
         <Text inline color={Color.GREEN_700} font={{ variation: FontVariation.H5 }}>
@@ -314,7 +313,7 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
     <>
       <Layout.Vertical spacing="large">
         {data.length ? (
-          <TableV2<RecommendationItemDto>
+          <TableV2<RecommendationItemDTO>
             onRowClick={({ id, resourceType, resourceName, monthlySaving }) => {
               trackEvent(USER_JOURNEY_EVENTS.RECOMMENDATION_CLICK, {
                 recommendationID: id,
@@ -389,10 +388,10 @@ const RecommendationListPage: React.FC = () => {
   }>()
 
   const [filters, setFilters] = useQueryParamsState<K8sRecommendationFilterPropertiesDTO>('filters', {})
-  const [filterList, setFilterList] = useState<ResponseListFilterStatsDTO>()
-  const [recommendationStats, setRecommendationStats] = useState<ResponseRecommendationOverviewStats>()
-  const [recommendationCount, setRecommendationCount] = useState<ResponseInteger>()
-  const [recommendationList, setRecommendationList] = useState<ResponseRecommendationsDTO>()
+  const [fetchedFilterValues, setFetchedFilterValues] = useState<FilterStatsDTO[]>([])
+  const [recommendationStats, setRecommendationStats] = useState<RecommendationOverviewStats>()
+  const [recommendationCount, setRecommendationCount] = useState<number>()
+  const [recommendationList, setRecommendationList] = useState<RecommendationItemDTO[]>([])
   const [costFilters, setCostFilters] = useQueryParamsState<{ minCost: number; minSaving: number }>('costFilters', {
     minCost: 0,
     minSaving: 0
@@ -434,10 +433,8 @@ const RecommendationListPage: React.FC = () => {
 
   const { getString } = useStrings()
 
-  const totalMonthlyCost = recommendationStats?.data?.totalMonthlyCost || 0
-  const totalSavings = recommendationStats?.data?.totalMonthlySaving || 0
-
-  const recommendationItems = recommendationList?.data?.items || []
+  const totalMonthlyCost = recommendationStats?.totalMonthlyCost || 0
+  const totalSavings = recommendationStats?.totalMonthlySaving || 0
 
   const gotoPage = (pageNumber: number) => setPage(pageNumber)
 
@@ -471,14 +468,14 @@ const RecommendationListPage: React.FC = () => {
   }
 
   const pagination = {
-    itemCount: (recommendationCount?.data || 0) as number,
+    itemCount: (recommendationCount || 0) as number,
     pageSize: 10,
-    pageCount: recommendationCount?.data ? Math.ceil(recommendationCount.data / 10) : 0,
+    pageCount: recommendationCount ? Math.ceil(recommendationCount / 10) : 0,
     pageIndex: page,
     gotoPage: gotoPage
   }
 
-  const isEmptyView = !listLoading && !recommendationItems?.length
+  const isEmptyView = !listLoading && !recommendationList?.length
 
   const getRecommendationData = async () => {
     try {
@@ -497,15 +494,15 @@ const RecommendationListPage: React.FC = () => {
         })
       ])
 
-      setRecommendationStats(stats)
-      setRecommendationCount(count)
+      setRecommendationStats(stats.data)
+      setRecommendationCount(count.data)
     } catch (error: any) {
       showError(getErrorInfoFromErrorObject(error))
     }
   }
 
   const getRecommendationList = async () => {
-    const list = await fetchRecommendationList({
+    const response = await fetchRecommendationList({
       filterType: 'CCMRecommendation',
       k8sRecommendationFilterPropertiesDTO: filters,
       ...costFilters,
@@ -514,13 +511,15 @@ const RecommendationListPage: React.FC = () => {
       limit: 10
     })
 
-    setRecommendationList(list)
+    setRecommendationList(response.data?.items || [])
   }
 
   const getRecommendationFilters = async () => {
-    const filterValues = await fetchFilterValues({ columns: ['name', 'resourceType', 'namespace', 'clusterName'] })
+    const response = await fetchFilterValues({
+      columns: ['name', 'resourceType', 'namespace', 'clusterName']
+    })
 
-    setFilterList(filterValues)
+    setFetchedFilterValues(response.data || [])
   }
 
   useEffect(() => {
@@ -566,7 +565,7 @@ const RecommendationListPage: React.FC = () => {
               fetching={filtersLoading}
               setFilters={setFilters}
               filters={filters}
-              filterList={(filterList || []) as ResponseListFilterStatsDTO}
+              fetchedFilterValues={fetchedFilterValues}
               costFilters={costFilters}
               setCostFilters={setCostFilters}
             />
@@ -580,7 +579,7 @@ const RecommendationListPage: React.FC = () => {
                 amount={isEmptyView ? '$-' : formatCost(totalSavings)}
                 iconName="money-icon"
                 subTitle={getString('ce.recommendation.listPage.recommendationCount', {
-                  count: recommendationCount?.data
+                  count: recommendationCount
                 })}
               />
               {sustainabilityEnabled && (
@@ -600,7 +599,7 @@ const RecommendationListPage: React.FC = () => {
                   }
                   cardCssName={css.potentialReducedEmissionCard}
                   subTitle={getString('ce.recommendation.listPage.potentialReducedEmissionSubtitle', {
-                    count: recommendationCount?.data || 0
+                    count: recommendationCount || 0
                   })}
                 />
               )}
@@ -638,7 +637,7 @@ const RecommendationListPage: React.FC = () => {
               ccmData={ccmData?.ccmMetaData}
               pagination={pagination}
               fetching={listLoading || fetchingCCMMetaData}
-              data={recommendationItems as Array<RecommendationItemDto>}
+              data={recommendationList}
             />
           </Layout.Vertical>
         </Container>

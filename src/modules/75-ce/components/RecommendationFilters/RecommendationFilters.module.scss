@@ -70,3 +70,64 @@
 .pointer {
   cursor: pointer;
 }
+
+.checkbox {
+  width: 100%;
+  padding-top: var(--spacing-xsmall) !important;
+  padding-left: var(--spacing-xlarge) !important;
+  padding-right: var(--spacing-small) !important;
+
+  ~ :global(span .bp3-popover-target > button::before) {
+    background-color: var(--grey-100) !important;
+  }
+}
+
+.popoverContainer {
+  max-height: 340px;
+  overflow: scroll;
+
+  .menuItem {
+    padding: var(--spacing-small);
+    &:hover,
+    &:active {
+      background: var(--primary-1) !important;
+      color: var(--black) !important;
+    }
+  }
+
+  .costInput {
+    margin-top: var(--spacing-small);
+  }
+}
+
+.costInputContainer {
+  position: relative;
+  padding: var(--spacing-small) !important;
+  overflow: hidden;
+
+  .costText {
+    cursor: pointer;
+  }
+
+  .costInput {
+    position: absolute;
+    width: 120px;
+    right: -100%;
+    top: 0px;
+    transition: all 0.2s ease-in;
+
+    &.visible {
+      right: 0;
+    }
+  }
+}
+
+.filterPillContainer {
+  .filterValue {
+    max-width: 100px;
+  }
+
+  & > span {
+    line-height: 13px !important;
+  }
+}

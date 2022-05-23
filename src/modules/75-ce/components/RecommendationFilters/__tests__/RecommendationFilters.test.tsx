@@ -6,9 +6,11 @@
  */
 
 import React from 'react'
-import { queryByText, render, fireEvent, act, waitFor } from '@testing-library/react'
+import { queryByText, render, fireEvent, getByText, act, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import AnomaliesFilter from '../AnomaliesFilter'
+import RecommendationFilters from '../RecommendationFilters'
+
+const params = { accountId: 'TEST_ACC', orgIdentifier: 'TEST_ORG', projectIdentifier: 'TEST_PROJECT' }
 
 jest.mock('services/ce', () => ({
   useGetFilterList: jest.fn().mockImplementation(() => {
@@ -35,27 +37,17 @@ jest.mock('services/ce', () => ({
   })
 }))
 
-const params = {
-  accountId: 'TEST_ACC',
-  perspetiveId: 'perspectiveId',
-  perspectiveName: 'sample perspective'
-}
-
-describe('test case for anomalies detection overview page', () => {
-  test('should be able to render the overview dashboard', async () => {
-    const setFilters = jest.fn()
+describe('Tests For Recommendation Filters', () => {
+  test('Should be able to render RecommendationFilters Component', () => {
     const { container } = render(
       <TestWrapper pathParams={params}>
-        <AnomaliesFilter
-          filters={{}}
-          setFilters={setFilters}
-          timeRange={{
-            to: '2022-10-02',
-            from: '2022-10-02'
-          }}
-          setTimeRange={jest.fn}
-          fetchedFilterValues={[{ key: 'key1', values: ['val1'] }]}
+        <RecommendationFilters
+          costFilters={{ minCost: 0, minSaving: 0 }}
+          setCostFilters={jest.fn()}
           fetching={false}
+          fetchedFilterValues={[]}
+          filters={{}}
+          setFilters={jest.fn()}
         />
       </TestWrapper>
     )
@@ -68,27 +60,23 @@ describe('test case for anomalies detection overview page', () => {
     })
 
     waitFor(() => {
-      expect(queryByText(container, 'ce.recommendation.listPage.filters.minSaving')).toBeDefined()
+      expect(getByText(container, 'ce.recommendation.listPage.filters.minSaving')).toBeDefined()
       fireEvent.click(container.querySelector('[icon="plus"]')!)
-      expect(queryByText(container, 'filters.typeFilterName')).toBeDefined()
-      fireEvent.click(queryByText(container, 'save')!)
+      expect(getByText(container, 'filters.typeFilterName')).toBeDefined()
+      fireEvent.click(getByText(container, 'save')!)
     })
   })
 
-  test('should be able to render the anomaly filters when loading', async () => {
-    const setFilters = jest.fn()
+  test('Should be able to render RecommendationFilters Component When Fetching Filters', () => {
     const { container } = render(
       <TestWrapper pathParams={params}>
-        <AnomaliesFilter
-          filters={{}}
-          setFilters={setFilters}
-          timeRange={{
-            to: '2022-10-02',
-            from: '2022-10-02'
-          }}
-          setTimeRange={jest.fn}
-          fetchedFilterValues={[{ key: 'key1', values: ['val1'] }]}
+        <RecommendationFilters
+          costFilters={{ minCost: 0, minSaving: 0 }}
+          setCostFilters={jest.fn()}
           fetching={true}
+          fetchedFilterValues={[]}
+          filters={{}}
+          setFilters={jest.fn()}
         />
       </TestWrapper>
     )

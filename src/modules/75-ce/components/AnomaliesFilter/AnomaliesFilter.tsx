@@ -61,7 +61,7 @@ const AnomalyFilters: React.FC<AnomalyFiltersProps> = ({
             placeholder={getString(savedFilters.length > 0 ? 'filters.selectFilter' : 'common.filters.noFilterSaved')}
             filterable={false}
             disabled={savedFilters.length === 0}
-            onChange={option => setSavedFilter(option)}
+            onChange={/* istanbul ignore next */ option => setSavedFilter(option)}
             addClearBtn={true}
             value={selectedFilter?.identifier}
             items={savedFilterOptions}
