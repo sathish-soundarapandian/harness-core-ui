@@ -21,19 +21,21 @@ jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('services/cd-ng', () => ({
   useGetConnector: jest.fn(() => ConnectorResponse),
   getConnectorListV2Promise: jest.fn(() => Promise.resolve(ConnectorsResponse.data)),
-  useValidateSshHosts: jest.fn(() => jest.fn(() => ({ mutate: jest.fn() })))
+  useValidateSshHosts: jest.fn(() => jest.fn(() => ({ mutate: jest.fn() }))),
+  useFilterHostsByConnector: jest.fn(() => ({ mutate: jest.fn(() => Promise.resolve({ data: { content: [] } })) })),
+  useValidateHosts: jest.fn(() => ({ mutate: jest.fn(() => Promise.resolve({ data: { content: [] } })) }))
 }))
 
 const getRuntimeInputsValues = () => ({
-  connectorRef: RUNTIME_INPUT_VALUE
+  credentialsRef: RUNTIME_INPUT_VALUE
 })
 
 const getInitialValues = () => ({
-  connectorRef: 'connectorRef'
+  credentialsRef: 'credentialsRef'
 })
 
 const getEmptyInitialValues = () => ({
-  connectorRef: ''
+  credentialsRef: ''
 })
 
 const getInvalidYaml = () => `p ipe<>line:
@@ -47,9 +49,9 @@ const getYaml = () => `pipeline:
               spec:
                   infrastructure:
                       infrastructureDefinition:
-                          type: PDC
+                          type: Pdc
                           spec:
-                              connectorRef: account.connectorRef`
+                          credentialsRef: account.credentialsRef`
 
 const getParams = () => ({
   accountId: 'accountId',
@@ -59,61 +61,7 @@ const getParams = () => ({
   projectIdentifier: 'projectIdentifier'
 })
 
-const connectorRefPath = 'pipeline.stages.0.stage.spec.infrastructure.infrastructureDefinition.spec.connectorRef'
-
-describe('Test PDCInfrastructureSpec snapshot', () => {
-  beforeEach(() => {
-    factory.registerStep(new PDCInfrastructureSpec())
-  })
-
-  test('should render edit view with empty initial values', () => {
-    const { container } = render(
-      <TestStepWidget initialValues={{}} type={StepType.PDC} stepViewType={StepViewType.Edit} />
-    )
-    expect(container).toMatchSnapshot()
-  })
-
-  test('should render edit view with values ', () => {
-    const { container } = render(
-      <TestStepWidget initialValues={getInitialValues()} type={StepType.PDC} stepViewType={StepViewType.Edit} />
-    )
-    expect(container).toMatchSnapshot()
-  })
-
-  test('should render edit view with runtime values ', () => {
-    const { container } = render(
-      <TestStepWidget initialValues={getRuntimeInputsValues()} type={StepType.PDC} stepViewType={StepViewType.Edit} />
-    )
-    expect(container).toMatchSnapshot()
-  })
-
-  test('should render edit view for inputset view', () => {
-    const { container } = render(
-      <TestStepWidget
-        initialValues={getInitialValues()}
-        template={getRuntimeInputsValues()}
-        allValues={getInitialValues()}
-        type={StepType.PDC}
-        stepViewType={StepViewType.InputSet}
-      />
-    )
-    expect(container).toMatchSnapshot()
-  })
-
-  test('should render variable view', () => {
-    const { container } = render(
-      <TestStepWidget
-        initialValues={getInitialValues()}
-        template={getRuntimeInputsValues()}
-        allValues={getInitialValues()}
-        type={StepType.PDC}
-        stepViewType={StepViewType.InputVariable}
-      />
-    )
-
-    expect(container).toMatchSnapshot()
-  })
-})
+const credentialsRefPath = 'pipeline.stages.0.stage.spec.infrastructure.infrastructureDefinition.spec.credentialsRef'
 
 describe('Test PDCInfrastructureSpec behavior', () => {
   beforeEach(() => {
@@ -165,7 +113,7 @@ describe('Test PDCInfrastructureSpec autocomplete', () => {
     const step = new PDCInfrastructureSpec() as any
     let list: CompletionItemInterface[]
 
-    list = await step.getConnectorsListForYaml(connectorRefPath, getYaml(), getParams())
+    list = await step.getConnectorsListForYaml(credentialsRefPath, getYaml(), getParams())
     expect(list).toHaveLength(1)
     expect(list[0].insertText).toBe('Pdc')
 
@@ -174,7 +122,7 @@ describe('Test PDCInfrastructureSpec autocomplete', () => {
 
     // TODO: create yaml that cause yaml.parse to throw an error
     // its expected that yaml.parse throw an error but is not happening
-    list = await step.getConnectorsListForYaml(connectorRefPath, getInvalidYaml(), getParams())
+    list = await step.getConnectorsListForYaml(credentialsRefPath, getInvalidYaml(), getParams())
     expect(list).toHaveLength(0)
   })
 })

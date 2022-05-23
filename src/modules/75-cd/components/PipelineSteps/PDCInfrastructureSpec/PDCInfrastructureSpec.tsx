@@ -198,7 +198,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
         })
         set(values, 'sshKey', secretData)
       } catch (e) {
-        showError(e.data.message || e.message)
+        showError(e.data?.message || e.message)
       }
       setFormikInitialValues(values as any)
     }
