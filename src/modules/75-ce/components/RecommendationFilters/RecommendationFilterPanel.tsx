@@ -141,6 +141,72 @@ const useRecommendationFilterPanel = ({
     return options
   }
 
+  const handleDeleteFilter = async (item: FilterDTO) => {
+    await deleteFilter(item.identifier)
+    setUpdatedFilters({})
+    refetchSavedFilters()
+    setFilterName('')
+  }
+
+  const handleEditFilter = (item: FilterDTO) => {
+    const filterProperties = item.filterProperties as ExtendedFilterProperties
+
+    setFilterFlow('edit')
+    setFilterName(item.name)
+    setFilterVisibility(item.filterVisibility || 'EveryOne')
+    setSelectedFilter(item)
+    setUpdatedFilters(filterProperties.k8sRecommendationFilterPropertiesDTO || {})
+    setUpdatedCostFilters({
+      minCost: filterProperties.minCost || 0,
+      minSaving: filterProperties.minSaving || 0
+    })
+  }
+
+  const handleClearAllFilters = () => {
+    setFilters({})
+    setUpdatedFilters({})
+    const defaultCostFilters = { minCost: 0, minSaving: 0 }
+    setCostFilters(defaultCostFilters)
+    setUpdatedCostFilters(defaultCostFilters)
+    setSelectedFilter(undefined)
+    setFilterFlow(null)
+  }
+
+  const createOrUpdateFilter = async () => {
+    if (filterName) {
+      const payload = {
+        name: filterName,
+        filterVisibility,
+        filterProperties: {
+          filterType: 'CCMRecommendation',
+          k8sRecommendationFilterPropertiesDTO: updatedFilters,
+          ...updatedCostFilters
+        } as FilterProperties
+      }
+
+      if (filterFlow === 'create') {
+        await createFilter({ ...payload, identifier: getIdentifierFromName(filterName) })
+      } else if (filterFlow === 'edit' && selectedFilter?.identifier) {
+        await updateFilter({ ...payload, identifier: selectedFilter?.identifier })
+      }
+    }
+
+    setFilterFlow(null)
+    refetchSavedFilters()
+  }
+
+  const handleSelectedFilter = (item: FilterDTO) => {
+    const filterProperties = item.filterProperties as ExtendedFilterProperties
+
+    setSelectedFilter(item)
+    setUpdatedFilters(filterProperties.k8sRecommendationFilterPropertiesDTO || {})
+    setUpdatedCostFilters({
+      minCost: filterProperties.minCost || 0,
+      minSaving: filterProperties.minSaving || 0
+    })
+    setFilterFlow(null)
+  }
+
   const [openFilterDrawer, hideFilterDrawer] = useModalHook(() => {
     return (
       <Drawer onClose={hideFilterDrawer} className={css.filterDrawer} {...drawerProps}>
@@ -233,15 +299,7 @@ const useRecommendationFilterPanel = ({
                 text={getString('filters.clearAll')}
                 variation={ButtonVariation.TERTIARY}
                 margin={{ left: 'small' }}
-                onClick={() => {
-                  setFilters({})
-                  setUpdatedFilters({})
-                  const defaultCostFilters = { minCost: 0, minSaving: 0 }
-                  setCostFilters(defaultCostFilters)
-                  setUpdatedCostFilters(defaultCostFilters)
-                  setSelectedFilter(undefined)
-                  setFilterFlow(null)
-                }}
+                onClick={handleClearAllFilters}
               />
             </Container>
           </Layout.Vertical>
@@ -292,57 +350,22 @@ const useRecommendationFilterPanel = ({
                             padding={{ left: item.filterVisibility === 'OnlyCreator' ? 'small' : 'xlarge' }}
                             font={{ variation: FontVariation.SMALL_SEMI }}
                             color={Color.WHITE}
-                            onClick={() => {
-                              setSelectedFilter(item)
-                              setUpdatedFilters(
-                                (item.filterProperties as ExtendedFilterProperties)
-                                  .k8sRecommendationFilterPropertiesDTO || {}
-                              )
-
-                              setUpdatedCostFilters({
-                                minCost: (item.filterProperties as ExtendedFilterProperties).minCost || 0,
-                                minSaving: (item.filterProperties as ExtendedFilterProperties).minSaving || 0
-                              })
-                              setFilterFlow(null)
-                            }}
+                            onClick={() => handleSelectedFilter(item)}
                           >
                             {item.name}
                           </Text>
                         </Layout.Horizontal>
                         <Popover
                           position="left"
-                          interactionKind={'hover'}
                           className={Classes.DARK}
                           usePortal={false}
                           content={
                             <Menu>
-                              <MenuItem
-                                text={getString('edit')}
-                                icon="edit"
-                                onClick={() => {
-                                  setFilterFlow('edit')
-                                  setFilterName(item.name)
-                                  setFilterVisibility(item.filterVisibility || 'EveryOne')
-                                  setSelectedFilter(item)
-                                  setUpdatedFilters(
-                                    (item.filterProperties as ExtendedFilterProperties)
-                                      .k8sRecommendationFilterPropertiesDTO || {}
-                                  )
-                                  setUpdatedCostFilters({
-                                    minCost: (item.filterProperties as ExtendedFilterProperties).minCost || 0,
-                                    minSaving: (item.filterProperties as ExtendedFilterProperties).minSaving || 0
-                                  })
-                                }}
-                              />
+                              <MenuItem text={getString('edit')} icon="edit" onClick={() => handleEditFilter(item)} />
                               <MenuItem
                                 text={getString('delete')}
                                 icon="trash"
-                                onClick={async () => {
-                                  await deleteFilter(item.identifier)
-                                  setUpdatedFilters({})
-                                  refetchSavedFilters()
-                                  setFilterName('')
-                                }}
+                                onClick={() => handleDeleteFilter(item)}
                               />
                             </Menu>
                           }
@@ -389,28 +412,7 @@ const useRecommendationFilterPanel = ({
                     <Button
                       text={getString(filterFlow === 'create' ? 'save' : 'update')}
                       variation={ButtonVariation.SECONDARY}
-                      onClick={async () => {
-                        if (filterName) {
-                          const payload = {
-                            name: filterName,
-                            filterVisibility,
-                            filterProperties: {
-                              filterType: 'CCMRecommendation',
-                              k8sRecommendationFilterPropertiesDTO: updatedFilters,
-                              ...updatedCostFilters
-                            } as FilterProperties
-                          }
-
-                          if (filterFlow === 'create') {
-                            await createFilter({ ...payload, identifier: getIdentifierFromName(filterName) })
-                          } else if (filterFlow === 'edit' && selectedFilter?.identifier) {
-                            await updateFilter({ ...payload, identifier: selectedFilter?.identifier })
-                          }
-                        }
-
-                        setFilterFlow(null)
-                        refetchSavedFilters()
-                      }}
+                      onClick={createOrUpdateFilter}
                     />
                     <Button
                       text={getString('cancel')}

@@ -6,20 +6,41 @@
  */
 
 import React from 'react'
-import { queryByText, render, fireEvent, getByText, act, waitFor } from '@testing-library/react'
-import { TestWrapper } from '@common/utils/testUtils'
+import {
+  queryByText,
+  render,
+  fireEvent,
+  getByText,
+  act,
+  getByPlaceholderText,
+  waitFor,
+  queryByPlaceholderText
+} from '@testing-library/react'
+import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import RecommendationFilters from '../RecommendationFilters'
+import SavedFilterData from './SavedFilterData.json'
 
 const params = { accountId: 'TEST_ACC', orgIdentifier: 'TEST_ORG', projectIdentifier: 'TEST_PROJECT' }
 
+const findDrawerContainer = (): HTMLElement | null => document.querySelector('.bp3-drawer')
+
 jest.mock('services/ce', () => ({
-  useGetFilterList: jest.fn().mockImplementation(() => {
-    return {
-      data: [],
-      refetch: jest.fn(),
-      loading: false
-    }
-  }),
+  useGetFilterList: jest
+    .fn()
+    .mockImplementationOnce(() => {
+      return {
+        data: {},
+        refetch: jest.fn(),
+        loading: false
+      }
+    })
+    .mockImplementation(() => {
+      return {
+        data: SavedFilterData,
+        refetch: jest.fn(),
+        loading: false
+      }
+    }),
   usePostFilter: jest.fn().mockImplementation(() => {
     return {
       mutate: jest.fn()
@@ -38,7 +59,9 @@ jest.mock('services/ce', () => ({
 }))
 
 describe('Tests For Recommendation Filters', () => {
-  test('Should be able to render RecommendationFilters Component', () => {
+  test('Should be able to render component when no saved filters', () => {
+    const setFilters = jest.fn()
+
     const { container } = render(
       <TestWrapper pathParams={params}>
         <RecommendationFilters
@@ -47,27 +70,42 @@ describe('Tests For Recommendation Filters', () => {
           fetching={false}
           fetchedFilterValues={[]}
           filters={{}}
-          setFilters={jest.fn()}
+          setFilters={setFilters}
         />
       </TestWrapper>
     )
 
-    expect(queryByText(container, 'filters.selectFilter')).toBeDefined()
-
-    const filterPanelButton = container.querySelector('[data-icon="ng-filter"]')
-    act(() => {
-      fireEvent.click(filterPanelButton!)
-    })
-
-    waitFor(() => {
-      expect(getByText(container, 'ce.recommendation.listPage.filters.minSaving')).toBeDefined()
-      fireEvent.click(container.querySelector('[icon="plus"]')!)
-      expect(getByText(container, 'filters.typeFilterName')).toBeDefined()
-      fireEvent.click(getByText(container, 'save')!)
-    })
+    expect(queryByText(container, 'common.filters.noFilterSaved')).toBeDefined()
   })
 
-  test('Should be able to render RecommendationFilters Component When Fetching Filters', () => {
+  test('Should be able to select saved filter', () => {
+    const setFilters = jest.fn()
+
+    const { container } = render(
+      <TestWrapper pathParams={params}>
+        <RecommendationFilters
+          costFilters={{ minCost: 0, minSaving: 0 }}
+          setCostFilters={jest.fn()}
+          fetching={false}
+          fetchedFilterValues={[]}
+          filters={{}}
+          setFilters={setFilters}
+        />
+      </TestWrapper>
+    )
+
+    const selectedFilter = queryByText(container, 'filters.selectFilter')
+
+    fireEvent.click(selectedFilter!)
+
+    fireEvent.click(queryByText(container, 'Test 2')!)
+
+    expect(setFilters).toBeCalledWith(
+      SavedFilterData.data.content[1].filterProperties.k8sRecommendationFilterPropertiesDTO
+    )
+  })
+
+  test('Should be able to render RecommendationFilters Component when fetching filters', () => {
     const { container } = render(
       <TestWrapper pathParams={params}>
         <RecommendationFilters
@@ -82,5 +120,112 @@ describe('Tests For Recommendation Filters', () => {
     )
 
     expect(container.querySelector('[data-icon="spinner"]')).toBeDefined()
+  })
+
+  const props = {
+    fetching: false,
+    fetchedFilterValues: [
+      {
+        key: 'name',
+        values: ['default-pool', 'general-preemptible', 'pool-1', 'pool-2']
+      },
+      {
+        key: 'resourceType',
+        values: ['NODE_POOL']
+      },
+      {
+        key: 'clusterName',
+        values: ['609cfe4282d2f0abd7fc4549', '611a2e7f82d2f0abd7f4e9f8']
+      }
+    ],
+    costFilters: { minCost: 0, minSaving: 0 },
+    setCostFilters: jest.fn(),
+    filters: { names: ['general-preemptible'] },
+    setFilters: jest.fn()
+  }
+
+  test('Should be able to edit and delete saved filter', async () => {
+    const { container } = render(
+      <TestWrapper pathParams={params}>
+        <RecommendationFilters {...props} />
+      </TestWrapper>
+    )
+
+    expect(queryByText(container, 'filters.selectFilter')).toBeDefined()
+
+    const filterPanelButton = container.querySelector('[data-icon="ng-filter"]')
+
+    act(() => {
+      fireEvent.click(filterPanelButton!)
+    })
+
+    const drawer = findDrawerContainer()
+
+    expect(getByText(drawer!, 'ce.recommendation.listPage.filters.minSaving')).toBeDefined()
+    fireEvent.click(drawer?.querySelector('[icon="plus"]')!)
+    expect(getByPlaceholderText(drawer!, 'filters.typeFilterName')).toBeDefined()
+    fireEvent.click(queryByText(drawer!, 'Test 2')!)
+
+    fireEvent.click(drawer?.querySelectorAll('[data-icon="Options"]')[2]!)
+
+    const menu1 = findPopoverContainer()
+    fireEvent.click(menu1?.querySelector('[data-icon="edit"]')!)
+    fireEvent.click(getByText(drawer!, 'update'))
+
+    fireEvent.click(queryByText(drawer!, 'Test3')!)
+    fireEvent.click(drawer?.querySelectorAll('[data-icon="Options"]')[3]!)
+    const menu2 = findPopoverContainer()
+    fireEvent.click(menu2?.querySelector('[data-icon="trash"]')!)
+  })
+
+  test('Should be able to create new filter', async () => {
+    const { container } = render(
+      <TestWrapper pathParams={params}>
+        <RecommendationFilters {...props} />
+      </TestWrapper>
+    )
+
+    expect(queryByText(container, 'filters.selectFilter')).toBeDefined()
+
+    const filterPanelButton = container.querySelector('[data-icon="ng-filter"]')
+
+    act(() => {
+      fireEvent.click(filterPanelButton!)
+    })
+
+    const drawer = findDrawerContainer()
+
+    expect(getByText(drawer!, 'ce.recommendation.listPage.filters.minSaving')).toBeDefined()
+    fireEvent.click(drawer?.querySelector('[icon="plus"]')!)
+    expect(getByPlaceholderText(drawer!, 'filters.typeFilterName')).toBeDefined()
+
+    fireEvent.change(getByPlaceholderText(drawer!, 'filters.typeFilterName'), { target: { value: 'mock_name' } })
+    fireEvent.click(getByText(drawer!, 'save'))
+
+    await waitFor(() => expect(queryByPlaceholderText(drawer!, 'filters.typeFilterName')).toBeNull())
+  })
+
+  test('Should be able to set and apply filters and clear them', async () => {
+    const { container } = render(
+      <TestWrapper pathParams={params}>
+        <RecommendationFilters {...props} />
+      </TestWrapper>
+    )
+
+    const filterPanelButton = container.querySelector('[data-icon="ng-filter"]')
+
+    act(() => {
+      fireEvent.click(filterPanelButton!)
+    })
+
+    const drawer = findDrawerContainer()
+
+    fireEvent.change(drawer?.querySelectorAll('input[value="0"]')[0]!, { target: { value: 200 } })
+    fireEvent.click(getByText(drawer!, 'filters.clearAll'))
+
+    fireEvent.change(drawer?.querySelectorAll('input[value="0"]')[1]!, { target: { value: 150 } })
+    fireEvent.click(getByText(drawer!, 'common.apply'))
+
+    expect(drawer?.querySelector('input[value="150"]')).toBeDefined()
   })
 })

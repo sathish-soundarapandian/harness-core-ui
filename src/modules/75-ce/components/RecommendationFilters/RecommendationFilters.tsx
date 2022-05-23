@@ -54,7 +54,7 @@ const RecommendationFilters: React.FC<RecommendationFiltersProps> = ({
         placeholder={getString(savedFilters.length > 0 ? 'filters.selectFilter' : 'common.filters.noFilterSaved')}
         filterable={false}
         disabled={savedFilters.length === 0}
-        onChange={/* istanbul ignore next */ option => setSavedFilter(option)}
+        onChange={option => setSavedFilter(option)}
         addClearBtn={true}
         value={selectedFilter?.identifier}
         items={savedFilterOptions}

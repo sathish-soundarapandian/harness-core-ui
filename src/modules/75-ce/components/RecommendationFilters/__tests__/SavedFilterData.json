@@ -1,0 +1,84 @@
+{
+  "data": {
+    "totalPages": 1,
+    "totalItems": 4,
+    "pageItemCount": 4,
+    "pageSize": 100,
+    "content": [
+      {
+        "name": "4",
+        "identifier": "Test_1",
+        "orgIdentifier": null,
+        "projectIdentifier": null,
+        "filterProperties": {
+          "k8sRecommendationFilterPropertiesDTO": {},
+          "perspectiveFilters": null,
+          "minSaving": 0,
+          "minCost": 0,
+          "offset": null,
+          "limit": null,
+          "tags": {},
+          "filterType": "CCMRecommendation"
+        },
+        "filterVisibility": "EveryOne"
+      },
+      {
+        "name": "Test 2",
+        "identifier": "Test_2",
+        "orgIdentifier": null,
+        "projectIdentifier": null,
+        "filterProperties": {
+          "k8sRecommendationFilterPropertiesDTO": {
+            "names": ["general-preemptible"]
+          },
+          "perspectiveFilters": null,
+          "minSaving": 0,
+          "minCost": 0,
+          "offset": null,
+          "limit": null,
+          "tags": {},
+          "filterType": "CCMRecommendation"
+        },
+        "filterVisibility": "EveryOne"
+      },
+      {
+        "name": "Test 3",
+        "identifier": "Test_3",
+        "orgIdentifier": null,
+        "projectIdentifier": null,
+        "filterProperties": {
+          "k8sRecommendationFilterPropertiesDTO": {
+            "clusterNames": ["609cfe4282d2f0abd7fc4549"]
+          },
+          "perspectiveFilters": null,
+          "minSaving": 0,
+          "minCost": 0,
+          "offset": null,
+          "limit": null,
+          "tags": {},
+          "filterType": "CCMRecommendation"
+        },
+        "filterVisibility": "EveryOne"
+      },
+      {
+        "name": "Test3",
+        "identifier": "Test3",
+        "orgIdentifier": null,
+        "projectIdentifier": null,
+        "filterProperties": {
+          "k8sRecommendationFilterPropertiesDTO": {},
+          "perspectiveFilters": null,
+          "minSaving": 0,
+          "minCost": 0,
+          "offset": null,
+          "limit": null,
+          "tags": {},
+          "filterType": "CCMRecommendation"
+        },
+        "filterVisibility": "OnlyCreator"
+      }
+    ],
+    "pageIndex": 0,
+    "empty": false
+  }
+}
