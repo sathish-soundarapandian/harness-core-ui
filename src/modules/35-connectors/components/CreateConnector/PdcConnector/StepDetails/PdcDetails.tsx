@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useMemo } from 'react'
 import {
   Layout,
   Button,
@@ -27,13 +27,8 @@ import css from '../CreatePdcConnector.module.scss'
 interface PdcDetailsProps {
   name: string
   isEditMode: boolean
-  setIsEditMode: (val: boolean) => void
-  setFormData?: (formData: ConnectorConfigDTO) => void
   onConnectorCreated: (data?: ConnectorConfigDTO) => void | Promise<void>
   connectorInfo: ConnectorInfoDTO | void
-  accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
 }
 
 export interface uploadHostItem {
@@ -42,21 +37,15 @@ export interface uploadHostItem {
 interface StepConfigureProps {
   closeModal?: () => void
   onSuccess?: () => void
-  hosts?: string | []
-  spec?: { hosts: string }
+  hosts?: string | string[]
+  spec?: { hosts: string | any[] }
 }
 
-const PdcDetails: React.FC<StepProps<StepConfigureProps> & PdcDetailsProps> = props => {
-  const { prevStepData, nextStep, isEditMode } = props
+const PdcDetails: React.FC<StepProps<StepConfigureProps> & Partial<PdcDetailsProps>> = props => {
+  const { prevStepData, nextStep } = props
   const { getString } = useStrings()
 
   const [hostsJSON, setHostsJSON] = useState([] as uploadHostItem[])
-
-  useEffect(() => {
-    if (typeof prevStepData?.spec?.hosts === 'object' && !isEditMode) {
-      setHostsJSON(prevStepData?.spec?.hosts)
-    }
-  }, [])
 
   const handleSubmit = (formData: ConnectorConfigDTO) => {
     const data = { ...formData }

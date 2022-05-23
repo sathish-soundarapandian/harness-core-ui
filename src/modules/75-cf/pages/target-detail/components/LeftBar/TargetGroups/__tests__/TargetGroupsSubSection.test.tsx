@@ -33,6 +33,7 @@ const renderComponent = (props: Partial<TargetGroupsSubSectionProps> = {}): Rend
         modalTitle="cf.targetDetail.addTargetToSegment"
         addButtonText="cf.targetDetail.addToSegment"
         noDataMessage="cf.targetDetail.noSegmentAdded"
+        instructionKind="addToIncludeList"
         {...props}
       />
     </TestWrapper>

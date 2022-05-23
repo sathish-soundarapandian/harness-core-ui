@@ -6,24 +6,23 @@
  */
 
 import React, { FC } from 'react'
-import { useParams } from 'react-router-dom'
-import { ButtonVariation, Layout, Text, useToaster } from '@harness/uicore'
+import { Button, ButtonVariation, Layout, Text, useToaster } from '@harness/uicore'
 import { FontVariation, Intent } from '@harness/design-system'
-import type { Segment, Target, TargetDetailSegment } from 'services/cf'
+import type { Target, TargetDetailSegment } from 'services/cf'
 import { String, StringKeys, useStrings } from 'framework/strings'
-import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
-import { SelectSegmentsModalButton } from '@cf/components/SelectSegmentsModalButton/SelectSegmentsModalButton'
 import TargetGroupRow from '@cf/pages/target-detail/components/LeftBar/TargetGroups/TargetGroupRow'
 import { NoDataFoundRow } from '@cf/components/NoDataFoundRow/NoDataFoundRow'
 import type { useAddTargetsToExcludeList } from '@cf/utils/SegmentUtils'
 import { getErrorMessage } from '@cf/utils/CFUtils'
+import type { Instruction } from '@cf/utils/instructions'
+import useAddTargetToTargetGroupsDialog from '@cf/pages/target-detail/hooks/useAddTargetToTargetGroupsDialog'
 
 import css from './TargetGroupsSubSection.module.scss'
 
 export interface TargetGroupsSubSectionProps {
   target: Target
   targetGroups: TargetDetailSegment[]
-  onAddTargetGroups: (targetGroups: Segment[]) => Promise<void>
+  onAddTargetGroups: () => void
   removeTargetGroup: ReturnType<typeof useAddTargetsToExcludeList>
   onRemoveTargetGroup: () => void
   sectionTitle: StringKeys
@@ -31,6 +30,7 @@ export interface TargetGroupsSubSectionProps {
   modalTitle: StringKeys
   addButtonText: StringKeys
   noDataMessage: StringKeys
+  instructionKind: Instruction['kind']
 }
 
 const TargetGroupsSubSection: FC<TargetGroupsSubSectionProps> = ({
@@ -43,12 +43,19 @@ const TargetGroupsSubSection: FC<TargetGroupsSubSectionProps> = ({
   sectionTitleTooltipId,
   modalTitle,
   addButtonText,
-  noDataMessage
+  noDataMessage,
+  instructionKind
 }) => {
   const { getString } = useStrings()
-  const { accountId: accountIdentifier, orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
-  const { activeEnvironment: environmentIdentifier } = useActiveEnvironment()
   const { showError } = useToaster()
+
+  const [openAddTargetToTargetGroupsDialog] = useAddTargetToTargetGroupsDialog(
+    target,
+    onAddTargetGroups,
+    getString(modalTitle),
+    addButtonText,
+    instructionKind
+  )
 
   return (
     <Layout.Vertical spacing="xsmall">
@@ -64,19 +71,11 @@ const TargetGroupsSubSection: FC<TargetGroupsSubSectionProps> = ({
         >
           {getString(sectionTitle)}
         </Text>
-        <SelectSegmentsModalButton
+        <Button
           className={css.addBtn}
           text={getString(addButtonText)}
-          minimal
-          intent="primary"
           variation={ButtonVariation.LINK}
-          accountIdentifier={accountIdentifier}
-          orgIdentifier={orgIdentifier}
-          projectIdentifier={projectIdentifier}
-          environmentIdentifier={environmentIdentifier}
-          targetIdentifier={target.identifier}
-          modalTitle={getString(modalTitle)}
-          onSubmit={onAddTargetGroups}
+          onClick={() => openAddTargetToTargetGroupsDialog()}
         />
       </Layout.Horizontal>
       {targetGroups.length ? (

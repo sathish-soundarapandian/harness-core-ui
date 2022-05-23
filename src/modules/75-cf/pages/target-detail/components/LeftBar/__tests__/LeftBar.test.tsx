@@ -33,4 +33,10 @@ describe('LeftBar', () => {
 
     expect(screen.getByText('cf.targetDetail.attributes')).toBeInTheDocument()
   })
+
+  test('it should display the Target Groups tab', async () => {
+    renderComponent()
+
+    expect(screen.getByText('cf.shared.segments')).toBeInTheDocument()
+  })
 })

@@ -142,6 +142,10 @@ export interface EnvironmentPathProps {
   environmentIdentifier: string
 }
 
+export interface EnvironmentQueryParams {
+  sectionId?: 'CONFIGURATION'
+}
+
 export interface EnvironmentGroupPathProps {
   environmentGroupIdentifier: string
 }
@@ -158,7 +162,14 @@ export interface ServicePathProps {
   serviceId: string
 }
 
-export type ModuleNameMatch = ':module' | ':module(ci)' | ':module(cd)' | ':module(cf)' | ':module(cv)' | ':module(ce)'
+export type ModuleNameMatch =
+  | ':module'
+  | ':module(ci)'
+  | ':module(cd)'
+  | ':module(cf)'
+  | ':module(cv)'
+  | ':module(ce)'
+  | ':module(sto)'
 
 export type Module = ModuleName | ModuleNameMatch
 

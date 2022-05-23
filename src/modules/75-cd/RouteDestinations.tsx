@@ -31,7 +31,8 @@ import {
   serviceAccountProps,
   servicePathProps,
   templatePathProps,
-  environmentGroupPathProps
+  environmentGroupPathProps,
+  environmentPathProps
 } from '@common/utils/routeUtils'
 import type {
   PipelinePathProps,
@@ -119,8 +120,11 @@ import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import GitSyncConfigTab from '@gitsync/pages/config/GitSyncConfigTab'
 import FullPageLogView from '@pipeline/pages/full-page-log-view/FullPageLogView'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+import type { ModuleListCardProps } from '@projects-orgs/components/ModuleListCard/ModuleListCard'
 import VariablesPage from '@variables/pages/variables/VariablesPage'
 import { Environments } from './components/Environments/Environments'
+import { Environments as EnvironmentsV2 } from './components/EnvironmentsV2/Environments'
+import EnvironmentDetails from './components/EnvironmentsV2/EnvironmentDetails/EnvironmentDetails'
 import EnvironmentGroups from './components/EnvironmentGroups/EnvironmentGroups'
 import EnvironmentGroupDetails from './components/EnvironmentGroups/EnvironmentGroupDetails/EnvironmentGroupDetails'
 
@@ -137,16 +141,14 @@ import { KubernetesArtifacts } from './components/PipelineSteps/K8sServiceSpec/K
 import { KubernetesManifests } from './components/PipelineSteps/K8sServiceSpec/KubernetesManifests/KubernetesManifests'
 import manifestSourceBaseFactory from './factory/ManifestSourceFactory/ManifestSourceBaseFactory'
 import {
-  DeployServiceWidget,
-  NewEditServiceModal
-} from './components/PipelineSteps/DeployServiceStep/DeployServiceStep'
-import {
   DeployEnvironmentWidget,
   NewEditEnvironmentModal
 } from './components/PipelineSteps/DeployEnvStep/DeployEnvStep'
 import type { GitOpsCustomMicroFrontendProps } from './interfaces/GitOps.types'
 import { getBannerText } from './utils/renderMessageUtils'
 import ServiceStudio from './components/Services/ServiceStudio/ServiceStudio'
+import { DeployServiceWidget } from './components/PipelineSteps/DeployServiceStep/DeployServiceWidget'
+import { NewEditServiceModal } from './components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
 
 // eslint-disable-next-line import/no-unresolved
 const GitOpsServersList = React.lazy(() => import('gitopsui/MicroFrontendApp'))
@@ -298,13 +300,17 @@ const RedirectToCDProject = (): React.ReactElement => {
 }
 
 const CDDashboardPageOrRedirect = (): React.ReactElement => {
-  const params = useParams<ProjectPathProps>()
+  const params = useParams<ProjectPathProps & ModuleListCardProps>()
+  const { module } = params
   const { selectedProject } = useAppStore()
   const isCommunity = isCommunityPlan()
 
   if (!isCommunity) {
     return <CDDashboardPage />
-  } else if (selectedProject?.modules?.includes(ModuleName.CD)) {
+  } else if (
+    selectedProject?.modules?.includes(ModuleName.CD) ||
+    (module && module.toUpperCase() === ModuleName.CD.toUpperCase())
+  ) {
     return <Redirect to={routes.toDeployments({ ...params, module: 'cd' })} />
   } else {
     return <Redirect to={routes.toCDHome(params)} />
@@ -384,6 +390,16 @@ const RedirectToSubscriptions = (): React.ReactElement => {
   )
 }
 
+const EnvironmentsPage = (): React.ReactElement | null => {
+  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
+
+  if (NG_SVC_ENV_REDESIGN) {
+    return <EnvironmentsV2 />
+  } else {
+    return <Environments />
+  }
+}
+
 const licenseRedirectData: LicenseRedirectProps = {
   licenseStateName: LICENSE_STATE_NAMES.CD_LICENSE_STATE,
   startTrialRedirect: RedirectToModuleTrialHome,
@@ -414,6 +430,7 @@ TriggerFactory.registerTriggerForm(TriggerFormType.Artifact, {
   component: KubernetesArtifacts,
   baseFactory: artifactSourceBaseFactory
 })
+const isCommunity = isCommunityPlan()
 
 export default (
   <>
@@ -484,16 +501,25 @@ export default (
       })}
       pageName={PAGE_NAME.ServiceStudio}
     >
-      <ServiceStudio />
+      {!isCommunity ? <ServiceStudio /> : <Services />}
     </RouteWithLayout>
     <RouteWithLayout
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={CDSideNavProps}
-      path={routes.toEnvironment({ ...accountPathProps, ...projectPathProps, ...pipelineModuleParams })}
+      path={routes.toEnvironment({ ...projectPathProps, ...pipelineModuleParams })}
       pageName={PAGE_NAME.Environments}
     >
-      <Environments />
+      <EnvironmentsPage />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CDSideNavProps}
+      path={routes.toEnvironmentDetails({ ...projectPathProps, ...pipelineModuleParams, ...environmentPathProps })}
+      pageName={PAGE_NAME.Environments}
+    >
+      <EnvironmentDetails />
     </RouteWithLayout>
     <RouteWithLayout
       exact

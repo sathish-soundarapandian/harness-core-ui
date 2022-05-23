@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import {
   Card,
   Container,
@@ -20,8 +20,8 @@ import {
 import { useParams } from 'react-router-dom'
 import { FontVariation, Color } from '@harness/design-system'
 import cx from 'classnames'
-import { TimeRangeToDays, useLandingDashboardContext } from '@common/factories/LandingDashboardContext'
-import { useStrings } from 'framework/strings'
+import { useLandingDashboardContext } from '@common/factories/LandingDashboardContext'
+import { useStrings, String } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
@@ -55,9 +55,17 @@ const renderTooltipForProjectLabel = (
   return (
     <Layout.Vertical padding="medium" spacing="small">
       <Text color={Color.WHITE}>{projectData?.projectInfo?.projectName ?? ''}</Text>
-      <Text icon="union" iconProps={{ color: Color.GREY_300 }} color={Color.GREY_300}>
-        {projectData?.orgInfo?.orgName ?? ''}
-      </Text>
+      {projectData?.orgInfo?.orgName ? (
+        <Layout.Horizontal padding={{ top: 'small' }} flex={{ alignItems: 'center' }}>
+          <Icon name="union" color={Color.GREY_300} margin={{ right: 'xsmall' }} />
+          <Text inline color={Color.GREY_300}>
+            <String stringID="common.org" />
+          </Text>
+          <Text color={Color.GREY_300}>:&nbsp;</Text>
+
+          <Text color={Color.WHITE}>{projectData?.orgInfo?.orgName}</Text>
+        </Layout.Horizontal>
+      ) : undefined}
     </Layout.Vertical>
   )
 }
@@ -179,7 +187,6 @@ interface LandingDashboardSummaryWidgetProps {
 const LandingDashboardSummaryWidget: React.FC<LandingDashboardSummaryWidgetProps> = props => {
   const { selectedTimeRange } = useLandingDashboardContext()
   const { accountId } = useParams<ProjectPathProps>()
-  const [range] = useState([Date.now() - TimeRangeToDays[selectedTimeRange] * 24 * 60 * 60000, Date.now()])
   const { getString } = useStrings()
 
   const {
@@ -190,8 +197,8 @@ const LandingDashboardSummaryWidget: React.FC<LandingDashboardSummaryWidgetProps
   } = useGetTopProjects({
     queryParams: {
       accountIdentifier: accountId,
-      startTime: range[0],
-      endTime: range[1]
+      startTime: selectedTimeRange.range[0]?.getTime() || 0,
+      endTime: selectedTimeRange.range[1]?.getTime() || 0
     },
     lazy: true
   })
@@ -200,8 +207,8 @@ const LandingDashboardSummaryWidget: React.FC<LandingDashboardSummaryWidgetProps
     refetch({
       queryParams: {
         accountIdentifier: accountId,
-        startTime: Date.now() - TimeRangeToDays[selectedTimeRange] * 24 * 60 * 60000,
-        endTime: Date.now()
+        startTime: selectedTimeRange.range[0]?.getTime() || 0,
+        endTime: selectedTimeRange.range[1]?.getTime() || 0
       }
     })
   }, [selectedTimeRange, refetch, accountId])

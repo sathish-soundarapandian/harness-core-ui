@@ -22,13 +22,14 @@ import {
   Page,
   TableV2,
   ExpandingSearchInput,
-  PageHeader
+  PageHeader,
+  PillToggle
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { isEmpty as _isEmpty, defaultTo as _defaultTo } from 'lodash-es'
 import HighchartsReact from 'highcharts-react-official'
 import Highcharts from 'highcharts'
-import { useHistory, useLocation, useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { Classes, Drawer, Menu, Position } from '@blueprintjs/core'
 import routes from '@common/RouteDefinitions'
 import { useToaster } from '@common/exports'
@@ -57,6 +58,12 @@ import RbacButton from '@rbac/components/Button/Button'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import type { FeatureDetail } from 'framework/featureStore/featureStoreUtil'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
+import { RulesMode } from '@ce/constants'
+import { Utils } from '@ce/common/Utils'
+import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import { useQueryParams } from '@common/hooks'
 import COGatewayAnalytics from './COGatewayAnalytics'
 import COGatewayCumulativeAnalytics from './COGatewayCumulativeAnalytics'
 import ComputeType from './components/ComputeType'
@@ -85,6 +92,11 @@ interface SearchParams {
 
 interface EmptyListPageProps {
   featureDetail?: FeatureDetail
+}
+
+interface RulesListQueryParams {
+  mode?: RulesMode
+  search?: string
 }
 
 function IconCell(tableProps: CellProps<Service>): JSX.Element {
@@ -469,9 +481,10 @@ interface RulesTableContainerProps {
   rowMenuProps: TableRowMenuProps
   pageProps: { index: number; setIndex: (index: number) => void }
   onRowClick: (data: Service, index: number) => void
-  refetchRules: (value: string, isSearchActive: boolean) => Promise<void>
+  refetchRules: (value: string, isSearchActive: boolean, triggerFetch?: boolean) => Promise<void>
   onSearchCallback?: (value: string) => void
   searchParams: SearchParams
+  mode: RulesMode
 }
 
 const POLL_TIMER = 1000 * 60 * 1
@@ -536,11 +549,10 @@ const RulesTableContainer: React.FC<RulesTableContainerProps> = ({
   pageProps,
   onRowClick,
   refetchRules,
-  searchParams
+  searchParams,
+  mode
 }) => {
   const { getString } = useStrings()
-  const history = useHistory()
-  const location = useLocation()
   const tableData = rules.slice(
     pageProps.index * TOTAL_ITEMS_PER_PAGE,
     pageProps.index * TOTAL_ITEMS_PER_PAGE + TOTAL_ITEMS_PER_PAGE
@@ -559,10 +571,7 @@ const RulesTableContainer: React.FC<RulesTableContainerProps> = ({
   /* istanbul ignore next */
   const onSearchChange = async (val: string) => {
     val = val.trim()
-    const hasSearchText = !_isEmpty(val)
-    const params = new URLSearchParams({ search: val })
-    history.replace({ pathname: location.pathname, search: hasSearchText ? params.toString() : undefined })
-    await refetchRules(val, true)
+    await refetchRules(val, true, false)
     pageProps.setIndex(0)
   }
 
@@ -605,7 +614,13 @@ const RulesTableContainer: React.FC<RulesTableContainerProps> = ({
             <Layout.Vertical spacing="large" style={{ alignItems: 'center' }}>
               <img src={NoDataImage} height={150} />
               <Text color="grey800" font="normal" style={{ lineHeight: '25px' }}>
-                {getString('ce.co.emptyResultText', { string: searchParams.text })}
+                {searchParams.text.length
+                  ? getString('ce.co.emptyResultText', {
+                      string: searchParams.text
+                    })
+                  : mode === RulesMode.DRY
+                  ? getString('ce.co.noDataForDryRunMsg')
+                  : getString('ce.co.noDataForActiveRulesMsg')}
               </Text>
             </Layout.Vertical>
           </>
@@ -617,7 +632,7 @@ const RulesTableContainer: React.FC<RulesTableContainerProps> = ({
               data-testid={'refreshIconContainer'}
             >
               <img src={refreshIcon} width={'12px'} height={'12px'} />
-              <Text>Refresh</Text>
+              <Text>{getString('common.refresh')}</Text>
             </Layout.Horizontal>
             <TableV2<Service>
               data={tableData}
@@ -694,10 +709,38 @@ const RulesTableContainer: React.FC<RulesTableContainerProps> = ({
   )
 }
 
+const ModePillToggle = ({ mode, onChange }: { mode: RulesMode; onChange: (val: RulesMode) => void }) => {
+  const { getString } = useStrings()
+  const dryRunModeEnabled = useFeatureFlag(FeatureFlag.CCM_AS_DRY_RUN)
+
+  if (!dryRunModeEnabled) {
+    return null
+  }
+
+  return (
+    <Layout.Horizontal flex={{ justifyContent: 'center', alignItems: 'center' }} padding="medium">
+      <PillToggle
+        selectedView={mode}
+        options={[
+          {
+            label: getString('ce.co.activeModeLabel'),
+            value: RulesMode.ACTIVE
+          },
+          {
+            label: getString('ce.co.dryRunModeLabel'),
+            value: RulesMode.DRY
+          }
+        ]}
+        className={css.modeToggle}
+        onChange={onChange}
+      />
+    </Layout.Horizontal>
+  )
+}
+
 const COGatewayList: React.FC = () => {
   const { getString } = useStrings()
   const history = useHistory()
-  const location = useLocation()
   const { trackEvent } = useTelemetry()
   const { accountId } = useParams<AccountPathProps>()
   const { showSuccess, showError } = useToaster()
@@ -706,16 +749,31 @@ const COGatewayList: React.FC = () => {
       featureName: FeatureIdentifier.RESTRICTED_AUTOSTOPPING_RULE_CREATION
     }
   })
+
+  const { mode: modeQueryParam } = useQueryParams<RulesListQueryParams>()
+
   const [selectedService, setSelectedService] = useState<{ data: Service; index: number } | null>()
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false)
   const [tableData, setTableData] = useState<Service[]>([])
   const [pageIndex, setPageIndex] = useState<number>(0)
-  const searchQueryText = useRef(new URLSearchParams(location.search).get('search'))
+  const [mode, setMode] = useQueryParamsState<RulesMode>('mode', RulesMode.ACTIVE)
+  const [searchQueryText, setSearchQueryText] = useQueryParamsState<string | undefined>('search', undefined)
+  const fetchCounter = useRef<number>(0)
+  const tryFetchingDryRun = useRef<boolean>(false)
   const [searchParams, setSearchParams] = useState<SearchParams>({
-    isActive: !_isEmpty(searchQueryText.current),
-    text: _defaultTo(searchQueryText.current, '')
+    isActive: !_isEmpty(searchQueryText),
+    text: _defaultTo(searchQueryText, '')
   })
   const [isLoadingPage, setIsLoadingPage] = useState(true) // track initial loading of page
+
+  const getServicesQueryParams = React.useMemo(
+    () => ({
+      accountIdentifier: accountId,
+      value: _defaultTo(searchParams.text, ''),
+      dry_run: mode === RulesMode.DRY
+    }),
+    [searchParams.text, mode]
+  )
 
   const {
     data: servicesData,
@@ -725,38 +783,85 @@ const COGatewayList: React.FC = () => {
   } = useGetServices({
     account_id: accountId,
     queryParams: {
-      accountIdentifier: accountId,
-      value: _defaultTo(searchParams.text, '')
+      ...getServicesQueryParams
     }
   })
 
-  const { data: graphData, loading: graphLoading } = useCumulativeServiceSavings({
+  const {
+    data: graphData,
+    loading: graphLoading,
+    refetch: refetchGraphData
+  } = useCumulativeServiceSavings({
     account_id: accountId,
     queryParams: {
-      accountIdentifier: accountId
+      accountIdentifier: accountId,
+      dry_run: mode === RulesMode.DRY
     }
   })
 
-  const triggerServiceFetch = async (value: string, isSearchActive: boolean) => {
-    await refetchServices({ queryParams: { accountIdentifier: accountId, value } })
+  const triggerServiceFetch = async (value: string, isSearchActive: boolean, triggerFetch = true) => {
+    if (triggerFetch) {
+      await refetchServices({
+        queryParams: {
+          ...getServicesQueryParams
+        }
+      })
+    }
     setSearchParams({ isActive: isSearchActive, text: value })
+    setSearchQueryText(Utils.getConditionalResult(_isEmpty(value), undefined, value))
   }
 
   const trackLandingPage = () => {
     const hasData = !_isEmpty(servicesData?.response)
-    const eventName = hasData ? USER_JOURNEY_EVENTS.LOAD_AS_SUMMARY_PAGE : USER_JOURNEY_EVENTS.LOAD_AS_LANDING_PAGE
+    const eventName = Utils.getConditionalResult(
+      hasData,
+      USER_JOURNEY_EVENTS.LOAD_AS_SUMMARY_PAGE,
+      USER_JOURNEY_EVENTS.LOAD_AS_LANDING_PAGE
+    )
     if (!loading) {
       trackEvent(eventName, {})
     }
   }
 
   useEffect(() => {
+    handleDataLoading()
+    trackLandingPage()
+  }, [servicesData])
+
+  const handleDataLoading = () => {
     if (servicesData) {
-      setTableData(_defaultTo(servicesData?.response, []))
+      fetchCounter.current += 1
+      const rules = _defaultTo(servicesData?.response, [])
+      handleRulesDataSaving(rules)
+    }
+  }
+
+  const handleRulesDataSaving = (rules: Service[]) => {
+    if (_isEmpty(rules) && mode === RulesMode.ACTIVE) {
+      handleEmptyRulesSave(rules)
+    } else {
+      handleFinalRulesSave(rules)
+    }
+  }
+
+  const handleEmptyRulesSave = (rules: Service[]) => {
+    if (fetchCounter.current < 2) {
+      tryFetchingDryRun.current = true
+      refetchServices({ queryParams: { ...getServicesQueryParams, dry_run: true } })
+    } else {
+      setTableData(rules)
       setIsLoadingPage(false) // to stop initial loading of page
     }
-    trackLandingPage()
-  }, [servicesData?.response])
+  }
+
+  const handleFinalRulesSave = (rules: Service[]) => {
+    if (tryFetchingDryRun.current && mode === RulesMode.ACTIVE) {
+      tryFetchingDryRun.current = false
+      setMode(RulesMode.DRY)
+    }
+    setTableData(rules)
+    setIsLoadingPage(false) // to stop initial loading of page
+  }
 
   if (error) {
     const errMessage = _defaultTo((error.data as any)?.errors?.join(', '), error.message)
@@ -766,30 +871,39 @@ const COGatewayList: React.FC = () => {
   /* istanbul ignore next */
   const onServiceStateToggle = (type: 'SUCCESS' | 'FAILURE', data: Service | any, index?: number) => {
     if (type === 'SUCCESS') {
-      const currTableData: Service[] = [...tableData]
-      currTableData.splice(index as number, 1, data)
-      setTableData(currTableData)
-      if (!_isEmpty(selectedService)) {
-        setSelectedService({ data, index: index as number })
-      }
-      showSuccess(`Rule ${data.name} ${!data.disabled ? 'enabled' : 'disabled'}`)
+      onServiceStateToggleSuccess(data, index)
     } else {
       showError(_defaultTo(data.data?.errors?.join(', '), ''))
     }
   }
 
+  const onServiceStateToggleSuccess = (data: Service, index?: number) => {
+    const currTableData: Service[] = [...tableData]
+    currTableData.splice(index as number, 1, data)
+    setTableData(currTableData)
+    if (!_isEmpty(selectedService)) {
+      setSelectedService({ data, index: index as number })
+    }
+    showSuccess(`Rule ${data.name} ${Utils.getConditionalResult(!data.disabled, 'enabled', 'disabled')}`)
+  }
+
   /* istanbul ignore next */
   const onServiceDeletion = (type: 'SUCCESS' | 'FAILURE', data: Service | any) => {
     if (type === 'SUCCESS') {
-      showSuccess(`Rule ${data.name} deleted successfully`)
-      if (isDrawerOpen) {
-        setIsDrawerOpen(false)
-        setSelectedService(null)
-      }
-      refetchServices()
+      onServiceDeletionSuccess(data)
     } else {
       showError(_defaultTo(data.data?.errors?.join(', '), ''))
     }
+  }
+
+  const onServiceDeletionSuccess = (data: Service) => {
+    showSuccess(getString('ce.co.deleteRuleSuccessMessage', { name: data.name }))
+    if (isDrawerOpen) {
+      setIsDrawerOpen(false)
+      setSelectedService(null)
+    }
+    refetchServices()
+    refetchGraphData()
   }
 
   const handleServiceEdit = (_service: Service) =>
@@ -799,6 +913,11 @@ const COGatewayList: React.FC = () => {
         gatewayIdentifier: _service.id?.toString() as string
       })
     )
+
+  const handleModeChange = async (val: RulesMode) => {
+    setPageIndex(0)
+    setMode(val)
+  }
 
   // Render page loader for initial loading of the page
   if (isLoadingPage) {
@@ -812,7 +931,8 @@ const COGatewayList: React.FC = () => {
   // Render empty page component when:
   // no data is available
   // search is not active
-  if (!isLoadingPage && _isEmpty(tableData) && !searchParams.isActive) {
+  // and no 'mode' query param is present
+  if (!isLoadingPage && !modeQueryParam && _isEmpty(tableData) && !searchParams.isActive) {
     return <EmptyListPage featureDetail={featureDetail} />
   }
 
@@ -884,7 +1004,8 @@ const COGatewayList: React.FC = () => {
         </Layout.Horizontal>
       </>
       <Page.Body className={css.pageContainer}>
-        <COGatewayCumulativeAnalytics data={graphData?.response} loadingData={graphLoading} />
+        <ModePillToggle mode={mode} onChange={handleModeChange} />
+        <COGatewayCumulativeAnalytics data={graphData?.response} loadingData={graphLoading} mode={mode} />
         <RulesTableContainer
           rules={tableData}
           setRules={setTableData}
@@ -901,6 +1022,7 @@ const COGatewayList: React.FC = () => {
             onStateToggle: onServiceStateToggle
           }}
           searchParams={searchParams}
+          mode={mode}
         />
       </Page.Body>
     </Container>

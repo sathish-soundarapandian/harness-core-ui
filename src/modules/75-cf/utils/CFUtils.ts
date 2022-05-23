@@ -85,7 +85,7 @@ export const AuditLogAction = {
   SegmentPatched: 'SegmentPatched'
 }
 
-export const isFeatureFlagOn = (featureFlag: Feature) => {
+export const isFeatureFlagOn = (featureFlag: Feature): boolean => {
   return featureFlag.envProperties?.state?.toLocaleLowerCase() === FeatureFlagActivationStatus.ON
 }
 

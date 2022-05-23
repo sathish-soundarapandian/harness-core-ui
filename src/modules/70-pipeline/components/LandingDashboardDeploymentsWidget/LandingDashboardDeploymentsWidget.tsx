@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState, useEffect } from 'react'
+import React, { useMemo, useState } from 'react'
 import cx from 'classnames'
 import {
   Card,
@@ -18,20 +18,18 @@ import {
   StackedSummaryInterface,
   StackedSummaryTable,
   handleZeroOrInfinityTrend,
-  renderTrend
+  renderTrend,
+  IconName
 } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { FontVariation, Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import type { TooltipFormatterContextObject } from 'highcharts'
 import type { GetDataError } from 'restful-react'
+import moment from 'moment'
 import type { Error, Failure } from 'services/template-ng'
-import {
-  useLandingDashboardContext,
-  TimeRangeToDays,
-  DashboardTimeRange
-} from '@common/factories/LandingDashboardContext'
-import { String, useStrings } from 'framework/strings'
+import { useLandingDashboardContext } from '@common/factories/LandingDashboardContext'
+import { String, StringKeys, useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   ChartType,
@@ -50,13 +48,27 @@ import { useErrorHandler } from '@pipeline/components/Dashboards/shared'
 import DashboardAPIErrorWidget from '@projects-orgs/components/DashboardAPIErrorWidget/DashboardAPIErrorWidget'
 import DashboardNoDataWidget from '@projects-orgs/components/DashboardNoDataWidget/DashboardNoDataWidget'
 
+import type { TimeRangeSelectorProps } from '@common/components/TimeRangeSelector/TimeRangeSelector'
 import css from './LandingDashboardDeploymentsWidget.module.scss'
 
 export enum TimeRangeGroupByMapping {
-  '30Days' = 'DAY',
-  '60Days' = 'WEEK',
-  '90Days' = 'WEEK',
-  '1Year' = 'MONTH'
+  'DAY' = 'DAY',
+  'WEEK' = 'WEEK',
+  'MONTH' = 'MONTH'
+}
+
+const getGroupByValue = (timeRange: TimeRangeSelectorProps): TimeRangeGroupByMapping => {
+  const startDate = moment(timeRange.range[0])
+  const endDate = moment(timeRange.range[1])
+  const diff = endDate.diff(startDate, 'day')
+
+  if (diff <= 30) {
+    return TimeRangeGroupByMapping.DAY
+  } else if (diff > 30 && diff <= 90) {
+    return TimeRangeGroupByMapping.WEEK
+  }
+
+  return TimeRangeGroupByMapping.MONTH
 }
 
 const sortByOptions: SelectOption[] = [
@@ -324,16 +336,33 @@ function LandingDashboardDeploymentsNoContentWidget(
   return <></>
 }
 
+const renderServiceTooltipRow = (iconName: IconName, label: StringKeys, value?: string) => {
+  if (!value) {
+    return <></>
+  }
+  return (
+    <Layout.Horizontal padding={{ top: 'small' }} flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+      <Icon name={iconName} color={Color.GREY_300} margin={{ right: 'xsmall' }} />
+      <Layout.Horizontal className={css.serviceTooltipRowLabel}>
+        <Text inline color={Color.GREY_300}>
+          <String stringID={label} />
+        </Text>
+        <Text color={Color.GREY_300} margin={{ right: 'xsmall' }}>
+          :
+        </Text>
+      </Layout.Horizontal>
+
+      <Text color={Color.WHITE}>{value}</Text>
+    </Layout.Horizontal>
+  )
+}
+
 const renderTooltipForServiceLabel = (service: ActiveServiceInfo): JSX.Element => {
   return (
     <Layout.Vertical padding="medium" spacing="small">
       <Text color={Color.WHITE}>{service?.serviceInfo?.serviceName ?? ''}</Text>
-      <Text icon="nav-project" iconProps={{ color: Color.GREY_300 }} color={Color.GREY_300}>
-        {service?.projectInfo?.projectName ?? ''}
-      </Text>
-      <Text icon="union" iconProps={{ color: Color.GREY_300 }} color={Color.GREY_300}>
-        {service?.orgInfo?.orgName ?? ''}
-      </Text>
+      {renderServiceTooltipRow('nav-project', 'projectLabel', service?.projectInfo?.projectName)}
+      {renderServiceTooltipRow('union', 'common.org', service?.orgInfo?.orgName)}
     </Layout.Vertical>
   )
 }
@@ -342,12 +371,10 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
   const { getString } = useStrings()
   const { selectedTimeRange } = useLandingDashboardContext()
   const { accountId } = useParams<ProjectPathProps>()
-  const [range, setRange] = useState([0, 0])
-  const [groupByValue, setGroupByValues] = useState(TimeRangeGroupByMapping[selectedTimeRange])
   const [sortByValue, setSortByValue] = useState<GetDeploymentStatsOverviewQueryParams['sortBy']>('DEPLOYMENTS')
   const [selectedView, setSelectedView] = useState<ChartType>(ChartType.BAR)
   const getServiceDetailsLink = (service: ActiveServiceInfo): string => {
-    const serviceId = service.serviceInfo?.serviceIdentifier || ''
+    const serviceId = defaultTo(service.serviceInfo?.serviceIdentifier, '')
     return routes.toServiceStudio({
       accountId,
       orgIdentifier: service.orgInfo?.orgIdentifier || '',
@@ -357,30 +384,19 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
     })
   }
 
+  const groupByValue = getGroupByValue(selectedTimeRange)
+
   const { data, error, refetch, loading } = useGetDeploymentStatsOverview({
     queryParams: {
       accountIdentifier: accountId,
-      startTime: range[0],
-      endTime: range[1],
-      groupBy: groupByValue,
+      startTime: selectedTimeRange.range[0]?.getTime() || 0,
+      endTime: selectedTimeRange.range[1]?.getTime() || 0,
+      groupBy: getGroupByValue(selectedTimeRange),
       sortBy: sortByValue
-    },
-    lazy: true
+    }
   })
 
   const response = data?.data?.response
-
-  useEffect(() => {
-    setRange([Date.now() - TimeRangeToDays[selectedTimeRange] * 24 * 60 * 60000, Date.now()])
-    setGroupByValues(TimeRangeGroupByMapping[selectedTimeRange])
-  }, [selectedTimeRange])
-
-  useEffect(() => {
-    if (!range[0]) {
-      return
-    }
-    refetch()
-  }, [refetch, range, groupByValue, sortByValue])
 
   useErrorHandler(error)
 
@@ -501,21 +517,15 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
   }
 
   const noDataRenderer = () => {
-    const TIME_RANGE_TO_LABEL_STRING = {
-      [DashboardTimeRange['30Days']]: getString('projectsOrgs.landingDashboard.last30Days'),
-      [DashboardTimeRange['60Days']]: getString('projectsOrgs.landingDashboard.last60Days'),
-      [DashboardTimeRange['90Days']]: getString('projectsOrgs.landingDashboard.last90Days'),
-      [DashboardTimeRange['1Year']]: getString('projectsOrgs.landingDashboard.last1Year')
-    }
     if (sortByValue === 'INSTANCES') {
       return (
         <div className={css.noDataContainer}>
           <Icon name="no-instances" size={55} className={css.noDataIcon} />
-          No Service Instances in {TIME_RANGE_TO_LABEL_STRING[selectedTimeRange]}
+          No Service Instances in selected time range
         </div>
       )
     }
-    return <div className={css.noDataContainer}>No Deployments in {TIME_RANGE_TO_LABEL_STRING[selectedTimeRange]}</div>
+    return <div className={css.noDataContainer}>No Deployments in selected time range</div>
   }
 
   return (
