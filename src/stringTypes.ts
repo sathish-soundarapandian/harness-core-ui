@@ -902,6 +902,10 @@ export interface StringsMap {
   'rbac.generateToken': string
   'rbac.group': string
   'rbac.in': string
+  'rbac.inheritedScope.errorMessage': string
+  'rbac.inheritedScope.noData': string
+  'rbac.inheritedScope.projectOrg': string
+  'rbac.inheritedScope.title': string
   'rbac.manageInheritedGroupText': string
   'rbac.manageSCIMText': string
   'rbac.myApiKeys': string

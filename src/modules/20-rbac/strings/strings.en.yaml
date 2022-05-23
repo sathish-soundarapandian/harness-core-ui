@@ -248,3 +248,8 @@ resourceScope:
   includeOrgResources: Include Organization-level Resources
   includeProjResources: Include Project-level Resources
   noProjects: No Projects
+inheritedScope:
+  title: Organizations or Projects using this Group
+  projectOrg: '(Organization: {{orgName}})'
+  noData: No Organization or Project is using this Group
+  errorMessage: Failed to load the list

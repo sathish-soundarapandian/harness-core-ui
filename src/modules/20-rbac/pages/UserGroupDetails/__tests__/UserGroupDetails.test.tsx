@@ -21,7 +21,14 @@ import routes from '@common/RouteDefinitions'
 import { accountPathProps, userGroupPathProps } from '@common/utils/routeUtils'
 import { ResponseBoolean, useGetUserGroupAggregate } from 'services/cd-ng'
 import UserGroupDetails from '../UserGroupDetails'
-import { mockResponse, userGroupInfo, userInfo, userGroupInfoSSOLinked, mockSSOSettings } from './mock'
+import {
+  mockResponse,
+  userGroupInfo,
+  userInfo,
+  userGroupInfoSSOLinked,
+  mockSSOSettings,
+  inheritingChildScopeListData
+} from './mock'
 
 const deleteMember = jest.fn()
 const deleteMemberMock = (): ResponseBoolean => {
@@ -48,6 +55,7 @@ const unLinkToSSoMock = (): ResponseBoolean => {
 
 jest.mock('services/cd-ng', () => ({
   useGetUserGroupAggregate: jest.fn(),
+  useGetInheritingChildScopeList: jest.fn().mockImplementation(() => inheritingChildScopeListData),
   useRemoveMember: jest.fn().mockImplementation(() => {
     return { mutate: deleteMemberMock }
   }),

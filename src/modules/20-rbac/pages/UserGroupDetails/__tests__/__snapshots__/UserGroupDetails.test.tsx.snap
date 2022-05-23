@@ -537,7 +537,7 @@ exports[`UserGroupDetails Test render data 1`] = `
         </div>
       </div>
       <div
-        class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+        class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--padding-bottom-large"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-size-medium StyledProps--font-weight-bold"
@@ -558,6 +558,159 @@ exports[`UserGroupDetails Test render data 1`] = `
               plusNumber
             </span>
           </button>
+        </div>
+      </div>
+      <div
+        class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--border StyledProps--border-top"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-size-medium StyledProps--font-weight-bold StyledProps--padding-top-large"
+        >
+          rbac.inheritedScope.title
+        </p>
+        <div
+          class="TableV2--table"
+        >
+          <div
+            class="TableV2--body"
+          >
+            <div
+              class="TableV2--row TableV2--card"
+              role="row"
+            >
+              <div
+                class="TableV2--cell"
+                role="cell"
+                style="width: 25%;"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main"
+                  style="display: flex; align-items: center;"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small"
+                    data-icon="nav-organization-hover"
+                  >
+                    <svg
+                      height="16"
+                      viewBox="0 0 16 16"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <filter
+                        id="nav-organization-hover_svg__a"
+                      >
+                        <fecolormatrix
+                          in="SourceGraphic"
+                          values="0 0 0 0 1.000000 0 0 0 0 1.000000 0 0 0 0 1.000000 0 0 0 1.000000 0"
+                        />
+                      </filter>
+                      <filter
+                        id="nav-organization-hover_svg__b"
+                      >
+                        <fecolormatrix
+                          in="SourceGraphic"
+                          values="0 0 0 0 1.000000 0 0 0 0 1.000000 0 0 0 0 1.000000 0 0 0 1.000000 0"
+                        />
+                      </filter>
+                      <filter
+                        height="100%"
+                        id="nav-organization-hover_svg__c"
+                        width="100%"
+                        x="0%"
+                        y="0%"
+                      >
+                        <fegaussianblur
+                          in="SourceGraphic"
+                        />
+                      </filter>
+                      <g
+                        fill="none"
+                        fill-rule="evenodd"
+                        filter="url(#nav-organization-hover_svg__a)"
+                        opacity="0.6"
+                        transform="translate(-418 -707)"
+                      >
+                        <g
+                          filter="url(#nav-organization-hover_svg__b)"
+                          opacity="0.6"
+                          transform="translate(418 707)"
+                        >
+                          <path
+                            d="M14.5 10.033h-2V8.5h1c.267 0 .5-.233.5-.5s-.233-.5-.5-.5h-5V5.967h2c.267 0 .5-.234.5-.5V1.5c0-.267-.233-.5-.5-.5h-5c-.267 0-.5.233-.5.5v3.967c0 .266.233.5.5.5h2V7.5h-5c-.267 0-.5.233-.5.5s.233.5.5.5h1v1.533h-2c-.267 0-.5.234-.5.5V14.5c0 .267.233.5.5.5h5c.267 0 .5-.233.5-.5v-3.967c0-.266-.233-.5-.5-.5h-2V8.5h7v1.533h-2c-.267 0-.5.234-.5.5V14.5c0 .267.233.5.5.5h5c.267 0 .5-.233.5-.5v-3.967c0-.266-.233-.5-.5-.5zM6 2h4v2.967H6zm0 12H2v-2.967h4zm8 0h-4v-2.967h4z"
+                            fill="#dbdbdb"
+                            fill-rule="nonzero"
+                            filter="url(#nav-organization-hover_svg__c)"
+                          />
+                        </g>
+                      </g>
+                    </svg>
+                  </span>
+                  orgLabel
+                </p>
+              </div>
+              <div
+                class="TableV2--cell"
+                role="cell"
+                style="width: 75%;"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main"
+                >
+                  checking org
+                </p>
+              </div>
+            </div>
+            <div
+              class="TableV2--row TableV2--card"
+              role="row"
+            >
+              <div
+                class="TableV2--cell"
+                role="cell"
+                style="width: 25%;"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main"
+                  style="display: flex; align-items: center;"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small"
+                    data-icon="nav-project"
+                  >
+                    <svg
+                      height="16"
+                      viewBox="0 0 22 22"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M1.1 4.583L11 0l9.9 4.583v12.834L11 22l-9.9-4.583zm9 5.171l-7.2-3.33v9.811l7.2 3.338V9.754zm9 6.481V6.424l-7.2 3.33v9.819zm-1.462-11.15L11 2.012 4.362 5.085 11 8.157z"
+                        fill="#56778d"
+                      />
+                    </svg>
+                  </span>
+                  projectLabel
+                </p>
+              </div>
+              <div
+                class="TableV2--cell"
+                role="cell"
+                style="width: 75%;"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main"
+                >
+                  testing
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--padding-top-xsmall StyledProps--color StyledProps--color-grey400"
+                >
+                  rbac.inheritedScope.projectOrg
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -19,6 +19,7 @@ import TagsRenderer from '@common/components/TagsRenderer/TagsRenderer'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { PageSpinner } from '@common/components'
 import RoleBindingsList from '@rbac/components/RoleBindingsList/RoleBindingsList'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRoleAssignmentModal'
 import { useQueryParams } from '@common/hooks'
@@ -37,6 +38,7 @@ import MemberList from '@rbac/pages/UserGroupDetails/views/MemberList'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
 import NotificationList from '@rbac/components/NotificationList/NotificationList'
+import ScopeList from '@rbac/components/ScopeList/ScopeList'
 import { isCommunityPlan } from '@common/utils/utils'
 import css from './UserGroupDetails.module.scss'
 
@@ -67,6 +69,8 @@ const UserGroupDetails: React.FC = () => {
   const { openLinkToSSOProviderModal } = useLinkToSSOProviderModal({
     onSuccess: refetch
   })
+
+  const { INHERITED_USER_GROUP } = useFeatureFlags()
 
   const userGroupAggregateResponse: UserGroupAggregateDTO | undefined = data?.data
   const userGroup = userGroupAggregateResponse?.userGroupDTO
@@ -222,12 +226,20 @@ const UserGroupDetails: React.FC = () => {
               </Layout.Horizontal>
             </Layout.Vertical>
           )}
-          <Layout.Vertical spacing="medium">
+          <Layout.Vertical spacing="medium" padding={{ bottom: 'large' }}>
             <Text color={Color.BLACK} font={{ size: 'medium', weight: 'bold' }}>
               {getString('common.notificationPreferences')}
             </Text>
             <NotificationList userGroup={userGroup} inherited={userGroupInherited} onSubmit={refetch} />
           </Layout.Vertical>
+          {!INHERITED_USER_GROUP && (
+            <Layout.Vertical spacing="large" border={{ top: true }}>
+              <Text color={Color.BLACK} font={{ size: 'medium', weight: 'bold' }} padding={{ top: 'large' }}>
+                {getString('rbac.inheritedScope.title')}
+              </Text>
+              <ScopeList />
+            </Layout.Vertical>
+          )}
         </Container>
       </Page.Body>
     </>

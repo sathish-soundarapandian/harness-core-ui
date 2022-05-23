@@ -5,7 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { ResponseBoolean, RestResponseAuthenticationSettingsResponse, SAMLSettings } from 'services/cd-ng'
+import type {
+  ResponseBoolean,
+  ResponseListScopeName,
+  RestResponseAuthenticationSettingsResponse,
+  SAMLSettings
+} from 'services/cd-ng'
 
 export const userGroupInfo = {
   status: 'SUCCESS',
@@ -169,4 +174,28 @@ export const userGroupCheckingInfo = {
   },
   metaData: {},
   correlationId: ''
+}
+
+export const inheritingChildScopeListData: { data: ResponseListScopeName } = {
+  data: {
+    status: 'SUCCESS',
+    data: [
+      {
+        accountIdentifier: 'kmpySmUISimoRrJL6NL73w',
+        orgName: 'checking org',
+        orgIdentifier: 'checking_org',
+        projectName: undefined,
+        projectIdentifier: undefined
+      },
+      {
+        accountIdentifier: 'kmpySmUISimoRrJL6NL73w',
+        orgName: 'default',
+        orgIdentifier: 'default',
+        projectName: 'testing',
+        projectIdentifier: 'testing'
+      }
+    ],
+    metaData: undefined,
+    correlationId: '2217f4b6-92f7-439e-be4b-8d58187d2d4b'
+  }
 }
