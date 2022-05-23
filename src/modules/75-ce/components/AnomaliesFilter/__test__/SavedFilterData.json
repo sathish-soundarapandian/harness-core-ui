@@ -1,0 +1,71 @@
+{
+  "data": {
+    "totalPages": 1,
+    "totalItems": 4,
+    "pageItemCount": 4,
+    "pageSize": 100,
+    "content": [
+      {
+        "name": "Test1",
+        "identifier": "Test1",
+        "orgIdentifier": null,
+        "projectIdentifier": null,
+        "filterProperties": {
+          "k8sClusterNames": ["sample-ce-dev"],
+          "k8sNamespaces": null,
+          "k8sWorkloadNames": null,
+          "gcpProjects": null,
+          "gcpProducts": null,
+          "gcpSKUDescriptions": null,
+          "awsAccounts": null,
+          "awsServices": null,
+          "awsUsageTypes": null,
+          "azureSubscriptions": null,
+          "azureServiceNames": null,
+          "azureResources": null,
+          "minActualAmount": null,
+          "minAnomalousSpend": null,
+          "timeFilters": null,
+          "offset": null,
+          "limit": null,
+          "tags": {
+            "1": "",
+            "22": ""
+          },
+          "filterType": "Anomaly"
+        },
+        "filterVisibility": "EveryOne"
+      },
+      {
+        "name": "Test_3",
+        "identifier": "Test_3",
+        "orgIdentifier": null,
+        "projectIdentifier": null,
+        "filterProperties": {
+          "k8sClusterNames": null,
+          "k8sNamespaces": null,
+          "k8sWorkloadNames": null,
+          "gcpProjects": null,
+          "gcpProducts": null,
+          "gcpSKUDescriptions": null,
+          "awsAccounts": null,
+          "awsServices": null,
+          "awsUsageTypes": null,
+          "azureSubscriptions": null,
+          "azureServiceNames": null,
+          "azureResources": null,
+          "minActualAmount": null,
+          "minAnomalousSpend": null,
+          "timeFilters": null,
+          "offset": null,
+          "limit": null,
+          "tags": {},
+          "filterType": "Anomaly"
+        },
+        "filterVisibility": "OnlyCreator"
+      }
+    ],
+    "pageIndex": 0,
+    "empty": false
+  }
+}

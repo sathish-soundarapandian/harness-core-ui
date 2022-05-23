@@ -10,6 +10,7 @@ import {
   Button,
   ButtonVariation,
   Container,
+  getErrorInfoFromErrorObject,
   Icon,
   Layout,
   MultiSelect,
@@ -25,6 +26,7 @@ import { useParams } from 'react-router-dom'
 import { defaultTo, isEqual } from 'lodash-es'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
+import { useToaster } from '@common/exports'
 import {
   CCMRecommendationFilterProperties,
   FilterDTO,
@@ -59,6 +61,7 @@ const useRecommendationFilterPanel = ({
   setCostFilters
 }: RecommendationFilterPanelProps) => {
   const { getString } = useStrings()
+  const { showError } = useToaster()
   const { accountId } = useParams<{ accountId: string }>()
 
   const {
@@ -173,26 +176,31 @@ const useRecommendationFilterPanel = ({
   }
 
   const createOrUpdateFilter = async () => {
-    if (filterName) {
-      const payload = {
-        name: filterName,
-        filterVisibility,
-        filterProperties: {
-          filterType: 'CCMRecommendation',
-          k8sRecommendationFilterPropertiesDTO: updatedFilters,
-          ...updatedCostFilters
-        } as FilterProperties
+    try {
+      if (filterName) {
+        const payload = {
+          name: filterName,
+          filterVisibility,
+          filterProperties: {
+            filterType: 'CCMRecommendation',
+            k8sRecommendationFilterPropertiesDTO: updatedFilters,
+            ...updatedCostFilters
+          } as FilterProperties
+        }
+
+        if (filterFlow === 'create') {
+          await createFilter({ ...payload, identifier: getIdentifierFromName(filterName) })
+        } else if (filterFlow === 'edit' && selectedFilter?.identifier) {
+          await updateFilter({ ...payload, identifier: selectedFilter?.identifier })
+        }
       }
 
-      if (filterFlow === 'create') {
-        await createFilter({ ...payload, identifier: getIdentifierFromName(filterName) })
-      } else if (filterFlow === 'edit' && selectedFilter?.identifier) {
-        await updateFilter({ ...payload, identifier: selectedFilter?.identifier })
-      }
+      setFilterFlow(null)
+      refetchSavedFilters()
+    } catch (error) {
+      /* istanbul ignore next */
+      showError(getErrorInfoFromErrorObject(error as any))
     }
-
-    setFilterFlow(null)
-    refetchSavedFilters()
   }
 
   const handleSelectedFilter = (item: FilterDTO) => {

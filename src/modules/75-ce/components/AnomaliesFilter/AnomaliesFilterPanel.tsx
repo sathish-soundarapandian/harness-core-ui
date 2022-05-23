@@ -19,16 +19,16 @@ import {
   Radio,
   SelectOption,
   Text,
-  TextInput,
-  useToaster
+  TextInput
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { FontVariation, Color } from '@harness/design-system'
 import { Classes, Drawer, Menu, MenuItem, Popover, Position, TagInput } from '@blueprintjs/core'
-import { isEqual, omit } from 'lodash-es'
+import { defaultTo, isEqual, omit } from 'lodash-es'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
+import { useToaster } from '@common/exports'
 import {
   AnomalyFilterProperties,
   FilterDTO,
@@ -69,7 +69,7 @@ const useAnomaliesFilterPanel = ({ fetchedFilterValues, filters, setFilters }: A
     }
   })
 
-  const savedFilters = fetchedSavedFilters?.data?.content || []
+  const savedFilters = defaultTo(fetchedSavedFilters?.data?.content, [])
 
   const { mutate: createFilter } = usePostFilter({
     queryParams: {
@@ -119,7 +119,7 @@ const useAnomaliesFilterPanel = ({ fetchedFilterValues, filters, setFilters }: A
     return options
   }
 
-  const renderFilterInputs = (filterValues: FilterStatsDTO[], type?: 'default' | 'cloudProvider') =>
+  const renderFilterInputs = (filterValues: FilterStatsDTO[]) =>
     filterValues.map(filter => {
       const key = filter.key as keyof AnomalyFilterProperties
       const values = filter.values
@@ -133,10 +133,7 @@ const useAnomaliesFilterPanel = ({ fetchedFilterValues, filters, setFilters }: A
 
         return (
           <>
-            <Text
-              className={cx(css.label, { [css.cpLabel]: type === 'cloudProvider' })}
-              font={{ variation: type === 'cloudProvider' ? FontVariation.BODY : FontVariation.SMALL_SEMI }}
-            >
+            <Text className={css.label} font={{ variation: FontVariation.SMALL_SEMI }}>
               {filterKeyToLabelMapping[key]}
             </Text>
             <MultiSelect
@@ -144,14 +141,16 @@ const useAnomaliesFilterPanel = ({ fetchedFilterValues, filters, setFilters }: A
               value={selectedOptions}
               items={multiSelectValues as MultiSelectOption[]}
               allowCreatingNewItems={false}
-              onChange={options => {
-                const optionValues = options.map(option => option.value)
-
-                setUpdatedFilters(prevValues => ({
-                  ...prevValues,
-                  [filterKeyToKeyMapping[key]]: optionValues
-                }))
-              }}
+              onChange={
+                /* istanbul ignore next */
+                options => {
+                  const optionValues = options.map(option => option.value)
+                  setUpdatedFilters(prevValues => ({
+                    ...prevValues,
+                    [filterKeyToKeyMapping[key]]: optionValues
+                  }))
+                }
+              }
             />
           </>
         )
@@ -160,10 +159,11 @@ const useAnomaliesFilterPanel = ({ fetchedFilterValues, filters, setFilters }: A
 
   const setSavedFilter = (option: SelectOption) => {
     const selectedSavedFilter = savedFilters.find(filter => filter.identifier === option.value)
+    const filterProperties = defaultTo(selectedSavedFilter?.filterProperties, {})
 
     setSelectedFilter(selectedSavedFilter)
-    setUpdatedFilters(selectedSavedFilter?.filterProperties || {})
-    setFilters(selectedSavedFilter?.filterProperties || {})
+    setUpdatedFilters(filterProperties)
+    setFilters(filterProperties)
     setFilterFormFlow(null)
   }
 
@@ -171,8 +171,8 @@ const useAnomaliesFilterPanel = ({ fetchedFilterValues, filters, setFilters }: A
     setFilterFormFlow('edit')
     setSelectedFilter(filter)
     setFilterName(filter.name)
-    setFilterVisibility(filter.filterVisibility || 'EveryOne')
-    setUpdatedFilters(filter.filterProperties || {})
+    setFilterVisibility(defaultTo(filter.filterVisibility, 'EveryOne'))
+    setUpdatedFilters(defaultTo(filter.filterProperties, {}))
   }
 
   const createOrUpdateFilter = async () => {
@@ -197,16 +197,13 @@ const useAnomaliesFilterPanel = ({ fetchedFilterValues, filters, setFilters }: A
       setFilterFormFlow(null)
       refetchSavedFilters()
     } catch (error) {
+      /* istanbul ignore next */
       showError(getErrorInfoFromErrorObject(error as any))
     }
   }
 
   const commonFilterValues = fetchedFilterValues?.filter(
-    key =>
-      key.key?.startsWith('aws') &&
-      key.key?.startsWith('gcp') &&
-      key.key?.startsWith('azure') &&
-      filterKeyToKeyMapping[key.key]?.startsWith('k8s')
+    key => key.key?.startsWith('aws') && key.key?.startsWith('gcp') && filterKeyToKeyMapping[key.key].startsWith('k8s')
   )
 
   const awsFilterValues = fetchedFilterValues?.filter(key => key.key?.startsWith('aws'))
@@ -236,17 +233,20 @@ const useAnomaliesFilterPanel = ({ fetchedFilterValues, filters, setFilters }: A
               <TagInput
                 values={Object.keys(updatedFilters.tags || {}).map(key => key)}
                 className={css.tagInput}
-                onAdd={options => {
-                  options.map(option =>
-                    setUpdatedFilters(prevValues => ({
-                      ...prevValues,
-                      tags: {
-                        ...prevValues.tags,
-                        [option]: ''
-                      }
-                    }))
-                  )
-                }}
+                onAdd={
+                  /* istanbul ignore next */
+                  options => {
+                    options.map(option =>
+                      setUpdatedFilters(prevValues => ({
+                        ...prevValues,
+                        tags: {
+                          ...prevValues.tags,
+                          [option]: ''
+                        }
+                      }))
+                    )
+                  }
+                }
                 onRemove={option => {
                   setUpdatedFilters(prevValues => ({
                     ...prevValues,
@@ -278,7 +278,7 @@ const useAnomaliesFilterPanel = ({ fetchedFilterValues, filters, setFilters }: A
                   }))
                 }
               />
-              {renderFilterInputs(commonFilterValues || [])}
+              {renderFilterInputs(commonFilterValues)}
               {awsFilterValues?.length ? (
                 <Card style={{ width: '100%' }} className={cx(css.filterCard, { [css.expanded]: awsFiltersVisible })}>
                   <Layout.Horizontal flex>
@@ -333,9 +333,7 @@ const useAnomaliesFilterPanel = ({ fetchedFilterValues, filters, setFilters }: A
                 text={getString('common.apply')}
                 variation={ButtonVariation.PRIMARY}
                 disabled={isEqual(filters, updatedFilters)}
-                onClick={() => {
-                  setFilters(updatedFilters)
-                }}
+                onClick={() => setFilters(updatedFilters)}
               />
               <Button
                 text={getString('filters.clearAll')}
@@ -400,7 +398,7 @@ const useAnomaliesFilterPanel = ({ fetchedFilterValues, filters, setFilters }: A
                             color={Color.WHITE}
                             onClick={() => {
                               setSelectedFilter(item)
-                              setUpdatedFilters(item.filterProperties || {})
+                              setUpdatedFilters(defaultTo(item.filterProperties, {}))
                               setFilterFormFlow(null)
                             }}
                           >
@@ -409,7 +407,6 @@ const useAnomaliesFilterPanel = ({ fetchedFilterValues, filters, setFilters }: A
                         </Layout.Horizontal>
                         <Popover
                           position="left"
-                          interactionKind={'hover'}
                           className={Classes.DARK}
                           usePortal={false}
                           content={
