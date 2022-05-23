@@ -180,7 +180,6 @@ describe('test case for anomalies detection overview page', () => {
     fireEvent.click(drawer?.querySelector('input[value="OnlyCreator"]')!)
     fireEvent.click(drawer?.querySelector('input[value="EveryOne"]')!)
     fireEvent.click(getByText(drawer!, 'save'))
-    expect(drawer).toMatchSnapshot()
 
     await waitFor(() => expect(queryByPlaceholderText(drawer!, 'filters.typeFilterName')).toBeNull())
   })
