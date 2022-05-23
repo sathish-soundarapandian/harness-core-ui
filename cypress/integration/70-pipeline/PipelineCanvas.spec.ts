@@ -482,7 +482,7 @@ describe.only('ServerlessAwsLambda as deployment type', () => {
     cy.contains('p', 'Serverless Rollback Step 1').should('be.visible')
   })
 
-  it(`select Kubernetes deployment type and check for execution strategies`, () => {
+  it.skip(`select Kubernetes deployment type and check for execution strategies`, () => {
     cy.intercept('GET', pipelineDetails, {
       fixture: 'pipeline/api/pipelines/pipelineDetailsWithoutServiceDefinitionType'
     }).as('pipelineDetails')
