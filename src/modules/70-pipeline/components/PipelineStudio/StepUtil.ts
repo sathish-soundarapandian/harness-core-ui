@@ -31,7 +31,7 @@ import { getDurationValidationSchema } from '@common/components/MultiTypeDuratio
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { getPrCloneStrategyOptions } from '@pipeline/utils/constants'
-import { CodebaseTypes } from '@pipeline/utils/CIUtils'
+import { CodebaseTypes, isCloneCodebaseEnabledAtLeastOneStage } from '@pipeline/utils/CIUtils'
 import factory from '../PipelineSteps/PipelineStepFactory'
 import { StepType } from '../PipelineSteps/PipelineStepInterface'
 // eslint-disable-next-line no-restricted-imports
@@ -42,7 +42,6 @@ import '@ci/components/PipelineSteps'
 import '@sto-steps/components/PipelineSteps'
 import { StepViewType } from '../AbstractSteps/Step'
 
-const cloneCodebaseKeyRef = 'stage.spec.cloneCodebase'
 export const clearRuntimeInput = (template: PipelineInfoConfig): PipelineInfoConfig => {
   return JSON.parse(
     JSON.stringify(template || {}).replace(/"<\+input>.?(?:allowedValues\((.*?)\)|regex\((.*?)\))?"/g, '""')
@@ -365,12 +364,12 @@ export const validateCICodebase = ({
   const errors = {}
   const requiresConnectorRuntimeInputValue =
     template?.properties?.ci?.codebase?.connectorRef && !pipeline?.properties?.ci?.codebase?.connectorRef
-  const pipelineHasCloneCodebase = (resolvedPipeline || originalPipeline)?.stages?.some(stage =>
-    Object.is(get(stage, cloneCodebaseKeyRef), true)
-  )
+
+  const pipelineHasCloneCodebase = isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline || originalPipeline)
   const shouldValidateCICodebase =
-    (pipelineHasCloneCodebase && !requiresConnectorRuntimeInputValue) || // ci codebase field is hidden until connector is selected
-    template?.properties?.ci?.codebase?.build
+    pipelineHasCloneCodebase &&
+    (!requiresConnectorRuntimeInputValue ||
+      (requiresConnectorRuntimeInputValue && !isEmpty(pipeline?.properties?.ci?.codebase?.connectorRef))) // ci codebase field is hidden until connector is selected
   const shouldValidate = !Object.keys(viewTypeMetadata || {}).includes('isTemplateBuilder')
   const isInputSetForm = viewTypeMetadata?.isInputSet // should not require any values
   if (
@@ -671,11 +670,7 @@ export const getErrorsList = memoize((errors: any): { errorStrings: string[]; er
 })
 
 export const validateCICodebaseConfiguration = ({ pipeline, getString }: Partial<ValidatePipelineProps>): string => {
-  const shouldValidateCICodebase = pipeline?.stages?.some(
-    stage =>
-      Object.is(get(stage, cloneCodebaseKeyRef), true) ||
-      stage.parallel?.some(parallelStage => Object.is(get(parallelStage, cloneCodebaseKeyRef), true))
-  )
+  const shouldValidateCICodebase = isCloneCodebaseEnabledAtLeastOneStage(pipeline)
   if (
     shouldValidateCICodebase &&
     !has(pipeline, 'properties') &&

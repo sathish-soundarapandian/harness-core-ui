@@ -32,20 +32,43 @@ exports[`Auto stopping Rule creation Tests Advanced configuration section change
       <div
         class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
       >
-        <label
-          class="Toggle--toggle StyledProps--main"
-          data-testid="progressPageViewToggle"
+        <div
+          class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
         >
-          <input
-            class="Toggle--input"
-            type="checkbox"
-            value=""
-          />
-          <span
-            class="Toggle--toggleIcon"
-          />
-          Hide Progress Page
-        </label>
+          <label
+            class="Toggle--toggle StyledProps--main"
+            data-testid="progressPageViewToggle"
+          >
+            <input
+              class="Toggle--input"
+              type="checkbox"
+              value=""
+            />
+            <span
+              class="Toggle--toggleIcon"
+            />
+            ce.co.autoStoppingRule.review.hideProgressPage
+          </label>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline"
+          >
+            <label
+              class="Toggle--toggle StyledProps--main"
+              data-testid="dryRunToggle"
+              data-tooltip-id="dryRunToggleTooltip"
+            >
+              <input
+                class="Toggle--input"
+                type="checkbox"
+                value=""
+              />
+              <span
+                class="Toggle--toggleIcon"
+              />
+              ce.co.dryRunLabel
+            </label>
+          </div>
+        </div>
         <div
           class="bp3-tabs Tabs--main Tabs--horizontal"
         >
@@ -175,20 +198,43 @@ exports[`Auto stopping Rule creation Tests Advanced configuration section should
       <div
         class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
       >
-        <label
-          class="Toggle--toggle StyledProps--main"
-          data-testid="progressPageViewToggle"
+        <div
+          class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
         >
-          <input
-            class="Toggle--input"
-            type="checkbox"
-            value=""
-          />
-          <span
-            class="Toggle--toggleIcon"
-          />
-          Hide Progress Page
-        </label>
+          <label
+            class="Toggle--toggle StyledProps--main"
+            data-testid="progressPageViewToggle"
+          >
+            <input
+              class="Toggle--input"
+              type="checkbox"
+              value=""
+            />
+            <span
+              class="Toggle--toggleIcon"
+            />
+            ce.co.autoStoppingRule.review.hideProgressPage
+          </label>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline"
+          >
+            <label
+              class="Toggle--toggle StyledProps--main"
+              data-testid="dryRunToggle"
+              data-tooltip-id="dryRunToggleTooltip"
+            >
+              <input
+                class="Toggle--input"
+                type="checkbox"
+                value=""
+              />
+              <span
+                class="Toggle--toggleIcon"
+              />
+              ce.co.dryRunLabel
+            </label>
+          </div>
+        </div>
         <div
           class="bp3-tabs Tabs--main Tabs--horizontal"
         >
@@ -273,7 +319,7 @@ exports[`Auto stopping Rule creation Tests Advanced configuration section should
                 <span
                   class="bp3-button-text"
                 >
-                   Add dependency
+                  ce.co.gatewayConfig.addDependency
                 </span>
               </button>
             </div>
@@ -317,20 +363,43 @@ exports[`Auto stopping Rule creation Tests Advanced configuration section should
       <div
         class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
       >
-        <label
-          class="Toggle--toggle StyledProps--main"
-          data-testid="progressPageViewToggle"
+        <div
+          class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
         >
-          <input
-            class="Toggle--input"
-            type="checkbox"
-            value=""
-          />
-          <span
-            class="Toggle--toggleIcon"
-          />
-          Hide Progress Page
-        </label>
+          <label
+            class="Toggle--toggle StyledProps--main"
+            data-testid="progressPageViewToggle"
+          >
+            <input
+              class="Toggle--input"
+              type="checkbox"
+              value=""
+            />
+            <span
+              class="Toggle--toggleIcon"
+            />
+            ce.co.autoStoppingRule.review.hideProgressPage
+          </label>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline"
+          >
+            <label
+              class="Toggle--toggle StyledProps--main"
+              data-testid="dryRunToggle"
+              data-tooltip-id="dryRunToggleTooltip"
+            >
+              <input
+                class="Toggle--input"
+                type="checkbox"
+                value=""
+              />
+              <span
+                class="Toggle--toggleIcon"
+              />
+              ce.co.dryRunLabel
+            </label>
+          </div>
+        </div>
         <div
           class="bp3-tabs Tabs--main Tabs--horizontal"
         >
@@ -882,6 +951,29 @@ exports[`Auto stopping Rule creation Tests Config screen renders without crashin
               class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
             >
               <div
+                class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline"
+                >
+                  <label
+                    class="Toggle--toggle StyledProps--main"
+                    data-testid="dryRunToggle"
+                    data-tooltip-id="dryRunToggleTooltip"
+                  >
+                    <input
+                      class="Toggle--input"
+                      type="checkbox"
+                      value=""
+                    />
+                    <span
+                      class="Toggle--toggleIcon"
+                    />
+                    ce.co.dryRunLabel
+                  </label>
+                </div>
+              </div>
+              <div
                 class="bp3-tabs Tabs--main Tabs--horizontal"
               >
                 <div
@@ -965,7 +1057,7 @@ exports[`Auto stopping Rule creation Tests Config screen renders without crashin
                       <span
                         class="bp3-button-text"
                       >
-                         Add dependency
+                        ce.co.gatewayConfig.addDependency
                       </span>
                     </button>
                   </div>
@@ -1648,6 +1740,29 @@ exports[`Auto stopping Rule creation Tests Fill remaining form for INSTANCES 1`]
               class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
             >
               <div
+                class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline"
+                >
+                  <label
+                    class="Toggle--toggle StyledProps--main"
+                    data-testid="dryRunToggle"
+                    data-tooltip-id="dryRunToggleTooltip"
+                  >
+                    <input
+                      class="Toggle--input"
+                      type="checkbox"
+                      value=""
+                    />
+                    <span
+                      class="Toggle--toggleIcon"
+                    />
+                    ce.co.dryRunLabel
+                  </label>
+                </div>
+              </div>
+              <div
                 class="bp3-tabs Tabs--main Tabs--horizontal"
               >
                 <div
@@ -1731,7 +1846,7 @@ exports[`Auto stopping Rule creation Tests Fill remaining form for INSTANCES 1`]
                       <span
                         class="bp3-button-text"
                       >
-                         Add dependency
+                        ce.co.gatewayConfig.addDependency
                       </span>
                     </button>
                   </div>
@@ -2396,6 +2511,29 @@ exports[`Auto stopping Rule creation Tests fill remaining form for ASGs 1`] = `
               class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
             >
               <div
+                class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline"
+                >
+                  <label
+                    class="Toggle--toggle StyledProps--main"
+                    data-testid="dryRunToggle"
+                    data-tooltip-id="dryRunToggleTooltip"
+                  >
+                    <input
+                      class="Toggle--input"
+                      type="checkbox"
+                      value=""
+                    />
+                    <span
+                      class="Toggle--toggleIcon"
+                    />
+                    ce.co.dryRunLabel
+                  </label>
+                </div>
+              </div>
+              <div
                 class="bp3-tabs Tabs--main Tabs--horizontal"
               >
                 <div
@@ -2479,7 +2617,7 @@ exports[`Auto stopping Rule creation Tests fill remaining form for ASGs 1`] = `
                       <span
                         class="bp3-button-text"
                       >
-                         Add dependency
+                        ce.co.gatewayConfig.addDependency
                       </span>
                     </button>
                   </div>
@@ -3144,6 +3282,29 @@ exports[`Auto stopping Rule creation Tests fill remaining form for ASGs 2`] = `
               class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
             >
               <div
+                class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline"
+                >
+                  <label
+                    class="Toggle--toggle StyledProps--main"
+                    data-testid="dryRunToggle"
+                    data-tooltip-id="dryRunToggleTooltip"
+                  >
+                    <input
+                      class="Toggle--input"
+                      type="checkbox"
+                      value=""
+                    />
+                    <span
+                      class="Toggle--toggleIcon"
+                    />
+                    ce.co.dryRunLabel
+                  </label>
+                </div>
+              </div>
+              <div
                 class="bp3-tabs Tabs--main Tabs--horizontal"
               >
                 <div
@@ -3227,7 +3388,7 @@ exports[`Auto stopping Rule creation Tests fill remaining form for ASGs 2`] = `
                       <span
                         class="bp3-button-text"
                       >
-                         Add dependency
+                        ce.co.gatewayConfig.addDependency
                       </span>
                     </button>
                   </div>
@@ -3613,20 +3774,43 @@ exports[`Auto stopping Rule creation Tests kubernestes config edit 1`] = `
             <div
               class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
             >
-              <label
-                class="Toggle--toggle StyledProps--main"
-                data-testid="progressPageViewToggle"
+              <div
+                class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
               >
-                <input
-                  class="Toggle--input"
-                  type="checkbox"
-                  value=""
-                />
-                <span
-                  class="Toggle--toggleIcon"
-                />
-                Hide Progress Page
-              </label>
+                <label
+                  class="Toggle--toggle StyledProps--main"
+                  data-testid="progressPageViewToggle"
+                >
+                  <input
+                    class="Toggle--input"
+                    type="checkbox"
+                    value=""
+                  />
+                  <span
+                    class="Toggle--toggleIcon"
+                  />
+                  ce.co.autoStoppingRule.review.hideProgressPage
+                </label>
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline"
+                >
+                  <label
+                    class="Toggle--toggle StyledProps--main"
+                    data-testid="dryRunToggle"
+                    data-tooltip-id="dryRunToggleTooltip"
+                  >
+                    <input
+                      class="Toggle--input"
+                      type="checkbox"
+                      value=""
+                    />
+                    <span
+                      class="Toggle--toggleIcon"
+                    />
+                    ce.co.dryRunLabel
+                  </label>
+                </div>
+              </div>
               <div
                 class="bp3-tabs Tabs--main Tabs--horizontal"
               >
@@ -3711,7 +3895,7 @@ exports[`Auto stopping Rule creation Tests kubernestes config edit 1`] = `
                       <span
                         class="bp3-button-text"
                       >
-                         Add dependency
+                        ce.co.gatewayConfig.addDependency
                       </span>
                     </button>
                   </div>

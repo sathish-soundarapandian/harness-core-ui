@@ -5,9 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Layout } from '@wings-software/uicore'
-import { defaultTo, get, isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty, isEqual, set } from 'lodash-es'
+import produce from 'immer'
 import type { AllNGVariables as Variable } from '@pipeline/utils/types'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -18,7 +19,7 @@ import type {
 } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableEditable'
 
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import type { StageElementWrapperConfig } from 'services/cd-ng'
+import type { StageElementConfig, StageElementWrapperConfig } from 'services/cd-ng'
 import type { AbstractStepFactory } from '../AbstractSteps/AbstractStepFactory'
 import { getFlattenedStages, getStageIndexFromPipeline } from '../PipelineStudio/StageBuilder/StageBuilderUtil'
 import { StepViewType } from '../AbstractSteps/Step'
@@ -46,7 +47,7 @@ export default function WorkflowVariables({
     },
     allowableTypes,
     getStageFromPipeline,
-    updatePipeline
+    updateStage
   } = usePipelineContext()
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
@@ -66,16 +67,36 @@ export default function WorkflowVariables({
 
   const stageSpec = defaultTo(serviceConfig.serviceDefinition?.spec, {})
   const predefinedSetsPath = defaultTo(serviceConfig.stageOverrides, {})
+
+  const updateVariableData = (vars: Variable[]): void => {
+    const yamlPath = isPropagating
+      ? 'stage.spec.serviceConfig.stageOverrides.variables'
+      : 'stage.spec.serviceConfig.serviceDefinition.spec.variables'
+    if (stage) {
+      updateStage(
+        produce(stage, draft => {
+          set(draft, yamlPath, vars)
+        }).stage as StageElementConfig
+      )
+    }
+  }
   const updateVariables = (vars: Variable[]): void => {
     if (stageSpec || predefinedSetsPath) {
       if (isPropagating) {
         predefinedSetsPath.variables = [...vars]
-        updatePipeline(pipeline)
+        updateVariableData(vars)
         return
       }
     }
-    updatePipeline(pipeline)
+    updateVariableData(vars)
   }
+
+  const getInitialValues = useCallback((): Variable[] => {
+    if (isPropagating) {
+      return (predefinedSetsPath?.variables || []) as Variable[]
+    }
+    return (stageSpec?.variables || []) as Variable[]
+  }, [isPropagating, predefinedSetsPath, stageSpec?.variables])
 
   const getYamlPropertiesForVariables = (): Variable[] => {
     if (isPropagating) {
@@ -92,7 +113,7 @@ export default function WorkflowVariables({
           factory={factory}
           stepViewType={StepViewType.StageVariable}
           initialValues={{
-            variables: getYamlPropertiesForVariables(),
+            variables: getInitialValues(),
             isPropagating,
             canAddVariable: true
           }}
@@ -100,7 +121,9 @@ export default function WorkflowVariables({
           readonly={readonly}
           type={StepType.CustomVariable}
           onUpdate={({ variables }: { variables: Variable[] }) => {
-            updateVariables(variables)
+            if (!isEqual(getInitialValues(), variables)) {
+              updateVariables(variables)
+            }
           }}
           customStepProps={{
             tabName,
