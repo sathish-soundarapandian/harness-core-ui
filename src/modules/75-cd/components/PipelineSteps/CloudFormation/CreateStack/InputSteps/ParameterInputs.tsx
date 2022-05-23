@@ -61,6 +61,7 @@ export default function ParameterFileInputs<T extends CreateStackData = CreateSt
       setRegions(regionValues as MultiSelectOption[])
     }
 
+    /* istanbul ignore next */
     if (!regionData && regionRequired && !regionsLoading) {
       getRegions()
     }
@@ -117,12 +118,12 @@ export default function ParameterFileInputs<T extends CreateStackData = CreateSt
                   multiTypeInputProps={{
                     selectProps: {
                       allowCreatingNewItems: true,
-                      items: regions ? regions : []
+                      items: regions
                     },
                     expressions,
                     allowableTypes
                   }}
-                  selectItems={regions ? regions : []}
+                  selectItems={regions}
                 />
               </div>
             )}
@@ -197,14 +198,12 @@ export default function ParameterFileInputs<T extends CreateStackData = CreateSt
                                 onDragEnd={onDragEnd}
                                 onDragOver={onDragOver}
                                 onDragLeave={onDragLeave}
-                                onDragStart={event => {
-                                  /* istanbul ignore next */
-                                  onDragStart(event, n)
-                                }}
+                                onDragStart={event => onDragStart(event, n)}
                                 onDrop={event => {
                                   /* istanbul ignore next */
                                   onDrop(event, arrayHelpers, n)
                                 }}
+                                data-testid={`filePath-${n}`}
                               >
                                 <Icon name="drag-handle-vertical" className={css.drag} />
                                 <Text width={12}>{`${n + 1}.`}</Text>

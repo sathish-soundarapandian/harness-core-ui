@@ -4,25 +4,7 @@ exports[`Create stack Variable view  initial render 1`] = `
 <div>
   <div
     class="variablesListTable variablePaddingL3"
-  >
-    <div
-      class="variableListRow variable-list-row"
-    >
-      <span
-        class="nameSection"
-      />
-      <p
-        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
-        style="--text-line-clamp: 1;"
-      >
-        <span
-          class=""
-        >
-          test
-        </span>
-      </p>
-    </div>
-  </div>
+  />
   <div
     class="variablesListTable variablePaddingL3"
   />

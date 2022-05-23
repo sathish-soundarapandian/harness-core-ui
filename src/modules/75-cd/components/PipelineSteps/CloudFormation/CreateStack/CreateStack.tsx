@@ -88,7 +88,7 @@ export class CFCreateStack extends PipelineStep<CreateStackStepInfo> {
     }
     return errors
   }
-
+  /* istanbul ignore next */
   processFormData(data: any): CreateStackStepInfo {
     const awsConnRef = data?.spec?.configuration?.connectorRef?.value || data?.spec?.configuration?.connectorRef
     let templateFile = data.spec.configuration.templateFile
@@ -174,6 +174,7 @@ export class CFCreateStack extends PipelineStep<CreateStackStepInfo> {
     }
   }
 
+  /* istanbul ignore next */
   private getInitialValues(data: CreateStackStepInfo): CreateStackData {
     let capabilities, skipOnStackStatuses, parameters
     capabilities = data?.spec?.configuration?.capabilities
@@ -240,8 +241,6 @@ export class CFCreateStack extends PipelineStep<CreateStackStepInfo> {
       return (
         <CreateStackInputStep
           initialValues={initialValues}
-          onUpdate={data => onUpdate?.(this.processFormData(data))}
-          onChange={data => onChange?.(this.processFormData(data))}
           allowableTypes={allowableTypes}
           allValues={inputSetData?.allValues}
           stepViewType={stepViewType}
@@ -252,11 +251,7 @@ export class CFCreateStack extends PipelineStep<CreateStackStepInfo> {
       )
     } else if (stepViewType === StepViewType.InputVariable) {
       return (
-        <CreateStackVariableStep
-          {...(customStepProps as CreateStackVariableStepProps)}
-          initialValues={initialValues}
-          onUpdate={data => onUpdate?.(this.processFormData(data))}
-        />
+        <CreateStackVariableStep {...(customStepProps as CreateStackVariableStepProps)} initialValues={initialValues} />
       )
     }
 

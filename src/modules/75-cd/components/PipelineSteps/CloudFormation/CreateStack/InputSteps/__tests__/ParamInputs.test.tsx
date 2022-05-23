@@ -6,13 +6,13 @@
  */
 
 import React from 'react'
-import { render, queryByAttribute } from '@testing-library/react'
+import { render, queryByAttribute, fireEvent, createEvent, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Formik, FormikForm, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import * as Portal from 'services/portal'
+import { useListAwsRegions } from '../../__tests__/ApiRequestMocks'
 
 import ParameterFileInputs from '../ParameterInputs'
 
@@ -36,18 +36,7 @@ const initialValues = {
   }
 }
 
-const regionMock = {
-  resource: [
-    {
-      name: 'GovCloud (US-West)',
-      value: 'us-gov-west-1'
-    },
-    {
-      name: 'GovCloud (US-East)',
-      value: 'us-gov-east-1'
-    }
-  ]
-}
+const eventData = { dataTransfer: { setData: jest.fn(), dropEffect: '', getData: () => '1' } }
 
 const renderComponent = (data: any) => {
   return render(
@@ -65,6 +54,7 @@ const renderComponent = (data: any) => {
               template: data
             }}
             path="test"
+            readonly={false}
             allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
           />
         </FormikForm>
@@ -75,9 +65,7 @@ const renderComponent = (data: any) => {
 
 describe('Test cloudformation create stack parameters input set', () => {
   test('should render remote parameters with region request', async () => {
-    jest
-      .spyOn(Portal, 'useListAwsRegions')
-      .mockImplementation(() => ({ loading: false, error: null, data: regionMock, refetch: jest.fn() } as any))
+    useListAwsRegions()
     const data = {
       type: StepType.CloudFormationCreateStack,
       name: 'testCreate',
@@ -109,19 +97,21 @@ describe('Test cloudformation create stack parameters input set', () => {
     }
     const { container, getByPlaceholderText, getByText } = renderComponent(data)
     const input = getByPlaceholderText('pipeline.regionPlaceholder')
-    userEvent.click(input)
+    act(() => {
+      userEvent.click(input)
+    })
 
     const label = getByText('GovCloud (US-West)')
-    userEvent.click(label)
+    act(() => {
+      userEvent.click(label)
+    })
 
     expect(input).toHaveValue('GovCloud (US-West)')
     expect(container).toMatchSnapshot()
   })
 
-  test('should render remote parameters add/remove new url path', async () => {
-    jest
-      .spyOn(Portal, 'useListAwsRegions')
-      .mockImplementation(() => ({ loading: false, error: null, data: regionMock, refetch: jest.fn() } as any))
+  test('should render remote parameters with region loading state', async () => {
+    useListAwsRegions(false, true)
     const data = {
       type: StepType.CloudFormationCreateStack,
       name: 'testCreate',
@@ -151,16 +141,72 @@ describe('Test cloudformation create stack parameters input set', () => {
         }
       }
     }
-    const { container, getByText, getByTestId } = renderComponent(data)
-    const addLabel = getByText('cd.addTFVarFileLabel')
-    userEvent.click(addLabel)
+    const { container } = renderComponent(data)
+    expect(container).toMatchSnapshot()
+  })
 
+  test('should render remote parameters add/remove new url path', async () => {
+    useListAwsRegions()
+    const data = {
+      type: StepType.CloudFormationCreateStack,
+      name: 'testCreate',
+      identifier: 'testID',
+      timeout: '10m',
+      spec: {
+        provisionerIdentifier: 'id',
+        configuration: {
+          stackName: 'name',
+          connectorRef: 'testRef',
+          templateFile: {
+            type: 'Remote',
+            spec: {}
+          },
+          parameters: [
+            {
+              store: {
+                type: 'S3Url',
+                spec: {
+                  connectorRef: RUNTIME_INPUT_VALUE,
+                  urls: RUNTIME_INPUT_VALUE,
+                  region: RUNTIME_INPUT_VALUE
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+    const { container, getByTestId } = renderComponent(data)
+    const addLabel = getByTestId('add-header')
+    act(() => {
+      userEvent.click(addLabel)
+    })
     const input = queryByAttribute('name', container, 'test.spec.configuration.parameters[0].store.spec.urls[0]')
-    userEvent.type(input!, 'test')
+    act(() => {
+      userEvent.type(input!, 'test')
+    })
     expect(input).toHaveValue('test')
 
+    const paramOne = getByTestId(`filePath-0`)
+
+    act(() => {
+      const dragStartEvent = Object.assign(createEvent.dragStart(paramOne), eventData)
+
+      fireEvent(paramOne, dragStartEvent)
+      fireEvent.dragEnd(addLabel)
+      fireEvent.dragLeave(paramOne)
+
+      const dropEffectEvent = Object.assign(createEvent.dragOver(paramOne), eventData)
+      fireEvent(addLabel, dropEffectEvent)
+
+      const dropEvent = Object.assign(createEvent.drop(paramOne), eventData)
+      fireEvent(addLabel, dropEvent)
+    })
+
     const removeLabel = getByTestId('remove-header-0')
-    userEvent.click(removeLabel)
+    act(() => {
+      userEvent.click(removeLabel)
+    })
     expect(input).toHaveValue('')
     expect(container).toMatchSnapshot()
   })

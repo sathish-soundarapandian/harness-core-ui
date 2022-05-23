@@ -8,56 +8,47 @@
 import React from 'react'
 import userEvent from '@testing-library/user-event'
 import { render, act, queryByAttribute, waitFor } from '@testing-library/react'
-import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
-import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { RUNTIME_INPUT_VALUE, MultiTypeInputType } from '@harness/uicore'
+import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
-import * as Portal from 'services/portal'
-import * as cdServices from 'services/cd-ng'
 import {} from '../../CloudFormationInterfaces.types'
 import { CFCreateStack } from '../CreateStack'
-
+import {
+  useCFCapabilitiesForAws,
+  useListAwsRegions,
+  useCFStatesForAws,
+  useGetIamRolesForAws,
+  useGetConnector
+} from './ApiRequestMocks'
 jest.mock('@common/components/MonacoEditor/MonacoEditor')
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('react-monaco-editor', () => ({ value, onChange, name }: any) => {
   return <textarea value={value} onChange={e => onChange(e.target.value)} name={name || 'spec.source.spec.script'} />
 })
 
-const regionMock = {
-  resource: [
-    {
-      name: 'GovCloud (US-West)',
-      value: 'us-gov-west-1'
-    },
-    {
-      name: 'GovCloud (US-East)',
-      value: 'us-gov-east-1'
-    }
-  ]
-}
-
 const renderComponent = (data: any, stepType = StepViewType.Edit) => {
-  return render(<TestStepWidget {...data} type={StepType.CloudFormationCreateStack} stepViewType={stepType} />)
+  return render(
+    <TestStepWidget
+      onUpdate={jest.fn()}
+      allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+      type={StepType.CloudFormationCreateStack}
+      stepViewType={stepType}
+      {...data}
+    />
+  )
 }
 
-describe('Test Cloudformation delete stack', () => {
+describe('Test Cloudformation create stack', () => {
   beforeEach(() => {
     factory.registerStep(new CFCreateStack())
-    jest
-      .spyOn(cdServices, 'useCFCapabilitiesForAws')
-      .mockImplementation(() => ({ loading: false, error: null, data: {}, refetch: jest.fn() } as any))
-    jest
-      .spyOn(cdServices, 'useCFStatesForAws')
-      .mockImplementation(() => ({ loading: false, error: null, data: {}, refetch: jest.fn() } as any))
-    jest
-      .spyOn(Portal, 'useListAwsRegions')
-      .mockImplementation(() => ({ loading: false, error: null, data: regionMock, refetch: jest.fn() } as any))
   })
 
   test('should render edit view as new step', () => {
-    jest
-      .spyOn(cdServices, 'useGetConnector')
-      .mockImplementation(() => ({ loading: false, error: null, data: {} } as any))
+    useCFCapabilitiesForAws()
+    useListAwsRegions()
+    useCFStatesForAws()
+    useGetConnector()
     const data = {
       initialValues: {
         type: StepType.CloudFormationCreateStack,
@@ -109,6 +100,41 @@ describe('Test Cloudformation delete stack', () => {
     expect(container).toMatchSnapshot()
   })
 
+  test('should open and close remote template modal', () => {
+    const data = {
+      initialValues: {
+        type: StepType.CloudFormationCreateStack,
+        name: 'create stack',
+        identifier: 'create_stack',
+        timeout: '10m',
+        spec: {
+          provisionerIdentifier: 'provisionerID',
+          configuration: {
+            stackName: 'test_name',
+            connectorRef: RUNTIME_INPUT_VALUE,
+            region: 'ireland',
+            templateFile: {
+              type: 'Remote',
+              spec: {}
+            }
+          }
+        }
+      }
+    }
+    const { container, getByTestId } = renderComponent(data)
+    const remoteTempButton = getByTestId('remoteTemplate')
+    act(() => {
+      userEvent.click(remoteTempButton)
+    })
+    expect(container).toMatchSnapshot()
+
+    const remoteClose = getByTestId('remoteClose')
+    act(() => {
+      userEvent.click(remoteClose)
+    })
+    expect(container).toMatchSnapshot()
+  })
+
   test('should be able to edit inputs', async () => {
     const data = {
       initialValues: {
@@ -123,9 +149,9 @@ describe('Test Cloudformation delete stack', () => {
             connectorRef: RUNTIME_INPUT_VALUE,
             region: 'ireland',
             templateFile: {
-              type: 'Inline',
+              type: 'S3URL',
               spec: {
-                templateBody: 'test body'
+                templateUrl: 'test.test.com'
               }
             }
           }
@@ -166,9 +192,651 @@ describe('Test Cloudformation delete stack', () => {
 
     const stackName = queryByAttribute('name', container, 'spec.configuration.stackName')
     act(() => {
-      userEvent.type(stackName!, ' new name')
+      userEvent.clear(stackName!)
+      userEvent.type(stackName!, 'new name')
     })
-    expect(stackName).toHaveDisplayValue('test_name new name')
+    expect(stackName).toHaveDisplayValue('new name')
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should be able to open and edit optional inputs', async () => {
+    const data = {
+      initialValues: {
+        type: StepType.CloudFormationCreateStack,
+        name: 'create stack',
+        identifier: 'create_stack',
+        timeout: '10m',
+        spec: {
+          provisionerIdentifier: 'provisionerID',
+          configuration: {
+            stackName: 'test_name',
+            connectorRef: RUNTIME_INPUT_VALUE,
+            region: 'ireland',
+            templateFile: {
+              type: 'Inline',
+              spec: {
+                templateBody: RUNTIME_INPUT_VALUE
+              }
+            },
+            // optional
+            parameterOverrides: [
+              {
+                name: 'OtherName',
+                type: 'String',
+                value: 'test'
+              }
+            ],
+            parameters: [
+              {
+                identifier: 'idtest',
+                store: {
+                  type: 'Github',
+                  spec: {
+                    branch: 'main',
+                    connectorRef: 'github_demo',
+                    gitFetchType: 'Branch',
+                    paths: ['www.test.com']
+                  }
+                }
+              }
+            ],
+            capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
+            skipOnStackStatuses: ['UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS'],
+            tags: '[{"key": "value"}]'
+          }
+        }
+      }
+    }
+    const { container, getByText } = renderComponent(data)
+    const optionalButton = getByText('common.optionalConfig')
+    act(() => {
+      userEvent.click(optionalButton)
+    })
+
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should be able to open optional dropdown and remove param', async () => {
+    const data = {
+      initialValues: {
+        type: StepType.CloudFormationCreateStack,
+        name: 'create stack',
+        identifier: 'create_stack',
+        timeout: '10m',
+        spec: {
+          provisionerIdentifier: 'provisionerID',
+          configuration: {
+            stackName: 'test_name',
+            connectorRef: RUNTIME_INPUT_VALUE,
+            region: 'ireland',
+            templateFile: {
+              type: 'Inline',
+              spec: {
+                templateBody: 'test body'
+              }
+            },
+            // optional
+            parameterOverrides: [
+              {
+                name: 'OtherName',
+                type: 'String',
+                value: 'test'
+              }
+            ],
+            parameters: [
+              {
+                identifier: 'idtest',
+                store: {
+                  type: 'Github',
+                  spec: {
+                    branch: 'main',
+                    connectorRef: 'github_demo',
+                    gitFetchType: 'Branch',
+                    paths: ['www.test.com']
+                  }
+                }
+              }
+            ],
+            capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
+            skipOnStackStatuses: ['UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS'],
+            tags: '[{"key": "value"}]'
+          }
+        }
+      }
+    }
+    const { container, getByText, getByTestId } = renderComponent(data)
+    const optionalButton = getByText('common.optionalConfig')
+    act(() => {
+      userEvent.click(optionalButton)
+    })
+
+    const removeParamButton = getByTestId('remove-param-0')
+    act(() => {
+      userEvent.click(removeParamButton)
+    })
+
+    expect(container).toMatchSnapshot()
+  })
+  test('should be able to open and close remote param modal', async () => {
+    const data = {
+      initialValues: {
+        type: StepType.CloudFormationCreateStack,
+        name: 'create stack',
+        identifier: 'create_stack',
+        timeout: '10m',
+        spec: {
+          provisionerIdentifier: 'provisionerID',
+          configuration: {
+            stackName: 'test_name',
+            connectorRef: RUNTIME_INPUT_VALUE,
+            region: 'ireland',
+            templateFile: {
+              type: 'Inline',
+              spec: {
+                templateBody: 'test body'
+              }
+            },
+            // optional
+            parameterOverrides: [
+              {
+                name: 'OtherName',
+                type: 'String',
+                value: 'test'
+              }
+            ],
+            parameters: [
+              {
+                identifier: 'idtest',
+                store: {
+                  type: 'Github',
+                  spec: {
+                    branch: 'main',
+                    connectorRef: 'github_demo',
+                    gitFetchType: 'Branch',
+                    paths: ['www.test.com']
+                  }
+                }
+              }
+            ],
+            capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
+            skipOnStackStatuses: ['UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS'],
+            tags: '[{"key": "value"}]'
+          }
+        }
+      }
+    }
+    const { container, getByText, getByTestId } = renderComponent(data)
+    const optionalButton = getByText('common.optionalConfig')
+    act(() => {
+      userEvent.click(optionalButton)
+    })
+
+    const remoteParamButton = getByTestId('remoteParamFiles')
+    act(() => {
+      userEvent.click(remoteParamButton)
+    })
+
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should be able to open and open inline param modal', async () => {
+    const data = {
+      initialValues: {
+        type: StepType.CloudFormationCreateStack,
+        name: 'create stack',
+        identifier: 'create_stack',
+        timeout: '10m',
+        spec: {
+          provisionerIdentifier: 'provisionerID',
+          configuration: {
+            stackName: 'test_name',
+            connectorRef: RUNTIME_INPUT_VALUE,
+            region: 'ireland',
+            templateFile: {
+              type: 'Inline',
+              spec: {
+                templateBody: 'test body'
+              }
+            },
+            // optional
+            parameterOverrides: [
+              {
+                name: 'OtherName',
+                type: 'String',
+                value: 'test'
+              }
+            ],
+            parameters: [
+              {
+                identifier: 'idtest',
+                store: {
+                  type: 'Github',
+                  spec: {
+                    branch: 'main',
+                    connectorRef: 'github_demo',
+                    gitFetchType: 'Branch',
+                    paths: ['www.test.com']
+                  }
+                }
+              }
+            ],
+            capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
+            skipOnStackStatuses: ['UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS'],
+            tags: '[{"key": "value"}]'
+          }
+        }
+      }
+    }
+    const { container, getByText, getByTestId } = renderComponent(data)
+    const optionalButton = getByText('common.optionalConfig')
+    act(() => {
+      userEvent.click(optionalButton)
+    })
+
+    const inlineParamButton = getByTestId('inlineParamFiles')
+    act(() => {
+      userEvent.click(inlineParamButton)
+    })
+
+    const inlineParamClose = getByTestId('inlineParamClose')
+    act(() => {
+      userEvent.click(inlineParamClose)
+    })
+
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should error on submit with invalid data', async () => {
+    const data = {
+      initialValues: {
+        type: StepType.CloudFormationCreateStack,
+        name: '',
+        identifier: '',
+        timeout: '',
+        spec: {
+          provisionerIdentifier: '',
+          configuration: {
+            stackName: '',
+            connectorRef: '',
+            region: '',
+            templateFile: {
+              type: 'Inline',
+              spec: {}
+            }
+          }
+        }
+      }
+    }
+    const ref = React.createRef<StepFormikRef<unknown>>()
+    const { container, getByText } = renderComponent({ ...data, ref })
+    await act(() => ref.current?.submitForm()!)
+
+    const regionError = getByText('cd.cloudFormation.errors.region')
+    expect(regionError).toBeInTheDocument()
+
+    const stackNameError = getByText('cd.cloudFormation.errors.stackName')
+    expect(stackNameError).toBeInTheDocument()
+
+    const templateFileError = getByText('cd.cloudFormation.errors.templateBody')
+    expect(templateFileError).toBeInTheDocument()
+
+    const connectorError = getByText('pipelineSteps.build.create.connectorRequiredError')
+    expect(connectorError).toBeInTheDocument()
+
+    const provIDError = getByText('common.validation.provisionerIdentifierIsRequired')
+    expect(provIDError).toBeInTheDocument()
+
+    const timeoutError = getByText('validation.timeout10SecMinimum')
+    expect(timeoutError).toBeInTheDocument()
+
+    const nameError = getByText('pipelineSteps.stepNameRequired')
+    expect(nameError).toBeInTheDocument()
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should be able to submit', async () => {
+    const data = {
+      initialValues: {
+        type: StepType.CloudFormationCreateStack,
+        name: 'create stack',
+        identifier: 'create_stack',
+        timeout: '10m',
+        spec: {
+          provisionerIdentifier: 'provisionerID',
+          configuration: {
+            stackName: 'test_name',
+            connectorRef: RUNTIME_INPUT_VALUE,
+            region: 'ireland',
+            templateFile: {
+              type: 'Remote',
+              spec: {
+                store: {
+                  type: 'Github',
+                  spec: {
+                    branch: 'main',
+                    connectorRef: 'github_demo',
+                    gitFetchType: 'Branch',
+                    paths: ['test/file/path']
+                  }
+                }
+              }
+            },
+            // optional
+            parameterOverrides: [
+              {
+                name: 'OtherName',
+                type: 'String',
+                value: 'test'
+              }
+            ],
+            parameters: [
+              {
+                identifier: 'idtest',
+                store: {
+                  type: 'Github',
+                  spec: {
+                    branch: 'main',
+                    connectorRef: 'github_demo',
+                    gitFetchType: 'Branch',
+                    paths: ['www.test.com']
+                  }
+                }
+              }
+            ],
+            capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM'],
+            skipOnStackStatuses: ['UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS'],
+            tags: '[{"key": "value"}]'
+          }
+        }
+      }
+    }
+    const ref = React.createRef<StepFormikRef<unknown>>()
+    const { container } = renderComponent({ ...data, ref })
+    await act(() => ref.current?.submitForm()!)
+
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should show api capabilities error', async () => {
+    useCFCapabilitiesForAws(true)
+    const data = {
+      initialValues: {
+        type: StepType.CloudFormationCreateStack,
+        name: '',
+        identifier: '',
+        timeout: '',
+        spec: {
+          provisionerIdentifier: '',
+          configuration: {
+            stackName: '',
+            connectorRef: '',
+            region: '',
+            templateFile: {
+              type: 'Inline',
+              spec: {}
+            }
+          }
+        }
+      }
+    }
+    const { container } = renderComponent(data)
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should show api capabilities loading state', async () => {
+    useCFCapabilitiesForAws(false, true)
+    const data = {
+      initialValues: {
+        type: StepType.CloudFormationCreateStack,
+        name: '',
+        identifier: '',
+        timeout: '',
+        spec: {
+          provisionerIdentifier: '',
+          configuration: {
+            stackName: '',
+            connectorRef: '',
+            region: '',
+            templateFile: {
+              type: 'Inline',
+              spec: {}
+            }
+          }
+        }
+      }
+    }
+    const { container } = renderComponent(data)
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should show api regions error', async () => {
+    useListAwsRegions(true)
+    const data = {
+      initialValues: {
+        type: StepType.CloudFormationCreateStack,
+        name: '',
+        identifier: '',
+        timeout: '',
+        spec: {
+          provisionerIdentifier: '',
+          configuration: {
+            stackName: '',
+            connectorRef: '',
+            region: '',
+            templateFile: {
+              type: 'Inline',
+              spec: {}
+            }
+          }
+        }
+      }
+    }
+    const { container } = renderComponent(data)
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should show api regions loading state', async () => {
+    useListAwsRegions(false, true)
+    const data = {
+      initialValues: {
+        type: StepType.CloudFormationCreateStack,
+        name: '',
+        identifier: '',
+        timeout: '',
+        spec: {
+          provisionerIdentifier: '',
+          configuration: {
+            stackName: '',
+            connectorRef: '',
+            region: '',
+            templateFile: {
+              type: 'Inline',
+              spec: {}
+            }
+          }
+        }
+      }
+    }
+    const { container } = renderComponent(data)
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should show api aws statues error', async () => {
+    useCFStatesForAws(true)
+    const data = {
+      initialValues: {
+        type: StepType.CloudFormationCreateStack,
+        name: '',
+        identifier: '',
+        timeout: '',
+        spec: {
+          provisionerIdentifier: '',
+          configuration: {
+            stackName: '',
+            connectorRef: '',
+            region: '',
+            templateFile: {
+              type: 'Inline',
+              spec: {}
+            }
+          }
+        }
+      }
+    }
+    const { container } = renderComponent(data)
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should show api aws statues loading states', async () => {
+    useCFStatesForAws(false, true)
+    const data = {
+      initialValues: {
+        type: StepType.CloudFormationCreateStack,
+        name: '',
+        identifier: '',
+        timeout: '',
+        spec: {
+          provisionerIdentifier: '',
+          configuration: {
+            stackName: '',
+            connectorRef: '',
+            region: '',
+            templateFile: {
+              type: 'Inline',
+              spec: {}
+            }
+          }
+        }
+      }
+    }
+    const { container } = renderComponent(data)
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should show api aws roles error', async () => {
+    useGetIamRolesForAws(true)
+    const data = {
+      initialValues: {
+        type: StepType.CloudFormationCreateStack,
+        name: '',
+        identifier: '',
+        timeout: '',
+        spec: {
+          provisionerIdentifier: '',
+          configuration: {
+            stackName: '',
+            connectorRef: '',
+            region: '',
+            templateFile: {
+              type: 'Inline',
+              spec: {}
+            }
+          }
+        }
+      }
+    }
+    const { container } = renderComponent(data)
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should render runtime components', async () => {
+    const data = {
+      initialValues: {
+        type: StepType.CloudFormationCreateStack,
+        name: 'test',
+        identifier: 'test',
+        timeout: RUNTIME_INPUT_VALUE,
+        spec: {
+          provisionerIdentifier: RUNTIME_INPUT_VALUE,
+          configuration: {
+            stackName: RUNTIME_INPUT_VALUE,
+            connectorRef: RUNTIME_INPUT_VALUE,
+            region: RUNTIME_INPUT_VALUE,
+            templateFile: {
+              type: 'Remote',
+              spec: {
+                store: {
+                  spec: {
+                    paths: RUNTIME_INPUT_VALUE
+                  }
+                }
+              }
+            },
+            parameters: [
+              {
+                identifier: 'idtest',
+                store: {
+                  type: 'Github',
+                  spec: {
+                    branch: RUNTIME_INPUT_VALUE,
+                    connectorRef: RUNTIME_INPUT_VALUE,
+                    gitFetchType: RUNTIME_INPUT_VALUE,
+                    paths: RUNTIME_INPUT_VALUE
+                  }
+                }
+              }
+            ],
+            capabilities: RUNTIME_INPUT_VALUE,
+            skipOnStackStatuses: RUNTIME_INPUT_VALUE,
+            tags: RUNTIME_INPUT_VALUE
+          }
+        }
+      }
+    }
+    const { container } = renderComponent(data)
+
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should render input view', async () => {
+    const data = {
+      initialValues: {
+        type: StepType.CloudFormationCreateStack,
+        name: '',
+        identifier: '',
+        timeout: '',
+        spec: {
+          provisionerIdentifier: '',
+          configuration: {
+            stackName: '',
+            connectorRef: '',
+            region: '',
+            templateFile: {
+              type: 'Inline',
+              spec: {}
+            }
+          }
+        }
+      }
+    }
+    const { container } = renderComponent(data, StepViewType.InputVariable)
+
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should render variable view', async () => {
+    const data = {
+      initialValues: {
+        type: StepType.CloudFormationCreateStack,
+        name: '',
+        identifier: '',
+        timeout: '',
+        spec: {
+          provisionerIdentifier: '',
+          configuration: {
+            stackName: '',
+            connectorRef: '',
+            region: '',
+            templateFile: {
+              type: 'Inline',
+              spec: {}
+            }
+          }
+        }
+      }
+    }
+    const { container } = renderComponent(data, StepViewType.InputSet)
+
     expect(container).toMatchSnapshot()
   })
 })

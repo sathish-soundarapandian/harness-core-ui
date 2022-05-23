@@ -18,9 +18,7 @@ import {
   MultiSelectTypeInput,
   Label,
   Layout,
-  useToaster,
-  MultiTypeInputType,
-  getMultiTypeFromValue
+  useToaster
 } from '@harness/uicore'
 import { connect, FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'

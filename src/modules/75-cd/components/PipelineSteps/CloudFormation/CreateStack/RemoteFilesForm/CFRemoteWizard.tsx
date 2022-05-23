@@ -205,6 +205,7 @@ const CFRemoteWizard = ({
         iconProps={{ size: 18 }}
         onClick={close}
         className={css.crossIcon}
+        data-testid="remoteClose"
       />
     </Dialog>
   )

@@ -215,7 +215,12 @@ export const InlineParameterFile = ({
                     rightIcon="chevron-right"
                     data-testid="submit"
                   />
-                  <Button onClick={onClose} variation={ButtonVariation.TERTIARY} text={getString('cancel')} />
+                  <Button
+                    data-testid="inlineParamClose"
+                    onClick={onClose}
+                    variation={ButtonVariation.TERTIARY}
+                    text={getString('cancel')}
+                  />
                 </Layout.Horizontal>
               </Form>
             )
