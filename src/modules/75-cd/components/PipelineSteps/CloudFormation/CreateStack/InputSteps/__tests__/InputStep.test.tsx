@@ -55,7 +55,7 @@ const rolesMock = {
   }
 }
 
-const renderComponent = (data: any, path?: string) => {
+const renderComponent = (data: any) => {
   return render(
     <TestWrapper
       path="/account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier"

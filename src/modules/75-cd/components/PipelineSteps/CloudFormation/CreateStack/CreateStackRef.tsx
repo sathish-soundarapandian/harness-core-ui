@@ -743,7 +743,6 @@ export const CreateStack = (
               onClose={() => {
                 setInlineParams(false)
               }}
-              /* istanbul ignore next */
               onSubmit={inlineValues => {
                 /* istanbul ignore next */
                 setFieldValue('spec.configuration.parameterOverrides', inlineValues?.parameterOverrides)

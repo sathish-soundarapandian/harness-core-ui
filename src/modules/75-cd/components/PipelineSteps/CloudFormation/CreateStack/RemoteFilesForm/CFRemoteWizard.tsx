@@ -163,10 +163,9 @@ const CFRemoteWizard = ({
     <Dialog
       {...(DIALOG_PROPS as IDialogProps)}
       isOpen={showModal}
-      isCloseButtonShown={true}
+      isCloseButtonShown
       onClose={close}
       className={cx(css.modal, Classes.DIALOG)}
-      title=""
     >
       <div className={css.wizard}>
         <StepWizard
