@@ -60,7 +60,7 @@ const CostUsageStep: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
   }
 
   const getValidationScheme = () => {
-    if (isExistingCostUsageReport) return {}
+    if (isExistingCostUsageReport) return undefined
     else
       return Yup.object().shape({
         reportName: Yup.string().required(getString('connectors.ceAws.cur.validation.reportRequired')),
