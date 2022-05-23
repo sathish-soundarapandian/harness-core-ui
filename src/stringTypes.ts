@@ -2362,6 +2362,7 @@ export interface StringsMap {
   'projectsOrgs.pendingUsers': string
   'projectsOrgs.placeholder': string
   'projectsOrgs.projectCreateSuccess': string
+  'projectsOrgs.projectDeleteErrorMessage': string
   'projectsOrgs.projectDeleteSuccess': string
   'projectsOrgs.projectEdit': string
   'projectsOrgs.projectEditSuccess': string

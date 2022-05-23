@@ -38,7 +38,7 @@ const deleteProject = jest.fn()
 const getOrg = jest.fn()
 const deleteProjectMock = (): Promise<{ status: string }> => {
   deleteProject()
-  return Promise.resolve({ status: 'SUCCESS' })
+  return Promise.resolve({ status: 'SUCCESS', data: true })
 }
 
 let noModule = false

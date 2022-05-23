@@ -333,12 +333,12 @@ const HomePage: React.FC = () => {
         />
       </Layout.Vertical>
 
-      {!loading && (
+      {!loading && !!data?.items && (
         <Layout.Vertical padding={{ left: 'medium', right: 'medium' }}>
           <Pagination
-            itemCount={dashboardList?.items || 1}
+            itemCount={data.items}
             pageSize={PAGE_SIZE}
-            pageCount={dashboardList?.pages || 1}
+            pageCount={data?.pages || 1}
             pageIndex={page}
             gotoPage={(pageNumber: number) => setPage(pageNumber)}
           />

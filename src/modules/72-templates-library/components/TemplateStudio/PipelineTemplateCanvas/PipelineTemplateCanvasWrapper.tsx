@@ -31,7 +31,7 @@ type EventDetailType = PipelineDrawerTypes.PipelineVariables | PipelineDrawerTyp
 
 const PipelineTemplateCanvasWrapper = (): JSX.Element => {
   const {
-    state: { template, templateView },
+    state: { template, templateView, isLoading, isUpdated },
     updateTemplate,
     updateTemplateView,
     isReadonly
@@ -39,14 +39,19 @@ const PipelineTemplateCanvasWrapper = (): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
 
-  const pipeline = React.useMemo(
-    (): PipelineInfoConfig =>
-      merge({}, template.spec, {
-        name: DefaultNewPipelineName,
-        identifier: DefaultNewPipelineId
-      }),
-    [template.spec]
-  )
+  const createPipelineFromTemplate = (): PipelineInfoConfig =>
+    merge({}, template.spec, {
+      name: DefaultNewPipelineName,
+      identifier: DefaultNewPipelineId
+    })
+
+  const [pipeline, setPipeline] = React.useState<PipelineInfoConfig>(createPipelineFromTemplate())
+
+  React.useEffect(() => {
+    if (!isLoading && !isUpdated) {
+      setPipeline(createPipelineFromTemplate())
+    }
+  }, [isLoading, isUpdated])
 
   const onUpdatePipeline = async (pipelineConfig: PipelineInfoConfig) => {
     const processNode = omit(pipelineConfig, 'name', 'identifier', 'description', 'tags')
@@ -69,7 +74,7 @@ const PipelineTemplateCanvasWrapper = (): JSX.Element => {
   return (
     <TemplatePipelineProvider
       queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier, repoIdentifier, branch }}
-      initialValue={pipeline as PipelineInfoConfig}
+      initialValue={pipeline}
       onUpdatePipeline={onUpdatePipeline}
       contextType={PipelineContextType.PipelineTemplate}
       isReadOnly={isReadonly}
