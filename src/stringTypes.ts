@@ -2797,7 +2797,7 @@ export interface StringsMap {
   'pipeline.filters.pipelineNamePlaceholder': string
   'pipeline.filters.servicePlaceholder': string
   'pipeline.gitDetails': string
-  'pipeline.gitExperience.noPipelineFound': string
+  'pipeline.gitExperience.noEntityFound': string
   'pipeline.gitExperience.selectDiffBranch': string
   'pipeline.gitExperience.selectRepoBranch': string
   'pipeline.gitExperience.skipNow': string
@@ -3405,6 +3405,7 @@ export interface StringsMap {
   'triggers.pageNotFound': string
   'triggers.pipelineExecutionInput': string
   'triggers.pipelineInputLabel': string
+  'triggers.pipelineReferenceBranch': string
   'triggers.schedulePanel.FRI': string
   'triggers.schedulePanel.MON': string
   'triggers.schedulePanel.SAT': string

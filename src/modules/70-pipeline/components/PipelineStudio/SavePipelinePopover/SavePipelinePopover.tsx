@@ -54,9 +54,9 @@ import { useSaveAsTemplate } from '@pipeline/components/PipelineStudio/SaveTempl
 import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
 import type { PipelineInfoConfig } from 'services/cd-ng'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
-import { GovernanceMetadata, StoreType } from 'services/pipeline-ng'
+import type { GovernanceMetadata } from 'services/pipeline-ng'
 import PipelineErrors from '@pipeline/components/PipelineStudio/PipelineCanvas/PipelineErrors/PipelineErrors'
-import type { StoreMetaData } from '@common/constants/GitSyncTypes'
+import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { AccessControlCheckError } from 'services/rbac'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { EvaluationModal } from '@governance/EvaluationModal'
@@ -100,7 +100,7 @@ export function SavePipelinePopover({
     updatePipelineView
   } = usePipelineContext()
   const [loading, setLoading] = React.useState<boolean>()
-  const { branch, repoName, connectorRef, storeType } = useQueryParams<GitQueryParams>()
+  const { branch, repoName, connectorRef, storeType, repoIdentifier } = useQueryParams<GitQueryParams>()
   const { trackEvent } = useTelemetry()
   const { pipelineSchema } = usePipelineSchema()
   const { showSuccess, showError, clear } = useToaster()
@@ -168,7 +168,7 @@ export function SavePipelinePopover({
         pipelineIdentifier: newPipelineId,
         accountId,
         module,
-        repoIdentifier: updatedGitDetails?.repoIdentifier,
+        repoIdentifier: defaultTo(updatedGitDetails?.repoIdentifier, repoIdentifier),
         branch: updatedGitDetails?.branch,
         ...(isPipelineRemote
           ? {
@@ -229,7 +229,7 @@ export function SavePipelinePopover({
 
   const saveAndPublishPipeline = async (
     latestPipeline: PipelineInfoConfig,
-    currStoreMetadata?: StoreMetaData,
+    currStoreMetadata?: StoreMetadata,
     updatedGitDetails?: SaveToGitFormInterface,
     lastObject?: { lastObjectId?: string }
   ): Promise<UseSaveSuccessResponse> => {

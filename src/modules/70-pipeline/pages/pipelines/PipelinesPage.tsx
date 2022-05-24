@@ -37,7 +37,6 @@ import {
   PipelineFilterProperties,
   PMSPipelineSummaryResponse,
   ResponsePagePMSPipelineSummaryResponse,
-  StoreType,
   useDeleteFilter,
   useGetFilterList,
   useGetPipelineList,
@@ -85,6 +84,7 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { deploymentTypeLabel } from '@pipeline/utils/DeploymentTypeUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { StoreType } from '@common/constants/GitSyncTypes'
 import { PipelineGridView } from './views/PipelineGridView'
 import { PipelineListView } from './views/PipelineListView'
 import PipelineFilterForm from '../pipeline-deployment-list/PipelineFilterForm/PipelineFilterForm'

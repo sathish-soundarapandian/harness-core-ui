@@ -42,7 +42,7 @@ import type { PipelineStageWrapper } from '@pipeline/utils/pipelineTypes'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { getTemplateTypesByRef } from '@pipeline/utils/templateUtils'
-import type { StoreMetaData } from '@common/constants/GitSyncTypes'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import {
   ActionReturnType,
   DefaultNewPipelineId,
@@ -213,7 +213,7 @@ export interface PipelineContextInterface {
   setYamlHandler: (yamlHandler: YamlBuilderHandlerBinding) => void
   setTemplateTypes: (data: { [key: string]: string }) => void
   updatePipeline: (pipeline: PipelineInfoConfig) => Promise<void>
-  updatePipelineStoreMetadata: (storeMetadata: StoreMetaData, gitDetails: EntityGitDetails) => Promise<void>
+  updatePipelineStoreMetadata: (storeMetadata: StoreMetadata, gitDetails: EntityGitDetails) => Promise<void>
   updateGitDetails: (gitDetails: EntityGitDetails) => Promise<void>
   updateEntityValidityDetails: (entityValidityDetails: EntityValidityDetails) => Promise<void>
   updatePipelineView: (data: PipelineViewData) => void
@@ -241,7 +241,7 @@ interface PipelinePayload {
   pipeline: PipelineInfoConfig | undefined
   originalPipeline?: PipelineInfoConfig
   isUpdated: boolean
-  storeMetadata?: StoreMetaData
+  storeMetadata?: StoreMetadata
   gitDetails: EntityGitDetails
   entityValidityDetails?: EntityValidityDetails
 }
@@ -512,7 +512,7 @@ interface UpdateGitDetailsArgs {
 
 const _updateStoreMetadata = async (
   args: UpdateGitDetailsArgs,
-  storeMetadata: StoreMetaData,
+  storeMetadata: StoreMetadata,
   gitDetails: EntityGitDetails
 ): Promise<void> => {
   const { dispatch, queryParams, identifier, originalPipeline, pipeline } = args

@@ -5,8 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { EntityGitDetails, StoreType } from 'services/pipeline-ng'
+import type { EntityGitDetails } from 'services/pipeline-ng'
 import type { Module as ModuleName } from 'framework/types/ModuleName'
+import type { StoreType } from '@common/constants/GitSyncTypes'
 
 export interface AccountPathProps {
   accountId: string

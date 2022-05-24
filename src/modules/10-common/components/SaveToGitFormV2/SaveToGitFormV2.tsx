@@ -27,7 +27,7 @@ import { Color } from '@harness/design-system'
 import type { GitSyncEntityDTO, EntityGitDetails } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { getEntityNameFromType } from '@common/utils/StringUtils'
-import type { StoreMetaData } from '@common/constants/GitSyncTypes'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import RepoBranchSelectV2 from '../RepoBranchSelectV2/RepoBranchSelectV2'
 import css from './SaveToGitFormV2.module.scss'
 
@@ -36,7 +36,7 @@ export interface GitResourceInterface {
   name: string
   identifier: string
   gitDetails?: EntityGitDetails
-  storeMetadata?: StoreMetaData
+  storeMetadata?: StoreMetadata
 }
 
 interface SaveToGitFormV2Props {
@@ -226,6 +226,7 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
                         large
                         onChange={() => handleBranchTypeChange(true, formik)}
                         checked={isNewBranch}
+                        disabled={resource.type === 'InputSets'}
                       >
                         <Icon name="git-new-branch" color={Color.GREY_700}></Icon>
                         <Text inline margin={{ left: 'small' }}>
