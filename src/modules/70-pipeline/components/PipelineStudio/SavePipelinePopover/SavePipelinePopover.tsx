@@ -51,7 +51,7 @@ import type {
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { usePipelineSchema } from '@pipeline/components/PipelineStudio/PipelineSchema/PipelineSchemaContext'
 import { useSaveAsTemplate } from '@pipeline/components/PipelineStudio/SaveTemplateButton/useSaveAsTemplate'
-import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
+import { AppStoreContext, useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { PipelineInfoConfig } from 'services/cd-ng'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import type { GovernanceMetadata } from 'services/pipeline-ng'
@@ -106,7 +106,8 @@ export function SavePipelinePopover({
   const { showSuccess, showError, clear } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
-  const { OPA_PIPELINE_GOVERNANCE, GIT_SIMPLIFICATION } = useFeatureFlags()
+  const { OPA_PIPELINE_GOVERNANCE } = useFeatureFlags()
+  const { isGitSimplificationEnabled } = useAppStore()
   const history = useHistory()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } =
     useParams<PipelineType<PipelinePathProps>>()
@@ -117,7 +118,7 @@ export function SavePipelinePopover({
   const [updatePipelineAPIResponse, setUpdatePipelineAPIResponse] = React.useState<any>()
   const [governanceMetadata, setGovernanceMetadata] = React.useState<GovernanceMetadata>()
 
-  const isPipelineRemote = GIT_SIMPLIFICATION && storeType === StoreType.REMOTE
+  const isPipelineRemote = isGitSimplificationEnabled && storeType === StoreType.REMOTE
 
   const [showOPAErrorModal, closeOPAErrorModal] = useModalHook(
     () => (

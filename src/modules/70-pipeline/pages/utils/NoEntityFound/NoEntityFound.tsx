@@ -17,9 +17,9 @@ import type {
   TemplateStudioPathProps,
   TemplateStudioQueryParams
 } from '@common/interfaces/RouteInterfaces'
-import { StoreType } from '@common/constants/GitSyncTypes'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { StoreType } from 'services/pipeline-ng'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import noEntityFoundImage from './images/no-entity-found.svg'
 import css from './NoEntityFound.module.scss'
 
@@ -35,9 +35,9 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
 
   const { getString } = useStrings()
   const history = useHistory()
+  const { isGitSimplificationEnabled } = useAppStore()
 
-  const { GIT_SIMPLIFICATION } = useFeatureFlags()
-  const isPipelineRemote = GIT_SIMPLIFICATION && storeType === StoreType.REMOTE
+  const isPipelineRemote = isGitSimplificationEnabled && storeType === StoreType.REMOTE
 
   const { accountId, projectIdentifier, orgIdentifier, module, templateType } = useParams<
     PipelineType<{

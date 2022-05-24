@@ -113,8 +113,7 @@ export default function CreatePipelines({
   const { pipelineIdentifier } = useParams<{ pipelineIdentifier: string }>()
   const { storeType: storeTypeParam } = useQueryParams<GitQueryParams>()
   const { updateQueryParams } = useUpdateQueryParams()
-  const { isGitSyncEnabled } = useAppStore()
-  const gitSimplification: boolean = useFeatureFlag(FeatureFlag.GIT_SIMPLIFICATION)
+  const { isGitSyncEnabled, isGitSimplificationEnabled } = useAppStore()
   const { trackEvent } = useTelemetry()
   const templatesFeatureFlagEnabled = useFeatureFlag(FeatureFlag.NG_TEMPLATES)
   const pipelineTemplatesFeatureFlagEnabled = useFeatureFlag(FeatureFlag.NG_PIPELINE_TEMPLATE)
@@ -173,7 +172,7 @@ export default function CreatePipelines({
         validationSchema={Yup.object().shape({
           name: NameSchema({ requiredErrorMsg: getString('createPipeline.pipelineNameRequired') }),
           identifier: IdentifierSchema(),
-          ...(gitSimplification && storeType?.type === StoreType.REMOTE
+          ...(isGitSimplificationEnabled && storeType?.type === StoreType.REMOTE
             ? {
                 repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
                 branch: Yup.string().trim().required(getString('common.git.validation.branchRequired')),
@@ -190,7 +189,7 @@ export default function CreatePipelines({
         onSubmit={values => {
           logger.info(JSON.stringify(values))
           const formGitDetails =
-            gitSimplification && values.storeType === 'REMOTE'
+            isGitSimplificationEnabled && values.storeType === 'REMOTE'
               ? { repoName: values.repo, branch: values.branch, filePath: values.filePath }
               : values.repo && values.repo.trim().length > 0
               ? { repoIdentifier: values.repo, branch: values.branch }
@@ -240,7 +239,7 @@ export default function CreatePipelines({
               </Container>
             )}
 
-            {gitSimplification && !isGitSyncEnabled ? (
+            {isGitSimplificationEnabled ? (
               <>
                 <Divider />
                 <Text font={{ variation: FontVariation.H6 }} className={css.choosePipelineSetupHeader}>
