@@ -63,6 +63,7 @@ import DelegateConfigurations from '@delegates/pages/delegates/DelegateConfigura
 import DelegateDetails from '@delegates/pages/delegates/DelegateDetails'
 import DelegateProfileDetails from '@delegates/pages/delegates/DelegateConfigurationDetailPage'
 import DelegateTokens from '@delegates/components/DelegateTokens/DelegateTokens'
+import FileStorePage from '@filestore/pages/filestore/FileStorePage'
 import { RedirectToSecretDetailHome } from '@secrets/RouteDestinations'
 import SecretReferences from '@secrets/pages/secretReferences/SecretReferences'
 import SecretDetailsHomePage from '@secrets/pages/secretDetailsHomePage/SecretDetailsHomePage'
@@ -1140,5 +1141,15 @@ export default (
       sidebarProps: CDSideNavProps,
       pathProps: { ...accountPathProps, ...projectPathProps, ...pipelineModuleParams }
     })}
+
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CDSideNavProps}
+      path={routes.toFileStore({ ...accountPathProps, ...projectPathProps, ...pipelineModuleParams })}
+      pageName={PAGE_NAME.FileStorePage}
+    >
+      <FileStorePage />
+    </RouteWithLayout>
   </>
 )

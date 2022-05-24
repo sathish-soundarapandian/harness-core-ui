@@ -100,7 +100,7 @@ function ServiceStudioDetails({ serviceData }: ServiceStudioDetailsProps): React
 
           <Tab
             id={ServiceTabs.REFERENCED_BY}
-            title={getString('refrencedBy')}
+            title={getString('referencedBy')}
             panel={<EntitySetupUsage entityType={'Service'} entityIdentifier={serviceId} />}
           />
           <Tab id={ServiceTabs.ActivityLog} title={getString('activityLog')} panel={<></>} />
@@ -137,7 +137,7 @@ function ServiceStudioDetails({ serviceData }: ServiceStudioDetailsProps): React
         <Tab id={ServiceTabs.SUMMARY} title={getString('summary')} panel={<ServiceDetailsSummary />} />
         <Tab
           id={ServiceTabs.REFERENCED_BY}
-          title={getString('refrencedBy')}
+          title={getString('referencedBy')}
           panel={<EntitySetupUsage entityType={'Service'} entityIdentifier={serviceId} />}
         />
       </Tabs>
