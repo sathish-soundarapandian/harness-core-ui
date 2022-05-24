@@ -12,7 +12,7 @@ import { Color } from '@harness/design-system'
 import { matchPath, useLocation, useParams, useRouteMatch } from 'react-router-dom'
 import { Page } from '@common/exports'
 import routes from '@common/RouteDefinitions'
-import { useGlobalEventListener, useQueryParams } from '@common/hooks'
+import { useGlobalEventListener, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useGetPipelineSummary } from 'services/pipeline-ng'
 import { useGetListOfBranchesWithStatus } from 'services/cd-ng'
 import { NavigatedToPage } from '@common/constants/TrackingConstants'
@@ -46,6 +46,7 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
   const location = useLocation()
   const { trackEvent } = useTelemetry()
   const { branch, repoIdentifier, storeType, repoName, connectorRef } = useQueryParams<GitQueryParams>()
+  const { updateQueryParams } = useUpdateQueryParams()
   const {
     data: pipeline,
     refetch,
@@ -90,6 +91,10 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
       setTriggerTabDisabled(false)
     }
   }, [branchesWithStatusData])
+
+  React.useEffect(() => {
+    pipeline?.data?.gitDetails?.branch && updateQueryParams({ branch: pipeline?.data?.gitDetails?.branch })
+  }, [pipeline?.data?.gitDetails?.branch])
 
   React.useEffect(() => {
     const routeParams = {

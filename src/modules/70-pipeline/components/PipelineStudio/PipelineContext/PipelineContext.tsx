@@ -522,7 +522,7 @@ const _updateStoreMetadata = async (
     queryParams.orgIdentifier || '',
     queryParams.projectIdentifier || '',
     identifier,
-    gitDetails.repoIdentifier || '',
+    gitDetails.repoIdentifier || gitDetails.repoName || '',
     gitDetails.branch || ''
   )
   const isUpdated = !isEqual(originalPipeline, pipeline)
