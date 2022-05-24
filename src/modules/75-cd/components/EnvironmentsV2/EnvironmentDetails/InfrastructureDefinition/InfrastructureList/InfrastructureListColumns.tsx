@@ -7,50 +7,55 @@
 
 import React from 'react'
 import ReactTimeago from 'react-timeago'
-import cx from 'classnames'
 import { defaultTo, isEmpty } from 'lodash-es'
-import { Classes, Intent, Menu, Position } from '@blueprintjs/core'
+import { Classes, Menu, Position } from '@blueprintjs/core'
 
-import { Button, Layout, Popover, TagsPopover, Text, useConfirmationDialog } from '@harness/uicore'
+import { Layout, TagsPopover, Text, useConfirmationDialog, Intent, Popover, Button } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+
 import { useStrings } from 'framework/strings'
+import type { InfrastructureResponse, InfrastructureResponseDTO } from 'services/cd-ng'
 
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
-import { EnvironmentType } from '@common/constants/EnvironmentType'
+import css from '../InfrastructureDefinition.module.scss'
 
-import css from '../EnvironmentGroups.module.scss'
-import environmentCss from '../../EnvironmentsV2/EnvironmentsList/EnvironmentsList.module.scss'
-
-export function EnvironmentGroupName({
-  name,
-  identifier,
-  tags
-}: {
-  name?: string
-  identifier?: string
-  tags?: {
-    [key: string]: string
+interface InfrastructureRowColumn {
+  row: { original: InfrastructureResponse }
+  column: {
+    actions: {
+      onEdit: (identifier: string) => void
+      onDelete: (identifier: string) => void
+    }
   }
+}
+
+export function withInfrastructure(Component: any) {
+  return (props: InfrastructureRowColumn) => {
+    return <Component {...props.row.original} {...props.column.actions} />
+  }
+}
+
+export function InfrastructureName({
+  infrastructure
+}: {
+  infrastructure: InfrastructureResponseDTO
 }): React.ReactElement {
   const { getString } = useStrings()
 
+  const { name, tags, identifier } = infrastructure
+
   return (
-    <>
+    <Layout.Vertical>
       <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small" margin={{ bottom: 'small' }}>
-        <Text color={Color.BLACK} lineClamp={1}>
-          {name}
-        </Text>
+        <Text color={Color.BLACK}>{name}</Text>
         {!isEmpty(tags) && (
           <TagsPopover
             className={css.tagsPopover}
             iconProps={{ size: 14, color: Color.GREY_600 }}
             tags={defaultTo(tags, {})}
-            popoverProps={{
-              position: 'right'
-            }}
           />
         )}
       </Layout.Horizontal>
@@ -58,38 +63,33 @@ export function EnvironmentGroupName({
       <Text color={Color.GREY_500} font={{ size: 'small' }} lineClamp={1}>
         {getString('common.ID')}: {identifier}
       </Text>
-    </>
-  )
-}
-
-export function LastUpdatedBy({ lastModifiedAt }: { lastModifiedAt?: number }): React.ReactElement {
-  return (
-    <Layout.Vertical spacing={'small'}>
-      <ReactTimeago date={lastModifiedAt as number} />
     </Layout.Vertical>
   )
 }
 
-export function NoOfEnvironments({ length }: { length: number }) {
+export function LastUpdatedBy({ lastModifiedAt }: InfrastructureResponse): React.ReactElement {
   return (
-    <Text
-      color={Color.BLACK}
-      background={Color.GREY_100}
-      padding={{ left: 'large', top: 'small', right: 'large', bottom: 'small' }}
-      inline
-    >
-      {length} environment(s) included
-    </Text>
+    <Layout.Vertical spacing={'small'}>
+      <ReactTimeago date={defaultTo(lastModifiedAt, 0)} />
+    </Layout.Vertical>
   )
 }
 
-export function EditOrDeleteCell({ identifier, onEdit, onDelete }: any): React.ReactElement {
+export function InfrastructureMenu({
+  infrastructure: { identifier, yaml },
+  onEdit,
+  onDelete
+}: {
+  infrastructure: InfrastructureResponseDTO
+  onEdit: (identifier: string) => void
+  onDelete: (identifier: string) => void
+}): React.ReactElement {
   const [menuOpen, setMenuOpen] = React.useState(false)
   const { getString } = useStrings()
 
   const { openDialog } = useConfirmationDialog({
-    titleText: getString('common.environmentGroup.delete'),
-    contentText: getString('common.environmentGroup.deleteConfirmation'),
+    titleText: getString('cd.infrastructure.delete'),
+    contentText: getString('cd.infrastructure.deleteConfirmation'),
     confirmButtonText: getString('delete'),
     cancelButtonText: getString('cancel'),
     intent: Intent.DANGER,
@@ -97,15 +97,16 @@ export function EditOrDeleteCell({ identifier, onEdit, onDelete }: any): React.R
     onCloseDialog: async (isConfirmed: boolean) => {
       /* istanbul ignore else */
       if (isConfirmed) {
-        await onDelete(identifier)
+        setMenuOpen(false)
+        await onDelete(defaultTo(identifier, ''))
       }
-      setMenuOpen(false)
     }
   })
 
   const handleEdit = (event: React.MouseEvent) => {
     event.stopPropagation()
-    onEdit(identifier)
+    onEdit(defaultTo(yaml, ''))
+    setMenuOpen(false)
   }
 
   const handleDelete = (event: React.MouseEvent) => {
@@ -134,9 +135,9 @@ export function EditOrDeleteCell({ identifier, onEdit, onDelete }: any): React.R
             onClick={handleEdit}
             permission={{
               resource: {
-                resourceType: ResourceType.ENVIRONMENT_GROUP
+                resourceType: ResourceType.ENVIRONMENT
               },
-              permission: PermissionIdentifier.EDIT_ENVIRONMENT_GROUP
+              permission: PermissionIdentifier.EDIT_ENVIRONMENT
             }}
           />
           <RbacMenuItem
@@ -145,27 +146,13 @@ export function EditOrDeleteCell({ identifier, onEdit, onDelete }: any): React.R
             onClick={handleDelete}
             permission={{
               resource: {
-                resourceType: ResourceType.ENVIRONMENT_GROUP
+                resourceType: ResourceType.ENVIRONMENT
               },
-              permission: PermissionIdentifier.DELETE_ENVIRONMENT_GROUP
+              permission: PermissionIdentifier.DELETE_ENVIRONMENT
             }}
           />
         </Menu>
       </Popover>
     </Layout.Horizontal>
-  )
-}
-
-export function EnvironmentTypes({ type }: { type?: 'PreProduction' | 'Production' }) {
-  const { getString } = useStrings()
-  return (
-    <Text
-      className={cx(environmentCss.environmentType, {
-        [environmentCss.production]: type === EnvironmentType.PRODUCTION
-      })}
-      font={{ size: 'small' }}
-    >
-      {getString(type === EnvironmentType.PRODUCTION ? 'cd.serviceDashboard.prod' : 'cd.preProductionType')}
-    </Text>
   )
 }

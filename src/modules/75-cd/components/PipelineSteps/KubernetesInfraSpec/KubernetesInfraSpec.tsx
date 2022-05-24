@@ -6,6 +6,14 @@
  */
 
 import React from 'react'
+import cx from 'classnames'
+import * as Yup from 'yup'
+import { useParams } from 'react-router-dom'
+import { debounce, noop, isEmpty, get } from 'lodash-es'
+import { parse } from 'yaml'
+import { CompletionItemKind } from 'vscode-languageserver-types'
+import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
+
 import {
   IconName,
   Text,
@@ -18,37 +26,40 @@ import {
   Icon,
   Accordion
 } from '@wings-software/uicore'
-import cx from 'classnames'
-import * as Yup from 'yup'
-import { useParams } from 'react-router-dom'
-import { debounce, noop, isEmpty, get } from 'lodash-es'
-import { parse } from 'yaml'
-import { CompletionItemKind } from 'vscode-languageserver-types'
-import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
-import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
-import { K8SDirectInfrastructure, getConnectorListV2Promise } from 'services/cd-ng'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
-import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
-import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
-import { useQueryParams } from '@common/hooks'
-import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
+import { K8SDirectInfrastructure, getConnectorListV2Promise } from 'services/cd-ng'
+import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
+
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
+import { useQueryParams } from '@common/hooks'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+
+import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
-import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
+import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { getConnectorName, getConnectorValue } from '@pipeline/components/PipelineSteps/Steps/StepsHelper'
+import {
+  PipelineContextType,
+  usePipelineContext
+} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+
+import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
+
 import { getConnectorSchema, getNameSpaceSchema, getReleaseNameSchema } from '../PipelineStepsUtil'
-import css from './KubernetesInfraSpec.module.scss'
-import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
+import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import css from './KubernetesInfraSpec.module.scss'
+
 const logger = loggerFor(ModuleName.CD)
 type K8SDirectInfrastructureTemplate = { [key in keyof K8SDirectInfrastructure]: string }
 interface KubernetesInfraSpecEditableProps {
@@ -84,6 +95,7 @@ const KubernetesInfraSpecEditable: React.FC<KubernetesInfraSpecEditableProps> = 
   })
 
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
+  const { contextType } = usePipelineContext()
 
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
 
@@ -226,17 +238,19 @@ const KubernetesInfraSpecEditable: React.FC<KubernetesInfraSpecEditableProps> = 
                 />
               </Accordion>
 
-              <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }} className={css.lastRow}>
-                <FormInput.CheckBox
-                  className={css.simultaneousDeployment}
-                  name={'allowSimultaneousDeployments'}
-                  label={getString('cd.allowSimultaneousDeployments')}
-                  tooltipProps={{
-                    dataTooltipId: 'k8InfraAllowSimultaneousDeployments'
-                  }}
-                  disabled={readonly}
-                />
-              </Layout.Horizontal>
+              {contextType !== PipelineContextType.Standalone && (
+                <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }} className={css.lastRow}>
+                  <FormInput.CheckBox
+                    className={css.simultaneousDeployment}
+                    name={'allowSimultaneousDeployments'}
+                    label={getString('cd.allowSimultaneousDeployments')}
+                    tooltipProps={{
+                      dataTooltipId: 'k8InfraAllowSimultaneousDeployments'
+                    }}
+                    disabled={readonly}
+                  />
+                </Layout.Horizontal>
+              )}
             </FormikForm>
           )
         }}

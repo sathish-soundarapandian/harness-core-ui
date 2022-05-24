@@ -48,9 +48,9 @@ export const mockResponse: ResponseBoolean = {
 }
 
 export const backButtonMock: ConnectorInfoDTO = {
-  name: 'dummy gcp connector',
-  identifier: 'dummyGCPIdentifier',
-  description: 'dummy gcp description',
+  name: 'dummy pdc connector',
+  identifier: 'dummyPDCIdentifier',
+  description: 'dummy pdc description',
   orgIdentifier: '',
   projectIdentifier: '',
   tags: {},

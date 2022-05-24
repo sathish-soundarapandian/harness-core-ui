@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import moment from 'moment'
 import { Card, Layout } from '@wings-software/uicore'
@@ -23,16 +23,26 @@ import { ServicesList, ServicesListProps } from '@cd/components/Services/Service
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useStrings } from 'framework/strings'
+import { useLocalStorage } from '@common/hooks'
+import { validTimeFormat } from '@common/factories/LandingDashboardContext'
 import css from '@cd/components/Services/ServicesContent/ServicesContent.module.scss'
 
 export const ServicesContent: React.FC = () => {
   const { view, fetchDeploymentList } = useServiceStore()
   const { getString } = useStrings()
 
-  const [timeRange, setTimeRange] = useState<TimeRangeSelectorProps>({
-    range: [startOfDay(moment().subtract(1, 'month').add(1, 'day')), startOfDay(moment())],
-    label: getString('common.duration.month')
-  })
+  const [timeFilterRange, setTimeFilterRange] = useLocalStorage<TimeRangeSelectorProps>(
+    'timeRangeServiceDashboard',
+    {
+      range: [startOfDay(moment().subtract(1, 'month').add(1, 'day')), startOfDay(moment())],
+      label: getString('common.duration.month')
+    },
+    window.sessionStorage
+  )
+
+  const resultTimeFilterRange = validTimeFormat(timeFilterRange)
+  timeFilterRange.range[0] = resultTimeFilterRange.range[0]
+  timeFilterRange.range[1] = resultTimeFilterRange.range[1]
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
 
@@ -40,8 +50,8 @@ export const ServicesContent: React.FC = () => {
     accountIdentifier: accountId,
     orgIdentifier,
     projectIdentifier,
-    startTime: timeRange?.range[0]?.getTime() || 0,
-    endTime: timeRange?.range[1]?.getTime() || 0
+    startTime: timeFilterRange?.range[0]?.getTime() || 0,
+    endTime: timeFilterRange?.range[1]?.getTime() || 0
   }
 
   useDocumentTitle([getString('services')])
@@ -84,7 +94,7 @@ export const ServicesContent: React.FC = () => {
   return (
     <Page.Body className={css.pageBody}>
       <Layout.Vertical className={css.container}>
-        <DeploymentsTimeRangeContext.Provider value={{ timeRange, setTimeRange }}>
+        <DeploymentsTimeRangeContext.Provider value={{ timeRange: timeFilterRange, setTimeRange: setTimeFilterRange }}>
           {view === Views.INSIGHT && (
             <Layout.Horizontal margin={{ bottom: 'large' }}>
               <ServiceInstancesWidget {...serviceInstanceProps} />

@@ -361,7 +361,7 @@ exports[`Environment Group Tests first render and search term change 1`] = `
           style="width: 40%;"
           tabindex="0"
         >
-          LASTUPDATEDBY
+          LASTUPDATED
         </p>
       </div>
       <div

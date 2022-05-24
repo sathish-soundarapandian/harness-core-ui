@@ -132,7 +132,7 @@ const BillingExport: React.FC<StepProps<CEAzureDTO>> = props => {
   }
 
   const getSchemaValidations = () => {
-    if (!showBillingExportForm) return {}
+    if (!showBillingExportForm) return undefined
     return Yup.object().shape({
       storageAccountName: Yup.string()
         .required(getString('connectors.ceAzure.validation.storageAccountName'))

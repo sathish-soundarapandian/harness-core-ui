@@ -139,7 +139,7 @@ export default function ModalEnvironmentList({
       {isFetchingEnvironmentsNextTime && (
         <Container padding={{ left: 'xxlarge' }}>
           <Text icon="loading" iconProps={{ size: 20 }} font={{ align: 'center' }}>
-            {getString('common.environment.fetchNext')}
+            {getString('cd.environment.fetchNext')}
           </Text>
         </Container>
       )}

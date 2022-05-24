@@ -21,7 +21,7 @@ import {
 } from '@wings-software/uicore'
 import { Color, Intent } from '@harness/design-system'
 import { parse } from 'yaml'
-import { isEmpty, isUndefined, merge, cloneDeep, defaultTo } from 'lodash-es'
+import { isEmpty, isUndefined, merge, cloneDeep, defaultTo, get } from 'lodash-es'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { Page, useToaster } from '@common/exports'
 import Wizard from '@common/components/Wizard/Wizard'
@@ -261,16 +261,70 @@ const getArtifactManifestTriggerYaml = ({
     pipeline: clearNullUndefined(newPipeline)
   })
 
-  // clears any runtime inputs
-  const artifactSourceSpec = clearRuntimeInputValue(
+  const filteredStagesforStore = val?.resolvedPipeline?.stages
+
+  //if manifest chosen is from stage
+  const filteredManifestforStore = filteredStagesforStore?.map((st: any) =>
+    get(st, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests' || [])?.find(
+      (mani: { manifest: { identifier: any } }) => mani?.manifest?.identifier === selectedArtifact?.identifier
+    )
+  )
+
+  const storeManifest = filteredManifestforStore?.find((mani: undefined) => mani != undefined)
+  let storeVal = storeManifest?.manifest?.spec?.store
+
+  //if manifest chosen is of parallel stage then to show store value in trigger yaml
+  const filteredParallelManifestforStore = filteredStagesforStore?.map((st: { parallel: any[] }) =>
+    st?.parallel
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      ?.map(st =>
+        get(st, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests' || [])?.find(
+          (mani: { manifest: { identifier: any } }) => mani?.manifest?.identifier === selectedArtifact?.identifier
+        )
+      )
+      ?.map(i => i?.manifest?.spec?.store)
+  )
+
+  //further finding storeVal in parallel stage
+  for (let i = 0; i < filteredParallelManifestforStore.length; i++) {
+    if (filteredParallelManifestforStore[i] !== undefined) {
+      for (let j = 0; j < filteredParallelManifestforStore[i].length; j++) {
+        if (filteredParallelManifestforStore[i][j] != undefined) {
+          storeVal = filteredParallelManifestforStore[i][j]
+        }
+      }
+    }
+  }
+
+  // clears any runtime inputs and set values in source->spec->spec
+  let artifactSourceSpec = clearRuntimeInputValue(
     cloneDeep(
       parse(
         JSON.stringify({
-          spec: selectedArtifact?.spec
+          spec: { ...selectedArtifact?.spec, store: storeVal }
         }) || ''
       )
     )
   )
+
+  //if connectorRef present in store is runtime then we need to fetch values from stringifyPipelineRuntimeInput
+  const filteredStageforRuntimeStore = parse(stringifyPipelineRuntimeInput)?.pipeline?.stages?.map((st: any) =>
+    get(st, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests' || [])?.find(
+      (mani: { manifest: { identifier: any } }) => mani?.manifest?.identifier === selectedArtifact?.identifier
+    )
+  )
+  const runtimeStoreManifest = filteredStageforRuntimeStore?.find((mani: undefined) => mani != undefined)
+  const newStoreVal = runtimeStoreManifest?.manifest?.spec?.store
+  if (storeVal?.spec?.connectorRef === '<+input>') {
+    artifactSourceSpec = cloneDeep(
+      parse(
+        JSON.stringify({
+          spec: { ...selectedArtifact?.spec, store: newStoreVal }
+        }) || ''
+      )
+    )
+  }
+
   const triggerYaml: NGTriggerConfigV2 = {
     name,
     identifier,

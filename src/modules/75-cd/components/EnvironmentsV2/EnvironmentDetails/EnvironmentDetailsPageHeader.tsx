@@ -28,17 +28,6 @@ export function PageHeaderTitle({ name, identifier, description, tags, type }: P
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { getString } = useStrings()
 
-  // TODO: To be handled better
-  const prop = {
-    row: {
-      original: {
-        environment: {
-          type
-        }
-      }
-    }
-  }
-
   return (
     <Layout.Vertical spacing={'small'}>
       <Layout.Horizontal margin={{ bottom: 'xsmall' }}>
@@ -66,7 +55,7 @@ export function PageHeaderTitle({ name, identifier, description, tags, type }: P
               }}
             />
           )}
-          <EnvironmentTypes {...(prop as any)} />
+          <EnvironmentTypes environment={{ type }} />
         </Layout.Horizontal>
         <Text font={{ size: 'small' }} inline>
           {getString('common.ID')}: {identifier}

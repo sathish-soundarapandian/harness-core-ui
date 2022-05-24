@@ -287,7 +287,7 @@ export function EntityReference<T>(props: EntityReferenceProps<T>): JSX.Element 
             recordRender={recordRender}
             collapsedRecordRender={collapsedRecordRender}
             selectedScope={selectedScope}
-            pagination={props.pagination}
+            pagination={{ ...props.pagination, hidePageNumbers: true }}
             disableCollapse={disableCollapse}
           />
         ) : (

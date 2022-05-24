@@ -33,6 +33,7 @@ export default class SecureStorage {
     }
 
     localStorage.clear()
+    sessionStorage.clear()
 
     Object.entries(storage).forEach(([key, val]) => {
       localStorage.setItem(key, val)

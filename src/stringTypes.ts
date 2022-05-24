@@ -203,7 +203,6 @@ export interface StringsMap {
   'common.entityReferenceSubTitle': string
   'common.entityReferenceTitle': string
   'common.entityType': string
-  'common.environment.fetchNext': string
   'common.environmentCreated': string
   'common.environmentGroup.createNew': string
   'common.environmentGroup.created': string
@@ -711,7 +710,9 @@ export interface StringsMap {
   'common.tagName': string
   'common.targetBranch': string
   'common.targetBranchPlaceholder': string
-  'common.template.deleteTemplate.errorWhileDeleting': string
+  'common.template.deleteTemplate.errorWhileDeletingTemplate': string
+  'common.template.deleteTemplate.errorWhileDeletingTemplates': string
+  'common.template.deleteTemplate.templateDeleted': string
   'common.template.deleteTemplate.templatesDeleted': string
   'common.template.label': string
   'common.template.saveAsNewTemplateHeading': string
@@ -3574,6 +3575,11 @@ export interface StringsMap {
   'cd.editIdError': string
   'cd.enterTragets': string
   'cd.enterWorkDirectory': string
+  'cd.environment.createSubTitle': string
+  'cd.environment.delete': string
+  'cd.environment.deleteConfirmation': string
+  'cd.environment.deleted': string
+  'cd.environment.fetchNext': string
   'cd.environmentCreated': string
   'cd.environmentDelete': string
   'cd.environmentDeleteMessage': string
@@ -3592,6 +3598,13 @@ export interface StringsMap {
   'cd.gitOps': string
   'cd.gitOpsWizardTitle': string
   'cd.harnessManagedGitOpsWizardTitle': string
+  'cd.infrastructure.createNew': string
+  'cd.infrastructure.created': string
+  'cd.infrastructure.delete': string
+  'cd.infrastructure.deleteConfirmation': string
+  'cd.infrastructure.deleted': string
+  'cd.infrastructure.infrastructureDefinitions': string
+  'cd.infrastructure.noInfrastructureInEnvironment': string
   'cd.installAdapterHelperText': string
   'cd.launchArgo': string
   'cd.learnMore': string

@@ -303,6 +303,7 @@ export interface AccessControlCheckError {
     | 'HTTP_RESPONSE_EXCEPTION'
     | 'SCM_NOT_FOUND_ERROR'
     | 'SCM_CONFLICT_ERROR'
+    | 'SCM_CONFLICT_ERROR_V2'
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
@@ -338,6 +339,7 @@ export interface AccessControlCheckError {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -1481,6 +1483,10 @@ export interface CloudformationTemplateFileSpec {
   type?: string
 }
 
+export interface Cluster {
+  identifier?: string
+}
+
 export interface ClusterBasicDTO {
   identifier?: string
   name?: string
@@ -2093,6 +2099,7 @@ export interface DelegateProfileFilterProperties {
     | 'FileStore'
     | 'CCMRecommendation'
     | 'Anomaly'
+    | 'Environment'
   identifier?: string
   name?: string
   selectors?: string[]
@@ -2504,6 +2511,7 @@ export interface EntityDetail {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
 }
 
 export interface EntityGitDetails {
@@ -2574,6 +2582,30 @@ export interface Environment {
 
 export interface EnvironmentDeploymentInfo {
   environmentInfoByServiceId?: EnvironmentInfoByServiceId[]
+}
+
+export interface EnvironmentFilterProperties {
+  description?: string
+  environmentIdentifiers?: string[]
+  environmentNames?: string[]
+  environmentTypes?: ('PreProduction' | 'Production')[]
+  filterType?:
+    | 'Connector'
+    | 'DelegateProfile'
+    | 'Delegate'
+    | 'PipelineSetup'
+    | 'PipelineExecution'
+    | 'Deployment'
+    | 'Audit'
+    | 'Template'
+    | 'EnvironmentGroup'
+    | 'FileStore'
+    | 'CCMRecommendation'
+    | 'Anomaly'
+    | 'Environment'
+  tags?: {
+    [key: string]: string
+  }
 }
 
 export interface EnvironmentGroupDeleteResponse {
@@ -2961,6 +2993,7 @@ export interface Error {
     | 'HTTP_RESPONSE_EXCEPTION'
     | 'SCM_NOT_FOUND_ERROR'
     | 'SCM_CONFLICT_ERROR'
+    | 'SCM_CONFLICT_ERROR_V2'
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
@@ -2996,6 +3029,7 @@ export interface Error {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -3352,6 +3386,7 @@ export interface Failure {
     | 'HTTP_RESPONSE_EXCEPTION'
     | 'SCM_NOT_FOUND_ERROR'
     | 'SCM_CONFLICT_ERROR'
+    | 'SCM_CONFLICT_ERROR_V2'
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
@@ -3387,6 +3422,7 @@ export interface Failure {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -3708,6 +3744,7 @@ export interface FilesFilterProperties {
     | 'FileStore'
     | 'CCMRecommendation'
     | 'Anomaly'
+    | 'Environment'
   referencedBy?: EntityDetail
   tags?: {
     [key: string]: string
@@ -3741,6 +3778,7 @@ export interface FilterProperties {
     | 'FileStore'
     | 'CCMRecommendation'
     | 'Anomaly'
+    | 'Environment'
   tags?: {
     [key: string]: string
   }
@@ -3979,6 +4017,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   )[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
   searchTerm?: string
@@ -4063,6 +4102,7 @@ export interface GitEntityFilterProperties {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
@@ -4180,6 +4220,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -4272,6 +4313,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -4442,6 +4484,7 @@ export interface GitSyncEntityDTO {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -4528,6 +4571,7 @@ export interface GitSyncEntityListDTO {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -4550,7 +4594,7 @@ export interface GitSyncErrorDTO {
   accountIdentifier?: string
   additionalErrorDetails?: GitSyncErrorDetailsDTO
   branchName?: string
-  changeType?: 'ADD' | 'RENAME' | 'MODIFY' | 'DELETE' | 'NONE'
+  changeType?: 'ADD' | 'RENAME' | 'MODIFY' | 'DELETE' | 'NONE' | 'ADD_V2' | 'UPDATE_V2'
   completeFilePath?: string
   createdAt?: number
   entityType?:
@@ -4631,6 +4675,7 @@ export interface GitSyncErrorDTO {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -5054,6 +5099,7 @@ export interface InfrastructureDef {
 }
 
 export interface InfrastructureDefinitionConfig {
+  allowSimultaneousDeployments?: ParameterFieldBoolean
   description?: string
   environmentRef?: string
   identifier: string
@@ -5073,7 +5119,7 @@ export interface InfrastructureDetails {
 
 export interface InfrastructureRequestDTO {
   description?: string
-  envIdentifier?: string
+  environmentRef?: string
   identifier?: string
   name?: string
   orgIdentifier?: string
@@ -5094,7 +5140,7 @@ export interface InfrastructureResponse {
 export interface InfrastructureResponseDTO {
   accountId?: string
   description?: string
-  envIdentifier?: string
+  environmentRef?: string
   identifier?: string
   name?: string
   orgIdentifier?: string
@@ -6055,9 +6101,10 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export type OAuthSettings = NGAuthSettings & {
+export interface OAuthSettings {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
@@ -6198,6 +6245,16 @@ export interface PageActivitySummary {
 
 export interface PageApiKeyAggregateDTO {
   content?: ApiKeyAggregateDTO[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
+export interface PageCluster {
+  content?: Cluster[]
   empty?: boolean
   pageIndex?: number
   pageItemCount?: number
@@ -7648,6 +7705,7 @@ export interface ResponseListEntityType {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -8182,6 +8240,7 @@ export interface ResponseMessage {
     | 'HTTP_RESPONSE_EXCEPTION'
     | 'SCM_NOT_FOUND_ERROR'
     | 'SCM_CONFLICT_ERROR'
+    | 'SCM_CONFLICT_ERROR_V2'
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
@@ -8217,6 +8276,7 @@ export interface ResponseMessage {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -8320,6 +8380,13 @@ export interface ResponsePageActivitySummary {
 export interface ResponsePageApiKeyAggregateDTO {
   correlationId?: string
   data?: PageApiKeyAggregateDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePageCluster {
+  correlationId?: string
+  data?: PageCluster
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -9581,6 +9648,23 @@ export type ServerlessAwsLambdaInfrastructure = Infrastructure & {
   metadata?: string
   region: string
   stage: string
+}
+
+export type ServerlessAwsLambdaInfrastructureDetails = InfrastructureDetails & {
+  region?: string
+  stage?: string
+}
+
+export type ServerlessAwsLambdaInstanceInfoDTO = InstanceInfoDTO & {
+  functionName: string
+  handler?: string
+  infraStructureKey?: string
+  memorySize?: string
+  region: string
+  runTime?: string
+  serviceName: string
+  stage: string
+  timeout?: number
 }
 
 export type ServerlessAwsLambdaManifest = ManifestAttributes & {
@@ -10975,9 +11059,9 @@ export type ScimUserRequestBody = ScimUser
 
 export type ScopingRuleDetailsNgArrayRequestBody = ScopingRuleDetailsNg[]
 
-export type SecretRequestWrapperRequestBody = SecretRequestWrapper
+export type SecretRequestWrapperRequestBody = void
 
-export type SecretRequestWrapper2RequestBody = void
+export type SecretRequestWrapper2RequestBody = SecretRequestWrapper
 
 export type ServiceAccountDTORequestBody = ServiceAccountDTO
 
@@ -11563,6 +11647,7 @@ export interface ListActivitiesQueryParams {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   referredByEntityType?:
     | 'Projects'
     | 'Pipelines'
@@ -11641,6 +11726,7 @@ export interface ListActivitiesQueryParams {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -11823,6 +11909,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   referredByEntityType?:
     | 'Projects'
     | 'Pipelines'
@@ -11901,6 +11988,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -20529,6 +20617,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -21418,6 +21507,7 @@ export interface GetEnvironmentListQueryParams {
   searchTerm?: string
   envIdentifiers?: string[]
   sort?: string[]
+  filterIdentifier?: string
 }
 
 export type GetEnvironmentListProps = Omit<
@@ -22559,6 +22649,7 @@ export interface GetReferencedByInScopeQueryParams {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
 }
 
 export type GetReferencedByInScopeProps = Omit<
@@ -23004,6 +23095,7 @@ export interface GetReferencedByQueryParams {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   searchTerm?: string
 }
 
@@ -23084,6 +23176,7 @@ export interface GetFilterListQueryParams {
     | 'FileStore'
     | 'CCMRecommendation'
     | 'Anomaly'
+    | 'Environment'
 }
 
 export type GetFilterListProps = Omit<
@@ -23248,6 +23341,7 @@ export interface DeleteFilterQueryParams {
     | 'FileStore'
     | 'CCMRecommendation'
     | 'Anomaly'
+    | 'Environment'
 }
 
 export type DeleteFilterProps = Omit<
@@ -23313,6 +23407,7 @@ export interface GetFilterQueryParams {
     | 'FileStore'
     | 'CCMRecommendation'
     | 'Anomaly'
+    | 'Environment'
 }
 
 export interface GetFilterPathParams {
@@ -24289,6 +24384,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -24435,6 +24531,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'ServerlessAwsLambdaRollback'
       | 'CustomStage'
       | 'RollbackStack'
+      | 'Infrastructure'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -25241,6 +25338,58 @@ export const createClustersPromise = (
     'POST',
     getConfig('ng/api'),
     `/gitops/clusters/batch`,
+    props,
+    signal
+  )
+
+export interface GetClusterListFromSourceQueryParams {
+  page?: number
+  size?: number
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type GetClusterListFromSourceProps = Omit<
+  GetProps<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets cluster list from Gitops Service
+ */
+export const GetClusterListFromSource = (props: GetClusterListFromSourceProps) => (
+  <Get<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>
+    path={`/gitops/clusters/listFromGitops`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetClusterListFromSourceProps = Omit<
+  UseGetProps<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets cluster list from Gitops Service
+ */
+export const useGetClusterListFromSource = (props: UseGetClusterListFromSourceProps) =>
+  useGet<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>(
+    `/gitops/clusters/listFromGitops`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets cluster list from Gitops Service
+ */
+export const getClusterListFromSourcePromise = (
+  props: GetUsingFetchProps<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>(
+    getConfig('ng/api'),
+    `/gitops/clusters/listFromGitops`,
     props,
     signal
   )
@@ -28739,6 +28888,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   yamlGroup?: string
 }
 
@@ -28945,6 +29095,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -37525,7 +37676,7 @@ export type PostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -37535,7 +37686,7 @@ export type PostSecretProps = Omit<
  * Create a secret
  */
 export const PostSecret = (props: PostSecretProps) => (
-  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapperRequestBody, void>
+  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapper2RequestBody, void>
     verb="POST"
     path={`/v2/secrets`}
     base={getConfig('ng/api')}
@@ -37548,7 +37699,7 @@ export type UsePostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -37562,7 +37713,7 @@ export const usePostSecret = (props: UsePostSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', `/v2/secrets`, { base: getConfig('ng/api'), ...props })
 
@@ -37574,7 +37725,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -37583,7 +37734,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets`, props, signal)
 
@@ -37976,7 +38127,7 @@ export type PostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -37990,7 +38141,7 @@ export const PostSecretViaYaml = (props: PostSecretViaYamlProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >
     verb="POST"
@@ -38005,7 +38156,7 @@ export type UsePostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -38019,7 +38170,7 @@ export const usePostSecretViaYaml = (props: UsePostSecretViaYamlProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', `/v2/secrets/yaml`, { base: getConfig('ng/api'), ...props })
 
@@ -38031,7 +38182,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -38040,7 +38191,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets/yaml`, props, signal)
 
@@ -38175,7 +38326,7 @@ export type PutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -38190,7 +38341,7 @@ export const PutSecret = ({ identifier, ...props }: PutSecretProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >
     verb="PUT"
@@ -38205,7 +38356,7 @@ export type UsePutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -38220,7 +38371,7 @@ export const usePutSecret = ({ identifier, ...props }: UsePutSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', (paramsInPath: PutSecretPathParams) => `/v2/secrets/${paramsInPath.identifier}`, {
     base: getConfig('ng/api'),
@@ -38239,7 +38390,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -38248,7 +38399,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}`, props, signal)
 
@@ -38267,7 +38418,7 @@ export type PutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -38282,7 +38433,7 @@ export const PutSecretViaYaml = ({ identifier, ...props }: PutSecretViaYamlProps
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >
     verb="PUT"
@@ -38297,7 +38448,7 @@ export type UsePutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -38312,7 +38463,7 @@ export const usePutSecretViaYaml = ({ identifier, ...props }: UsePutSecretViaYam
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', (paramsInPath: PutSecretViaYamlPathParams) => `/v2/secrets/${paramsInPath.identifier}/yaml`, {
     base: getConfig('ng/api'),
@@ -38331,7 +38482,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -38340,7 +38491,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}/yaml`, props, signal)
 
@@ -38931,6 +39082,7 @@ export interface GetYamlSchemaQueryParams {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   subtype?:
     | 'K8sCluster'
     | 'Git'

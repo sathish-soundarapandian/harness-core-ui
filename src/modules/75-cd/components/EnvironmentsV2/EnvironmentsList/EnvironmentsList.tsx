@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import type { Column } from 'react-table'
-import { defaultTo, get } from 'lodash-es'
+import { defaultTo } from 'lodash-es'
 
 import { TableV2, useToaster } from '@harness/uicore'
 import { EnvironmentResponse, useDeleteEnvironmentV2 } from 'services/cd-ng'
@@ -17,12 +17,22 @@ import { useStrings } from 'framework/strings'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 
-import { EnvironmentMenu, EnvironmentName, EnvironmentTypes, LastUpdatedBy } from './EnvironmentsListColumns'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+
+import {
+  EnvironmentMenu,
+  EnvironmentName,
+  EnvironmentTypes,
+  withEnvironment,
+  LastUpdatedBy
+} from './EnvironmentsListColumns'
+import { EnvironmentDetailsTab } from '../utils'
 
 export default function EnvironmentsList({ response, refetch }: any) {
-  const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { showSuccess, showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
+  const { getString } = useStrings()
   const history = useHistory()
 
   const { mutate: deleteItem } = useDeleteEnvironmentV2({
@@ -41,7 +51,7 @@ export default function EnvironmentsList({ response, refetch }: any) {
         projectIdentifier,
         module,
         environmentIdentifier: defaultTo(id, ''),
-        sectionId: 'CONFIGURATION'
+        sectionId: EnvironmentDetailsTab.CONFIGURATION
       })
     )
   }
@@ -49,10 +59,10 @@ export default function EnvironmentsList({ response, refetch }: any) {
   const handleEnvDelete = async (id: string) => {
     try {
       await deleteItem(id, { headers: { 'content-type': 'application/json' } })
-      showSuccess(`Successfully deleted environment ${id}`)
+      showSuccess(getString('cd.environment.deleted'))
       refetch()
     } catch (e: any) {
-      showError(get(e, 'data.message', e?.message), 0, 'cf.delete.env.error')
+      showError(getRBACErrorMessage(e))
     }
   }
 
@@ -64,38 +74,36 @@ export default function EnvironmentsList({ response, refetch }: any) {
         Header: getString('environment').toUpperCase(),
         id: 'name',
         width: '50%',
-        Cell: EnvironmentName
+        Cell: withEnvironment(EnvironmentName)
       },
       {
         Header: getString('typeLabel').toUpperCase(),
         id: 'type',
         width: '15%',
-        Cell: EnvironmentTypes
+        Cell: withEnvironment(EnvironmentTypes)
       },
       {
-        Header: getString('lastUpdatedBy').toUpperCase(),
+        Header: getString('lastUpdated').toUpperCase(),
         id: 'lastUpdatedBy',
         width: '25%',
-        Cell: ({ row }: any) => {
-          return <LastUpdatedBy lastModifiedAt={/*istanbul ignore next*/ row?.original?.lastModifiedAt} />
-        }
+        Cell: withEnvironment(LastUpdatedBy)
       },
       {
         id: 'modifiedBy',
         width: '10%',
-        Cell: EnvironmentMenu,
+        Cell: withEnvironment(EnvironmentMenu),
         actions: {
           onEdit: handleEnvEdit,
           onDelete: handleEnvDelete
         }
       }
     ],
-    [getString, handleEnvDelete]
+    [getString, handleEnvEdit, handleEnvDelete]
   )
   return (
     <TableV2<EnvironmentResponse>
       columns={envColumns}
-      data={(response?.content as EnvironmentResponse[]) || []}
+      data={response.content}
       onRowClick={(row: EnvironmentResponse) => {
         history.push(
           routes.toEnvironmentDetails({
@@ -104,7 +112,7 @@ export default function EnvironmentsList({ response, refetch }: any) {
             projectIdentifier,
             module,
             environmentIdentifier: defaultTo(row.environment?.identifier, ''),
-            sectionId: 'CONFIGURATION'
+            sectionId: EnvironmentDetailsTab.CONFIGURATION
           })
         )
       }}
