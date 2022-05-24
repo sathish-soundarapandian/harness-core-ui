@@ -1,0 +1,8 @@
+.gitSyncForm {
+  padding-top: var(--spacing-large);
+  :global {
+    input {
+      width: 350px !important;
+    }
+  }
+}

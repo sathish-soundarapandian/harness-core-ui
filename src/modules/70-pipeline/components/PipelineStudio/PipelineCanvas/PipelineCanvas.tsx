@@ -49,8 +49,7 @@ import {
   EntityGitDetails,
   useGetTemplateFromPipeline,
   InputSetSummaryResponse,
-  useGetInputsetYaml,
-  StoreType
+  useGetInputsetYaml
 } from 'services/pipeline-ng'
 import { useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
@@ -68,7 +67,7 @@ import { TemplatePipelineBuilder } from '@pipeline/components/PipelineStudio/Pip
 import { SavePipelinePopover } from '@pipeline/components/PipelineStudio/SavePipelinePopover/SavePipelinePopover'
 import { useTemplateSelector } from '@pipeline/utils/useTemplateSelector'
 import { useSaveTemplateListener } from '@pipeline/components/PipelineStudio/hooks/useSaveTemplateListener'
-import type { StoreMetaData } from '@common/constants/GitSyncTypes'
+import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
@@ -114,7 +113,7 @@ export interface PipelineCanvasProps {
   toPipelineList: PathFn<PipelineType<ProjectPathProps>>
   toPipelineProject: PathFn<PipelineType<ProjectPathProps>>
   getOtherModal?: (
-    onSubmit: (values: PipelineInfoConfig, storeMetadata?: StoreMetaData, gitDetails?: EntityGitDetails) => void,
+    onSubmit: (values: PipelineInfoConfig, storeMetadata?: StoreMetadata, gitDetails?: EntityGitDetails) => void,
     onClose: () => void
   ) => React.ReactElement<OtherModalProps>
 }
@@ -399,7 +398,7 @@ export function PipelineCanvas({
   const onSubmit = React.useCallback(
     (
       values: PipelineInfoConfig,
-      currStoreMetadata?: StoreMetaData,
+      currStoreMetadata?: StoreMetadata,
       updatedGitDetails?: EntityGitDetails,
       shouldUseTemplate = false
     ) => {

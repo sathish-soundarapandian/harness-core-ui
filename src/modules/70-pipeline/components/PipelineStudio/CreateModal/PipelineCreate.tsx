@@ -36,13 +36,13 @@ import { NameIdDescriptionTags } from '@common/components'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import GitContextForm, { IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
-import { EntityGitDetails, StoreType } from 'services/pipeline-ng'
+import type { EntityGitDetails } from 'services/pipeline-ng'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, PipelineActions } from '@common/constants/TrackingConstants'
 import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
-import type { StoreMetaData } from '@common/constants/GitSyncTypes'
+import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { DefaultNewPipelineId } from '../PipelineContext/PipelineActions'
 import css from './PipelineCreate.module.scss'
 
@@ -74,7 +74,7 @@ type CretePipelinesValue = PipelineInfoConfigWithGitDetails & UseTemplate
 export interface PipelineCreateProps {
   afterSave?: (
     values: PipelineInfoConfig,
-    storeMetadata: StoreMetaData,
+    storeMetadata: StoreMetadata,
     gitDetails?: EntityGitDetails,
     useTemplate?: boolean
   ) => void
@@ -178,7 +178,7 @@ export default function CreatePipelines({
           afterSave &&
             afterSave(
               omit(values, 'repo', 'branch', 'storeType', 'connectorRef', 'useTemplate'),
-              { storeType: values.storeType as StoreMetaData['storeType'], connectorRef: values.connectorRef?.value },
+              { storeType: values.storeType as StoreMetadata['storeType'], connectorRef: values.connectorRef?.value },
               formGitDetails,
               values.useTemplate
             )

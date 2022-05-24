@@ -124,7 +124,7 @@ describe('InputSetFrom testing - When GitSync is enabled', () => {
               repoIdentifier: 'identifier',
               branch: 'feature'
             }}
-            defaultAppStoreValues={defaultAppStoreValues}
+            defaultAppStoreValues={{ ...defaultAppStoreValues, isGitSyncEnabled: true }}
           >
             <EnhancedInputSetForm />
           </GitSyncTestWrapper>
@@ -166,7 +166,7 @@ describe('InputSetFrom testing - When GitSync is enabled', () => {
               repoIdentifier: 'identifier',
               branch: 'feature'
             }}
-            defaultAppStoreValues={defaultAppStoreValues}
+            defaultAppStoreValues={{ ...defaultAppStoreValues, isGitSyncEnabled: true }}
           >
             <EnhancedInputSetForm />
           </GitSyncTestWrapper>
@@ -228,7 +228,7 @@ describe('InputSetFrom testing - When GitSync is enabled', () => {
               repoIdentifier: 'identifier',
               branch: 'feature'
             }}
-            defaultAppStoreValues={defaultAppStoreValues}
+            defaultAppStoreValues={{ ...defaultAppStoreValues, isGitSyncEnabled: true }}
           >
             <EnhancedInputSetForm />
           </GitSyncTestWrapper>

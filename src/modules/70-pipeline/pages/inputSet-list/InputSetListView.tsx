@@ -215,13 +215,14 @@ const RenderColumnMenu: Renderer<CellProps<InputSetLocal>> = ({ row, column }) =
 const RenderColumnActions: Renderer<CellProps<InputSetLocal>> = ({ row, column }) => {
   const rowData = row.original
   const isPipelineInvalid = (column as any)?.isPipelineInvalid
+  const isGitSyncEnabled = (column as any)?.isGitSyncEnabled
 
   const { pipelineIdentifier } = useParams<{
     pipelineIdentifier: string
     module: Module
   }>()
 
-  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { repoIdentifier, branch, repoName } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const runPipeline = (): void => {
     openRunPipelineModal()
@@ -233,11 +234,13 @@ const RenderColumnActions: Renderer<CellProps<InputSetLocal>> = ({ row, column }
         type: rowData.inputSetType || /* istanbul ignore next */ 'INPUT_SET',
         value: rowData.identifier || /* istanbul ignore next */ '',
         label: rowData.name || /* istanbul ignore next */ '',
-        gitDetails: rowData.gitDetails
+        gitDetails: isGitSyncEnabled
+          ? rowData.gitDetails
+          : { repoIdentifier: rowData.gitDetails?.repoName, branch: branch }
       }
     ],
     pipelineIdentifier: (rowData.pipelineIdentifier || '') as string,
-    repoIdentifier,
+    repoIdentifier: isGitSyncEnabled ? repoIdentifier : repoName,
     branch
   })
 
@@ -314,7 +317,8 @@ export function InputSetListView({
         goToInputSetDetail,
         pipelineHasRuntimeInputs,
         isPipelineInvalid,
-        template
+        template,
+        isGitSyncEnabled
       },
       {
         Header: '',

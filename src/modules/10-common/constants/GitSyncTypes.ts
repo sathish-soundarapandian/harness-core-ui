@@ -1,6 +1,12 @@
-import type { StoreType } from 'services/pipeline-ng'
+export enum StoreType {
+  INLINE = 'INLINE',
+  REMOTE = 'REMOTE'
+}
 
-export interface StoreMetaData {
+export interface StoreMetadata {
+  storeType?: 'INLINE' | 'REMOTE'
   connectorRef?: string
-  storeType?: StoreType
+  repoName?: string
+  branch?: string
+  filePath?: string
 }

@@ -20,6 +20,7 @@ import SaveToGitFormV2, { SaveToGitFormV2Interface } from '@common/components/Sa
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { getEntityNameFromType } from '@common/utils/StringUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { StoreType } from '@common/constants/GitSyncTypes'
 import { EntityGitDetails, ResponseMessage, useCreatePR, useCreatePRV2 } from 'services/cd-ng'
 import { String, useStrings } from 'framework/strings'
 import type { GovernanceMetadata } from 'services/cd-ng'
@@ -245,31 +246,33 @@ export function useSaveToGitDialog<T = Record<string, string>>(
   }, [createUpdateStatus, error])
 
   const createPR = (data: SaveToGitFormInterface & SaveToGitFormV2Interface): void => {
-    const params = resource?.storeMetadata?.storeType
-      ? {
-          orgIdentifier,
-          projectIdentifier,
-          connectorRef: resource?.storeMetadata?.connectorRef,
-          repoName: resource?.gitDetails?.repoName,
-          sourceBranch: defaultTo(data?.branch, ''),
-          targetBranch: defaultTo(data?.targetBranch, ''),
-          sourceBranchName: defaultTo(data?.branch, ''),
-          targetBranchName: defaultTo(data?.targetBranch, ''),
-          title: defaultTo(data?.commitMsg, ''),
-          yamlGitConfigRef: defaultTo(data?.repoIdentifier, '')
-        }
-      : {
-          accountIdentifier: accountId,
-          orgIdentifier,
-          projectIdentifier,
-          sourceBranch: defaultTo(data?.branch, ''),
-          targetBranch: defaultTo(data?.targetBranch, ''),
-          title: defaultTo(data?.commitMsg, ''),
-          useUserFromToken: true,
-          yamlGitConfigRef: defaultTo(data?.repoIdentifier, '')
-        }
+    const params =
+      resource?.storeMetadata?.storeType === StoreType.REMOTE
+        ? {
+            orgIdentifier,
+            projectIdentifier,
+            connectorRef: resource?.storeMetadata?.connectorRef,
+            repoName: resource?.gitDetails?.repoName,
+            sourceBranch: defaultTo(data?.branch, ''),
+            targetBranch: defaultTo(data?.targetBranch, ''),
+            sourceBranchName: defaultTo(data?.branch, ''),
+            targetBranchName: defaultTo(data?.targetBranch, ''),
+            title: defaultTo(data?.commitMsg, ''),
+            yamlGitConfigRef: defaultTo(data?.repoIdentifier, '')
+          }
+        : {
+            accountIdentifier: accountId,
+            orgIdentifier,
+            projectIdentifier,
+            sourceBranch: defaultTo(data?.branch, ''),
+            targetBranch: defaultTo(data?.targetBranch, ''),
+            title: defaultTo(data?.commitMsg, ''),
+            useUserFromToken: true,
+            yamlGitConfigRef: defaultTo(data?.repoIdentifier, '')
+          }
 
-    const cretePrPromise = resource?.storeMetadata?.storeType ? createPullRequestV2(params) : createPullRequest(params)
+    const cretePrPromise =
+      resource?.storeMetadata?.storeType === StoreType.REMOTE ? createPullRequestV2(params) : createPullRequest(params)
 
     cretePrPromise
       .then(_response => {
@@ -360,7 +363,7 @@ export function useSaveToGitDialog<T = Record<string, string>>(
     }
     return (
       <Dialog className={css.gitDialog} {...modalProps}>
-        {resource?.storeMetadata?.storeType ? (
+        {resource?.storeMetadata?.storeType === StoreType.REMOTE ? (
           <SaveToGitFormV2
             accountId={accountId}
             orgIdentifier={orgIdentifier}

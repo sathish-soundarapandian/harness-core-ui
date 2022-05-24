@@ -45,7 +45,7 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
   const { GIT_SIMPLIFICATION } = useFeatureFlags()
   const location = useLocation()
   const { trackEvent } = useTelemetry()
-  const { branch, repoIdentifier, storeType } = useQueryParams<GitQueryParams>()
+  const { branch, repoIdentifier, storeType, repoName, connectorRef } = useQueryParams<GitQueryParams>()
   const {
     data: pipeline,
     refetch,
@@ -218,8 +218,11 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
                     pipelineIdentifier,
                     accountId,
                     module,
+                    connectorRef,
                     repoIdentifier,
-                    branch
+                    repoName,
+                    branch,
+                    storeType
                   })
                 },
                 {
@@ -230,8 +233,11 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
                     pipelineIdentifier,
                     accountId,
                     module,
+                    connectorRef,
                     repoIdentifier,
-                    branch
+                    repoName,
+                    branch,
+                    storeType
                   }),
                   disabled: pipelineIdentifier === DefaultNewPipelineId
                 },
@@ -243,8 +249,11 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
                     pipelineIdentifier,
                     accountId,
                     module,
+                    connectorRef,
                     repoIdentifier,
-                    branch
+                    repoName,
+                    branch,
+                    storeType
                   }),
                   disabled: pipelineIdentifier === DefaultNewPipelineId || triggerTabDisabled
                 },
@@ -256,8 +265,11 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
                     pipelineIdentifier,
                     accountId,
                     module,
+                    connectorRef,
                     repoIdentifier,
-                    branch
+                    repoName,
+                    branch,
+                    storeType
                   }),
                   disabled: pipelineIdentifier === DefaultNewPipelineId
                 }
