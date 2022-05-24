@@ -36,6 +36,8 @@ export interface FlatInitialValuesInterface {
   connectorRef?: ConnectorRefInterface
   // SCHEDULE-SPECIFIC
   selectedScheduleTab?: string
+  pipelineBranchName?: string
+  inputSetRefs?: string[]
 }
 
 export interface FlatOnEditValuesInterface {

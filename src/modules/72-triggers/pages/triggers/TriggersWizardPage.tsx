@@ -21,7 +21,7 @@ import {
 } from '@wings-software/uicore'
 import { Color, Intent } from '@harness/design-system'
 import { parse } from 'yaml'
-import { isEmpty, isUndefined, merge, cloneDeep, defaultTo } from 'lodash-es'
+import { isEmpty, isUndefined, merge, cloneDeep, defaultTo, noop } from 'lodash-es'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { Page, useToaster } from '@common/exports'
 import Wizard from '@common/components/Wizard/Wizard'
@@ -34,7 +34,8 @@ import {
   useGetConnector,
   GetConnectorQueryParams,
   getConnectorListV2Promise,
-  Failure
+  Failure,
+  useGetListOfBranchesWithStatus
 } from 'services/cd-ng'
 import {
   useGetPipeline,
@@ -55,7 +56,7 @@ import { useStrings } from 'framework/strings'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import type { PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { clearRuntimeInput, validatePipeline } from '@pipeline/components/PipelineStudio/StepUtil'
 import { ErrorsStrip } from '@pipeline/components/ErrorsStrip/ErrorsStrip'
@@ -72,7 +73,9 @@ import type {
   CompletionItemInterface
 } from '@common/interfaces/YAMLBuilderProps'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import { useMutateAsGet } from '@common/hooks'
+import { useConfirmAction, useMutateAsGet, useQueryParams } from '@common/hooks'
+import type { FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
+import { useGitSyncStore } from 'framework/GitRepoStore/GitSyncStoreContext'
 import {
   scheduleTabsId,
   getDefaultExpressionBreakdownValues,
@@ -357,27 +360,48 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     }
     // lazy: true
   })
-
-  const [connectorScopeParams, setConnectorScopeParams] = useState<GetConnectorQueryParams | undefined>(undefined)
-
-  const { mutate: createTrigger, loading: createTriggerLoading } = useCreateTrigger({
+  const { data: pipelineResponse } = useGetPipeline({
+    pipelineIdentifier,
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      targetIdentifier: pipelineIdentifier
-    },
+      getTemplatesResolvedPipeline: true
+    }
+  })
+  const isGitSyncEnabled = useMemo(() => !!pipelineResponse?.data?.gitDetails?.branch, [pipelineResponse])
+  const gitAwareForTriggerFeatureFlag =
+    useFeatureFlag(FeatureFlag.GIT_AWARE_FOR_TRIGGER) || !!localStorage.GIT_AWARE_FOR_TRIGGER
+  const gitAwareForTriggerEnabled = isGitSyncEnabled && gitAwareForTriggerFeatureFlag
+  const [connectorScopeParams, setConnectorScopeParams] = useState<GetConnectorQueryParams | undefined>(undefined)
+  const [ignoreError, setIgnoreError] = useState<boolean>(false)
+  const createUpdateTriggerQueryParams = useMemo(
+    () => ({
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      targetIdentifier: pipelineIdentifier,
+      ignoreError: gitAwareForTriggerEnabled ? ignoreError : undefined
+    }),
+    [accountId, orgIdentifier, projectIdentifier, pipelineIdentifier, ignoreError, gitAwareForTriggerEnabled]
+  )
+  const retryFn = useRef<() => void>(noop)
+  const confirmIgnoreErrorAndResubmit = useConfirmAction({
+    title: 'Save with error?',
+    message: <span>You can still save trigger with error? Do you want to process?</span>,
+    action: () => {
+      retryFn.current?.()
+    }
+  })
+
+  const { mutate: createTrigger, loading: createTriggerLoading } = useCreateTrigger({
+    queryParams: createUpdateTriggerQueryParams,
     requestOptions: { headers: { 'content-type': 'application/yaml' } }
   })
 
   const { mutate: updateTrigger, loading: updateTriggerLoading } = useUpdateTrigger({
     triggerIdentifier,
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      targetIdentifier: pipelineIdentifier
-    },
+    queryParams: createUpdateTriggerQueryParams,
     requestOptions: { headers: { 'content-type': 'application/yaml' } }
   })
 
@@ -460,6 +484,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         }
       }
   >({ triggerType: triggerTypeOnNew })
+  const isCreatingNewTrigger = useMemo(() => !onEditInitialValues?.identifier, [onEditInitialValues?.identifier])
 
   const { openDialog, closeDialog } = useConfirmationDialog({
     contentText: getString('triggers.updateTriggerDetails'),
@@ -509,22 +534,6 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       setEnabledStatus(false)
     }
   }, [triggerResponse?.data?.enabled])
-
-  const { data: pipelineResponse } = useGetPipeline({
-    pipelineIdentifier,
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      getTemplatesResolvedPipeline: true
-    }
-  })
-  const isGitSyncEnabled = useMemo(() => !!pipelineResponse?.data?.gitDetails?.branch, [pipelineResponse])
-  const gitAwareForTriggerFeatureFlag =
-    useFeatureFlag(FeatureFlag.GIT_AWARE_FOR_TRIGGER) || !!localStorage.GIT_AWARE_FOR_TRIGGER
-  const gitAwareForTriggerEnabled = isGitSyncEnabled && gitAwareForTriggerFeatureFlag
-
-  // console.info({ pipelineResponse, isGitSyncEnabled, gitAwareForTriggerEnabled })
 
   const originalPipeline: PipelineInfoConfig | undefined = parse(
     (pipelineResponse?.data?.yamlPipeline as any) || ''
@@ -610,7 +619,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       jexlCondition,
       secureToken,
       autoAbortPreviousExecutions = false,
-      pipelineBranchName,
+      pipelineBranchName = DEFAULT_TRIGGER_BRANCH,
       inputSetRefs
     } = val
 
@@ -1201,12 +1210,10 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
 
   // Fix https://harness.atlassian.net/browse/CI-3411
   useEffect(() => {
-    const formik = formikRef?.current
-
     if (Object.keys(formErrors || {}).length > 0) {
       Object.entries(flattenKeys(formErrors)).forEach(([fieldName, fieldError]) => {
-        formik?.setFieldTouched(fieldName, true, true)
-        setTimeout(() => formik?.setFieldError(fieldName, fieldError), 0)
+        formikRef?.current?.setFieldTouched(fieldName, true, true)
+        setTimeout(() => formikRef?.current?.setFieldError(fieldName, fieldError), 0)
       })
     }
   }, [formErrors, formikRef])
@@ -1264,13 +1271,23 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
   }
   // TriggerConfigDTO is NGTriggerConfigV2 with optional identifier
   const submitTrigger = async (triggerYaml: NGTriggerConfigV2 | TriggerConfigDTO): Promise<void> => {
-    if (onEditInitialValues?.identifier) {
+    if (!isCreatingNewTrigger) {
       try {
         const { status, data } = await updateTrigger(yamlStringify({ trigger: clearNullUndefined(triggerYaml) }) as any)
 
         if (data?.errors && !isEmpty(data?.errors)) {
-          const displayErrors = displayPipelineIntegrityResponse(data.errors)
-          setFormErrors(displayErrors)
+          // TODO: Need to confirm with backend which error is allow to retry
+          if (gitAwareForTriggerEnabled) {
+            retryFn.current = () => {
+              setIgnoreError(true)
+              formikRef.current?.handleSubmit()
+            }
+            confirmIgnoreErrorAndResubmit()
+          } else {
+            const displayErrors = displayPipelineIntegrityResponse(data.errors)
+            setFormErrors(displayErrors)
+          }
+
           return
         } else if (status === ResponseStatus.SUCCESS) {
           showSuccess(
@@ -1290,6 +1307,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         }
       } catch (err) {
         setErrorToasterMessage(err?.data?.message)
+      } finally {
+        setIgnoreError(false)
       }
       // error flow sent to Wizard
     } else {
@@ -1297,8 +1316,18 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         const { status, data } = await createTrigger(yamlStringify({ trigger: clearNullUndefined(triggerYaml) }) as any)
 
         if (data?.errors && !isEmpty(data?.errors)) {
-          const displayErrors = displayPipelineIntegrityResponse(data.errors)
-          setFormErrors(displayErrors)
+          // TODO: Need to confirm with backend which error is allow to retry
+          if (gitAwareForTriggerEnabled) {
+            retryFn.current = () => {
+              setIgnoreError(true)
+              formikRef.current?.handleSubmit()
+            }
+            confirmIgnoreErrorAndResubmit()
+          } else {
+            const displayErrors = displayPipelineIntegrityResponse(data.errors)
+            setFormErrors(displayErrors)
+          }
+
           return
         } else if (status === ResponseStatus.SUCCESS) {
           showSuccess(
@@ -1318,6 +1347,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         }
       } catch (err) {
         setErrorToasterMessage(err?.data?.message)
+      } finally {
+        setIgnoreError(false)
       }
     }
   }
@@ -1481,6 +1512,19 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     initialValues,
     currentPipeline
   ])
+  const { repoIdentifier } = useQueryParams<GitQueryParams>()
+
+  const { data: branchesWithStatusData, refetch: getDefaultBranchName } = useGetListOfBranchesWithStatus({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      yamlGitConfigIdentifier: repoIdentifier,
+      page: 0,
+      size: 1
+    },
+    lazy: true
+  })
 
   const { data: connectorData, refetch: getConnectorDetails } = useGetConnector({
     identifier: getIdentifierFromValue(
@@ -1491,6 +1535,39 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     queryParams: connectorScopeParams,
     lazy: true
   })
+  const { gitSyncRepos } = useGitSyncStore()
+
+  useEffect(() => {
+    if (isCreatingNewTrigger) {
+      getDefaultBranchName()
+    }
+  }, [isCreatingNewTrigger, getDefaultBranchName])
+
+  const onFormikEffect: FormikEffectProps['onChange'] = ({ nextValues, formik }) => {
+    formikRef.current = formik
+
+    if (isCreatingNewTrigger && !nextValues._pipelineBranchNameCustomValue && !nextValues.pipelineBranchName) {
+      // connectorRef is the same as pipeline git sync config, and pipelineBranchName is empty
+      // -> Set pipelineBranchName to <+trigger.branch>
+      // @see https://harness.atlassian.net/browse/CI-4424
+      if (
+        nextValues.connectorRef?.value &&
+        gitSyncRepos?.find(({ gitConnectorRef }) => gitConnectorRef === nextValues.connectorRef?.value)
+      ) {
+        formik.setValues({
+          ...nextValues,
+          pipelineBranchName: DEFAULT_TRIGGER_BRANCH,
+          _pipelineBranchNameCustomValue: true
+        })
+      } else {
+        formik.setValues({
+          ...nextValues,
+          pipelineBranchName: branchesWithStatusData?.data?.defaultBranch?.branchName || '',
+          _pipelineBranchNameCustomValue: true
+        })
+      }
+    }
+  }
 
   useEffect(() => {
     if (onEditInitialValues?.connectorRef?.identifier && !isUndefined(connectorScopeParams) && !connectorData) {
@@ -1710,7 +1787,6 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     latestYaml?: any // validate from YAML view
   }): Promise<FormikErrors<FlatValidWebhookFormikValuesInterface>> => {
     if (!formikProps) return {}
-    formikRef.current = formikProps
     const { values, setErrors, setSubmitting } = formikProps
     let latestPipelineFromYamlView
     const latestPipeline = {
@@ -1780,6 +1856,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         }}
         leftNav={titleWithSwitch}
         renderErrorsStrip={renderErrorsStrip}
+        onFormikEffect={onFormikEffect}
       >
         <WebhookTriggerConfigPanel />
         <WebhookConditionsPanel />

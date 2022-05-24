@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import {
   Container,
@@ -24,7 +24,8 @@ import type { PipelineInfoConfig, StageElementWrapperConfig } from 'services/cd-
 import {
   useGetTemplateFromPipeline,
   getInputSetForPipelinePromise,
-  useGetMergeInputSetFromPipelineTemplateWithListInput
+  useGetMergeInputSetFromPipelineTemplateWithListInput,
+  InputSetResponse
 } from 'services/pipeline-ng'
 import { PipelineInputSetForm } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
 import { isCloneCodebaseEnabledAtLeastOneStage } from '@pipeline/utils/CIUtils'
@@ -32,7 +33,9 @@ import { useStrings } from 'framework/strings'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { clearRuntimeInput } from '@pipeline/components/PipelineStudio/StepUtil'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { useMutateAsGet } from '@common/hooks'
+import { useMutateAsGet, useQueryParams } from '@common/hooks'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
 import {
   ciCodebaseBuild,
   ciCodebaseBuildPullRequest,
@@ -189,7 +192,7 @@ function WebhookPipelineInputPanelForm({
 
   const { getString } = useStrings()
   const ciCodebaseBuildValue = formikProps.values?.pipeline?.properties?.ci?.codebase?.build
-
+  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [selectedInputSets, setSelectedInputSets] = useState<InputSetSelectorProps['value']>(inputSetSelected)
   const [hasEverRendered, setHasEverRendered] = useState(
     typeof ciCodebaseBuildValue === 'object' && !isEmpty(ciCodebaseBuildValue)
@@ -241,10 +244,78 @@ function WebhookPipelineInputPanelForm({
 
     setHasEverRendered(true)
   }, [formikProps, hasEverRendered, resolvedPipeline?.properties?.ci?.codebase, resolvedPipeline?.stages])
+  const inputSetQueryParams = useMemo(
+    () => ({
+      accountIdentifier: accountId,
+      orgIdentifier,
+      pipelineIdentifier,
+      projectIdentifier,
+      repoIdentifier,
+      branch: formikProps?.values?.pipelineBranchName || branch
+    }),
+    [
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      pipelineIdentifier,
+      repoIdentifier,
+      formikProps?.values?.pipelineBranchName,
+      branch
+    ]
+  )
 
   useEffect(() => {
     setSelectedInputSets(inputSetSelected)
   }, [inputSetSelected])
+
+  const [fetchInputSetsInProgress, setFetchInputSetsInProgress] = useState(false)
+
+  useEffect(
+    function fetchInputSetsFromInputSetRefs() {
+      async function fetchInputSets(): Promise<void> {
+        Promise.all(
+          formikProps?.values?.inputSetRefs?.map(async (inputSetIdentifier: string): Promise<any> => {
+            const data = await getInputSetForPipelinePromise({
+              inputSetIdentifier,
+              queryParams: inputSetQueryParams
+            })
+
+            return data
+          })
+        )
+          .then(results => {
+            const inputSets = (results as unknown as { data: InputSetResponse }[]).map(
+              ({ data: { identifier, name, gitDetails } }) => ({
+                label: name,
+                value: identifier,
+                type: 'INPUT_SET',
+                gitDetails
+              })
+            )
+
+            setSelectedInputSets(inputSets as InputSetValue[])
+          })
+          .catch(_exception => {
+            // TODO handle exception here
+          })
+          .finally(() => {
+            setFetchInputSetsInProgress(false)
+          })
+      }
+
+      if (!fetchInputSetsInProgress && !inputSetSelected && formikProps?.values?.inputSetRefs?.length) {
+        setFetchInputSetsInProgress(true)
+        fetchInputSets()
+      }
+    },
+    [
+      formikProps?.values?.inputSetRefs,
+      inputSetSelected,
+      inputSetQueryParams,
+      fetchInputSetsInProgress,
+      setFetchInputSetsInProgress
+    ]
+  )
 
   useEffect(() => {
     if (template?.data?.inputSetTemplateYaml) {
@@ -331,28 +402,24 @@ function WebhookPipelineInputPanelForm({
                         ...formikProps.values,
                         inputSetRefs: (value || []).map(v => v.value)
                       })
-                      // console.log('INPUT SET', { gitAwareForTriggerEnabled, value })
                     }
                   }}
                   value={selectedInputSets}
                   selectedValueClass={css.inputSetSelectedValue}
+                  selectedRepo={repoIdentifier}
+                  selectedBranch={formikProps?.values?.pipelineBranchName || branch}
                 />
               </GitSyncStoreProvider>
               <div className={css.divider} />
             </div>
             {gitAwareForTriggerEnabled && (
               <Container padding={{ top: 'medium' }}>
-                <Text className={css.formContentTitle} inline={true}>
+                <Text className={css.formContentTitle} inline={true} data-tooltip-id="pipelineReferenceBranch">
                   {getString('triggers.pipelineReferenceBranch')}
+                  <HarnessDocTooltip tooltipId="pipelineReferenceBranch" useStandAlone={true} />
                 </Text>
                 <Container className={css.refBranchOuter}>
-                  <FormInput.Text
-                    name="pipelineBranchName"
-                    placeholder="<+trigger.branch>"
-                    tooltipProps={{
-                      dataTooltipId: 'triggerGitPipelineBranchName'
-                    }}
-                  />
+                  <FormInput.Text name="pipelineBranchName" placeholder="<+trigger.branch>" />
                 </Container>
                 <div className={css.divider} />
               </Container>
@@ -367,7 +434,7 @@ function WebhookPipelineInputPanelForm({
               viewType={StepViewType.InputSet}
               maybeContainerClass={css.pipelineInputSetForm}
               viewTypeMetadata={{ isTrigger: true }}
-              readonlyStageInputs={gitAwareForTriggerEnabled}
+              readonly={gitAwareForTriggerEnabled}
             />
           </div>
         </div>
