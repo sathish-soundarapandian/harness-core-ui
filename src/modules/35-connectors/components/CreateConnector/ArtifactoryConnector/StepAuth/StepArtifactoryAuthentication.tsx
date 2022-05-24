@@ -19,7 +19,7 @@ import {
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { setupArtifactoryFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { setupArtifactoryFormData, getHelpPanel } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import type { ConnectorConfigDTO, ConnectorRequestBody, ConnectorInfoDTO } from 'services/cd-ng'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
 import TextReference, { ValueType, TextReferenceInterface } from '@secrets/components/TextReference/TextReference'
@@ -27,7 +27,6 @@ import { useStrings } from 'framework/strings'
 import { PageSpinner } from '@common/components'
 import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
-import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from '../../NexusConnector/StepAuth/StepNexusConnector.module.scss'
 
@@ -98,7 +97,7 @@ const StepArtifactoryAuthentication: React.FC<
   const handleSubmit = (formData: ConnectorConfigDTO) => {
     nextStep?.({ ...props.connectorInfo, ...prevStepData, ...formData } as StepArtifactoryAuthenticationProps)
   }
-  useConnectorWizard({ helpPanel: { referenceId: 'AritfactoryDetails', contentWidth: 900 } })
+  getHelpPanel('AritfactoryDetails', 900)
   return loadingConnectorSecrets ? (
     <PageSpinner />
   ) : (
