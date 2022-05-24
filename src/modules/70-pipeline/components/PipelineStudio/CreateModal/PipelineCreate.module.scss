@@ -6,15 +6,24 @@
  */
 
 .pipelineCreateForm {
+  .pipelineCardWrapper {
+    display: flex;
+    gap: 20px;
+
+    & > :first-child {
+      flex: 1;
+      & > div {
+        justify-content: flex-start !important;
+      }
+    }
+  }
+
   .choosePipelineSetupHeader {
     font-size: 14px;
     line-height: 20px;
     font-weight: 600;
     margin-top: var(--spacing-medium) !important;
     margin-bottom: var(--spacing-medium) !important;
-  }
-  .pipelineModeCard {
-    margin-right: var(--spacing-large) !important;
   }
 
   :global {

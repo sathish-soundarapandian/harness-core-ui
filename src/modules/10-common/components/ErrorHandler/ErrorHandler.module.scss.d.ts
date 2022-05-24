@@ -14,5 +14,6 @@ declare const styles: {
   readonly scroll: string
   readonly shrink: string
   readonly text: string
+  readonly v2: string
 }
 export default styles

@@ -53,6 +53,7 @@ interface CardInterface {
   title: string
   info: string
   icon: IconName
+  size: number
   disabled?: boolean
 }
 interface UseTemplate {
@@ -60,16 +61,24 @@ interface UseTemplate {
 }
 
 interface PipelineInfoConfigWithGitDetails extends PipelineInfoConfig {
-  repo: string
+  repo?: string
   branch: string
-  connectorRef?: any
+  connectorRef?:
+    | string
+    | {
+        label?: string
+        value?: string
+        scope?: string
+        live?: boolean
+        connector?: any
+      }
   storeType?: string
+  remoteType?: string
   importYaml?: string
-  repoName?: string
   filePath?: string
 }
 
-type CretePipelinesValue = PipelineInfoConfigWithGitDetails & UseTemplate
+type CreatePipelinesValue = PipelineInfoConfigWithGitDetails & UseTemplate
 
 export interface PipelineCreateProps {
   afterSave?: (
@@ -78,7 +87,7 @@ export interface PipelineCreateProps {
     gitDetails?: EntityGitDetails,
     useTemplate?: boolean
   ) => void
-  initialValues?: CretePipelinesValue
+  initialValues?: CreatePipelinesValue
   closeModal?: () => void
   gitDetails?: IGitContextFormProps
 }
@@ -92,8 +101,10 @@ export default function CreatePipelines({
     tags: {},
     repo: '',
     branch: '',
-    storeType: 'inline',
-    stages: []
+    storeType: 'INLINE',
+    remoteType: 'create',
+    stages: [],
+    connectorRef: ''
   },
   closeModal,
   gitDetails
@@ -123,6 +134,7 @@ export default function CreatePipelines({
       title: 'Inline',
       info: 'Pipeline content is stored in Harness',
       icon: 'repository',
+      size: 16,
       disabled: pipelineIdentifier !== DefaultNewPipelineId && storeTypeParam === 'REMOTE'
     },
     {
@@ -130,6 +142,7 @@ export default function CreatePipelines({
       title: 'Remote',
       info: 'Pipeline content is stored in a Git repository',
       icon: 'remote-setup',
+      size: 20,
       disabled: pipelineIdentifier !== DefaultNewPipelineId && !storeTypeParam
     }
   ]
@@ -154,13 +167,20 @@ export default function CreatePipelines({
 
   return (
     <Container className={css.pipelineCreateForm}>
-      <Formik<CretePipelinesValue>
+      <Formik<CreatePipelinesValue>
         initialValues={newInitialValues}
         formName="pipelineCreate"
         validationSchema={Yup.object().shape({
           name: NameSchema({ requiredErrorMsg: getString('createPipeline.pipelineNameRequired') }),
           identifier: IdentifierSchema(),
-          ...(isGitSyncEnabled
+          ...(gitSimplification && storeType?.type === StoreType.REMOTE
+            ? {
+                repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
+                branch: Yup.string().trim().required(getString('common.git.validation.branchRequired')),
+                connectorRef: Yup.string().trim().required(getString('validation.sshConnectorRequired')),
+                filePath: Yup.string().trim().required(getString('common.git.validation.filePath'))
+              }
+            : isGitSyncEnabled
             ? {
                 repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
                 branch: Yup.string().trim().required(getString('common.git.validation.branchRequired'))
@@ -171,17 +191,20 @@ export default function CreatePipelines({
           logger.info(JSON.stringify(values))
           const formGitDetails =
             gitSimplification && values.storeType === 'REMOTE'
-              ? { repoName: values.repoName, branch: values.branch, filePath: values.filePath }
+              ? { repoName: values.repo, branch: values.branch, filePath: values.filePath }
               : values.repo && values.repo.trim().length > 0
               ? { repoIdentifier: values.repo, branch: values.branch }
               : undefined
-          afterSave &&
-            afterSave(
-              omit(values, 'repo', 'branch', 'storeType', 'connectorRef', 'useTemplate'),
-              { storeType: values.storeType as StoreMetadata['storeType'], connectorRef: values.connectorRef?.value },
-              formGitDetails,
-              values.useTemplate
-            )
+
+          afterSave?.(
+            omit(values, 'storeType', 'remoteType', 'connectorRef', 'repo', 'branch', 'filePath', 'useTemplate'),
+            {
+              storeType: values.storeType as StoreMetadata['storeType'],
+              connectorRef: typeof values.connectorRef !== 'string' ? values.connectorRef?.value : ''
+            },
+            formGitDetails,
+            values.useTemplate
+          )
         }}
       >
         {formikProps => (
@@ -226,12 +249,12 @@ export default function CreatePipelines({
                 <CardSelect
                   data={PipelineModeCards}
                   cornerSelected
-                  cardClassName={css.pipelineModeCard}
+                  className={css.pipelineCardWrapper}
                   renderItem={(item: CardInterface) => (
                     <Layout.Horizontal flex spacing={'small'}>
                       <Icon
-                        size={16}
                         name={item.icon}
+                        size={item.size}
                         color={storeType?.type === item.type ? Color.PRIMARY_7 : Color.GREY_600}
                       />
                       <Container>
@@ -261,7 +284,7 @@ export default function CreatePipelines({
                 formikProps={formikProps as any}
                 handleSubmit={noop}
                 isEdit={isEdit && pipelineIdentifier !== DefaultNewPipelineId}
-              ></GitSyncForm>
+              />
             ) : null}
 
             <Container padding={{ top: 'xlarge' }}>

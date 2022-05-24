@@ -13,14 +13,13 @@ import {
   Layout,
   ModalErrorHandlerBinding,
   SelectOption,
-  Text,
   useToggleOpen
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { Error, GitBranchDetailsDTO, useGetListOfBranchesByRefConnectorV2 } from 'services/cd-ng'
+import { Error, GitBranchDetailsDTO, ResponseMessage, useGetListOfBranchesByRefConnectorV2 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import css from '@common/components/RepositorySelect/RepositorySelect.module.scss'
 
@@ -34,6 +33,7 @@ export interface RepoBranchSelectProps {
   repoName?: string
   selectedValue?: string
   onChange?: (selected: SelectOption, options?: SelectOption[]) => void
+  setErrorResponse?: React.Dispatch<React.SetStateAction<ResponseMessage[]>>
 }
 
 export const getBranchSelectOptions = (data: GitBranchDetailsDTO[] = []): SelectOption[] => {
@@ -54,7 +54,8 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
     name,
     label,
     noLabel = false,
-    disabled
+    disabled,
+    setErrorResponse
   } = props
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -78,6 +79,12 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
     debounce: 500,
     lazy: true
   })
+
+  const responseMessages = (error?.data as Error)?.responseMessages
+
+  useEffect(() => {
+    responseMessages && setErrorResponse?.(responseMessages)
+  }, [responseMessages, setErrorResponse])
 
   const { open } = useToggleOpen()
 
@@ -133,14 +140,30 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
         selectProps={{ usePortal: true, popoverClassName: css.gitBranchSelectorPopover }}
       />
       {loading ? (
-        <Layout.Horizontal spacing="small" flex padding={{ top: 'xsmall', left: 'xsmall' }}>
+        <Layout.Horizontal
+          spacing="small"
+          flex={{ alignItems: 'flex-start' }}
+          style={{ paddingTop: noLabel ? '10px' : '28px' }}
+        >
           <Icon name="steps-spinner" size={18} color={Color.PRIMARY_7} />
-          <Text>{getString('common.fetchingBranches').concat('...')}</Text>
+        </Layout.Horizontal>
+      ) : repoName && ((responseMessages?.length && responseMessages?.length > 0) || !!error) ? (
+        <Layout.Horizontal spacing="small" flex={{ alignItems: 'flex-start' }} style={{ paddingTop: '22px' }}>
+          <Icon
+            name="refresh"
+            size={16}
+            color={Color.PRIMARY_7}
+            background={Color.PRIMARY_1}
+            padding="small"
+            style={{ borderRadius: '4px', cursor: 'pointer' }}
+            onClick={() => {
+              setErrorResponse?.([])
+              setBranchSelectOptions([])
+              connectorIdentifierRef && repoName && refetch()
+            }}
+          />
         </Layout.Horizontal>
       ) : null}
-      {/* <Dialog isOpen={isOpen} enforceFocus={false} title={getString('gitsync.branchFetchFailed')} onClose={close}>
-        {responseMessages ? <ErrorHandler responseMessages={responseMessages} /> : undefined}
-      </Dialog> */}
     </Layout.Horizontal>
   )
 }

@@ -1,16 +1,9 @@
-/*
- * Copyright 2022 Harness Inc. All rights reserved.
- * Use of this source code is governed by the PolyForm Shield 1.0.0 license
- * that can be found in the licenses directory at the root of this repository, also available at
- * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
- */
-
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import type { FormikContextType } from 'formik'
 import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 
-import { Container, FormInput, SelectOption } from '@harness/uicore'
+import { Container, FormInput, Layout, SelectOption } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import {
   ConnectorReferenceField,
@@ -21,6 +14,8 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import RepositorySelect from '@common/components/RepositorySelect/RepositorySelect'
 import RepoBranchSelectV2 from '@common/components/RepoBranchSelectV2/RepoBranchSelectV2'
+import type { ResponseMessage } from 'services/cd-ng'
+import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import css from './GitSyncForm.module.scss'
 
 interface GitSyncFormProps<T> {
@@ -37,11 +32,11 @@ interface GitSyncFormProps<T> {
   }
 }
 
-interface GitSyncFormFields {
+export interface GitSyncFormFields {
   identifier?: string
   remoteType?: string
   connectorRef?: ConnectorSelectedValue
-  repoName?: string
+  repo?: string
   branch?: string
   filePath?: string
 }
@@ -51,21 +46,25 @@ const getConnectorIdentifierWithScope = (scope: Scope, identifier: string): stri
 }
 
 export function GitSyncForm(props: GitSyncFormProps<GitSyncFormFields>): React.ReactElement {
-  const { formikProps, modalErrorHandler, isEdit, showRemoteTypeSelection = true, disableFields = {} } = props
+  const { formikProps, isEdit, showRemoteTypeSelection = true, disableFields = {} } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { branch, connectorRef, repoName } = useQueryParams<GitQueryParams>()
   const { updateQueryParams } = useUpdateQueryParams()
   const { getString } = useStrings()
+  const [errorResponse, setErrorResponse] = useState<ResponseMessage[]>([])
 
   useEffect(() => {
-    formikProps.setFieldValue('remoteType', 'create')
-    if (formikProps.values?.identifier && !isEdit) {
+    !isEdit &&
+      formikProps?.values?.identifier &&
       formikProps.setFieldValue('filePath', `.harness/${formikProps.values.identifier}.yaml`)
-    }
-  }, [formikProps.values.identifier])
+  }, [formikProps?.values?.identifier, isEdit])
+
+  useEffect(() => {
+    setErrorResponse([])
+  }, [formikProps.values.connectorRef])
 
   return (
-    <Container className={css.gitSyncForm}>
+    <Container padding={{ top: 'large' }} className={css.gitSyncForm}>
       {showRemoteTypeSelection && (
         <FormInput.RadioGroup
           name="remoteType"
@@ -84,65 +83,73 @@ export function GitSyncForm(props: GitSyncFormProps<GitSyncFormFields>): React.R
           }}
         />
       )}
-      <ConnectorReferenceField
-        name="connectorRef"
-        width={350}
-        type={['Github', 'Bitbucket']}
-        selected={formikProps.values.connectorRef || connectorRef}
-        label={'Select Git Connector'}
-        placeholder={`- ${getString('select')} -`}
-        accountIdentifier={accountId}
-        projectIdentifier={projectIdentifier}
-        orgIdentifier={orgIdentifier}
-        onChange={(value, scope) => {
-          // modalErrorHandler?.hide()
-          formikProps.setFieldValue('connectorRef', {
-            label: defaultTo(value.name, ''),
-            value: getConnectorIdentifierWithScope(scope, value?.identifier),
-            scope: scope,
-            live: value?.status?.status === 'SUCCESS',
-            connector: value
-          })
-          formikProps.setFieldValue?.('repoName', '')
-          formikProps.setFieldValue?.('branch', '')
-          updateQueryParams({ connectorRef: value?.identifier, repoName: [] as any, branch: [] as any })
-        }}
-        disabled={isEdit || disableFields.connectorRef}
-      />
 
-      <RepositorySelect
-        formikProps={formikProps}
-        connectorRef={formikProps.values.connectorRef?.value}
-        //modalErrorHandler={modalErrorHandler}
-        onChange={(selected: SelectOption, options?: SelectOption[]) => {
-          if (!options?.find(repo => repo.value === selected.value)) {
-            formikProps.setFieldValue?.('repository', '')
-          }
-          formikProps.setFieldValue?.('branch', '')
-          updateQueryParams({ repoName: selected.value as string, branch: [] as any })
-        }}
-        selectedValue={formikProps.values.repoName || repoName}
-        disabled={isEdit || disableFields.repoName}
-      />
-      <RepoBranchSelectV2
-        connectorIdentifierRef={formikProps.values.connectorRef?.value}
-        repoName={formikProps.values.repoName}
-        modalErrorHandler={modalErrorHandler}
-        onChange={(selected: SelectOption, options?: SelectOption[]) => {
-          if (!options?.find(currBranch => currBranch.value === selected.value)) {
-            formikProps.setFieldValue?.('branch', '')
-          }
-          updateQueryParams({ branch: selected.value as string })
-        }}
-        selectedValue={formikProps.values.branch || branch}
-        disabled={isEdit || disableFields.branch}
-      />
-      <FormInput.Text
-        name="filePath"
-        label={'Yaml Path'}
-        placeholder={'Enter Yaml path'}
-        disabled={isEdit || disableFields.filePath}
-      />
+      <Layout.Horizontal>
+        <Layout.Vertical>
+          <ConnectorReferenceField
+            name="connectorRef"
+            width={350}
+            type={['Github', 'Bitbucket']}
+            selected={formikProps.values.connectorRef || connectorRef}
+            label={'Select Git Connector'}
+            placeholder={`- ${getString('select')} -`}
+            accountIdentifier={accountId}
+            projectIdentifier={projectIdentifier}
+            orgIdentifier={orgIdentifier}
+            onChange={(value, scope) => {
+              // modalErrorHandler?.hide()
+              formikProps.setFieldValue('connectorRef', {
+                label: defaultTo(value.name, ''),
+                value: getConnectorIdentifierWithScope(scope, value?.identifier),
+                scope: scope,
+                live: value?.status?.status === 'SUCCESS',
+                connector: value
+              })
+              formikProps.setFieldValue?.('repo', '')
+              formikProps.setFieldValue?.('branch', '')
+              updateQueryParams({ connectorRef: value?.identifier, repoName: [] as any, branch: [] as any })
+            }}
+            disabled={isEdit || disableFields.connectorRef}
+          />
+
+          <RepositorySelect
+            formikProps={formikProps}
+            connectorRef={formikProps.values.connectorRef?.value || connectorRef}
+            onChange={(selected: SelectOption) => {
+              if (errorResponse?.length === 0) {
+                formikProps.setFieldValue?.('branch', '')
+                updateQueryParams({ repoName: selected.value as string, branch: [] as any })
+              }
+            }}
+            selectedValue={formikProps?.values?.repo || repoName}
+            disabled={isEdit || disableFields.repoName}
+            setErrorResponse={setErrorResponse}
+          />
+          <RepoBranchSelectV2
+            connectorIdentifierRef={formikProps.values.connectorRef?.value || connectorRef}
+            repoName={formikProps?.values?.repo}
+            onChange={(selected: SelectOption) => {
+              if (errorResponse?.length === 0) {
+                updateQueryParams({ branch: selected.value as string })
+              }
+            }}
+            selectedValue={formikProps.values.branch || branch}
+            disabled={isEdit || disableFields.branch}
+            setErrorResponse={setErrorResponse}
+          />
+          <FormInput.Text
+            name="filePath"
+            label={'Yaml Path'}
+            placeholder={'Enter Yaml path'}
+            disabled={isEdit || disableFields.filePath}
+          />
+        </Layout.Vertical>
+        {errorResponse?.length > 0 && (
+          <Layout.Vertical style={{ flexShrink: 1 }} padding={{ left: 'xlarge' }}>
+            <ErrorHandler responseMessages={errorResponse} />
+          </Layout.Vertical>
+        )}
+      </Layout.Horizontal>
     </Container>
   )
 }

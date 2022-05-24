@@ -368,6 +368,7 @@ options: Options
 note: Note
 link: link
 errorHandler:
+  possibleReasons: Possible reasons
   issueCouldBe: Issue could be
   tryTheseSuggestions: Try these suggestions
   contactLabel: 'Contact '

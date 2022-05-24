@@ -227,6 +227,7 @@ export interface StringsMap {
   'common.errorHandler.contactLabel': string
   'common.errorHandler.contactSupport': string
   'common.errorHandler.issueCouldBe': string
+  'common.errorHandler.possibleReasons': string
   'common.errorHandler.tryTheseSuggestions': string
   'common.execute': string
   'common.expiration': string

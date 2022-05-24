@@ -87,6 +87,8 @@ interface OtherModalProps {
 interface PipelineWithGitContextFormProps extends PipelineInfoConfig {
   repo?: string
   branch?: string
+  connectorRef?: string
+  filePath?: string
 }
 
 interface InputSetValue extends SelectOption {
@@ -311,8 +313,10 @@ export function PipelineCanvas({
             <CreatePipelines
               afterSave={onSubmit}
               initialValues={merge(pipeline, {
-                repo: gitDetails.repoIdentifier || '',
-                branch: gitDetails.branch || '' //todo: initialize for edit
+                repo: repoName || gitDetails.repoIdentifier || '',
+                branch: branch || gitDetails.branch || '',
+                connectorRef: connectorRef || '',
+                filePath: gitDetails.filePath
               })}
               closeModal={onCloseCreate}
               gitDetails={gitDetails as IGitContextFormProps}
@@ -408,6 +412,8 @@ export function PipelineCanvas({
       pipeline.tags = values.tags ?? {}
       delete (pipeline as PipelineWithGitContextFormProps).repo
       delete (pipeline as PipelineWithGitContextFormProps).branch
+      delete (pipeline as PipelineWithGitContextFormProps).connectorRef
+      delete (pipeline as PipelineWithGitContextFormProps).filePath
       updatePipeline(pipeline)
       if (currStoreMetadata?.storeType) {
         updatePipelineStoreMetadata(currStoreMetadata, gitDetails)
@@ -773,7 +779,7 @@ export function PipelineCanvas({
                   connectorRef={connectorRef}
                   repoName={repoName || gitDetails.repoName || gitDetails.repoIdentifier || ''}
                   filePath={gitDetails.filePath || ''}
-                  branch={selectedBranch || gitDetails.branch || ''}
+                  branch={selectedBranch || branch || ''}
                   onBranchChange={onGitBranchChange}
                   flags={{
                     readOnly: pipelineIdentifier === DefaultNewPipelineId
