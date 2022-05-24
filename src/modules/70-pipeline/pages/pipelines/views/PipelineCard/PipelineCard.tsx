@@ -43,7 +43,7 @@ import { Badge } from '@pipeline/pages/utils/Badge/Badge'
 import { formatCount } from '@common/utils/utils'
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
 import { getFeaturePropsForRunPipelineButton } from '@pipeline/utils/runPipelineUtils'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { getIconsForPipeline } from '../../PipelineListUtils'
 
 import css from './PipelineCard.module.scss'
@@ -245,8 +245,8 @@ export function PipelineCard({
   const { isGitSyncEnabled } = { isGitSyncEnabled: true }
   const { gitSyncRepos, loadingRepos } = useGitSyncStore()
   const { storeType, gitDetails: { repoName } = {} } = pipeline
-  const { GIT_SIMPLIFICATION } = useFeatureFlags()
-  const isPipelineRemote = GIT_SIMPLIFICATION && storeType === StoreType.REMOTE
+  const { isGitSimplificationEnabled } = useAppStore()
+  const isPipelineRemote = isGitSimplificationEnabled && storeType === StoreType.REMOTE
   const history = useHistory()
   const goToExecutionPipelineView = (executionId: string | undefined): void => {
     if (executionId && pipeline.identifier) {

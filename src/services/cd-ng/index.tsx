@@ -638,12 +638,6 @@ export interface AddUsersResponse {
   }
 }
 
-export interface AggregateACLRequest {
-  resourceGroupFilter?: string[]
-  roleFilter?: string[]
-  searchTerm?: string
-}
-
 export interface ApiKeyAggregateDTO {
   apiKey: ApiKeyDTO
   createdAt: number
@@ -3702,7 +3696,8 @@ export interface FileDTO {
   draft?: boolean
   fileUsage?: 'MANIFEST_FILE' | 'CONFIG' | 'SCRIPT'
   identifier: string
-  lastUpdatedBy?: EmbeddedUserDetailsDTO
+  lastModifiedAt?: number
+  lastModifiedBy?: EmbeddedUserDetailsDTO
   mimeType?: string
   name: string
   orgIdentifier?: string
@@ -3945,6 +3940,7 @@ export type GitConfigDTO = ConnectorConfigDTO & {
 
 export interface GitEnabledDTO {
   connectivityMode?: 'MANAGER' | 'DELEGATE'
+  gitSimplificationEnabled?: boolean
   gitSyncEnabled?: boolean
 }
 
@@ -4716,6 +4712,7 @@ export interface GitSyncRepoFilesList {
 export interface GitSyncSettingsDTO {
   accountIdentifier?: string
   executeOnDelegate: boolean
+  gitSimplificationEnabled?: boolean
   orgIdentifier: string
   projectIdentifier: string
 }
@@ -5105,7 +5102,7 @@ export interface InfrastructureConfig {
 export interface InfrastructureDef {
   provisioner?: ExecutionElementConfig
   spec: Infrastructure
-  type: 'KubernetesDirect' | 'KubernetesGcp' | 'KubernetesAzure' | 'Pdc' | 'ServerlessAwsLambda'
+  type: 'KubernetesDirect' | 'KubernetesGcp' | 'KubernetesAzure' | 'Pdc' | 'SshWinRmAzure' | 'ServerlessAwsLambda'
 }
 
 export interface InfrastructureDefinitionConfig {
@@ -5120,7 +5117,7 @@ export interface InfrastructureDefinitionConfig {
   tags?: {
     [key: string]: string
   }
-  type: 'KubernetesDirect' | 'KubernetesGcp' | 'KubernetesAzure' | 'Pdc' | 'ServerlessAwsLambda'
+  type: 'KubernetesDirect' | 'KubernetesGcp' | 'KubernetesAzure' | 'Pdc' | 'SshWinRmAzure' | 'ServerlessAwsLambda'
 }
 
 export interface InfrastructureDetails {
@@ -5137,7 +5134,7 @@ export interface InfrastructureRequestDTO {
   tags?: {
     [key: string]: string
   }
-  type?: 'KubernetesDirect' | 'KubernetesGcp' | 'KubernetesAzure' | 'Pdc' | 'ServerlessAwsLambda'
+  type?: 'KubernetesDirect' | 'KubernetesGcp' | 'KubernetesAzure' | 'Pdc' | 'SshWinRmAzure' | 'ServerlessAwsLambda'
   yaml?: string
 }
 
@@ -5158,7 +5155,7 @@ export interface InfrastructureResponseDTO {
   tags?: {
     [key: string]: string
   }
-  type?: 'KubernetesDirect' | 'KubernetesGcp' | 'KubernetesAzure' | 'Pdc' | 'ServerlessAwsLambda'
+  type?: 'KubernetesDirect' | 'KubernetesGcp' | 'KubernetesAzure' | 'Pdc' | 'SshWinRmAzure' | 'ServerlessAwsLambda'
   yaml?: string
 }
 
@@ -6111,10 +6108,9 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export interface OAuthSettings {
+export type OAuthSettings = NGAuthSettings & {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
-  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
@@ -7859,6 +7855,13 @@ export interface ResponseListRoleAssignmentResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseListScopeName {
+  correlationId?: string
+  data?: ScopeName[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseListServiceAccountDTO {
   correlationId?: string
   data?: ServiceAccountDTO[]
@@ -7911,13 +7914,6 @@ export interface ResponseListSourceCodeManagerDTO {
 export interface ResponseListString {
   correlationId?: string
   data?: string[]
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponseListUserGroupAggregateDTO {
-  correlationId?: string
-  data?: UserGroupAggregateDTO[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -9476,6 +9472,14 @@ export interface Scope {
   projectIdentifier?: string
 }
 
+export interface ScopeName {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  orgName?: string
+  projectIdentifier?: string
+  projectName?: string
+}
+
 export interface ScopingRuleDetailsNg {
   description?: string
   environmentIds?: string[]
@@ -10143,6 +10147,18 @@ export type SplunkConnectorDTO = ConnectorConfigDTO & {
 
 export type SshServiceSpec = ServiceSpec & {}
 
+export type SshWinRmAzureInfrastructure = Infrastructure & {
+  connectorRef: string
+  credentialsRef: string
+  delegateSelectors?: string[]
+  resourceGroup: string
+  subscriptionId: string
+  tags?: {
+    [key: string]: string
+  }
+  usePublicDns?: boolean
+}
+
 export interface StackTraceElement {
   className?: string
   fileName?: string
@@ -10716,6 +10732,7 @@ export interface UserGroupEntityReference {
 export interface UserGroupFilterDTO {
   accountIdentifier?: string
   databaseIdFilter?: string[]
+  filterType?: 'INCLUDE_INHERITED_GROUPS' | 'EXCLUDE_INHERITED_GROUPS'
   identifierFilter?: string[]
   orgIdentifier?: string
   projectIdentifier?: string
@@ -12110,6 +12127,7 @@ export interface GetUserGroupAggregateListQueryParams {
   pageSize?: number
   sortOrders?: string[]
   searchTerm?: string
+  filterType?: 'INCLUDE_INHERITED_GROUPS' | 'EXCLUDE_INHERITED_GROUPS'
   userSize?: number
 }
 
@@ -12162,89 +12180,12 @@ export const getUserGroupAggregateListPromise = (
     signal
   )
 
-export interface GetUserGroupAggregateListsWithFilterQueryParams {
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-}
-
-export type GetUserGroupAggregateListsWithFilterProps = Omit<
-  MutateProps<
-    ResponseListUserGroupAggregateDTO,
-    Failure | Error,
-    GetUserGroupAggregateListsWithFilterQueryParams,
-    AggregateACLRequest,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get Aggregated User Group list with filter
- */
-export const GetUserGroupAggregateListsWithFilter = (props: GetUserGroupAggregateListsWithFilterProps) => (
-  <Mutate<
-    ResponseListUserGroupAggregateDTO,
-    Failure | Error,
-    GetUserGroupAggregateListsWithFilterQueryParams,
-    AggregateACLRequest,
-    void
-  >
-    verb="POST"
-    path={`/aggregate/acl/usergroups/filter`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetUserGroupAggregateListsWithFilterProps = Omit<
-  UseMutateProps<
-    ResponseListUserGroupAggregateDTO,
-    Failure | Error,
-    GetUserGroupAggregateListsWithFilterQueryParams,
-    AggregateACLRequest,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get Aggregated User Group list with filter
- */
-export const useGetUserGroupAggregateListsWithFilter = (props: UseGetUserGroupAggregateListsWithFilterProps) =>
-  useMutate<
-    ResponseListUserGroupAggregateDTO,
-    Failure | Error,
-    GetUserGroupAggregateListsWithFilterQueryParams,
-    AggregateACLRequest,
-    void
-  >('POST', `/aggregate/acl/usergroups/filter`, { base: getConfig('ng/api'), ...props })
-
-/**
- * Get Aggregated User Group list with filter
- */
-export const getUserGroupAggregateListsWithFilterPromise = (
-  props: MutateUsingFetchProps<
-    ResponseListUserGroupAggregateDTO,
-    Failure | Error,
-    GetUserGroupAggregateListsWithFilterQueryParams,
-    AggregateACLRequest,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    ResponseListUserGroupAggregateDTO,
-    Failure | Error,
-    GetUserGroupAggregateListsWithFilterQueryParams,
-    AggregateACLRequest,
-    void
-  >('POST', getConfig('ng/api'), `/aggregate/acl/usergroups/filter`, props, signal)
-
 export interface GetUserGroupAggregateQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
+  roleAssignmentScopeOrgIdentifier?: string
+  roleAssignmentScopeProjectIdentifier?: string
 }
 
 export interface GetUserGroupAggregatePathParams {
@@ -31258,6 +31199,60 @@ export const getFileContentPromise = (
     signal
   )
 
+export interface GetFileByBranchQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  RepoName: string
+  filePath: string
+  branch?: string
+  ConnectorRef?: string
+}
+
+export type GetFileByBranchProps = Omit<
+  GetProps<ResponseGetFileResponseDTO, Failure | Error, GetFileByBranchQueryParams, void>,
+  'path'
+>
+
+/**
+ * get file by branch
+ */
+export const GetFileByBranch = (props: GetFileByBranchProps) => (
+  <Get<ResponseGetFileResponseDTO, Failure | Error, GetFileByBranchQueryParams, void>
+    path={`/scm/get-file-by-branch`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetFileByBranchProps = Omit<
+  UseGetProps<ResponseGetFileResponseDTO, Failure | Error, GetFileByBranchQueryParams, void>,
+  'path'
+>
+
+/**
+ * get file by branch
+ */
+export const useGetFileByBranch = (props: UseGetFileByBranchProps) =>
+  useGet<ResponseGetFileResponseDTO, Failure | Error, GetFileByBranchQueryParams, void>(`/scm/get-file-by-branch`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * get file by branch
+ */
+export const getFileByBranchPromise = (
+  props: GetUsingFetchProps<ResponseGetFileResponseDTO, Failure | Error, GetFileByBranchQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseGetFileResponseDTO, Failure | Error, GetFileByBranchQueryParams, void>(
+    getConfig('ng/api'),
+    `/scm/get-file-by-branch`,
+    props,
+    signal
+  )
+
 export interface GetFileByCommitIdQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -31604,6 +31599,7 @@ export interface UpdateFileQueryParams {
   baseBranch?: string
   commitMessage?: string
   oldFileSha?: string
+  oldCommitId?: string
 }
 
 export type UpdateFileProps = Omit<
@@ -35025,6 +35021,7 @@ export interface GetUserGroupListQueryParams {
   orgIdentifier?: string
   projectIdentifier?: string
   searchTerm?: string
+  filterType?: 'INCLUDE_INHERITED_GROUPS' | 'EXCLUDE_INHERITED_GROUPS'
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
@@ -35781,6 +35778,91 @@ export const addMemberPromise = (
     void,
     AddMemberPathParams
   >('PUT', getConfig('ng/api'), `/user-groups/${identifier}/member/${userIdentifier}`, props, signal)
+
+export interface GetInheritingChildScopeListQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface GetInheritingChildScopeListPathParams {
+  identifier: string
+}
+
+export type GetInheritingChildScopeListProps = Omit<
+  GetProps<
+    ResponseListScopeName,
+    Failure | AccessControlCheckError | Error,
+    GetInheritingChildScopeListQueryParams,
+    GetInheritingChildScopeListPathParams
+  >,
+  'path'
+> &
+  GetInheritingChildScopeListPathParams
+
+/**
+ * Get Inheriting Child Scope List
+ */
+export const GetInheritingChildScopeList = ({ identifier, ...props }: GetInheritingChildScopeListProps) => (
+  <Get<
+    ResponseListScopeName,
+    Failure | AccessControlCheckError | Error,
+    GetInheritingChildScopeListQueryParams,
+    GetInheritingChildScopeListPathParams
+  >
+    path={`/user-groups/${identifier}/scopes`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetInheritingChildScopeListProps = Omit<
+  UseGetProps<
+    ResponseListScopeName,
+    Failure | AccessControlCheckError | Error,
+    GetInheritingChildScopeListQueryParams,
+    GetInheritingChildScopeListPathParams
+  >,
+  'path'
+> &
+  GetInheritingChildScopeListPathParams
+
+/**
+ * Get Inheriting Child Scope List
+ */
+export const useGetInheritingChildScopeList = ({ identifier, ...props }: UseGetInheritingChildScopeListProps) =>
+  useGet<
+    ResponseListScopeName,
+    Failure | AccessControlCheckError | Error,
+    GetInheritingChildScopeListQueryParams,
+    GetInheritingChildScopeListPathParams
+  >((paramsInPath: GetInheritingChildScopeListPathParams) => `/user-groups/${paramsInPath.identifier}/scopes`, {
+    base: getConfig('ng/api'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * Get Inheriting Child Scope List
+ */
+export const getInheritingChildScopeListPromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseListScopeName,
+    Failure | AccessControlCheckError | Error,
+    GetInheritingChildScopeListQueryParams,
+    GetInheritingChildScopeListPathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseListScopeName,
+    Failure | AccessControlCheckError | Error,
+    GetInheritingChildScopeListQueryParams,
+    GetInheritingChildScopeListPathParams
+  >(getConfig('ng/api'), `/user-groups/${identifier}/scopes`, props, signal)
 
 export interface GetUsersInUserGroupQueryParams {
   accountIdentifier: string

@@ -43,6 +43,7 @@ export interface AppStoreContextProps {
   readonly selectedProject?: Project
   readonly selectedOrg?: Organization
   readonly isGitSyncEnabled?: boolean
+  readonly isGitSimplificationEnabled?: boolean
   readonly connectivityMode?: GitEnabledDTO['connectivityMode'] //'MANAGER' | 'DELEGATE'
   readonly currentUserInfo: UserInfo
   /** feature flags */
@@ -114,6 +115,7 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
     featureFlags: {},
     currentUserInfo: { uuid: '' },
     isGitSyncEnabled: false,
+    isGitSimplificationEnabled: undefined,
     connectivityMode: undefined
   })
 
@@ -188,6 +190,24 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [featureFlags])
 
+  useEffect(() => {
+    if (
+      state.featureFlags &&
+      Object.keys(state.featureFlags).length > 0 &&
+      typeof state.isGitSimplificationEnabled === 'boolean'
+    ) {
+      if (state.isGitSimplificationEnabled && state.isGitSyncEnabled) {
+        // Old git experience and git simplification should never be true together
+        // logging to bugsnag if it happens
+        window.bugsnagClient?.notify?.(new Error(`Inconsistent git sync state for account ${accountId}`))
+      }
+      setState(prevState => ({
+        ...prevState,
+        isGitSimplificationEnabled: state.featureFlags.GIT_SIMPLIFICATION || state.isGitSimplificationEnabled
+      }))
+    }
+  }, [state.featureFlags, state.isGitSimplificationEnabled])
+
   // update gitSyncEnabled when selectedProject changes
   useEffect(() => {
     // For gitSync, using path params instead of project/org from PreferenceFramework
@@ -202,14 +222,16 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
         setState(prevState => ({
           ...prevState,
           isGitSyncEnabled: !!response?.gitSyncEnabled,
-          connectivityMode: response?.connectivityMode
+          connectivityMode: response?.connectivityMode,
+          isGitSimplificationEnabled: !!response?.gitSimplificationEnabled
         }))
       })
     } else {
       setState(prevState => ({
         ...prevState,
         isGitSyncEnabled: false,
-        connectivityMode: undefined
+        connectivityMode: undefined,
+        isGitSimplificationEnabled: false
       }))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

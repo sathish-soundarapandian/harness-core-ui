@@ -83,7 +83,6 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { deploymentTypeLabel } from '@pipeline/utils/DeploymentTypeUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { PipelineGridView } from './views/PipelineGridView'
 import { PipelineListView } from './views/PipelineListView'
@@ -115,7 +114,7 @@ export interface CDPipelinesPageProps {
 
 function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
   const { getString } = useStrings()
-  const { GIT_SIMPLIFICATION } = useFeatureFlags()
+  const { isGitSimplificationEnabled } = useAppStore()
   const sortOptions: SelectOption[] = [
     {
       label: getString('recentActivity'),
@@ -262,7 +261,7 @@ function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
 
   const goToPipeline = useCallback(
     (pipeline?: PMSPipelineSummaryResponse) => {
-      const isRemotePipeline = GIT_SIMPLIFICATION && pipeline?.storeType === StoreType.REMOTE
+      const isRemotePipeline = isGitSimplificationEnabled && pipeline?.storeType === StoreType.REMOTE
 
       history.push(
         routes.toPipelineStudio({
