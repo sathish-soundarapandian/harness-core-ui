@@ -333,6 +333,7 @@ export interface AccessControlCheckError {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -1474,6 +1475,10 @@ export interface CloudformationTemplateFile {
 
 export interface CloudformationTemplateFileSpec {
   type?: string
+}
+
+export interface Cluster {
+  identifier?: string
 }
 
 export interface ClusterBasicDTO {
@@ -3034,6 +3039,7 @@ export interface Error {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -3427,6 +3433,7 @@ export interface Failure {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -6263,6 +6270,16 @@ export interface PageApiKeyAggregateDTO {
   totalPages?: number
 }
 
+export interface PageCluster {
+  content?: Cluster[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
 export interface PageClusterResponse {
   content?: ClusterResponse[]
   empty?: boolean
@@ -8291,6 +8308,7 @@ export interface ResponseMessage {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -8394,6 +8412,13 @@ export interface ResponsePageActivitySummary {
 export interface ResponsePageApiKeyAggregateDTO {
   correlationId?: string
   data?: PageApiKeyAggregateDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePageCluster {
+  correlationId?: string
+  data?: PageCluster
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -25358,6 +25383,58 @@ export const createClustersPromise = (
     'POST',
     getConfig('ng/api'),
     `/gitops/clusters/batch`,
+    props,
+    signal
+  )
+
+export interface GetClusterListFromSourceQueryParams {
+  page?: number
+  size?: number
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type GetClusterListFromSourceProps = Omit<
+  GetProps<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets cluster list from Gitops Service
+ */
+export const GetClusterListFromSource = (props: GetClusterListFromSourceProps) => (
+  <Get<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>
+    path={`/gitops/clusters/listFromGitops`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetClusterListFromSourceProps = Omit<
+  UseGetProps<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets cluster list from Gitops Service
+ */
+export const useGetClusterListFromSource = (props: UseGetClusterListFromSourceProps) =>
+  useGet<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>(
+    `/gitops/clusters/listFromGitops`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets cluster list from Gitops Service
+ */
+export const getClusterListFromSourcePromise = (
+  props: GetUsingFetchProps<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>(
+    getConfig('ng/api'),
+    `/gitops/clusters/listFromGitops`,
     props,
     signal
   )

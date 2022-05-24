@@ -28,6 +28,7 @@ import CreateAWSCodeCommitConnector from '../CreateConnector/AWSCodeCommitConnec
 import CreateNexusConnector from '../CreateConnector/NexusConnector/CreateNexusConnector'
 import CreateArtifactoryConnector from '../CreateConnector/ArtifactoryConnector/CreateArtifactoryConnector'
 import CreateGcpConnector from '../CreateConnector/GcpConnector/CreateGcpConnector'
+import CreatePdcConnector from '../CreateConnector/PdcConnector/CreatePdcConnector'
 import HelmRepoConnector from '../CreateConnector/HelmRepoConnector/HemRepoConnector'
 import JiraConnector from '../CreateConnector/JiraConnector/JiraConnector'
 import ServiceNowConnector from '../CreateConnector/ServiceNowConnector/ServiceNowConnector'
@@ -142,6 +143,8 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
       return <CreateArtifactoryConnector {...commonProps} />
     case Connectors.GCP:
       return <CreateGcpConnector {...commonProps} />
+    case Connectors.PDC:
+      return <CreatePdcConnector {...commonProps} />
     case Connectors.AWS_KMS:
       return <CreateAwsKmsConnector {...commonProps} />
     case Connectors.AWS_SECRET_MANAGER:

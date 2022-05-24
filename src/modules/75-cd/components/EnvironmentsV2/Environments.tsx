@@ -12,6 +12,7 @@ import { defaultTo } from 'lodash-es'
 
 import { Container, Dialog, Heading, Text, Views } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
+import { Color, FontVariation } from '@harness/design-system'
 
 import { useGetEnvironmentList } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -26,10 +27,10 @@ import { NewEditEnvironmentModal } from '@cd/components/PipelineSteps/DeployEnvS
 
 import { PageStoreContext } from './PageTemplate/PageContext'
 import PageTemplate from './PageTemplate/PageTemplate'
+import { Sort, SortFields } from './PageTemplate/utils'
 import EnvironmentTabs from './EnvironmentTabs'
 import EnvironmentsList from './EnvironmentsList/EnvironmentsList'
 import EnvironmentsGrid from './EnvironmentsGrid/EnvironmentsGrid'
-import { Sort, SortFields } from './utils'
 
 import EmptyContentImg from './EmptyContent.svg'
 
@@ -50,7 +51,16 @@ export function Environments() {
         canEscapeKeyClose
         canOutsideClickClose
         onClose={hideCreateModal}
-        title={getString('newEnvironment')}
+        title={
+          <>
+            <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'small' }}>
+              {getString('newEnvironment')}
+            </Text>
+            <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_500}>
+              {getString('cd.environment.createSubTitle')}
+            </Text>
+          </>
+        }
         isCloseButtonShown
         className={cx('padded-dialog', css.dialogStylesEnv)}
       >
@@ -79,6 +89,14 @@ export function Environments() {
     ),
     [orgIdentifier, projectIdentifier]
   )
+
+  const handleCustomSortChange = (value: string) => {
+    return value === SortFields.AZ09
+      ? [SortFields.Name, Sort.ASC]
+      : value === SortFields.ZA90
+      ? [SortFields.Name, Sort.DESC]
+      : [SortFields.LastUpdatedAt, Sort.DESC]
+  }
 
   return (
     <PageStoreContext.Provider
@@ -129,6 +147,7 @@ export function Environments() {
           }
         ]}
         defaultSortOption={[SortFields.LastUpdatedAt, Sort.DESC]}
+        handleCustomSortChange={handleCustomSortChange}
       />
     </PageStoreContext.Provider>
   )

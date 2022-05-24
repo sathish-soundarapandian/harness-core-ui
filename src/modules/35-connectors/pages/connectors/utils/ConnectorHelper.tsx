@@ -117,6 +117,8 @@ export const getConnectorTitleIdByType = (type: string): StringKeys => {
       return 'connectors.title.artifactory'
     case Connectors.GCP:
       return 'connectors.title.gcpConnector'
+    case Connectors.PDC:
+      return 'connectors.title.pdcConnector'
     case 'Gcr':
       return 'connectors.GCR.fullName'
     case Connectors.AWS_KMS:
@@ -190,6 +192,8 @@ export const getConnectorIconByType = (type: string): IconName => {
     case Connectors.CE_GCP:
     case 'Gcr':
       return 'service-gcp'
+    case Connectors.PDC:
+      return 'pdc-inverse'
     case Connectors.AWS_KMS:
       return 'aws-kms'
     case Connectors.CE_AZURE:

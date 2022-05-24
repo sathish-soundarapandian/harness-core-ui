@@ -49,6 +49,7 @@ import DashboardAPIErrorWidget from '@projects-orgs/components/DashboardAPIError
 import DashboardNoDataWidget from '@projects-orgs/components/DashboardNoDataWidget/DashboardNoDataWidget'
 
 import type { TimeRangeSelectorProps } from '@common/components/TimeRangeSelector/TimeRangeSelector'
+import { renderTooltipContent } from '@pipeline/utils/DashboardUtils'
 import css from './LandingDashboardDeploymentsWidget.module.scss'
 
 export enum TimeRangeGroupByMapping {
@@ -76,49 +77,7 @@ const sortByOptions: SelectOption[] = [
   { label: 'By Instances', value: 'INSTANCES' }
 ]
 
-export const renderTooltipContent = ({
-  time,
-  failureRate,
-  count,
-  successCount,
-  failureCount
-}: {
-  time: string | number
-  failureRate: string | number
-  count?: number
-  successCount?: number
-  failureCount?: number
-}) => {
-  return `<div style="padding: 16px; color: white; width: 282px; height: 128px;">
-      <div style="display: flex; justify-content: space-between; border-bottom: 0.5px solid rgba(243, 243, 250); padding-bottom: 7px; margin-bottom: 15px;">
-        <div style="font-weight: normal; font-size: 12px; line-height: 18px; opacity: 0.8;">${time}</div>
-        <div>
-          <span style="white-space: pre; font-weight: bold; font-size: 12px; line-height: 18px; opacity: 0.8;">Deployments: </span>
-          <span style="font-weight: bold; font-size: 12px; line-height: 18px;">${count}</span>
-        </div>
-      </div>
-      <div style="display: flex; justify-content: space-between;">
-        <div>
-          <p style="font-weight: 500; font-size: 10px; line-height: 14px; letter-spacing: 0.2px; color: #D9DAE6; margin-bottom: 0px;">Failure Rate</p>
-          <p style="font-weight: 600; font-size: 28px; line-height: 38px; color: #FBE6E4;">${failureRate}</p>
-        </div>
-        <div style="margin-right: 8px;">
-          <div style="display: flex; align-items: center; margin-bottom: 6px;">
-            <div style="height: 6px; width: 12px; background-color: #5FB34E; border-radius: 16px; display: inline-block; margin-right: 8px"></div>
-            <span style="white-space: pre; font-weight: bold; font-size: 12px; line-height: 16px; letter-spacing: 0.2px; opacity: 0.8;">Success </span>
-            <span style="font-weight: bold; font-size: 12px; line-height: 16px; letter-spacing: 0.2px;">${successCount}</span>
-          </div>
-          <div style="display: flex; align-items: center;">
-            <div style="height: 6px; width: 12px; background-color: #EE5F54; border-radius: 16px; display: inline-block; margin-right: 8px"></div>
-            <span style="white-space: pre; font-weight: bold; font-size: 12px; line-height: 18px; opacity: 0.8;">Failed </span>
-            <span style="font-weight: bold; font-size: 12px; line-height: 18px;">${failureCount}</span>
-          </div>
-        </div>
-      </div>
-    </div>`
-}
-
-export const getTooltip = (currPoint: TooltipFormatterContextObject): string => {
+const getTooltip = (currPoint: TooltipFormatterContextObject): string => {
   const custom = currPoint?.series?.userOptions?.custom
   const point: TimeBasedStats = custom?.[currPoint.key]
   const time =

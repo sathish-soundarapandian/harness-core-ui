@@ -24,7 +24,7 @@ import { EnvironmentType } from '@common/constants/EnvironmentType'
 import css from '../EnvironmentGroups.module.scss'
 import environmentCss from '../../EnvironmentsV2/EnvironmentsList/EnvironmentsList.module.scss'
 
-function EnvironmentGroupName({
+export function EnvironmentGroupName({
   name,
   identifier,
   tags
@@ -62,7 +62,7 @@ function EnvironmentGroupName({
   )
 }
 
-function LastUpdatedBy({ lastModifiedAt }: { lastModifiedAt?: number }): React.ReactElement {
+export function LastUpdatedBy({ lastModifiedAt }: { lastModifiedAt?: number }): React.ReactElement {
   return (
     <Layout.Vertical spacing={'small'}>
       <ReactTimeago date={lastModifiedAt as number} />
@@ -70,7 +70,7 @@ function LastUpdatedBy({ lastModifiedAt }: { lastModifiedAt?: number }): React.R
   )
 }
 
-function NoOfEnvironments({ length }: { length: number }) {
+export function NoOfEnvironments({ length }: { length: number }) {
   return (
     <Text
       color={Color.BLACK}
@@ -83,7 +83,7 @@ function NoOfEnvironments({ length }: { length: number }) {
   )
 }
 
-function EditOrDeleteCell({ identifier, onEdit, onDelete }: any): React.ReactElement {
+export function EditOrDeleteCell({ identifier, onEdit, onDelete }: any): React.ReactElement {
   const [menuOpen, setMenuOpen] = React.useState(false)
   const { getString } = useStrings()
 
@@ -97,9 +97,9 @@ function EditOrDeleteCell({ identifier, onEdit, onDelete }: any): React.ReactEle
     onCloseDialog: async (isConfirmed: boolean) => {
       /* istanbul ignore else */
       if (isConfirmed) {
-        setMenuOpen(false)
         await onDelete(identifier)
       }
+      setMenuOpen(false)
     }
   })
 
@@ -156,7 +156,7 @@ function EditOrDeleteCell({ identifier, onEdit, onDelete }: any): React.ReactEle
   )
 }
 
-function EnvironmentTypes({ type }: { type?: 'PreProduction' | 'Production' }) {
+export function EnvironmentTypes({ type }: { type?: 'PreProduction' | 'Production' }) {
   const { getString } = useStrings()
   return (
     <Text
@@ -169,5 +169,3 @@ function EnvironmentTypes({ type }: { type?: 'PreProduction' | 'Production' }) {
     </Text>
   )
 }
-
-export { EnvironmentGroupName, LastUpdatedBy, NoOfEnvironments, EditOrDeleteCell, EnvironmentTypes }

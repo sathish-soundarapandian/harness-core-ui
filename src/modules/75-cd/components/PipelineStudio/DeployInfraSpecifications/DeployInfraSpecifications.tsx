@@ -29,7 +29,10 @@ import type {
 } from '@cd/components/PipelineSteps/InfraProvisioning/InfraProvisioning'
 import type { GcpInfrastructureSpec } from '@cd/components/PipelineSteps/GcpInfrastructureSpec/GcpInfrastructureSpec'
 import { useStrings } from 'framework/strings'
-import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import {
+  PipelineContextType,
+  usePipelineContext
+} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import DeployServiceErrors from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceErrors'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
@@ -97,7 +100,8 @@ export default function DeployInfraSpecifications(props: React.PropsWithChildren
     isReadonly,
     scope,
     getStageFromPipeline,
-    updateStage
+    updateStage,
+    contextType
   } = usePipelineContext()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceUpdateStage = React.useCallback(
@@ -454,32 +458,36 @@ export default function DeployInfraSpecifications(props: React.PropsWithChildren
     <div className={stageCss.serviceOverrides} key="1">
       <DeployServiceErrors domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
       <div className={stageCss.contentSection} ref={scrollRef}>
-        <div className={stageCss.tabHeading} id="environment">
-          {getString('environment')}
-        </div>
-        <Card className={stageCss.sectionCard}>
-          <StepWidget
-            type={StepType.DeployEnvironment}
-            readonly={isReadonly || scope !== Scope.PROJECT}
-            initialValues={{
-              environment: get(stage, 'stage.spec.infrastructure.environment', {}),
-              environmentRef:
-                scope === Scope.PROJECT
-                  ? get(stage, 'stage.spec.infrastructure.environmentRef', '')
-                  : RUNTIME_INPUT_VALUE
-            }}
-            allowableTypes={allowableTypes}
-            onUpdate={val => updateEnvStep(val)}
-            factory={factory}
-            stepViewType={StepViewType.Edit}
-          />
-        </Card>
-        <div className={stageCss.tabHeading} id="infrastructureDefinition">
-          <StringWithTooltip
-            tooltipId="pipelineStep.infrastructureDefinition"
-            stringId="pipelineSteps.deploy.infrastructure.infraDefinition"
-          />
-        </div>
+        {contextType !== PipelineContextType.Standalone && (
+          <>
+            <div className={stageCss.tabHeading} id="environment">
+              {getString('environment')}
+            </div>
+            <Card className={stageCss.sectionCard}>
+              <StepWidget
+                type={StepType.DeployEnvironment}
+                readonly={isReadonly || scope !== Scope.PROJECT}
+                initialValues={{
+                  environment: get(stage, 'stage.spec.infrastructure.environment', {}),
+                  environmentRef:
+                    scope === Scope.PROJECT
+                      ? get(stage, 'stage.spec.infrastructure.environmentRef', '')
+                      : RUNTIME_INPUT_VALUE
+                }}
+                allowableTypes={allowableTypes}
+                onUpdate={val => updateEnvStep(val)}
+                factory={factory}
+                stepViewType={StepViewType.Edit}
+              />
+            </Card>
+            <div className={stageCss.tabHeading} id="infrastructureDefinition">
+              <StringWithTooltip
+                tooltipId="pipelineStep.infrastructureDefinition"
+                stringId="pipelineSteps.deploy.infrastructure.infraDefinition"
+              />
+            </div>
+          </>
+        )}
         <Card className={stageCss.sectionCard}>
           {!isServerlessDeploymentType(selectedDeploymentType) && (
             <Text margin={{ bottom: 'medium' }} className={stageCss.info}>
@@ -499,7 +507,9 @@ export default function DeployInfraSpecifications(props: React.PropsWithChildren
             }}
           />
         </Card>
-        {selectedInfrastructureType && !isServerlessDeploymentType(selectedDeploymentType) ? (
+        {contextType !== PipelineContextType.Standalone &&
+        selectedInfrastructureType &&
+        !isServerlessDeploymentType(selectedDeploymentType) ? (
           <Accordion className={stageCss.accordion} activeId="dynamicProvisioning">
             <Accordion.Panel
               id="dynamicProvisioning"

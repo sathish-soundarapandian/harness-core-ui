@@ -8,6 +8,7 @@
 import React, { useContext, useMemo, useRef } from 'react'
 import ReactDOM from 'react-dom'
 import { useParams } from 'react-router-dom'
+import { defaultTo } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import { Card, Container, Layout, Text, PageError } from '@wings-software/uicore'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
@@ -107,24 +108,39 @@ export const InstanceCountHistory: React.FC = () => {
     return Object.values(envMap)
       .slice(0, 49) // Todo - Jasmeet - Handle UX for more than 50 series
       .map((envSeries, index) => ({
-        data: Object.keys(envSeries)
+        custom: Object.keys(envSeries)
           .map(envKey => ({ x: parseInt(envKey), y: envSeries[envKey] }))
           .sort((valA, valB) => valA.x - valB.x),
+        data: Object.values(envSeries),
         color: instanceCountHistoryChartColors[index % instanceCountHistoryChartColors.length]
       }))
   }, [data])
 
+  const dataList = data?.data?.timeValuePairList
   const customChartOptions: Highcharts.Options = useMemo(
     () => ({
       chart: { height: 220, spacing: [25, 0, 25, 0] },
       legend: { enabled: false },
       xAxis: {
+        title: {
+          text: 'Date'
+        },
         allowDecimals: false,
         labels: {
-          enabled: false
+          formatter: function () {
+            let time = new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short' })
+            if (dataList?.length) {
+              const val = dataList?.[this.pos]?.timestamp
+              time = val ? new Date(val).toLocaleDateString('en-US', { day: 'numeric', month: 'short' }) : time
+            }
+            return time
+          }
         }
       },
       yAxis: {
+        title: {
+          text: '# of Instances'
+        },
         max: Math.max(...(data?.data?.timeValuePairList || []).map(timeValuePair => timeValuePair.value?.count || 0))
       },
       tooltip: {
@@ -145,7 +161,8 @@ export const InstanceCountHistory: React.FC = () => {
               mouseOver: function () {
                 const el = document.getElementById('instance-count-history-widget-tooltip')
                 if (el) {
-                  const timestamp = this.options.x
+                  const custom = this.series.userOptions.custom
+                  const timestamp = defaultTo(custom?.[this.x].x, 0)
                   const tooltipProps = {
                     timestamp,
                     labels: [getString('cd.serviceDashboard.envName'), getString('common.instanceLabel')],

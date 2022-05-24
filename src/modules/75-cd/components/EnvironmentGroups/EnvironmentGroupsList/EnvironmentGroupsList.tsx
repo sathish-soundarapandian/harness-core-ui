@@ -196,7 +196,7 @@ function EnvironmentGroupsListHeaders() {
         {getString('typeLabel').toUpperCase()}
       </Text>
       <Text width={'40%'} font={{ variation: FontVariation.TABLE_HEADERS }} role="button" tabIndex={0}>
-        {getString('lastUpdatedBy').toUpperCase()}
+        {getString('lastUpdated').toUpperCase()}
       </Text>
     </Layout.Horizontal>
   )

@@ -729,7 +729,9 @@ template:
     errorWhileUpdating: Error occurred updating Template
   deleteTemplate:
     templatesDeleted: 'Templates "{{ name }}" Deleted'
-    errorWhileDeleting: Error occurred deleting Templates
+    templateDeleted: 'Template "{{ name }}" Deleted'
+    errorWhileDeletingTemplates: Error occurred deleting Templates
+    errorWhileDeletingTemplate: Error occurred deleting Template
 viewLatest: View latest
 viewUsage: View Usage
 selected: 'Selected:'
@@ -840,8 +842,6 @@ noexpiration: No Expiration
 subscriptionPlaceholder: 'Select or add Subscription Id'
 azureConnector: Azure Connector
 environmentList: Environment List
-environment:
-  fetchNext: Fetching Environments
 environmentGroup:
   label: Environment Group
   new: New Environment Group

@@ -756,7 +756,8 @@ const _deletePipelineCache = async (
 export enum PipelineContextType {
   Pipeline = 'Pipeline',
   StageTemplate = 'StageTemplate',
-  PipelineTemplate = 'PipelineTemplate'
+  PipelineTemplate = 'PipelineTemplate',
+  Standalone = 'Standalone'
 }
 
 export const PipelineContext = React.createContext<PipelineContextInterface>({

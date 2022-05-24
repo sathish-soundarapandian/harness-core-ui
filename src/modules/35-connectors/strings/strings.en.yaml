@@ -82,6 +82,7 @@ connectivityMode:
 title:
   k8sCluster: 'Kubernetes Cluster'
   gcpConnector: 'Google Cloud Provider'
+  pdcConnector: 'Physical Data Center'
   helmConnector: 'HTTP Helm Repo'
   gitConnector: 'Git Connector'
   githubConnector: 'GitHub Connector'
@@ -117,6 +118,7 @@ name_labels:
   Bitbucket: 'Bitbucket Connector Name'
   Docker: 'Docker Connector Name'
   GCP: 'GCP Connector Name'
+  PDC: 'PDC Connector Name'
   gcpKms: 'GCP KMS Connector Name'
   AWS: 'AWS Connector Name'
   AwsCodeCommit: 'AWS CodeCommit Name'
@@ -827,6 +829,15 @@ ceGcp:
     heading: '{{ $.common.labelTestConnection }}'
     step1: 'Verifying GCP connector setup'
     error: 'Could not verify connectivity'
+pdc:
+  hosts: 'Hosts'
+  hostsRule: 'Enter JSON or comma separated list here'
+  hostsUpload1: 'Drop JSON file here'
+  hostsUpload2: 'or click to upload'
+  errorUploading: 'Uploading file error'
+  editHosts: 'Edit hosts'
+  testConnection:
+    step1: 'Validating the PDC hosts connectivity'
 connectorReferenceText: "can't be deleted as it is being referenced by other entities. To see the list of entities referencing this connector,"
 cantDeleteConnector: "Can't Delete Connector"
 policyEvaluations:

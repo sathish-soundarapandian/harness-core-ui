@@ -203,7 +203,6 @@ export interface StringsMap {
   'common.entityReferenceSubTitle': string
   'common.entityReferenceTitle': string
   'common.entityType': string
-  'common.environment.fetchNext': string
   'common.environmentCreated': string
   'common.environmentGroup.createNew': string
   'common.environmentGroup.created': string
@@ -713,7 +712,9 @@ export interface StringsMap {
   'common.tagName': string
   'common.targetBranch': string
   'common.targetBranchPlaceholder': string
-  'common.template.deleteTemplate.errorWhileDeleting': string
+  'common.template.deleteTemplate.errorWhileDeletingTemplate': string
+  'common.template.deleteTemplate.errorWhileDeletingTemplates': string
+  'common.template.deleteTemplate.templateDeleted': string
   'common.template.deleteTemplate.templatesDeleted': string
   'common.template.label': string
   'common.template.saveAsNewTemplateHeading': string
@@ -2003,6 +2004,7 @@ export interface StringsMap {
   'connectors.name_labels.HttpHelmRepo': string
   'connectors.name_labels.Kubernetes': string
   'connectors.name_labels.Nexus': string
+  'connectors.name_labels.PDC': string
   'connectors.name_labels.SecretManager': string
   'connectors.name_labels.Splunk': string
   'connectors.name_labels.gcpKms': string
@@ -2020,6 +2022,13 @@ export interface StringsMap {
   'connectors.nexus.nexusServerUrl': string
   'connectors.pagerDutyConnectorDetails': string
   'connectors.parameters': string
+  'connectors.pdc.editHosts': string
+  'connectors.pdc.errorUploading': string
+  'connectors.pdc.hosts': string
+  'connectors.pdc.hostsRule': string
+  'connectors.pdc.hostsUpload1': string
+  'connectors.pdc.hostsUpload2': string
+  'connectors.pdc.testConnection.step1': string
   'connectors.policyEvaluations.failedToSave': string
   'connectors.policyEvaluations.warning': string
   'connectors.prometheus.urlValidation': string
@@ -2122,6 +2131,7 @@ export interface StringsMap {
   'connectors.title.jira': string
   'connectors.title.k8sCluster': string
   'connectors.title.nexus': string
+  'connectors.title.pdcConnector': string
   'connectors.title.secretManager': string
   'connectors.title.serviceNow': string
   'connectors.title.splunk': string
@@ -3568,6 +3578,11 @@ export interface StringsMap {
   'cd.editIdError': string
   'cd.enterTragets': string
   'cd.enterWorkDirectory': string
+  'cd.environment.createSubTitle': string
+  'cd.environment.delete': string
+  'cd.environment.deleteConfirmation': string
+  'cd.environment.deleted': string
+  'cd.environment.fetchNext': string
   'cd.environmentCreated': string
   'cd.environmentDelete': string
   'cd.environmentDeleteMessage': string
@@ -3586,6 +3601,13 @@ export interface StringsMap {
   'cd.gitOps': string
   'cd.gitOpsWizardTitle': string
   'cd.harnessManagedGitOpsWizardTitle': string
+  'cd.infrastructure.createNew': string
+  'cd.infrastructure.created': string
+  'cd.infrastructure.delete': string
+  'cd.infrastructure.deleteConfirmation': string
+  'cd.infrastructure.deleted': string
+  'cd.infrastructure.infrastructureDefinitions': string
+  'cd.infrastructure.noInfrastructureInEnvironment': string
   'cd.installAdapterHelperText': string
   'cd.launchArgo': string
   'cd.learnMore': string
