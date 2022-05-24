@@ -55,9 +55,9 @@ export default (
     <Route exact path={[justAccountPath({ ...accountPathProps }), routes.toHome({ ...accountPathProps })]}>
       <RedirectToHome />
     </Route>
-    <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toOauthRedirect({ ...accountPathProps })} exact>
+    <Route path={routes.toOauthRedirect({ ...accountPathProps })} exact>
       <OAuthRedirect />
-    </RouteWithLayout>
+    </Route>
     <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toAccountResources({ ...accountPathProps })} exact>
       <AccountResources />
     </RouteWithLayout>

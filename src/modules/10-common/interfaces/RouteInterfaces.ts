@@ -20,7 +20,7 @@ export interface DashboardPathProps extends AccountPathProps {
   folderId: string
 }
 
-export interface OAuthRedirectParams {
+export interface OAuthRedirectParams extends AccountPathProps {
   code: string
 }
 

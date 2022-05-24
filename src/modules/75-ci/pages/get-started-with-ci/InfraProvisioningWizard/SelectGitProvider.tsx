@@ -6,6 +6,7 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import type { FormikContextType, FormikProps } from 'formik'
 import cx from 'classnames'
@@ -27,9 +28,11 @@ import {
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
+import routes from '@common/RouteDefinitions'
 import { OAuthProviders, OAuthProviderType } from '@common/constants/OAuthProviders'
 import { joinAsASentence } from '@common/utils/StringUtils'
 import { TestStatus } from '@common/components/TestConnectionWidget/TestConnectionWidget'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { Connectors } from '@connectors/constants'
 import {
   AllSaaSGitProviders,
@@ -44,7 +47,7 @@ import {
 
 import css from './InfraProvisioningWizard.module.scss'
 
-const OAUTH_REDIRECT_URL_PREFIX = `${location.protocol}//${location.host}/gateway/`
+const OAUTH_REDIRECT_URL_PREFIX = `${location.protocol}//${location.host}`
 
 export interface SelectGitProviderRef {
   values: SelectGitProviderInterface
@@ -84,6 +87,7 @@ const SelectGitProviderRef = (
   const [authMethod, setAuthMethod] = useState<GitAuthenticationMethod>()
   const [testConnectionStatus, setTestConnectionStatus] = useState<TestStatus>(TestStatus.NOT_INITIATED)
   const formikRef = useRef<FormikContextType<SelectGitProviderInterface>>()
+  const { accountId } = useParams<AccountPathProps>()
 
   useEffect(() => {
     if (authMethod === GitAuthenticationMethod.AccessToken) {
@@ -569,7 +573,10 @@ const SelectGitProviderRef = (
                                   gitProvider && gitProvider.type.toUpperCase() === oAuthProvider.name.toUpperCase()
                               )[0]
                               if (oAuthProviderDetails) {
-                                const redirectionUrl = `${OAUTH_REDIRECT_URL_PREFIX}api/users/${oAuthProviderDetails.url}`
+                                const clientId = 'b504dc20b79631b0fe4e'
+                                const redirect_uri = routes.toOauthRedirect({ accountId })
+                                const completeUrl = `${OAUTH_REDIRECT_URL_PREFIX}/#${redirect_uri}`
+                                const redirectionUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${completeUrl}&scope=repo`
                                 window.open(redirectionUrl, '_blank')
                               }
                               formikProps.setFieldValue('gitAuthenticationMethod', GitAuthenticationMethod.OAuth)
