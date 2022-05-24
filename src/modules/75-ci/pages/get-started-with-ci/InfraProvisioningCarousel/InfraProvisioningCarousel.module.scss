@@ -8,7 +8,12 @@
 .main {
   width: 855px;
   min-height: 580px;
-  padding: var(--spacing-huge) var(--spacing-xxxlarge);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.closeBtn {
   span[class*='Dialog--close'] {
     visibility: hidden !important;
   }

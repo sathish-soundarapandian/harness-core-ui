@@ -6,6 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { debounce } from 'lodash-es'
 import type { Column, CellProps } from 'react-table'
@@ -18,16 +19,18 @@ import {
   RadioButton,
   Color,
   TextInput,
-  FormError
+  FormError,
+  Icon
 } from '@harness/uicore'
+import { useGetAllUserRepos, UserRepoResponse } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-
-import { repos } from './mocks/repositories'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { ACCOUNT_SCOPE_PREFIX, getFullRepoName } from './Constants'
 
 import css from './InfraProvisioningWizard.module.scss'
 
 export interface SelectRepositoryRef {
-  repository: Repository
+  repository: UserRepoResponse
 }
 
 export type SelectRepositoryForwardRef =
@@ -36,31 +39,82 @@ export type SelectRepositoryForwardRef =
   | null
 
 interface SelectRepositoryProps {
-  selectedRepository?: Repository
+  selectedRepository?: UserRepoResponse
   showError?: boolean
+  validatedConnectorRef?: string
+  disableNextBtn: () => void
+  enableNextBtn: () => void
 }
 
 const SelectRepositoryRef = (
   props: SelectRepositoryProps,
   forwardRef: SelectRepositoryForwardRef
 ): React.ReactElement => {
-  const { selectedRepository, showError } = props
+  const { selectedRepository, showError, validatedConnectorRef, disableNextBtn, enableNextBtn } = props
   const { getString } = useStrings()
-  const [repository, setRepository] = useState<Repository | undefined>(selectedRepository)
-  const [, setQuery] = useState<string>()
+  const [repository, setRepository] = useState<UserRepoResponse | undefined>(selectedRepository)
+  const [query, setQuery] = useState<string>('')
+  const [repositories, setRepositories] = useState<UserRepoResponse[]>()
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const {
+    data: repoData,
+    loading: fetchingRepositories,
+    refetch: fetchRepositories
+  } = useGetAllUserRepos({
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier,
+      connectorRef: ''
+    },
+    lazy: true
+  })
+
+  useEffect(() => {
+    if (validatedConnectorRef) {
+      fetchRepositories({
+        queryParams: {
+          accountIdentifier: accountId,
+          projectIdentifier,
+          orgIdentifier,
+          connectorRef: `${ACCOUNT_SCOPE_PREFIX}${validatedConnectorRef}`
+        }
+      })
+    }
+  }, [validatedConnectorRef])
+
+  useEffect(() => {
+    setRepositories(repoData?.data)
+  }, [repoData?.data])
 
   const debouncedRepositorySearch = useCallback(
-    debounce((query: string): void => {
-      setQuery(query)
+    debounce((queryText: string): void => {
+      setQuery(queryText)
     }, 500),
     []
   )
+
+  useEffect(() => {
+    if (fetchingRepositories) {
+      disableNextBtn()
+    } else {
+      enableNextBtn()
+    }
+  }, [fetchingRepositories])
 
   useEffect(() => {
     if (selectedRepository) {
       setRepository(selectedRepository)
     }
   }, [selectedRepository])
+
+  useEffect(() => {
+    if (query) {
+      setRepositories((repoData?.data || []).filter(item => item.name?.includes(query)))
+    } else {
+      setRepositories(repoData?.data)
+    }
+  }, [query])
 
   useEffect(() => {
     if (!forwardRef) {
@@ -78,35 +132,51 @@ const SelectRepositoryRef = (
     }
   })
 
+  const renderView = React.useCallback((): JSX.Element => {
+    if (fetchingRepositories) {
+      return (
+        <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small" padding={{ top: 'large' }}>
+          <Icon name="steps-spinner" color="primary7" size={25} />
+          <Text font={{ variation: FontVariation.H6 }}>{getString('ci.getStartedWithCI.fetchingRepos')}</Text>
+        </Layout.Horizontal>
+      )
+    } else {
+      if (repositories && Array.isArray(repositories) && repositories?.length > 0) {
+        return <RepositorySelectionTable repositories={repositories} onRowClick={setRepository} />
+      } else {
+        return (
+          <Text flex={{ justifyContent: 'center' }} padding={{ top: 'medium' }}>
+            {getString('noSearchResultsFoundPeriod')}
+          </Text>
+        )
+      }
+    }
+  }, [fetchingRepositories, repositories, repoData?.data])
+
   const showValidationErrorForRepositoryNotSelected = showError && !repository?.name
 
   return (
     <Layout.Vertical spacing="small">
       <Text font={{ variation: FontVariation.H4 }}>{getString('ci.getStartedWithCI.selectYourRepo')}</Text>
       <Text font={{ variation: FontVariation.BODY2 }}>{getString('ci.getStartedWithCI.codebaseHelptext')}</Text>
-      <Container
-        padding={{ top: 'small' }}
-        className={cx(css.repositories, { [css.repositoriesWithError]: showValidationErrorForRepositoryNotSelected })}
-      >
+      <Container padding={{ top: 'small' }} className={cx(css.repositories)}>
         <TextInput
           leftIcon="search"
           placeholder={getString('ci.getStartedWithCI.searchRepo')}
           className={css.repositorySearch}
           leftIconProps={{ name: 'search', size: 18, padding: 'xsmall' }}
           onChange={e => {
-            const queryText = (e.currentTarget as HTMLInputElement).value?.trim()
-            if (queryText) {
-              debouncedRepositorySearch(queryText)
-            }
+            debouncedRepositorySearch((e.currentTarget as HTMLInputElement).value)
           }}
+          disabled={fetchingRepositories}
         />
-        <RepositorySelectionTable repositories={repos} onRowClick={setRepository} />
+        {renderView()}
         {showValidationErrorForRepositoryNotSelected ? (
           <Container padding={{ top: 'xsmall' }}>
             <FormError
               name={'repository'}
-              errorMessage={getString('fieldRequired', {
-                field: getString('repository')
+              errorMessage={getString('ci.getStartedWithCI.plsChoose', {
+                field: `a ${getString('repository').toLowerCase()}`
               })}
             />
           </Container>
@@ -116,18 +186,14 @@ const SelectRepositoryRef = (
   )
 }
 
-interface Repository {
-  name: string
-}
-
 interface RepositorySelectionTableProps {
-  repositories: Repository[]
-  onRowClick: (repo: Repository) => void
+  repositories: UserRepoResponse[]
+  onRowClick: (repo: UserRepoResponse) => void
 }
 
 function RepositorySelectionTable({ repositories, onRowClick }: RepositorySelectionTableProps): React.ReactElement {
   const { getString } = useStrings()
-  const [selectedRow, setSelectedRow] = useState<Repository | undefined>(undefined)
+  const [selectedRow, setSelectedRow] = useState<UserRepoResponse | undefined>(undefined)
 
   useEffect(() => {
     if (selectedRow) {
@@ -135,12 +201,12 @@ function RepositorySelectionTable({ repositories, onRowClick }: RepositorySelect
     }
   }, [selectedRow])
 
-  const columns: Column<Repository>[] = React.useMemo(
+  const columns: Column<UserRepoResponse>[] = React.useMemo(
     () => [
       {
         accessor: 'name',
         width: '100%',
-        Cell: ({ row }: CellProps<Repository>) => {
+        Cell: ({ row }: CellProps<UserRepoResponse>) => {
           const { name: repositoryName } = row.original
           const isRowSelected = repositoryName === selectedRow?.name
           return (
@@ -156,7 +222,7 @@ function RepositorySelectionTable({ repositories, onRowClick }: RepositorySelect
                 font={{ variation: FontVariation.BODY2 }}
                 color={isRowSelected ? Color.PRIMARY_7 : Color.GREY_900}
               >
-                {repositoryName}
+                {getFullRepoName(row.original)}
               </Text>
             </Layout.Horizontal>
           )
@@ -168,7 +234,7 @@ function RepositorySelectionTable({ repositories, onRowClick }: RepositorySelect
   )
 
   return (
-    <TableV2<Repository>
+    <TableV2<UserRepoResponse>
       columns={columns}
       data={repositories || []}
       hideHeaders={true}

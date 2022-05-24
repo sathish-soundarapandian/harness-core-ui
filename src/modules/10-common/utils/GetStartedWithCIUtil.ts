@@ -22,8 +22,7 @@ import {
   DEFAULT_ORG_NAME,
   DEFAULT_PROJECT_ID,
   DEFAULT_PROJECT_NAME,
-  Status,
-  UNIQUE_ORG_ID
+  Status
 } from '@common/utils/CIConstants'
 import { Editions } from '@common/constants/SubscriptionTypes'
 
@@ -108,10 +107,11 @@ const startPlanAndSetupProject = ({
       const { data: startPlanData, status: startPlanStatus } = startPlanResponse
       /* istanbul ignore else */ if (startPlanStatus === Status.SUCCESS) {
         handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, 'ci', startPlanData)
+        const UNIQUE_PROJECT_ID = `${DEFAULT_PROJECT_ID}_${new Date().getTime().toString()}`
         postProjectPromise({
           body: {
             project: {
-              identifier: DEFAULT_PROJECT_ID,
+              identifier: UNIQUE_PROJECT_ID,
               name: DEFAULT_PROJECT_NAME,
               orgIdentifier: organizationId
             }
@@ -168,10 +168,11 @@ export const setUpCI = ({
           })
         } else {
           // Org with id "default" doesn't exist. We need to create an org in this case.
+          const UNIQUE_ORD_ID = `${DEFAULT_ORG_ID}_${new Date().getTime().toString()}`
           postOrganizationPromise({
             body: {
               organization: {
-                identifier: UNIQUE_ORG_ID,
+                identifier: UNIQUE_ORD_ID,
                 name: DEFAULT_ORG_NAME
               }
             },

@@ -8,7 +8,6 @@
 import React from 'react'
 import { Formik, FormikForm, Accordion, Container } from '@wings-software/uicore'
 import get from 'lodash/get'
-import type { K8sDirectInfraYaml } from 'services/ci'
 import { Connectors } from '@connectors/constants'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -29,6 +28,7 @@ import type { DependencyProps, DependencyData, DependencyDataUI } from './Depend
 import { CIStep } from '../CIStep/CIStep'
 import { CIStepOptionalConfig } from '../CIStep/CIStepOptionalConfig'
 import { AllMultiTypeInputTypesForStep, useGetPropagatedStageById } from '../CIStep/StepUtils'
+import { CIBuildInfrastructureType } from '../../../constants/Constants'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const DependencyBase = (
@@ -46,7 +46,7 @@ export const DependencyBase = (
 
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
 
-  const buildInfrastructureType = get(currentStage, 'stage.spec.infrastructure.type') as K8sDirectInfraYaml['type']
+  const buildInfrastructureType: CIBuildInfrastructureType = get(currentStage, 'stage.spec.infrastructure.type')
 
   return (
     <Formik<DependencyDataUI>
@@ -130,11 +130,13 @@ export const DependencyBase = (
                         stepViewType={stepViewType}
                         readonly={readonly}
                         enableFields={{
-                          'spec.privileged': {},
+                          ...(buildInfrastructureType !== CIBuildInfrastructureType.KubernetesHosted && {
+                            'spec.privileged': {}
+                          }),
                           'spec.envVariables': { tooltipId: 'dependencyEnvironmentVariables' },
                           'spec.entrypoint': {},
                           'spec.args': {},
-                          ...(buildInfrastructureType === 'VM' && {
+                          ...(buildInfrastructureType === CIBuildInfrastructureType.VM && {
                             'spec.portBindings': {}
                           })
                         }}

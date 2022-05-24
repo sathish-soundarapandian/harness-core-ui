@@ -29,6 +29,7 @@ export interface DetailPageTemplateProps {
   /** Note: Use absolute position to style it */
   menuItems?: RbacOptionsMenuButtonProps['items']
   metaData?: Record<string, string>
+  toolbar?: React.ReactNode
 }
 
 export const DetailPageTemplate: React.FC<DetailPageTemplateProps> = ({
@@ -38,7 +39,8 @@ export const DetailPageTemplate: React.FC<DetailPageTemplateProps> = ({
   identifier,
   children,
   menuItems = [],
-  metaData = {}
+  metaData = {},
+  toolbar
 }) => {
   const { getString } = useStrings()
 
@@ -82,6 +84,7 @@ export const DetailPageTemplate: React.FC<DetailPageTemplateProps> = ({
           </>
         }
       />
+      {toolbar && <Page.SubHeader>{toolbar}</Page.SubHeader>}
       <Page.Body>{children}</Page.Body>
     </>
   )

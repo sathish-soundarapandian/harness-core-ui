@@ -10,7 +10,8 @@ import { render, act, fireEvent } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { InfraProvisioningWizard } from '../InfraProvisioningWizard'
-import { InfraProvisiongWizardStepId } from '../Constants'
+import { getFullRepoName, InfraProvisiongWizardStepId } from '../Constants'
+import { repos } from '../mocks/repositories'
 
 jest.mock('services/pipeline-ng', () => ({
   createPipelineV2Promise: jest.fn().mockImplementation(() =>
@@ -20,7 +21,33 @@ jest.mock('services/pipeline-ng', () => ({
         identifier: 'Default_Pipeline'
       }
     })
+  ),
+  useCreateTrigger: jest.fn().mockImplementation(() =>
+    Promise.resolve({
+      status: 'SUCCESS'
+    })
   )
+}))
+
+jest.mock('services/cd-ng', () => ({
+  useProvisionResourcesForCI: jest.fn().mockImplementation(() =>
+    Promise.resolve({
+      status: 'SUCCESS'
+    })
+  ),
+  useGetDelegateInstallStatus: jest.fn().mockImplementation(() =>
+    Promise.resolve({
+      status: 'SUCCESS'
+    })
+  ),
+  useCreateDefaultScmConnector: jest.fn().mockImplementation(() =>
+    Promise.resolve({
+      status: 'SUCCESS'
+    })
+  ),
+  useGetAllUserRepos: jest.fn().mockImplementation(() => {
+    return { data: { data: repos, status: 'SUCCESS' }, refetch: jest.fn(), error: null, loading: false }
+  })
 }))
 
 const pathParams = { accountId: 'accountId', orgIdentifier: 'orgId', projectIdentifier: 'projectId' }
@@ -41,9 +68,9 @@ describe('Test SelectRepository component', () => {
       'div[class*="FormError--errorDiv"][data-name="repository"]'
     )
     expect(repositoryValidationError).toBeInTheDocument()
-    expect(getByText('fieldRequired')).toBeTruthy()
-
-    const testRepository = getByText('wings-software/monaco')
+    expect(getByText('ci.getStartedWithCI.plsChoose')).toBeTruthy()
+    const testRepoName = getFullRepoName(repos[1])
+    const testRepository = getByText(testRepoName)
     expect(testRepository).toBeInTheDocument()
     await act(async () => {
       fireEvent.click(testRepository)
@@ -55,20 +82,20 @@ describe('Test SelectRepository component', () => {
     ) as HTMLInputElement
     expect(repositorySearch).toBeTruthy()
     await act(async () => {
-      fireEvent.change(repositorySearch!, { target: { value: 'wings-software/monaco' } })
+      fireEvent.change(repositorySearch!, { target: { value: testRepoName } })
     })
-    expect(getByText('wings-software/monaco')).toBeInTheDocument()
+    expect(getByText(testRepoName)).toBeInTheDocument()
   })
 
   const routesToPipelineStudio = jest.spyOn(routes, 'toPipelineStudio')
-  test('Should create a pipeline if a repository is selected and user clicks on next', async () => {
+  test('Should not create a pipeline if a repository is selected and user clicks on next without successful Test connection', async () => {
     const { getByText } = render(
       <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
         <InfraProvisioningWizard lastConfiguredWizardStepId={InfraProvisiongWizardStepId.SelectRepository} />
       </TestWrapper>
     )
-
-    const testRepository = getByText('wings-software/monaco')
+    const testRepoName = getFullRepoName(repos[1])
+    const testRepository = getByText(testRepoName)
     expect(testRepository).toBeInTheDocument()
     await act(async () => {
       fireEvent.click(testRepository)
@@ -77,6 +104,6 @@ describe('Test SelectRepository component', () => {
     await act(async () => {
       fireEvent.click(createPipelineBtn)
     })
-    expect(routesToPipelineStudio).toHaveBeenCalled()
+    expect(routesToPipelineStudio).not.toHaveBeenCalled()
   })
 })

@@ -34,7 +34,7 @@ import { StepType as StepsStepType } from '@pipeline/components/PipelineSteps/Pi
 import { AdvancedPanels } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import type { BuildStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import type { K8sDirectInfraYaml, UseFromStageInfraYaml, VmInfraYaml, VmPoolYaml } from 'services/ci'
+import type { Infrastructure, K8sDirectInfraYaml, UseFromStageInfraYaml, VmInfraYaml, VmPoolYaml } from 'services/ci'
 import { FeatureFlag } from '@common/featureFlags'
 import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
 import { useAddStepTemplate } from '@pipeline/hooks/useAddStepTemplate'
@@ -43,6 +43,7 @@ import BuildInfraSpecifications from '../BuildInfraSpecifications/BuildInfraSpec
 import BuildStageSpecifications from '../BuildStageSpecifications/BuildStageSpecifications'
 import BuildAdvancedSpecifications from '../BuildAdvancedSpecifications/BuildAdvancedSpecifications'
 import { BuildTabs } from '../CIPipelineStagesUtils'
+import { CIBuildInfrastructureType } from '../../../constants/Constants'
 import css from './BuildStageSetupShell.module.scss'
 
 export const MapStepTypeToIcon: { [key: string]: HarnessIconName } = {
@@ -111,7 +112,8 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
       ((stageData?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.connectorRef &&
         (stageData?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.namespace) ||
       (stageData?.spec?.infrastructure as UseFromStageInfraYaml)?.useFromStage ||
-      ((stageData?.spec?.infrastructure as VmInfraYaml)?.spec as VmPoolYaml)?.spec?.identifier
+      ((stageData?.spec?.infrastructure as VmInfraYaml)?.spec as VmPoolYaml)?.spec?.identifier ||
+      (stageData?.spec?.infrastructure as Infrastructure)?.type === CIBuildInfrastructureType.KubernetesHosted
     )
     const execution = !!stageData?.spec?.execution?.steps?.length
     setFilledUpStages({ specifications, infra, execution })

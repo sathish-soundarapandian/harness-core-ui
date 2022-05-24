@@ -17,12 +17,13 @@ import {
   Card,
   Accordion,
   ThumbnailSelect,
-  IconName,
+  ThumbnailSelectProps,
   Container,
   getMultiTypeFromValue,
   Icon,
   MultiTypeInputType
 } from '@wings-software/uicore'
+import type { Item } from '@wings-software/uicore/dist/components/ThumbnailSelect/ThumbnailSelect'
 import { isEmpty, isUndefined, set, uniqBy, get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { FontVariation } from '@harness/design-system'
@@ -60,11 +61,19 @@ import { useGitScope } from '@pipeline/utils/CIUtils'
 import { MultiTypeList } from '@common/components/MultiTypeList/MultiTypeList'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { BuildStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import type { K8sDirectInfraYaml, UseFromStageInfraYaml, VmInfraYaml, VmPoolYaml } from 'services/ci'
+import type { K8sDirectInfraYaml, UseFromStageInfraYaml, VmInfraYaml, VmPoolYaml, Infrastructure } from 'services/ci'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { k8sLabelRegex, k8sAnnotationRegex } from '@common/utils/StringUtils'
 import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
 import { BuildTabs } from '../CIPipelineStagesUtils'
+import {
+  KUBERNETES_HOSTED_INFRA_ID,
+  ProvisioningStatus
+} from '../../../pages/get-started-with-ci/InfraProvisioningWizard/Constants'
+import { InfraProvisioningCarousel } from '../../../pages/get-started-with-ci/InfraProvisioningCarousel/InfraProvisioningCarousel'
+import { ProvisioningStatusPill } from '../../../pages/get-started-with-ci/InfraProvisioningWizard/ProvisioningStatusPill'
+import { useProvisionDelegateForHostedBuilds } from '../../../hooks/useProvisionDelegateForHostedBuilds'
+import { CIBuildInfrastructureType } from '../../../constants/Constants'
 import css from './BuildInfraSpecifications.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -72,13 +81,6 @@ const logger = loggerFor(ModuleName.CD)
 const k8sClusterKeyRef = 'connectors.title.k8sCluster'
 const namespaceKeyRef = 'pipelineSteps.build.infraSpecifications.namespace'
 const poolIdKeyRef = 'pipeline.buildInfra.poolId'
-
-interface BuildInfraTypeItem {
-  label: string
-  icon: IconName
-  value: K8sDirectInfraYaml['type']
-  disabled?: boolean
-}
 
 interface KubernetesBuildInfraFormValues {
   connectorRef?: string
@@ -115,7 +117,7 @@ interface AWSVMInfraFormValues {
 }
 
 type BuildInfraFormValues = (KubernetesBuildInfraFormValues | AWSVMInfraFormValues) & {
-  buildInfraType?: K8sDirectInfraYaml['type']
+  buildInfraType?: Infrastructure['type']
 }
 
 enum Modes {
@@ -236,29 +238,6 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const gitScope = useGitScope()
-  const { CI_VM_INFRASTRUCTURE } = useFeatureFlags()
-
-  const buildInfraTypes: BuildInfraTypeItem[] = [
-    {
-      label: getString('pipeline.serviceDeploymentTypes.kubernetes'),
-      icon: 'service-kubernetes',
-      value: 'KubernetesDirect'
-    },
-    {
-      label: getString('ci.buildInfra.awsVMs'),
-      icon: 'service-aws',
-      value: 'VM'
-    }
-  ]
-
-  const scrollRef = React.useRef<HTMLDivElement | null>(null)
-
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<{
-    projectIdentifier: string
-    orgIdentifier: string
-    accountId: string
-  }>()
-
   const {
     state: {
       pipeline,
@@ -269,6 +248,45 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
     updateStage,
     getStageFromPipeline
   } = usePipelineContext()
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<{
+    projectIdentifier: string
+    orgIdentifier: string
+    accountId: string
+  }>()
+  const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
+  const formikRef = React.useRef<FormikProps<BuildInfraFormValues>>()
+  const { initiateProvisioning, delegateProvisioningStatus } = useProvisionDelegateForHostedBuilds()
+  const { CI_VM_INFRASTRUCTURE, CIE_HOSTED_BUILDS } = useFeatureFlags()
+  const showThumbnailSelect = CI_VM_INFRASTRUCTURE || CIE_HOSTED_BUILDS
+
+  const BuildInfraTypes: ThumbnailSelectProps['items'] = [
+    ...(CIE_HOSTED_BUILDS
+      ? [
+          {
+            label: getString('ci.getStartedWithCI.hostedByHarness'),
+            icon: 'harness',
+            value: CIBuildInfrastructureType.KubernetesHosted
+          } as Item
+        ]
+      : []),
+    {
+      label: getString('pipeline.serviceDeploymentTypes.kubernetes'),
+      icon: 'service-kubernetes',
+      value: CIBuildInfrastructureType.KubernetesDirect
+    },
+    ...(CI_VM_INFRASTRUCTURE
+      ? [
+          {
+            label: getString('ci.buildInfra.awsVMs'),
+            icon: 'service-aws',
+            value: CIBuildInfrastructureType.VM
+          } as Item
+        ]
+      : [])
+  ]
+  const [showInfraProvisioningCarousel, setShowInfraProvisioningCarousel] = useState<boolean>(false)
+
+  const scrollRef = React.useRef<HTMLDivElement | null>(null)
 
   const { stage } = getStageFromPipeline<BuildStageElementConfig>(selectedStageId || '')
 
@@ -284,14 +302,22 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
     (stage?.stage?.spec?.infrastructure as UseFromStageInfraYaml)?.useFromStage || ''
   )
 
-  const [buildInfraType, setBuildInfraType] = useState<K8sDirectInfraYaml['type'] | undefined>(
-    CI_VM_INFRASTRUCTURE ? undefined : 'KubernetesDirect'
+  const [buildInfraType, setBuildInfraType] = useState<Infrastructure['type'] | undefined>(
+    showThumbnailSelect ? undefined : CIBuildInfrastructureType.KubernetesDirect
   )
 
   React.useEffect(() => {
-    if (CI_VM_INFRASTRUCTURE) {
-      const stageBuildInfraType = (stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.type
-      const propagatedStageType = (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.type
+    if (delegateProvisioningStatus === ProvisioningStatus.IN_PROGRESS) {
+      setShowInfraProvisioningCarousel(true)
+    } else if (delegateProvisioningStatus === ProvisioningStatus.SUCCESS) {
+      formikRef?.current?.validateForm()
+    }
+  }, [delegateProvisioningStatus])
+
+  React.useEffect(() => {
+    if (showThumbnailSelect) {
+      const stageBuildInfraType = (stage?.stage?.spec?.infrastructure as Infrastructure)?.type
+      const propagatedStageType = (propagatedStage?.stage?.spec?.infrastructure as Infrastructure)?.type
       currentMode === Modes.NewConfiguration
         ? setBuildInfraType(stageBuildInfraType)
         : setBuildInfraType(propagatedStageType)
@@ -311,6 +337,18 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
       }
     }
   }, [pipeline?.stages?.length])
+
+  React.useEffect(() => {
+    subscribeForm({
+      tab: BuildTabs.INFRASTRUCTURE,
+      form: formikRef as React.MutableRefObject<FormikProps<unknown> | null>
+    })
+    return () =>
+      unSubscribeForm({
+        tab: BuildTabs.INFRASTRUCTURE,
+        form: formikRef as React.MutableRefObject<FormikProps<unknown> | null>
+      })
+  }, [])
 
   const otherBuildStagesWithInfraConfigurationOptions: { label: string; value: string }[] = []
 
@@ -345,7 +383,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
         (stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.annotations || {}
       ),
       labels: getInitialMapValues((stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.labels || {}),
-      buildInfraType: 'KubernetesDirect',
+      buildInfraType: CIBuildInfrastructureType.KubernetesDirect,
       priorityClassName: (stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
         ?.priorityClassName as unknown as string,
       automountServiceAccountToken: typeof autoServiceAccountToken === 'undefined' ? true : autoServiceAccountToken,
@@ -375,8 +413,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
   const getInitialValues = useMemo((): BuildInfraFormValues => {
     const additionalDefaultFields: { automountServiceAccountToken?: boolean } = {}
     if (
-      buildInfraType === 'KubernetesDirect' ||
-      (stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.type === 'KubernetesDirect'
+      buildInfraType === CIBuildInfrastructureType.KubernetesDirect ||
+      (stage?.stage?.spec?.infrastructure as Infrastructure)?.type === CIBuildInfrastructureType.KubernetesDirect
     ) {
       additionalDefaultFields.automountServiceAccountToken = true
     }
@@ -387,8 +425,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           buildInfraType: undefined
         }
       } else {
-        const infraType = (stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.type
-        if (infraType === 'KubernetesDirect') {
+        const infraType = (stage?.stage?.spec?.infrastructure as Infrastructure)?.type
+        if (infraType === CIBuildInfrastructureType.KubernetesDirect) {
           const connectorId =
             ((stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.connectorRef as string) || ''
           if (!isEmpty(connectorId)) {
@@ -402,19 +440,23 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
               ...getKubernetesInfraPayload
             }
           }
-        } else if (infraType === 'VM') {
+        } else if (infraType === CIBuildInfrastructureType.VM) {
           const identifier =
             ((stage?.stage?.spec?.infrastructure as VmInfraYaml)?.spec as VmPoolYaml)?.spec?.identifier || ''
           if (!isEmpty(identifier)) {
             return {
               poolId: identifier,
-              buildInfraType: 'VM'
+              buildInfraType: CIBuildInfrastructureType.VM
             }
           } else {
             return {
               poolId: '',
-              buildInfraType: 'VM'
+              buildInfraType: CIBuildInfrastructureType.VM
             }
+          }
+        } else if (CIE_HOSTED_BUILDS && infraType === CIBuildInfrastructureType.KubernetesHosted) {
+          return {
+            buildInfraType: CIBuildInfrastructureType.KubernetesHosted
           }
         }
         return {
@@ -440,25 +482,16 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
     }
   }, [stage])
 
-  const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
-
-  const formikRef = React.useRef<FormikProps<unknown> | null>(null)
-
-  React.useEffect(() => {
-    subscribeForm({ tab: BuildTabs.INFRASTRUCTURE, form: formikRef })
-    return () => unSubscribeForm({ tab: BuildTabs.INFRASTRUCTURE, form: formikRef })
-  }, [])
-
   const handleValidate = (values: any): void => {
     if (stage) {
-      const _buildInfraType = values.buildInfraType || buildInfraTypes[0].value
+      const _buildInfraType: Infrastructure['type'] = values.buildInfraType || BuildInfraTypes[0].value
       const errors: { [key: string]: string } = {}
       const stageData = produce(stage, draft => {
         if (currentMode === Modes.Propagate && values.useFromStage) {
           set(draft, 'stage.spec.infrastructure', {
             useFromStage: values.useFromStage
           })
-        } else {
+        } else if (_buildInfraType !== CIBuildInfrastructureType.KubernetesHosted) {
           const filteredLabels = getMapValues(
             Array.isArray(values.labels) ? values.labels.filter((val: any) => testLabelKey(val.key)) : values.labels
           )
@@ -482,7 +515,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             errors.initTimeout = e.message
           }
           const additionalKubernetesFields: { containerSecurityContext?: ContainerSecurityContext } = {}
-          if (_buildInfraType === 'KubernetesDirect') {
+          if (_buildInfraType === CIBuildInfrastructureType.KubernetesDirect) {
             const containerSecurityContext: ContainerSecurityContext = {
               capabilities: {}
             }
@@ -532,9 +565,9 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           set(
             draft,
             'stage.spec.infrastructure',
-            _buildInfraType === 'KubernetesDirect'
+            _buildInfraType === CIBuildInfrastructureType.KubernetesDirect
               ? {
-                  type: 'KubernetesDirect',
+                  type: CIBuildInfrastructureType.KubernetesDirect,
                   spec: {
                     connectorRef:
                       values?.connectorRef?.value ||
@@ -554,9 +587,9 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                     ...additionalKubernetesFields
                   }
                 }
-              : _buildInfraType === 'VM'
+              : _buildInfraType === CIBuildInfrastructureType.VM
               ? {
-                  type: 'VM',
+                  type: CIBuildInfrastructureType.VM,
                   spec: {
                     type: 'Pool',
                     spec: {
@@ -582,6 +615,13 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             // move deprecated runAsUser to containerSecurityContext
             delete (draft.stage?.spec?.infrastructure as K8sDirectInfraYaml).spec.runAsUser
           }
+        } else {
+          set(draft, 'stage.spec.infrastructure', {
+            type: CIBuildInfrastructureType.KubernetesHosted,
+            ...(delegateProvisioningStatus === ProvisioningStatus.SUCCESS && {
+              spec: { identifier: KUBERNETES_HOSTED_INFRA_ID }
+            })
+          })
         }
       })
 
@@ -907,14 +947,33 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
     )
 
   const renderBuildInfraMainSection = React.useCallback((): React.ReactElement => {
-    return buildInfraType === 'KubernetesDirect' ? (
-      renderKubernetesBuildInfraForm()
-    ) : buildInfraType === 'VM' ? (
-      renderAWSVMBuildInfraForm()
-    ) : (
-      <></>
-    )
-  }, [buildInfraType])
+    switch (buildInfraType) {
+      case CIBuildInfrastructureType.KubernetesDirect:
+        return renderKubernetesBuildInfraForm()
+      case CIBuildInfrastructureType.VM:
+        return renderAWSVMBuildInfraForm()
+      case CIBuildInfrastructureType.KubernetesHosted:
+        /* For Hosted K8s Build Infra, we populate infrastructure yaml only once provisioning is done. Once done, option to provision should not be shown. */
+        return !(stage?.stage?.spec?.infrastructure as any)?.spec?.identifier ? (
+          <Layout.Vertical spacing="medium">
+            <Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>
+              {getString('ci.getStartedWithCI.provisioningHelpText')}
+            </Text>
+
+            <Container width="25%" padding={{ bottom: 'medium' }}>
+              <ProvisioningStatusPill
+                provisioningStatus={delegateProvisioningStatus}
+                onStartProvisioning={() => initiateProvisioning()}
+              />
+            </Container>
+          </Layout.Vertical>
+        ) : (
+          <></>
+        )
+      default:
+        return <></>
+    }
+  }, [buildInfraType, delegateProvisioningStatus, stage])
 
   const renderAWSVMBuildInfraForm = React.useCallback((): React.ReactElement => {
     return (
@@ -1103,153 +1162,157 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
     )
   }, [])
 
-  const getValidationSchema = React.useCallback(
-    (): yup.Schema<unknown> =>
-      buildInfraType === 'KubernetesDirect'
-        ? yup.object().shape({
-            connectorRef: yup
-              .string()
-              .nullable()
-              .test(
-                'connectorRef required only for New configuration',
-                getString('fieldRequired', { field: getString(k8sClusterKeyRef) }) || '',
-                function (connectorRef) {
-                  if (isEmpty(connectorRef) && currentMode === Modes.NewConfiguration) {
-                    return false
-                  }
-                  return true
+  const getValidationSchema = React.useCallback((): yup.Schema<unknown> => {
+    switch (buildInfraType) {
+      case CIBuildInfrastructureType.KubernetesDirect:
+        return yup.object().shape({
+          connectorRef: yup
+            .string()
+            .nullable()
+            .test(
+              'connectorRef required only for New configuration',
+              getString('fieldRequired', { field: getString(k8sClusterKeyRef) }) || '',
+              function (connectorRef) {
+                if (isEmpty(connectorRef) && currentMode === Modes.NewConfiguration) {
+                  return false
                 }
-              ),
-            namespace: yup
-              .string()
-              .nullable()
-              .test(
-                'namespace required only for New configuration',
-                getString('fieldRequired', { field: getString(namespaceKeyRef) }) || '',
-                function (namespace) {
-                  if (isEmpty(namespace) && currentMode === Modes.NewConfiguration) {
-                    return false
-                  }
-                  return true
-                }
-              ),
-            useFromStage: yup
-              .string()
-              .nullable()
-              .test(
-                'useFromStage required only when Propagate from an existing stage',
-                getString('pipeline.infraSpecifications.validation.requiredExistingStage') || '',
-                function (useFromStage) {
-                  if (isEmpty(useFromStage) && currentMode === Modes.Propagate) {
-                    return false
-                  }
-                  return true
-                }
-              ),
-            runAsUser: yup.string().test(
-              'Must be a number and allows runtimeinput or expression',
-              getString('pipeline.stepCommonFields.validation.mustBeANumber', {
-                label: getString(runAsUserStringKey)
-              }) || '',
-              function (runAsUser) {
-                if (isUndefined(runAsUser) || !runAsUser) {
-                  return true
-                } else if (runAsUser.startsWith('<+')) {
-                  return true
-                }
-                return !isNaN(runAsUser)
+                return true
               }
             ),
-            volumes: yup
-              .array()
-              .test({
-                test: value => !value || uniqBy(value, 'mountPath').length === value.length,
-                message: getString('pipeline.ci.validations.mountPathUnique')
-              })
-              .test({
-                test: value => {
-                  const pattern = /^\d+(\.\d+)?$|^\d+(\.\d+)?(G|M|Gi|Mi)$|^$/
-                  // invalid if size doesn't follow pattern or is an integer without units
-                  const isSizeInvalid = value?.some(
-                    (volume: VolumesInterface) =>
-                      volume?.spec?.size &&
-                      (!pattern.test(volume.spec.size) || !isNaN(volume.spec.size as unknown as number))
-                  )
-                  return !isSizeInvalid
-                },
-                message: getString('pipeline.ci.validations.invalidSize')
-              })
-              .test({
-                test: value => {
-                  const isPathMissing = value?.some(
-                    (volume: VolumesInterface) => volume.type === VolumesTypes.HostPath && !volume.spec?.path
-                  )
-                  return !isPathMissing
-                },
-                message: getString('pipeline.ci.validations.pathRequiredForHostPath')
-              })
-              .test({
-                test: value => {
-                  const isTypeMissing = value?.some((volume: VolumesInterface) => volume.mountPath && !volume.type)
-                  return !isTypeMissing
-                },
-                message: 'Type is required'
-              }),
-            annotations: yup.lazy(
-              (value: FieldValueType) => getFieldSchema(value, k8sAnnotationRegex) as yup.Schema<FieldValueType>
+          namespace: yup
+            .string()
+            .nullable()
+            .test(
+              'namespace required only for New configuration',
+              getString('fieldRequired', { field: getString(namespaceKeyRef) }) || '',
+              function (namespace) {
+                if (isEmpty(namespace) && currentMode === Modes.NewConfiguration) {
+                  return false
+                }
+                return true
+              }
             ),
-            labels: yup.lazy(
-              (value: FieldValueType) => getFieldSchema(value, k8sLabelRegex) as yup.Schema<FieldValueType>
+          useFromStage: yup
+            .string()
+            .nullable()
+            .test(
+              'useFromStage required only when Propagate from an existing stage',
+              getString('pipeline.infraSpecifications.validation.requiredExistingStage') || '',
+              function (useFromStage) {
+                if (isEmpty(useFromStage) && currentMode === Modes.Propagate) {
+                  return false
+                }
+                return true
+              }
             ),
-            addCapabilities: yup.lazy(value => validateUniqueList({ value, getString })),
-            dropCapabilities: yup.lazy(value => validateUniqueList({ value, getString })),
-            tolerations: yup.lazy(value =>
-              validateUniqueList({ value, getString, uniqueKey: 'key', stringKey: 'pipeline.ci.validations.keyUnique' })
+          runAsUser: yup.string().test(
+            'Must be a number and allows runtimeinput or expression',
+            getString('pipeline.stepCommonFields.validation.mustBeANumber', {
+              label: getString(runAsUserStringKey)
+            }) || '',
+            function (runAsUser) {
+              if (isUndefined(runAsUser) || !runAsUser) {
+                return true
+              } else if (runAsUser.startsWith('<+')) {
+                return true
+              }
+              return !isNaN(runAsUser)
+            }
+          ),
+          volumes: yup
+            .array()
+            .test({
+              test: value => !value || uniqBy(value, 'mountPath').length === value.length,
+              message: getString('pipeline.ci.validations.mountPathUnique')
+            })
+            .test({
+              test: value => {
+                const pattern = /^\d+(\.\d+)?$|^\d+(\.\d+)?(G|M|Gi|Mi)$|^$/
+                // invalid if size doesn't follow pattern or is an integer without units
+                const isSizeInvalid = value?.some(
+                  (volume: VolumesInterface) =>
+                    volume?.spec?.size &&
+                    (!pattern.test(volume.spec.size) || !isNaN(volume.spec.size as unknown as number))
+                )
+                return !isSizeInvalid
+              },
+              message: getString('pipeline.ci.validations.invalidSize')
+            })
+            .test({
+              test: value => {
+                const isPathMissing = value?.some(
+                  (volume: VolumesInterface) => volume.type === VolumesTypes.HostPath && !volume.spec?.path
+                )
+                return !isPathMissing
+              },
+              message: getString('pipeline.ci.validations.pathRequiredForHostPath')
+            })
+            .test({
+              test: value => {
+                const isTypeMissing = value?.some((volume: VolumesInterface) => volume.mountPath && !volume.type)
+                return !isTypeMissing
+              },
+              message: 'Type is required'
+            }),
+          annotations: yup.lazy(
+            (value: FieldValueType) => getFieldSchema(value, k8sAnnotationRegex) as yup.Schema<FieldValueType>
+          ),
+          labels: yup.lazy(
+            (value: FieldValueType) => getFieldSchema(value, k8sLabelRegex) as yup.Schema<FieldValueType>
+          ),
+          addCapabilities: yup.lazy(value => validateUniqueList({ value, getString })),
+          dropCapabilities: yup.lazy(value => validateUniqueList({ value, getString })),
+          tolerations: yup.lazy(value =>
+            validateUniqueList({ value, getString, uniqueKey: 'key', stringKey: 'pipeline.ci.validations.keyUnique' })
+          )
+        })
+      case CIBuildInfrastructureType.VM:
+        return yup.object().shape({
+          useFromStage: yup
+            .string()
+            .nullable()
+            .test(
+              'useFromStage required only when Propagate from an existing stage',
+              getString('pipeline.infraSpecifications.validation.requiredExistingStage') || '',
+              function (useFromStage) {
+                if (isEmpty(useFromStage) && currentMode === Modes.Propagate) {
+                  return false
+                }
+                return true
+              }
+            ),
+          poolId: yup
+            .string()
+            .nullable()
+            .test(
+              'pool id required only for New configuration',
+              getString('fieldRequired', { field: getString(poolIdKeyRef) }) || '',
+              function (poolId) {
+                if (isEmpty(poolId) && currentMode === Modes.NewConfiguration) {
+                  return false
+                }
+                return true
+              }
             )
-          })
-        : buildInfraType === 'VM'
-        ? yup.object().shape({
-            useFromStage: yup
-              .string()
-              .nullable()
-              .test(
-                'useFromStage required only when Propagate from an existing stage',
-                getString('pipeline.infraSpecifications.validation.requiredExistingStage') || '',
-                function (useFromStage) {
-                  if (isEmpty(useFromStage) && currentMode === Modes.Propagate) {
-                    return false
-                  }
-                  return true
-                }
-              ),
-            poolId: yup
-              .string()
-              .nullable()
-              .test(
-                'pool id required only for New configuration',
-                getString('fieldRequired', { field: getString(poolIdKeyRef) }) || '',
-                function (poolId) {
-                  if (isEmpty(poolId) && currentMode === Modes.NewConfiguration) {
-                    return false
-                  }
-                  return true
-                }
-              )
-          })
-        : yup.object().shape({
-            buildInfraType: yup
-              .string()
-              .nullable()
-              .test(
-                'buildInfraType required only when Propagate from an existing stage',
-                getString('ci.buildInfra.label') || '',
-                function (buildInfra) {
-                  return !isEmpty(buildInfra)
-                }
-              )
-          }),
-    [buildInfraType, currentMode]
-  )
+        })
+      case 'UseFromStage':
+        return yup.object().shape({
+          buildInfraType: yup
+            .string()
+            .nullable()
+            .test(
+              'buildInfraType required only when Propagate from an existing stage',
+              getString('ci.buildInfra.label') || '',
+              function (buildInfra) {
+                return !isEmpty(buildInfra)
+              }
+            )
+        })
+      case CIBuildInfrastructureType.KubernetesHosted:
+      default:
+        return yup.object()
+    }
+  }, [buildInfraType, currentMode])
 
   return (
     <div className={css.wrapper}>
@@ -1265,7 +1328,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           {formik => {
             const { setFieldValue } = formik
             window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: BuildTabs.INFRASTRUCTURE }))
-            formikRef.current = formik as FormikProps<unknown> | null
+            formikRef.current = formik
             return (
               <Layout.Vertical>
                 <Text font={{ variation: FontVariation.H5 }} id="infrastructureDefinition">
@@ -1297,7 +1360,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                                   items={otherBuildStagesWithInfraConfigurationOptions}
                                   disabled={isReadonly}
                                 />
-                                {buildInfraType === 'KubernetesDirect' ? (
+                                {buildInfraType === CIBuildInfrastructureType.KubernetesDirect ? (
                                   <>
                                     {(propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
                                       ?.connectorRef && (
@@ -1600,7 +1663,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                                       />
                                     </Accordion>
                                   </>
-                                ) : buildInfraType === 'VM' &&
+                                ) : buildInfraType === CIBuildInfrastructureType.VM &&
                                   ((propagatedStage?.stage?.spec?.infrastructure as VmInfraYaml)?.spec as VmPoolYaml)
                                     ?.spec?.identifier ? (
                                   <>
@@ -1628,9 +1691,9 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                                         set(
                                           draft,
                                           'stage.spec.infrastructure',
-                                          buildInfraType === 'KubernetesDirect'
+                                          buildInfraType === CIBuildInfrastructureType.KubernetesDirect
                                             ? {
-                                                type: 'KubernetesDirect',
+                                                type: CIBuildInfrastructureType.KubernetesDirect,
                                                 spec: {
                                                   connectorRef: '',
                                                   namespace: '',
@@ -1639,9 +1702,9 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                                                   nodeSelector: {}
                                                 }
                                               }
-                                            : buildInfraType === 'VM'
+                                            : buildInfraType === CIBuildInfrastructureType.VM
                                             ? {
-                                                type: 'VM',
+                                                type: CIBuildInfrastructureType.VM,
                                                 spec: {
                                                   identifier: ''
                                                 }
@@ -1663,19 +1726,19 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                                 }}
                               >
                                 <>
-                                  {CI_VM_INFRASTRUCTURE ? (
+                                  {showThumbnailSelect ? (
                                     <>
                                       <Text className={css.cardTitle} color="black" margin={{ bottom: 'large' }}>
                                         {getString('ci.buildInfra.useNewInfra')}
                                       </Text>
                                       <ThumbnailSelect
                                         name={'buildInfraType'}
-                                        items={buildInfraTypes}
+                                        items={BuildInfraTypes}
                                         isReadonly={isReadonly}
                                         onChange={val => {
-                                          const infraType = val as K8sDirectInfraYaml['type']
+                                          const infraType = val as Infrastructure['type']
                                           setFieldValue('buildInfraType', infraType)
-                                          setBuildInfraType(val as K8sDirectInfraYaml['type'])
+                                          setBuildInfraType(infraType)
                                         }}
                                       />
                                     </>
@@ -1684,7 +1747,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                                       {getString('pipelineSteps.build.infraSpecifications.newConfiguration')}
                                     </Text>
                                   )}
-                                  {CI_VM_INFRASTRUCTURE ? null : (
+                                  {showThumbnailSelect ? null : (
                                     <>
                                       {renderKubernetesBuildInfraForm()}
                                       {renderKubernetesBuildInfraAdvancedSection({ formik })}
@@ -1693,16 +1756,18 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                                 </>
                               </div>
                             </Layout.Horizontal>
-                            {CI_VM_INFRASTRUCTURE && currentMode === Modes.NewConfiguration ? (
+                            {showThumbnailSelect && currentMode === Modes.NewConfiguration ? (
                               <>
-                                {buildInfraType ? <Separator topSeparation={30} /> : null}
-                                {renderBuildInfraMainSection()}
+                                {buildInfraType !== CIBuildInfrastructureType.KubernetesHosted ? (
+                                  <Separator topSeparation={30} />
+                                ) : null}
+                                <Container margin={{ top: 'large' }}>{renderBuildInfraMainSection()}</Container>
                               </>
                             ) : null}
                           </Card>
-                          {CI_VM_INFRASTRUCTURE &&
+                          {showThumbnailSelect &&
                           currentMode === Modes.NewConfiguration &&
-                          buildInfraType === 'KubernetesDirect'
+                          buildInfraType === CIBuildInfrastructureType.KubernetesDirect
                             ? renderKubernetesBuildInfraAdvancedSection({ showCardView: true, formik })
                             : null}
                         </>
@@ -1710,31 +1775,36 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                         <>
                           <Card disabled={isReadonly} className={cx(css.sectionCard)}>
                             <Layout.Vertical spacing="small">
-                              {CI_VM_INFRASTRUCTURE ? (
+                              {showThumbnailSelect ? (
                                 <>
-                                  <Text font={{ variation: FontVariation.FORM_HELP }} padding={{ bottom: 'medium' }}>
+                                  <Text
+                                    font={{ variation: FontVariation.FORM_INPUT_TEXT }}
+                                    padding={{ bottom: 'medium' }}
+                                  >
                                     {getString('ci.buildInfra.selectInfra')}
                                   </Text>
                                   <ThumbnailSelect
                                     name={'buildInfraType'}
-                                    items={buildInfraTypes}
+                                    items={BuildInfraTypes}
                                     isReadonly={isReadonly}
                                     onChange={val => {
-                                      const infraType = val as K8sDirectInfraYaml['type']
-                                      setBuildInfraType(val as K8sDirectInfraYaml['type'])
+                                      const infraType = val as Infrastructure['type']
+                                      setBuildInfraType(infraType)
                                       formik.setValues({
                                         ...formik.values,
                                         buildInfraType: infraType,
                                         automountServiceAccountToken:
-                                          infraType === 'KubernetesDirect' ? true : undefined
+                                          infraType === CIBuildInfrastructureType.KubernetesDirect ? true : undefined
                                       })
                                     }}
                                   />
                                 </>
                               ) : null}
-                              {CI_VM_INFRASTRUCTURE ? (
+                              {showThumbnailSelect ? (
                                 <>
-                                  {buildInfraType ? <Separator topSeparation={10} /> : null}
+                                  {buildInfraType !== CIBuildInfrastructureType.KubernetesHosted ? (
+                                    <Separator topSeparation={10} />
+                                  ) : null}
                                   {renderBuildInfraMainSection()}
                                 </>
                               ) : (
@@ -1742,40 +1812,60 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                               )}
                             </Layout.Vertical>
                           </Card>
-                          {buildInfraType === 'KubernetesDirect'
+                          {buildInfraType === CIBuildInfrastructureType.KubernetesDirect
                             ? renderKubernetesBuildInfraAdvancedSection({ showCardView: true, formik })
                             : null}
                         </>
                       )}
                     </Layout.Vertical>
-                    {CI_VM_INFRASTRUCTURE ? (
-                      <Container className={css.helptext} margin={{ top: 'medium' }} padding="large">
+                    {CI_VM_INFRASTRUCTURE || CIE_HOSTED_BUILDS ? (
+                      <Container
+                        className={css.helptext}
+                        margin={{ top: 'medium' }}
+                        padding={{ top: 'xlarge', bottom: 'xlarge', left: 'large', right: 'large' }}
+                      >
                         <Layout.Horizontal spacing="xsmall" flex={{ justifyContent: 'start' }}>
                           <Icon name="info-messaging" size={20} />
                           <Text font={{ variation: FontVariation.H5 }}>
                             {getString('ci.buildInfra.infrastructureTypesLabel')}
                           </Text>
                         </Layout.Horizontal>
+                        {CIE_HOSTED_BUILDS ? (
+                          <>
+                            <Text
+                              font={{ variation: FontVariation.BODY2 }}
+                              padding={{ top: 'xlarge', bottom: 'xsmall' }}
+                            >
+                              {getString('ci.getStartedWithCI.hostedByHarness')}
+                            </Text>
+                            <Text font={{ variation: FontVariation.SMALL }}>
+                              {getString('ci.getStartedWithCI.hostedByHarnessBuildLocation')}
+                            </Text>
+                            <Separator />
+                          </>
+                        ) : null}
                         <>
-                          <Text font={{ variation: FontVariation.BODY2 }} padding={{ top: 'xlarge', bottom: 'xsmall' }}>
+                          <Text
+                            font={{ variation: FontVariation.BODY2 }}
+                            padding={{ top: CIE_HOSTED_BUILDS ? 0 : 'xlarge', bottom: 'xsmall' }}
+                          >
                             {getString('ci.buildInfra.k8sLabel')}
                           </Text>
                           <Text font={{ variation: FontVariation.SMALL }}>
                             {getString('ci.buildInfra.kubernetesHelpText')}
                           </Text>
                         </>
-                        <Separator />
-                        <>
-                          <Text font={{ variation: FontVariation.BODY2 }} padding={{ bottom: 'xsmall' }}>
-                            {getString('ci.buildInfra.vmLabel')}
-                          </Text>
-                          <Text font={{ variation: FontVariation.SMALL }}>
-                            {getString('ci.buildInfra.awsHelpText')}
-                          </Text>
-                        </>
-                        {/* <Container padding={{ top: 'medium' }}>
-                          <Link to="/">{getString('learnMore')}</Link>
-                        </Container> */}
+                        {CI_VM_INFRASTRUCTURE ? (
+                          <>
+                            <Separator />
+                            <Text font={{ variation: FontVariation.BODY2 }} padding={{ bottom: 'xsmall' }}>
+                              {getString('ci.buildInfra.vmLabel')}
+                            </Text>
+                            <Text font={{ variation: FontVariation.SMALL }}>
+                              {getString('ci.buildInfra.awsHelpText')}
+                            </Text>
+                          </>
+                        ) : null}
                       </Container>
                     ) : null}
                   </Layout.Horizontal>
@@ -1785,6 +1875,13 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           }}
         </Formik>
         {children}
+        {showInfraProvisioningCarousel ? (
+          <InfraProvisioningCarousel
+            show={showInfraProvisioningCarousel}
+            onClose={() => setShowInfraProvisioningCarousel(false)}
+            provisioningStatus={delegateProvisioningStatus}
+          />
+        ) : null}
       </div>
     </div>
   )

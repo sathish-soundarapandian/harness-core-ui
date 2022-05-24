@@ -5,21 +5,40 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
-import { Layout, Container, PageError } from '@wings-software/uicore'
+import { PageError } from '@harness/uicore'
+import routes from '@common/RouteDefinitions'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import type { EnvironmentResponseDTO } from 'services/cd-ng'
+import { ApiKey, useGetAllAPIKeys } from 'services/cf'
 import { useSyncedEnvironment } from '@cf/hooks/useSyncedEnvironment'
 import { useStrings } from 'framework/strings'
-import { getErrorMessage } from '@cf/utils/CFUtils'
-import CFEnvironmentDetailsHeader from './EnvironmentDetailsHeader'
+import { CF_DEFAULT_PAGE_SIZE, getErrorMessage } from '@cf/utils/CFUtils'
+import AddKeyDialog from '@cf/components/AddKeyDialog/AddKeyDialog'
+import { EnvironmentType } from '@common/constants/EnvironmentType'
+import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
+import { DetailPageTemplate } from '@cf/components/DetailPageTemplate/DetailPageTemplate'
 import CFEnvironmentDetailsBody from './EnvironmentDetailsBody'
 
 const EnvironmentDetails: React.FC = () => {
   const { getString } = useStrings()
   const { projectIdentifier, environmentIdentifier, orgIdentifier, accountId } = useParams<Record<string, string>>()
+  const { withActiveEnvironment } = useActiveEnvironment()
+  const [page, setPage] = useState<number>(0)
+  const [recents, setRecents] = useState<ApiKey[]>([])
+
+  const updateApiKeyList = (key: ApiKey): void => {
+    setRecents([...recents, key])
+  }
+
+  const queryParams = {
+    projectIdentifier: projectIdentifier,
+    environmentIdentifier: environmentIdentifier,
+    accountIdentifier: accountId,
+    orgIdentifier: orgIdentifier
+  }
 
   const { loading, data, error, refetch } = useSyncedEnvironment({
     accountId,
@@ -27,32 +46,83 @@ const EnvironmentDetails: React.FC = () => {
     projectIdentifier,
     environmentIdentifier
   })
+
+  const {
+    data: keys,
+    loading: keysLoading,
+    error: keysError,
+    refetch: refetchKeys
+  } = useGetAllAPIKeys({
+    queryParams: {
+      ...queryParams,
+      pageSize: CF_DEFAULT_PAGE_SIZE,
+      pageNumber: page
+    }
+  })
+
   const environment = data?.data as EnvironmentResponseDTO
+  const hasKeys = Boolean(keys?.apiKeys?.length)
   const hasData = Boolean(environment)
 
   useDocumentTitle(getString('environments'))
 
+  const breadcrumbs = [
+    {
+      label: getString('environments'),
+      url: withActiveEnvironment(
+        routes.toCFEnvironments({
+          accountId,
+          orgIdentifier,
+          projectIdentifier
+        })
+      )
+    }
+  ]
+
+  const onNewKeyCreated = useCallback(() => {
+    setPage(0)
+    refetchKeys()
+  }, [refetchKeys])
+
   return (
     <>
       {hasData && (
-        <Layout.Vertical height="100vh" style={{ boxSizing: 'border-box', background: '#FDFDFD' }}>
-          <CFEnvironmentDetailsHeader environment={environment} />
-          <CFEnvironmentDetailsBody environment={environment} />
-        </Layout.Vertical>
-      )}
-      {loading && (
-        <Container
-          style={{
-            position: 'fixed',
-            top: '144px',
-            left: '290px',
-            width: 'calc(100% - 290px)',
-            height: 'calc(100% - 144px)'
+        <DetailPageTemplate
+          breadcrumbs={breadcrumbs}
+          title={environment.name}
+          identifier={environment.identifier}
+          subTitle={environment.description}
+          metaData={{
+            environment: getString(environment.type === EnvironmentType.PRODUCTION ? 'production' : 'nonProduction')
           }}
+          toolbar={
+            hasKeys && (
+              <AddKeyDialog
+                environment={environment}
+                primary
+                onCreate={(newKey: ApiKey, hideModal) => {
+                  setRecents([...recents, newKey])
+                  onNewKeyCreated()
+                  hideModal()
+                }}
+              />
+            )
+          }
         >
-          <ContainerSpinner />
-        </Container>
+          <CFEnvironmentDetailsBody
+            data={keys}
+            loading={keysLoading}
+            error={keysError}
+            refetch={refetchKeys}
+            onNewKeyCreated={onNewKeyCreated}
+            environment={environment}
+            updatePageNumber={setPage}
+            updateApiKeyList={updateApiKeyList}
+            recents={recents}
+          />
+        </DetailPageTemplate>
       )}
+      {loading && <ContainerSpinner flex={{ align: 'center-center' }} />}
       {error && (
         <PageError
           message={getErrorMessage(error)}

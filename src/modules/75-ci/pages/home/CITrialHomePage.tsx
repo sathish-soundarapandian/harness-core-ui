@@ -25,7 +25,7 @@ import css from './CITrialHomePage.module.scss'
 
 const CITrialHomePage: React.FC = () => {
   const { getString } = useStrings()
-  const { CIE_HOSTED_BUILDS, FREE_PLAN_ENABLED } = useFeatureFlags()
+  const { FREE_PLAN_ENABLED, CIE_HOSTED_BUILDS } = useFeatureFlags()
   const history = useHistory()
   const { accountId } = useParams<AccountPathProps>()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()

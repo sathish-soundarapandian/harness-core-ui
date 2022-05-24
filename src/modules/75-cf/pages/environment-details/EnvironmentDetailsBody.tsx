@@ -5,23 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useContext, useMemo, useState } from 'react'
-import {
-  Container,
-  Heading,
-  Layout,
-  Pagination,
-  Tab,
-  Tabs,
-  Text,
-  Utils,
-  PageError,
-  TableV2
-} from '@wings-software/uicore'
+import React, { useContext, useMemo } from 'react'
+import { Container, Heading, Layout, Pagination, Text, Utils, PageError, TableV2 } from '@harness/uicore'
 import type { Column } from 'react-table'
 import { FontVariation, Color, Intent } from '@harness/design-system'
 import type { EnvironmentResponseDTO } from 'services/cd-ng'
-import { ApiKey, useDeleteAPIKey, useGetAllAPIKeys } from 'services/cf'
+import { ApiKey, ApiKeys, useDeleteAPIKey, UseGetAllAPIKeysProps } from 'services/cf'
 import { useToaster } from '@common/exports'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { useEnvStrings } from '@cf/hooks/environment'
@@ -37,6 +26,17 @@ import AddKeyDialog from '../../components/AddKeyDialog/AddKeyDialog'
 import EmptySDKs from './NoSDKs.svg'
 
 import css from './EnvironmentDetails.module.scss'
+export interface EnvironmentDetailsBodyProps {
+  environment: EnvironmentResponseDTO
+  onNewKeyCreated: () => void
+  refetch: (queryParams?: UseGetAllAPIKeysProps) => void
+  error: unknown
+  loading: boolean
+  data: ApiKeys | null
+  updatePageNumber: (pageNumber: number) => void
+  updateApiKeyList: (key: ApiKey) => void
+  recents: ApiKey[]
+}
 
 type CustomColumn<T extends Record<string, any>> = Column<T>
 
@@ -75,10 +75,11 @@ const ApiInfoCell = withApiKey(({ apiKey }) => {
   const deleteSDKKey = useConfirmAction({
     intent: Intent.DANGER,
     title: getEnvString('apiKeys.deleteTitle'),
-    message: <String stringID="cf.environments.apiKeys.deleteMessage" vars={{ keyName: apiKey.name }} />,
+    message: <String useRichText stringID="cf.environments.apiKeys.deleteMessage" vars={{ keyName: apiKey.name }} />,
     action: () => {
       onDelete(apiKey.identifier, apiKey.name)
-    }
+    },
+    confirmText: getString('delete')
   })
 
   return (
@@ -129,11 +130,19 @@ const ApiInfoCell = withApiKey(({ apiKey }) => {
   )
 })
 
-const EnvironmentSDKKeys: React.FC<{ environment: EnvironmentResponseDTO }> = ({ environment }) => {
+const EnvironmentSDKKeys: React.FC<EnvironmentDetailsBodyProps> = ({
+  environment,
+  onNewKeyCreated,
+  refetch,
+  data,
+  loading,
+  error,
+  updatePageNumber,
+  updateApiKeyList,
+  recents
+}) => {
   const { showError } = useToaster()
   const { getString, getEnvString } = useEnvStrings()
-  const [recents, setRecents] = useState<ApiKey[]>([])
-  const [page, setPage] = useState<number>(0)
 
   const queryParams = {
     projectIdentifier: environment.projectIdentifier as string,
@@ -141,14 +150,6 @@ const EnvironmentSDKKeys: React.FC<{ environment: EnvironmentResponseDTO }> = ({
     accountIdentifier: environment.accountId as string,
     orgIdentifier: environment.orgIdentifier as string
   }
-
-  const { data, loading, error, refetch } = useGetAllAPIKeys({
-    queryParams: {
-      ...queryParams,
-      pageSize: CF_DEFAULT_PAGE_SIZE,
-      pageNumber: page
-    }
-  })
 
   const { mutate: deleteKey } = useDeleteAPIKey({ queryParams })
   const handleDelete = (id: string, keyName: string): void => {
@@ -202,14 +203,6 @@ const EnvironmentSDKKeys: React.FC<{ environment: EnvironmentResponseDTO }> = ({
             <Heading level={2} font={{ variation: FontVariation.H5 }}>
               {getEnvString('apiKeys.title')}
             </Heading>
-            <AddKeyDialog
-              environment={environment}
-              onCreate={(newKey: ApiKey, hideCreate) => {
-                setRecents([...recents, newKey])
-                hideCreate()
-                refetch()
-              }}
-            />
           </Layout.Horizontal>
           <Text color={Color.GREY_800} padding={{ top: 'small', bottom: 'xxlarge' }}>
             {getEnvString('apiKeys.message')}
@@ -219,28 +212,25 @@ const EnvironmentSDKKeys: React.FC<{ environment: EnvironmentResponseDTO }> = ({
               <RowContext.Provider
                 value={{
                   environmentIdentifier: environment.identifier as string,
-                  isNew: (id: string) => Boolean(recents.find(r => r.identifier === id)),
+                  isNew: (id: string) => Boolean(recents?.find(r => r.identifier === id)),
                   onDelete: handleDelete,
                   getSecret: (id: string, fallback: string) =>
-                    recents.find(r => r.identifier === id)?.apiKey || fallback
+                    recents?.find(r => r.identifier === id)?.apiKey || fallback
                 }}
               >
                 <TableV2<ApiKey> data={(apiKeys || []) as ApiKey[]} columns={columns} />
               </RowContext.Provider>
             </Container>
             {!!pagination.itemCount && (
-              <Container className={css.paginationContainer}>
-                <Pagination
-                  itemCount={pagination.itemCount}
-                  pageCount={pagination.pageCount}
-                  pageIndex={pagination.pageIndex}
-                  pageSize={CF_DEFAULT_PAGE_SIZE}
-                  gotoPage={(index: number) => {
-                    setPage(index)
-                    refetch({ queryParams: { ...queryParams, pageNumber: index } })
-                  }}
-                />
-              </Container>
+              <Pagination
+                itemCount={pagination.itemCount}
+                pageCount={pagination.pageCount}
+                pageIndex={pagination.pageIndex}
+                pageSize={CF_DEFAULT_PAGE_SIZE}
+                gotoPage={(index: number) => {
+                  updatePageNumber(index)
+                }}
+              />
             )}
           </Container>
         </Layout.Vertical>
@@ -256,27 +246,21 @@ const EnvironmentSDKKeys: React.FC<{ environment: EnvironmentResponseDTO }> = ({
             <AddKeyDialog
               primary
               environment={environment}
-              onCreate={(newKey: ApiKey, hideCreate) => {
-                setRecents([...recents, newKey])
-                hideCreate()
-                refetch()
+              onCreate={(newKey: ApiKey, hideModal) => {
+                updateApiKeyList(newKey)
+                onNewKeyCreated()
+                hideModal()
               }}
             />
           </NoData>
         </Container>
       )}
-
-      {loading && (
-        <Layout.Horizontal width="100%" height="100%" flex={{ align: 'center-center' }}>
-          <ContainerSpinner />
-        </Layout.Horizontal>
-      )}
-
+      {loading && <ContainerSpinner flex={{ align: 'center-center' }} />}
       {error && (
         <PageError
           message={getErrorMessage(error)}
           onClick={() => {
-            setPage(0)
+            updatePageNumber(0)
             refetch()
           }}
         />
@@ -285,16 +269,31 @@ const EnvironmentSDKKeys: React.FC<{ environment: EnvironmentResponseDTO }> = ({
   )
 }
 
-const CFEnvironmentDetailsBody: React.FC<{
-  environment: EnvironmentResponseDTO
-}> = ({ environment }) => {
+const CFEnvironmentDetailsBody: React.FC<EnvironmentDetailsBodyProps> = ({
+  environment,
+  onNewKeyCreated,
+  refetch,
+  error,
+  loading,
+  data,
+  updatePageNumber,
+  updateApiKeyList,
+  recents
+}) => {
   return (
     <Container className={css.envTabs}>
-      <Tabs id="envDetailsTabs">
-        <Tab id="settings" title="Settings" panel={<EnvironmentSDKKeys environment={environment} />} />
-      </Tabs>
+      <EnvironmentSDKKeys
+        updatePageNumber={updatePageNumber}
+        data={data}
+        loading={loading}
+        error={error}
+        refetch={refetch}
+        onNewKeyCreated={onNewKeyCreated}
+        environment={environment}
+        updateApiKeyList={updateApiKeyList}
+        recents={recents}
+      />
     </Container>
   )
 }
-
 export default CFEnvironmentDetailsBody

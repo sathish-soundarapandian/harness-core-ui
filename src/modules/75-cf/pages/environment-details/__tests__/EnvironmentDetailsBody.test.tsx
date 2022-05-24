@@ -8,28 +8,16 @@
 import React from 'react'
 import { RenderResult, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import mockImport from 'framework/utils/mockImport'
 import { TestWrapper } from '@common/utils/testUtils'
-import EnvironmentDetailsBody from '@cf/pages/environment-details/EnvironmentDetailsBody'
+import EnvironmentDetailsBody, {
+  EnvironmentDetailsBodyProps
+} from '@cf/pages/environment-details/EnvironmentDetailsBody'
 import * as cfServices from 'services/cf'
-import type { ApiKey } from 'services/cf'
+import type { ApiKey, ApiKeys } from 'services/cf'
+import mockApiKeys from './mockApiKeys'
 
-const getMockResponseData = (keys: ApiKey[] = []) => ({
-  loading: false,
-  error: null,
-  refetch: jest.fn(),
-  absolutePath: '',
-  response: {} as Response,
-  cancel: jest.fn(),
-  data: {
-    itemCount: keys.length,
-    pageCount: 1,
-    pageIndex: 0,
-    pageSize: 1,
-    apiKeys: keys
-  }
-})
-
-const renderComponent = (): RenderResult =>
+const renderComponent = (props: Partial<EnvironmentDetailsBodyProps> = {}): RenderResult =>
   render(
     <TestWrapper>
       <EnvironmentDetailsBody
@@ -45,12 +33,20 @@ const renderComponent = (): RenderResult =>
           deleted: false,
           tags: {}
         }}
+        data={null}
+        onNewKeyCreated={jest.fn()}
+        refetch={jest.fn()}
+        error={undefined}
+        loading={false}
+        updatePageNumber={jest.fn()}
+        updateApiKeyList={jest.fn()}
+        recents={[]}
+        {...props}
       />
     </TestWrapper>
   )
 
 const mutateMock = jest.fn()
-const useGetAllAPIKeysMock = jest.spyOn(cfServices, 'useGetAllAPIKeys')
 jest.spyOn(cfServices, 'useAddAPIKey').mockReturnValue({
   cancel: jest.fn(),
   error: null,
@@ -74,17 +70,6 @@ const existingKey: ApiKey = {
 }
 
 describe('EnvironmentDetailsBody', () => {
-  const addNewAPIKey = (newKey: ApiKey): void => {
-    mutateMock.mockResolvedValue({ ...newKey })
-
-    userEvent.click(screen.getByRole('button', { name: /addKey/ }))
-    userEvent.type(screen.getByRole('textbox'), newKey.name)
-
-    useGetAllAPIKeysMock.mockReturnValue(getMockResponseData([{ ...newKey }]))
-
-    userEvent.click(screen.getByRole('button', { name: /create/ }))
-  }
-
   beforeAll(() => {
     const { getComputedStyle } = window
     window.getComputedStyle = elt => getComputedStyle(elt)
@@ -92,38 +77,42 @@ describe('EnvironmentDetailsBody', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    useGetAllAPIKeysMock.mockReturnValue(getMockResponseData())
   })
 
-  test('it should display the copy button and redaction warning when new API key is created', async () => {
-    const newKey: ApiKey = {
-      identifier: 'NewKey',
-      apiKey: 'api-key',
-      name: 'NewKey',
-      type: 'server'
-    }
-
-    renderComponent()
-    addNewAPIKey(newKey)
-
-    await waitFor(() => {
-      expect(screen.getByText(newKey.name)).toBeInTheDocument()
-
-      const apiKeyEl = screen.getByText(newKey.apiKey)
-      expect(apiKeyEl).toBeInTheDocument()
-      expect(apiKeyEl.querySelector('svg')).toBeInTheDocument()
-
-      expect(screen.getByText('cf.environments.apiKeys.redactionWarning')).toBeInTheDocument()
+  test('it should render loading', async () => {
+    mockImport('services/cf', {
+      useGetAllAPIKeys: () => ({ data: mockApiKeys })
     })
+
+    renderComponent({ loading: true })
+    expect(document.body.querySelector('[class*=ContainerSpinner]')).toBeDefined()
+  })
+
+  test('it should render error', async () => {
+    renderComponent({ error: true })
+    expect(screen.getByRole('button', { name: 'Retry' })).toBeInTheDocument()
+  })
+
+  test('it should render correct empty state', async () => {
+    const hasNoKeys = {
+      itemCount: 0,
+      pageCount: 0,
+      pageIndex: 0,
+      pageSize: 0,
+      apiKeys: []
+    }
+    renderComponent({ data: hasNoKeys })
+
+    expect(screen.getByRole('button', { name: 'cf.environments.apiKeys.addKey' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'cf.environments.apiKeys.noKeysFoundTitle' })).toBeInTheDocument()
   })
 
   test('it should not show the copy button and redaction warning when displaying existing keys', async () => {
-    useGetAllAPIKeysMock.mockReturnValue(getMockResponseData([existingKey]))
-    renderComponent()
+    renderComponent({ data: mockApiKeys as ApiKeys })
 
-    expect(screen.getByText(existingKey.name)).toBeInTheDocument()
+    expect(screen.getByText(mockApiKeys.apiKeys[0].name)).toBeInTheDocument()
 
-    const apiKeyEl = screen.getByText(existingKey.apiKey)
+    const apiKeyEl = screen.getByText(mockApiKeys.apiKeys[0].apiKey)
     expect(apiKeyEl).toBeInTheDocument()
     expect(apiKeyEl.querySelector('svg')).not.toBeInTheDocument()
 
@@ -132,17 +121,14 @@ describe('EnvironmentDetailsBody', () => {
 
   test('it should show Delete SDK key confirmation modal when trash icon is clicked', async () => {
     deleteMutate.mockResolvedValue({ data: {} })
-
-    useGetAllAPIKeysMock.mockReturnValue(getMockResponseData([existingKey]))
-    renderComponent()
-
+    renderComponent({ data: mockApiKeys as ApiKeys })
     userEvent.click(screen.getByRole('button', { name: 'trash' }))
 
     await waitFor(() => {
       expect(screen.queryByText('cf.environments.apiKeys.deleteTitle')).toBeInTheDocument()
     })
 
-    userEvent.click(screen.getByRole('button', { name: 'confirm' }))
+    userEvent.click(screen.getByRole('button', { name: 'delete' }))
     await waitFor(() => {
       expect(deleteMutate).toBeCalledWith(existingKey.identifier)
       expect(screen.queryByText('cf.environments.apiKeys.deleteTitle')).not.toBeInTheDocument()
@@ -151,8 +137,7 @@ describe('EnvironmentDetailsBody', () => {
   })
 
   test('it should close confirmation modal when cancel button is clicked', async () => {
-    useGetAllAPIKeysMock.mockReturnValue(getMockResponseData([existingKey]))
-    renderComponent()
+    renderComponent({ data: mockApiKeys as ApiKeys })
 
     userEvent.click(screen.getByRole('button', { name: 'trash' }))
 
@@ -168,10 +153,9 @@ describe('EnvironmentDetailsBody', () => {
   })
 
   test('it should show error message when API Key failed to delete', async () => {
-    useGetAllAPIKeysMock.mockReturnValue(getMockResponseData([existingKey]))
     deleteMutate.mockRejectedValueOnce({ data: { message: 'FAILED TO FETCH' } })
 
-    renderComponent()
+    renderComponent({ data: mockApiKeys as ApiKeys })
 
     userEvent.click(screen.getByRole('button', { name: 'trash' }))
 
@@ -179,7 +163,7 @@ describe('EnvironmentDetailsBody', () => {
       expect(screen.queryByText('cf.environments.apiKeys.deleteTitle')).toBeInTheDocument()
     })
 
-    userEvent.click(screen.getByRole('button', { name: 'confirm' }))
+    userEvent.click(screen.getByRole('button', { name: 'delete' }))
     await waitFor(() => {
       expect(screen.queryByText('FAILED TO FETCH')).toBeInTheDocument()
     })

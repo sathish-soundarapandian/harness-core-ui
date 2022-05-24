@@ -1199,7 +1199,7 @@ export interface ImageDetails {
 }
 
 export interface Infrastructure {
-  type?: 'KubernetesDirect' | 'UseFromStage' | 'VM'
+  type?: 'KubernetesDirect' | 'UseFromStage' | 'VM' | 'KubernetesHosted'
 }
 
 export type InitializeStepInfo = StepSpecType & {
@@ -1299,7 +1299,7 @@ export type K8BuildJobEnvInfo = BuildJobEnvInfo & {
 
 export type K8sDirectInfraYaml = Infrastructure & {
   spec: K8sDirectInfraYamlSpec
-  type: 'KubernetesDirect' | 'UseFromStage' | 'VM'
+  type: 'KubernetesDirect' | 'UseFromStage' | 'VM' | 'KubernetesHosted'
 }
 
 export type VolumeTypeInterface = 'EmptyDir' | 'HostPath' | 'PersistentVolumeClaim'
@@ -2443,7 +2443,7 @@ export interface VmInfraSpec {
 
 export type VmInfraYaml = Infrastructure & {
   spec: VmInfraSpec
-  type: 'KubernetesDirect' | 'UseFromStage' | 'VM'
+  type: 'KubernetesDirect' | 'UseFromStage' | 'VM' | 'KubernetesHosted'
 }
 
 export type VmPoolYaml = VmInfraSpec & {

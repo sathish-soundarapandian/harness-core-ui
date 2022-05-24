@@ -12,7 +12,7 @@ import * as featureFlags from '@common/hooks/useFeatureFlag'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { UseGetReturnData } from '@common/utils/testUtils'
 import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
-import type { ResponseConnectorResponse } from 'services/cd-ng'
+import type { ResponseConnectorResponse, ResponseDelegateStatus, ResponseSetupStatus } from 'services/cd-ng'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import BuildInfraSpecifications from '../BuildInfraSpecifications'
 
@@ -66,7 +66,23 @@ jest.mock('services/cd-ng', () => ({
           }
         ]
       }
-    })
+    }),
+  useGetDelegateInstallStatus: jest.fn().mockImplementation(() => ({
+    refetch: jest.fn(),
+    data: {
+      status: 'SUCCESS',
+      data: 'SUCCESS'
+    } as ResponseDelegateStatus
+  })),
+  useProvisionResourcesForCI: jest.fn().mockImplementation(() => {
+    return {
+      mutate: () =>
+        Promise.resolve({
+          data: 'SUCCESS',
+          status: 'SUCCESS'
+        } as ResponseSetupStatus)
+    }
+  })
 }))
 
 describe('BuildInfraSpecifications snapshot tests for K8s Build Infra', () => {

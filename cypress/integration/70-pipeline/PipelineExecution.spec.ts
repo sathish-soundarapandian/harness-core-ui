@@ -2,7 +2,7 @@ import {
   abortPipelineCall,
   executePipeline,
   pageHeaderClassName,
-  pipelineListAPIWithoutSearchTerm,
+  pipelineListAPI,
   pipelinesRoute,
   serviceStepAPI,
   serviceStepStageID
@@ -31,7 +31,7 @@ describe('Pipeline Execution', () => {
   })
 
   it('Pipeline Execution steps phases - Running & Failed', () => {
-    cy.intercept('POST', pipelineListAPIWithoutSearchTerm, {
+    cy.intercept('POST', pipelineListAPI, {
       fixture: '/pipeline/api/pipelineExecution/getPipelineList'
     }).as('pipelineList')
     cy.visitPageAssertion(pageHeaderClassName)
@@ -138,7 +138,7 @@ describe('Pipeline Execution', () => {
   })
 
   it('Pipeline Execution steps phases - Running & Success', () => {
-    cy.intercept('POST', pipelineListAPIWithoutSearchTerm, {
+    cy.intercept('POST', pipelineListAPI, {
       fixture: '/pipeline/api/pipelineExecution/getPipelineList'
     }).as('pipelineList')
     cy.intercept('POST', executePipeline, {
@@ -223,7 +223,7 @@ describe('Pipeline Execution', () => {
 
   it('Pipeline Execution Serverless Aws Lambda Deploy step - Failed', () => {
     // Pipeline List call
-    cy.intercept('POST', pipelineListAPIWithoutSearchTerm, {
+    cy.intercept('POST', pipelineListAPI, {
       fixture: '/pipeline/api/pipelineExecution/getPipelineList'
     }).as('pipelineList')
 
@@ -360,7 +360,7 @@ describe('Pipeline Execution', () => {
   })
 
   it('Pipeline Execution steps phases - Running & Abort', () => {
-    cy.intercept('POST', pipelineListAPIWithoutSearchTerm, {
+    cy.intercept('POST', pipelineListAPI, {
       fixture: '/pipeline/api/pipelineExecution/getPipelineList'
     }).as('pipelineList')
     cy.intercept('POST', executePipeline, {
