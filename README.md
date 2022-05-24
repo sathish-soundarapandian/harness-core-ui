@@ -24,8 +24,8 @@ Grouped Code Coverage report for master branch: [Coverage Report](https://github
 
 2. Install **yarn** package manager
 
-```
-$ brew install yarn
+```bash
+brew install yarn
 ```
 
 > Note: More options here: https://classic.yarnpkg.com/en/docs/install
@@ -103,7 +103,7 @@ See [src/services/README.md](https://github.com/harness/harness-core-ui/blob/mas
 You can configure the application to use remote environments such as `uat.harness.io`, `qa.harness.io` or `qb.harness.io` to allow local UI development without the need to run backend services. To achieve this, two environment variables are available.
 
 | Variable            | Default value                   | Description                                                                  |
-|---------------------|---------------------------------|------------------------------------------------------------------------------|
+| ------------------- | ------------------------------- | ---------------------------------------------------------------------------- |
 | `BASE_URL`          | `https://qa.harness.io/gateway` | Location of backend services to access                                       |
 | `TARGET_LOCALHOST`  | `true`                          | Whether to use local backend services. Set to `false` to use remote services |
 | `DISABLE_TYPECHECK` | `false`                         | Whether to disable the `ForkTsCheckerWebpackPlugin` for local development    |
