@@ -29,8 +29,10 @@ import { getIdentifierFromValue } from '@common/components/EntityReference/Entit
 import { useToaster } from '@common/exports'
 import type { GitQueryParams, Module } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
-
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
+
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+
 import css from './PreFlightCheckModal.module.scss'
 
 enum Section {
@@ -519,9 +521,14 @@ export function PreFlightCheckModal({
 
   const { showError } = useToaster()
   const { getString } = useStrings()
+  const { getRBACErrorMessage } = useRBACError()
   const { isGitSyncEnabled } = useAppStore()
-  const processResponseError = (error?: { message?: string }) => {
-    showError(error?.message ? error?.message : getString('somethingWentWrong'), undefined, 'pipeline.preflight.error')
+  const processResponseError = (error?: RBACError) => {
+    showError(
+      error ? getRBACErrorMessage(error) : getString('somethingWentWrong'),
+      undefined,
+      'pipeline.preflight.error'
+    )
     onCloseButtonClick()
   }
 
