@@ -24,7 +24,7 @@ import type { ConnectorRequestBody, ConnectorInfoDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
 import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
-import { setupServiceNowFormData, getHelpPanel } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { setupServiceNowFormData, useGetHelpPanel } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 
 import css from './ServiceNowConnector.module.scss'
@@ -81,7 +81,7 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
       }
     }
   }, [loadingConnectorSecrets])
-  getHelpPanel('ServiceNowConnectorDetails', 900)
+  useGetHelpPanel('ServiceNowConnectorDetails', 900)
   return loadingConnectorSecrets ? (
     <PageSpinner />
   ) : (

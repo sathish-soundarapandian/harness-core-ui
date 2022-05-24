@@ -24,7 +24,7 @@ import type { ConnectorRequestBody, ConnectorInfoDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
 import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
-import { setupJiraFormData, getHelpPanel } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { setupJiraFormData, useGetHelpPanel } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import css from './JiraConnector.module.scss'
 
@@ -81,7 +81,7 @@ const JiraDetailsForm: React.FC<StepProps<JiraFormProps> & AuthenticationProps> 
     }
   }, [loadingConnectorSecrets])
 
-  getHelpPanel('JiraConnectorDetails', 900)
+  useGetHelpPanel('JiraConnectorDetails', 900)
   return loadingConnectorSecrets ? (
     <PageSpinner />
   ) : (
