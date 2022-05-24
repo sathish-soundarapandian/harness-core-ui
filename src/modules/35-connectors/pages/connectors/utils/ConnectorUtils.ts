@@ -175,7 +175,7 @@ export const buildKubPayload = (formData: FormData) => {
   return { connector: savedData }
 }
 
-export const getHelpPanel = (refernceId: string, width: number) => {
+export const useGetHelpPanel = (refernceId: string, width: number) => {
   return useConnectorWizard({ helpPanel: { referenceId: refernceId, contentWidth: width } })
 }
 
