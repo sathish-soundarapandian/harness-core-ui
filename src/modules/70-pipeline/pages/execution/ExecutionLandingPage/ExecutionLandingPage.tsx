@@ -7,12 +7,18 @@
 
 import React, { Dispatch, SetStateAction, useEffect } from 'react'
 import { Intent } from '@blueprintjs/core'
+import type { GetDataError } from 'restful-react'
 import { useParams, useLocation } from 'react-router-dom'
 import { get, isEmpty, pickBy } from 'lodash-es'
 import { Text, Icon, PageError, PageSpinner, Layout } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { DeprecatedImageInfo, useGetExecutionConfig } from 'services/ci'
-import { GovernanceMetadata, ResponsePipelineExecutionDetail, useGetExecutionDetailV2 } from 'services/pipeline-ng'
+import {
+  Failure,
+  GovernanceMetadata,
+  ResponsePipelineExecutionDetail,
+  useGetExecutionDetailV2
+} from 'services/pipeline-ng'
 import type { ExecutionNode } from 'services/pipeline-ng'
 import { ExecutionStatus, isExecutionComplete } from '@pipeline/utils/statusHelpers'
 import {
@@ -49,7 +55,8 @@ const setStageIds = ({
   setAutoSelectedStepId,
   setSelectedStepId,
   setSelectedStageId,
-  data
+  data,
+  error
 }: {
   queryParams: ExecutionPageQueryParams
   setAutoSelectedStageId: Dispatch<SetStateAction<string>>
@@ -57,7 +64,12 @@ const setStageIds = ({
   setSelectedStepId: Dispatch<SetStateAction<string>>
   setSelectedStageId: Dispatch<SetStateAction<string>>
   data?: ResponsePipelineExecutionDetail | null
+  error?: GetDataError<Failure | Error> | null
 }): void => {
+  if (error) {
+    return
+  }
+
   // if user has selected a stage/step do not auto-update
   if (queryParams.stage || queryParams.step) {
     setAutoSelectedStageId('')
@@ -220,9 +232,10 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
       setAutoSelectedStepId,
       setSelectedStepId,
       setSelectedStageId,
-      data
+      data,
+      error
     })
-  }, [queryParams, data])
+  }, [queryParams, data, error])
 
   React.useEffect(() => {
     return () => {
