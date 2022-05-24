@@ -616,8 +616,8 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
       projectIdentifier: string
     }
     if (pipelineObj) {
-      const obj = get(pipelineObj, path.replace('.spec.connectorRef', ''))
-      if (obj.type === PdcType) {
+      const connectorRef = get(pipelineObj, path.replace('.spec.connectorRef', ''))
+      if (connectorRef) {
         return getConnectorListV2Promise({
           queryParams: {
             accountIdentifier: accountId,

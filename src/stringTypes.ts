@@ -3522,6 +3522,7 @@ export interface StringsMap {
   'cd.cloudFormation.awsURL': string
   'cd.cloudFormation.cfTemplateFile': string
   'cd.cloudFormation.continueStatus': string
+  'cd.cloudFormation.deploymentTypes.pdc': string
   'cd.cloudFormation.errors.awsURL': string
   'cd.cloudFormation.errors.getParam': string
   'cd.cloudFormation.errors.name': string
@@ -8375,10 +8376,6 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   'pipelineSteps.deploymentTypes.kubernetes': string
-  /**
-   * @deprecated migrate this string to module level file
-   */
-  'pipelineSteps.deploymentTypes.pdc': string
   /**
    * @deprecated migrate this string to module level file
    */
