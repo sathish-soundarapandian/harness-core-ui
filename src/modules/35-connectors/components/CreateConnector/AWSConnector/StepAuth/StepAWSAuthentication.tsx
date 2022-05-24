@@ -17,8 +17,8 @@ import { PageSpinner } from '@common/components'
 import type { ConnectorConfigDTO, ConnectorInfoDTO, AwsCredential } from 'services/cd-ng'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
 import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
-import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import type { ConnectorDetailsProps } from '@connectors/interfaces/ConnectorInterface'
+import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import css from './StepAWSAuthentication.module.scss'
 interface StepAWSAuthenticationProps extends ConnectorInfoDTO {
   name: string
