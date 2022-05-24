@@ -34,8 +34,7 @@ import {
   useGetConnector,
   GetConnectorQueryParams,
   getConnectorListV2Promise,
-  Failure,
-  useGetListOfBranchesWithStatus
+  Failure
 } from 'services/cd-ng'
 import {
   useGetPipeline,
@@ -56,7 +55,7 @@ import { useStrings } from 'framework/strings'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { clearRuntimeInput, validatePipeline } from '@pipeline/components/PipelineStudio/StepUtil'
 import { ErrorsStrip } from '@pipeline/components/ErrorsStrip/ErrorsStrip'
@@ -73,9 +72,8 @@ import type {
   CompletionItemInterface
 } from '@common/interfaces/YAMLBuilderProps'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import { useConfirmAction, useMutateAsGet, useQueryParams } from '@common/hooks'
+import { useConfirmAction, useMutateAsGet } from '@common/hooks'
 import type { FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
-import { useGitSyncStore } from 'framework/GitRepoStore/GitSyncStoreContext'
 import {
   scheduleTabsId,
   getDefaultExpressionBreakdownValues,
@@ -369,7 +367,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       getTemplatesResolvedPipeline: true
     }
   })
-  const isGitSyncEnabled = useMemo(() => !!pipelineResponse?.data?.gitDetails?.branch, [pipelineResponse])
+  // TODO: Check pipeline response JSON to see if git is enabled
+  const isGitSyncEnabled = true //useMemo(() => !!pipelineResponse?.data?.gitDetails?.branch, [pipelineResponse])
   const gitAwareForTriggerFeatureFlag =
     useFeatureFlag(FeatureFlag.GIT_AWARE_FOR_TRIGGER) || !!localStorage.GIT_AWARE_FOR_TRIGGER
   const gitAwareForTriggerEnabled = isGitSyncEnabled && gitAwareForTriggerFeatureFlag
@@ -1271,6 +1270,11 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
   }
   // TriggerConfigDTO is NGTriggerConfigV2 with optional identifier
   const submitTrigger = async (triggerYaml: NGTriggerConfigV2 | TriggerConfigDTO): Promise<void> => {
+    // TODO: Guard this using feature flag
+    if (gitAwareForTriggerEnabled) {
+      delete triggerYaml.inputYaml
+    }
+
     if (!isCreatingNewTrigger) {
       try {
         const { status, data } = await updateTrigger(yamlStringify({ trigger: clearNullUndefined(triggerYaml) }) as any)
@@ -1512,19 +1516,19 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     initialValues,
     currentPipeline
   ])
-  const { repoIdentifier } = useQueryParams<GitQueryParams>()
+  // const { repoIdentifier } = useQueryParams<GitQueryParams>()
 
-  const { data: branchesWithStatusData, refetch: getDefaultBranchName } = useGetListOfBranchesWithStatus({
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      yamlGitConfigIdentifier: repoIdentifier,
-      page: 0,
-      size: 1
-    },
-    lazy: true
-  })
+  // const { data: branchesWithStatusData, refetch:  getDefaultBranchName } = useGetListOfBranchesWithStatus({
+  //   queryParams: {
+  //     accountIdentifier: accountId,
+  //     orgIdentifier,
+  //     projectIdentifier,
+  //     yamlGitConfigIdentifier: repoIdentifier,
+  //     page: 0,
+  //     size: 1
+  //   },
+  //   lazy: true
+  // })
 
   const { data: connectorData, refetch: getConnectorDetails } = useGetConnector({
     identifier: getIdentifierFromValue(
@@ -1535,37 +1539,22 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     queryParams: connectorScopeParams,
     lazy: true
   })
-  const { gitSyncRepos } = useGitSyncStore()
 
-  useEffect(() => {
-    if (isCreatingNewTrigger) {
-      getDefaultBranchName()
-    }
-  }, [isCreatingNewTrigger, getDefaultBranchName])
+  // useEffect(() => {
+  //   if (isCreatingNewTrigger) {
+  //     getDefaultBranchName()
+  //   }
+  // }, [isCreatingNewTrigger, getDefaultBranchName])
 
   const onFormikEffect: FormikEffectProps['onChange'] = ({ nextValues, formik }) => {
     formikRef.current = formik
 
     if (isCreatingNewTrigger && !nextValues._pipelineBranchNameCustomValue && !nextValues.pipelineBranchName) {
-      // connectorRef is the same as pipeline git sync config, and pipelineBranchName is empty
-      // -> Set pipelineBranchName to <+trigger.branch>
-      // @see https://harness.atlassian.net/browse/CI-4424
-      if (
-        nextValues.connectorRef?.value &&
-        gitSyncRepos?.find(({ gitConnectorRef }) => gitConnectorRef === nextValues.connectorRef?.value)
-      ) {
-        formik.setValues({
-          ...nextValues,
-          pipelineBranchName: DEFAULT_TRIGGER_BRANCH,
-          _pipelineBranchNameCustomValue: true
-        })
-      } else {
-        formik.setValues({
-          ...nextValues,
-          pipelineBranchName: branchesWithStatusData?.data?.defaultBranch?.branchName || '',
-          _pipelineBranchNameCustomValue: true
-        })
-      }
+      formik.setValues({
+        ...nextValues,
+        pipelineBranchName: DEFAULT_TRIGGER_BRANCH,
+        _pipelineBranchNameCustomValue: true
+      })
     }
   }
 
