@@ -146,13 +146,16 @@ const ConnectorDetailsStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectorDe
       case Connectors.KUBERNETES_CLUSTER:
         return 'KubernetesConnectorOverview'
       case Connectors.ARTIFACTORY:
-        return 'KubernetesConnectorOverview'
+        return 'AritfactoryOverview'
       case Connectors.DOCKER:
         return 'DockerConnectorOverview'
       case Connectors.Jira:
         return 'JiraConnectorOverview'
       case Connectors.SERVICE_NOW:
         return 'ServiceNowConnectorOverview'
+      case Connectors.HttpHelmRepo:
+      case Connectors.NEXUS:
+        return 'NexusOverview'
       default:
         return ''
     }

@@ -27,6 +27,7 @@ import TextReference, { TextReferenceInterface, ValueType } from '@secrets/compo
 import { useStrings } from 'framework/strings'
 import { PageSpinner } from '@common/components'
 import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
+import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from './StepNexusConnector.module.scss'
 
@@ -102,7 +103,7 @@ const StepNexusAuthentication: React.FC<StepProps<StepNexusAuthenticationProps> 
   const handleSubmit = (formData: ConnectorConfigDTO) => {
     nextStep?.({ ...props.connectorInfo, ...prevStepData, ...formData } as StepNexusAuthenticationProps)
   }
-
+  useConnectorWizard({ helpPanel: { referenceId: 'NexusDetails', contentWidth: 900 } })
   return loadingConnectorSecrets ? (
     <PageSpinner />
   ) : (

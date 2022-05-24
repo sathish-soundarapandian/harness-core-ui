@@ -27,6 +27,7 @@ import { useStrings } from 'framework/strings'
 import { PageSpinner } from '@common/components'
 import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
+import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from '../../NexusConnector/StepAuth/StepNexusConnector.module.scss'
 
@@ -97,7 +98,7 @@ const StepArtifactoryAuthentication: React.FC<
   const handleSubmit = (formData: ConnectorConfigDTO) => {
     nextStep?.({ ...props.connectorInfo, ...prevStepData, ...formData } as StepArtifactoryAuthenticationProps)
   }
-
+  useConnectorWizard({ helpPanel: { referenceId: 'AritfactoryDetails', contentWidth: 900 } })
   return loadingConnectorSecrets ? (
     <PageSpinner />
   ) : (
