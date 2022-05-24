@@ -109,6 +109,9 @@ title:
   gcpKms: GCP Key Management Service
   errorTracking: 'Error Tracking'
   azure: 'Azure Cloud Provider'
+  harnessImageConnectorRef: 'Override Image Connector'
+placeholder:
+  harnessImageConnectorRef: 'Select Image Connector'
 name_labels:
   Kubernetes: 'Kubernetes Connector Name'
   HttpHelmRepo: 'Helm Http Connector Name'

@@ -17,8 +17,8 @@ import type {
   TemplateStudioPathProps,
   TemplateStudioQueryParams
 } from '@common/interfaces/RouteInterfaces'
-import { StoreType } from 'services/pipeline-ng'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
+import { StoreType } from '@common/constants/GitSyncTypes'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import noEntityFoundImage from './images/no-entity-found.svg'
 import css from './NoEntityFound.module.scss'

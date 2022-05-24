@@ -57,7 +57,7 @@
     &:hover,
     &:active {
       background-color: transparent !important;
-      color: black;
+      color: var(--grey-1000);
       font-weight: 800;
     }
   }
@@ -89,7 +89,7 @@
   // TODO: Replace color once it is available in UIKit
   background: var(--grey-50);
   // TODO: Replace color once it is available in UIKit
-  border: 1px solid #d9dae6;
+  border: 1px solid var(--grey-200);
   box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.08), 0px 0.5px 2px rgba(96, 97, 112, 0.16);
   border-radius: 8px;
   padding: var(--spacing-large);
@@ -107,9 +107,9 @@
 
   &.active {
     // TODO: Replace color once it is available in UIKit
-    background: #f1f9ff;
+    background: rgb(241, 249, 255);
     // TODO: Replace color once it is available in UIKit
-    border: 1px solid #25a6f7;
+    border: 1px solid rgb(37, 166, 247);
     box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.104513);
 
     .cardTitle {
@@ -117,7 +117,7 @@
 
       &:before {
         // TODO: Replace color once it is available in UIKit
-        background-color: #0278d5;
+        background-color: var(--primary-7);
       }
 
       &:after {
@@ -145,7 +145,7 @@
     display: block;
     position: absolute;
     // TODO: Replace color once it is available in UIKit
-    border: 1px solid #0278d5;
+    border: 1px solid var(--primary-7);
     width: 16px;
     height: 16px;
     border-radius: 50%;
