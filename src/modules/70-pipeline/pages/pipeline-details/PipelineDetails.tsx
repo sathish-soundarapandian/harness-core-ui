@@ -25,7 +25,8 @@ import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/Pipeli
 import GitPopover from '@pipeline/components/GitPopover/GitPopover'
 import GenericErrorHandler from '@common/pages/GenericErrorHandler/GenericErrorHandler'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import NoEntityFound from '../utils/NoEntityFound/NoEntityFound'
 import css from './PipelineDetails.module.scss'
 // add custom event to the global scope
@@ -38,6 +39,8 @@ declare global {
 export default function PipelineDetails({ children }: React.PropsWithChildren<unknown>): React.ReactElement {
   const { orgIdentifier, projectIdentifier, pipelineIdentifier, accountId, module } =
     useParams<PipelineType<PipelinePathProps>>()
+  const ciGitAwareForTriggerEnabled =
+    useFeatureFlag(FeatureFlag.GIT_AWARE_FOR_TRIGGER) || !!localStorage.GIT_AWARE_FOR_TRIGGER
   const { isGitSyncEnabled } = useAppStore()
   const { GIT_SIMPLIFICATION } = useFeatureFlags()
   const location = useLocation()
@@ -81,7 +84,7 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
   }, [repoIdentifier])
 
   React.useEffect(() => {
-    if (branch && branchesWithStatusData?.data?.defaultBranch?.branchName !== branch) {
+    if (branch && branchesWithStatusData?.data?.defaultBranch?.branchName !== branch && !ciGitAwareForTriggerEnabled) {
       setTriggerTabDisabled(true)
     } else {
       setTriggerTabDisabled(false)

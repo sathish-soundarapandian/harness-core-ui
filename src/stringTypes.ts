@@ -3404,6 +3404,7 @@ export interface StringsMap {
   'triggers.pageNotFound': string
   'triggers.pipelineExecutionInput': string
   'triggers.pipelineInputLabel': string
+  'triggers.pipelineReferenceBranch': string
   'triggers.schedulePanel.FRI': string
   'triggers.schedulePanel.MON': string
   'triggers.schedulePanel.SAT': string
