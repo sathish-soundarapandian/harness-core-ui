@@ -80,6 +80,21 @@
       window.HARNESS_ENABLE_NG_AUTH_UI = true
     </script>
     <% } %>
+    <script>
+      function getLoginPageURL({ returnUrl }) {
+        var basePath = window.HARNESS_ENABLE_NG_AUTH_UI
+          ? '/auth/#/signin'
+          : `${window.location.pathname.replace(/\/ng\//, '/')}#/login` // pick current path, but remove `/ng/`
+
+        return returnUrl
+          ? `${basePath}?action=signout&returnUrl=${encodeURIComponent(returnUrl)}`
+          : `${basePath}?action=signout`
+      }
+      var token = localStorage.getItem('token')
+      if (!token) {
+        window.location = getLoginPageURL({ returnUrl: window.location.href })
+      }
+    </script>
 
     <!-- AppDynamic EUM -->
     <script>
