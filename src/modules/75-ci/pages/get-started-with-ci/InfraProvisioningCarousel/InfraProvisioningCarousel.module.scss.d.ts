@@ -9,6 +9,7 @@
 declare const styles: {
   readonly bg: string
   readonly centerAlign: string
+  readonly closeBtn: string
   readonly fixedMinHeight: string
   readonly main: string
   readonly provisioningStatus: string

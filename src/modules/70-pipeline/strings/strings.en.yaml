@@ -656,6 +656,7 @@ artifactsSelection:
   repositoryPort: Repository Port
   repositoryPortPlaceholder: Enter Repository Port
   repositoryPlaceholder: Enter Repository
+  artifactType: Artifact Type
   artifactDetails: Artifact Details
   artifactTyperequired: Artifact Type is required
   loadingTags: Loading Tags...

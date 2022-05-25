@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useCallback } from 'react'
 import {
   Layout,
   Text,
@@ -19,11 +19,13 @@ import {
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { Color, FontVariation } from '@harness/design-system'
+import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { getConnectorNameFromValue, getStatus } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import type { PrimaryArtifact, SidecarArtifactWrapper } from 'services/cd-ng'
 import {
   ArtifactIconByType,
+  ArtifactTitleIdByType,
   ENABLED_ARTIFACT_TYPES,
   ModalViewFor
 } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
@@ -86,12 +88,16 @@ function ArtifactListView({
   )
   const primaryConnectorName = getConnectorNameFromValue(primaryArtifact?.spec?.connectorRef, fetchedConnectorResponse)
 
-  const getPrimaryArtifactRepository = (artifactType: ArtifactType): string => {
-    if (artifactType === ENABLED_ARTIFACT_TYPES.CustomArtifact) {
-      return getString('common.repo_provider.customLabel')
-    }
-    return primaryConnectorName ?? primaryArtifact.spec?.connectorRef
-  }
+  const getPrimaryArtifactRepository = useCallback(
+    (artifactType: ArtifactType): string => {
+      if (artifactType === ENABLED_ARTIFACT_TYPES.CustomArtifact) {
+        return getString('common.repo_provider.customLabel')
+      }
+      return defaultTo(primaryConnectorName, primaryArtifact?.spec?.connectorRef)
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [primaryArtifact?.spec?.connectorRef, primaryConnectorName]
+  )
 
   return (
     <Layout.Vertical style={{ width: '100%' }}>
@@ -99,6 +105,9 @@ function ArtifactListView({
         {!!(sideCarArtifact?.length || primaryArtifact?.type) && (
           <div className={cx(css.artifactList, css.listHeader)}>
             <span></span>
+            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
+              {getString('pipeline.artifactsSelection.artifactType')}
+            </Text>
             <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('artifactRepository')}</Text>
             <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('location')}</Text>
             <span></span>
@@ -114,6 +123,7 @@ function ArtifactListView({
                     {getString('primary')}
                   </Text>
                 </div>
+                <div>{getString(ArtifactTitleIdByType[primaryArtifact?.type])}</div>
                 <div className={css.connectorNameField}>
                   <Icon padding={{ right: 'small' }} name={ArtifactIconByType[primaryArtifact.type]} size={18} />
                   <Text
@@ -137,7 +147,7 @@ function ArtifactListView({
                   )}
                 </div>
                 <div>
-                  <Text width={340} lineClamp={1} style={{ color: Color.GREY_500 }}>
+                  <Text width={340} lineClamp={1} color={Color.GREY_500}>
                     <span className={css.noWrap}>{getPrimaryArtifactLocation(primaryArtifact)}</span>
                   </Text>
                 </div>
@@ -186,7 +196,7 @@ function ArtifactListView({
                         </Text>
                       </Text>
                     </div>
-
+                    <div>{getString(ArtifactTitleIdByType[sidecar?.type as ArtifactType])}</div>
                     <div className={css.connectorNameField}>
                       <Icon
                         padding={{ right: 'small' }}

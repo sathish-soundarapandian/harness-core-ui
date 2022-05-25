@@ -29,6 +29,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useQueryParams } from '@common/hooks'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMenu'
+import { useHostedBuilds } from '@common/hooks/useHostedBuild'
 import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import { useGetPipelines } from '@pipeline/hooks/useGetPipelines'
 import { useSideNavContext } from 'framework/SideNavStore/SideNavContext'
@@ -61,11 +62,12 @@ export default function CISideNav(): React.ReactElement {
   const routeMatch = useRouteMatch()
   const history = useHistory()
   const module = 'ci'
-  const { updateAppStore } = useAppStore()
-  const { CI_OVERVIEW_PAGE, CIE_HOSTED_BUILDS } = useFeatureFlags()
+  const { updateAppStore, selectedProject } = useAppStore()
+  const { CI_OVERVIEW_PAGE } = useFeatureFlags()
+  const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
   const { getString } = useStrings()
-  const { showGetStartedTab, setShowGetStartedTab } = useSideNavContext()
+  const { showGetStartedTabInMainMenu, setShowGetStartedTabInMainMenu } = useSideNavContext()
   const {
     data: fetchPipelinesData,
     loading: fetchingPipelines,
@@ -80,15 +82,17 @@ export default function CISideNav(): React.ReactElement {
   })
 
   useEffect(() => {
-    if (CIE_HOSTED_BUILDS) {
+    if (enabledHostedBuildsForFreeUsers && selectedProject?.identifier) {
       fetchPipelines()
     }
-  }, [])
+  }, [selectedProject?.identifier])
 
   useEffect(() => {
     if (!fetchingPipelines && fetchPipelinesData) {
       const { data, status } = fetchPipelinesData
-      setShowGetStartedTab(status === 'SUCCESS' && (data as PagePMSPipelineSummaryResponse)?.totalElements === 0)
+      setShowGetStartedTabInMainMenu(
+        status === 'SUCCESS' && (data as PagePMSPipelineSummaryResponse)?.totalElements === 0
+      )
     }
   }, [fetchPipelinesData])
 
@@ -199,10 +203,10 @@ export default function CISideNav(): React.ReactElement {
       />
       {projectIdentifier && orgIdentifier ? (
         <React.Fragment>
-          {showGetStartedTab && (
+          {showGetStartedTabInMainMenu && (
             <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCI({ ...params, module })} />
           )}
-          {!showGetStartedTab && CI_OVERVIEW_PAGE && (
+          {!showGetStartedTabInMainMenu && CI_OVERVIEW_PAGE && (
             <SidebarLink label={getString('overview')} to={routes.toProjectOverview({ ...params, module })} />
           )}
           <SidebarLink label="Builds" to={routes.toDeployments({ ...params, module })} />

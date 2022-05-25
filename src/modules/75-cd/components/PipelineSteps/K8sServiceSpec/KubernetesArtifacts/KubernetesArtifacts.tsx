@@ -22,7 +22,8 @@ export const KubernetesArtifacts: React.FC<KubernetesArtifactsProps> = props => 
     initialValues: props.initialValues,
     readonly: props.readonly,
     allowableTypes: props.allowableTypes,
-    fromTrigger: props.fromTrigger
+    fromTrigger: props.fromTrigger,
+    artifact: props.artifact
   }
   return (
     <>

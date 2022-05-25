@@ -63,6 +63,8 @@ export const getTriggerIcon = ({
         return ArtifactIconByType.Ecr
       case ENABLED_ARTIFACT_TYPES.DockerRegistry:
         return ArtifactIconByType.DockerRegistry
+      case ENABLED_ARTIFACT_TYPES.Acr:
+        return ArtifactIconByType.Acr
     }
   }
   return 'yaml-builder-trigger'
@@ -126,6 +128,11 @@ const triggerDrawerMap = (getString: (key: StringKeys) => string): AddDrawerMapI
           itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry]),
           value: ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
           iconName: ArtifactIconByType.ArtifactoryRegistry
+        },
+        {
+          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Acr]),
+          value: ENABLED_ARTIFACT_TYPES.Acr,
+          iconName: ArtifactIconByType.Acr
         }
       ]
     },
@@ -133,12 +140,6 @@ const triggerDrawerMap = (getString: (key: StringKeys) => string): AddDrawerMapI
       categoryLabel: getString('common.comingSoon'),
       categoryValue: 'ArtifactComingSoon',
       items: [
-        {
-          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Acr]),
-          value: ENABLED_ARTIFACT_TYPES.Acr,
-          iconName: ArtifactIconByType.Acr,
-          disabled: true
-        },
         {
           itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Nexus3Registry]),
           value: ENABLED_ARTIFACT_TYPES.Nexus3Registry,

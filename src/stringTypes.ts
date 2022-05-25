@@ -203,7 +203,6 @@ export interface StringsMap {
   'common.entityReferenceSubTitle': string
   'common.entityReferenceTitle': string
   'common.entityType': string
-  'common.environment.fetchNext': string
   'common.environmentCreated': string
   'common.environmentGroup.createNew': string
   'common.environmentGroup.created': string
@@ -276,6 +275,7 @@ export interface StringsMap {
   'common.git.addUserCredentialLabel': string
   'common.git.applicationId': string
   'common.git.bitbucketAccountUrl': string
+  'common.git.bitbucketOrgUrlPlaceholder': string
   'common.git.bitbucketPlaceholderSSH': string
   'common.git.bitbucketRepoUrl': string
   'common.git.bitbucketUrlPlaceholder': string
@@ -710,7 +710,9 @@ export interface StringsMap {
   'common.tagName': string
   'common.targetBranch': string
   'common.targetBranchPlaceholder': string
-  'common.template.deleteTemplate.errorWhileDeleting': string
+  'common.template.deleteTemplate.errorWhileDeletingTemplate': string
+  'common.template.deleteTemplate.errorWhileDeletingTemplates': string
+  'common.template.deleteTemplate.templateDeleted': string
   'common.template.deleteTemplate.templatesDeleted': string
   'common.template.label': string
   'common.template.saveAsNewTemplateHeading': string
@@ -2000,6 +2002,7 @@ export interface StringsMap {
   'connectors.name_labels.HttpHelmRepo': string
   'connectors.name_labels.Kubernetes': string
   'connectors.name_labels.Nexus': string
+  'connectors.name_labels.PDC': string
   'connectors.name_labels.SecretManager': string
   'connectors.name_labels.Splunk': string
   'connectors.name_labels.gcpKms': string
@@ -2017,6 +2020,14 @@ export interface StringsMap {
   'connectors.nexus.nexusServerUrl': string
   'connectors.pagerDutyConnectorDetails': string
   'connectors.parameters': string
+  'connectors.pdc.editHosts': string
+  'connectors.pdc.errorUploading': string
+  'connectors.pdc.hosts': string
+  'connectors.pdc.hostsRule': string
+  'connectors.pdc.hostsUpload1': string
+  'connectors.pdc.hostsUpload2': string
+  'connectors.pdc.testConnection.step1': string
+  'connectors.placeholder.harnessImageConnectorRef': string
   'connectors.policyEvaluations.failedToSave': string
   'connectors.policyEvaluations.warning': string
   'connectors.prometheus.urlValidation': string
@@ -2114,11 +2125,13 @@ export interface StringsMap {
   'connectors.title.gitConnector': string
   'connectors.title.githubConnector': string
   'connectors.title.gitlabConnector': string
+  'connectors.title.harnessImageConnectorRef': string
   'connectors.title.hashicorpVault': string
   'connectors.title.helmConnector': string
   'connectors.title.jira': string
   'connectors.title.k8sCluster': string
   'connectors.title.nexus': string
+  'connectors.title.pdcConnector': string
   'connectors.title.secretManager': string
   'connectors.title.serviceNow': string
   'connectors.title.splunk': string
@@ -2487,6 +2500,7 @@ export interface StringsMap {
   'pipeline.artifactsSelection.artifactDirectory': string
   'pipeline.artifactsSelection.artifactDirectoryPlaceholder': string
   'pipeline.artifactsSelection.artifactNamePlaceholder': string
+  'pipeline.artifactsSelection.artifactType': string
   'pipeline.artifactsSelection.artifactTyperequired': string
   'pipeline.artifactsSelection.errors.noRepositories': string
   'pipeline.artifactsSelection.existingDocker.enterTagRegex': string
@@ -3564,6 +3578,11 @@ export interface StringsMap {
   'cd.editIdError': string
   'cd.enterTragets': string
   'cd.enterWorkDirectory': string
+  'cd.environment.createSubTitle': string
+  'cd.environment.delete': string
+  'cd.environment.deleteConfirmation': string
+  'cd.environment.deleted': string
+  'cd.environment.fetchNext': string
   'cd.environmentCreated': string
   'cd.environmentDelete': string
   'cd.environmentDeleteMessage': string
@@ -3582,6 +3601,13 @@ export interface StringsMap {
   'cd.gitOps': string
   'cd.gitOpsWizardTitle': string
   'cd.harnessManagedGitOpsWizardTitle': string
+  'cd.infrastructure.createNew': string
+  'cd.infrastructure.created': string
+  'cd.infrastructure.delete': string
+  'cd.infrastructure.deleteConfirmation': string
+  'cd.infrastructure.deleted': string
+  'cd.infrastructure.infrastructureDefinitions': string
+  'cd.infrastructure.noInfrastructureInEnvironment': string
   'cd.installAdapterHelperText': string
   'cd.launchArgo': string
   'cd.learnMore': string
@@ -4662,6 +4688,7 @@ export interface StringsMap {
   'cf.environments.apiKeys.addKey': string
   'cf.environments.apiKeys.addKeyTitle': string
   'cf.environments.apiKeys.clientType': string
+  'cf.environments.apiKeys.create': string
   'cf.environments.apiKeys.deleteMessage': string
   'cf.environments.apiKeys.deleteSuccess': string
   'cf.environments.apiKeys.deleteTitle': string
@@ -5162,20 +5189,20 @@ export interface StringsMap {
   'ci.getStartedWithCI.carousel.labels.integration': string
   'ci.getStartedWithCI.carousel.labels.useCaching': string
   'ci.getStartedWithCI.carousel.labels.usePlugins': string
-  'ci.getStartedWithCI.chooseAnOption': string
   'ci.getStartedWithCI.chooseDiffInfra': string
   'ci.getStartedWithCI.codeRepo': string
   'ci.getStartedWithCI.codeRepoLabel': string
   'ci.getStartedWithCI.codebaseHelptext': string
-  'ci.getStartedWithCI.codebaseRepoLabel': string
   'ci.getStartedWithCI.configInfra': string
-  'ci.getStartedWithCI.connectSCM': string
+  'ci.getStartedWithCI.connectRepo': string
   'ci.getStartedWithCI.createPipeline': string
   'ci.getStartedWithCI.devFriendly': string
   'ci.getStartedWithCI.devFriendlyHelpText': string
   'ci.getStartedWithCI.dockerRunner': string
   'ci.getStartedWithCI.dockerRunnerBuildLocation': string
   'ci.getStartedWithCI.duration': string
+  'ci.getStartedWithCI.fetchingRepos': string
+  'ci.getStartedWithCI.fieldIsMissing': string
   'ci.getStartedWithCI.firstPipeline': string
   'ci.getStartedWithCI.flexibleInfra': string
   'ci.getStartedWithCI.flexibleInfraHelpText': string
@@ -5186,7 +5213,6 @@ export interface StringsMap {
   'ci.getStartedWithCI.infraProvisioningFailed': string
   'ci.getStartedWithCI.integratedCICD': string
   'ci.getStartedWithCI.integratedCICDHelpText': string
-  'ci.getStartedWithCI.javaLabel': string
   'ci.getStartedWithCI.k8sBuildLocation': string
   'ci.getStartedWithCI.languageAgnostic': string
   'ci.getStartedWithCI.languageAgnosticHelpText': string
@@ -5198,8 +5224,10 @@ export interface StringsMap {
   'ci.getStartedWithCI.parallelizationHelpText': string
   'ci.getStartedWithCI.parameterization': string
   'ci.getStartedWithCI.parameterizationHelpText': string
+  'ci.getStartedWithCI.plsChoose': string
   'ci.getStartedWithCI.provisionSecureEnv': string
   'ci.getStartedWithCI.provisioningFailed': string
+  'ci.getStartedWithCI.provisioningHelpText': string
   'ci.getStartedWithCI.provisioningSuccessful': string
   'ci.getStartedWithCI.quicklyCreate': string
   'ci.getStartedWithCI.searchRepo': string
@@ -5209,12 +5237,11 @@ export interface StringsMap {
   'ci.getStartedWithCI.selectRepo': string
   'ci.getStartedWithCI.selectYourRepo': string
   'ci.getStartedWithCI.setUpAuth': string
-  'ci.getStartedWithCI.startSamplePipeline': string
+  'ci.getStartedWithCI.startProvisioning': string
   'ci.getStartedWithCI.takeToTheNextLevel': string
   'ci.getStartedWithCI.ti': string
   'ci.getStartedWithCI.tiHelpText': string
   'ci.getStartedWithCI.troubleShootFailedProvisioning': string
-  'ci.getStartedWithCI.tryASamplePipeline': string
   'ci.getStartedWithCI.verifyConnection': string
   'ci.gradleNote1': string
   'ci.gradleNote2': string

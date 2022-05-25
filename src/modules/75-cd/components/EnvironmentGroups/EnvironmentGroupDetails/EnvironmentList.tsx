@@ -18,7 +18,8 @@ import { useDeepCompareEffect } from '@common/hooks'
 import {
   DeleteCheckbox,
   EnvironmentName,
-  EnvironmentTypes
+  EnvironmentTypes,
+  withEnvironment
 } from '@cd/components/EnvironmentsV2/EnvironmentsList/EnvironmentsListColumns'
 
 import { LastUpdatedBy } from '../EnvironmentGroupsList/EnvironmentGroupsListColumns'
@@ -62,21 +63,19 @@ export function EnvironmentList({
         Header: getString('environment').toUpperCase(),
         id: 'name',
         width: '50%',
-        Cell: EnvironmentName
+        Cell: withEnvironment(EnvironmentName)
       },
       {
         Header: getString('typeLabel').toUpperCase(),
         id: 'type',
         width: '15%',
-        Cell: EnvironmentTypes
+        Cell: withEnvironment(EnvironmentTypes)
       },
       {
         Header: getString('lastUpdatedBy').toUpperCase(),
         id: 'lastUpdatedBy',
         width: '30%',
-        Cell: ({ row }: any) => (
-          <LastUpdatedBy lastModifiedAt={/*istanbul ignore next*/ row?.original?.lastModifiedAt} />
-        )
+        Cell: withEnvironment(LastUpdatedBy)
       },
       {
         Header: (

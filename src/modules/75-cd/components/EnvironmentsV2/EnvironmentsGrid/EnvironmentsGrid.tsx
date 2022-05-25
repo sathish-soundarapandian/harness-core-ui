@@ -7,21 +7,28 @@
 
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { defaultTo, get } from 'lodash-es'
+import { defaultTo } from 'lodash-es'
 
 import { Container, Layout, useToaster } from '@harness/uicore'
 
+import { useStrings } from 'framework/strings'
 import { EnvironmentResponse, useDeleteEnvironmentV2 } from 'services/cd-ng'
 
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 
-import { EnvironmentCard } from './EnvironmentsCard'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+
+import { EnvironmentCard } from './EnvironmentCard'
+import { EnvironmentDetailsTab } from '../utils'
 
 export default function EnvironmentsGrid({ response, refetch }: any) {
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { showSuccess, showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
+  const { getString } = useStrings()
   const history = useHistory()
+
   const { mutate: deleteItem } = useDeleteEnvironmentV2({
     queryParams: {
       accountIdentifier: accountId,
@@ -38,7 +45,7 @@ export default function EnvironmentsGrid({ response, refetch }: any) {
         projectIdentifier,
         module,
         environmentIdentifier: defaultTo(id, ''),
-        sectionId: 'CONFIGURATION'
+        sectionId: EnvironmentDetailsTab.CONFIGURATION
       })
     )
   }
@@ -46,12 +53,13 @@ export default function EnvironmentsGrid({ response, refetch }: any) {
   const handleEnvDelete = async (id: string) => {
     try {
       await deleteItem(id, { headers: { 'content-type': 'application/json' } })
-      showSuccess(`Successfully deleted environment ${id}`)
+      showSuccess(getString('cd.environment.deleted'))
       refetch()
     } catch (e: any) {
-      showError(get(e, 'data.message', e?.message), 0, 'cf.delete.env.error')
+      showError(getRBACErrorMessage(e))
     }
   }
+
   return (
     <Container width={1160} style={{ margin: '0 auto' }}>
       <Layout.Masonry
@@ -59,7 +67,7 @@ export default function EnvironmentsGrid({ response, refetch }: any) {
         gutter={25}
         items={response?.content || []}
         renderItem={(item: EnvironmentResponse) => (
-          <EnvironmentCard environment={item} onEdit={handleEnvEdit} onDelete={handleEnvDelete} />
+          <EnvironmentCard response={item} onEdit={handleEnvEdit} onDelete={handleEnvDelete} />
         )}
         keyOf={(item: EnvironmentResponse) => item.environment?.identifier}
       />

@@ -1,0 +1,28 @@
+.uploadComponent {
+  border: 1px dashed var(--primary-7);
+  border-radius: var(--spacing-xsmall);
+  flex: 1;
+  height: 200px;
+  padding: var(--spacing-large);
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  box-sizing: border-box;
+  text-align: center;
+  svg,
+  p {
+    color: var(--primary-7) !important;
+  }
+  .uploadIcon {
+    margin-bottom: var(--spacing-normal);
+  }
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.highlightedDrop {
+  border: 2px dashed var(--primary-7);
+}

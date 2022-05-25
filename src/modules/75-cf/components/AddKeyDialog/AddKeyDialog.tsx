@@ -28,7 +28,7 @@ import { AddAPIKeyQueryParams, ApiKey, useAddAPIKey } from 'services/cf/index'
 import { useEnvStrings } from '@cf/hooks/environment'
 import { useToaster } from '@common/exports'
 import { getIdentifierFromName } from '@common/utils/StringUtils'
-import { EnvironmentSDKKeyType, getErrorMessage } from '@cf/utils/CFUtils'
+import { EnvironmentSDKKeyType, getErrorMessage, showToaster } from '@cf/utils/CFUtils'
 import type { EnvironmentResponseDTO } from 'services/cd-ng'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -91,7 +91,10 @@ const AddKeyDialog: React.FC<Props> = ({ disabled, primary, environment, onCreat
       name: values.name,
       type: values.type === 'server' ? 'Server' : 'Client'
     })
-      .then((created: ApiKey) => onCreate(created, hideModal))
+      .then((created: ApiKey) => {
+        onCreate(created, hideModal)
+        showToaster(getString('cf.environments.apiKeys.create'))
+      })
       .catch(error => showError(getErrorMessage(error), undefined, 'cf.create.key.error'))
   }
 

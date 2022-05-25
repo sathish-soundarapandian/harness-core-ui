@@ -50,6 +50,9 @@ export interface CheckboxOptions {
   visible: boolean
 }
 
+const getTemplateNameWithVersions = (name: string, versions: string[]) =>
+  `${name} (${versions && versions.length > 1 ? versions.join(', ') : versions[0]})`
+
 export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
   const { getString } = useStrings()
   const { template, onClose, onSuccess } = props
@@ -60,6 +63,7 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
   const { getRBACErrorMessage } = useRBACError()
   const { isGitSyncEnabled } = useAppStore()
   const { mutate: deleteTemplates, loading: deleteLoading } = useDeleteTemplateVersionsOfIdentifier({})
+  const [templateVersionsToDelete, setTemplateVersionsToDelete] = React.useState<string[]>([])
 
   const {
     data: templateData,
@@ -87,6 +91,7 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
   }, [templatesError])
 
   const performDelete = async (commitMsg: string, versions?: string[]): Promise<void> => {
+    const areMultipleVersionsSelected = !!(versions && versions.length > 1)
     try {
       const resp = await deleteTemplates(defaultTo(template.identifier, ''), {
         queryParams: {
@@ -105,17 +110,33 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
         headers: { 'content-type': 'application/json' }
       })
       if (resp?.status === 'SUCCESS') {
-        showSuccess(getString('common.template.deleteTemplate.templatesDeleted', { name: template.name }))
+        const templateNameWithVersions = getTemplateNameWithVersions(template.name as string, versions as string[])
+        showSuccess(
+          areMultipleVersionsSelected
+            ? getString('common.template.deleteTemplate.templatesDeleted', { name: templateNameWithVersions })
+            : getString('common.template.deleteTemplate.templateDeleted', { name: templateNameWithVersions })
+        )
         onSuccess?.()
       } else {
         throw getString('somethingWentWrong')
       }
     } catch (err) {
-      showError(getRBACErrorMessage(err), undefined, 'common.template.deleteTemplate.errorWhileDeleting')
+      showError(
+        getRBACErrorMessage(err),
+        undefined,
+        areMultipleVersionsSelected
+          ? 'common.template.deleteTemplate.errorWhileDeletingTemplates'
+          : 'common.template.deleteTemplate.errorWhileDeletingTemplate'
+      )
     }
   }
 
-  const { confirmDelete } = useDeleteConfirmationDialog(template, 'template', performDelete, true)
+  const { confirmDelete } = useDeleteConfirmationDialog(
+    { ...template, name: getTemplateNameWithVersions(template.name as string, templateVersionsToDelete) },
+    'template',
+    performDelete,
+    true
+  )
 
   React.useEffect(() => {
     if (templateData?.data?.content) {
@@ -156,6 +177,7 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
         <Formik<{ checkboxOptions: CheckboxOptions[] }>
           onSubmit={values => {
             const selectedVersions = values.checkboxOptions.filter(item => item.checked).map(item => item.value)
+            setTemplateVersionsToDelete(selectedVersions)
             confirmDelete({ versions: selectedVersions })
           }}
           enableReinitialize={true}

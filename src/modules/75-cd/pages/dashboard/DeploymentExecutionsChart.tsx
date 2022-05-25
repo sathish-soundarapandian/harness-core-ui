@@ -10,7 +10,6 @@ import { Container, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
-import type { TooltipFormatterContextObject } from 'highcharts'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetDeploymentExecution } from 'services/cd-ng'
@@ -18,39 +17,8 @@ import NoDeployments from '@pipeline/components/Dashboards/images/NoDeployments.
 
 import { useErrorHandler } from '@pipeline/components/Dashboards/shared'
 import { OverviewChartsWithToggle } from '@common/components/OverviewChartsWithToggle/OverviewChartsWithToggle'
-import { renderTooltipContent } from '@pipeline/components/LandingDashboardDeploymentsWidget/LandingDashboardDeploymentsWidget'
+import { getTooltip } from '@pipeline/utils/DashboardUtils'
 import styles from './CDDashboardPage.module.scss'
-
-interface PointStats {
-  deployments?: {
-    failure?: number
-    success?: number
-    total?: number
-  }
-  time?: number
-}
-const getTooltip = (currPoint: TooltipFormatterContextObject): string => {
-  const custom = currPoint?.series?.userOptions?.custom
-  const point: PointStats = custom?.[currPoint.key]
-  const time =
-    point && point?.time
-      ? new Date(point?.time).toLocaleDateString('en-US', { day: 'numeric', month: 'long' })
-      : currPoint.x
-  let failureRate: string | number = 'Infinity'
-  if (point?.deployments?.failure && point.deployments?.total) {
-    failureRate = ((point.deployments.failure / point.deployments.total) * 100).toFixed(1) + '%'
-  }
-  if (point?.deployments?.failure === 0) {
-    failureRate = '0'
-  }
-  return renderTooltipContent({
-    time,
-    failureRate,
-    count: point?.deployments?.total,
-    successCount: point?.deployments?.success,
-    failureCount: point?.deployments?.failure
-  })
-}
 
 export default function DeploymentExecutionsChart(props: any) {
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()

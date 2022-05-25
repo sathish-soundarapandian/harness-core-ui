@@ -74,7 +74,7 @@ describe('Configure Datadog health source', () => {
     cy.visitChangeIntelligence()
   })
 
-  it('Add new Custom HealthSource ', () => {
+  it.skip('Add new Custom HealthSource ', () => {
     cy.intercept('GET', baseURLCall, baseURLResponse).as('BaseURLCall')
     cy.intercept('POST', fetchRecordsCall, fetchRecordsRespose).as('FetchRecordsCall')
 

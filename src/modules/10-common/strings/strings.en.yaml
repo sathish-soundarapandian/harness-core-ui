@@ -329,6 +329,7 @@ git:
   gitLabUrlPlaceholder: 'https://www.gitlab.com/account/'
   gitLabUrlPlaceholderSSH: 'git@gitlab.com:account/'
   bitbucketUrlPlaceholder: 'https://www.bitbucket.com/account/'
+  bitbucketOrgUrlPlaceholder: 'https://www.bitbucket.org/'
   bitbucketPlaceholderSSH: 'git@bitbucket.com:account/'
   enableAPIAccess: 'Enable API access (recommended)'
   APIAccessDescription: 'API Access is required for using “Git Experience”, for creation of Git based triggers, Webhooks management and updating Git statuses'
@@ -675,7 +676,7 @@ module:
   pms: PMS
   templateService: TEMPLATESERVICE
   sto: STO
-  governance: GOVERNANCE
+  governance: POLICY ENGINE
 customPricing: for Custom Pricing
 specified: Specified
 file: File
@@ -727,7 +728,9 @@ template:
     errorWhileUpdating: Error occurred updating Template
   deleteTemplate:
     templatesDeleted: 'Templates "{{ name }}" Deleted'
-    errorWhileDeleting: Error occurred deleting Templates
+    templateDeleted: 'Template "{{ name }}" Deleted'
+    errorWhileDeletingTemplates: Error occurred deleting Templates
+    errorWhileDeletingTemplate: Error occurred deleting Template
 viewLatest: View latest
 viewUsage: View Usage
 selected: 'Selected:'
@@ -838,8 +841,6 @@ noexpiration: No Expiration
 subscriptionPlaceholder: 'Select or add Subscription Id'
 azureConnector: Azure Connector
 environmentList: Environment List
-environment:
-  fetchNext: Fetching Environments
 environmentGroup:
   label: Environment Group
   new: New Environment Group

@@ -41,6 +41,7 @@ jest.mock('services/cd-ng', () => ({
   getConnectorListV2Promise: () => Promise.resolve(mockManifestConnector),
   getBuildDetailsForArtifactoryArtifactWithYamlPromise: () => Promise.resolve(mockBuildList),
   useGetConnector: jest.fn(() => mockConnectorResponse),
+  useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() })),
   useCreateConnector: jest.fn(() => Promise.resolve(mockCreateConnectorResponse)),
   useUpdateConnector: jest.fn(() =>
     Promise.resolve({

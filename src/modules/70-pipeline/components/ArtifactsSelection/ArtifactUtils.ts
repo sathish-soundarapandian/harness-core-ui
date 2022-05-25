@@ -278,6 +278,6 @@ export const showConnectorStep = (selectedArtifact: ArtifactType): boolean => {
   return selectedArtifact !== ENABLED_ARTIFACT_TYPES.CustomArtifact
 }
 
-export const isFieldRuntime = (field: string): boolean => {
+export const isFieldFixed = (field: string): boolean => {
   return getMultiTypeFromValue(field) === MultiTypeInputType.FIXED
 }

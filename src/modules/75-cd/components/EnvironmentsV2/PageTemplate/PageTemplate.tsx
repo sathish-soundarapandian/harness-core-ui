@@ -37,7 +37,7 @@ import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerS
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
 import { usePageStore } from './PageContext'
-import { Sort, SortFields } from '../utils'
+import NoData from './NoData'
 
 import css from './PageTemplate.module.scss'
 
@@ -56,10 +56,11 @@ export interface PageTemplateProps {
   createButtonProps: CreateButtonProps
   useGetListHook: any
   emptyContent: ReactNode
-  ListComponent: any
-  GridComponent: any
-  sortOptions: any[]
-  defaultSortOption: any
+  ListComponent: React.VoidFunctionComponent<{ response: any; refetch: () => void }>
+  GridComponent: React.VoidFunctionComponent<{ response: any; refetch: () => void }>
+  sortOptions: SelectOption[]
+  defaultSortOption: string[]
+  handleCustomSortChange: (value: string) => string[]
 }
 export default function PageTemplate({
   title,
@@ -72,7 +73,8 @@ export default function PageTemplate({
   ListComponent,
   GridComponent,
   sortOptions,
-  defaultSortOption
+  defaultSortOption,
+  handleCustomSortChange
 }: PropsWithChildren<PageTemplateProps>) {
   useDocumentTitle(title)
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
@@ -111,15 +113,9 @@ export default function PageTemplate({
     'ok'
   }
 
-  // TODO: to be extracted
   const handleSortChange = (item: SelectOption) => {
-    const sortArray =
-      item.value === SortFields.AZ09
-        ? [SortFields.Name, Sort.ASC]
-        : item.value === SortFields.ZA90
-        ? [SortFields.Name, Sort.DESC]
-        : [SortFields.LastUpdatedAt, Sort.DESC]
-    setSort(sortArray)
+    const sortValue = handleCustomSortChange(item.value as string)
+    setSort(sortValue)
     setSortOption(item)
   }
 
@@ -148,25 +144,23 @@ export default function PageTemplate({
         toolbar={headerToolbar}
       />
       <Page.SubHeader className={css.toolbar}>
-        <Layout.Horizontal flex={{ justifyContent: 'space-between' }} width={'100%'}>
-          <Layout.Horizontal>
-            <RbacButton
-              intent="primary"
-              icon="plus"
-              iconProps={{ size: 12 }}
-              font={{ weight: 'bold' }}
-              {...createButtonProps}
-            />
-          </Layout.Horizontal>
-          <Layout.Horizontal spacing="medium" flex={{ alignItems: 'center' }}>
+        <RbacButton
+          intent="primary"
+          icon="plus"
+          iconProps={{ size: 12 }}
+          font={{ weight: 'bold' }}
+          {...createButtonProps}
+        />
+        <Layout.Horizontal spacing={'small'} flex={{ alignItems: 'center' }}>
+          <Container margin={{ right: 'medium' }}>
             <ExpandingSearchInput
               alwaysExpanded
               width={200}
               placeholder={getString('search')}
               onChange={setSearchTerm}
             />
-            <GridListToggle initialSelectedView={Views.LIST} onViewToggle={setView} />
-          </Layout.Horizontal>
+          </Container>
+          <GridListToggle initialSelectedView={Views.LIST} onViewToggle={setView} />
         </Layout.Horizontal>
       </Page.SubHeader>
 
@@ -195,11 +189,7 @@ export default function PageTemplate({
         )}
         {state === STATUS.ok ? (
           noData ? (
-            <Container flex={{ align: 'center-center' }}>
-              <Container flex style={{ flexDirection: 'column' }}>
-                {emptyContent}
-              </Container>
-            </Container>
+            <NoData searchTerm={searchTerm} hasFilters={false} emptyContent={emptyContent} />
           ) : view === Views.LIST ? (
             <Container padding={{ top: 'medium', right: 'xlarge', left: 'xlarge' }}>
               <ListComponent response={response} refetch={refetch} />

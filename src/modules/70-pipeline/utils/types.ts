@@ -56,3 +56,7 @@ export interface InputSetDTO extends Omit<InputSetResponse, 'identifier' | 'pipe
 export interface SaveInputSetDTO {
   inputSet: InputSetDTO
 }
+
+export interface Pipeline {
+  pipeline: PipelineInfoConfig
+}

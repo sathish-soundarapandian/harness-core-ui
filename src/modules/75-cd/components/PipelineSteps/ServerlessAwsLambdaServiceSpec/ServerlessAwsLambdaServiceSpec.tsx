@@ -343,7 +343,7 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
         onUpdate={onUpdate}
         stepViewType={stepViewType}
         path={inputSetData?.path}
-        readonly={readonly}
+        readonly={inputSetData?.readonly || readonly}
         allowableTypes={allowableTypes}
       />
     )

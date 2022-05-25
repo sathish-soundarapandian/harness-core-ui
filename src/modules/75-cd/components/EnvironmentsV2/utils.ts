@@ -5,20 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-export enum SortFields {
-  LastUpdatedAt = 'lastModifiedAt',
-  AZ09 = 'AZ09',
-  ZA90 = 'ZA90',
-  Name = 'name'
-}
-
-export enum Sort {
-  DESC = 'DESC',
-  ASC = 'ASC'
-}
-
 export enum EnvironmentDetailsTab {
-  CONFIGURATION = 'CONFIGURATION'
-  // INFRASTRUCTURE = 'INFRASTRUCTURE',
+  CONFIGURATION = 'CONFIGURATION',
+  INFRASTRUCTURE = 'INFRASTRUCTURE'
   // GITOPS = 'GITOPS'
 }

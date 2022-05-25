@@ -6,12 +6,10 @@
  */
 
 import React from 'react'
-import { useParams } from 'react-router-dom'
 import { Text, FormInput, MultiTypeInputType, getMultiTypeFromValue, SelectOption } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
-import produce from 'immer'
 import cx from 'classnames'
-import { defaultTo, get, isEqual, isUndefined, set } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
 import { connect, FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
 import type { AllNGVariables } from '@pipeline/utils/types'
@@ -19,7 +17,6 @@ import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import type { InputSetData } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { useQueryParams } from '@common/hooks'
 import { VariableType } from './CustomVariableUtils'
 import css from './CustomVariables.module.scss'
 export interface CustomVariablesData {
@@ -59,53 +56,12 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
     domId,
     inputSetData,
     formik,
-    allValues,
-    allowableTypes,
-    executionIdentifier
+    allowableTypes
   } = props
   const basePath = path?.length ? `${path}.variables` : 'variables'
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
-  const { executionId } = useQueryParams<Record<string, string>>()
-  const { triggerIdentifier } = useParams<Record<string, string>>()
   const formikVariables = get(formik?.values, basePath, [])
-
-  React.useEffect(() => {
-    const shouldUseDefaultValue =
-      (isUndefined(executionIdentifier) && isUndefined(executionId) && isUndefined(triggerIdentifier)) ||
-      triggerIdentifier === 'new'
-
-    const updatedVariables = defaultTo(template?.variables, []).map((templateVariable: AllNGVariables) => {
-      const pipelineVariable = defaultTo(allValues?.variables, []).find(
-        (variable: AllNGVariables) => variable.name === templateVariable.name
-      )
-      const formikVariable = formikVariables.find((variable: AllNGVariables) => variable.name === templateVariable.name)
-      const defaultValue = shouldUseDefaultValue ? defaultTo(pipelineVariable?.default, '') : ''
-
-      return {
-        name: pipelineVariable?.name,
-        type: pipelineVariable?.type,
-        // do not use defaultTo here as we need to override a possible empty string
-        value: formikVariable?.value || defaultValue
-      }
-    })
-
-    if (!isEqual(formikVariables, updatedVariables)) {
-      const newValues = produce(formik.values, draft => {
-        set(draft, basePath, updatedVariables)
-      })
-      formik.setValues(newValues)
-    }
-  }, [
-    formik.values, // fixes the variables default value issue
-    formikVariables,
-    basePath,
-    template?.variables,
-    allValues?.variables,
-    executionId,
-    executionIdentifier,
-    triggerIdentifier
-  ])
 
   return (
     <div className={cx(css.customVariablesInputSets, 'customVariables')} id={domId}>

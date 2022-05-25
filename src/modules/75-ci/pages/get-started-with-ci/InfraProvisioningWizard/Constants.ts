@@ -6,13 +6,14 @@
  */
 
 import type { IconName } from '@harness/uicore'
-import type { ConnectorInfoDTO } from 'services/cd-ng'
+import type { BitbucketPRSpec, GithubPRSpec, GitlabPRSpec } from 'services/pipeline-ng'
+import type { ConnectorInfoDTO, UserRepoResponse } from 'services/cd-ng'
 import type { StringsMap } from 'stringTypes'
 import { Connectors } from '@connectors/constants'
+import type { SelectBuildLocationForwardRef } from './SelectBuildLocation'
 
 export interface InfraProvisioningWizardProps {
   lastConfiguredWizardStepId?: InfraProvisiongWizardStepId
-  stepMetaData?: Map<string, Record<string, any>>
 }
 
 export const enum Hosting {
@@ -26,6 +27,8 @@ export const enum BuildLocation {
   AWS = 'AWS',
   DockerRunner = 'DOCKER_RUNNER'
 }
+
+export const OAUTH2_USER_NAME = 'oauth2'
 
 export interface BuildLocationDetails {
   icon: IconName
@@ -44,15 +47,19 @@ export interface WizardStep {
 }
 
 export enum ProvisioningStatus {
+  TO_DO,
   IN_PROGRESS,
   FAILURE,
   SUCCESS
 }
 
 export interface SelectBuildLocationProps {
+  ref: SelectBuildLocationForwardRef
   selectedHosting?: Hosting
   selectedBuildLocation?: BuildLocationDetails
   provisioningStatus?: ProvisioningStatus
+  onChangeBuildLocation: (status: ProvisioningStatus) => void
+  onStartProvisioning: () => void
 }
 
 export const HostedByHarnessBuildLocation: BuildLocationDetails = {
@@ -68,7 +75,8 @@ export const K8sBuildLocation: BuildLocationDetails = {
   location: BuildLocation.Kubernetes,
   label: 'kubernetesText',
   details: 'ci.getStartedWithCI.k8sBuildLocation',
-  approxETAInMins: 12
+  approxETAInMins: 12,
+  disabled: true
 }
 
 export const AllBuildLocationsForOnPrem: BuildLocationDetails[] = [
@@ -112,7 +120,7 @@ export interface GitProvider {
 export const AllSaaSGitProviders: GitProvider[] = [
   { icon: 'github', label: 'common.repo_provider.githubLabel', type: Connectors.GITHUB },
   { icon: 'gitlab', label: 'common.repo_provider.gitlabLabel', type: Connectors.GITLAB },
-  { icon: 'bitbucket-blue', label: 'common.repo_provider.bitbucketLabel', type: Connectors.BITBUCKET }
+  { icon: 'bitbucket-blue', label: 'pipeline.manifestType.bitBucketLabel', type: Connectors.BITBUCKET }
 ]
 
 export const AllOnPremGitProviders: GitProvider[] = [
@@ -144,3 +152,82 @@ export const GitProviderTypeToAuthenticationMethodMapping: Map<ConnectorInfoDTO[
     [Connectors.GITLAB, GitAuthenticationMethod.AccessKey],
     [Connectors.BITBUCKET, GitAuthenticationMethod.UserNameAndApplicationPassword]
   ])
+
+export const DEFAULT_HARNESS_KMS = 'harnessSecretManager'
+
+export const ACCOUNT_SCOPE_PREFIX = 'account.'
+
+const DEFAULT_STAGE_ID = 'Build'
+
+const DOCKER_REGISTRY_CONNECTOR_REF = 'harnessImage'
+
+export const KUBERNETES_HOSTED_INFRA_ID = 'k8s-hosted-infra'
+
+export const DEFAULT_PIPELINE_PAYLOAD = {
+  pipeline: {
+    name: '',
+    identifier: '',
+    projectIdentifier: '',
+    orgIdentifier: '',
+    properties: {
+      ci: {
+        codebase: {
+          connectorRef: 'connectorRef',
+          repoName: '',
+          build: '<+input>'
+        }
+      }
+    },
+    stages: [
+      {
+        stage: {
+          name: DEFAULT_STAGE_ID,
+          identifier: DEFAULT_STAGE_ID,
+          type: 'CI',
+          spec: {
+            cloneCodebase: true,
+            infrastructure: {
+              type: 'KubernetesHosted',
+              spec: {
+                identifier: KUBERNETES_HOSTED_INFRA_ID
+              }
+            },
+            execution: {
+              steps: [
+                {
+                  step: {
+                    type: 'Run',
+                    name: 'Echo Welcome Message',
+                    identifier: 'Run',
+                    spec: {
+                      connectorRef: ACCOUNT_SCOPE_PREFIX.concat(DOCKER_REGISTRY_CONNECTOR_REF),
+                      image: 'alpine',
+                      shell: 'Sh',
+                      command: 'echo "Welcome to Harness CI" '
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    ]
+  }
+}
+
+export const getFullRepoName = (repository: UserRepoResponse): string => {
+  const { name: repositoryName, namespace } = repository
+  return namespace && repositoryName ? `${namespace}/${repositoryName}` : repositoryName ?? ''
+}
+
+export const DELEGATE_INSTALLATION_REFETCH_DELAY = 10000
+export const MAX_TIMEOUT_DELEGATE_INSTALLATION = 1000 * 60 * 10 // ten minutes
+
+export const OAUTH_REDIRECT_URL_PREFIX = `${location.protocol}//${location.host}/gateway/`
+
+export const BitbucketPRTriggerActions: BitbucketPRSpec['actions'] = ['Create', 'Update']
+
+export const GitHubPRTriggerActions: GithubPRSpec['actions'] = ['Reopen', 'Synchronize', 'Open']
+
+export const GitlabPRTriggerActions: GitlabPRSpec['actions'] = ['Reopen', 'Sync', 'Open']

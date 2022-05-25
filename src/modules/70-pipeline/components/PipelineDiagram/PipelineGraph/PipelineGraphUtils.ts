@@ -318,6 +318,7 @@ const getScaleToFitValue = (
 const NodeTypeToNodeMap: Record<string, string> = {
   Deployment: NodeType.Default,
   CI: NodeType.Default,
+  SecurityTests: NodeType.Default,
   Pipeline: NodeType.Default,
   Custom: NodeType.Default,
   Approval: NodeType.Default

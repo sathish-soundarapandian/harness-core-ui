@@ -19,7 +19,8 @@ import { PipelineContextType } from '@pipeline/components/PipelineStudio/Pipelin
 import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { sanitize } from '@common/utils/JSONUtils'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
-import type { NGServiceConfig, PipelineInfoConfig, ServiceResponseDTO } from 'services/cd-ng'
+import type { NGServiceConfig, PipelineInfoConfig } from 'services/cd-ng'
+import { useServiceContext } from '@cd/context/ServiceContext'
 import {
   initialServiceState,
   DefaultNewStageName,
@@ -29,12 +30,13 @@ import {
 import ServiceStudioDetails from '../ServiceStudioDetails'
 
 interface ServiceConfigurationWrapperProps {
-  serviceResponse: ServiceResponseDTO
+  summaryPanel?: JSX.Element
+  refercedByPanel?: JSX.Element
 }
-
-function ServiceConfigurationWrapper({ serviceResponse }: ServiceConfigurationWrapperProps): React.ReactElement {
+function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
+  const { serviceResponse } = useServiceContext()
 
   const [isEdit] = usePermission({
     resource: {
@@ -95,7 +97,7 @@ function ServiceConfigurationWrapper({ serviceResponse }: ServiceConfigurationWr
       contextType={PipelineContextType.Pipeline}
       isReadOnly={isReadonly}
     >
-      <ServiceStudioDetails serviceData={currentService} />
+      <ServiceStudioDetails serviceData={currentService} {...props} />
     </ServicePipelineProvider>
   )
 }

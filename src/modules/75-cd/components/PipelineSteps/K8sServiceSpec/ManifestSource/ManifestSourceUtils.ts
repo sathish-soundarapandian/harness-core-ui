@@ -69,12 +69,27 @@ export const getManifestTriggerSetValues = (
     const initialArtifactValue = get(initialValues, `${manifestPath}`)
     const { selectedArtifact } = formik?.values || {}
 
-    if (initialArtifactValue && selectedArtifact.identifier === initialArtifactValue.identifier) {
+    const stages = formik?.initialValues?.inputSetTemplateYamlObj?.pipeline?.stages
+    const stageConnectorManifest = stages?.map((st: any) =>
+      get(st, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests' || [])?.find(
+        (mani: { manifest: { identifier: any; spec: { store: { spec: { connectorRef: string } } } } }) =>
+          mani?.manifest?.identifier === selectedArtifact?.identifier &&
+          mani?.manifest?.spec?.store?.spec?.connectorRef === '<+input>'
+      )
+    )
+
+    //!stageConnectorManifest is required because if manifest store has connectorRef as runtime so we cannot unset values from input yaml
+    if (
+      initialArtifactValue &&
+      selectedArtifact.identifier === initialArtifactValue.identifier &&
+      !stageConnectorManifest
+    ) {
       /*
-         backend requires eventConditions inside selectedArtifact but should not be added to inputYaml
+         backend requires eventConditions and store inside selectedArtifact but should not be added to inputYaml
         */
-      if (selectedArtifact?.spec.eventConditions) {
+      if (selectedArtifact?.spec.eventConditions && selectedArtifact?.spec.store) {
         unset(selectedArtifact?.spec, 'eventConditions')
+        unset(selectedArtifact?.spec, 'store')
       }
 
       return {

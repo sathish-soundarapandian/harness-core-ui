@@ -25,7 +25,7 @@ exports[`Environment Groups List View renders basic list and works like an accor
       style="width: 40%;"
       tabindex="0"
     >
-      LASTUPDATEDBY
+      LASTUPDATED
     </p>
   </div>
   <div

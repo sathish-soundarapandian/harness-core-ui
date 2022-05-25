@@ -60,6 +60,7 @@ import {
 import type { K8sDirectInfraYaml } from 'services/ci'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { Connectors } from '@connectors/constants'
 import factory from '../PipelineSteps/PipelineStepFactory'
 import { StepType } from '../PipelineSteps/PipelineStepInterface'
 import { CollapseForm } from './CollapseForm'
@@ -70,6 +71,8 @@ import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariab
 import type { StepViewType } from '../AbstractSteps/Step'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './PipelineInputSetForm.module.scss'
+
+const harnessImageConnectorRef = 'connectors.title.harnessImageConnectorRef'
 
 function ServiceDependencyForm({
   template,
@@ -757,25 +760,95 @@ export function StageInputSetFormInternal({
                     })}
                   </Container>
                 )}
+                {(deploymentStageTemplate.infrastructure as any).spec?.harnessImageConnectorRef ? (
+                  shouldRenderRunTimeInputViewWithAllowedValues(
+                    'spec.harnessImageConnectorRef',
+                    deploymentStageTemplate.infrastructure
+                  ) ? (
+                    renderMultiTypeInputWithAllowedValues({
+                      name: `${namePath}infrastructure.spec.harnessImageConnectorRef`,
+                      tooltipId: 'harnessImageConnectorRef',
+                      labelKey: harnessImageConnectorRef,
+                      placeholderKey: 'connectors.placeholder.harnessImageConnectorRef',
+                      fieldPath: 'spec.harnessImageConnectorRef'
+                    })
+                  ) : (
+                    <Container className={stepCss.bottomMargin3}>
+                      <FormMultiTypeConnectorField
+                        width={getConnectorRefWidth(viewType)}
+                        name={`${namePath}infrastructure.spec.harnessImageConnectorRef`}
+                        label={
+                          <Text font={{ variation: FontVariation.FORM_LABEL }}>
+                            {getString(harnessImageConnectorRef)}
+                          </Text>
+                        }
+                        placeholder={getString('connectors.placeholder.harnessImageConnectorRef')}
+                        accountIdentifier={accountId}
+                        projectIdentifier={projectIdentifier}
+                        orgIdentifier={orgIdentifier}
+                        gitScope={gitScope}
+                        multiTypeProps={{ expressions, disabled: readonly, allowableTypes }}
+                        setRefValue
+                        type={Connectors.DOCKER}
+                      />
+                    </Container>
+                  )
+                ) : null}
               </>
             ) : (deploymentStageTemplate.infrastructure as any).type === 'VM' ? (
-              (deploymentStageTemplate.infrastructure as any).spec?.spec?.identifier && (
-                <Container className={cx(stepCss.formGroup, stepCss.sm)}>
-                  {renderMultiTypeTextField({
-                    name: `${namePath}infrastructure.spec.spec.identifier`,
-                    tooltipId: 'poolId',
-                    labelKey: 'pipeline.buildInfra.poolId',
-                    inputProps: {
-                      multiTextInputProps: {
-                        expressions,
-                        allowableTypes: allowableTypes
+              <>
+                {(deploymentStageTemplate.infrastructure as any).spec?.spec?.identifier ? (
+                  <Container className={stepCss.bottomMargin3}>
+                    {renderMultiTypeTextField({
+                      name: `${namePath}infrastructure.spec.spec.identifier`,
+                      tooltipId: 'poolId',
+                      labelKey: 'pipeline.buildInfra.poolId',
+                      inputProps: {
+                        multiTextInputProps: {
+                          expressions,
+                          allowableTypes: allowableTypes
+                        },
+                        disabled: readonly
                       },
-                      disabled: readonly
-                    },
-                    fieldPath: 'spec.spec.identifier'
-                  })}
-                </Container>
-              )
+                      fieldPath: 'spec.spec.identifier'
+                    })}
+                  </Container>
+                ) : null}
+                {(deploymentStageTemplate.infrastructure as any).spec?.spec?.harnessImageConnectorRef ? (
+                  shouldRenderRunTimeInputViewWithAllowedValues(
+                    'spec.spec.harnessImageConnectorRef',
+                    deploymentStageTemplate.infrastructure
+                  ) ? (
+                    renderMultiTypeInputWithAllowedValues({
+                      name: `${namePath}infrastructure.spec.spec.harnessImageConnectorRef`,
+                      tooltipId: 'harnessImageConnectorRef',
+                      labelKey: harnessImageConnectorRef,
+                      placeholderKey: 'connectors.placeholder.harnessImageConnectorRef',
+                      fieldPath: 'spec.spec.harnessImageConnectorRef'
+                    })
+                  ) : (
+                    <Container className={stepCss.bottomMargin3}>
+                      <FormMultiTypeConnectorField
+                        width={getConnectorRefWidth(viewType)}
+                        name={`${namePath}infrastructure.spec.spec.harnessImageConnectorRef`}
+                        label={
+                          <Text font={{ variation: FontVariation.FORM_LABEL }}>
+                            {getString(harnessImageConnectorRef)}
+                          </Text>
+                        }
+                        placeholder={getString('connectors.placeholder.harnessImageConnectorRef')}
+                        accountIdentifier={accountId}
+                        projectIdentifier={projectIdentifier}
+                        orgIdentifier={orgIdentifier}
+                        gitScope={gitScope}
+                        multiTypeProps={{ expressions, disabled: readonly, allowableTypes }}
+                        setRefValue
+                        type={Connectors.DOCKER}
+                      />
+                    </Container>
+                  )
+                ) : null}
+              </>
             ) : null}
             {(deploymentStageTemplate.infrastructure as K8sDirectInfraYaml).spec?.volumes && (
               <Container data-name="100width" className={stepCss.bottomMargin5}>
