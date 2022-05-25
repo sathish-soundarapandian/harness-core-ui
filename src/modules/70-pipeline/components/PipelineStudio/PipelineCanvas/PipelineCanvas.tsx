@@ -546,7 +546,7 @@ export function PipelineCanvas({
 
   React.useEffect(() => {
     isPipelineRemote &&
-      (gitDetails.repoIdentifier || gitDetails.repoName) &&
+      gitDetails.repoName &&
       gitDetails.branch &&
       updatePipelineStoreMetadata({ connectorRef, storeType }, gitDetails)
   }, [isPipelineRemote, gitDetails])

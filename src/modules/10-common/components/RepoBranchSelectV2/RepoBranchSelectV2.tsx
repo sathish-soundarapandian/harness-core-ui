@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react'
+import cx from 'classnames'
 import {
   FormInput,
   getErrorInfoFromErrorObject,
@@ -21,7 +22,7 @@ import { defaultTo, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { Error, GitBranchDetailsDTO, ResponseMessage, useGetListOfBranchesByRefConnectorV2 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import css from '@common/components/RepositorySelect/RepositorySelect.module.scss'
+import css from './RepoBranchSelectV2.module.scss'
 
 export interface RepoBranchSelectProps {
   name?: string
@@ -143,19 +144,23 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
         <Layout.Horizontal
           spacing="small"
           flex={{ alignItems: 'flex-start' }}
-          style={{ paddingTop: noLabel ? '10px' : '28px' }}
+          className={cx(css.loadingWrapper, { [css.noLabel]: noLabel })}
         >
           <Icon name="steps-spinner" size={18} color={Color.PRIMARY_7} />
         </Layout.Horizontal>
       ) : repoName && ((responseMessages?.length && responseMessages?.length > 0) || !!error) ? (
-        <Layout.Horizontal spacing="small" flex={{ alignItems: 'flex-start' }} style={{ paddingTop: '22px' }}>
+        <Layout.Horizontal
+          spacing="small"
+          flex={{ alignItems: 'flex-start' }}
+          className={cx(css.refreshButtonWrapper, { [css.noLabel]: noLabel })}
+        >
           <Icon
             name="refresh"
             size={16}
             color={Color.PRIMARY_7}
             background={Color.PRIMARY_1}
             padding="small"
-            style={{ borderRadius: '4px', cursor: 'pointer' }}
+            className={css.refreshIcon}
             onClick={() => {
               setErrorResponse?.([])
               setBranchSelectOptions([])

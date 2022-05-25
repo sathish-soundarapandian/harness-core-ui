@@ -8,5 +8,9 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly gitBranchSelectorPopover: string
+  readonly loadingWrapper: string
+  readonly noLabel: string
+  readonly refreshButtonWrapper: string
+  readonly refreshIcon: string
 }
 export default styles

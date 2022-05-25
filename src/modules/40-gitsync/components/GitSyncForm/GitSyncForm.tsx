@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { useEffect, useState } from 'react'
 import type { FormikContextType } from 'formik'
 import { defaultTo } from 'lodash-es'
@@ -97,17 +104,18 @@ export function GitSyncForm(props: GitSyncFormProps<GitSyncFormFields>): React.R
             projectIdentifier={projectIdentifier}
             orgIdentifier={orgIdentifier}
             onChange={(value, scope) => {
-              // modalErrorHandler?.hide()
+              const connectorRefWithScope = getConnectorIdentifierWithScope(scope, value?.identifier)
+
               formikProps.setFieldValue('connectorRef', {
                 label: defaultTo(value.name, ''),
-                value: getConnectorIdentifierWithScope(scope, value?.identifier),
+                value: connectorRefWithScope,
                 scope: scope,
                 live: value?.status?.status === 'SUCCESS',
                 connector: value
               })
               formikProps.setFieldValue?.('repo', '')
               formikProps.setFieldValue?.('branch', '')
-              updateQueryParams({ connectorRef: value?.identifier, repoName: [] as any, branch: [] as any })
+              updateQueryParams({ connectorRef: connectorRefWithScope, repoName: [] as any, branch: [] as any })
             }}
             disabled={isEdit || disableFields.connectorRef}
           />

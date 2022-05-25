@@ -175,11 +175,11 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
     })
   ) || { isExact: false }
 
-  if (error?.data && !isGitSyncEnabled && !(isGitSimplificationEnabled && branch)) {
+  if (error?.data && !isGitSyncEnabled && !isGitSimplificationEnabled) {
     return <GenericErrorHandler errStatusCode={error?.status} errorMessage={(error?.data as Error)?.message} />
   }
 
-  if (error?.data && isEmpty(pipeline) && (isGitSyncEnabled || (isGitSimplificationEnabled && branch))) {
+  if (error?.data && isEmpty(pipeline) && (isGitSyncEnabled || isGitSimplificationEnabled)) {
     return <NoEntityFound identifier={pipelineIdentifier} entityType={'pipeline'} />
   }
 

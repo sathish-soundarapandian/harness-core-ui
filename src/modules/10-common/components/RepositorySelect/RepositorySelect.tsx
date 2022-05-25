@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { useState, useEffect } from 'react'
 import type { FormikContextType } from 'formik'
 import { defaultTo, isEmpty } from 'lodash-es'
@@ -7,7 +14,7 @@ import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { Error, GitRepositoryResponseDTO, ResponseMessage, useGetListOfReposByRefConnector } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import css from './RepositorySelect.module.scss'
+import css from '../RepoBranchSelectV2/RepoBranchSelectV2.module.scss'
 
 export interface RepositorySelectProps<T> {
   formikProps: FormikContextType<T>
@@ -96,18 +103,18 @@ const RepositorySelect: React.FC<RepositorySelectProps<any>> = props => {
         selectProps={{ usePortal: true, popoverClassName: css.gitBranchSelectorPopover }}
       />
       {loading ? (
-        <Layout.Horizontal spacing="small" flex={{ alignItems: 'flex-start' }} style={{ paddingTop: '28px' }}>
+        <Layout.Horizontal spacing="small" flex={{ alignItems: 'flex-start' }} className={css.loadingWrapper}>
           <Icon name="steps-spinner" size={18} color={Color.PRIMARY_7} />
         </Layout.Horizontal>
       ) : (responseMessages?.length && responseMessages?.length) || !!error ? (
-        <Layout.Horizontal spacing="small" flex={{ alignItems: 'flex-start' }} style={{ paddingTop: '22px' }}>
+        <Layout.Horizontal spacing="small" flex={{ alignItems: 'flex-start' }} className={css.refreshButtonWrapper}>
           <Icon
             name="refresh"
             size={16}
             color={Color.PRIMARY_7}
             background={Color.PRIMARY_1}
             padding="small"
-            style={{ borderRadius: '4px', cursor: 'pointer' }}
+            className={css.refreshIcon}
             onClick={() => {
               setErrorResponse([])
               setRepoSelectOptions([])

@@ -18,8 +18,8 @@ import type {
   TemplateStudioQueryParams
 } from '@common/interfaces/RouteInterfaces'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
-import { StoreType } from '@common/constants/GitSyncTypes'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { StoreType } from '@common/constants/GitSyncTypes'
 import noEntityFoundImage from './images/no-entity-found.svg'
 import css from './NoEntityFound.module.scss'
 
@@ -103,7 +103,7 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
         <Text className={css.selectDiffBranch} margin={{ top: 'xsmall', bottom: 'xlarge' }}>
           {getString('pipeline.gitExperience.selectDiffBranch')}
         </Text>
-        {isPipelineRemote && connectorRef && branch && (
+        {isPipelineRemote && connectorRef && (
           <GitRemoteDetails
             connectorRef={connectorRef}
             repoName={repoName}
