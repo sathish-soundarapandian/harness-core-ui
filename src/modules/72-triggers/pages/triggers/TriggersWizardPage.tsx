@@ -27,8 +27,7 @@ import { Page, useToaster } from '@common/exports'
 import Wizard from '@common/components/Wizard/Wizard'
 import { connectorUrlType } from '@connectors/constants'
 import routes from '@common/RouteDefinitions'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import {
   PipelineInfoConfig,
   useGetConnector,
@@ -224,7 +223,8 @@ const getArtifactManifestTriggerYaml = ({
   enabledStatus,
   projectIdentifier,
   pipelineIdentifier,
-  persistIncomplete = false
+  persistIncomplete = false,
+  gitAwareForTriggerEnabled: _gitAwareForTriggerEnabled
 }: {
   values: any
 
@@ -234,6 +234,7 @@ const getArtifactManifestTriggerYaml = ({
   pipelineIdentifier: string
   manifestType?: string
   persistIncomplete?: boolean
+  gitAwareForTriggerEnabled: boolean | undefined
 }): TriggerConfigDTO => {
   const {
     name,
@@ -421,11 +422,14 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       getTemplatesResolvedPipeline: true
     }
   })
-  // TODO: Check pipeline response JSON to see if git is enabled
-  const isGitSyncEnabled = true //useMemo(() => !!pipelineResponse?.data?.gitDetails?.branch, [pipelineResponse])
-  const gitAwareForTriggerFeatureFlag =
-    useFeatureFlag(FeatureFlag.GIT_AWARE_FOR_TRIGGER) || !!localStorage.GIT_AWARE_FOR_TRIGGER
-  const gitAwareForTriggerEnabled = isGitSyncEnabled && gitAwareForTriggerFeatureFlag
+
+  const isGitSyncEnabled = useMemo(() => !!pipelineResponse?.data?.gitDetails?.branch, [pipelineResponse])
+  const { GIT_SIMPLIFICATION } = useFeatureFlags()
+  const gitAwareForTriggerEnabled = useMemo(
+    () => isGitSyncEnabled && GIT_SIMPLIFICATION,
+    [isGitSyncEnabled, GIT_SIMPLIFICATION]
+  )
+
   const [connectorScopeParams, setConnectorScopeParams] = useState<GetConnectorQueryParams | undefined>(undefined)
   const [ignoreError, setIgnoreError] = useState<boolean>(false)
   const createUpdateTriggerQueryParams = useMemo(
@@ -497,7 +501,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         enabledStatus,
         orgIdentifier,
         projectIdentifier,
-        pipelineIdentifier
+        pipelineIdentifier,
+        gitAwareForTriggerEnabled
       })
 
       return { trigger: res }
@@ -904,18 +909,21 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
           ) || {}
 
         let pipelineJson = undefined
-        try {
-          pipelineJson = parse(inputYaml)?.pipeline
-          // Ensure ordering of variables and their values respectively for UI
-          if (pipelineJson?.variables) {
-            pipelineJson.variables = getOrderedPipelineVariableValues({
-              originalPipelineVariables: resolvedPipeline?.variables,
-              currentPipelineVariables: pipelineJson.variables
-            })
+
+        if (inputYaml) {
+          try {
+            pipelineJson = parse(inputYaml)?.pipeline
+            // Ensure ordering of variables and their values respectively for UI
+            if (pipelineJson?.variables) {
+              pipelineJson.variables = getOrderedPipelineVariableValues({
+                originalPipelineVariables: resolvedPipeline?.variables,
+                currentPipelineVariables: pipelineJson.variables
+              })
+            }
+          } catch (e) {
+            // set error
+            setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
           }
-        } catch (e) {
-          // set error
-          setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
         }
 
         triggerValues = {
@@ -1012,18 +1020,21 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         } = triggerResponseJson
 
         let pipelineJson = undefined
-        try {
-          pipelineJson = parse(inputYaml)?.pipeline
-          // Ensure ordering of variables and their values respectively for UI
-          if (pipelineJson?.variables) {
-            pipelineJson.variables = getOrderedPipelineVariableValues({
-              originalPipelineVariables: resolvedPipeline?.variables,
-              currentPipelineVariables: pipelineJson.variables
-            })
+
+        if (inputYaml) {
+          try {
+            pipelineJson = parse(inputYaml)?.pipeline
+            // Ensure ordering of variables and their values respectively for UI
+            if (pipelineJson?.variables) {
+              pipelineJson.variables = getOrderedPipelineVariableValues({
+                originalPipelineVariables: resolvedPipeline?.variables,
+                currentPipelineVariables: pipelineJson.variables
+              })
+            }
+          } catch (e) {
+            // set error
+            setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
           }
-        } catch (e) {
-          // set error
-          setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
         }
 
         triggerValues = {
@@ -1078,18 +1089,21 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       } = triggerResponseJson
 
       let pipelineJson = undefined
-      try {
-        pipelineJson = parse(inputYaml)?.pipeline
-        // Ensure ordering of variables and their values respectively for UI
-        if (pipelineJson?.variables) {
-          pipelineJson.variables = getOrderedPipelineVariableValues({
-            originalPipelineVariables: resolvedPipeline?.variables,
-            currentPipelineVariables: pipelineJson.variables
-          })
+
+      if (inputYaml) {
+        try {
+          pipelineJson = parse(inputYaml)?.pipeline
+          // Ensure ordering of variables and their values respectively for UI
+          if (pipelineJson?.variables) {
+            pipelineJson.variables = getOrderedPipelineVariableValues({
+              originalPipelineVariables: resolvedPipeline?.variables,
+              currentPipelineVariables: pipelineJson.variables
+            })
+          }
+        } catch (e) {
+          // set error
+          setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
         }
-      } catch (e) {
-        // set error
-        setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
       }
       const expressionBreakdownValues = getBreakdownValues(expression)
       const newExpressionBreakdown = {
@@ -1164,18 +1178,21 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       }
 
       let pipelineJson = undefined
-      try {
-        pipelineJson = parse(inputYaml)?.pipeline
-        // Ensure ordering of variables and their values respectively for UI
-        if (pipelineJson?.variables) {
-          pipelineJson.variables = getOrderedPipelineVariableValues({
-            originalPipelineVariables: resolvedPipeline?.variables,
-            currentPipelineVariables: pipelineJson.variables
-          })
+
+      if (inputYaml) {
+        try {
+          pipelineJson = parse(inputYaml)?.pipeline
+          // Ensure ordering of variables and their values respectively for UI
+          if (pipelineJson?.variables) {
+            pipelineJson.variables = getOrderedPipelineVariableValues({
+              originalPipelineVariables: resolvedPipeline?.variables,
+              currentPipelineVariables: pipelineJson.variables
+            })
+          }
+        } catch (e) {
+          // set error
+          setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
         }
-      } catch (e) {
-        // set error
-        setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
       }
       const eventConditions = source?.spec?.spec?.eventConditions || []
       const { value: versionValue, operator: versionOperator } =
@@ -1324,7 +1341,6 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
   }
   // TriggerConfigDTO is NGTriggerConfigV2 with optional identifier
   const submitTrigger = async (triggerYaml: NGTriggerConfigV2 | TriggerConfigDTO): Promise<void> => {
-    // TODO: Guard this using feature flag
     if (gitAwareForTriggerEnabled) {
       delete triggerYaml.inputYaml
     }
@@ -1429,7 +1445,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       enabledStatus,
       orgIdentifier,
       projectIdentifier,
-      pipelineIdentifier
+      pipelineIdentifier,
+      gitAwareForTriggerEnabled
     })
     submitTrigger(triggerYaml)
   }
@@ -1570,19 +1587,6 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     initialValues,
     currentPipeline
   ])
-  // const { repoIdentifier } = useQueryParams<GitQueryParams>()
-
-  // const { data: branchesWithStatusData, refetch:  getDefaultBranchName } = useGetListOfBranchesWithStatus({
-  //   queryParams: {
-  //     accountIdentifier: accountId,
-  //     orgIdentifier,
-  //     projectIdentifier,
-  //     yamlGitConfigIdentifier: repoIdentifier,
-  //     page: 0,
-  //     size: 1
-  //   },
-  //   lazy: true
-  // })
 
   const { data: connectorData, refetch: getConnectorDetails } = useGetConnector({
     identifier: getIdentifierFromValue(
@@ -1594,12 +1598,6 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     lazy: true
   })
 
-  // useEffect(() => {
-  //   if (isCreatingNewTrigger) {
-  //     getDefaultBranchName()
-  //   }
-  // }, [isCreatingNewTrigger, getDefaultBranchName])
-
   const onFormikEffect: FormikEffectProps['onChange'] = ({ nextValues, formik }) => {
     formikRef.current = formik
 
@@ -1609,6 +1607,12 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         pipelineBranchName: DEFAULT_TRIGGER_BRANCH,
         _pipelineBranchNameCustomValue: true
       })
+    }
+
+    if (gitAwareForTriggerEnabled && nextValues.inputYaml) {
+      // debugger
+      // delete nextValues.inputYaml
+      //formik.setValues(nextValues)
     }
   }
 

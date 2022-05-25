@@ -251,7 +251,10 @@ function WebhookPipelineInputPanelForm({
       pipelineIdentifier,
       projectIdentifier,
       repoIdentifier,
-      branch: formikProps?.values?.pipelineBranchName || branch
+
+      // TODO: Fetching with pipelineBranchName = <+trigger.branch> will fail when editing
+      // Need to confirm with Product about the behavior
+      branch: /* formikProps?.values?.pipelineBranchName || */ branch
     }),
     [
       accountId,

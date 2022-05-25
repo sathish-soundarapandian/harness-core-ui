@@ -25,8 +25,7 @@ import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/Pipeli
 import GitPopover from '@pipeline/components/GitPopover/GitPopover'
 import GenericErrorHandler from '@common/pages/GenericErrorHandler/GenericErrorHandler'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import NoEntityFound from '../utils/NoEntityFound/NoEntityFound'
 import css from './PipelineDetails.module.scss'
 // add custom event to the global scope
@@ -39,9 +38,8 @@ declare global {
 export default function PipelineDetails({ children }: React.PropsWithChildren<unknown>): React.ReactElement {
   const { orgIdentifier, projectIdentifier, pipelineIdentifier, accountId, module } =
     useParams<PipelineType<PipelinePathProps>>()
-  const ciGitAwareForTriggerEnabled =
-    useFeatureFlag(FeatureFlag.GIT_AWARE_FOR_TRIGGER) || !!localStorage.GIT_AWARE_FOR_TRIGGER
   const { isGitSyncEnabled, isGitSimplificationEnabled } = useAppStore()
+  const { GIT_SIMPLIFICATION } = useFeatureFlags()
   const location = useLocation()
   const { trackEvent } = useTelemetry()
   const { branch, repoIdentifier, storeType, repoName, connectorRef } = useQueryParams<GitQueryParams>()
@@ -84,12 +82,12 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
   }, [repoIdentifier])
 
   React.useEffect(() => {
-    if (branch && branchesWithStatusData?.data?.defaultBranch?.branchName !== branch && !ciGitAwareForTriggerEnabled) {
+    if (branch && branchesWithStatusData?.data?.defaultBranch?.branchName !== branch && !GIT_SIMPLIFICATION) {
       setTriggerTabDisabled(true)
     } else {
       setTriggerTabDisabled(false)
     }
-  }, [branchesWithStatusData])
+  }, [branchesWithStatusData, branch, GIT_SIMPLIFICATION])
 
   React.useEffect(() => {
     pipeline?.data?.gitDetails?.branch && updateQueryParams({ branch: pipeline?.data?.gitDetails?.branch })
