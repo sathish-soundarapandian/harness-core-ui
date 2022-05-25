@@ -12,7 +12,6 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import type { AllNGVariables } from '@pipeline/utils/types'
 import { CustomVariables } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariables'
-import { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import {
@@ -77,33 +76,16 @@ jest.mock('services/portal', () => ({
   useListAwsRegions: () => jest.fn(() => mockAwsRegionsResponse)
 }))
 
-class StepFactory extends AbstractStepFactory {
-  protected type = 'test-factory'
-}
-const factory = new StepFactory()
-
-jest.mock('@common/hooks', () => ({
-  ...(jest.requireActual('@common/hooks') as any),
-  useMutateAsGet: jest.fn().mockImplementation(() => {
-    return {
-      data: mockDockerTagsCallResponse,
-      refetch: jest.fn(),
-      error: null,
-      cancel: jest.fn(),
-      loading: false
-    }
-  })
-}))
-
 describe('DOCKER', () => {
   beforeEach(() => {
-    factory.registerStep(new KubernetesServiceSpec())
+    testStepFactory.reset()
+    testStepFactory.registerStep(new KubernetesServiceSpec())
   })
   test(`renders the primary artifact form if all the attributes are runtime`, () => {
     const { container } = render(
       <TestWrapper>
         <StepWidget<K8SDirectServiceStep>
-          factory={factory}
+          factory={testStepFactory}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
           initialValues={{}}
           type={StepType.K8sServiceSpec}
@@ -136,7 +118,7 @@ describe('DOCKER', () => {
     const { container } = render(
       <TestWrapper>
         <StepWidget<K8SDirectServiceStep>
-          factory={factory}
+          factory={testStepFactory}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
           initialValues={{}}
           type={StepType.K8sServiceSpec}
@@ -170,7 +152,7 @@ describe('DOCKER', () => {
     const { container } = render(
       <TestWrapper>
         <StepWidget<K8SDirectServiceStep>
-          factory={factory}
+          factory={testStepFactory}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
           initialValues={{}}
           type={StepType.K8sServiceSpec}
@@ -221,7 +203,7 @@ describe('DOCKER', () => {
     const { container } = render(
       <TestWrapper>
         <StepWidget<K8SDirectServiceStep>
-          factory={factory}
+          factory={testStepFactory}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
           initialValues={{}}
           type={StepType.K8sServiceSpec}
@@ -266,13 +248,14 @@ describe('DOCKER', () => {
 
 describe('ECR', () => {
   beforeEach(() => {
-    factory.registerStep(new KubernetesServiceSpec())
+    testStepFactory.reset()
+    testStepFactory.registerStep(new KubernetesServiceSpec())
   })
   test(`renders the primary artifact form if all the attributes are runtime`, () => {
     const { container } = render(
       <TestWrapper>
         <StepWidget<K8SDirectServiceStep>
-          factory={factory}
+          factory={testStepFactory}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
           initialValues={{}}
           type={StepType.K8sServiceSpec}
@@ -305,7 +288,7 @@ describe('ECR', () => {
     const { container } = render(
       <TestWrapper>
         <StepWidget<K8SDirectServiceStep>
-          factory={factory}
+          factory={testStepFactory}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
           initialValues={{}}
           type={StepType.K8sServiceSpec}
@@ -339,7 +322,7 @@ describe('ECR', () => {
     const { container } = render(
       <TestWrapper>
         <StepWidget<K8SDirectServiceStep>
-          factory={factory}
+          factory={testStepFactory}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
           initialValues={{}}
           type={StepType.K8sServiceSpec}
@@ -389,7 +372,7 @@ describe('ECR', () => {
     const { container } = render(
       <TestWrapper>
         <StepWidget<K8SDirectServiceStep>
-          factory={factory}
+          factory={testStepFactory}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
           initialValues={{}}
           type={StepType.K8sServiceSpec}
@@ -436,13 +419,14 @@ describe('ECR', () => {
 
 describe('GCR', () => {
   beforeEach(() => {
-    factory.registerStep(new KubernetesServiceSpec())
+    testStepFactory.reset()
+    testStepFactory.registerStep(new KubernetesServiceSpec())
   })
   test(`renders the primary artifact form if all the attributes are runtime`, () => {
     const { container } = render(
       <TestWrapper>
         <StepWidget<K8SDirectServiceStep>
-          factory={factory}
+          factory={testStepFactory}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
           initialValues={{}}
           type={StepType.K8sServiceSpec}
@@ -475,7 +459,7 @@ describe('GCR', () => {
     const { container } = render(
       <TestWrapper>
         <StepWidget<K8SDirectServiceStep>
-          factory={factory}
+          factory={testStepFactory}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
           initialValues={{}}
           type={StepType.K8sServiceSpec}
@@ -509,7 +493,7 @@ describe('GCR', () => {
     const { container } = render(
       <TestWrapper>
         <StepWidget<K8SDirectServiceStep>
-          factory={factory}
+          factory={testStepFactory}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
           initialValues={{}}
           type={StepType.K8sServiceSpec}
@@ -559,7 +543,7 @@ describe('GCR', () => {
     const { container } = render(
       <TestWrapper>
         <StepWidget<K8SDirectServiceStep>
-          factory={factory}
+          factory={testStepFactory}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
           initialValues={{}}
           type={StepType.K8sServiceSpec}
@@ -606,19 +590,23 @@ describe('GCR', () => {
 
 describe('VARIABLES', () => {
   beforeEach(() => {
-    factory.registerStep(new KubernetesServiceSpec())
-    factory.registerStep(new CustomVariables())
+    testStepFactory.reset()
+    testStepFactory.registerStep(new KubernetesServiceSpec())
+    testStepFactory.registerStep(new CustomVariables())
   })
   test(`renders the service variables form`, async () => {
-    // stepTestUtilFactory.registerStep(new CustomVariables())
     const onUpdateMock = jest.fn()
     const { container, queryByText } = render(
-      <Formik initialValues={{}} formName="dummy" onSubmit={jest.fn()}>
+      <Formik
+        initialValues={{ variables: [{ name: 'testvar1', type: 'String', value: 'somedefaultvalue' }] }}
+        formName="dummy"
+        onSubmit={jest.fn()}
+      >
         {() => {
           return (
             <TestWrapper>
               <StepWidget<K8SDirectServiceStep>
-                factory={factory}
+                factory={testStepFactory}
                 allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
                 initialValues={{}}
                 type={StepType.K8sServiceSpec}
@@ -659,7 +647,8 @@ describe('VARIABLES', () => {
 
 describe('MANIFEST', () => {
   beforeEach(() => {
-    factory.registerStep(new KubernetesServiceSpec())
+    testStepFactory.reset()
+    testStepFactory.registerStep(new KubernetesServiceSpec())
   })
   test(`renders the K8 manifest`, async () => {
     // stepTestUtilFactory.registerStep(new CustomVariables())
@@ -667,7 +656,7 @@ describe('MANIFEST', () => {
     const { container } = render(
       <TestWrapper>
         <StepWidget<K8SDirectServiceStep>
-          factory={factory}
+          factory={testStepFactory}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
           initialValues={{}}
           type={StepType.K8sServiceSpec}
@@ -698,6 +687,7 @@ describe('MANIFEST', () => {
 
 describe('VALIDATIONS', () => {
   beforeEach(() => {
+    testStepFactory.reset()
     testStepFactory.registerStep(new KubernetesServiceSpec())
   })
   test('ARTIFACTS', async () => {
@@ -1165,7 +1155,7 @@ describe('INPUT VARIABLE VIEW', () => {
     const { container } = render(
       <TestWrapper>
         <StepWidget<K8SDirectServiceStep>
-          factory={factory}
+          factory={testStepFactory}
           allowableTypes={[]}
           customStepProps={{
             variablesData: {

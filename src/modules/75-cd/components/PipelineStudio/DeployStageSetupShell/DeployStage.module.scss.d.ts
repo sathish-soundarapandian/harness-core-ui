@@ -10,7 +10,9 @@ declare const styles: {
   readonly accordion: string
   readonly cardListContainer: string
   readonly contentSection: string
+  readonly editServiceModal: string
   readonly info: string
+  readonly nonModalView: string
   readonly sectionCard: string
   readonly serviceOverrides: string
   readonly tabHeading: string

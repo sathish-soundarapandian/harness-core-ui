@@ -11,14 +11,14 @@ import { cloneDeep, defaultTo, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { parse } from 'yaml'
 import produce from 'immer'
-import DeployServiceSpecifications from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceSpecifications'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import { NGServiceConfig, useGetEntityYamlSchema } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import DeployServiceDefinition from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceDefinition/DeployServiceDefinition'
 import { setNameIDDescription } from '../../utils/ServiceUtils'
-import BasicServiceStep from './BasicServiceStep'
+import ServiceStepBasicInfo from './ServiceStepBasicInfo'
 import css from './ServiceConfiguration.module.scss'
 
 interface ServiceConfigurationProps {
@@ -95,8 +95,8 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
       </div>
       {selectedView === SelectedView.VISUAL ? (
         <>
-          <BasicServiceStep />
-          <DeployServiceSpecifications />
+          <ServiceStepBasicInfo />
+          <DeployServiceDefinition />
         </>
       ) : (
         <Container>

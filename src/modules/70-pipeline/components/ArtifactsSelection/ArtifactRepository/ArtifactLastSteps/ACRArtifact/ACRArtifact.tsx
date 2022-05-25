@@ -45,7 +45,7 @@ import {
   getConnectorIdValue,
   getFinalArtifactObj,
   helperTextData,
-  isFieldRuntime,
+  isFieldFixed,
   resetTag,
   shouldFetchTags
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
@@ -264,12 +264,7 @@ export function ACRArtifact({
 
   useEffect(() => {
     /* istanbul ignore else */
-    if (
-      initialValues?.spec?.subscriptionId &&
-      isFieldRuntime(initialValues?.spec?.subscriptionId) &&
-      initialValues?.spec?.registry &&
-      isFieldRuntime(initialValues?.spec?.registry)
-    ) {
+    if (initialValues?.spec?.subscriptionId && isFieldFixed(initialValues?.spec?.subscriptionId)) {
       refetchRegistries({
         queryParams: {
           connectorRef: getConnectorRefQueryData(),
@@ -315,11 +310,9 @@ export function ACRArtifact({
     /* istanbul ignore else */
     if (
       initialValues?.spec?.subscriptionId &&
-      isFieldRuntime(initialValues?.spec?.subscriptionId) &&
+      isFieldFixed(initialValues?.spec?.subscriptionId) &&
       initialValues?.spec?.registry &&
-      isFieldRuntime(initialValues?.spec?.registry) &&
-      initialValues?.spec?.repository &&
-      isFieldRuntime(initialValues?.spec?.repository)
+      isFieldFixed(initialValues?.spec?.registry)
     ) {
       refetchRepositories({
         queryParams: {

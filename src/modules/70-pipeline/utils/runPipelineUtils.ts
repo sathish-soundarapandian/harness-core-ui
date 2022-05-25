@@ -9,24 +9,35 @@ import { cloneDeep, defaultTo, set } from 'lodash-es'
 import type { SelectOption } from '@wings-software/uicore'
 
 import { getStageFromPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
-import type { AllNGVariables } from '@pipeline/utils/types'
+import type { AllNGVariables, Pipeline } from '@pipeline/utils/types'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import type { FeaturesProps } from 'framework/featureStore/featureStoreUtil'
 import type { UseStringsReturn } from 'framework/strings'
 import type { PipelineInfoConfig, StageElementWrapperConfig } from 'services/cd-ng'
 import type { InputSetErrorResponse } from 'services/pipeline-ng'
 
-function mergeStage(stage: StageElementWrapperConfig, inputSetPortion: NgPipelineTemplate): StageElementWrapperConfig {
+export interface MergeStageProps {
+  stage: StageElementWrapperConfig
+  inputSetPortion: Pipeline
+  allValues: Pipeline
+  shouldUseDefaultValues: boolean
+}
+
+function mergeStage(props: MergeStageProps): StageElementWrapperConfig {
+  const { stage, inputSetPortion, allValues, shouldUseDefaultValues } = props
   const stageIdToBeMatched = defaultTo(stage.stage?.identifier, '')
   const matchedStageInInputSet = getStageFromPipeline(stageIdToBeMatched, inputSetPortion.pipeline)
+  const matchedStageInAllValues = getStageFromPipeline(stageIdToBeMatched, allValues.pipeline)
 
   if (matchedStageInInputSet.stage) {
     let updatedStageVars = []
     if (stage?.stage?.variables && matchedStageInInputSet?.stage?.stage?.variables) {
-      updatedStageVars = getMergedVariables(
-        stage?.stage?.variables as AllNGVariables[],
-        matchedStageInInputSet.stage.stage?.variables as AllNGVariables[]
-      )
+      updatedStageVars = getMergedVariables({
+        variables: defaultTo(stage?.stage?.variables, []) as AllNGVariables[],
+        inputSetVariables: defaultTo(matchedStageInInputSet.stage.stage?.variables, []) as AllNGVariables[],
+        allVariables: defaultTo(matchedStageInAllValues.stage?.stage?.variables, []) as AllNGVariables[],
+        shouldUseDefaultValues
+      })
       matchedStageInInputSet.stage.stage.variables = updatedStageVars
     }
     return matchedStageInInputSet.stage
@@ -35,14 +46,19 @@ function mergeStage(stage: StageElementWrapperConfig, inputSetPortion: NgPipelin
   return stage
 }
 
-interface NgPipelineTemplate {
-  pipeline: PipelineInfoConfig
+export interface MergeTemplateWithInputSetDataProps {
+  templatePipeline: Pipeline
+  /**
+   * Input set to merged. In case of no input sets,
+   * just pass all values in place of input sets
+   */
+  inputSetPortion: Pipeline
+  allValues: Pipeline
+  shouldUseDefaultValues: boolean
 }
 
-export const mergeTemplateWithInputSetData = (
-  templatePipeline: NgPipelineTemplate,
-  inputSetPortion: NgPipelineTemplate
-): NgPipelineTemplate => {
+export const mergeTemplateWithInputSetData = (props: MergeTemplateWithInputSetDataProps): Pipeline => {
+  const { templatePipeline, inputSetPortion, allValues, shouldUseDefaultValues } = props
   // Replace all the matching stages in parsedTemplate with the stages received in input set portion
   const stages = templatePipeline.pipeline.template
     ? (templatePipeline.pipeline.template.templateInputs as PipelineInfoConfig)?.stages
@@ -54,7 +70,9 @@ export const mergeTemplateWithInputSetData = (
       We update all the parallel stages with the ones matching in the input set portion
       and then finally return the new 'updatedParallelStages' object
       */
-      const updatedParallelStages = stage.parallel.map(parallelStage => mergeStage(parallelStage, inputSetPortion))
+      const updatedParallelStages = stage.parallel.map(parallelStage =>
+        mergeStage({ stage: parallelStage, inputSetPortion, allValues, shouldUseDefaultValues })
+      )
       // Finally setting the updatedParallelStages in the original object, so that the 'mergedStages' will have the updated values
       stage.parallel = updatedParallelStages
       return stage
@@ -64,7 +82,7 @@ export const mergeTemplateWithInputSetData = (
     This block will be executed if there are no parallel stages.
     Simply loop over the stages and keep matching and replacing
     */
-    return mergeStage(stage, inputSetPortion)
+    return mergeStage({ stage, inputSetPortion, allValues, shouldUseDefaultValues })
   })
 
   const toBeUpdated = cloneDeep(templatePipeline)
@@ -84,10 +102,21 @@ export const mergeTemplateWithInputSetData = (
       set(
         toBeUpdated,
         'pipeline.template.templateInputs.variables',
-        getMergedVariables(
-          (toBeUpdated.pipeline?.template?.templateInputs as PipelineInfoConfig).variables as AllNGVariables[],
-          (inputSetPortion.pipeline?.template?.templateInputs as PipelineInfoConfig).variables as AllNGVariables[]
-        )
+        getMergedVariables({
+          variables: defaultTo(
+            (toBeUpdated.pipeline?.template?.templateInputs as PipelineInfoConfig)?.variables,
+            []
+          ) as AllNGVariables[],
+          inputSetVariables: defaultTo(
+            (inputSetPortion.pipeline?.template?.templateInputs as PipelineInfoConfig)?.variables,
+            []
+          ) as AllNGVariables[],
+          allVariables: defaultTo(
+            (allValues.pipeline?.template?.templateInputs as PipelineInfoConfig)?.variables,
+            []
+          ) as AllNGVariables[],
+          shouldUseDefaultValues
+        })
       )
     }
   } else {
@@ -113,10 +142,12 @@ export const mergeTemplateWithInputSetData = (
     if (inputSetPortion.pipeline.variables) {
       // If we have variables saved in input set, pick them and update
 
-      toBeUpdated.pipeline.variables = getMergedVariables(
-        toBeUpdated.pipeline.variables as AllNGVariables[],
-        inputSetPortion.pipeline.variables as AllNGVariables[]
-      ) // inputSetPortion.pipeline.variables
+      toBeUpdated.pipeline.variables = getMergedVariables({
+        variables: defaultTo(toBeUpdated.pipeline.variables, []) as AllNGVariables[],
+        inputSetVariables: defaultTo(inputSetPortion.pipeline.variables, []) as AllNGVariables[],
+        allVariables: defaultTo(allValues.pipeline.variables, []) as AllNGVariables[],
+        shouldUseDefaultValues
+      })
     }
   }
   return toBeUpdated
@@ -148,13 +179,22 @@ export const getOverlayErrors = (invalidReferences: Record<string, string>): Rec
   return toReturn
 }
 
-export const getMergedVariables = (
-  variables: AllNGVariables[],
+export interface GetMergedVariablesProps {
+  variables: AllNGVariables[]
   inputSetVariables: AllNGVariables[]
-): AllNGVariables[] => {
+  allVariables: AllNGVariables[]
+  shouldUseDefaultValues: boolean
+}
+
+export const getMergedVariables = (props: GetMergedVariablesProps): AllNGVariables[] => {
+  const { inputSetVariables, variables, allVariables, shouldUseDefaultValues } = props
   // create a map of input set variables values for easier lookup
   // we use "name" of the varibale as the key
   const inputSetVariablesMap: Record<string, AllNGVariables> = inputSetVariables.reduce(
+    (acc, curr) => ({ ...acc, [defaultTo(curr.name, '')]: curr }),
+    {}
+  )
+  const allVariablesMap: Record<string, AllNGVariables> = allVariables.reduce(
     (acc, curr) => ({ ...acc, [defaultTo(curr.name, '')]: curr }),
     {}
   )
@@ -166,15 +206,24 @@ export const getMergedVariables = (
     // if a variable with same name exists in input set variables
     if (name in inputSetVariablesMap) {
       // copy the variable data
-      const newVar: AllNGVariables = { ...inputSetVariablesMap[name] }
+      const varFromInpuSet: AllNGVariables = { ...inputSetVariablesMap[name] }
+      const varFromAllVars: AllNGVariables = allVariablesMap[name]
 
       // remove the variable from input set variables
       delete inputSetVariablesMap[name]
 
+      // use new value if the type of varibale is same else use the current value
+      let value = varFromInpuSet.type === type ? varFromInpuSet.value : variable.value
+
+      // fallback to default value, if the flag is true, the value is empty and
+      // the variable has a default value defined in pipeline
+      if (shouldUseDefaultValues && !value && typeof varFromAllVars?.default !== 'undefined') {
+        value = varFromAllVars.default
+      }
+
       return {
         ...variable,
-        // use new value if the type of varibale is same else use the current value
-        value: newVar.type === type ? newVar.value : variable.value
+        value
       } as AllNGVariables
     }
 

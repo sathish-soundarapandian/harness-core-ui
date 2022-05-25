@@ -12,22 +12,23 @@ import { cloneDeep, omit } from 'lodash-es'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
-import ServiceDetailsSummary from '@cd/components/ServiceDetails/ServiceDetailsContent/ServiceDetailsSummary'
-import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
-import EntitySetupUsage from '@common/pages/entityUsage/EntityUsage'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGServiceConfig, updateServiceV2Promise } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useServiceContext } from '@cd/context/ServiceContext'
 import ServiceConfiguration from './ServiceConfiguration/ServiceConfiguration'
 import { ServiceTabs } from '../utils/ServiceUtils'
 import css from '@cd/components/Services/ServiceStudio/ServiceStudio.module.scss'
 
 interface ServiceStudioDetailsProps {
   serviceData: NGServiceConfig
+  summaryPanel?: JSX.Element
+  refercedByPanel?: JSX.Element
 }
-function ServiceStudioDetails({ serviceData }: ServiceStudioDetailsProps): React.ReactElement | null {
+function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElement | null {
   const { getString } = useStrings()
-  const { accountId, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
+  const { accountId } = useParams<AccountPathProps>()
   const { tab } = useQueryParams<{ tab: string }>()
   const { updateQueryParams } = useUpdateQueryParams()
   const {
@@ -36,6 +37,9 @@ function ServiceStudioDetails({ serviceData }: ServiceStudioDetailsProps): React
     fetchPipeline,
     isReadonly
   } = usePipelineContext()
+
+  const { isEditServiceModal, onCloseModal } = useServiceContext()
+
   const [selectedTabId, setSelectedTabId] = useState(tab ?? ServiceTabs.SUMMARY)
   const { showSuccess, showError, clear } = useToaster()
 
@@ -52,8 +56,8 @@ function ServiceStudioDetails({ serviceData }: ServiceStudioDetailsProps): React
     clear()
 
     const body = {
-      ...omit(cloneDeep(serviceData.service), 'serviceDefinition'),
-      yaml: yamlStringify({ ...serviceData })
+      ...omit(cloneDeep(props.serviceData.service), 'serviceDefinition'),
+      yaml: yamlStringify({ ...props.serviceData })
     }
 
     try {
@@ -66,8 +70,12 @@ function ServiceStudioDetails({ serviceData }: ServiceStudioDetailsProps): React
       })
       // istanbul ignore else
       if (response.status === 'SUCCESS') {
-        showSuccess(getString('common.serviceCreated'))
-        fetchPipeline({ forceFetch: true, forceUpdate: true })
+        if (isEditServiceModal) {
+          onCloseModal?.()
+        } else {
+          showSuccess(getString('common.serviceCreated'))
+          fetchPipeline({ forceFetch: true, forceUpdate: true })
+        }
       } else {
         throw response
       }
@@ -87,22 +95,36 @@ function ServiceStudioDetails({ serviceData }: ServiceStudioDetailsProps): React
   }
 
   if (NG_SVC_ENV_REDESIGN) {
+    if (isEditServiceModal) {
+      return (
+        <>
+          <ServiceConfiguration serviceData={props.serviceData} />
+          <Layout.Horizontal className={css.btnContainer} spacing="medium" margin={{ top: 'medium', bottom: 'medium' }}>
+            <Button
+              variation={ButtonVariation.PRIMARY}
+              disabled={!isUpdated}
+              text={getString('save')}
+              onClick={saveAndPublishService}
+              className={css.saveButton}
+            />
+            <Button text={getString('cancel')} variation={ButtonVariation.TERTIARY} onClick={onCloseModal} />
+          </Layout.Horizontal>
+        </>
+      )
+    }
+
     return (
       <Container padding={{ left: 'xlarge', right: 'xlarge' }} className={css.tabsContainer}>
         <Tabs id="serviceDetailsTab" selectedTabId={selectedTabId} onChange={handleTabChange}>
-          <Tab id={ServiceTabs.SUMMARY} title={getString('summary')} panel={<ServiceDetailsSummary />} />
+          <Tab id={ServiceTabs.SUMMARY} title={getString('summary')} panel={props.summaryPanel} />
 
           <Tab
             id={ServiceTabs.Configuration}
             title={getString('configuration')}
-            panel={<ServiceConfiguration serviceData={serviceData} />}
+            panel={<ServiceConfiguration serviceData={props.serviceData} />}
           />
 
-          <Tab
-            id={ServiceTabs.REFERENCED_BY}
-            title={getString('refrencedBy')}
-            panel={<EntitySetupUsage entityType={'Service'} entityIdentifier={serviceId} />}
-          />
+          <Tab id={ServiceTabs.REFERENCED_BY} title={getString('refrencedBy')} panel={props.refercedByPanel} />
           <Tab id={ServiceTabs.ActivityLog} title={getString('activityLog')} panel={<></>} />
         </Tabs>
         {selectedTabId === ServiceTabs.Configuration && (
@@ -134,12 +156,8 @@ function ServiceStudioDetails({ serviceData }: ServiceStudioDetailsProps): React
   return (
     <Container padding={{ left: 'xlarge', right: 'xlarge' }} className={css.tabsContainer}>
       <Tabs id="serviceDetailsTab" selectedTabId={selectedTabId} onChange={handleTabChange}>
-        <Tab id={ServiceTabs.SUMMARY} title={getString('summary')} panel={<ServiceDetailsSummary />} />
-        <Tab
-          id={ServiceTabs.REFERENCED_BY}
-          title={getString('refrencedBy')}
-          panel={<EntitySetupUsage entityType={'Service'} entityIdentifier={serviceId} />}
-        />
+        <Tab id={ServiceTabs.SUMMARY} title={getString('summary')} panel={props.summaryPanel} />
+        <Tab id={ServiceTabs.REFERENCED_BY} title={getString('refrencedBy')} panel={props.refercedByPanel} />
       </Tabs>
     </Container>
   )

@@ -37,12 +37,13 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useQueryParams } from '@common/hooks'
 import GitContextForm, { GitContextProps } from '@common/components/GitContextForm/GitContextForm'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
-import type { InputSetDTO, InputSetType } from '@pipeline/utils/types'
+import type { InputSetDTO, InputSetType, Pipeline } from '@pipeline/utils/types'
 import {
   isCloneCodebaseEnabledAtLeastOneStage,
   isCodebaseFieldsRuntimeInputs,
   getPipelineWithoutCodebaseInputs
 } from '@pipeline/utils/CIUtils'
+import { mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
 import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetForm'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import { factory } from '../PipelineSteps/Steps/__tests__/StepTestUtil'
@@ -188,7 +189,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
   >()
   const { repoIdentifier, branch } = useQueryParams<InputSetGitQueryParams>()
   const history = useHistory()
-  const resolvedPipeline = parse(defaultTo(resolvedTemplatesPipelineYaml, ''))?.pipeline
+  const resolvedPipeline = defaultTo(parse(defaultTo(resolvedTemplatesPipelineYaml, ''))?.pipeline, {})
 
   useEffect(() => {
     if (!isUndefined(inputSet?.outdated) && yamlHandler?.setLatestYaml) {
@@ -241,6 +242,15 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
     identifier: IdentifierSchema()
   })
   const formRefDom = React.useRef<HTMLElement | undefined>()
+  const init = React.useMemo(() => {
+    const omittedPipeline = omit(inputSet, 'gitDetails', 'entityValidityDetails', 'outdated') as Pipeline
+    return mergeTemplateWithInputSetData({
+      templatePipeline: omittedPipeline,
+      inputSetPortion: omittedPipeline,
+      allValues: { pipeline: resolvedPipeline },
+      shouldUseDefaultValues: !isEdit
+    })
+  }, [inputSet, isEdit, resolvedPipeline])
 
   return (
     <Container className={css.inputSetForm}>
@@ -252,7 +262,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
       >
         <Formik<InputSetDTO & GitContextProps>
           initialValues={{
-            ...omit(inputSet, 'gitDetails', 'entityValidityDetails', 'outdated'),
+            ...init,
             repo: defaultTo(repoIdentifier, ''),
             branch: defaultTo(branch, '')
           }}

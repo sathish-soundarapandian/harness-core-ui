@@ -8,12 +8,10 @@
 import React, { Dispatch, FormEvent, SetStateAction } from 'react'
 import cx from 'classnames'
 import { FormikForm, Layout, PageSpinner, Text } from '@harness/uicore'
-import { parse } from 'yaml'
-import { defaultTo } from 'lodash-es'
+import { isEmpty } from 'lodash-es'
 
 import { useStrings } from 'framework/strings'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
-import type { ResponseInputSetTemplateWithReplacedExpressionsResponse } from 'services/pipeline-ng'
 import type { PipelineInfoConfig } from 'services/cd-ng'
 import SelectExistingInputsOrProvideNew from './SelectExistingOrProvide'
 import { InputSetSelector } from '../InputSetSelector/InputSetSelector'
@@ -33,8 +31,8 @@ export interface VisualViewProps {
   selectedInputSets?: InputSetValue[]
   pipelineIdentifier: string
   executionIdentifier?: string
-  executionInputSetTemplateYaml?: string
-  template: ResponseInputSetTemplateWithReplacedExpressionsResponse | null
+  hasRuntimeInputs: boolean
+  template: PipelineInfoConfig
   pipeline?: PipelineInfoConfig
   resolvedPipeline?: PipelineInfoConfig
   currentPipeline?: {
@@ -56,7 +54,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
     selectedInputSets,
     pipelineIdentifier,
     executionIdentifier,
-    executionInputSetTemplateYaml,
+    hasRuntimeInputs,
     template,
     pipeline,
     currentPipeline,
@@ -72,15 +70,9 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
   const { getString } = useStrings()
 
   const checkIfRuntimeInputsNotPresent = (): string | undefined => {
-    if (executionView && !executionInputSetTemplateYaml) {
+    if (executionView && isEmpty(template)) {
       return getString('pipeline.inputSets.noRuntimeInputsWhileExecution')
-    } else if (
-      !executionView &&
-      resolvedPipeline &&
-      currentPipeline &&
-      !template?.data?.inputSetTemplateYaml &&
-      !getTemplateError
-    ) {
+    } else if (!executionView && resolvedPipeline && currentPipeline && !hasRuntimeInputs && !getTemplateError) {
       /*
       We don't have any runtime inputs required for running this pipeline
         - if API doesn't fail and
@@ -91,7 +83,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
   }
 
   const showInputSetSelector = (): boolean => {
-    return !!(pipeline && currentPipeline && template?.data?.inputSetTemplateYaml && existingProvide === 'existing')
+    return !!(pipeline && currentPipeline && hasRuntimeInputs && existingProvide === 'existing')
   }
 
   const showPipelineInputSetForm = (): boolean => {
@@ -169,7 +161,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
                 existingProvide={existingProvide}
                 currentPipeline={currentPipeline}
                 executionIdentifier={executionIdentifier}
-                executionInputSetTemplateYaml={executionInputSetTemplateYaml}
+                hasRuntimeInputs={hasRuntimeInputs}
                 template={template}
                 resolvedPipeline={resolvedPipeline}
                 loadingMergeInputSetUpdate={loadingMergeInputSetUpdate}
@@ -191,8 +183,8 @@ export interface PipelineInputSetFormWrapperProps {
   currentPipeline?: {
     pipeline?: PipelineInfoConfig
   }
-  executionInputSetTemplateYaml?: string
-  template: ResponseInputSetTemplateWithReplacedExpressionsResponse | null
+  hasRuntimeInputs?: boolean
+  template: PipelineInfoConfig
   resolvedPipeline?: PipelineInfoConfig
   loadingMergeInputSetUpdate: boolean
 }
@@ -203,7 +195,7 @@ function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): R
     executionView,
     existingProvide,
     currentPipeline,
-    executionInputSetTemplateYaml,
+    hasRuntimeInputs,
     template,
     executionIdentifier,
     resolvedPipeline,
@@ -223,16 +215,13 @@ function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): R
       />
     )
   }
-  if (currentPipeline?.pipeline && resolvedPipeline && template?.data?.inputSetTemplateYaml) {
-    let templateSource = executionView ? executionInputSetTemplateYaml : template.data.inputSetTemplateYaml
-    templateSource = defaultTo(templateSource, '')
-
+  if (currentPipeline?.pipeline && resolvedPipeline && hasRuntimeInputs) {
     return (
       <>
         {existingProvide === 'existing' ? <div className={css.divider} /> : null}
         <PipelineInputSetForm
           originalPipeline={resolvedPipeline}
-          template={parse(templateSource)?.pipeline}
+          template={template}
           readonly={executionView}
           path=""
           viewType={StepViewType.DeploymentForm}

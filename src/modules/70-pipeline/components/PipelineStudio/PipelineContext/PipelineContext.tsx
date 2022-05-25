@@ -154,26 +154,34 @@ export const savePipeline = (
         },
         body: body as any,
         requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
-      }).then((response: any) => {
-        if ((typeof response as unknown) === 'string') {
-          return JSON.parse(response as string) as Failure
-        } else {
-          return response
-        }
       })
+        .then((response: any) => {
+          if ((typeof response as unknown) === 'string') {
+            return JSON.parse(response as string) as Failure
+          } else {
+            return response
+          }
+        })
+        .catch(err => {
+          return err
+        })
     : createPipeline({
         body: body as any,
         queryParams: {
           ...params
         },
         requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
-      }).then(async (response: unknown) => {
-        if (typeof response === 'string') {
-          return JSON.parse(response as unknown as string) as Failure
-        } else {
-          return response as unknown as Failure
-        }
       })
+        .then(async (response: unknown) => {
+          if (typeof response === 'string') {
+            return JSON.parse(response as unknown as string) as Failure
+          } else {
+            return response as unknown as Failure
+          }
+        })
+        .catch(err => {
+          return err
+        })
 }
 
 const DBInitializationFailed = 'DB Creation retry exceeded.'

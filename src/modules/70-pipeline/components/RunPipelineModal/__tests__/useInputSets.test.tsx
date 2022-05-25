@@ -16,7 +16,8 @@ const getInitialProps = (): UseInputSetsProps => ({
   orgIdentifier: 'TEST_ORG',
   pipelineIdentifier: 'TEST_PIPELINE',
   projectIdentifier: 'TEST_PROJECT',
-  selectedStageData: { allStagesSelected: true, selectedStages: [], selectedStageItems: [] }
+  selectedStageData: { allStagesSelected: true, selectedStages: [], selectedStageItems: [] },
+  executionInputSetTemplateYaml: ''
 })
 
 const runtimeInputsYaml = `pipeline:
@@ -105,7 +106,7 @@ describe('<useInputSets /> tests', () => {
 
     await waitFor(() => expect(result.current.inputSetYamlResponse?.data?.inputSetTemplateYaml).toEqual(''))
     expect(result.current.inputSet).toEqual({})
-    expect(result.current.parsedInputSetTemplateYaml).toEqual({})
+    expect(result.current.inputSetTemplate).toEqual({})
   })
 
   test('works with runtime inputs, without predefined inputsets', async () => {
@@ -123,7 +124,7 @@ describe('<useInputSets /> tests', () => {
       expect(result.current.inputSetYamlResponse?.data?.inputSetTemplateYaml).toEqual(runtimeInputsYaml)
     )
     expect(result.current.inputSet).toEqual(clearRuntimeInput(parsed))
-    expect(result.current.parsedInputSetTemplateYaml).toEqual(parsed)
+    expect(result.current.inputSetTemplate).toEqual(parsed)
   })
 
   test('works with predefined inputsets', async () => {
@@ -228,7 +229,7 @@ describe('<useInputSets /> tests', () => {
       expect(result.current.inputSetYamlResponse?.data?.inputSetTemplateYaml).toEqual(runtimeInputsYaml)
     )
     expect(result.current.inputSet).toEqual(parse(mergedPipelineYaml))
-    expect(result.current.parsedInputSetTemplateYaml).toEqual(parsed)
+    expect(result.current.inputSetTemplate).toEqual(parsed)
   })
 
   test('git sync params are passed to API when available', async () => {

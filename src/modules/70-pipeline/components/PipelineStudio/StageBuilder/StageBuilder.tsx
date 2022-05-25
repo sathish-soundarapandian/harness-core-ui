@@ -76,6 +76,7 @@ const diagram = new DiagramFactory('graph')
 
 diagram.registerNode('Deployment', PipelineStageNode as unknown as React.FC<BaseReactComponentProps>, true)
 diagram.registerNode('CI', PipelineStageNode as unknown as React.FC<BaseReactComponentProps>)
+diagram.registerNode('SecurityTests', PipelineStageNode as unknown as React.FC<BaseReactComponentProps>)
 diagram.registerNode('Approval', DiamondNodeWidget)
 diagram.registerNode('Barrier', IconNode)
 diagram.registerNode(NodeType.CreateNode, CreateNodeStage as unknown as React.FC<BaseReactComponentProps>)

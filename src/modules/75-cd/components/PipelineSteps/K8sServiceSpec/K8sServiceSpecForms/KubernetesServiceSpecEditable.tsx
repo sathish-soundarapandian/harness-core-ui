@@ -69,7 +69,11 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
               <HarnessDocTooltip tooltipId={getManifestsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
             </div>
 
-            <ManifestSelection isPropagating={isPropagating} deploymentType={selectedDeploymentType} />
+            <ManifestSelection
+              isPropagating={isPropagating}
+              deploymentType={selectedDeploymentType}
+              readonly={!!readonly}
+            />
           </Card>
 
           <Card
@@ -83,7 +87,11 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
               {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
               <HarnessDocTooltip tooltipId={getArtifactsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
             </div>
-            <ArtifactsSelection isPropagating={isPropagating} deploymentType={selectedDeploymentType} />
+            <ArtifactsSelection
+              isPropagating={isPropagating}
+              deploymentType={selectedDeploymentType}
+              readonly={!!readonly}
+            />
           </Card>
         </>
       )}
@@ -99,7 +107,7 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
             formName={'addEditServiceCustomVariableForm'}
             factory={factory as any}
             isPropagating={isPropagating}
-            readonly={readonly}
+            readonly={!!readonly}
           />
         </Card>
       </div>

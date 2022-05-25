@@ -108,7 +108,7 @@ export const moduleInfoMap: Record<AuditEventDTO['module'], ModuleInfo> = {
   },
   GOVERNANCE: {
     moduleLabel: 'common.module.governance',
-    icon: { name: 'nav-settings' }
+    icon: { name: 'governance' }
   }
 }
 

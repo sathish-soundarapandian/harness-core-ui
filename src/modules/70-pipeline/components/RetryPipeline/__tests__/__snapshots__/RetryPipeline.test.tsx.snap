@@ -265,7 +265,7 @@ exports[`Retry Pipeline tests should not allow submit if form is incomplete 1`] 
                               class="bp3-input"
                               name="variables[0].value"
                               type="text"
-                              value=""
+                              value="variablevalue"
                             />
                           </div>
                           <span

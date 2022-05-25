@@ -16,6 +16,11 @@ exports[`ArtifactsSelection tests artifact list renders with proper payload 1`] 
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
         >
+          pipeline.artifactsSelection.artifactType
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+        >
           artifactRepository
         </p>
         <p
@@ -39,6 +44,9 @@ exports[`ArtifactsSelection tests artifact list renders with proper payload 1`] 
               >
                 primary
               </p>
+            </div>
+            <div>
+              connectors.ECR.name
             </div>
             <div
               class="connectorNameField"
@@ -194,7 +202,7 @@ exports[`ArtifactsSelection tests artifact list renders with proper payload 1`] 
             </div>
             <div>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main"
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500"
                 style="--text-line-clamp: 1; width: 340px;"
               >
                 <span
@@ -319,6 +327,9 @@ exports[`ArtifactsSelection tests artifact list renders with proper payload 1`] 
                   )
                 </p>
               </p>
+            </div>
+            <div>
+              dockerRegistry
             </div>
             <div
               class="connectorNameField"
@@ -498,6 +509,11 @@ exports[`ArtifactsSelection tests delete artifact list works correctly 1`] = `
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
         >
+          pipeline.artifactsSelection.artifactType
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+        >
           artifactRepository
         </p>
         <p
@@ -521,6 +537,9 @@ exports[`ArtifactsSelection tests delete artifact list works correctly 1`] = `
               >
                 primary
               </p>
+            </div>
+            <div>
+              connectors.GCR.name
             </div>
             <div
               class="connectorNameField"
@@ -609,9 +628,7 @@ exports[`ArtifactsSelection tests delete artifact list works correctly 1`] = `
                     class="StyledProps--font Text--lineclamp StyledProps--main connectorName"
                     style="--text-line-clamp: 1;"
                     tabindex="0"
-                  >
-                    
-                  </p>
+                  />
                 </span>
               </span>
               <span
@@ -636,7 +653,7 @@ exports[`ArtifactsSelection tests delete artifact list works correctly 1`] = `
             </div>
             <div>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main"
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500"
                 style="--text-line-clamp: 1; width: 340px;"
               >
                 <span
@@ -775,6 +792,11 @@ exports[`ArtifactsSelection tests edit artifact list works correctly 1`] = `
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
         >
+          pipeline.artifactsSelection.artifactType
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+        >
           artifactRepository
         </p>
         <p
@@ -798,6 +820,9 @@ exports[`ArtifactsSelection tests edit artifact list works correctly 1`] = `
               >
                 primary
               </p>
+            </div>
+            <div>
+              connectors.GCR.name
             </div>
             <div
               class="connectorNameField"
@@ -886,9 +911,7 @@ exports[`ArtifactsSelection tests edit artifact list works correctly 1`] = `
                     class="StyledProps--font Text--lineclamp StyledProps--main connectorName"
                     style="--text-line-clamp: 1;"
                     tabindex="0"
-                  >
-                    
-                  </p>
+                  />
                 </span>
               </span>
               <span
@@ -913,7 +936,7 @@ exports[`ArtifactsSelection tests edit artifact list works correctly 1`] = `
             </div>
             <div>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main"
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500"
                 style="--text-line-clamp: 1; width: 340px;"
               >
                 <span
@@ -1052,6 +1075,11 @@ exports[`ArtifactsSelection tests renders Artifact Listview with connectors Data
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
         >
+          pipeline.artifactsSelection.artifactType
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+        >
           artifactRepository
         </p>
         <p
@@ -1075,6 +1103,9 @@ exports[`ArtifactsSelection tests renders Artifact Listview with connectors Data
               >
                 primary
               </p>
+            </div>
+            <div>
+              connectors.GCR.name
             </div>
             <div
               class="connectorNameField"
@@ -1163,9 +1194,7 @@ exports[`ArtifactsSelection tests renders Artifact Listview with connectors Data
                     class="StyledProps--font Text--lineclamp StyledProps--main connectorName"
                     style="--text-line-clamp: 1;"
                     tabindex="0"
-                  >
-                    
-                  </p>
+                  />
                 </span>
               </span>
               <span
@@ -1190,7 +1219,7 @@ exports[`ArtifactsSelection tests renders Artifact Listview with connectors Data
             </div>
             <div>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main"
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500"
                 style="--text-line-clamp: 1; width: 340px;"
               >
                 <span
@@ -1301,6 +1330,11 @@ exports[`ArtifactsSelection tests renders Artifact Listview without crashing 1`]
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
         >
+          pipeline.artifactsSelection.artifactType
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+        >
           artifactRepository
         </p>
         <p
@@ -1324,6 +1358,9 @@ exports[`ArtifactsSelection tests renders Artifact Listview without crashing 1`]
               >
                 primary
               </p>
+            </div>
+            <div>
+              dockerRegistry
             </div>
             <div
               class="connectorNameField"
@@ -1359,9 +1396,7 @@ exports[`ArtifactsSelection tests renders Artifact Listview without crashing 1`]
                     class="StyledProps--font Text--lineclamp StyledProps--main connectorName"
                     style="--text-line-clamp: 1;"
                     tabindex="0"
-                  >
-                    
-                  </p>
+                  />
                 </span>
               </span>
               <span
@@ -1386,7 +1421,7 @@ exports[`ArtifactsSelection tests renders Artifact Listview without crashing 1`]
             </div>
             <div>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main"
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500"
                 style="--text-line-clamp: 1; width: 340px;"
               >
                 <span
@@ -1497,6 +1532,11 @@ exports[`ArtifactsSelection tests renders add Artifact option without crashing 1
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
         >
+          pipeline.artifactsSelection.artifactType
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+        >
           artifactRepository
         </p>
         <p
@@ -1521,6 +1561,7 @@ exports[`ArtifactsSelection tests renders add Artifact option without crashing 1
                 primary
               </p>
             </div>
+            <div />
             <div
               class="connectorNameField"
             >
@@ -1535,14 +1576,14 @@ exports[`ArtifactsSelection tests renders add Artifact option without crashing 1
                     style="--text-line-clamp: 1;"
                     tabindex="0"
                   >
-                    
+                    &lt;+input&gt;
                   </p>
                 </span>
               </span>
             </div>
             <div>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main"
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500"
                 style="--text-line-clamp: 1; width: 340px;"
               >
                 <span
@@ -1640,6 +1681,9 @@ exports[`ArtifactsSelection tests renders add Artifact option without crashing 1
                 </p>
               </p>
             </div>
+            <div>
+              connectors.GCR.name
+            </div>
             <div
               class="connectorNameField"
             >
@@ -1728,7 +1772,7 @@ exports[`ArtifactsSelection tests renders add Artifact option without crashing 1
                     style="--text-line-clamp: 1;"
                     tabindex="0"
                   >
-                    
+                    gcp_connector
                   </p>
                 </span>
               </span>
@@ -1854,6 +1898,9 @@ exports[`ArtifactsSelection tests renders add Artifact option without crashing 1
                 </p>
               </p>
             </div>
+            <div>
+              dockerRegistry
+            </div>
             <div
               class="connectorNameField"
             >
@@ -1889,7 +1936,7 @@ exports[`ArtifactsSelection tests renders add Artifact option without crashing 1
                     style="--text-line-clamp: 1;"
                     tabindex="0"
                   >
-                    
+                    harnessImage
                   </p>
                 </span>
               </span>
@@ -2032,6 +2079,11 @@ exports[`ArtifactsSelection tests renders artifact when overrideSetIdentifier an
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
         >
+          pipeline.artifactsSelection.artifactType
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+        >
           artifactRepository
         </p>
         <p
@@ -2056,6 +2108,7 @@ exports[`ArtifactsSelection tests renders artifact when overrideSetIdentifier an
                 primary
               </p>
             </div>
+            <div />
             <div
               class="connectorNameField"
             >
@@ -2070,14 +2123,14 @@ exports[`ArtifactsSelection tests renders artifact when overrideSetIdentifier an
                     style="--text-line-clamp: 1;"
                     tabindex="0"
                   >
-                    
+                    &lt;+input&gt;
                   </p>
                 </span>
               </span>
             </div>
             <div>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main"
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500"
                 style="--text-line-clamp: 1; width: 340px;"
               >
                 <span
@@ -2175,6 +2228,9 @@ exports[`ArtifactsSelection tests renders artifact when overrideSetIdentifier an
                 </p>
               </p>
             </div>
+            <div>
+              connectors.GCR.name
+            </div>
             <div
               class="connectorNameField"
             >
@@ -2263,7 +2319,7 @@ exports[`ArtifactsSelection tests renders artifact when overrideSetIdentifier an
                     style="--text-line-clamp: 1;"
                     tabindex="0"
                   >
-                    
+                    gcp_connector
                   </p>
                 </span>
               </span>
@@ -2389,6 +2445,9 @@ exports[`ArtifactsSelection tests renders artifact when overrideSetIdentifier an
                 </p>
               </p>
             </div>
+            <div>
+              dockerRegistry
+            </div>
             <div
               class="connectorNameField"
             >
@@ -2424,7 +2483,7 @@ exports[`ArtifactsSelection tests renders artifact when overrideSetIdentifier an
                     style="--text-line-clamp: 1;"
                     tabindex="0"
                   >
-                    
+                    harnessImage
                   </p>
                 </span>
               </span>
@@ -2567,6 +2626,11 @@ exports[`ArtifactsSelection tests renders without crashing 1`] = `
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
         >
+          pipeline.artifactsSelection.artifactType
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+        >
           artifactRepository
         </p>
         <p
@@ -2591,6 +2655,7 @@ exports[`ArtifactsSelection tests renders without crashing 1`] = `
                 primary
               </p>
             </div>
+            <div />
             <div
               class="connectorNameField"
             >
@@ -2605,14 +2670,14 @@ exports[`ArtifactsSelection tests renders without crashing 1`] = `
                     style="--text-line-clamp: 1;"
                     tabindex="0"
                   >
-                    
+                    &lt;+input&gt;
                   </p>
                 </span>
               </span>
             </div>
             <div>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main"
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500"
                 style="--text-line-clamp: 1; width: 340px;"
               >
                 <span
@@ -2710,6 +2775,9 @@ exports[`ArtifactsSelection tests renders without crashing 1`] = `
                 </p>
               </p>
             </div>
+            <div>
+              connectors.GCR.name
+            </div>
             <div
               class="connectorNameField"
             >
@@ -2798,7 +2866,7 @@ exports[`ArtifactsSelection tests renders without crashing 1`] = `
                     style="--text-line-clamp: 1;"
                     tabindex="0"
                   >
-                    
+                    gcp_connector
                   </p>
                 </span>
               </span>
@@ -2924,6 +2992,9 @@ exports[`ArtifactsSelection tests renders without crashing 1`] = `
                 </p>
               </p>
             </div>
+            <div>
+              dockerRegistry
+            </div>
             <div
               class="connectorNameField"
             >
@@ -2959,7 +3030,7 @@ exports[`ArtifactsSelection tests renders without crashing 1`] = `
                     style="--text-line-clamp: 1;"
                     tabindex="0"
                   >
-                    
+                    harnessImage
                   </p>
                 </span>
               </span>

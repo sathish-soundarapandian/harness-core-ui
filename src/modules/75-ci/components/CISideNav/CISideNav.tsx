@@ -29,6 +29,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useQueryParams } from '@common/hooks'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMenu'
+import { useHostedBuilds } from '@common/hooks/useHostedBuild'
 import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import { useGetPipelines } from '@pipeline/hooks/useGetPipelines'
 import { useSideNavContext } from 'framework/SideNavStore/SideNavContext'
@@ -62,7 +63,8 @@ export default function CISideNav(): React.ReactElement {
   const history = useHistory()
   const module = 'ci'
   const { updateAppStore, selectedProject } = useAppStore()
-  const { CI_OVERVIEW_PAGE, CIE_HOSTED_BUILDS } = useFeatureFlags()
+  const { CI_OVERVIEW_PAGE } = useFeatureFlags()
+  const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
   const { getString } = useStrings()
   const { showGetStartedTabInMainMenu, setShowGetStartedTabInMainMenu } = useSideNavContext()
@@ -80,7 +82,7 @@ export default function CISideNav(): React.ReactElement {
   })
 
   useEffect(() => {
-    if (CIE_HOSTED_BUILDS && selectedProject?.identifier) {
+    if (enabledHostedBuildsForFreeUsers && selectedProject?.identifier) {
       fetchPipelines()
     }
   }, [selectedProject?.identifier])

@@ -64,7 +64,7 @@ import { useToaster } from '@common/exports'
 import routes from '@common/RouteDefinitions'
 import { useQueryParams } from '@common/hooks'
 import { getFeaturePropsForRunPipelineButton, mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
-import type { InputSetDTO } from '@pipeline/utils/types'
+import type { InputSetDTO, Pipeline } from '@pipeline/utils/types'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
 import GitPopover from '../GitPopover/GitPopover'
 import SelectStagetoRetry from './SelectStagetoRetry'
@@ -344,7 +344,12 @@ function RetryPipeline({
               const inputSetPortion = parse(data.data.pipelineYaml) as {
                 pipeline: PipelineInfoConfig
               }
-              const toBeUpdated = mergeTemplateWithInputSetData(parsedTemplate, inputSetPortion)
+              const toBeUpdated = mergeTemplateWithInputSetData({
+                templatePipeline: parsedTemplate,
+                inputSetPortion,
+                allValues: { pipeline: {} } as Pipeline,
+                shouldUseDefaultValues: false
+              })
               setCurrentPipeline(toBeUpdated)
             }
           } catch (e) {
@@ -370,7 +375,12 @@ function RetryPipeline({
               const inputSetPortion = pick(parse(data.data.inputSetYaml)?.inputSet, 'pipeline') as {
                 pipeline: PipelineInfoConfig
               }
-              const toBeUpdated = mergeTemplateWithInputSetData(parsedTemplate, inputSetPortion)
+              const toBeUpdated = mergeTemplateWithInputSetData({
+                templatePipeline: parsedTemplate,
+                inputSetPortion,
+                allValues: { pipeline: {} } as Pipeline,
+                shouldUseDefaultValues: false
+              })
               setCurrentPipeline(toBeUpdated)
             }
           }

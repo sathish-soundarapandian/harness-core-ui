@@ -189,11 +189,10 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                             />
                           ) : null}
                           <div className={css.actionButtons}>
-                            {initialValues.canAddVariable ? (
+                            {initialValues.canAddVariable && !readonly ? (
                               <React.Fragment>
                                 <Button
                                   icon="Edit"
-                                  disabled={readonly}
                                   tooltip={<String className={css.tooltip} stringID="common.editVariableType" />}
                                   data-testid={`edit-variable-${index}`}
                                   onClick={() => setSelectedVariable({ variable, index })}
@@ -201,7 +200,6 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                                 />
                                 <Button
                                   icon="main-trash"
-                                  disabled={readonly}
                                   data-testid={`delete-variable-${index}`}
                                   tooltip={<String className={css.tooltip} stringID="common.removeThisVariable" />}
                                   onClick={() => handleRemove(index)}
@@ -217,6 +215,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                   {values.canAddVariable && (
                     <Button
                       className={css.addVariable}
+                      disabled={readonly}
                       size={ButtonSize.SMALL}
                       variation={ButtonVariation.LINK}
                       onClick={addNew}

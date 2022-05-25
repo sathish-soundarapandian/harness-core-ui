@@ -5,8 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { AllNGVariables } from '@pipeline/utils/types'
+import type { AllNGVariables, Pipeline } from '@pipeline/utils/types'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
+import { clearRuntimeInput } from '@pipeline/components/PipelineStudio/StepUtil'
 import { getFeaturePropsForRunPipelineButton, mergeTemplateWithInputSetData } from '../runPipelineUtils'
 import pipelineTemplate from './mockJson/pipelineTemplate.json'
 import pipelineInputSetPortion from './mockJson/pipelineInputSetPortion.json'
@@ -45,7 +46,7 @@ describe('mergeTemplateWithInputSetData tests', () => {
           }
         }
       }
-    }
+    } as unknown as Pipeline
     const inputSetPortion = {
       pipeline: {
         identifier: 'P1',
@@ -83,14 +84,24 @@ describe('mergeTemplateWithInputSetData tests', () => {
           }
         }
       }
-    }
-    const output = mergeTemplateWithInputSetData(templatePipeline as any, inputSetPortion as any)
+    } as unknown as Pipeline
+    const output = mergeTemplateWithInputSetData({
+      templatePipeline,
+      inputSetPortion,
+      allValues: { pipeline: {} } as Pipeline,
+      shouldUseDefaultValues: false
+    })
     expect(output.pipeline.properties?.ci?.codebase?.build.type).toEqual('branch')
     expect(output.pipeline.stages?.length).toEqual(1)
   })
 
   test('mergeTemplateWithInputSetData works as expected', () => {
-    const output = mergeTemplateWithInputSetData(pipelineTemplate as any, pipelineInputSetPortion as any)
+    const output = mergeTemplateWithInputSetData({
+      templatePipeline: pipelineTemplate as any,
+      inputSetPortion: pipelineInputSetPortion as any,
+      allValues: { pipeline: {} } as Pipeline,
+      shouldUseDefaultValues: false
+    })
     expect((output.pipeline.variables?.[0] as AllNGVariables)?.value).toEqual('D2')
     expect((output.pipeline.variables?.[1] as AllNGVariables)?.value).toEqual('http')
     expect((output.pipeline.stages?.[0].stage?.variables?.[0] as AllNGVariables)?.value).toEqual('<+input>')
@@ -128,14 +139,19 @@ describe('mergeTemplateWithInputSetData tests', () => {
         }
       }
     }
-    const output = mergeTemplateWithInputSetData(templatePipeline as any, inputSetPortion as any)
+    const output = mergeTemplateWithInputSetData({
+      templatePipeline: templatePipeline as any,
+      inputSetPortion: inputSetPortion as any,
+      allValues: { pipeline: {} } as Pipeline,
+      shouldUseDefaultValues: false
+    })
     expect('stages' in output.pipeline).toEqual(false)
   })
 
   describe('variables tests', () => {
     test('merges new variables', () => {
-      const result = mergeTemplateWithInputSetData(
-        {
+      const result = mergeTemplateWithInputSetData({
+        templatePipeline: {
           pipeline: {
             variables: [
               { name: 'var1', type: 'String', value: '<+input>' },
@@ -144,7 +160,7 @@ describe('mergeTemplateWithInputSetData tests', () => {
             ]
           }
         } as any,
-        {
+        inputSetPortion: {
           pipeline: {
             variables: [
               { name: 'var1', type: 'String', value: '1' },
@@ -153,8 +169,10 @@ describe('mergeTemplateWithInputSetData tests', () => {
               { name: 'var4', type: 'String', value: '4' }
             ]
           }
-        } as any
-      )
+        } as any,
+        allValues: { pipeline: {} } as Pipeline,
+        shouldUseDefaultValues: false
+      })
 
       expect(result).toEqual({
         pipeline: {
@@ -169,8 +187,8 @@ describe('mergeTemplateWithInputSetData tests', () => {
     })
 
     test('merges deleted variables', () => {
-      const result = mergeTemplateWithInputSetData(
-        {
+      const result = mergeTemplateWithInputSetData({
+        templatePipeline: {
           pipeline: {
             variables: [
               { name: 'var1', type: 'String', value: '<+input>' },
@@ -179,15 +197,17 @@ describe('mergeTemplateWithInputSetData tests', () => {
             ]
           }
         } as any,
-        {
+        inputSetPortion: {
           pipeline: {
             variables: [
               { name: 'var1', type: 'String', value: '1' },
               { name: 'var3', type: 'String', value: '3' }
             ]
           }
-        } as any
-      )
+        } as any,
+        allValues: { pipeline: {} } as Pipeline,
+        shouldUseDefaultValues: false
+      })
 
       expect(result).toEqual({
         pipeline: {
@@ -201,8 +221,8 @@ describe('mergeTemplateWithInputSetData tests', () => {
     })
 
     test('maintains order of first object', () => {
-      const result = mergeTemplateWithInputSetData(
-        {
+      const result = mergeTemplateWithInputSetData({
+        templatePipeline: {
           pipeline: {
             variables: [
               { name: 'var1', type: 'String', value: '<+input>' },
@@ -211,7 +231,7 @@ describe('mergeTemplateWithInputSetData tests', () => {
             ]
           }
         } as any,
-        {
+        inputSetPortion: {
           pipeline: {
             variables: [
               { name: 'var1', type: 'String', value: '1' },
@@ -219,8 +239,10 @@ describe('mergeTemplateWithInputSetData tests', () => {
               { name: 'var3', type: 'String', value: '3' }
             ]
           }
-        } as any
-      )
+        } as any,
+        allValues: { pipeline: {} } as Pipeline,
+        shouldUseDefaultValues: false
+      })
 
       expect(result).toEqual({
         pipeline: {
@@ -234,8 +256,8 @@ describe('mergeTemplateWithInputSetData tests', () => {
     })
 
     test('handles type change of variables', () => {
-      const result = mergeTemplateWithInputSetData(
-        {
+      const result = mergeTemplateWithInputSetData({
+        templatePipeline: {
           pipeline: {
             variables: [
               { name: 'var1', type: 'String', value: '<+input>' },
@@ -244,7 +266,7 @@ describe('mergeTemplateWithInputSetData tests', () => {
             ]
           }
         } as any,
-        {
+        inputSetPortion: {
           pipeline: {
             variables: [
               { name: 'var1', type: 'String', value: '1' },
@@ -252,14 +274,62 @@ describe('mergeTemplateWithInputSetData tests', () => {
               { name: 'var3', type: 'String', value: '3' }
             ]
           }
-        } as any
-      )
+        } as any,
+        allValues: { pipeline: {} } as Pipeline,
+        shouldUseDefaultValues: false
+      })
 
       expect(result).toEqual({
         pipeline: {
           variables: [
             { name: 'var1', type: 'String', value: '1' },
             { name: 'var2', type: 'Number', value: '<+input>' },
+            { name: 'var3', type: 'String', value: '3' }
+          ]
+        }
+      })
+    })
+
+    test('handles default values from allValues', () => {
+      const templateVariables = [
+        { name: 'var1', type: 'String' as const, value: '<+input>' },
+        { name: 'var2', type: 'String' as const, value: '<+input>' },
+        { name: 'var3', type: 'String' as const, value: '<+input>' }
+      ]
+      const result = mergeTemplateWithInputSetData({
+        templatePipeline: {
+          pipeline: clearRuntimeInput({
+            identifier: '',
+            name: '',
+            variables: templateVariables
+          })
+        },
+        inputSetPortion: {
+          pipeline: clearRuntimeInput({
+            identifier: '',
+            name: '',
+            variables: templateVariables
+          })
+        },
+        allValues: {
+          pipeline: {
+            variables: [
+              { name: 'var1', type: 'String', default: '1' },
+              { name: 'var2', type: 'String', default: '2' },
+              { name: 'var3', type: 'String', default: '3' }
+            ]
+          }
+        } as any,
+        shouldUseDefaultValues: true
+      })
+
+      expect(result).toEqual({
+        pipeline: {
+          identifier: '',
+          name: '',
+          variables: [
+            { name: 'var1', type: 'String', value: '1' },
+            { name: 'var2', type: 'String', value: '2' },
             { name: 'var3', type: 'String', value: '3' }
           ]
         }

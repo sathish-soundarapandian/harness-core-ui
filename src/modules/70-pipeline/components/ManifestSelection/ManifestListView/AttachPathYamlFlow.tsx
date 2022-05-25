@@ -36,6 +36,7 @@ interface AttachPathYamlFlowType {
   attachPathYaml: (formData: ConnectorConfigDTO) => void
   removeValuesYaml: (index: number) => void
   valuesPaths: string[]
+  isReadonly: boolean
 }
 
 function AttachPathYamlFlow({
@@ -44,7 +45,8 @@ function AttachPathYamlFlow({
   expressions,
   allowableTypes,
   attachPathYaml,
-  removeValuesYaml
+  removeValuesYaml,
+  isReadonly
 }: AttachPathYamlFlowType): React.ReactElement | null {
   const { getString } = useStrings()
 
@@ -129,20 +131,26 @@ function AttachPathYamlFlow({
                 </Text>
               </Layout.Horizontal>
 
-              <span>
-                <Button iconProps={{ size: 18 }} icon="main-trash" onClick={() => removeValuesYaml(index)} minimal />
-              </span>
+              {!isReadonly && (
+                <span>
+                  <Button iconProps={{ size: 18 }} icon="main-trash" onClick={() => removeValuesYaml(index)} minimal />
+                </span>
+              )}
             </Layout.Horizontal>
           </section>
         ))}
-        <Button
-          className={css.addValuesYaml}
-          id="add-manifest"
-          size={ButtonSize.SMALL}
-          variation={ButtonVariation.LINK}
-          onClick={showModal}
-          text={`${getString('pipeline.manifestType.attachPath')}  ${getString(ManifestToPathLabelMap[manifestType])}`}
-        />
+        {!isReadonly && (
+          <Button
+            className={css.addValuesYaml}
+            id="add-manifest"
+            size={ButtonSize.SMALL}
+            variation={ButtonVariation.LINK}
+            onClick={showModal}
+            text={getString('pipeline.manifestType.attachPath', {
+              manifestPath: ManifestToPathMap[manifestType]
+            })}
+          />
+        )}
       </section>
     )
   }

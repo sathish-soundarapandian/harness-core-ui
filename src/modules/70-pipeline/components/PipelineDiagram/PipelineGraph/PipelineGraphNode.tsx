@@ -391,7 +391,7 @@ function PipelineGraphNodeObserved(
     return () => {
       if (observer && ref && IS_RENDER_OPTIMIZATION_ENABLED) observer.unobserve(ref as HTMLDivElement)
     }
-  }, [ref, elementRect])
+  }, [ref, elementRect, props?.isDragging])
 
   React.useEffect(() => {
     if (!elementRect && ref !== null) {

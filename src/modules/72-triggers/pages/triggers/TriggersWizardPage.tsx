@@ -27,6 +27,8 @@ import { Page, useToaster } from '@common/exports'
 import Wizard from '@common/components/Wizard/Wizard'
 import { connectorUrlType } from '@connectors/constants'
 import routes from '@common/RouteDefinitions'
+import { mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
+import type { Pipeline } from '@pipeline/utils/types'
 import {
   PipelineInfoConfig,
   useGetConnector,
@@ -69,8 +71,8 @@ import type {
   InvocationMapFunction,
   CompletionItemInterface
 } from '@common/interfaces/YAMLBuilderProps'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import { useMutateAsGet } from '@common/hooks'
+import { memoizedParse, yamlStringify } from '@common/utils/YamlHelperMethods'
+import { useMutateAsGet, useDeepCompareEffect } from '@common/hooks'
 import {
   scheduleTabsId,
   getDefaultExpressionBreakdownValues,
@@ -523,7 +525,25 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     )
   })
 
-  useEffect(() => {
+  const { data: pipelineResponse } = useGetPipeline({
+    pipelineIdentifier,
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      getTemplatesResolvedPipeline: true
+    }
+  })
+
+  const originalPipeline: PipelineInfoConfig | undefined = memoizedParse<Pipeline>(
+    (pipelineResponse?.data?.yamlPipeline as any) || ''
+  )?.pipeline
+
+  const resolvedPipeline: PipelineInfoConfig | undefined = memoizedParse<Pipeline>(
+    (pipelineResponse?.data?.resolvedTemplatesPipelineYaml as any) || ''
+  )?.pipeline
+
+  useDeepCompareEffect(() => {
     if (onEditInitialValues?.pipeline && template?.data?.inputSetTemplateYaml && mergedPipelineKey < 1) {
       let newOnEditPipeline = merge(
         parse(template?.data?.inputSetTemplateYaml || '')?.pipeline,
@@ -547,37 +567,22 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       setCurrentPipeline({ pipeline: newPipeline }) // will reset initialValues
       setMergedPipelineKey(1)
     } else if (template?.data?.inputSetTemplateYaml) {
-      setCurrentPipeline(
-        merge(clearRuntimeInput(parse(template?.data?.inputSetTemplateYaml || '')), currentPipeline || {}) as {
-          pipeline: PipelineInfoConfig
-        }
-      )
+      const inpuSet = clearRuntimeInput(memoizedParse<Pipeline>(template?.data?.inputSetTemplateYaml || '').pipeline)
+      const newPipeline = mergeTemplateWithInputSetData({
+        inputSetPortion: { pipeline: inpuSet },
+        templatePipeline: { pipeline: inpuSet },
+        allValues: { pipeline: defaultTo(resolvedPipeline, {} as PipelineInfoConfig) },
+        shouldUseDefaultValues: true
+      })
+      setCurrentPipeline(newPipeline)
     }
-  }, [template?.data?.inputSetTemplateYaml, onEditInitialValues?.pipeline])
+  }, [template?.data?.inputSetTemplateYaml, onEditInitialValues?.pipeline, resolvedPipeline])
 
   useEffect(() => {
     if (triggerResponse?.data?.enabled === false) {
       setEnabledStatus(false)
     }
   }, [triggerResponse?.data?.enabled])
-
-  const { data: pipelineResponse } = useGetPipeline({
-    pipelineIdentifier,
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      getTemplatesResolvedPipeline: true
-    }
-  })
-
-  const originalPipeline: PipelineInfoConfig | undefined = parse(
-    (pipelineResponse?.data?.yamlPipeline as any) || ''
-  )?.pipeline
-
-  const resolvedPipeline: PipelineInfoConfig | undefined = parse(
-    (pipelineResponse?.data?.resolvedTemplatesPipelineYaml as any) || ''
-  )?.pipeline
 
   useEffect(() => {
     if (triggerResponse?.data?.yaml && triggerResponse.data.type === TriggerTypes.WEBHOOK) {

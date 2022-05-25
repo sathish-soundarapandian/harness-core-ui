@@ -25,6 +25,7 @@ import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext
 import { clearRuntimeInput } from '@pipeline/components/PipelineStudio/StepUtil'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useMutateAsGet } from '@common/hooks'
+import { mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
 import {
   ciCodebaseBuild,
   ciCodebaseBuildPullRequest,
@@ -185,7 +186,7 @@ function WebhookPipelineInputPanelForm({
     typeof ciCodebaseBuildValue === 'object' && !isEmpty(ciCodebaseBuildValue)
   )
 
-  const { orgIdentifier, accountId, projectIdentifier, pipelineIdentifier } = useParams<{
+  const { orgIdentifier, accountId, projectIdentifier, pipelineIdentifier, triggerIdentifier } = useParams<{
     projectIdentifier: string
     orgIdentifier: string
     accountId: string
@@ -220,17 +221,31 @@ function WebhookPipelineInputPanelForm({
     if (!hasEverRendered && shouldInjectCloneCodebase && !isEdit) {
       const formikValues = cloneDeep(formikProps.values)
       const isPipelineFromTemplate = !!formikValues?.pipeline?.template
-      formikValues.pipeline = getPipelineWithInjectedWithCloneCodebase({
+      const newPipelineObject = getPipelineWithInjectedWithCloneCodebase({
         event: formikValues.event,
         pipeline: formikValues.pipeline,
         isPipelineFromTemplate
       })
 
+      formikValues.pipeline = mergeTemplateWithInputSetData({
+        inputSetPortion: { pipeline: newPipelineObject },
+        templatePipeline: { pipeline: newPipelineObject },
+        allValues: { pipeline: resolvedPipeline },
+        shouldUseDefaultValues: triggerIdentifier === 'new'
+      })
       formikProps.setValues(formikValues)
     }
 
     setHasEverRendered(true)
-  }, [formikProps, hasEverRendered, resolvedPipeline?.properties?.ci?.codebase, resolvedPipeline?.stages])
+  }, [
+    formikProps,
+    hasEverRendered,
+    resolvedPipeline?.properties?.ci?.codebase,
+    resolvedPipeline?.stages,
+    resolvedPipeline,
+    triggerIdentifier,
+    isEdit
+  ])
 
   useEffect(() => {
     setSelectedInputSets(inputSetSelected)
@@ -247,11 +262,18 @@ function WebhookPipelineInputPanelForm({
             const pipelineObject = parse(data.data.pipelineYaml) as {
               pipeline: PipelineInfoConfig
             }
-            const newPipelineObject = applySelectedArtifactToPipelineObject(pipelineObject.pipeline, formikProps)
+            const newPipelineObject = clearRuntimeInput(
+              merge(pipeline, applySelectedArtifactToPipelineObject(pipelineObject.pipeline, formikProps))
+            )
             formikProps.setValues({
               ...values,
               inputSetSelected: selectedInputSets,
-              pipeline: clearRuntimeInput(merge(pipeline, newPipelineObject))
+              pipeline: mergeTemplateWithInputSetData({
+                inputSetPortion: { pipeline: newPipelineObject },
+                templatePipeline: { pipeline: newPipelineObject },
+                allValues: { pipeline: resolvedPipeline },
+                shouldUseDefaultValues: triggerIdentifier === 'new'
+              })
             })
           }
         }
@@ -273,11 +295,19 @@ function WebhookPipelineInputPanelForm({
                 pipeline: PipelineInfoConfig
               }
 
-              const newPipelineObject = applySelectedArtifactToPipelineObject(pipelineObject.pipeline, formikProps)
+              const newPipelineObject = clearRuntimeInput(
+                merge(pipeline, applySelectedArtifactToPipelineObject(pipelineObject.pipeline, formikProps))
+              )
+
               formikProps.setValues({
                 ...values,
                 inputSetSelected: selectedInputSets,
-                pipeline: clearRuntimeInput(merge(pipeline, newPipelineObject))
+                pipeline: mergeTemplateWithInputSetData({
+                  inputSetPortion: { pipeline: newPipelineObject },
+                  templatePipeline: { pipeline: newPipelineObject },
+                  allValues: { pipeline: resolvedPipeline },
+                  shouldUseDefaultValues: triggerIdentifier === 'new'
+                })
               })
             }
           }
@@ -293,7 +323,8 @@ function WebhookPipelineInputPanelForm({
     accountId,
     projectIdentifier,
     orgIdentifier,
-    pipelineIdentifier
+    pipelineIdentifier,
+    resolvedPipeline
   ])
 
   return (

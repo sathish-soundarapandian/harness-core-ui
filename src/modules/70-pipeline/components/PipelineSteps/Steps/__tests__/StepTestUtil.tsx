@@ -15,6 +15,11 @@ import { useStrings } from 'framework/strings'
 
 class StepTestFactory extends AbstractStepFactory {
   protected type = 'test-factory'
+
+  reset(): void {
+    this.stepBank.clear()
+    this.stepIconMap.clear()
+  }
 }
 
 export const factory = new StepTestFactory()
