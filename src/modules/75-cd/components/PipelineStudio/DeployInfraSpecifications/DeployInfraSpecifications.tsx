@@ -92,7 +92,7 @@ export default function DeployInfraSpecifications(props: React.PropsWithChildren
   const { getString } = useStrings()
   const { submitFormsForTab } = React.useContext(StageErrorContext)
   const { errorMap } = useValidationErrors()
-  const { NG_AZURE } = useFeatureFlags()
+  const { NG_AZURE, SSH_NG } = useFeatureFlags()
   React.useEffect(() => {
     if (errorMap.size > 0) {
       submitFormsForTab(DeployTabs.INFRASTRUCTURE)
@@ -192,7 +192,7 @@ export default function DeployInfraSpecifications(props: React.PropsWithChildren
   }, [stage, getStageFromPipeline])
 
   const infraGroups = React.useMemo(
-    () => getInfraGroups(selectedDeploymentType, getString, { NG_AZURE: defaultTo(NG_AZURE, false) }),
+    () => getInfraGroups(selectedDeploymentType, getString, { NG_AZURE: defaultTo(NG_AZURE, false), SSH_NG }),
     [selectedDeploymentType, NG_AZURE]
   )
 

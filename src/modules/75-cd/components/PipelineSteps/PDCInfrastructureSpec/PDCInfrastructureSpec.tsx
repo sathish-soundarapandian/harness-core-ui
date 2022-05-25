@@ -142,7 +142,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
   const { getString } = useStrings()
   const { showError } = useToaster()
   const [showPreviewHostBtn, setShowPreviewHostBtn] = useState(true)
-  const [formikInitialValues, setFormikInitialValues] = useState()
+  const [formikInitialValues, setFormikInitialValues] = useState<PDCInfrastructureUI>()
   const [isPreconfiguredHosts, setIsPreconfiguredHosts] = useState(
     initialValues.connectorRef ? PreconfiguredHosts.TRUE : PreconfiguredHosts.FALSE
   )
@@ -200,7 +200,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
       } catch (e) {
         showError(e.data?.message || e.message)
       }
-      setFormikInitialValues(values as any)
+      setFormikInitialValues(values as PDCInfrastructureUI)
     }
     setInitial()
   }, [])
@@ -272,7 +272,14 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
       accessor: 'status',
       id: 'status',
       width: '12%',
-      Cell: ({ row }) => <ConnectivityStatus {...row.original} />
+      Cell: ({ row }) => (
+        <ConnectivityStatus
+          identifier={get(formikRef.current, 'values.credentialsRef', '')}
+          tags={get(formikRef.current, 'values.delegateSelectors', [])}
+          host={row.original.host || ''}
+          status={row.original.status}
+        />
+      )
     },
     {
       Header: '',
@@ -321,7 +328,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
         })
         setDetailHosts(Object.values(tempMap) as [])
       } else {
-        setErrors(hostResults?.responseMessages || [])
+        setErrors(get(hostResults, 'responseMessages', []))
       }
     } catch (e: any) {
       if (e.data?.responseMessages) {
