@@ -86,7 +86,11 @@ const getRuntimeInputsValues = () => ({
 })
 
 const getInitialValues = () => ({
-  credentialsRef: 'credentialsRef'
+  credentialsRef: 'credentialsRef',
+  connectorRef: 'connectorRefId',
+  hosts: ['localhost', '1.2.3.4'],
+  delegateSelectors: ['tag1'],
+  sshKey: 'sshkey1'
 })
 
 const getEmptyInitialValues = () => ({
