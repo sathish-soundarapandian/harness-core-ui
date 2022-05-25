@@ -3475,6 +3475,9 @@ export interface StringsMap {
   'triggers.triggerConfigurationPanel.payloadType': string
   'triggers.triggerConfigurationPanel.title': string
   'triggers.triggerConfigurationPanel.triggerName': string
+  'triggers.triggerCouldNotBeSavedContent': string
+  'triggers.triggerCouldNotBeSavedGenericError': string
+  'triggers.triggerCouldNotBeSavedTitle': string
   'triggers.triggerOverviewPanel.title': string
   'triggers.triggersSubLabel': string
   'triggers.updateTrigger': string

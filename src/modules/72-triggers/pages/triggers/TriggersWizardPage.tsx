@@ -44,7 +44,8 @@ import {
   useUpdateTrigger,
   NGTriggerConfigV2,
   NGTriggerSourceV2,
-  useGetSchemaYaml
+  useGetSchemaYaml,
+  ResponseNGTriggerResponse
 } from 'services/pipeline-ng'
 import {
   isCloneCodebaseEnabledAtLeastOneStage,
@@ -129,6 +130,8 @@ import type {
   FlatValidFormikValuesInterface
 } from './interface/TriggersWizardInterface'
 import css from './TriggersWizardPage.module.scss'
+
+type ResponseNGTriggerResponseWithMessage = ResponseNGTriggerResponse & { message?: string }
 
 const replaceRunTimeVariables = ({
   manifestType,
@@ -445,9 +448,17 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     [accountId, orgIdentifier, projectIdentifier, pipelineIdentifier, ignoreError, gitAwareForTriggerEnabled]
   )
   const retryFn = useRef<() => void>(noop)
+  const [retrySavingConfirmationMessage, setRetrySavingConfirmation] = useState('')
   const confirmIgnoreErrorAndResubmit = useConfirmAction({
-    title: 'Save with error?',
-    message: <span>You can still save trigger with error? Do you want to process?</span>,
+    intent: Intent.PRIMARY,
+    title: getString('triggers.triggerCouldNotBeSavedTitle'),
+    confirmText: getString('continue'),
+    message: (
+      <Layout.Vertical spacing="medium">
+        <Text>{retrySavingConfirmationMessage}</Text>
+        <Text>{getString('triggers.triggerCouldNotBeSavedContent')}</Text>
+      </Layout.Vertical>
+    ),
     action: () => {
       retryFn.current?.()
     }
@@ -1356,20 +1367,20 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
 
     if (!isCreatingNewTrigger) {
       try {
-        const { status, data } = await updateTrigger(yamlStringify({ trigger: clearNullUndefined(triggerYaml) }) as any)
+        const { status, data, message } = (await updateTrigger(
+          yamlStringify({ trigger: clearNullUndefined(triggerYaml) }) as any
+        )) as ResponseNGTriggerResponseWithMessage
 
-        if (data?.errors && !isEmpty(data?.errors)) {
-          // TODO: Need to confirm with backend which error is allow to retry
-          if (gitAwareForTriggerEnabled) {
-            retryFn.current = () => {
-              setIgnoreError(true)
-              formikRef.current?.handleSubmit()
-            }
-            confirmIgnoreErrorAndResubmit()
-          } else {
-            const displayErrors = displayPipelineIntegrityResponse(data.errors)
-            setFormErrors(displayErrors)
+        if (status === ResponseStatus.ERROR && gitAwareForTriggerEnabled) {
+          retryFn.current = () => {
+            setIgnoreError(true)
+            formikRef.current?.handleSubmit()
           }
+          setRetrySavingConfirmation(message || getString('triggers.triggerCouldNotBeSavedGenericError'))
+          confirmIgnoreErrorAndResubmit()
+        } else if (data?.errors && !isEmpty(data?.errors)) {
+          const displayErrors = displayPipelineIntegrityResponse(data.errors)
+          setFormErrors(displayErrors)
 
           return
         } else if (status === ResponseStatus.SUCCESS) {
@@ -1396,20 +1407,20 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       // error flow sent to Wizard
     } else {
       try {
-        const { status, data } = await createTrigger(yamlStringify({ trigger: clearNullUndefined(triggerYaml) }) as any)
+        const { status, data, message } = (await createTrigger(
+          yamlStringify({ trigger: clearNullUndefined(triggerYaml) }) as any
+        )) as ResponseNGTriggerResponseWithMessage
 
-        if (data?.errors && !isEmpty(data?.errors)) {
-          // TODO: Need to confirm with backend which error is allow to retry
-          if (gitAwareForTriggerEnabled) {
-            retryFn.current = () => {
-              setIgnoreError(true)
-              formikRef.current?.handleSubmit()
-            }
-            confirmIgnoreErrorAndResubmit()
-          } else {
-            const displayErrors = displayPipelineIntegrityResponse(data.errors)
-            setFormErrors(displayErrors)
+        if (status === ResponseStatus.ERROR && gitAwareForTriggerEnabled) {
+          retryFn.current = () => {
+            setIgnoreError(true)
+            formikRef.current?.handleSubmit()
           }
+          setRetrySavingConfirmation(message || getString('triggers.triggerCouldNotBeSavedGenericError'))
+          confirmIgnoreErrorAndResubmit()
+        } else if (data?.errors && !isEmpty(data?.errors)) {
+          const displayErrors = displayPipelineIntegrityResponse(data.errors)
+          setFormErrors(displayErrors)
 
           return
         } else if (status === ResponseStatus.SUCCESS) {
@@ -1482,7 +1493,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         originalPipeline,
         resolvedPipeline,
         anyAction: false,
-        autoAbortPreviousExecutions: false
+        autoAbortPreviousExecutions: false,
+        pipelineBranchName: DEFAULT_TRIGGER_BRANCH
       }
     } else if (triggerType === TriggerTypes.SCHEDULE) {
       return {
@@ -1607,16 +1619,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     lazy: true
   })
 
-  const onFormikEffect: FormikEffectProps['onChange'] = ({ nextValues, formik }) => {
+  const onFormikEffect: FormikEffectProps['onChange'] = ({ formik }) => {
     formikRef.current = formik
-
-    if (isCreatingNewTrigger && !nextValues._pipelineBranchNameCustomValue && !nextValues.pipelineBranchName) {
-      formik.setValues({
-        ...nextValues,
-        pipelineBranchName: DEFAULT_TRIGGER_BRANCH,
-        _pipelineBranchNameCustomValue: true
-      })
-    }
   }
 
   useEffect(() => {
