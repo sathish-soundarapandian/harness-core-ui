@@ -24,7 +24,6 @@ sed -i "s|<\!-- deploymentType -->|<script>window.deploymentType = '$DEPLOYMENT_
 sed -i "s|<\!-- refinerProjectToken -->|<script>window.refinerProjectToken = '$REFINER_PROJECT_TOKEN'</script>|" index.html
 sed -i "s|<\!-- refinerFeedbackToken -->|<script>window.refinerFeedbackToken = '$REFINER_FEEDBACK_TOKEN'</script>|" index.html
 sed -i "s|<\!-- saberToken -->|<script>window.saberToken = '$SABER_TOKEN'</script>|" index.html
-sed -i "s|HARNESS_REDIRECT_FROM_INDEX_PLACEHOLDER|$HARNESS_REDIRECT_FROM_INDEX_PLACEHOLDER|" index.html
 if [ "$HARNESS_ENABLE_CDN_PLACEHOLDER" = "true" ]
 then
   sed -i "s|\"static\/main\.\(.*\)\.js\"|\"//static.harness.io/ng-static/main.\1.js\"|" index.html
