@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import type { CellProps, Column } from 'react-table'
 import cx from 'classnames'
 import {
@@ -115,6 +115,11 @@ interface PaginationProps {
 }
 
 interface PaginationResponseProps extends Omit<PaginationProps, 'pageIndex'> {}
+
+interface SortByObjInterface {
+  field?: sortType
+  type?: orderType
+}
 
 function IconCell(tableProps: CellProps<Service>): JSX.Element {
   return <ComputeType data={tableProps.row.original} />
@@ -503,6 +508,8 @@ interface RulesTableContainerProps {
   onSearchCallback?: (value: string) => void
   searchParams: SearchParams
   mode: RulesMode
+  sortObj: SortByObjInterface
+  handleSort: (sort: SortByObjInterface) => void
 }
 
 const POLL_TIMER = 1000 * 60 * 1
@@ -559,23 +566,17 @@ const useSubmittedRulesStatusUpdate = ({
   }, [data?.response])
 }
 
-interface SortByObjInterface {
-  sort?: sortType
-  order?: orderType
-}
-
 const getServerSortProps = ({
   enableServerSort,
   accessor,
   sortByObj,
-  setSortByObj,
-  refetch
+  setSortByObj
 }: {
   enableServerSort: boolean
   accessor: string
   sortByObj: SortByObjInterface
-  setSortByObj: Dispatch<SetStateAction<SortByObjInterface>>
-  refetch: () => void
+  setSortByObj: (sort: SortByObjInterface) => void
+  refetch?: () => void
 }): serverSortProps => {
   if (!enableServerSort) {
     return { enableServerSort: false }
@@ -585,18 +586,17 @@ const getServerSortProps = ({
 
     return {
       enableServerSort: true,
-      isServerSorted: sortByObj.sort === accessor,
-      isServerSortedDesc: sortByObj.order === 'DESC',
+      isServerSorted: sortByObj.field === accessor,
+      isServerSortedDesc: sortByObj.type === 'DESC',
       getSortedColumn: sortData => {
         console.log({ sortData })
-        if (sortName === sortByObj.sort && sortByObj.order) {
-          newOrder = sortByObj.order === 'DESC' ? 'ASC' : 'DESC'
+        if (sortName === sortByObj.field && sortByObj.type) {
+          newOrder = sortByObj.type === 'DESC' ? 'ASC' : 'DESC'
         } else {
           // no saved state for sortBy of the same sort type
           newOrder = 'ASC'
         }
-        setSortByObj({ sort: sortName, order: newOrder })
-        refetch?.()
+        setSortByObj({ field: sortName, type: newOrder })
       }
     }
   }
@@ -612,15 +612,15 @@ const RulesTableContainer: React.FC<RulesTableContainerProps> = ({
   refetchRules,
   searchParams,
   mode,
-  setPageProps
+  setPageProps,
+  sortObj,
+  handleSort
 }) => {
   const { getString } = useStrings()
   // const tableData = rules.slice(
   //   pageProps.index * TOTAL_ITEMS_PER_PAGE,
   //   pageProps.index * TOTAL_ITEMS_PER_PAGE + TOTAL_ITEMS_PER_PAGE
   // )
-
-  const [sortByObj, setSortByObj] = useState<SortByObjInterface>({})
 
   useSubmittedRulesStatusUpdate({
     rules,
@@ -659,9 +659,8 @@ const RulesTableContainer: React.FC<RulesTableContainerProps> = ({
         serverSortProps: getServerSortProps({
           enableServerSort: true,
           accessor: 'name',
-          sortByObj,
-          setSortByObj,
-          refetch: handleRefreshClick
+          sortByObj: sortObj,
+          setSortByObj: handleSort
         })
       },
       {
@@ -669,13 +668,7 @@ const RulesTableContainer: React.FC<RulesTableContainerProps> = ({
         Header: getString('ce.co.rulesTableHeaders.idleTime'),
         width: '8%',
         Cell: TimeCell,
-        serverSortProps: getServerSortProps({
-          enableServerSort: true,
-          accessor: 'idle_time_mins',
-          sortByObj,
-          setSortByObj,
-          refetch: handleRefreshClick
-        })
+        disableSortBy: true
       },
       {
         accessor: 'fulfilment',
@@ -690,20 +683,34 @@ const RulesTableContainer: React.FC<RulesTableContainerProps> = ({
         Cell: ResourcesCell
       },
       {
+        accessor: 'access_point_id', // random accessor to display sort icon
         Header: getString('ce.co.rulesTableHeaders.savings').toUpperCase(),
         width: '15%',
         Cell: SavingsCell,
-        disableSortBy: true
+        serverSortProps: getServerSortProps({
+          enableServerSort: true,
+          accessor: 'savings',
+          sortByObj: sortObj,
+          setSortByObj: handleSort
+        })
       },
       {
+        accessor: 'account_identifier', // random accessor to display sort icon
         Header: getString('ce.co.rulesTableHeaders.lastActivity'),
         width: '10%',
-        Cell: ActivityCell
+        Cell: ActivityCell,
+        serverSortProps: getServerSortProps({
+          enableServerSort: true,
+          accessor: 'last_activity',
+          sortByObj: sortObj,
+          setSortByObj: handleSort
+        })
       },
       {
         Header: getString('ce.co.rulesTableHeaders.status'),
         width: '10%',
-        Cell: StatusCell
+        Cell: StatusCell,
+        disableSortBy: true
       },
       {
         Header: '',
@@ -837,6 +844,10 @@ const COGatewayList: React.FC = () => {
   })
   const { mode: modeQueryParam } = useQueryParams<RulesListQueryParams>()
 
+  const [mode, setMode] = useQueryParamsState<RulesMode>('mode', RulesMode.ACTIVE)
+  const [searchQueryText, setSearchQueryText] = useQueryParamsState<string | undefined>('search', undefined)
+  const [sortObj, setSortObj] = useQueryParamsState<SortByObjInterface>('sort', {})
+
   const [selectedService, setSelectedService] = useState<{ data: Service; index: number } | null>()
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false)
   const [tableData, setTableData] = useState<Service[]>([])
@@ -845,15 +856,14 @@ const COGatewayList: React.FC = () => {
     totalRecords: 0
   })
   const [pageIndex, setPageIndex] = useState<number>(1)
-  const [mode, setMode] = useQueryParamsState<RulesMode>('mode', RulesMode.ACTIVE)
-  const [searchQueryText, setSearchQueryText] = useQueryParamsState<string | undefined>('search', undefined)
-  // const fetchCounter = useRef<number>(0)
-  const initLoadComplete = useRef<boolean>(false)
   const [searchParams, setSearchParams] = useState<SearchParams>({
     isActive: !_isEmpty(searchQueryText),
     text: _defaultTo(searchQueryText, '')
   })
   const [isLoadingPage, setIsLoadingPage] = useState(true) // track initial loading of page
+
+  // const fetchCounter = useRef<number>(0)
+  const initLoadComplete = useRef<boolean>(false)
 
   // const getServicesQueryParams = React.useMemo(
   //   () => ({
@@ -903,6 +913,7 @@ const COGatewayList: React.FC = () => {
         limit: TOTAL_ITEMS_PER_PAGE,
         query: searchParams.text.length ? searchParams.text : undefined,
         dry_run: mode === RulesMode.DRY,
+        sort: sortObj.field && sortObj.type ? { ...sortObj, type: sortObj.type.toLowerCase() } : undefined,
         ...body
       })
       response = rulesResponse.response
@@ -918,7 +929,7 @@ const COGatewayList: React.FC = () => {
     } else {
       handleInitialPageLoad()
     }
-  }, [mode, searchParams.text, pageIndex])
+  }, [mode, searchParams.text, pageIndex, sortObj.field, sortObj.type])
 
   const handleInitialPageLoad = async () => {
     const { response: activeRulesResponse } = await getRules()
@@ -1074,6 +1085,10 @@ const COGatewayList: React.FC = () => {
     setPaginationProps({ totalPages: updatedPageProps.totalPages, totalRecords: updatedPageProps.totalRecords })
   }
 
+  const handleTableSort = (sort: SortByObjInterface) => {
+    setSortObj(sort)
+  }
+
   // Render page loader for initial loading of the page
   if (isLoadingPage) {
     return (
@@ -1179,6 +1194,8 @@ const COGatewayList: React.FC = () => {
           }}
           searchParams={searchParams}
           mode={mode}
+          sortObj={sortObj}
+          handleSort={handleTableSort}
         />
       </Page.Body>
     </Container>
