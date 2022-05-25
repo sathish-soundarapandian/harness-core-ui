@@ -62,10 +62,8 @@ import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/Sa
 import GitContextForm, { GitContextProps } from '@common/components/GitContextForm/GitContextForm'
 import { useQueryParams } from '@common/hooks'
 import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
-import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
+import { AppStoreContext, useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import type { CreateUpdateInputSetsReturnType, InputSetDTO } from '@pipeline/utils/types'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
@@ -153,7 +151,7 @@ export function OverlayInputSetForm({
   const [isEdit, setIsEdit] = React.useState(false)
   const [savedInputSetObj, setSavedInputSetObj] = React.useState<OverlayInputSetDTO>({})
   const { isGitSyncEnabled } = React.useContext(AppStoreContext)
-  const gitSimplification: boolean = useFeatureFlag(FeatureFlag.GIT_SIMPLIFICATION)
+  const { isGitSimplificationEnabled: gitSimplification } = useAppStore()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<{
     projectIdentifier: string
     orgIdentifier: string
