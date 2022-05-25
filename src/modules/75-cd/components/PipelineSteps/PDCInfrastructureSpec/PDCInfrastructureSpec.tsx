@@ -53,7 +53,6 @@ import { getConnectorName, getConnectorValue } from '@pipeline/components/Pipeli
 import { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
-import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import DelegateSelectorPanel from '@pipeline/components/PipelineSteps/AdvancedSteps/DelegateSelectorPanel/DelegateSelectorPanel'
 import SSHSecretInput from '@secrets/components/SSHSecretInput/SSHSecretInput'
@@ -93,6 +92,7 @@ interface PDCInfrastructureUI {
   delegateSelectors?: string[] | undefined
   hostFilters: string
   sshKey: SecretReferenceInterface | void
+  credentialsRef: string
 }
 
 const PreconfiguredHosts = {
@@ -205,14 +205,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
     setInitial()
   }, [])
 
-  const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
-
-  const formikRef = React.useRef<FormikProps<unknown> | null>(null)
-
-  React.useEffect(() => {
-    subscribeForm({ tab: DeployTabs.INFRASTRUCTURE, form: formikRef })
-    return () => unSubscribeForm({ tab: DeployTabs.INFRASTRUCTURE, form: formikRef })
-  }, [])
+  const formikRef = React.useRef<FormikProps<PDCInfrastructureUI> | null>(null)
 
   const hostSpecificyOptions = useMemo(
     () => [
@@ -247,7 +240,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
     setIsLoading(true)
     setErrors([])
     const getData = async () => {
-      const hosts = await fetchHosts()
+      const hosts = (await fetchHosts()) as []
       setDetailHosts(
         hosts?.map((host: string) => ({
           host,
@@ -314,7 +307,10 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
     setErrors([])
     try {
       const validationHosts = testHost ? [testHost] : detailHosts.map(host => host.host || '')
-      const hostResults = await validateHosts({ hosts: validationHosts, tags })
+      const hostResults = await validateHosts({
+        hosts: validationHosts,
+        tags: get(formikRef, 'current.values.delegateSelectors', [])
+      })
       if (hostResults.status === 'SUCCESS') {
         const tempMap: any = {}
         detailHosts.forEach(hostItem => {
@@ -490,7 +486,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                       <SSHSecretInput name={'sshKey'} label={getString('cd.steps.common.specifyCredentials')} />
                     </div>
                     <div className={css.inputWidth}>
-                      <DelegateSelectorPanel isReadonly={false} formikProps={formik} />
+                      <DelegateSelectorPanel isReadonly={false} formikProps={formik as any} />
                     </div>
                     {showPreviewHostBtn ? (
                       <Button
@@ -536,7 +532,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                             Loading...
                           </Label>
                         ) : detailHosts.length > 0 ? (
-                          <Table columns={columns} data={detailHosts} />
+                          <Table columns={columns} data={detailHosts} bpTableProps={{}} />
                         ) : (
                           <Label className={'bp3-label'} style={{ margin: 'auto' }}>
                             No hosts provided
@@ -608,7 +604,7 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
     try {
       pipelineObj = parse(yaml)
     } catch (err) {
-      logger.error('Error while parsing the yaml', err)
+      logger.error('Error while parsing the yaml', err as any)
     }
     const { accountId, projectIdentifier, orgIdentifier } = params as {
       accountId: string
@@ -652,7 +648,7 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
     try {
       pipelineObj = parse(yaml)
     } catch (err) {
-      logger.error('Error while parsing the yaml', err)
+      logger.error('Error while parsing the yaml', err as any)
     }
     const { accountId } = params as {
       accountId: string

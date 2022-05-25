@@ -19,7 +19,7 @@ import {
 import { Position, Intent, PopoverInteractionKind } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
-import type { IconProps } from '@wings-software/uicore/dist/icons/Icon'
+import type { IconProps } from '@harness/icons'
 import defaultTo from 'lodash-es/defaultTo'
 import { useStrings } from 'framework/strings'
 import { ConnectorConnectivityDetails, ConnectorValidationResult, ErrorDetail, useValidateHosts } from 'services/cd-ng'
@@ -35,6 +35,7 @@ export interface ConnectivityStatusProps {
   identifier: string
   host: string
   tags: string[]
+  status: any
 }
 
 interface WarningTooltipProps {

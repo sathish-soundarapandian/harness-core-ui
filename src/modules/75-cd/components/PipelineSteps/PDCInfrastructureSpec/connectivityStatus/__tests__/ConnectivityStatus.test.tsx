@@ -46,7 +46,7 @@ describe('connectivity status', () => {
   const setup = (data: any) =>
     render(
       <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
-        <ConnectivityStatus data={data} />
+        <ConnectivityStatus {...data} />
       </TestWrapper>
     )
 

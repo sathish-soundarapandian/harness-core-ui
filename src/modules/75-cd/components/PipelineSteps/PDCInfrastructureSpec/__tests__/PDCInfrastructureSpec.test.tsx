@@ -94,7 +94,7 @@ describe('Test PDCInfrastructureSpec behavior', () => {
     factory.registerStep(new PDCInfrastructureSpec())
   })
 
-  test('should call onUpdate if valid values entered - inputset', async () => {
+  test.only('should call onUpdate if valid values entered - inputset', async () => {
     const onUpdateHandler = jest.fn()
     const { container } = render(
       <TestStepWidget

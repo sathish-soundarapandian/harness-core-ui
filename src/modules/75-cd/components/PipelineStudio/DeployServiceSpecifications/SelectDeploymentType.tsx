@@ -150,12 +150,18 @@ export default function SelectDeploymentType(props: SelectServiceDeploymentTypeP
         value: ServiceDeploymentType.Kubernetes
       },
       {
+        label: getString('pipeline.nativeHelm'),
+        icon: 'service-helm',
+        value: ServiceDeploymentType.NativeHelm
+      },
+      {
         label: getString('pipeline.serviceDeploymentTypes.ssh'),
         icon: 'secret-ssh',
         value: ServiceDeploymentType.ssh
-      }
+      },
+      ...getServerlessDeploymentTypes(getString, SERVERLESS_SUPPORT)
     ],
-    [getString]
+    [getString, SERVERLESS_SUPPORT]
   )
 
   // Suppported in CG (First Gen - Old Version of Harness App)
@@ -190,15 +196,9 @@ export default function SelectDeploymentType(props: SelectServiceDeploymentTypeP
         label: getString('pipeline.serviceDeploymentTypes.pcf'),
         icon: 'service-pivotal',
         value: ServiceDeploymentType.pcf
-      },
-      {
-        label: getString('pipeline.nativeHelm'),
-        icon: 'service-helm',
-        value: ServiceDeploymentType.NativeHelm
-      },
-      ...getServerlessDeploymentTypes(getString, SERVERLESS_SUPPORT)
+      }
     ],
-    [getString, SERVERLESS_SUPPORT]
+    [getString]
   )
 
   const [cgDeploymentTypes, setCgDeploymentTypes] = React.useState(cgSupportedDeploymentTypes)
