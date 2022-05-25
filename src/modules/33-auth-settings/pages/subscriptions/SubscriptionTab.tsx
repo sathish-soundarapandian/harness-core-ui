@@ -15,7 +15,7 @@ import { SUBSCRIPTION_TAB_NAMES, ModuleLicenseType } from '@common/constants/Sub
 import { useStrings } from 'framework/strings'
 import { useQueryParams } from '@common/hooks'
 import type { ModuleName } from 'framework/types/ModuleName'
-import type { ModuleLicenseDTO } from 'services/cd-ng'
+import type { ModuleLicenseDTO } from 'services/cd-ng/index'
 import routes from '@common/RouteDefinitions'
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
 
@@ -23,6 +23,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { StringsMap } from 'stringTypes'
 import { isCommunityPlan } from '@common/utils/utils'
 
+import {ExampleModal} from "@common/components/CostCalculator/CostCalculator";
 import SubscriptionOverview from './overview/SubscriptionOverview'
 import SubscriptionBanner from './SubscriptionBanner'
 import SubscriptionPlans from './plans/SubscriptionPlans'
@@ -158,6 +159,7 @@ const SubscriptionTab = ({
         {getSubscriptionTabButtons()}
       </Layout.Horizontal>
       {getTabComponent()}
+      <ExampleModal/>
     </React.Fragment>
   )
 }

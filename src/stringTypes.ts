@@ -160,6 +160,19 @@ export interface StringsMap {
   'common.copy': string
   'common.copyFqn': string
   'common.copyVariableName': string
+  'common.costCalculator.currentUsage': string
+  'common.costCalculator.enterprise': string
+  'common.costCalculator.ff.developer': string
+  'common.costCalculator.ff.mau': string
+  'common.costCalculator.month': string
+  'common.costCalculator.nextPayment': string
+  'common.costCalculator.plannedUsage': string
+  'common.costCalculator.recommended': string
+  'common.costCalculator.support': string
+  'common.costCalculator.tax': string
+  'common.costCalculator.team': string
+  'common.costCalculator.unitPrice': string
+  'common.costCalculator.year': string
   'common.createPipeline': string
   'common.creating': string
   'common.current': string

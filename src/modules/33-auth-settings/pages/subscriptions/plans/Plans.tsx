@@ -13,6 +13,7 @@ import type { FetchPlansQuery } from 'services/common/services'
 import type { ModuleName } from 'framework/types/ModuleName'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+import { ExampleModal } from '@common/components/CostCalculator/CostCalculator'
 import PlansPanel from './PlansPanel'
 import FeatureComparison from './FeatureComparison'
 import css from './Plans.module.scss'
@@ -56,6 +57,7 @@ const Plans: React.FC<PlansProps> = ({ plans, featureCaption, featureGroup, modu
           {getString('common.plans.faq')}
         </Text>
       </a>
+      <ExampleModal />
     </Layout.Vertical>
   )
 }
