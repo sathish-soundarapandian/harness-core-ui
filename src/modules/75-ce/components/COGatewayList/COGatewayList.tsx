@@ -844,11 +844,11 @@ const COGatewayList: React.FC = () => {
     totalPages: 1,
     totalRecords: 0
   })
-  const [pageIndex, setPageIndex] = useQueryParamsState('page', 1)
+  const [pageIndex, setPageIndex] = useState<number>(1)
   const [mode, setMode] = useQueryParamsState<RulesMode>('mode', RulesMode.ACTIVE)
   const [searchQueryText, setSearchQueryText] = useQueryParamsState<string | undefined>('search', undefined)
   // const fetchCounter = useRef<number>(0)
-  // const tryFetchingDryRun = useRef<boolean>(false)
+  const initLoadComplete = useRef<boolean>(false)
   const [searchParams, setSearchParams] = useState<SearchParams>({
     isActive: !_isEmpty(searchQueryText),
     text: _defaultTo(searchQueryText, '')
@@ -913,8 +913,30 @@ const COGatewayList: React.FC = () => {
   }
 
   useEffect(() => {
-    fetchAndSaveRules()
+    if (initLoadComplete.current) {
+      fetchAndSaveRules()
+    } else {
+      handleInitialPageLoad()
+    }
   }, [mode, searchParams.text, pageIndex])
+
+  const handleInitialPageLoad = async () => {
+    const { response: activeRulesResponse } = await getRules()
+    const { response: dryRunRulesResponse } = await getRules({ dry_run: true })
+    const dataToSave = !_isEmpty(activeRulesResponse?.records) ? activeRulesResponse : dryRunRulesResponse
+    trackLandingPage(dataToSave?.records)
+    if (_isEmpty(activeRulesResponse?.records) && !_isEmpty(dryRunRulesResponse?.records)) {
+      setMode(RulesMode.DRY)
+    }
+    setTableData(_defaultTo(dataToSave?.records, []))
+    setPaginationProps(prevProps => ({
+      ...prevProps,
+      totalPages: _defaultTo(dataToSave?.pages, 1),
+      totalRecords: _defaultTo(dataToSave?.total, 0)
+    }))
+    setIsLoadingPage(false)
+    initLoadComplete.current = true
+  }
 
   const fetchAndSaveRules = async (body?: FetchRulesBody) => {
     const { response, error } = await getRules(body)
@@ -940,17 +962,15 @@ const COGatewayList: React.FC = () => {
     }
   }
 
-  // const trackLandingPage = () => {
-  //   const hasData = !_isEmpty(servicesData?.response)
-  //   const eventName = Utils.getConditionalResult(
-  //     hasData,
-  //     USER_JOURNEY_EVENTS.LOAD_AS_SUMMARY_PAGE,
-  //     USER_JOURNEY_EVENTS.LOAD_AS_LANDING_PAGE
-  //   )
-  //   if (!loading) {
-  //     trackEvent(eventName, {})
-  //   }
-  // }
+  const trackLandingPage = (data?: Service[]) => {
+    const hasData = !_isEmpty(data)
+    const eventName = Utils.getConditionalResult(
+      hasData,
+      USER_JOURNEY_EVENTS.LOAD_AS_SUMMARY_PAGE,
+      USER_JOURNEY_EVENTS.LOAD_AS_LANDING_PAGE
+    )
+    trackEvent(eventName, {})
+  }
 
   // useEffect(() => {
   //   handleDataLoading()
@@ -1044,9 +1064,8 @@ const COGatewayList: React.FC = () => {
       })
     )
 
-  const handleModeChange = async (val: RulesMode) => {
+  const handleModeChange = (val: RulesMode) => {
     setPageIndex(1)
-    setPaginationProps(prevProps => ({ ...prevProps }))
     setMode(val)
   }
 
