@@ -6,12 +6,15 @@
  */
 
 import React from 'react'
-import { act, fireEvent, render } from '@testing-library/react'
+import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import { useValidateHosts } from 'services/cd-ng'
 import ConnectivityStatus from '../ConnectivityStatus'
 import mock from './mock.json'
 
 const { failure, success, unknownType } = mock
+
+const useValidateHostsMock = useValidateHosts as jest.MockedFunction<any>
 
 jest.mock('services/cd-ng', () => ({
   useValidateHosts: jest.fn().mockImplementation(() => {
@@ -20,9 +23,8 @@ jest.mock('services/cd-ng', () => ({
       loading: false,
       mutate: jest.fn().mockImplementation(() => {
         return {
-          data: {
-            status: 'SUCCESS'
-          }
+          status: 'SUCCESS',
+          data: {}
         }
       })
     }
@@ -33,9 +35,8 @@ jest.mock('services/cd-ng', () => ({
       loading: false,
       mutate: jest.fn().mockImplementation(() => {
         return {
-          data: {
-            status: 'SUCCESS'
-          }
+          status: 'SUCCESS',
+          data: {}
         }
       })
     }
@@ -50,7 +51,7 @@ describe('connectivity status', () => {
       </TestWrapper>
     )
 
-  test('fail render should match snapshot', async () => {
+  test('success on click check hosts', async () => {
     const { container, getByText } = setup(failure)
     expect(container).toMatchSnapshot()
     const testBtn = getByText('test')
@@ -58,13 +59,46 @@ describe('connectivity status', () => {
     act(() => {
       fireEvent.click(testBtn)
     })
-    expect(container).toMatchSnapshot()
+    expect(getByText('connectors.testInProgress')).toBeDefined()
+
+    await waitFor(() => {
+      expect(getByText('warning-sign')).toBeDefined()
+    })
   })
+
+  test('fail on click check hosts', async () => {
+    useValidateHostsMock.mockImplementation(() => {
+      return {
+        cancel: jest.fn(),
+        loading: false,
+        mutate: jest.fn().mockImplementation(() => {
+          return {
+            status: 'FAILURE',
+            data: {}
+          }
+        })
+      }
+    })
+
+    const { getByText } = setup(failure)
+    const testBtn = getByText('test')
+
+    act(() => {
+      fireEvent.click(testBtn)
+    })
+    expect(getByText('connectors.testInProgress')).toBeDefined()
+
+    await waitFor(() => {
+      expect(getByText('warning-sign')).toBeDefined()
+    })
+  })
+
   test('success render should match snapshot', async () => {
     const { container } = setup(success)
 
     expect(container).toMatchSnapshot()
   })
+
   test('unknown render should match snapshot', async () => {
     const { container } = setup(unknownType)
 
