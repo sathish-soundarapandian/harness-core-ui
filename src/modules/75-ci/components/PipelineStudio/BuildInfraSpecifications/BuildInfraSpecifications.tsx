@@ -64,6 +64,7 @@ import type { K8sDirectInfraYaml, UseFromStageInfraYaml, VmInfraYaml, VmPoolYaml
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { k8sLabelRegex, k8sAnnotationRegex } from '@common/utils/StringUtils'
 import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
+import { Connectors } from '@connectors/constants'
 import { BuildTabs } from '../CIPipelineStagesUtils'
 import css from './BuildInfraSpecifications.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -100,6 +101,7 @@ interface KubernetesBuildInfraFormValues {
   readOnlyRootFilesystem?: boolean
   tolerations?: { effect?: string; key?: string; operator?: string; value?: string }[]
   nodeSelector?: MultiTypeMapUIType
+  harnessImageConnectorRef?: string
 }
 
 interface ContainerSecurityContext {
@@ -112,6 +114,7 @@ interface ContainerSecurityContext {
 }
 interface AWSVMInfraFormValues {
   poolId?: string
+  harnessImageConnectorRef?: string
 }
 
 type BuildInfraFormValues = (KubernetesBuildInfraFormValues | AWSVMInfraFormValues) & {
@@ -127,6 +130,7 @@ type FieldValueType = yup.Ref | yup.Schema<any> | yup.MixedSchema<any>
 
 const runAsUserStringKey = 'pipeline.stepCommonFields.runAsUser'
 const priorityClassNameStringKey = 'pipeline.buildInfra.priorityClassName'
+const harnessImageConnectorRefKey = 'connectors.title.harnessImageConnectorRef'
 
 const getInitialMapValues: (value: MultiTypeMapType) => MultiTypeMapUIType = value => {
   const map =
@@ -368,9 +372,20 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
       tolerations: (stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.tolerations,
       nodeSelector: getInitialMapValues(
         (stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.nodeSelector || {}
-      )
+      ),
+      harnessImageConnectorRef: (stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+        ?.harnessImageConnectorRef
     }
   }, [stage])
+
+  const getVmInfraPayload = useMemo(
+    (): BuildInfraFormValues => ({
+      buildInfraType: 'VM',
+      harnessImageConnectorRef: ((stage?.stage?.spec?.infrastructure as VmInfraYaml)?.spec as VmPoolYaml)?.spec
+        ?.harnessImageConnectorRef
+    }),
+    [stage]
+  )
 
   const getInitialValues = useMemo((): BuildInfraFormValues => {
     const additionalDefaultFields: { automountServiceAccountToken?: boolean } = {}
@@ -408,12 +423,12 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           if (!isEmpty(identifier)) {
             return {
               poolId: identifier,
-              buildInfraType: 'VM'
+              ...getVmInfraPayload
             }
           } else {
             return {
               poolId: '',
-              buildInfraType: 'VM'
+              ...getVmInfraPayload
             }
           }
         }
@@ -424,6 +439,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           labels: '',
           buildInfraType: undefined,
           poolId: undefined,
+          harnessImageConnectorRef: undefined,
           ...additionalDefaultFields
         }
       }
@@ -436,6 +452,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
       labels: '',
       buildInfraType: undefined,
       poolId: undefined,
+      harnessImageConnectorRef: undefined,
       ...additionalDefaultFields
     }
   }, [stage])
@@ -475,6 +492,11 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           const filteredVolumes = Array.isArray(values.volumes)
             ? values.volumes.filter((volume: VolumesInterface) => volume.mountPath && volume.type)
             : values.volumes
+
+          const harnessImageConnectorRef =
+            values?.harnessImageConnectorRef === ''
+              ? undefined
+              : values?.harnessImageConnectorRef?.value || values?.harnessImageConnectorRef
 
           try {
             getDurationValidationSchema().validateSync(values.initTimeout)
@@ -551,7 +573,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                     priorityClassName: values.priorityClassName,
                     ...(filteredTolerations?.length ? { tolerations: filteredTolerations } : {}),
                     nodeSelector: getMapValues(values.nodeSelector),
-                    ...additionalKubernetesFields
+                    ...additionalKubernetesFields,
+                    harnessImageConnectorRef
                   }
                 }
               : _buildInfraType === 'VM'
@@ -560,7 +583,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                   spec: {
                     type: 'Pool',
                     spec: {
-                      identifier: values.poolId
+                      identifier: values.poolId,
+                      harnessImageConnectorRef
                     }
                   }
                 }
@@ -916,32 +940,67 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
     )
   }, [buildInfraType])
 
+  const renderHarnessImageConnectorRefField = React.useCallback((): React.ReactElement => {
+    return (
+      <div className={cx(css.fieldsGroup, css.withoutSpacing)}>
+        <FormMultiTypeConnectorField
+          width={300}
+          name="harnessImageConnectorRef"
+          label={
+            <Text
+              tooltipProps={{ dataTooltipId: 'harnessImageConnectorRef' }}
+              font={{ variation: FontVariation.FORM_LABEL }}
+              margin={{ bottom: 'xsmall' }}
+            >
+              {`${getString(harnessImageConnectorRefKey)} ${getString('common.optionalLabel')}`}
+            </Text>
+          }
+          placeholder={getString('connectors.placeholder.harnessImageConnectorRef')}
+          accountIdentifier={accountId}
+          projectIdentifier={projectIdentifier}
+          orgIdentifier={orgIdentifier}
+          gitScope={gitScope}
+          multiTypeProps={{
+            disabled: isReadonly,
+            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+          }}
+          type={Connectors.DOCKER}
+        />
+      </div>
+    )
+  }, [])
+
   const renderAWSVMBuildInfraForm = React.useCallback((): React.ReactElement => {
     return (
-      <MultiTypeTextField
-        label={
-          <Text
-            tooltipProps={{ dataTooltipId: 'poolId' }}
-            font={{ variation: FontVariation.FORM_LABEL }}
-            margin={{ bottom: 'xsmall' }}
-          >
-            {getString('pipeline.buildInfra.poolId')}
-          </Text>
-        }
-        name={'poolId'}
-        style={{ width: 300 }}
-        multiTextInputProps={{
-          multiTextInputProps: { expressions, allowableTypes },
-          disabled: isReadonly
-        }}
-      />
+      <>
+        <div className={cx(css.fieldsGroup, css.withoutSpacing)}>
+          <MultiTypeTextField
+            label={
+              <Text
+                tooltipProps={{ dataTooltipId: 'poolId' }}
+                font={{ variation: FontVariation.FORM_LABEL }}
+                margin={{ bottom: 'xsmall' }}
+              >
+                {getString('pipeline.buildInfra.poolId')}
+              </Text>
+            }
+            name={'poolId'}
+            style={{ width: 300, paddingBottom: 'var(--spacing-small)' }}
+            multiTextInputProps={{
+              multiTextInputProps: { expressions, allowableTypes },
+              disabled: isReadonly
+            }}
+          />
+        </div>
+        {renderHarnessImageConnectorRefField()}
+      </>
     )
   }, [])
 
   const renderKubernetesBuildInfraForm = React.useCallback((): React.ReactElement => {
     return (
       <>
-        <Container className={css.bottomMargin3}>
+        <div className={cx(css.fieldsGroup, css.withoutSpacing)}>
           <FormMultiTypeConnectorField
             width={300}
             name="connectorRef"
@@ -957,7 +1016,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             gitScope={gitScope}
             multiTypeProps={{ expressions, disabled: isReadonly, allowableTypes }}
           />
-        </Container>
+        </div>
         <div className={cx(css.fieldsGroup, css.withoutSpacing)}>
           <MultiTypeTextField
             label={
@@ -970,7 +1029,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
               </Text>
             }
             name={'namespace'}
-            style={{ width: 300 }}
+            style={{ width: 300, paddingBottom: 'var(--spacing-small)' }}
             multiTextInputProps={{
               multiTextInputProps: { expressions, allowableTypes },
               disabled: isReadonly,
@@ -978,6 +1037,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             }}
           />
         </div>
+        {renderHarnessImageConnectorRefField()}
       </>
     )
   }, [])
@@ -1326,10 +1386,28 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                                         >
                                           {getString(namespaceKeyRef)}
                                         </Text>
-                                        <Text color="black">
+                                        <Text color="var(--black)" margin={{ bottom: 'medium' }}>
                                           {
                                             (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
                                               ?.namespace
+                                          }
+                                        </Text>
+                                      </>
+                                    )}
+                                    {(propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                                      ?.harnessImageConnectorRef && (
+                                      <>
+                                        <Text
+                                          font={{ variation: FontVariation.FORM_LABEL }}
+                                          margin={{ bottom: 'xsmall' }}
+                                          tooltipProps={{ dataTooltipId: 'harnessImageConnectorRef' }}
+                                        >
+                                          {getString(harnessImageConnectorRefKey)}
+                                        </Text>
+                                        <Text color="var(--black)">
+                                          {
+                                            (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                                              ?.harnessImageConnectorRef
                                           }
                                         </Text>
                                       </>
@@ -1604,17 +1682,44 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                                   ((propagatedStage?.stage?.spec?.infrastructure as VmInfraYaml)?.spec as VmPoolYaml)
                                     ?.spec?.identifier ? (
                                   <>
-                                    <Text font={{ variation: FontVariation.FORM_LABEL }} margin={{ bottom: 'xsmall' }}>
-                                      {getString(poolIdKeyRef)}
-                                    </Text>
-                                    <Text color="black" margin={{ bottom: 'medium' }}>
-                                      {
-                                        (
-                                          (propagatedStage?.stage?.spec?.infrastructure as VmInfraYaml)
-                                            ?.spec as VmPoolYaml
-                                        )?.spec?.identifier
-                                      }
-                                    </Text>
+                                    {((propagatedStage?.stage?.spec?.infrastructure as VmInfraYaml)?.spec as VmPoolYaml)
+                                      ?.spec?.identifier && (
+                                      <>
+                                        <Text
+                                          font={{ variation: FontVariation.FORM_LABEL }}
+                                          margin={{ bottom: 'xsmall' }}
+                                        >
+                                          {getString(poolIdKeyRef)}
+                                        </Text>
+                                        <Text color="black" margin={{ bottom: 'medium' }}>
+                                          {
+                                            (
+                                              (propagatedStage?.stage?.spec?.infrastructure as VmInfraYaml)
+                                                ?.spec as VmPoolYaml
+                                            )?.spec?.identifier
+                                          }
+                                        </Text>
+                                      </>
+                                    )}
+                                    {((propagatedStage?.stage?.spec?.infrastructure as VmInfraYaml)?.spec as VmPoolYaml)
+                                      ?.spec?.harnessImageConnectorRef && (
+                                      <>
+                                        <Text
+                                          font={{ variation: FontVariation.FORM_LABEL }}
+                                          margin={{ bottom: 'xsmall' }}
+                                        >
+                                          {getString(harnessImageConnectorRefKey)}
+                                        </Text>
+                                        <Text color="black" margin={{ bottom: 'medium' }}>
+                                          {
+                                            (
+                                              (propagatedStage?.stage?.spec?.infrastructure as VmInfraYaml)
+                                                ?.spec as VmPoolYaml
+                                            )?.spec?.harnessImageConnectorRef
+                                          }
+                                        </Text>
+                                      </>
+                                    )}
                                   </>
                                 ) : null}
                               </div>
@@ -1636,14 +1741,16 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                                                   namespace: '',
                                                   annotations: {},
                                                   labels: {},
-                                                  nodeSelector: {}
+                                                  nodeSelector: {},
+                                                  harnessImageConnectorRef: ''
                                                 }
                                               }
                                             : buildInfraType === 'VM'
                                             ? {
                                                 type: 'VM',
                                                 spec: {
-                                                  identifier: ''
+                                                  identifier: '',
+                                                  harnessImageConnectorRef: ''
                                                 }
                                               }
                                             : { type: undefined, spec: {} }

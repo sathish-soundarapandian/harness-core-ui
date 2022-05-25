@@ -1333,6 +1333,7 @@ export interface K8sDirectInfraYamlSpec {
   }
   tolerations?: { effect?: string; key?: string; operator?: string; value?: string }[]
   nodeSelector?: { [key: string]: string }
+  harnessImageConnectorRef?: string // hard coded for now
 }
 
 export type KeyValuesCriteriaSpec = CriteriaSpec & {
@@ -2453,6 +2454,7 @@ export type VmPoolYaml = VmInfraSpec & {
 
 export interface VmPoolYamlSpec {
   identifier: string
+  harnessImageConnectorRef?: string // hard coded for now
 }
 
 export interface WebhookBaseAttributes {

@@ -2012,6 +2012,7 @@ export interface StringsMap {
   'connectors.nexus.nexusServerUrl': string
   'connectors.pagerDutyConnectorDetails': string
   'connectors.parameters': string
+  'connectors.placeholder.harnessImageConnectorRef': string
   'connectors.policyEvaluations.failedToSave': string
   'connectors.policyEvaluations.warning': string
   'connectors.prometheus.urlValidation': string
@@ -2109,6 +2110,7 @@ export interface StringsMap {
   'connectors.title.gitConnector': string
   'connectors.title.githubConnector': string
   'connectors.title.gitlabConnector': string
+  'connectors.title.harnessImageConnectorRef': string
   'connectors.title.hashicorpVault': string
   'connectors.title.helmConnector': string
   'connectors.title.jira': string

@@ -99,9 +99,9 @@ describe('BuildInfraSpecifications snapshot tests for K8s Build Infra', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    const selectBtn = await findByText(container, 'tesa 1')
+    const selectBtn = await findAllByText(container, 'tesa 1')
     expect(selectBtn).toBeDefined()
-    fireEvent.click(selectBtn)
+    fireEvent.click(selectBtn[0])
     await act(async () => {
       const portal = document.getElementsByClassName('bp3-portal')[0]
       expect(portal).toBeDefined()
@@ -110,8 +110,8 @@ describe('BuildInfraSpecifications snapshot tests for K8s Build Infra', () => {
       await waitFor(() => expect(connector?.[0]).toBeDefined())
       fireEvent.click(connector?.[0])
     })
-    const chosenConnector = await findByText(container, 'tesa 1')
-    expect(chosenConnector).toBeDefined()
+    const chosenConnector = await findAllByText(container, 'tesa 1')
+    expect(chosenConnector[0]).toBeDefined()
     expect(container).toMatchSnapshot()
   })
 
