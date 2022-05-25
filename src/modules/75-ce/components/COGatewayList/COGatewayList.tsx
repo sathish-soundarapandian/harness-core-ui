@@ -39,7 +39,6 @@ import {
   Service,
   ServiceSavings,
   useAllServiceResources,
-  useGetServices,
   useHealthOfService,
   useRequestsOfService,
   useSavingsOfService,
@@ -47,7 +46,10 @@ import {
   ServiceError,
   useCumulativeServiceSavings,
   useDescribeServiceInContainerServiceCluster,
-  useRouteDetails
+  useRouteDetails,
+  useFetchRules,
+  FetchRulesResponseRecords,
+  FetchRulesBody
 } from 'services/lw'
 import { String, useStrings } from 'framework/strings'
 import useDeleteServiceHook from '@ce/common/useDeleteService'
@@ -98,7 +100,21 @@ interface EmptyListPageProps {
 interface RulesListQueryParams {
   mode?: RulesMode
   search?: string
+  page?: number
 }
+
+interface GetRulesReturnDetails {
+  response?: FetchRulesResponseRecords
+  error?: any
+}
+
+interface PaginationProps {
+  pageIndex: number
+  totalPages: number
+  totalRecords: number
+}
+
+interface PaginationResponseProps extends Omit<PaginationProps, 'pageIndex'> {}
 
 function IconCell(tableProps: CellProps<Service>): JSX.Element {
   return <ComputeType data={tableProps.row.original} />
@@ -480,7 +496,8 @@ interface RulesTableContainerProps {
   setRules: (services: Service[]) => void
   loading: boolean
   rowMenuProps: TableRowMenuProps
-  pageProps: { index: number; setIndex: (index: number) => void }
+  pageProps: PaginationProps
+  setPageProps: (pagination: PaginationProps) => void
   onRowClick: (data: Service, index: number) => void
   refetchRules: (value: string, isSearchActive: boolean, triggerFetch?: boolean) => Promise<void>
   onSearchCallback?: (value: string) => void
@@ -594,21 +611,22 @@ const RulesTableContainer: React.FC<RulesTableContainerProps> = ({
   onRowClick,
   refetchRules,
   searchParams,
-  mode
+  mode,
+  setPageProps
 }) => {
   const { getString } = useStrings()
-  const tableData = rules.slice(
-    pageProps.index * TOTAL_ITEMS_PER_PAGE,
-    pageProps.index * TOTAL_ITEMS_PER_PAGE + TOTAL_ITEMS_PER_PAGE
-  )
+  // const tableData = rules.slice(
+  //   pageProps.index * TOTAL_ITEMS_PER_PAGE,
+  //   pageProps.index * TOTAL_ITEMS_PER_PAGE + TOTAL_ITEMS_PER_PAGE
+  // )
 
   const [sortByObj, setSortByObj] = useState<SortByObjInterface>({})
 
   useSubmittedRulesStatusUpdate({
-    rules: tableData,
+    rules,
     onRuleUpdate: ({ updatedService, index }) => {
       const updatedRules = [...rules]
-      const updatedIndex = pageProps.index * TOTAL_ITEMS_PER_PAGE + index
+      const updatedIndex = pageProps.pageIndex * TOTAL_ITEMS_PER_PAGE + index
       updatedRules.splice(updatedIndex, 1, updatedService)
       setRules(updatedRules)
     }
@@ -618,11 +636,15 @@ const RulesTableContainer: React.FC<RulesTableContainerProps> = ({
   const onSearchChange = async (val: string) => {
     val = val.trim()
     await refetchRules(val, true, false)
-    pageProps.setIndex(0)
+    onPageClick(0)
   }
 
   const handleRefreshClick = () => {
     refetchRules(searchParams.text, !_isEmpty(searchParams.text))
+  }
+
+  const onPageClick = (newPageIndex: number) => {
+    setPageProps({ ...pageProps, pageIndex: newPageIndex + 1 })
   }
 
   const emptySearchResults = _isEmpty(rules)
@@ -697,7 +719,7 @@ const RulesTableContainer: React.FC<RulesTableContainerProps> = ({
         disableSortBy: true
       }
     ],
-    [tableData]
+    [rules]
   )
 
   return (
@@ -754,13 +776,13 @@ const RulesTableContainer: React.FC<RulesTableContainerProps> = ({
               <Text>{getString('common.refresh')}</Text>
             </Layout.Horizontal>
             <TableV2
-              data={tableData}
+              data={rules}
               pagination={{
                 pageSize: TOTAL_ITEMS_PER_PAGE,
-                pageIndex: pageProps.index,
-                pageCount: Math.ceil(rules.length / TOTAL_ITEMS_PER_PAGE) ?? 1,
-                itemCount: rules.length,
-                gotoPage: newPageIndex => pageProps.setIndex(newPageIndex)
+                pageIndex: pageProps.pageIndex - 1,
+                pageCount: pageProps.totalPages ?? 1,
+                itemCount: pageProps.totalRecords,
+                gotoPage: onPageClick
               }}
               onRowClick={onRowClick}
               columns={columns}
@@ -813,41 +835,51 @@ const COGatewayList: React.FC = () => {
       featureName: FeatureIdentifier.RESTRICTED_AUTOSTOPPING_RULE_CREATION
     }
   })
-
   const { mode: modeQueryParam } = useQueryParams<RulesListQueryParams>()
 
   const [selectedService, setSelectedService] = useState<{ data: Service; index: number } | null>()
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false)
   const [tableData, setTableData] = useState<Service[]>([])
-  const [pageIndex, setPageIndex] = useState<number>(0)
+  const [paginationProps, setPaginationProps] = useState<PaginationResponseProps>({
+    totalPages: 1,
+    totalRecords: 0
+  })
+  const [pageIndex, setPageIndex] = useQueryParamsState('page', 1)
   const [mode, setMode] = useQueryParamsState<RulesMode>('mode', RulesMode.ACTIVE)
   const [searchQueryText, setSearchQueryText] = useQueryParamsState<string | undefined>('search', undefined)
-  const fetchCounter = useRef<number>(0)
-  const tryFetchingDryRun = useRef<boolean>(false)
+  // const fetchCounter = useRef<number>(0)
+  // const tryFetchingDryRun = useRef<boolean>(false)
   const [searchParams, setSearchParams] = useState<SearchParams>({
     isActive: !_isEmpty(searchQueryText),
     text: _defaultTo(searchQueryText, '')
   })
   const [isLoadingPage, setIsLoadingPage] = useState(true) // track initial loading of page
 
-  const getServicesQueryParams = React.useMemo(
-    () => ({
-      accountIdentifier: accountId,
-      value: _defaultTo(searchParams.text, ''),
-      dry_run: mode === RulesMode.DRY
-    }),
-    [searchParams.text, mode]
-  )
+  // const getServicesQueryParams = React.useMemo(
+  //   () => ({
+  //     accountIdentifier: accountId,
+  //     value: _defaultTo(searchParams.text, ''),
+  //     dry_run: mode === RulesMode.DRY
+  //   }),
+  //   [searchParams.text, mode]
+  // )
 
-  const {
-    data: servicesData,
-    error,
-    loading,
-    refetch: refetchServices
-  } = useGetServices({
+  // const {
+  //   data: servicesData,
+  //   error,
+  //   loading,
+  //   refetch: refetchServices
+  // } = useGetServices({
+  //   account_id: accountId,
+  //   queryParams: {
+  //     ...getServicesQueryParams
+  //   }
+  // })
+
+  const { mutate: fetchRules, loading } = useFetchRules({
     account_id: accountId,
     queryParams: {
-      ...getServicesQueryParams
+      accountIdentifier: accountId
     }
   })
 
@@ -863,74 +895,108 @@ const COGatewayList: React.FC = () => {
     }
   })
 
-  const triggerServiceFetch = async (value: string, isSearchActive: boolean, triggerFetch = true) => {
-    if (triggerFetch) {
-      await refetchServices({
-        queryParams: {
-          ...getServicesQueryParams
-        }
+  const getRules = async (body?: FetchRulesBody): Promise<GetRulesReturnDetails> => {
+    let response, error
+    try {
+      const rulesResponse = await fetchRules({
+        page: pageIndex,
+        limit: TOTAL_ITEMS_PER_PAGE,
+        query: searchParams.text.length ? searchParams.text : undefined,
+        dry_run: mode === RulesMode.DRY,
+        ...body
       })
+      response = rulesResponse.response
+    } catch (error) {
+      error = error
     }
-    setSearchParams({ isActive: isSearchActive, text: value })
-    setSearchQueryText(Utils.getConditionalResult(_isEmpty(value), undefined, value))
-  }
-
-  const trackLandingPage = () => {
-    const hasData = !_isEmpty(servicesData?.response)
-    const eventName = Utils.getConditionalResult(
-      hasData,
-      USER_JOURNEY_EVENTS.LOAD_AS_SUMMARY_PAGE,
-      USER_JOURNEY_EVENTS.LOAD_AS_LANDING_PAGE
-    )
-    if (!loading) {
-      trackEvent(eventName, {})
-    }
+    return { response, error }
   }
 
   useEffect(() => {
-    handleDataLoading()
-    trackLandingPage()
-  }, [servicesData])
+    fetchAndSaveRules()
+  }, [mode, searchParams.text, pageIndex])
 
-  const handleDataLoading = () => {
-    if (servicesData) {
-      fetchCounter.current += 1
-      const rules = _defaultTo(servicesData?.response, [])
-      handleRulesDataSaving(rules)
-    }
-  }
-
-  const handleRulesDataSaving = (rules: Service[]) => {
-    if (_isEmpty(rules) && mode === RulesMode.ACTIVE) {
-      handleEmptyRulesSave(rules)
+  const fetchAndSaveRules = async (body?: FetchRulesBody) => {
+    const { response, error } = await getRules(body)
+    if (error) {
+      const errMessage = _defaultTo((error.data as any)?.errors?.join(', '), error.message)
+      showError(errMessage)
     } else {
-      handleFinalRulesSave(rules)
+      setTableData(_defaultTo(response?.records, []))
+      setPaginationProps(prevProps => ({
+        ...prevProps,
+        totalPages: _defaultTo(response?.pages, 1),
+        totalRecords: _defaultTo(response?.total, 0)
+      }))
+      setIsLoadingPage(false)
     }
   }
 
-  const handleEmptyRulesSave = (rules: Service[]) => {
-    if (fetchCounter.current < 2) {
-      tryFetchingDryRun.current = true
-      refetchServices({ queryParams: { ...getServicesQueryParams, dry_run: true } })
-    } else {
-      setTableData(rules)
-      setIsLoadingPage(false) // to stop initial loading of page
+  const triggerServiceFetch = async (value: string, isSearchActive: boolean, triggerFetch = true) => {
+    setSearchParams({ isActive: isSearchActive, text: value })
+    setSearchQueryText(Utils.getConditionalResult(_isEmpty(value), undefined, value))
+    if (triggerFetch) {
+      fetchAndSaveRules()
     }
   }
 
-  const handleFinalRulesSave = (rules: Service[]) => {
-    if (tryFetchingDryRun.current && mode === RulesMode.ACTIVE) {
-      tryFetchingDryRun.current = false
-      setMode(RulesMode.DRY)
-    }
-    setTableData(rules)
-    setIsLoadingPage(false) // to stop initial loading of page
-  }
+  // const trackLandingPage = () => {
+  //   const hasData = !_isEmpty(servicesData?.response)
+  //   const eventName = Utils.getConditionalResult(
+  //     hasData,
+  //     USER_JOURNEY_EVENTS.LOAD_AS_SUMMARY_PAGE,
+  //     USER_JOURNEY_EVENTS.LOAD_AS_LANDING_PAGE
+  //   )
+  //   if (!loading) {
+  //     trackEvent(eventName, {})
+  //   }
+  // }
 
-  if (error) {
-    const errMessage = _defaultTo((error.data as any)?.errors?.join(', '), error.message)
-    showError(errMessage, undefined, 'ce.get.svc.error')
-  }
+  // useEffect(() => {
+  //   handleDataLoading()
+  //   trackLandingPage()
+  // }, [servicesData])
+
+  // const handleDataLoading = () => {
+  //   if (servicesData) {
+  //     fetchCounter.current += 1
+  //     const rules = _defaultTo(servicesData?.response, [])
+  //     handleRulesDataSaving(rules)
+  //   }
+  // }
+
+  // const handleRulesDataSaving = (rules: Service[]) => {
+  //   if (_isEmpty(rules) && mode === RulesMode.ACTIVE) {
+  //     handleEmptyRulesSave(rules)
+  //   } else {
+  //     handleFinalRulesSave(rules)
+  //   }
+  // }
+
+  // const handleEmptyRulesSave = (rules: Service[]) => {
+  //   if (fetchCounter.current < 2) {
+  //     tryFetchingDryRun.current = true
+  //     fetch
+  //     refetchServices({ queryParams: { ...getServicesQueryParams, dry_run: true } })
+  //   } else {
+  //     setTableData(rules)
+  //     setIsLoadingPage(false) // to stop initial loading of page
+  //   }
+  // }
+
+  // const handleFinalRulesSave = (rules: Service[]) => {
+  //   if (tryFetchingDryRun.current && mode === RulesMode.ACTIVE) {
+  //     tryFetchingDryRun.current = false
+  //     setMode(RulesMode.DRY)
+  //   }
+  //   setTableData(rules)
+  //   setIsLoadingPage(false) // to stop initial loading of page
+  // }
+
+  // if (error) {
+  //   const errMessage = _defaultTo((error.data as any)?.errors?.join(', '), error.message)
+  //   showError(errMessage, undefined, 'ce.get.svc.error')
+  // }
 
   /* istanbul ignore next */
   const onServiceStateToggle = (type: 'SUCCESS' | 'FAILURE', data: Service | any, index?: number) => {
@@ -966,7 +1032,7 @@ const COGatewayList: React.FC = () => {
       setIsDrawerOpen(false)
       setSelectedService(null)
     }
-    refetchServices()
+    fetchAndSaveRules()
     refetchGraphData()
   }
 
@@ -979,8 +1045,14 @@ const COGatewayList: React.FC = () => {
     )
 
   const handleModeChange = async (val: RulesMode) => {
-    setPageIndex(0)
+    setPageIndex(1)
+    setPaginationProps(prevProps => ({ ...prevProps }))
     setMode(val)
+  }
+
+  const handlePageChange = (updatedPageProps: PaginationProps) => {
+    setPageIndex(updatedPageProps.pageIndex)
+    setPaginationProps({ totalPages: updatedPageProps.totalPages, totalRecords: updatedPageProps.totalRecords })
   }
 
   // Render page loader for initial loading of the page
@@ -1078,7 +1150,8 @@ const COGatewayList: React.FC = () => {
             setSelectedService({ data: e, index })
             setIsDrawerOpen(true)
           }}
-          pageProps={{ index: pageIndex, setIndex: setPageIndex }}
+          pageProps={{ ...paginationProps, pageIndex }}
+          setPageProps={handlePageChange}
           refetchRules={triggerServiceFetch}
           rowMenuProps={{
             onDelete: onServiceDeletion,
