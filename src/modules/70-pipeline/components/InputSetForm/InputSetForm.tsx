@@ -54,14 +54,12 @@ import type {
 import routes from '@common/RouteDefinitions'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useStrings } from 'framework/strings'
-import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
+import { AppStoreContext, useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import type { GitContextProps } from '@common/components/GitContextForm/GitContextForm'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { InputSetDTO, InputSetType } from '@pipeline/utils/types'
 import { clearNullUndefined, isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
@@ -160,7 +158,7 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
   const { repoIdentifier, branch, inputSetRepoIdentifier, inputSetBranch, connectorRef, repoName, storeType } =
     useQueryParams<InputSetGitQueryParams>()
   const { isGitSyncEnabled } = React.useContext(AppStoreContext)
-  const gitSimplification: boolean = useFeatureFlag(FeatureFlag.GIT_SIMPLIFICATION)
+  const { isGitSimplificationEnabled: gitSimplification } = useAppStore()
   const [inputSetUpdateResponse, setInputSetUpdateResponse] = React.useState<ResponseInputSetResponse>()
   const [filePath, setFilePath] = React.useState<string>()
   const {

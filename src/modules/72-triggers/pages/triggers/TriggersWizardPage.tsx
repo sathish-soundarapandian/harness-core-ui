@@ -27,7 +27,6 @@ import { Page, useToaster } from '@common/exports'
 import Wizard from '@common/components/Wizard/Wizard'
 import { connectorUrlType } from '@connectors/constants'
 import routes from '@common/RouteDefinitions'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
 import type { Pipeline } from '@pipeline/utils/types'
 import {
@@ -75,6 +74,7 @@ import type {
 import { memoizedParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useConfirmAction, useMutateAsGet, useDeepCompareEffect } from '@common/hooks'
 import type { FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import {
   scheduleTabsId,
   getDefaultExpressionBreakdownValues,
@@ -425,10 +425,11 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
   })
 
   const isGitSyncEnabled = useMemo(() => !!pipelineResponse?.data?.gitDetails?.branch, [pipelineResponse])
-  const { GIT_SIMPLIFICATION } = useFeatureFlags()
+  const { isGitSimplificationEnabled } = useAppStore()
+
   const gitAwareForTriggerEnabled = useMemo(
-    () => isGitSyncEnabled && GIT_SIMPLIFICATION,
-    [isGitSyncEnabled, GIT_SIMPLIFICATION]
+    () => isGitSyncEnabled && isGitSimplificationEnabled,
+    [isGitSyncEnabled, isGitSimplificationEnabled]
   )
 
   const [connectorScopeParams, setConnectorScopeParams] = useState<GetConnectorQueryParams | undefined>(undefined)
