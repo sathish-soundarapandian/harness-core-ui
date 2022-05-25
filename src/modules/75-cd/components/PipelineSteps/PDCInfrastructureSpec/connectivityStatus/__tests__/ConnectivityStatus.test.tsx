@@ -93,6 +93,62 @@ describe('connectivity status', () => {
     })
   })
 
+  test('throw error on click check hosts', async () => {
+    useValidateHostsMock.mockImplementation(() => {
+      return {
+        cancel: jest.fn(),
+        loading: false,
+        mutate: jest.fn().mockImplementation(
+          () =>
+            new Promise((_resolve, reject) => {
+              reject({
+                data: { responseMessages: [], message: 'error' }
+              })
+            })
+        )
+      }
+    })
+
+    const { getByText } = setup(failure)
+    const testBtn = getByText('test')
+
+    act(() => {
+      fireEvent.click(testBtn)
+    })
+    expect(getByText('connectors.testInProgress')).toBeDefined()
+
+    await waitFor(() => {
+      expect(getByText('warning-sign')).toBeDefined()
+    })
+  })
+
+  test('throw error with no message on click check hosts', async () => {
+    useValidateHostsMock.mockImplementation(() => {
+      return {
+        cancel: jest.fn(),
+        loading: false,
+        mutate: jest.fn().mockImplementation(
+          () =>
+            new Promise((_resolve, reject) => {
+              reject({ message: 'error' })
+            })
+        )
+      }
+    })
+
+    const { getByText } = setup(failure)
+    const testBtn = getByText('test')
+
+    act(() => {
+      fireEvent.click(testBtn)
+    })
+    expect(getByText('connectors.testInProgress')).toBeDefined()
+
+    await waitFor(() => {
+      expect(getByText('warning-sign')).toBeDefined()
+    })
+  })
+
   test('success render should match snapshot', async () => {
     const { container } = setup(success)
 
