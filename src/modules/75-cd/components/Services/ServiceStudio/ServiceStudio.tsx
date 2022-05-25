@@ -8,10 +8,13 @@
 import React from 'react'
 import { Layout } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import { isEmpty } from 'lodash-es'
+import { isEmpty, noop } from 'lodash-es'
 import { ServiceDetailsHeader } from '@cd/components/ServiceDetails/ServiceDetailsHeader/ServiceDetailsHeader'
 import { ServiceResponseDTO, useGetServiceV2 } from 'services/cd-ng'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
+import { ServiceContextProvider } from '@cd/context/ServiceContext'
+import ServiceDetailsSummary from '@cd/components/ServiceDetails/ServiceDetailsContent/ServiceDetailsSummary'
+import EntitySetupUsage from '@common/pages/entityUsage/EntityUsage'
 import ServiceConfigurationWrapper from './ServiceConfigWrapper/ServiceConfigWrapper'
 
 function ServiceStudio(): React.ReactElement | null {
@@ -32,7 +35,17 @@ function ServiceStudio(): React.ReactElement | null {
   return (
     <Layout.Vertical>
       <ServiceDetailsHeader />
-      <ServiceConfigurationWrapper serviceResponse={serviceResponse?.data?.service as ServiceResponseDTO} />
+      <ServiceContextProvider
+        serviceResponse={serviceResponse?.data?.service as ServiceResponseDTO}
+        isEditServiceModal={false}
+        onCloseModal={noop}
+        isServiceEntityPage={true}
+      >
+        <ServiceConfigurationWrapper
+          summaryPanel={<ServiceDetailsSummary />}
+          refercedByPanel={<EntitySetupUsage entityType="Service" entityIdentifier={serviceId} />}
+        />
+      </ServiceContextProvider>
     </Layout.Vertical>
   )
 }

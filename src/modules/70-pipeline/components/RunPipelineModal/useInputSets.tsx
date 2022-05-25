@@ -5,9 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { useMemo, useState } from 'react'
 import type { GetDataError } from 'restful-react'
 import { parse } from 'yaml'
-import { memoize } from 'lodash-es'
+import { defaultTo, isUndefined, memoize } from 'lodash-es'
 
 import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
 import {
@@ -36,17 +37,20 @@ export interface UseInputSetsProps {
   projectIdentifier: string
   orgIdentifier: string
   pipelineIdentifier: string
-  pipelineExecutionId?: string
   branch?: string
   repoIdentifier?: string
   inputSetSelected?: InputSetValue[]
   rerunInputSetYaml?: string
   selectedStageData: StageSelectionData
+  resolvedPipeline?: PipelineInfoConfig
+  executionInputSetTemplateYaml: string
+  executionView?: boolean
+  executionIdentifier?: string
 }
 
 export interface UseInputSetsReturn {
   inputSet: Pipeline
-  parsedInputSetTemplateYaml: Pipeline
+  inputSetTemplate: Pipeline
   inputSetYamlResponse: ResponseInputSetTemplateWithReplacedExpressionsResponse | null
   loading: boolean
   hasInputSets: boolean
@@ -67,7 +71,11 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
     repoIdentifier,
     projectIdentifier,
     pipelineIdentifier,
-    selectedStageData
+    selectedStageData,
+    resolvedPipeline,
+    executionInputSetTemplateYaml,
+    executionView,
+    executionIdentifier
   } = props
 
   const shouldFetchInputSets = !rerunInputSetYaml && Array.isArray(inputSetSelected) && inputSetSelected.length > 0
@@ -111,39 +119,72 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
     }
   })
 
-  let isInputSetApplied = false
+  const [isInputSetApplied, setIsInputSetApplied] = useState(false)
+  const hasRuntimeInputs = !!inputSetYamlResponse?.data?.inputSetTemplateYaml
 
-  function getInputSet(): Pipeline {
+  const inputSet = useMemo((): Pipeline => {
+    const shouldUseDefaultValues = isUndefined(executionIdentifier)
+
     if (rerunInputSetYaml) {
       return memoizedParse(rerunInputSetYaml)
     }
 
-    if (inputSetYamlResponse?.data?.inputSetTemplateYaml) {
+    if (hasRuntimeInputs) {
       const parsedRunPipelineYaml = clearRuntimeInput(
-        memoizedParse(inputSetYamlResponse.data.inputSetTemplateYaml).pipeline
+        memoizedParse(defaultTo(inputSetYamlResponse?.data?.inputSetTemplateYaml, '')).pipeline
       )
 
       if (shouldFetchInputSets && inputSetData?.data?.pipelineYaml) {
-        isInputSetApplied = true
+        setIsInputSetApplied(true)
         const parsedInputSets = clearRuntimeInput(memoizedParse(inputSetData.data.pipelineYaml).pipeline)
 
-        return mergeTemplateWithInputSetData({ pipeline: parsedRunPipelineYaml }, { pipeline: parsedInputSets })
+        return mergeTemplateWithInputSetData({
+          templatePipeline: { pipeline: parsedRunPipelineYaml },
+          inputSetPortion: { pipeline: parsedInputSets },
+          allValues: { pipeline: defaultTo(resolvedPipeline, {} as PipelineInfoConfig) },
+          shouldUseDefaultValues
+        })
       }
+
+      return mergeTemplateWithInputSetData({
+        templatePipeline: { pipeline: parsedRunPipelineYaml },
+        inputSetPortion: { pipeline: parsedRunPipelineYaml },
+        allValues: { pipeline: defaultTo(resolvedPipeline, {} as PipelineInfoConfig) },
+        shouldUseDefaultValues
+      })
+    }
+
+    return {}
+  }, [
+    inputSetData?.data?.pipelineYaml,
+    inputSetYamlResponse?.data?.inputSetTemplateYaml,
+    rerunInputSetYaml,
+    shouldFetchInputSets,
+    resolvedPipeline,
+    executionIdentifier,
+    hasRuntimeInputs
+  ])
+
+  const inputSetTemplate = useMemo((): Pipeline => {
+    if (executionView) {
+      return memoizedParse(executionInputSetTemplateYaml)
+    }
+
+    if (inputSetYamlResponse?.data?.inputSetTemplateYaml) {
+      const parsedRunPipelineYaml = memoizedParse(inputSetYamlResponse.data.inputSetTemplateYaml).pipeline
 
       return { pipeline: parsedRunPipelineYaml }
     }
 
     return {}
-  }
+  }, [inputSetYamlResponse?.data?.inputSetTemplateYaml, executionInputSetTemplateYaml, executionView])
 
   return {
-    inputSet: getInputSet(),
+    inputSet,
+    inputSetTemplate,
     loading: loadingTemplate || loadingInputSetsData,
     error: templateError || inputSetError,
-    parsedInputSetTemplateYaml: inputSetYamlResponse?.data?.inputSetTemplateYaml
-      ? memoizedParse(inputSetYamlResponse.data.inputSetTemplateYaml)
-      : {},
-    hasRuntimeInputs: !!inputSetYamlResponse?.data?.inputSetTemplateYaml,
+    hasRuntimeInputs,
     hasInputSets: !!inputSetYamlResponse?.data?.hasInputSets,
     isInputSetApplied,
     inputSetYamlResponse,

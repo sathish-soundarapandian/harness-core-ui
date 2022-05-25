@@ -2501,6 +2501,7 @@ export interface StringsMap {
   'pipeline.artifactsSelection.artifactDirectory': string
   'pipeline.artifactsSelection.artifactDirectoryPlaceholder': string
   'pipeline.artifactsSelection.artifactNamePlaceholder': string
+  'pipeline.artifactsSelection.artifactType': string
   'pipeline.artifactsSelection.artifactTyperequired': string
   'pipeline.artifactsSelection.errors.noRepositories': string
   'pipeline.artifactsSelection.existingDocker.enterTagRegex': string

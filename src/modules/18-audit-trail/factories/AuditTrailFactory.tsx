@@ -7,7 +7,7 @@
 
 import type { IconProps } from '@harness/icons'
 import type { Module } from '@common/interfaces/RouteInterfaces'
-import type { ResourceDTO, ResourceScopeDTO } from 'services/audit'
+import type { AuditEventData, ResourceDTO, ResourceScopeDTO } from 'services/audit'
 import type { StringKeys } from 'framework/strings'
 
 export type ResourceType = ResourceDTO['type']
@@ -20,7 +20,12 @@ interface ResourceHandler {
   moduleIcon: IconProps
   moduleLabel?: StringKeys
   resourceLabel: StringKeys
-  resourceUrl?: (resource: ResourceDTO, resourceScope: ResourceScope, module?: Module) => string | undefined
+  resourceUrl?: (
+    resource: ResourceDTO,
+    resourceScope: ResourceScope,
+    module?: Module,
+    auditEventData?: AuditEventData
+  ) => string | undefined
 }
 
 class AuditTrailFactory {

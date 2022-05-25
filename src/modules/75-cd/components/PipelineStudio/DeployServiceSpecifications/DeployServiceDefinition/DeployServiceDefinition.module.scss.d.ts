@@ -7,16 +7,9 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly accordion: string
-  readonly cardListContainer: string
   readonly contentSection: string
   readonly editServiceModal: string
-  readonly info: string
   readonly nonModalView: string
-  readonly sectionCard: string
-  readonly serviceOverrides: string
   readonly tabHeading: string
-  readonly tabSubHeading: string
-  readonly thumbnailSelect: string
 }
 export default styles

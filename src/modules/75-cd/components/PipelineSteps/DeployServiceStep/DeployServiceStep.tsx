@@ -18,9 +18,9 @@ import { Step, StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import type { DeployServiceData } from './DeployServiceInterface'
-import { DeployServiceWidget } from './DeployServiceWidget'
 import { ServiceRegex } from './DeployServiceUtils'
 import { DeployServiceInputStepFormik } from './DeployServiceInputStep'
+import DeployServiceWidget from './DeployServiceWidget'
 
 const logger = loggerFor(ModuleName.CD)
 

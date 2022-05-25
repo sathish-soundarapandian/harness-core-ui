@@ -93,7 +93,8 @@ const AuditTrailsListView: React.FC<AuditTrailsListViewProps> = ({ data, setPage
             ...resourceScope,
             accountIdentifier: accountIdentifier
           },
-          getModuleNameFromAuditModule(module)
+          getModuleNameFromAuditModule(module),
+          row.original.auditEventData
         )
       : undefined
 

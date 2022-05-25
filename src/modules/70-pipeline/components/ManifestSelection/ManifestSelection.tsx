@@ -5,12 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
-import { Layout, useToaster } from '@wings-software/uicore'
+import React, { useEffect, useMemo } from 'react'
+import { Layout, PageSpinner, useToaster } from '@harness/uicore'
 
 import { useParams } from 'react-router-dom'
-import { get } from 'lodash-es'
-import { useGetConnectorListV2, PageConnectorResponse } from 'services/cd-ng'
+import { defaultTo, get, isEmpty } from 'lodash-es'
+import {
+  useGetConnectorListV2,
+  PageConnectorResponse,
+  useGetServiceV2,
+  ServiceResponseDTO,
+  NGServiceConfig
+} from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
@@ -21,10 +27,15 @@ import type { Scope } from '@common/interfaces/SecretsInterface'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { useDeepCompareEffect } from '@common/hooks'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { yamlParse } from '@common/utils/YamlHelperMethods'
 import type { ManifestSelectionProps } from './ManifestInterface'
 import ManifestListView from './ManifestListView/ManifestListView'
 
-export default function ManifestSelection({ isPropagating, deploymentType }: ManifestSelectionProps): JSX.Element {
+export default function ManifestSelection({
+  isPropagating,
+  deploymentType,
+  readonly: isReadOnlyServiceMode
+}: ManifestSelectionProps): JSX.Element {
   const {
     state: {
       pipeline,
@@ -32,8 +43,8 @@ export default function ManifestSelection({ isPropagating, deploymentType }: Man
     },
     getStageFromPipeline,
     updateStage,
-    isReadonly,
-    allowableTypes
+    allowableTypes,
+    isReadonly
   } = usePipelineContext()
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
@@ -61,13 +72,42 @@ export default function ManifestSelection({ isPropagating, deploymentType }: Man
     queryParams: defaultQueryParams
   })
 
+  /*************************************Service Entity Related code********************************************************/
+  // This is temporary code to fetch the manifest data from service api. It will be replaced once caching is implemented for service entity
+  const {
+    data: selectedServiceResponse,
+    refetch: refetchServiceData,
+    loading: serviceLoading
+  } = useGetServiceV2({
+    serviceIdentifier: (stage?.stage?.spec as any)?.service?.serviceRef,
+    queryParams: { accountIdentifier: accountId, orgIdentifier: orgIdentifier, projectIdentifier: projectIdentifier },
+    lazy: true
+  })
+
+  useEffect(() => {
+    if (!isReadonly && isReadOnlyServiceMode) {
+      refetchServiceData()
+    }
+  }, [isReadOnlyServiceMode, (stage?.stage?.spec as any)?.service?.serviceRef])
+
+  /*************************************Service Entity Related code********************************************************/
+
   const listOfManifests = useMemo(() => {
+    if (!isReadonly && isReadOnlyServiceMode) {
+      const serviceData = selectedServiceResponse?.data?.service as ServiceResponseDTO
+      if (!isEmpty(serviceData?.yaml)) {
+        const parsedYaml = yamlParse<NGServiceConfig>(defaultTo(serviceData.yaml, ''))
+        const serviceInfo = parsedYaml.service?.serviceDefinition
+        return serviceInfo?.spec.manifests
+      }
+      return []
+    }
     if (isPropagating) {
       return get(stage, 'stage.spec.serviceConfig.stageOverrides.manifests', [])
     }
 
     return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests', [])
-  }, [isPropagating, stage])
+  }, [isPropagating, isReadonly, isReadOnlyServiceMode, selectedServiceResponse?.data?.service])
 
   useDeepCompareEffect(() => {
     refetchConnectorList()
@@ -96,6 +136,10 @@ export default function ManifestSelection({ isPropagating, deploymentType }: Man
     }
   }
 
+  if (serviceLoading) {
+    return <PageSpinner />
+  }
+
   return (
     <Layout.Vertical>
       <ManifestListView
@@ -106,7 +150,7 @@ export default function ManifestSelection({ isPropagating, deploymentType }: Man
         connectors={fetchedConnectorResponse}
         refetchConnectors={refetchConnectorList}
         listOfManifests={listOfManifests}
-        isReadonly={isReadonly}
+        isReadonly={isReadOnlyServiceMode}
         deploymentType={deploymentType}
         allowableTypes={allowableTypes}
         allowOnlyOne={isServerlessDeploymentType(deploymentType)}

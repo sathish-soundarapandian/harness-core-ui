@@ -362,6 +362,7 @@ describe('Render Forms - Snapshot Testing', () => {
             name: 'asd',
             orgIdentifier: 'Harness11',
             pipelineIdentifier: 'testqqq',
+            pipeline: { identifier: 'testqqq', name: '' },
             outdated: false
           }}
           selectedView={SelectedView.YAML}
@@ -416,7 +417,8 @@ describe('Render Forms - Snapshot Testing', () => {
             },
             identifier: 'asd56',
             orgIdentifier: 'Harness11',
-            pipelineIdentifier: 'testqqq'
+            pipelineIdentifier: 'testqqq',
+            pipeline: { identifier: 'testqqq', name: '' }
           }}
           selectedView={SelectedView.VISUAL}
           handleSubmit={handleSubmit}
@@ -448,7 +450,8 @@ describe('Render Forms - Snapshot Testing', () => {
         repo: '',
         connectorRef: '',
         repoName: '',
-        storeType: 'INLINE'
+        storeType: 'INLINE',
+        pipeline: { identifier: 'testqqq', name: '' }
       },
       { branch: '', repoIdentifier: '' },
       { branch: '', connectorRef: '', filePath: undefined, repoName: '', storeType: 'INLINE' }

@@ -10,7 +10,6 @@
   margin-top: 2px;
   .content-section {
     background-color: var(--form-bg);
-    padding: var(--spacing-xxlarge) var(--spacing-huge) var(--spacing-13) var(--spacing-huge);
     height: 100%;
     > .tabHeading {
       font-size: 16px;
@@ -22,29 +21,12 @@
         margin-top: 0;
       }
     }
-    .tabSubHeading {
-      font-size: var(--font-size-normal);
-      color: var(--grey-700);
-      margin-bottom: var(--spacing-5);
-      font-weight: 600;
-    }
-    .section-card {
-      width: 1024px;
-      margin-top: var(--spacing-3);
-      display: block;
-      padding: var(--spacing-7);
-      .info {
-        font-size: 13px;
-      }
-      .thumbnailSelect {
-        &:global(.bp3-form-group) {
-          margin-bottom: 0px;
-        }
-      }
-      .cardListContainer {
-        margin-top: 0 !important;
-      }
-    }
+  }
+  .editServiceModal {
+    padding: 0;
+  }
+  .nonModalView {
+    padding: var(--spacing-xxlarge) var(--spacing-huge) var(--spacing-13) var(--spacing-huge);
   }
   .accordion {
     margin-top: var(--spacing-7);
@@ -61,5 +43,28 @@
       margin-left: var(--spacing-small);
       line-height: 24px;
     }
+  }
+}
+.tabSubHeading {
+  font-size: var(--font-size-normal);
+  color: var(--grey-700);
+  margin-bottom: var(--spacing-5);
+  font-weight: 600;
+}
+.section-card {
+  width: 1024px;
+  margin-top: var(--spacing-3);
+  display: block;
+  padding: var(--spacing-7);
+  .info {
+    font-size: 13px;
+  }
+  .thumbnailSelect {
+    &:global(.bp3-form-group) {
+      margin-bottom: 0px;
+    }
+  }
+  .cardListContainer {
+    margin-top: 0 !important;
   }
 }

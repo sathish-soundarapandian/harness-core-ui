@@ -30,6 +30,7 @@ const props = {
 
 jest.mock('services/cd-ng', () => ({
   useGetServiceList: jest.fn().mockImplementation(() => ({ loading: false, data: serviceData, refetch: jest.fn() })),
+  useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() })),
   useGetServiceAccessList: jest
     .fn()
     .mockImplementation(() => ({ loading: false, data: inputSetServiceData, refetch: jest.fn() })),

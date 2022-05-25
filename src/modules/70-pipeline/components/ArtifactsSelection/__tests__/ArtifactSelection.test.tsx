@@ -34,6 +34,7 @@ const fetchConnectors = (): Promise<unknown> => Promise.resolve({})
 
 jest.mock('services/cd-ng', () => ({
   useGetConnectorListV2: jest.fn().mockImplementation(() => ({ mutate: fetchConnectors })),
+  useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() })),
   useGetConnector: jest.fn().mockImplementation(() => {
     return { data: {}, refetch: jest.fn(), error: null }
   }),
@@ -50,7 +51,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection deploymentType="Kubernetes" />
+          <ArtifactsSelection readonly={false} deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -62,7 +63,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection deploymentType="Kubernetes" />
+          <ArtifactsSelection readonly={false} deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -74,7 +75,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection deploymentType="Kubernetes" />
+          <ArtifactsSelection readonly={false} deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -91,7 +92,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection deploymentType="Kubernetes" isPropagating={true} />
+          <ArtifactsSelection readonly={false} deploymentType="Kubernetes" isPropagating={true} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -104,7 +105,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection deploymentType="Kubernetes" isPropagating={false} />
+          <ArtifactsSelection readonly={false} deploymentType="Kubernetes" isPropagating={false} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -115,7 +116,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection deploymentType="Kubernetes" />
+          <ArtifactsSelection readonly={false} deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -135,7 +136,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection deploymentType="Kubernetes" />
+          <ArtifactsSelection readonly={false} deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -156,7 +157,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection deploymentType="Kubernetes" />
+          <ArtifactsSelection readonly={false} deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -335,7 +336,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection deploymentType="Kubernetes" />
+          <ArtifactsSelection readonly={false} deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -355,7 +356,7 @@ describe('ArtifactsSelection tests', () => {
         }}
       >
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection deploymentType="Kubernetes" />
+          <ArtifactsSelection readonly={false} deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -383,7 +384,7 @@ describe('ArtifactsSelection tests', () => {
         }}
       >
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection deploymentType="NativeHelm" />
+          <ArtifactsSelection readonly={false} deploymentType="NativeHelm" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -403,6 +404,32 @@ describe('ArtifactsSelection tests', () => {
     expect(custom).toBeDefined()
   })
 
+  test('is artifacts type list containing all types for NativeHelm for activated NG_AZURE, NG_NEXUS_ARTIFACTORY and CUSTOM_ARTIFACT_NG', async () => {
+    const { container } = render(
+      <TestWrapper
+        defaultAppStoreValues={{
+          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+        }}
+      >
+        <PipelineContext.Provider value={getContextValue()}>
+          <ArtifactsSelection readonly={false} deploymentType="NativeHelm" />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    const addSidecarButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    expect(addSidecarButton).toBeDefined()
+    fireEvent.click(addSidecarButton)
+    const portal = document.getElementsByClassName('bp3-dialog')[0]
+    const artifactLabel = await waitFor(() => findByText(portal as HTMLElement, 'connectors.specifyArtifactRepoType'))
+    expect(artifactLabel).toBeDefined()
+    const nexus = await container.querySelector('input[value="Nexus3Registry"]')
+    expect(nexus).toBeDefined()
+    const artifactory = await container.querySelector('input[value="ArtifactoryRegistry"]')
+    expect(artifactory).toBeDefined()
+    const acr = await container.querySelector('input[value="Acr"]')
+    expect(acr).toBeDefined()
+  })
+
   test('is artifacts type list containing all types for ServerlessAwsLambda for activated NG_AZURE, NG_NEXUS_ARTIFACTORY and CUSTOM_ARTIFACT_NG', async () => {
     const context = {
       ...pipelineContextWithoutArtifactsMock,
@@ -418,7 +445,7 @@ describe('ArtifactsSelection tests', () => {
         }}
       >
         <PipelineContext.Provider value={context}>
-          <ArtifactsSelection deploymentType="ServerlessAwsLambda" />
+          <ArtifactsSelection readonly={false} deploymentType="ServerlessAwsLambda" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -454,7 +481,7 @@ describe('ArtifactsSelection tests', () => {
         }}
       >
         <PipelineContext.Provider value={context}>
-          <ArtifactsSelection deploymentType="ServerlessAwsLambda" />
+          <ArtifactsSelection readonly={false} deploymentType="ServerlessAwsLambda" />
         </PipelineContext.Provider>
       </TestWrapper>
     )

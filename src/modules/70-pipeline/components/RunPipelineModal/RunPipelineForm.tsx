@@ -86,7 +86,7 @@ import { PipelineInvalidRequestContent } from './PipelineInvalidRequestContent'
 import RunModalHeader from './RunModalHeader'
 import CheckBoxActions from './CheckBoxActions'
 import VisualView from './VisualView'
-import { useInputSets } from './useInputSets'
+import { Pipeline, useInputSets } from './useInputSets'
 
 import css from './RunPipelineForm.module.scss'
 
@@ -180,28 +180,6 @@ function RunPipelineFormBasic({
     return stageIds
   }, [stagesExecuted, selectedStageData])
 
-  const {
-    inputSet,
-    inputSetYamlResponse,
-    hasInputSets,
-    parsedInputSetTemplateYaml,
-    loading: loadingInputSets,
-    error: inputSetsError,
-    isInputSetApplied,
-    refetch: getTemplateFromPipeline
-  } = useInputSets({
-    accountId,
-    projectIdentifier,
-    orgIdentifier,
-    pipelineIdentifier,
-    selectedStageData,
-    rerunInputSetYaml: inputSetYAML,
-    branch,
-    repoIdentifier,
-    pipelineExecutionId: executionIdentifier,
-    inputSetSelected: selectedInputSets
-  })
-
   const { data: pipelineResponse, loading: loadingPipeline } = useGetPipeline({
     pipelineIdentifier,
     queryParams: {
@@ -223,6 +201,32 @@ function RunPipelineFormBasic({
     () => yamlParse<PipelineConfig>(defaultTo(pipelineResponse?.data?.resolvedTemplatesPipelineYaml, ''))?.pipeline,
     [pipelineResponse?.data?.resolvedTemplatesPipelineYaml]
   )
+
+  const {
+    inputSet,
+    inputSetTemplate,
+    inputSetYamlResponse,
+    hasInputSets,
+    loading: loadingInputSets,
+    error: inputSetsError,
+    isInputSetApplied,
+    refetch: getTemplateFromPipeline,
+    hasRuntimeInputs
+  } = useInputSets({
+    accountId,
+    projectIdentifier,
+    orgIdentifier,
+    pipelineIdentifier,
+    selectedStageData,
+    rerunInputSetYaml: inputSetYAML,
+    branch,
+    repoIdentifier,
+    executionIdentifier,
+    inputSetSelected: selectedInputSets,
+    resolvedPipeline,
+    executionInputSetTemplateYaml,
+    executionView
+  })
 
   const { mutate: runPipeline, loading: runLoading } = usePostPipelineExecuteWithInputSetYaml({
     queryParams: {
@@ -616,14 +620,18 @@ function RunPipelineFormBasic({
   }
 
   const formRefDom = React.useRef<HTMLElement | undefined>()
-  const handleValidation = async (values: any) => {
-    if (values?.pipeline) {
-      values = values.pipeline
+  const handleValidation = async (values: Pipeline | PipelineInfoConfig): Promise<FormikErrors<InputSetDTO>> => {
+    let pl: PipelineInfoConfig | undefined
+
+    if ((values as Pipeline)?.pipeline) {
+      pl = (values as Pipeline)?.pipeline
+    } else {
+      pl = values as PipelineInfoConfig
     }
-    const latestPipeline = { pipeline: values as PipelineInfoConfig }
+
     const runPipelineFormErrors = await getFormErrors(
-      latestPipeline,
-      defaultTo(parsedInputSetTemplateYaml?.pipeline, {} as PipelineInfoConfig),
+      { pipeline: pl } as Required<Pipeline>,
+      defaultTo(inputSetTemplate?.pipeline, {} as PipelineInfoConfig),
       pipeline
     )
     // https://github.com/formium/formik/issues/1392
@@ -694,10 +702,10 @@ function RunPipelineFormBasic({
                     selectedInputSets={selectedInputSets}
                     existingProvide={existingProvide}
                     setExistingProvide={setExistingProvide}
-                    executionInputSetTemplateYaml={executionInputSetTemplateYaml}
+                    hasRuntimeInputs={hasRuntimeInputs}
                     pipelineIdentifier={pipelineIdentifier}
                     executionIdentifier={pipelineExecutionId}
-                    template={inputSetYamlResponse}
+                    template={defaultTo(inputSetTemplate?.pipeline, {} as PipelineInfoConfig)}
                     pipeline={pipeline}
                     currentPipeline={{ pipeline: values }}
                     getTemplateError={inputSetsError}

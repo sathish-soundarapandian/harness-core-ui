@@ -147,8 +147,8 @@ import {
 import type { GitOpsCustomMicroFrontendProps } from './interfaces/GitOps.types'
 import { getBannerText } from './utils/renderMessageUtils'
 import ServiceStudio from './components/Services/ServiceStudio/ServiceStudio'
-import { DeployServiceWidget } from './components/PipelineSteps/DeployServiceStep/DeployServiceWidget'
 import { NewEditServiceModal } from './components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
+import DeployServiceWidget from './components/PipelineSteps/DeployServiceStep/DeployServiceWidget'
 
 // eslint-disable-next-line import/no-unresolved
 const GitOpsServersList = React.lazy(() => import('gitopsui/MicroFrontendApp'))
