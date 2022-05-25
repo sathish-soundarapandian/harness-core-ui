@@ -82,6 +82,7 @@ export const RollbackStack = (
                 inputLabel={getString('name')}
                 isIdentifierEditable={isNewStep}
                 inputGroupProps={{
+                  placeholder: getString('pipeline.stepNamePlaceholder'),
                   disabled: readonly
                 }}
               />
