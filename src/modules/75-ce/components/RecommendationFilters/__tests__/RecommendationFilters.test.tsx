@@ -161,7 +161,7 @@ describe('Tests For Recommendation Filters', () => {
 
     const drawer = findDrawerContainer()
 
-    expect(getByText(drawer!, 'ce.recommendation.listPage.filters.minSaving')).toBeDefined()
+    expect(getByText(drawer!, 'ce.recommendation.listPage.filters.savings')).toBeDefined()
     fireEvent.click(drawer?.querySelector('[icon="plus"]')!)
     expect(getByPlaceholderText(drawer!, 'filters.typeFilterName')).toBeDefined()
     fireEvent.click(queryByText(drawer!, 'Test 2')!)
@@ -170,6 +170,8 @@ describe('Tests For Recommendation Filters', () => {
 
     const menu1 = findPopoverContainer()
     fireEvent.click(menu1?.querySelector('[data-icon="edit"]')!)
+    fireEvent.click(drawer?.querySelector('input[value="OnlyCreator"]')!)
+    fireEvent.click(drawer?.querySelector('input[value="EveryOne"]')!)
     fireEvent.click(getByText(drawer!, 'update'))
 
     fireEvent.click(queryByText(drawer!, 'Test3')!)
@@ -195,7 +197,6 @@ describe('Tests For Recommendation Filters', () => {
 
     const drawer = findDrawerContainer()
 
-    expect(getByText(drawer!, 'ce.recommendation.listPage.filters.minSaving')).toBeDefined()
     fireEvent.click(drawer?.querySelector('[icon="plus"]')!)
     expect(getByPlaceholderText(drawer!, 'filters.typeFilterName')).toBeDefined()
 
@@ -220,10 +221,14 @@ describe('Tests For Recommendation Filters', () => {
 
     const drawer = findDrawerContainer()
 
-    fireEvent.change(drawer?.querySelectorAll('input[value="0"]')[0]!, { target: { value: 200 } })
+    fireEvent.change(getByPlaceholderText(drawer!, 'ce.recommendation.listPage.filters.savingsPlaceholder')!, {
+      target: { value: 200 }
+    })
     fireEvent.click(getByText(drawer!, 'filters.clearAll'))
 
-    fireEvent.change(drawer?.querySelectorAll('input[value="0"]')[1]!, { target: { value: 150 } })
+    fireEvent.change(getByPlaceholderText(drawer!, 'ce.recommendation.listPage.filters.spendPlaceholder')!, {
+      target: { value: 150 }
+    })
     fireEvent.click(getByText(drawer!, 'common.apply'))
 
     expect(drawer?.querySelector('input[value="150"]')).toBeDefined()

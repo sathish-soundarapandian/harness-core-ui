@@ -564,6 +564,10 @@ recommendation:
       name: '{{ $.name }}'
       namespace: '{{ $.common.namespace }}'
       enterCost: Enter Cost
+      potentialSpend: Potential Spend
+      savings: Savings
+      spendPlaceholder: Enter minimum Potential spend
+      savingsPlaceholder: Enter minimum savings
     listTableHeaders:
       monthlySavings: 'MONTHLY SAVINGS'
       resourceName: 'RESOURCE NAME'
@@ -949,6 +953,7 @@ anomalyDetection:
     gcpFilters: GCP Filters
     azureFilters: Azure Filters
     actualSpend: Actual Spend
+    spendPlaceholder: Enter minimum spend
     anomalousSpend: Anomalous Spend
   summary:
     totalCountText: Anomalies Detected

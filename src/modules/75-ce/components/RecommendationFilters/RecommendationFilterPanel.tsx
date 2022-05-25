@@ -47,8 +47,8 @@ interface RecommendationFilterPanelProps {
   fetchedFilterValues: FilterStatsDTO[]
   filters: K8sRecommendationFilterPropertiesDTO
   setFilters: (newState: K8sRecommendationFilterPropertiesDTO) => void
-  costFilters: { minCost: number; minSaving: number }
-  setCostFilters: (newValue: { minCost: number; minSaving: number }) => void
+  costFilters: { minCost?: number; minSaving?: number }
+  setCostFilters: (newValue: { minCost?: number; minSaving?: number }) => void
 }
 
 type ExtendedFilterProperties = FilterProperties & CCMRecommendationFilterProperties
@@ -99,7 +99,7 @@ const useRecommendationFilterPanel = ({
   const keyToLabelMapping = getLabelMappingForFilters(getString)
 
   const [updatedFilters, setUpdatedFilters] = useState<K8sRecommendationFilterPropertiesDTO>(filters)
-  const [updatedCostFilters, setUpdatedCostFilters] = useState<{ minCost: number; minSaving: number }>(costFilters)
+  const [updatedCostFilters, setUpdatedCostFilters] = useState<{ minCost?: number; minSaving?: number }>(costFilters)
   const [filterName, setFilterName] = useState('')
   const [filterVisibility, setFilterVisibility] = useState<'EveryOne' | 'OnlyCreator'>('EveryOne')
   const [selectedFilter, setSelectedFilter] = useState<FilterDTO>()
@@ -121,14 +121,15 @@ const useRecommendationFilterPanel = ({
   const setSavedFilter = (option: MultiSelectOption) => {
     const selectedSavedFilter = savedFilters.find(filter => filter.identifier === option.value)
     const filterProperties = selectedSavedFilter?.filterProperties as ExtendedFilterProperties
+    const k8sRecommendationFilterPropertiesDTO = defaultTo(filterProperties?.k8sRecommendationFilterPropertiesDTO, {})
     const selectedCostFilters = {
-      minCost: filterProperties?.minCost || 0,
-      minSaving: filterProperties?.minSaving || 0
+      minCost: filterProperties?.minCost,
+      minSaving: filterProperties?.minSaving
     }
 
     setSelectedFilter(selectedSavedFilter)
-    setUpdatedFilters(filterProperties?.k8sRecommendationFilterPropertiesDTO || {})
-    setFilters(filterProperties?.k8sRecommendationFilterPropertiesDTO || {})
+    setUpdatedFilters(k8sRecommendationFilterPropertiesDTO)
+    setFilters(k8sRecommendationFilterPropertiesDTO)
     setCostFilters(selectedCostFilters)
     setUpdatedCostFilters(selectedCostFilters)
     setFilterFlow(null)
@@ -156,21 +157,20 @@ const useRecommendationFilterPanel = ({
 
     setFilterFlow('edit')
     setFilterName(item.name)
-    setFilterVisibility(item.filterVisibility || 'EveryOne')
+    setFilterVisibility(defaultTo(item.filterVisibility, 'EveryOne'))
     setSelectedFilter(item)
-    setUpdatedFilters(filterProperties.k8sRecommendationFilterPropertiesDTO || {})
+    setUpdatedFilters(defaultTo(filterProperties.k8sRecommendationFilterPropertiesDTO, {}))
     setUpdatedCostFilters({
-      minCost: filterProperties.minCost || 0,
-      minSaving: filterProperties.minSaving || 0
+      minCost: filterProperties.minCost,
+      minSaving: filterProperties.minSaving
     })
   }
 
   const handleClearAllFilters = () => {
     setFilters({})
     setUpdatedFilters({})
-    const defaultCostFilters = { minCost: 0, minSaving: 0 }
-    setCostFilters(defaultCostFilters)
-    setUpdatedCostFilters(defaultCostFilters)
+    setCostFilters({})
+    setUpdatedCostFilters({})
     setSelectedFilter(undefined)
     setFilterFlow(null)
   }
@@ -209,8 +209,8 @@ const useRecommendationFilterPanel = ({
     setSelectedFilter(item)
     setUpdatedFilters(filterProperties.k8sRecommendationFilterPropertiesDTO || {})
     setUpdatedCostFilters({
-      minCost: filterProperties.minCost || 0,
-      minSaving: filterProperties.minSaving || 0
+      minCost: filterProperties.minCost,
+      minSaving: filterProperties.minSaving
     })
     setFilterFlow(null)
   }
@@ -269,26 +269,28 @@ const useRecommendationFilterPanel = ({
                 }
               })}
               <Text padding={{ bottom: 'small' }} color={Color.GREY_700} font={{ variation: FontVariation.SMALL_SEMI }}>
-                {getString('ce.recommendation.listPage.filters.minCost')}
+                {getString('ce.recommendation.listPage.filters.savings')}
               </Text>
               <TextInput
-                value={String(updatedCostFilters.minCost || 0)}
+                value={String(updatedCostFilters?.minSaving || '')}
+                placeholder={getString('ce.recommendation.listPage.filters.savingsPlaceholder')}
                 onChange={e =>
                   setUpdatedCostFilters(prevValues => ({
                     ...prevValues,
-                    minCost: Number((e.target as HTMLInputElement).value)
+                    minSaving: +(e.target as HTMLInputElement).value
                   }))
                 }
               />
               <Text padding={{ bottom: 'small' }} color={Color.GREY_700} font={{ variation: FontVariation.SMALL_SEMI }}>
-                {getString('ce.recommendation.listPage.filters.minSaving')}
+                {getString('ce.recommendation.listPage.filters.potentialSpend')}
               </Text>
               <TextInput
-                value={String(updatedCostFilters.minSaving || 0)}
+                value={String(updatedCostFilters?.minCost || '')}
+                placeholder={getString('ce.recommendation.listPage.filters.spendPlaceholder')}
                 onChange={e =>
                   setUpdatedCostFilters(prevValues => ({
                     ...prevValues,
-                    minSaving: Number((e.target as HTMLInputElement).value)
+                    minCost: +(e.target as HTMLInputElement).value
                   }))
                 }
               />

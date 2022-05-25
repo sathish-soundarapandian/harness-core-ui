@@ -146,10 +146,11 @@ const AnomaliesOverviewPage: React.FC = () => {
     const getList = async () => {
       try {
         const response = await getAnomaliesList({
+          ...filters,
           timeFilters: getTimeFilters(getGMTStartDateTime(timeRange.from), getGMTEndDateTime(timeRange.to)),
           limit: 100,
           offset: 0,
-          ...filters
+          filterType: 'Anomaly'
         })
         setListData(response?.data as AnomalyData[])
       } catch (error) {
@@ -164,8 +165,9 @@ const AnomaliesOverviewPage: React.FC = () => {
     const getSummary = async () => {
       try {
         const response = await getAnomalySummary({
+          ...filters,
           timeFilters: getTimeFilters(getGMTStartDateTime(timeRange.from), getGMTEndDateTime(timeRange.to)),
-          ...filters
+          filterType: 'Anomaly'
         })
         const { data } = response
         parseSummaryData(data)

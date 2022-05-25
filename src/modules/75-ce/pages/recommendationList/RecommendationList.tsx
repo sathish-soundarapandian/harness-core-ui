@@ -54,7 +54,6 @@ import greenLeafImg from '@ce/common/images/green-leaf.svg'
 import grayLeafImg from '@ce/common/images/gray-leaf.svg'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import resizingIcon from '@ce/common/images/resizing-icon.svg'
 import type { StringsMap } from 'stringTypes'
 import RecommendationSavingsCard from '../../components/RecommendationSavingsCard/RecommendationSavingsCard'
 import RecommendationFilters from '../../components/RecommendationFilters'
@@ -279,12 +278,9 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
     const rowData = row.original
     const { resourceType } = rowData
     return (
-      <Layout.Horizontal spacing={'small'}>
-        <img src={resizingIcon} />
-        <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }}>
-          {resourceTypeMap[resourceType]}
-        </Text>
-      </Layout.Horizontal>
+      <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }}>
+        {resourceTypeMap[resourceType]}
+      </Text>
     )
   }
 
@@ -392,10 +388,7 @@ const RecommendationListPage: React.FC = () => {
   const [recommendationStats, setRecommendationStats] = useState<RecommendationOverviewStats>()
   const [recommendationCount, setRecommendationCount] = useState<number>()
   const [recommendationList, setRecommendationList] = useState<RecommendationItemDTO[]>([])
-  const [costFilters, setCostFilters] = useQueryParamsState<{ minCost: number; minSaving: number }>('costFilters', {
-    minCost: 0,
-    minSaving: 0
-  })
+  const [costFilters, setCostFilters] = useQueryParamsState<{ minCost?: number; minSaving?: number }>('costFilters', {})
 
   const perspectiveFilters = perspectiveId ? [getViewFilterForId(perspectiveId)] : []
 

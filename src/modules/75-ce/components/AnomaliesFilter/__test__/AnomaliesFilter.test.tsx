@@ -14,7 +14,8 @@ import {
   getByText,
   getByPlaceholderText,
   queryByPlaceholderText,
-  waitFor
+  waitFor,
+  getAllByPlaceholderText
 } from '@testing-library/react'
 import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 
@@ -147,7 +148,6 @@ describe('test case for anomalies detection overview page', () => {
 
     const menu1 = findPopoverContainer()
     fireEvent.click(menu1?.querySelector('[data-icon="edit"]')!)
-    fireEvent.click(drawer?.querySelectorAll('[class="bp3-tag-remove"]')[1]!)
     fireEvent.click(getByText(drawer!, 'update'))
 
     fireEvent.click(queryByText(drawer!, 'Test_3')!)
@@ -217,14 +217,18 @@ describe('test case for anomalies detection overview page', () => {
 
     const drawer = findDrawerContainer()
 
-    fireEvent.change(drawer?.querySelectorAll('input[value="0"]')[0]!, { target: { value: 200 } })
+    fireEvent.change(getAllByPlaceholderText(drawer!, 'ce.anomalyDetection.filters.spendPlaceholder')[0]!, {
+      target: { value: 200 }
+    })
     fireEvent.click(getByText(drawer!, 'filters.clearAll'))
 
     fireEvent.click(drawer?.querySelectorAll('[data-icon="chevron-down"]')[0]!)
     fireEvent.click(drawer?.querySelectorAll('[data-icon="chevron-down"]')[0]!)
     fireEvent.click(drawer?.querySelectorAll('[data-icon="chevron-down"]')[0]!)
 
-    fireEvent.change(drawer?.querySelectorAll('input[value="0"]')[1]!, { target: { value: 150 } })
+    fireEvent.change(getAllByPlaceholderText(drawer!, 'ce.anomalyDetection.filters.spendPlaceholder')[1]!, {
+      target: { value: 150 }
+    })
     fireEvent.click(getByText(drawer!, 'common.apply'))
 
     expect(drawer?.querySelector('input[value="150"]')).toBeDefined()

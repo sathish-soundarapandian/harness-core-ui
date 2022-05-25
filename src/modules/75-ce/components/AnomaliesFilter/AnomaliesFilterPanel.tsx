@@ -23,8 +23,8 @@ import {
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { FontVariation, Color } from '@harness/design-system'
-import { Classes, Drawer, Menu, MenuItem, Popover, Position, TagInput } from '@blueprintjs/core'
-import { defaultTo, isEqual, omit } from 'lodash-es'
+import { Classes, Drawer, Menu, MenuItem, Popover, Position } from '@blueprintjs/core'
+import { defaultTo, isEqual } from 'lodash-es'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -228,41 +228,15 @@ const useAnomaliesFilterPanel = ({ fetchedFilterValues, filters, setFilters }: A
             </Container>
             <Container height={'100%'} padding={{ top: 'xlarge' }}>
               <Text padding={{ bottom: 'small' }} color={Color.GREY_700} font={{ variation: FontVariation.SMALL_SEMI }}>
-                {getString('tagsLabel')}
-              </Text>
-              <TagInput
-                values={Object.keys(updatedFilters.tags || {}).map(key => key)}
-                className={css.tagInput}
-                onAdd={
-                  /* istanbul ignore next */
-                  options => {
-                    options.map(option =>
-                      setUpdatedFilters(prevValues => ({
-                        ...prevValues,
-                        tags: {
-                          ...prevValues.tags,
-                          [option]: ''
-                        }
-                      }))
-                    )
-                  }
-                }
-                onRemove={option => {
-                  setUpdatedFilters(prevValues => ({
-                    ...prevValues,
-                    tags: omit(prevValues.tags, option)
-                  }))
-                }}
-              />
-              <Text padding={{ bottom: 'small' }} color={Color.GREY_700} font={{ variation: FontVariation.SMALL_SEMI }}>
                 {getString('ce.anomalyDetection.filters.actualSpend')}
               </Text>
               <TextInput
-                value={String(updatedFilters.minActualAmount || 0)}
+                value={String(updatedFilters.minActualAmount || '')}
+                placeholder={getString('ce.anomalyDetection.filters.spendPlaceholder')}
                 onChange={e =>
                   setUpdatedFilters(prevValues => ({
                     ...prevValues,
-                    minActualAmount: Number((e.target as HTMLInputElement).value)
+                    minActualAmount: +(e.target as HTMLInputElement).value
                   }))
                 }
               />
@@ -270,11 +244,12 @@ const useAnomaliesFilterPanel = ({ fetchedFilterValues, filters, setFilters }: A
                 {getString('ce.anomalyDetection.filters.anomalousSpend')}
               </Text>
               <TextInput
-                value={String(updatedFilters.minAnomalousSpend || 0)}
+                value={String(updatedFilters.minAnomalousSpend || '')}
+                placeholder={getString('ce.anomalyDetection.filters.spendPlaceholder')}
                 onChange={e =>
                   setUpdatedFilters(prevValues => ({
                     ...prevValues,
-                    minAnomalousSpend: Number((e.target as HTMLInputElement).value)
+                    minAnomalousSpend: +(e.target as HTMLInputElement).value
                   }))
                 }
               />

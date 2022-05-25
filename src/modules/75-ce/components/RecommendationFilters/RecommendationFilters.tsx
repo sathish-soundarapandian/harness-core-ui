@@ -19,8 +19,8 @@ interface RecommendationFiltersProps {
   setFilters: (newValue: K8sRecommendationFilterPropertiesDTO) => void
   filters: K8sRecommendationFilterPropertiesDTO
   fetchedFilterValues: FilterStatsDTO[]
-  costFilters: { minCost: number; minSaving: number }
-  setCostFilters: (newValue: { minCost: number; minSaving: number }) => void
+  costFilters: { minCost?: number; minSaving?: number }
+  setCostFilters: (newValue: { minCost?: number; minSaving?: number }) => void
 }
 
 const RecommendationFilters: React.FC<RecommendationFiltersProps> = ({
