@@ -94,7 +94,7 @@
         }
       }
     },
-    "/accounts/{account_id}/autostoppping/rules/list": {
+    "/accounts/{account_id}/autostopping/rules/list": {
       "parameters": [
         {
           "name": "account_id",
@@ -2496,6 +2496,9 @@
           "type": "string",
           "description": "Fetch rules based on search query"
         },
+        "dry_run": {
+          "type": "boolean"
+        },
         "page": {
           "type": "number"
         },
@@ -2840,11 +2843,26 @@
     "FetchRulesResponse": {
       "type": "object",
       "properties": {
+        "response": {
+          "type": "object",
+          "$ref": "#/definitions/FetchRulesResponseRecords"
+        }
+      }
+    },
+    "FetchRulesResponseRecords": {
+      "type": "object",
+      "properties": {
         "records": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Service"
           }
+        },
+        "total": {
+          "type": "integer"
+        },
+        "pages": {
+          "type": "integer"
         }
       }
     },

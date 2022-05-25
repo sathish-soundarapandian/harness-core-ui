@@ -302,6 +302,7 @@ export interface ExecutionRule {
 }
 
 export interface FetchRulesBody {
+  dry_run?: boolean
   filters?: FetchRulesFilterObj[]
   limit?: number
   page?: number
@@ -319,7 +320,13 @@ export interface FetchRulesFilterObj {
 }
 
 export interface FetchRulesResponse {
+  response?: FetchRulesResponseRecords
+}
+
+export interface FetchRulesResponseRecords {
+  pages?: number
   records?: Service[]
+  total?: number
 }
 
 export interface FetchRulesSortObj {
@@ -1425,6 +1432,52 @@ export const useSaveService = ({ account_id, ...props }: UseSaveServiceProps) =>
     { base: getConfig('lw/api'), pathParams: { account_id }, ...props }
   )
 
+export interface FetchRulesQueryParams {
+  accountIdentifier: string
+}
+
+export interface FetchRulesPathParams {
+  account_id: string
+}
+
+export type FetchRulesProps = Omit<
+  MutateProps<FetchRulesResponse, void, FetchRulesQueryParams, FetchRulesBody, FetchRulesPathParams>,
+  'path' | 'verb'
+> &
+  FetchRulesPathParams
+
+/**
+ * Fetch Autostopping rules
+ *
+ * Fetch all Autostopping rules based on parameters like search, sort and filters.
+ */
+export const FetchRules = ({ account_id, ...props }: FetchRulesProps) => (
+  <Mutate<FetchRulesResponse, void, FetchRulesQueryParams, FetchRulesBody, FetchRulesPathParams>
+    verb="POST"
+    path={`/accounts/${account_id}/autostopping/rules/list`}
+    base={getConfig('lw/api')}
+    {...props}
+  />
+)
+
+export type UseFetchRulesProps = Omit<
+  UseMutateProps<FetchRulesResponse, void, FetchRulesQueryParams, FetchRulesBody, FetchRulesPathParams>,
+  'path' | 'verb'
+> &
+  FetchRulesPathParams
+
+/**
+ * Fetch Autostopping rules
+ *
+ * Fetch all Autostopping rules based on parameters like search, sort and filters.
+ */
+export const useFetchRules = ({ account_id, ...props }: UseFetchRulesProps) =>
+  useMutate<FetchRulesResponse, void, FetchRulesQueryParams, FetchRulesBody, FetchRulesPathParams>(
+    'POST',
+    (paramsInPath: FetchRulesPathParams) => `/accounts/${paramsInPath.account_id}/autostopping/rules/list`,
+    { base: getConfig('lw/api'), pathParams: { account_id }, ...props }
+  )
+
 export interface CumulativeServiceSavingsQueryParams {
   accountIdentifier: string
   dry_run?: boolean
@@ -2009,52 +2062,6 @@ export const useToggleAutostoppingRule = ({ account_id, rule_id, ...props }: Use
     (paramsInPath: ToggleAutostoppingRulePathParams) =>
       `/accounts/${paramsInPath.account_id}/autostopping/rules/${paramsInPath.rule_id}/toggle_state`,
     { base: getConfig('lw/api'), pathParams: { account_id, rule_id }, ...props }
-  )
-
-export interface FetchRulesQueryParams {
-  accountIdentifier: string
-}
-
-export interface FetchRulesPathParams {
-  account_id: string
-}
-
-export type FetchRulesProps = Omit<
-  MutateProps<FetchRulesResponse, void, FetchRulesQueryParams, FetchRulesBody, FetchRulesPathParams>,
-  'path' | 'verb'
-> &
-  FetchRulesPathParams
-
-/**
- * Fetch Autostopping rules
- *
- * Fetch all Autostopping rules based on parameters like search, sort and filters.
- */
-export const FetchRules = ({ account_id, ...props }: FetchRulesProps) => (
-  <Mutate<FetchRulesResponse, void, FetchRulesQueryParams, FetchRulesBody, FetchRulesPathParams>
-    verb="POST"
-    path={`/accounts/${account_id}/autostoppping/rules/list`}
-    base={getConfig('lw/api')}
-    {...props}
-  />
-)
-
-export type UseFetchRulesProps = Omit<
-  UseMutateProps<FetchRulesResponse, void, FetchRulesQueryParams, FetchRulesBody, FetchRulesPathParams>,
-  'path' | 'verb'
-> &
-  FetchRulesPathParams
-
-/**
- * Fetch Autostopping rules
- *
- * Fetch all Autostopping rules based on parameters like search, sort and filters.
- */
-export const useFetchRules = ({ account_id, ...props }: UseFetchRulesProps) =>
-  useMutate<FetchRulesResponse, void, FetchRulesQueryParams, FetchRulesBody, FetchRulesPathParams>(
-    'POST',
-    (paramsInPath: FetchRulesPathParams) => `/accounts/${paramsInPath.account_id}/autostoppping/rules/list`,
-    { base: getConfig('lw/api'), pathParams: { account_id }, ...props }
   )
 
 export interface AllCertificatesQueryParams {
