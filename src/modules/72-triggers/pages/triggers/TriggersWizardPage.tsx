@@ -487,6 +487,10 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         delete res.source.spec.spec.event
       }
 
+      if (gitAwareForTriggerEnabled) {
+        delete res.inputYaml
+      }
+
       return { trigger: res }
     } else if (values.triggerType === TriggerTypes.SCHEDULE) {
       const res = getScheduleTriggerYaml({ values })
@@ -1606,12 +1610,6 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         pipelineBranchName: DEFAULT_TRIGGER_BRANCH,
         _pipelineBranchNameCustomValue: true
       })
-    }
-
-    if (gitAwareForTriggerEnabled && nextValues.inputYaml) {
-      // debugger
-      // delete nextValues.inputYaml
-      //formik.setValues(nextValues)
     }
   }
 
