@@ -103,7 +103,8 @@ import {
   displayPipelineIntegrityResponse,
   getOrderedPipelineVariableValues,
   clearUndefinedArtifactId,
-  getModifiedTemplateValues
+  getModifiedTemplateValues,
+  DEFAULT_TRIGGER_BRANCH
 } from './utils/TriggersWizardPageUtils'
 import {
   ArtifactTriggerConfigPanel,
@@ -126,8 +127,6 @@ import type {
   FlatValidFormikValuesInterface
 } from './interface/TriggersWizardInterface'
 import css from './TriggersWizardPage.module.scss'
-
-export const DEFAULT_TRIGGER_BRANCH = '<+trigger.branch>'
 
 const replaceRunTimeVariables = ({
   manifestType,

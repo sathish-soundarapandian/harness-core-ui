@@ -42,7 +42,8 @@ import {
   filterArtifactIndex,
   getFilteredStage,
   TriggerTypes,
-  eventTypes
+  eventTypes,
+  getTriggerInputSetsBranchQueryParameter
 } from '../utils/TriggersWizardPageUtils'
 import css from './WebhookPipelineInputPanel.module.scss'
 
@@ -251,10 +252,11 @@ function WebhookPipelineInputPanelForm({
       pipelineIdentifier,
       projectIdentifier,
       repoIdentifier,
-
-      // TODO: Fetching with pipelineBranchName = <+trigger.branch> will fail when editing
-      // Need to confirm with Product about the behavior
-      branch: /* formikProps?.values?.pipelineBranchName || */ branch
+      branch: getTriggerInputSetsBranchQueryParameter({
+        gitAwareForTriggerEnabled,
+        pipelineBranchName: formikProps?.values?.pipelineBranchName,
+        branch
+      })
     }),
     [
       accountId,
@@ -263,7 +265,8 @@ function WebhookPipelineInputPanelForm({
       pipelineIdentifier,
       repoIdentifier,
       formikProps?.values?.pipelineBranchName,
-      branch
+      branch,
+      gitAwareForTriggerEnabled
     ]
   )
 
@@ -410,7 +413,11 @@ function WebhookPipelineInputPanelForm({
                   value={selectedInputSets}
                   selectedValueClass={css.inputSetSelectedValue}
                   selectedRepo={repoIdentifier}
-                  selectedBranch={formikProps?.values?.pipelineBranchName || branch}
+                  selectedBranch={getTriggerInputSetsBranchQueryParameter({
+                    gitAwareForTriggerEnabled,
+                    pipelineBranchName: formikProps?.values?.pipelineBranchName,
+                    branch
+                  })}
                 />
               </GitSyncStoreProvider>
               <div className={css.divider} />
