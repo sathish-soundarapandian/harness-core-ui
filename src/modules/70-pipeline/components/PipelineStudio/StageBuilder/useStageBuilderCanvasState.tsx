@@ -8,7 +8,7 @@
 import React, { useEffect } from 'react'
 import { isNil } from 'lodash-es'
 import type { DiagramEngine } from '@projectstorm/react-diagrams-core'
-import { Event } from '../../Diagram'
+import { Event } from '@pipeline/utils/PipelineStudioUtils'
 
 interface StageCanvasData {
   offsetX?: number

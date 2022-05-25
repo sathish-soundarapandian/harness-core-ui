@@ -18,9 +18,9 @@ import {
   DefaultNodeModelOptions,
   DefaultNodeWidget,
   DiamondNodeModel,
-  DiamondNodeWidget,
-  Event
+  DiamondNodeWidget
 } from '@pipeline/components/Diagram'
+import { Event } from '@pipeline/utils/PipelineStudioUtils'
 import type { StageElementConfig } from 'services/cd-ng'
 import { DynamicPopover } from '@common/components'
 import { renderPopover } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilder'

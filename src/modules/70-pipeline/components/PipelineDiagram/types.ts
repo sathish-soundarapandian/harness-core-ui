@@ -25,10 +25,6 @@ export interface NodeData {
 
 export type BaseListener = (event: any) => void
 
-export const enum PipelineGraphType {
-  STAGE_GRAPH = 'STAGE_GRAPH',
-  STEP_GRAPH = 'STEP_GRAPH'
-}
 export interface PipelineGraphState {
   id: string
   identifier: string
@@ -38,7 +34,6 @@ export interface PipelineGraphState {
   status?: string
   data: any
   nodeType?: string
-  graphType?: PipelineGraphType
   children?: PipelineGraphState[]
   parentStepGroupId?: string
   readonly?: boolean
@@ -91,6 +86,9 @@ export enum NodeType {
   StepGroupNode = 'StepGroup'
 }
 
+export const Event: KVPair = {
+  CanvasClick: 'CanvasClick'
+}
 export interface NodeProps<T> {
   width: number
   height: number

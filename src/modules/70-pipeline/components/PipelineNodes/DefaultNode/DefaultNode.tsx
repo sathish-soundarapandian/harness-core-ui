@@ -12,8 +12,8 @@ import { Icon, Text, Button, ButtonVariation, IconName } from '@wings-software/u
 import { Color } from '@harness/design-system'
 import { DiagramDrag, DiagramType } from '@pipeline/components/Diagram'
 import { Event } from '@pipeline/utils/PipelineStudioUtils'
+import type { BaseReactComponentProps } from '@pipeline/components/PipelineDiagram/DiagramFactory'
 import SVGMarker from '../SVGMarker'
-import type { BaseReactComponentProps } from '../../types'
 import css from './DefaultNode.module.scss'
 interface DefaultNodeProps extends BaseReactComponentProps {
   disableClick?: boolean

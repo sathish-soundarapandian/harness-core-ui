@@ -10,7 +10,7 @@ import React, { useEffect, useLayoutEffect, useState, useRef, useMemo } from 're
 import classNames from 'classnames'
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable'
 import { v4 as uuid } from 'uuid'
-import { Event } from '@pipeline/components/Diagram'
+import { Event } from '../types'
 import {
   CANVAS_CLICK_EVENT,
   dispatchCustomEvent,

@@ -8,10 +8,11 @@
 import * as React from 'react'
 import cx from 'classnames'
 import { Icon, Layout, Text } from '@wings-software/uicore'
-import { Event, DiagramType } from '@pipeline/components/Diagram'
+import { DiagramType } from '@pipeline/components/Diagram'
 import { useStrings } from 'framework/strings'
+import { NodeType } from '@pipeline/components/PipelineDiagram/DiagramFactory'
+import { Event } from '@pipeline/utils/PipelineStudioUtils'
 import StepGroupGraph from '../StepGroupGraph/StepGroupGraph'
-import { NodeType } from '../../DiagramFactory'
 import css from './StepGroupNode.module.scss'
 
 export function CIDependencyNode(props: any): JSX.Element {

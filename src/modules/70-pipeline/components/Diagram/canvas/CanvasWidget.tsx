@@ -8,7 +8,8 @@
 import React from 'react'
 import { CanvasWidget as CanvasWidgetCore, DiagramProps } from '@projectstorm/react-canvas-core'
 import cx from 'classnames'
-import { Event } from '../Constants'
+
+import { Event } from '@pipeline/utils/PipelineStudioUtils'
 import { RollbackToggleSwitch, RollbackToggleSwitchProps } from './RollbackToggleSwitch/RollbackToggleSwitch'
 import css from './CanvasWidget.module.scss'
 

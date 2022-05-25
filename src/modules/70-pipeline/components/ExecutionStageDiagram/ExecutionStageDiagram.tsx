@@ -13,6 +13,7 @@ import type { BaseModelListener } from '@projectstorm/react-canvas-core'
 import { GraphCanvasState, useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { useDeepCompareEffect, useUpdateQueryParams } from '@common/hooks'
 import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
+import { Event as DiagramEvent } from '@pipeline/utils/PipelineStudioUtils'
 import type { ExecutionPipeline, ExecutionPipelineGroupInfo, ExecutionPipelineItem } from './ExecutionPipelineModel'
 import {
   ExecutionStageDiagramConfiguration,
@@ -228,8 +229,8 @@ export default function ExecutionStageDiagram<T>(props: ExecutionStageDiagramPro
       }
     }
     const listenerHandle = model.registerListener({
-      [Diagram.Event.OffsetUpdated]: offsetUpdateHandler,
-      [Diagram.Event.ZoomUpdated]: zoomUpdateHandler
+      [DiagramEvent.OffsetUpdated]: offsetUpdateHandler,
+      [DiagramEvent.ZoomUpdated]: zoomUpdateHandler
     })
     return () => {
       model.deregisterListener(listenerHandle)
@@ -238,7 +239,7 @@ export default function ExecutionStageDiagram<T>(props: ExecutionStageDiagramPro
 
   const nodeListeners: NodeModelListener = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [Diagram.Event.ClickNode]: (event: any) => {
+    [DiagramEvent.ClickNode]: (event: any) => {
       /* istanbul ignore else */ if (autoPosition) {
         setAutoPosition(false)
       }
@@ -251,26 +252,26 @@ export default function ExecutionStageDiagram<T>(props: ExecutionStageDiagramPro
       }
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [Diagram.Event.MouseEnterNode]: (event: any) => {
+    [DiagramEvent.MouseEnterNode]: (event: any) => {
       const stage = getStageFromDiagramEvent(event, data)
       /* istanbul ignore else */ if (stage) itemMouseEnter(new ItemMouseEnterEvent(stage, event.target))
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [Diagram.Event.MouseLeaveNode]: (event: any) => {
+    [DiagramEvent.MouseLeaveNode]: (event: any) => {
       const stage = getStageFromDiagramEvent(event, data)
       // dynamicPopoverHandler?.hide()
       /* istanbul ignore else */ if (stage) itemMouseLeave(new ItemMouseLeaveEvent(stage, event.target))
     }
   }
   const layerListeners: BaseModelListener = {
-    [Diagram.Event.StepGroupCollapsed]: (event: any) => updateGroupStage(event),
-    [Diagram.Event.MouseEnterStepGroupTitle]: (event: any) => {
+    [DiagramEvent.StepGroupCollapsed]: (event: any) => updateGroupStage(event),
+    [DiagramEvent.MouseEnterStepGroupTitle]: (event: any) => {
       const groupData = groupState?.get(event.entity.getIdentifier())
       if (groupData?.group) {
         mouseEnterStepGroupTitle(new GroupMouseEnterEvent(groupData?.group, event.target))
       }
     },
-    [Diagram.Event.MouseLeaveStepGroupTitle]: (event: any) => {
+    [DiagramEvent.MouseLeaveStepGroupTitle]: (event: any) => {
       const groupData = groupState?.get(event.entity.getIdentifier())
       if (groupData?.group) {
         mouseLeaveStepGroupTitle(new GroupMouseEnterEvent(groupData?.group, event.target))

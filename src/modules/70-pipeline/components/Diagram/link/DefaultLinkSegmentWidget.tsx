@@ -9,9 +9,10 @@ import React from 'react'
 import type { DiagramEngine } from '@projectstorm/react-diagrams-core'
 import { Utils } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
+import { Event } from '@pipeline/utils/PipelineStudioUtils'
 import type { DefaultLinkFactory } from './DefaultLinkFactory'
 import type { DefaultLinkModel } from './DefaultLinkModel'
-import { Event, DiagramDrag } from '../Constants'
+import { DiagramDrag } from '../Constants'
 
 export interface DefaultLinkSegmentWidgetProps {
   path: string

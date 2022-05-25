@@ -7,11 +7,11 @@
 
 import type { IconName } from '@harness/uicore'
 import { get, isEmpty } from 'lodash-es'
-import { PipelineGraphState, PipelineGraphType } from '@pipeline/components/PipelineDiagram/types'
+import type { PipelineGraphState } from '@pipeline/components/PipelineDiagram/types'
 import type { ExecutionGraph, ExecutionNode, NodeRunInfo } from 'services/pipeline-ng'
 import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
-import { Event } from '@pipeline/components/Diagram'
+
 import {
   StepGroupRollbackIdentifier,
   NodeType,
@@ -26,6 +26,7 @@ import {
   STATIC_SERVICE_GROUP_NAME
 } from './executionUtils'
 import type { ExecutionStatus } from './statusHelpers'
+import { Event, PipelineGraphType } from './PipelineStudioUtils'
 interface ProcessParalellNodeArgs {
   nodeMap: ExecutionGraph['nodeMap']
   nodeAdjacencyListMap: ExecutionGraph['nodeAdjacencyListMap']

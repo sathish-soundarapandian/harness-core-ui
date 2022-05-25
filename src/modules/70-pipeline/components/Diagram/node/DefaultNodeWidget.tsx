@@ -12,10 +12,11 @@ import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import { Position } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
+import { Event } from '@pipeline/utils/PipelineStudioUtils'
 import type { DefaultNodeModel } from './DefaultNodeModel'
 import type { DefaultPortModel } from '../port/DefaultPortModel'
 import { DefaultPortLabel } from '../port/DefaultPortLabelWidget'
-import { Event, DiagramDrag } from '../Constants'
+import { DiagramDrag } from '../Constants'
 import css from './DefaultNode.module.scss'
 
 export interface DefaultNodeProps {

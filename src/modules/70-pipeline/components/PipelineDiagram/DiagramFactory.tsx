@@ -6,8 +6,8 @@
  */
 import React from 'react'
 import { v4 as uuid } from 'uuid'
-import PipelineGraph from './PipelineGraph/PipelineGraph'
-import GroupNode from './Nodes/GroupNode/GroupNode'
+import PipelineGraph, { SVGComponent } from './PipelineGraph/PipelineGraph'
+import GroupNode from './Nodes/GroupNode/DefaultGroupNode'
 import type {
   BaseReactComponentProps,
   BaseListener,
@@ -15,12 +15,16 @@ import type {
   ListenerHandle,
   NodeBank,
   NodeDetails,
-  PipelineGraphState
+  PipelineGraphState,
+  FireEventMethod,
+  GetNodeMethod,
+  SVGPathRecord
 } from './types'
 import { NodeType } from './types'
-import { StepGroupNode } from './Nodes/StepGroupNode/StepGroupNode'
-import { CANVAS_CLICK_EVENT } from './PipelineGraph/PipelineGraphUtils'
+import { CANVAS_CLICK_EVENT, getFinalSVGArrowPath, getSVGLinksFromPipeline } from './PipelineGraph/PipelineGraphUtils'
 import DefaultNode from './Nodes/DefaultNode/DefaultNode'
+import { PipelineGraphRecursive } from './PipelineGraph/PipelineGraphNode'
+import GraphConfigStore from './PipelineGraph/GraphConfigStore'
 
 export class DiagramFactory {
   /**
@@ -36,7 +40,7 @@ export class DiagramFactory {
     this.nodeBank = new Map<string, NodeDetails>()
     this.type = diagramType || 'graph'
     this.registerNode(NodeType.Default, DefaultNode as React.FC<BaseReactComponentProps>)
-    this.registerNode(NodeType.StepGroupNode, StepGroupNode)
+
     this.listeners = {}
   }
 
@@ -175,9 +179,22 @@ export class DiagramFactory {
 }
 
 const DiagramNodes = {
-  [NodeType.Default]: DefaultNode,
-  [NodeType.GroupNode]: GroupNode,
-  [NodeType.StepGroupNode]: StepGroupNode
+  [NodeType.Default]: DefaultNode
 }
 
-export { DiagramNodes, NodeType, BaseReactComponentProps, CANVAS_CLICK_EVENT }
+export {
+  DiagramNodes,
+  NodeType,
+  BaseReactComponentProps,
+  CANVAS_CLICK_EVENT,
+  FireEventMethod,
+  PipelineGraphRecursive,
+  GraphConfigStore,
+  getFinalSVGArrowPath,
+  getSVGLinksFromPipeline,
+  GetNodeMethod,
+  NodeDetails,
+  SVGComponent,
+  PipelineGraphState,
+  SVGPathRecord
+}

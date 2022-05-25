@@ -7,34 +7,31 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
+import { defaultTo } from 'lodash-es'
+import type { FireEventMethod } from '@pipeline/components/PipelineDiagram/DiagramFactory'
+import { DiagramDrag, DiagramType } from '@pipeline/components/Diagram'
+import { Event } from '@pipeline/utils/PipelineStudioUtils'
 import CreateNode from './CreateNode'
-import type { FireEventMethod } from '../../types'
 import cssDefault from '../DefaultNode/DefaultNode.module.scss'
 import css from './CreateNode.module.scss'
-
-interface CreateNodeStepProps {
+interface CreateNodeStageProps {
   onMouseOver?: () => void
   onMouseLeave?: () => void
-  onDragLeave?: () => void
-  onDragOver?: () => void
   onDrop?: (event: React.DragEvent<HTMLDivElement>) => void
   fireEvent?: FireEventMethod
   onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
   identifier: string
   name: string
   disabled?: boolean
-  node: CreateNodeStepProps & { isSelected?: boolean }
-  titleClassName?: string
+  node: CreateNodeStageProps
+  visible?: boolean
   className?: string
-  hidden?: boolean
 }
-
-function CreateNodeStep(props: CreateNodeStepProps): React.ReactElement {
+function CreateNodeStage(props: CreateNodeStageProps): React.ReactElement | null {
   return (
     <div
-      onMouseOver={(event: any) => {
-        event?.stopPropagation()
+      data-nodeid="add-parallel"
+      onMouseOver={() => {
         props.onMouseOver?.()
       }}
       onMouseLeave={() => {
@@ -44,24 +41,18 @@ function CreateNodeStep(props: CreateNodeStepProps): React.ReactElement {
       onDragOver={event => {
         event.preventDefault()
         event.stopPropagation()
-        props.onDragOver?.()
-      }}
-      onDragLeave={event => {
-        event.preventDefault()
-        event.stopPropagation()
-        props.onDragLeave?.()
       }}
       onDrop={event => {
-        props.onDrop?.(event)
+        props?.onDrop?.(event)
         event.stopPropagation()
         props?.fireEvent?.({
           type: Event.DropNodeEvent,
           target: event.target,
           data: {
-            identifier: props.identifier,
             entityType: DiagramType.CreateNew,
             node: JSON.parse(event.dataTransfer.getData(DiagramDrag.NodeDrag)),
-            destination: props
+            destination: props,
+            identifier: props.identifier
           }
         })
       }}
@@ -84,20 +75,18 @@ function CreateNodeStep(props: CreateNodeStepProps): React.ReactElement {
     >
       <CreateNode
         identifier={props.identifier}
-        titleClassName={props.titleClassName}
         name={props.name}
         className={cx(
+          props?.className,
           cssDefault.defaultCard,
           css.createNode,
-          css.stepAddIcon,
-          { [css.disabled]: props.disabled || false },
-          { [css.selected]: props?.node?.isSelected },
-          props?.className
+          css.stageAddIcon,
+          { [css.disabled]: defaultTo(props.disabled, false) },
+          { [css.selected]: (props?.node as any)?.isSelected }
         )}
-        hidden={props.hidden}
       />
     </div>
   )
 }
 
-export default CreateNodeStep
+export default CreateNodeStage

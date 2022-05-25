@@ -8,52 +8,47 @@
 import React from 'react'
 import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
-import { Icon, Text, Button, ButtonVariation, IconName } from '@wings-software/uicore'
+import { Icon, Text, Button, ButtonVariation, IconName, Utils } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
-import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
-import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
+import { DiagramDrag, DiagramType } from '@pipeline/components/Diagram'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
+import stepsfactory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
+import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
+import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
 import { useStrings } from 'framework/strings'
+import { BaseReactComponentProps, NodeType } from '@pipeline/components/PipelineDiagram/DiagramFactory'
+import { Event } from '@pipeline/utils/PipelineStudioUtils'
 import SVGMarker from '../../SVGMarker'
 import AddLinkNode from '../AddLinkNode/AddLinkNode'
-import { FireEventMethod, NodeType } from '../../../types'
 import { getPositionOfAddIcon } from '../../utils'
 import defaultCss from '../DefaultNode.module.scss'
 
 const CODE_ICON: IconName = 'command-echo'
+
 const TEMPLATE_ICON: IconName = 'template-library'
-interface PipelineStageNodeProps {
-  getNode: (node: NodeType) => { component: React.FC<any> }
-  fireEvent: FireEventMethod
+interface PipelineStepNodeProps extends BaseReactComponentProps {
   status: string
-  data: any
-  readonly: boolean
-  onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
-  id: string
-  isSelected: boolean
-  icon: string
-  identifier: string
-  name: JSX.Element
-  defaultSelected: any
-  parentIdentifier?: string
-  isParallelNode: boolean
-  prevNodeIdentifier?: string
-  nextNode: any
-  allowAdd?: boolean
-  selectedNodeId?: string
 }
-function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
+
+function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
   const { getString } = useStrings()
   const allowAdd = defaultTo(props.allowAdd, false)
   const [showAddNode, setVisibilityOfAdd] = React.useState(false)
+  const stepType = props.type || props?.data?.step?.stepType || ''
+  const stepData = stepsfactory.getStepData(stepType)
+  let stepIconColor = stepsfactory.getStepIconColor(stepType)
+  if (stepIconColor && Object.values(Color).includes(stepIconColor)) {
+    stepIconColor = Utils.getRealCSSColor(stepIconColor)
+  }
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
 
-  const stageStatus = defaultTo(props?.status, props?.data?.stage?.status as ExecutionStatus)
+  const stepStatus = defaultTo(props?.status, props?.data?.step?.status as ExecutionStatus)
   const { secondaryIconProps, secondaryIcon, secondaryIconStyle } = getStatusProps(
-    stageStatus as ExecutionStatus,
+    stepStatus as ExecutionStatus,
     ExecutionPipelineNodeType.NORMAL
   )
+  const isSelectedNode = (): boolean => props.isSelected || props.id === props?.selectedNodeId
+  const isServiceStep = stepType === 'Service'
   const setAddVisibility = (visibility: boolean): void => {
     if (!allowAdd) {
       return
@@ -61,16 +56,36 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
     setVisibilityOfAdd(visibility)
   }
 
-  const isSelectedNode = (): boolean => props.isSelected || props.id === props?.selectedNodeId
+  const stepIcon = defaultTo(defaultTo(stepData?.icon, props?.icon), props?.data?.step?.icon)
+  const onDropEvent = (event: React.DragEvent) => {
+    event.stopPropagation()
+
+    props?.fireEvent?.({
+      type: Event.DropNodeEvent,
+      target: event.target,
+      data: {
+        entityType: DiagramType.Default,
+        node: JSON.parse(event.dataTransfer.getData(DiagramDrag.NodeDrag)),
+        destination: props
+      }
+    })
+  }
+  // const isPrevNodeParallel = !!defaultTo(props.prevNode?.children?.length, 1)
   const isTemplateNode = props?.data?.isTemplateNode
   return (
     <div
       className={cx(defaultCss.defaultNode, 'default-node', {
         draggable: !props.readonly
       })}
-      onMouseOver={() => setAddVisibility(true)}
-      onMouseLeave={() => setAddVisibility(false)}
-      onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      onMouseOver={e => {
+        e.stopPropagation()
+        setAddVisibility(true)
+      }}
+      onMouseLeave={e => {
+        e.stopPropagation()
+        setAddVisibility(false)
+      }}
+      onClick={event => {
         event.stopPropagation()
         if (props?.onClick) {
           props.onClick(event)
@@ -101,67 +116,35 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
           setAddVisibility(false)
         }
       }}
-      onDrop={event => {
-        if (!props.allowAdd) {
-          return
-        }
-        event.stopPropagation()
-        props?.fireEvent?.({
-          type: Event.DropNodeEvent,
-          target: event.target,
-          data: {
-            entityType: DiagramType.Default,
-            node: JSON.parse(event.dataTransfer.getData(DiagramDrag.NodeDrag)),
-            destination: props
-          }
-        })
-      }}
+      onDrop={onDropEvent}
     >
-      <div className={cx(defaultCss.markerStart, defaultCss.stageMarkerLeft)}>
-        <SVGMarker />
-      </div>
+      {!isServiceStep && (
+        <div className={cx(defaultCss.markerStart, defaultCss.stepMarker, defaultCss.stepMarkerLeft)}>
+          <SVGMarker />
+        </div>
+      )}
       <div
         id={props.id}
         data-nodeid={props.id}
         draggable={!props.readonly}
         className={cx(defaultCss.defaultCard, {
           [defaultCss.selected]: isSelectedNode(),
-          [defaultCss.failed]: stageStatus === ExecutionStatusEnum.Failed,
-          [defaultCss.runningNode]: stageStatus === ExecutionStatusEnum.Running,
-          [defaultCss.skipped]: stageStatus === ExecutionStatusEnum.Skipped,
-          [defaultCss.notStarted]: stageStatus === ExecutionStatusEnum.NotStarted
+          [defaultCss.failed]: stepStatus === ExecutionStatusEnum.Failed,
+          [defaultCss.runningNode]: stepStatus === ExecutionStatusEnum.Running,
+          [defaultCss.skipped]: stepStatus === ExecutionStatusEnum.Skipped,
+          [defaultCss.notStarted]: stepStatus === ExecutionStatusEnum.NotStarted
         })}
         style={{
-          width: 90,
-          height: 40
-        }}
-        onMouseOver={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-          e.stopPropagation()
-          setAddVisibility(true)
-        }}
-        onMouseEnter={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-          event.stopPropagation()
-          props?.fireEvent?.({
-            type: Event.MouseEnterNode,
-            target: event.target,
-            data: {
-              identifier: props?.identifier as string,
-              node: props,
-              id: props.id
-            }
-          })
-        }}
-        onMouseLeave={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-          setAddVisibility(false)
-          event.stopPropagation()
-          props?.fireEvent?.({
-            type: Event.MouseLeaveNode,
-            target: event.target,
-            data: { ...props }
-          })
+          width: 64,
+          height: 64
         }}
         onDragStart={event => {
           event.stopPropagation()
+          props?.fireEvent?.({
+            type: Event.DragStart,
+            target: event.target,
+            data: { ...props }
+          })
           event.dataTransfer.setData(DiagramDrag.NodeDrag, JSON.stringify(props))
           // NOTE: onDragOver we cannot access dataTransfer data
           // in order to detect if we can drop, we are setting and using "keys" and then
@@ -169,22 +152,43 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
           event.dataTransfer.setData(DiagramDrag.AllowDropOnLink, '1')
           event.dataTransfer.setData(DiagramDrag.AllowDropOnNode, '1')
           event.dataTransfer.dropEffect = 'move'
+        }}
+        onDragEnd={event => {
+          event.preventDefault()
+          event.stopPropagation()
+        }}
+        onMouseEnter={event => {
+          event.stopPropagation()
+
           props?.fireEvent?.({
-            type: Event.DragStart,
+            type: Event.MouseEnterNode,
             target: event.target,
             data: { ...props }
           })
         }}
-        onDragEnd={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-          event.preventDefault()
+        onMouseLeave={event => {
           event.stopPropagation()
+          setVisibilityOfAdd(false)
+          props?.fireEvent?.({
+            type: Event.MouseLeaveNode,
+            target: event.target,
+            data: { ...props }
+          })
         }}
       >
         <div className="execution-running-animation" />
         {props?.data?.isInComplete && (
           <Icon className={defaultCss.inComplete} size={12} name={'warning-sign'} color="orange500" />
         )}
-        {props.icon && <Icon size={28} name={props.icon as IconName} inverse={isSelectedNode()} />}
+        {stepIcon && (
+          <>
+            <Icon
+              size={28}
+              {...(isSelectedNode() ? { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true } : {})}
+              name={defaultTo(stepIcon, 'cross') as IconName}
+            />
+          </>
+        )}
         {secondaryIcon && (
           <Icon
             name={secondaryIcon}
@@ -194,8 +198,29 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
             {...secondaryIconProps}
           />
         )}
-        {props?.data?.tertiaryIcon && (
-          <Icon name={props?.data?.tertiaryIcon} size={13} className={defaultCss.tertiaryIcon} />
+        {props.data?.skipCondition && (
+          <div className={defaultCss.conditional}>
+            <Text
+              tooltip={`Skip condition:\n${props.data?.skipCondition}`}
+              tooltipProps={{
+                isDark: true
+              }}
+            >
+              <Icon size={26} name={'conditional-skip-new'} color="white" />
+            </Text>
+          </div>
+        )}
+        {props.data?.conditionalExecutionEnabled && (
+          <div className={defaultCss.conditional}>
+            <Text
+              tooltip={getString('pipeline.conditionalExecution.title')}
+              tooltipProps={{
+                isDark: true
+              }}
+            >
+              <Icon size={26} name={'conditional-skip-new'} color="white" />
+            </Text>
+          </div>
         )}
         {isTemplateNode && (
           <Icon
@@ -208,9 +233,8 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
         )}
         {CODE_ICON && (
           <Icon
-            {...(isSelectedNode()
-              ? { color: Color.WHITE, className: cx(defaultCss.primaryIcon, defaultCss.codeIcon), inverse: true }
-              : { className: defaultCss.codeIcon })}
+            className={defaultCss.codeIcon}
+            color={isSelectedNode() ? Color.WHITE : undefined}
             size={8}
             name={CODE_ICON}
           />
@@ -226,20 +250,19 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
             props?.fireEvent?.({
               type: Event.RemoveNode,
               target: e.target,
-              data: {
-                identifier: props?.identifier as string,
-                node: props
-              }
+              data: { identifier: props?.identifier, node: props }
             })
           }}
           withoutCurrentColor={true}
         />
       </div>
-      <div className={cx(defaultCss.markerEnd, defaultCss.stageMarkerRight)}>
-        <SVGMarker />
-      </div>
+      {!isServiceStep && (
+        <div className={cx(defaultCss.markerEnd, defaultCss.stepMarker, defaultCss.stepMarkerRight)}>
+          <SVGMarker />
+        </div>
+      )}
       {props.name && (
-        <div className={cx(defaultCss.nodeNameText, defaultCss.stageName)}>
+        <div className={defaultCss.nodeNameText}>
           <Text
             width={125}
             font={{ size: 'normal', align: 'center' }}
@@ -251,21 +274,11 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
           </Text>
         </div>
       )}
-      {props.data?.conditionalExecutionEnabled && (
-        <div className={defaultCss.conditional}>
-          <Text
-            tooltip={getString('pipeline.conditionalExecution.title')}
-            tooltipProps={{
-              isDark: true
-            }}
-          >
-            <Icon size={26} name={'conditional-skip-new'} color="white" />
-          </Text>
-        </div>
-      )}
-      {allowAdd && CreateNode && !props.readonly && showAddNode && (
+      {allowAdd && CreateNode && !props.readonly && !isServiceStep && (
         <CreateNode
           onMouseOver={() => setAddVisibility(true)}
+          onDragOver={() => setAddVisibility(true)}
+          onDrop={onDropEvent}
           onMouseLeave={() => setAddVisibility(false)}
           onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
             event.stopPropagation()
@@ -280,27 +293,46 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
               }
             })
           }}
-          className={cx(defaultCss.addNode, defaultCss.stageAddNode, { [defaultCss.visible]: showAddNode })}
+          className={cx(defaultCss.addNode, defaultCss.stepAddNode, { [defaultCss.visible]: showAddNode })}
+          data-nodeid="add-parallel"
         />
       )}
-
-      {!props.isParallelNode && !props.readonly && (
-        <AddLinkNode<PipelineStageNodeProps>
-          id={props.id}
+      {!props.isParallelNode && !isServiceStep && !props.readonly && (
+        <AddLinkNode<PipelineStepNodeProps>
           nextNode={props?.nextNode}
           parentIdentifier={props?.parentIdentifier}
           isParallelNode={props.isParallelNode}
           readonly={props.readonly}
           data={props}
           fireEvent={props.fireEvent}
-          style={{ left: getPositionOfAddIcon(props) }}
           identifier={props.identifier}
           prevNodeIdentifier={props.prevNodeIdentifier as string}
-          className={cx(defaultCss.addNodeIcon, defaultCss.left, defaultCss.stageAddIcon)}
+          style={{ left: getPositionOfAddIcon(props) }}
+          className={cx(
+            defaultCss.addNodeIcon,
+            // { [defaultCss.left]: !isPrevNodeParallel, [defaultCss.stepGroupLeft]: isPrevNodeParallel },
+            defaultCss.stepAddIcon
+            // { [defaultCss.stepGroupLeftAddLink]: !!props.parentIdentifier }
+          )}
+        />
+      )}
+      {!props?.nextNode && !isServiceStep && props?.parentIdentifier && !props.readonly && !props.isParallelNode && (
+        <AddLinkNode<PipelineStepNodeProps>
+          nextNode={props?.nextNode}
+          style={{ right: getPositionOfAddIcon(props, true) }}
+          parentIdentifier={props?.parentIdentifier}
+          isParallelNode={props.isParallelNode}
+          readonly={props.readonly}
+          data={props}
+          fireEvent={props.fireEvent}
+          isRightAddIcon={true}
+          identifier={props.identifier}
+          prevNodeIdentifier={props.prevNodeIdentifier as string}
+          className={cx(defaultCss.addNodeIcon, defaultCss.stepAddIcon)}
         />
       )}
     </div>
   )
 }
 
-export default PipelineStageNode
+export default PipelineStepNode

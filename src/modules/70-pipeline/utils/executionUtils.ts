@@ -35,9 +35,10 @@ import {
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { stagesCollection } from '@pipeline/components/PipelineStudio/Stages/StagesCollection'
-import { PipelineGraphState, PipelineGraphType } from '@pipeline/components/PipelineDiagram/types'
+import type { PipelineGraphState } from '@pipeline/components/PipelineDiagram/types'
 import { isApprovalStep } from './stepUtils'
 import { StageType } from './stageHelpers'
+import { PipelineGraphType } from './PipelineStudioUtils'
 
 export const LITE_ENGINE_TASK = 'liteEngineTask'
 export const STATIC_SERVICE_GROUP_NAME = 'static_service_group'

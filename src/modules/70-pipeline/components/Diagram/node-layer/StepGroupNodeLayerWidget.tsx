@@ -12,8 +12,9 @@ import { DiagramEngine, NodeWidget, NodeModel } from '@projectstorm/react-diagra
 import { Text, Icon, Layout, Link } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
+import { Event } from '@pipeline/utils/PipelineStudioUtils'
 import type { StepGroupNodeLayerModel } from './StepGroupNodeLayerModel'
-import { Event, StepsType, DiagramDrag } from '../Constants'
+import { StepsType, DiagramDrag } from '../Constants'
 import { RollbackToggleSwitch } from '../canvas/RollbackToggleSwitch/RollbackToggleSwitch'
 import css from './StepGroupNodeLayer.module.scss'
 

@@ -46,15 +46,15 @@ import {
   NodeType as DiagramNodeType,
   BaseReactComponentProps
 } from '@pipeline/components/PipelineDiagram/DiagramFactory'
-import { DiamondNodeWidget } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondNode'
-import PipelineStageNode from '@pipeline/components/PipelineDiagram/Nodes/DefaultNode/PipelineStageNode/PipelineStageNode'
-import CreateNodeStage from '@pipeline/components/PipelineDiagram/Nodes/CreateNode/CreateNodeStage'
-import EndNodeStage from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndNodeStage'
-import StartNodeStage from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNodeStage'
 import { getExecutionStageDiagramListeners } from '@pipeline/utils/execUtils'
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { DiamondNodeWidget } from '@pipeline/components/PipelineNodes/DiamondNode/DiamondNode'
+import PipelineStageNode from '@pipeline/components/PipelineNodes/DefaultNode/PipelineStageNode/PipelineStageNode'
+import StartNodeStage from '@pipeline/components/PipelineNodes/StartNode/StartNodeStage'
+import CreateNodeStage from '@pipeline/components/PipelineNodes/CreateNode/CreateNodeStage'
+import EndNodeStage from '@pipeline/components/PipelineNodes/EndNode/EndNodeStage'
 import CDInfo from './components/CD/CDInfo/CDInfo'
 import css from './ExecutionGraph.module.scss'
 

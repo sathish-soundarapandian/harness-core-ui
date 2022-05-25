@@ -11,6 +11,11 @@ import type { NodeModelListener, LinkModelListener } from '@projectstorm/react-d
 import type { BaseModelListener } from '@projectstorm/react-canvas-core'
 import { Color } from '@harness/design-system'
 import { Button, ButtonVariation, Layout, Text } from '@wings-software/uicore'
+import { IconNode } from '@pipeline/components/PipelineNodes/IconNode/IconNode'
+import { DiamondNodeWidget } from '@pipeline/components/PipelineNodes/DiamondNode/DiamondNode'
+import { CIDependencyNode } from '@pipeline/components/PipelineNodes/StepGroupNode/CIDependencyNode'
+import PipelineStepNode from '@pipeline/components/PipelineNodes/DefaultNode/PipelineStepNode/PipelineStepNode'
+import CreateNodeStep from '@pipeline/components/PipelineNodes/CreateNode/CreateNodeStep'
 import { useStrings } from 'framework/strings'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { DynamicPopover, DynamicPopoverHandlerBinding } from '@common/components/DynamicPopover/DynamicPopover'
@@ -32,22 +37,14 @@ import type {
 import type { DependencyElement } from 'services/ci'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
-import {
-  DiagramFactory,
-  DiagramNodes,
-  NodeType,
-  BaseReactComponentProps
-} from '@pipeline/components/PipelineDiagram/DiagramFactory'
-import { DiamondNodeWidget } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondNode'
-import { getPipelineGraphData } from '@pipeline/components/PipelineDiagram/PipelineGraph/PipelineGraphUtils'
-import PipelineStepNode from '@pipeline/components/PipelineDiagram/Nodes/DefaultNode/PipelineStepNode/PipelineStepNode'
-import { IconNode } from '@pipeline/components/PipelineDiagram/Nodes/IconNode/IconNode'
-import CreateNodeStep from '@pipeline/components/PipelineDiagram/Nodes/CreateNode/CreateNodeStep'
-import EndNodeStep from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndNodeStep'
-import StartNodeStep from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNodeStep'
+import { DiagramFactory, NodeType, BaseReactComponentProps } from '@pipeline/components/PipelineDiagram/DiagramFactory'
+
 import { StageType } from '@pipeline/utils/stageHelpers'
-import { CIDependencyNode } from '@pipeline/components/PipelineDiagram/Nodes/StepGroupNode/CIDependencyNode'
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
+import { Event, getPipelineGraphData } from '@pipeline/utils/PipelineStudioUtils'
+import EndNodeStep from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndNodeStep'
+import StartNodeStep from '@pipeline/components/PipelineNodes/StartNode/StartNodeStep'
+import { StepGroupNode } from '@pipeline/components/PipelineNodes/StepGroupNode/StepGroupNode'
 import { ExecutionStepModel, GridStyleInterface } from './ExecutionStepModel'
 import { StepType as PipelineStepType } from '../../PipelineSteps/PipelineStepInterface'
 import {
@@ -82,7 +79,6 @@ import {
   DefaultNodeModel,
   DefaultNodeModelGenerics,
   DiagramType,
-  Event,
   RollbackToggleSwitch,
   StepGroupNodeLayerModel,
   StepGroupNodeLayerOptions,
@@ -98,11 +94,8 @@ diagram.registerNode('ShellScript', PipelineStepNode as React.FC<BaseReactCompon
 diagram.registerNode(NodeType.CreateNode, CreateNodeStep as unknown as React.FC<BaseReactComponentProps>)
 diagram.registerNode(NodeType.EndNode, EndNodeStep)
 diagram.registerNode(NodeType.StartNode, StartNodeStep)
-diagram.registerNode('StepGroup', DiagramNodes[NodeType.StepGroupNode])
-diagram.registerNode('Approval', DiamondNodeWidget)
-diagram.registerNode('JiraApproval', DiamondNodeWidget)
-diagram.registerNode('HarnessApproval', DiamondNodeWidget)
-diagram.registerNode('default-diamond', DiamondNodeWidget)
+diagram.registerNode('StepGroup', StepGroupNode)
+diagram.registerNode(['Approval', 'JiraApproval', 'HarnessApproval', 'default-diamond'], DiamondNodeWidget)
 diagram.registerNode('Barrier', IconNode)
 diagram.registerNode(STATIC_SERVICE_GROUP_NAME, CIDependencyNode)
 

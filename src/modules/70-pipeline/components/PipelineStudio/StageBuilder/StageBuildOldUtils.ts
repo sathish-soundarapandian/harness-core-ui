@@ -16,9 +16,9 @@ import {
   DefaultNodeEvent,
   DefaultNodeModel,
   DiagramType,
-  Event,
   GroupNodeModelOptions
 } from '@pipeline/components/Diagram'
+import { Event } from '@pipeline/utils/PipelineStudioUtils'
 import type { DynamicPopoverHandlerBinding } from '@common/components/DynamicPopover/DynamicPopover'
 import { moveStageToFocusDelayed } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { PipelineOrStageStatus } from '@pipeline/components/PipelineSteps/AdvancedSteps/ConditionalExecutionPanel/ConditionalExecutionPanelUtils'

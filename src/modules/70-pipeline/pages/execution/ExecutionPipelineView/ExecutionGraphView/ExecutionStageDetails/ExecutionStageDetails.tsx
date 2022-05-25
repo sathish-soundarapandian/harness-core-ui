@@ -27,21 +27,17 @@ import type { ExecutionLayoutState } from '@pipeline/components/ExecutionLayout/
 import ConditionalExecutionTooltipWrapper from '@pipeline/components/ConditionalExecutionToolTip/ConditionalExecutionTooltipWrapper'
 import { getExecutionStageDiagramListeners, processExecutionDataV1 } from '@pipeline/utils/execUtils'
 
-import {
-  DiagramFactory,
-  DiagramNodes,
-  NodeType,
-  BaseReactComponentProps
-} from '@pipeline/components/PipelineDiagram/DiagramFactory'
-import { DiamondNodeWidget } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondNode'
-import PipelineStepNode from '@pipeline/components/PipelineDiagram/Nodes/DefaultNode/PipelineStepNode/PipelineStepNode'
-import { IconNode } from '@pipeline/components/PipelineDiagram/Nodes/IconNode/IconNode'
-import CreateNodeStep from '@pipeline/components/PipelineDiagram/Nodes/CreateNode/CreateNodeStep'
-import EndNodeStep from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndNodeStep'
-import StartNodeStep from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNodeStep'
+import { DiagramFactory, NodeType, BaseReactComponentProps } from '@pipeline/components/PipelineDiagram/DiagramFactory'
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import PipelineStepNode from '@pipeline/components/PipelineNodes/DefaultNode/PipelineStepNode/PipelineStepNode'
+import CreateNodeStep from '@pipeline/components/PipelineNodes/CreateNode/CreateNodeStep'
+import EndNodeStep from '@pipeline/components/PipelineNodes/EndNode/EndNodeStep'
+import { DiamondNodeWidget } from '@pipeline/components/PipelineNodes/DiamondNode/DiamondNode'
+import { IconNode } from '@pipeline/components/PipelineNodes/IconNode/IconNode'
+import { StepGroupNode } from '@pipeline/components/PipelineNodes/StepGroupNode/StepGroupNode'
+import StartNodeStep from '@pipeline/components/PipelineNodes/StartNode/StartNodeStep'
 import BarrierStepTooltip from './components/BarrierStepTooltip/BarrierStepTooltip'
 import ResourceConstraintTooltip from './components/ResourceConstraints/ResourceConstraints'
 import VerifyStepTooltip from './components/VerifyStepTooltip/VerifyStepTooltip'
@@ -54,11 +50,8 @@ diagram.registerNode('Deployment', PipelineStepNode as unknown as React.FC<BaseR
 diagram.registerNode(NodeType.CreateNode, CreateNodeStep as unknown as React.FC<BaseReactComponentProps>)
 diagram.registerNode(NodeType.EndNode, EndNodeStep)
 diagram.registerNode(NodeType.StartNode, StartNodeStep)
-diagram.registerNode('STEP_GROUP', DiagramNodes[NodeType.StepGroupNode])
-diagram.registerNode('Approval', DiamondNodeWidget)
-diagram.registerNode('JiraApproval', DiamondNodeWidget)
-diagram.registerNode('HarnessApproval', DiamondNodeWidget)
-diagram.registerNode('default-diamond', DiamondNodeWidget)
+diagram.registerNode('STEP_GROUP', StepGroupNode)
+diagram.registerNode(['Approval', 'JiraApproval', 'HarnessApproval', 'default-diamond'], DiamondNodeWidget)
 diagram.registerNode(['Barrier', 'ResourceConstraint'], IconNode)
 
 export const CDPipelineStudioNew = diagram.render()

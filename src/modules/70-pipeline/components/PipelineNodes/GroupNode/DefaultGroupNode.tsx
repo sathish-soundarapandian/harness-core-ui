@@ -12,16 +12,16 @@ import { Icon, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { DiagramDrag, DiagramType } from '@pipeline/components/Diagram'
 import { Event } from '@pipeline/utils/PipelineStudioUtils'
-import type { BaseReactComponentProps, PipelineGraphState } from '../../types'
+import type { BaseReactComponentProps } from '@pipeline/components/PipelineDiagram/DiagramFactory'
 import css from '../DefaultNode/DefaultNode.module.scss'
 
 interface GroupNodeProps extends BaseReactComponentProps {
   allowAdd: boolean
-  children?: PipelineGraphState[]
+  children: []
   intersectingIndex: number
   customNodeStyle?: CSSProperties
-  defaultSelected?: any
-  parentIdentifier?: string
+  defaultSelected: any
+  parentIdentifier: string
 }
 const getDisplayValue = (showAdd: boolean): string => (showAdd ? 'flex' : 'none')
 
@@ -29,7 +29,6 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
   const allowAdd = props.allowAdd ?? false
   const [showAdd, setVisibilityOfAdd] = React.useState(false)
   const nodeRef = React.useRef<HTMLDivElement>(null)
-  const children = defaultTo(props.children, [])
   const setAddVisibility = (visibility: boolean): void => {
     if (!allowAdd) {
       return
@@ -57,10 +56,10 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
   }, [nodeRef, allowAdd])
 
   const nodesInfo = React.useMemo(() => {
-    return children
+    return props?.children
       ?.slice(props.intersectingIndex - 1)
       .map((node: any) => ({ name: node.name, icon: node.icon, identifier: node.identifier, type: node.type }))
-  }, [children, props.intersectingIndex])
+  }, [props?.children, props.intersectingIndex])
 
   const getGroupNodeName = (): string => {
     return `${defaultTo(nodesInfo?.[0]?.name, '')} +  ${nodesInfo.length - 1} more stages`

@@ -13,6 +13,7 @@ import { cloneDeep, debounce, isNil } from 'lodash-es'
 import type { NodeModelListener, LinkModelListener } from '@projectstorm/react-diagrams-core'
 import SplitPane from 'react-split-pane'
 import produce from 'immer'
+import { Event, getPipelineGraphData } from '@pipeline/utils/PipelineStudioUtils'
 import { DynamicPopover, DynamicPopoverHandlerBinding } from '@common/components/DynamicPopover/DynamicPopover'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { StageActions } from '@common/constants/TrackingConstants'
@@ -28,24 +29,23 @@ import { useGlobalEventListener } from '@common/hooks'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { useTemplateSelector } from '@pipeline/utils/useTemplateSelector'
-import { getPipelineGraphData } from '@pipeline/components/PipelineDiagram/PipelineGraph/PipelineGraphUtils'
-import PipelineStageNode from '@pipeline/components/PipelineDiagram/Nodes/DefaultNode/PipelineStageNode/PipelineStageNode'
-import { DiamondNodeWidget } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondNode'
-import { IconNode } from '@pipeline/components/PipelineDiagram/Nodes/IconNode/IconNode'
+
+import { IconNode } from '@pipeline/components/PipelineNodes/IconNode/IconNode'
 import { DiagramFactory, NodeType, BaseReactComponentProps } from '@pipeline/components/PipelineDiagram/DiagramFactory'
-import CreateNodeStage from '@pipeline/components/PipelineDiagram/Nodes/CreateNode/CreateNodeStage'
-import EndNodeStage from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndNodeStage'
-import StartNodeStage from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNodeStage'
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import PipelineStageNode from '@pipeline/components/PipelineNodes/DefaultNode/PipelineStageNode/PipelineStageNode'
+import { DiamondNodeWidget } from '@pipeline/components/PipelineNodes/DiamondNode/DiamondNode'
+import CreateNodeStage from '@pipeline/components/PipelineNodes/CreateNode/CreateNodeStage'
+import EndNodeStage from '@pipeline/components/PipelineNodes/EndNode/EndNodeStage'
+import StartNodeStage from '@pipeline/components/PipelineNodes/StartNode/StartNodeStage'
 import {
   CanvasWidget,
   createEngine,
   DefaultLinkModel,
   DefaultNodeEvent,
   DefaultNodeModel,
-  Event,
   NodeStartModel
 } from '../../Diagram'
 import { StageBuilderModel } from './StageBuilderModel'
@@ -74,9 +74,11 @@ import css from './StageBuilder.module.scss'
 
 const diagram = new DiagramFactory('graph')
 
-diagram.registerNode('Deployment', PipelineStageNode as unknown as React.FC<BaseReactComponentProps>, true)
-diagram.registerNode('CI', PipelineStageNode as unknown as React.FC<BaseReactComponentProps>)
-diagram.registerNode('SecurityTests', PipelineStageNode as unknown as React.FC<BaseReactComponentProps>)
+diagram.registerNode(
+  ['Deployment', 'CI', 'SecurityTests'],
+  PipelineStageNode as unknown as React.FC<BaseReactComponentProps>,
+  true
+)
 diagram.registerNode('Approval', DiamondNodeWidget)
 diagram.registerNode('Barrier', IconNode)
 diagram.registerNode(NodeType.CreateNode, CreateNodeStage as unknown as React.FC<BaseReactComponentProps>)

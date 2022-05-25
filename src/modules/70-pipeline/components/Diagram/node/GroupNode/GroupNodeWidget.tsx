@@ -9,11 +9,11 @@ import React from 'react'
 import type { DiagramEngine } from '@projectstorm/react-diagrams-core'
 import { Icon, Text } from '@wings-software/uicore'
 import cx from 'classnames'
+import { Event } from '@pipeline/utils/PipelineStudioUtils'
 import type { GroupNodeModel } from './GroupNodeModel'
 import { DefaultPortLabel } from '../../port/DefaultPortLabelWidget'
 import type { DefaultPortModel } from '../../port/DefaultPortModel'
-
-import { DiagramDrag, Event } from '../../Constants'
+import { DiagramDrag } from '../../Constants'
 import css from '../DefaultNode.module.scss'
 
 export interface GroupNodeProps {

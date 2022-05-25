@@ -8,7 +8,7 @@
 import React, { useRef, useState, useLayoutEffect, ForwardedRef } from 'react'
 import { defaultTo, throttle } from 'lodash-es'
 import classNames from 'classnames'
-import GroupNode from '../Nodes/GroupNode/GroupNode'
+import GroupNode from '../Nodes/GroupNode/DefaultGroupNode'
 import type {
   NodeCollapsibleProps,
   NodeDetails,
@@ -258,6 +258,8 @@ const PipelineGraphNodeWithoutCollapse = React.forwardRef(
               >
                 {shouldRenderGroupNode(attachRef, isCurrentChildLast) ? (
                   <GroupNode
+                    defaultSelected={undefined}
+                    parentIdentifier={''}
                     {...data}
                     id={currentNodeData.id}
                     fireEvent={fireEvent}

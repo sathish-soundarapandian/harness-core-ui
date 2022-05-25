@@ -8,27 +8,31 @@
 import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import cx from 'classnames'
 import { defaultTo, get } from 'lodash-es'
-import { DiagramType, Event } from '@pipeline/components/Diagram'
+import { DiagramType } from '@pipeline/components/Diagram'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { SVGComponent } from '../../PipelineGraph/PipelineGraph'
-import { PipelineGraphRecursive } from '../../PipelineGraph/PipelineGraphNode'
+
 import {
+  NodeType,
+  GetNodeMethod,
+  NodeDetails,
+  GraphConfigStore,
   getFinalSVGArrowPath,
-  getPipelineGraphData,
-  getSVGLinksFromPipeline
-} from '../../PipelineGraph/PipelineGraphUtils'
-import type { GetNodeMethod, NodeDetails, NodeIds, PipelineGraphState, SVGPathRecord } from '../../types'
-import { NodeType } from '../../types'
-import GraphConfigStore from '../../PipelineGraph/GraphConfigStore'
+  getSVGLinksFromPipeline,
+  PipelineGraphRecursive,
+  SVGComponent,
+  PipelineGraphState,
+  SVGPathRecord
+} from '@pipeline/components/PipelineDiagram/DiagramFactory'
+import { Event, getPipelineGraphData } from '@pipeline/utils/PipelineStudioUtils'
 import css from './StepGroupGraph.module.scss'
+
 interface StepGroupGraphProps {
   id?: string
   data?: any[]
   getNode: GetNodeMethod
   getDefaultNode(): NodeDetails | null
   selectedNodeId?: string
-  uniqueNodeIds?: NodeIds
   fireEvent: (event: any) => void
   startEndNodeNeeded?: boolean
   updateSVGLinks?: (svgPath: string[]) => void
