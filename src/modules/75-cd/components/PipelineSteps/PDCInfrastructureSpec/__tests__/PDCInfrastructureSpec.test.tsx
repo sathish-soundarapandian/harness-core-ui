@@ -77,6 +77,10 @@ jest.mock('services/cd-ng', () => ({
   listSecretsV2Promise: jest.fn().mockImplementation(() => Promise.resolve(mockListSecrets))
 }))
 
+jest.mock('services/portal', () => ({
+  useGetDelegateSelectorsUpTheHierarchy: jest.fn().mockImplementation(() => ({ mutate: jest.fn() }))
+}))
+
 const getRuntimeInputsValues = () => ({
   credentialsRef: RUNTIME_INPUT_VALUE
 })
@@ -94,7 +98,7 @@ describe('Test PDCInfrastructureSpec behavior', () => {
     factory.registerStep(new PDCInfrastructureSpec())
   })
 
-  test.only('should call onUpdate if valid values entered - inputset', async () => {
+  test('should call onUpdate if valid values entered - inputset', async () => {
     const onUpdateHandler = jest.fn()
     const { container } = render(
       <TestStepWidget
