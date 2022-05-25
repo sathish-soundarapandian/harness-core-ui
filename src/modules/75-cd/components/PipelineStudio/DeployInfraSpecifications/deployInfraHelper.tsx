@@ -6,9 +6,12 @@
  */
 
 import { defaultTo, get, isNil } from 'lodash-es'
+import type { IconName } from '@wings-software/uicore'
 import { InfraDeploymentType } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
-import type { Infrastructure } from 'services/cd-ng'
+import type { Infrastructure, ServiceDefinition } from 'services/cd-ng'
+import type { StringsMap } from 'stringTypes'
+import { isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
 
 const DEFAULT_RELEASE_NAME = 'release-<+INFRA_KEY>'
 
@@ -119,4 +122,83 @@ export const getInfrastructureDefaultValue = (
       return {}
     }
   }
+}
+interface InfrastructureItem {
+  label: string
+  icon: IconName
+  value: string
+  disabled?: boolean
+}
+export interface InfrastructureGroup {
+  groupLabel: string
+  items: InfrastructureItem[]
+  disabled?: boolean
+}
+
+export const getInfraGroups = (
+  deploymentType: ServiceDefinition['type'],
+  getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
+  featureFlags: Record<string, boolean>
+): InfrastructureGroup[] => {
+  const { NG_AZURE } = featureFlags
+  return isServerlessDeploymentType(deploymentType)
+    ? [
+        {
+          groupLabel: '',
+          items: [
+            {
+              label: getString('common.aws'),
+              icon: 'service-aws',
+              value: InfraDeploymentType.ServerlessAwsLambda
+            },
+            {
+              label: getString('common.gcp'),
+              icon: 'gcp',
+              value: InfraDeploymentType.ServerlessGoogleFunctions,
+              disabled: true
+            },
+            {
+              label: getString('common.azure'),
+              icon: 'service-azure',
+              value: InfraDeploymentType.ServerlessAzureFunctions,
+              disabled: true
+            }
+          ]
+        }
+      ]
+    : [
+        {
+          groupLabel: getString('pipelineSteps.deploy.infrastructure.directConnection'),
+          items: [
+            {
+              label: getString('pipelineSteps.deploymentTypes.kubernetes'),
+              icon: 'service-kubernetes',
+              value: InfraDeploymentType.KubernetesDirect
+            }
+          ]
+        },
+        {
+          groupLabel: getString('pipelineSteps.deploy.infrastructure.viaCloudProvider'),
+          items: NG_AZURE
+            ? [
+                {
+                  label: getString('pipelineSteps.deploymentTypes.gk8engine'),
+                  icon: 'google-kubernetes-engine',
+                  value: InfraDeploymentType.KubernetesGcp
+                },
+                {
+                  label: getString('cd.steps.azureInfraStep.azure'),
+                  icon: 'microsoft-azure',
+                  value: InfraDeploymentType.KubernetesAzure
+                }
+              ]
+            : [
+                {
+                  label: getString('pipelineSteps.deploymentTypes.gk8engine'),
+                  icon: 'google-kubernetes-engine',
+                  value: InfraDeploymentType.KubernetesGcp
+                }
+              ]
+        }
+      ]
 }

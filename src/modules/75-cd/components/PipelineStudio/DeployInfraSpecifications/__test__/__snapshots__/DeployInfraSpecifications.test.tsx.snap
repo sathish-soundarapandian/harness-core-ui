@@ -197,19 +197,6 @@ exports[`Deploy infra specifications test Should match snapshot 1`] = `
         </div>
       </div>
       <div
-        class="tabHeading"
-        id="clusterDetails"
-      >
-        cd.steps.common.clusterDetails
-      </div>
-      <div
-        class="bp3-card bp3-elevation-0 Card--card sectionCard"
-      >
-        <div>
-          cd.steps.common.undefinedType
-        </div>
-      </div>
-      <div
         class="StyledProps--font StyledProps--main StyledProps--margin-top-xxlarge"
       />
     </div>
