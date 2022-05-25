@@ -9,6 +9,7 @@ import React, { ReactElement } from 'react'
 import { createRenderer } from 'react-test-renderer/shallow'
 import * as hooks from '@common/hooks/useFeatureFlag'
 import type { FeatureFlag } from '@common/featureFlags'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import RouteDestinations from '../RouteDestinations'
 
 jest.mock('@common/utils/YamlUtils', () => ({}))
@@ -45,17 +46,27 @@ describe('RouteDestinations', () => {
     test('it should not return the pipeline routes when the FF_PIPELINE feature flag is false', () => {
       const routes = renderRoutes({ FF_PIPELINE: false })
 
-      expect(routes).not.toContainEqual(
-        expect.objectContaining({ type: expect.objectContaining({ name: 'PipelineRouteDestinations' }) })
-      )
+      expect(routeHasPageName(routes, PAGE_NAME.PipelinesPage)).toBeFalsy()
     })
 
     test('it should return the pipeline routes when the FF_PIPELINE feature flag is true', () => {
       const routes = renderRoutes({ FF_PIPELINE: true })
 
-      expect(routes).toContainEqual(
-        expect.objectContaining({ type: expect.objectContaining({ name: 'PipelineRouteDestinations' }) })
-      )
+      expect(routeHasPageName(routes, PAGE_NAME.PipelinesPage)).toBeTruthy()
     })
   })
 })
+
+// Recursively search through routes (which can contain arrays of routes) for the given page name.
+function routeHasPageName(el: ReactElement | ReactElement[], pageName: string): boolean {
+  if (Array.isArray(el)) {
+    for (const child of el) {
+      if (routeHasPageName(child, pageName)) {
+        return true
+      }
+    }
+  } else {
+    return el.props?.pageName === pageName
+  }
+  return false
+}

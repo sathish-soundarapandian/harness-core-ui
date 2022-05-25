@@ -322,50 +322,6 @@ Array [
         "startTrialRedirect": [Function],
       }
     }
-    pageName="TemplateStudioWrapper"
-    path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/resources/template-studio/:templateType/template/:templateIdentifier/"
-    sidebarProps={
-      Object {
-        "icon": "cf-main",
-        "navComponent": [Function],
-        "title": "Feature Flags",
-      }
-    }
-  >
-    <TemplateStudioWrapper />
-  </RouteWithLayout>,
-  <RouteWithLayout
-    exact={true}
-    layout={[Function]}
-    licenseRedirectData={
-      Object {
-        "expiredTrialRedirect": [Function],
-        "licenseStateName": "FF_LICENSE_STATE",
-        "startTrialRedirect": [Function],
-      }
-    }
-    pageName="TemplatesPage"
-    path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/resources/templates"
-    sidebarProps={
-      Object {
-        "icon": "cf-main",
-        "navComponent": [Function],
-        "title": "Feature Flags",
-      }
-    }
-  >
-    <TemplatesPage />
-  </RouteWithLayout>,
-  <RouteWithLayout
-    exact={true}
-    layout={[Function]}
-    licenseRedirectData={
-      Object {
-        "expiredTrialRedirect": [Function],
-        "licenseStateName": "FF_LICENSE_STATE",
-        "startTrialRedirect": [Function],
-      }
-    }
     pageName="CFWorkflowsPage"
     path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/workflows"
     sidebarProps={
@@ -378,6 +334,235 @@ Array [
   >
     <CFWorkflowsPage />
   </RouteWithLayout>,
+  Array [
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="TemplatesPage"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/resources/templates"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <TemplatesPage />
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="TemplateStudioWrapper"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/resources/template-studio/:templateType/template/:templateIdentifier/"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <TemplateStudioWrapper />
+    </RouteWithLayout>,
+  ],
+  Array [
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="ConnectorsPage"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/resources/connectors"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <ConnectorsPage />
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="CreateConnectorFromYamlPage"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/resources/connectors/yaml/create-connector"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <CreateConnectorFromYamlPage />
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="ConnectorDetailsPage"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/resources/connectors/:connectorId"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <ConnectorDetailsPage />
+    </RouteWithLayout>,
+  ],
+  Array [
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="SecretsPage"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/resources/secrets"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <SecretsPage />
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="CreateSecretFromYamlPage"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/resources/secrets/yaml/create-secret"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <CreateSecretFromYamlPage />
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/resources/secrets/:secretId"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <RedirectToSecretDetailHome />
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="SecretDetails"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/resources/secrets/:secretId/overview"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <SecretDetaislHomePage>
+        <SecretDetails />
+      </SecretDetaislHomePage>
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="SecretReferences"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/resources/secrets/:secretId/references"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <SecretDetaislHomePage>
+        <SecretReferences />
+      </SecretDetaislHomePage>
+    </RouteWithLayout>,
+  ],
   <RouteWithLayout
     exact={true}
     layout={[Function]}
@@ -388,95 +573,8 @@ Array [
         "startTrialRedirect": [Function],
       }
     }
-    pageName="ConnectorsPage"
-    path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/resources/connectors"
-    sidebarProps={
-      Object {
-        "icon": "cf-main",
-        "navComponent": [Function],
-        "title": "Feature Flags",
-      }
-    }
-  >
-    <ConnectorsPage />
-  </RouteWithLayout>,
-  <RouteWithLayout
-    exact={true}
-    layout={[Function]}
-    licenseRedirectData={
-      Object {
-        "expiredTrialRedirect": [Function],
-        "licenseStateName": "FF_LICENSE_STATE",
-        "startTrialRedirect": [Function],
-      }
-    }
-    pageName="CreateConnectorFromYamlPage"
-    path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/resources/connectors/yaml/create-connector"
-    sidebarProps={
-      Object {
-        "icon": "cf-main",
-        "navComponent": [Function],
-        "title": "Feature Flags",
-      }
-    }
-  >
-    <CreateConnectorFromYamlPage />
-  </RouteWithLayout>,
-  <RouteWithLayout
-    exact={true}
-    layout={[Function]}
-    licenseRedirectData={
-      Object {
-        "expiredTrialRedirect": [Function],
-        "licenseStateName": "FF_LICENSE_STATE",
-        "startTrialRedirect": [Function],
-      }
-    }
-    pageName="ConnectorDetailsPage"
-    path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/resources/connectors/:connectorId"
-    sidebarProps={
-      Object {
-        "icon": "cf-main",
-        "navComponent": [Function],
-        "title": "Feature Flags",
-      }
-    }
-  >
-    <ConnectorDetailsPage />
-  </RouteWithLayout>,
-  <RouteWithLayout
-    exact={true}
-    layout={[Function]}
-    licenseRedirectData={
-      Object {
-        "expiredTrialRedirect": [Function],
-        "licenseStateName": "FF_LICENSE_STATE",
-        "startTrialRedirect": [Function],
-      }
-    }
-    pageName="SecretsPage"
-    path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/resources/secrets"
-    sidebarProps={
-      Object {
-        "icon": "cf-main",
-        "navComponent": [Function],
-        "title": "Feature Flags",
-      }
-    }
-  >
-    <SecretsPage />
-  </RouteWithLayout>,
-  <RouteWithLayout
-    exact={true}
-    layout={[Function]}
-    licenseRedirectData={
-      Object {
-        "expiredTrialRedirect": [Function],
-        "licenseStateName": "FF_LICENSE_STATE",
-        "startTrialRedirect": [Function],
-      }
-    }
-    path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/resources/variables"
+    pageName="VariablesPage"
+    path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/resources/variables"
     sidebarProps={
       Object {
         "icon": "cf-main",
@@ -487,231 +585,825 @@ Array [
   >
     <VariablesPage />
   </RouteWithLayout>,
-  <RouteWithLayout
-    exact={true}
-    layout={[Function]}
-    licenseRedirectData={
-      Object {
-        "expiredTrialRedirect": [Function],
-        "licenseStateName": "FF_LICENSE_STATE",
-        "startTrialRedirect": [Function],
+  Array [
+    <Route
+      exact={true}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
       }
-    }
-    pageName="CreateSecretFromYamlPage"
-    path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/resources/secrets/yaml/create-secret"
-    sidebarProps={
-      Object {
-        "icon": "cf-main",
-        "navComponent": [Function],
-        "title": "Feature Flags",
+      pageName="GitSyncRepoTab"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/git-sync"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
       }
-    }
-  >
-    <CreateSecretFromYamlPage />
-  </RouteWithLayout>,
-  <RouteWithLayout
-    exact={true}
-    layout={[Function]}
-    licenseRedirectData={
-      Object {
-        "expiredTrialRedirect": [Function],
-        "licenseStateName": "FF_LICENSE_STATE",
-        "startTrialRedirect": [Function],
+    >
+      <RedirectToGitSyncHome />
+    </Route>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
       }
-    }
-    pageName="SecretDetails"
-    path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/resources/secrets/:secretId"
-    sidebarProps={
-      Object {
-        "icon": "cf-main",
-        "navComponent": [Function],
-        "title": "Feature Flags",
+      pageName="GitSyncRepoTab"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/git-sync/repos"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
       }
-    }
-  >
-    <RedirectToSecretDetailHome />
-  </RouteWithLayout>,
-  <RouteWithLayout
-    exact={true}
-    layout={[Function]}
-    licenseRedirectData={
-      Object {
-        "expiredTrialRedirect": [Function],
-        "licenseStateName": "FF_LICENSE_STATE",
-        "startTrialRedirect": [Function],
+    >
+      <GitSyncPage>
+        <GitSyncRepoTab />
+      </GitSyncPage>
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
       }
-    }
-    pageName="SecretDetails"
-    path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/resources/secrets/:secretId/overview"
-    sidebarProps={
-      Object {
-        "icon": "cf-main",
-        "navComponent": [Function],
-        "title": "Feature Flags",
+      pageName="GitSyncEntityTab"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/git-sync/entities"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
       }
-    }
-  >
-    <SecretDetaislHomePage>
-      <SecretDetails />
-    </SecretDetaislHomePage>
-  </RouteWithLayout>,
-  <RouteWithLayout
-    exact={true}
-    layout={[Function]}
-    licenseRedirectData={
-      Object {
-        "expiredTrialRedirect": [Function],
-        "licenseStateName": "FF_LICENSE_STATE",
-        "startTrialRedirect": [Function],
+    >
+      <GitSyncPage>
+        <GitSyncEntityTab />
+      </GitSyncPage>
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
       }
-    }
-    pageName="SecretReferences"
-    path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/resources/secrets/:secretId/references"
-    sidebarProps={
-      Object {
-        "icon": "cf-main",
-        "navComponent": [Function],
-        "title": "Feature Flags",
+      pageName="GitSyncErrors"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/git-sync/errors"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
       }
-    }
-  >
-    <SecretDetaislHomePage>
-      <SecretReferences />
-    </SecretDetaislHomePage>
-  </RouteWithLayout>,
-  <RouteWithLayout
-    exact={true}
-    layout={[Function]}
-    licenseRedirectData={
-      Object {
-        "expiredTrialRedirect": [Function],
-        "licenseStateName": "FF_LICENSE_STATE",
-        "startTrialRedirect": [Function],
+    >
+      <GitSyncPage>
+        <GitSyncErrors />
+      </GitSyncPage>
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
       }
-    }
-    pageName="GitSyncRepoTab"
-    path={
-      Array [
-        "/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/setup/git-sync",
-      ]
-    }
-    sidebarProps={
-      Object {
-        "icon": "cf-main",
-        "navComponent": [Function],
-        "title": "Feature Flags",
+      pageName="GitSyncConfigTab"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/git-sync/config"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
       }
-    }
-  >
-    <RedirectToGitSyncHome />
-  </RouteWithLayout>,
-  <RouteWithLayout
-    exact={true}
-    layout={[Function]}
-    licenseRedirectData={
-      Object {
-        "expiredTrialRedirect": [Function],
-        "licenseStateName": "FF_LICENSE_STATE",
-        "startTrialRedirect": [Function],
+    >
+      <GitSyncPage>
+        <GitSyncConfigTab />
+      </GitSyncPage>
+    </RouteWithLayout>,
+  ],
+  Array [
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
       }
-    }
-    pageName="GitSyncRepoTab"
-    path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/git-sync/repos"
-    sidebarProps={
-      Object {
-        "icon": "cf-main",
-        "navComponent": [Function],
-        "title": "Feature Flags",
+      path={
+        Array [
+          "/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/access-control",
+        ]
       }
-    }
-  >
-    <GitSyncPage>
-      <GitSyncRepoTab />
-    </GitSyncPage>
-  </RouteWithLayout>,
-  <RouteWithLayout
-    exact={true}
-    layout={[Function]}
-    licenseRedirectData={
-      Object {
-        "expiredTrialRedirect": [Function],
-        "licenseStateName": "FF_LICENSE_STATE",
-        "startTrialRedirect": [Function],
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
       }
-    }
-    pageName="GitSyncEntityTab"
-    path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/git-sync/entities"
-    sidebarProps={
-      Object {
-        "icon": "cf-main",
-        "navComponent": [Function],
-        "title": "Feature Flags",
+    >
+      <RedirectToModuleAccessControlHome />
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
       }
-    }
-  >
-    <GitSyncPage>
-      <GitSyncEntityTab />
-    </GitSyncPage>
-  </RouteWithLayout>,
-  <RouteWithLayout
-    exact={true}
-    layout={[Function]}
-    licenseRedirectData={
-      Object {
-        "expiredTrialRedirect": [Function],
-        "licenseStateName": "FF_LICENSE_STATE",
-        "startTrialRedirect": [Function],
+      pageName="UsersPage"
+      path={
+        Array [
+          "/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/access-control/users",
+        ]
       }
-    }
-    pageName="GitSyncErrors"
-    path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/git-sync/errors"
-    sidebarProps={
-      Object {
-        "icon": "cf-main",
-        "navComponent": [Function],
-        "title": "Feature Flags",
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
       }
-    }
-  >
-    <GitSyncPage>
-      <GitSyncErrors />
-    </GitSyncPage>
-  </RouteWithLayout>,
-  <RouteWithLayout
-    exact={true}
-    layout={[Function]}
-    licenseRedirectData={
-      Object {
-        "expiredTrialRedirect": [Function],
-        "licenseStateName": "FF_LICENSE_STATE",
-        "startTrialRedirect": [Function],
+    >
+      <AccessControlPage>
+        <UsersPage />
+      </AccessControlPage>
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
       }
-    }
-    pageName="GitSyncConfigTab"
-    path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/git-sync/config"
-    sidebarProps={
-      Object {
-        "icon": "cf-main",
-        "navComponent": [Function],
-        "title": "Feature Flags",
+      pageName="UserDetails"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/access-control/users/:userIdentifier"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
       }
-    }
-  >
-    <GitSyncPage>
-      <GitSyncConfigTab />
-    </GitSyncPage>
-  </RouteWithLayout>,
-  <AdminRouteDestinations />,
-  <PipelineRouteDestinations />,
-  <Route
-    path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/governance"
-  >
+    >
+      <UserDetails />
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="UserGroups"
+      path={
+        Array [
+          "/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/access-control/user-groups",
+        ]
+      }
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <AccessControlPage>
+        <UserGroupsPage />
+      </AccessControlPage>
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="UserGroupDetails"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/access-control/user-groups/:userGroupIdentifier"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <UserGroupDetails />
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="ServiceAccountsPage"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/access-control/service-accounts"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <AccessControlPage>
+        <ServiceAccountsPage />
+      </AccessControlPage>
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="ServiceAccountDetails"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/access-control/service-accounts/:serviceAccountIdentifier"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <ServiceAccountDetails />
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="ResourceGroups"
+      path={
+        Array [
+          "/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/access-control/resource-groups",
+        ]
+      }
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <AccessControlPage>
+        <ResourceGroups />
+      </AccessControlPage>
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="Roles"
+      path={
+        Array [
+          "/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/access-control/roles",
+        ]
+      }
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <AccessControlPage>
+        <Roles />
+      </AccessControlPage>
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="RoleDetails"
+      path={
+        Array [
+          "/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/access-control/roles/:roleIdentifier",
+        ]
+      }
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <RoleDetails />
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="ResourceGroupDetails"
+      path={
+        Array [
+          "/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/access-control/resource-groups/:resourceGroupIdentifier",
+        ]
+      }
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <ResourceGroupDetails />
+    </RouteWithLayout>,
+  ],
+  Array [
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/pipelines/:pipelineIdentifier/pipeline-studio/"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <PipelineDetails>
+        <CFPipelineStudioWrapper />
+      </PipelineDetails>
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="FullPageLogView"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/pipelines/:pipelineIdentifier/execution/:executionIdentifier/logs/:stageIdentifier/:stepIndentifier"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <FullPageLogView />
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="PipelinesPage"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/pipelines"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <PipelinesPage />
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/deployments"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <DeploymentsList />
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="InputSetList"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/pipelines/:pipelineIdentifier/input-sets"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <PipelineDetails>
+        <InputSetList />
+      </PipelineDetails>
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="EnhancedInputSetForm"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/pipelines/:pipelineIdentifier/input-sets/:inputSetIdentifier"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <EnhancedInputSetForm />
+    </RouteWithLayout>,
+    <Route
+      exact={true}
+      licenseStateName="FF_LICENSE_STATE"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/pipelines/:pipelineIdentifier/executions/:executionIdentifier"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <RedirectToExecutionPipeline />
+    </Route>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="ExecutionPipelineView"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/pipelines/:pipelineIdentifier/executions/:executionIdentifier/pipeline"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <ExecutionLandingPage>
+        <ExecutionPipelineView />
+      </ExecutionLandingPage>
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="ExecutionPolicyEvaluationsView"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/pipelines/:pipelineIdentifier/executions/:executionIdentifier/policy-evaluations"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <ExecutionLandingPage>
+        <ExecutionPolicyEvaluationsView />
+      </ExecutionLandingPage>
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="ExecutionSecurityView"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/pipelines/:pipelineIdentifier/executions/:executionIdentifier/security"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <ExecutionLandingPage>
+        <ExecutionSecurityView />
+      </ExecutionLandingPage>
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="ExecutionInputsView"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/pipelines/:pipelineIdentifier/executions/:executionIdentifier/inputs"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <ExecutionLandingPage>
+        <ExecutionInputsView />
+      </ExecutionLandingPage>
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="ExecutionArtifactsView"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/pipelines/:pipelineIdentifier/executions/:executionIdentifier/artifacts"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <ExecutionLandingPage>
+        <ExecutionArtifactsView />
+      </ExecutionLandingPage>
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="BuildTests"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/pipelines/:pipelineIdentifier/executions/:executionIdentifier/tests"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <ExecutionLandingPage>
+        <BuildTests />
+      </ExecutionLandingPage>
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/pipelines/:pipelineIdentifier/executions"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <PipelineDetails>
+        <CFPipelineDeploymentList />
+      </PipelineDetails>
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/pipelines/:pipelineIdentifier"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <RedirectToPipelineDetailHome />
+    </RouteWithLayout>,
+  ],
+  Array [
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="TriggersPage"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/pipelines/:pipelineIdentifier/triggers"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <PipelineDetails>
+        <TriggersPage />
+      </PipelineDetails>
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="TriggersDetailPage"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/pipelines/:pipelineIdentifier/triggers/:triggerIdentifier/detail"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <TriggersDetailPage />
+    </RouteWithLayout>,
+    <RouteWithLayout
+      exact={true}
+      layout={[Function]}
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      pageName="TriggersWizardPage"
+      path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/pipelines/:pipelineIdentifier/triggers/:triggerIdentifier"
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    >
+      <TriggerDetails
+        wizard={true}
+      >
+        <TriggersWizardPage />
+      </TriggerDetails>
+    </RouteWithLayout>,
+  ],
+  Array [
     <Route
       exact={true}
       path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/governance"
     >
       <RedirectToDefaultGovernanceRoute />
-    </Route>
+    </Route>,
     <RouteWithLayout
       layout={[Function]}
       path="/account/:accountId/:module(cf)/orgs/:orgIdentifier/projects/:projectIdentifier/setup/governance"
@@ -740,7 +1432,7 @@ Array [
           </Container>
         }
       />
-    </RouteWithLayout>
-  </Route>,
+    </RouteWithLayout>,
+  ],
 ]
 `;
