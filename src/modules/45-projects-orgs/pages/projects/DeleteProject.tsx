@@ -21,12 +21,10 @@ interface UseDeleteProjectDialogReturn {
 
 const useDeleteProjectDialog = (data: Project, onSuccess: () => void): UseDeleteProjectDialogReturn => {
   const { accountId } = useParams<AccountPathProps>()
-  const { updateAppStore } = useAppStore()
+  const { updateAppStore, selectedProject: selectedProjectFromAppStore } = useAppStore()
   const { getRBACErrorMessage } = useRBACError()
-  const { preference: savedProject, clearPreference: clearSavedProject } = usePreferenceStore<SavedProjectDetails>(
-    PreferenceScope.USER,
-    'savedProject'
-  )
+  const { preference: savedProjectFromPreferenceStore, clearPreference: clearSavedProject } =
+    usePreferenceStore<SavedProjectDetails>(PreferenceScope.USER, 'savedProject')
   const { mutate: deleteProject } = useDeleteProject({
     queryParams: {
       accountIdentifier: accountId,
@@ -48,15 +46,24 @@ const useDeleteProjectDialog = (data: Project, onSuccess: () => void): UseDelete
           const deleted = await deleteProject(data.identifier || /* istanbul ignore next */ '', {
             headers: { 'content-type': 'application/json' }
           })
-          if (deleted)
+          if (deleted.data) {
             showSuccess(
               getString('projectCard.successMessage', { projectName: data.name || /* istanbul ignore next */ '' })
             )
-          if (savedProject.projectIdentifier === data.identifier) {
-            clearSavedProject()
-            updateAppStore({ selectedProject: undefined, selectedOrg: undefined })
+            if (savedProjectFromPreferenceStore?.projectIdentifier === data?.identifier) {
+              clearSavedProject()
+            }
+            if (selectedProjectFromAppStore?.identifier === data?.identifier) {
+              updateAppStore({ selectedProject: undefined, selectedOrg: undefined })
+            }
+            onSuccess()
+          } else {
+            showError(
+              getString('projectsOrgs.projectDeleteErrorMessage', {
+                projectName: data.name || /* istanbul ignore next */ ''
+              })
+            )
           }
-          onSuccess()
         } catch (err) {
           /* istanbul ignore next */
           showError(getRBACErrorMessage(err))

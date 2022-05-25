@@ -121,3 +121,4 @@ resendInvitation: Resend Invitation
 optional: Optional
 moduleSelectionTitle: Which Harness module would you like to start using for this project
 goToModuleBtn: Go to Module
+projectDeleteErrorMessage: 'Project {{projectName}} could not be deleted'
