@@ -20,7 +20,7 @@ import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/Pipeli
 import { sanitize } from '@common/utils/JSONUtils'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
 import type { NGServiceConfig, PipelineInfoConfig } from 'services/cd-ng'
-import { useServiceContext } from '@cd/context/ServiceContext'
+import { useServiceContext } from '@pipeline/context/ServiceContext'
 import {
   initialServiceState,
   DefaultNewStageName,

@@ -12,7 +12,7 @@ import cx from 'classnames'
 import { NameIdDescriptionTags } from '@common/components'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { NGServiceV2InfoConfig } from 'services/cd-ng'
-import { useServiceContext } from '@cd/context/ServiceContext'
+import { useServiceContext } from '@pipeline/context/ServiceContext'
 import css from './ServiceConfiguration.module.scss'
 
 function ServiceStepBasicInfo(): React.ReactElement {

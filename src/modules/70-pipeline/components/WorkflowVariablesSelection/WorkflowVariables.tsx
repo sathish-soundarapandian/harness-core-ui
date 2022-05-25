@@ -74,7 +74,7 @@ export default function WorkflowVariables({
   const [parentStageData, setParentStageData] = React.useState<StageElementWrapperConfig>()
 
   /*************************************Service Entity Related code********************************************************/
-  //This is temporary code to fetch the WORKFLOW data from service api. It will be replaced once caching is implemented for service entity
+  //This is temporary code to fetch the Workflow data from service api. It will be replaced once caching is implemented for service entity
   const {
     data: selectedServiceResponse,
     refetch: refetchServiceData,
@@ -129,7 +129,7 @@ export default function WorkflowVariables({
   }
 
   const getInitialValues = useCallback((): Variable[] => {
-    //This is temporary code to fetch the WORKFLOW data from service api. It will be replaced once caching is implemented for service entity
+    //This is temporary code to fetch the Workflow data from service api. It will be replaced once caching is implemented for service entity
     if (!isReadonly && isReadOnlyServiceMode) {
       const serviceData = selectedServiceResponse?.data?.service as ServiceResponseDTO
       if (!isEmpty(serviceData?.yaml)) {
@@ -144,7 +144,14 @@ export default function WorkflowVariables({
       return (predefinedSetsPath?.variables || []) as Variable[]
     }
     return (stageSpec?.variables || []) as Variable[]
-  }, [isPropagating, predefinedSetsPath, stageSpec?.variables])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    isPropagating,
+    isReadOnlyServiceMode,
+    predefinedSetsPath?.variables,
+    selectedServiceResponse?.data?.service,
+    stageSpec
+  ])
 
   const getYamlPropertiesForVariables = (): Variable[] => {
     if (isPropagating) {

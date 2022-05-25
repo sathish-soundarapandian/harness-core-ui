@@ -33,6 +33,7 @@ import type { NGVariable } from 'services/cd-ng'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import type { AllNGVariables } from '@pipeline/utils/types'
 import { getVariablesValidationField } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/validation'
+import { useServiceContext } from '@pipeline/context/ServiceContext'
 import type { CustomVariableEditableProps, CustomVariablesData } from './CustomVariableEditable'
 import { VariableType, labelStringMap } from './CustomVariableUtils'
 import AddEditCustomVariable, { VariableState } from './AddEditCustomVariable'
@@ -59,6 +60,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
   const uids = React.useRef<string[]>([])
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
+  const { isServiceEntityPage } = useServiceContext()
 
   const [selectedVariable, setSelectedVariable] = React.useState<VariableState | null>(null)
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -90,6 +92,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
   return (
     <Formik
       initialValues={initialValues}
+      enableReinitialize={isServiceEntityPage}
       onSubmit={data => onUpdate?.(data)}
       validate={debouncedUpdate}
       validationSchema={enableValidation ? getValidationSchema(getString) : undefined}

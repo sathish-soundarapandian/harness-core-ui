@@ -10,7 +10,7 @@ import { isEmpty } from 'lodash-es'
 import { PageSpinner } from '@harness/uicore'
 import type { ServiceResponseDTO } from 'services/cd-ng'
 import ServiceConfigurationWrapper from '@cd/components/Services/ServiceStudio/ServiceConfigWrapper/ServiceConfigWrapper'
-import { ServiceContextProvider } from '@cd/context/ServiceContext'
+import { ServiceContextProvider } from '@pipeline/context/ServiceContext'
 
 interface ServiceEntityEditModalProps {
   serviceResponse: ServiceResponseDTO

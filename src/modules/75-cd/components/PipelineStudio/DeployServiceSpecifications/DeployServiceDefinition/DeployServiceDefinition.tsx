@@ -25,7 +25,7 @@ import {
   ServiceDeploymentType
 } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import { useServiceContext } from '@cd/context/ServiceContext'
+import { useServiceContext } from '@pipeline/context/ServiceContext'
 import { setupMode } from '../PropagateWidget/PropagateWidget'
 import SelectDeploymentType from '../SelectDeploymentType'
 import css from './DeployServiceDefinition.module.scss'

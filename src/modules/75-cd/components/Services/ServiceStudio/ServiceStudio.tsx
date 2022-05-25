@@ -12,9 +12,9 @@ import { isEmpty, noop } from 'lodash-es'
 import { ServiceDetailsHeader } from '@cd/components/ServiceDetails/ServiceDetailsHeader/ServiceDetailsHeader'
 import { ServiceResponseDTO, useGetServiceV2 } from 'services/cd-ng'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
-import { ServiceContextProvider } from '@cd/context/ServiceContext'
 import ServiceDetailsSummary from '@cd/components/ServiceDetails/ServiceDetailsContent/ServiceDetailsSummary'
 import EntitySetupUsage from '@common/pages/entityUsage/EntityUsage'
+import { ServiceContextProvider } from '@pipeline/context/ServiceContext'
 import ServiceConfigurationWrapper from './ServiceConfigWrapper/ServiceConfigWrapper'
 
 function ServiceStudio(): React.ReactElement | null {
