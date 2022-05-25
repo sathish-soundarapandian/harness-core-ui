@@ -192,7 +192,11 @@ export default function DeployInfraSpecifications(props: React.PropsWithChildren
   }, [stage, getStageFromPipeline])
 
   const infraGroups = React.useMemo(
-    () => getInfraGroups(selectedDeploymentType, getString, { NG_AZURE: defaultTo(NG_AZURE, false), SSH_NG }),
+    () =>
+      getInfraGroups(selectedDeploymentType, getString, {
+        NG_AZURE: defaultTo(NG_AZURE, false),
+        SSH_NG: defaultTo(SSH_NG, false)
+      }),
     [selectedDeploymentType, NG_AZURE]
   )
 
