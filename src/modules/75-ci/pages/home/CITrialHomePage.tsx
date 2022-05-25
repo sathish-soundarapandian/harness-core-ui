@@ -25,39 +25,39 @@ import css from './CITrialHomePage.module.scss'
 
 const CITrialHomePage: React.FC = () => {
   const { getString } = useStrings()
-  const { FREE_PLAN_ENABLED, CIE_HOSTED_BUILDS } = useFeatureFlags()
+  const { FREE_PLAN_ENABLED } = useFeatureFlags()
   const history = useHistory()
   const { accountId } = useParams<AccountPathProps>()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const [loading, setLoading] = useState<boolean>(false)
+  const { status: currentCIStatus } = licenseInformation['CI'] || {}
 
   useEffect(() => {
-    if (CIE_HOSTED_BUILDS) {
-      setLoading(true)
-      try {
-        setUpCI({
-          accountId,
-          edition: Editions.FREE,
-          onSetUpSuccessCallback: ({ orgId, projectId }: StartFreeLicenseAndSetupProjectCallback) => {
-            setLoading(false)
-            history.push(
-              routes.toGetStartedWithCI({
-                accountId,
-                module: 'ci',
-                orgIdentifier: orgId,
-                projectIdentifier: projectId
-              })
-            )
-          },
-          licenseInformation,
-          updateLicenseStore,
-          onSetupFailureCallback: () => {
-            setLoading(false)
-          }
-        })
-      } catch (e) {
-        setLoading(false)
-      }
+    setLoading(true)
+    try {
+      setUpCI({
+        accountId,
+        // A new CI user will not have an active CI license. Also, for an existing user with an active license, we will not override the existing license.
+        edition: currentCIStatus !== 'ACTIVE' ? Editions.FREE : undefined,
+        onSetUpSuccessCallback: ({ orgId, projectId }: StartFreeLicenseAndSetupProjectCallback) => {
+          setLoading(false)
+          history.push(
+            routes.toGetStartedWithCI({
+              accountId,
+              module: 'ci',
+              orgIdentifier: orgId,
+              projectIdentifier: projectId
+            })
+          )
+        },
+        licenseInformation,
+        updateLicenseStore,
+        onSetupFailureCallback: () => {
+          setLoading(false)
+        }
+      })
+    } catch (e) {
+      setLoading(false)
     }
   }, [])
 

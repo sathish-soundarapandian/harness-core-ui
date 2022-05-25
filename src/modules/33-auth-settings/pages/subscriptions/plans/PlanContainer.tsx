@@ -27,7 +27,7 @@ import { useContactSalesMktoModal } from '@common/modals/ContactSales/useContact
 import routes from '@common/RouteDefinitions'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import { setUpCI, StartFreeLicenseAndSetupProjectCallback } from '@common/utils/GetStartedWithCIUtil'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useHostedBuilds } from '@common/hooks/useHostedBuild'
 import { ModuleName } from 'framework/types/ModuleName'
 import { ModuleLicenseType, Editions } from '@common/constants/SubscriptionTypes'
 import type { FetchPlansQuery } from 'services/common/services'
@@ -69,7 +69,7 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
   const history = useHistory()
   const moduleType = moduleName as StartTrialDTO['moduleType']
   const module = moduleName.toLowerCase() as Module
-  const { CIE_HOSTED_BUILDS } = useFeatureFlags()
+  const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
   const [settingUpCI, setSettingUpCI] = useState<boolean>(false)
   const { accountId } = useParams<{
     accountId: string
@@ -219,7 +219,7 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
       plan,
       getString,
       handleStartPlan: (edition: Editions) => {
-        if (moduleName === ModuleName.CI && CIE_HOSTED_BUILDS) {
+        if (moduleName === ModuleName.CI && enabledHostedBuildsForFreeUsers) {
           setSettingUpCI(true)
           setUpCI({
             accountId,

@@ -149,6 +149,7 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
         }
         case 400: {
           response
+            .clone()
             .json()
             .then(res => {
               const notWhiteListedMessage = res?.responseMessages?.find(
