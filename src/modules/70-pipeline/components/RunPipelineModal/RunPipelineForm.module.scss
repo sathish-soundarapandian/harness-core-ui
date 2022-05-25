@@ -141,7 +141,7 @@
   padding: var(--spacing-small) var(--spacing-xlarge) var(--spacing-small) var(--spacing-huge) !important;
   border: 1px solid var(--grey-200);
   border-radius: 4px;
-  background-color: white;
+  background-color: var(--white);
 }
 
 .selectedValueProvider {
@@ -265,4 +265,8 @@
       width: 300px;
     }
   }
+}
+
+.gitRemoteDetailsWrapper {
+  padding: 0 var(--spacing-large) var(--spacing-medium);
 }

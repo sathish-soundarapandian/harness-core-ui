@@ -22,7 +22,7 @@ interface GitRemoteDetailsProps {
   repoName?: string
   filePath?: string
   branch?: string
-  onBranchChange: (selectedFilter: GitFilterScope) => void
+  onBranchChange?: (selectedFilter: GitFilterScope) => void
   flags?: {
     borderless?: boolean
     showRepo?: boolean
@@ -141,7 +141,7 @@ const GitRemoteDetails = ({
             name="remoteBranch"
             selectProps={{ borderless }}
             onChange={(selected: SelectOption): void => {
-              onBranchChange({
+              onBranchChange?.({
                 branch: selected.value as string
               })
             }}

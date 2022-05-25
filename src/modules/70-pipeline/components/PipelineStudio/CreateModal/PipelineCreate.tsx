@@ -111,7 +111,7 @@ export default function CreatePipelines({
 }: PipelineCreateProps): JSX.Element {
   const { getString } = useStrings()
   const { pipelineIdentifier } = useParams<{ pipelineIdentifier: string }>()
-  const { storeType: storeTypeParam } = useQueryParams<GitQueryParams>()
+  const { storeType: storeTypeParam = 'INLINE' } = useQueryParams<GitQueryParams>()
   const { updateQueryParams } = useUpdateQueryParams()
   const { isGitSyncEnabled, isGitSimplificationEnabled } = useAppStore()
   const { trackEvent } = useTelemetry()
