@@ -130,6 +130,17 @@ describe('connectivity status', () => {
     })
 
     const { getByText } = setup(failure)
+
+    const warningItem = getByText('warning-sign')
+
+    act(() => {
+      fireEvent.mouseOver(warningItem)
+    })
+
+    await waitFor(() => {
+      expect(getByText('noDetails')).toBeDefined()
+    })
+
     const testBtn = getByText('test')
 
     act(() => {
@@ -157,6 +168,17 @@ describe('connectivity status', () => {
     })
 
     const { getByText } = setup(failure)
+
+    const warningItem = getByText('warning-sign')
+
+    act(() => {
+      fireEvent.mouseOver(warningItem)
+    })
+
+    await waitFor(() => {
+      expect(getByText('noDetails')).toBeDefined()
+    })
+
     const testBtn = getByText('test')
 
     act(() => {
@@ -213,6 +235,16 @@ describe('connectivity status', () => {
 
     act(() => {
       fireEvent.mouseOver(warningItem)
+    })
+
+    await waitFor(() => {
+      expect(getByText('ErrorSummaryStatus')).toBeDefined()
+    })
+
+    const tooltipItem = getByText('ErrorSummaryStatus')
+
+    act(() => {
+      fireEvent.click(tooltipItem)
     })
 
     await waitFor(() => {
