@@ -102,6 +102,7 @@ function ManifestStore({
       return true
     }
     return (
+      !isLoadingConnectors &&
       !!selectedStore &&
       ((getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.FIXED &&
         !isEmpty((connectorRefValue as ConnectorSelectedValue)?.connector)) ||
@@ -268,10 +269,7 @@ function ManifestStore({
                   type="submit"
                   text={getString('continue')}
                   rightIcon="chevron-right"
-                  disabled={
-                    isLoadingConnectors ||
-                    !shouldGotoNextStep(formik.values.connectorRef as ConnectorSelectedValue | string)
-                  }
+                  disabled={!shouldGotoNextStep(formik.values.connectorRef as ConnectorSelectedValue | string)}
                 />
               </Layout.Horizontal>
             </Layout.Vertical>
