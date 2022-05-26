@@ -444,6 +444,7 @@ function WebhookPipelineInputPanelForm({
               maybeContainerClass={css.pipelineInputSetForm}
               viewTypeMetadata={{ isTrigger: true }}
               readonly={gitAwareForTriggerEnabled}
+              gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
             />
           </div>
         </div>
