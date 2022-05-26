@@ -3526,7 +3526,8 @@ export interface StringsMap {
   'cd.cloudFormation.awsURL': string
   'cd.cloudFormation.cfTemplateFile': string
   'cd.cloudFormation.continueStatus': string
-  'cd.cloudFormation.deleteStackDescription': string
+  'cd.cloudFormation.createDescription': string
+  'cd.cloudFormation.deleteDescription': string
   'cd.cloudFormation.errors.awsURL': string
   'cd.cloudFormation.errors.getParam': string
   'cd.cloudFormation.errors.name': string
@@ -3542,7 +3543,7 @@ export interface StringsMap {
   'cd.cloudFormation.parameterFilePaths': string
   'cd.cloudFormation.parameterFiles': string
   'cd.cloudFormation.retrieveNames': string
-  'cd.cloudFormation.rollbackStackDescription': string
+  'cd.cloudFormation.rollbackDescription': string
   'cd.cloudFormation.specifyCapabilities': string
   'cd.cloudFormation.specifyInlineParameterFiles': string
   'cd.cloudFormation.specifyParameterFiles': string
