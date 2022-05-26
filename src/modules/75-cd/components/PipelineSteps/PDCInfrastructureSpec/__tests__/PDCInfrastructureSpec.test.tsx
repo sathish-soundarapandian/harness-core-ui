@@ -78,6 +78,8 @@ const mockListSecrets = {
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
+const validateHosts = jest.fn().mockImplementation(() => Promise.resolve({ data: { content: [] } }))
+
 jest.mock('services/cd-ng', () => ({
   useGetConnector: jest.fn(() => ConnectorResponse),
   getConnectorListV2Promise: jest.fn(() => Promise.resolve(ConnectorsResponse.data)),
@@ -85,7 +87,7 @@ jest.mock('services/cd-ng', () => ({
   useFilterHostsByConnector: jest.fn(() => ({
     mutate: jest.fn(() => Promise.resolve({ data: { content: [{ hostname: '1.2.3.4' }] } }))
   })),
-  useValidateHosts: jest.fn(() => ({ mutate: jest.fn(() => Promise.resolve({ data: { content: [] } })) })),
+  useValidateHosts: jest.fn(() => ({ mutate: validateHosts })),
   getSecretV2Promise: jest.fn().mockImplementation(() => Promise.resolve(mockSecret)),
   listSecretsV2Promise: jest.fn().mockImplementation(() => Promise.resolve(mockListSecrets))
 }))
@@ -386,6 +388,57 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
 
     await waitFor(() => {
       expect(getByText('1.2.3.4')).toBeDefined()
+    })
+  })
+
+  test.only('populate hosts, test is deploy to all hosts, and open hosts table and test all connections', async () => {
+    const onUpdateHandler = jest.fn()
+    const { getByText, container } = render(
+      <TestStepWidget
+        initialValues={getInitialValuesPreconfigured()}
+        template={getRuntimeInputsValues()}
+        allValues={getInitialValuesPreconfigured()}
+        type={StepType.PDC}
+        stepViewType={StepViewType.InputSet}
+        onUpdate={onUpdateHandler}
+      />
+    )
+
+    const form = container.querySelector('form')
+    await waitFor(() => {
+      expect(form!).toBeDefined()
+    })
+
+    const hostsArea = container.querySelector('textarea')
+
+    expect(hostsArea).toBe(null)
+
+    await waitFor(() => {
+      expect(getByText('cd.steps.pdcStep.previewHosts')).toBeDefined()
+    })
+
+    act(() => {
+      fireEvent.click(getByText('cd.steps.pdcStep.previewHosts'))
+    })
+
+    await waitFor(() => {
+      expect(container.querySelector('table')).toBeDefined()
+    })
+
+    act(() => {
+      fireEvent.click(getByText('common.refresh'))
+    })
+
+    await waitFor(() => {
+      expect(getByText('1.2.3.4')).toBeDefined()
+    })
+
+    act(() => {
+      fireEvent.click(getByText('common.smtp.testConnection'))
+    })
+
+    await waitFor(() => {
+      expect(validateHosts).toBeCalled()
     })
   })
 
