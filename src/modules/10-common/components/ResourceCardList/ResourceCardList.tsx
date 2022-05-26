@@ -53,8 +53,9 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   const smtpResource: ResourceOption[] = [
     {
       label: <String stringID="common.smtp.conifg" />,
-      icon: 'smtp-configuration-blue',
+      icon: 'smtp',
       disabled: loading,
+      colorClass: css.smtp,
       onClick: () => {
         if (!loading) {
           if (!data?.data) {
@@ -96,17 +97,20 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   const options: ResourceOption[] = items || [
     {
       label: <String stringID="connectorsLabel" />,
-      icon: 'connectors-blue',
-      route: routes.toConnectors({ accountId, orgIdentifier })
+      icon: 'connectors-icon',
+      route: routes.toConnectors({ accountId, orgIdentifier }),
+      colorClass: css.connectors
     },
     {
       label: <String stringID="delegate.delegates" />,
-      icon: 'delegates-blue' as IconName,
-      route: routes.toDelegates({ accountId, orgIdentifier })
+      icon: 'delegates-icon' as IconName,
+      route: routes.toDelegates({ accountId, orgIdentifier }),
+      colorClass: css.delegates
     },
     {
       label: <String stringID="common.secrets" />,
-      icon: 'secrets-blue',
+      icon: 'secrets-icon',
+      colorClass: css.delegates,
       route: routes.toSecrets({ accountId, orgIdentifier })
     },
     ...(!orgIdentifier ? smtpResource : []),
@@ -114,7 +118,8 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       ? [
           {
             label: <String stringID="common.templates" />,
-            icon: 'templates-blue',
+            icon: 'templates-icon',
+            colorClass: css.templates,
             route: routes.toTemplates({ accountId, orgIdentifier })
           } as ResourceOption
         ]
@@ -123,7 +128,8 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       ? [
           {
             label: <String stringID="common.variables" />,
-            icon: 'variables-blue',
+            icon: 'variable',
+            colorClass: css.variables,
             route: routes.toVariables({ accountId, orgIdentifier })
           } as ResourceOption
         ]

@@ -11,6 +11,28 @@
   justify-content: flex-start;
 }
 
+.connectors {
+  background-color: var(--blue-50);
+}
+
+.secrets {
+  background-color: var(--teal-50);
+}
+.smtp {
+  background-color: var(--red-50);
+}
+.delegates {
+  background-color: var(--orange-50);
+}
+
+.templates {
+  background-color: var(--yellow-100);
+}
+
+.variables {
+  background-color: var(--lime-50);
+}
+
 .gitOpsEntities {
   margin: var(--spacing-xlarge) 0;
   padding-top: var(--spacing-xlarge);

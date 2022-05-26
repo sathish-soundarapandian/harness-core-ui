@@ -10,6 +10,12 @@ declare const styles: {
   readonly arrowDown: string
   readonly card: string
   readonly cardsWrapper: string
+  readonly connectors: string
+  readonly delegates: string
   readonly gitOpsEntities: string
+  readonly secrets: string
+  readonly smtp: string
+  readonly templates: string
+  readonly variables: string
 }
 export default styles
