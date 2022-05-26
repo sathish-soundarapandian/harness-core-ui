@@ -29,7 +29,7 @@ const getYaml = (): string => `pipeline:
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
-const validateHosts = jest.fn().mockImplementation(() => Promise.resolve({ data: { content: [] } }))
+const validateHosts = jest.fn().mockImplementation(() => Promise.resolve({ data: { content: [] }, status: 'SUCCESS' }))
 
 jest.mock('services/cd-ng', () => ({
   useGetConnector: jest.fn(() => ConnectorResponse),
@@ -342,7 +342,7 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
     })
   })
 
-  test('populate hosts, test is deploy to all hosts, and open hosts table and test all connections', async () => {
+  test('populate hosts, test is deploy to all hosts, and open hosts table and test all connections - all success', async () => {
     const onUpdateHandler = jest.fn()
     const { getByText, container } = render(
       <TestStepWidget
@@ -354,40 +354,28 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
         onUpdate={onUpdateHandler}
       />
     )
-
     const form = container.querySelector('form')
     await waitFor(() => {
       expect(form!).toBeDefined()
     })
-
-    const hostsArea = container.querySelector('textarea')
-
-    expect(hostsArea).toBe(null)
-
     await waitFor(() => {
       expect(getByText('cd.steps.pdcStep.previewHosts')).toBeDefined()
     })
-
     act(() => {
       fireEvent.click(getByText('cd.steps.pdcStep.previewHosts'))
     })
-
     await waitFor(() => {
       expect(container.querySelector('table')).toBeDefined()
     })
-
     act(() => {
       fireEvent.click(getByText('common.refresh'))
     })
-
     await waitFor(() => {
       expect(getByText('1.2.3.4')).toBeDefined()
     })
-
     act(() => {
       fireEvent.click(getByText('common.smtp.testConnection'))
     })
-
     await waitFor(() => {
       expect(validateHosts).toBeCalled()
     })

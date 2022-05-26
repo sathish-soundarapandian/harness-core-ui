@@ -337,7 +337,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
       if (e.data?.responseMessages) {
         setErrors(e.data?.responseMessages)
       } else {
-        showError(e.data.message || e.message)
+        showError(e.data?.message || e.message)
       }
     }
   }
