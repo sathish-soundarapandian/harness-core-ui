@@ -15,9 +15,9 @@ import {
 } from '@projectstorm/react-diagrams-core'
 import { Point } from '@projectstorm/geometry'
 import type { BaseEntityEvent, BaseModelOptions, DeserializeEvent } from '@projectstorm/react-canvas-core'
-import { Event } from '@pipeline/utils/PipelineStudioUtils'
+
 import { DefaultLabelModel } from '../label/DefaultLabelModel'
-import { DiagramType } from '../Constants'
+import { Event, DiagramType } from '../Constants'
 
 export interface DefaultLinkModelListener extends LinkModelListener {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
