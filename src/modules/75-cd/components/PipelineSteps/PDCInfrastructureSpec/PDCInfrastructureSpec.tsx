@@ -119,7 +119,7 @@ const parseByComma = (data: string) =>
 
 const parseHosts = (hosts: string) => parseByComma(hosts)
 
-const parseAttributes = (attributes: string) =>
+export const parseAttributes = (attributes: string) =>
   parseByComma(attributes).reduce((prev, current) => {
     const [key, value] = current.split(':')
     if (key && value) {

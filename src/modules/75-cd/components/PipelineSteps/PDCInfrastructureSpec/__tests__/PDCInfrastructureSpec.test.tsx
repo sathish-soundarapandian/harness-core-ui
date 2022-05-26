@@ -12,9 +12,10 @@ import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import * as CDNG from 'services/cd-ng'
-import { PDCInfrastructureSpec, PdcRegex, SshKeyRegex } from '../PDCInfrastructureSpec'
+import { PDCInfrastructureSpec, PdcRegex, SshKeyRegex, parseAttributes } from '../PDCInfrastructureSpec'
 import { ConnectorsResponse } from './mock/ConnectorsResponse.mock'
 import { ConnectorResponse } from './mock/ConnectorResponse.mock'
+import { mockListSecrets, mockSecret } from './mock/Secrets.mock'
 
 const getYaml = (): string => `pipeline:
     stages:
@@ -25,56 +26,6 @@ const getYaml = (): string => `pipeline:
                           type: Pdc
                           spec:
                               connectorRef: account.connectorRef`
-
-export const mockSecret = {
-  status: 'SUCCESS',
-  data: {
-    secret: {
-      type: 'SecretText',
-      name: 'connectorPass',
-      identifier: 'connectorPass',
-      tags: {},
-      description: '',
-      spec: { secretManagerIdentifier: 'harnessSecretManager' }
-    },
-    createdAt: 1606373702954,
-    updatedAt: 1606373702954,
-    draft: false
-  },
-  metaData: null,
-  correlationId: '0346aa2b-290e-4892-a7f0-4ad2128c9829'
-}
-
-const mockListSecrets = {
-  status: 'SUCCESS',
-  data: {
-    totalPages: 1,
-    totalItems: 1,
-    pageItemCount: 1,
-    pageSize: 100,
-    content: [
-      {
-        secret: {
-          type: 'SecretFile',
-          name: 'nfile1',
-          identifier: 'nfile1',
-          tags: {},
-          description: 'desc',
-          spec: {
-            secretManagerIdentifier: 'vault1'
-          }
-        },
-        createdAt: 1602137372269,
-        updatedAt: 1602137372269,
-        draft: false
-      }
-    ],
-    pageIndex: 0,
-    empty: false
-  },
-  metaData: null,
-  correlationId: 'eae05856-9cc0-450d-9d18-b459320311ff'
-}
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
@@ -442,6 +393,28 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
     })
   })
 
+  test('invocation map, empty yaml', () => {
+    const yaml = ''
+    const params = { accountId: 'accountId1' }
+    const path = 'pipeline.stages[0].stage.spec.infrastructure.infrastructureDefinition'
+    const invocationMap = factory.getStep(StepType.PDC)?.getInvocationMap?.()
+    invocationMap?.get(PdcRegex)?.(path, yaml, params)
+    expect(CDNG.getConnectorListV2Promise).not.toBeCalled()
+    invocationMap?.get(SshKeyRegex)?.(path, yaml, params)
+    expect(CDNG.listSecretsV2Promise).not.toBeCalled()
+  })
+
+  test('invocation map, wrong yaml', () => {
+    const yaml = {} as string
+    const params = { accountId: 'accountId1' }
+    const path = 'pipeline.stages[0].stage.spec.infrastructure.infrastructureDefinition'
+    const invocationMap = factory.getStep(StepType.PDC)?.getInvocationMap?.()
+    invocationMap?.get(PdcRegex)?.(path, yaml, params)
+    expect(CDNG.getConnectorListV2Promise).not.toBeCalled()
+    invocationMap?.get(SshKeyRegex)?.(path, yaml, params)
+    expect(CDNG.listSecretsV2Promise).not.toBeCalled()
+  })
+
   test('invocation map should call template list', () => {
     jest.spyOn(CDNG, 'listSecretsV2Promise').mockImplementation(() => Promise.resolve(mockListSecrets as any))
     jest
@@ -456,5 +429,11 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
     expect(CDNG.getConnectorListV2Promise).toBeCalled()
     invocationMap?.get(SshKeyRegex)?.(path, yaml, params)
     expect(CDNG.listSecretsV2Promise).toBeCalled()
+  })
+})
+
+describe('test custom functions', () => {
+  test('test parseAttributes fn', () => {
+    expect(parseAttributes('hostType:DB\nregion:west')).toEqual({ hostType: 'DB', region: 'west' })
   })
 })
