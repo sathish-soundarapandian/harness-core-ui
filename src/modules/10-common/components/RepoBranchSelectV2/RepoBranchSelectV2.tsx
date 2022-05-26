@@ -131,7 +131,7 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
         items={branchSelectOptions}
         label={noLabel ? '' : defaultTo(label, getString('gitBranch'))}
         placeholder={loading ? getString('loading') : getString('select')}
-        value={{ label: selectedValue || '', value: selectedValue || '' }}
+        value={{ label: defaultTo(selectedValue, ''), value: defaultTo(selectedValue, '') }}
         onChange={selected => props.onChange?.(selected, branchSelectOptions)}
         selectProps={{ usePortal: true, popoverClassName: css.gitBranchSelectorPopover }}
       />
