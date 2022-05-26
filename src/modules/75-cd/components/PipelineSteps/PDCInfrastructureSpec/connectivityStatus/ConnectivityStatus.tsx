@@ -184,7 +184,6 @@ const ConnectivityStatus: React.FC<ConnectivityStatusProps> = data => {
     }
 
     const statusMsg = defaultTo(statusMessageMap[`${connectorStatus}`], getString('na'))
-    console.log('isStatusSuccess: ', isStatusSuccess)
     if (isStatusSuccess) {
       return renderStatusText('full-circle', { size: 6, color: Color.GREEN_500 }, '', statusMsg)
     }

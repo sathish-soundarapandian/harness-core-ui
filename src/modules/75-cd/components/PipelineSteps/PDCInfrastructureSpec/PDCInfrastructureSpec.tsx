@@ -533,8 +533,8 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                               disabled={
                                 detailHosts.length === 0 ||
                                 !(
-                                  formikRef?.current?.values?.credentialsRef ||
-                                  formikRef?.current?.values?.sshKey?.identifier
+                                  get(formikRef.current, 'values.credentialsRef', '') ||
+                                  get(formikRef.current, 'values.sshKey.identifier', '')
                                 )
                               }
                             >
