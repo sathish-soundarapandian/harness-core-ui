@@ -391,7 +391,7 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
     })
   })
 
-  test.only('populate hosts, test is deploy to all hosts, and open hosts table and test all connections', async () => {
+  test('populate hosts, test is deploy to all hosts, and open hosts table and test all connections', async () => {
     const onUpdateHandler = jest.fn()
     const { getByText, container } = render(
       <TestStepWidget
