@@ -279,7 +279,7 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
     expect(getByText('cd.steps.pdcStep.noHosts')).toBeDefined()
   })
 
-  test.only('populate hosts, test is deploy to custom hosts, and open hosts table', async () => {
+  test('populate hosts, test is deploy to custom hosts, and open hosts table', async () => {
     const onUpdateHandler = jest.fn()
     const { getByText, container, getByPlaceholderText } = render(
       <TestStepWidget
