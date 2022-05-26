@@ -389,7 +389,7 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
     })
   })
 
-  test.only('invocation map should call template list', () => {
+  test('invocation map should call template list', () => {
     jest.spyOn(CDNG, 'listSecretsV2Promise').mockImplementation(() => Promise.resolve(mockListSecrets as any))
     jest
       .spyOn(CDNG, 'getConnectorListV2Promise')
