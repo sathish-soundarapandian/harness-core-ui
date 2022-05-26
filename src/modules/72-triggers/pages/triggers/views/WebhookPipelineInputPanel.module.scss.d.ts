@@ -19,6 +19,7 @@ declare const styles: {
   readonly inputsetGrid: string
   readonly pipelineInputRow: string
   readonly pipelineInputSetForm: string
+  readonly refBranchOuter: string
   readonly webhookPipelineInputContainer: string
 }
 export default styles

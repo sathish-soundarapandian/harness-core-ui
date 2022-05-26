@@ -22,6 +22,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import GitPopover from '@pipeline/components/GitPopover/GitPopover'
 import GenericErrorHandler from '@common/pages/GenericErrorHandler/GenericErrorHandler'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
@@ -41,6 +42,7 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
   const location = useLocation()
   const { trackEvent } = useTelemetry()
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
+  const { GIT_SIMPLIFICATION_FOR_TRIGGER } = useFeatureFlags()
   const {
     data: pipeline,
     refetch,
@@ -79,7 +81,11 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
   }, [repoIdentifier])
 
   React.useEffect(() => {
-    if (branch && branchesWithStatusData?.data?.defaultBranch?.branchName !== branch) {
+    if (
+      branch &&
+      branchesWithStatusData?.data?.defaultBranch?.branchName !== branch &&
+      !GIT_SIMPLIFICATION_FOR_TRIGGER
+    ) {
       setTriggerTabDisabled(true)
     } else {
       setTriggerTabDisabled(false)
