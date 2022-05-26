@@ -10,6 +10,7 @@ import cx from 'classnames'
 import { FormInput, Icon, Layout, SelectOption } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
+import type { GetDataError } from 'restful-react'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import {
@@ -20,7 +21,6 @@ import {
   useGetListOfBranchesByRefConnectorV2
 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import type { GetDataError } from 'restful-react'
 import css from './RepoBranchSelectV2.module.scss'
 
 export interface RepoBranchSelectProps {
