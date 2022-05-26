@@ -6,7 +6,7 @@
  */
 
 import '@testing-library/jest-dom'
-import { setAutoFreeze, enableMapSet } from 'immer'
+import { enableMapSet, setAutoFreeze } from 'immer'
 import { noop } from 'lodash-es'
 
 // set up Immer
@@ -70,3 +70,6 @@ jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 const { getComputedStyle } = window
 window.getComputedStyle = elt => getComputedStyle(elt)
+
+jest.setTimeout(10000)
+jest.retryTimes(3)

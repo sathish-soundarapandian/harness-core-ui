@@ -22,7 +22,7 @@ import {
 import { Color } from '@harness/design-system'
 import { Classes, Intent, Menu, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { useParams, useHistory } from 'react-router-dom'
-import { isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import cx from 'classnames'
 import { isExecutionComplete } from '@pipeline/utils/statusHelpers'
 import { TimeAgoPopover } from '@common/exports'
@@ -108,8 +108,9 @@ function ContextMenu({
 
   const { openRunPipelineModal } = useRunPipelineModal({
     pipelineIdentifier: (pipeline.identifier || '') as string,
-    repoIdentifier: pipeline?.gitDetails?.repoIdentifier,
-    branch: pipeline?.gitDetails?.branch
+    repoIdentifier: defaultTo(pipeline?.gitDetails?.repoIdentifier, pipeline?.gitDetails?.repoName),
+    branch: pipeline?.gitDetails?.branch,
+    storeType: pipeline.gitDetails?.repoName ? StoreType.REMOTE : StoreType.INLINE
   })
 
   const isPipelineInvalid = pipeline?.entityValidityDetails?.valid === false
@@ -272,8 +273,9 @@ export function PipelineCard({
 
   const { openRunPipelineModal } = useRunPipelineModal({
     pipelineIdentifier: (pipeline.identifier || '') as string,
-    repoIdentifier: pipeline?.gitDetails?.repoIdentifier,
-    branch: pipeline?.gitDetails?.branch
+    repoIdentifier: defaultTo(pipeline?.gitDetails?.repoIdentifier, pipeline?.gitDetails?.repoName),
+    branch: pipeline?.gitDetails?.branch,
+    storeType: pipeline.gitDetails?.repoName ? StoreType.REMOTE : StoreType.INLINE
   })
 
   const pipelineIcons = getIconsForPipeline(pipeline)

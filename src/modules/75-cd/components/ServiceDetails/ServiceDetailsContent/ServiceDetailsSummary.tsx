@@ -30,7 +30,7 @@ const ServiceDetailsSummary: React.FC = () => {
   const { serviceId } = useParams<ServicePathProps>()
   const { getString } = useStrings()
 
-  const [timeRangeService, setTimeRangeService] = useLocalStorage<TimeRangeSelectorProps>(
+  const [serviceTimeRange, setServiceTimeRange] = useLocalStorage<TimeRangeSelectorProps>(
     'timeRangeServiceDetails',
     {
       range: [startOfDay(moment().subtract(1, 'month').add(1, 'day')), startOfDay(moment())],
@@ -39,17 +39,17 @@ const ServiceDetailsSummary: React.FC = () => {
     window.sessionStorage
   )
 
-  const timeServiceDetail = validTimeFormat(timeRangeService)
-  timeRangeService.range[0] = timeServiceDetail.range[0]
-  timeRangeService.range[1] = timeServiceDetail.range[1]
+  const timeServiceDetail = validTimeFormat(serviceTimeRange)
+  serviceTimeRange.range[0] = timeServiceDetail.range[0]
+  serviceTimeRange.range[1] = timeServiceDetail.range[1]
   return (
     <Page.Body>
       <Container flex className={css.timeRangeContainer}>
-        <TimeRangeSelector timeRange={timeRangeService?.range} setTimeRange={setTimeRangeService} />
+        <TimeRangeSelector timeRange={serviceTimeRange?.range} setTimeRange={setServiceTimeRange} />
       </Container>
       <Layout.Horizontal margin={{ top: 'large', bottom: 'large' }}>
         <DeploymentsTimeRangeContext.Provider
-          value={{ timeRange: timeRangeService, setTimeRange: setTimeRangeService }}
+          value={{ timeRange: serviceTimeRange, setTimeRange: setServiceTimeRange }}
         >
           <Layout.Vertical margin={{ right: 'xlarge' }}>
             <Layout.Horizontal margin={{ bottom: 'medium' }}>

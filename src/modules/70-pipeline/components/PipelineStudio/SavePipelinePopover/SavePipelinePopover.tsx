@@ -219,7 +219,7 @@ export function SavePipelinePopover({
       navigateToLocation(newPipelineId, updatedGitDetails)
       // note: without setTimeout does not redirect properly after save
       await fetchPipeline({ forceFetch: true, forceUpdate: true, newPipelineId })
-    } else {
+    } else if (updatedGitDetails?.isNewBranch === false) {
       await fetchPipeline({ forceFetch: true, forceUpdate: true })
     }
     if (updatedGitDetails?.isNewBranch) {

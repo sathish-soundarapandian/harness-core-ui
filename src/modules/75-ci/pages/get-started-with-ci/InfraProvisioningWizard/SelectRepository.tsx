@@ -140,17 +140,15 @@ const SelectRepositoryRef = (
           <Text font={{ variation: FontVariation.H6 }}>{getString('ci.getStartedWithCI.fetchingRepos')}</Text>
         </Layout.Horizontal>
       )
-    } else {
-      if (repositories && Array.isArray(repositories) && repositories?.length > 0) {
-        return <RepositorySelectionTable repositories={repositories} onRowClick={setRepository} />
-      } else {
-        return (
-          <Text flex={{ justifyContent: 'center' }} padding={{ top: 'medium' }}>
-            {getString('noSearchResultsFoundPeriod')}
-          </Text>
-        )
-      }
     }
+    if (Array.isArray(repositories) && repositories.length > 0) {
+      return <RepositorySelectionTable repositories={repositories} onRowClick={setRepository} />
+    }
+    return (
+      <Text flex={{ justifyContent: 'center' }} padding={{ top: 'medium' }}>
+        {getString('noSearchResultsFoundPeriod')}
+      </Text>
+    )
   }, [fetchingRepositories, repositories, repoData?.data])
 
   const showValidationErrorForRepositoryNotSelected = showError && !repository?.name

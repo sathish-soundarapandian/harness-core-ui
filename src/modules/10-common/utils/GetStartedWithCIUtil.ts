@@ -33,7 +33,6 @@ export interface StartFreeLicenseAndSetupProjectCallback {
 
 export interface SetUpCIInterface {
   accountId: string
-  edition: Editions
   onSetUpSuccessCallback: ({ orgId, projectId }: StartFreeLicenseAndSetupProjectCallback) => void
   onSetupFailureCallback?: (error: any) => void
   licenseInformation:
@@ -42,6 +41,7 @@ export interface SetUpCIInterface {
       }
     | Record<string, undefined>
   updateLicenseStore: (data: Partial<Pick<LicenseStoreContextProps, 'licenseInformation'>>) => void
+  edition?: Editions
 }
 
 function startPlanByEdition(accountId: string, edition: Editions): Promise<ResponseModuleLicenseDTO> {
@@ -93,7 +93,6 @@ const startPlanAndSetupProject = ({
   accountId: string
   orgId: string
   onSetUpSuccessCallback: ({ orgId, projectId }: StartFreeLicenseAndSetupProjectCallback) => void
-  edition: Editions
   onSetupFailureCallback?: (error?: any) => void
   licenseInformation:
     | {
@@ -101,39 +100,64 @@ const startPlanAndSetupProject = ({
       }
     | Record<string, undefined>
   updateLicenseStore: (data: Partial<Pick<LicenseStoreContextProps, 'licenseInformation'>>) => void
+  edition?: Editions
 }) => {
-  startPlanByEdition(accountId, edition)
-    .then((startPlanResponse: ResponseModuleLicenseDTO) => {
-      const { data: startPlanData, status: startPlanStatus } = startPlanResponse
-      /* istanbul ignore else */ if (startPlanStatus === Status.SUCCESS) {
-        handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, 'ci', startPlanData)
-        const UNIQUE_PROJECT_ID = `${DEFAULT_PROJECT_ID}_${new Date().getTime().toString()}`
-        postProjectPromise({
-          body: {
-            project: {
-              identifier: UNIQUE_PROJECT_ID,
-              name: DEFAULT_PROJECT_NAME,
-              orgIdentifier: organizationId
-            }
-          },
-          queryParams: { accountIdentifier: accountId, orgIdentifier: organizationId }
-        })
-          .then((createProjectResponse: ResponseProjectResponse) => {
-            const { data: projectData, status: createProjectResponseStatus } = createProjectResponse
-            /* istanbul ignore else */ if (
-              createProjectResponseStatus === 'SUCCESS' &&
-              projectData?.project.identifier &&
-              startPlanData
-            ) {
-              onSetUpSuccessCallback({
-                orgId: organizationId,
-                projectId: projectData.project.identifier
-              })
-            }
+  if (edition) {
+    startPlanByEdition(accountId, edition)
+      .then((startPlanResponse: ResponseModuleLicenseDTO) => {
+        const { data: startPlanData, status: startPlanStatus } = startPlanResponse
+        /* istanbul ignore else */ if (startPlanStatus === Status.SUCCESS) {
+          handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, 'ci', startPlanData)
+          setupProjectAndNavigateToDefaultProject({
+            accountId,
+            organizationId,
+            onSetUpSuccessCallback,
+            onSetupFailureCallback
           })
-          .catch(e => onSetupFailureCallback?.(e))
-      } else if (startPlanStatus === Status.ERROR || startPlanStatus === Status.FAILURE) {
-        onSetupFailureCallback?.()
+        } else if (startPlanStatus === Status.ERROR || startPlanStatus === Status.FAILURE) {
+          onSetupFailureCallback?.()
+        }
+      })
+      .catch(e => onSetupFailureCallback?.(e))
+  } else {
+    setupProjectAndNavigateToDefaultProject({
+      accountId,
+      organizationId,
+      onSetUpSuccessCallback,
+      onSetupFailureCallback
+    })
+  }
+}
+
+const setupProjectAndNavigateToDefaultProject = ({
+  accountId,
+  organizationId,
+  onSetUpSuccessCallback,
+  onSetupFailureCallback
+}: {
+  accountId: string
+  organizationId: string
+  onSetUpSuccessCallback: ({ orgId, projectId }: StartFreeLicenseAndSetupProjectCallback) => void
+  onSetupFailureCallback?: (error?: any) => void
+}) => {
+  const UNIQUE_PROJECT_ID = `${DEFAULT_PROJECT_ID}_${new Date().getTime().toString()}`
+  postProjectPromise({
+    body: {
+      project: {
+        identifier: UNIQUE_PROJECT_ID,
+        name: DEFAULT_PROJECT_NAME,
+        orgIdentifier: organizationId
+      }
+    },
+    queryParams: { accountIdentifier: accountId, orgIdentifier: organizationId }
+  })
+    .then((createProjectResponse: ResponseProjectResponse) => {
+      const { data: projectData, status: createProjectResponseStatus } = createProjectResponse
+      /* istanbul ignore else */ if (createProjectResponseStatus === 'SUCCESS' && projectData?.project.identifier) {
+        onSetUpSuccessCallback({
+          orgId: organizationId,
+          projectId: projectData.project.identifier
+        })
       }
     })
     .catch(e => onSetupFailureCallback?.(e))

@@ -30,3 +30,13 @@
 .editor {
   width: 100%;
 }
+.editServiceDialog {
+  background-color: var(--form-bg) !important;
+  padding-bottom: 0 !important;
+  :global {
+    .bp3-dialog-header {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+    }
+  }
+}

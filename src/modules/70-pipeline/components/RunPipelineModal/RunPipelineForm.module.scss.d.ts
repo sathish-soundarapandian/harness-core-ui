@@ -20,6 +20,7 @@ declare const styles: {
   readonly footer: string
   readonly footerCheckbox: string
   readonly form: string
+  readonly gitRemoteDetailsWrapper: string
   readonly helpIcon: string
   readonly helpSection: string
   readonly iconInfo: string

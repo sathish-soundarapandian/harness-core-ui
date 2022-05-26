@@ -33,6 +33,7 @@ export interface DeployServiceState {
 
 export interface DeployServiceData extends Omit<ServiceConfig, 'serviceRef'> {
   serviceRef?: string
+  isNewServiceEntity?: boolean
 }
 
 export interface NewEditServiceModalProps {

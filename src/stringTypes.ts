@@ -2501,6 +2501,7 @@ export interface StringsMap {
   'pipeline.artifactsSelection.artifactDirectory': string
   'pipeline.artifactsSelection.artifactDirectoryPlaceholder': string
   'pipeline.artifactsSelection.artifactNamePlaceholder': string
+  'pipeline.artifactsSelection.artifactType': string
   'pipeline.artifactsSelection.artifactTyperequired': string
   'pipeline.artifactsSelection.errors.noRepositories': string
   'pipeline.artifactsSelection.existingDocker.enterTagRegex': string
@@ -3474,6 +3475,9 @@ export interface StringsMap {
   'triggers.triggerConfigurationPanel.payloadType': string
   'triggers.triggerConfigurationPanel.title': string
   'triggers.triggerConfigurationPanel.triggerName': string
+  'triggers.triggerCouldNotBeSavedContent': string
+  'triggers.triggerCouldNotBeSavedGenericError': string
+  'triggers.triggerCouldNotBeSavedTitle': string
   'triggers.triggerOverviewPanel.title': string
   'triggers.triggersSubLabel': string
   'triggers.updateTrigger': string
@@ -3662,6 +3666,7 @@ export interface StringsMap {
   'cd.serverlessDeployCommandOptions': string
   'cd.serviceCreated': string
   'cd.serviceDashboard.6monthTrend': string
+  'cd.serviceDashboard.activeInstanceCount': string
   'cd.serviceDashboard.activeServiceInstancesLabel': string
   'cd.serviceDashboard.artifact': string
   'cd.serviceDashboard.buildName': string
@@ -3677,6 +3682,7 @@ export interface StringsMap {
   'cd.serviceDashboard.instanceCountHistory': string
   'cd.serviceDashboard.instanceDetails': string
   'cd.serviceDashboard.lastDeployment': string
+  'cd.serviceDashboard.manageServiceLabel': string
   'cd.serviceDashboard.noActiveServiceInstances': string
   'cd.serviceDashboard.noActiveServices': string
   'cd.serviceDashboard.noDeployments': string

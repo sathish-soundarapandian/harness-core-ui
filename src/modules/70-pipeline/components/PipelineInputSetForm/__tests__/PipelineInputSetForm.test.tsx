@@ -18,6 +18,7 @@ import * as cdngServices from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelineModuleParams, triggerPathProps } from '@common/utils/routeUtils'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
+import { clearRuntimeInput } from '@pipeline/components/PipelineStudio/StepUtil'
 import { PipelineInputSetForm, PipelineInputSetFormProps } from '../PipelineInputSetForm'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
@@ -38,7 +39,7 @@ const getCommonProps = ({
 }: {
   path?: string
 }): { path?: string; readonly?: boolean; viewType: StepViewType; maybeContainerClass?: string } => ({
-  path: path || '/dummypath',
+  path: path ?? '/dummypath',
   readonly: false,
   viewType: StepViewType.InputSet,
   maybeContainerClass: ''
@@ -68,7 +69,7 @@ const getPropsForVariables = (): PipelineInputSetFormProps => ({
     ] as AllNGVariables[],
     stages: []
   },
-  ...getCommonProps({})
+  ...getCommonProps({ path: '' })
 })
 
 const getPropsForCIStage = ({
@@ -293,14 +294,18 @@ const getPropsForCDStage = (
       }
     ]
   },
-  ...getCommonProps({})
+  ...getCommonProps({ path: '' })
 })
 
 describe('PIPELINE VARIABLES', () => {
   test('Render variables in normal mode', () => {
     const props = getPropsForVariables()
     const { container } = render(
-      <Formik initialValues={{}} formName="pipelineInputSetFormTest" onSubmit={jest.fn()}>
+      <Formik
+        initialValues={clearRuntimeInput(props.template)}
+        formName="pipelineInputSetFormTest"
+        onSubmit={jest.fn()}
+      >
         {() => (
           <TestWrapper>
             <PipelineInputSetForm {...props} />
@@ -310,7 +315,7 @@ describe('PIPELINE VARIABLES', () => {
     )
 
     // Check if variable is rendered
-    const variableInput = container.querySelector('input[name="/dummypath.variables[0].value"]')
+    const variableInput = container.querySelector('input[name="variables[0].value"]')
     expect(variableInput).toBeTruthy()
   })
 
@@ -611,7 +616,11 @@ describe('CD enabled', () => {
   test('CD stage with variables', () => {
     const props = getPropsForCDStage(true)
     const { container } = render(
-      <Formik initialValues={{}} formName="pipelineInputSetFormTest" onSubmit={jest.fn()}>
+      <Formik
+        initialValues={clearRuntimeInput(props.template)}
+        formName="pipelineInputSetFormTest"
+        onSubmit={jest.fn()}
+      >
         {() => (
           <TestWrapper>
             <PipelineInputSetForm {...props} readonly={true} isRetryFormStageSelected={true} />
@@ -620,7 +629,7 @@ describe('CD enabled', () => {
       </Formik>
     )
 
-    const stageVariableInput = container.querySelector('input[name="/dummypath.stages[0].stage.variables[0].value"]')
+    const stageVariableInput = container.querySelector('input[name="stages[0].stage.variables[0].value"]')
     expect(stageVariableInput).toBeTruthy()
   })
 

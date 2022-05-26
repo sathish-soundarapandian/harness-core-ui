@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { useEffect, useState } from 'react'
 import { Icon, Text, SelectOption, FormInput, Formik } from '@wings-software/uicore'
 import { PopoverInteractionKind, Position } from '@blueprintjs/core'
@@ -14,8 +21,8 @@ interface GitRemoteDetailsProps {
   connectorRef?: string
   repoName?: string
   filePath?: string
-  branch: string
-  onBranchChange: (selectedFilter: GitFilterScope) => void
+  branch?: string
+  onBranchChange?: (selectedFilter: GitFilterScope) => void
   flags?: {
     borderless?: boolean
     showRepo?: boolean
@@ -28,7 +35,7 @@ const GitRemoteDetails = ({
   connectorRef,
   repoName,
   filePath,
-  branch,
+  branch = '',
   onBranchChange,
   flags: { borderless = true, showRepo = true, normalInputStyle = false, readOnly = false } = {}
 }: GitRemoteDetailsProps): React.ReactElement => {
@@ -54,7 +61,8 @@ const GitRemoteDetails = ({
     lazy: true
   })
 
-  const defaultBranch = response?.data?.defaultBranch?.name
+  const defaultBranch = response?.data?.defaultBranch?.name || ''
+  const branchText = branch || defaultBranch
 
   useEffect(() => {
     connectorRef && repoName && !readOnly && refetch()
@@ -119,7 +127,10 @@ const GitRemoteDetails = ({
           onSubmit={noop}
           formName="remoteBranchSelectForm"
           initialValues={{
-            remoteBranch: { label: branch === defaultBranch ? `${branch} (default)` : branch, value: branch }
+            remoteBranch: {
+              label: branch === defaultBranch || !branch ? (branchText ? `${branchText} (default)` : '') : branch,
+              value: branch
+            }
           }}
         >
           <FormInput.Select
@@ -130,11 +141,14 @@ const GitRemoteDetails = ({
             name="remoteBranch"
             selectProps={{ borderless }}
             onChange={(selected: SelectOption): void => {
-              onBranchChange({
+              onBranchChange?.({
                 branch: selected.value as string
               })
             }}
-            value={{ label: branch === defaultBranch ? `${branch} (default)` : branch, value: branch }}
+            value={{
+              label: branch === defaultBranch || !branch ? (branchText ? `${branchText} (default)` : '') : branch,
+              value: branch
+            }}
           />
         </Formik>
       )}

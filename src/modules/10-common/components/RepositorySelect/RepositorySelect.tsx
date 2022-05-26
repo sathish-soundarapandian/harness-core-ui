@@ -14,7 +14,7 @@ import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { Error, GitRepositoryResponseDTO, ResponseMessage, useGetListOfReposByRefConnector } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import css from './RepositorySelect.module.scss'
+import css from '../RepoBranchSelectV2/RepoBranchSelectV2.module.scss'
 
 export interface RepositorySelectProps<T> {
   formikProps?: FormikContextType<T>
@@ -105,18 +105,18 @@ const RepositorySelect: React.FC<RepositorySelectProps<any>> = props => {
         selectProps={{ usePortal: true, popoverClassName: css.gitBranchSelectorPopover }}
       />
       {loading ? (
-        <Layout.Horizontal spacing="small" flex={{ alignItems: 'flex-start' }} style={{ paddingTop: '28px' }}>
+        <Layout.Horizontal spacing="small" flex={{ alignItems: 'flex-start' }} className={css.loadingWrapper}>
           <Icon name="steps-spinner" size={18} color={Color.PRIMARY_7} />
         </Layout.Horizontal>
       ) : (responseMessages?.length && responseMessages?.length) || !!error ? (
-        <Layout.Horizontal spacing="small" flex={{ alignItems: 'flex-start' }} style={{ paddingTop: '22px' }}>
+        <Layout.Horizontal spacing="small" flex={{ alignItems: 'flex-start' }} className={css.refreshButtonWrapper}>
           <Icon
             name="refresh"
             size={16}
             color={Color.PRIMARY_7}
             background={Color.PRIMARY_1}
             padding="small"
-            style={{ borderRadius: '4px', cursor: 'pointer' }}
+            className={css.refreshIcon}
             onClick={() => {
               setErrorResponse?.([])
               setRepoSelectOptions([])

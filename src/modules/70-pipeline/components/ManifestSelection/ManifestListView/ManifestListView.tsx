@@ -356,17 +356,11 @@ function ManifestListView({
       case selectedManifest === ManifestDataType.Kustomize:
         manifestDetailStep = <KustomizeWithGIT {...lastStepProps()} />
         break
-      case selectedManifest === ManifestDataType.OpenshiftParam &&
-        [ManifestStoreMap.Git, ManifestStoreMap.Github, ManifestStoreMap.GitLab, ManifestStoreMap.Bitbucket].includes(
-          manifestStore as ManifestStores
-        ):
+      case selectedManifest === ManifestDataType.OpenshiftParam:
         manifestDetailStep = <OpenShiftParamWithGit {...lastStepProps()} />
         break
 
-      case selectedManifest === ManifestDataType.KustomizePatches &&
-        [ManifestStoreMap.Git, ManifestStoreMap.Github, ManifestStoreMap.GitLab, ManifestStoreMap.Bitbucket].includes(
-          manifestStore as ManifestStores
-        ):
+      case selectedManifest === ManifestDataType.KustomizePatches:
         manifestDetailStep = <KustomizePatchDetails {...lastStepProps()} />
         break
       case selectedManifest === ManifestDataType.ServerlessAwsLambda:
@@ -786,6 +780,7 @@ function ManifestListView({
                       valuesPaths={manifest?.spec[ManifestToPathKeyMap[manifest?.type as PrimaryManifestType]]}
                       expressions={expressions}
                       allowableTypes={allowableTypes}
+                      isReadonly={isReadonly}
                       attachPathYaml={formData =>
                         attachPathYaml(formData, manifest?.identifier as string, manifest?.type as PrimaryManifestType)
                       }

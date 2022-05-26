@@ -16,11 +16,11 @@ exports[`CD enabled CD stage form READONLY mode: disabled CD stage 1`] = `
         >
           <label
             class="bp3-label"
-            for="/dummypath.timeout"
+            for="timeout"
           >
             <span
               class="Tooltip--acenter"
-              data-tooltip-id="pipelineInputSetFormTest_/dummypath.timeout"
+              data-tooltip-id="pipelineInputSetFormTest_timeout"
             >
               pipelineSteps.timeoutLabel
             </span>
@@ -42,7 +42,7 @@ exports[`CD enabled CD stage form READONLY mode: disabled CD stage 1`] = `
                 <input
                   class="bp3-input"
                   disabled=""
-                  name="/dummypath.timeout"
+                  name="timeout"
                   placeholder="Enter w/d/h/m/s/ms"
                   type="text"
                   value=""

@@ -59,6 +59,7 @@ import type {
 } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import { useGitScope } from '@pipeline/utils/CIUtils'
 import { MultiTypeList } from '@common/components/MultiTypeList/MultiTypeList'
+import { useHostedBuilds } from '@common/hooks/useHostedBuild'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { BuildStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import type { K8sDirectInfraYaml, UseFromStageInfraYaml, VmInfraYaml, VmPoolYaml, Infrastructure } from 'services/ci'
@@ -260,11 +261,12 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
   const formikRef = React.useRef<FormikProps<BuildInfraFormValues>>()
   const { initiateProvisioning, delegateProvisioningStatus } = useProvisionDelegateForHostedBuilds()
-  const { CI_VM_INFRASTRUCTURE, CIE_HOSTED_BUILDS } = useFeatureFlags()
-  const showThumbnailSelect = CI_VM_INFRASTRUCTURE || CIE_HOSTED_BUILDS
+  const { CI_VM_INFRASTRUCTURE } = useFeatureFlags()
+  const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
+  const showThumbnailSelect = CI_VM_INFRASTRUCTURE || enabledHostedBuildsForFreeUsers
 
   const BuildInfraTypes: ThumbnailSelectProps['items'] = [
-    ...(CIE_HOSTED_BUILDS
+    ...(enabledHostedBuildsForFreeUsers
       ? [
           {
             label: getString('ci.getStartedWithCI.hostedByHarness'),
@@ -469,7 +471,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
               ...getVmInfraPayload
             }
           }
-        } else if (CIE_HOSTED_BUILDS && infraType === CIBuildInfrastructureType.KubernetesHosted) {
+        } else if (enabledHostedBuildsForFreeUsers && infraType === CIBuildInfrastructureType.KubernetesHosted) {
           return {
             buildInfraType: CIBuildInfrastructureType.KubernetesHosted
           }
@@ -1925,7 +1927,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                         </>
                       )}
                     </Layout.Vertical>
-                    {CI_VM_INFRASTRUCTURE || CIE_HOSTED_BUILDS ? (
+                    {CI_VM_INFRASTRUCTURE || enabledHostedBuildsForFreeUsers ? (
                       <Container
                         className={css.helptext}
                         margin={{ top: 'medium' }}
@@ -1937,7 +1939,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                             {getString('ci.buildInfra.infrastructureTypesLabel')}
                           </Text>
                         </Layout.Horizontal>
-                        {CIE_HOSTED_BUILDS ? (
+                        {enabledHostedBuildsForFreeUsers ? (
                           <>
                             <Text
                               font={{ variation: FontVariation.BODY2 }}
@@ -1954,7 +1956,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                         <>
                           <Text
                             font={{ variation: FontVariation.BODY2 }}
-                            padding={{ top: CIE_HOSTED_BUILDS ? 0 : 'xlarge', bottom: 'xsmall' }}
+                            padding={{ top: enabledHostedBuildsForFreeUsers ? 0 : 'xlarge', bottom: 'xsmall' }}
                           >
                             {getString('ci.buildInfra.k8sLabel')}
                           </Text>

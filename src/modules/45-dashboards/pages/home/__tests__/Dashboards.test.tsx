@@ -50,13 +50,17 @@ const openDashboardCardContextMenu = (): void => {
   })
 }
 
-describe('Dashboards', () => {
-  const mockEmptyGetFolderResponse: customDashboardServices.GetFolderResponse = {
-    resource: []
-  }
+const mockEmptyGetFolderResponse: customDashboardServices.GetFolderResponse = {
+  resource: []
+}
 
-  afterEach(() => {
-    jest.spyOn(customDashboardServices, 'useGetFolder').mockReset()
+describe('Dashboards', () => {
+  const useGetFolderMock = jest.spyOn(customDashboardServices, 'useGetFolder')
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+
+    useGetFolderMock.mockReturnValue({ data: mockEmptyGetFolderResponse, error: null, loading: false } as any)
   })
 
   test('it should show an empty message when there are no dashboards', () => {
@@ -97,10 +101,6 @@ describe('Dashboards', () => {
   })
 
   test('it should show edit dashboard form when editDashboard callback triggered', async () => {
-    jest
-      .spyOn(customDashboardServices, 'useGetFolder')
-      .mockImplementation(() => ({ data: mockEmptyGetFolderResponse, loading: false } as any))
-
     const testDashboard: IDashboard = {
       ...defaultTestDashboard,
       type: DashboardType.ACCOUNT
@@ -152,9 +152,6 @@ describe('Dashboards', () => {
   })
 
   test('it should trigger clone callback when cloneDashboard triggered', async () => {
-    jest
-      .spyOn(customDashboardServices, 'useGetFolder')
-      .mockImplementation(() => ({ data: mockEmptyGetFolderResponse, loading: false } as any))
     const testDashboard: IDashboard = {
       ...defaultTestDashboard,
       type: DashboardType.ACCOUNT

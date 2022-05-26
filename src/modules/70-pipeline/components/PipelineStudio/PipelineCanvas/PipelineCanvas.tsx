@@ -546,7 +546,7 @@ export function PipelineCanvas({
 
   React.useEffect(() => {
     isPipelineRemote &&
-      (gitDetails.repoIdentifier || gitDetails.repoName) &&
+      gitDetails.repoName &&
       gitDetails.branch &&
       updatePipelineStoreMetadata({ connectorRef, storeType }, gitDetails)
   }, [isPipelineRemote, gitDetails])
@@ -566,12 +566,13 @@ export function PipelineCanvas({
               module={module}
               inputSetYAML={inputSetYaml || ''}
               inputSetSelected={getInputSetSelected()}
-              repoIdentifier={repoIdentifier}
+              repoIdentifier={isPipelineRemote ? repoName : repoIdentifier}
               branch={branch}
               onClose={() => {
                 onCloseRunPipelineModal()
               }}
               stagesExecuted={stagesExecuted}
+              storeType={storeType}
             />
             <Button
               aria-label="close modal"

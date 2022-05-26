@@ -10,12 +10,9 @@ import { Tooltip } from '@blueprintjs/core'
 
 import { Checkbox, Layout, Color } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
-import { useQueryParams } from '@common/hooks'
-import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { StoreType } from '@common/constants/GitSyncTypes'
 
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import css from './RunPipelineForm.module.scss'
 
 export interface CheckBoxActionsProps {
@@ -24,13 +21,13 @@ export interface CheckBoxActionsProps {
   setSkipPreFlightCheck: Dispatch<SetStateAction<boolean>>
   notifyOnlyMe: boolean
   setNotifyOnlyMe: Dispatch<SetStateAction<boolean>>
+  storeType: StoreType
 }
 
 export default function CheckBoxActions(props: CheckBoxActionsProps): React.ReactElement | null {
-  const { executionView, skipPreFlightCheck, setSkipPreFlightCheck, notifyOnlyMe, setNotifyOnlyMe } = props
-  const { storeType } = useQueryParams<GitQueryParams>()
+  const { executionView, skipPreFlightCheck, setSkipPreFlightCheck, notifyOnlyMe, setNotifyOnlyMe, storeType } = props
   const { getString } = useStrings()
-  const GIT_SIMPLIFICATION = useFeatureFlag(FeatureFlag.GIT_SIMPLIFICATION)
+  const { isGitSimplificationEnabled } = useAppStore()
 
   if (executionView) {
     return null
@@ -46,7 +43,7 @@ export default function CheckBoxActions(props: CheckBoxActionsProps): React.Reac
         padding={{ top: 'small', bottom: 'small', left: 'xxlarge', right: 'medium' }}
         checked={skipPreFlightCheck}
         onChange={e => setSkipPreFlightCheck(e.currentTarget.checked)}
-        disabled={GIT_SIMPLIFICATION && storeType === StoreType.REMOTE}
+        disabled={isGitSimplificationEnabled && storeType === StoreType.REMOTE}
       />
       <Tooltip position="top" content={getString('featureNA')}>
         <Checkbox

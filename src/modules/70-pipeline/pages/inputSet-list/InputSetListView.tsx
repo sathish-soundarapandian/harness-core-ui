@@ -222,7 +222,7 @@ const RenderColumnActions: Renderer<CellProps<InputSetLocal>> = ({ row, column }
     module: Module
   }>()
 
-  const { repoIdentifier, branch, repoName } = useQueryParams<GitQueryParams>()
+  const { repoIdentifier, branch, repoName, storeType } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const runPipeline = (): void => {
     openRunPipelineModal()
@@ -241,7 +241,8 @@ const RenderColumnActions: Renderer<CellProps<InputSetLocal>> = ({ row, column }
     ],
     pipelineIdentifier: (rowData.pipelineIdentifier || '') as string,
     repoIdentifier: isGitSyncEnabled ? repoIdentifier : repoName,
-    branch
+    branch,
+    storeType
   })
 
   return (

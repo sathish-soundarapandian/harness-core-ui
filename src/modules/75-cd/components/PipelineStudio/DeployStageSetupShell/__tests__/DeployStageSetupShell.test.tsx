@@ -61,6 +61,7 @@ jest.mock('services/cd-ng', () => ({
     return { data: {}, refetch: jest.fn(), error: null }
   }),
   useGetServiceListForProject: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() })),
+  useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() })),
   useGetFailureStrategiesYaml: jest.fn().mockReturnValue({
     data: {
       data: 'failureStrategies:\n  - onFailure:\n      errors:\n        - AllErrors\n      action:\n        type: StageRollback',

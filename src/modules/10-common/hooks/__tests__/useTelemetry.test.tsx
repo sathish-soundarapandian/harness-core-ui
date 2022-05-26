@@ -53,7 +53,6 @@ describe('useTelemetry', () => {
     })
     expect(pageMock).toHaveBeenCalledWith({
       name: 'page',
-      category: '',
       properties: {
         userId: '',
         source: 'NG UI'
@@ -103,7 +102,6 @@ describe('useTelemetry', () => {
     })
     expect(pageMock).toHaveBeenCalledWith({
       name: 'page',
-      category: '',
       properties: {
         source: 'NG UI',
         userId: '',
