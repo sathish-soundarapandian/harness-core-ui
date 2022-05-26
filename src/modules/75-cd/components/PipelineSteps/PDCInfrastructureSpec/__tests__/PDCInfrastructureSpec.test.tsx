@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, fireEvent, getByText, render } from '@testing-library/react'
+import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -104,7 +104,7 @@ describe('Test PDCInfrastructureSpec behavior', () => {
 
   test('should call onUpdate if valid values entered - inputset', async () => {
     const onUpdateHandler = jest.fn()
-    const { container } = render(
+    const { getByText } = render(
       <TestStepWidget
         initialValues={getInitialValues()}
         template={getRuntimeInputsValues()}
@@ -116,14 +116,14 @@ describe('Test PDCInfrastructureSpec behavior', () => {
     )
 
     await act(async () => {
-      fireEvent.click(getByText(container, 'Submit'))
+      fireEvent.click(getByText('Submit'))
     })
     expect(onUpdateHandler).toHaveBeenCalledWith(getInitialValues())
   })
 
   test('should not call onUpdate if invalid values entered - inputset', async () => {
     const onUpdateHandler = jest.fn()
-    const { container } = render(
+    const { getByText } = render(
       <TestStepWidget
         initialValues={getEmptyInitialValues()}
         template={getRuntimeInputsValues()}
@@ -135,9 +135,33 @@ describe('Test PDCInfrastructureSpec behavior', () => {
     )
 
     await act(async () => {
-      fireEvent.click(getByText(container, 'Submit'))
+      fireEvent.click(getByText('Submit'))
     })
 
     expect(onUpdateHandler).not.toHaveBeenCalled()
+  })
+
+  test('open hosts table - empty', async () => {
+    const onUpdateHandler = jest.fn()
+    const { getByText } = render(
+      <TestStepWidget
+        initialValues={getInitialValues()}
+        template={getRuntimeInputsValues()}
+        allValues={getInitialValues()}
+        type={StepType.PDC}
+        stepViewType={StepViewType.InputSet}
+        onUpdate={onUpdateHandler}
+      />
+    )
+
+    await waitFor(() => {
+      expect(getByText('cd.steps.pdcStep.previewHosts')).toBeDefined()
+    })
+
+    act(() => {
+      fireEvent.click(getByText('cd.steps.pdcStep.previewHosts'))
+    })
+
+    expect(getByText('cd.steps.pdcStep.noHosts')).toBeDefined()
   })
 })

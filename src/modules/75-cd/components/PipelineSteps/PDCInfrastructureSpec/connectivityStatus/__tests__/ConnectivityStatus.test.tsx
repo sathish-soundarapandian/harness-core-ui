@@ -36,7 +36,7 @@ jest.mock('services/cd-ng', () => ({
       mutate: jest.fn().mockImplementation(() => {
         return {
           status: 'SUCCESS',
-          data: {}
+          data: { status: 'SUCCESS' }
         }
       })
     }
@@ -52,17 +52,33 @@ describe('connectivity status', () => {
     )
 
   test('success on click check hosts', async () => {
-    const { container, getByText } = setup(failure)
-    expect(container).toMatchSnapshot()
+    const { getByText } = setup(failure)
+
+    expect(getByText('failed')).toBeDefined()
+
+    useValidateHostsMock.mockImplementation(() => {
+      return {
+        cancel: jest.fn(),
+        loading: false,
+        mutate: jest.fn().mockImplementation(() => {
+          return {
+            status: 'SUCCESS',
+            data: {}
+          }
+        })
+      }
+    })
+
     const testBtn = getByText('test')
 
     act(() => {
       fireEvent.click(testBtn)
     })
+
     expect(getByText('connectors.testInProgress')).toBeDefined()
 
     await waitFor(() => {
-      expect(getByText('warning-sign')).toBeDefined()
+      expect(getByText('full-circle')).toBeDefined()
     })
   })
 
@@ -102,7 +118,11 @@ describe('connectivity status', () => {
           () =>
             new Promise((_resolve, reject) => {
               reject({
-                data: { responseMessages: [], message: 'error' }
+                data: {
+                  responseMessages: [],
+                  message: 'tooltip error',
+                  errors: [{ code: 400, message: 'error message', reason: 'error reason' }]
+                }
               })
             })
         )
@@ -118,7 +138,7 @@ describe('connectivity status', () => {
     expect(getByText('connectors.testInProgress')).toBeDefined()
 
     await waitFor(() => {
-      expect(getByText('warning-sign')).toBeDefined()
+      expect(getByText('failed')).toBeDefined()
     })
   })
 
@@ -150,9 +170,11 @@ describe('connectivity status', () => {
   })
 
   test('success render should match snapshot', async () => {
-    const { container } = setup(success)
+    const { getByText } = setup(success)
 
-    expect(container).toMatchSnapshot()
+    await waitFor(() => {
+      expect(getByText('success')).toBeDefined()
+    })
   })
 
   test('unknown render should match snapshot', async () => {

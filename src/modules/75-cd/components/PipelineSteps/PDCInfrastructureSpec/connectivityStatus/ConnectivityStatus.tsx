@@ -103,12 +103,14 @@ const ConnectivityStatus: React.FC<ConnectivityStatusProps> = data => {
     try {
       const result = await validateHosts({ hosts: [host], tags })
       if (result.status === 'SUCCESS') {
+        setStatus('SUCCESS')
         setStepDetails({
           step: 2,
           intent: Intent.SUCCESS,
           status: 'DONE'
         })
       } else {
+        setStatus('FAILURE')
         setErrorMessage({ ...result.data, useErrorHandler: false })
         setStepDetails({
           step: 1,
@@ -176,15 +178,13 @@ const ConnectivityStatus: React.FC<ConnectivityStatusProps> = data => {
   }
 
   const renderStatus = () => {
-    if (!(connectorStatus || errorMessage)) {
-      return undefined
-    }
     const statusMessageMap = {
       [`${ConnectorStatus.SUCCESS}`]: getString('success'),
       [`${ConnectorStatus.FAILURE}`]: getString('failed')
     }
 
     const statusMsg = defaultTo(statusMessageMap[`${connectorStatus}`], getString('na'))
+    console.log('isStatusSuccess: ', isStatusSuccess)
     if (isStatusSuccess) {
       return renderStatusText('full-circle', { size: 6, color: Color.GREEN_500 }, '', statusMsg)
     }

@@ -29,6 +29,8 @@ steps:
     pdcConnectorLabel: Physical Datacentar Connector
     deployAllHostsOption: Deploy to All hosts
     deploySpecificHostsOption: Deploy to specific hosts based on
+    previewHosts: Preview Hosts
+    noHosts: No hosts provided
   azureInfraStep:
     azure: 'Microsoft Azure'
     subscription: '{{ $.common.subscriptionId }}'

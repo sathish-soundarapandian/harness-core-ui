@@ -3720,8 +3720,10 @@ export interface StringsMap {
   'cd.steps.pdcStep.hostNameOption': string
   'cd.steps.pdcStep.hostsPlaceholder': string
   'cd.steps.pdcStep.no': string
+  'cd.steps.pdcStep.noHosts': string
   'cd.steps.pdcStep.pdcConnectorLabel': string
   'cd.steps.pdcStep.preconfiguredHostsOption': string
+  'cd.steps.pdcStep.previewHosts': string
   'cd.steps.pdcStep.specificHostsPlaceholder': string
   'cd.steps.pdcStep.specifyHostsOption': string
   'cd.steps.serverless.regionPlaceholder': string

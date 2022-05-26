@@ -274,7 +274,10 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
       width: '12%',
       Cell: ({ row }) => (
         <ConnectivityStatus
-          identifier={get(formikRef.current, 'values.credentialsRef', '')}
+          identifier={
+            get(formikRef.current, 'values.credentialsRef', '') ||
+            get(formikRef.current, 'values.sshKey.identifier', '')
+          }
           tags={get(formikRef.current, 'values.delegateSelectors', [])}
           host={row.original.host || ''}
           status={row.original.status}
@@ -504,7 +507,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                         variation={ButtonVariation.SECONDARY}
                         width={140}
                       >
-                        Preview Hosts
+                        {getString('cd.steps.pdcStep.previewHosts')}
                       </Button>
                     ) : (
                       <Layout.Vertical>
@@ -527,7 +530,13 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                               onClick={() => testConnection()}
                               size={ButtonSize.SMALL}
                               variation={ButtonVariation.SECONDARY}
-                              disabled={detailHosts.length === 0 || !formikRef?.current?.values?.credentialsRef}
+                              disabled={
+                                detailHosts.length === 0 ||
+                                !(
+                                  formikRef?.current?.values?.credentialsRef ||
+                                  formikRef?.current?.values?.sshKey?.identifier
+                                )
+                              }
                             >
                               {getString('common.smtp.testConnection')}
                             </Button>
@@ -542,7 +551,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                           <Table columns={columns} data={detailHosts} bpTableProps={{}} />
                         ) : (
                           <Label className={'bp3-label'} style={{ margin: 'auto' }}>
-                            No hosts provided
+                            {getString('cd.steps.pdcStep.noHosts')}
                           </Label>
                         )}
                       </Layout.Vertical>
