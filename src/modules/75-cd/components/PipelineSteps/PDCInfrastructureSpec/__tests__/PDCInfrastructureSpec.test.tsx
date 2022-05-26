@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import { act, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -138,6 +138,19 @@ const clickOnDeploySpecificHostsOption = async (getByText: any) => {
   clickOn(getByText, 'cd.steps.pdcStep.deploySpecificHostsOption')
 }
 
+const clickOnDeployAllHostsOption = async (getByText: any) => {
+  clickOn(getByText, 'cd.steps.pdcStep.deployAllHostsOption')
+}
+
+const updateConnector = async (container: any) => {
+  const connnectorRefInput = queryByAttribute('data-testid', container, /connectorRef/)
+  act(() => {
+    fireEvent.change(connnectorRefInput!, {
+      target: { value: { name: 'connectorName', identifier: 'connIdentifier' } }
+    })
+  })
+}
+
 describe('Test PDCInfrastructureSpec behavior - No Preconfigured', () => {
   beforeEach(() => {
     factory.registerStep(new PDCInfrastructureSpec())
@@ -217,6 +230,8 @@ describe('Test PDCInfrastructureSpec behavior - No Preconfigured', () => {
     await waitFor(() => {
       expect(getByPlaceholderText('cd.steps.pdcStep.specificHostsPlaceholder')).toBeDefined()
     })
+    await clickOnDeployAllHostsOption(getByText)
+    await updateConnector(container)
     await submitForm(getByText)
   })
 })
