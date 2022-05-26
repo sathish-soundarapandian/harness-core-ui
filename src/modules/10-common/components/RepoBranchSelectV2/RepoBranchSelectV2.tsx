@@ -6,29 +6,27 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import {
-  FormInput,
-  getErrorInfoFromErrorObject,
-  Icon,
-  Layout,
-  ModalErrorHandlerBinding,
-  SelectOption,
-  useToggleOpen
-} from '@harness/uicore'
+import { FormInput, Icon, Layout, SelectOption } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { Error, GitBranchDetailsDTO, ResponseMessage, useGetListOfBranchesByRefConnectorV2 } from 'services/cd-ng'
+import {
+  Error,
+  Failure,
+  GitBranchDetailsDTO,
+  ResponseMessage,
+  useGetListOfBranchesByRefConnectorV2
+} from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import css from '@common/components/RepositorySelect/RepositorySelect.module.scss'
+import type { GetDataError } from 'restful-react'
 
 export interface RepoBranchSelectProps {
   name?: string
   label?: string
   noLabel?: boolean
   disabled?: boolean
-  modalErrorHandler?: ModalErrorHandlerBinding
   connectorIdentifierRef?: string
   repoName?: string
   selectedValue?: string
@@ -44,17 +42,36 @@ export const getBranchSelectOptions = (data: GitBranchDetailsDTO[] = []): Select
     }
   })
 }
+const hasToRefetchBranches = (
+  disabled: boolean,
+  connectorIdentifierRef: string | undefined,
+  repoName: string | undefined
+) => !disabled && connectorIdentifierRef && repoName
+
+const showRefetchButon = (
+  disabled: boolean,
+  connectorIdentifierRef: string | undefined,
+  repoName: string | undefined,
+  error: GetDataError<Failure | Error> | null
+) => {
+  const responseMessages = (error?.data as Error)?.responseMessages
+  return (
+    !disabled &&
+    connectorIdentifierRef &&
+    repoName &&
+    ((responseMessages?.length && responseMessages?.length > 0) || !!error)
+  )
+}
 
 const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
   const {
-    modalErrorHandler,
     connectorIdentifierRef,
     repoName,
     selectedValue,
     name,
     label,
     noLabel = false,
-    disabled,
+    disabled = false,
     setErrorResponse
   } = props
   const { getString } = useStrings()
@@ -80,49 +97,28 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
     lazy: true
   })
 
-  const responseMessages = (error?.data as Error)?.responseMessages
-
   useEffect(() => {
-    responseMessages && setErrorResponse?.(responseMessages)
-  }, [responseMessages, setErrorResponse])
-
-  const { open } = useToggleOpen()
-
-  useEffect(() => {
-    setBranchSelectOptions([])
-    if (connectorIdentifierRef && repoName) {
+    if (hasToRefetchBranches(disabled, connectorIdentifierRef, repoName)) {
+      setBranchSelectOptions([])
       refetch()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connectorIdentifierRef, repoName])
 
-  const handleError = (errorMessage: string): void => {
-    modalErrorHandler?.showDanger(errorMessage)
-  }
-
   useEffect(() => {
     if (loading) {
       return
     }
-    modalErrorHandler?.hide()
+    const responseMessages = (error?.data as Error)?.responseMessages
 
-    if (error) {
-      if ((error?.data as Error)?.responseMessages?.length) {
-        open()
-      } else {
-        handleError(getErrorInfoFromErrorObject(error))
-      }
-      return
-    }
-
-    if (response?.status !== 'SUCCESS') {
-      response && handleError(getErrorInfoFromErrorObject(response))
-    } else {
+    if (response?.status === 'SUCCESS') {
       if (!isEmpty(response?.data)) {
         setBranchSelectOptions(getBranchSelectOptions(response.data?.branches))
-      } else {
-        modalErrorHandler?.showDanger(getString('common.git.noBranchesFound'))
       }
+    }
+
+    if (responseMessages) {
+      setErrorResponse?.(responseMessages)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading])
@@ -130,11 +126,11 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
   return (
     <Layout.Horizontal>
       <FormInput.Select
-        name={name ?? 'branch'}
+        name={defaultTo(name, 'branch')}
         disabled={disabled || loading}
         items={branchSelectOptions}
-        label={noLabel ? '' : label ?? 'Select an existing Branch'}
-        placeholder={loading ? 'Loading...' : 'Select'}
+        label={noLabel ? '' : defaultTo(label, getString('gitBranch'))}
+        placeholder={loading ? getString('loading') : getString('select')}
         value={{ label: selectedValue || '', value: selectedValue || '' }}
         onChange={selected => props.onChange?.(selected, branchSelectOptions)}
         selectProps={{ usePortal: true, popoverClassName: css.gitBranchSelectorPopover }}
@@ -147,7 +143,7 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
         >
           <Icon name="steps-spinner" size={18} color={Color.PRIMARY_7} />
         </Layout.Horizontal>
-      ) : repoName && ((responseMessages?.length && responseMessages?.length > 0) || !!error) ? (
+      ) : showRefetchButon(disabled, connectorIdentifierRef, repoName, error) ? (
         <Layout.Horizontal spacing="small" flex={{ alignItems: 'flex-start' }} style={{ paddingTop: '22px' }}>
           <Icon
             name="refresh"
@@ -159,7 +155,7 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
             onClick={() => {
               setErrorResponse?.([])
               setBranchSelectOptions([])
-              connectorIdentifierRef && repoName && refetch()
+              refetch()
             }}
           />
         </Layout.Horizontal>

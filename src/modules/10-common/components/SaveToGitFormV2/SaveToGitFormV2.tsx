@@ -19,9 +19,7 @@ import {
   Button,
   SelectOption,
   Radio,
-  Icon,
-  ModalErrorHandler,
-  ModalErrorHandlerBinding
+  Icon
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { GitSyncEntityDTO, EntityGitDetails } from 'services/cd-ng'
@@ -65,7 +63,6 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
   const { isEditing = false, resource } = props
   const { getString } = useStrings()
   const [isNewBranch, setIsNewBranch] = React.useState(false)
-  const [modalErrorHandler, setModalErrorHandler] = React.useState<ModalErrorHandlerBinding>()
   const formikRef = useRef<FormikContextType<SaveToGitFormV2Interface>>()
   const [targetBranch, setTargetBranch] = useState<string>('')
   const [disableBranchSelection, setDisableBranchSelection] = useState<boolean>(true)
@@ -117,7 +114,6 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
           disabled={disableBranchSelection}
           connectorIdentifierRef={resource.storeMetadata?.connectorRef}
           repoName={resource.gitDetails?.repoName}
-          modalErrorHandler={modalErrorHandler}
           onChange={(selected: SelectOption, options?: SelectOption[]) => {
             if (!options?.find(branch => branch.value === selected.value)) {
               formikRef.current?.setFieldValue('targetBranch', '')
@@ -134,7 +130,6 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
 
   return (
     <Container height={'inherit'} className={css.modalContainer}>
-      <ModalErrorHandler bind={setModalErrorHandler} />
       <Text
         className={css.modalHeader}
         font={{ weight: 'semi-bold' }}
