@@ -10,9 +10,9 @@ import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { useValidateHosts } from 'services/cd-ng'
 import ConnectivityStatus from '../ConnectivityStatus'
-import mock from './mock.json'
+import mockData from './mockData'
 
-const { failure, success, unknownType } = mock
+const { failure, success, unknownType, failureWithErrorSummary } = mockData
 
 const useValidateHostsMock = useValidateHosts as jest.MockedFunction<any>
 
@@ -203,6 +203,20 @@ describe('connectivity status', () => {
 
     await waitFor(() => {
       expect(getByText('noDetails')).toBeDefined()
+    })
+  })
+
+  test('click on failed message with errorSummary', async () => {
+    const { getByText } = setup(failureWithErrorSummary)
+
+    const warningItem = getByText('warning-sign')
+
+    act(() => {
+      fireEvent.mouseOver(warningItem)
+    })
+
+    await waitFor(() => {
+      expect(getByText('ErrorSummaryStatus')).toBeDefined()
     })
   })
 })

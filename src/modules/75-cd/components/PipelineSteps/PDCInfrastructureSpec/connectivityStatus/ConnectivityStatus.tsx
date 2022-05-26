@@ -42,7 +42,7 @@ interface WarningTooltipProps {
   errorSummary?: string
   errors?: ErrorDetail[]
   onClick: (event: MouseEvent<HTMLDivElement>) => void
-  errorDeatailsText: string
+  errorDetailsText: string
   noDetailsText: string
 }
 
@@ -50,7 +50,7 @@ const WarningTooltip: React.FC<WarningTooltipProps> = ({
   errorSummary,
   errors,
   onClick,
-  errorDeatailsText,
+  errorDetailsText,
   noDetailsText
 }) => {
   if (errorSummary) {
@@ -61,7 +61,7 @@ const WarningTooltip: React.FC<WarningTooltipProps> = ({
         </Text>
         {errors ? (
           <Text color={Color.BLUE_400} onClick={onClick} className={css.viewDetails}>
-            {errorDeatailsText}
+            {errorDetailsText}
           </Text>
         ) : null}
       </Layout.Vertical>
@@ -77,7 +77,7 @@ const WarningTooltip: React.FC<WarningTooltipProps> = ({
 const ConnectivityStatus: React.FC<ConnectivityStatusProps> = data => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [testing, setTesting] = useState(false)
-  const [status, setStatus] = useState<ConnectorConnectivityDetails['status']>(data?.status || 'UNKNOWN')
+  const [status, setStatus] = useState<ConnectorConnectivityDetails['status']>(data?.status?.status || 'UNKNOWN')
 
   const [errorMessage, setErrorMessage] = useState<ErrorMessage>()
   const { getString } = useStrings()
@@ -171,7 +171,7 @@ const ConnectivityStatus: React.FC<ConnectivityStatusProps> = data => {
           e.stopPropagation()
           openErrorModal((errorMessage as ErrorMessage) || data?.status)
         }}
-        errorDeatailsText={getString('connectors.testConnectionStep.errorDetails')}
+        errorDetailsText={getString('connectors.testConnectionStep.errorDetails')}
         noDetailsText={getString('noDetails')}
       />
     )
