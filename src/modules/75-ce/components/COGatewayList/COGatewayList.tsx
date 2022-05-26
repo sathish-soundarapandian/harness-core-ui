@@ -631,13 +631,6 @@ const RulesTableContainer: React.FC<RulesTableContainerProps> = ({
     }
   })
 
-  /* istanbul ignore next */
-  const onSearchChange = async (val: string) => {
-    val = val.trim()
-    await refetchRules(val, true, false)
-    onPageClick(0)
-  }
-
   const handleRefreshClick = () => {
     refetchRules(searchParams.text, !_isEmpty(searchParams.text))
   }
@@ -740,15 +733,6 @@ const RulesTableContainer: React.FC<RulesTableContainerProps> = ({
               })}
             </Text>
           ) : null}
-        </Layout.Horizontal>
-        <Layout.Horizontal flex>
-          <ExpandingSearchInput
-            placeholder={getString('search')}
-            onChange={onSearchChange}
-            throttle={300}
-            alwaysExpanded={true}
-            defaultValue={searchParams.text}
-          />
         </Layout.Horizontal>
       </Layout.Horizontal>
       <Container margin={{ top: 'medium' }} style={{ position: 'relative' }}>
@@ -1088,6 +1072,12 @@ const COGatewayList: React.FC = () => {
     setSortObj(sort)
   }
 
+  const onSearchChange = async (val: string) => {
+    val = val.trim()
+    setPageIndex(0)
+    triggerServiceFetch(val, true, false)
+  }
+
   // Render page loader for initial loading of the page
   if (isLoadingPage) {
     return (
@@ -1149,7 +1139,7 @@ const COGatewayList: React.FC = () => {
         />
       </Drawer>
       <>
-        <Layout.Horizontal padding="large">
+        <Layout.Horizontal padding="large" flex={{ justifyContent: 'space-between' }}>
           <Layout.Horizontal width="55%">
             <RbacButton
               intent="primary"
@@ -1168,6 +1158,15 @@ const COGatewayList: React.FC = () => {
                 )
                 trackEvent('StartedMakingAutoStoppingRule', {})
               }}
+            />
+          </Layout.Horizontal>
+          <Layout.Horizontal flex>
+            <ExpandingSearchInput
+              placeholder={getString('search')}
+              onChange={onSearchChange}
+              throttle={300}
+              alwaysExpanded={true}
+              defaultValue={searchParams.text}
             />
           </Layout.Horizontal>
         </Layout.Horizontal>
