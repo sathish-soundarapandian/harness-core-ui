@@ -182,4 +182,27 @@ describe('connectivity status', () => {
 
     expect(container).toMatchSnapshot()
   })
+
+  test('click on failed message', async () => {
+    const { getByText } = setup(failure)
+    const warningItem = getByText('warning-sign')
+
+    act(() => {
+      fireEvent.mouseOver(warningItem)
+    })
+
+    await waitFor(() => {
+      expect(getByText('noDetails')).toBeDefined()
+    })
+
+    const tooltipItem = getByText('noDetails')
+
+    act(() => {
+      fireEvent.click(tooltipItem)
+    })
+
+    await waitFor(() => {
+      expect(getByText('noDetails')).toBeDefined()
+    })
+  })
 })
