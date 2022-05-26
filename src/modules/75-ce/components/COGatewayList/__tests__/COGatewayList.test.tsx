@@ -46,15 +46,13 @@ jest.mock('@common/hooks/useFeatures', () => {
   }
 })
 
-const listData = {
-  response: [
-    mockedK8sServiceData,
-    mockedInstanceServiceData,
-    { ...mockedInstanceServiceData, fulfilment: 'spot', disabled: true },
-    mockedEcsServiceData,
-    mockedRdsServiceData
-  ]
-}
+const listData = [
+  mockedK8sServiceData,
+  mockedInstanceServiceData,
+  { ...mockedInstanceServiceData, fulfilment: 'spot', disabled: true },
+  mockedEcsServiceData,
+  mockedRdsServiceData
+]
 
 const mockedCumulativeSavingsData = {
   actual_cost: [],
@@ -106,16 +104,23 @@ jest.mock('services/lw', () => ({
     loading: false,
     error: null
   })),
-  useGetServices: jest.fn().mockImplementation(() => ({
-    data: listData,
-    loading: false,
-    error: null,
-    refetch: jest.fn().mockImplementation(() =>
+  useFetchRules: jest.fn().mockImplementation(() => ({
+    mutate: () =>
       Promise.resolve({
-        data: listData,
+        response: {
+          records: listData,
+          total: listData.length,
+          pages: 1
+        },
         loading: false
       })
-    )
+    // error: null,
+    // refetch: jest.fn().mockImplementation(() =>
+    //   Promise.resolve({
+    //     data: listData,
+    //     loading: false
+    //   })
+    // )
   })),
   useHealthOfService: jest.fn().mockImplementation(() => ({
     data: null,
@@ -132,7 +137,7 @@ jest.mock('services/lw', () => ({
   useGetServiceDiagnostics: jest.fn().mockImplementation(() => ({
     data: null
   })),
-  useCumulativeServiceSavings: jest.fn().mockImplementation(() => ({
+  useCumulativeServiceSavingsV2: jest.fn().mockImplementation(() => ({
     data: { response: mockedCumulativeSavingsData },
     loading: false
   })),
@@ -177,7 +182,7 @@ afterEach(() => {
 })
 
 describe('Test COGatewayList', () => {
-  test('renders without crashing', () => {
+  test.only('renders without crashing', async () => {
     const { container, getByText } = render(
       <TestWrapper path={testpath} pathParams={testparams}>
         <COGatewayList></COGatewayList>
@@ -185,7 +190,7 @@ describe('Test COGatewayList', () => {
     )
     expect(container).toMatchSnapshot()
 
-    const createAsBtn = getByText('ce.co.newAutoStoppingRule')
+    const createAsBtn = await getByText('ce.co.newAutoStoppingRule')
     expect('createAsBtn').toBeDefined()
     act(() => {
       fireEvent.click(createAsBtn)
@@ -270,14 +275,15 @@ describe('Test COGatewayList', () => {
   })
 
   test('error from services API should show error', () => {
-    const servicesSpy = jest.spyOn(lwServices, 'useGetServices')
+    const servicesSpy = jest.spyOn(lwServices, 'useFetchRules')
     servicesSpy.mockImplementation(
       () =>
         ({
-          data: null,
-          loading: false,
-          error: { data: { errors: ['Fetch Service error'] } },
-          refetch: jest.fn()
+          mutate: () => Promise.reject({ data: { errors: ['Fetch Service error'] } }),
+          loading: false
+          // data: null,
+          // error: { data: { errors: ['Fetch Service error'] } },
+          // refetch: jest.fn()
         } as any)
     )
     const { container } = render(
@@ -294,14 +300,15 @@ describe('Test COGatewayList', () => {
 
   describe('render based on the content', () => {
     test('render page loader on initial loading', () => {
-      const servicesSpy = jest.spyOn(lwServices, 'useGetServices')
+      const servicesSpy = jest.spyOn(lwServices, 'useFetchRules')
       servicesSpy.mockImplementation(
         () =>
           ({
-            data: null,
-            loading: false,
-            error: null,
-            refetch: jest.fn()
+            mutate: () => Promise.resolve({ response: { records: null } }),
+            // data: null,
+            loading: false
+            // error: null,
+            // refetch: jest.fn()
           } as any)
       )
       const { container } = render(
@@ -315,14 +322,20 @@ describe('Test COGatewayList', () => {
 
     // eslint-disable-next-line jest/no-disabled-tests
     test.skip('render empty page component for no rules created', () => {
-      const servicesSpy = jest.spyOn(lwServices, 'useGetServices')
+      const servicesSpy = jest.spyOn(lwServices, 'useFetchRules')
       servicesSpy.mockImplementation(
         () =>
           ({
-            data: { response: null },
-            loading: false,
-            error: null,
-            refetch: jest.fn()
+            mutate: () =>
+              Promise.resolve({
+                response: {
+                  records: null
+                }
+              }),
+            // data: { response: null },
+            loading: false
+            // error: null,
+            // refetch: jest.fn()
           } as any)
       )
       const { container, getByText } = render(
@@ -340,13 +353,14 @@ describe('Test COGatewayList', () => {
     })
 
     test('render table loader component when data is loading', () => {
-      jest.spyOn(lwServices, 'useGetServices').mockImplementation(
+      jest.spyOn(lwServices, 'useFetchRules').mockImplementation(
         () =>
           ({
-            data: { response: null },
-            loading: true,
-            error: null,
-            refetch: jest.fn()
+            mutate: () => Promise.resolve(),
+            // data: { response: null },
+            loading: true
+            // error: null,
+            // refetch: jest.fn()
           } as any)
       )
       const { container } = render(
@@ -358,13 +372,14 @@ describe('Test COGatewayList', () => {
     })
 
     test('should show error message on receiving error from services API', () => {
-      jest.spyOn(lwServices, 'useGetServices').mockImplementation(
+      jest.spyOn(lwServices, 'useFetchRules').mockImplementation(
         () =>
           ({
-            data: { response: null },
-            loading: false,
-            error: { message: 'Some random error' },
-            refetch: jest.fn()
+            mutate: () => Promise.reject({ message: 'Some random error' }),
+            // data: { response: null },
+            loading: false
+            // error: { message: 'Some random error' },
+            // refetch: jest.fn()
           } as any)
       )
       const { container } = render(

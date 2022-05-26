@@ -825,7 +825,7 @@ const COGatewayList: React.FC = () => {
       featureName: FeatureIdentifier.RESTRICTED_AUTOSTOPPING_RULE_CREATION
     }
   })
-  const { mode: modeQueryParam } = useQueryParams<RulesListQueryParams>()
+  const queryParams = useQueryParams<RulesListQueryParams>()
 
   const [mode, setMode] = useQueryParamsState<RulesMode>('mode', RulesMode.ACTIVE)
   const [searchQueryText, setSearchQueryText] = useQueryParamsState<string | undefined>('search', undefined)
@@ -846,7 +846,7 @@ const COGatewayList: React.FC = () => {
   const [isLoadingPage, setIsLoadingPage] = useState(true) // track initial loading of page
 
   // const fetchCounter = useRef<number>(0)
-  const initLoadComplete = useRef<boolean>(false)
+  const initLoadComplete = useRef<boolean>(!_isEmpty(queryParams))
 
   // const getServicesQueryParams = React.useMemo(
   //   () => ({
@@ -1091,7 +1091,7 @@ const COGatewayList: React.FC = () => {
   // no data is available
   // search is not active
   // and no 'mode' query param is present
-  if (!isLoadingPage && !modeQueryParam && _isEmpty(tableData) && !searchParams.isActive) {
+  if (!isLoadingPage && !queryParams.mode && _isEmpty(tableData) && !searchParams.isActive) {
     return <EmptyListPage featureDetail={featureDetail} />
   }
 

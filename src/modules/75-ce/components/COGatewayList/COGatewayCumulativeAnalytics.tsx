@@ -7,7 +7,7 @@
 
 // import { ProgressBar } from '@blueprintjs/core'
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router'
+import { useParams } from 'react-router-dom'
 import { isEmpty as _isEmpty, defaultTo as _defaultTo } from 'lodash-es'
 import { Container, HarnessDocTooltip, Heading, Icon, Layout, Text } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'

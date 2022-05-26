@@ -68,16 +68,16 @@ const mockedResponse = {
 jest.mock('highcharts-react-official', () => () => <div />)
 
 jest.mock('services/lw', () => ({
-  useCumulativeServiceSavings: jest
+  useCumulativeServiceSavingsV2: jest
     .fn()
-    .mockImplementation(() => ({ data: { response: mockedResponse }, loading: false }))
+    .mockImplementation(() => ({ mutate: () => Promise.resolve({ response: mockedResponse }), loading: false }))
 }))
 
 describe('Cumulative Analytics tests', () => {
   test('render component', () => {
     const { container } = render(
       <TestWrapper pathParams={testParams}>
-        <COGatewayCumulativeAnalytics data={mockedResponse} loadingData={false} mode={RulesMode.ACTIVE} />
+        <COGatewayCumulativeAnalytics mode={RulesMode.ACTIVE} rules={[]} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
