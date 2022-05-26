@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { RulesMode } from '@ce/constants'
 import COGatewayCumulativeAnalytics from '../COGatewayCumulativeAnalytics'
@@ -74,12 +74,13 @@ jest.mock('services/lw', () => ({
 }))
 
 describe('Cumulative Analytics tests', () => {
-  test('render component', () => {
+  test('render component', async () => {
     const { container } = render(
       <TestWrapper pathParams={testParams}>
         <COGatewayCumulativeAnalytics mode={RulesMode.ACTIVE} rules={[]} />
       </TestWrapper>
     )
+    await waitFor(() => Promise.resolve())
     expect(container).toMatchSnapshot()
   })
 })

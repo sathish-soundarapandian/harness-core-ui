@@ -98,7 +98,7 @@ exports[`Test COGatewayList able to search through the list 1`] = `
       </div>
     </div>
     <div
-      class="Layout--horizontal StyledProps--main StyledProps--padding-large"
+      class="Layout--horizontal StyledProps--main StyledProps--padding-large StyledProps--flex StyledProps--flex-justifyContent-space-between"
     >
       <div
         class="Layout--horizontal StyledProps--main"
@@ -133,6 +133,67 @@ exports[`Test COGatewayList able to search through the list 1`] = `
             ce.co.newAutoStoppingRule
           </span>
         </button>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex"
+      >
+        <div
+          class="bp3-input-group ui-search-box ExpandingSearchInput--main   ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+          data-name=""
+        >
+          <span
+            class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+            data-icon="thinner-search"
+          >
+            <svg
+              fill="none"
+              height="14"
+              viewBox="0 0 16 16"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <input
+            class="bp3-input  ExpandingSearchInput--filter"
+            dir="auto"
+            placeholder="search"
+            style="padding-right: 38px;"
+            type="search"
+            value="test"
+          />
+          <span
+            class="ExpandingSearchInput--btnWrapper"
+          >
+            <button
+              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+              type="button"
+            >
+              <span
+                class="bp3-icon StyledProps--main"
+                data-icon="main-close"
+              >
+                <svg
+                  height="8"
+                  viewBox="0 0 14 14"
+                  width="8"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M8.6 7l5-5c.3-.2.4-.5.4-.8 0-.7-.5-1.2-1.2-1.2-.3 0-.6.1-.8.3l-5 5-5-5C1.8.1 1.5 0 1.2 0 .5 0 0 .5 0 1.2c0 .3.1.6.3.8l5 5-5 5c-.2.2-.3.5-.3.8 0 .7.5 1.2 1.2 1.2.3 0 .6-.1.8-.3l5-5 5 5c.2.2.5.4.8.4.6 0 1.2-.5 1.2-1.2 0-.3-.1-.6-.3-.8z"
+                    fill="#4d5969"
+                  />
+                </svg>
+              </span>
+            </button>
+          </span>
+        </div>
       </div>
     </div>
     <div
@@ -344,67 +405,6 @@ exports[`Test COGatewayList able to search through the list 1`] = `
           <div
             class="Layout--horizontal StyledProps--main"
           />
-          <div
-            class="Layout--horizontal StyledProps--main StyledProps--flex"
-          >
-            <div
-              class="bp3-input-group ui-search-box ExpandingSearchInput--main   ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
-              data-name=""
-            >
-              <span
-                class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
-                data-icon="thinner-search"
-              >
-                <svg
-                  fill="none"
-                  height="14"
-                  viewBox="0 0 16 16"
-                  width="14"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </span>
-              <input
-                class="bp3-input  ExpandingSearchInput--filter"
-                dir="auto"
-                placeholder="search"
-                style="padding-right: 38px;"
-                type="search"
-                value="test"
-              />
-              <span
-                class="ExpandingSearchInput--btnWrapper"
-              >
-                <button
-                  class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
-                  type="button"
-                >
-                  <span
-                    class="bp3-icon StyledProps--main"
-                    data-icon="main-close"
-                  >
-                    <svg
-                      height="8"
-                      viewBox="0 0 14 14"
-                      width="8"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M8.6 7l5-5c.3-.2.4-.5.4-.8 0-.7-.5-1.2-1.2-1.2-.3 0-.6.1-.8.3l-5 5-5-5C1.8.1 1.5 0 1.2 0 .5 0 0 .5 0 1.2c0 .3.1.6.3.8l5 5-5 5c-.2.2-.3.5-.3.8 0 .7.5 1.2 1.2 1.2.3 0 .6-.1.8-.3l5-5 5 5c.2.2.5.4.8.4.6 0 1.2-.5 1.2-1.2 0-.3-.1-.6-.3-.8z"
-                        fill="#4d5969"
-                      />
-                    </svg>
-                  </span>
-                </button>
-              </span>
-            </div>
-          </div>
         </div>
         <div
           class="StyledProps--font StyledProps--main StyledProps--margin-top-medium"
@@ -433,19 +433,39 @@ exports[`Test COGatewayList able to search through the list 1`] = `
               role="row"
             >
               <div
-                class="TableV2--cell"
+                class="TableV2--cell TableV2--sortable"
                 colspan="1"
                 role="columnheader"
                 style="width: 18%;"
+                title="Toggle SortBy"
               >
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                 >
                   ce.co.rulesTableHeaders.name
                 </p>
+                <span
+                  class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+                  icon="double-caret-vertical"
+                >
+                  <svg
+                    data-icon="double-caret-vertical"
+                    height="15"
+                    viewBox="0 0 16 16"
+                    width="15"
+                  >
+                    <desc>
+                      double-caret-vertical
+                    </desc>
+                    <path
+                      d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
               </div>
               <div
-                class="TableV2--cell"
+                class="TableV2--cell TableV2--sortable"
                 colspan="1"
                 role="columnheader"
                 style="width: 8%;"
@@ -457,7 +477,7 @@ exports[`Test COGatewayList able to search through the list 1`] = `
                 </p>
               </div>
               <div
-                class="TableV2--cell"
+                class="TableV2--cell TableV2--sortable"
                 colspan="1"
                 role="columnheader"
                 style="width: 12%;"
@@ -469,7 +489,7 @@ exports[`Test COGatewayList able to search through the list 1`] = `
                 </p>
               </div>
               <div
-                class="TableV2--cell"
+                class="TableV2--cell TableV2--sortable"
                 colspan="1"
                 role="columnheader"
                 style="width: 22%;"
@@ -481,31 +501,71 @@ exports[`Test COGatewayList able to search through the list 1`] = `
                 </p>
               </div>
               <div
-                class="TableV2--cell"
+                class="TableV2--cell TableV2--sortable"
                 colspan="1"
                 role="columnheader"
                 style="width: 15%;"
+                title="Toggle SortBy"
               >
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                 >
                   CE.CO.RULESTABLEHEADERS.SAVINGS
                 </p>
+                <span
+                  class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+                  icon="double-caret-vertical"
+                >
+                  <svg
+                    data-icon="double-caret-vertical"
+                    height="15"
+                    viewBox="0 0 16 16"
+                    width="15"
+                  >
+                    <desc>
+                      double-caret-vertical
+                    </desc>
+                    <path
+                      d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
               </div>
               <div
-                class="TableV2--cell"
+                class="TableV2--cell TableV2--sortable"
                 colspan="1"
                 role="columnheader"
                 style="width: 10%;"
+                title="Toggle SortBy"
               >
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                 >
                   ce.co.rulesTableHeaders.lastActivity
                 </p>
+                <span
+                  class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+                  icon="double-caret-vertical"
+                >
+                  <svg
+                    data-icon="double-caret-vertical"
+                    height="15"
+                    viewBox="0 0 16 16"
+                    width="15"
+                  >
+                    <desc>
+                      double-caret-vertical
+                    </desc>
+                    <path
+                      d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
               </div>
               <div
-                class="TableV2--cell"
+                class="TableV2--cell TableV2--sortable"
                 colspan="1"
                 role="columnheader"
                 style="width: 10%;"
@@ -517,7 +577,7 @@ exports[`Test COGatewayList able to search through the list 1`] = `
                 </p>
               </div>
               <div
-                class="TableV2--cell"
+                class="TableV2--cell TableV2--sortable"
                 colspan="1"
                 role="columnheader"
                 style="width: 5%;"
@@ -1919,7 +1979,7 @@ exports[`Test COGatewayList clicking on a row should open info drawer 1`] = `
       </div>
     </div>
     <div
-      class="Layout--horizontal StyledProps--main StyledProps--padding-large"
+      class="Layout--horizontal StyledProps--main StyledProps--padding-large StyledProps--flex StyledProps--flex-justifyContent-space-between"
     >
       <div
         class="Layout--horizontal StyledProps--main"
@@ -1954,6 +2014,42 @@ exports[`Test COGatewayList clicking on a row should open info drawer 1`] = `
             ce.co.newAutoStoppingRule
           </span>
         </button>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex"
+      >
+        <div
+          class="bp3-input-group ui-search-box ExpandingSearchInput--main   ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+          data-name=""
+        >
+          <span
+            class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+            data-icon="thinner-search"
+          >
+            <svg
+              fill="none"
+              height="14"
+              viewBox="0 0 16 16"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <input
+            class="bp3-input  ExpandingSearchInput--filter"
+            dir="auto"
+            placeholder="search"
+            style="padding-right: 38px;"
+            type="search"
+            value=""
+          />
+        </div>
       </div>
     </div>
     <div
@@ -2165,42 +2261,6 @@ exports[`Test COGatewayList clicking on a row should open info drawer 1`] = `
           <div
             class="Layout--horizontal StyledProps--main"
           />
-          <div
-            class="Layout--horizontal StyledProps--main StyledProps--flex"
-          >
-            <div
-              class="bp3-input-group ui-search-box ExpandingSearchInput--main   ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
-              data-name=""
-            >
-              <span
-                class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
-                data-icon="thinner-search"
-              >
-                <svg
-                  fill="none"
-                  height="14"
-                  viewBox="0 0 16 16"
-                  width="14"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </span>
-              <input
-                class="bp3-input  ExpandingSearchInput--filter"
-                dir="auto"
-                placeholder="search"
-                style="padding-right: 38px;"
-                type="search"
-                value=""
-              />
-            </div>
-          </div>
         </div>
         <div
           class="StyledProps--font StyledProps--main StyledProps--margin-top-medium"
@@ -2229,19 +2289,39 @@ exports[`Test COGatewayList clicking on a row should open info drawer 1`] = `
               role="row"
             >
               <div
-                class="TableV2--cell"
+                class="TableV2--cell TableV2--sortable"
                 colspan="1"
                 role="columnheader"
                 style="width: 18%;"
+                title="Toggle SortBy"
               >
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                 >
                   ce.co.rulesTableHeaders.name
                 </p>
+                <span
+                  class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+                  icon="double-caret-vertical"
+                >
+                  <svg
+                    data-icon="double-caret-vertical"
+                    height="15"
+                    viewBox="0 0 16 16"
+                    width="15"
+                  >
+                    <desc>
+                      double-caret-vertical
+                    </desc>
+                    <path
+                      d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
               </div>
               <div
-                class="TableV2--cell"
+                class="TableV2--cell TableV2--sortable"
                 colspan="1"
                 role="columnheader"
                 style="width: 8%;"
@@ -2253,7 +2333,7 @@ exports[`Test COGatewayList clicking on a row should open info drawer 1`] = `
                 </p>
               </div>
               <div
-                class="TableV2--cell"
+                class="TableV2--cell TableV2--sortable"
                 colspan="1"
                 role="columnheader"
                 style="width: 12%;"
@@ -2265,7 +2345,7 @@ exports[`Test COGatewayList clicking on a row should open info drawer 1`] = `
                 </p>
               </div>
               <div
-                class="TableV2--cell"
+                class="TableV2--cell TableV2--sortable"
                 colspan="1"
                 role="columnheader"
                 style="width: 22%;"
@@ -2277,31 +2357,71 @@ exports[`Test COGatewayList clicking on a row should open info drawer 1`] = `
                 </p>
               </div>
               <div
-                class="TableV2--cell"
+                class="TableV2--cell TableV2--sortable"
                 colspan="1"
                 role="columnheader"
                 style="width: 15%;"
+                title="Toggle SortBy"
               >
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                 >
                   CE.CO.RULESTABLEHEADERS.SAVINGS
                 </p>
+                <span
+                  class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+                  icon="double-caret-vertical"
+                >
+                  <svg
+                    data-icon="double-caret-vertical"
+                    height="15"
+                    viewBox="0 0 16 16"
+                    width="15"
+                  >
+                    <desc>
+                      double-caret-vertical
+                    </desc>
+                    <path
+                      d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
               </div>
               <div
-                class="TableV2--cell"
+                class="TableV2--cell TableV2--sortable"
                 colspan="1"
                 role="columnheader"
                 style="width: 10%;"
+                title="Toggle SortBy"
               >
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                 >
                   ce.co.rulesTableHeaders.lastActivity
                 </p>
+                <span
+                  class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+                  icon="double-caret-vertical"
+                >
+                  <svg
+                    data-icon="double-caret-vertical"
+                    height="15"
+                    viewBox="0 0 16 16"
+                    width="15"
+                  >
+                    <desc>
+                      double-caret-vertical
+                    </desc>
+                    <path
+                      d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
               </div>
               <div
-                class="TableV2--cell"
+                class="TableV2--cell TableV2--sortable"
                 colspan="1"
                 role="columnheader"
                 style="width: 10%;"
@@ -2313,7 +2433,7 @@ exports[`Test COGatewayList clicking on a row should open info drawer 1`] = `
                 </p>
               </div>
               <div
-                class="TableV2--cell"
+                class="TableV2--cell TableV2--sortable"
                 colspan="1"
                 role="columnheader"
                 style="width: 5%;"
@@ -3715,7 +3835,7 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
       </div>
     </div>
     <div
-      class="Layout--horizontal StyledProps--main StyledProps--padding-large"
+      class="Layout--horizontal StyledProps--main StyledProps--padding-large StyledProps--flex StyledProps--flex-justifyContent-space-between"
     >
       <div
         class="Layout--horizontal StyledProps--main"
@@ -3750,6 +3870,42 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
             ce.co.newAutoStoppingRule
           </span>
         </button>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex"
+      >
+        <div
+          class="bp3-input-group ui-search-box ExpandingSearchInput--main   ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+          data-name=""
+        >
+          <span
+            class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+            data-icon="thinner-search"
+          >
+            <svg
+              fill="none"
+              height="14"
+              viewBox="0 0 16 16"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <input
+            class="bp3-input  ExpandingSearchInput--filter"
+            dir="auto"
+            placeholder="search"
+            style="padding-right: 38px;"
+            type="search"
+            value=""
+          />
+        </div>
       </div>
     </div>
     <div
@@ -3961,42 +4117,6 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
           <div
             class="Layout--horizontal StyledProps--main"
           />
-          <div
-            class="Layout--horizontal StyledProps--main StyledProps--flex"
-          >
-            <div
-              class="bp3-input-group ui-search-box ExpandingSearchInput--main   ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
-              data-name=""
-            >
-              <span
-                class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
-                data-icon="thinner-search"
-              >
-                <svg
-                  fill="none"
-                  height="14"
-                  viewBox="0 0 16 16"
-                  width="14"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </span>
-              <input
-                class="bp3-input  ExpandingSearchInput--filter"
-                dir="auto"
-                placeholder="search"
-                style="padding-right: 38px;"
-                type="search"
-                value=""
-              />
-            </div>
-          </div>
         </div>
         <div
           class="StyledProps--font StyledProps--main StyledProps--margin-top-medium"
@@ -4025,19 +4145,39 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
               role="row"
             >
               <div
-                class="TableV2--cell"
+                class="TableV2--cell TableV2--sortable"
                 colspan="1"
                 role="columnheader"
                 style="width: 18%;"
+                title="Toggle SortBy"
               >
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                 >
                   ce.co.rulesTableHeaders.name
                 </p>
+                <span
+                  class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+                  icon="double-caret-vertical"
+                >
+                  <svg
+                    data-icon="double-caret-vertical"
+                    height="15"
+                    viewBox="0 0 16 16"
+                    width="15"
+                  >
+                    <desc>
+                      double-caret-vertical
+                    </desc>
+                    <path
+                      d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
               </div>
               <div
-                class="TableV2--cell"
+                class="TableV2--cell TableV2--sortable"
                 colspan="1"
                 role="columnheader"
                 style="width: 8%;"
@@ -4049,7 +4189,7 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
                 </p>
               </div>
               <div
-                class="TableV2--cell"
+                class="TableV2--cell TableV2--sortable"
                 colspan="1"
                 role="columnheader"
                 style="width: 12%;"
@@ -4061,7 +4201,7 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
                 </p>
               </div>
               <div
-                class="TableV2--cell"
+                class="TableV2--cell TableV2--sortable"
                 colspan="1"
                 role="columnheader"
                 style="width: 22%;"
@@ -4073,31 +4213,71 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
                 </p>
               </div>
               <div
-                class="TableV2--cell"
+                class="TableV2--cell TableV2--sortable"
                 colspan="1"
                 role="columnheader"
                 style="width: 15%;"
+                title="Toggle SortBy"
               >
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                 >
                   CE.CO.RULESTABLEHEADERS.SAVINGS
                 </p>
+                <span
+                  class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+                  icon="double-caret-vertical"
+                >
+                  <svg
+                    data-icon="double-caret-vertical"
+                    height="15"
+                    viewBox="0 0 16 16"
+                    width="15"
+                  >
+                    <desc>
+                      double-caret-vertical
+                    </desc>
+                    <path
+                      d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
               </div>
               <div
-                class="TableV2--cell"
+                class="TableV2--cell TableV2--sortable"
                 colspan="1"
                 role="columnheader"
                 style="width: 10%;"
+                title="Toggle SortBy"
               >
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                 >
                   ce.co.rulesTableHeaders.lastActivity
                 </p>
+                <span
+                  class="bp3-icon bp3-icon-double-caret-vertical StyledProps--main StyledProps--padding-left-small"
+                  icon="double-caret-vertical"
+                >
+                  <svg
+                    data-icon="double-caret-vertical"
+                    height="15"
+                    viewBox="0 0 16 16"
+                    width="15"
+                  >
+                    <desc>
+                      double-caret-vertical
+                    </desc>
+                    <path
+                      d="M5 7h6a1.003 1.003 0 00.71-1.71l-3-3C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-3 3A1.003 1.003 0 005 7zm6 2H5a1.003 1.003 0 00-.71 1.71l3 3c.18.18.43.29.71.29s.53-.11.71-.29l3-3A1.003 1.003 0 0011 9z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
               </div>
               <div
-                class="TableV2--cell"
+                class="TableV2--cell TableV2--sortable"
                 colspan="1"
                 role="columnheader"
                 style="width: 10%;"
@@ -4109,7 +4289,7 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
                 </p>
               </div>
               <div
-                class="TableV2--cell"
+                class="TableV2--cell TableV2--sortable"
                 colspan="1"
                 role="columnheader"
                 style="width: 5%;"
@@ -5666,90 +5846,6 @@ exports[`Test COGatewayList render based on the content render table loader comp
 `;
 
 exports[`Test COGatewayList render based on the content should show error message on receiving error from services API 1`] = `
-<div>
-  <div
-    style="position: relative; height: calc(100vh - 128px);"
-  >
-    <div
-      class="StyledProps--font StyledProps--main PageSpinner--spinner StyledProps--flex StyledProps--flex-align-center-center"
-    >
-      <div
-        class="Layout--vertical Layout--layout-spacing-medium StyledProps--main PageSpinner--content"
-        style="align-items: center; width: 500px;"
-      >
-        <span
-          class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey600"
-          data-icon="steps-spinner"
-        >
-          <svg
-            height="32"
-            viewBox="0 0 128 128"
-            width="32"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <g>
-              <path
-                d="M122.5 69.25H96.47a33.1 33.1 0 000-10.5h26.05a5.25 5.25 0 010 10.5z"
-                fill="#ff8e02"
-              />
-              <path
-                d="M112.04 97.83L89.47 84.8a33.1 33.1 0 005.25-9.1l22.57 13.03a5.25 5.25 0 01-5.28 9.1zM88.68 117.35L75.65 94.78a33.1 33.1 0 009.1-5.25l13.02 22.57a5.25 5.25 0 11-9.1 5.25zM58.7 122.57V96.5a33.1 33.1 0 0010.5 0v26.07a5.25 5.25 0 01-10.5 0zM30.1 112.1l13.04-22.57a33.1 33.1 0 009.1 5.25L39.2 117.35a5.25 5.25 0 11-9.1-5.25zM10.6 88.74L33.16 75.7a33.1 33.1 0 005.25 9.1L15.88 97.83a5.25 5.25 0 11-5.25-9.1z"
-                fill="#ffddb3"
-                fill-opacity="0.3"
-              />
-              <path
-                d="M5.37 58.75h26.06a33.1 33.1 0 000 10.5H5.37a5.25 5.25 0 010-10.5z"
-                fill="#ffd29a"
-                fill-opacity="0.4"
-              />
-              <path
-                d="M15.85 30.17L38.4 43.2a33.1 33.1 0 00-5.24 9.1L10.6 39.25a5.25 5.25 0 115.25-9.1z"
-                fill="#ffc680"
-                fill-opacity="0.5"
-              />
-              <path
-                d="M39.2 10.65l13.03 22.57a33.1 33.1 0 00-9.1 5.25l-13-22.57a5.25 5.25 0 119.1-5.25z"
-                fill="#ffbb67"
-                fill-opacity="0.6"
-              />
-              <path
-                d="M69.2 5.43V31.5a33.1 33.1 0 00-10.5 0V5.42a5.25 5.25 0 1110.5 0z"
-                fill="#ffb04d"
-                fill-opacity="0.7"
-              />
-              <path
-                d="M97.77 15.9L84.75 38.47a33.1 33.1 0 00-9.1-5.25l13.03-22.57a5.25 5.25 0 119.1 5.25z"
-                fill="#ffa535"
-                fill-opacity="0.8"
-              />
-              <path
-                d="M117.3 39.26L94.7 52.3a33.1 33.1 0 00-5.25-9.1l22.57-13.03a5.25 5.25 0 015.25 9.1z"
-                fill="#ff991b"
-                fill-opacity="0.9"
-              />
-              <animatetransform
-                attributeName="transform"
-                calcMode="discrete"
-                dur="1200ms"
-                repeatCount="indefinite"
-                type="rotate"
-                values="0 64 64;30 64 64;60 64 64;90 64 64;120 64 64;150 64 64;180 64 64;210 64 64;240 64 64;270 64 64;300 64 64;330 64 64"
-              />
-            </g>
-          </svg>
-        </span>
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--font-size-medium StyledProps--font-align-center StyledProps--color StyledProps--color-grey600"
-        >
-          Loading, please wait...
-        </p>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`Test COGatewayList renders without crashing 1`] = `
 <div>
   <div
     style="position: relative; height: calc(100vh - 128px);"
