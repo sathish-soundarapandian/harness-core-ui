@@ -11,7 +11,7 @@ import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { Category, PageNames } from '@common/constants/TrackingConstants'
+import { PageNames } from '@common/constants/TrackingConstants'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 
 import SelectModuleList from './SelectModuleList'
@@ -108,7 +108,7 @@ const WelcomePage: React.FC = () => {
     return options
   }
 
-  useTelemetry({ pageName: PageNames.Purpose, category: Category.SIGNUP })
+  useTelemetry({ pageName: PageNames.Purpose })
 
   const body = (
     <Layout.Vertical width={'80vw'}>

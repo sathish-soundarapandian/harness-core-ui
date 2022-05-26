@@ -231,10 +231,10 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
           role="tabpanel"
         >
           <div
-            class="serviceOverrides"
+            class="deployStage"
           >
             <div
-              class="contentSection nonModalView"
+              class="contentSection"
             >
               <div
                 class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xlarge StyledProps--margin-left-xlarge"

@@ -13,7 +13,6 @@ import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { StartTrialTemplate } from '@rbac/components/TrialHomePageTemplate/StartTrialTemplate'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { PageNames } from '@ci/constants/TrackingConstants'
-import { Category } from '@common/constants/TrackingConstants'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -61,7 +60,7 @@ const CITrialHomePage: React.FC = () => {
     }
   }, [])
 
-  useTelemetry({ pageName: PageNames.CIStartTrial, category: Category.SIGNUP })
+  useTelemetry({ pageName: PageNames.CIStartTrial })
 
   const startBtnDescription = FREE_PLAN_ENABLED
     ? getString('common.startFreePlan', { module: 'CI' })

@@ -469,7 +469,7 @@ export default function DeployInfraSpecifications(props: React.PropsWithChildren
   )
 
   return (
-    <div className={stageCss.serviceOverrides} key="1">
+    <div className={stageCss.deployStage} key="1">
       <DeployServiceErrors domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
       <div className={stageCss.contentSection} ref={scrollRef}>
         {contextType !== PipelineContextType.Standalone && (

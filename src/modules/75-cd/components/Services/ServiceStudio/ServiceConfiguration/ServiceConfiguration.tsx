@@ -17,6 +17,7 @@ import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interf
 import { NGServiceConfig, useGetEntityYamlSchema } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import DeployServiceDefinition from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceDefinition/DeployServiceDefinition'
+import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { setNameIDDescription } from '../../utils/ServiceUtils'
 import ServiceStepBasicInfo from './ServiceStepBasicInfo'
 import css from './ServiceConfiguration.module.scss'
@@ -38,10 +39,10 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   }
 }
 
-function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React.ReactElement {
+function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React.ReactElement | null {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const {
-    state: { pipeline },
+    state: { pipeline: service },
     updatePipeline,
     isReadonly
   } = usePipelineContext()
@@ -65,7 +66,7 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
         const serviceSetYamlVisual = parse(yaml).service
 
         if (serviceSetYamlVisual) {
-          const newPipelineData = produce({ ...pipeline }, draft => {
+          const newServiceData = produce({ ...service }, draft => {
             setNameIDDescription(draft, serviceSetYamlVisual)
 
             set(
@@ -74,7 +75,7 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
               cloneDeep(serviceSetYamlVisual.serviceDefinition)
             )
           })
-          updatePipeline(newPipelineData)
+          updatePipeline(newServiceData)
         }
       }
       setSelectedView(view)
@@ -82,8 +83,11 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
     [yamlHandler?.getLatestYaml, serviceSchema]
   )
 
+  if (service.identifier === DefaultNewPipelineId) {
+    return null
+  }
   return (
-    <>
+    <div className={css.serviceEntity}>
       <div className={css.optionBtns}>
         <VisualYamlToggle
           selectedView={selectedView}
@@ -110,7 +114,7 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
           />
         </Container>
       )}
-    </>
+    </div>
   )
 }
 

@@ -22,7 +22,7 @@ function ServiceStepBasicInfo(): React.ReactElement {
     updatePipeline
   } = usePipelineContext()
 
-  const { isEditServiceModal } = useServiceContext()
+  const { isServiceEntityModalView } = useServiceContext()
 
   const onUpdate = useCallback(
     (value: NGServiceV2InfoConfig): void => {
@@ -33,7 +33,7 @@ function ServiceStepBasicInfo(): React.ReactElement {
   const delayedOnUpdate = React.useRef(debounce(onUpdate || noop, 1000)).current
 
   return (
-    <div className={cx(css.serviceStepBasicInfo, isEditServiceModal ? css.serviceModal : css.nonModalView)}>
+    <div className={cx(css.serviceStepBasicInfo, isServiceEntityModalView ? css.serviceModal : css.nonModalView)}>
       <Formik
         enableReinitialize
         initialValues={pipeline}

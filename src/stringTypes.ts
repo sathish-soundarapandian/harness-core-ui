@@ -3666,6 +3666,7 @@ export interface StringsMap {
   'cd.serverlessDeployCommandOptions': string
   'cd.serviceCreated': string
   'cd.serviceDashboard.6monthTrend': string
+  'cd.serviceDashboard.activeInstanceCount': string
   'cd.serviceDashboard.activeServiceInstancesLabel': string
   'cd.serviceDashboard.artifact': string
   'cd.serviceDashboard.buildName': string
@@ -3681,6 +3682,7 @@ export interface StringsMap {
   'cd.serviceDashboard.instanceCountHistory': string
   'cd.serviceDashboard.instanceDetails': string
   'cd.serviceDashboard.lastDeployment': string
+  'cd.serviceDashboard.manageServiceLabel': string
   'cd.serviceDashboard.noActiveServiceInstances': string
   'cd.serviceDashboard.noActiveServices': string
   'cd.serviceDashboard.noDeployments': string

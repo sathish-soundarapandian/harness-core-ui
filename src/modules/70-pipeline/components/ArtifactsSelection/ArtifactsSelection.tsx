@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { PageSpinner, StepWizard, useToaster } from '@harness/uicore'
+import { StepWizard, useToaster } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
@@ -96,7 +96,7 @@ export default function ArtifactsSelection({
   isPropagating = false,
   deploymentType,
   readonly: isReadOnlyServiceMode
-}: ArtifactsSelectionProps): JSX.Element {
+}: ArtifactsSelectionProps): React.ReactElement | null {
   const {
     state: {
       selectionState: { selectedStageId }
@@ -688,7 +688,7 @@ export default function ArtifactsSelection({
   }
 
   if (serviceLoading) {
-    return <PageSpinner />
+    return null
   }
 
   return (

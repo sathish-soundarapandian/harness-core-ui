@@ -3,7 +3,7 @@
 exports[`Deploy infra specifications test Should match snapshot 1`] = `
 <div>
   <div
-    class="serviceOverrides"
+    class="deployStage"
   >
     <div
       class="contentSection"

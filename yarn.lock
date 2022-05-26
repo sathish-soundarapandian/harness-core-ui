@@ -1796,10 +1796,10 @@
   resolved "https://npm.pkg.github.com/download/@harness/ng-tooltip/1.30.98/f43af84141f912541db4e0c30e6c33c4fa4c516fef4897a305ff7632a96437c8#f29ac62f6982a5dc23b0ef4a0d208a13336bc098"
   integrity sha512-f1x8gESjZlw3Bb4EkLQzOMzXVRn+ik6mIyvXncnORbmW+hl97v5+c7VDJW48RKOd7mt8dtMxpH2i1KLsYW/1WA==
 
-"@harness/telemetry@^1.0.41":
-  version "1.0.41"
-  resolved "https://npm.pkg.github.com/download/@harness/telemetry/1.0.41/b5d01d56931f6c3cee504cf9b45028a7d5096636a21f2863aea2118c0eb327ef#94c7dc384c1e692fc60fb353d3533397d3588846"
-  integrity sha512-XXS0sUK4WMdDJTVVhnpASz7HyvmDMDLep2IUxK5OawvYG3GJmw5OaLloEHz6iVeaTCIdnzeLuxP+ArAf5q6z6A==
+"@harness/telemetry@^1.0.42":
+  version "1.0.42"
+  resolved "https://npm.pkg.github.com/download/@harness/telemetry/1.0.42/60bc34c133bb40f0e0aa08f80620a1b23f3f089070e8550767e9d3fce8ca6e25#4d3f71026a03c898992d902f13a6c6d9cb0edac6"
+  integrity sha512-pwjPYnQ8du1UswlX7A/apewGVDmbmaKKWTQSXtSHhKf9ekZ8WCwVvFcrM8ZIq/QbTn7Z8BXFYtMJdSG25oNtOg==
 
 "@harness/uicore@3.0.0":
   version "3.0.0"

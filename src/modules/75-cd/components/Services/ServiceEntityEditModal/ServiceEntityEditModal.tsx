@@ -6,7 +6,6 @@
  */
 
 import React from 'react'
-import { isEmpty } from 'lodash-es'
 import { PageSpinner } from '@harness/uicore'
 import type { ServiceResponseDTO } from 'services/cd-ng'
 import ServiceConfigurationWrapper from '@cd/components/Services/ServiceStudio/ServiceConfigWrapper/ServiceConfigWrapper'
@@ -22,7 +21,7 @@ function ServiceEntityEditModal({
   onCloseModal,
   isLoading
 }: ServiceEntityEditModalProps): React.ReactElement {
-  if (isLoading || isEmpty(serviceResponse)) {
+  if (isLoading) {
     return (
       <React.Fragment>
         <PageSpinner fixed />
@@ -33,7 +32,7 @@ function ServiceEntityEditModal({
   return (
     <ServiceContextProvider
       serviceResponse={serviceResponse}
-      isEditServiceModal={true}
+      isServiceEntityModalView={true}
       onCloseModal={onCloseModal}
       isServiceEntityPage={true}
     >

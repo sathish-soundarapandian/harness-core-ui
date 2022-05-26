@@ -109,6 +109,7 @@ serviceDashboard:
   servicesInLast: 'Services added in {{period}}'
   serviceInstancesInLast: 'Active service instance trend in {{period}}'
   serviceInstances: 'Service Instances'
+  activeInstanceCount: 'Active Instance Count'
   nonProd: 'Non Prod'
   prod: 'Prod'
   in: 'in {{timeRange}}'
@@ -137,6 +138,7 @@ serviceDashboard:
   helmChartDetails: Helm Chart Details
   helmChartName: Helm Chart Name
   helmRopoUrl: Repo URL
+  manageServiceLabel: Manage Services
 noEnvironment:
   title: No Environments Available
   message: Create an environment and let’s start configuring the deployment

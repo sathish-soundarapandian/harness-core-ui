@@ -7,7 +7,6 @@
 
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import cx from 'classnames'
 import {
   Card,
   Checkbox,
@@ -55,6 +54,7 @@ import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import {
   DeployTabs,
+  getServiceEntityServiceRef,
   isEmptyServiceConfigPath
 } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import SelectDeploymentType from '@cd/components/PipelineStudio/DeployServiceSpecifications/SelectDeploymentType'
@@ -143,20 +143,39 @@ export default function DeployServiceSpecifications(props: React.PropsWithChildr
     lazy: true
   })
 
-  const { openDialog: openStageDataDeleteWarningDialog } = useConfirmationDialog({
-    cancelButtonText: getString('cancel'),
-    contentText: getString('pipeline.stageDataDeleteWarningText'),
-    titleText: getString('pipeline.stageDataDeleteWarningTitle'),
-    confirmButtonText: getString('confirm'),
-    intent: Intent.WARNING,
-    onCloseDialog: async isConfirmed => {
-      if (isConfirmed) {
-        deleteStageData(currStageData)
-        await debounceUpdateStage(currStageData)
-        setSelectedDeploymentType(currStageData?.spec?.serviceConfig.serviceDefinition?.type as ServiceDeploymentType)
+  useEffect(() => {
+    if (getServiceEntityServiceRef(stage?.stage)) {
+      const stageServiceRef = (stage?.stage?.spec as any)?.service?.serviceRef
+      refetchServiceData({
+        pathParams: {
+          serviceIdentifier: stageServiceRef
+        },
+        queryParams: memoizedQueryParam
+      })
+    } else {
+      if (
+        !stage?.stage?.spec?.serviceConfig?.serviceDefinition &&
+        !stage?.stage?.spec?.serviceConfig?.useFromStage?.stage &&
+        stage?.stage?.type === StageType.DEPLOY &&
+        !NG_SVC_ENV_REDESIGN
+      ) {
+        setDefaultServiceSchema()
+      } else if (
+        scope !== Scope.PROJECT &&
+        stage?.stage?.spec?.serviceConfig &&
+        stage?.stage?.spec?.serviceConfig?.serviceRef !== RUNTIME_INPUT_VALUE
+      ) {
+        const stageData = produce(stage, draft => {
+          if (draft) {
+            set(draft, 'stage.spec.serviceConfig.serviceRef', RUNTIME_INPUT_VALUE)
+          }
+        })
+        if (stageData?.stage) {
+          debounceUpdateStage(stageData?.stage)
+        }
       }
     }
-  })
+  }, [])
 
   //This is to refetch the service API and update stage on change of service from service select
   useEffect(() => {
@@ -184,29 +203,6 @@ export default function DeployServiceSpecifications(props: React.PropsWithChildr
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedServiceResponse])
-
-  useEffect(() => {
-    if (
-      !stage?.stage?.spec?.serviceConfig?.serviceDefinition &&
-      !stage?.stage?.spec?.serviceConfig?.useFromStage?.stage &&
-      stage?.stage?.type === StageType.DEPLOY
-    ) {
-      setDefaultServiceSchema()
-    } else if (
-      scope !== Scope.PROJECT &&
-      stage?.stage?.spec?.serviceConfig &&
-      stage?.stage?.spec?.serviceConfig?.serviceRef !== RUNTIME_INPUT_VALUE
-    ) {
-      const stageData = produce(stage, draft => {
-        if (draft) {
-          set(draft, 'stage.spec.serviceConfig.serviceRef', RUNTIME_INPUT_VALUE)
-        }
-      })
-      if (stageData?.stage) {
-        debounceUpdateStage(stageData?.stage)
-      }
-    }
-  }, [])
 
   useEffect(() => {
     if (errorMap.size > 0) {
@@ -473,13 +469,6 @@ export default function DeployServiceSpecifications(props: React.PropsWithChildr
     }
   }, [templateDetails?.data])
 
-  useEffect(() => {
-    //This is required when serviceDefinition is rendered inside service entity
-    if (!selectedDeploymentType) {
-      setSelectedDeploymentType(getDeploymentType())
-    }
-  }, [stage?.stage?.spec?.serviceConfig?.serviceDefinition?.type])
-
   // Fetches deployment type if current stage is propagated from template based stage
   useEffect(() => {
     if (selectedPropagatedState?.value && checkedItems.overrideSetCheckbox) {
@@ -496,6 +485,21 @@ export default function DeployServiceSpecifications(props: React.PropsWithChildr
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedPropagatedState?.value, checkedItems.overrideSetCheckbox])
+
+  const { openDialog: openStageDataDeleteWarningDialog } = useConfirmationDialog({
+    cancelButtonText: getString('cancel'),
+    contentText: getString('pipeline.stageDataDeleteWarningText'),
+    titleText: getString('pipeline.stageDataDeleteWarningTitle'),
+    confirmButtonText: getString('confirm'),
+    intent: Intent.WARNING,
+    onCloseDialog: async isConfirmed => {
+      if (isConfirmed) {
+        deleteStageData(currStageData)
+        await debounceUpdateStage(currStageData)
+        setSelectedDeploymentType(currStageData?.spec?.serviceConfig.serviceDefinition?.type as ServiceDeploymentType)
+      }
+    }
+  })
 
   const getScopeBasedDefaultServiceRef = React.useCallback(() => {
     return scope === Scope.PROJECT ? '' : RUNTIME_INPUT_VALUE
@@ -538,9 +542,9 @@ export default function DeployServiceSpecifications(props: React.PropsWithChildr
   /*************************************Service Entity Related code********************************************************/
 
   return (
-    <div className={stageCss.serviceOverrides} ref={scrollRef}>
+    <div className={stageCss.deployStage} ref={scrollRef}>
       <DeployServiceErrors domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
-      <div className={cx(stageCss.contentSection, stageCss.nonModalView)}>
+      <div className={stageCss.contentSection}>
         {previousStageList.length > 0 && (
           <Container margin={{ bottom: 'xlarge', left: 'xlarge' }}>
             <PropagateWidget

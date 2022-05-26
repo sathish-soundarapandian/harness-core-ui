@@ -12,14 +12,14 @@ import type { ServiceResponseDTO } from 'services/cd-ng'
 export interface ServiceContextValues {
   serviceResponse: ServiceResponseDTO
   onCloseModal: () => void
-  isEditServiceModal: boolean
+  isServiceEntityModalView: boolean
   isServiceEntityPage: boolean
 }
 
 export const ServiceContext = React.createContext<ServiceContextValues>({
   serviceResponse: {},
   onCloseModal: () => noop,
-  isEditServiceModal: false,
+  isServiceEntityModalView: false,
   isServiceEntityPage: false
 })
 

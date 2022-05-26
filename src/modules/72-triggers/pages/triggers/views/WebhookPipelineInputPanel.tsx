@@ -16,8 +16,7 @@ import {
   HarnessDocTooltip,
   PageSpinner
 } from '@wings-software/uicore'
-import { parse } from 'yaml'
-import { pick, merge, cloneDeep, isEmpty, defaultTo } from 'lodash-es'
+import { merge, cloneDeep, isEmpty, defaultTo } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { InputSetSelector, InputSetSelectorProps } from '@pipeline/components/InputSetSelector/InputSetSelector'
 import type { PipelineInfoConfig, StageElementWrapperConfig } from 'services/cd-ng'
@@ -37,6 +36,8 @@ import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
 import { mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
+import { memoizedParse } from '@common/utils/YamlHelperMethods'
+import type { Pipeline } from '@pipeline/utils/types'
 import {
   ciCodebaseBuild,
   ciCodebaseBuildPullRequest,
@@ -340,68 +341,34 @@ function WebhookPipelineInputPanelForm({
   )
 
   useEffect(() => {
-    if (template?.data?.inputSetTemplateYaml) {
-      if ((selectedInputSets && selectedInputSets.length > 1) || selectedInputSets?.[0]?.type === 'OVERLAY_INPUT_SET') {
-        const fetchData = async (): Promise<void> => {
-          const data = await mergeInputSet({
-            inputSetReferences: selectedInputSets.map(item => item.value as string)
-          })
-          if (data?.data?.pipelineYaml) {
-            const pipelineObject = parse(data.data.pipelineYaml) as {
-              pipeline: PipelineInfoConfig
-            }
-            const newPipelineObject = clearRuntimeInput(
-              merge(pipeline, applySelectedArtifactToPipelineObject(pipelineObject.pipeline, formikProps))
-            )
-            formikProps.setValues({
-              ...values,
-              inputSetSelected: selectedInputSets,
-              pipeline: mergeTemplateWithInputSetData({
-                inputSetPortion: { pipeline: newPipelineObject },
-                templatePipeline: { pipeline: newPipelineObject },
-                allValues: { pipeline: resolvedPipeline },
-                shouldUseDefaultValues: triggerIdentifier === 'new'
-              })
-            })
-          }
-        }
-        fetchData()
-      } else if (selectedInputSets && selectedInputSets.length === 1) {
-        const fetchData = async (): Promise<void> => {
-          const data = await getInputSetForPipelinePromise({
-            inputSetIdentifier: selectedInputSets[0].value as string,
-            queryParams: {
-              accountIdentifier: accountId,
-              projectIdentifier,
-              orgIdentifier,
-              pipelineIdentifier
-            }
-          })
-          if (data?.data?.inputSetYaml) {
-            if (selectedInputSets[0].type === 'INPUT_SET') {
-              const pipelineObject = pick(parse(data.data.inputSetYaml)?.inputSet, 'pipeline') as {
-                pipeline: PipelineInfoConfig
-              }
+    if (template?.data?.inputSetTemplateYaml && selectedInputSets && selectedInputSets.length > 0) {
+      const pipelineObject = memoizedParse<Pipeline>(template?.data?.inputSetTemplateYaml)
+      const fetchData = async (): Promise<void> => {
+        const data = await mergeInputSet({
+          inputSetReferences: selectedInputSets.map(item => item.value as string)
+        })
+        if (data?.data?.pipelineYaml) {
+          const parsedInputSets = clearRuntimeInput(memoizedParse<Pipeline>(data.data.pipelineYaml).pipeline)
 
-              const newPipelineObject = clearRuntimeInput(
-                merge(pipeline, applySelectedArtifactToPipelineObject(pipelineObject.pipeline, formikProps))
-              )
+          const newPipelineObject = clearRuntimeInput(
+            merge(pipeline, applySelectedArtifactToPipelineObject(pipelineObject.pipeline, formikProps))
+          )
 
-              formikProps.setValues({
-                ...values,
-                inputSetSelected: selectedInputSets,
-                pipeline: mergeTemplateWithInputSetData({
-                  inputSetPortion: { pipeline: newPipelineObject },
-                  templatePipeline: { pipeline: newPipelineObject },
-                  allValues: { pipeline: resolvedPipeline },
-                  shouldUseDefaultValues: triggerIdentifier === 'new'
-                })
-              })
-            }
-          }
+          const mergedPipeline = mergeTemplateWithInputSetData({
+            inputSetPortion: { pipeline: parsedInputSets },
+            templatePipeline: { pipeline: newPipelineObject },
+            allValues: { pipeline: resolvedPipeline },
+            shouldUseDefaultValues: triggerIdentifier === 'new'
+          })
+
+          formikProps.setValues({
+            ...values,
+            inputSetSelected: selectedInputSets,
+            pipeline: mergedPipeline.pipeline
+          })
         }
-        fetchData()
       }
+      fetchData()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -468,10 +435,10 @@ function WebhookPipelineInputPanelForm({
             )}
             <PipelineInputSetForm
               originalPipeline={resolvedPipeline}
-              template={
-                !isEmpty(template?.data?.inputSetTemplateYaml) &&
-                defaultTo(parse(template.data.inputSetTemplateYaml).pipeline, {})
-              }
+              template={defaultTo(
+                memoizedParse<Pipeline>(template?.data?.inputSetTemplateYaml)?.pipeline,
+                {} as PipelineInfoConfig
+              )}
               path="pipeline"
               viewType={StepViewType.InputSet}
               maybeContainerClass={css.pipelineInputSetForm}
