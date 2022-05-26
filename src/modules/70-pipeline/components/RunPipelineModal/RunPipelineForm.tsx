@@ -68,6 +68,7 @@ import {
   getPipelineWithoutCodebaseInputs
 } from '@pipeline/utils/CIUtils'
 import { useDeepCompareEffect } from '@common/hooks/useDeepCompareEffect'
+import { StoreType } from '@common/constants/GitSyncTypes'
 import { clearRuntimeInput, validatePipeline, getErrorsList } from '../PipelineStudio/StepUtil'
 import { PreFlightCheckModal } from '../PreFlightCheckModal/PreFlightCheckModal'
 import { YamlBuilderMemo } from '../PipelineStudio/PipelineYamlView/PipelineYamlView'
@@ -124,6 +125,7 @@ function RunPipelineFormBasic({
   executionView,
   branch,
   repoIdentifier,
+  storeType,
   executionInputSetTemplateYaml = '',
   stagesExecuted,
   executionIdentifier
@@ -139,7 +141,7 @@ function RunPipelineFormBasic({
   const history = useHistory()
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled, isGitSimplificationEnabled } = useAppStore()
   const [runClicked, setRunClicked] = useState(false)
   const [expressionFormState, setExpressionFormState] = useState<KVPair>({})
   const [selectedStageData, setSelectedStageData] = useState<StageSelectionData>({
@@ -377,6 +379,10 @@ function RunPipelineFormBasic({
       formikRef.current.setValues({ ...formikRef.current.values, ...newPipeline })
     }
   }, [formikRef?.current?.values?.template?.templateInputs, resolvedPipeline])
+
+  useEffect(() => {
+    setSkipPreFlightCheck(defaultTo(isGitSimplificationEnabled && storeType === StoreType.REMOTE, false))
+  }, [isGitSimplificationEnabled, storeType])
 
   const [showPreflightCheckModal, hidePreflightCheckModal] = useModalHook(() => {
     return (
@@ -740,6 +746,7 @@ function RunPipelineFormBasic({
                   skipPreFlightCheck={skipPreFlightCheck}
                   setSkipPreFlightCheck={setSkipPreFlightCheck}
                   setNotifyOnlyMe={setNotifyOnlyMe}
+                  storeType={storeType as StoreType}
                 />
                 {executionView ? null : (
                   <Layout.Horizontal
