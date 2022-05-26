@@ -6,11 +6,12 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Container, PageBody, PageHeader, Text } from '@wings-software/uicore'
+import { Container, PageBody, PageHeader, Text, getErrorInfoFromErrorObject } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { useModalHook } from '@harness/use-modal'
 import { Drawer, Position } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
+import { useToaster } from '@common/components'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { CcmMetaData, QlceViewTimeFilterOperator, useFetchCcmMetaDataQuery } from 'services/ce/services'
 import {
@@ -81,6 +82,7 @@ interface SortByObjInterface {
 
 const AnomaliesOverviewPage: React.FC = () => {
   const { getString } = useStrings()
+  const { showError } = useToaster()
   const [searchText, setSearchText] = React.useState('')
   const { accountId } = useParams<AccountPathProps>()
   const [listData, setListData] = useState<AnomalyData[] | null>(null)
@@ -154,7 +156,7 @@ const AnomaliesOverviewPage: React.FC = () => {
         })
         setListData(response?.data as AnomalyData[])
       } catch (error) {
-        // console.log('AnomaliesOverviewPage: Error in fetching the anomalies list', error)
+        showError(getErrorInfoFromErrorObject(error))
       }
     }
 
@@ -172,7 +174,7 @@ const AnomaliesOverviewPage: React.FC = () => {
         const { data } = response
         parseSummaryData(data)
       } catch (error) {
-        // console.log('AnomaliesOverviewPage: Error in fetching summary data', error)
+        showError(getErrorInfoFromErrorObject(error))
       }
     }
     getSummary()
