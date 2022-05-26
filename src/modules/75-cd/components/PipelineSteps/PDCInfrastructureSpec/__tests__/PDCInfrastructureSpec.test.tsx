@@ -99,6 +99,11 @@ const getInitialValuesPreconfigured = () => ({
   connectorRef: 'connectorRef1'
 })
 
+const getInitialValuesPreconfiguredWithAttributes = () => ({
+  ...getInitialValuesPreconfigured(),
+  attributeFilters: { hostType: 'DB' }
+})
+
 const getEmptyInitialValues = () => ({
   credentialsRef: ''
 })
@@ -330,7 +335,46 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
     })
 
     await waitFor(() => {
-      expect(getByText('full-circle')).toBeDefined()
+      expect(getByText('1.2.3.4')).toBeDefined()
+    })
+  })
+
+  test('test is deploy to custom hosts by attribute filter, and open hosts table', async () => {
+    const onUpdateHandler = jest.fn()
+    const { getByText, container } = render(
+      <TestStepWidget
+        initialValues={getInitialValuesPreconfiguredWithAttributes()}
+        template={getRuntimeInputsValues()}
+        allValues={getInitialValuesPreconfiguredWithAttributes()}
+        type={StepType.PDC}
+        stepViewType={StepViewType.InputSet}
+        onUpdate={onUpdateHandler}
+      />
+    )
+
+    const form = container.querySelector('form')
+    await waitFor(() => {
+      expect(form!).toBeDefined()
+    })
+
+    await waitFor(() => {
+      expect(getByText('cd.steps.pdcStep.previewHosts')).toBeDefined()
+    })
+
+    act(() => {
+      fireEvent.click(getByText('cd.steps.pdcStep.previewHosts'))
+    })
+
+    await waitFor(() => {
+      expect(getByText('common.refresh')).toBeDefined()
+    })
+
+    act(() => {
+      fireEvent.click(getByText('common.refresh'))
+    })
+
+    await waitFor(() => {
+      expect(getByText('1.2.3.4')).toBeDefined()
     })
   })
 })
