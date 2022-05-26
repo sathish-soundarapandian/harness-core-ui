@@ -27,6 +27,9 @@ const getYaml = (): string => `pipeline:
                           spec:
                               connectorRef: account.connectorRef`
 
+const infraDefPath = 'pipeline.stages[0].stage.spec.infrastructure.infrastructureDefinition'
+const accountIdParams = { accountId: 'accountId1' }
+
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 const validateHosts = jest.fn().mockImplementation(() => Promise.resolve({ data: { content: [] }, status: 'SUCCESS' }))
@@ -72,6 +75,55 @@ const getEmptyInitialValues = () => ({
   credentialsRef: ''
 })
 
+const checkForFormInit = async (container: HTMLElement) => {
+  const form = container.querySelector('form')
+  return await waitFor(() => {
+    expect(form!).toBeDefined()
+  })
+}
+
+const openPreviewHosts = async (container: HTMLElement, getByText: any) => {
+  await waitFor(() => {
+    expect(getByText('cd.steps.pdcStep.previewHosts')).toBeDefined()
+  })
+  act(() => {
+    fireEvent.click(getByText('cd.steps.pdcStep.previewHosts'))
+  })
+  await waitFor(() => {
+    expect(container.querySelector('table')).toBeDefined()
+  })
+}
+
+const checkTestConnection = async (getByText: any) => {
+  act(() => {
+    fireEvent.click(getByText('common.smtp.testConnection'))
+  })
+  await waitFor(() => {
+    expect(validateHosts).toBeCalled()
+  })
+}
+
+const submitForm = async (getByText: any) => {
+  await act(async () => {
+    fireEvent.click(getByText('Submit'))
+  })
+}
+
+const refreshHosts = async (getByText: any) => {
+  await waitFor(() => {
+    expect(getByText('common.refresh')).toBeDefined()
+  })
+  act(() => {
+    fireEvent.click(getByText('common.refresh'))
+  })
+}
+
+const clickOn = (getByText: any, textIdentifier: string) => {
+  act(() => {
+    fireEvent.click(getByText(textIdentifier)!)
+  })
+}
+
 describe('Test PDCInfrastructureSpec behavior - No Preconfigured', () => {
   beforeEach(() => {
     factory.registerStep(new PDCInfrastructureSpec())
@@ -89,15 +141,8 @@ describe('Test PDCInfrastructureSpec behavior - No Preconfigured', () => {
         onUpdate={onUpdateHandler}
       />
     )
-
-    const form = container.querySelector('form')
-    await waitFor(() => {
-      expect(form!).toBeDefined()
-    })
-
-    await act(async () => {
-      fireEvent.click(getByText('Submit'))
-    })
+    await checkForFormInit(container)
+    await submitForm(getByText)
     expect(onUpdateHandler).toHaveBeenCalledWith(getInitialValuesNoPreconfigured())
   })
 
@@ -113,16 +158,8 @@ describe('Test PDCInfrastructureSpec behavior - No Preconfigured', () => {
         onUpdate={onUpdateHandler}
       />
     )
-
-    const form = container.querySelector('form')
-    await waitFor(() => {
-      expect(form!).toBeDefined()
-    })
-
-    await act(async () => {
-      fireEvent.click(getByText('Submit'))
-    })
-
+    await checkForFormInit(container)
+    await submitForm(getByText)
     expect(onUpdateHandler).not.toHaveBeenCalled()
   })
 
@@ -139,24 +176,13 @@ describe('Test PDCInfrastructureSpec behavior - No Preconfigured', () => {
       />
     )
 
-    const form = container.querySelector('form')
-    await waitFor(() => {
-      expect(form!).toBeDefined()
-    })
+    await checkForFormInit(container)
 
     const hostsArea = container.querySelector('textarea')
     act(() => {
       fireEvent.change(hostsArea!, { target: { value: 'localhost, 1.2.3.4' } })
     })
-
-    await waitFor(() => {
-      expect(getByText('cd.steps.pdcStep.previewHosts')).toBeDefined()
-    })
-
-    act(() => {
-      fireEvent.click(getByText('cd.steps.pdcStep.previewHosts'))
-    })
-
+    await openPreviewHosts(container, getByText)
     expect(getByText('cd.steps.pdcStep.noHosts')).toBeDefined()
   })
 })
@@ -179,14 +205,8 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
       />
     )
 
-    const form = container.querySelector('form')
-    await waitFor(() => {
-      expect(form!).toBeDefined()
-    })
-
-    await act(async () => {
-      fireEvent.click(getByText('Submit'))
-    })
+    await checkForFormInit(container)
+    await submitForm(getByText)
     expect(onUpdateHandler).toHaveBeenCalledWith(getInitialValuesPreconfigured())
   })
 
@@ -202,16 +222,8 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
         onUpdate={onUpdateHandler}
       />
     )
-
-    const form = container.querySelector('form')
-    await waitFor(() => {
-      expect(form!).toBeDefined()
-    })
-
-    await act(async () => {
-      fireEvent.click(getByText('Submit'))
-    })
-
+    await checkForFormInit(container)
+    await submitForm(getByText)
     expect(onUpdateHandler).not.toHaveBeenCalled()
   })
 
@@ -228,23 +240,9 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
       />
     )
 
-    const form = container.querySelector('form')
-    await waitFor(() => {
-      expect(form!).toBeDefined()
-    })
-
-    const hostsArea = container.querySelector('textarea')
-
-    expect(hostsArea).toBe(null)
-
-    await waitFor(() => {
-      expect(getByText('cd.steps.pdcStep.previewHosts')).toBeDefined()
-    })
-
-    act(() => {
-      fireEvent.click(getByText('cd.steps.pdcStep.previewHosts'))
-    })
-
+    await checkForFormInit(container)
+    expect(container.querySelector('textarea')).toBe(null)
+    await openPreviewHosts(container, getByText)
     expect(getByText('cd.steps.pdcStep.noHosts')).toBeDefined()
   })
 
@@ -260,44 +258,18 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
         onUpdate={onUpdateHandler}
       />
     )
-
-    const form = container.querySelector('form')
-    await waitFor(() => {
-      expect(form!).toBeDefined()
-    })
-
-    const deploySpecificHostsOptionRadio = getByText('cd.steps.pdcStep.deploySpecificHostsOption')
-
-    act(() => {
-      fireEvent.click(deploySpecificHostsOptionRadio!)
-    })
-
+    await checkForFormInit(container)
+    clickOn(getByText, 'cd.steps.pdcStep.deploySpecificHostsOption')
     await waitFor(() => {
       expect(getByPlaceholderText('cd.steps.pdcStep.specificHostsPlaceholder')).toBeDefined()
     })
-
     const customHostsTextArea = getByPlaceholderText('cd.steps.pdcStep.specificHostsPlaceholder')
-
     act(() => {
       fireEvent.change(customHostsTextArea, { target: { value: '1.1.1.1, 2.2.2.2' } })
     })
 
-    await waitFor(() => {
-      expect(getByText('cd.steps.pdcStep.previewHosts')).toBeDefined()
-    })
-
-    act(() => {
-      fireEvent.click(getByText('cd.steps.pdcStep.previewHosts'))
-    })
-
-    await waitFor(() => {
-      expect(getByText('common.refresh')).toBeDefined()
-    })
-
-    act(() => {
-      fireEvent.click(getByText('common.refresh'))
-    })
-
+    await openPreviewHosts(container, getByText)
+    await refreshHosts(getByText)
     await waitFor(() => {
       expect(getByText('1.2.3.4')).toBeDefined()
     })
@@ -316,26 +288,9 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
       />
     )
 
-    const form = container.querySelector('form')
-    await waitFor(() => {
-      expect(form!).toBeDefined()
-    })
-
-    await waitFor(() => {
-      expect(getByText('cd.steps.pdcStep.previewHosts')).toBeDefined()
-    })
-
-    act(() => {
-      fireEvent.click(getByText('cd.steps.pdcStep.previewHosts'))
-    })
-
-    await waitFor(() => {
-      expect(getByText('common.refresh')).toBeDefined()
-    })
-
-    act(() => {
-      fireEvent.click(getByText('common.refresh'))
-    })
+    await checkForFormInit(container)
+    await openPreviewHosts(container, getByText)
+    await refreshHosts(getByText)
 
     await waitFor(() => {
       expect(getByText('1.2.3.4')).toBeDefined()
@@ -354,68 +309,47 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
         onUpdate={onUpdateHandler}
       />
     )
-    const form = container.querySelector('form')
-    await waitFor(() => {
-      expect(form!).toBeDefined()
-    })
-    await waitFor(() => {
-      expect(getByText('cd.steps.pdcStep.previewHosts')).toBeDefined()
-    })
-    act(() => {
-      fireEvent.click(getByText('cd.steps.pdcStep.previewHosts'))
-    })
-    await waitFor(() => {
-      expect(container.querySelector('table')).toBeDefined()
-    })
-    act(() => {
-      fireEvent.click(getByText('common.refresh'))
-    })
+    await checkForFormInit(container)
+    await openPreviewHosts(container, getByText)
+    refreshHosts(getByText)
     await waitFor(() => {
       expect(getByText('1.2.3.4')).toBeDefined()
     })
-    act(() => {
-      fireEvent.click(getByText('common.smtp.testConnection'))
-    })
-    await waitFor(() => {
-      expect(validateHosts).toBeCalled()
-    })
+    await checkTestConnection(getByText)
   })
+})
 
+describe('invocation map test', () => {
   test('invocation map, empty yaml', () => {
     const yaml = ''
-    const params = { accountId: 'accountId1' }
-    const path = 'pipeline.stages[0].stage.spec.infrastructure.infrastructureDefinition'
     const invocationMap = factory.getStep(StepType.PDC)?.getInvocationMap?.()
-    invocationMap?.get(PdcRegex)?.(path, yaml, params)
+    invocationMap?.get(PdcRegex)?.(infraDefPath, yaml, accountIdParams)
     expect(CDNG.getConnectorListV2Promise).not.toBeCalled()
-    invocationMap?.get(SshKeyRegex)?.(path, yaml, params)
+    invocationMap?.get(SshKeyRegex)?.(infraDefPath, yaml, accountIdParams)
     expect(CDNG.listSecretsV2Promise).not.toBeCalled()
   })
 
   test('invocation map, wrong yaml', () => {
     const yaml = {} as string
-    const params = { accountId: 'accountId1' }
-    const path = 'pipeline.stages[0].stage.spec.infrastructure.infrastructureDefinition'
     const invocationMap = factory.getStep(StepType.PDC)?.getInvocationMap?.()
-    invocationMap?.get(PdcRegex)?.(path, yaml, params)
+    invocationMap?.get(PdcRegex)?.(infraDefPath, yaml, accountIdParams)
     expect(CDNG.getConnectorListV2Promise).not.toBeCalled()
-    invocationMap?.get(SshKeyRegex)?.(path, yaml, params)
+    invocationMap?.get(SshKeyRegex)?.(infraDefPath, yaml, accountIdParams)
     expect(CDNG.listSecretsV2Promise).not.toBeCalled()
   })
 
   test('invocation map should call template list', () => {
-    jest.spyOn(CDNG, 'listSecretsV2Promise').mockImplementation(() => Promise.resolve(mockListSecrets as any))
+    jest.spyOn(CDNG, 'listSecretsV2Promise').mockImplementationOnce(() => Promise.resolve(mockListSecrets as any))
     jest
       .spyOn(CDNG, 'getConnectorListV2Promise')
-      .mockImplementation(() => Promise.resolve(ConnectorsResponse.data as any))
+      .mockImplementationOnce(() => Promise.resolve(ConnectorsResponse.data as any))
 
     const yaml = getYaml()
-    const params = { accountId: 'accountId1' }
-    const path = 'pipeline.stages[0].stage.spec.infrastructure.infrastructureDefinition'
+
     const invocationMap = factory.getStep(StepType.PDC)?.getInvocationMap?.()
-    invocationMap?.get(PdcRegex)?.(path, yaml, params)
+    invocationMap?.get(PdcRegex)?.(infraDefPath, yaml, accountIdParams)
     expect(CDNG.getConnectorListV2Promise).toBeCalled()
-    invocationMap?.get(SshKeyRegex)?.(path, yaml, params)
+    invocationMap?.get(SshKeyRegex)?.(infraDefPath, yaml, accountIdParams)
     expect(CDNG.listSecretsV2Promise).toBeCalled()
   })
 })
