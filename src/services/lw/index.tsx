@@ -287,6 +287,14 @@ export interface CumulativeSavingsResponse {
   response?: CumulativeSavings
 }
 
+export interface CumulativeServiceSavingsBody {
+  dry_run?: boolean
+  filters?: FetchRulesFilterObj
+  from?: string
+  query?: string
+  to?: string
+}
+
 export interface DeleteAccessPointPayload {
   ids?: string[]
   with_resources?: boolean
@@ -1520,6 +1528,77 @@ export type UseCumulativeServiceSavingsProps = Omit<
 export const useCumulativeServiceSavings = ({ account_id, ...props }: UseCumulativeServiceSavingsProps) =>
   useGet<CumulativeSavingsResponse, void, CumulativeServiceSavingsQueryParams, CumulativeServiceSavingsPathParams>(
     (paramsInPath: CumulativeServiceSavingsPathParams) =>
+      `/accounts/${paramsInPath.account_id}/autostopping/rules/savings/cumulative`,
+    { base: getConfig('lw/api'), pathParams: { account_id }, ...props }
+  )
+
+export interface CumulativeServiceSavingsV2QueryParams {
+  accountIdentifier: string
+}
+
+export interface CumulativeServiceSavingsV2PathParams {
+  account_id: string
+}
+
+export type CumulativeServiceSavingsV2Props = Omit<
+  MutateProps<
+    CumulativeSavingsResponse,
+    void,
+    CumulativeServiceSavingsV2QueryParams,
+    CumulativeServiceSavingsBody,
+    CumulativeServiceSavingsV2PathParams
+  >,
+  'path' | 'verb'
+> &
+  CumulativeServiceSavingsV2PathParams
+
+/**
+ * CumulativeSavings for all services based on filters and params
+ *
+ * CumulativeSavings for all services based on filters and params like search query, dry_run and date range
+ */
+export const CumulativeServiceSavingsV2 = ({ account_id, ...props }: CumulativeServiceSavingsV2Props) => (
+  <Mutate<
+    CumulativeSavingsResponse,
+    void,
+    CumulativeServiceSavingsV2QueryParams,
+    CumulativeServiceSavingsBody,
+    CumulativeServiceSavingsV2PathParams
+  >
+    verb="POST"
+    path={`/accounts/${account_id}/autostopping/rules/savings/cumulative`}
+    base={getConfig('lw/api')}
+    {...props}
+  />
+)
+
+export type UseCumulativeServiceSavingsV2Props = Omit<
+  UseMutateProps<
+    CumulativeSavingsResponse,
+    void,
+    CumulativeServiceSavingsV2QueryParams,
+    CumulativeServiceSavingsBody,
+    CumulativeServiceSavingsV2PathParams
+  >,
+  'path' | 'verb'
+> &
+  CumulativeServiceSavingsV2PathParams
+
+/**
+ * CumulativeSavings for all services based on filters and params
+ *
+ * CumulativeSavings for all services based on filters and params like search query, dry_run and date range
+ */
+export const useCumulativeServiceSavingsV2 = ({ account_id, ...props }: UseCumulativeServiceSavingsV2Props) =>
+  useMutate<
+    CumulativeSavingsResponse,
+    void,
+    CumulativeServiceSavingsV2QueryParams,
+    CumulativeServiceSavingsBody,
+    CumulativeServiceSavingsV2PathParams
+  >(
+    'POST',
+    (paramsInPath: CumulativeServiceSavingsV2PathParams) =>
       `/accounts/${paramsInPath.account_id}/autostopping/rules/savings/cumulative`,
     { base: getConfig('lw/api'), pathParams: { account_id }, ...props }
   )

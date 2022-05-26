@@ -6,29 +6,32 @@
  */
 
 // import { ProgressBar } from '@blueprintjs/core'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router'
 import { isEmpty as _isEmpty, defaultTo as _defaultTo } from 'lodash-es'
 import { Container, HarnessDocTooltip, Heading, Icon, Layout, Text } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import { String, useStrings } from 'framework/strings'
-import type { CumulativeSavings } from 'services/lw'
+import { CumulativeSavings, Service, useCumulativeServiceSavingsV2 } from 'services/lw'
 import { RulesMode } from '@ce/constants'
 import EmptyView from '@ce/images/empty-state.svg'
 import { getEmissionsValue } from '@ce/utils/formatResourceValue'
 import greenLeaf from '@ce/common/images/green-leaf.svg'
 import grayLeaf from '@ce/common/images/gray-leaf.svg'
 import { FeatureFlag } from '@common/featureFlags'
+import { useToaster } from '@common/exports'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { Utils } from '@ce/common/Utils'
 import { geGaugeChartOptionsWithoutLabel, getDay } from './Utils'
 import css from './COGatewayCumulativeAnalytics.module.scss'
 
 interface COGatewayCumulativeAnalyticsProps {
-  data: CumulativeSavings | undefined
-  loadingData: boolean
   mode: RulesMode
+  searchQuery?: string
+  rules: Service[]
 }
 
 const toFixedDecimalNumber = (num: number, decimalPlaces = 2) => Number(num.toFixed(decimalPlaces))
@@ -144,12 +147,40 @@ function getSavingsPercentage(totalSavings: number, totalPotentialCost: number):
   }
   return Math.round((totalSavings / totalPotentialCost) * 100)
 }
-const COGatewayCumulativeAnalytics: React.FC<COGatewayCumulativeAnalyticsProps> = ({ data, loadingData, mode }) => {
+const COGatewayCumulativeAnalytics: React.FC<COGatewayCumulativeAnalyticsProps> = ({ mode, searchQuery, rules }) => {
   const { getString } = useStrings()
+  const { accountId } = useParams<AccountPathProps>()
+  const { showError } = useToaster()
   const sustainabilityEnabled = useFeatureFlag(FeatureFlag.CCM_SUSTAINABILITY)
-  const hasData = !_isEmpty(data)
 
+  const [data, setData] = useState<CumulativeSavings>()
+
+  const hasData = !_isEmpty(data)
   const isDryRunMode = mode === RulesMode.DRY
+
+  const { mutate: fetchCumulativeSavings, loading: loadingData } = useCumulativeServiceSavingsV2({
+    account_id: accountId,
+    queryParams: {
+      accountIdentifier: accountId
+    }
+  })
+
+  useEffect(() => {
+    getSavingsData()
+  }, [mode, rules])
+
+  const getSavingsData = async () => {
+    try {
+      const savingsResponse = await fetchCumulativeSavings({
+        dry_run: isDryRunMode,
+        query: searchQuery?.length ? searchQuery : undefined
+      })
+      setData(savingsResponse.response as CumulativeSavings)
+    } catch (error) {
+      const errMessage = _defaultTo(((error as any)?.data as any)?.errors?.join(', '), (error as any)?.message)
+      showError(errMessage)
+    }
+  }
 
   return (
     <Container padding="small">

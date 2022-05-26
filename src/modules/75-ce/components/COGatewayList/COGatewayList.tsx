@@ -44,7 +44,6 @@ import {
   useSavingsOfService,
   useGetServiceDiagnostics,
   ServiceError,
-  useCumulativeServiceSavings,
   useDescribeServiceInContainerServiceCluster,
   useRouteDetails,
   useFetchRules,
@@ -66,6 +65,7 @@ import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useQueryParams } from '@common/hooks'
+import type { orderType, serverSortProps, sortType } from '@common/components/Table/react-table-config'
 import COGatewayAnalytics from './COGatewayAnalytics'
 import COGatewayCumulativeAnalytics from './COGatewayCumulativeAnalytics'
 import ComputeType from './components/ComputeType'
@@ -76,7 +76,6 @@ import landingPageSVG from './images/AutostoppingRuleIllustration.svg'
 import refreshIcon from './images/refresh.svg'
 import NoDataImage from './images/NoData.svg'
 import css from './COGatewayList.module.scss'
-import type { orderType, serverSortProps, sortType } from '@common/components/Table/react-table-config'
 
 const textColor: { [key: string]: string } = {
   disable: '#6B6D85'
@@ -108,13 +107,14 @@ interface GetRulesReturnDetails {
   error?: any
 }
 
-interface PaginationProps {
-  pageIndex: number
+interface PaginationResponseProps {
   totalPages: number
   totalRecords: number
 }
 
-interface PaginationResponseProps extends Omit<PaginationProps, 'pageIndex'> {}
+interface PaginationProps extends PaginationResponseProps {
+  pageIndex: number
+}
 
 interface SortByObjInterface {
   field?: sortType
@@ -588,8 +588,7 @@ const getServerSortProps = ({
       enableServerSort: true,
       isServerSorted: sortByObj.field === accessor,
       isServerSortedDesc: sortByObj.type === 'DESC',
-      getSortedColumn: sortData => {
-        console.log({ sortData })
+      getSortedColumn: _sortData => {
         if (sortName === sortByObj.field && sortByObj.type) {
           newOrder = sortByObj.type === 'DESC' ? 'ASC' : 'DESC'
         } else {
@@ -893,17 +892,17 @@ const COGatewayList: React.FC = () => {
     }
   })
 
-  const {
-    data: graphData,
-    loading: graphLoading,
-    refetch: refetchGraphData
-  } = useCumulativeServiceSavings({
-    account_id: accountId,
-    queryParams: {
-      accountIdentifier: accountId,
-      dry_run: mode === RulesMode.DRY
-    }
-  })
+  // const {
+  //   data: graphData,
+  //   loading: graphLoading,
+  //   refetch: refetchGraphData
+  // } = useCumulativeServiceSavings({
+  //   account_id: accountId,
+  //   queryParams: {
+  //     accountIdentifier: accountId,
+  //     dry_run: mode === RulesMode.DRY
+  //   }
+  // })
 
   const getRules = async (body?: FetchRulesBody): Promise<GetRulesReturnDetails> => {
     let response, error
@@ -917,8 +916,8 @@ const COGatewayList: React.FC = () => {
         ...body
       })
       response = rulesResponse.response
-    } catch (error) {
-      error = error
+    } catch (err) {
+      error = err
     }
     return { response, error }
   }
@@ -952,7 +951,7 @@ const COGatewayList: React.FC = () => {
   const fetchAndSaveRules = async (body?: FetchRulesBody) => {
     const { response, error } = await getRules(body)
     if (error) {
-      const errMessage = _defaultTo((error.data as any)?.errors?.join(', '), error.message)
+      const errMessage = _defaultTo((error?.data as any)?.errors?.join(', '), error?.message)
       showError(errMessage)
     } else {
       setTableData(_defaultTo(response?.records, []))
@@ -1064,7 +1063,7 @@ const COGatewayList: React.FC = () => {
       setSelectedService(null)
     }
     fetchAndSaveRules()
-    refetchGraphData()
+    // refetchGraphData()
   }
 
   const handleServiceEdit = (_service: Service) =>
@@ -1175,7 +1174,7 @@ const COGatewayList: React.FC = () => {
       </>
       <Page.Body className={css.pageContainer}>
         <ModePillToggle mode={mode} onChange={handleModeChange} />
-        <COGatewayCumulativeAnalytics data={graphData?.response} loadingData={graphLoading} mode={mode} />
+        <COGatewayCumulativeAnalytics mode={mode} rules={tableData} searchQuery={searchParams.text} />
         <RulesTableContainer
           rules={tableData}
           setRules={setTableData}

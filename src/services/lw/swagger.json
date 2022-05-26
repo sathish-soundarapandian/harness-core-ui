@@ -575,31 +575,71 @@
       }
     },
     "/accounts/{account_id}/autostopping/rules/savings/cumulative": {
-      "parameters": [
-        {
-          "name": "account_id",
-          "in": "path",
-          "required": true,
-          "type": "string"
-        },
-        {
-          "name": "accountIdentifier",
-          "in": "query",
-          "required": true,
-          "type": "string"
-        },
-        {
-          "name": "dry_run",
-          "in": "query",
-          "required": false,
-          "type": "boolean"
-        }
-      ],
       "get": {
+        "parameters": [
+          {
+            "name": "account_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "dry_run",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
         "tags": ["serviceCumulativeSavings"],
         "summary": "CumulativeSavings for all services",
         "description": "CumulativeSavings for all services",
         "operationId": "CumulativeServiceSavings",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/CumulativeSavingsResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid status value"
+          }
+        }
+      },
+      "post": {
+        "parameters": [
+          {
+            "name": "account_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CumulativeServiceSavingsBody"
+            }
+          }
+        ],
+        "tags": ["serviceCumulativeSavingsV2"],
+        "summary": "CumulativeSavings for all services based on filters and params",
+        "description": "CumulativeSavings for all services based on filters and params like search query, dry_run and date range",
+        "operationId": "CumulativeServiceSavingsV2",
         "produces": ["application/json"],
         "responses": {
           "200": {
@@ -3350,6 +3390,27 @@
         },
         "content": {
           "type": "string"
+        }
+      }
+    },
+    "CumulativeServiceSavingsBody": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "filters": {
+          "type": "object",
+          "$ref": "#/definitions/FetchRulesFilterObj"
         }
       }
     },
