@@ -197,7 +197,7 @@ const AnomaliesOverviewPage: React.FC = () => {
 
         setFilterValues(response.data as FilterStatsDTO[])
       } catch (error) {
-        // console.log('AnomaliesOverviewPage: Error in fetching the anomalies list', error)
+        showError(getErrorInfoFromErrorObject(error))
       }
     }
 
