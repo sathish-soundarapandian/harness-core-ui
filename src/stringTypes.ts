@@ -5004,6 +5004,7 @@ export interface StringsMap {
   'cf.testTheFlag.verify': string
   'cf.testTheFlag.verifyText': string
   'chaos.chaoshub': string
+  'chaos.chaosworkflow': string
   'chaos.homepage.chaosHomePageTitle': string
   'chaos.homepage.learnMore': string
   'chaos.homepage.slogan': string
