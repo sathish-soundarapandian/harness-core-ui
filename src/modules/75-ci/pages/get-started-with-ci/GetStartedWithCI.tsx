@@ -20,7 +20,7 @@ import css from './GetStartedWithCI.module.scss'
 
 export default function GetStartedWithCI(): React.ReactElement {
   const { getString } = useStrings()
-  const [showWizard, setShowWizard] = useState<boolean>(false)
+  const [showWizard, setShowWizard] = useState<boolean>(true)
   const [showProvisioningCarousel, setShowProvisioningCarousel] = useState<boolean>(false)
   const { initiateProvisioning, delegateProvisioningStatus } = useProvisionDelegateForHostedBuilds()
 

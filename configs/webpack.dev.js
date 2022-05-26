@@ -103,6 +103,15 @@ const config = {
         __NON_CDN_BASE_PATH__: '/'
       }
     }),
+    new HTMLWebpackPlugin({
+      template: 'src/oauth-redirect.html',
+      filename: 'oauth-redirect.html',
+      minify: false,
+      templateParameters: {
+        __DEV__: true,
+        __NON_CDN_BASE_PATH__: '/oauth-redirect'
+      }
+    }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[name].[id].css'

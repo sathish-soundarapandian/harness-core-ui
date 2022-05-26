@@ -22,7 +22,7 @@ export function useSideNavContext(): SideNavContextProps {
 }
 
 export function SideNavProvider(props: React.PropsWithChildren<unknown>): React.ReactElement {
-  const [show, setShow] = useState<boolean>(false)
+  const [show, setShow] = useState<boolean>(true)
   return (
     <SideNavContext.Provider
       value={{
