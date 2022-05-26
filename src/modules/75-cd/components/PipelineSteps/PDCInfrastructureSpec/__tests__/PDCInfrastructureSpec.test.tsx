@@ -11,9 +11,20 @@ import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
-import { PDCInfrastructureSpec } from '../PDCInfrastructureSpec'
+import * as CDNG from 'services/cd-ng'
+import { PDCInfrastructureSpec, PdcRegex, SshKeyRegex } from '../PDCInfrastructureSpec'
 import { ConnectorsResponse } from './mock/ConnectorsResponse.mock'
 import { ConnectorResponse } from './mock/ConnectorResponse.mock'
+
+const getYaml = (): string => `pipeline:
+    stages:
+        - stage:
+              spec:
+                  infrastructure:
+                      infrastructureDefinition:
+                          type: Pdc
+                          spec:
+                              connectorRef: account.connectorRef`
 
 export const mockSecret = {
   status: 'SUCCESS',
@@ -376,5 +387,21 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
     await waitFor(() => {
       expect(getByText('1.2.3.4')).toBeDefined()
     })
+  })
+
+  test.only('invocation map should call template list', () => {
+    jest.spyOn(CDNG, 'listSecretsV2Promise').mockImplementation(() => Promise.resolve(mockListSecrets as any))
+    jest
+      .spyOn(CDNG, 'getConnectorListV2Promise')
+      .mockImplementation(() => Promise.resolve(ConnectorsResponse.data as any))
+
+    const yaml = getYaml()
+    const params = { accountId: 'accountId1' }
+    const path = 'pipeline.stages[0].stage.spec.infrastructure.infrastructureDefinition'
+    const invocationMap = factory.getStep(StepType.PDC)?.getInvocationMap?.()
+    invocationMap?.get(PdcRegex)?.(path, yaml, params)
+    expect(CDNG.getConnectorListV2Promise).toBeCalled()
+    invocationMap?.get(SshKeyRegex)?.(path, yaml, params)
+    expect(CDNG.listSecretsV2Promise).toBeCalled()
   })
 })

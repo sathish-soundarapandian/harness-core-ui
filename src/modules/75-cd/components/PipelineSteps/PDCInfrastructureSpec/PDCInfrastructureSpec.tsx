@@ -584,8 +584,8 @@ interface PDCInfrastructureSpecStep extends PdcInfrastructure {
   identifier?: string
 }
 
-const PdcRegex = /^.+stage\.spec\.infrastructure\.infrastructureDefinition\.spec\.connectorRef$/
-const SshKeyRegex = /^.+stage\.spec\.infrastructure\.infrastructureDefinition\.spec\.sshKeyRef$/
+export const PdcRegex = /^.+stage\.spec\.infrastructure\.infrastructureDefinition\.spec\.connectorRef$/
+export const SshKeyRegex = /^.+stage\.spec\.infrastructure\.infrastructureDefinition\.spec\.sshKeyRef$/
 export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecStep> {
   lastFetched: number
   protected type = StepType.PDC
