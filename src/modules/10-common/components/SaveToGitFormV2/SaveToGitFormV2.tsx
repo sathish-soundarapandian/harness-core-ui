@@ -96,6 +96,7 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
     return (
       <Layout.Horizontal flex={{ alignItems: 'baseline', justifyContent: 'flex-start' }} padding={{ top: 'small' }}>
         <FormInput.CheckBox
+          margin={{ right: 'small' }}
           name="createPr"
           label={getString('common.git.startPRLabel')}
           onChange={e => {
