@@ -34,6 +34,7 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
 interface GetUpdatedGitDetailsReturnType extends EntityGitDetails {
   lastObjectId?: string
+  lastCommitId?: string
   baseBranch?: string
 }
 
@@ -48,6 +49,7 @@ const getUpdatedGitDetails = (
     updatedGitDetails = { ...gitDetails }
     if (isEdit) {
       updatedGitDetails['lastObjectId'] = lastObjectId
+      updatedGitDetails['lastCommitId'] = initialGitDetails.commitId
     }
     if (gitDetails.isNewBranch) {
       updatedGitDetails['baseBranch'] = initialGitDetails.branch
@@ -205,7 +207,7 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
         'remoteType'
       )
       setSavedInputSetObj(inputSetObj)
-      setInitialGitDetails(gitDetails as EntityGitDetails)
+      setInitialGitDetails(defaultTo(isEdit ? inputSetResponse?.data?.gitDetails : gitDetails, {}))
       setInitialStoreMetadata(defaultTo(storeMetadata, {}))
 
       if (inputSetObj) {
