@@ -309,6 +309,7 @@ export interface AccessControlCheckError {
     | 'SCM_UNAUTHORIZED'
     | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'DATA'
     | 'CONTEXT'
     | 'PR_CREATION_ERROR'
@@ -339,7 +340,6 @@ export interface AccessControlCheckError {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
-    | 'SCM_INTERNAL_SERVER_ERROR_V2'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -643,12 +643,6 @@ export interface AddUsersResponse {
       | 'USER_ALREADY_INVITED'
       | 'FAIL'
   }
-}
-
-export interface AggregateACLRequest {
-  resourceGroupFilter?: string[]
-  roleFilter?: string[]
-  searchTerm?: string
 }
 
 export interface ApiKeyAggregateDTO {
@@ -1481,10 +1475,6 @@ export interface CloudformationTemplateFile {
 
 export interface CloudformationTemplateFileSpec {
   type?: string
-}
-
-export interface Cluster {
-  identifier?: string
 }
 
 export interface ClusterBasicDTO {
@@ -2999,6 +2989,7 @@ export interface Error {
     | 'SCM_UNAUTHORIZED'
     | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'DATA'
     | 'CONTEXT'
     | 'PR_CREATION_ERROR'
@@ -3029,7 +3020,6 @@ export interface Error {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
-    | 'SCM_INTERNAL_SERVER_ERROR_V2'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -3392,6 +3382,7 @@ export interface Failure {
     | 'SCM_UNAUTHORIZED'
     | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'DATA'
     | 'CONTEXT'
     | 'PR_CREATION_ERROR'
@@ -3422,7 +3413,6 @@ export interface Failure {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
-    | 'SCM_INTERNAL_SERVER_ERROR_V2'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -3698,7 +3688,8 @@ export interface FileDTO {
   draft?: boolean
   fileUsage?: 'MANIFEST_FILE' | 'CONFIG' | 'SCRIPT'
   identifier: string
-  lastUpdatedBy?: EmbeddedUserDetailsDTO
+  lastModifiedAt?: number
+  lastModifiedBy?: EmbeddedUserDetailsDTO
   mimeType?: string
   name: string
   orgIdentifier?: string
@@ -5095,7 +5086,7 @@ export interface InfrastructureConfig {
 export interface InfrastructureDef {
   provisioner?: ExecutionElementConfig
   spec: Infrastructure
-  type: 'KubernetesDirect' | 'KubernetesGcp' | 'KubernetesAzure' | 'Pdc' | 'ServerlessAwsLambda'
+  type: 'KubernetesDirect' | 'KubernetesGcp' | 'KubernetesAzure' | 'Pdc' | 'SshWinRmAzure' | 'ServerlessAwsLambda'
 }
 
 export interface InfrastructureDefinitionConfig {
@@ -5110,7 +5101,7 @@ export interface InfrastructureDefinitionConfig {
   tags?: {
     [key: string]: string
   }
-  type: 'KubernetesDirect' | 'KubernetesGcp' | 'KubernetesAzure' | 'Pdc' | 'ServerlessAwsLambda'
+  type: 'KubernetesDirect' | 'KubernetesGcp' | 'KubernetesAzure' | 'Pdc' | 'SshWinRmAzure' | 'ServerlessAwsLambda'
 }
 
 export interface InfrastructureDetails {
@@ -5127,7 +5118,7 @@ export interface InfrastructureRequestDTO {
   tags?: {
     [key: string]: string
   }
-  type?: 'KubernetesDirect' | 'KubernetesGcp' | 'KubernetesAzure' | 'Pdc' | 'ServerlessAwsLambda'
+  type?: 'KubernetesDirect' | 'KubernetesGcp' | 'KubernetesAzure' | 'Pdc' | 'SshWinRmAzure' | 'ServerlessAwsLambda'
   yaml?: string
 }
 
@@ -5148,7 +5139,7 @@ export interface InfrastructureResponseDTO {
   tags?: {
     [key: string]: string
   }
-  type?: 'KubernetesDirect' | 'KubernetesGcp' | 'KubernetesAzure' | 'Pdc' | 'ServerlessAwsLambda'
+  type?: 'KubernetesDirect' | 'KubernetesGcp' | 'KubernetesAzure' | 'Pdc' | 'SshWinRmAzure' | 'ServerlessAwsLambda'
   yaml?: string
 }
 
@@ -6245,16 +6236,6 @@ export interface PageActivitySummary {
 
 export interface PageApiKeyAggregateDTO {
   content?: ApiKeyAggregateDTO[]
-  empty?: boolean
-  pageIndex?: number
-  pageItemCount?: number
-  pageSize?: number
-  totalItems?: number
-  totalPages?: number
-}
-
-export interface PageCluster {
-  content?: Cluster[]
   empty?: boolean
   pageIndex?: number
   pageItemCount?: number
@@ -7845,6 +7826,13 @@ export interface ResponseListRoleAssignmentResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseListScopeName {
+  correlationId?: string
+  data?: ScopeName[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseListServiceAccountDTO {
   correlationId?: string
   data?: ServiceAccountDTO[]
@@ -7897,13 +7885,6 @@ export interface ResponseListSourceCodeManagerDTO {
 export interface ResponseListString {
   correlationId?: string
   data?: string[]
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponseListUserGroupAggregateDTO {
-  correlationId?: string
-  data?: UserGroupAggregateDTO[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -8246,6 +8227,7 @@ export interface ResponseMessage {
     | 'SCM_UNAUTHORIZED'
     | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'DATA'
     | 'CONTEXT'
     | 'PR_CREATION_ERROR'
@@ -8276,7 +8258,6 @@ export interface ResponseMessage {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
-    | 'SCM_INTERNAL_SERVER_ERROR_V2'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -8380,13 +8361,6 @@ export interface ResponsePageActivitySummary {
 export interface ResponsePageApiKeyAggregateDTO {
   correlationId?: string
   data?: PageApiKeyAggregateDTO
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponsePageCluster {
-  correlationId?: string
-  data?: PageCluster
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -9457,6 +9431,14 @@ export interface Scope {
   projectIdentifier?: string
 }
 
+export interface ScopeName {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  orgName?: string
+  projectIdentifier?: string
+  projectName?: string
+}
+
 export interface ScopingRuleDetailsNg {
   description?: string
   environmentIds?: string[]
@@ -10124,6 +10106,18 @@ export type SplunkConnectorDTO = ConnectorConfigDTO & {
 
 export type SshServiceSpec = ServiceSpec & {}
 
+export type SshWinRmAzureInfrastructure = Infrastructure & {
+  connectorRef: string
+  credentialsRef: string
+  delegateSelectors?: string[]
+  resourceGroup: string
+  subscriptionId: string
+  tags?: {
+    [key: string]: string
+  }
+  usePublicDns?: boolean
+}
+
 export interface StackTraceElement {
   className?: string
   fileName?: string
@@ -10697,6 +10691,7 @@ export interface UserGroupEntityReference {
 export interface UserGroupFilterDTO {
   accountIdentifier?: string
   databaseIdFilter?: string[]
+  filterType?: 'INCLUDE_INHERITED_GROUPS' | 'EXCLUDE_INHERITED_GROUPS'
   identifierFilter?: string[]
   orgIdentifier?: string
   projectIdentifier?: string
@@ -12091,6 +12086,7 @@ export interface GetUserGroupAggregateListQueryParams {
   pageSize?: number
   sortOrders?: string[]
   searchTerm?: string
+  filterType?: 'INCLUDE_INHERITED_GROUPS' | 'EXCLUDE_INHERITED_GROUPS'
   userSize?: number
 }
 
@@ -12143,89 +12139,12 @@ export const getUserGroupAggregateListPromise = (
     signal
   )
 
-export interface GetUserGroupAggregateListsWithFilterQueryParams {
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-}
-
-export type GetUserGroupAggregateListsWithFilterProps = Omit<
-  MutateProps<
-    ResponseListUserGroupAggregateDTO,
-    Failure | Error,
-    GetUserGroupAggregateListsWithFilterQueryParams,
-    AggregateACLRequest,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get Aggregated User Group list with filter
- */
-export const GetUserGroupAggregateListsWithFilter = (props: GetUserGroupAggregateListsWithFilterProps) => (
-  <Mutate<
-    ResponseListUserGroupAggregateDTO,
-    Failure | Error,
-    GetUserGroupAggregateListsWithFilterQueryParams,
-    AggregateACLRequest,
-    void
-  >
-    verb="POST"
-    path={`/aggregate/acl/usergroups/filter`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetUserGroupAggregateListsWithFilterProps = Omit<
-  UseMutateProps<
-    ResponseListUserGroupAggregateDTO,
-    Failure | Error,
-    GetUserGroupAggregateListsWithFilterQueryParams,
-    AggregateACLRequest,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get Aggregated User Group list with filter
- */
-export const useGetUserGroupAggregateListsWithFilter = (props: UseGetUserGroupAggregateListsWithFilterProps) =>
-  useMutate<
-    ResponseListUserGroupAggregateDTO,
-    Failure | Error,
-    GetUserGroupAggregateListsWithFilterQueryParams,
-    AggregateACLRequest,
-    void
-  >('POST', `/aggregate/acl/usergroups/filter`, { base: getConfig('ng/api'), ...props })
-
-/**
- * Get Aggregated User Group list with filter
- */
-export const getUserGroupAggregateListsWithFilterPromise = (
-  props: MutateUsingFetchProps<
-    ResponseListUserGroupAggregateDTO,
-    Failure | Error,
-    GetUserGroupAggregateListsWithFilterQueryParams,
-    AggregateACLRequest,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    ResponseListUserGroupAggregateDTO,
-    Failure | Error,
-    GetUserGroupAggregateListsWithFilterQueryParams,
-    AggregateACLRequest,
-    void
-  >('POST', getConfig('ng/api'), `/aggregate/acl/usergroups/filter`, props, signal)
-
 export interface GetUserGroupAggregateQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
+  roleAssignmentScopeOrgIdentifier?: string
+  roleAssignmentScopeProjectIdentifier?: string
 }
 
 export interface GetUserGroupAggregatePathParams {
@@ -21812,6 +21731,91 @@ export const getEnvironmentAccessListPromise = (
     signal
   )
 
+export interface GetEnvironmentListV2QueryParams {
+  page?: number
+  size?: number
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  searchTerm?: string
+  envIdentifiers?: string[]
+  sort?: string[]
+  filterIdentifier?: string
+}
+
+export type GetEnvironmentListV2Props = Omit<
+  MutateProps<
+    ResponsePageEnvironmentResponse,
+    Failure | Error,
+    GetEnvironmentListV2QueryParams,
+    EnvironmentFilterProperties,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets environment list
+ */
+export const GetEnvironmentListV2 = (props: GetEnvironmentListV2Props) => (
+  <Mutate<
+    ResponsePageEnvironmentResponse,
+    Failure | Error,
+    GetEnvironmentListV2QueryParams,
+    EnvironmentFilterProperties,
+    void
+  >
+    verb="POST"
+    path={`/environmentsV2/listV2`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetEnvironmentListV2Props = Omit<
+  UseMutateProps<
+    ResponsePageEnvironmentResponse,
+    Failure | Error,
+    GetEnvironmentListV2QueryParams,
+    EnvironmentFilterProperties,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets environment list
+ */
+export const useGetEnvironmentListV2 = (props: UseGetEnvironmentListV2Props) =>
+  useMutate<
+    ResponsePageEnvironmentResponse,
+    Failure | Error,
+    GetEnvironmentListV2QueryParams,
+    EnvironmentFilterProperties,
+    void
+  >('POST', `/environmentsV2/listV2`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Gets environment list
+ */
+export const getEnvironmentListV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponsePageEnvironmentResponse,
+    Failure | Error,
+    GetEnvironmentListV2QueryParams,
+    EnvironmentFilterProperties,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePageEnvironmentResponse,
+    Failure | Error,
+    GetEnvironmentListV2QueryParams,
+    EnvironmentFilterProperties,
+    void
+  >('POST', getConfig('ng/api'), `/environmentsV2/listV2`, props, signal)
+
 export interface UpsertEnvironmentV2QueryParams {
   accountIdentifier: string
 }
@@ -25338,58 +25342,6 @@ export const createClustersPromise = (
     'POST',
     getConfig('ng/api'),
     `/gitops/clusters/batch`,
-    props,
-    signal
-  )
-
-export interface GetClusterListFromSourceQueryParams {
-  page?: number
-  size?: number
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-}
-
-export type GetClusterListFromSourceProps = Omit<
-  GetProps<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>,
-  'path'
->
-
-/**
- * Gets cluster list from Gitops Service
- */
-export const GetClusterListFromSource = (props: GetClusterListFromSourceProps) => (
-  <Get<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>
-    path={`/gitops/clusters/listFromGitops`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetClusterListFromSourceProps = Omit<
-  UseGetProps<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>,
-  'path'
->
-
-/**
- * Gets cluster list from Gitops Service
- */
-export const useGetClusterListFromSource = (props: UseGetClusterListFromSourceProps) =>
-  useGet<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>(
-    `/gitops/clusters/listFromGitops`,
-    { base: getConfig('ng/api'), ...props }
-  )
-
-/**
- * Gets cluster list from Gitops Service
- */
-export const getClusterListFromSourcePromise = (
-  props: GetUsingFetchProps<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>(
-    getConfig('ng/api'),
-    `/gitops/clusters/listFromGitops`,
     props,
     signal
   )
@@ -34824,6 +34776,7 @@ export interface GetUserGroupListQueryParams {
   orgIdentifier?: string
   projectIdentifier?: string
   searchTerm?: string
+  filterType?: 'INCLUDE_INHERITED_GROUPS' | 'EXCLUDE_INHERITED_GROUPS'
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
@@ -35580,6 +35533,91 @@ export const addMemberPromise = (
     void,
     AddMemberPathParams
   >('PUT', getConfig('ng/api'), `/user-groups/${identifier}/member/${userIdentifier}`, props, signal)
+
+export interface GetInheritingChildScopeListQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface GetInheritingChildScopeListPathParams {
+  identifier: string
+}
+
+export type GetInheritingChildScopeListProps = Omit<
+  GetProps<
+    ResponseListScopeName,
+    Failure | AccessControlCheckError | Error,
+    GetInheritingChildScopeListQueryParams,
+    GetInheritingChildScopeListPathParams
+  >,
+  'path'
+> &
+  GetInheritingChildScopeListPathParams
+
+/**
+ * Get Inheriting Child Scope List
+ */
+export const GetInheritingChildScopeList = ({ identifier, ...props }: GetInheritingChildScopeListProps) => (
+  <Get<
+    ResponseListScopeName,
+    Failure | AccessControlCheckError | Error,
+    GetInheritingChildScopeListQueryParams,
+    GetInheritingChildScopeListPathParams
+  >
+    path={`/user-groups/${identifier}/scopes`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetInheritingChildScopeListProps = Omit<
+  UseGetProps<
+    ResponseListScopeName,
+    Failure | AccessControlCheckError | Error,
+    GetInheritingChildScopeListQueryParams,
+    GetInheritingChildScopeListPathParams
+  >,
+  'path'
+> &
+  GetInheritingChildScopeListPathParams
+
+/**
+ * Get Inheriting Child Scope List
+ */
+export const useGetInheritingChildScopeList = ({ identifier, ...props }: UseGetInheritingChildScopeListProps) =>
+  useGet<
+    ResponseListScopeName,
+    Failure | AccessControlCheckError | Error,
+    GetInheritingChildScopeListQueryParams,
+    GetInheritingChildScopeListPathParams
+  >((paramsInPath: GetInheritingChildScopeListPathParams) => `/user-groups/${paramsInPath.identifier}/scopes`, {
+    base: getConfig('ng/api'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * Get Inheriting Child Scope List
+ */
+export const getInheritingChildScopeListPromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseListScopeName,
+    Failure | AccessControlCheckError | Error,
+    GetInheritingChildScopeListQueryParams,
+    GetInheritingChildScopeListPathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseListScopeName,
+    Failure | AccessControlCheckError | Error,
+    GetInheritingChildScopeListQueryParams,
+    GetInheritingChildScopeListPathParams
+  >(getConfig('ng/api'), `/user-groups/${identifier}/scopes`, props, signal)
 
 export interface GetUsersInUserGroupQueryParams {
   accountIdentifier: string

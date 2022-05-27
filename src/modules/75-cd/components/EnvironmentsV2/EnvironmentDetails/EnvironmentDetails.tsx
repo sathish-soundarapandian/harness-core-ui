@@ -128,6 +128,10 @@ export default function EnvironmentDetails() {
       if (view === SelectedView.VISUAL) {
         const yaml = defaultTo(yamlHandler?.getLatestYaml(), '{}')
         const yamlVisual = parse(yaml).environment as NGEnvironmentInfoConfig
+        if (isModified && yamlHandler?.getYAMLValidationErrorMap()?.size) {
+          showError(getString('common.validation.invalidYamlText'))
+          return
+        }
         if (yamlVisual) {
           formikRef.current?.setValues({
             ...yamlVisual
@@ -245,13 +249,13 @@ export default function EnvironmentDetails() {
               {
                 name: defaultTo(name, ''),
                 identifier: defaultTo(identifier, ''),
-                description: defaultTo(description, ''),
+                description,
                 tags: defaultTo(tags, {}),
                 type: defaultTo(type, ''),
                 orgIdentifier: defaultTo(orgIdentifier, ''),
                 projectIdentifier: defaultTo(projectIdentifier, ''),
-                variables: variables,
-                serviceOverrides: serviceOverrides
+                variables,
+                serviceOverrides
               } as NGEnvironmentInfoConfig
             }
             formName="editEnvironment"
@@ -341,7 +345,12 @@ export default function EnvironmentDetails() {
                                 {/* #region Advanced section */}
                                 {data?.data && (
                                   <Accordion
-                                    activeId={variables?.length > 0 || serviceOverrides?.length > 0 ? 'advanced' : ''}
+                                    activeId={
+                                      Boolean(formikProps?.values?.variables?.length) ||
+                                      Boolean(formikProps?.values?.serviceOverrides?.length)
+                                        ? 'advanced'
+                                        : ''
+                                    }
                                     className={css.accordion}
                                   >
                                     <Accordion.Panel
@@ -445,7 +454,17 @@ export default function EnvironmentDetails() {
                   >
                     <Expander />
                     {(selectedTabId === EnvironmentDetailsTab.CONFIGURATION || selectedView === SelectedView.YAML) && (
-                      <Layout.Horizontal spacing="medium">
+                      <Layout.Horizontal spacing="medium" flex={{ alignItems: 'center' }}>
+                        {isModified && (
+                          <Text
+                            color={Color.ORANGE_600}
+                            font={{ size: 'small', weight: 'bold' }}
+                            icon={'dot'}
+                            iconProps={{ color: Color.ORANGE_600 }}
+                          >
+                            {getString('unsavedChanges')}
+                          </Text>
+                        )}
                         <Button
                           variation={ButtonVariation.PRIMARY}
                           type={'submit'}

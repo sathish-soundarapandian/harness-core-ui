@@ -5,31 +5,34 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.optionBtns {
-  display: flex;
-  margin-top: var(--spacing-medium);
-  margin-bottom: var(--spacing-medium);
-  align-items: center;
-  justify-content: center;
-}
+.serviceEntity {
+  overflow: hidden;
+  .optionBtns {
+    display: flex;
+    margin-top: var(--spacing-medium);
+    margin-bottom: var(--spacing-medium);
+    align-items: center;
+    justify-content: center;
+  }
 
-.serviceStepBasicInfo {
-  background-color: var(--form-bg);
-  .section-card {
-    width: 1024px;
-    padding: var(--spacing-7) !important;
-    &.notwide {
-      width: auto;
+  .serviceStepBasicInfo {
+    background-color: var(--form-bg);
+    .section-card {
+      width: 1024px;
+      padding: var(--spacing-7) !important;
+      &.notwide {
+        width: auto;
+      }
+      background-color: var(--white);
+      .nameIdDescriptionTags {
+        width: 324px;
+      }
     }
-    background-color: var(--white);
-    .nameIdDescriptionTags {
-      width: 324px;
+    .serviceModal {
+      margin-bottom: var(--spacing-small);
     }
-  }
-  .serviceModal {
-    margin-bottom: var(--spacing-small);
-  }
-  .nonModalView {
-    margin: var(--spacing-xxlarge) var(--spacing-huge) 0 var(--spacing-huge);
+    .nonModalView {
+      margin: var(--spacing-xxlarge) var(--spacing-huge) 0 var(--spacing-huge);
+    }
   }
 }

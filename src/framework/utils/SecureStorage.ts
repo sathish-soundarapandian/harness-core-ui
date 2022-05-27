@@ -33,6 +33,9 @@ export default class SecureStorage {
     }
 
     localStorage.clear()
+
+    /* adding this to clear sessionStorage on logout - because at harness we want user session to end once the user is logged out,
+       so we are clearing this from our end - because by default sessionStorage behavior doesn't care for login/logout events */
     sessionStorage.clear()
 
     Object.entries(storage).forEach(([key, val]) => {

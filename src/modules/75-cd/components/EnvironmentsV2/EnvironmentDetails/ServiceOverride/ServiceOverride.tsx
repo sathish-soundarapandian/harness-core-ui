@@ -146,7 +146,7 @@ export function ServiceOverride({
                       }
 
                       return (
-                        <Container key={override.serviceRef}>
+                        <Container key={override.serviceRef} margin={{ bottom: 'medium' }}>
                           <Text
                             color={Color.BLACK}
                             font={{ variation: FontVariation.UPPERCASED, weight: 'bold' }}
@@ -236,7 +236,9 @@ export function ServiceOverride({
                                               <String className={css.tooltip} stringID="common.editVariableType" />
                                             }
                                             data-testid={`edit-variable-${index}`}
-                                            onClick={() => setSelectedVariable({ variable, index, serviceRef: '' })}
+                                            onClick={() =>
+                                              setSelectedVariable({ variable, index, serviceRef: override.serviceRef })
+                                            }
                                             minimal
                                           />
                                           <Button

@@ -15,11 +15,10 @@ import { useShouldIntegrateHotJar } from '3rd-party/hotjarUtil'
 import { useTelemetryInstance } from './useTelemetryInstance'
 
 type TrackEvent = (eventName: string, properties: Record<string, unknown>) => void
-type TrackPage = (name: string, properties: Record<string, string>, category?: string) => void
+type TrackPage = (name: string, properties: Record<string, string>) => void
 type IdentifyUser = (email: string | undefined) => void
 interface PageParams {
   pageName?: string
-  category?: string
   properties?: Record<string, string>
 }
 interface TelemetryReturnType {
@@ -57,11 +56,10 @@ export function useTelemetry(pageParams: PageParams = {}): TelemetryReturnType {
     pageParams.pageName &&
       telemetry.page({
         name: pageParams.pageName,
-        category: pageParams.category || '',
         properties: { ...sourceProperties, ...licenseProperties, ...pageParams.properties } || {}
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageParams.pageName, pageParams.category, pageParams.properties])
+  }, [pageParams.pageName, pageParams.properties])
 
   const trackEvent: TrackEvent = (eventName: string, properties: Record<string, unknown>) => {
     telemetry.track({
@@ -70,10 +68,9 @@ export function useTelemetry(pageParams: PageParams = {}): TelemetryReturnType {
     })
   }
 
-  const trackPage: TrackPage = (name: string, properties: Record<string, string>, category?: string) => {
+  const trackPage: TrackPage = (name: string, properties: Record<string, string>) => {
     telemetry.page({
       name,
-      category,
       properties: { ...sourceProperties, ...licenseProperties, ...properties }
     })
   }

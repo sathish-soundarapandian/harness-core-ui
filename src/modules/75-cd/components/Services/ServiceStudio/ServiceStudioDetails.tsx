@@ -38,7 +38,7 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
     isReadonly
   } = usePipelineContext()
 
-  const { isEditServiceModal, onCloseModal } = useServiceContext()
+  const { isServiceEntityModalView, onCloseModal } = useServiceContext()
 
   const [selectedTabId, setSelectedTabId] = useState(tab ?? ServiceTabs.SUMMARY)
   const { showSuccess, showError, clear } = useToaster()
@@ -70,7 +70,7 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
       })
       // istanbul ignore else
       if (response.status === 'SUCCESS') {
-        if (isEditServiceModal) {
+        if (isServiceEntityModalView) {
           onCloseModal?.()
         } else {
           showSuccess(getString('common.serviceCreated'))
@@ -95,7 +95,7 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
   }
 
   if (NG_SVC_ENV_REDESIGN) {
-    if (isEditServiceModal) {
+    if (isServiceEntityModalView) {
       return (
         <>
           <ServiceConfiguration serviceData={props.serviceData} />

@@ -124,6 +124,7 @@ serviceDashboard:
   servicesInLast: 'Services added in {{period}}'
   serviceInstancesInLast: 'Active service instance trend in {{period}}'
   serviceInstances: 'Service Instances'
+  activeInstanceCount: 'Active Instance Count'
   nonProd: 'Non Prod'
   prod: 'Prod'
   in: 'in {{timeRange}}'
@@ -152,6 +153,7 @@ serviceDashboard:
   helmChartDetails: Helm Chart Details
   helmChartName: Helm Chart Name
   helmRopoUrl: Repo URL
+  manageServiceLabel: Manage Services
 noEnvironment:
   title: No Environments Available
   message: Create an environment and let’s start configuring the deployment
@@ -245,6 +247,8 @@ environment:
   deleted: Successfully deleted Environment {{ identifier }}
   fetchNext: Fetching Environments
   createSubTitle: An environment is the representation of where your deployments take place
+  filters:
+    environmentNamePlaceholder: Enter Environment Name
 infrastructure:
   infrastructureDefinitions: Infrastructure Definitions
   noInfrastructureInEnvironment: You have no infrastructures in this environment
@@ -270,6 +274,8 @@ cloudFormation:
   templateFileStore: Template File Store
   retrieveNames: Retrieve Names from template
   awsURL: S3 URL
+  urls: URLs
+  parameterFilePaths: Parameter File Paths
   errors:
     region: AWS Region is required
     role: Role ARN required
@@ -279,5 +285,6 @@ cloudFormation:
     templateBody: Template body required
     awsURL: S3 url required
     getParam: AWS Connector, Region and Template File are required to retrieve parameters
+    templateRequired: Template file required
   deploymentTypes:
     pdc: PDC

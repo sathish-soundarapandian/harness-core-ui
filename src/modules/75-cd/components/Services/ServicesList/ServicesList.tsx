@@ -495,7 +495,7 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
           Cell: RenderType
         },
         {
-          Header: getString('cd.serviceDashboard.serviceInstances').toLocaleUpperCase(),
+          Header: getString('cd.serviceDashboard.activeInstanceCount').toLocaleUpperCase(),
           id: 'serviceInstances',
           width: '15%',
           Cell: RenderServiceInstances

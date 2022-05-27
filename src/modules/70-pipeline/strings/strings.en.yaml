@@ -1038,3 +1038,4 @@ ACR:
   registryError: 'No registry found with given Subscription'
   repositoryPlaceholder: 'Select or add Repository'
   repositoryError: 'No repository found with given Registry'
+  tagError: 'No tags found with given Connector, Subscription Id, Registry and Repository'

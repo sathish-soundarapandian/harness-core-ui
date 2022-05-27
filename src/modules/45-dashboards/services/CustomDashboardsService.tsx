@@ -8,48 +8,6 @@
 import type { SetStateAction } from 'react'
 import { useGet, useMutate, GetDataError } from 'restful-react'
 
-export interface TagsResponseDataResource {
-  tags?: string
-}
-
-export interface TagsResponseData {
-  resource?: TagsResponseDataResource
-}
-
-export interface TagsResponse {
-  data?: TagsResponseData
-  loading?: boolean
-}
-
-export const folderIdOrBlank = (folderId: string): string => (folderId === 'shared' ? '' : folderId)
-
-export const useGetTags = (accountId: string, folderId: string): TagsResponse => {
-  const { data: response, loading: isLoading } = useGet({
-    path: `gateway/dashboard/v1/tags`,
-    queryParams: {
-      accountId: accountId,
-      folderId: folderIdOrBlank(folderId)
-    }
-  })
-  return { data: response, loading: isLoading }
-}
-
-export interface FolderDetailResponseData {
-  resource?: string
-}
-
-export interface FolderDetailResponse {
-  data?: FolderDetailResponseData
-}
-
-export const useGetFolderDetail = (accountId: string, folderId: string): FolderDetailResponse => {
-  const { data: folderDetail } = useGet({
-    path: 'gateway/dashboard/folderDetail',
-    queryParams: { accountId: accountId, folderId: folderIdOrBlank(folderId) }
-  })
-  return { data: folderDetail }
-}
-
 export interface DashboardDetailResponseData {
   title: string
 }

@@ -52,7 +52,7 @@ const DeployAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childr
   }, [errorMap])
 
   return (
-    <div className={stageCss.serviceOverrides}>
+    <div className={stageCss.deployStage}>
       <DeployServiceErrors domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
       <div className={stageCss.contentSection} ref={scrollRef}>
         <div className={stageCss.tabHeading}>

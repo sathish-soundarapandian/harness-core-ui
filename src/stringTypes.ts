@@ -2432,6 +2432,7 @@ export interface StringsMap {
   'pipeline.ACR.subscription': string
   'pipeline.ACR.subscriptionError': string
   'pipeline.ACR.subscriptionPlaceholder': string
+  'pipeline.ACR.tagError': string
   'pipeline.aboutYourStage.stageNamePlaceholder': string
   'pipeline.addStage.description': string
   'pipeline.addStage.title': string
@@ -3533,10 +3534,12 @@ export interface StringsMap {
   'cd.cloudFormation.errors.role': string
   'cd.cloudFormation.errors.stackName': string
   'cd.cloudFormation.errors.templateBody': string
+  'cd.cloudFormation.errors.templateRequired': string
   'cd.cloudFormation.errors.value': string
   'cd.cloudFormation.inlineParameterFiles': string
   'cd.cloudFormation.paramFileConnector': string
   'cd.cloudFormation.parameterFileDetails': string
+  'cd.cloudFormation.parameterFilePaths': string
   'cd.cloudFormation.parameterFiles': string
   'cd.cloudFormation.retrieveNames': string
   'cd.cloudFormation.specifyCapabilities': string
@@ -3547,6 +3550,7 @@ export interface StringsMap {
   'cd.cloudFormation.templateFile': string
   'cd.cloudFormation.templateFileConnector': string
   'cd.cloudFormation.templateFileStore': string
+  'cd.cloudFormation.urls': string
   'cd.componentsInstalled': string
   'cd.configFileDetails': string
   'cd.configFilePlaceHolder': string
@@ -3584,6 +3588,7 @@ export interface StringsMap {
   'cd.environment.deleteConfirmation': string
   'cd.environment.deleted': string
   'cd.environment.fetchNext': string
+  'cd.environment.filters.environmentNamePlaceholder': string
   'cd.environmentCreated': string
   'cd.environmentDelete': string
   'cd.environmentDeleteMessage': string
@@ -3661,6 +3666,7 @@ export interface StringsMap {
   'cd.serverlessDeployCommandOptions': string
   'cd.serviceCreated': string
   'cd.serviceDashboard.6monthTrend': string
+  'cd.serviceDashboard.activeInstanceCount': string
   'cd.serviceDashboard.activeServiceInstancesLabel': string
   'cd.serviceDashboard.artifact': string
   'cd.serviceDashboard.buildName': string
@@ -3676,6 +3682,7 @@ export interface StringsMap {
   'cd.serviceDashboard.instanceCountHistory': string
   'cd.serviceDashboard.instanceDetails': string
   'cd.serviceDashboard.lastDeployment': string
+  'cd.serviceDashboard.manageServiceLabel': string
   'cd.serviceDashboard.noActiveServiceInstances': string
   'cd.serviceDashboard.noActiveServices': string
   'cd.serviceDashboard.noDeployments': string

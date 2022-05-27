@@ -51,17 +51,17 @@ function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): R
   const isReadonly = !isEdit
 
   const serviceYaml = React.useMemo(
-    () => yamlParse<NGServiceConfig>(defaultTo(serviceResponse.yaml, '')),
-    [serviceResponse.yaml]
+    () => yamlParse<NGServiceConfig>(defaultTo(serviceResponse?.yaml, '')),
+    [serviceResponse?.yaml]
   )
   const serviceData = merge(serviceYaml, initialServiceState)
 
   const currentPipeline = React.useMemo(() => {
     const defaultPipeline = {
-      name: serviceResponse.name,
-      identifier: defaultTo(serviceResponse.identifier, DefaultNewPipelineId),
-      description: serviceResponse.description,
-      tags: serviceResponse.tags
+      name: serviceResponse?.name,
+      identifier: defaultTo(serviceResponse?.identifier, DefaultNewPipelineId),
+      description: serviceResponse?.description,
+      tags: serviceResponse?.tags
     }
     return produce({ ...defaultPipeline }, draft => {
       if (!isEmpty(serviceData.service.serviceDefinition)) {
@@ -72,7 +72,7 @@ function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): R
           'stages[0].stage.spec.serviceConfig.serviceDefinition',
           cloneDeep(serviceData.service.serviceDefinition)
         )
-        set(draft, 'stages[0].stage.spec.serviceConfig.serviceRef', serviceResponse.identifier)
+        set(draft, 'stages[0].stage.spec.serviceConfig.serviceRef', serviceResponse?.identifier)
       }
     })
   }, [serviceData, serviceResponse])

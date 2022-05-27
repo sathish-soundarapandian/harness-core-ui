@@ -10,13 +10,12 @@ import { Container, Layout, Text, Icon } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { CellProps, Renderer } from 'react-table'
 import { useParams, Link } from 'react-router-dom'
-import { useGet } from 'restful-react'
 import ResourceHandlerTable from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable'
 
 import { PageSpinner } from '@common/components'
 
 import routes from '@common/RouteDefinitions'
-import type { RbacResourceModalProps } from '@rbac/factories/RbacFactory'
+import { useGetFolder } from 'services/custom-dashboards'
 
 import { useStrings } from 'framework/strings'
 
@@ -73,7 +72,13 @@ export const RenderColumnSecret: Renderer<CellProps<FolderList>> = ({ row }) => 
   )
 }
 
-const DashboardResourceModalBody: React.FC<RbacResourceModalProps> = ({
+export interface DashboardResourceModalBodyProps {
+  onSelectChange: (items: string[]) => void
+  selectedData: string[]
+  resourceScope: { accountIdentifier: string }
+}
+
+const DashboardResourceModalBody: React.FC<DashboardResourceModalBodyProps> = ({
   // searchTerm,
   onSelectChange,
   selectedData,
@@ -84,20 +89,17 @@ const DashboardResourceModalBody: React.FC<RbacResourceModalProps> = ({
   const [page, setPage] = React.useState(0)
   const { getString } = useStrings()
 
-  const { data: folders, loading: fethingFolders } = useGet({
-    // Inferred from RestfulProvider in index.js
-    path: 'gateway/dashboard/folder',
+  const { data: folders, loading: fetchingFolders } = useGetFolder({
     queryParams: { accountId: accountIdentifier, page: page + 1, pageSize: PAGE_SIZE, isAdmin: true }
   })
 
-  const totalFolders: number = folders?.total
+  const parsedFolders =
+    folders?.resource?.map((folder: { id: string; name: string }) => ({
+      identifier: folder.id,
+      ...folder
+    })) || []
 
-  const parsedFolders = folders?.resource?.map((folder: { id?: string; name: string; identifier?: string }) => ({
-    identifier: folder['id'],
-    ...folder
-  }))
-
-  if (fethingFolders) return <PageSpinner />
+  if (fetchingFolders) return <PageSpinner />
   return parsedFolders?.length > 0 ? (
     <Container className={css.container}>
       <ResourceHandlerTable
@@ -113,9 +115,9 @@ const DashboardResourceModalBody: React.FC<RbacResourceModalProps> = ({
           }
         ]}
         pagination={{
-          itemCount: totalFolders || 1,
+          itemCount: folders?.items || 0,
           pageSize: PAGE_SIZE,
-          pageCount: Math.ceil(totalFolders / PAGE_SIZE),
+          pageCount: folders?.pages || 1,
           pageIndex: page || 0,
           gotoPage: pageNumber => setPage(pageNumber)
         }}

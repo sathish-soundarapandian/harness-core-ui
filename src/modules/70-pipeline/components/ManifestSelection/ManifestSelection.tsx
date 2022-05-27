@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useMemo } from 'react'
-import { Layout, PageSpinner, useToaster } from '@harness/uicore'
+import { Layout, useToaster } from '@harness/uicore'
 
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty } from 'lodash-es'
@@ -35,7 +35,7 @@ export default function ManifestSelection({
   isPropagating,
   deploymentType,
   readonly: isReadOnlyServiceMode
-}: ManifestSelectionProps): JSX.Element {
+}: ManifestSelectionProps): JSX.Element | null {
   const {
     state: {
       pipeline,
@@ -137,7 +137,7 @@ export default function ManifestSelection({
   }
 
   if (serviceLoading) {
-    return <PageSpinner />
+    return null
   }
 
   return (

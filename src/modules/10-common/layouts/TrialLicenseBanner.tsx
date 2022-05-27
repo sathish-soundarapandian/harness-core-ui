@@ -292,7 +292,7 @@ export const TrialLicenseBanner = (): React.ReactElement => {
   }
 
   return (
-    <div className={cx(css.trialLicenseBanner, expiredClassName)}>
+    <div className={cx(css.trialLicenseBanner, expiredClassName)} data-trial-banner-is-visible>
       <Layout.Horizontal width="95%" padding={{ left: 'large' }}>
         {alertMsg}
         {contactSalesLink}

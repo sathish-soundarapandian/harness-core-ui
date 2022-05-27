@@ -6,9 +6,9 @@
  */
 
 import React from 'react'
-import { Layout } from '@harness/uicore'
+import { Layout, PageSpinner } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import { isEmpty, noop } from 'lodash-es'
+import { noop } from 'lodash-es'
 import { ServiceDetailsHeader } from '@cd/components/ServiceDetails/ServiceDetailsHeader/ServiceDetailsHeader'
 import { ServiceResponseDTO, useGetServiceV2 } from 'services/cd-ng'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
@@ -20,7 +20,7 @@ import ServiceConfigurationWrapper from './ServiceConfigWrapper/ServiceConfigWra
 function ServiceStudio(): React.ReactElement | null {
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
 
-  const { data: serviceResponse } = useGetServiceV2({
+  const { data: serviceResponse, loading: serviceDataLoading } = useGetServiceV2({
     serviceIdentifier: serviceId,
     queryParams: {
       accountIdentifier: accountId,
@@ -29,15 +29,15 @@ function ServiceStudio(): React.ReactElement | null {
     }
   })
 
-  if (isEmpty(serviceResponse?.data?.service)) {
-    return null
+  if (serviceDataLoading) {
+    return <PageSpinner />
   }
   return (
     <Layout.Vertical>
       <ServiceDetailsHeader />
       <ServiceContextProvider
         serviceResponse={serviceResponse?.data?.service as ServiceResponseDTO}
-        isEditServiceModal={false}
+        isServiceEntityModalView={false}
         onCloseModal={noop}
         isServiceEntityPage={true}
       >

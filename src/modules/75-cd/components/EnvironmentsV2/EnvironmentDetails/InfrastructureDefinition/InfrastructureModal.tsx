@@ -137,7 +137,6 @@ function BootstrapDeployInfraSpecifications({
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [isSavingInfrastructure, setIsSavingInfrastructure] = useState(false)
-
   const formikRef = useRef<FormikProps<InfrastructureConfig>>()
 
   useEffect(() => {
@@ -161,6 +160,12 @@ function BootstrapDeployInfraSpecifications({
       if (view === SelectedView.VISUAL) {
         const yaml = defaultTo(yamlHandler?.getLatestYaml(), '{}')
         const yamlVisual = parse(yaml).environment as InfrastructureConfig
+
+        if (yamlHandler?.getYAMLValidationErrorMap()?.size) {
+          showError(getString('common.validation.invalidYamlText'))
+          return
+        }
+
         if (yamlVisual) {
           formikRef.current?.setValues({
             ...yamlVisual
@@ -238,6 +243,7 @@ function BootstrapDeployInfraSpecifications({
         showError(getErrorInfoFromErrorObject(e))
       })
   }
+
   return (
     <Formik<InfrastructureDefinitionConfig>
       initialValues={{
