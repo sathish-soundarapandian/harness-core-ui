@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useEffect, useMemo } from 'react'
+import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import {
   Container,
@@ -14,7 +15,8 @@ import {
   Text,
   NestedAccordionProvider,
   HarnessDocTooltip,
-  PageSpinner
+  PageSpinner,
+  Color
 } from '@wings-software/uicore'
 import { merge, cloneDeep, isEmpty, defaultTo } from 'lodash-es'
 import type { FormikProps } from 'formik'
@@ -423,29 +425,36 @@ function WebhookPipelineInputPanelForm({
             </div>
             {gitAwareForTriggerEnabled && (
               <Container padding={{ top: 'medium' }}>
-                <Text className={css.formContentTitle} inline={true} data-tooltip-id="pipelineReferenceBranch">
+                <Text
+                  color={Color.BLACK_100}
+                  font={{ weight: 'semi-bold' }}
+                  inline={true}
+                  data-tooltip-id="pipelineReferenceBranch"
+                >
                   {getString('triggers.pipelineReferenceBranch')}
                   <HarnessDocTooltip tooltipId="pipelineReferenceBranch" useStandAlone={true} />
                 </Text>
-                <Container className={css.refBranchOuter}>
+                <Container className={cx(css.refBranchOuter, css.halfWidth)}>
                   <FormInput.Text name="pipelineBranchName" placeholder="<+trigger.branch>" />
                 </Container>
                 <div className={css.divider} />
               </Container>
             )}
-            <PipelineInputSetForm
-              originalPipeline={resolvedPipeline}
-              template={defaultTo(
-                memoizedParse<Pipeline>(template?.data?.inputSetTemplateYaml)?.pipeline,
-                {} as PipelineInfoConfig
-              )}
-              path="pipeline"
-              viewType={StepViewType.InputSet}
-              maybeContainerClass={css.pipelineInputSetForm}
-              viewTypeMetadata={{ isTrigger: true }}
-              readonly={gitAwareForTriggerEnabled}
-              gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
-            />
+            <Container className={css.halfWidth}>
+              <PipelineInputSetForm
+                originalPipeline={resolvedPipeline}
+                template={defaultTo(
+                  memoizedParse<Pipeline>(template?.data?.inputSetTemplateYaml)?.pipeline,
+                  {} as PipelineInfoConfig
+                )}
+                path="pipeline"
+                viewType={StepViewType.InputSet}
+                maybeContainerClass={css.pipelineInputSetForm}
+                viewTypeMetadata={{ isTrigger: true }}
+                readonly={gitAwareForTriggerEnabled}
+                gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
+              />
+            </Container>
           </div>
         </div>
       ) : (

@@ -12,6 +12,7 @@ declare const styles: {
   readonly errorHeader: string
   readonly formContent: string
   readonly formContentTitle: string
+  readonly halfWidth: string
   readonly heading: string
   readonly inputSetContent: string
   readonly inputSetSelectedValue: string
