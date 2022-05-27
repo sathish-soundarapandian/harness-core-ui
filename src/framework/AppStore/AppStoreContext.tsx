@@ -22,7 +22,8 @@ import {
   isGitSyncEnabledPromise,
   GitEnabledDTO,
   Organization,
-  useGetOrganization
+  useGetOrganization,
+  Error
 } from 'services/cd-ng'
 import { useGetFeatureFlags } from 'services/portal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -30,7 +31,6 @@ import type { FeatureFlag } from '@common/featureFlags'
 import { useTelemetryInstance } from '@common/hooks/useTelemetryInstance'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import routes from '@common/RouteDefinitions'
-import type { Error } from 'services/cd-ng'
 
 export type FeatureFlagMap = Partial<Record<FeatureFlag, boolean>>
 

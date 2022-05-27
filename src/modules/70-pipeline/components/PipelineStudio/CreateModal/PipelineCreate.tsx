@@ -282,7 +282,8 @@ export default function CreatePipelines({
               <GitSyncForm
                 formikProps={formikProps as any}
                 handleSubmit={noop}
-                isEdit={isEdit && pipelineIdentifier !== DefaultNewPipelineId}
+                isEdit={isEdit}
+                showRemoteTypeSelection={false}
               />
             ) : null}
 
@@ -290,7 +291,7 @@ export default function CreatePipelines({
               <Button
                 variation={ButtonVariation.PRIMARY}
                 type="submit"
-                text={isEdit ? getString('save') : getString('start')}
+                text={isEdit ? getString('continue') : getString('start')}
               />
               &nbsp; &nbsp;
               <Button

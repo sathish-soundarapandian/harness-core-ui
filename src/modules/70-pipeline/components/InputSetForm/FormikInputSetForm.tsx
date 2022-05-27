@@ -69,6 +69,8 @@ export const isYamlPresent = (
 ): string | undefined => {
   return template?.data?.inputSetTemplateYaml && pipeline?.data?.yamlPipeline
 }
+
+type InputSetDTOGitDetails = InputSetDTO & GitContextProps & StoreMetadata
 interface FormikInputSetFormProps {
   inputSet: InputSetDTO | InputSetType
   template: ResponseInputSetTemplateWithReplacedExpressionsResponse | null
@@ -81,7 +83,7 @@ interface FormikInputSetFormProps {
   ) => Promise<void>
   formErrors: Record<string, unknown>
   setFormErrors: React.Dispatch<React.SetStateAction<Record<string, unknown>>>
-  formikRef: React.MutableRefObject<FormikProps<InputSetDTO & GitContextProps & StoreMetadata> | undefined>
+  formikRef: React.MutableRefObject<FormikProps<InputSetDTOGitDetails> | undefined>
   selectedView: SelectedView
   executionView?: boolean
   isEdit: boolean
