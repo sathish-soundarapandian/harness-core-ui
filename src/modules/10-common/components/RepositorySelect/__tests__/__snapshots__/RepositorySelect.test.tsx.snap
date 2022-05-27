@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`RepoBranchSelectV2 test default rendering RepoBranchSelectV2 1`] = `
+exports[`RepositorySelect test default rendering RepositorySelect 1`] = `
 <div>
   <div
     class="Layout--horizontal StyledProps--main"

@@ -7,18 +7,13 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly addUserContainer: string
   readonly branchInput: string
   readonly branchSection: string
-  readonly branchSelector: string
   readonly formBody: string
   readonly formButton: string
   readonly formRow: string
-  readonly gitBranchSelectorPopover: string
   readonly modalBody: string
   readonly modalContainer: string
   readonly modalHeader: string
-  readonly tooltip: string
-  readonly userInfo: string
 }
 export default styles

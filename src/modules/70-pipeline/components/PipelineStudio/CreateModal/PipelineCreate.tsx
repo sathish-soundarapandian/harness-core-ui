@@ -101,7 +101,7 @@ export default function CreatePipelines({
     tags: {},
     repo: '',
     branch: '',
-    storeType: 'INLINE',
+    storeType: StoreType.INLINE,
     remoteType: 'create',
     stages: [],
     connectorRef: ''
@@ -129,15 +129,15 @@ export default function CreatePipelines({
 
   const PipelineModeCards: CardInterface[] = [
     {
-      type: 'INLINE',
+      type: StoreType.INLINE,
       title: 'Inline',
       info: 'Pipeline content is stored in Harness',
       icon: 'repository',
       size: 16,
-      disabled: pipelineIdentifier !== DefaultNewPipelineId && storeTypeParam === 'REMOTE'
+      disabled: pipelineIdentifier !== DefaultNewPipelineId && storeTypeParam === StoreType.REMOTE
     },
     {
-      type: 'REMOTE',
+      type: StoreType.REMOTE,
       title: 'Remote',
       info: 'Pipeline content is stored in a Git repository',
       icon: 'remote-setup',
