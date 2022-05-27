@@ -10,7 +10,7 @@ import { DropDown, FlexExpander, Layout, Text } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import { QlceViewFilterOperator } from 'services/ce/services'
 import { allCloudProvidersList } from '@ce/constants'
-import PerspectiveTimeRangePicker from '@ce/components/PerspectiveTimeRangePicker/PerspectiveTimeRangePicker'
+import TimeRangePicker from '@ce/common/TimeRangePicker/TimeRangePicker'
 import type { setTimeRangeFn } from '@ce/types'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
@@ -49,7 +49,7 @@ const AnomalyFilters: React.FC<AnomalyFiltersProps> = ({ filters, setFilters, ti
           <Text border={{ right: true, color: 'grey300' }} />
         </>
       ) : null}
-      <PerspectiveTimeRangePicker timeRange={timeRange} setTimeRange={setTimeRange} />
+      <TimeRangePicker timeRange={timeRange} setTimeRange={setTimeRange} />
     </Layout.Horizontal>
   )
 }

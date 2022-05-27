@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, act, fireEvent } from '@testing-library/react'
-import PerspectiveTimeRangePicker from '../PerspectiveTimeRangePicker'
+import TimeRangePicker from '../TimeRangePicker'
 
 jest.mock('framework/strings', () => ({
   useStrings: () => ({
@@ -18,7 +18,7 @@ jest.mock('framework/strings', () => ({
 describe('Tests for Perspective Time Range Picker', () => {
   test('Should be able to render and open Perspective Time Range Picker', () => {
     const { getByText } = render(
-      <PerspectiveTimeRangePicker timeRange={{ from: '2022-04-01', to: '2022-04-07' }} setTimeRange={jest.fn()} />
+      <TimeRangePicker timeRange={{ from: '2022-04-01', to: '2022-04-07' }} setTimeRange={jest.fn()} />
     )
 
     expect(getByText('2022-04-01 - 2022-04-07')).toBeDefined()

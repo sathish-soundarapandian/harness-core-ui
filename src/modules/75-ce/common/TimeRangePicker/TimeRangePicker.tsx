@@ -29,7 +29,7 @@ import { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import type { setTimeRangeFn } from '@ce/types'
-import css from './PerspectiveTimeRangePicker.module.scss'
+import css from './TimeRangePicker.module.scss'
 
 const getDateLabelToDisplayText: (getString: UseStringsReturn['getString']) => Record<string, string> = getString => {
   return {
@@ -176,7 +176,7 @@ const DateLabelRenderer: React.FC<DateLabelRendererProps> = ({ text, dateRange, 
   )
 }
 
-interface PerspectiveTimeRangePickerProps {
+interface TimeRangePickerProps {
   setTimeRange: setTimeRangeFn
   timeRange: {
     to: string
@@ -185,7 +185,7 @@ interface PerspectiveTimeRangePickerProps {
   featureEnabled?: boolean
 }
 
-const PerspectiveTimeRangePicker: React.FC<PerspectiveTimeRangePickerProps> = ({ timeRange, setTimeRange }) => {
+const TimeRangePicker: React.FC<TimeRangePickerProps> = ({ timeRange, setTimeRange }) => {
   const { getString } = useStrings()
 
   const { licenseInformation } = useLicenseStore()
@@ -445,4 +445,4 @@ const Upgrade = () => {
   )
 }
 
-export default PerspectiveTimeRangePicker
+export default TimeRangePicker
