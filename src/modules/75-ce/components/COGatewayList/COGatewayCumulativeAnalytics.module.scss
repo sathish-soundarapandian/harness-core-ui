@@ -96,3 +96,9 @@
 .totalSpendInfoCardDryRun {
   @include savingsInfoCard(var(--purple-50), var(--grey-500), 1px, var(--purple-500));
 }
+
+.colChartBorderRadius {
+  rect {
+    clip-path: inset(0% 0% -2px 0% round 2px);
+  }
+}
