@@ -37,6 +37,7 @@ import {
   useGetPipelineSummary
 } from 'services/pipeline-ng'
 import { useStrings, UseStringsReturn } from 'framework/strings'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { TagsPopover, PageSpinner } from '@common/components'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -54,7 +55,6 @@ import { TriggerBreadcrumbs } from '../trigger-details/TriggerDetails'
 import { getTriggerIcon, getEnabledStatusTriggerValues } from './utils/TriggersListUtils'
 import { clearNullUndefined, ResponseStatus } from './utils/TriggersWizardPageUtils'
 import css from './TriggersDetailPage.module.scss'
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
 
 const loadingHeaderHeight = 43
 
