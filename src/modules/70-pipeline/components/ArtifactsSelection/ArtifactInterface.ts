@@ -128,6 +128,7 @@ export interface ArtifactTagHelperText {
   artifactDirectory?: string
   subscription?: string
   registry?: string
+  subscriptionId?: string
 }
 export interface ArtifactImagePathTagViewProps {
   selectedArtifact: ArtifactType

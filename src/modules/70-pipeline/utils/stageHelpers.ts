@@ -132,6 +132,8 @@ export const getHelpeTextForTags = (
     repository?: string
     repositoryPort?: number
     artifactDirectory?: string
+    registry?: string
+    subscriptionId?: string
   },
   getString: (key: StringKeys) => string,
   isServerlessDeploymentTypeSelected = false
@@ -144,7 +146,9 @@ export const getHelpeTextForTags = (
     registryHostname,
     repository,
     repositoryPort,
-    artifactDirectory
+    artifactDirectory,
+    registry,
+    subscriptionId
   } = fields
   const invalidFields: string[] = []
   if (!connectorRef || getMultiTypeFromValue(connectorRef) === MultiTypeInputType.RUNTIME) {
@@ -185,6 +189,17 @@ export const getHelpeTextForTags = (
     (!artifactDirectory || getMultiTypeFromValue(artifactDirectory) === MultiTypeInputType.RUNTIME)
   ) {
     invalidFields.push(getString('pipeline.artifactsSelection.artifactDirectory'))
+  }
+
+  if (registry !== undefined && (!registry || getMultiTypeFromValue(registry) === MultiTypeInputType.RUNTIME)) {
+    invalidFields.push(getString('pipeline.ACR.registry'))
+  }
+
+  if (
+    subscriptionId !== undefined &&
+    (!subscriptionId || getMultiTypeFromValue(subscriptionId) === MultiTypeInputType.RUNTIME)
+  ) {
+    invalidFields.push(getString('pipeline.ACR.subscription'))
   }
 
   const helpText = getHelperTextString(invalidFields, getString, isServerlessDeploymentTypeSelected)

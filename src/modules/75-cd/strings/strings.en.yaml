@@ -232,6 +232,8 @@ environment:
   deleted: Successfully deleted Environment {{ identifier }}
   fetchNext: Fetching Environments
   createSubTitle: An environment is the representation of where your deployments take place
+  filters:
+    environmentNamePlaceholder: Enter Environment Name
 infrastructure:
   infrastructureDefinitions: Infrastructure Definitions
   noInfrastructureInEnvironment: You have no infrastructures in this environment
@@ -257,6 +259,8 @@ cloudFormation:
   templateFileStore: Template File Store
   retrieveNames: Retrieve Names from template
   awsURL: S3 URL
+  urls: URLs
+  parameterFilePaths: Parameter File Paths
   errors:
     region: AWS Region is required
     role: Role ARN required
@@ -266,3 +270,4 @@ cloudFormation:
     templateBody: Template body required
     awsURL: S3 url required
     getParam: AWS Connector, Region and Template File are required to retrieve parameters
+    templateRequired: Template file required

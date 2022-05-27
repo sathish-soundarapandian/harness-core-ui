@@ -12,12 +12,9 @@ import routes from '@common/RouteDefinitions'
 import { Page } from '@common/exports'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
-import {
-  useGetFolderDetail,
-  useGetDashboardDetail,
-  useMutateCreateSignedUrl
-} from '@dashboards/services/CustomDashboardsService'
+import { useGetDashboardDetail, useMutateCreateSignedUrl } from '@dashboards/services/CustomDashboardsService'
 import { useDashboardsContext } from '@dashboards/pages/DashboardsContext'
+import { useGetFolderDetail } from 'services/custom-dashboards'
 import css from './DashboardView.module.scss'
 
 const DASHBOARDS_ORIGIN = 'https://dashboards.harness.io'
@@ -53,7 +50,7 @@ const DashboardViewPage: React.FC = () => {
     })
   }, [])
 
-  const { data: folderDetail } = useGetFolderDetail(accountId, folderId)
+  const { data: folderDetail } = useGetFolderDetail({ queryParams: { accountId, folderId } })
 
   const { data: dashboardDetail } = useGetDashboardDetail(accountId, viewId)
 

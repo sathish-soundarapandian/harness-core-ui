@@ -209,7 +209,7 @@ const NodeRecommendationDetails: React.FC<NodeRecommendationDetailsProps> = ({
         setUpdatedState(addBufferToState(state, buffer))
         UpdatePreferenceToaster.show({ message: getString('ce.nodeRecommendation.updatePreferences'), icon: 'tick' })
       } catch (e: any) {
-        showError(getErrorInfoFromErrorObject(e))
+        showError(e?.data?.title === 'recommendation problem' ? e?.data?.detail : getErrorInfoFromErrorObject(e))
       }
     } else {
       showError(getString('ce.nodeRecommendation.inconsistentResourceReq'))

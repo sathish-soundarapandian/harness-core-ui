@@ -50,6 +50,26 @@ export interface CreateFolderResponse {
   responseMessages?: string
 }
 
+export interface DashboardFolderModel {
+  created_at: string
+  id: string
+  title: string
+}
+
+export interface DashboardModel {
+  created_at: string
+  data_source: ('CD' | 'CE' | 'CF' | 'CI' | 'CG_CD')[]
+  description: string
+  favorite_count: number
+  folder: DashboardFolderModel
+  id: string
+  last_accessed_at: string
+  resourceIdentifier: string
+  title: string
+  type: string
+  view_count: number
+}
+
 export interface ErrorFolderParameters {
   accountId?: string
   folderId?: string
@@ -82,6 +102,14 @@ export interface FolderModel {
   type: string
 }
 
+export interface GetAllTagsResponse {
+  resource: GetAllTagsResponseResource
+}
+
+export interface GetAllTagsResponseResource {
+  tags: string
+}
+
 export interface GetFolderResponse {
   items?: number
   pages?: number
@@ -109,6 +137,14 @@ export interface PatchFolderResponseResource {
   accountId: string
   folderId: string
   name: string
+}
+
+export interface SearchResponse {
+  error: string
+  items: number
+  pages: number
+  resource: DashboardModel[]
+  total: number
 }
 
 export interface UpdateDashboardResponse {
@@ -236,10 +272,10 @@ export const cloneDashboardPromise = (
   )
 
 export interface GetFolderQueryParams {
+  page?: number
   accountId: string
   pageSize?: number
   isAdmin?: boolean
-  page?: number
 }
 
 export type GetFolderProps = Omit<GetProps<GetFolderResponse, ErrorResponse, GetFolderQueryParams, void>, 'path'>
@@ -394,12 +430,61 @@ export const createFolderPromise = (
     signal
   )
 
+export interface GetFolderDetailQueryParams {
+  accountId: string
+  folderId: string
+}
+
+export type GetFolderDetailProps = Omit<
+  GetProps<CreateFolderResponse, ErrorResponse, GetFolderDetailQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get a folders name.
+ */
+export const GetFolderDetail = (props: GetFolderDetailProps) => (
+  <Get<CreateFolderResponse, ErrorResponse, GetFolderDetailQueryParams, void>
+    path={`/folderDetail`}
+    base={getConfig('dashboard/')}
+    {...props}
+  />
+)
+
+export type UseGetFolderDetailProps = Omit<
+  UseGetProps<CreateFolderResponse, ErrorResponse, GetFolderDetailQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get a folders name.
+ */
+export const useGetFolderDetail = (props: UseGetFolderDetailProps) =>
+  useGet<CreateFolderResponse, ErrorResponse, GetFolderDetailQueryParams, void>(`/folderDetail`, {
+    base: getConfig('dashboard/'),
+    ...props
+  })
+
+/**
+ * Get a folders name.
+ */
+export const getFolderDetailPromise = (
+  props: GetUsingFetchProps<CreateFolderResponse, ErrorResponse, GetFolderDetailQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<CreateFolderResponse, ErrorResponse, GetFolderDetailQueryParams, void>(
+    getConfig('dashboard/'),
+    `/folderDetail`,
+    props,
+    signal
+  )
+
 export interface GetFoldersQueryParams {
   page: number
   accountId: string
+  sortBy?: string
   pageSize: number
   searchTerm?: string
-  sortBy?: string
 }
 
 export type GetFoldersProps = Omit<GetProps<GetFoldersResponse, ErrorResponse, GetFoldersQueryParams, void>, 'path'>
@@ -439,6 +524,100 @@ export const getFoldersPromise = (
   getUsingFetch<GetFoldersResponse, ErrorResponse, GetFoldersQueryParams, void>(
     getConfig('dashboard/'),
     `/v1/folders`,
+    props,
+    signal
+  )
+
+export interface SearchQueryParams {
+  folderId: string
+  page: number
+  accountId: string
+  tags: string
+  sortBy?: string
+  customTag: string
+  pageSize: number
+  searchTerm?: string
+}
+
+export type SearchProps = Omit<GetProps<SearchResponse, ErrorResponse, SearchQueryParams, void>, 'path'>
+
+/**
+ * Get list of dashboards that match the search criteria.
+ */
+export const Search = (props: SearchProps) => (
+  <Get<SearchResponse, ErrorResponse, SearchQueryParams, void>
+    path={`/v1/search`}
+    base={getConfig('dashboard/')}
+    {...props}
+  />
+)
+
+export type UseSearchProps = Omit<UseGetProps<SearchResponse, ErrorResponse, SearchQueryParams, void>, 'path'>
+
+/**
+ * Get list of dashboards that match the search criteria.
+ */
+export const useSearch = (props: UseSearchProps) =>
+  useGet<SearchResponse, ErrorResponse, SearchQueryParams, void>(`/v1/search`, {
+    base: getConfig('dashboard/'),
+    ...props
+  })
+
+/**
+ * Get list of dashboards that match the search criteria.
+ */
+export const searchPromise = (
+  props: GetUsingFetchProps<SearchResponse, ErrorResponse, SearchQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<SearchResponse, ErrorResponse, SearchQueryParams, void>(
+    getConfig('dashboard/'),
+    `/v1/search`,
+    props,
+    signal
+  )
+
+export interface GetAllTagsQueryParams {
+  accountId: string
+}
+
+export type GetAllTagsProps = Omit<GetProps<GetAllTagsResponse, ErrorResponse, GetAllTagsQueryParams, void>, 'path'>
+
+/**
+ * Get tags.
+ */
+export const GetAllTags = (props: GetAllTagsProps) => (
+  <Get<GetAllTagsResponse, ErrorResponse, GetAllTagsQueryParams, void>
+    path={`/v1/tags`}
+    base={getConfig('dashboard/')}
+    {...props}
+  />
+)
+
+export type UseGetAllTagsProps = Omit<
+  UseGetProps<GetAllTagsResponse, ErrorResponse, GetAllTagsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get tags.
+ */
+export const useGetAllTags = (props: UseGetAllTagsProps) =>
+  useGet<GetAllTagsResponse, ErrorResponse, GetAllTagsQueryParams, void>(`/v1/tags`, {
+    base: getConfig('dashboard/'),
+    ...props
+  })
+
+/**
+ * Get tags.
+ */
+export const getAllTagsPromise = (
+  props: GetUsingFetchProps<GetAllTagsResponse, ErrorResponse, GetAllTagsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<GetAllTagsResponse, ErrorResponse, GetAllTagsQueryParams, void>(
+    getConfig('dashboard/'),
+    `/v1/tags`,
     props,
     signal
   )

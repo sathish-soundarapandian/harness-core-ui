@@ -11,11 +11,8 @@ import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps } from '@common/utils/routeUtils'
 import { useDashboardsContext } from '@dashboards/pages/DashboardsContext'
-import {
-  useGetFolderDetail,
-  useGetDashboardDetail,
-  useMutateCreateSignedUrl
-} from '@dashboards/services/CustomDashboardsService'
+import { useGetDashboardDetail, useMutateCreateSignedUrl } from '@dashboards/services/CustomDashboardsService'
+import { useGetFolderDetail } from 'services/custom-dashboards'
 import DashboardViewPage from '../DashboardView'
 
 const accountId = 'ggre4325'
@@ -27,14 +24,17 @@ jest.mock('@dashboards/pages/DashboardsContext', () => ({
 }))
 
 jest.mock('@dashboards/services/CustomDashboardsService', () => ({
-  useGetFolderDetail: jest.fn(),
   useGetDashboardDetail: jest.fn(),
   useMutateCreateSignedUrl: jest.fn()
 }))
 const useDashboardsContextMock = useDashboardsContext as jest.Mock
-const useGetFolderDetailMock = useGetFolderDetail as jest.Mock
 const useGetDashboardDetailMock = useGetDashboardDetail as jest.Mock
 const useMutateCreateSignedUrlMock = useMutateCreateSignedUrl as jest.Mock
+
+jest.mock('services/custom-dashboards', () => ({
+  useGetFolderDetail: jest.fn()
+}))
+const useGetFolderDetailMock = useGetFolderDetail as jest.Mock
 
 const renderComponent = (folder = folderId): RenderResult =>
   render(
