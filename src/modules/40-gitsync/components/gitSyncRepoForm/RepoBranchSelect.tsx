@@ -126,7 +126,12 @@ const RepoBranchSelect: React.FC<RepoBranchSelectProps> = props => {
           <Text>{getString('common.fetchingBranches').concat('...')}</Text>
         </Layout.Horizontal>
       ) : null}
-      <Dialog isOpen={isOpen} enforceFocus={false} title={getString('gitsync.branchFetchFailed')} onClose={close}>
+      <Dialog
+        isOpen={isOpen}
+        enforceFocus={false}
+        title={getString('common.gitSync.branchFetchFailed')}
+        onClose={close}
+      >
         {responseMessages ? <ErrorHandler responseMessages={responseMessages} /> : undefined}
       </Dialog>
     </Layout.Horizontal>

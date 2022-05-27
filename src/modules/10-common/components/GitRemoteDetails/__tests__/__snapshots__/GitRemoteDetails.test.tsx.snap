@@ -56,11 +56,12 @@ exports[`GitRemoteDetails test default rendering GitRemoteDetails 1`] = `
       </svg>
     </span>
     <div
-      class="OverlaySpinner--overlaySpinner"
+      class="Layout--horizontal StyledProps--main"
     >
       <div
-        class="bp3-form-group branchSelector"
+        class="bp3-form-group bp3-disabled branchSelector branchSelector"
       >
+        
         <div
           class="bp3-form-content"
         >
@@ -71,16 +72,17 @@ exports[`GitRemoteDetails test default rendering GitRemoteDetails 1`] = `
               class="bp3-popover-target"
             >
               <div
-                class="bp3-input-group"
+                class="bp3-input-group bp3-disabled"
               >
                 <input
                   autocomplete="off"
                   class="bp3-input"
+                  disabled=""
                   name="remoteBranch"
-                  placeholder="- Select -"
+                  placeholder="- loading -"
                   style="padding-right: 0px;"
                   type="text"
-                  value="main (default)"
+                  value="main"
                 />
                 <span
                   class="bp3-input-action"

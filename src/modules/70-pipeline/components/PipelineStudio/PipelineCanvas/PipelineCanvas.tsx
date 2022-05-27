@@ -282,6 +282,8 @@ export function PipelineCanvas({
   useSaveTemplateListener()
 
   const [showModal, hideModal] = useModalHook(() => {
+    const dialogWidth = isGitSimplificationEnabled ? '800px' : isGitSyncEnabled ? '614px' : 'auto'
+
     if (getOtherModal) {
       pipeline.identifier = ''
       updatePipeline(pipeline)
@@ -295,7 +297,7 @@ export function PipelineCanvas({
         <PipelineVariablesContextProvider pipeline={pipeline}>
           <Dialog
             style={{
-              width: isGitSyncEnabled ? '614px' : '800px',
+              width: dialogWidth,
               background: 'var(--form-bg)',
               paddingTop: '36px'
             }}

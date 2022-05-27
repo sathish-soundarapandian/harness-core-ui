@@ -282,6 +282,7 @@ repo_provider:
   awscodecommit: AWS Code Commit
   azureDev: Azure Devops
 gitSync:
+  branchFetchFailed: Branch fetch failed
   resourceLabel: '{{resource}} Name'
   rootFolderLabel: Root Folder
   harnessFolderLabel: Harness Folder

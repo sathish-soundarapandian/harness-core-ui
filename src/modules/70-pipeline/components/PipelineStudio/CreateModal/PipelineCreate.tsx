@@ -141,7 +141,7 @@ export default function CreatePipelines({
       info: getString('common.git.remoteStoreLabel'),
       icon: 'remote-setup',
       size: 20,
-      disabled: pipelineIdentifier !== DefaultNewPipelineId && !storeTypeParam
+      disabled: pipelineIdentifier !== DefaultNewPipelineId && storeTypeParam === 'INLINE'
     }
   ]
 
@@ -149,7 +149,35 @@ export default function CreatePipelines({
     PipelineModeCards.find(card => card.type === storeTypeParam)
   )
 
-  const isEdit = React.useMemo(() => initialValues?.identifier !== DefaultNewPipelineId, [initialValues])
+  const validationSchema = React.useMemo(
+    () =>
+      Yup.object().shape({
+        name: NameSchema({ requiredErrorMsg: getString('createPipeline.pipelineNameRequired') }),
+        identifier: IdentifierSchema(),
+        ...(isGitSimplificationEnabled && storeType?.type === StoreType.REMOTE
+          ? {
+              repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
+              branch: Yup.string().trim().required(getString('common.git.validation.branchRequired')),
+              connectorRef: Yup.string().trim().required(getString('validation.sshConnectorRequired')),
+              filePath: Yup.string().trim().required(getString('common.git.validation.filePath'))
+            }
+          : isGitSyncEnabled
+          ? {
+              repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
+              branch: Yup.string().trim().required(getString('common.git.validation.branchRequired'))
+            }
+          : {})
+      }),
+    [getString, isGitSimplificationEnabled, isGitSyncEnabled, storeType?.type]
+  )
+
+  const isEdit = React.useMemo(
+    () =>
+      isGitSimplificationEnabled
+        ? pipelineIdentifier !== DefaultNewPipelineId
+        : initialValues.identifier !== DefaultNewPipelineId,
+    [initialValues.identifier, isGitSimplificationEnabled, pipelineIdentifier]
+  )
 
   useEffect(() => {
     !isEdit &&
@@ -163,47 +191,33 @@ export default function CreatePipelines({
     !!storeType?.type && updateQueryParams({ storeType: storeType?.type })
   }, [storeType])
 
+  const handleSubmit = (values: CreatePipelinesValue): void => {
+    logger.info(JSON.stringify(values))
+    const formGitDetails =
+      isGitSimplificationEnabled && values.storeType === 'REMOTE'
+        ? { repoName: values.repo, branch: values.branch, filePath: values.filePath }
+        : values.repo && values.repo.trim().length > 0
+        ? { repoIdentifier: values.repo, branch: values.branch }
+        : undefined
+
+    afterSave?.(
+      omit(values, 'storeType', 'remoteType', 'connectorRef', 'repo', 'branch', 'filePath', 'useTemplate'),
+      {
+        storeType: values.storeType as StoreMetadata['storeType'],
+        connectorRef: typeof values.connectorRef !== 'string' ? values.connectorRef?.value : ''
+      },
+      formGitDetails,
+      values.useTemplate
+    )
+  }
+
   return (
     <Container className={css.pipelineCreateForm}>
       <Formik<CreatePipelinesValue>
         initialValues={newInitialValues}
         formName="pipelineCreate"
-        validationSchema={Yup.object().shape({
-          name: NameSchema({ requiredErrorMsg: getString('createPipeline.pipelineNameRequired') }),
-          identifier: IdentifierSchema(),
-          ...(isGitSimplificationEnabled && storeType?.type === StoreType.REMOTE
-            ? {
-                repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
-                branch: Yup.string().trim().required(getString('common.git.validation.branchRequired')),
-                connectorRef: Yup.string().trim().required(getString('validation.sshConnectorRequired')),
-                filePath: Yup.string().trim().required(getString('common.git.validation.filePath'))
-              }
-            : isGitSyncEnabled
-            ? {
-                repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
-                branch: Yup.string().trim().required(getString('common.git.validation.branchRequired'))
-              }
-            : {})
-        })}
-        onSubmit={values => {
-          logger.info(JSON.stringify(values))
-          const formGitDetails =
-            isGitSimplificationEnabled && values.storeType === 'REMOTE'
-              ? { repoName: values.repo, branch: values.branch, filePath: values.filePath }
-              : values.repo && values.repo.trim().length > 0
-              ? { repoIdentifier: values.repo, branch: values.branch }
-              : undefined
-
-          afterSave?.(
-            omit(values, 'storeType', 'remoteType', 'connectorRef', 'repo', 'branch', 'filePath', 'useTemplate'),
-            {
-              storeType: values.storeType as StoreMetadata['storeType'],
-              connectorRef: typeof values.connectorRef !== 'string' ? values.connectorRef?.value : ''
-            },
-            formGitDetails,
-            values.useTemplate
-          )
-        }}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
       >
         {formikProps => (
           <FormikForm>
