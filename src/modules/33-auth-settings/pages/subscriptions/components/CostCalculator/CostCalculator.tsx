@@ -5,25 +5,29 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, {useEffect, useState} from 'react'
-import {Color, FontVariation} from '@harness/design-system'
-import {Button, ButtonSize, Layout, PillToggle, Text, Toggle} from '@harness/uicore'
+import React, { useEffect, useState } from 'react'
+import { Color, FontVariation } from '@harness/design-system'
+import { Button, ButtonSize, Layout, PillToggle, Text, Toggle } from '@harness/uicore'
 import cx from 'classnames'
-import {Classes, Dialog, IDialogProps, NumericInput, Slider} from '@blueprintjs/core'
-import {useModalHook} from '@harness/use-modal'
-import {ButtonVariation, Container} from '@wings-software/uicore'
-import {useParams} from 'react-router-dom'
+import { Classes, Dialog, IDialogProps, NumericInput, Slider } from '@blueprintjs/core'
+import { useModalHook } from '@harness/use-modal'
+import { ButtonVariation, Container } from '@wings-software/uicore'
+import { useParams } from 'react-router-dom'
 import moment from 'moment'
-import {isNaN} from 'lodash-es'
-import {Editions} from '@common/constants/SubscriptionTypes'
-import {acquireCurrentPlan, ffUnitTypes, PlanType} from '@common/components/CostCalculator/CostCalculatorUtils'
-import {ReviewPage} from '@common/components/CostCalculator/ReviewAndBuyPlanUpgrades'
-import type {AccountPathProps} from '@common/interfaces/RouteInterfaces'
-import {useCreateFfSubscription, useListSubscriptions, useRetrieveProductPrices} from 'services/cd-ng/index'
-import {useGetUsageAndLimit} from '@common/hooks/useGetUsageAndLimit'
-import {ModuleName} from 'framework/types/ModuleName'
-import {ContainerSpinner} from '@common/components/ContainerSpinner/ContainerSpinner'
-import {useLicenseStore} from 'framework/LicenseStore/LicenseStoreContext'
+import { isNaN } from 'lodash-es'
+import { Editions } from '@common/constants/SubscriptionTypes'
+import {
+  acquireCurrentPlan,
+  ffUnitTypes,
+  PlanType
+} from '@auth-settings/pages/subscriptions/components/CostCalculator/CostCalculatorUtils'
+import { ReviewPage } from '@auth-settings/pages/subscriptions/components/SubscribeNPay/ReviewAndBuyPlanUpgrades'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { useCreateFfSubscription, useListSubscriptions, useRetrieveProductPrices } from 'services/cd-ng/index'
+import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
+import { ModuleName } from 'framework/types/ModuleName'
+import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import recommendedIcon from './images/recommendedbig.png'
 import usageIcon from './images/usagebig.png'
 import plannedUsageIcon from './images/currentbig.png'
@@ -36,7 +40,6 @@ interface InfoBoxParams {
   recommended: number
   using: number
 }
-
 
 const InfoBox = ({ title, units, using, recommended, planned }: InfoBoxParams) => {
   const newUnits = units ? units : ''
@@ -123,8 +126,7 @@ interface EditionBox {
 }
 
 export const GetEditionBox = ({ editionType }: EditionBox) => {
-
-  const backGround = Object.values(Editions).includes(editionType as Editions) ? css.editionBg : css.planBg;
+  const backGround = Object.values(Editions).includes(editionType as Editions) ? css.editionBg : css.planBg
 
   return (
     <Container className={cx(css.editionPlanBox, backGround)}>
@@ -167,7 +169,7 @@ const CostSlider = (costSliderParms: CostSliderParams) => {
   const [thumbMoved, setThumbMoved] = useState<boolean>(false)
 
   const usagePercent = costSliderParms.currentUsage / costSliderParms.maxVal
-  const recommendedPercent = costSliderParms.recommended/ costSliderParms.maxVal
+  const recommendedPercent = costSliderParms.recommended / costSliderParms.maxVal
   const plannedPercent = (costSliderParms.plannedUsage || 0) / costSliderParms.maxVal
 
   return (
@@ -268,7 +270,6 @@ export const CostCalculator = (): JSX.Element => {
   const [clientSecret, setClientSecret] = useState<string>('')
   const [reviewClicked, setReviewClicked] = useState<boolean>(false)
 
-
   useEffect(() => {
     if (!reviewClicked) {
       return
@@ -282,9 +283,9 @@ export const CostCalculator = (): JSX.Element => {
       premiumSupport: !premiumSupportDisabled
     })
       .then(resp => {
-        const respondedData = resp?.data;
-        const paymentIntent = respondedData?.paymentIntent;
-        const dueTodayTotal = respondedData?.totalAmount || 0;
+        const respondedData = resp?.data
+        const paymentIntent = respondedData?.paymentIntent
+        const dueTodayTotal = respondedData?.totalAmount || 0
         const acqCl = resp?.data?.clientSecret || ''
         setClientSecret(acqCl)
       })

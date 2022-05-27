@@ -6,18 +6,18 @@
  */
 
 import React from 'react'
-import {Button, ButtonSize, ButtonVariation, Container, Layout, Text} from '@harness/uicore'
+import { Button, ButtonSize, ButtonVariation, Container, Layout, Text } from '@harness/uicore'
 import cx from 'classnames'
-import {FontVariation} from '@harness/design-system'
-import {loadStripe} from '@stripe/stripe-js'
-import {Elements, PaymentElement, useElements, useStripe} from '@stripe/react-stripe-js'
-import {useParams} from "react-router-dom";
-import type {PlanType} from '@common/components/CostCalculator/CostCalculatorUtils'
-import type {Editions} from '@common/constants/SubscriptionTypes'
-import {GetEditionBox} from '@common/components/CostCalculator/CostCalculator'
-import type {AccountPathProps} from "@common/interfaces/RouteInterfaces";
-import {useListSubscriptions} from "services/cd-ng";
-import css from '@common/components/CostCalculator/CostCalculator.module.scss'
+import { FontVariation } from '@harness/design-system'
+import { loadStripe } from '@stripe/stripe-js'
+import { Elements, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
+import { useParams } from 'react-router-dom'
+import type { PlanType } from '@auth-settings/pages/subscriptions/components/CostCalculator/CostCalculatorUtils'
+import type { Editions } from '@common/constants/SubscriptionTypes'
+import { GetEditionBox } from '@auth-settings/pages/subscriptions/components/CostCalculator/CostCalculator'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { useListSubscriptions } from 'services/cd-ng'
+import css from '@auth-settings/pages/subscriptions/components/CostCalculator/CostCalculator.module.scss'
 
 interface ReviewPageParams {
   previousEdition: Editions
@@ -45,53 +45,49 @@ interface JustStripeDataParams {
 }
 
 const DoCheckout = () => {
-
-  const stripe = useStripe();
-  const elements = useElements();
-
+  const stripe = useStripe()
+  const elements = useElements()
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     // We don't want to let default form submission happen here,
     // which would refresh the page.
-    event.preventDefault();
+    event.preventDefault()
 
     if (!stripe || !elements) {
       // Stripe.js has not yet loaded.
       // Make sure to disable form submission until Stripe.js has loaded.
-      return;
+      return
     }
 
     const result = await stripe.confirmPayment({
       //`Elements` instance that was used to create the Payment Element
       elements,
       confirmParams: {
-        return_url: window.location.href,  //"https://example.com/order/123/complete",
-      },
-    });
+        return_url: window.location.href //"https://example.com/order/123/complete",
+      }
+    })
 
     if (result.error) {
       // Show error to your customer (for example, payment details incomplete)
-      console.log(result.error.message);
     } else {
       // Your customer will be redirected to your `return_url`. For some payment
       // methods like iDEAL, your customer will be redirected to an intermediate
       // site first to authorize the payment, then redirected to the `return_url`.
     }
-  };
-
+  }
 
   return (
-      <><Layout.Vertical padding={{left: 'xlarge', right: 'xlarge'}}>
-        <Text font={{variation: FontVariation.H4}}>
-          Payment Information
-        </Text>
-        <PaymentElement/>
+    <>
+      <Layout.Vertical padding={{ left: 'xlarge', right: 'xlarge' }}>
+        <Text font={{ variation: FontVariation.H4 }}>Payment Information</Text>
+        <PaymentElement />
       </Layout.Vertical>
-        <Button intent={'primary'} size={ButtonSize.LARGE} disabled={!stripe} onClick={handleSubmit}>Subscribe and Pay</Button></>
+      <Button intent={'primary'} size={ButtonSize.LARGE} disabled={!stripe} onClick={handleSubmit}>
+        Subscribe and Pay
+      </Button>
+    </>
   )
-
 }
-
 
 const JustStripeData = ({ clientSecret }: JustStripeDataParams) => {
   const options = {
@@ -99,12 +95,9 @@ const JustStripeData = ({ clientSecret }: JustStripeDataParams) => {
     clientSecret: clientSecret
   }
 
-
-
-  console.log(clientSecret)
   return (
     <Elements stripe={stripePromise} options={options}>
-      <DoCheckout/>
+      <DoCheckout />
     </Elements>
   )
 }
@@ -127,32 +120,30 @@ export const ReviewPage = ({
 }: ReviewPageParams) => {
   const reviewTitle = `Feature Flag Subscription`
   const { accountId } = useParams<AccountPathProps>()
-  const subList = useListSubscriptions({ queryParams: {accountIdentifier : accountId, moduleType: 'CF'}})
+  const subList = useListSubscriptions({ queryParams: { accountIdentifier: accountId, moduleType: 'CF' } })
   const acquiredSub = subList.data?.data
-  let cl = clientSecret;
-  let proratedCost = 0;
-
+  let cl = clientSecret
+  let proratedCost = 0
 
   if (acquiredSub) {
     const acqSubscription = acquiredSub[0]
-    console.log(acqSubscription)
-    cl = (cl === '' ? acqSubscription.clientSecret : clientSecret) || clientSecret;
+    cl = (cl === '' ? acqSubscription.clientSecret : clientSecret) || clientSecret
     let totalCent = acqSubscription.latestInvoiceDetail?.totalAmount
-    totalCent = totalCent ? totalCent/100 : total
+    totalCent = totalCent ? totalCent / 100 : total
     proratedCost = totalCent
   }
 
   return (
-      <Container className={css.subscriptionReviewContainer}>
-    <Layout.Vertical flex={{ justifyContent: 'left', alignItems: 'stretch' }}>
-      <Text
-        icon={'ff-solid'}
-        iconProps={{ size: 24 }}
-        font={{ variation: FontVariation.H3 }}
-        className={cx(css.textwrap)}
-      >
-        {reviewTitle}
-      </Text>
+    <Container className={css.subscriptionReviewContainer}>
+      <Layout.Vertical flex={{ justifyContent: 'left', alignItems: 'stretch' }}>
+        <Text
+          icon={'ff-solid'}
+          iconProps={{ size: 24 }}
+          font={{ variation: FontVariation.H3 }}
+          className={cx(css.textwrap)}
+        >
+          {reviewTitle}
+        </Text>
         <Layout.Vertical>
           <Container className={cx(css.reviewContainer)}>
             <Layout.Horizontal className={cx(css.currentPlanContainer, css.pillboxgap)}>
@@ -200,7 +191,7 @@ export const ReviewPage = ({
               Unit price
             </Text>
             <Text font={{ size: 'normal' }} className={cx(css.mauUnitPrice, css.reviewItems)}>
-              {mauCost / (newMau/25)}
+              {mauCost / (newMau / 25)}
             </Text>
             <Text font={{ size: 'normal' }} className={cx(css.premiumSupport, css.reviewText)}>
               Support
@@ -228,27 +219,26 @@ export const ReviewPage = ({
             </Text>
           </Container>
           <Container className={cx(css.reviewProratedDueToday)}>
-            <Text font={{variation: FontVariation.H4}} className={cx(css.dueToday)}>
+            <Text font={{ variation: FontVariation.H4 }} className={cx(css.dueToday)}>
               Prorated Amount Due Today
             </Text>
-            <Text font={{variation: FontVariation.SMALL}} className={cx(css.dueTodaySummary)}>
+            <Text font={{ variation: FontVariation.SMALL }} className={cx(css.dueTodaySummary)}>
               Your plan changes take effect today. Full renewal amount will be charged at your next billing cycle.
             </Text>
-            <Text font={{variation: FontVariation.H4}} className={cx(css.dueTodayPrice)}>
+            <Text font={{ variation: FontVariation.H4 }} className={cx(css.dueTodayPrice)}>
               {proratedCost}
             </Text>
           </Container>
         </Layout.Vertical>
-    </Layout.Vertical>
-        <Layout.Vertical className={cx(css.paymentBox)}>
-          <JustStripeData clientSecret={cl} />
-        </Layout.Vertical>
-        <Layout.Vertical className={cx(css.backButtonBox)} flex={{alignItems: "flex-start", justifyContent: 'left'}}>
-          <Button variation={ButtonVariation.SECONDARY} onClick={backButtonClick}>
-            Back
-          </Button>
-        </Layout.Vertical>
-
-      </Container>
+      </Layout.Vertical>
+      <Layout.Vertical className={cx(css.paymentBox)}>
+        <JustStripeData clientSecret={cl} />
+      </Layout.Vertical>
+      <Layout.Vertical className={cx(css.backButtonBox)} flex={{ alignItems: 'flex-start', justifyContent: 'left' }}>
+        <Button variation={ButtonVariation.SECONDARY} onClick={backButtonClick}>
+          Back
+        </Button>
+      </Layout.Vertical>
+    </Container>
   )
 }

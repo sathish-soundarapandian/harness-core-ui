@@ -85,3 +85,9 @@ export const calculateCostTotal = (
   }
   return unitsInUse * costPerUnit
 }
+
+export enum SubscribeViews {
+  CALCULATE,
+  REVIEW,
+  SUCCESS
+}
