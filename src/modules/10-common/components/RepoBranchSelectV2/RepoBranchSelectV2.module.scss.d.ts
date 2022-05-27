@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly branchSelector: string
   readonly gitBranchSelectorPopover: string
   readonly loadingWrapper: string
   readonly noLabel: string

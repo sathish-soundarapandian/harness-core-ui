@@ -33,6 +33,7 @@ export interface RepoBranchSelectProps {
   selectedValue?: string
   onChange?: (selected: SelectOption, options?: SelectOption[]) => void
   setErrorResponse?: React.Dispatch<React.SetStateAction<ResponseMessage[]>>
+  branchSelectorClassName?: string
 }
 
 export const getBranchSelectOptions = (data: GitBranchDetailsDTO[] = []): SelectOption[] => {
@@ -73,7 +74,8 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
     label,
     noLabel = false,
     disabled = false,
-    setErrorResponse
+    setErrorResponse,
+    branchSelectorClassName
   } = props
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -135,8 +137,9 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
         value={{ label: defaultTo(selectedValue, ''), value: defaultTo(selectedValue, '') }}
         onChange={selected => props.onChange?.(selected, branchSelectOptions)}
         selectProps={{ usePortal: true, popoverClassName: css.gitBranchSelectorPopover }}
+        className={cx(branchSelectorClassName, css.branchSelector)}
       />
-      {loading ? (
+      {loading && !disabled ? (
         <Layout.Horizontal
           spacing="small"
           flex={{ alignItems: 'flex-start' }}

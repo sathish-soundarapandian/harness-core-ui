@@ -645,7 +645,9 @@ export function PipelineCanvas({
   }
 
   const getPipelineNameTextContainerWidth = (): number | undefined => {
-    if (isPipelineRemote) return 100
+    if (isPipelineRemote) {
+      return 100
+    }
 
     if (isGitSyncEnabled) {
       if (pipelineIdentifier === DefaultNewPipelineId) {

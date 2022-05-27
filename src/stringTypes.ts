@@ -2228,6 +2228,7 @@ export interface StringsMap {
   'gitsync.markAsDefault': string
   'gitsync.markAsDefaultLabel': string
   'gitsync.moveFolder': string
+  'gitsync.newGitExperienceMessage': string
   'gitsync.pathToHarnessFolder': string
   'gitsync.resyncButtonText': string
   'gitsync.resyncFailToaster': string
