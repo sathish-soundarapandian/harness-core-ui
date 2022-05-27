@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react'
 import cx from 'classnames'
-import { FormInput, Icon, Layout, SelectOption } from '@harness/uicore'
+import { Dialog, FormInput, Icon, Layout, SelectOption, SelectProps, useToggleOpen } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import type { GetDataError } from 'restful-react'
@@ -21,6 +21,7 @@ import {
   useGetListOfBranchesByRefConnectorV2
 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { ErrorHandler } from '../ErrorHandler/ErrorHandler'
 import css from './RepoBranchSelectV2.module.scss'
 
 export interface RepoBranchSelectProps {
@@ -33,6 +34,10 @@ export interface RepoBranchSelectProps {
   selectedValue?: string
   onChange?: (selected: SelectOption, options?: SelectOption[]) => void
   setErrorResponse?: React.Dispatch<React.SetStateAction<ResponseMessage[]>>
+  branchSelectorClassName?: string
+  selectProps?: Omit<SelectProps, 'value' | 'onChange' | 'items'>
+  showIcons?: boolean
+  showErrorInModal?: boolean
 }
 
 export const getBranchSelectOptions = (data: GitBranchDetailsDTO[] = []): SelectOption[] => {
@@ -73,11 +78,17 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
     label,
     noLabel = false,
     disabled = false,
-    setErrorResponse
+    setErrorResponse,
+    branchSelectorClassName,
+    selectProps,
+    showIcons = true,
+    showErrorInModal = false
   } = props
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [branchSelectOptions, setBranchSelectOptions] = useState<SelectOption[]>([])
+
+  const { isOpen, open, close } = useToggleOpen()
 
   const {
     data: response,
@@ -95,14 +106,13 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
       size: 100
     },
     debounce: 500,
-    lazy: true
+    lazy: !hasToRefetchBranches(disabled, connectorIdentifierRef, repoName)
   })
 
+  const responseMessages = (error?.data as Error)?.responseMessages
+
   useEffect(() => {
-    if (hasToRefetchBranches(disabled, connectorIdentifierRef, repoName)) {
-      setBranchSelectOptions([])
-      refetch()
-    }
+    setBranchSelectOptions([])
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connectorIdentifierRef, repoName])
 
@@ -110,7 +120,6 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
     if (loading) {
       return
     }
-    const responseMessages = (error?.data as Error)?.responseMessages
 
     if (response?.status === 'SUCCESS') {
       if (!isEmpty(response?.data)) {
@@ -120,9 +129,11 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
 
     if (responseMessages) {
       setErrorResponse?.(responseMessages)
+      if (showErrorInModal) {
+        open()
+      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading])
+  }, [loading, open, response?.data, response?.status, responseMessages, setErrorResponse, showErrorInModal])
 
   return (
     <Layout.Horizontal>
@@ -134,9 +145,10 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
         placeholder={loading ? getString('loading') : getString('select')}
         value={{ label: defaultTo(selectedValue, ''), value: defaultTo(selectedValue, '') }}
         onChange={selected => props.onChange?.(selected, branchSelectOptions)}
-        selectProps={{ usePortal: true, popoverClassName: css.gitBranchSelectorPopover }}
+        selectProps={{ usePortal: true, popoverClassName: css.gitBranchSelectorPopover, ...selectProps }}
+        className={cx(branchSelectorClassName, css.branchSelector)}
       />
-      {loading ? (
+      {!showIcons ? null : loading && !disabled ? (
         <Layout.Horizontal
           spacing="small"
           flex={{ alignItems: 'flex-start' }}
@@ -165,6 +177,14 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
           />
         </Layout.Horizontal>
       ) : null}
+      <Dialog
+        isOpen={isOpen}
+        enforceFocus={false}
+        title={getString('common.gitSync.branchFetchFailed')}
+        onClose={close}
+      >
+        {responseMessages ? <ErrorHandler responseMessages={responseMessages} /> : undefined}
+      </Dialog>
     </Layout.Horizontal>
   )
 }

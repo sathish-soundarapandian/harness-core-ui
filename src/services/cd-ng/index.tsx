@@ -21781,6 +21781,91 @@ export const getEnvironmentAccessListPromise = (
     signal
   )
 
+export interface GetEnvironmentListV2QueryParams {
+  page?: number
+  size?: number
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  searchTerm?: string
+  envIdentifiers?: string[]
+  sort?: string[]
+  filterIdentifier?: string
+}
+
+export type GetEnvironmentListV2Props = Omit<
+  MutateProps<
+    ResponsePageEnvironmentResponse,
+    Failure | Error,
+    GetEnvironmentListV2QueryParams,
+    EnvironmentFilterProperties,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets environment list
+ */
+export const GetEnvironmentListV2 = (props: GetEnvironmentListV2Props) => (
+  <Mutate<
+    ResponsePageEnvironmentResponse,
+    Failure | Error,
+    GetEnvironmentListV2QueryParams,
+    EnvironmentFilterProperties,
+    void
+  >
+    verb="POST"
+    path={`/environmentsV2/listV2`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetEnvironmentListV2Props = Omit<
+  UseMutateProps<
+    ResponsePageEnvironmentResponse,
+    Failure | Error,
+    GetEnvironmentListV2QueryParams,
+    EnvironmentFilterProperties,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets environment list
+ */
+export const useGetEnvironmentListV2 = (props: UseGetEnvironmentListV2Props) =>
+  useMutate<
+    ResponsePageEnvironmentResponse,
+    Failure | Error,
+    GetEnvironmentListV2QueryParams,
+    EnvironmentFilterProperties,
+    void
+  >('POST', `/environmentsV2/listV2`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Gets environment list
+ */
+export const getEnvironmentListV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponsePageEnvironmentResponse,
+    Failure | Error,
+    GetEnvironmentListV2QueryParams,
+    EnvironmentFilterProperties,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePageEnvironmentResponse,
+    Failure | Error,
+    GetEnvironmentListV2QueryParams,
+    EnvironmentFilterProperties,
+    void
+  >('POST', getConfig('ng/api'), `/environmentsV2/listV2`, props, signal)
+
 export interface UpsertEnvironmentV2QueryParams {
   accountIdentifier: string
 }

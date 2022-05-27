@@ -9,11 +9,11 @@
   padding-top: 22px !important;
 
   &.noLabel {
-    padding-top: 4px !important;
+    padding-top: var(--spacing-2) !important;
   }
 
   .refreshIcon {
-    border-radius: 4px;
+    border-radius: var(--spacing-2);
     cursor: pointer;
   }
 }
@@ -26,6 +26,10 @@
   }
 }
 
+.branchSelector {
+  width: 350px;
+}
+
 .gitBranchSelectorPopover {
   width: 350px !important;
   max-height: 400px;
@@ -35,7 +39,7 @@
     .bp3-menu {
       padding: 0;
       li {
-        height: 32px;
+        height: var(--spacing-8);
         cursor: pointer;
         padding: var(--spacing-xsmall) var(--spacing-small);
 
@@ -49,6 +53,10 @@
     .Select--active {
       background-color: var(--primary-2) !important;
       color: var(--grey-900) !important;
+    }
+
+    .Select--noResultsFound {
+      padding: var(--spacing-xsmall) var(--spacing-medium) !important;
     }
   }
 }

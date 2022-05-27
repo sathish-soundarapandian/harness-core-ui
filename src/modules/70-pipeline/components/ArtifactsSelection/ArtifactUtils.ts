@@ -85,7 +85,7 @@ export const helperTextData = (
       }
     case ENABLED_ARTIFACT_TYPES.Acr:
       return {
-        subscription: formik.values?.subscription,
+        subscriptionId: formik.values?.subscriptionId,
         registry: formik.values?.registry,
         repository: formik.values?.repository,
         connectorRef: connectorIdValue

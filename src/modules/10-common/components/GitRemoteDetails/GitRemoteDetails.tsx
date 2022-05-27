@@ -5,16 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
-import { Icon, Text, SelectOption, FormInput, Formik } from '@wings-software/uicore'
+import React from 'react'
+import { Icon, Text, SelectOption } from '@wings-software/uicore'
 import { PopoverInteractionKind, Position } from '@blueprintjs/core'
-import { useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { isEmpty, noop } from 'lodash-es'
-import { useGetListOfBranchesByRefConnectorV2 } from 'services/cd-ng'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { getBranchSelectOptions } from '../RepoBranchSelectV2/RepoBranchSelectV2'
-import type { GitFilterScope } from '../GitFilters/GitFilters'
+import RepoBranchSelectV2 from '@common/components/RepoBranchSelectV2/RepoBranchSelectV2'
 import css from './GitRemoteDetails.module.scss'
 
 interface GitRemoteDetailsProps {
@@ -22,7 +17,7 @@ interface GitRemoteDetailsProps {
   repoName?: string
   filePath?: string
   branch?: string
-  onBranchChange?: (selectedFilter: GitFilterScope) => void
+  onBranchChange?: (selectedFilter: { branch: string }) => void
   flags?: {
     borderless?: boolean
     showRepo?: boolean
@@ -39,51 +34,6 @@ const GitRemoteDetails = ({
   onBranchChange,
   flags: { borderless = true, showRepo = true, normalInputStyle = false, readOnly = false } = {}
 }: GitRemoteDetailsProps): React.ReactElement => {
-  const { accountId: accountIdentifier, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
-  const [branchSelectOptions, setBranchSelectOptions] = useState<SelectOption[]>([])
-
-  const {
-    data: response,
-    error,
-    loading,
-    refetch
-  } = useGetListOfBranchesByRefConnectorV2({
-    queryParams: {
-      connectorRef,
-      accountIdentifier,
-      orgIdentifier,
-      projectIdentifier,
-      repoName,
-      page: 0,
-      size: 100
-    },
-    debounce: 500,
-    lazy: true
-  })
-
-  const defaultBranch = response?.data?.defaultBranch?.name || ''
-  const branchText = branch || defaultBranch
-
-  useEffect(() => {
-    connectorRef && repoName && !readOnly && refetch()
-  }, [connectorRef, readOnly, refetch, repoName])
-
-  useEffect(() => {
-    if (loading || error) {
-      return
-    }
-
-    if (response?.status === 'SUCCESS') {
-      if (!isEmpty(response?.data)) {
-        setBranchSelectOptions(
-          getBranchSelectOptions(response.data?.branches).map(b =>
-            b.value === defaultBranch ? { label: `${b.value} (default)`, value: b.value } : b
-          )
-        )
-      }
-    }
-  }, [defaultBranch, error, loading, response?.data, response?.status])
-
   return (
     <div className={cx(css.wrapper, { [css.normalInputStyle]: normalInputStyle })}>
       {showRepo && (
@@ -123,34 +73,22 @@ const GitRemoteDetails = ({
           {branch}
         </Text>
       ) : (
-        <Formik
-          onSubmit={noop}
-          formName="remoteBranchSelectForm"
-          initialValues={{
-            remoteBranch: {
-              label: branch === defaultBranch || !branch ? (branchText ? `${branchText} (default)` : '') : branch,
-              value: branch
-            }
+        <RepoBranchSelectV2
+          name="remoteBranch"
+          noLabel={true}
+          connectorIdentifierRef={connectorRef}
+          repoName={repoName}
+          onChange={(selected: SelectOption): void => {
+            onBranchChange?.({
+              branch: selected.value as string
+            })
           }}
-        >
-          <FormInput.Select
-            disabled={loading}
-            placeholder={loading ? 'Loading' : 'Select'}
-            className={css.branchSelector}
-            items={branchSelectOptions}
-            name="remoteBranch"
-            selectProps={{ borderless }}
-            onChange={(selected: SelectOption): void => {
-              onBranchChange?.({
-                branch: selected.value as string
-              })
-            }}
-            value={{
-              label: branch === defaultBranch || !branch ? (branchText ? `${branchText} (default)` : '') : branch,
-              value: branch
-            }}
-          />
-        </Formik>
+          selectedValue={branch}
+          branchSelectorClassName={css.branchSelector}
+          selectProps={{ borderless, popoverClassName: '' }}
+          showIcons={false}
+          showErrorInModal
+        />
       )}
     </div>
   )

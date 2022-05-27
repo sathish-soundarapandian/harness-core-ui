@@ -14,7 +14,7 @@ import { Container, Dialog, Heading, Text, Views } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color, FontVariation } from '@harness/design-system'
 
-import { useGetEnvironmentList } from 'services/cd-ng'
+import { useGetEnvironmentListV2 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -31,6 +31,7 @@ import { Sort, SortFields } from './PageTemplate/utils'
 import EnvironmentTabs from './EnvironmentTabs'
 import EnvironmentsList from './EnvironmentsList/EnvironmentsList'
 import EnvironmentsGrid from './EnvironmentsGrid/EnvironmentsGrid'
+import EnvironmentsFilters from './EnvironmentsFilters/EnvironmentsFilters'
 
 import EmptyContentImg from './EmptyContent.svg'
 
@@ -120,7 +121,7 @@ export function Environments() {
           },
           onClick: showCreateModal
         }}
-        useGetListHook={useGetEnvironmentList}
+        useGetListHook={useGetEnvironmentListV2}
         emptyContent={
           <>
             <img src={EmptyContentImg} width={220} height={220} />
@@ -148,6 +149,8 @@ export function Environments() {
         ]}
         defaultSortOption={[SortFields.LastUpdatedAt, Sort.DESC]}
         handleCustomSortChange={handleCustomSortChange}
+        filterType={'Environment'}
+        FilterComponent={EnvironmentsFilters}
       />
     </PageStoreContext.Provider>
   )

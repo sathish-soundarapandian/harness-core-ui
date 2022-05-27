@@ -282,6 +282,7 @@ repo_provider:
   awscodecommit: AWS Code Commit
   azureDev: Azure Devops
 gitSync:
+  branchFetchFailed: Branch fetch failed
   resourceLabel: '{{resource}} Name'
   rootFolderLabel: Root Folder
   harnessFolderLabel: Harness Folder
@@ -354,6 +355,8 @@ git:
   startPRLabel: Start a pull request to merge
   noBranchesFound: No branches found for configured git repository
   onlyDefaultBranchFound: Cannot find additional branches to raise a pull request.
+  inlineStoreLabel: Pipeline content is stored in Harness
+  remoteStoreLabel: Pipeline content is stored in a Git repository
   validation:
     filePath: '{{$.common.git.filePath}} is required'
     commitMessage: '{{$.common.git.commitMessage}} is required'

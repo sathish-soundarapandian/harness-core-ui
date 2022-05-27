@@ -232,7 +232,7 @@ export function SavePipelinePopover({
     latestPipeline: PipelineInfoConfig,
     currStoreMetadata?: StoreMetadata,
     updatedGitDetails?: SaveToGitFormInterface,
-    lastObject?: { lastObjectId?: string }
+    lastObject?: { lastObjectId?: string; lastCommitId?: string }
   ): Promise<UseSaveSuccessResponse> => {
     setLoading(true)
     setSchemaErrorView(false)
@@ -301,7 +301,8 @@ export function SavePipelinePopover({
   const saveAngPublishWithGitInfo = async (
     updatedGitDetails: SaveToGitFormInterface | SaveToGitFormV2Interface,
     payload?: SavePipelineObj,
-    objectId?: string
+    objectId?: string,
+    commitId?: string
   ): Promise<UseSaveSuccessResponse> => {
     let latestPipeline: PipelineInfoConfig = payload?.pipeline || pipeline
 
@@ -321,7 +322,7 @@ export function SavePipelinePopover({
         repoName: gitDetails.repoName,
         filePath: isGitSyncEnabled ? updatedGitDetails.filePath : defaultTo(gitDetails.filePath, '')
       },
-      pipelineIdentifier !== DefaultNewPipelineId ? { lastObjectId: objectId } : {}
+      pipelineIdentifier !== DefaultNewPipelineId ? { lastObjectId: objectId, lastCommitId: commitId } : {}
     )
 
     return {
@@ -335,7 +336,7 @@ export function SavePipelinePopover({
       payload?: SavePipelineObj,
       objectId?: string
     ): Promise<UseSaveSuccessResponse> =>
-      saveAngPublishWithGitInfo(gitData, payload, objectId || gitDetails?.objectId || '')
+      saveAngPublishWithGitInfo(gitData, payload, objectId || gitDetails?.objectId || '', gitDetails.commitId)
   })
 
   const saveAndPublish = React.useCallback(async () => {

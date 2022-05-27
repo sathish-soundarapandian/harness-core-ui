@@ -46,7 +46,8 @@ describe('RepoBranchSelectV2 test', () => {
         <RepoBranchSelectV2 connectorIdentifierRef="connectorId" repoName="repoName" onChange={branchChangehandler} />
       </TestWrapper>
     )
-    await waitFor(() => expect(fetchBranches).toBeCalledTimes(1))
+    //refetch should not be called
+    await waitFor(() => expect(fetchBranches).toBeCalledTimes(0))
     expect(getByText('gitBranch')).toBeInTheDocument()
     expect(container).toMatchSnapshot()
   })

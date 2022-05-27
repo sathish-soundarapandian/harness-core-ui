@@ -101,7 +101,7 @@ export default function CreatePipelines({
     tags: {},
     repo: '',
     branch: '',
-    storeType: 'INLINE',
+    storeType: StoreType.INLINE,
     remoteType: 'create',
     stages: [],
     connectorRef: ''
@@ -118,7 +118,6 @@ export default function CreatePipelines({
   const templatesFeatureFlagEnabled = useFeatureFlag(FeatureFlag.NG_TEMPLATES)
   const pipelineTemplatesFeatureFlagEnabled = useFeatureFlag(FeatureFlag.NG_PIPELINE_TEMPLATE)
   const isPipelineTemplateEnabled = templatesFeatureFlagEnabled && pipelineTemplatesFeatureFlagEnabled
-
   const newInitialValues = React.useMemo(() => {
     return produce(initialValues, draft => {
       if (draft.identifier === DefaultNewPipelineId) {
@@ -129,20 +128,20 @@ export default function CreatePipelines({
 
   const PipelineModeCards: CardInterface[] = [
     {
-      type: 'INLINE',
-      title: 'Inline',
-      info: 'Pipeline content is stored in Harness',
+      type: StoreType.INLINE,
+      title: getString('inline'),
+      info: getString('common.git.inlineStoreLabel'),
       icon: 'repository',
       size: 16,
-      disabled: pipelineIdentifier !== DefaultNewPipelineId && storeTypeParam === 'REMOTE'
+      disabled: pipelineIdentifier !== DefaultNewPipelineId && storeTypeParam === StoreType.REMOTE
     },
     {
-      type: 'REMOTE',
-      title: 'Remote',
-      info: 'Pipeline content is stored in a Git repository',
+      type: StoreType.REMOTE,
+      title: getString('remote'),
+      info: getString('common.git.remoteStoreLabel'),
       icon: 'remote-setup',
       size: 20,
-      disabled: pipelineIdentifier !== DefaultNewPipelineId && !storeTypeParam
+      disabled: pipelineIdentifier !== DefaultNewPipelineId && storeTypeParam === 'INLINE'
     }
   ]
 
@@ -150,7 +149,35 @@ export default function CreatePipelines({
     PipelineModeCards.find(card => card.type === storeTypeParam)
   )
 
-  const isEdit = React.useMemo(() => initialValues?.identifier !== DefaultNewPipelineId, [initialValues])
+  const validationSchema = React.useMemo(
+    () =>
+      Yup.object().shape({
+        name: NameSchema({ requiredErrorMsg: getString('createPipeline.pipelineNameRequired') }),
+        identifier: IdentifierSchema(),
+        ...(isGitSimplificationEnabled && storeType?.type === StoreType.REMOTE
+          ? {
+              repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
+              branch: Yup.string().trim().required(getString('common.git.validation.branchRequired')),
+              connectorRef: Yup.string().trim().required(getString('validation.sshConnectorRequired')),
+              filePath: Yup.string().trim().required(getString('common.git.validation.filePath'))
+            }
+          : isGitSyncEnabled
+          ? {
+              repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
+              branch: Yup.string().trim().required(getString('common.git.validation.branchRequired'))
+            }
+          : {})
+      }),
+    [getString, isGitSimplificationEnabled, isGitSyncEnabled, storeType?.type]
+  )
+
+  const isEdit = React.useMemo(
+    () =>
+      isGitSimplificationEnabled
+        ? pipelineIdentifier !== DefaultNewPipelineId
+        : initialValues.identifier !== DefaultNewPipelineId,
+    [initialValues.identifier, isGitSimplificationEnabled, pipelineIdentifier]
+  )
 
   useEffect(() => {
     !isEdit &&
@@ -164,47 +191,33 @@ export default function CreatePipelines({
     !!storeType?.type && updateQueryParams({ storeType: storeType?.type })
   }, [storeType])
 
+  const handleSubmit = (values: CreatePipelinesValue): void => {
+    logger.info(JSON.stringify(values))
+    const formGitDetails =
+      isGitSimplificationEnabled && values.storeType === 'REMOTE'
+        ? { repoName: values.repo, branch: values.branch, filePath: values.filePath }
+        : values.repo && values.repo.trim().length > 0
+        ? { repoIdentifier: values.repo, branch: values.branch }
+        : undefined
+
+    afterSave?.(
+      omit(values, 'storeType', 'remoteType', 'connectorRef', 'repo', 'branch', 'filePath', 'useTemplate'),
+      {
+        storeType: values.storeType as StoreMetadata['storeType'],
+        connectorRef: typeof values.connectorRef !== 'string' ? values.connectorRef?.value : ''
+      },
+      formGitDetails,
+      values.useTemplate
+    )
+  }
+
   return (
     <Container className={css.pipelineCreateForm}>
       <Formik<CreatePipelinesValue>
         initialValues={newInitialValues}
         formName="pipelineCreate"
-        validationSchema={Yup.object().shape({
-          name: NameSchema({ requiredErrorMsg: getString('createPipeline.pipelineNameRequired') }),
-          identifier: IdentifierSchema(),
-          ...(isGitSimplificationEnabled && storeType?.type === StoreType.REMOTE
-            ? {
-                repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
-                branch: Yup.string().trim().required(getString('common.git.validation.branchRequired')),
-                connectorRef: Yup.string().trim().required(getString('validation.sshConnectorRequired')),
-                filePath: Yup.string().trim().required(getString('common.git.validation.filePath'))
-              }
-            : isGitSyncEnabled
-            ? {
-                repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
-                branch: Yup.string().trim().required(getString('common.git.validation.branchRequired'))
-              }
-            : {})
-        })}
-        onSubmit={values => {
-          logger.info(JSON.stringify(values))
-          const formGitDetails =
-            isGitSimplificationEnabled && values.storeType === 'REMOTE'
-              ? { repoName: values.repo, branch: values.branch, filePath: values.filePath }
-              : values.repo && values.repo.trim().length > 0
-              ? { repoIdentifier: values.repo, branch: values.branch }
-              : undefined
-
-          afterSave?.(
-            omit(values, 'storeType', 'remoteType', 'connectorRef', 'repo', 'branch', 'filePath', 'useTemplate'),
-            {
-              storeType: values.storeType as StoreMetadata['storeType'],
-              connectorRef: typeof values.connectorRef !== 'string' ? values.connectorRef?.value : ''
-            },
-            formGitDetails,
-            values.useTemplate
-          )
-        }}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
       >
         {formikProps => (
           <FormikForm>
@@ -278,11 +291,12 @@ export default function CreatePipelines({
                 />
               </>
             ) : null}
-            {storeType?.type === 'REMOTE' ? (
+            {storeType?.type === StoreType.REMOTE ? (
               <GitSyncForm
                 formikProps={formikProps as any}
                 handleSubmit={noop}
-                isEdit={isEdit && pipelineIdentifier !== DefaultNewPipelineId}
+                isEdit={isEdit}
+                showRemoteTypeSelection={false}
               />
             ) : null}
 
@@ -290,7 +304,7 @@ export default function CreatePipelines({
               <Button
                 variation={ButtonVariation.PRIMARY}
                 type="submit"
-                text={isEdit ? getString('save') : getString('start')}
+                text={isEdit ? getString('continue') : getString('start')}
               />
               &nbsp; &nbsp;
               <Button

@@ -343,11 +343,14 @@ environments:
     emptyName: 'SDK Key name is required'
     addKey: '+ New SDK Key'
     clientType: '{{ $.cf.testTheFlag.sdkClient }}'
+    clientDescription: 'A client id will be generated as your client-side SDK key.'
     serverType: '{{ $.cf.testTheFlag.sdkServer }}'
+    serverDescription: 'A secret will be generated as your server-side SDK key.'
     deleteTitle: 'Confirm Key Delete?'
     deleteMessage: 'Are you sure you want to delete Key: <strong>{{keyName}}</strong>? You cannot recover it afterwards'
     deleteSuccess: 'Successfully deleted Key: {{keyName}}'
     keyType: 'Key Type'
+    applicableLanguages: 'Applicable Languages:'
     noKeysFoundTitle: There are no SDK keys for this environment
     noKeysFoundMessage: Create an <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_3_create_an_sdk_key" target="_blank" rel="noreferrer"> SDK key</a> for this environment so that your application can connect to our FF client. We support SDK keys for multiple programming languages.
     redactionWarning: Your secret will be redacted once you leave the page. Please make sure to copy and store your secret.

@@ -635,7 +635,7 @@ pipelineSteps:
   customStage: Custom Stage
   chainedPipeline: Chained Pipeline
   templateStageDescription: Use stage template.
-  customStageDescription: A blank canvas for custom processes.
+  customStageDescription: Use this to set up a stage configurable to your needs.
   chainedPipelineDescription: Run a Pipeline as a stage in another Pipeline.
   deployStageDescription: Deploy services, Serverless functions, or other workloads.
   featureStageDescription: Enable or disable functionality remotely without redeploying code.
@@ -1039,3 +1039,4 @@ ACR:
   registryError: 'No registry found with given Subscription'
   repositoryPlaceholder: 'Select or add Repository'
   repositoryError: 'No repository found with given Registry'
+  tagError: 'No tags found with given Connector, Subscription Id, Registry and Repository'

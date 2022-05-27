@@ -302,12 +302,14 @@ export interface StringsMap {
   'common.git.gitLabUrlPlaceholder': string
   'common.git.gitLabUrlPlaceholderSSH': string
   'common.git.gitRepoUrl': string
+  'common.git.inlineStoreLabel': string
   'common.git.installationId': string
   'common.git.newBranchCommitLabel': string
   'common.git.noBranchesFound': string
   'common.git.noUserLabel': string
   'common.git.onlyDefaultBranchFound': string
   'common.git.privateKey': string
+  'common.git.remoteStoreLabel': string
   'common.git.saveResourceLabel': string
   'common.git.selectRepoLabel': string
   'common.git.startPRLabel': string
@@ -324,6 +326,7 @@ export interface StringsMap {
   'common.git.validation.targetBranch': string
   'common.gitDetailsTitle': string
   'common.gitSync.allRepositories': string
+  'common.gitSync.branchFetchFailed': string
   'common.gitSync.branchSyncNotAllowed': string
   'common.gitSync.commitDetailsLabel': string
   'common.gitSync.createResource': string
@@ -2195,7 +2198,6 @@ export interface StringsMap {
   'gitsync.addFolder': string
   'gitsync.addNewHarnessFolderLabel': string
   'gitsync.baseBranch': string
-  'gitsync.branchFetchFailed': string
   'gitsync.branchToSync': string
   'gitsync.configSaveToaster': string
   'gitsync.configureHarnessFolder': string
@@ -2226,6 +2228,7 @@ export interface StringsMap {
   'gitsync.markAsDefault': string
   'gitsync.markAsDefaultLabel': string
   'gitsync.moveFolder': string
+  'gitsync.newGitExperienceMessage': string
   'gitsync.pathToHarnessFolder': string
   'gitsync.resyncButtonText': string
   'gitsync.resyncFailToaster': string
@@ -2433,6 +2436,7 @@ export interface StringsMap {
   'pipeline.ACR.subscription': string
   'pipeline.ACR.subscriptionError': string
   'pipeline.ACR.subscriptionPlaceholder': string
+  'pipeline.ACR.tagError': string
   'pipeline.aboutYourStage.stageNamePlaceholder': string
   'pipeline.addStage.description': string
   'pipeline.addStage.title': string
@@ -3538,10 +3542,12 @@ export interface StringsMap {
   'cd.cloudFormation.errors.role': string
   'cd.cloudFormation.errors.stackName': string
   'cd.cloudFormation.errors.templateBody': string
+  'cd.cloudFormation.errors.templateRequired': string
   'cd.cloudFormation.errors.value': string
   'cd.cloudFormation.inlineParameterFiles': string
   'cd.cloudFormation.paramFileConnector': string
   'cd.cloudFormation.parameterFileDetails': string
+  'cd.cloudFormation.parameterFilePaths': string
   'cd.cloudFormation.parameterFiles': string
   'cd.cloudFormation.retrieveNames': string
   'cd.cloudFormation.specifyCapabilities': string
@@ -3552,6 +3558,7 @@ export interface StringsMap {
   'cd.cloudFormation.templateFile': string
   'cd.cloudFormation.templateFileConnector': string
   'cd.cloudFormation.templateFileStore': string
+  'cd.cloudFormation.urls': string
   'cd.componentsInstalled': string
   'cd.configFileDetails': string
   'cd.configFilePlaceHolder': string
@@ -3589,6 +3596,7 @@ export interface StringsMap {
   'cd.environment.deleteConfirmation': string
   'cd.environment.deleted': string
   'cd.environment.fetchNext': string
+  'cd.environment.filters.environmentNamePlaceholder': string
   'cd.environmentCreated': string
   'cd.environmentDelete': string
   'cd.environmentDeleteMessage': string
@@ -4695,6 +4703,8 @@ export interface StringsMap {
   'cf.environments.adminEnvironments': string
   'cf.environments.apiKeys.addKey': string
   'cf.environments.apiKeys.addKeyTitle': string
+  'cf.environments.apiKeys.applicableLanguages': string
+  'cf.environments.apiKeys.clientDescription': string
   'cf.environments.apiKeys.clientType': string
   'cf.environments.apiKeys.create': string
   'cf.environments.apiKeys.deleteMessage': string
@@ -4706,6 +4716,7 @@ export interface StringsMap {
   'cf.environments.apiKeys.noKeysFoundMessage': string
   'cf.environments.apiKeys.noKeysFoundTitle': string
   'cf.environments.apiKeys.redactionWarning': string
+  'cf.environments.apiKeys.serverDescription': string
   'cf.environments.apiKeys.serverType': string
   'cf.environments.apiKeys.title': string
   'cf.environments.create.description': string
