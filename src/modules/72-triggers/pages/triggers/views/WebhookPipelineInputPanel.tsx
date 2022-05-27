@@ -391,7 +391,7 @@ function WebhookPipelineInputPanelForm({
           <PageSpinner />
         </div>
       )}
-      {!isEmpty(pipeline) && template?.data?.inputSetTemplateYaml ? (
+      {!isEmpty(pipeline) && template?.data?.inputSetTemplateYaml && !loading ? (
         <div className={css.inputsetGrid}>
           <div className={css.inputSetContent}>
             <div className={css.pipelineInputRow}>
