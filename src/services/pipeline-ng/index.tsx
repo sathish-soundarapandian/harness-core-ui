@@ -277,6 +277,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'ErrorTracking'
     | 'Pdc'
     | 'AzureRepo'
+    | 'Jenkins'
   )[]
 }
 
@@ -686,7 +687,6 @@ export interface Error {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
-    | 'SCM_INTERNAL_SERVER_ERROR_V2'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -755,6 +755,16 @@ export interface ExecutionInfo {
     | 'APPROVAL_REJECTED'
     | 'Waiting'
   uuid?: string
+}
+
+export interface ExecutionInputDTO {
+  inputTemplate?: string
+  nodeExecutionId?: string
+}
+
+export interface ExecutionInputStatus {
+  nodeExecutionId?: string
+  status?: 'Failed' | 'Success'
 }
 
 export interface ExecutionMetadata {
@@ -1150,7 +1160,6 @@ export interface Failure {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
-    | 'SCM_INTERNAL_SERVER_ERROR_V2'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2279,6 +2288,20 @@ export interface ResponseDashboardPipelineHealthInfo {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseExecutionInputDTO {
+  correlationId?: string
+  data?: ExecutionInputDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseExecutionInputStatus {
+  correlationId?: string
+  data?: ExecutionInputStatus
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseExecutionNode {
   correlationId?: string
   data?: ExecutionNode
@@ -2797,7 +2820,6 @@ export interface ResponseMessage {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
-    | 'SCM_INTERNAL_SERVER_ERROR_V2'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4982,6 +5004,7 @@ export interface UpdateOverlayInputSetForPipelineQueryParams {
   baseBranch?: string
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
+  lastCommitId?: string
 }
 
 export interface UpdateOverlayInputSetForPipelinePathParams {
@@ -5321,6 +5344,7 @@ export interface UpdateInputSetForPipelineQueryParams {
   baseBranch?: string
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
+  lastCommitId?: string
 }
 
 export interface UpdateInputSetForPipelinePathParams {
@@ -5426,6 +5450,7 @@ export interface SanitiseInputSetQueryParams {
   baseBranch?: string
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
+  lastCommitId?: string
 }
 
 export interface SanitiseInputSetPathParams {
@@ -7386,6 +7411,265 @@ export const getRetryStagesPromise = (
     signal
   )
 
+export interface CreateVariablesForPipelineExecutionQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  planExecutionId: string
+}
+
+export type CreateVariablesForPipelineExecutionProps = Omit<
+  MutateProps<
+    ResponseVariableMergeServiceResponse,
+    Failure | Error,
+    CreateVariablesForPipelineExecutionQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Create variables for Pipeline at execution time
+ */
+export const CreateVariablesForPipelineExecution = (props: CreateVariablesForPipelineExecutionProps) => (
+  <Mutate<
+    ResponseVariableMergeServiceResponse,
+    Failure | Error,
+    CreateVariablesForPipelineExecutionQueryParams,
+    void,
+    void
+  >
+    verb="POST"
+    path={`/pipeline/execution-input/variables`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseCreateVariablesForPipelineExecutionProps = Omit<
+  UseMutateProps<
+    ResponseVariableMergeServiceResponse,
+    Failure | Error,
+    CreateVariablesForPipelineExecutionQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Create variables for Pipeline at execution time
+ */
+export const useCreateVariablesForPipelineExecution = (props: UseCreateVariablesForPipelineExecutionProps) =>
+  useMutate<
+    ResponseVariableMergeServiceResponse,
+    Failure | Error,
+    CreateVariablesForPipelineExecutionQueryParams,
+    void,
+    void
+  >('POST', `/pipeline/execution-input/variables`, { base: getConfig('pipeline/api'), ...props })
+
+/**
+ * Create variables for Pipeline at execution time
+ */
+export const createVariablesForPipelineExecutionPromise = (
+  props: MutateUsingFetchProps<
+    ResponseVariableMergeServiceResponse,
+    Failure | Error,
+    CreateVariablesForPipelineExecutionQueryParams,
+    void,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseVariableMergeServiceResponse,
+    Failure | Error,
+    CreateVariablesForPipelineExecutionQueryParams,
+    void,
+    void
+  >('POST', getConfig('pipeline/api'), `/pipeline/execution-input/variables`, props, signal)
+
+export interface GetExecutionInputTemplateQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export interface GetExecutionInputTemplatePathParams {
+  nodeExecutionId: string
+}
+
+export type GetExecutionInputTemplateProps = Omit<
+  GetProps<
+    ResponseExecutionInputDTO,
+    Failure | Error,
+    GetExecutionInputTemplateQueryParams,
+    GetExecutionInputTemplatePathParams
+  >,
+  'path'
+> &
+  GetExecutionInputTemplatePathParams
+
+/**
+ * Get the template for Execution time inputs for any step
+ */
+export const GetExecutionInputTemplate = ({ nodeExecutionId, ...props }: GetExecutionInputTemplateProps) => (
+  <Get<
+    ResponseExecutionInputDTO,
+    Failure | Error,
+    GetExecutionInputTemplateQueryParams,
+    GetExecutionInputTemplatePathParams
+  >
+    path={`/pipeline/execution-input/${nodeExecutionId}`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseGetExecutionInputTemplateProps = Omit<
+  UseGetProps<
+    ResponseExecutionInputDTO,
+    Failure | Error,
+    GetExecutionInputTemplateQueryParams,
+    GetExecutionInputTemplatePathParams
+  >,
+  'path'
+> &
+  GetExecutionInputTemplatePathParams
+
+/**
+ * Get the template for Execution time inputs for any step
+ */
+export const useGetExecutionInputTemplate = ({ nodeExecutionId, ...props }: UseGetExecutionInputTemplateProps) =>
+  useGet<
+    ResponseExecutionInputDTO,
+    Failure | Error,
+    GetExecutionInputTemplateQueryParams,
+    GetExecutionInputTemplatePathParams
+  >(
+    (paramsInPath: GetExecutionInputTemplatePathParams) => `/pipeline/execution-input/${paramsInPath.nodeExecutionId}`,
+    { base: getConfig('pipeline/api'), pathParams: { nodeExecutionId }, ...props }
+  )
+
+/**
+ * Get the template for Execution time inputs for any step
+ */
+export const getExecutionInputTemplatePromise = (
+  {
+    nodeExecutionId,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseExecutionInputDTO,
+    Failure | Error,
+    GetExecutionInputTemplateQueryParams,
+    GetExecutionInputTemplatePathParams
+  > & { nodeExecutionId: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseExecutionInputDTO,
+    Failure | Error,
+    GetExecutionInputTemplateQueryParams,
+    GetExecutionInputTemplatePathParams
+  >(getConfig('pipeline/api'), `/pipeline/execution-input/${nodeExecutionId}`, props, signal)
+
+export interface SubmitExecutionInputQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export interface SubmitExecutionInputPathParams {
+  nodeExecutionId: string
+}
+
+export type SubmitExecutionInputProps = Omit<
+  MutateProps<
+    ResponseExecutionInputStatus,
+    Failure | Error,
+    SubmitExecutionInputQueryParams,
+    UpdateInputSetForPipelineBodyRequestBody,
+    SubmitExecutionInputPathParams
+  >,
+  'path' | 'verb'
+> &
+  SubmitExecutionInputPathParams
+
+/**
+ * Submit the Execution Input for a Stage/Step and continue Pipeline execution
+ */
+export const SubmitExecutionInput = ({ nodeExecutionId, ...props }: SubmitExecutionInputProps) => (
+  <Mutate<
+    ResponseExecutionInputStatus,
+    Failure | Error,
+    SubmitExecutionInputQueryParams,
+    UpdateInputSetForPipelineBodyRequestBody,
+    SubmitExecutionInputPathParams
+  >
+    verb="POST"
+    path={`/pipeline/execution-input/${nodeExecutionId}`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseSubmitExecutionInputProps = Omit<
+  UseMutateProps<
+    ResponseExecutionInputStatus,
+    Failure | Error,
+    SubmitExecutionInputQueryParams,
+    UpdateInputSetForPipelineBodyRequestBody,
+    SubmitExecutionInputPathParams
+  >,
+  'path' | 'verb'
+> &
+  SubmitExecutionInputPathParams
+
+/**
+ * Submit the Execution Input for a Stage/Step and continue Pipeline execution
+ */
+export const useSubmitExecutionInput = ({ nodeExecutionId, ...props }: UseSubmitExecutionInputProps) =>
+  useMutate<
+    ResponseExecutionInputStatus,
+    Failure | Error,
+    SubmitExecutionInputQueryParams,
+    UpdateInputSetForPipelineBodyRequestBody,
+    SubmitExecutionInputPathParams
+  >(
+    'POST',
+    (paramsInPath: SubmitExecutionInputPathParams) => `/pipeline/execution-input/${paramsInPath.nodeExecutionId}`,
+    { base: getConfig('pipeline/api'), pathParams: { nodeExecutionId }, ...props }
+  )
+
+/**
+ * Submit the Execution Input for a Stage/Step and continue Pipeline execution
+ */
+export const submitExecutionInputPromise = (
+  {
+    nodeExecutionId,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponseExecutionInputStatus,
+    Failure | Error,
+    SubmitExecutionInputQueryParams,
+    UpdateInputSetForPipelineBodyRequestBody,
+    SubmitExecutionInputPathParams
+  > & { nodeExecutionId: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseExecutionInputStatus,
+    Failure | Error,
+    SubmitExecutionInputQueryParams,
+    UpdateInputSetForPipelineBodyRequestBody,
+    SubmitExecutionInputPathParams
+  >('POST', getConfig('pipeline/api'), `/pipeline/execution-input/${nodeExecutionId}`, props, signal)
+
 export interface CreatePipelineQueryParams {
   accountIdentifier: string
   orgIdentifier: string
@@ -8900,6 +9184,7 @@ export interface PutPipelineV2QueryParams {
   baseBranch?: string
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
+  lastCommitId?: string
 }
 
 export interface PutPipelineV2PathParams {
@@ -9325,6 +9610,7 @@ export interface PutPipelineQueryParams {
   baseBranch?: string
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
+  lastCommitId?: string
 }
 
 export interface PutPipelinePathParams {

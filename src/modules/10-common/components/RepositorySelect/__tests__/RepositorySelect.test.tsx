@@ -29,12 +29,12 @@ jest.mock('services/cd-ng', () => ({
   })
 }))
 
-describe('RepoBranchSelectV2 test', () => {
+describe('RepositorySelect test', () => {
   afterEach(() => {
     fetchRepos.mockReset()
   })
 
-  test('default rendering RepoBranchSelectV2', async () => {
+  test('default rendering RepositorySelect', async () => {
     const { container, getByText } = render(
       <TestWrapper
         path="/account/:accountId/ci/orgs/:orgIdentifier/projects/:projectIdentifier/pipelines/-1/pipeline-studio/"

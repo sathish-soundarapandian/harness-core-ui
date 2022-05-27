@@ -459,7 +459,7 @@ export function OverlayInputSetForm({
         'remoteType'
       )
       setSavedInputSetObj(inputSetObj)
-      setInitialGitDetails(gitDetails as EntityGitDetails)
+      setInitialGitDetails(defaultTo(isEdit ? overlayInputSetResponse?.data?.gitDetails : gitDetails, {}))
       setInitialStoreMetadata(defaultTo(storeMetadata, {}))
       if (inputSetObj) {
         delete inputSetObj.pipeline

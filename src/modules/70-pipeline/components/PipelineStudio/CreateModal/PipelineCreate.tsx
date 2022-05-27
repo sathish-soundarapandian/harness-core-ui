@@ -101,7 +101,7 @@ export default function CreatePipelines({
     tags: {},
     repo: '',
     branch: '',
-    storeType: 'INLINE',
+    storeType: StoreType.INLINE,
     remoteType: 'create',
     stages: [],
     connectorRef: ''
@@ -118,7 +118,6 @@ export default function CreatePipelines({
   const templatesFeatureFlagEnabled = useFeatureFlag(FeatureFlag.NG_TEMPLATES)
   const pipelineTemplatesFeatureFlagEnabled = useFeatureFlag(FeatureFlag.NG_PIPELINE_TEMPLATE)
   const isPipelineTemplateEnabled = templatesFeatureFlagEnabled && pipelineTemplatesFeatureFlagEnabled
-
   const newInitialValues = React.useMemo(() => {
     return produce(initialValues, draft => {
       if (draft.identifier === DefaultNewPipelineId) {
@@ -129,17 +128,17 @@ export default function CreatePipelines({
 
   const PipelineModeCards: CardInterface[] = [
     {
-      type: 'INLINE',
-      title: 'Inline',
-      info: 'Pipeline content is stored in Harness',
+      type: StoreType.INLINE,
+      title: getString('inline'),
+      info: getString('common.git.inlineStoreLabel'),
       icon: 'repository',
       size: 16,
-      disabled: pipelineIdentifier !== DefaultNewPipelineId && storeTypeParam === 'REMOTE'
+      disabled: pipelineIdentifier !== DefaultNewPipelineId && storeTypeParam === StoreType.REMOTE
     },
     {
-      type: 'REMOTE',
-      title: 'Remote',
-      info: 'Pipeline content is stored in a Git repository',
+      type: StoreType.REMOTE,
+      title: getString('remote'),
+      info: getString('common.git.remoteStoreLabel'),
       icon: 'remote-setup',
       size: 20,
       disabled: pipelineIdentifier !== DefaultNewPipelineId && !storeTypeParam
@@ -278,7 +277,7 @@ export default function CreatePipelines({
                 />
               </>
             ) : null}
-            {storeType?.type === 'REMOTE' ? (
+            {storeType?.type === StoreType.REMOTE ? (
               <GitSyncForm
                 formikProps={formikProps as any}
                 handleSubmit={noop}

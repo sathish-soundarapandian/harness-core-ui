@@ -64,7 +64,7 @@ export const getCreateUpdateRequestBodyOptions = ({
         queryParams: {
           ...commonQueryParams,
           ...(initialStoreMetadata?.storeType === StoreType.REMOTE ? initialStoreMetadata : {}),
-          ...(gitDetails ? { ...gitDetails, lastObjectId: objectId } : {}),
+          ...(gitDetails ? { ...gitDetails, lastObjectId: objectId, lastCommitId: initialGitDetails.commitId } : {}),
           ...(gitDetails && gitDetails.isNewBranch ? { baseBranch: initialGitDetails.branch } : {})
         }
       }
