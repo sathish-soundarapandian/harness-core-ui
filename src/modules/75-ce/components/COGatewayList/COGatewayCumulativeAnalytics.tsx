@@ -20,6 +20,9 @@ import EmptyView from '@ce/images/empty-state.svg'
 import { getEmissionsValue } from '@ce/utils/formatResourceValue'
 import greenLeaf from '@ce/common/images/green-leaf.svg'
 import grayLeaf from '@ce/common/images/gray-leaf.svg'
+import TimeRangePicker from '@ce/common/TimeRangePicker/TimeRangePicker'
+import type { TimeRangeFilterType } from '@ce/types'
+import { CE_DATE_FORMAT_INTERNAL, DATE_RANGE_SHORTCUTS } from '@ce/utils/momentUtils'
 import { FeatureFlag } from '@common/featureFlags'
 import { useToaster } from '@common/exports'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
@@ -154,6 +157,10 @@ const COGatewayCumulativeAnalytics: React.FC<COGatewayCumulativeAnalyticsProps> 
   const sustainabilityEnabled = useFeatureFlag(FeatureFlag.CCM_SUSTAINABILITY)
 
   const [data, setData] = useState<CumulativeSavings>()
+  const [timeRange, setTimeRange] = useState<TimeRangeFilterType>({
+    to: DATE_RANGE_SHORTCUTS.LAST_30_DAYS[1].format(CE_DATE_FORMAT_INTERNAL),
+    from: DATE_RANGE_SHORTCUTS.LAST_30_DAYS[0].format(CE_DATE_FORMAT_INTERNAL)
+  })
 
   const hasData = !_isEmpty(data)
   const isDryRunMode = mode === RulesMode.DRY
@@ -167,13 +174,15 @@ const COGatewayCumulativeAnalytics: React.FC<COGatewayCumulativeAnalyticsProps> 
 
   useEffect(() => {
     getSavingsData()
-  }, [mode, rules])
+  }, [mode, rules, timeRange.from, timeRange.to])
 
   const getSavingsData = async () => {
     try {
       const savingsResponse = await fetchCumulativeSavings({
         dry_run: isDryRunMode,
-        query: searchQuery?.length ? searchQuery : undefined
+        query: searchQuery?.length ? searchQuery : undefined,
+        from: timeRange.from,
+        to: timeRange.to
       })
       setData(savingsResponse.response as CumulativeSavings)
     } catch (error) {
@@ -184,15 +193,18 @@ const COGatewayCumulativeAnalytics: React.FC<COGatewayCumulativeAnalyticsProps> 
 
   return (
     <Container padding="small">
-      <div>
-        <Text className={css.summaryHeading} data-tooltip-id="summaryOfRulesHeader">
-          {getString('ce.co.summarySection.sectionHeader')}
-          <HarnessDocTooltip tooltipId="summaryOfRulesHeader" useStandAlone={true} />
-        </Text>
+      <Layout.Vertical background={Color.WHITE} className={css.analyticsContainer} spacing="large">
+        <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
+          <Text font={{ variation: FontVariation.H6 }} data-tooltip-id="summaryOfRulesHeader">
+            {getString('ce.co.summarySection.sectionHeader')}
+            <HarnessDocTooltip tooltipId="summaryOfRulesHeader" useStandAlone={true} />
+          </Text>
+          <Container margin={{ right: 'xxxlarge' }}>
+            <TimeRangePicker timeRange={timeRange} setTimeRange={setTimeRange} />
+          </Container>
+        </Layout.Horizontal>
         <Layout.Horizontal
           spacing="xxlarge"
-          background={Color.WHITE}
-          className={css.analyticsContainer}
           // style={{ margin: '0px var(--spacing-medium) !important' }}
         >
           <Layout.Vertical
@@ -354,7 +366,7 @@ const COGatewayCumulativeAnalytics: React.FC<COGatewayCumulativeAnalyticsProps> 
             </Layout.Vertical>
           )}
         </Layout.Horizontal>
-      </div>
+      </Layout.Vertical>
     </Container>
   )
 }
