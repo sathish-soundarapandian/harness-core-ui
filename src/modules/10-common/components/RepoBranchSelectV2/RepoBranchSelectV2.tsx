@@ -102,9 +102,6 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
 
   useEffect(() => {
     setBranchSelectOptions([])
-    // if (hasToRefetchBranches(disabled, connectorIdentifierRef, repoName)) {
-    //   refetch()
-    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connectorIdentifierRef, repoName])
 
