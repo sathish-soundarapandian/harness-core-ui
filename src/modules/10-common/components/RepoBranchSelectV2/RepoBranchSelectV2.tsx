@@ -97,14 +97,11 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
       size: 100
     },
     debounce: 500,
-    lazy: true
+    lazy: !hasToRefetchBranches(disabled, connectorIdentifierRef, repoName)
   })
 
   useEffect(() => {
-    if (hasToRefetchBranches(disabled, connectorIdentifierRef, repoName)) {
-      setBranchSelectOptions([])
-      refetch()
-    }
+    setBranchSelectOptions([])
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connectorIdentifierRef, repoName])
 

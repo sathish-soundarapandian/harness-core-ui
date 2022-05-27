@@ -6,10 +6,10 @@
  */
 
 import React from 'react'
-import { render, waitFor, queryByText } from '@testing-library/react'
+import { queryByAttribute, render, waitFor } from '@testing-library/react'
 import { noop } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
-import RepoBranchSelectV2 from '../RepoBranchSelectV2'
+import GitRemoteDetails from '../GitRemoteDetails'
 
 const mockBranches = {
   status: 'SUCCESS',
@@ -32,43 +32,32 @@ jest.mock('services/cd-ng', () => ({
   })
 }))
 
-describe('RepoBranchSelectV2 test', () => {
+describe('GitRemoteDetails test', () => {
   afterEach(() => {
     fetchBranches.mockReset()
   })
 
-  test('default rendering RepoBranchSelectV2', async () => {
+  test('default rendering GitRemoteDetails', async () => {
     const { container, getByText } = render(
       <TestWrapper
         path="/account/:accountId/ci/orgs/:orgIdentifier/projects/:projectIdentifier/pipelines/-1/pipeline-studio/"
         pathParams={pathParams}
       >
-        <RepoBranchSelectV2 connectorIdentifierRef="connectorId" repoName="repoName" onChange={branchChangehandler} />
-      </TestWrapper>
-    )
-    //refetch should not be called
-    await waitFor(() => expect(fetchBranches).toBeCalledTimes(0))
-    expect(getByText('gitBranch')).toBeInTheDocument()
-    expect(container).toMatchSnapshot()
-  })
-
-  test('rendering RepoBranchSelectV2 as disabled and no label as used in saveToGitForm for target branch selection', async () => {
-    const { container } = render(
-      <TestWrapper
-        path="/account/:accountId/ci/orgs/:orgIdentifier/projects/:projectIdentifier/pipelines/-1/pipeline-studio/"
-        pathParams={pathParams}
-      >
-        <RepoBranchSelectV2
-          connectorIdentifierRef="connectorId"
-          repoName="repoName"
-          onChange={branchChangehandler}
-          disabled={true}
-          noLabel={true}
+        <GitRemoteDetails
+          connectorRef="connectorId"
+          onBranchChange={branchChangehandler}
+          repoName={'testRepoName'}
+          filePath={'filePath.yaml'}
+          branch={'main'}
         />
       </TestWrapper>
     )
-
-    expect(queryByText(container, 'gitBranch')).toBeFalsy()
-    expect(fetchBranches).not.toBeCalled()
+    await waitFor(() => expect(fetchBranches).toBeCalledTimes(1))
+    expect(getByText('testRepoName')).toBeInTheDocument()
+    const branchSelect = queryByAttribute('name', container, 'remoteBranch') as HTMLInputElement
+    expect(branchSelect).toBeTruthy()
+    expect(branchSelect.value).toEqual('main (default)')
+    expect(getByText('testRepoName')).toBeInTheDocument()
+    expect(container).toMatchSnapshot()
   })
 })

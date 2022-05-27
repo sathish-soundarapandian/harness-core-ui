@@ -101,8 +101,11 @@ const RepositorySelect: React.FC<RepositorySelectProps<any>> = props => {
         disabled={loading || disabled}
         items={repoSelectOptions}
         value={{ label: defaultTo(selectedValue, ''), value: defaultTo(selectedValue, '') }}
-        onChange={selected => props.onChange?.(selected, repoSelectOptions)}
-        selectProps={{ usePortal: true, popoverClassName: css.gitBranchSelectorPopover }}
+        onChange={(selected: SelectOption, event: React.SyntheticEvent<HTMLElement, Event> | undefined) => {
+          props.onChange?.(selected, repoSelectOptions)
+          event?.stopPropagation()
+        }}
+        selectProps={{ usePortal: true, popoverClassName: css.gitBranchSelectorPopover, allowCreatingNewItems: true }}
       />
       {loading ? (
         <Layout.Horizontal spacing="small" flex={{ alignItems: 'flex-start' }} className={css.loadingWrapper}>
