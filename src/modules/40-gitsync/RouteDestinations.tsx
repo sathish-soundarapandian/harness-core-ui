@@ -6,11 +6,10 @@
  */
 
 import React from 'react'
-import { Route } from 'react-router-dom'
-import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import { Redirect, Route, useParams } from 'react-router-dom'
+import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
-import { RedirectToGitSyncHome } from '@common/Redirects'
 import routes from '@common/RouteDefinitions'
 import { RouteWithLayout } from '@common/router'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
@@ -20,6 +19,12 @@ import GitSyncErrors from '@gitsync/pages/errors/GitSyncErrors'
 import GitSyncPage from '@gitsync/pages/GitSyncPage'
 import GitSyncRepoTab from '@gitsync/pages/repos/GitSyncRepoTab'
 import type { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
+
+export function RedirectToGitSyncHome(): React.ReactElement {
+  const { accountId, projectIdentifier, orgIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
+
+  return <Redirect to={routes.toGitSyncReposAdmin({ projectIdentifier, accountId, orgIdentifier, module })} />
+}
 
 export const GitSyncRouteDestinations: React.FC<{
   moduleParams: ModulePathParams
