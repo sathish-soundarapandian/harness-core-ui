@@ -547,9 +547,7 @@ export default function TriggersDetailPage(): JSX.Element {
                       triggerResponse.data.lastTriggerExecutionDetails.lastExecutionTime
                     ).toLocaleTimeString()}`}
                   </Text>
-                ) : (
-                  <Text>{`${getString('triggers.lastActivationAt')}: -`}</Text>
-                )}
+                ) : null}
               </div>
               <hr />
             </Layout.Vertical>
