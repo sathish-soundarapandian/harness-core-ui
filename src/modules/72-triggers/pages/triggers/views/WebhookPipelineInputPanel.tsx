@@ -440,21 +440,19 @@ function WebhookPipelineInputPanelForm({
                 <div className={css.divider} />
               </Container>
             )}
-            <Container className={css.halfWidth}>
-              <PipelineInputSetForm
-                originalPipeline={resolvedPipeline}
-                template={defaultTo(
-                  memoizedParse<Pipeline>(template?.data?.inputSetTemplateYaml)?.pipeline,
-                  {} as PipelineInfoConfig
-                )}
-                path="pipeline"
-                viewType={StepViewType.InputSet}
-                maybeContainerClass={css.pipelineInputSetForm}
-                viewTypeMetadata={{ isTrigger: true }}
-                readonly={gitAwareForTriggerEnabled}
-                gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
-              />
-            </Container>
+            <PipelineInputSetForm
+              originalPipeline={resolvedPipeline}
+              template={defaultTo(
+                memoizedParse<Pipeline>(template?.data?.inputSetTemplateYaml)?.pipeline,
+                {} as PipelineInfoConfig
+              )}
+              path="pipeline"
+              viewType={StepViewType.InputSet}
+              maybeContainerClass={css.pipelineInputSetForm}
+              viewTypeMetadata={{ isTrigger: true }}
+              readonly={gitAwareForTriggerEnabled}
+              gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
+            />
           </div>
         </div>
       ) : (
