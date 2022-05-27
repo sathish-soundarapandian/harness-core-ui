@@ -225,6 +225,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
       if (hostSpecifics === SpecificHostOption.HOST_NAME) {
         filterData = { type: 'HOST_NAMES', filter: formikValues.hostFilters }
       } else {
+        /* istanbul ignore next */
         filterData = { type: 'HOST_ATTRIBUTES', filter: formikValues.attributeFilters }
       }
     }
@@ -414,6 +415,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                           projectIdentifier={projectIdentifier}
                           orgIdentifier={orgIdentifier}
                           onChange={(value, scope) => {
+                            /* istanbul ignore next */
                             formik.setFieldValue('connectorRef', {
                               label: value.name || '',
                               value: `${scope !== Scope.PROJECT ? `${scope}.` : ''}${value.identifier}`,
@@ -446,6 +448,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                             className={css.hostSelect}
                             value={hostSpecificyOptions.find(option => option.value === hostSpecifics)}
                             onChange={option => {
+                              /* istanbul ignore else */
                               const value = option.value.toString()
                               if (value === SpecificHostOption.HOST_NAME) {
                                 formik.setFieldValue('attributeFilters', '')
@@ -587,16 +590,21 @@ interface PDCInfrastructureSpecStep extends PdcInfrastructure {
 export const PdcRegex = /^.+stage\.spec\.infrastructure\.infrastructureDefinition\.spec\.connectorRef$/
 export const SshKeyRegex = /^.+stage\.spec\.infrastructure\.infrastructureDefinition\.spec\.sshKeyRef$/
 export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecStep> {
-  lastFetched: number
+  /* istanbul ignore next */
   protected type = StepType.PDC
+  /* istanbul ignore next */
   protected defaultValues: PdcInfrastructure = {
     connectorRef: '',
     credentialsRef: ''
   }
 
+  /* istanbul ignore next */
   protected stepIcon: IconName = 'pdc'
+  /* istanbul ignore next */
   protected stepName = 'Specify your PDC Connector'
+  /* istanbul ignore next */
   protected stepPaletteVisible = false
+  /* istanbul ignore next */
   protected invocationMap: Map<
     RegExp,
     (path: string, yaml: string, params: Record<string, unknown>) => Promise<CompletionItemInterface[]>
@@ -604,7 +612,6 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
 
   constructor() {
     super()
-    this.lastFetched = new Date().getTime()
     this.invocationMap.set(PdcRegex, this.getConnectorsListForYaml.bind(this))
     this.invocationMap.set(SshKeyRegex, this.getSshKeyListForYaml.bind(this))
 
