@@ -129,4 +129,20 @@ describe('Redirect', () => {
       })
     )
   })
+
+  test('RedirectToProjectFactory redirects to module home when no project selected', () => {
+    const RedirectToModuleTrialHome = RedirectToProjectFactory(ModuleName.STO, routes.toSTOHome)
+
+    const { getByTestId } = render(
+      <TestWrapper path={testPath} pathParams={testPathParams}>
+        <RedirectToModuleTrialHome />
+      </TestWrapper>
+    )
+
+    expect(getByTestId('location').innerHTML).toEqual(
+      routes.toSTOHome({
+        accountId: 'accountId'
+      })
+    )
+  })
 })
