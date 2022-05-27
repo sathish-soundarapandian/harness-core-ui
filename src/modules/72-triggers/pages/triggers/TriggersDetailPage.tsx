@@ -382,8 +382,7 @@ export default function TriggersDetailPage(): JSX.Element {
     [isGitSyncEnabled, isGitSimplificationEnabled]
   )
 
-  let pipelineInputSet: string = ''
-
+  let pipelineInputSet
   if (gitAwareForTriggerEnabled) {
     pipelineInputSet = yamlStringify({
       pipelineBranchName: get(triggerObj, 'pipelineBranchName') ?? '',
