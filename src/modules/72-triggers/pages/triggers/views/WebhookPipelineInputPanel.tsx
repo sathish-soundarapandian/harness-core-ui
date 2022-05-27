@@ -15,9 +15,9 @@ import {
   Text,
   NestedAccordionProvider,
   HarnessDocTooltip,
-  PageSpinner,
-  Color
+  PageSpinner
 } from '@wings-software/uicore'
+import { Color } from '@harness/design-system'
 import { merge, cloneDeep, isEmpty, defaultTo } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { InputSetSelector, InputSetSelectorProps } from '@pipeline/components/InputSetSelector/InputSetSelector'
