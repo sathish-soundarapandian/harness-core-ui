@@ -6,7 +6,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Button, ButtonSize, Card, Layout, Text, useToggleOpen } from '@wings-software/uicore'
@@ -46,10 +46,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   }
   const { openCreateSmtpModal } = useCreateSmtpModal({ onCloseModal: refetchSmtpData })
   // showGitOpsCard defaults to false for now while the feature is being developed
-  const showGitOpsCard = useMemo(
-    () => history?.location?.pathname.includes('resources') && true,
-    [history?.location?.pathname]
-  )
+  const showGitOpsCard = window?.location?.href?.includes('resources') && true
   const smtpResource: ResourceOption[] = [
     {
       label: <String stringID="common.smtp.conifg" />,
