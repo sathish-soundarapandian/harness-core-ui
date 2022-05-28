@@ -140,6 +140,7 @@ jiraApprovalStep:
     project: Project is required
     issueKey: Issue Key is required
     issueType: Issue Type is required
+    requiredField: This is a required field.
 jiraCreateStep:
   fields: Jira Fields
   summaryPlaceholder: Enter a Title or Summary

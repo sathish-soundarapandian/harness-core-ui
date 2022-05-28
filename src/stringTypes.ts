@@ -2881,6 +2881,7 @@ export interface StringsMap {
   'pipeline.jiraApprovalStep.validations.issueKey': string
   'pipeline.jiraApprovalStep.validations.issueType': string
   'pipeline.jiraApprovalStep.validations.project': string
+  'pipeline.jiraApprovalStep.validations.requiredField': string
   'pipeline.jiraCreateStep.addFields': string
   'pipeline.jiraCreateStep.fetchingFields': string
   'pipeline.jiraCreateStep.fieldSelectorAdd': string
@@ -3535,6 +3536,7 @@ export interface StringsMap {
   'cd.cloudFormation.awsURL': string
   'cd.cloudFormation.cfTemplateFile': string
   'cd.cloudFormation.continueStatus': string
+  'cd.cloudFormation.deploymentTypes.pdc': string
   'cd.cloudFormation.errors.awsURL': string
   'cd.cloudFormation.errors.getParam': string
   'cd.cloudFormation.errors.name': string
@@ -3725,8 +3727,22 @@ export interface StringsMap {
   'cd.steps.common.clusterDetails': string
   'cd.steps.common.releaseNamePlaceholder': string
   'cd.steps.common.selectOrEnterClusterPlaceholder': string
+  'cd.steps.common.specifyCredentials': string
   'cd.steps.common.undefinedType': string
   'cd.steps.kubernetesGcpStep.stepName': string
+  'cd.steps.pdcStep.attributesPlaceholder': string
+  'cd.steps.pdcStep.deployAllHostsOption': string
+  'cd.steps.pdcStep.deploySpecificHostsOption': string
+  'cd.steps.pdcStep.hostAttributesOption': string
+  'cd.steps.pdcStep.hostNameOption': string
+  'cd.steps.pdcStep.hostsPlaceholder': string
+  'cd.steps.pdcStep.no': string
+  'cd.steps.pdcStep.noHosts': string
+  'cd.steps.pdcStep.pdcConnectorLabel': string
+  'cd.steps.pdcStep.preconfiguredHostsOption': string
+  'cd.steps.pdcStep.previewHosts': string
+  'cd.steps.pdcStep.specificHostsPlaceholder': string
+  'cd.steps.pdcStep.specifyHostsOption': string
   'cd.steps.serverless.regionPlaceholder': string
   'cd.steps.serverless.stagePlaceholder': string
   'cd.terraformVarFiles': string
@@ -5000,7 +5016,6 @@ export interface StringsMap {
   'cf.rbac.targetgroup.delete': string
   'cf.rbac.targetgroup.edit': string
   'cf.rbac.targetgroup.label': string
-  'cf.segmentDetail.addFlag': string
   'cf.segmentDetail.addFlagNameToTargetGroup': string
   'cf.segmentDetail.addFlagToTargetGroup': string
   'cf.segmentDetail.addFlags': string
@@ -5111,6 +5126,9 @@ export interface StringsMap {
   'cf.targetDetail.searchPlaceholder': string
   'cf.targetDetail.targetSetting': string
   'cf.targetDetail.title': string
+  'cf.targetManagementFlagConfiguration.addFlag': string
+  'cf.targetManagementFlagConfiguration.allFlagsRemoved': string
+  'cf.targetManagementFlagConfiguration.removeFlag': string
   'cf.targets.ID': string
   'cf.targets.addTargets': string
   'cf.targets.addTargetsLabel': string

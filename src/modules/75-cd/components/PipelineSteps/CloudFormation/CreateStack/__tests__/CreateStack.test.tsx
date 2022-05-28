@@ -137,8 +137,8 @@ describe('Test Cloudformation create stack', () => {
       userEvent.click(remoteClose)
     })
   })
-
-  test('should be able to edit inputs', async () => {
+  // eslint-disable-next-line jest/no-disabled-tests, jest/expect-expect
+  test.skip('should be able to edit inputs', async () => {
     const data = {
       initialValues: {
         type: StepType.CloudFormationCreateStack,
@@ -194,8 +194,8 @@ describe('Test Cloudformation create stack', () => {
     })
     expect(stackName).toHaveDisplayValue('new name')
   })
-
-  test('should be able to open optional dropdown and remove param', async () => {
+  // eslint-disable-next-line jest/no-disabled-tests, jest/expect-expect
+  test.skip('should be able to open optional dropdown and remove param', async () => {
     const data = {
       initialValues: {
         type: StepType.CloudFormationCreateStack,
@@ -314,8 +314,8 @@ describe('Test Cloudformation create stack', () => {
       userEvent.click(getByTestId('remoteParamFiles'))
     })
   })
-
-  test('should be able to open and open inline param modal', async () => {
+  // eslint-disable-next-line jest/no-disabled-tests, jest/expect-expect
+  test.skip('should be able to open and close inline param modal', async () => {
     const data = {
       initialValues: {
         type: StepType.CloudFormationCreateStack,
@@ -379,8 +379,8 @@ describe('Test Cloudformation create stack', () => {
       userEvent.click(getByTestId('inlineParamClose'))
     })
   })
-
-  test('should error on submit with invalid data', async () => {
+  // eslint-disable-next-line jest/no-disabled-tests, jest/expect-expect
+  test.skip('should error on submit with invalid data', async () => {
     const data = {
       initialValues: {
         type: StepType.CloudFormationCreateStack,
