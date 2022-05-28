@@ -431,7 +431,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
   const { isGitSimplificationEnabled } = useAppStore()
 
   const gitAwareForTriggerEnabled = useMemo(
-    () => isGitSyncEnabled || isGitSimplificationEnabled,
+    () => isGitSyncEnabled && isGitSimplificationEnabled,
     [isGitSyncEnabled, isGitSimplificationEnabled]
   )
 
