@@ -39,7 +39,6 @@ import {
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { PipelineActions } from '@common/constants/TrackingConstants'
 import { validateCICodebaseConfiguration } from '@pipeline/components/PipelineStudio/StepUtil'
-import { validateJSONWithSchema } from '@common/utils/YamlUtils'
 import { useQueryParams } from '@common/hooks'
 import type {
   GitQueryParams,
@@ -49,7 +48,6 @@ import type {
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
 import { useTelemetry } from '@common/hooks/useTelemetry'
-import { usePipelineSchema } from '@pipeline/components/PipelineStudio/PipelineSchema/PipelineSchemaContext'
 import { useSaveAsTemplate } from '@pipeline/components/PipelineStudio/SaveTemplateButton/useSaveAsTemplate'
 import { AppStoreContext, useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { PipelineInfoConfig } from 'services/cd-ng'
@@ -61,6 +59,7 @@ import type { AccessControlCheckError } from 'services/rbac'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { EvaluationModal } from '@governance/EvaluationModal'
 import type { SaveToGitFormV2Interface } from '@common/components/SaveToGitFormV2/SaveToGitFormV2'
+import { SCHEMA_VALIDATION_FAILED } from '@common/interfaces/GitSyncInterface'
 import css from './SavePipelinePopover.module.scss'
 
 export interface SavePipelinePopoverProps extends PopoverProps {
@@ -102,7 +101,6 @@ export function SavePipelinePopover({
   const [loading, setLoading] = React.useState<boolean>()
   const { branch, repoName, connectorRef, storeType, repoIdentifier } = useQueryParams<GitQueryParams>()
   const { trackEvent } = useTelemetry()
-  const { pipelineSchema } = usePipelineSchema()
   const { showSuccess, showError, clear } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
@@ -276,23 +274,19 @@ export function SavePipelinePopover({
     } else {
       clear()
       setSchemaErrorView(true)
-      // This is done because when git sync is enabled, errors are displayed in a modal
-      if (!isGitSyncEnabled && currStoreMetadata?.storeType !== StoreType.REMOTE) {
-        // eslint-disable-next-line
-        // @ts-ignore
-        if (response?.metadata?.schemaErrors?.length) {
-          setUpdatePipelineAPIResponse(response)
-          showErrorModal()
-        } else {
-          showError(
-            getRBACErrorMessage({ data: response as AccessControlCheckError }) || getString('errorWhileSaving'),
-            undefined,
-            'pipeline.save.pipeline.error'
-          )
+      if ((response as any)?.metadata?.schemaErrors?.length) {
+        setUpdatePipelineAPIResponse(response)
+        showErrorModal()
+        if (isGitSyncEnabled || currStoreMetadata?.storeType == StoreType.REMOTE) {
+          // isGitSyncEnabled true
+          throw { code: SCHEMA_VALIDATION_FAILED }
         }
       } else {
-        // isGitSyncEnabled true
-        throw response
+        showError(
+          getRBACErrorMessage({ data: response as AccessControlCheckError }) || getString('errorWhileSaving'),
+          undefined,
+          'pipeline.save.pipeline.error'
+        )
       }
     }
     return { status: response?.status }
@@ -371,17 +365,6 @@ export function SavePipelinePopover({
         showError(getString('pipeline.gitExperience.selectRepoBranch'))
         return
       }
-      // When git sync enabled, do not irritate user by taking all git info then at the end showing BE errors related to schema
-      const error = await validateJSONWithSchema({ pipeline: latestPipeline }, pipelineSchema?.data as any)
-      if (error.size > 0) {
-        clear()
-        showError(error)
-        return
-      }
-      if (isYaml && yamlHandler && !isValidYaml()) {
-        return
-      }
-
       openSaveToGitDialog({
         isEditing: pipelineIdentifier !== DefaultNewPipelineId,
         resource: {

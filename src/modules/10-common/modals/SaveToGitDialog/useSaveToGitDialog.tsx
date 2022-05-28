@@ -11,7 +11,7 @@ import { Classes, Dialog, IDialogProps } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import { defaultTo, noop } from 'lodash-es'
 import { useModalHook } from '@harness/use-modal'
-import { Entities } from '@common/interfaces/GitSyncInterface'
+import { Entities, SCHEMA_VALIDATION_FAILED } from '@common/interfaces/GitSyncInterface'
 import SaveToGitForm, {
   GitResourceInterface,
   SaveToGitFormInterface
@@ -157,6 +157,10 @@ export function useSaveToGitDialog<T = Record<string, string>>(
   }
 
   const handleCreateUpdateError = (e: any, data: SaveToGitFormInterface | SaveToGitFormV2Interface): void => {
+    if (e.code === SCHEMA_VALIDATION_FAILED) {
+      hideCreateUpdateModal()
+      return
+    }
     setError(e)
     setCreateUpdateStatus('ERROR')
     if (data?.createPr) {
