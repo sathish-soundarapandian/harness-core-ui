@@ -291,3 +291,4 @@ cloudFormation:
     pdc: PDC
 gitOpsCluster: 'GitOps Cluster'
 selectGitopsCluster: 'Select GitOps Clusters to add to Environment'
+clustersSelected: 'Clusters Selected'

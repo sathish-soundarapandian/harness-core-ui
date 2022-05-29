@@ -14,18 +14,20 @@ import css from './AddCluster.module.scss'
 
 const ClusterCard = (props: any): React.ReactElement => {
   const { cluster, selectedClusters } = props
+  const isClusterAlreadySelected = selectedClusters.find((clstr: any) => clstr.identifier === cluster.identifier)
   return (
     <div
       onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
         e.stopPropagation()
-        if (selectedClusters.length) {
+
+        if (!isClusterAlreadySelected) {
           props.setSelectedClusters([...selectedClusters, cluster])
         } else {
-          props.setSelectedClusters([cluster])
+          props.setSelectedClusters([...selectedClusters])
         }
       }}
       className={cx(css.gitopsClusterCard, {
-        [css.selected]: selectedClusters.find((clstr: any) => clstr.identifier === cluster.identifier)
+        [css.selected]: isClusterAlreadySelected
       })}
       data-cy="cluster-card"
     >

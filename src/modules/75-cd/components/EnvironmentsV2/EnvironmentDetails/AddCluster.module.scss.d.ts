@@ -20,6 +20,7 @@ declare const styles: {
   readonly clusterName: string
   readonly contentContainer: string
   readonly footerStyle: string
+  readonly gitOpsSelectedClusters: string
   readonly gitopsClusterCard: string
   readonly greenStatus: string
   readonly hasError: string
@@ -30,6 +31,10 @@ declare const styles: {
   readonly rightIcon: string
   readonly rightStatus: string
   readonly selected: string
+  readonly selectedClusters: string
+  readonly selectedHeader: string
+  readonly selectedIdenfitier: string
+  readonly separator: string
   readonly status: string
   readonly subChild: string
   readonly tabIcon: string

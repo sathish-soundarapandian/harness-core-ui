@@ -16,8 +16,23 @@
   margin-top: 10px !important;
 }
 
+.gitOpsSelectedClusters {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .subChild {
   display: flex;
+  padding: 16px;
+  width: 45% !important;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.separator {
+  width: 80%;
+  border: 1px solid var(--grey-200);
 }
 
 .clusterDetails {
@@ -50,6 +65,20 @@
 
 .selected {
   background-color: var(--primary-2) !important;
+}
+
+.selectedClusters {
+  font-weight: 600 !important;
+  font-size: 14px !important;
+}
+
+.selectedHeader {
+  font-weight: 400 !important;
+  font-size: 13px !important;
+}
+
+.selectedIdenfitier {
+  font-weight: 600 !important;
 }
 
 .agentList {
@@ -102,10 +131,6 @@
     position: relative;
     bottom: 11px;
   }
-}
-
-.subChild {
-  width: 45%;
 }
 
 .tabIcon {

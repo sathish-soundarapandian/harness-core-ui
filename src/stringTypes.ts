@@ -3591,6 +3591,7 @@ export interface StringsMap {
   'cd.cloudFormation.templateFileConnector': string
   'cd.cloudFormation.templateFileStore': string
   'cd.cloudFormation.urls': string
+  'cd.clustersSelected': string
   'cd.componentsInstalled': string
   'cd.configFileDetails': string
   'cd.configFilePlaceHolder': string
