@@ -143,7 +143,7 @@ export interface EnvironmentPathProps {
 }
 
 export interface EnvironmentQueryParams {
-  sectionId?: 'CONFIGURATION' | 'INFRASTRUCTURE'
+  sectionId?: 'CONFIGURATION' | 'INFRASTRUCTURE' | 'GITOPS'
 }
 
 export interface EnvironmentGroupPathProps {
