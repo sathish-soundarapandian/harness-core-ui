@@ -76,6 +76,7 @@ export enum PAGE_NAME {
   SubscriptionsPage = 'SubscriptionsPage',
   PlanPage = 'PlanPage',
   GetStartedWithCI = 'GetStartedWithCI',
+  GetStartedWithCD = 'GetStartedWithCD',
   CFHomePage = 'CFHomePage',
   CFTrialHomePage = 'CFTrialHomePage',
   FeatureFlagsLandingPage = 'FeatureFlagsLandingPage',
