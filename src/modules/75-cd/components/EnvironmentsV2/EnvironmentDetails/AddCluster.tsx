@@ -13,6 +13,7 @@ import {
   Color,
   Dialog,
   FontVariation,
+  Icon,
   Layout,
   Text,
   TextInput
@@ -74,11 +75,36 @@ const AddCluster = (props: any): React.ReactElement => {
               </div>
             </div>
 
-            <Layout.Vertical className={css.subChild} flex>
-              <div>child1</div>
-              <hr />
-              <div>child2</div>
-            </Layout.Vertical>
+            <div className={css.subChild}>
+              <div className={css.gitOpsSelectedClusters}>
+                <Icon name="gitops-clusters" />
+                <Text color={Color.GREY_800} className={css.selectedClusters}>
+                  {getString('cd.clustersSelected')}({selectedClusters.length})
+                </Text>
+              </div>
+              <div className={css.separator}></div>
+              <Layout.Vertical>
+                {selectedClusters?.length ? (
+                  <>
+                    <Text className={css.selectedHeader} color={Color.GREY_800}>
+                      Selected
+                    </Text>
+                    {selectedClusters.map((clstr: any) => {
+                      return (
+                        <Text
+                          key={clstr.identifier}
+                          style={{ fontSize: '12' }}
+                          color={Color.GREY_800}
+                          className={css.selectedIdenfitier}
+                        >
+                          {clstr.cluster.name}
+                        </Text>
+                      )
+                    })}
+                  </>
+                ) : null}
+              </Layout.Vertical>
+            </div>
           </Layout.Horizontal>
         </Layout.Vertical>
 
