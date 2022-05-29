@@ -1,0 +1,299 @@
+{
+    "content": [
+        {
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "gitops2",
+            "agentIdentifier": "testagent1",
+            "identifier": "testclusteravx",
+            "cluster": {
+                "server": "https://kubernetes.default.svc",
+                "name": "testclusteravx",
+                "config": {
+                    "tlsClientConfig": {
+                        "insecure": true
+                    },
+                    "connectionType": "IN_CLUSTER"
+                },
+                "connectionState": {
+                    "status": "Failed",
+                    "message": "failed to sync cluster https://10.72.0.1:443: failed to load initial state of resource Deployment.apps: deployments.apps is forbidden: User \"system:serviceaccount:gitops-test-1:argocd-application-controller\" cannot list resource \"deployments\" in API group \"apps\" at the cluster scope",
+                    "attemptedAt": "2022-05-19T22:47:29Z"
+                },
+                "serverVersion": "1.21",
+                "info": {
+                    "connectionState": {
+                        "status": "Failed",
+                        "message": "failed to sync cluster https://10.72.0.1:443: failed to load initial state of resource Deployment.apps: deployments.apps is forbidden: User \"system:serviceaccount:gitops-test-1:argocd-application-controller\" cannot list resource \"deployments\" in API group \"apps\" at the cluster scope",
+                        "attemptedAt": "2022-05-19T22:47:29Z"
+                    },
+                    "serverVersion": "1.21",
+                    "cacheInfo": {},
+                    "applicationsCount": "1",
+                    "apiVersions": [
+                        "v1",
+                        "apiregistration.k8s.io/v1",
+                        "apiregistration.k8s.io/v1beta1",
+                        "apps/v1",
+                        "events.k8s.io/v1",
+                        "authentication.k8s.io/v1",
+                        "authentication.k8s.io/v1beta1",
+                        "authorization.k8s.io/v1",
+                        "authorization.k8s.io/v1beta1",
+                        "autoscaling/v1",
+                        "autoscaling/v2beta1",
+                        "autoscaling/v2beta2",
+                        "batch/v1",
+                        "batch/v1beta1",
+                        "certificates.k8s.io/v1",
+                        "certificates.k8s.io/v1beta1",
+                        "networking.k8s.io/v1",
+                        "networking.k8s.io/v1beta1",
+                        "extensions/v1beta1",
+                        "policy/v1",
+                        "policy/v1beta1",
+                        "rbac.authorization.k8s.io/v1",
+                        "rbac.authorization.k8s.io/v1beta1",
+                        "storage.k8s.io/v1",
+                        "storage.k8s.io/v1beta1",
+                        "admissionregistration.k8s.io/v1",
+                        "admissionregistration.k8s.io/v1beta1",
+                        "apiextensions.k8s.io/v1",
+                        "apiextensions.k8s.io/v1beta1",
+                        "scheduling.k8s.io/v1",
+                        "scheduling.k8s.io/v1beta1",
+                        "coordination.k8s.io/v1",
+                        "coordination.k8s.io/v1beta1",
+                        "node.k8s.io/v1",
+                        "node.k8s.io/v1beta1",
+                        "discovery.k8s.io/v1",
+                        "discovery.k8s.io/v1beta1",
+                        "flowcontrol.apiserver.k8s.io/v1beta1",
+                        "cloud.google.com/v1",
+                        "cloud.google.com/v1beta1",
+                        "networking.gke.io/v1",
+                        "networking.gke.io/v1beta2",
+                        "networking.gke.io/v1beta1",
+                        "snapshot.storage.k8s.io/v1",
+                        "snapshot.storage.k8s.io/v1beta1",
+                        "argoproj.io/v1alpha1",
+                        "extensions.istio.io/v1alpha1",
+                        "install.istio.io/v1alpha1",
+                        "internal.autoscaling.gke.io/v1alpha1",
+                        "migration.k8s.io/v1alpha1",
+                        "nodemanagement.gke.io/v1alpha1",
+                        "policy.cert-manager.io/v1alpha1",
+                        "telemetry.istio.io/v1alpha1",
+                        "config.istio.io/v1alpha2",
+                        "networking.istio.io/v1beta1",
+                        "networking.istio.io/v1alpha3",
+                        "security.istio.io/v1beta1",
+                        "metrics.k8s.io/v1beta1"
+                    ]
+                },
+                "project": "ac977c6e"
+            },
+            "createdAt": "2022-05-02T20:47:34.701307467Z",
+            "lastModifiedAt": "2022-05-19T22:47:37.032058821Z"
+        },
+        {
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "gitops2",
+            "agentIdentifier": "testagent1",
+            "identifier": "gitops-play-test-apps",
+            "cluster": {
+                "server": "https://35.223.22.178",
+                "name": "gitops-play-test-apps",
+                "config": {
+                    "bearerToken": "********",
+                    "tlsClientConfig": {
+                        "insecure": true
+                    },
+                    "connectionType": "SERVICE_ACCOUNT"
+                },
+                "connectionState": {
+                    "status": "Successful",
+                    "attemptedAt": "2022-05-19T22:47:29Z"
+                },
+                "serverVersion": "1.21",
+                "namespaces": [
+                    "default"
+                ],
+                "info": {
+                    "connectionState": {
+                        "status": "Successful",
+                        "attemptedAt": "2022-05-19T22:47:29Z"
+                    },
+                    "serverVersion": "1.21",
+                    "cacheInfo": {
+                        "resourcesCount": "368",
+                        "apisCount": "61",
+                        "lastCacheSyncTime": "2022-05-19T16:09:11Z"
+                    },
+                    "applicationsCount": "11",
+                    "apiVersions": [
+                        "v1",
+                        "apiregistration.k8s.io/v1",
+                        "apiregistration.k8s.io/v1beta1",
+                        "apps/v1",
+                        "events.k8s.io/v1",
+                        "authentication.k8s.io/v1",
+                        "authentication.k8s.io/v1beta1",
+                        "authorization.k8s.io/v1",
+                        "authorization.k8s.io/v1beta1",
+                        "autoscaling/v1",
+                        "autoscaling/v2beta1",
+                        "autoscaling/v2beta2",
+                        "batch/v1",
+                        "batch/v1beta1",
+                        "certificates.k8s.io/v1",
+                        "certificates.k8s.io/v1beta1",
+                        "networking.k8s.io/v1",
+                        "networking.k8s.io/v1beta1",
+                        "extensions/v1beta1",
+                        "policy/v1",
+                        "policy/v1beta1",
+                        "rbac.authorization.k8s.io/v1",
+                        "rbac.authorization.k8s.io/v1beta1",
+                        "storage.k8s.io/v1",
+                        "storage.k8s.io/v1beta1",
+                        "admissionregistration.k8s.io/v1",
+                        "admissionregistration.k8s.io/v1beta1",
+                        "apiextensions.k8s.io/v1",
+                        "apiextensions.k8s.io/v1beta1",
+                        "scheduling.k8s.io/v1",
+                        "scheduling.k8s.io/v1beta1",
+                        "coordination.k8s.io/v1",
+                        "coordination.k8s.io/v1beta1",
+                        "node.k8s.io/v1",
+                        "node.k8s.io/v1beta1",
+                        "discovery.k8s.io/v1",
+                        "discovery.k8s.io/v1beta1",
+                        "flowcontrol.apiserver.k8s.io/v1beta1",
+                        "cloud.google.com/v1",
+                        "cloud.google.com/v1beta1",
+                        "networking.gke.io/v1",
+                        "networking.gke.io/v1beta2",
+                        "networking.gke.io/v1beta1",
+                        "snapshot.storage.k8s.io/v1",
+                        "snapshot.storage.k8s.io/v1beta1",
+                        "argoproj.io/v1alpha1",
+                        "internal.autoscaling.gke.io/v1alpha1",
+                        "migration.k8s.io/v1alpha1",
+                        "nodemanagement.gke.io/v1alpha1",
+                        "metrics.k8s.io/v1beta1"
+                    ]
+                }
+            },
+            "createdAt": "2022-05-09T10:41:50.433179634Z",
+            "lastModifiedAt": "2022-05-19T22:47:37.030935918Z"
+        },
+        {
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "gitops2",
+            "agentIdentifier": "qasanitymay13",
+            "identifier": "testcluster3",
+            "cluster": {
+                "server": "https://35.193.28.27",
+                "name": "test-cluster-3",
+                "config": {
+                    "bearerToken": "********",
+                    "tlsClientConfig": {
+                        "insecure": true
+                    },
+                    "connectionType": "SERVICE_ACCOUNT"
+                },
+                "connectionState": {
+                    "status": "Successful",
+                    "attemptedAt": "2022-05-13T22:05:50Z"
+                },
+                "serverVersion": "1.21",
+                "info": {
+                    "connectionState": {
+                        "status": "Successful",
+                        "attemptedAt": "2022-05-13T22:05:50Z"
+                    },
+                    "serverVersion": "1.21",
+                    "cacheInfo": {}
+                },
+                "project": "ac977c6e"
+            },
+            "createdAt": "2022-05-13T22:05:50.707553578Z",
+            "lastModifiedAt": "2022-05-13T22:05:50.969579763Z"
+        },
+        {
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "gitops2",
+            "agentIdentifier": "qasanitymay13",
+            "identifier": "testcluster2",
+            "cluster": {
+                "server": "https://34.121.144.229",
+                "name": "test-cluster-2",
+                "config": {
+                    "bearerToken": "********",
+                    "tlsClientConfig": {
+                        "insecure": true
+                    },
+                    "connectionType": "SERVICE_ACCOUNT"
+                },
+                "connectionState": {
+                    "status": "Successful",
+                    "attemptedAt": "2022-05-13T21:47:55Z"
+                },
+                "serverVersion": "1.21",
+                "info": {
+                    "connectionState": {
+                        "status": "Successful",
+                        "attemptedAt": "2022-05-13T21:47:55Z"
+                    },
+                    "serverVersion": "1.21",
+                    "cacheInfo": {}
+                },
+                "project": "ac977c6e"
+            },
+            "createdAt": "2022-05-13T21:47:55.960504534Z",
+            "lastModifiedAt": "2022-05-13T21:47:56.203929178Z"
+        },
+        {
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "gitops2",
+            "agentIdentifier": "testagentdown",
+            "identifier": "testcluster12343",
+            "cluster": {
+                "server": "https://35.223.22.178",
+                "name": "test-cluster-12343",
+                "config": {
+                    "bearerToken": "********",
+                    "tlsClientConfig": {
+                        "insecure": true
+                    },
+                    "connectionType": "SERVICE_ACCOUNT"
+                },
+                "connectionState": {
+                    "status": "Failed",
+                    "message": "Agent not found",
+                    "attemptedAt": "2022-05-16T22:32:51Z"
+                },
+                "info": {
+                    "connectionState": {
+                        "status": "Failed",
+                        "message": "Agent not found",
+                        "attemptedAt": "2022-05-16T22:32:51Z"
+                    },
+                    "cacheInfo": {}
+                },
+                "project": "ac977c6e"
+            },
+            "createdAt": "2022-05-04T18:31:38.451485119Z",
+            "lastModifiedAt": "2022-05-04T18:39:01.634471262Z"
+        }
+    ],
+    "totalPages": 1,
+    "totalItems": 5,
+    "pageItemCount": 5,
+    "pageSize": 10
+}

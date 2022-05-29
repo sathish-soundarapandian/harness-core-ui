@@ -61,6 +61,7 @@ import { ServiceOverride } from './ServiceOverride/ServiceOverride'
 import InfrastructureDefinition from './InfrastructureDefinition/InfrastructureDefinition'
 import { EnvironmentDetailsTab } from '../utils'
 
+import GitOpsCluster from './GitOpsCluster/GitOpsCluster'
 import css from './EnvironmentDetails.module.scss'
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
@@ -449,6 +450,15 @@ export default function EnvironmentDetails() {
                           </Text>
                         ),
                         panel: <InfrastructureDefinition />
+                      },
+                      {
+                        id: EnvironmentDetailsTab.GITOPS,
+                        title: (
+                          <Text font={{ size: 'normal' }} color={Color.BLACK}>
+                            {getString('cd.gitOpsCluster')}
+                          </Text>
+                        ),
+                        panel: <GitOpsCluster />
                       }
                     ]}
                   >
