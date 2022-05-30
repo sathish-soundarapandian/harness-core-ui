@@ -11,7 +11,7 @@ import { Text } from '@harness/uicore'
 import { Icon } from '@harness/icons'
 import { RulesMode } from '@ce/constants'
 import type { TimeRangeFilterType } from '@ce/types'
-import { getDiffInDays, CE_DATE_FORMAT_INTERNAL, getTimePeriodString } from '@ce/utils/momentUtils'
+import { getDiffInDays, getStaticSchedulePeriodTime } from '@ce/utils/momentUtils'
 import type { CumulativeSavings } from 'services/lw'
 import { useStrings } from 'framework/strings'
 import CEChart from '../CEChart/CEChart'
@@ -140,10 +140,7 @@ const getBarChartOptions = (data: CumulativeSavings, mode = RulesMode.ACTIVE) =>
   const isDryRunMode = mode === RulesMode.DRY
   let savingsData = [],
     spendData = []
-  //   categories = []
-  // if (data.days?.length) {
-  // }
-  const categories = data.days?.map(x => getTimePeriodString(x, CE_DATE_FORMAT_INTERNAL))
+  const categories = data.days?.map(x => getStaticSchedulePeriodTime(x))
   savingsData = defaultTo(
     data?.savings?.map((n, i) => [categories?.[i], toFixedDecimalNumber(n)]),
     []
@@ -158,19 +155,20 @@ const getBarChartOptions = (data: CumulativeSavings, mode = RulesMode.ACTIVE) =>
       height: 200
     },
     xAxis: {
-      // labels: {
-      //   formatter: function () {
-      //     const date = moment(this.value)
-      //     console.log('date', this.value)
-      //     return `${date.month()}/${date.day()}`
-      //   }
-      // },
+      labels: {
+        formatter: function () {
+          const date = new Date(this.value)
+          return `${date.getMonth() + 1}/${date.getDate()}`
+        }
+      },
+      type: 'datetime',
       lineWidth: 0,
       plotLines: [
         {
           dashStyle: 'Dash'
         }
-      ]
+      ],
+      tickLength: 0
     } as Highcharts.XAxisOptions,
     yAxis: {
       min: 0,
