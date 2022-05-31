@@ -99,7 +99,11 @@ const getTooltip = (currPoint: TooltipFormatterContextObject): string => {
     failureRate,
     count: point?.countWithSuccessFailureDetails?.count,
     successCount: point?.countWithSuccessFailureDetails?.successCount,
-    failureCount: point?.countWithSuccessFailureDetails?.failureCount
+    failureCount: point?.countWithSuccessFailureDetails?.failureCount,
+    dateOnClick: e => {
+      e.stopPropagation()
+      alert('EHLLO')
+    }
   })
 }
 
@@ -509,13 +513,14 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
                 height: 225
               },
               tooltip: {
+                hideDelay: 5000,
                 stickOnContact: true,
                 useHTML: true,
                 formatter: function () {
                   return getTooltip(this)
                 },
                 backgroundColor: Color.BLACK,
-                outside: true,
+                outside: false,
                 borderColor: 'black'
               },
               xAxis: {

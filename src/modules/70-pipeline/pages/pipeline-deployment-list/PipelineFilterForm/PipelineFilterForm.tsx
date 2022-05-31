@@ -8,7 +8,8 @@
 import React, { useState } from 'react'
 import type { FormikProps } from 'formik'
 import type { DateRange } from '@blueprintjs/datetime'
-import { DateRangePickerButton, ButtonSize, ButtonVariation } from '@harness/uicore'
+import { DateRangePickerButton, ButtonSize, ButtonVariation, Button } from '@harness/uicore'
+import { DateRangePicker, IDateRangePickerProps } from '@blueprintjs/datetime'
 import { FormInput, SelectOption, Text } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -22,6 +23,7 @@ import {
 
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import css from './PipelineFilterForm.module.scss'
+import { PopoverInteractionKind } from '@blueprintjs/core'
 
 export type FormView = 'PIPELINE-META'
 interface PipelineFilterFormProps<T> {
@@ -181,14 +183,17 @@ export default function PipelineFilterForm<
       </>
     )
   }
-  const [customTimeFilter, setCustomTimeFilter] = useState(false)
   const [chartTimeRange, setChartTimeRange] = useState<{ startTime: number; endTime: number }>()
+  const [selectedShortcutIndex, setSelectedShortcutIndex] = useState(-1)
+  const [isOpen, setIsOpen] = useState(false)
+  const [text, setText] = useState<string>('')
   const getValue = (): DateRange | undefined => {
     return [new Date(chartTimeRange?.startTime || 0), new Date(chartTimeRange?.endTime || 0)]
   }
 
   const getPipelineFormCommonFields = (): React.ReactElement => {
     const isPipeSetupType = type === 'PipelineSetup'
+
     return (
       <>
         <FormInput.Text
@@ -221,29 +226,49 @@ export default function PipelineFilterForm<
           />
         ) : null}
         {type === 'PipelineExecution' ? (
-          <DateRangePickerButton
-            key={'timeRange'}
-            initialButtonText={getString('common.repo_provider.customLabel')}
-            renderButtonText={/* istanbul ignore next */ () => getString('common.repo_provider.customLabel')}
-            onChange={
-              /* istanbul ignore next */
-              selectedDate => {
-                // resetSlider()
-                setCustomTimeFilter(true)
-                setChartTimeRange?.({ startTime: selectedDate[0].getTime(), endTime: selectedDate[1].getTime() })
+          <>
+            <Button
+              minimal
+              text={text}
+              onClick={() => setIsOpen(open => !open)}
+              tooltip={
+                <DateRangePicker
+                  allowSingleDayRange={true}
+                  shortcuts={true}
+                  defaultValue={getValue()}
+                  minDate={new Date(0)}
+                  maxDate={new Date()}
+                  selectedShortcutIndex={selectedShortcutIndex}
+                  onShortcutChange={(_, index) => {
+                    setSelectedShortcutIndex(index)
+                  }}
+                  onChange={selectedDates => {
+                    setSelectedShortcutIndex(-1)
+
+                    formikProps?.setValues({
+                      ...formikProps.values,
+                      timeRange: {
+                        startTime: selectedDates[0]?.getTime(),
+                        endTime: selectedDates[1]?.getTime()
+                      }
+                    })
+                    setText(`${selectedDates[0]?.toLocaleDateString()} - ${selectedDates[1]?.toLocaleDateString()}`)
+                    setChartTimeRange?.({
+                      startTime: selectedDates[0]?.getTime() || 0,
+                      endTime: selectedDates[1]?.getTime() || 0
+                    })
+                  }}
+                />
               }
-            }
-            dateRangePickerProps={{
-              shortcuts: true,
-              defaultValue: getValue(),
-              minDate: new Date(0),
-              maxDate: new Date()
-              // value: getValue()
-            }}
-            rightIcon={undefined}
-            size={ButtonSize.SMALL}
-            variation={customTimeFilter ? ButtonVariation.SECONDARY : ButtonVariation.LINK}
-          />
+              tooltipProps={{
+                interactionKind: PopoverInteractionKind.CLICK,
+                onInteraction: isOpen => {
+                  setIsOpen(isOpen)
+                },
+                isOpen: isOpen
+              }}
+            ></Button>
+          </>
         ) : null}
       </>
     )

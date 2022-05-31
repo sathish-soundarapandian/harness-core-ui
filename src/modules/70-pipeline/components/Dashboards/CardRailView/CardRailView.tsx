@@ -112,7 +112,7 @@ export default function CardRailView({ contentType, isLoading, onShowAll, childr
           onClick={() => setRateToggle('FAILURE')}
           className={classnames(styles.status, { [styles.selectedStatus]: rateToggle === 'FAILURE' })}
         >
-          {getString('common.failureRate')}
+          {getString('common.failureRate')}"###
         </Text>
       </Layout.Horizontal>
     )
