@@ -76,25 +76,29 @@ export function useProvisionDelegateForHostedBuilds(): ProvisionDelegateForHoste
   useEffect((): void => {
     if (initProvisioning) {
       setDelegateProvisioningStatus(ProvisioningStatus.IN_PROGRESS)
-      startProvisioning()
-        .then((startProvisioningResponse: ResponseSetupStatus) => {
-          setInitProvisioning(false)
-          const { status: startProvisioningStatus, data: startProvisioningData } = startProvisioningResponse
-          if (
-            startProvisioningStatus === ProvisioningStatus[ProvisioningStatus.SUCCESS] &&
-            startProvisioningData === ProvisioningStatus[ProvisioningStatus.SUCCESS]
-          ) {
-            /* ?. added here for test cases */
-            fetchProvisioningStatus?.()
-            setStartPolling(true)
-          } else {
-            setDelegateProvisioningStatus(ProvisioningStatus.FAILURE)
-          }
-        })
-        .catch(() => {
-          setInitProvisioning(false)
-          setDelegateProvisioningStatus(ProvisioningStatus.FAILURE)
-        })
+      setTimeout(
+        () =>
+          startProvisioning()
+            .then((startProvisioningResponse: ResponseSetupStatus) => {
+              setInitProvisioning(false)
+              const { status: startProvisioningStatus, data: startProvisioningData } = startProvisioningResponse
+              if (
+                startProvisioningStatus === ProvisioningStatus[ProvisioningStatus.SUCCESS] &&
+                startProvisioningData === ProvisioningStatus[ProvisioningStatus.SUCCESS]
+              ) {
+                /* ?. added here for test cases */
+                fetchProvisioningStatus?.()
+                setStartPolling(true)
+              } else {
+                setDelegateProvisioningStatus(ProvisioningStatus.FAILURE)
+              }
+            })
+            .catch(() => {
+              setInitProvisioning(false)
+              setDelegateProvisioningStatus(ProvisioningStatus.FAILURE)
+            }),
+        10000
+      )
     }
   }, [initProvisioning])
 
