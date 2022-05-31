@@ -7,14 +7,14 @@
 
 import { Color, FontVariation, Icon, Text } from '@harness/uicore'
 import cx from 'classnames'
-
 import React from 'react'
-import clusters from './clusters.json'
+
 import css from './AddCluster.module.scss'
 
 const ClusterCard = (props: any): React.ReactElement => {
   const { cluster, selectedClusters } = props
   const isClusterAlreadySelected = selectedClusters.find((clstr: any) => clstr.identifier === cluster.identifier)
+
   return (
     <div
       onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
@@ -41,7 +41,7 @@ const ClusterCard = (props: any): React.ReactElement => {
           color={Color.BLACK}
           className={css.clusterName}
         >
-          {cluster.cluster.name}
+          {cluster?.cluster?.name || ''}
         </Text>
         <Text
           data-id="cluster-id-text"
@@ -59,10 +59,10 @@ const ClusterCard = (props: any): React.ReactElement => {
 }
 
 const ClusterList = (props: any): React.ReactElement => {
-  if (clusters.totalItems > 0) {
+  if (!props.loading && props?.clusters?.length > 0) {
     return (
       <div>
-        {clusters.content.map(cluster => {
+        {props?.clusters?.map((cluster: any) => {
           return (
             <ClusterCard
               cluster={cluster}

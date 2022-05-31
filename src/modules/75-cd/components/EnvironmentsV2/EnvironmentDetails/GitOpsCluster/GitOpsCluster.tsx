@@ -6,27 +6,39 @@
  */
 
 import React from 'react'
-import { Button } from '@harness/uicore'
-import { useStrings } from 'framework/strings'
+import { Button, ButtonSize, ButtonVariation, Container } from '@harness/uicore'
 import AddCluster from '../AddCluster'
+import ClusterTableView from '../ClusterTableView'
 
-const GitOpsCluster = (): React.ReactElement => {
-  const { getString } = useStrings()
+const GitOpsCluster = (props: any): React.ReactElement => {
   const [showSelectClusterModal, setShowClusterModal] = React.useState(false)
   return (
-    <div>
-      <Button
-        minimal
-        intent="primary"
-        onClick={() => {
-          setShowClusterModal(true)
-        }}
-      >
-        Select Cluster
-      </Button>
-      <div>{getString('cd.gitOpsCluster')} </div>
-      {showSelectClusterModal ? <AddCluster /> : null}
-    </div>
+    <Container padding={{ left: 'medium', right: 'medium' }}>
+      <>
+        <Button
+          minimal
+          intent="primary"
+          onClick={() => {
+            setShowClusterModal(true)
+          }}
+          size={ButtonSize.SMALL}
+          variation={ButtonVariation.LINK}
+        >
+          Select Cluster
+        </Button>
+        <Container border={{ top: true }}>
+          <ClusterTableView {...props} />
+          {showSelectClusterModal ? (
+            <AddCluster
+              onHide={() => {
+                setShowClusterModal(false)
+              }}
+              {...props}
+            />
+          ) : null}
+        </Container>
+      </>
+    </Container>
   )
 }
 

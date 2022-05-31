@@ -6,6 +6,8 @@
  */
 
 import React from 'react'
+import { useParams } from 'react-router-dom'
+
 import {
   Button,
   ButtonVariation,
@@ -15,17 +17,67 @@ import {
   FontVariation,
   Icon,
   Layout,
+  PageSpinner,
   Text,
-  TextInput
+  TextInput,
+  useToaster
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
+import { Cluster, useCreateClusters, useGetClusterListFromSource } from 'services/cd-ng'
+
 import ClusterList from './ClusterList'
-import clusters from './clusters.json'
 import css from './AddCluster.module.scss'
 
 const AddCluster = (props: any): React.ReactElement => {
   const [selectedClusters, setSelectedClusters] = React.useState<any>([])
   const { getString } = useStrings()
+  const { showSuccess, showError } = useToaster()
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<{
+    orgIdentifier: string
+    projectIdentifier: string
+    accountId: string
+  }>()
+
+  const { data, loading, error, refetch } = useGetClusterListFromSource({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier: orgIdentifier,
+      projectIdentifier: projectIdentifier,
+      page: 0,
+      size: 50
+    }
+  })
+
+  const { mutate: createCluster } = useCreateClusters({
+    queryParams: { accountIdentifier: accountId }
+  })
+
+  const onSubmit = (): void => {
+    if (selectedClusters && selectedClusters.length) {
+      const payload = {
+        envRef: props.envRef,
+        clusters: selectedClusters.map((clstr: any) => ({
+          identifier: clstr.identifier,
+          name: clstr?.name
+        })),
+        orgIdentifier,
+        projectIdentifier,
+        accountId
+      }
+
+      createCluster(payload, { queryParams: { accountIdentifier: accountId } })
+        .then(() => {
+          showSuccess('Successfully linked')
+          props?.onHide()
+        })
+        .catch(err => {
+          showError(err?.message)
+        })
+    } else {
+      alert('select clusters')
+    }
+  }
+
   return (
     <Dialog
       isOpen
@@ -40,7 +92,7 @@ const AddCluster = (props: any): React.ReactElement => {
       enforceFocus={false}
       usePortal
       canOutsideClickClose={false}
-      onClose={props.onCancel}
+      onClose={props.onHide}
       isCloseButtonShown={true}
     >
       <div className={css.addClusterDialog}>
@@ -53,13 +105,23 @@ const AddCluster = (props: any): React.ReactElement => {
           <TextInput placeholder="Search" leftIcon="search" />
           <Layout.Horizontal className={css.contentContainer} height={'339px'}>
             <div className={css.agentList}>
-              <ClusterList setSelectedClusters={setSelectedClusters} selectedClusters={selectedClusters} />
+              {loading ? <PageSpinner /> : null}
+              {!loading ? (
+                <ClusterList
+                  setSelectedClusters={setSelectedClusters}
+                  selectedClusters={selectedClusters}
+                  clusters={data?.data?.content}
+                  loading={loading}
+                  error={error}
+                  refetch={refetch}
+                />
+              ) : null}
               <div>
                 <Checkbox
                   label="Select All"
                   onClick={ev => {
                     if (ev.currentTarget.checked) {
-                      setSelectedClusters(clusters.content)
+                      setSelectedClusters(data?.data?.content)
                     } else {
                       setSelectedClusters([])
                     }
@@ -67,10 +129,10 @@ const AddCluster = (props: any): React.ReactElement => {
                 />
                 {selectedClusters.length ? (
                   <span>
-                    ({selectedClusters.length}/{clusters.content.length})
+                    ({selectedClusters.length}/{data?.data?.content?.length})
                   </span>
                 ) : (
-                  <span>({clusters.content.length})</span>
+                  <span>({data?.data?.content?.length})</span>
                 )}
               </div>
             </div>
@@ -89,7 +151,7 @@ const AddCluster = (props: any): React.ReactElement => {
                     <Text className={css.selectedHeader} color={Color.GREY_800}>
                       Selected
                     </Text>
-                    {selectedClusters.map((clstr: any) => {
+                    {selectedClusters.map((clstr: Cluster) => {
                       return (
                         <Text
                           key={clstr.identifier}
@@ -97,7 +159,7 @@ const AddCluster = (props: any): React.ReactElement => {
                           color={Color.GREY_800}
                           className={css.selectedIdenfitier}
                         >
-                          {clstr.cluster.name}
+                          {clstr?.identifier}
                         </Text>
                       )
                     })}
@@ -109,8 +171,8 @@ const AddCluster = (props: any): React.ReactElement => {
         </Layout.Vertical>
 
         <Layout.Horizontal className={css.footerStyle}>
-          <Button variation={ButtonVariation.PRIMARY} text="Add" />
-          <Button text="Cancel" variation={ButtonVariation.TERTIARY} />
+          <Button variation={ButtonVariation.PRIMARY} text="Add" onClick={onSubmit} />
+          <Button text="Cancel" variation={ButtonVariation.TERTIARY} onClick={props.onHide} />
         </Layout.Horizontal>
       </div>
     </Dialog>

@@ -458,7 +458,7 @@ export default function EnvironmentDetails() {
                             {getString('cd.gitOpsCluster')}
                           </Text>
                         ),
-                        panel: <GitOpsCluster />
+                        panel: <GitOpsCluster envRef={identifier} />
                       }
                     ]}
                   >
