@@ -95,7 +95,13 @@ const PerspectiveBuilderFilter: React.FC<FilterPillProps> = ({
     providerData,
     serviceData
   ) => {
-    onInputChange('')
+    if (provider.id !== providerData.id || service.id !== serviceData.id) {
+      setPageInfo(prevInfo => ({
+        ...prevInfo,
+        filtersValuesData: [],
+        searchValue: ''
+      }))
+    }
     const changedData = {
       ...pillData,
       viewField: {
@@ -103,13 +109,19 @@ const PerspectiveBuilderFilter: React.FC<FilterPillProps> = ({
         fieldName: serviceData.name,
         identifierName: providerData.name,
         identifier: providerData.id
-      }
+      },
+      values: []
     }
     onChange(id, changedData)
   }
 
+  const clearInput = () =>
+    setPageInfo(prevInfo => ({
+      ...prevInfo,
+      searchValue: ''
+    }))
+
   const onOperatorChange: (op: QlceViewFilterOperator) => void = op => {
-    onInputChange('')
     const changedData = {
       ...pillData,
       viewOperator: op
@@ -117,8 +129,10 @@ const PerspectiveBuilderFilter: React.FC<FilterPillProps> = ({
     if (op === QlceViewFilterOperator.Null || op === QlceViewFilterOperator.NotNull) {
       onChange(id, { ...changedData, values: [''] })
     } else if ([QlceViewFilterOperator.Null, QlceViewFilterOperator.NotNull].includes(operator)) {
+      clearInput()
       onChange(id, { ...changedData, values: [] })
     } else {
+      clearInput()
       onChange(id, changedData)
     }
   }
@@ -176,19 +190,10 @@ const PerspectiveBuilderFilter: React.FC<FilterPillProps> = ({
     }
   }, [data?.perspectiveFilters?.values])
 
-  useEffect(() => {
-    if (!pageInfo.searchValue) {
-      setPageInfo(prevInfo => ({
-        ...prevInfo,
-        filtersValuesData: (data?.perspectiveFilters?.values?.filter(e => e) || []) as string[]
-      }))
-    }
-  }, [pageInfo.searchValue])
-
   const onInputChange: (val: string) => void = val => {
     setPageInfo({
-      filtersValuesData: [],
-      loadMore: true,
+      filtersValuesData: val ? [] : ((data?.perspectiveFilters?.values?.filter(e => e) || []) as string[]),
+      loadMore: val ? true : false,
       page: 1,
       searchValue: val
     })
