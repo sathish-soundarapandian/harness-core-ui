@@ -279,7 +279,6 @@ export interface StringsMap {
   'common.git.addUserCredentialLabel': string
   'common.git.applicationId': string
   'common.git.bitbucketAccountUrl': string
-  'common.git.bitbucketOrgUrlPlaceholder': string
   'common.git.bitbucketPlaceholderSSH': string
   'common.git.bitbucketRepoUrl': string
   'common.git.bitbucketUrlPlaceholder': string
@@ -5285,6 +5284,9 @@ export interface StringsMap {
   'ci.getStartedWithCI.flexibleInfra': string
   'ci.getStartedWithCI.flexibleInfraHelpText': string
   'ci.getStartedWithCI.genericGit': string
+  'ci.getStartedWithCI.gitProviderURLs.bitbucket': string
+  'ci.getStartedWithCI.gitProviderURLs.github': string
+  'ci.getStartedWithCI.gitProviderURLs.gitlab': string
   'ci.getStartedWithCI.hostedByHarness': string
   'ci.getStartedWithCI.hostedByHarnessBuildLocation': string
   'ci.getStartedWithCI.hosting': string
