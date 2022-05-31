@@ -36,3 +36,15 @@ export enum CD_LICENSE_TYPE {
   SERVICES = 'SERVICES',
   SERVICE_INSTANCES = 'SERVICE_INSTANCES'
 }
+
+export enum TimeType {
+  YEARLY = 'yearly',
+  MONTHLY = 'monthly'
+}
+
+export enum SubscribeViews {
+  CALCULATE,
+  BILLINGINFO,
+  FINALREVIEW,
+  SUCCESS
+}

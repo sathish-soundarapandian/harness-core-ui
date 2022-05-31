@@ -646,6 +646,7 @@ default: Default
 searchPlaceholder: Search by name or Id
 monthly: Monthly
 perMonth: /month
+perYear: /year
 hourly: Hourly
 daily: Daily
 yearly: Yearly
@@ -869,18 +870,5 @@ editName: Edit {{name}}
 selectName: Select {{name}}
 override: Override
 plusNewName: + New {{name}}
-costCalculator:
-  month: 'Month '
-  year: 'Year'
-  team: 'Team'
-  enterprise: 'Enterprise '
-  tax: 'Tax'
-  support: 'Support'
-  unitPrice: 'Unit Price'
-  currentUsage: 'Current Usage'
-  plannedUsage: 'Planned Usage'
-  recommended: 'Recommended Usage'
-  nextPayment: 'Next Payment'
-  ff:
-    developer: 'Developer'
-    mau: 'MAU'
+subtotal: Subtotal
+annually: annually

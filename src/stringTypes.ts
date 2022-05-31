@@ -48,6 +48,7 @@ export interface StringsMap {
   'common.allErrors': string
   'common.and': string
   'common.andCaps': string
+  'common.annually': string
   'common.apiKeys': string
   'common.apiStatus': string
   'common.apikey': string
@@ -160,19 +161,6 @@ export interface StringsMap {
   'common.copy': string
   'common.copyFqn': string
   'common.copyVariableName': string
-  'common.costCalculator.currentUsage': string
-  'common.costCalculator.enterprise': string
-  'common.costCalculator.ff.developer': string
-  'common.costCalculator.ff.mau': string
-  'common.costCalculator.month': string
-  'common.costCalculator.nextPayment': string
-  'common.costCalculator.plannedUsage': string
-  'common.costCalculator.recommended': string
-  'common.costCalculator.support': string
-  'common.costCalculator.tax': string
-  'common.costCalculator.team': string
-  'common.costCalculator.unitPrice': string
-  'common.costCalculator.year': string
   'common.createPipeline': string
   'common.creating': string
   'common.current': string
@@ -464,6 +452,7 @@ export interface StringsMap {
   'common.payload': string
   'common.pendingInvitation': string
   'common.perMonth': string
+  'common.perYear': string
   'common.performAction': string
   'common.pipeline': string
   'common.pipelineDetails': string
@@ -711,6 +700,7 @@ export interface StringsMap {
   'common.subscriptions.usage.monthlyUsers': string
   'common.subscriptions.usage.services': string
   'common.subscriptions.usage.srvcInst': string
+  'common.subtotal': string
   'common.successfullCreate': string
   'common.successfullUpdate': string
   'common.suggestionsLabel': string
@@ -1311,7 +1301,19 @@ export interface StringsMap {
   'authSettings.authenticationSettings': string
   'authSettings.authorizationEnabledFor': string
   'authSettings.authorizationNotEnabled': string
+  'authSettings.autoRenewal': string
   'authSettings.azure': string
+  'authSettings.billedAnnually': string
+  'authSettings.billedMonthly': string
+  'authSettings.billing.next': string
+  'authSettings.billing.premSupport.includedByDefault': string
+  'authSettings.billing.premSupport.line1': string
+  'authSettings.billing.premSupport.line2': string
+  'authSettings.billing.premSupport.line3': string
+  'authSettings.billing.premSupport.title': string
+  'authSettings.billing.step': string
+  'authSettings.billing.subscribeNPay': string
+  'authSettings.billing.totalDuetoday': string
   'authSettings.cdCommunityPlan.communityLinkText': string
   'authSettings.cdCommunityPlan.communityPlanStrings.item1': string
   'authSettings.cdCommunityPlan.communityPlanStrings.item2': string
@@ -1342,6 +1344,29 @@ export interface StringsMap {
   'authSettings.confirmDisablePasswordStrength': string
   'authSettings.confirmDisableUserPasswordLogin': string
   'authSettings.confirmDisableWhitelistedDomains': string
+  'authSettings.costCalculator.autoRenew': string
+  'authSettings.costCalculator.comparePlans': string
+  'authSettings.costCalculator.currentSubscription': string
+  'authSettings.costCalculator.currentUsage': string
+  'authSettings.costCalculator.developerLicenses': string
+  'authSettings.costCalculator.enterprise': string
+  'authSettings.costCalculator.ff.developer': string
+  'authSettings.costCalculator.ff.mau': string
+  'authSettings.costCalculator.maus': string
+  'authSettings.costCalculator.month': string
+  'authSettings.costCalculator.newSubscription': string
+  'authSettings.costCalculator.next': string
+  'authSettings.costCalculator.nextPayment': string
+  'authSettings.costCalculator.payingToday': string
+  'authSettings.costCalculator.plannedUsage': string
+  'authSettings.costCalculator.recommended': string
+  'authSettings.costCalculator.step': string
+  'authSettings.costCalculator.support': string
+  'authSettings.costCalculator.tax': string
+  'authSettings.costCalculator.team': string
+  'authSettings.costCalculator.unitPrice': string
+  'authSettings.costCalculator.using': string
+  'authSettings.costCalculator.year': string
   'authSettings.daysBeforePasswordExpires': string
   'authSettings.daysBeforeUserNotified': string
   'authSettings.deleteSamlProvider': string
@@ -1373,6 +1398,10 @@ export interface StringsMap {
   'authSettings.existingMembersWillReceiveAnEmailWithQRCode': string
   'authSettings.failedLoginsBeforeLocked': string
   'authSettings.failedLoginsBeforeLockedAccount': string
+  'authSettings.finalReview.ofTotalSpend': string
+  'authSettings.finalReview.premiumSupport': string
+  'authSettings.finalReview.step': string
+  'authSettings.firstIncludedFree': string
   'authSettings.friendlyReminder': string
   'authSettings.friendlyReminderDescription': string
   'authSettings.goToSettings': string
@@ -1392,6 +1421,7 @@ export interface StringsMap {
   'authSettings.loginViaSAML': string
   'authSettings.logoutUrl': string
   'authSettings.minLength': string
+  'authSettings.monthlySubscriptionTotal': string
   'authSettings.multipleOrganizations': string
   'authSettings.multipleProjects': string
   'authSettings.newMembersWillNeedToSetUpTwoFADuringSignup': string
@@ -1415,6 +1445,7 @@ export interface StringsMap {
   'authSettings.periodicallyExpirePasswordNote': string
   'authSettings.pleaseRemoveSAMLOrLDAPToEnableOauth': string
   'authSettings.plusSAMLProvider': string
+  'authSettings.plusTax': string
   'authSettings.publicOAuthLoginDisabled': string
   'authSettings.publicOAuthLoginEnabled': string
   'authSettings.restrictUsersToEmailDomains': string
@@ -1427,6 +1458,8 @@ export interface StringsMap {
   'authSettings.samlTestFailed': string
   'authSettings.samlTestSuccessful': string
   'authSettings.selectSAMLProvider': string
+  'authSettings.success.msg': string
+  'authSettings.success.title': string
   'authSettings.sureToDisableTwoFAEnforcement': string
   'authSettings.testingSSO': string
   'authSettings.testingSSODescription': string
@@ -1434,11 +1467,13 @@ export interface StringsMap {
   'authSettings.twoFAEnforcementEnabled': string
   'authSettings.twoFactorAuthSupport': string
   'authSettings.typeAndPressEnterToAddADomain': string
+  'authSettings.unitPrice': string
   'authSettings.updating': string
   'authSettings.uploadIdentityProvider': string
   'authSettings.useHarnessUsernameAndPassword': string
   'authSettings.usePublicOAuth': string
   'authSettings.whitelistedDomainsDisabled': string
+  'authSettings.yearlySubscriptionTotal': string
   'authSettings.yourAccountWillBeLockedOut': string
   'connectors.ECR.fullName': string
   'connectors.ECR.name': string

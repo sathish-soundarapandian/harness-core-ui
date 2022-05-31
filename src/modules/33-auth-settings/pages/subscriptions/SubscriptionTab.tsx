@@ -23,7 +23,6 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { StringsMap } from 'stringTypes'
 import { isCommunityPlan } from '@common/utils/utils'
 
-import { ExampleModal } from '@auth-settings/pages/subscriptions/components/CostCalculator/CostCalculator'
 import SubscriptionOverview from './overview/SubscriptionOverview'
 import SubscriptionBanner from './SubscriptionBanner'
 import SubscriptionPlans from './plans/SubscriptionPlans'
@@ -159,7 +158,6 @@ const SubscriptionTab = ({
         {getSubscriptionTabButtons()}
       </Layout.Horizontal>
       {getTabComponent()}
-      <ExampleModal />
     </React.Fragment>
   )
 }

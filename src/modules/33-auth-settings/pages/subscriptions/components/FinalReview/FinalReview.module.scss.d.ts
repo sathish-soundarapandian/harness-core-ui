@@ -7,16 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly billingHeader: string
-  readonly body: string
-  readonly currentPlan: string
-  readonly equation: string
-  readonly newPlan: string
-  readonly newSubscription: string
-  readonly premLabel: string
-  readonly premSupport: string
-  readonly slider: string
-  readonly textInput: string
-  readonly unit: string
+  readonly line: string
+  readonly lineItem: string
+  readonly payingToday: string
 }
 export default styles
