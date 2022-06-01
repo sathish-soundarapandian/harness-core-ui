@@ -89,10 +89,18 @@ export default function AddEditServiceOverride({
   })
 
   const servicesAvailable = defaultTo(
-    data?.data?.content?.map(item => ({
-      label: defaultTo(item?.service?.name, ''),
-      value: defaultTo(yamlParse(defaultTo(item.service?.yaml, '{}')), '')
-    })),
+    data?.data?.content
+      ?.map(item => {
+        try {
+          return {
+            label: defaultTo(item?.service?.name, ''),
+            value: defaultTo(yamlParse(defaultTo(item.service?.yaml, '{}')), '')
+          }
+        } catch (e: any) {
+          return null
+        }
+      })
+      .filter(services => services),
     []
   )
 
@@ -184,7 +192,7 @@ export default function AddEditServiceOverride({
             <Container margin={{ left: 'small', right: 'small' }}>
               <FormInput.Select
                 name="serviceYaml"
-                items={servicesAvailable}
+                items={servicesAvailable as SelectOption[]}
                 label={getString('service')}
                 placeholder={getString('common.selectName', { name: getString('service') })}
                 disabled={servicesLoading}

@@ -93,6 +93,7 @@ interface ListProps {
   type?: ListType
   classNames?: string
   showCost?: boolean
+  showCount?: boolean
 }
 
 interface ChartTypeProps {
@@ -304,7 +305,7 @@ export const FlexList = (props: ListProps) => {
 
 export const TableList = (props: ListProps) => {
   const { accountId } = useParams<{ accountId: string }>()
-  const { data = [], type = ListType.KEY_ONLY, classNames, showCost = true } = props
+  const { data = [], type = ListType.KEY_ONLY, classNames, showCost = true, showCount = true } = props
 
   const renderLegend = (item: Stats) => {
     return (
@@ -342,7 +343,7 @@ export const TableList = (props: ListProps) => {
             <Text color="grey600" font="small" lineClamp={1} style={{ maxWidth: 90 }}>
               {showCost ? formatCost(item.value) : item.count}
             </Text>
-            {item.count && showCost ? (
+            {item.count && showCount && showCost ? (
               <Text color="grey600" font="small" lineClamp={1} style={{ maxWidth: 90 }}>
                 {`(${item.count})`}
               </Text>

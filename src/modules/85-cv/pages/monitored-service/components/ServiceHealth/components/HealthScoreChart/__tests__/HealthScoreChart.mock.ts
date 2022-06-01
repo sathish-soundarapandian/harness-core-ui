@@ -740,7 +740,7 @@ export const mockedExecutionSummary = {
         triggerType: 'SCHEDULER_CRON',
         triggeredBy: {
           uuid: 'systemUser',
-          // identifier: 'trigger',
+          identifier: 'trigger',
           extraInfo: {
             execution_trigger_tag_needed_for_abort: 'zEaak-FLS425IEO7OLzMUg:CVNG:SRM:SingleStageMultipleHealthSources',
             triggerRef: 'zEaak-FLS425IEO7OLzMUg/CVNG/SRM/trigger',

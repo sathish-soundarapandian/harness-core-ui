@@ -11,7 +11,7 @@ import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import { useTelemetry } from '@common/hooks/useTelemetry'
-import { Category, PageNames } from '@common/constants/TrackingConstants'
+import { PageNames } from '@common/constants/TrackingConstants'
 import RbacButton from '@rbac/components/Button/Button'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import css from './TrialInProgressTemplate.module.scss'
@@ -73,7 +73,6 @@ export const TrialInProgressTemplate: React.FC<TrialInProgressTemplateProps> = (
   const { module } = useModuleInfo()
   useTelemetry({
     pageName: PageNames.TrialInProgress,
-    category: Category.SIGNUP,
     properties: { module: module || '' }
   })
 

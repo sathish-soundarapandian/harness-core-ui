@@ -36,7 +36,7 @@ import type { StepDetails } from '@connectors/interfaces/ConnectorInterface'
 import { ConnectorStatus } from '@connectors/constants'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import useTestConnectionErrorModal from '@connectors/common/useTestConnectionErrorModal/useTestConnectionErrorModal'
-import { GetTestConnectionValidationTextByType } from '../../utils/ConnectorUtils'
+import { GetTestConnectionValidationTextByType, showCustomErrorSuggestion } from '../../utils/ConnectorUtils'
 
 import css from '../ConnectorsListView.module.scss'
 
@@ -116,7 +116,10 @@ const ConnectivityStatus: React.FC<ConnectivityStatusProps> = ({ data }) => {
     status: 'PROCESS' // Replace when enum is added in uikit
   })
 
-  const { openErrorModal } = useTestConnectionErrorModal({})
+  const { openErrorModal } = useTestConnectionErrorModal({
+    showCustomErrorSuggestion: showCustomErrorSuggestion(data.connector?.type as string),
+    connectorInfo: data.connector
+  })
 
   const { mutate: reloadTestConnection } = useGetTestConnectionResult({
     identifier: identifier,

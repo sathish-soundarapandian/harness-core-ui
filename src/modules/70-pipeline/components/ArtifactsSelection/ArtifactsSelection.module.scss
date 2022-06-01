@@ -78,12 +78,13 @@
 }
 .artifactList {
   display: grid;
-  grid-template-columns: 190px 400px minmax(10px, 1fr) 80px;
+  grid-template-columns: 200px 200px 300px minmax(10px, 1fr) 80px;
   align-items: center;
   padding-left: var(--spacing-small);
   &.list-header {
     border-bottom: solid 1px var(--grey-100);
     padding-bottom: var(--spacing-medium);
+    text-transform: uppercase;
   }
 }
 

@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { Button, ButtonVariation, Layout, MultiTypeInputType } from '@wings-software/uicore'
-import { defaultTo, isEmpty, merge } from 'lodash-es'
+import { defaultTo, get, isEmpty, merge } from 'lodash-es'
 import cx from 'classnames'
 import { Dialog } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
@@ -25,7 +25,8 @@ import {
   PRIMARY_ARTIFACT,
   replaceTriggerDefaultBuild,
   updatePipelineArtifact,
-  updatePipelineManifest
+  updatePipelineManifest,
+  getFilteredStage
 } from '../../utils/TriggersWizardPageUtils'
 import css from './SelectArtifactModal.module.scss'
 
@@ -146,6 +147,10 @@ const onSubmit = ({
     finalArtifact.spec.tag = replaceTriggerDefaultBuild({
       build: finalArtifact?.spec?.tag
     })
+  } else if (!isManifest && finalArtifact?.spec?.artifactPath) {
+    finalArtifact.spec.artifactPath = replaceTriggerDefaultBuild({
+      artifactPath: finalArtifact?.spec?.artifactPath
+    })
   }
 
   const { pipeline, selectedArtifact } = formikProps.values
@@ -225,12 +230,23 @@ const SelectArtifactModal: React.FC<SelectArtifactModalPropsInterface> = ({
     ? getString('manifestsText')
     : getString('pipeline.artifactTriggerConfigPanel.artifact')
 
+  const selectedStage = formikProps?.values?.originalPipeline?.stages
+    ? getFilteredStage(formikProps?.values?.originalPipeline?.stages, selectedStageId)
+    : undefined
+
+  const artifacts = selectedStageId
+    ? get(selectedStage, 'stage.spec.serviceConfig.serviceDefinition.spec.artifacts')
+    : templateObject?.artifacts
+
+  const artifact = values?.selectedArtifact
+
   const formComponentProps = isManifest
     ? { manifestSourceBaseFactory: getManifesttBasefactory(), manifests: templateObject?.manifests }
     : {
         artifactSourceBaseFactory: getArtifactBasefactory(),
         type: defaultTo(templateObject?.artifacts?.primary?.type, ''),
-        artifacts: templateObject?.artifacts
+        artifacts,
+        artifact: isEmpty(artifact) ? undefined : artifact
       }
 
   return (

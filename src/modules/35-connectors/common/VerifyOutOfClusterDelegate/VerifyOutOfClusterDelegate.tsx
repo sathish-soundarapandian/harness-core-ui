@@ -36,7 +36,9 @@ import { useStrings } from 'framework/strings'
 import {
   GetTestConnectionValidationTextByType,
   removeErrorCode,
-  DelegateTypes
+  DelegateTypes,
+  showCustomErrorSuggestion,
+  showEditAndViewPermission
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
@@ -181,8 +183,8 @@ const VerifyOutOfClusterDelegate: React.FC<StepProps<VerifyOutOfClusterStepProps
       helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 900 } : undefined
     })
 
-    const ceConnectors: string[] = [Connectors.CE_KUBERNETES, Connectors.CEAWS, Connectors.CE_AZURE, Connectors.CE_GCP]
-    const isCeConnector = ceConnectors.includes(props.type)
+    const showCustomErrorHints = showCustomErrorSuggestion(props.type)
+    const showEditAndPermission = showEditAndViewPermission(props.type)
 
     const { trackEvent } = useTelemetry()
 
@@ -235,6 +237,8 @@ const VerifyOutOfClusterDelegate: React.FC<StepProps<VerifyOutOfClusterStepProps
           return 'https://ngdocs.harness.io/article/s65mzbyags-add-hashicorp-vault#permissions'
         case Connectors.AWS_KMS:
           return 'https://ngdocs.harness.io/article/pt52h8sb6z-add-an-aws-kms-secrets-manager'
+        case Connectors.AZURE:
+          return 'https://ngdocs.harness.io/article/9epdx5m9ae'
         default:
           return ''
       }
@@ -299,7 +303,7 @@ const VerifyOutOfClusterDelegate: React.FC<StepProps<VerifyOutOfClusterStepProps
           ) : null}
         </Layout.Vertical>
       )
-
+      const permissionLink = getPermissionsLink()
       return (
         <Layout.Vertical className={css.stepError}>
           {responseMessages ? (
@@ -307,7 +311,7 @@ const VerifyOutOfClusterDelegate: React.FC<StepProps<VerifyOutOfClusterStepProps
               responseMessages={responseMessages}
               className={css.errorHandler}
               errorHintsRenderer={
-                isCeConnector
+                showCustomErrorHints
                   ? hints => (
                       <Suggestions
                         items={hints as ResponseMessage[]}
@@ -323,7 +327,7 @@ const VerifyOutOfClusterDelegate: React.FC<StepProps<VerifyOutOfClusterStepProps
             genericHandler
           )}
           {/* TODO: when install delegate behaviour is known {testConnectionResponse?.data?.delegateId ? ( */}
-          {!isCeConnector ? (
+          {!showEditAndPermission ? (
             <Layout.Horizontal spacing="small">
               {props.isStep ? (
                 <Button
@@ -343,13 +347,15 @@ const VerifyOutOfClusterDelegate: React.FC<StepProps<VerifyOutOfClusterStepProps
                   withoutBoxShadow
                 />
               ) : null}
-              <Text
-                onClick={() => window.open(getPermissionsLink(), '_blank')}
-                className={cx(css.veiwPermission, { [css.marginAuto]: props.isStep })}
-                intent="primary"
-              >
-                {getString('connectors.testConnectionStep.viewPermissions')}
-              </Text>
+              {permissionLink && (
+                <Text
+                  onClick={() => window.open(permissionLink, '_blank')}
+                  className={cx(css.veiwPermission, { [css.marginAuto]: props.isStep })}
+                  intent="primary"
+                >
+                  {getString('connectors.testConnectionStep.viewPermissions')}
+                </Text>
+              )}
             </Layout.Horizontal>
           ) : null}
           {/* ) : (

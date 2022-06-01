@@ -6,23 +6,17 @@
  */
 
 import React, { useCallback, useContext, useMemo } from 'react'
-import ReactDOM from 'react-dom'
 import { useParams } from 'react-router-dom'
 import type { SeriesAreaOptions } from 'highcharts'
 import { Card, Container, Layout, Text, PageError } from '@wings-software/uicore'
+import { defaultTo } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { Ticker, TickerVerticalAlignment } from '@common/components/Ticker/Ticker'
 import { getBucketSizeForTimeRange } from '@common/components/TimeRangeSelector/TimeRangeSelector'
 import { PageSpinner, TimeSeriesAreaChart } from '@common/components'
 import type { TimeSeriesAreaChartProps } from '@common/components/TimeSeriesAreaChart/TimeSeriesAreaChart'
-import {
-  DeploymentsTimeRangeContext,
-  getFixed,
-  INVALID_CHANGE_RATE,
-  numberFormatter
-} from '@cd/components/Services/common'
-import { getReadableDateTime } from '@common/utils/dateUtils'
+import { DeploymentsTimeRangeContext, INVALID_CHANGE_RATE, numberFormatter } from '@cd/components/Services/common'
 import DeploymentsEmptyState from '@cd/icons/DeploymentsEmptyState.svg'
 import {
   GetServiceDeploymentsInfoQueryParams,
@@ -30,6 +24,7 @@ import {
   useGetServiceDeploymentsInfo
 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { getTooltip } from '@pipeline/utils/DashboardUtils'
 import css from '@cd/components/Services/DeploymentsWidget/DeploymentsWidget.module.scss'
 
 export interface ChangeValue {
@@ -53,84 +48,6 @@ const TickerValue: React.FC<{ value: number; color: Color }> = props => (
     truncate: false
   })}%`}</Text>
 )
-
-const DeploymentsTooltip: React.FC<any> = props => {
-  const {
-    x: timestamp,
-    failureRate,
-    failureRateLabel,
-    failureRateChangeRate,
-    frequency,
-    frequencyChangeRate,
-    frequencyLabel
-  } = props.options || {}
-  const currentDate = getReadableDateTime(timestamp)
-  const isFailureBoost = failureRateChangeRate === INVALID_CHANGE_RATE
-  const isFrequencyBoost = frequencyChangeRate === INVALID_CHANGE_RATE
-  return (
-    <Card className={css.tooltipCard}>
-      <Layout.Vertical>
-        <Text
-          font={{ size: 'small' }}
-          width="100%"
-          className={css.tooltipTimestamp}
-          margin={{ bottom: 'medium' }}
-          padding={{ bottom: 'small' }}
-        >
-          {currentDate}
-        </Text>
-        <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
-          <Text font={{ size: 'small', weight: 'semi-bold' }}>{failureRateLabel}</Text>
-          <Ticker
-            value={
-              isFailureBoost ? (
-                <></>
-              ) : (
-                <TickerValue
-                  value={getFixed(failureRateChangeRate || 0)}
-                  color={!isFailureBoost || failureRateChangeRate < 0 ? Color.GREEN_600 : Color.RED_500}
-                />
-              )
-            }
-            decreaseMode={!isFailureBoost && failureRateChangeRate < 0}
-            boost={isFailureBoost}
-            color={!isFailureBoost || failureRateChangeRate < 0 ? Color.GREEN_600 : Color.RED_500}
-            verticalAlign={TickerVerticalAlignment.TOP}
-            size={isFailureBoost ? 10 : 6}
-          >
-            <Text color={Color.BLACK} font={{ weight: 'bold' }} margin={{ right: 'medium' }}>
-              {numberFormatter(failureRate, { truncate: false })}%
-            </Text>
-          </Ticker>
-        </Layout.Horizontal>
-        <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
-          <Text font={{ size: 'small', weight: 'semi-bold' }}>{frequencyLabel}</Text>
-          <Ticker
-            value={
-              isFrequencyBoost ? (
-                <></>
-              ) : (
-                <TickerValue
-                  value={getFixed(frequencyChangeRate || 0)}
-                  color={isFrequencyBoost || frequencyChangeRate > 0 ? Color.GREEN_600 : Color.RED_500}
-                />
-              )
-            }
-            decreaseMode={!isFrequencyBoost && frequencyChangeRate < 0}
-            boost={isFrequencyBoost}
-            color={isFrequencyBoost || frequencyChangeRate > 0 ? Color.GREEN_600 : Color.RED_500}
-            verticalAlign={TickerVerticalAlignment.TOP}
-            size={isFrequencyBoost ? 10 : 6}
-          >
-            <Text color={Color.BLACK} font={{ weight: 'bold' }} margin={{ right: 'medium' }}>
-              {numberFormatter(frequency)}
-            </Text>
-          </Ticker>
-        </Layout.Horizontal>
-      </Layout.Vertical>
-    </Card>
-  )
-}
 
 export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
   const { getString } = useStrings()
@@ -169,6 +86,9 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
 
       const success: SeriesAreaOptions['data'] = []
       const failed: SeriesAreaOptions['data'] = []
+      const successData: number[] = []
+      const failureData: number[] = []
+      const custom: any = []
 
       deployments.forEach(deployment => {
         const { failureRate, failureRateChangeRate, frequency, frequencyChangeRate } = deployment.rate || {}
@@ -182,6 +102,10 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
         }
         success.push({ x: deployment.time || 0, y: deployment.deployments?.success || 0, ...rates })
         failed.push({ x: deployment.time || 0, y: deployment.deployments?.failure || 0, ...rates })
+
+        successData.push(defaultTo(deployment.deployments?.success, 0))
+        failureData.push(defaultTo(deployment.deployments?.failure, 0))
+        custom.push(deployment)
       })
 
       return {
@@ -200,13 +124,15 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
         data: [
           {
             name: getString('success'),
-            data: success,
-            color: '#3dc7f6'
+            data: successData,
+            color: '#3dc7f6',
+            custom
           },
           {
             name: getString('failed'),
-            data: failed,
-            color: '#ee5f54'
+            data: failureData,
+            color: '#ee5f54',
+            custom
           }
         ]
       }
@@ -260,16 +186,27 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
 
   const { deployments, failureRate, frequency, data } = parseData(serviceDeploymentsInfo.data)
 
+  const dataList = serviceDeploymentsInfo?.data?.serviceDeploymentList
   const customChartOptions: Highcharts.Options = {
     chart: { height: 170, spacing: [25, 0, 25, 0] },
     legend: { padding: 0 },
     xAxis: {
       allowDecimals: false,
       labels: {
-        enabled: false
+        formatter: function (this) {
+          let time = new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short' })
+          if (dataList?.length) {
+            const val = dataList?.[this.pos]?.time
+            time = val ? new Date(val).toLocaleDateString('en-US', { day: 'numeric', month: 'short' }) : time
+          }
+          return time
+        }
       }
     },
     yAxis: {
+      title: {
+        text: '# of Deployments'
+      },
       max: Math.max(
         ...(serviceDeploymentsInfo?.data?.serviceDeploymentList || []).map(
           deployment => (deployment.deployments?.failure || 0) + (deployment.deployments?.success || 0)
@@ -280,29 +217,12 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
       useHTML: true,
       borderWidth: 0,
       padding: 0,
+      backgroundColor: Color.BLACK,
       formatter: function () {
-        return '<div id="deployments-widget-tooltip" style="width: 300px"></div>'
-      }
-    },
-    plotOptions: {
-      area: {
-        pointStart: 0,
-        stacking: 'normal',
-        animation: false,
-        point: {
-          events: {
-            mouseOver: function () {
-              const el = document.getElementById('deployments-widget-tooltip')
-              if (el) {
-                ReactDOM.render(<DeploymentsTooltip {...this} />, el)
-              }
-            }
-          }
-        }
+        return getTooltip(this)
       }
     }
   }
-
   const isDeploymentBoost = deployments.change === INVALID_CHANGE_RATE
   return (
     <DeploymentWidgetContainer>

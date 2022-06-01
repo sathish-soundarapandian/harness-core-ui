@@ -303,10 +303,13 @@ export interface AccessControlCheckError {
     | 'HTTP_RESPONSE_EXCEPTION'
     | 'SCM_NOT_FOUND_ERROR'
     | 'SCM_CONFLICT_ERROR'
+    | 'SCM_CONFLICT_ERROR_V2'
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'DATA'
     | 'CONTEXT'
     | 'PR_CREATION_ERROR'
@@ -640,12 +643,6 @@ export interface AddUsersResponse {
       | 'USER_ALREADY_INVITED'
       | 'FAIL'
   }
-}
-
-export interface AggregateACLRequest {
-  resourceGroupFilter?: string[]
-  roleFilter?: string[]
-  searchTerm?: string
 }
 
 export interface ApiKeyAggregateDTO {
@@ -1480,6 +1477,32 @@ export interface CloudformationTemplateFileSpec {
   type?: string
 }
 
+export interface ClusterBasicDTO {
+  identifier?: string
+  name?: string
+}
+
+export interface ClusterBatchRequest {
+  clusters?: ClusterBasicDTO[]
+  envRef?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface ClusterRequest {
+  envRef?: string
+  identifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface ClusterResponse {
+  clusterRef?: string
+  envRef?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
 export interface CodeBase {
   build: Build
   connectorRef: string
@@ -1831,6 +1854,20 @@ export interface CreatePRDTO {
   prNumber?: number
 }
 
+export interface CreatePRRequest {
+  connectorRef?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  repoName?: string
+  sourceBranchName?: string
+  targetBranchName?: string
+  title?: string
+}
+
+export interface CreatePRResponse {
+  prNumber?: number
+}
+
 export interface CriteriaSpec {
   [key: string]: any
 }
@@ -2066,6 +2103,7 @@ export interface DelegateProfileFilterProperties {
     | 'FileStore'
     | 'CCMRecommendation'
     | 'Anomaly'
+    | 'Environment'
   identifier?: string
   name?: string
   selectors?: string[]
@@ -2477,10 +2515,12 @@ export interface EntityDetail {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
 }
 
 export interface EntityGitDetails {
   branch?: string
+  commitId?: string
   filePath?: string
   objectId?: string
   repoIdentifier?: string
@@ -2547,6 +2587,30 @@ export interface Environment {
 
 export interface EnvironmentDeploymentInfo {
   environmentInfoByServiceId?: EnvironmentInfoByServiceId[]
+}
+
+export interface EnvironmentFilterProperties {
+  description?: string
+  environmentIdentifiers?: string[]
+  environmentNames?: string[]
+  environmentTypes?: ('PreProduction' | 'Production')[]
+  filterType?:
+    | 'Connector'
+    | 'DelegateProfile'
+    | 'Delegate'
+    | 'PipelineSetup'
+    | 'PipelineExecution'
+    | 'Deployment'
+    | 'Audit'
+    | 'Template'
+    | 'EnvironmentGroup'
+    | 'FileStore'
+    | 'CCMRecommendation'
+    | 'Anomaly'
+    | 'Environment'
+  tags?: {
+    [key: string]: string
+  }
 }
 
 export interface EnvironmentGroupDeleteResponse {
@@ -2934,10 +2998,13 @@ export interface Error {
     | 'HTTP_RESPONSE_EXCEPTION'
     | 'SCM_NOT_FOUND_ERROR'
     | 'SCM_CONFLICT_ERROR'
+    | 'SCM_CONFLICT_ERROR_V2'
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'DATA'
     | 'CONTEXT'
     | 'PR_CREATION_ERROR'
@@ -3324,10 +3391,13 @@ export interface Failure {
     | 'HTTP_RESPONSE_EXCEPTION'
     | 'SCM_NOT_FOUND_ERROR'
     | 'SCM_CONFLICT_ERROR'
+    | 'SCM_CONFLICT_ERROR_V2'
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'DATA'
     | 'CONTEXT'
     | 'PR_CREATION_ERROR'
@@ -3633,7 +3703,8 @@ export interface FileDTO {
   draft?: boolean
   fileUsage?: 'MANIFEST_FILE' | 'CONFIG' | 'SCRIPT'
   identifier: string
-  lastUpdatedBy?: EmbeddedUserDetailsDTO
+  lastModifiedAt?: number
+  lastModifiedBy?: EmbeddedUserDetailsDTO
   mimeType?: string
   name: string
   orgIdentifier?: string
@@ -3646,6 +3717,7 @@ export interface FileDTO {
 export type FileNodeDTO = FileStoreNodeDTO & {
   description?: string
   fileUsage: 'MANIFEST_FILE' | 'CONFIG' | 'SCRIPT'
+  mimeType?: string
   tags?: NGTag[]
 }
 
@@ -3654,6 +3726,7 @@ export interface FileStoreNodeDTO {
   lastModifiedAt?: number
   lastModifiedBy?: EmbeddedUserDetailsDTO
   name: string
+  parentIdentifier?: string
   type: 'FILE' | 'FOLDER'
 }
 
@@ -3662,7 +3735,7 @@ export interface FileStoreRequest {
 }
 
 export interface FilesFilterProperties {
-  createdBy?: string
+  createdBy?: EmbeddedUserDetailsDTO
   fileUsage?: 'MANIFEST_FILE' | 'CONFIG' | 'SCRIPT'
   filterType?:
     | 'Connector'
@@ -3677,7 +3750,8 @@ export interface FilesFilterProperties {
     | 'FileStore'
     | 'CCMRecommendation'
     | 'Anomaly'
-  referencedBy?: string
+    | 'Environment'
+  referencedBy?: EntityDetail
   tags?: {
     [key: string]: string
   }
@@ -3710,6 +3784,7 @@ export interface FilterProperties {
     | 'FileStore'
     | 'CCMRecommendation'
     | 'Anomaly'
+    | 'Environment'
   tags?: {
     [key: string]: string
   }
@@ -3731,6 +3806,7 @@ export interface FolderNodeDTO {
   lastModifiedAt?: number
   lastModifiedBy?: EmbeddedUserDetailsDTO
   name: string
+  parentIdentifier?: string
   type: 'FILE' | 'FOLDER'
 }
 
@@ -3829,8 +3905,10 @@ export type GenericEntityFilter = Filter & {
   filterType?: string
 }
 
-export interface GetFileResponse {
-  [key: string]: any
+export interface GetFileResponseDTO {
+  blobId?: string
+  commitId?: string
+  fileContent?: string
 }
 
 export interface GitAuthenticationDTO {
@@ -3869,6 +3947,7 @@ export type GitConfigDTO = ConnectorConfigDTO & {
 
 export interface GitEnabledDTO {
   connectivityMode?: 'MANAGER' | 'DELEGATE'
+  gitSimplificationEnabled?: boolean
   gitSyncEnabled?: boolean
 }
 
@@ -3951,6 +4030,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   )[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
   searchTerm?: string
@@ -4035,6 +4115,7 @@ export interface GitEntityFilterProperties {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
@@ -4152,6 +4233,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -4244,6 +4326,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -4414,6 +4497,7 @@ export interface GitSyncEntityDTO {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -4500,6 +4584,7 @@ export interface GitSyncEntityListDTO {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -4522,7 +4607,7 @@ export interface GitSyncErrorDTO {
   accountIdentifier?: string
   additionalErrorDetails?: GitSyncErrorDetailsDTO
   branchName?: string
-  changeType?: 'ADD' | 'RENAME' | 'MODIFY' | 'DELETE' | 'NONE'
+  changeType?: 'ADD' | 'RENAME' | 'MODIFY' | 'DELETE' | 'NONE' | 'ADD_V2' | 'UPDATE_V2'
   completeFilePath?: string
   createdAt?: number
   entityType?:
@@ -4603,6 +4688,7 @@ export interface GitSyncErrorDTO {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -4633,6 +4719,7 @@ export interface GitSyncRepoFilesList {
 export interface GitSyncSettingsDTO {
   accountIdentifier?: string
   executeOnDelegate: boolean
+  gitSimplificationEnabled?: boolean
   orgIdentifier: string
   projectIdentifier: string
 }
@@ -4833,6 +4920,7 @@ export type HelmChartManifest = ManifestAttributes & {
   metadata?: string
   skipResourceVersioning?: boolean
   store?: StoreConfigWrapper
+  valuesPaths?: string[]
 }
 
 export type HelmDeployStepInfo = StepSpecType & {
@@ -5021,10 +5109,11 @@ export interface InfrastructureConfig {
 export interface InfrastructureDef {
   provisioner?: ExecutionElementConfig
   spec: Infrastructure
-  type: 'KubernetesDirect' | 'KubernetesGcp' | 'KubernetesAzure' | 'Pdc' | 'ServerlessAwsLambda'
+  type: 'KubernetesDirect' | 'KubernetesGcp' | 'KubernetesAzure' | 'Pdc' | 'SshWinRmAzure' | 'ServerlessAwsLambda'
 }
 
 export interface InfrastructureDefinitionConfig {
+  allowSimultaneousDeployments?: ParameterFieldBoolean
   description?: string
   environmentRef?: string
   identifier: string
@@ -5035,7 +5124,7 @@ export interface InfrastructureDefinitionConfig {
   tags?: {
     [key: string]: string
   }
-  type: 'KubernetesDirect' | 'KubernetesGcp' | 'KubernetesAzure' | 'Pdc' | 'ServerlessAwsLambda'
+  type: 'KubernetesDirect' | 'KubernetesGcp' | 'KubernetesAzure' | 'Pdc' | 'SshWinRmAzure' | 'ServerlessAwsLambda'
 }
 
 export interface InfrastructureDetails {
@@ -5044,7 +5133,7 @@ export interface InfrastructureDetails {
 
 export interface InfrastructureRequestDTO {
   description?: string
-  envIdentifier?: string
+  environmentRef?: string
   identifier?: string
   name?: string
   orgIdentifier?: string
@@ -5052,7 +5141,7 @@ export interface InfrastructureRequestDTO {
   tags?: {
     [key: string]: string
   }
-  type?: 'KubernetesDirect' | 'KubernetesGcp' | 'KubernetesAzure' | 'Pdc' | 'ServerlessAwsLambda'
+  type?: 'KubernetesDirect' | 'KubernetesGcp' | 'KubernetesAzure' | 'Pdc' | 'SshWinRmAzure' | 'ServerlessAwsLambda'
   yaml?: string
 }
 
@@ -5065,7 +5154,7 @@ export interface InfrastructureResponse {
 export interface InfrastructureResponseDTO {
   accountId?: string
   description?: string
-  envIdentifier?: string
+  environmentRef?: string
   identifier?: string
   name?: string
   orgIdentifier?: string
@@ -5073,8 +5162,12 @@ export interface InfrastructureResponseDTO {
   tags?: {
     [key: string]: string
   }
-  type?: 'KubernetesDirect' | 'KubernetesGcp' | 'KubernetesAzure' | 'Pdc' | 'ServerlessAwsLambda'
+  type?: 'KubernetesDirect' | 'KubernetesGcp' | 'KubernetesAzure' | 'Pdc' | 'SshWinRmAzure' | 'ServerlessAwsLambda'
   yaml?: string
+}
+
+export type InheritFromManifestStoreConfig = StoreConfig & {
+  paths?: string[]
 }
 
 export type InheritedCloudformationDeleteStackStepConfiguration = CloudformationDeleteStackStepConfigurationSpec & {
@@ -5094,6 +5187,10 @@ export type InlineCloudformationTagsFileSpec = CloudformationTagsFileSpec & {
 
 export type InlineCloudformationTemplateFileSpec = CloudformationTemplateFileSpec & {
   templateBody: string
+}
+
+export type InlineStoreConfig = StoreConfig & {
+  content: string
 }
 
 export type InlineTerraformBackendConfigSpec = TerraformBackendConfigSpec & {
@@ -5300,6 +5397,7 @@ export type K8SDirectInfrastructure = Infrastructure & {
 export type K8sApplyStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   filePaths?: string[]
+  overrides?: ManifestConfigWrapper[]
   skipDryRun?: boolean
   skipSteadyStateCheck?: boolean
 }
@@ -5377,6 +5475,7 @@ export type K8sManifest = ManifestAttributes & {
   metadata?: string
   skipResourceVersioning?: ParameterFieldBoolean
   store?: StoreConfigWrapper
+  valuesPaths?: string[]
 }
 
 export type K8sRollingRollbackStepInfo = StepSpecType & {
@@ -5485,6 +5584,7 @@ export type KubernetesUserNamePasswordDTO = KubernetesAuthCredentialDTO & {
 
 export type KustomizeManifest = ManifestAttributes & {
   metadata?: string
+  patchesPaths?: string[]
   pluginPath?: string
   skipResourceVersioning?: ParameterFieldBoolean
   store?: StoreConfigWrapper
@@ -6015,9 +6115,10 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export type OAuthSettings = NGAuthSettings & {
+export interface OAuthSettings {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
@@ -6068,6 +6169,7 @@ export interface OnTimeoutConfig {
 
 export type OpenshiftManifest = ManifestAttributes & {
   metadata?: string
+  paramsPaths?: string[]
   skipResourceVersioning?: ParameterFieldBoolean
   store?: StoreConfigWrapper
 }
@@ -6157,6 +6259,16 @@ export interface PageActivitySummary {
 
 export interface PageApiKeyAggregateDTO {
   content?: ApiKeyAggregateDTO[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
+export interface PageClusterResponse {
+  content?: ClusterResponse[]
   empty?: boolean
   pageIndex?: number
   pageItemCount?: number
@@ -7111,6 +7223,13 @@ export interface ResponseCDStageModuleInfo {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseClusterResponse {
+  correlationId?: string
+  data?: ClusterResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseConnectivityCheckSummary {
   correlationId?: string
   data?: ConnectivityCheckSummary
@@ -7149,6 +7268,13 @@ export interface ResponseConnectorValidationResult {
 export interface ResponseCreatePRDTO {
   correlationId?: string
   data?: CreatePRDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseCreatePRResponse {
+  correlationId?: string
+  data?: CreatePRResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -7342,9 +7468,9 @@ export interface ResponseGcrResponseDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ResponseGetFileResponse {
+export interface ResponseGetFileResponseDTO {
   correlationId?: string
-  data?: GetFileResponse
+  data?: GetFileResponseDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -7597,6 +7723,7 @@ export interface ResponseListEntityType {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -7736,6 +7863,13 @@ export interface ResponseListRoleAssignmentResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseListScopeName {
+  correlationId?: string
+  data?: ScopeName[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseListServiceAccountDTO {
   correlationId?: string
   data?: ServiceAccountDTO[]
@@ -7788,13 +7922,6 @@ export interface ResponseListSourceCodeManagerDTO {
 export interface ResponseListString {
   correlationId?: string
   data?: string[]
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponseListUserGroupAggregateDTO {
-  correlationId?: string
-  data?: UserGroupAggregateDTO[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -8131,10 +8258,13 @@ export interface ResponseMessage {
     | 'HTTP_RESPONSE_EXCEPTION'
     | 'SCM_NOT_FOUND_ERROR'
     | 'SCM_CONFLICT_ERROR'
+    | 'SCM_CONFLICT_ERROR_V2'
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'DATA'
     | 'CONTEXT'
     | 'PR_CREATION_ERROR'
@@ -8268,6 +8398,13 @@ export interface ResponsePageActivitySummary {
 export interface ResponsePageApiKeyAggregateDTO {
   correlationId?: string
   data?: PageApiKeyAggregateDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePageClusterResponse {
+  correlationId?: string
+  data?: PageClusterResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -8555,6 +8692,13 @@ export interface ResponseRoleAssignmentResponse {
 export interface ResponseSaasGitDTO {
   correlationId?: string
   data?: SaasGitDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseScmCommitFileResponseDTO {
+  correlationId?: string
+  data?: ScmCommitFileResponseDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -9310,6 +9454,11 @@ export interface ScimUser {
   userName?: string
 }
 
+export interface ScmCommitFileResponseDTO {
+  blobId?: string
+  commitId?: string
+}
+
 export interface ScmConnectorDTO {
   connector?: ConnectorInfoDTO
   secret?: SecretDTOV2
@@ -9329,6 +9478,14 @@ export interface Scope {
   accountIdentifier?: string
   orgIdentifier?: string
   projectIdentifier?: string
+}
+
+export interface ScopeName {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  orgName?: string
+  projectIdentifier?: string
+  projectName?: string
 }
 
 export interface ScopingRuleDetailsNg {
@@ -9522,6 +9679,23 @@ export type ServerlessAwsLambdaInfrastructure = Infrastructure & {
   metadata?: string
   region: string
   stage: string
+}
+
+export type ServerlessAwsLambdaInfrastructureDetails = InfrastructureDetails & {
+  region?: string
+  stage?: string
+}
+
+export type ServerlessAwsLambdaInstanceInfoDTO = InstanceInfoDTO & {
+  functionName: string
+  handler?: string
+  infraStructureKey?: string
+  memorySize?: string
+  region: string
+  runTime?: string
+  serviceName: string
+  stage: string
+  timeout?: number
 }
 
 export type ServerlessAwsLambdaManifest = ManifestAttributes & {
@@ -9981,6 +10155,18 @@ export type SplunkConnectorDTO = ConnectorConfigDTO & {
 
 export type SshServiceSpec = ServiceSpec & {}
 
+export type SshWinRmAzureInfrastructure = Infrastructure & {
+  connectorRef: string
+  credentialsRef: string
+  delegateSelectors?: string[]
+  resourceGroup: string
+  subscriptionId: string
+  tags?: {
+    [key: string]: string
+  }
+  usePublicDns?: boolean
+}
+
 export interface StackTraceElement {
   className?: string
   fileName?: string
@@ -10122,7 +10308,18 @@ export interface StoreConfig {
 export interface StoreConfigWrapper {
   metadata?: string
   spec: StoreConfig
-  type: 'Git' | 'Github' | 'Bitbucket' | 'GitLab' | 'Http' | 'S3' | 'Gcs' | 'Artifactory' | 'S3Url'
+  type:
+    | 'Git'
+    | 'Github'
+    | 'Bitbucket'
+    | 'GitLab'
+    | 'Http'
+    | 'S3'
+    | 'Gcs'
+    | 'Inline'
+    | 'Artifactory'
+    | 'S3Url'
+    | 'InheritFromManifest'
 }
 
 export type StringNGVariable = NGVariable & {
@@ -10236,6 +10433,7 @@ export interface TerraformPlanExecutionData {
   command: 'Apply' | 'Destroy'
   configFiles: TerraformConfigFilesWrapper
   environmentVariables?: NGVariable[]
+  exportTerraformPlanJson?: boolean
   secretManagerRef: string
   targets?: string[]
   varFiles?: TerraformVarFileWrapper[]
@@ -10543,6 +10741,7 @@ export interface UserGroupEntityReference {
 export interface UserGroupFilterDTO {
   accountIdentifier?: string
   databaseIdFilter?: string[]
+  filterType?: 'INCLUDE_INHERITED_GROUPS' | 'EXCLUDE_INHERITED_GROUPS'
   identifierFilter?: string[]
   orgIdentifier?: string
   projectIdentifier?: string
@@ -10855,6 +11054,8 @@ export type ApiKeyDTORequestBody = ApiKeyDTO
 
 export type CFParametersForAwsBodyRequestBody = string
 
+export type ClusterRequestRequestBody = ClusterRequest
+
 export type ConnectorRequestBody = Connector
 
 export type DelegateGroupTagsRequestBody = DelegateGroupTags
@@ -10903,9 +11104,9 @@ export type ScimUserRequestBody = ScimUser
 
 export type ScopingRuleDetailsNgArrayRequestBody = ScopingRuleDetailsNg[]
 
-export type SecretRequestWrapperRequestBody = SecretRequestWrapper
+export type SecretRequestWrapperRequestBody = void
 
-export type SecretRequestWrapper2RequestBody = void
+export type SecretRequestWrapper2RequestBody = SecretRequestWrapper
 
 export type ServiceAccountDTORequestBody = ServiceAccountDTO
 
@@ -10933,7 +11134,7 @@ export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody = string
 
-export type SubscribeBodyRequestBody = string[]
+export type UnsubscribeBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -11491,6 +11692,7 @@ export interface ListActivitiesQueryParams {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   referredByEntityType?:
     | 'Projects'
     | 'Pipelines'
@@ -11569,6 +11771,7 @@ export interface ListActivitiesQueryParams {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -11751,6 +11954,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   referredByEntityType?:
     | 'Projects'
     | 'Pipelines'
@@ -11829,6 +12033,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -11931,6 +12136,7 @@ export interface GetUserGroupAggregateListQueryParams {
   pageSize?: number
   sortOrders?: string[]
   searchTerm?: string
+  filterType?: 'INCLUDE_INHERITED_GROUPS' | 'EXCLUDE_INHERITED_GROUPS'
   userSize?: number
 }
 
@@ -11983,89 +12189,12 @@ export const getUserGroupAggregateListPromise = (
     signal
   )
 
-export interface GetUserGroupAggregateListsWithFilterQueryParams {
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-}
-
-export type GetUserGroupAggregateListsWithFilterProps = Omit<
-  MutateProps<
-    ResponseListUserGroupAggregateDTO,
-    Failure | Error,
-    GetUserGroupAggregateListsWithFilterQueryParams,
-    AggregateACLRequest,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get Aggregated User Group list with filter
- */
-export const GetUserGroupAggregateListsWithFilter = (props: GetUserGroupAggregateListsWithFilterProps) => (
-  <Mutate<
-    ResponseListUserGroupAggregateDTO,
-    Failure | Error,
-    GetUserGroupAggregateListsWithFilterQueryParams,
-    AggregateACLRequest,
-    void
-  >
-    verb="POST"
-    path={`/aggregate/acl/usergroups/filter`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetUserGroupAggregateListsWithFilterProps = Omit<
-  UseMutateProps<
-    ResponseListUserGroupAggregateDTO,
-    Failure | Error,
-    GetUserGroupAggregateListsWithFilterQueryParams,
-    AggregateACLRequest,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get Aggregated User Group list with filter
- */
-export const useGetUserGroupAggregateListsWithFilter = (props: UseGetUserGroupAggregateListsWithFilterProps) =>
-  useMutate<
-    ResponseListUserGroupAggregateDTO,
-    Failure | Error,
-    GetUserGroupAggregateListsWithFilterQueryParams,
-    AggregateACLRequest,
-    void
-  >('POST', `/aggregate/acl/usergroups/filter`, { base: getConfig('ng/api'), ...props })
-
-/**
- * Get Aggregated User Group list with filter
- */
-export const getUserGroupAggregateListsWithFilterPromise = (
-  props: MutateUsingFetchProps<
-    ResponseListUserGroupAggregateDTO,
-    Failure | Error,
-    GetUserGroupAggregateListsWithFilterQueryParams,
-    AggregateACLRequest,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    ResponseListUserGroupAggregateDTO,
-    Failure | Error,
-    GetUserGroupAggregateListsWithFilterQueryParams,
-    AggregateACLRequest,
-    void
-  >('POST', getConfig('ng/api'), `/aggregate/acl/usergroups/filter`, props, signal)
-
 export interface GetUserGroupAggregateQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
+  roleAssignmentScopeOrgIdentifier?: string
+  roleAssignmentScopeProjectIdentifier?: string
 }
 
 export interface GetUserGroupAggregatePathParams {
@@ -16453,6 +16582,7 @@ export interface CreateConnectorQueryParams {
   baseBranch?: string
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
+  repoName?: string
 }
 
 export type CreateConnectorProps = Omit<
@@ -20457,6 +20587,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -21346,6 +21477,7 @@ export interface GetEnvironmentListQueryParams {
   searchTerm?: string
   envIdentifiers?: string[]
   sort?: string[]
+  filterIdentifier?: string
 }
 
 export type GetEnvironmentListProps = Omit<
@@ -21649,6 +21781,91 @@ export const getEnvironmentAccessListPromise = (
     props,
     signal
   )
+
+export interface GetEnvironmentListV2QueryParams {
+  page?: number
+  size?: number
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  searchTerm?: string
+  envIdentifiers?: string[]
+  sort?: string[]
+  filterIdentifier?: string
+}
+
+export type GetEnvironmentListV2Props = Omit<
+  MutateProps<
+    ResponsePageEnvironmentResponse,
+    Failure | Error,
+    GetEnvironmentListV2QueryParams,
+    EnvironmentFilterProperties,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets environment list
+ */
+export const GetEnvironmentListV2 = (props: GetEnvironmentListV2Props) => (
+  <Mutate<
+    ResponsePageEnvironmentResponse,
+    Failure | Error,
+    GetEnvironmentListV2QueryParams,
+    EnvironmentFilterProperties,
+    void
+  >
+    verb="POST"
+    path={`/environmentsV2/listV2`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetEnvironmentListV2Props = Omit<
+  UseMutateProps<
+    ResponsePageEnvironmentResponse,
+    Failure | Error,
+    GetEnvironmentListV2QueryParams,
+    EnvironmentFilterProperties,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets environment list
+ */
+export const useGetEnvironmentListV2 = (props: UseGetEnvironmentListV2Props) =>
+  useMutate<
+    ResponsePageEnvironmentResponse,
+    Failure | Error,
+    GetEnvironmentListV2QueryParams,
+    EnvironmentFilterProperties,
+    void
+  >('POST', `/environmentsV2/listV2`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Gets environment list
+ */
+export const getEnvironmentListV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponsePageEnvironmentResponse,
+    Failure | Error,
+    GetEnvironmentListV2QueryParams,
+    EnvironmentFilterProperties,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePageEnvironmentResponse,
+    Failure | Error,
+    GetEnvironmentListV2QueryParams,
+    EnvironmentFilterProperties,
+    void
+  >('POST', getConfig('ng/api'), `/environmentsV2/listV2`, props, signal)
 
 export interface UpsertEnvironmentV2QueryParams {
   accountIdentifier: string
@@ -22487,6 +22704,7 @@ export interface GetReferencedByInScopeQueryParams {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
 }
 
 export type GetReferencedByInScopeProps = Omit<
@@ -22932,6 +23150,7 @@ export interface GetReferencedByQueryParams {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   searchTerm?: string
 }
 
@@ -23012,6 +23231,7 @@ export interface GetFilterListQueryParams {
     | 'FileStore'
     | 'CCMRecommendation'
     | 'Anomaly'
+    | 'Environment'
 }
 
 export type GetFilterListProps = Omit<
@@ -23176,6 +23396,7 @@ export interface DeleteFilterQueryParams {
     | 'FileStore'
     | 'CCMRecommendation'
     | 'Anomaly'
+    | 'Environment'
 }
 
 export type DeleteFilterProps = Omit<
@@ -23241,6 +23462,7 @@ export interface GetFilterQueryParams {
     | 'FileStore'
     | 'CCMRecommendation'
     | 'Anomaly'
+    | 'Environment'
 }
 
 export interface GetFilterPathParams {
@@ -24217,6 +24439,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -24363,6 +24586,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'ServerlessAwsLambdaRollback'
       | 'CustomStage'
       | 'RollbackStack'
+      | 'Infrastructure'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -24946,6 +25170,349 @@ export const putGitSyncDefaultPromise = (
     signal
   )
 
+export interface GetClusterListQueryParams {
+  page?: number
+  size?: number
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  environmentIdentifier?: string
+  searchTerm?: string
+  identifiers?: string[]
+  sort?: string[]
+}
+
+export type GetClusterListProps = Omit<
+  GetProps<ResponsePageClusterResponse, Failure | Error, GetClusterListQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets cluster list
+ */
+export const GetClusterList = (props: GetClusterListProps) => (
+  <Get<ResponsePageClusterResponse, Failure | Error, GetClusterListQueryParams, void>
+    path={`/gitops/clusters`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetClusterListProps = Omit<
+  UseGetProps<ResponsePageClusterResponse, Failure | Error, GetClusterListQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets cluster list
+ */
+export const useGetClusterList = (props: UseGetClusterListProps) =>
+  useGet<ResponsePageClusterResponse, Failure | Error, GetClusterListQueryParams, void>(`/gitops/clusters`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Gets cluster list
+ */
+export const getClusterListPromise = (
+  props: GetUsingFetchProps<ResponsePageClusterResponse, Failure | Error, GetClusterListQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePageClusterResponse, Failure | Error, GetClusterListQueryParams, void>(
+    getConfig('ng/api'),
+    `/gitops/clusters`,
+    props,
+    signal
+  )
+
+export interface CreateClusterQueryParams {
+  accountIdentifier: string
+}
+
+export type CreateClusterProps = Omit<
+  MutateProps<ResponseClusterResponse, Failure | Error, CreateClusterQueryParams, ClusterRequestRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Create a Cluster
+ */
+export const CreateCluster = (props: CreateClusterProps) => (
+  <Mutate<ResponseClusterResponse, Failure | Error, CreateClusterQueryParams, ClusterRequestRequestBody, void>
+    verb="POST"
+    path={`/gitops/clusters`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseCreateClusterProps = Omit<
+  UseMutateProps<ResponseClusterResponse, Failure | Error, CreateClusterQueryParams, ClusterRequestRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Create a Cluster
+ */
+export const useCreateCluster = (props: UseCreateClusterProps) =>
+  useMutate<ResponseClusterResponse, Failure | Error, CreateClusterQueryParams, ClusterRequestRequestBody, void>(
+    'POST',
+    `/gitops/clusters`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Create a Cluster
+ */
+export const createClusterPromise = (
+  props: MutateUsingFetchProps<
+    ResponseClusterResponse,
+    Failure | Error,
+    CreateClusterQueryParams,
+    ClusterRequestRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseClusterResponse, Failure | Error, CreateClusterQueryParams, ClusterRequestRequestBody, void>(
+    'POST',
+    getConfig('ng/api'),
+    `/gitops/clusters`,
+    props,
+    signal
+  )
+
+export interface UpdateClusterQueryParams {
+  accountIdentifier: string
+}
+
+export type UpdateClusterProps = Omit<
+  MutateProps<ResponseClusterResponse, Failure | Error, UpdateClusterQueryParams, ClusterRequestRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Update a cluster by identifier
+ */
+export const UpdateCluster = (props: UpdateClusterProps) => (
+  <Mutate<ResponseClusterResponse, Failure | Error, UpdateClusterQueryParams, ClusterRequestRequestBody, void>
+    verb="PUT"
+    path={`/gitops/clusters`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateClusterProps = Omit<
+  UseMutateProps<ResponseClusterResponse, Failure | Error, UpdateClusterQueryParams, ClusterRequestRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Update a cluster by identifier
+ */
+export const useUpdateCluster = (props: UseUpdateClusterProps) =>
+  useMutate<ResponseClusterResponse, Failure | Error, UpdateClusterQueryParams, ClusterRequestRequestBody, void>(
+    'PUT',
+    `/gitops/clusters`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Update a cluster by identifier
+ */
+export const updateClusterPromise = (
+  props: MutateUsingFetchProps<
+    ResponseClusterResponse,
+    Failure | Error,
+    UpdateClusterQueryParams,
+    ClusterRequestRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseClusterResponse, Failure | Error, UpdateClusterQueryParams, ClusterRequestRequestBody, void>(
+    'PUT',
+    getConfig('ng/api'),
+    `/gitops/clusters`,
+    props,
+    signal
+  )
+
+export interface CreateClustersQueryParams {
+  accountIdentifier: string
+}
+
+export type CreateClustersProps = Omit<
+  MutateProps<ResponsePageClusterResponse, Failure | Error, CreateClustersQueryParams, ClusterBatchRequest, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Create Clusters
+ */
+export const CreateClusters = (props: CreateClustersProps) => (
+  <Mutate<ResponsePageClusterResponse, Failure | Error, CreateClustersQueryParams, ClusterBatchRequest, void>
+    verb="POST"
+    path={`/gitops/clusters/batch`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseCreateClustersProps = Omit<
+  UseMutateProps<ResponsePageClusterResponse, Failure | Error, CreateClustersQueryParams, ClusterBatchRequest, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Create Clusters
+ */
+export const useCreateClusters = (props: UseCreateClustersProps) =>
+  useMutate<ResponsePageClusterResponse, Failure | Error, CreateClustersQueryParams, ClusterBatchRequest, void>(
+    'POST',
+    `/gitops/clusters/batch`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Create Clusters
+ */
+export const createClustersPromise = (
+  props: MutateUsingFetchProps<
+    ResponsePageClusterResponse,
+    Failure | Error,
+    CreateClustersQueryParams,
+    ClusterBatchRequest,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponsePageClusterResponse, Failure | Error, CreateClustersQueryParams, ClusterBatchRequest, void>(
+    'POST',
+    getConfig('ng/api'),
+    `/gitops/clusters/batch`,
+    props,
+    signal
+  )
+
+export interface DeleteClusterQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  environmentIdentifier?: string
+}
+
+export type DeleteClusterProps = Omit<
+  MutateProps<ResponseBoolean, Failure | Error, DeleteClusterQueryParams, string, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Delete a Cluster by identifier
+ */
+export const DeleteCluster = (props: DeleteClusterProps) => (
+  <Mutate<ResponseBoolean, Failure | Error, DeleteClusterQueryParams, string, void>
+    verb="DELETE"
+    path={`/gitops/clusters`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseDeleteClusterProps = Omit<
+  UseMutateProps<ResponseBoolean, Failure | Error, DeleteClusterQueryParams, string, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Delete a Cluster by identifier
+ */
+export const useDeleteCluster = (props: UseDeleteClusterProps) =>
+  useMutate<ResponseBoolean, Failure | Error, DeleteClusterQueryParams, string, void>('DELETE', `/gitops/clusters`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Delete a Cluster by identifier
+ */
+export const deleteClusterPromise = (
+  props: MutateUsingFetchProps<ResponseBoolean, Failure | Error, DeleteClusterQueryParams, string, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseBoolean, Failure | Error, DeleteClusterQueryParams, string, void>(
+    'DELETE',
+    getConfig('ng/api'),
+    `/gitops/clusters`,
+    props,
+    signal
+  )
+
+export interface GetClusterQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  environmentIdentifier?: string
+  deleted?: boolean
+}
+
+export interface GetClusterPathParams {
+  identifier: string
+}
+
+export type GetClusterProps = Omit<
+  GetProps<ResponseClusterResponse, Failure | Error, GetClusterQueryParams, GetClusterPathParams>,
+  'path'
+> &
+  GetClusterPathParams
+
+/**
+ * Gets a Cluster by identifier
+ */
+export const GetCluster = ({ identifier, ...props }: GetClusterProps) => (
+  <Get<ResponseClusterResponse, Failure | Error, GetClusterQueryParams, GetClusterPathParams>
+    path={`/gitops/clusters/${identifier}`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetClusterProps = Omit<
+  UseGetProps<ResponseClusterResponse, Failure | Error, GetClusterQueryParams, GetClusterPathParams>,
+  'path'
+> &
+  GetClusterPathParams
+
+/**
+ * Gets a Cluster by identifier
+ */
+export const useGetCluster = ({ identifier, ...props }: UseGetClusterProps) =>
+  useGet<ResponseClusterResponse, Failure | Error, GetClusterQueryParams, GetClusterPathParams>(
+    (paramsInPath: GetClusterPathParams) => `/gitops/clusters/${paramsInPath.identifier}`,
+    { base: getConfig('ng/api'), pathParams: { identifier }, ...props }
+  )
+
+/**
+ * Gets a Cluster by identifier
+ */
+export const getClusterPromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<ResponseClusterResponse, Failure | Error, GetClusterQueryParams, GetClusterPathParams> & {
+    identifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseClusterResponse, Failure | Error, GetClusterQueryParams, GetClusterPathParams>(
+    getConfig('ng/api'),
+    `/gitops/clusters/${identifier}`,
+    props,
+    signal
+  )
+
 export interface CreateGitOpsProviderQueryParams {
   accountIdentifier?: string
   orgIdentifier?: string
@@ -24959,6 +25526,7 @@ export interface CreateGitOpsProviderQueryParams {
   baseBranch?: string
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
+  repoName?: string
 }
 
 export type CreateGitOpsProviderProps = Omit<
@@ -25047,6 +25615,7 @@ export interface UpdateGitOpsProviderQueryParams {
   baseBranch?: string
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
+  repoName?: string
 }
 
 export type UpdateGitOpsProviderProps = Omit<
@@ -28324,6 +28893,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   yamlGroup?: string
 }
 
@@ -28530,6 +29100,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -28976,7 +29547,7 @@ export type ProcessPollingResultNgProps = Omit<
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    UnsubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >,
   'path' | 'verb'
@@ -28988,7 +29559,7 @@ export const ProcessPollingResultNg = ({ perpetualTaskId, ...props }: ProcessPol
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    UnsubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >
     verb="POST"
@@ -29003,7 +29574,7 @@ export type UseProcessPollingResultNgProps = Omit<
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    UnsubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >,
   'path' | 'verb'
@@ -29015,7 +29586,7 @@ export const useProcessPollingResultNg = ({ perpetualTaskId, ...props }: UseProc
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    UnsubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >(
     'POST',
@@ -29031,7 +29602,7 @@ export const processPollingResultNgPromise = (
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    UnsubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   > & { perpetualTaskId: string },
   signal?: RequestInit['signal']
@@ -29040,17 +29611,17 @@ export const processPollingResultNgPromise = (
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    UnsubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >('POST', getConfig('ng/api'), `/polling/delegate-response/${perpetualTaskId}`, props, signal)
 
 export type SubscribeProps = Omit<
-  MutateProps<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  MutateProps<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const Subscribe = (props: SubscribeProps) => (
-  <Mutate<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>
+  <Mutate<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>
     verb="POST"
     path={`/polling/subscribe`}
     base={getConfig('ng/api')}
@@ -29059,22 +29630,22 @@ export const Subscribe = (props: SubscribeProps) => (
 )
 
 export type UseSubscribeProps = Omit<
-  UseMutateProps<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  UseMutateProps<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const useSubscribe = (props: UseSubscribeProps) =>
-  useMutate<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>(
+  useMutate<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>(
     'POST',
     `/polling/subscribe`,
     { base: getConfig('ng/api'), ...props }
   )
 
 export const subscribePromise = (
-  props: MutateUsingFetchProps<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  props: MutateUsingFetchProps<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>(
+  mutateUsingFetch<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>(
     'POST',
     getConfig('ng/api'),
     `/polling/subscribe`,
@@ -29083,12 +29654,12 @@ export const subscribePromise = (
   )
 
 export type UnsubscribeProps = Omit<
-  MutateProps<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  MutateProps<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const Unsubscribe = (props: UnsubscribeProps) => (
-  <Mutate<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>
+  <Mutate<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>
     verb="POST"
     path={`/polling/unsubscribe`}
     base={getConfig('ng/api')}
@@ -29097,21 +29668,21 @@ export const Unsubscribe = (props: UnsubscribeProps) => (
 )
 
 export type UseUnsubscribeProps = Omit<
-  UseMutateProps<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  UseMutateProps<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const useUnsubscribe = (props: UseUnsubscribeProps) =>
-  useMutate<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>('POST', `/polling/unsubscribe`, {
+  useMutate<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>('POST', `/polling/unsubscribe`, {
     base: getConfig('ng/api'),
     ...props
   })
 
 export const unsubscribePromise = (
-  props: MutateUsingFetchProps<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  props: MutateUsingFetchProps<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>(
+  mutateUsingFetch<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>(
     'POST',
     getConfig('ng/api'),
     `/polling/unsubscribe`,
@@ -30505,6 +31076,116 @@ export const updateScimUserPromise = (
     signal
   )
 
+export interface CreateFileQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  RepoName: string
+  branch?: string
+  filePath: string
+  ConnectorRef?: string
+  fileContent?: string
+  createPr?: boolean
+  isCommitToNewBranch?: boolean
+  newBranch?: string
+  commitMessage?: string
+}
+
+export type CreateFileProps = Omit<
+  GetProps<ResponseScmCommitFileResponseDTO, Failure | Error, CreateFileQueryParams, void>,
+  'path'
+>
+
+/**
+ * get file
+ */
+export const CreateFile = (props: CreateFileProps) => (
+  <Get<ResponseScmCommitFileResponseDTO, Failure | Error, CreateFileQueryParams, void>
+    path={`/scm/create-file`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseCreateFileProps = Omit<
+  UseGetProps<ResponseScmCommitFileResponseDTO, Failure | Error, CreateFileQueryParams, void>,
+  'path'
+>
+
+/**
+ * get file
+ */
+export const useCreateFile = (props: UseCreateFileProps) =>
+  useGet<ResponseScmCommitFileResponseDTO, Failure | Error, CreateFileQueryParams, void>(`/scm/create-file`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * get file
+ */
+export const createFilePromise = (
+  props: GetUsingFetchProps<ResponseScmCommitFileResponseDTO, Failure | Error, CreateFileQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseScmCommitFileResponseDTO, Failure | Error, CreateFileQueryParams, void>(
+    getConfig('ng/api'),
+    `/scm/create-file`,
+    props,
+    signal
+  )
+
+export interface CreatePRV2QueryParams {
+  accountIdentifier: string
+}
+
+export type CreatePRV2Props = Omit<
+  MutateProps<ResponseCreatePRResponse, Failure | Error, CreatePRV2QueryParams, CreatePRRequest, void>,
+  'path' | 'verb'
+>
+
+/**
+ * creates a pull request
+ */
+export const CreatePRV2 = (props: CreatePRV2Props) => (
+  <Mutate<ResponseCreatePRResponse, Failure | Error, CreatePRV2QueryParams, CreatePRRequest, void>
+    verb="POST"
+    path={`/scm/create-pull-request`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseCreatePRV2Props = Omit<
+  UseMutateProps<ResponseCreatePRResponse, Failure | Error, CreatePRV2QueryParams, CreatePRRequest, void>,
+  'path' | 'verb'
+>
+
+/**
+ * creates a pull request
+ */
+export const useCreatePRV2 = (props: UseCreatePRV2Props) =>
+  useMutate<ResponseCreatePRResponse, Failure | Error, CreatePRV2QueryParams, CreatePRRequest, void>(
+    'POST',
+    `/scm/create-pull-request`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * creates a pull request
+ */
+export const createPRV2Promise = (
+  props: MutateUsingFetchProps<ResponseCreatePRResponse, Failure | Error, CreatePRV2QueryParams, CreatePRRequest, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseCreatePRResponse, Failure | Error, CreatePRV2QueryParams, CreatePRRequest, void>(
+    'POST',
+    getConfig('ng/api'),
+    `/scm/create-pull-request`,
+    props,
+    signal
+  )
+
 export type CreatePRProps = Omit<
   MutateProps<ResponseCreatePRDTO, Failure | Error, void, GitPRCreateRequest, void>,
   'path' | 'verb'
@@ -30605,54 +31286,110 @@ export const getFileContentPromise = (
     signal
   )
 
-export interface GetFileQueryParams {
+export interface GetFileByBranchQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
   RepoName: string
-  branch?: string
   filePath: string
-  commitId?: string
+  branch?: string
   ConnectorRef?: string
 }
 
-export type GetFileProps = Omit<GetProps<ResponseGetFileResponse, Failure | Error, GetFileQueryParams, void>, 'path'>
+export type GetFileByBranchProps = Omit<
+  GetProps<ResponseGetFileResponseDTO, Failure | Error, GetFileByBranchQueryParams, void>,
+  'path'
+>
 
 /**
- * get file
+ * get file by branch
  */
-export const GetFile = (props: GetFileProps) => (
-  <Get<ResponseGetFileResponse, Failure | Error, GetFileQueryParams, void>
-    path={`/scm/get-file`}
+export const GetFileByBranch = (props: GetFileByBranchProps) => (
+  <Get<ResponseGetFileResponseDTO, Failure | Error, GetFileByBranchQueryParams, void>
+    path={`/scm/get-file-by-branch`}
     base={getConfig('ng/api')}
     {...props}
   />
 )
 
-export type UseGetFileProps = Omit<
-  UseGetProps<ResponseGetFileResponse, Failure | Error, GetFileQueryParams, void>,
+export type UseGetFileByBranchProps = Omit<
+  UseGetProps<ResponseGetFileResponseDTO, Failure | Error, GetFileByBranchQueryParams, void>,
   'path'
 >
 
 /**
- * get file
+ * get file by branch
  */
-export const useGetFile = (props: UseGetFileProps) =>
-  useGet<ResponseGetFileResponse, Failure | Error, GetFileQueryParams, void>(`/scm/get-file`, {
+export const useGetFileByBranch = (props: UseGetFileByBranchProps) =>
+  useGet<ResponseGetFileResponseDTO, Failure | Error, GetFileByBranchQueryParams, void>(`/scm/get-file-by-branch`, {
     base: getConfig('ng/api'),
     ...props
   })
 
 /**
- * get file
+ * get file by branch
  */
-export const getFilePromise = (
-  props: GetUsingFetchProps<ResponseGetFileResponse, Failure | Error, GetFileQueryParams, void>,
+export const getFileByBranchPromise = (
+  props: GetUsingFetchProps<ResponseGetFileResponseDTO, Failure | Error, GetFileByBranchQueryParams, void>,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseGetFileResponse, Failure | Error, GetFileQueryParams, void>(
+  getUsingFetch<ResponseGetFileResponseDTO, Failure | Error, GetFileByBranchQueryParams, void>(
     getConfig('ng/api'),
-    `/scm/get-file`,
+    `/scm/get-file-by-branch`,
+    props,
+    signal
+  )
+
+export interface GetFileByCommitIdQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  RepoName: string
+  filePath: string
+  commitId?: string
+  ConnectorRef?: string
+}
+
+export type GetFileByCommitIdProps = Omit<
+  GetProps<ResponseGetFileResponseDTO, Failure | Error, GetFileByCommitIdQueryParams, void>,
+  'path'
+>
+
+/**
+ * get file by commit id
+ */
+export const GetFileByCommitId = (props: GetFileByCommitIdProps) => (
+  <Get<ResponseGetFileResponseDTO, Failure | Error, GetFileByCommitIdQueryParams, void>
+    path={`/scm/get-file-by-commit-id`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetFileByCommitIdProps = Omit<
+  UseGetProps<ResponseGetFileResponseDTO, Failure | Error, GetFileByCommitIdQueryParams, void>,
+  'path'
+>
+
+/**
+ * get file by commit id
+ */
+export const useGetFileByCommitId = (props: UseGetFileByCommitIdProps) =>
+  useGet<ResponseGetFileResponseDTO, Failure | Error, GetFileByCommitIdQueryParams, void>(
+    `/scm/get-file-by-commit-id`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * get file by commit id
+ */
+export const getFileByCommitIdPromise = (
+  props: GetUsingFetchProps<ResponseGetFileResponseDTO, Failure | Error, GetFileByCommitIdQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseGetFileResponseDTO, Failure | Error, GetFileByCommitIdQueryParams, void>(
+    getConfig('ng/api'),
+    `/scm/get-file-by-commit-id`,
     props,
     signal
   )
@@ -30931,6 +31668,67 @@ export const getListOfBranchesByConnectorPromise = (
   getUsingFetch<ResponseListString, Failure | Error, GetListOfBranchesByConnectorQueryParams, void>(
     getConfig('ng/api'),
     `/scm/listRepoBranches`,
+    props,
+    signal
+  )
+
+export interface UpdateFileQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  RepoName: string
+  branch?: string
+  filePath: string
+  ConnectorRef?: string
+  fileContent?: string
+  createPr?: boolean
+  isCommitToNewBranch?: boolean
+  baseBranch?: string
+  commitMessage?: string
+  oldFileSha?: string
+  oldCommitId?: string
+}
+
+export type UpdateFileProps = Omit<
+  GetProps<ResponseScmCommitFileResponseDTO, Failure | Error, UpdateFileQueryParams, void>,
+  'path'
+>
+
+/**
+ * get file
+ */
+export const UpdateFile = (props: UpdateFileProps) => (
+  <Get<ResponseScmCommitFileResponseDTO, Failure | Error, UpdateFileQueryParams, void>
+    path={`/scm/update-file`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateFileProps = Omit<
+  UseGetProps<ResponseScmCommitFileResponseDTO, Failure | Error, UpdateFileQueryParams, void>,
+  'path'
+>
+
+/**
+ * get file
+ */
+export const useUpdateFile = (props: UseUpdateFileProps) =>
+  useGet<ResponseScmCommitFileResponseDTO, Failure | Error, UpdateFileQueryParams, void>(`/scm/update-file`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * get file
+ */
+export const updateFilePromise = (
+  props: GetUsingFetchProps<ResponseScmCommitFileResponseDTO, Failure | Error, UpdateFileQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseScmCommitFileResponseDTO, Failure | Error, UpdateFileQueryParams, void>(
+    getConfig('ng/api'),
+    `/scm/update-file`,
     props,
     signal
   )
@@ -34037,6 +34835,27 @@ export const getAllUserReposPromise = (
     signal
   )
 
+export interface GetListOfAllReposByRefConnectorQueryParams {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  connectorRef?: string
+}
+
+export type UseGetListOfAllReposByRefConnectorProps = Omit<
+  UseGetProps<ResponseListUserRepoResponse, Failure | Error, GetListOfAllReposByRefConnectorQueryParams, void>,
+  'path'
+>
+
+/**
+ * Lists All Git Repos corresponding to given reference connector
+ */
+export const useGetListOfAllReposByRefConnector = (props: UseGetListOfAllReposByRefConnectorProps) =>
+  useGet<ResponseListUserRepoResponse, Failure | Error, GetListOfAllReposByRefConnectorQueryParams, void>(
+    `/scm/list-all-repos-by-connector`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
 export interface ProvisionResourcesForCIQueryParams {
   accountIdentifier: string
 }
@@ -34310,6 +35129,7 @@ export interface GetUserGroupListQueryParams {
   orgIdentifier?: string
   projectIdentifier?: string
   searchTerm?: string
+  filterType?: 'INCLUDE_INHERITED_GROUPS' | 'EXCLUDE_INHERITED_GROUPS'
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
@@ -35066,6 +35886,91 @@ export const addMemberPromise = (
     void,
     AddMemberPathParams
   >('PUT', getConfig('ng/api'), `/user-groups/${identifier}/member/${userIdentifier}`, props, signal)
+
+export interface GetInheritingChildScopeListQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface GetInheritingChildScopeListPathParams {
+  identifier: string
+}
+
+export type GetInheritingChildScopeListProps = Omit<
+  GetProps<
+    ResponseListScopeName,
+    Failure | AccessControlCheckError | Error,
+    GetInheritingChildScopeListQueryParams,
+    GetInheritingChildScopeListPathParams
+  >,
+  'path'
+> &
+  GetInheritingChildScopeListPathParams
+
+/**
+ * Get Inheriting Child Scope List
+ */
+export const GetInheritingChildScopeList = ({ identifier, ...props }: GetInheritingChildScopeListProps) => (
+  <Get<
+    ResponseListScopeName,
+    Failure | AccessControlCheckError | Error,
+    GetInheritingChildScopeListQueryParams,
+    GetInheritingChildScopeListPathParams
+  >
+    path={`/user-groups/${identifier}/scopes`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetInheritingChildScopeListProps = Omit<
+  UseGetProps<
+    ResponseListScopeName,
+    Failure | AccessControlCheckError | Error,
+    GetInheritingChildScopeListQueryParams,
+    GetInheritingChildScopeListPathParams
+  >,
+  'path'
+> &
+  GetInheritingChildScopeListPathParams
+
+/**
+ * Get Inheriting Child Scope List
+ */
+export const useGetInheritingChildScopeList = ({ identifier, ...props }: UseGetInheritingChildScopeListProps) =>
+  useGet<
+    ResponseListScopeName,
+    Failure | AccessControlCheckError | Error,
+    GetInheritingChildScopeListQueryParams,
+    GetInheritingChildScopeListPathParams
+  >((paramsInPath: GetInheritingChildScopeListPathParams) => `/user-groups/${paramsInPath.identifier}/scopes`, {
+    base: getConfig('ng/api'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * Get Inheriting Child Scope List
+ */
+export const getInheritingChildScopeListPromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseListScopeName,
+    Failure | AccessControlCheckError | Error,
+    GetInheritingChildScopeListQueryParams,
+    GetInheritingChildScopeListPathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseListScopeName,
+    Failure | AccessControlCheckError | Error,
+    GetInheritingChildScopeListQueryParams,
+    GetInheritingChildScopeListPathParams
+  >(getConfig('ng/api'), `/user-groups/${identifier}/scopes`, props, signal)
 
 export interface GetUsersInUserGroupQueryParams {
   accountIdentifier: string
@@ -37155,7 +38060,7 @@ export type PostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -37165,7 +38070,7 @@ export type PostSecretProps = Omit<
  * Create a secret
  */
 export const PostSecret = (props: PostSecretProps) => (
-  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapperRequestBody, void>
+  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapper2RequestBody, void>
     verb="POST"
     path={`/v2/secrets`}
     base={getConfig('ng/api')}
@@ -37178,7 +38083,7 @@ export type UsePostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -37192,7 +38097,7 @@ export const usePostSecret = (props: UsePostSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', `/v2/secrets`, { base: getConfig('ng/api'), ...props })
 
@@ -37204,7 +38109,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -37213,7 +38118,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets`, props, signal)
 
@@ -37606,7 +38511,7 @@ export type PostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -37620,7 +38525,7 @@ export const PostSecretViaYaml = (props: PostSecretViaYamlProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >
     verb="POST"
@@ -37635,7 +38540,7 @@ export type UsePostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -37649,7 +38554,7 @@ export const usePostSecretViaYaml = (props: UsePostSecretViaYamlProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', `/v2/secrets/yaml`, { base: getConfig('ng/api'), ...props })
 
@@ -37661,7 +38566,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -37670,7 +38575,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets/yaml`, props, signal)
 
@@ -37805,7 +38710,7 @@ export type PutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -37820,7 +38725,7 @@ export const PutSecret = ({ identifier, ...props }: PutSecretProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >
     verb="PUT"
@@ -37835,7 +38740,7 @@ export type UsePutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -37850,7 +38755,7 @@ export const usePutSecret = ({ identifier, ...props }: UsePutSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', (paramsInPath: PutSecretPathParams) => `/v2/secrets/${paramsInPath.identifier}`, {
     base: getConfig('ng/api'),
@@ -37869,7 +38774,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -37878,7 +38783,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}`, props, signal)
 
@@ -37897,7 +38802,7 @@ export type PutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -37912,7 +38817,7 @@ export const PutSecretViaYaml = ({ identifier, ...props }: PutSecretViaYamlProps
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >
     verb="PUT"
@@ -37927,7 +38832,7 @@ export type UsePutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -37942,7 +38847,7 @@ export const usePutSecretViaYaml = ({ identifier, ...props }: UsePutSecretViaYam
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', (paramsInPath: PutSecretViaYamlPathParams) => `/v2/secrets/${paramsInPath.identifier}/yaml`, {
     base: getConfig('ng/api'),
@@ -37961,7 +38866,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -37970,7 +38875,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}/yaml`, props, signal)
 
@@ -38561,6 +39466,7 @@ export interface GetYamlSchemaQueryParams {
     | 'ServerlessAwsLambdaRollback'
     | 'CustomStage'
     | 'RollbackStack'
+    | 'Infrastructure'
   subtype?:
     | 'K8sCluster'
     | 'Git'

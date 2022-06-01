@@ -326,6 +326,7 @@ jest.mock('services/cd-ng', () => ({
   getBuildDetailsForGcrPromise: () => Promise.resolve(mockBuildList),
   getBuildDetailsForEcrPromise: () => Promise.resolve(mockBuildList),
   useGetConnector: jest.fn(() => ConnectorResponse),
+  useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() })),
   useCreateConnector: jest.fn(() =>
     Promise.resolve({
       status: 'SUCCESS',

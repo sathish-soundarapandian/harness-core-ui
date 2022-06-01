@@ -11,8 +11,9 @@ import { useParams } from 'react-router-dom'
 import { Button, Container, Layout, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { useGetTags } from '@dashboards/services/CustomDashboardsService'
+import { useGetAllTags } from 'services/custom-dashboards'
 import css from './HomePage.module.scss'
+import moduleTagCss from '@dashboards/common/ModuleTags.module.scss'
 
 export interface FilterTagsSideBarProps {
   setFilteredTags: (cb: (prevState: string[]) => string[]) => void
@@ -20,14 +21,14 @@ export interface FilterTagsSideBarProps {
 
 const FilterTagsSideBar: React.FC<FilterTagsSideBarProps> = ({ setFilteredTags }) => {
   const { getString } = useStrings()
-  const { accountId, folderId } = useParams<{ accountId: string; folderId: string }>()
+  const { accountId } = useParams<{ accountId: string; folderId: string }>()
 
-  const { data: tagsList, loading: fetchingTags } = useGetTags(accountId, folderId)
+  const { data: tagsList, loading: fetchingTags } = useGetAllTags({ queryParams: { accountId } })
 
   return (
     <Layout.Vertical className={css.filterPanel} padding="medium" spacing="medium">
       <Text font={{ variation: FontVariation.FORM_SUB_SECTION }}>{getString('dashboards.homePage.filterByTags')}</Text>
-      <Container className={css.predefinedTags}>
+      <Container className={moduleTagCss.predefinedTags}>
         {fetchingTags && <span>{getString('loading')} </span>}
         {!fetchingTags &&
           tagsList?.resource?.tags
@@ -39,7 +40,7 @@ const FilterTagsSideBar: React.FC<FilterTagsSideBarProps> = ({ setFilteredTags }
                   text={tag}
                   inline
                   minimal
-                  className={cx(css.customTag, css.customTagButton)}
+                  className={cx(moduleTagCss.customTag, moduleTagCss.customTagButton)}
                   key={tag + index}
                   onClick={() => {
                     setFilteredTags(prevState => {

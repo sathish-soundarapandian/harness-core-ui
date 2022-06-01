@@ -15,7 +15,7 @@ import {
   PipelineContextInterface
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import ManifestSelection from '../ManifestSelection'
-import ManifestListView from '../ManifestListView'
+import ManifestListView from '../ManifestListView/ManifestListView'
 import pipelineContextMock from './pipeline_mock.json'
 import connectorsData from './connectors_mock.json'
 
@@ -24,7 +24,8 @@ const fetchConnectors = (): Promise<unknown> => Promise.resolve(connectorsData)
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 jest.mock('services/cd-ng', () => ({
-  useGetConnectorListV2: jest.fn().mockImplementation(() => ({ mutate: fetchConnectors }))
+  useGetConnectorListV2: jest.fn().mockImplementation(() => ({ mutate: fetchConnectors })),
+  useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() }))
 }))
 
 const getContextValue = (): PipelineContextInterface => {
@@ -40,7 +41,7 @@ describe('ManifestSelection tests', () => {
   test(`renders without crashing`, () => {
     const { container } = render(
       <TestWrapper>
-        <ManifestSelection deploymentType="Kubernetes" />
+        <ManifestSelection readonly={false} deploymentType="Kubernetes" />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -50,7 +51,7 @@ describe('ManifestSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ManifestSelection deploymentType="Kubernetes" />
+          <ManifestSelection readonly={false} deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -71,7 +72,7 @@ describe('ManifestSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ManifestSelection deploymentType="Kubernetes" />
+          <ManifestSelection readonly={false} deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -96,7 +97,7 @@ describe('ManifestSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ManifestSelection deploymentType="Kubernetes" />
+          <ManifestSelection readonly={false} deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -114,7 +115,7 @@ describe('ManifestSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ManifestSelection deploymentType="Kubernetes" />
+          <ManifestSelection readonly={false} deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -132,7 +133,7 @@ describe('ManifestSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ManifestSelection deploymentType="Kubernetes" isPropagating={false} />
+          <ManifestSelection readonly={false} deploymentType="Kubernetes" isPropagating={false} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -143,7 +144,7 @@ describe('ManifestSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ManifestSelection deploymentType="Kubernetes" isPropagating={true} />
+          <ManifestSelection readonly={false} deploymentType="Kubernetes" isPropagating={true} />
         </PipelineContext.Provider>
       </TestWrapper>
     )

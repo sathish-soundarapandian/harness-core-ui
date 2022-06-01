@@ -39,7 +39,8 @@ interface AnomaliesOverviewProps {
 const map: Record<string, string> = {
   AZURE: 'defaultAzurePerspectiveId',
   AWS: 'defaultAwsPerspectiveId',
-  GCP: 'defaultGcpPerspectiveId'
+  GCP: 'defaultGcpPerspectiveId',
+  CLUSTER: 'defaultClusterPerspectiveId'
 }
 
 const transformCloudCost = (data: Record<string, any>[], providers: Record<string, any>): Stats[] => {
@@ -122,6 +123,7 @@ const AnomaliesSummary: React.FC<AnomaliesOverviewProps> = ({
               data={perspectiveWiseChartData.slice(0, LEGEND_LIMIT)}
               type={ListType.KEY_VALUE}
               classNames={css.rowGap8}
+              showCount={false}
             />
           }
           strokeSize={'65%'}

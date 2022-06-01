@@ -19,7 +19,8 @@ import { PipelineContextType } from '@pipeline/components/PipelineStudio/Pipelin
 import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { sanitize } from '@common/utils/JSONUtils'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
-import type { NGServiceConfig, PipelineInfoConfig, ServiceResponseDTO } from 'services/cd-ng'
+import type { NGServiceConfig, PipelineInfoConfig } from 'services/cd-ng'
+import { useServiceContext } from '@cd/context/ServiceContext'
 import {
   initialServiceState,
   DefaultNewStageName,
@@ -29,12 +30,13 @@ import {
 import ServiceStudioDetails from '../ServiceStudioDetails'
 
 interface ServiceConfigurationWrapperProps {
-  serviceResponse: ServiceResponseDTO
+  summaryPanel?: JSX.Element
+  refercedByPanel?: JSX.Element
 }
-
-function ServiceConfigurationWrapper({ serviceResponse }: ServiceConfigurationWrapperProps): React.ReactElement {
+function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
+  const { serviceResponse } = useServiceContext()
 
   const [isEdit] = usePermission({
     resource: {
@@ -49,17 +51,17 @@ function ServiceConfigurationWrapper({ serviceResponse }: ServiceConfigurationWr
   const isReadonly = !isEdit
 
   const serviceYaml = React.useMemo(
-    () => yamlParse<NGServiceConfig>(defaultTo(serviceResponse.yaml, '')),
-    [serviceResponse.yaml]
+    () => yamlParse<NGServiceConfig>(defaultTo(serviceResponse?.yaml, '')),
+    [serviceResponse?.yaml]
   )
   const serviceData = merge(serviceYaml, initialServiceState)
 
   const currentPipeline = React.useMemo(() => {
     const defaultPipeline = {
-      name: serviceResponse.name,
-      identifier: defaultTo(serviceResponse.identifier, DefaultNewPipelineId),
-      description: serviceResponse.description,
-      tags: serviceResponse.tags
+      name: serviceResponse?.name,
+      identifier: defaultTo(serviceResponse?.identifier, DefaultNewPipelineId),
+      description: serviceResponse?.description,
+      tags: serviceResponse?.tags
     }
     return produce({ ...defaultPipeline }, draft => {
       if (!isEmpty(serviceData.service.serviceDefinition)) {
@@ -70,7 +72,7 @@ function ServiceConfigurationWrapper({ serviceResponse }: ServiceConfigurationWr
           'stages[0].stage.spec.serviceConfig.serviceDefinition',
           cloneDeep(serviceData.service.serviceDefinition)
         )
-        set(draft, 'stages[0].stage.spec.serviceConfig.serviceRef', serviceResponse.identifier)
+        set(draft, 'stages[0].stage.spec.serviceConfig.serviceRef', serviceResponse?.identifier)
       }
     })
   }, [serviceData, serviceResponse])
@@ -95,7 +97,7 @@ function ServiceConfigurationWrapper({ serviceResponse }: ServiceConfigurationWr
       contextType={PipelineContextType.Pipeline}
       isReadOnly={isReadonly}
     >
-      <ServiceStudioDetails serviceData={currentService} />
+      <ServiceStudioDetails serviceData={currentService} {...props} />
     </ServicePipelineProvider>
   )
 }

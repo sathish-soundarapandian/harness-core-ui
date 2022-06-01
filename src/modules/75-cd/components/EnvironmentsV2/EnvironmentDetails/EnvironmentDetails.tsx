@@ -37,6 +37,7 @@ import { useStrings } from 'framework/strings'
 import {
   EnvironmentResponse,
   EnvironmentResponseDTO,
+  NGEnvironmentConfig,
   NGEnvironmentInfoConfig,
   updateEnvironmentV2Promise,
   useGetEnvironmentV2,
@@ -57,6 +58,7 @@ import type { AllNGVariables } from '@pipeline/utils/types'
 
 import { PageHeaderTitle, PageHeaderToolbar } from './EnvironmentDetailsPageHeader'
 import { ServiceOverride } from './ServiceOverride/ServiceOverride'
+import InfrastructureDefinition from './InfrastructureDefinition/InfrastructureDefinition'
 import { EnvironmentDetailsTab } from '../utils'
 
 import css from './EnvironmentDetails.module.scss'
@@ -126,6 +128,10 @@ export default function EnvironmentDetails() {
       if (view === SelectedView.VISUAL) {
         const yaml = defaultTo(yamlHandler?.getLatestYaml(), '{}')
         const yamlVisual = parse(yaml).environment as NGEnvironmentInfoConfig
+        if (isModified && yamlHandler?.getYAMLValidationErrorMap()?.size) {
+          showError(getString('common.validation.invalidYamlText'))
+          return
+        }
         if (yamlVisual) {
           formikRef.current?.setValues({
             ...yamlVisual
@@ -184,10 +190,24 @@ export default function EnvironmentDetails() {
     setSelectedTabId(tabId)
   }
 
-  const validate = (values: EnvironmentResponseDTO) => {
-    const { name: newName, description: newDescription, tags: newTags, type: newType } = values
+  const validate = (values: NGEnvironmentInfoConfig) => {
+    const {
+      name: newName,
+      description: newDescription,
+      tags: newTags,
+      type: newType,
+      variables: newVariables,
+      serviceOverrides: newServiceOverrides
+    } = values
 
-    if (name === newName && description === newDescription && isEqual(tags, newTags) && type === newType) {
+    if (
+      name === newName &&
+      description === newDescription &&
+      isEqual(tags, newTags) &&
+      type === newType &&
+      isEqual(variables, newVariables) &&
+      isEqual(serviceOverrides, newServiceOverrides)
+    ) {
       setIsModified(false)
     } else {
       setIsModified(true)
@@ -205,9 +225,12 @@ export default function EnvironmentDetails() {
     }
   ]
 
-  const parsedYamlEnvironment = useMemo(() => (yamlParse(defaultTo(yaml, '{}')) as any)?.environment, [yaml])
-  const variables = parsedYamlEnvironment?.variables
-  const serviceOverrides = parsedYamlEnvironment?.serviceOverrides
+  const parsedYamlEnvironment = useMemo(
+    () => (yamlParse(defaultTo(yaml, '{}')) as NGEnvironmentConfig)?.environment,
+    [yaml]
+  )
+  const variables = defaultTo(parsedYamlEnvironment?.variables, [])
+  const serviceOverrides = defaultTo(parsedYamlEnvironment?.serviceOverrides, [])
 
   return (
     <>
@@ -226,13 +249,13 @@ export default function EnvironmentDetails() {
               {
                 name: defaultTo(name, ''),
                 identifier: defaultTo(identifier, ''),
-                description: defaultTo(description, ''),
+                description,
                 tags: defaultTo(tags, {}),
                 type: defaultTo(type, ''),
                 orgIdentifier: defaultTo(orgIdentifier, ''),
                 projectIdentifier: defaultTo(projectIdentifier, ''),
-                variables: variables,
-                serviceOverrides: serviceOverrides
+                variables,
+                serviceOverrides
               } as NGEnvironmentInfoConfig
             }
             formName="editEnvironment"
@@ -269,11 +292,20 @@ export default function EnvironmentDetails() {
                         ),
                         panel: (
                           <Container padding={{ left: 'medium', right: 'medium' }}>
-                            <TabSubHeader
-                              selectedTabId={selectedTabId}
-                              selectedView={selectedView}
-                              handleModeSwitch={handleModeSwitch}
-                            />
+                            <Layout.Horizontal
+                              margin={{ bottom: 'medium' }}
+                              flex={{
+                                justifyContent: 'center'
+                              }}
+                              width={'100%'}
+                            >
+                              <VisualYamlToggle
+                                selectedView={selectedView}
+                                onChange={nextMode => {
+                                  handleModeSwitch(nextMode)
+                                }}
+                              />
+                            </Layout.Horizontal>
                             {selectedView === SelectedView.VISUAL ? (
                               <>
                                 <Container
@@ -313,7 +345,12 @@ export default function EnvironmentDetails() {
                                 {/* #region Advanced section */}
                                 {data?.data && (
                                   <Accordion
-                                    activeId={variables?.length > 0 || serviceOverrides?.length > 0 ? 'advanced' : ''}
+                                    activeId={
+                                      Boolean(formikProps?.values?.variables?.length) ||
+                                      Boolean(formikProps?.values?.serviceOverrides?.length)
+                                        ? 'advanced'
+                                        : ''
+                                    }
                                     className={css.accordion}
                                   >
                                     <Accordion.Panel
@@ -403,12 +440,31 @@ export default function EnvironmentDetails() {
                             )}
                           </Container>
                         )
+                      },
+                      {
+                        id: EnvironmentDetailsTab.INFRASTRUCTURE,
+                        title: (
+                          <Text font={{ size: 'normal' }} color={Color.BLACK}>
+                            {getString('cd.infrastructure.infrastructureDefinitions')}
+                          </Text>
+                        ),
+                        panel: <InfrastructureDefinition />
                       }
                     ]}
                   >
                     <Expander />
                     {(selectedTabId === EnvironmentDetailsTab.CONFIGURATION || selectedView === SelectedView.YAML) && (
-                      <Layout.Horizontal spacing="medium">
+                      <Layout.Horizontal spacing="medium" flex={{ alignItems: 'center' }}>
+                        {isModified && (
+                          <Text
+                            color={Color.ORANGE_600}
+                            font={{ size: 'small', weight: 'bold' }}
+                            icon={'dot'}
+                            iconProps={{ color: Color.ORANGE_600 }}
+                          >
+                            {getString('unsavedChanges')}
+                          </Text>
+                        )}
                         <Button
                           variation={ButtonVariation.PRIMARY}
                           type={'submit'}
@@ -457,37 +513,5 @@ export default function EnvironmentDetails() {
         )}
       </Page.Body>
     </>
-  )
-}
-
-function TabSubHeader({
-  selectedTabId,
-  selectedView,
-  handleModeSwitch
-}: {
-  selectedTabId: EnvironmentDetailsTab
-  selectedView: SelectedView
-  handleModeSwitch: (nextMode: SelectedView) => void
-}) {
-  return (
-    <Layout.Horizontal
-      margin={{ bottom: 'small' }}
-      padding={{
-        right: 'medium',
-        bottom: selectedTabId === EnvironmentDetailsTab.CONFIGURATION && 'small',
-        top: selectedTabId === EnvironmentDetailsTab.CONFIGURATION && 'small'
-      }}
-      flex={{
-        justifyContent: selectedTabId !== EnvironmentDetailsTab.CONFIGURATION ? 'flex-start' : 'center'
-      }}
-      width={'100%'}
-    >
-      <VisualYamlToggle
-        selectedView={selectedView}
-        onChange={nextMode => {
-          handleModeSwitch(nextMode)
-        }}
-      />
-    </Layout.Horizontal>
   )
 }

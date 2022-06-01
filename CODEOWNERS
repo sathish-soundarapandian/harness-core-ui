@@ -52,6 +52,8 @@ src/modules/45-projects-orgs/components/CreateOrSelectAProjectTemplate @harness/
 src/modules/70-pipeline @harness/ui-pipeline
 src/modules/70-pipeline/components/HomePageByModule @harness/ui-plg
 src/modules/70-pipeline/components/TrialModalTemplate @harness/ui-plg
+src/modules/70-pipeline/interfaces/STOApp.ts @harness/ui-sto
+src/modules/70-pipeline/pages/execution/ExecutionSecurityView @harness/ui-sto
 src/modules/72-templates-library @harness/ui-pipeline
 src/modules/75-cd @harness/ui-pipeline
 src/modules/75-cd/modals/CDTrial @harness/ui-plg
@@ -65,6 +67,7 @@ src/modules/75-ci/pages/home @harness/ui-plg
 src/modules/72-triggers @harness/ui-triggers
 src/modules/70-pipeline/pages/execution/ExecutionTestView @harness/ui-ci
 src/modules/70-pipeline/components/Volumes @harness/ui-ci
+src/modules/70-pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm @harness/ui-ci
 src/modules/70-pipeline/pages/execution/ExecutionArtifactsView @harness/ui-ci
 src/modules/75-ce/modals/CETrialModal @harness/ui-plg
 src/modules/75-ce/pages/home @harness/ui-plg

@@ -46,14 +46,13 @@ describe('useTelemetry', () => {
     )
     result.current.identifyUser(email)
     result.current.trackEvent('event1', {})
-    expect(identifyMock).toHaveBeenCalledWith(email)
+    expect(identifyMock).toHaveBeenCalledWith({ properties: { hotjar_link: undefined }, userId: email })
     expect(trackMock).toHaveBeenCalledWith({
       event: 'event1',
       properties: { groupId: undefined, userId: '', source: 'NG UI' }
     })
     expect(pageMock).toHaveBeenCalledWith({
       name: 'page',
-      category: '',
       properties: {
         userId: '',
         source: 'NG UI'
@@ -89,7 +88,7 @@ describe('useTelemetry', () => {
     )
     result.current.identifyUser(email)
     result.current.trackEvent('event2', {})
-    expect(identifyMock).toHaveBeenCalledWith(email)
+    expect(identifyMock).toHaveBeenCalledWith({ properties: { hotjar_link: undefined }, userId: email })
     expect(trackMock).toHaveBeenCalledWith({
       event: 'event2',
       properties: {
@@ -103,7 +102,6 @@ describe('useTelemetry', () => {
     })
     expect(pageMock).toHaveBeenCalledWith({
       name: 'page',
-      category: '',
       properties: {
         source: 'NG UI',
         userId: '',

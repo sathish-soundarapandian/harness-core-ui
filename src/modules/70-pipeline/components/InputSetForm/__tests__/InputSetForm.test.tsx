@@ -75,6 +75,7 @@ const getListGitSync = jest.fn(() => Promise.resolve(gitConfigs))
 jest.mock('services/cd-ng', () => ({
   useGetConnector: jest.fn(() => ConnectorResponse),
   useCreatePR: jest.fn(() => noop),
+  useCreatePRV2: jest.fn(() => noop),
   useGetFileContent: jest.fn(() => noop),
   useGetListOfBranchesWithStatus: jest.fn().mockImplementation(() => {
     return { data: branchStatusMock, refetch: getListOfBranchesWithStatus, loading: false }
@@ -361,6 +362,7 @@ describe('Render Forms - Snapshot Testing', () => {
             name: 'asd',
             orgIdentifier: 'Harness11',
             pipelineIdentifier: 'testqqq',
+            pipeline: { identifier: 'testqqq', name: '' },
             outdated: false
           }}
           selectedView={SelectedView.YAML}
@@ -413,16 +415,10 @@ describe('Render Forms - Snapshot Testing', () => {
             entityValidityDetails: {
               valid: false
             },
-            gitDetails: {
-              branch: 'feature',
-              filePath: 'asd.yaml',
-              objectId: '4471ec3aa40c26377353974c29a6670d998db06g',
-              repoIdentifier: 'gitSyncRepo',
-              rootFolder: '/rootFolderTest/.harness/'
-            },
             identifier: 'asd56',
             orgIdentifier: 'Harness11',
-            pipelineIdentifier: 'testqqq'
+            pipelineIdentifier: 'testqqq',
+            pipeline: { identifier: 'testqqq', name: '' }
           }}
           selectedView={SelectedView.VISUAL}
           handleSubmit={handleSubmit}
@@ -451,9 +447,14 @@ describe('Render Forms - Snapshot Testing', () => {
         name: 'asd56',
         orgIdentifier: 'Harness11',
         pipelineIdentifier: 'testqqq',
-        repo: ''
+        repo: '',
+        connectorRef: '',
+        repoName: '',
+        storeType: 'INLINE',
+        pipeline: { identifier: 'testqqq', name: '' }
       },
-      { branch: '', repoIdentifier: '' }
+      { branch: '', repoIdentifier: '' },
+      { branch: '', connectorRef: '', filePath: undefined, repoName: '', storeType: 'INLINE' }
     )
     //ErrorStrip
     await waitFor(() => expect(getByText('common.errorCount')).toBeTruthy())
@@ -471,14 +472,7 @@ describe('Render Forms - Snapshot Testing', () => {
         data: {
           status: 'SUCCESS',
           data: {
-            ...PipelineResponse,
-            gitDetails: {
-              branch: 'feature',
-              filePath: 'asd.yaml',
-              objectId: '4471ec3aa40c26377353974c29a6670d998db06g',
-              repoIdentifier: 'gitSyncRepo',
-              rootFolder: '/rootFolderTest/.harness/'
-            }
+            ...PipelineResponse
           }
         },
         loading: false,

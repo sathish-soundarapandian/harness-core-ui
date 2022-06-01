@@ -11,7 +11,7 @@ import type { IconName } from '@blueprintjs/core'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { UseGetReturnData } from '@common/utils/testUtils'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import type { ResponseConnectorResponse } from 'services/cd-ng'
+import type { ResponseConnectorResponse, ResponseDelegateStatus, ResponseSetupStatus } from 'services/cd-ng'
 import type { PipelineContextInterface } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
@@ -133,7 +133,23 @@ jest.mock('services/cd-ng', () => ({
         ]
       }
     }),
-  listSecretsV2Promise: jest.fn().mockImplementation(() => Promise.resolve(secretMockdata))
+  listSecretsV2Promise: jest.fn().mockImplementation(() => Promise.resolve(secretMockdata)),
+  useGetDelegateInstallStatus: jest.fn().mockImplementation(() => ({
+    refetch: jest.fn(),
+    data: {
+      status: 'SUCCESS',
+      data: 'SUCCESS'
+    } as ResponseDelegateStatus
+  })),
+  useProvisionResourcesForCI: jest.fn().mockImplementation(() => {
+    return {
+      mutate: () =>
+        Promise.resolve({
+          data: 'SUCCESS',
+          status: 'SUCCESS'
+        } as ResponseSetupStatus)
+    }
+  })
 }))
 
 describe('BuildStageSetupShell snapshot test', () => {

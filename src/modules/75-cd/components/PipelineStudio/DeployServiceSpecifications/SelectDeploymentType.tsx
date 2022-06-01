@@ -135,6 +135,7 @@ export default function SelectDeploymentType(props: SelectServiceDeploymentTypeP
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
   const { SERVERLESS_SUPPORT } = useFeatureFlags()
+
   const { accountId } = useParams<{
     accountId: string
   }>()
@@ -152,6 +153,11 @@ export default function SelectDeploymentType(props: SelectServiceDeploymentTypeP
         label: getString('pipeline.nativeHelm'),
         icon: 'service-helm',
         value: ServiceDeploymentType.NativeHelm
+      },
+      {
+        label: getString('pipeline.serviceDeploymentTypes.ssh'),
+        icon: 'secret-ssh',
+        value: ServiceDeploymentType.ssh
       },
       ...getServerlessDeploymentTypes(getString, SERVERLESS_SUPPORT)
     ],
@@ -190,11 +196,6 @@ export default function SelectDeploymentType(props: SelectServiceDeploymentTypeP
         label: getString('pipeline.serviceDeploymentTypes.pcf'),
         icon: 'service-pivotal',
         value: ServiceDeploymentType.pcf
-      },
-      {
-        label: getString('pipeline.serviceDeploymentTypes.ssh'),
-        icon: 'secret-ssh',
-        value: ServiceDeploymentType.ssh
       }
     ],
     [getString]

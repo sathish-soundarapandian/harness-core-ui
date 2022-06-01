@@ -16,7 +16,6 @@ declare const styles: {
   readonly keyDeleteButton: string
   readonly keyRedactionWarning: string
   readonly keyType: string
-  readonly paginationContainer: string
   readonly table: string
 }
 export default styles

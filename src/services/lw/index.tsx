@@ -722,6 +722,15 @@ export interface Subnet {
   name?: string
 }
 
+export interface Tags {
+  key?: string
+  values?: string[]
+}
+
+export interface TagsResponse {
+  response?: Tags[]
+}
+
 export interface TargetGroupMinimal {
   id?: string
   name?: string
@@ -3304,5 +3313,52 @@ export type UseGetMachineListForZoneProps = Omit<
 export const useGetMachineListForZone = ({ account_id, ...props }: UseGetMachineListForZoneProps) =>
   useGet<GetMachineListForZoneResponse, unknown, GetMachineListForZoneQueryParams, GetMachineListForZonePathParams>(
     (paramsInPath: GetMachineListForZonePathParams) => `accounts/${paramsInPath.account_id}/machine_types`,
+    { base: getConfig('lw/api'), pathParams: { account_id }, ...props }
+  )
+
+export interface GetInstancesTagsQueryParams {
+  accountIdentifier: string
+  cloud_account_id: string
+  routingId: string
+  filter?: string
+}
+
+export interface GetInstancesTagsPathParams {
+  account_id: string
+}
+
+export type GetInstancesTagsProps = Omit<
+  GetProps<TagsResponse, unknown, GetInstancesTagsQueryParams, GetInstancesTagsPathParams>,
+  'path'
+> &
+  GetInstancesTagsPathParams
+
+/**
+ * Fetches all the tags associated with instances
+ *
+ * Fetches all the tags (key and values) associated with instances
+ */
+export const GetInstancesTags = ({ account_id, ...props }: GetInstancesTagsProps) => (
+  <Get<TagsResponse, unknown, GetInstancesTagsQueryParams, GetInstancesTagsPathParams>
+    path={`accounts/${account_id}/tags`}
+    base={getConfig('lw/api')}
+    {...props}
+  />
+)
+
+export type UseGetInstancesTagsProps = Omit<
+  UseGetProps<TagsResponse, unknown, GetInstancesTagsQueryParams, GetInstancesTagsPathParams>,
+  'path'
+> &
+  GetInstancesTagsPathParams
+
+/**
+ * Fetches all the tags associated with instances
+ *
+ * Fetches all the tags (key and values) associated with instances
+ */
+export const useGetInstancesTags = ({ account_id, ...props }: UseGetInstancesTagsProps) =>
+  useGet<TagsResponse, unknown, GetInstancesTagsQueryParams, GetInstancesTagsPathParams>(
+    (paramsInPath: GetInstancesTagsPathParams) => `accounts/${paramsInPath.account_id}/tags`,
     { base: getConfig('lw/api'), pathParams: { account_id }, ...props }
   )

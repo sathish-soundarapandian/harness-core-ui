@@ -33,12 +33,13 @@ import {
   snowApprovalStageYamlSnippet,
   serverlessLambdaYamlSnippet,
   yamlSnippet,
-  executionStratergies
+  executionStratergies,
+  pageHeaderClassName
 } from '../../support/70-pipeline/constants'
 import { connectorsListAPI } from '../../support/35-connectors/constants'
 import { getIdentifierFromName } from '../../utils/stringHelpers'
 
-describe.skip('GIT SYNC DISABLED', () => {
+describe('GIT SYNC DISABLED', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -57,7 +58,16 @@ describe.skip('GIT SYNC DISABLED', () => {
     cy.createDeploymentStage()
   })
 
-  it('should display the error returned by pipeline save API', () => {
+  it('should display the close without saving dialog for pipeline', () => {
+    cy.wait(2000)
+    cy.contains('p', 'Pipelines').should('be.visible', { timeout: 10000 }).click()
+    cy.contains('p', 'Close without saving?').should('be.visible')
+    cy.contains('span', 'Confirm').click({ force: true })
+    cy.wait(2000)
+    cy.contains('span', 'Create a Pipeline').should('be.visible')
+  })
+
+  it.skip('should display the error returned by pipeline save API', () => {
     cy.intercept('POST', pipelineSaveCall, { fixture: 'pipeline/api/pipelines.post' }).as('pipelineSaveCall')
 
     cy.wait('@cdFailureStrategiesYaml')
@@ -105,7 +115,7 @@ describe.skip('GIT SYNC DISABLED', () => {
     ).should('be.visible')
   })
 
-  it('should display the success message if pipeline save is success', () => {
+  it.skip('should display the success message if pipeline save is success', () => {
     cy.intercept('POST', pipelineSaveCall, { fixture: 'pipeline/api/pipelines.postsuccess' }).as('pipelineSaveCall')
     cy.contains('span', 'Save').click({ force: true })
     cy.wait('@pipelineSaveCall')
@@ -376,6 +386,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
 
   it(`fixed values to region and stage in infrastructure tab`, () => {
     cy.visit(pipelineStudioRoute, { timeout: 30000 })
+    cy.visitPageAssertion()
     cy.get(`div[data-testid="pipeline-studio"]`, {
       timeout: 5000
     }).should('be.visible')
@@ -399,6 +410,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
 
   it(`runtime values to region, stage in infrastructure tab`, () => {
     cy.visit(pipelineStudioRoute, { timeout: 30000 })
+    cy.visitPageAssertion()
     cy.get(`div[data-testid="pipeline-studio"]`, {
       timeout: 5000
     }).should('be.visible')
@@ -433,6 +445,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
 
     // Visit Pipeline Studio
     cy.visit(pipelineStudioRoute, { timeout: 30000 })
+    cy.visitPageAssertion()
     cy.get(`div[data-testid="pipeline-studio"]`, {
       timeout: 5000
     }).should('be.visible')
@@ -495,6 +508,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
 
     // Visit Pipeline Studio
     cy.visit(pipelineStudioRoute, { timeout: 30000 })
+    cy.visitPageAssertion()
     cy.get(`div[data-testid="pipeline-studio"]`, {
       timeout: 5000
     }).should('be.visible')
@@ -550,6 +564,7 @@ describe('Input Sets', () => {
   })
 
   it('Input Set Creation & Deletion', () => {
+    cy.visitPageAssertion()
     cy.wait('@emptyInputSetList')
     cy.wait(1000)
     cy.contains('span', '+ New Input Set').should('be.visible')
@@ -626,6 +641,7 @@ describe('Add stage view with enabled licences', () => {
     cy.visit(pipelinesRoute, {
       timeout: 30000
     })
+    cy.visitPageAssertion(pageHeaderClassName)
     cy.contains('span', 'Create a Pipeline').click()
     cy.fillName('testPipeline_Cypress')
     cy.clickSubmit()
@@ -638,6 +654,7 @@ describe('Add stage view with enabled licences', () => {
     cy.contains('span', 'Use template').should('be.visible')
     cy.findByTestId('stage-CI').should('be.visible')
     cy.findByTestId('stage-Approval').should('be.visible')
+    cy.findByTestId('stage-Custom').should('be.visible')
     cy.findByTestId('stage-SecurityTests').should('be.visible')
   })
 
@@ -693,6 +710,7 @@ describe('Add stage view with disabled licences', () => {
     cy.get('[icon="plus"]').click()
     cy.findByTestId('stage-Deployment').should('be.visible')
     cy.findByTestId('stage-Approval').should('be.visible')
+    cy.findByTestId('stage-Custom').should('be.visible')
 
     cy.get('[data-icon="template-library"]').should('not.exist')
     cy.contains('span', 'Use template').should('not.exist')

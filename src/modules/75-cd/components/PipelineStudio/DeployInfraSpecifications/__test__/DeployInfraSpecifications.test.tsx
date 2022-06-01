@@ -128,15 +128,6 @@ const getOverrideContextValue = (type?: string): PipelineContextInterface => {
   } as any
 }
 
-const getOverrideContextValueWithUndefinedStage = (): PipelineContextInterface => {
-  return {
-    state: { pipeline: { stages: [] }, originalPipeline: {}, selectionState: { selectedStageId: null } },
-    getStageFromPipeline: jest.fn().mockReturnValue({}),
-    updateStage: jest.fn().mockImplementation(() => ({ then: jest.fn() })),
-    updatePipeline: jest.fn()
-  } as any
-}
-
 jest.mock('services/cd-ng', () => ({
   useGetEnvironmentList: jest.fn().mockImplementation(() => ({ loading: false, data: envs, refetch: jest.fn() }))
 }))
@@ -429,18 +420,5 @@ describe('Deploy infra specifications test', () => {
     const button = await waitFor(() => findAllByText('Step Widget button'))
     fireEvent.click(button[1])
     expect(context.updateStage).toBeCalled()
-  })
-
-  test('Should render undefined deployment type when stage is undefined', async () => {
-    const context = getOverrideContextValueWithUndefinedStage()
-    const { findAllByText } = render(
-      <TestWrapper>
-        <PipelineContext.Provider value={context}>
-          <DeployInfraSpecifications />
-        </PipelineContext.Provider>
-      </TestWrapper>
-    )
-    const undefinedDeploymentTypeText = await waitFor(() => findAllByText('Undefined deployment type'))
-    expect(undefinedDeploymentTypeText).toBeTruthy()
   })
 })

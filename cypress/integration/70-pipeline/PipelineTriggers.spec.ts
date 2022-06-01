@@ -57,11 +57,14 @@ describe('Triggers for Pipeline', () => {
       .within(() => {
         cy.contains('h2', 'Triggers').should('be.visible')
         Object.entries(triggersListData).forEach(([key, values]) => {
-          cy.contains('section', key)
+          cy.contains('div', key)
             .should('be.visible')
+            .parent()
+            .siblings()
+            .eq(0)
             .within(() => {
               values.forEach(value => {
-                cy.contains('section', value).should('be.visible')
+                cy.contains('section', value).scrollIntoView().should('be.visible')
               })
             })
         })
@@ -78,7 +81,7 @@ describe('Triggers for Pipeline', () => {
   })
 
   it('Cron Trigger Flow', () => {
-    cy.wait(1000)
+    cy.visitPageAssertion()
     cy.wait('@emptyTriggersList')
     cy.contains('span', 'Add New Trigger').should('be.visible').click()
     cy.intercept('POST', inputSetsTemplateCall, { fixture: '/ng/api/triggers/triggerInputSet' }).as('triggerInputSet')
@@ -90,7 +93,7 @@ describe('Triggers for Pipeline', () => {
     cy.get('[class*="AddDrawer"][class*="stepsRenderer"]')
       .should('be.visible')
       .within(() => {
-        cy.contains('section', 'Cron').should('be.visible').click()
+        cy.contains('section', 'Cron').scrollIntoView().should('be.visible').click()
       })
     cy.wait('@triggerPiplelineDetails')
     cy.wait(1000)
@@ -143,7 +146,7 @@ describe('Triggers for Pipeline', () => {
     cy.contains('span', 'testPipeline_Cypress').should('be.visible')
 
     cy.contains('span', 'Scheduled').should('be.visible')
-    cy.contains('span', 'Cron').should('be.visible')
+    cy.contains('span', 'Cron').scrollIntoView().should('be.visible')
 
     cy.contains('span', 'expression').should('be.visible')
     cy.contains('span', '0/10 * * * *').should('be.visible')

@@ -65,20 +65,18 @@
 }
 
 .repositories {
-  height: 73%;
-}
-
-.repositoriesWithError {
-  height: 71% !important;
+  height: 63vh;
+  width: 676px;
 }
 
 .repositoryTable {
-  width: 676px !important;
+  height: fit-content;
+  max-height: 100%;
+  overflow-y: scroll;
+  border-radius: 8px;
+  border: 1px solid var(--grey-200);
   > div {
-    height: 100%;
-    overflow-y: scroll;
-    border-radius: 8px;
-    border: 1px solid var(--grey-200);
+    max-height: 100%;
     > div {
       padding: 0 !important;
     }
@@ -119,6 +117,17 @@
 }
 
 .provisioningFailed {
+  width: fit-content !important;
   background-color: var(--red-50) !important;
   border-radius: 4px;
+}
+
+.provisioningSuccessful {
+  width: fit-content !important;
+  background-color: var(--green-50) !important;
+  border-radius: 4px;
+}
+
+.main {
+  overflow-y: scroll;
 }

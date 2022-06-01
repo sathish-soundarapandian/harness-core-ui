@@ -32,11 +32,14 @@ export const KubernetesPrimaryArtifacts = (props: KubernetesArtifactsProps): Rea
   const isPrimaryArtifactsRuntime = runtimeMode && !!get(props.template, 'artifacts.primary', false)
   const isSidecarRuntime = runtimeMode && !!get(props.template, 'artifacts.sidecars', false)
   const artifactSource = props.type && artifactSourceBaseFactory.getArtifactSource(props.type)
-  const artifact = props.artifacts?.primary
+  const artifact =
+    props.fromTrigger && props.artifact
+      ? { ...props.artifact, spec: { ...props.artifacts?.primary?.spec, ...props.artifact?.spec } }
+      : props.artifacts?.primary
   const artifactPath = 'primary'
 
   useEffect(() => {
-    /* instanbul ignore else */
+    /* istanbul ignore else */
     if (fromPipelineInputTriggerTab(props.formik, props.fromTrigger)) {
       const artifacTriggerData = getPrimaryInitialValues(
         props.initialValues,

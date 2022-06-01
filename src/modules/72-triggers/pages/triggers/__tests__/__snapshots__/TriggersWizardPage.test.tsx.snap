@@ -460,7 +460,7 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                           class="bp3-input"
                                           name="pipeline.variables[1].value"
                                           type="text"
-                                          value="1"
+                                          value=""
                                         />
                                       </div>
                                       <span
@@ -538,7 +538,7 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                               placeholder="Search..."
                                               style="padding-right: 0px;"
                                               type="text"
-                                              value="val1"
+                                              value=""
                                             />
                                             <span
                                               class="bp3-input-action"
@@ -632,7 +632,7 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                     data-tooltip-id="ciCodebaseBuildType"
                                   >
                                     <p
-                                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                                      class="StyledProps--font StyledProps--main StyledProps--font-variation-form-sub-section"
                                     >
                                       filters.executions.buildType
                                     </p>

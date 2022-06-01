@@ -14,16 +14,14 @@ import {
   PageBody,
   PageSpinner,
   Text,
-  PageError
+  PageError,
+  ButtonSize
 } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
+import { Callout } from '@blueprintjs/core'
 import LandingDashboardFactory from '@common/factories/LandingDashboardFactory'
-import {
-  LandingDashboardContextProvider,
-  TimeRangeToDays,
-  useLandingDashboardContext
-} from '@common/factories/LandingDashboardContext'
+import { LandingDashboardContextProvider, useLandingDashboardContext } from '@common/factories/LandingDashboardContext'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
@@ -32,27 +30,30 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetCounts } from 'services/dashboard-service'
 import LandingDashboardSummaryWidget from '@projects-orgs/components/LandingDashboardSummaryWidget/LandingDashboardSummaryWidget'
 import TimeRangeSelect from '@projects-orgs/components/TimeRangeSelect/TimeRangeSelect'
-import { isCommunityPlan, isOnPrem } from '@common/utils/utils'
-import LandingDashboardWelcomeView, { View } from './LandingDashboardWelcomeView'
+import useLandingPageDefaultView, { View } from '@projects-orgs/hooks/useLandingPageDefaultView'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
+import LandingDashboardWelcomeView from './LandingDashboardWelcomeView'
 import css from './LandingDashboardPage.module.scss'
 
 const modules: Array<ModuleName> = [ModuleName.CD]
-const defaultView = isCommunityPlan() || isOnPrem() ? View.Welcome : View.Dashboard
 
 const LandingDashboardPage: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
   const { currentUserInfo } = useAppStore()
   const { getString } = useStrings()
+  useDocumentTitle(getString('dashboardLabel'))
+  const defaultView = useLandingPageDefaultView()
   const [view, setView] = useState<View>(defaultView)
   const name = currentUserInfo.name || currentUserInfo.email
 
   const { selectedTimeRange } = useLandingDashboardContext()
-  const [range] = useState([Date.now() - TimeRangeToDays[selectedTimeRange] * 24 * 60 * 60000, Date.now()])
   const { data, loading, error, refetch } = useGetCounts({
     queryParams: {
       accountIdentifier: accountId,
-      startTime: range[0],
-      endTime: range[1]
+      startTime: selectedTimeRange.range[0]?.getTime() || 0,
+      endTime: selectedTimeRange.range[1]?.getTime() || 0
     }
   })
 
@@ -60,8 +61,8 @@ const LandingDashboardPage: React.FC = () => {
     refetch({
       queryParams: {
         accountIdentifier: accountId,
-        startTime: Date.now() - TimeRangeToDays[selectedTimeRange] * 24 * 60 * 60000,
-        endTime: Date.now()
+        startTime: selectedTimeRange.range[0]?.getTime() || 0,
+        endTime: selectedTimeRange.range[1]?.getTime() || 0
       }
     })
 
@@ -123,4 +124,38 @@ const LandingDashboardPage: React.FC = () => {
   }
 }
 
-export default LandingDashboardPage
+const LandingDashboardPageWithCallout = () => {
+  const isFeatureFlagEnabled = useFeatureFlag(FeatureFlag.JDK11_UPGRADE_BANNER)
+  const [showBanner, setShowBanner] = useState(isFeatureFlagEnabled)
+  return (
+    <>
+      {showBanner && (
+        <Callout className={css.callout} intent="success" icon={null}>
+          <Text color={Color.BLACK}>
+            To improve Harness security and reliability, all Delegates will start using OpenJDK 11 starting May 31,
+            2022. There is no operational impact. Harness users that installed self-signed certificates into the
+            Delegate default Java KeyStore should follow
+            <a
+              href="https://community.harness.io/t/information-regarding-certificates-and-delegate-upgrade-to-openjdk-11/12074"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <b>&nbsp;these instructions&nbsp;</b>
+            </a>
+            to make sure Delegates continue to use these certificates.
+          </Text>
+          <Button
+            variation={ButtonVariation.ICON}
+            size={ButtonSize.LARGE}
+            icon="cross"
+            onClick={() => setShowBanner(false)}
+          />
+        </Callout>
+      )}
+
+      <LandingDashboardPage />
+    </>
+  )
+}
+
+export default LandingDashboardPageWithCallout

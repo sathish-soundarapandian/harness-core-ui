@@ -12,15 +12,16 @@ import type { GraphLayoutNode, PipelineExecutionSummary } from 'services/pipelin
 import type { StringKeys } from 'framework/strings'
 import type {
   Infrastructure,
-  GetExecutionStrategyYamlQueryParams,
   PipelineInfoConfig,
   StageElementConfig,
-  ServerlessAwsLambdaInfrastructure
+  ServerlessAwsLambdaInfrastructure,
+  ServiceDefinition
 } from 'services/cd-ng'
 import { connectorTypes } from '@pipeline/utils/constants'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import type { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { getStageFromPipeline as getStageByPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
 import type { DependencyElement } from 'services/ci'
 import type { PipelineGraphState } from '@pipeline/components/PipelineDiagram/types'
 import type { InputSetDTO } from './types'
@@ -46,7 +47,8 @@ export enum ServiceDeploymentType {
   winrm = 'winrm',
   awsLambda = 'awsLambda',
   pcf = 'pcf',
-  ssh = 'ssh',
+  ssh = 'Ssh',
+  Pdc = 'Pdc',
   ServerlessAwsLambda = 'ServerlessAwsLambda',
   ServerlessAzureFunctions = 'ServerlessAzureFunctions',
   ServerlessGoogleFunctions = 'ServerlessGoogleFunctions',
@@ -99,6 +101,14 @@ export function hasCIStage(pipelineExecution?: PipelineExecutionSummary): boolea
   return pipelineExecution?.modules?.includes('ci') || !isEmpty(pipelineExecution?.moduleInfo?.ci)
 }
 
+export function hasSTOStage(pipelineExecution?: PipelineExecutionSummary): boolean {
+  return (
+    pipelineExecution?.modules?.includes('sto') ||
+    pipelineExecution?.modules?.includes('ci') ||
+    !isEmpty(pipelineExecution?.moduleInfo?.sto)
+  )
+}
+
 export const getHelperTextString = (
   invalidFields: string[],
   getString: (key: StringKeys) => string,
@@ -123,6 +133,8 @@ export const getHelpeTextForTags = (
     repository?: string
     repositoryPort?: number
     artifactDirectory?: string
+    registry?: string
+    subscriptionId?: string
   },
   getString: (key: StringKeys) => string,
   isServerlessDeploymentTypeSelected = false
@@ -135,7 +147,9 @@ export const getHelpeTextForTags = (
     registryHostname,
     repository,
     repositoryPort,
-    artifactDirectory
+    artifactDirectory,
+    registry,
+    subscriptionId
   } = fields
   const invalidFields: string[] = []
   if (!connectorRef || getMultiTypeFromValue(connectorRef) === MultiTypeInputType.RUNTIME) {
@@ -178,6 +192,17 @@ export const getHelpeTextForTags = (
     invalidFields.push(getString('pipeline.artifactsSelection.artifactDirectory'))
   }
 
+  if (registry !== undefined && (!registry || getMultiTypeFromValue(registry) === MultiTypeInputType.RUNTIME)) {
+    invalidFields.push(getString('pipeline.ACR.registry'))
+  }
+
+  if (
+    subscriptionId !== undefined &&
+    (!subscriptionId || getMultiTypeFromValue(subscriptionId) === MultiTypeInputType.RUNTIME)
+  ) {
+    invalidFields.push(getString('pipeline.ACR.subscription'))
+  }
+
   const helpText = getHelperTextString(invalidFields, getString, isServerlessDeploymentTypeSelected)
 
   return invalidFields.length > 0 ? helpText : ''
@@ -189,14 +214,16 @@ export const isServerlessDeploymentType = (deploymentType: string): boolean => {
     deploymentType === ServiceDeploymentType.ServerlessAzureFunctions ||
     deploymentType === ServiceDeploymentType.ServerlessGoogleFunctions ||
     deploymentType === ServiceDeploymentType.AmazonSAM ||
-    deploymentType === ServiceDeploymentType.AzureFunctions
+    deploymentType === ServiceDeploymentType.AzureFunctions ||
+    deploymentType === ServiceDeploymentType.ssh
   )
 }
 
 export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessAwsLambda]: 'Amazon Web Services Details',
   [ServiceDeploymentType.ServerlessAzureFunctions]: 'Azure Details',
-  [ServiceDeploymentType.ServerlessGoogleFunctions]: 'GCP Details'
+  [ServiceDeploymentType.ServerlessGoogleFunctions]: 'GCP Details',
+  [ServiceDeploymentType.Pdc]: 'Infrastructure definition'
 }
 
 export const isServerlessManifestType = (selectedManifest: ManifestTypes | null): boolean => {
@@ -207,13 +234,26 @@ export const getSelectedDeploymentType = (
   stage: StageElementWrapper<DeploymentStageElementConfig> | undefined,
   getStageFromPipeline: <T extends StageElementConfig = StageElementConfig>(
     stageId: string,
-    pipeline?: PipelineInfoConfig | undefined
+    pipeline?: PipelineInfoConfig
   ) => PipelineStageWrapper<T>,
   isPropagating = false
-): GetExecutionStrategyYamlQueryParams['serviceDefinitionType'] => {
+): ServiceDefinition['type'] => {
   if (isPropagating) {
     const parentStageId = get(stage, 'stage.spec.serviceConfig.useFromStage.stage', null)
     const parentStage = getStageFromPipeline<DeploymentStageElementConfig>(defaultTo(parentStageId, ''))
+    return get(parentStage, 'stage.stage.spec.serviceConfig.serviceDefinition.type', null)
+  }
+  return get(stage, 'stage.spec.serviceConfig.serviceDefinition.type', null)
+}
+
+export const getStageDeploymentType = (
+  pipeline: PipelineInfoConfig,
+  stage: StageElementWrapper<DeploymentStageElementConfig>,
+  isPropagating = false
+): ServiceDefinition['type'] => {
+  if (isPropagating) {
+    const parentStageId = get(stage, 'stage.spec.serviceConfig.useFromStage.stage', null)
+    const parentStage = getStageByPipeline<DeploymentStageElementConfig>(defaultTo(parentStageId, ''), pipeline)
     return get(parentStage, 'stage.stage.spec.serviceConfig.serviceDefinition.type', null)
   }
   return get(stage, 'stage.spec.serviceConfig.serviceDefinition.type', null)

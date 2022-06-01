@@ -99,7 +99,11 @@ export default function RouteDestinations(): React.ReactElement {
           <CERoutes />
         </Route>
       ) : null}
-      {CFNG_ENABLED && <CFRoutes />}
+      {CFNG_ENABLED && (
+        <Route path="/account/:accountId/:module(cf)">
+          <CFRoutes />
+        </Route>
+      )}
       <Route path="*">
         <NotFoundPage />
       </Route>

@@ -98,6 +98,9 @@ export default function AddEditCustomVariable(props: AddEditCustomVariableProps)
               items={getVaribaleTypeOptions(getString)}
               label={getString('typeLabel')}
               placeholder={getString('pipeline.variable.typePlaceholder')}
+              selectProps={{
+                usePortal: true
+              }}
             />
             <div className="buttons-container">
               <Button

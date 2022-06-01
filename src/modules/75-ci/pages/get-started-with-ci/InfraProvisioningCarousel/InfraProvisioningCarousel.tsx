@@ -9,8 +9,8 @@ import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
 import Lottie from 'react-lottie-player'
 
-import { Dialog, Layout, Icon, Text, FontVariation, Color, Container, Button, ButtonVariation } from '@harness/uicore'
-import { String, useStrings } from 'framework/strings'
+import { Dialog, Layout, Icon, Text, FontVariation, Color, Container } from '@harness/uicore'
+import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import { ProvisioningStatus } from '../InfraProvisioningWizard/Constants'
 
@@ -30,7 +30,7 @@ export interface InfraProvisioningCarouselProps {
 
 const AUTO_TRANSITION_DELAY = 5000
 const USER_INTERVENTION_TRANSITION_DELAY = 10000
-const POST_SUCCESS_TRANSITION_DELAY = 1000
+const POST_SUCCESS_TRANSITION_DELAY = 2000
 
 export const CarouselSlides: { label: keyof StringsMap; details: keyof StringsMap }[] = [
   {
@@ -127,8 +127,8 @@ export const InfraProvisioningCarousel: React.FC<InfraProvisioningCarouselProps>
     switch (provisioningStatus) {
       case ProvisioningStatus.IN_PROGRESS:
         return (
-          <Layout.Horizontal padding={{ top: 'xlarge', left: 'xxxlarge', right: 'xxxlarge' }} flex>
-            <Layout.Vertical padding="xlarge" style={{ flex: 1 }} className={css.centerAlign}>
+          <Layout.Horizontal flex>
+            <Layout.Vertical padding="xlarge" style={{ flex: 1, textAlign: 'center' }} className={css.centerAlign}>
               <Icon name="harness" size={34} padding="large" />
               <Text font={{ variation: FontVariation.H4 }} className={css.centerAlign}>
                 {getString('ci.getStartedWithCI.provisionSecureEnv')}
@@ -172,15 +172,6 @@ export const InfraProvisioningCarousel: React.FC<InfraProvisioningCarouselProps>
               style={{ background: `transparent url(${provisioningFailed}) no-repeat` }}
               className={css.provisioningStatus}
             />
-            <Text font={{ variation: FontVariation.BODY }} className={css.centerAlign} padding={{ bottom: 'small' }}>
-              <String stringID="ci.getStartedWithCI.troubleShootFailedProvisioning" useRichText={true} />
-            </Text>
-            <Button
-              variation={ButtonVariation.PRIMARY}
-              text={getString('ci.getStartedWithCI.chooseDiffInfra')}
-              onClick={() => onClose()}
-            />
-            <Button icon="contact-support" text={getString('common.contactSupport')} disabled={true} />
           </Layout.Vertical>
         )
       case ProvisioningStatus.SUCCESS:
@@ -213,7 +204,7 @@ export const InfraProvisioningCarousel: React.FC<InfraProvisioningCarouselProps>
       canEscapeKeyClose={false}
       canOutsideClickClose={false}
       onClose={onClose}
-      className={css.main}
+      className={cx(css.main, { [css.closeBtn]: provisioningStatus !== ProvisioningStatus.FAILURE })}
     >
       {renderViewForStatus()}
     </Dialog>

@@ -7,6 +7,7 @@
 
 import type { EntityGitDetails } from 'services/pipeline-ng'
 import type { Module as ModuleName } from 'framework/types/ModuleName'
+import type { StoreType } from '@common/constants/GitSyncTypes'
 
 export interface AccountPathProps {
   accountId: string
@@ -23,6 +24,9 @@ export interface DashboardPathProps extends AccountPathProps {
 export interface GitQueryParams {
   branch?: EntityGitDetails['branch']
   repoIdentifier?: EntityGitDetails['repoIdentifier']
+  repoName?: EntityGitDetails['repoName']
+  connectorRef?: string
+  storeType?: StoreType
 }
 
 export interface InputSetGitQueryParams extends GitQueryParams {
@@ -143,7 +147,7 @@ export interface EnvironmentPathProps {
 }
 
 export interface EnvironmentQueryParams {
-  sectionId?: 'CONFIGURATION'
+  sectionId?: 'CONFIGURATION' | 'INFRASTRUCTURE'
 }
 
 export interface EnvironmentGroupPathProps {
@@ -162,7 +166,14 @@ export interface ServicePathProps {
   serviceId: string
 }
 
-export type ModuleNameMatch = ':module' | ':module(ci)' | ':module(cd)' | ':module(cf)' | ':module(cv)' | ':module(ce)'
+export type ModuleNameMatch =
+  | ':module'
+  | ':module(ci)'
+  | ':module(cd)'
+  | ':module(cf)'
+  | ':module(cv)'
+  | ':module(ce)'
+  | ':module(sto)'
 
 export type Module = ModuleName | ModuleNameMatch
 

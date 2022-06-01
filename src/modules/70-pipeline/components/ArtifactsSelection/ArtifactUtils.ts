@@ -85,7 +85,7 @@ export const helperTextData = (
       }
     case ENABLED_ARTIFACT_TYPES.Acr:
       return {
-        subscription: formik.values?.subscription,
+        subscriptionId: formik.values?.subscriptionId,
         registry: formik.values?.registry,
         repository: formik.values?.repository,
         connectorRef: connectorIdValue
@@ -110,15 +110,6 @@ export const shouldFetchTags = (
   return (
     !isEmpty(getConnectorIdValue(prevStepData)) &&
     getMultiTypeFromValue(getConnectorIdValue(prevStepData)) === MultiTypeInputType.FIXED &&
-    checkIfQueryParamsisNotEmpty(queryParamList) &&
-    queryParamList.every(query => getMultiTypeFromValue(query) === MultiTypeInputType.FIXED)
-  )
-}
-
-export const shouldFetchTagsSource = (connectorRefValue: any, queryParamList: Array<string>): boolean => {
-  return (
-    !isEmpty(connectorRefValue) &&
-    getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.FIXED &&
     checkIfQueryParamsisNotEmpty(queryParamList) &&
     queryParamList.every(query => getMultiTypeFromValue(query) === MultiTypeInputType.FIXED)
   )
@@ -287,6 +278,6 @@ export const showConnectorStep = (selectedArtifact: ArtifactType): boolean => {
   return selectedArtifact !== ENABLED_ARTIFACT_TYPES.CustomArtifact
 }
 
-export const isFieldRuntime = (field: string): boolean => {
+export const isFieldFixed = (field: string): boolean => {
   return getMultiTypeFromValue(field) === MultiTypeInputType.FIXED
 }

@@ -9,7 +9,6 @@ import React from 'react'
 import { Formik, FormikForm, Accordion, Container } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
 import get from 'lodash/get'
-import type { K8sDirectInfraYaml } from 'services/ci'
 import { Connectors } from '@connectors/constants'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
@@ -29,6 +28,7 @@ import type { PluginStepProps, PluginStepData, PluginStepDataUI } from './Plugin
 import { CIStep } from '../CIStep/CIStep'
 import { CIStepOptionalConfig } from '../CIStep/CIStepOptionalConfig'
 import { AllMultiTypeInputTypesForStep, useGetPropagatedStageById } from '../CIStep/StepUtils'
+import { CIBuildInfrastructureType } from '../../../constants/Constants'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const PluginStepBase = (
@@ -46,7 +46,7 @@ export const PluginStepBase = (
 
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
 
-  const buildInfrastructureType = get(currentStage, 'stage.spec.infrastructure.type') as K8sDirectInfraYaml['type']
+  const buildInfrastructureType: CIBuildInfrastructureType = get(currentStage, 'stage.spec.infrastructure.type')
 
   return (
     <Formik
@@ -120,7 +120,12 @@ export const PluginStepBase = (
                       stepViewType={stepViewType}
                       readonly={readonly}
                       enableFields={{
-                        'spec.privileged': { shouldHide: buildInfrastructureType === 'VM' },
+                        'spec.privileged': {
+                          shouldHide: [
+                            CIBuildInfrastructureType.VM,
+                            CIBuildInfrastructureType.KubernetesHosted
+                          ].includes(buildInfrastructureType)
+                        },
                         'spec.settings': {},
                         'spec.reportPaths': {}
                       }}

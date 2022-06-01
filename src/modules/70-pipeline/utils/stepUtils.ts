@@ -111,6 +111,19 @@ export function getStepPaletteModuleInfosFromStage(
           shouldShowCommonSteps: false
         }
       ]
+    case StageType.CUSTOM:
+      return [
+        {
+          module: 'cd',
+          category: 'Approval',
+          shouldShowCommonSteps: true
+        },
+        {
+          module: 'cd',
+          category: 'Provisioner',
+          shouldShowCommonSteps: false
+        }
+      ]
 
     default:
       return [

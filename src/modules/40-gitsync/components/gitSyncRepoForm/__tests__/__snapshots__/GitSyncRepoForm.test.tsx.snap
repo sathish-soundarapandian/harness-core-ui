@@ -640,18 +640,6 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
                     </span>
                   </button>
                   <button
-                    class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--selected Button--with-current-color"
-                    disabled=""
-                    tabindex="-1"
-                    type="button"
-                  >
-                    <span
-                      class="bp3-button-text"
-                    >
-                      1
-                    </span>
-                  </button>
-                  <button
                     class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--buttonRight Button--with-current-color Button--withRightIcon Button--size Button--small"
                     disabled=""
                     tabindex="-1"
@@ -2710,18 +2698,6 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
                       class="bp3-button-text"
                     >
                       Prev
-                    </span>
-                  </button>
-                  <button
-                    class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Pagination--roundedButton Pagination--selected Button--with-current-color"
-                    disabled=""
-                    tabindex="-1"
-                    type="button"
-                  >
-                    <span
-                      class="bp3-button-text"
-                    >
-                      1
                     </span>
                   </button>
                   <button

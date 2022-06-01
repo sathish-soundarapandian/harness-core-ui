@@ -6,6 +6,8 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react'
+import set from 'lodash-es/set'
+import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import type { FormikContextType, FormikProps } from 'formik'
 import cx from 'classnames'
@@ -27,9 +29,20 @@ import {
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
+import {
+  ConnectorInfoDTO,
+  ResponseMessage,
+  ResponseScmConnectorResponse,
+  SecretDTOV2,
+  SecretTextSpecDTO,
+  useCreateDefaultScmConnector
+} from 'services/cd-ng'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { OAuthProviders, OAuthProviderType } from '@common/constants/OAuthProviders'
 import { joinAsASentence } from '@common/utils/StringUtils'
 import { TestStatus } from '@common/components/TestConnectionWidget/TestConnectionWidget'
+import { Status } from '@common/utils/CIConstants'
+import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { Connectors } from '@connectors/constants'
 import {
   AllSaaSGitProviders,
@@ -39,18 +52,21 @@ import {
   GitProviderTypeToAuthenticationMethodMapping,
   GitProviderPermission,
   Hosting,
-  GitProviderPermissions
+  GitProviderPermissions,
+  ACCOUNT_SCOPE_PREFIX,
+  DEFAULT_HARNESS_KMS,
+  OAUTH_REDIRECT_URL_PREFIX
 } from './Constants'
 
 import css from './InfraProvisioningWizard.module.scss'
-
-const OAUTH_REDIRECT_URL_PREFIX = `${location.protocol}//${location.host}/gateway/`
 
 export interface SelectGitProviderRef {
   values: SelectGitProviderInterface
   setFieldTouched(field: keyof SelectGitProviderInterface & string, isTouched?: boolean, shouldValidate?: boolean): void
   validate: () => boolean
   showValidationErrors: () => void
+  validatedConnector?: ConnectorInfoDTO
+  validatedSecret?: SecretDTOV2
 }
 
 export type SelectGitProviderForwardRef =
@@ -84,18 +100,33 @@ const SelectGitProviderRef = (
   const [authMethod, setAuthMethod] = useState<GitAuthenticationMethod>()
   const [testConnectionStatus, setTestConnectionStatus] = useState<TestStatus>(TestStatus.NOT_INITIATED)
   const formikRef = useRef<FormikContextType<SelectGitProviderInterface>>()
+  const { accountId } = useParams<ProjectPathProps>()
+  const [testConnectionErrors, setTestConnectionErrors] = useState<ResponseMessage[]>()
+  const [connector, setConnector] = useState<ConnectorInfoDTO>()
+  const [secret, setSecret] = useState<SecretDTOV2>()
+  const scrollRef = useRef<Element>()
+  const { mutate: createSCMConnector } = useCreateDefaultScmConnector({
+    queryParams: { accountIdentifier: accountId }
+  })
 
   useEffect(() => {
-    if (authMethod === GitAuthenticationMethod.AccessToken) {
+    if (shouldRenderAuthFormFields()) {
       setTestConnectionStatus(TestStatus.NOT_INITIATED)
       enableNextBtn()
     }
-  }, [authMethod])
+  }, [gitProvider, authMethod, selectedHosting])
 
   useEffect(() => {
     if (gitProvider) {
       if (selectedHosting === Hosting.SaaS) {
-        if (authMethod === GitAuthenticationMethod.AccessToken) {
+        if (
+          authMethod &&
+          [
+            GitAuthenticationMethod.AccessToken,
+            GitAuthenticationMethod.AccessKey,
+            GitAuthenticationMethod.UserNameAndApplicationPassword
+          ].includes(authMethod)
+        ) {
           if (testConnectionStatus === TestStatus.SUCCESS) {
             enableNextBtn()
           } else {
@@ -114,15 +145,10 @@ const SelectGitProviderRef = (
 
   const setForwardRef = ({
     values,
-    setFieldTouched
-  }: {
-    values: SelectGitProviderInterface
-    setFieldTouched(
-      field: keyof SelectGitProviderInterface & string,
-      isTouched?: boolean,
-      shouldValidate?: boolean
-    ): void
-  }): void => {
+    setFieldTouched,
+    validatedConnector,
+    validatedSecret
+  }: Omit<SelectGitProviderRef, 'validate' | 'showValidationErrors'>): void => {
     if (!forwardRef) {
       return
     }
@@ -132,10 +158,12 @@ const SelectGitProviderRef = (
 
     if (values) {
       forwardRef.current = {
-        values: values,
+        values,
         setFieldTouched: setFieldTouched,
         validate: validateGitProviderSetup,
-        showValidationErrors: markFieldsTouchedToShowValidationErrors
+        showValidationErrors: markFieldsTouchedToShowValidationErrors,
+        validatedConnector,
+        validatedSecret
       }
     }
   }
@@ -144,31 +172,198 @@ const SelectGitProviderRef = (
     if (formikRef.current?.values && formikRef.current?.setFieldTouched) {
       setForwardRef({
         values: formikRef.current.values,
-        setFieldTouched: formikRef.current.setFieldTouched
+        setFieldTouched: formikRef.current.setFieldTouched,
+        validatedConnector: connector,
+        validatedSecret: secret
       })
     }
-  })
+  }, [formikRef.current?.values, formikRef.current?.setFieldTouched, connector, secret])
+
+  //#region scm validation
+
+  const getSecretPayload = React.useCallback((): SecretDTOV2 => {
+    const gitProviderLabel = gitProvider?.type as string
+    const secretName = `${gitProviderLabel} ${getString('ci.getStartedWithCI.accessTokenLabel')}`
+    const secretPayload: SecretDTOV2 = {
+      name: secretName,
+      identifier: secretName.split(' ').join('_'), // an identifier cannot contain spaces
+      type: 'SecretText',
+      spec: {
+        valueType: 'Inline',
+        secretManagerIdentifier: DEFAULT_HARNESS_KMS
+      } as SecretTextSpecDTO
+    }
+    switch (gitProvider?.type) {
+      case Connectors.GITHUB:
+        return set(secretPayload, 'spec.value', formikRef.current?.values.accessToken)
+      case Connectors.BITBUCKET:
+        return set(secretPayload, 'spec.value', formikRef.current?.values.applicationPassword)
+      case Connectors.GITLAB:
+        return set(secretPayload, 'spec.value', formikRef.current?.values.accessKey)
+      default:
+        return secretPayload
+    }
+  }, [gitProvider?.type, formikRef.current?.values])
+
+  const getGitUrl = React.useCallback((): string => {
+    let url = ''
+    switch (gitProvider?.type) {
+      case Connectors.GITHUB:
+        url = getString('common.git.gitHubUrlPlaceholder')
+        break
+      case Connectors.BITBUCKET:
+        url = getString('common.git.bitbucketOrgUrlPlaceholder')
+        break
+      case Connectors.GITLAB:
+        url = getString('common.git.gitLabUrlPlaceholder')
+        break
+    }
+    return url ? url.replace('/account/', '') : ''
+  }, [gitProvider?.type])
+
+  const getSCMConnectorPayload = React.useCallback(
+    (secretId: string, type: GitProvider['type']): ConnectorInfoDTO => {
+      const commonConnectorPayload = {
+        name: type,
+        identifier: type,
+        type,
+        spec: {
+          executeOnDelegate: true,
+          type: 'Account',
+          url: getGitUrl(),
+          authentication: {
+            type: 'Http',
+            spec: {}
+          },
+          apiAccess: {}
+        }
+      }
+      let updatedConnectorPayload: ConnectorInfoDTO
+      switch (gitProvider?.type) {
+        case Connectors.GITLAB:
+        case Connectors.GITHUB:
+          updatedConnectorPayload = set(commonConnectorPayload, 'spec.authentication.spec.type', 'UsernameToken')
+          updatedConnectorPayload = set(
+            updatedConnectorPayload,
+            'spec.authentication.spec.spec.tokenRef',
+            `${ACCOUNT_SCOPE_PREFIX}${secretId}`
+          )
+          updatedConnectorPayload = set(updatedConnectorPayload, 'spec.apiAccess.type', 'Token')
+          updatedConnectorPayload = set(
+            updatedConnectorPayload,
+            'spec.apiAccess.spec.tokenRef',
+            `${ACCOUNT_SCOPE_PREFIX}${secretId}`
+          )
+          return updatedConnectorPayload
+        case Connectors.BITBUCKET:
+          updatedConnectorPayload = set(commonConnectorPayload, 'spec.authentication.spec.type', 'UsernamePassword')
+          updatedConnectorPayload = set(updatedConnectorPayload, 'spec.authentication.spec.spec', {
+            username: formikRef.current?.values?.username,
+            passwordRef: `${ACCOUNT_SCOPE_PREFIX}${secretId}`
+          })
+          updatedConnectorPayload = set(updatedConnectorPayload, 'spec.apiAccess.type', 'UsernameToken')
+          updatedConnectorPayload = set(updatedConnectorPayload, 'spec.apiAccess.spec', {
+            username: formikRef.current?.values?.username,
+            tokenRef: `${ACCOUNT_SCOPE_PREFIX}${secretId}`
+          })
+          return updatedConnectorPayload
+        default:
+          return commonConnectorPayload
+      }
+    },
+    [gitProvider?.type, formikRef.current?.values?.username]
+  )
+
+  useEffect(() => {
+    if (scrollRef) {
+      scrollRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [testConnectionErrors?.length])
 
   const TestConnection = (): React.ReactElement => {
     switch (testConnectionStatus) {
       case TestStatus.FAILED:
       case TestStatus.NOT_INITIATED:
         return (
-          <Button
-            variation={ButtonVariation.PRIMARY}
-            text={getString('common.smtp.testConnection')}
-            size={ButtonSize.SMALL}
-            type="submit"
-            onClick={() => {
-              if (validateGitProviderSetup()) {
-                setTestConnectionStatus(TestStatus.IN_PROGRESS)
-                //TODO remove this when api will available for integration
-                setTimeout(() => setTestConnectionStatus(TestStatus.SUCCESS), 3000)
-              }
-            }}
-            className={css.testConnectionBtn}
-            id="test-connection-btn"
-          />
+          <Layout.Vertical>
+            <Button
+              variation={ButtonVariation.PRIMARY}
+              text={getString('common.smtp.testConnection')}
+              size={ButtonSize.SMALL}
+              type="submit"
+              onClick={() => {
+                if (validateGitProviderSetup()) {
+                  setTestConnectionStatus(TestStatus.IN_PROGRESS)
+                  setTestConnectionErrors([])
+                  if (gitProvider?.type) {
+                    const createSecretPayload = getSecretPayload()
+                    const createConnectorPayload = getSCMConnectorPayload(
+                      createSecretPayload.identifier,
+                      gitProvider.type
+                    )
+                    createSCMConnector({
+                      secret: createSecretPayload,
+                      connector: createConnectorPayload
+                    })
+                      .then((createSCMCtrResponse: ResponseScmConnectorResponse) => {
+                        const { data: scmCtrData, status: scmCtrResponse } = createSCMCtrResponse
+                        const connectorId = scmCtrData?.connectorResponseDTO?.connector?.identifier
+                        const secretId = scmCtrData?.secretResponseWrapper?.secret?.identifier
+                        if (
+                          secretId &&
+                          connectorId &&
+                          scmCtrResponse === Status.SUCCESS &&
+                          scmCtrData?.connectorValidationResult?.status === Status.SUCCESS
+                        ) {
+                          setTestConnectionStatus(TestStatus.SUCCESS)
+                          setConnector(createConnectorPayload)
+                          setSecret(createSecretPayload)
+                        } else {
+                          setTestConnectionStatus(TestStatus.FAILED)
+                          const errorMsgs: ResponseMessage[] = []
+                          if (!connectorId) {
+                            errorMsgs.push({
+                              level: 'ERROR',
+                              message: getString('ci.getStartedWithCI.fieldIsMissing', {
+                                field: `${getString('connector')} ${getString('identifier').toLowerCase()}`
+                              })
+                            })
+                          }
+                          if (!secretId) {
+                            errorMsgs.push({
+                              level: 'ERROR',
+                              message: getString('ci.getStartedWithCI.fieldIsMissing', {
+                                field: `${getString('secretType')} ${getString('identifier').toLowerCase()}`
+                              })
+                            })
+                          }
+                          if (errorMsgs.length > 0) {
+                            errorMsgs.push({
+                              level: 'ERROR',
+                              message: `${getString('common.smtp.testConnection')} ${getString('failed').toLowerCase()}`
+                            })
+                            setTestConnectionErrors(errorMsgs.reverse())
+                          }
+                        }
+                      })
+                      .catch(err => {
+                        setTestConnectionStatus(TestStatus.FAILED)
+                        setTestConnectionErrors((err?.data as any)?.responseMessages)
+                      })
+                  }
+                }
+              }}
+              className={css.testConnectionBtn}
+              id="test-connection-btn"
+            />
+            {testConnectionStatus === TestStatus.FAILED &&
+            Array.isArray(testConnectionErrors) &&
+            testConnectionErrors.length > 0 ? (
+              <Container padding={{ top: 'medium' }} ref={scrollRef}>
+                <ErrorHandler responseMessages={testConnectionErrors || []} />
+              </Container>
+            ) : null}
+          </Layout.Vertical>
         )
       case TestStatus.IN_PROGRESS:
         return (
@@ -192,6 +387,8 @@ const SelectGitProviderRef = (
         return <></>
     }
   }
+
+  //#endregion
 
   //#region form view
 
@@ -328,35 +525,36 @@ const SelectGitProviderRef = (
   }, [gitProvider, authMethod, selectedHosting])
 
   const validateGitProviderSetup = React.useCallback((): boolean => {
-    let isSetupValid = false
     const { accessToken, accessKey, applicationPassword, username, url } = formikRef.current?.values || {}
     if (selectedHosting === Hosting.SaaS) {
       switch (gitProvider?.type) {
         case Connectors.GITHUB:
-          isSetupValid = authMethod === GitAuthenticationMethod.AccessToken && !!accessToken
-          break
+          return authMethod === GitAuthenticationMethod.AccessToken && !!accessToken
         case Connectors.GITLAB:
-          isSetupValid = authMethod === GitAuthenticationMethod.AccessKey && !!accessKey
-          break
+          return authMethod === GitAuthenticationMethod.AccessKey && !!accessKey
+
         case Connectors.BITBUCKET:
-          isSetupValid =
+          return (
             authMethod === GitAuthenticationMethod.UserNameAndApplicationPassword && !!username && !!applicationPassword
-          break
+          )
+        default:
+          return false
       }
     } else if (selectedHosting === Hosting.OnPrem) {
       switch (gitProvider?.type) {
         case Connectors.GITHUB:
-          isSetupValid = !!accessToken && !!url
+          return !!accessToken && !!url
           break
         case Connectors.GITLAB:
-          isSetupValid = !!accessKey && !!url
+          return !!accessKey && !!url
           break
         case Connectors.BITBUCKET:
-          isSetupValid = !!username && !!applicationPassword && !!url
-          break
+          return !!username && !!applicationPassword && !!url
+        default:
+          return false
       }
     }
-    return isSetupValid
+    return false
   }, [gitProvider, authMethod, selectedHosting])
 
   //#endregion
@@ -490,10 +688,6 @@ const SelectGitProviderRef = (
       >
         {formikProps => {
           formikRef.current = formikProps
-          setForwardRef({
-            values: formikProps.values,
-            setFieldTouched: formikProps.setFieldTouched
-          })
           return (
             <Form>
               <Container
@@ -536,8 +730,8 @@ const SelectGitProviderRef = (
                   <Container padding={{ top: 'xsmall' }}>
                     <FormError
                       name={'gitProvider'}
-                      errorMessage={getString('fieldRequired', {
-                        field: getString('ci.getStartedWithCI.codeRepoLabel')
+                      errorMessage={getString('ci.getStartedWithCI.plsChoose', {
+                        field: `a ${getString('ci.getStartedWithCI.codeRepoLabel').toLowerCase()}`
                       })}
                     />
                   </Container>
@@ -576,6 +770,8 @@ const SelectGitProviderRef = (
                               setAuthMethod(GitAuthenticationMethod.OAuth)
                             }}
                             intent={authMethod === GitAuthenticationMethod.OAuth ? 'primary' : 'none'}
+                            /* Disabling till OAuth support is ready */
+                            disabled={true}
                           />
                           <Button
                             className={css.authMethodBtn}
@@ -596,8 +792,8 @@ const SelectGitProviderRef = (
                           <Container padding={{ top: 'xsmall' }}>
                             <FormError
                               name={'gitAuthenticationMethod'}
-                              errorMessage={getString('fieldRequired', {
-                                field: getString('ci.getStartedWithCI.authMethodLabel')
+                              errorMessage={getString('ci.getStartedWithCI.plsChoose', {
+                                field: `an ${getString('ci.getStartedWithCI.authMethodLabel').toLowerCase()}`
                               })}
                             />
                           </Container>

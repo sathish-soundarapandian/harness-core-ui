@@ -13,8 +13,8 @@ import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import { DeployService } from '../DeployServiceStep.stories'
-import { NewEditServiceModal } from '../DeployServiceStep'
 import serviceData, { inputSetServiceData } from './serviceMock'
+import { NewEditServiceModal } from '../NewEditServiceModal'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 const onSave = jest.fn()
@@ -30,6 +30,7 @@ const props = {
 
 jest.mock('services/cd-ng', () => ({
   useGetServiceList: jest.fn().mockImplementation(() => ({ loading: false, data: serviceData, refetch: jest.fn() })),
+  useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() })),
   useGetServiceAccessList: jest
     .fn()
     .mockImplementation(() => ({ loading: false, data: inputSetServiceData, refetch: jest.fn() })),

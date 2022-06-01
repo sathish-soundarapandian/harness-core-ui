@@ -19,7 +19,6 @@ import {
 import { Color } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import get from 'lodash/get'
-import type { K8sDirectInfraYaml } from 'services/ci'
 import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -47,6 +46,7 @@ import {
 } from '../CIStep/StepUtils'
 import { CIStep } from '../CIStep/CIStep'
 import { ConnectorRefWithImage } from '../CIStep/ConnectorRefWithImage'
+import { CIBuildInfrastructureType } from '../../../constants/Constants'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const RunStepBase = (
@@ -64,7 +64,7 @@ export const RunStepBase = (
 
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
 
-  const buildInfrastructureType = get(currentStage, 'stage.spec.infrastructure.type') as K8sDirectInfraYaml['type']
+  const buildInfrastructureType: CIBuildInfrastructureType = get(currentStage, 'stage.spec.infrastructure.type')
 
   return (
     <Formik
@@ -77,7 +77,7 @@ export const RunStepBase = (
       validate={valuesToValidate => {
         /* If a user configures AWS VMs as an infra, the steps can be executed directly on the VMS or in a container on a VM. 
         For the latter case, even though Container Registry and Image are optional for AWS VMs infra, they both need to be specified for container to be spawned properly */
-        if (buildInfrastructureType === 'VM') {
+        if (buildInfrastructureType === CIBuildInfrastructureType.VM) {
           return validateConnectorRefAndImageDepdendency(
             get(valuesToValidate, 'spec.connectorRef', ''),
             get(valuesToValidate, 'spec.image', ''),
@@ -125,7 +125,7 @@ export const RunStepBase = (
                 description: {}
               }}
             />
-            {buildInfrastructureType !== 'VM' ? (
+            {buildInfrastructureType !== CIBuildInfrastructureType.VM ? (
               <ConnectorRefWithImage showOptionalSublabel={false} readonly={readonly} stepViewType={stepViewType} />
             ) : null}
             <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
@@ -213,7 +213,7 @@ export const RunStepBase = (
                 summary={getString('common.optionalConfig')}
                 details={
                   <Container margin={{ top: 'medium' }}>
-                    {buildInfrastructureType === 'VM' ? (
+                    {buildInfrastructureType === CIBuildInfrastructureType.VM ? (
                       <ConnectorRefWithImage
                         showOptionalSublabel={true}
                         readonly={readonly}
@@ -224,7 +224,12 @@ export const RunStepBase = (
                       stepViewType={stepViewType}
                       readonly={readonly}
                       enableFields={{
-                        'spec.privileged': { shouldHide: buildInfrastructureType === 'VM' },
+                        'spec.privileged': {
+                          shouldHide: [
+                            CIBuildInfrastructureType.VM,
+                            CIBuildInfrastructureType.KubernetesHosted
+                          ].includes(buildInfrastructureType)
+                        },
                         'spec.reportPaths': {},
                         'spec.envVariables': {},
                         'spec.outputVariables': {}

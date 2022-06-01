@@ -7,10 +7,19 @@
 
 import React from 'react'
 import { Tabs } from '@harness/uicore'
+import moment from 'moment'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { Page } from '@common/exports'
 import { useStrings } from 'framework/strings'
-import { ServiceStoreContext, useServiceStore } from './common'
+import { isCommunityPlan } from '@common/utils/utils'
+import {
+  startOfDay,
+  TimeRangeSelector,
+  TimeRangeSelectorProps
+} from '@common/components/TimeRangeSelector/TimeRangeSelector'
+import { useLocalStorage } from '@common/hooks'
+import { validTimeFormat } from '@common/factories/LandingDashboardContext'
+import { DeploymentsTimeRangeContext, ServiceStoreContext, useServiceStore } from './common'
 
 import { ServicesListPage } from './ServicesListPage/ServicesListPage'
 import { ServicesDashboardPage } from './ServicesDashboardPage/ServicesDashboardPage'
@@ -20,6 +29,20 @@ import css from './Services.module.scss'
 export const Services: React.FC = () => {
   const { view, setView, fetchDeploymentList } = useServiceStore()
   const { getString } = useStrings()
+  const isCommunity = isCommunityPlan()
+
+  const [timeRange, setTimeRange] = useLocalStorage<TimeRangeSelectorProps>(
+    'serviceTimeRange',
+    {
+      range: [startOfDay(moment().subtract(1, 'month').add(1, 'day')), startOfDay(moment())],
+      label: getString('common.duration.month')
+    },
+    window.sessionStorage
+  )
+
+  const resultTimeFilterRange = validTimeFormat(timeRange)
+  timeRange.range[0] = resultTimeFilterRange.range[0]
+  timeRange.range[1] = resultTimeFilterRange.range[1]
 
   return (
     <ServiceStoreContext.Provider
@@ -29,22 +52,35 @@ export const Services: React.FC = () => {
         fetchDeploymentList
       }}
     >
-      <Page.Header title={getString('services')} breadcrumbs={<NGBreadcrumbs />} />
-
-      <div className={css.tabs}>
-        <Tabs
-          id={'serviceLandingPageTabs'}
-          defaultSelectedTabId={'dashboard'}
-          tabList={[
-            {
-              id: 'dashboard',
-              title: 'Dashboard',
-              panel: <ServicesDashboardPage />
-            },
-            { id: 'manageServices', title: 'Manage Services', panel: <ServicesListPage /> }
-          ]}
-        />
-      </div>
+      <Page.Header
+        title={getString('services')}
+        breadcrumbs={<NGBreadcrumbs />}
+        toolbar={<TimeRangeSelector timeRange={timeRange?.range} setTimeRange={setTimeRange} minimal />}
+      />
+      {isCommunity ? (
+        <ServicesListPage />
+      ) : (
+        <DeploymentsTimeRangeContext.Provider value={{ timeRange, setTimeRange }}>
+          <div className={css.tabs}>
+            <Tabs
+              id={'serviceLandingPageTabs'}
+              defaultSelectedTabId={'dashboard'}
+              tabList={[
+                {
+                  id: 'dashboard',
+                  title: getString('dashboardLabel'),
+                  panel: <ServicesDashboardPage />
+                },
+                {
+                  id: 'manageServices',
+                  title: getString('cd.serviceDashboard.manageServiceLabel'),
+                  panel: <ServicesListPage />
+                }
+              ]}
+            />
+          </div>
+        </DeploymentsTimeRangeContext.Provider>
+      )}
     </ServiceStoreContext.Provider>
   )
 }

@@ -45,7 +45,7 @@ import {
   getConnectorIdValue,
   getFinalArtifactObj,
   helperTextData,
-  isFieldRuntime,
+  isFieldFixed,
   resetTag,
   shouldFetchTags
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
@@ -55,7 +55,6 @@ import type {
   ACRArtifactProps
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
-import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import SideCarArtifactIdentifier from '../SideCarArtifactIdentifier'
 import css from '../../ArtifactConnector.module.scss'
 
@@ -264,12 +263,7 @@ export function ACRArtifact({
 
   useEffect(() => {
     /* istanbul ignore else */
-    if (
-      initialValues?.spec?.subscriptionId &&
-      isFieldRuntime(initialValues?.spec?.subscriptionId) &&
-      initialValues?.spec?.registry &&
-      isFieldRuntime(initialValues?.spec?.registry)
-    ) {
+    if (initialValues?.spec?.subscriptionId && isFieldFixed(initialValues?.spec?.subscriptionId)) {
       refetchRegistries({
         queryParams: {
           connectorRef: getConnectorRefQueryData(),
@@ -315,11 +309,9 @@ export function ACRArtifact({
     /* istanbul ignore else */
     if (
       initialValues?.spec?.subscriptionId &&
-      isFieldRuntime(initialValues?.spec?.subscriptionId) &&
+      isFieldFixed(initialValues?.spec?.subscriptionId) &&
       initialValues?.spec?.registry &&
-      isFieldRuntime(initialValues?.spec?.registry) &&
-      initialValues?.spec?.repository &&
-      isFieldRuntime(initialValues?.spec?.repository)
+      isFieldFixed(initialValues?.spec?.registry)
     ) {
       refetchRepositories({
         queryParams: {
@@ -487,6 +479,7 @@ export function ACRArtifact({
                     name="subscriptionId"
                     selectItems={subscriptions}
                     multiTypeInputProps={{
+                      expressions,
                       onChange: /* istanbul ignore next */ (value, _typeValue, type) => {
                         if (type === MultiTypeInputType.FIXED) {
                           if (getValue(value)) {
@@ -703,7 +696,11 @@ export function ACRArtifact({
                         allowableTypes,
                         selectProps: {
                           defaultSelectedItem: formik.values?.tag as SelectOption,
-                          noResults: <NoTagResults tagError={acrTagError} />,
+                          noResults: (
+                            <Text padding={'small'}>
+                              {get(acrTagError, 'data.message', null) || getString('pipeline.ACR.tagError')}
+                            </Text>
+                          ),
                           items: tags,
                           addClearBtn: true,
                           allowCreatingNewItems: true

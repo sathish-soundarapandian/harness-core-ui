@@ -37,7 +37,13 @@ import {
 } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import ExperimentalInput from '../../K8sServiceSpecForms/ExperimentalInput'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
-import { getYamlData, isArtifactSourceRuntime, isFieldfromTriggerTabDisabled, resetTags } from '../artifactSourceUtils'
+import {
+  getYamlData,
+  isArtifactSourceRuntime,
+  isFieldfromTriggerTabDisabled,
+  resetTags,
+  shouldFetchTagsSource
+} from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
 import css from '../../K8sServiceSpec.module.scss'
 
@@ -75,6 +81,18 @@ const Content = (props: ACRRenderContent): JSX.Element => {
   const [subscriptions, setSubscriptions] = React.useState<SelectOption[]>([])
   const [registries, setRegistries] = React.useState<SelectOption[]>([])
   const [repositories, setRepositories] = React.useState<SelectOption[]>([])
+
+  const [lastQueryData, setLastQueryData] = React.useState<{
+    connectorRef: string
+    subscriptionId: string
+    registry: string
+    repository: string
+  }>({
+    connectorRef: '',
+    subscriptionId: '',
+    registry: '',
+    repository: ''
+  })
 
   const {
     data: acrTagsData,
@@ -249,6 +267,38 @@ const Content = (props: ACRRenderContent): JSX.Element => {
       })) || /* istanbul ignore next */ []
     setRepositories(options)
   }, [repositoriesData])
+
+  const connectorRefValue =
+    get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '') || artifact?.spec?.connectorRef
+  const subscriptionIdValue =
+    get(initialValues, `artifacts.${artifactPath}.spec.subscriptionId`, '') || artifact?.spec?.subscriptionId
+  const registryValue = get(initialValues, `artifacts.${artifactPath}.spec.registry`, '') || artifact?.spec?.registry
+  const repositoryValue =
+    get(initialValues, `artifacts.${artifactPath}.spec.repository`, '') || artifact?.spec?.repository
+
+  const fetchTagsEnabled = (): void => {
+    if (canFetchTags()) {
+      setLastQueryData({
+        connectorRef: connectorRefValue,
+        subscriptionId: subscriptionIdValue,
+        registry: registryValue,
+        repository: repositoryValue
+      })
+
+      fetchTags()
+    }
+  }
+
+  const canFetchTags = (): boolean => {
+    return (
+      !!(
+        lastQueryData.connectorRef !== connectorRefValue ||
+        lastQueryData.subscriptionId !== subscriptionIdValue ||
+        lastQueryData.registry !== registryValue ||
+        lastQueryData.repository !== repositoryValue
+      ) && shouldFetchTagsSource([connectorRefValue, subscriptionIdValue, registryValue, repositoryValue])
+    )
+  }
 
   const isFieldDisabled = (fieldName: string, isTag = false): boolean => {
     if (
@@ -476,11 +526,6 @@ const Content = (props: ACRRenderContent): JSX.Element => {
           {!!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.tag`, template) && (
             <FormInput.MultiTextInput
               label={getString('tagLabel')}
-              placeholder={
-                loadingRepositories
-                  ? /* istanbul ignore next */ getString('loading')
-                  : getString('pipeline.ACR.repositoryPlaceholder')
-              }
               multiTextInputProps={{
                 expressions,
                 value: TriggerDefaultFieldList.build,
@@ -498,7 +543,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
               fetchingTags={fetchingTags}
               buildDetailsList={/* istanbul ignore next */ acrTagsData?.data?.buildDetailsList}
               fetchTagsError={fetchTagsError}
-              fetchTags={fetchTags}
+              fetchTags={fetchTagsEnabled}
               expressions={expressions}
               stageIdentifier={stageIdentifier}
             />

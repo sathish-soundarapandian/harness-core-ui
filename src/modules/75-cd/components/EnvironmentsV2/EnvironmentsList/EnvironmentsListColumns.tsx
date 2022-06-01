@@ -9,39 +9,40 @@ import React from 'react'
 import cx from 'classnames'
 import ReactTimeago from 'react-timeago'
 import { defaultTo, isEmpty } from 'lodash-es'
+import { Classes, Menu, Position } from '@blueprintjs/core'
 
-import { Layout, TagsPopover, Text, Container, Checkbox } from '@harness/uicore'
+import { Layout, TagsPopover, Text, Checkbox, useConfirmationDialog, Intent, Popover, Button } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 
-import type { EnvironmentResponse } from 'services/cd-ng'
+import type { EnvironmentResponse, EnvironmentResponseDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 
-import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 
-import { useConfirmAction } from '@common/hooks/useConfirmAction'
 import { EnvironmentType } from '@common/constants/EnvironmentType'
-
-import { withTableData } from '@cd/utils/tableUtils'
 
 import css from './EnvironmentsList.module.scss'
 
-interface EnvironmentRow {
-  row: { original: any }
+interface EnvironmentRowColumn {
+  row: { original: EnvironmentResponse }
+  column: {
+    actions: {
+      onEdit: (identifier: string) => void
+      onDelete: (identifier: string) => void
+    }
+  }
 }
 
-export enum DeploymentStatus {
-  SUCCESS = 'success',
-  FAILED = 'failed'
+export function withEnvironment(Component: any) {
+  return (props: EnvironmentRowColumn) => {
+    return <Component {...props.row.original} {...props.column.actions} />
+  }
 }
 
-const EnvironmentName = ({ row }: EnvironmentRow): React.ReactElement => {
+export function EnvironmentName({ environment: { name, tags, identifier } }: { environment: EnvironmentResponseDTO }) {
   const { getString } = useStrings()
-  const data = row.original
-
-  const { environment: { name, tags, identifier } = {} } = data as EnvironmentResponse
-
   return (
     <Layout.Vertical>
       <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small" margin={{ bottom: 'small' }}>
@@ -62,85 +63,112 @@ const EnvironmentName = ({ row }: EnvironmentRow): React.ReactElement => {
   )
 }
 
-type EnvData = { environment: EnvironmentResponse }
-const withEnvironment = withTableData<EnvironmentResponse, EnvData>(({ row }) => ({
-  environment: row.original.environment as EnvironmentResponse
-}))
-const withActions = withTableData<
-  EnvironmentResponse,
-  EnvData & { actions: { [P in 'onEdit' | 'onDelete']?: (id: string) => void } }
->(({ row, column }) => ({
-  environment: row.original,
-  actions: (column as any).actions as { [P in 'onEdit' | 'onDelete']?: (id: string) => void }
-}))
-
-export const EnvironmentTypes = withEnvironment(({ environment }) => {
+export function EnvironmentTypes({ environment: { type } }: { environment: EnvironmentResponseDTO }) {
   const { getString } = useStrings()
   return (
     <Text
       className={cx(css.environmentType, {
-        [css.production]: (environment as any)?.type === EnvironmentType.PRODUCTION
+        [css.production]: type === EnvironmentType.PRODUCTION
       })}
       font={{ size: 'small' }}
     >
-      {getString(
-        (environment as any)?.type === EnvironmentType.PRODUCTION ? 'cd.serviceDashboard.prod' : 'cd.preProductionType'
-      )}
+      {getString(type === EnvironmentType.PRODUCTION ? 'cd.serviceDashboard.prod' : 'cd.preProductionType')}
     </Text>
   )
-})
+}
 
-export const EnvironmentMenu = withActions(({ environment: environmentHOC, actions }) => {
+export function LastUpdatedBy({ lastModifiedAt }: EnvironmentResponse): React.ReactElement {
+  return (
+    <Layout.Vertical spacing={'small'}>
+      <ReactTimeago date={lastModifiedAt as number} />
+    </Layout.Vertical>
+  )
+}
+
+export function EnvironmentMenu({
+  environment: { identifier },
+  onEdit,
+  onDelete
+}: {
+  environment: EnvironmentResponseDTO
+  onEdit: (identifier: string) => void
+  onDelete: (identifier: string) => void
+}) {
+  const [menuOpen, setMenuOpen] = React.useState(false)
   const { getString } = useStrings()
-  const { environment } = environmentHOC
-  const identifier = environment?.identifier as string
-  const deleteEnvironment = useConfirmAction({
-    title: getString('cd.environmentDelete'),
-    message: (
-      <span
-        dangerouslySetInnerHTML={{ __html: getString('cd.environmentDeleteMessage', { name: environment?.name }) }}
-      />
-    ),
-    action: () => {
-      actions.onDelete?.(identifier)
+
+  const { openDialog } = useConfirmationDialog({
+    titleText: getString('cd.environment.delete'),
+    contentText: getString('cd.environment.deleteConfirmation'),
+    confirmButtonText: getString('delete'),
+    cancelButtonText: getString('cancel'),
+    intent: Intent.DANGER,
+    buttonIntent: Intent.DANGER,
+    onCloseDialog: async (isConfirmed: boolean) => {
+      /* istanbul ignore else */
+      if (isConfirmed) {
+        await onDelete(defaultTo(identifier, ''))
+      }
+      setMenuOpen(false)
     }
   })
 
+  const handleEdit = (event: React.MouseEvent) => {
+    event.stopPropagation()
+    onEdit(defaultTo(identifier, ''))
+    setMenuOpen(false)
+  }
+
+  const handleDelete = (event: React.MouseEvent) => {
+    event.stopPropagation()
+    openDialog()
+    setMenuOpen(false)
+  }
+
   return (
-    <Layout.Horizontal style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
-      <Container
-        onClick={(e: React.MouseEvent) => {
-          e.stopPropagation()
-        }}
-      >
-        <RbacOptionsMenuButton
-          items={[
-            {
-              icon: 'edit',
-              text: getString('edit'),
-              onClick: () => actions.onEdit?.(identifier),
-              permission: {
-                resource: { resourceType: ResourceType.ENVIRONMENT },
-                permission: PermissionIdentifier.EDIT_ENVIRONMENT
-              }
-            },
-            {
-              icon: 'trash',
-              text: getString('delete'),
-              onClick: deleteEnvironment,
-              permission: {
-                resource: { resourceType: ResourceType.ENVIRONMENT },
-                permission: PermissionIdentifier.DELETE_ENVIRONMENT
-              }
-            }
-          ]}
+    <Layout.Horizontal style={{ justifyContent: 'flex-end' }}>
+      <Popover isOpen={menuOpen} onInteraction={setMenuOpen} className={Classes.DARK} position={Position.LEFT}>
+        <Button
+          minimal
+          style={{
+            transform: 'rotate(90deg)'
+          }}
+          icon="more"
+          onClick={e => {
+            e.stopPropagation()
+            setMenuOpen(true)
+          }}
         />
-      </Container>
+        <Menu style={{ minWidth: 'unset' }}>
+          <RbacMenuItem
+            icon="edit"
+            text={getString('edit')}
+            onClick={handleEdit}
+            permission={{
+              resource: {
+                resourceType: ResourceType.ENVIRONMENT
+              },
+              permission: PermissionIdentifier.EDIT_ENVIRONMENT
+            }}
+          />
+          <RbacMenuItem
+            icon="trash"
+            text={getString('delete')}
+            onClick={handleDelete}
+            permission={{
+              resource: {
+                resourceType: ResourceType.ENVIRONMENT
+              },
+              permission: PermissionIdentifier.DELETE_ENVIRONMENT
+            }}
+          />
+        </Menu>
+      </Popover>
     </Layout.Horizontal>
   )
-})
+}
 
-function DeleteCheckbox({ row, column }: any) {
+export function DeleteCheckbox({ row, column }: any) {
   return (
     <Checkbox
       onClick={event => column.onCheckboxSelect(event, row?.original)}
@@ -151,13 +179,3 @@ function DeleteCheckbox({ row, column }: any) {
     />
   )
 }
-
-function LastUpdatedBy({ lastModifiedAt }: { lastModifiedAt?: number }): React.ReactElement {
-  return (
-    <Layout.Vertical spacing={'small'}>
-      <ReactTimeago date={lastModifiedAt as number} />
-    </Layout.Vertical>
-  )
-}
-
-export { EnvironmentName, DeleteCheckbox, LastUpdatedBy }

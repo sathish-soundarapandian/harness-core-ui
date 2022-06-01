@@ -2162,6 +2162,55 @@
         }
       }
     },
+    "accounts/{account_id}/tags": {
+      "get": {
+        "parameters": [
+          {
+            "name": "account_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "cloud_account_id",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "routingId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": ["getInstancesTags"],
+        "summary": "Fetches all the tags associated with instances",
+        "description": "Fetches all the tags (key and values) associated with instances",
+        "operationId": "getInstancesTags",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TagsResponse"
+            }
+          }
+        }
+      }
+    },
     "/app_id": {
       "get": {
         "tags": ["appId"],
@@ -2206,6 +2255,31 @@
         },
         "is_default": {
           "type": "boolean"
+        }
+      }
+    },
+    "TagsResponse": {
+      "type": "object",
+      "properties": {
+        "response": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Tags"
+          }
+        }
+      }
+    },
+    "Tags": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },

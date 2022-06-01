@@ -8,6 +8,7 @@
 import React from 'react'
 import { Card, FormInput, Heading, Icon, Layout, Text, Container } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
+import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import SLOTargetChartWrapper from '@cv/pages/slos/components/SLOTargetChart/SLOTargetChart'
 import {
@@ -26,15 +27,17 @@ import {
   PeriodLengthTypes,
   SLOFormFields
 } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.types'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import SLOTargetContextualHelpText from './components/SLOTargetContextualHelpText'
+import { flexStart } from './SLOTargetAndBudgetPolicy.constants'
+import SLOTargetNotificationsContainer from './components/SLOTargetNotificationsContainer/SLOTargetNotificationsContainer'
 import css from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.module.scss'
-
-// SONAR recommendation
-const flexStart = 'flex-start'
 
 const SLOTargetAndBudgetPolicy: React.FC<SLOTargetAndBudgetPolicyProps> = ({ children, formikProps, ...rest }) => {
   const { getString } = useStrings()
-  const { periodType, periodLengthType } = formikProps.values
+  const { identifier } = useParams<ProjectPathProps & { identifier: string }>()
+
+  const { periodType, periodLengthType, notificationRuleRefs } = formikProps.values || {}
 
   return (
     <>
@@ -142,6 +145,11 @@ const SLOTargetAndBudgetPolicy: React.FC<SLOTargetAndBudgetPolicyProps> = ({ chi
             <SLOTargetContextualHelpText />
           </Container>
         </Layout.Horizontal>
+        <SLOTargetNotificationsContainer
+          identifier={identifier}
+          setFieldValue={formikProps?.setFieldValue}
+          notificationRuleRefs={notificationRuleRefs}
+        />
       </Card>
       {children}
     </>

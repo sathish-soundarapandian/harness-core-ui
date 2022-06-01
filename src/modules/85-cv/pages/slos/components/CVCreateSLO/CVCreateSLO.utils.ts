@@ -23,7 +23,8 @@ import type {
   MonitoredServiceWithHealthSources,
   MetricDTO,
   ServiceLevelIndicatorDTO,
-  MonitoredServiceDTO
+  MonitoredServiceDTO,
+  NotificationRuleRefDTO
 } from 'services/cv'
 import { initialValuesSLO } from './CVCreateSLO.constants'
 import {
@@ -67,6 +68,7 @@ export const getSLOInitialFormData = (
     const {
       serviceLevelIndicators: [serviceLevelIndicator],
       target,
+      notificationRuleRefs,
       ...rest
     } = serviceLevelObjective
     const SLIMetricSpec = serviceLevelIndicator?.spec.spec as (ThresholdSLIMetricSpec & RatioSLIMetricSpec) | undefined
@@ -88,7 +90,8 @@ export const getSLOInitialFormData = (
       periodLengthType: targetSpec?.type,
       dayOfWeek: periodLengthTypeSpec?.dayOfWeek,
       dayOfMonth: periodLengthTypeSpec?.dayOfMonth?.toString(),
-      SLOTargetPercentage: target.sloTargetPercentage
+      SLOTargetPercentage: target.sloTargetPercentage,
+      notificationRuleRefs: notificationRuleRefs as NotificationRuleRefDTO[]
     }
   }
 
@@ -110,6 +113,7 @@ export const createSLORequestPayload = (
     healthSourceRef: values.healthSourceRef,
     orgIdentifier,
     projectIdentifier,
+    notificationRuleRefs: values?.notificationRuleRefs,
     serviceLevelIndicators: [
       {
         type: values.SLIType,
@@ -148,9 +152,11 @@ export const isFormDataValid = (formikProps: FormikProps<SLOForm>, selectedTabId
     formikProps.setFieldTouched(SLOFormFields.USER_JOURNEY_REF, true)
     formikProps.setFieldTouched(SLOFormFields.MONITORED_SERVICE_REF, true)
 
-    const { name, identifier, userJourneyRef } = formikProps.values
+    const isNameValid = /^[0-9a-zA-Z-_\s]+$/.test(formikProps.values[SLOFormFields.NAME])
 
-    if (!name || !identifier || !userJourneyRef) {
+    const { name, identifier, userJourneyRef, monitoredServiceRef } = formikProps.values
+
+    if (!name || !identifier || !userJourneyRef || !monitoredServiceRef || !isNameValid) {
       return false
     }
   }

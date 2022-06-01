@@ -28,6 +28,7 @@ import MonitoredServiceOverview from './components/MonitoredServiceOverview/Moni
 import { onSave, updateMonitoredServiceDTOOnTypeChange } from './Service.utils'
 import { getImperativeHandleRef, isUpdated } from '../../Configurations.utils'
 import ChangeSourceTableContainer from './components/ChangeSourceTableContainer/ChangeSourceTableContainer'
+import MonitoredServiceNotificationsContainer from './components/MonitoredServiceNotificationsContainer/MonitoredServiceNotificationsContainer'
 import css from './Service.module.scss'
 
 function Service(
@@ -56,9 +57,7 @@ function Service(
 ): JSX.Element {
   const { getString } = useStrings()
   const { projectIdentifier, identifier } = useParams<ProjectPathProps & { identifier: string }>()
-
   const isEdit = !!identifier
-
   const ref = useRef<any | null>()
 
   React.useImperativeHandle(getImperativeHandleRef(isTemplate, formikRef), () => ({
@@ -189,7 +188,6 @@ function Service(
                 <MonitoredServiceOverview
                   formikProps={formik}
                   isEdit={isEdit}
-                  isTemplate={isTemplate}
                   onChangeMonitoredServiceType={type => {
                     if (type === formik.values.type) {
                       return
@@ -216,6 +214,11 @@ function Service(
                   healthSourceListFromAPI={initialValues.sources?.healthSources}
                   serviceFormFormik={formik}
                   isTemplate={isTemplate}
+                />
+                <MonitoredServiceNotificationsContainer
+                  setFieldValue={formik?.setFieldValue}
+                  notificationRuleRefs={formik?.values?.notificationRuleRefs}
+                  identifier={identifier}
                 />
               </>
             )}

@@ -6,18 +6,21 @@
  */
 
 import React from 'react'
-import { Layout } from '@harness/uicore'
+import { Layout, PageSpinner } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import { isEmpty } from 'lodash-es'
+import { noop } from 'lodash-es'
 import { ServiceDetailsHeader } from '@cd/components/ServiceDetails/ServiceDetailsHeader/ServiceDetailsHeader'
 import { ServiceResponseDTO, useGetServiceV2 } from 'services/cd-ng'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
+import { ServiceContextProvider } from '@cd/context/ServiceContext'
+import ServiceDetailsSummary from '@cd/components/ServiceDetails/ServiceDetailsContent/ServiceDetailsSummary'
+import EntitySetupUsage from '@common/pages/entityUsage/EntityUsage'
 import ServiceConfigurationWrapper from './ServiceConfigWrapper/ServiceConfigWrapper'
 
 function ServiceStudio(): React.ReactElement | null {
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
 
-  const { data: serviceResponse } = useGetServiceV2({
+  const { data: serviceResponse, loading: serviceDataLoading } = useGetServiceV2({
     serviceIdentifier: serviceId,
     queryParams: {
       accountIdentifier: accountId,
@@ -26,13 +29,23 @@ function ServiceStudio(): React.ReactElement | null {
     }
   })
 
-  if (isEmpty(serviceResponse?.data?.service)) {
-    return null
+  if (serviceDataLoading) {
+    return <PageSpinner />
   }
   return (
     <Layout.Vertical>
       <ServiceDetailsHeader />
-      <ServiceConfigurationWrapper serviceResponse={serviceResponse?.data?.service as ServiceResponseDTO} />
+      <ServiceContextProvider
+        serviceResponse={serviceResponse?.data?.service as ServiceResponseDTO}
+        isServiceEntityModalView={false}
+        onCloseModal={noop}
+        isServiceEntityPage={true}
+      >
+        <ServiceConfigurationWrapper
+          summaryPanel={<ServiceDetailsSummary />}
+          refercedByPanel={<EntitySetupUsage entityType="Service" entityIdentifier={serviceId} />}
+        />
+      </ServiceContextProvider>
     </Layout.Vertical>
   )
 }

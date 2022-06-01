@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
 import { useParams } from 'react-router-dom'
 import moment from 'moment'
 import { Card, Container, Layout } from '@wings-software/uicore'
@@ -22,23 +22,35 @@ import { DeploymentsWidget } from '@cd/components/Services/DeploymentsWidget/Dep
 import type { ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { InstanceCountHistory } from '@cd/components/ServiceDetails/InstanceCountHistory/InstanceCountHistory'
 import { PipelineExecutions } from '@cd/components/ServiceDetails/PipelineExecutions/PipelineExecutions'
+import { useLocalStorage } from '@common/hooks/useLocalStorage'
+import { validTimeFormat } from '@common/factories/LandingDashboardContext'
 import css from '@cd/components/ServiceDetails/ServiceDetailsContent/ServicesDetailsContent.module.scss'
 
 const ServiceDetailsSummary: React.FC = () => {
   const { serviceId } = useParams<ServicePathProps>()
   const { getString } = useStrings()
 
-  const [timeRange, setTimeRange] = useState<TimeRangeSelectorProps>({
-    range: [startOfDay(moment().subtract(1, 'month').add(1, 'day')), startOfDay(moment())],
-    label: getString('common.duration.month')
-  })
+  const [serviceTimeRange, setServiceTimeRange] = useLocalStorage<TimeRangeSelectorProps>(
+    'timeRangeServiceDetails',
+    {
+      range: [startOfDay(moment().subtract(1, 'month').add(1, 'day')), startOfDay(moment())],
+      label: getString('common.duration.month')
+    },
+    window.sessionStorage
+  )
+
+  const timeServiceDetail = validTimeFormat(serviceTimeRange)
+  serviceTimeRange.range[0] = timeServiceDetail.range[0]
+  serviceTimeRange.range[1] = timeServiceDetail.range[1]
   return (
     <Page.Body>
       <Container flex className={css.timeRangeContainer}>
-        <TimeRangeSelector timeRange={timeRange?.range} setTimeRange={setTimeRange} />
+        <TimeRangeSelector timeRange={serviceTimeRange?.range} setTimeRange={setServiceTimeRange} />
       </Container>
       <Layout.Horizontal margin={{ top: 'large', bottom: 'large' }}>
-        <DeploymentsTimeRangeContext.Provider value={{ timeRange, setTimeRange }}>
+        <DeploymentsTimeRangeContext.Provider
+          value={{ timeRange: serviceTimeRange, setTimeRange: setServiceTimeRange }}
+        >
           <Layout.Vertical margin={{ right: 'xlarge' }}>
             <Layout.Horizontal margin={{ bottom: 'medium' }}>
               <ActiveServiceInstances />

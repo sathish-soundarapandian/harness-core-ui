@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.serviceOverrides {
+.deployStage {
   min-width: 464px;
   margin-top: 2px;
   .content-section {
@@ -22,29 +22,9 @@
         margin-top: 0;
       }
     }
-    .tabSubHeading {
-      font-size: var(--font-size-normal);
-      color: var(--grey-700);
-      margin-bottom: var(--spacing-5);
-      font-weight: 600;
-    }
-    .section-card {
-      width: 1024px;
-      margin-top: var(--spacing-3);
-      display: block;
-      padding: var(--spacing-7);
-      .info {
-        font-size: 13px;
-      }
-      .thumbnailSelect {
-        &:global(.bp3-form-group) {
-          margin-bottom: 0px;
-        }
-      }
-      .cardListContainer {
-        margin-top: 0 !important;
-      }
-    }
+  }
+  .editServiceModal {
+    padding: 0;
   }
   .accordion {
     margin-top: var(--spacing-7);
@@ -61,5 +41,28 @@
       margin-left: var(--spacing-small);
       line-height: 24px;
     }
+  }
+}
+.tabSubHeading {
+  font-size: var(--font-size-normal);
+  color: var(--grey-700);
+  margin-bottom: var(--spacing-5);
+  font-weight: 600;
+}
+.section-card {
+  width: 1024px;
+  margin-top: var(--spacing-3);
+  display: block;
+  padding: var(--spacing-7);
+  .info {
+    font-size: 13px;
+  }
+  .thumbnailSelect {
+    &:global(.bp3-form-group) {
+      margin-bottom: 0px;
+    }
+  }
+  .cardListContainer {
+    margin-top: 0 !important;
   }
 }

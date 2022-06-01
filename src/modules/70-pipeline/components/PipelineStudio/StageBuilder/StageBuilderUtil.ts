@@ -342,7 +342,7 @@ export const getConnectorNameFromValue = (
   fetchedConnectorResponse: PageConnectorResponse | undefined
 ): string | undefined => {
   if (!connectorRef || !fetchedConnectorResponse) {
-    return ''
+    return undefined
   }
 
   const connector = getIdentifierFromValue(connectorRef)

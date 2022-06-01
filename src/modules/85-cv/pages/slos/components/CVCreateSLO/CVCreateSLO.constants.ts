@@ -36,7 +36,8 @@ export const initialValuesSLO: SLOForm = {
   [SLOFormFields.VALID_REQUEST_METRIC]: '',
   [SLOFormFields.SLI_MISSING_DATA_TYPE]: SLIMissingDataTypes.GOOD,
   [SLOFormFields.PERIOD_TYPE]: PeriodTypes.ROLLING,
-  [SLOFormFields.SLO_TARGET_PERCENTAGE]: 99
+  [SLOFormFields.SLO_TARGET_PERCENTAGE]: 99,
+  [SLOFormFields.NOTIFICATION_RULE_REFS]: []
 }
 
 export const comparatorOptions: SelectOption[] = [
@@ -101,7 +102,10 @@ export const getSLOFormValidationSchema = (getString: UseStringsReturn['getStrin
   const METRIC_IS_REQUIRED = getString('cv.metricIsRequired')
 
   return Yup.object().shape({
-    [SLOFormFields.NAME]: Yup.string().trim().required(getString('cv.slos.validations.nameValidation')),
+    [SLOFormFields.NAME]: Yup.string()
+      .trim()
+      .required(getString('cv.slos.validations.nameValidation'))
+      .matches(/^[0-9a-zA-Z-_\s]+$/, getString('cv.slos.validations.specialCharacters')),
     [SLOFormFields.IDENTIFIER]: Yup.string().when([SLOFormFields.NAME], {
       is: name => name,
       then: Yup.string().trim().required(getString('validation.identifierRequired'))

@@ -60,7 +60,9 @@ export function TemplatePipelineProvider({
   const { licenseInformation } = useLicenseStore()
   const isCDEnabled = useFeatureFlag(FeatureFlag.CDNG_ENABLED) && !!licenseInformation['CD']
   const isCIEnabled = useFeatureFlag(FeatureFlag.CING_ENABLED) && !!licenseInformation['CI']
+  const isCFEnabled = useFeatureFlag(FeatureFlag.CFNG_ENABLED) && !!licenseInformation['CF']
   const isSTOEnabled = useFeatureFlag(FeatureFlag.SECURITY_STAGE)
+  const isCustomStageEnabled = useFeatureFlag(FeatureFlag.NG_CUSTOM_STAGE)
   const { getString } = useStrings()
   const [state, dispatch] = React.useReducer(PipelineReducer, initialState)
   const [view, setView] = useLocalStorage<SelectedView>('pipeline_studio_view', SelectedView.VISUAL)
@@ -83,10 +85,10 @@ export function TemplatePipelineProvider({
         {stagesCollection.getStage(StageType.BUILD, isCIEnabled, getString)}
         {stagesCollection.getStage(StageType.DEPLOY, isCDEnabled, getString)}
         {stagesCollection.getStage(StageType.APPROVAL, true, getString)}
-        {stagesCollection.getStage(StageType.FEATURE, false, getString)}
+        {stagesCollection.getStage(StageType.FEATURE, isCFEnabled, getString)}
         {stagesCollection.getStage(StageType.SECURITY, isSTOEnabled, getString)}
         {stagesCollection.getStage(StageType.PIPELINE, false, getString)}
-        {stagesCollection.getStage(StageType.CUSTOM, false, getString)}
+        {stagesCollection.getStage(StageType.CUSTOM, isCustomStageEnabled, getString)}
         {stagesCollection.getStage(StageType.Template, false, getString)}
       </PipelineStages>
     )
@@ -213,6 +215,7 @@ export function TemplatePipelineProvider({
         renderPipelineStage,
         fetchPipeline: Promise.resolve,
         updateGitDetails: Promise.resolve,
+        updatePipelineStoreMetadata: Promise.resolve,
         updateEntityValidityDetails: Promise.resolve,
         updatePipeline,
         updateStage,

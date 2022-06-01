@@ -37,7 +37,7 @@ interface ManifestWizardStepsProps {
   expressions: string[]
   allowableTypes: MultiTypeInputType[]
   newConnectorSteps?: any
-  lastSteps?: Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> | null
+  lastSteps: Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> | null
   changeManifestType: (data: ManifestTypes | null) => void
   iconsProps: IconProps
   isReadonly: boolean

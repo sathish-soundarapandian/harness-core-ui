@@ -178,7 +178,7 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
   }
 
   return (
-    <div className={stageCss.serviceOverrides}>
+    <div className={stageCss.deployStage}>
       <DeployServiceErrors domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
       <div className={context ? stageCss.contentSection : css.contentSection} ref={scrollRef}>
         {context ? (

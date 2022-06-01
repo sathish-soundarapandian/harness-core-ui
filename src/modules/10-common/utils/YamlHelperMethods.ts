@@ -8,6 +8,7 @@
 import { Document } from 'yaml'
 import type { Options } from 'yaml'
 import { load } from 'js-yaml'
+import { memoize } from 'lodash-es'
 
 // https://github.com/eemeli/yaml/issues/211
 export const yamlStringify = (obj: any, options: Options = {}): string => {
@@ -20,3 +21,5 @@ export const yamlStringify = (obj: any, options: Options = {}): string => {
 export function yamlParse<T = unknown>(input: string): T {
   return load(input) as T
 }
+
+export const memoizedParse = memoize(yamlParse)

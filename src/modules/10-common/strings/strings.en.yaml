@@ -176,6 +176,7 @@ validation:
   environmentIsRequired: 'Environment is required'
   subscription: 'Subscription is required'
   repository: 'Repository is required'
+  projectIsRequired: Project is required
 specify: Specify
 role: Role
 projectViewer: Project Viewer
@@ -282,6 +283,7 @@ repo_provider:
   awscodecommit: AWS Code Commit
   azureDev: Azure Devops
 gitSync:
+  branchFetchFailed: Branch fetch failed
   resourceLabel: '{{resource}} Name'
   rootFolderLabel: Root Folder
   harnessFolderLabel: Harness Folder
@@ -329,6 +331,7 @@ git:
   gitLabUrlPlaceholder: 'https://www.gitlab.com/account/'
   gitLabUrlPlaceholderSSH: 'git@gitlab.com:account/'
   bitbucketUrlPlaceholder: 'https://www.bitbucket.com/account/'
+  bitbucketOrgUrlPlaceholder: 'https://www.bitbucket.org/'
   bitbucketPlaceholderSSH: 'git@bitbucket.com:account/'
   enableAPIAccess: 'Enable API access (recommended)'
   APIAccessDescription: 'API Access is required for using “Git Experience”, for creation of Git based triggers, Webhooks management and updating Git statuses'
@@ -353,6 +356,8 @@ git:
   startPRLabel: Start a pull request to merge
   noBranchesFound: No branches found for configured git repository
   onlyDefaultBranchFound: Cannot find additional branches to raise a pull request.
+  inlineStoreLabel: Pipeline content is stored in Harness
+  remoteStoreLabel: Pipeline content is stored in a Git repository
   validation:
     filePath: '{{$.common.git.filePath}} is required'
     commitMessage: '{{$.common.git.commitMessage}} is required'
@@ -367,6 +372,7 @@ options: Options
 note: Note
 link: link
 errorHandler:
+  possibleReasons: Possible reasons
   issueCouldBe: Issue could be
   tryTheseSuggestions: Try these suggestions
   contactLabel: 'Contact '
@@ -398,7 +404,6 @@ savedSuccessfully: Saved Successfully
 submittingRequest: Submitting request and pushing changes to Git
 submittingRequestToGitViaDelegate: Submitting request and pushing changes to Git from Delegate
 local: Local
-location: Location
 subscribed: Subscribed
 overSubscribed: Oversubscribed
 unlimited: Unlimited
@@ -517,6 +522,7 @@ filters:
   saveNewFilter: Save New Filter
   unsavedFilter: Unsaved Filter
   noMatchingFilterData: No Results found matching the Filter criteria
+  noResultsFound: No results found
   clearFilters: Clear Filters
   noFilterSaved: No Filter Saved
 in: in
@@ -676,7 +682,7 @@ module:
   pms: PMS
   templateService: TEMPLATESERVICE
   sto: STO
-  governance: GOVERNANCE
+  governance: POLICY ENGINE
 customPricing: for Custom Pricing
 specified: Specified
 file: File
@@ -728,7 +734,9 @@ template:
     errorWhileUpdating: Error occurred updating Template
   deleteTemplate:
     templatesDeleted: 'Templates "{{ name }}" Deleted'
-    errorWhileDeleting: Error occurred deleting Templates
+    templateDeleted: 'Template "{{ name }}" Deleted'
+    errorWhileDeletingTemplates: Error occurred deleting Templates
+    errorWhileDeletingTemplate: Error occurred deleting Template
 viewLatest: View latest
 viewUsage: View Usage
 selected: 'Selected:'
@@ -839,8 +847,6 @@ noexpiration: No Expiration
 subscriptionPlaceholder: 'Select or add Subscription Id'
 azureConnector: Azure Connector
 environmentList: Environment List
-environment:
-  fetchNext: Fetching Environments
 environmentGroup:
   label: Environment Group
   new: New Environment Group
@@ -869,3 +875,5 @@ editName: Edit {{name}}
 selectName: Select {{name}}
 override: Override
 plusNewName: + New {{name}}
+fetchingBranches: Fetching branches
+download: Download

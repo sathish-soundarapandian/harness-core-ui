@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { Spinner } from '@blueprintjs/core'
 import * as yup from 'yup'
 import {
@@ -28,13 +28,21 @@ import { AddAPIKeyQueryParams, ApiKey, useAddAPIKey } from 'services/cf/index'
 import { useEnvStrings } from '@cf/hooks/environment'
 import { useToaster } from '@common/exports'
 import { getIdentifierFromName } from '@common/utils/StringUtils'
-import { EnvironmentSDKKeyType, getErrorMessage } from '@cf/utils/CFUtils'
+import { EnvironmentSDKKeyType, getErrorMessage, showToaster } from '@cf/utils/CFUtils'
 import type { EnvironmentResponseDTO } from 'services/cd-ng'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
+import nodejs from '@cf/images/icons/nodejs.svg'
+import android from '@cf/images/icons/android.svg'
+import dotnet from '@cf/images/icons/dotnet.svg'
+import golang from '@cf/images/icons/golang.svg'
+import ios from '@cf/images/icons/ios.svg'
+import java from '@cf/images/icons/java.svg'
+import javascript from '@cf/images/icons/javascript.svg'
+import python from '@cf/images/icons/python.svg'
 import css from './AddKeyDialog.module.scss'
 
 interface Props {
@@ -91,11 +99,39 @@ const AddKeyDialog: React.FC<Props> = ({ disabled, primary, environment, onCreat
       name: values.name,
       type: values.type === 'server' ? 'Server' : 'Client'
     })
-      .then((created: ApiKey) => onCreate(created, hideModal))
+      .then((created: ApiKey) => {
+        onCreate(created, hideModal)
+        showToaster(getString('cf.environments.apiKeys.create'))
+      })
       .catch(error => showError(getErrorMessage(error), undefined, 'cf.create.key.error'))
   }
 
   const { trackEvent } = useTelemetry()
+
+  const languagesApplicable = (value: string): ReactNode => {
+    return (
+      <Layout.Vertical flex={{ alignItems: 'start' }} spacing="medium" padding={{ top: 'medium' }}>
+        <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }} flex={{ justifyContent: 'flex-end' }}>
+          {getEnvString('apiKeys.applicableLanguages')}
+        </Text>
+        {value == 'server' ? (
+          <Layout.Horizontal spacing="small">
+            <img className={css.languageIcon} src={nodejs} alt="NodeJS" />
+            <img className={css.languageIcon} src={java} alt="Java" />
+            <img className={css.languageIcon} src={golang} alt="Golang" />
+            <img className={css.languageIcon} src={dotnet} alt="DotNet" />
+            <img className={css.languageIcon} src={python} alt="Python" />
+          </Layout.Horizontal>
+        ) : (
+          <Layout.Horizontal spacing="small">
+            <img className={css.languageIcon} src={javascript} alt="JavaScript" />
+            <img className={css.languageIcon} src={android} alt="Android" />
+            <img className={css.languageIcon} src={ios} alt="IOS" />
+          </Layout.Horizontal>
+        )}
+      </Layout.Vertical>
+    )
+  }
 
   const [openModal, hideModal] = useModalHook(() => {
     return (
@@ -117,23 +153,49 @@ const AddKeyDialog: React.FC<Props> = ({ disabled, primary, environment, onCreat
           {formikProps => (
             <FormikForm>
               <Layout.Vertical className={css.container} spacing="small" padding={{ left: 'xsmall', right: 'xsmall' }}>
-                <FormInput.Text label={getString('name')} name="name" inputGroup={{ autoFocus: true }} />
-                <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }}>
-                  {getEnvString('apiKeys.keyType')}
-                </Text>
-                <CardSelect
-                  cornerSelected
-                  data={keyTypes}
-                  selected={getTypeOption(formikProps.values.type)}
-                  className={css.cardSelect}
-                  onChange={nextValue => formikProps.setFieldValue('type', nextValue.value)}
-                  renderItem={cardData => (
-                    <Container flex={{ align: 'center-center' }} className={css.cardBody}>
-                      <Text font={{ variation: FontVariation.SMALL }}>{cardData.text}</Text>
-                    </Container>
-                  )}
+                <FormInput.Text
+                  className={css.nameTextbox}
+                  label={getString('name')}
+                  name="name"
+                  inputGroup={{ autoFocus: true }}
                 />
-                <Layout.Horizontal spacing="small" padding={{ top: 'xxxlarge' }}>
+
+                {keyTypes.length > 1 && (
+                  <>
+                    <Text
+                      color={Color.GREY_600}
+                      font={{ weight: 'bold', variation: FontVariation.FORM_INPUT_TEXT }}
+                      padding={{ top: 'medium' }}
+                    >
+                      {getEnvString('apiKeys.keyType')}
+                    </Text>
+                    <Container flex={{ justifyContent: 'left' }}>
+                      <CardSelect
+                        cornerSelected
+                        data={keyTypes}
+                        selected={getTypeOption(formikProps.values.type)}
+                        className={css.cardSelect}
+                        onChange={nextValue => formikProps.setFieldValue('type', nextValue.value)}
+                        renderItem={cardData => (
+                          <Container flex={{ align: 'center-center' }} className={css.cardBody}>
+                            <Text font={{ variation: FontVariation.SMALL }}>{cardData.text}</Text>
+                          </Container>
+                        )}
+                      />
+                      {languagesApplicable(formikProps.values.type)}
+                    </Container>
+                  </>
+                )}
+
+                <Layout.Vertical spacing="medium" padding={{ bottom: 'medium', top: 'medium' }}>
+                  <Text>
+                    {formikProps.values.type == 'server'
+                      ? getEnvString('apiKeys.serverDescription')
+                      : getEnvString('apiKeys.clientDescription')}
+                  </Text>
+                  {keyTypes.length <= 1 ? languagesApplicable(formikProps.values.type) : null}
+                </Layout.Vertical>
+                <Layout.Horizontal className={css.buttonContainer} spacing="small" padding={{ top: 'xxlarge' }}>
                   <Button
                     text={getString('createSecretYAML.create')}
                     type="submit"
@@ -155,13 +217,14 @@ const AddKeyDialog: React.FC<Props> = ({ disabled, primary, environment, onCreat
   return (
     <RbacButton
       disabled={disabled}
+      variation={ButtonVariation.PRIMARY}
       onClick={() => {
         trackEvent(FeatureActions.CreateSDKKeyClick, {
           category: Category.FEATUREFLAG
         })
         openModal()
       }}
-      text={getString('cf.environments.apiKeys.addKeyTitle')}
+      text={getString('cf.environments.apiKeys.addKey')}
       minimal={!primary}
       intent="primary"
       permission={{

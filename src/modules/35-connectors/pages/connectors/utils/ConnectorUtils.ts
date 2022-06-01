@@ -1018,6 +1018,25 @@ export const buildHelmPayload = (formData: FormData) => {
   return { connector: savedData }
 }
 
+export const buildPdcPayload = (formData: FormData) => {
+  const savedData = {
+    name: formData.name,
+    description: formData.description,
+    projectIdentifier: formData.projectIdentifier,
+    identifier: formData.identifier,
+    orgIdentifier: formData.orgIdentifier,
+    tags: formData.tags,
+    type: Connectors.PDC,
+    spec: {
+      ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
+      hosts: formData.hosts,
+      sshKeyRef: formData.sshKeyRef
+    }
+  }
+
+  return { connector: savedData }
+}
+
 export const buildGcpPayload = (formData: FormData) => {
   const savedData = {
     name: formData.name,
@@ -1718,6 +1737,8 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
       return 'service-artifactory'
     case Connectors.GCP:
       return 'service-gcp'
+    case Connectors.PDC:
+      return 'pdc'
     case Connectors.Jira:
       return 'service-jira'
     case Connectors.AWS_KMS:
@@ -1771,6 +1792,8 @@ export const getConnectorDisplayName = (type: string) => {
       return 'Docker Registry'
     case Connectors.GCP:
       return 'GCP'
+    case Connectors.PDC:
+      return 'Physical Data Center'
     case Connectors.APP_DYNAMICS:
       return 'AppDynamics'
     case Connectors.SPLUNK:
@@ -1982,6 +2005,8 @@ export const getInvocationPathsForSecrets = (type: ConnectorInfoDTO['type'] | 'U
       return new Set([/^.+\.secretKeyRef$/])
     case 'Aws':
       return new Set([/^.+\.accessKeyRef$/, /^.+\.secretKeyRef$/])
+    case 'Pdc':
+      return new Set([/^.+\.connectorRef$/, /^.+\.sshKeyRef$/])
     case 'Github':
       return new Set([
         /^.+\.usernameRef$/,
@@ -2025,4 +2050,14 @@ export const isSMConnector = (type?: ConnectorInfoDTO['type']): boolean | undefi
   return (['AwsKms', 'AzureKeyVault', 'Vault', 'AwsSecretManager', 'GcpKms'] as ConnectorInfoDTO['type'][]).includes(
     type
   )
+}
+
+export const showCustomErrorSuggestion = (connectorType: string) => {
+  const connectorsList: string[] = [Connectors.CE_KUBERNETES, Connectors.CEAWS, Connectors.CE_AZURE, Connectors.CE_GCP]
+  return Boolean(connectorsList.includes(connectorType))
+}
+
+export const showEditAndViewPermission = (connectorType: string) => {
+  const connectorsList: string[] = [Connectors.CE_KUBERNETES, Connectors.CEAWS, Connectors.CE_AZURE, Connectors.CE_GCP]
+  return Boolean(connectorsList.includes(connectorType))
 }

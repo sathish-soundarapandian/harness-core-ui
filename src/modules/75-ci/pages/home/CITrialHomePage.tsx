@@ -13,7 +13,6 @@ import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { StartTrialTemplate } from '@rbac/components/TrialHomePageTemplate/StartTrialTemplate'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { PageNames } from '@ci/constants/TrackingConstants'
-import { Category } from '@common/constants/TrackingConstants'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -25,43 +24,43 @@ import css from './CITrialHomePage.module.scss'
 
 const CITrialHomePage: React.FC = () => {
   const { getString } = useStrings()
-  const { CIE_HOSTED_BUILDS, FREE_PLAN_ENABLED } = useFeatureFlags()
+  const { FREE_PLAN_ENABLED } = useFeatureFlags()
   const history = useHistory()
   const { accountId } = useParams<AccountPathProps>()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const [loading, setLoading] = useState<boolean>(false)
+  const { status: currentCIStatus } = licenseInformation['CI'] || {}
 
   useEffect(() => {
-    if (CIE_HOSTED_BUILDS) {
-      setLoading(true)
-      try {
-        setUpCI({
-          accountId,
-          edition: Editions.FREE,
-          onSetUpSuccessCallback: ({ orgId, projectId }: StartFreeLicenseAndSetupProjectCallback) => {
-            setLoading(false)
-            history.push(
-              routes.toGetStartedWithCI({
-                accountId,
-                module: 'ci',
-                orgIdentifier: orgId,
-                projectIdentifier: projectId
-              })
-            )
-          },
-          licenseInformation,
-          updateLicenseStore,
-          onSetupFailureCallback: () => {
-            setLoading(false)
-          }
-        })
-      } catch (e) {
-        setLoading(false)
-      }
+    setLoading(true)
+    try {
+      setUpCI({
+        accountId,
+        // A new CI user will not have an active CI license. Also, for an existing user with an active license, we will not override the existing license.
+        edition: currentCIStatus !== 'ACTIVE' ? Editions.FREE : undefined,
+        onSetUpSuccessCallback: ({ orgId, projectId }: StartFreeLicenseAndSetupProjectCallback) => {
+          setLoading(false)
+          history.push(
+            routes.toGetStartedWithCI({
+              accountId,
+              module: 'ci',
+              orgIdentifier: orgId,
+              projectIdentifier: projectId
+            })
+          )
+        },
+        licenseInformation,
+        updateLicenseStore,
+        onSetupFailureCallback: () => {
+          setLoading(false)
+        }
+      })
+    } catch (e) {
+      setLoading(false)
     }
   }, [])
 
-  useTelemetry({ pageName: PageNames.CIStartTrial, category: Category.SIGNUP })
+  useTelemetry({ pageName: PageNames.CIStartTrial })
 
   const startBtnDescription = FREE_PLAN_ENABLED
     ? getString('common.startFreePlan', { module: 'CI' })
