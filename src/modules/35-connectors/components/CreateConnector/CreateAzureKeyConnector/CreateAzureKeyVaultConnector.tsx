@@ -83,6 +83,7 @@ const CreateAzureKeyVaultConnector: React.FC<CreateConnectorModalProps> = props 
         isLastStep={true}
         type={Connectors.AZURE_KEY_VAULT}
         stepIndex={GIT_TESTCONNECTION_STEP_INDEX}
+        helpPanelReferenceId="ConnectorTest"
       />
     </StepWizard>
   )

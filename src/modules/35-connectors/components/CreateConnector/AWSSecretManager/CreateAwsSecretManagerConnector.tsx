@@ -66,6 +66,7 @@ const CreateAwsSecretManagerConnector: React.FC<CreateConnectorModalProps> = pro
         isLastStep={true}
         type={Connectors.AWS_SECRET_MANAGER}
         stepIndex={TESTCONNECTION_STEP_INDEX}
+        helpPanelReferenceId="ConnectorTest"
       />
     </StepWizard>
   )

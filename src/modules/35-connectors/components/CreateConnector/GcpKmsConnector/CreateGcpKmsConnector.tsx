@@ -56,6 +56,7 @@ const CreateGcpKmsConnector: React.FC<CreateConnectorModalProps> = props => {
         isLastStep
         type={Connectors.GCP_KMS}
         stepIndex={TESTCONNECTION_STEP_INDEX}
+        helpPanelReferenceId="ConnectorTest"
       />
     </StepWizard>
   )

@@ -81,6 +81,7 @@ const CreateHashiCorpVault: React.FC<CreateConnectorModalProps> = props => {
         isLastStep={true}
         type={Connectors.VAULT}
         stepIndex={GIT_TESTCONNECTION_STEP_INDEX}
+        helpPanelReferenceId="ConnectorTest"
       />
     </StepWizard>
   )

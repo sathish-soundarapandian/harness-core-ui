@@ -76,6 +76,7 @@ const CreateAwsKmsConnector: React.FC<CreateConnectorModalProps> = props => {
         isLastStep={true}
         type={Connectors.AWS_KMS}
         stepIndex={TESTCONNECTION_STEP_INDEX}
+        helpPanelReferenceId="ConnectorTest"
       />
     </StepWizard>
   )
