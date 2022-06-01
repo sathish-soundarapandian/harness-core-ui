@@ -607,6 +607,7 @@ export interface StringsMap {
   'common.selectBranch': string
   'common.selectDefaultExperience': string
   'common.selectName': string
+  'common.selectTimeFrame': string
   'common.selectType': string
   'common.selectUserGroups': string
   'common.selectVersion': string

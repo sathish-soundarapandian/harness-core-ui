@@ -99,11 +99,7 @@ const getTooltip = (currPoint: TooltipFormatterContextObject): string => {
     failureRate,
     count: point?.countWithSuccessFailureDetails?.count,
     successCount: point?.countWithSuccessFailureDetails?.successCount,
-    failureCount: point?.countWithSuccessFailureDetails?.failureCount,
-    dateOnClick: e => {
-      e.stopPropagation()
-      alert('EHLLO')
-    }
+    failureCount: point?.countWithSuccessFailureDetails?.failureCount
   })
 }
 
