@@ -28,10 +28,25 @@ import { Cluster, useCreateClusters, useGetClusterListFromSource } from 'service
 import ClusterList from './ClusterList'
 import css from './AddCluster.module.scss'
 
+const getUnlinkedClusters = (clusters: any, linkedClusters: any[]): any[] => {
+  if (!linkedClusters || !clusters) {
+    return []
+  }
+  const unlinkedClusters = []
+  for (const clstr of clusters) {
+    const clstrObj = linkedClusters.find(obj => obj.clusterRef === clstr.identifier)
+    if (!clstrObj) {
+      unlinkedClusters.push(clstr)
+    }
+  }
+  return unlinkedClusters
+}
+
 const AddCluster = (props: any): React.ReactElement => {
   const [selectedClusters, setSelectedClusters] = React.useState<any>([])
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
+  const [submitting, setSubmitting] = React.useState(false)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     orgIdentifier: string
     projectIdentifier: string
@@ -48,12 +63,15 @@ const AddCluster = (props: any): React.ReactElement => {
     }
   })
 
+  const unlinkedClusters = getUnlinkedClusters(data?.data?.content, props?.linkedClusters)
+
   const { mutate: createCluster } = useCreateClusters({
     queryParams: { accountIdentifier: accountId }
   })
 
   const onSubmit = (): void => {
     if (selectedClusters && selectedClusters.length) {
+      setSubmitting(true)
       const payload = {
         envRef: props.envRef,
         clusters: selectedClusters.map((clstr: any) => ({
@@ -69,9 +87,12 @@ const AddCluster = (props: any): React.ReactElement => {
         .then(() => {
           showSuccess('Successfully linked')
           props?.onHide()
+          setSubmitting(false)
+          props?.refetch()
         })
         .catch(err => {
           showError(err?.message)
+          setSubmitting(false)
         })
     } else {
       alert('select clusters')
@@ -105,12 +126,12 @@ const AddCluster = (props: any): React.ReactElement => {
           <TextInput placeholder="Search" leftIcon="search" />
           <Layout.Horizontal className={css.contentContainer} height={'339px'}>
             <div className={css.agentList}>
-              {loading ? <PageSpinner /> : null}
+              {loading || submitting ? <PageSpinner /> : null}
               {!loading ? (
                 <ClusterList
                   setSelectedClusters={setSelectedClusters}
                   selectedClusters={selectedClusters}
-                  clusters={data?.data?.content}
+                  clusters={unlinkedClusters}
                   loading={loading}
                   error={error}
                   refetch={refetch}
@@ -121,7 +142,7 @@ const AddCluster = (props: any): React.ReactElement => {
                   label="Select All"
                   onClick={ev => {
                     if (ev.currentTarget.checked) {
-                      setSelectedClusters(data?.data?.content)
+                      setSelectedClusters(unlinkedClusters)
                     } else {
                       setSelectedClusters([])
                     }
@@ -129,10 +150,10 @@ const AddCluster = (props: any): React.ReactElement => {
                 />
                 {selectedClusters.length ? (
                   <span>
-                    ({selectedClusters.length}/{data?.data?.content?.length})
+                    ({selectedClusters.length}/{unlinkedClusters?.length})
                   </span>
                 ) : (
-                  <span>({data?.data?.content?.length})</span>
+                  <span>({unlinkedClusters.length})</span>
                 )}
               </div>
             </div>

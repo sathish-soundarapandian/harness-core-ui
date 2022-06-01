@@ -1,13 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Button, Intent, PageSpinner, TableV2, useConfirmationDialog, useToaster } from '@harness/uicore'
+import { Button, Intent, Layout, PageSpinner, TableV2, useConfirmationDialog, useToaster } from '@harness/uicore'
 import React from 'react'
-import { useParams } from 'react-router-dom'
-import type { Column } from 'react-table'
+import type { CellProps, Column, Renderer } from 'react-table'
 
 import { useStrings } from 'framework/strings'
 
-import { useDeleteCluster, useGetClusterList } from 'services/cd-ng'
+import { useDeleteCluster } from 'services/cd-ng'
 import css from './EnvironmentDetails.module.scss'
+import ReactTimeago from 'react-timeago'
+import { defaultTo } from 'lodash-es'
 
 const RenderColumnMenu = ({ row, column }: any): React.ReactElement => {
   const data = row.original.clusterRef
@@ -59,29 +60,31 @@ const RenderColumnMenu = ({ row, column }: any): React.ReactElement => {
   )
 }
 
+const RenderLastUpdatedBy: Renderer<CellProps<any>> = ({ row }): JSX.Element => {
+  const rowdata = row.original
+  return (
+    <Layout.Vertical spacing={'small'}>
+      <ReactTimeago date={defaultTo(rowdata.linkedAt, 0)} />
+    </Layout.Vertical>
+  )
+}
+
 const ClusterTableView = (props: any): React.ReactElement => {
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<{
-    orgIdentifier: string
-    projectIdentifier: string
-    accountId: string
-  }>()
-
-  const { data, loading } = useGetClusterList({
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      environmentIdentifier: props?.envRef
-    }
-  })
-
+  const { accountId, orgIdentifier, projectIdentifier, loading, linkedClusters } = props
   const columns: Array<Column<any>> = React.useMemo(
     () => [
       {
         Header: 'Clusters',
         id: 'clusterRef',
         accessor: 'clusterRef',
-        width: '90%'
+        width: '75%'
+      },
+      {
+        Header: 'Last Updated At',
+        id: 'linkedAt',
+        accessor: 'linkedAt',
+        width: '15%',
+        Cell: RenderLastUpdatedBy
       },
       {
         id: 'menuBtn',
@@ -92,7 +95,8 @@ const ClusterTableView = (props: any): React.ReactElement => {
         accountIdentifier: accountId,
         orgIdentifier,
         projectIdentifier,
-        environmentIdentifier: props?.envRef
+        environmentIdentifier: props?.envRef,
+        refetch: props?.refetch
       }
     ],
     []
@@ -101,21 +105,21 @@ const ClusterTableView = (props: any): React.ReactElement => {
   if (loading) {
     return <PageSpinner />
   }
-  if (data && data?.data && data?.data?.content?.length) {
-    return <div> No Clusters Linked</div>
-  }
 
-  return (
-    <TableV2
-      columns={columns}
-      data={data?.data?.content || []}
-      sortable
-      rowDataTestID={() => {
-        return `clusterDataRow`
-      }}
-      className={css.clusterDataTable}
-    />
-  )
+  if (linkedClusters?.data?.content.length) {
+    return (
+      <TableV2
+        columns={columns}
+        data={linkedClusters?.data?.content}
+        sortable
+        rowDataTestID={() => {
+          return `clusterDataRow`
+        }}
+        className={css.clusterDataTable}
+      />
+    )
+  }
+  return <div>No Linked Clusters Available</div>
 }
 
 export default ClusterTableView

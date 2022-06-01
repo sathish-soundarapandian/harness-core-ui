@@ -8,7 +8,6 @@
 import { Color, FontVariation, Icon, Text } from '@harness/uicore'
 import cx from 'classnames'
 import React from 'react'
-
 import css from './AddCluster.module.scss'
 
 const ClusterCard = (props: any): React.ReactElement => {
@@ -59,7 +58,7 @@ const ClusterCard = (props: any): React.ReactElement => {
 }
 
 const ClusterList = (props: any): React.ReactElement => {
-  if (!props.loading && props?.clusters?.length > 0) {
+  if (!props.loading && props?.clusters?.length) {
     return (
       <div>
         {props?.clusters?.map((cluster: any) => {
