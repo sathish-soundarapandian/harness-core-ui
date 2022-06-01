@@ -126,7 +126,7 @@ export function getInfraDeploymentTypeSchema(
     .required(getString('cd.pipelineSteps.infraTab.deploymentType'))
 }
 
-const getInfrastructureDefinitionValidationSchema = (
+export const getInfrastructureDefinitionValidationSchema = (
   deploymentType: GetExecutionStrategyYamlQueryParams['serviceDefinitionType'],
   getString: UseStringsReturn['getString']
 ) => {

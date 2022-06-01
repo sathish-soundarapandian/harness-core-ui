@@ -7,10 +7,11 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { defaultTo, merge, set } from 'lodash-es'
+import { defaultTo, get, merge, set } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { parse } from 'yaml'
 import produce from 'immer'
+import * as Yup from 'yup'
 
 import {
   Button,
@@ -28,10 +29,12 @@ import { Color } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
 import {
+  DeploymentStageConfig,
   InfrastructureConfig,
   InfrastructureDefinitionConfig,
   InfrastructureRequestDTORequestBody,
   PipelineInfoConfig,
+  StageElementConfig,
   useCreateInfrastructure,
   useGetYamlSchema,
   useUpdateInfrastructure
@@ -43,16 +46,17 @@ import { NameIdDescriptionTags } from '@common/components'
 import type { EnvironmentPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 
 import { DefaultPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { StageType } from '@pipeline/utils/stageHelpers'
+import { ServiceDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 
-import DeployInfraSpecifications, {
-  deploymentTypeInfraTypeMap
-} from '@cd/components/PipelineStudio/DeployInfraSpecifications/DeployInfraSpecifications'
+import DeployInfraSpecifications from '@cd/components/PipelineStudio/DeployInfraSpecifications/DeployInfraSpecifications' // deploymentTypeInfraTypeMap
 import { DefaultNewStageId, DefaultNewStageName } from '@cd/components/Services/utils/ServiceUtils'
+import { getInfrastructureDefinitionValidationSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
+import SelectDeploymentType from '@cd/components/PipelineStudio/DeployServiceSpecifications/SelectDeploymentType'
 import { InfrastructurePipelineProvider } from '@cd/context/InfrastructurePipelineContext'
 import { useTemplateSelector } from '@templates-library/hooks/useTemplateSelector'
 import css from './InfrastructureDefinition.module.scss'
@@ -78,7 +82,7 @@ export function InfrastructureModal({ hideModal, refetch, infrastructureToEdit, 
     return (parse(defaultTo(infrastructureToEdit, '{}')) as InfrastructureConfig).infrastructureDefinition
   }, [infrastructureToEdit])
 
-  const { type, spec } = defaultTo(infrastructureDefinition, {}) as InfrastructureDefinitionConfig
+  // const { type, spec } = defaultTo(infrastructureDefinition, {}) as InfrastructureDefinitionConfig
 
   const pipeline = React.useMemo(
     () =>
@@ -93,8 +97,13 @@ export function InfrastructureModal({ hideModal, refetch, infrastructureToEdit, 
             spec: {
               infrastructure: {
                 infrastructureDefinition: {
-                  type: defaultTo(type, deploymentTypeInfraTypeMap.Kubernetes),
-                  spec: defaultTo(spec, {})
+                  // type: defaultTo(type, deploymentTypeInfraTypeMap.Kubernetes),
+                  // spec: defaultTo(spec, {})
+                }
+              },
+              serviceConfig: {
+                serviceDefinition: {
+                  type: ''
                 }
               }
             }
@@ -132,7 +141,12 @@ function BootstrapDeployInfraSpecifications({
   >()
   const {
     setSelection,
-    state: { pipeline }
+    state: {
+      pipeline,
+      selectionState: { selectedStageId }
+    },
+    getStageFromPipeline,
+    updateStage
   } = usePipelineContext()
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
@@ -140,7 +154,9 @@ function BootstrapDeployInfraSpecifications({
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [isSavingInfrastructure, setIsSavingInfrastructure] = useState(false)
+  const [selectedDeploymentType, setSelectedDeploymentType] = useState<ServiceDeploymentType | undefined>()
   const formikRef = useRef<FormikProps<InfrastructureConfig>>()
+  const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   useEffect(() => {
     setSelection({
@@ -247,6 +263,20 @@ function BootstrapDeployInfraSpecifications({
       })
   }
 
+  const handleDeploymentTypeChange = useCallback(
+    (deploymentType: ServiceDeploymentType): void => {
+      if (deploymentType !== selectedDeploymentType) {
+        const stageData = produce(stage, draft => {
+          const serviceDefinition = get(draft, 'stage.spec.serviceConfig.serviceDefinition', {})
+          serviceDefinition.type = deploymentType
+        })
+        setSelectedDeploymentType(deploymentType)
+        updateStage(stageData?.stage as StageElementConfig)
+      }
+    },
+    [stage, updateStage]
+  )
+
   return (
     <Formik<InfrastructureDefinitionConfig>
       initialValues={{
@@ -259,6 +289,11 @@ function BootstrapDeployInfraSpecifications({
       }}
       formName={'Test'}
       onSubmit={onSubmit}
+      validationSchema={Yup.object().shape({
+        name: NameSchema({ requiredErrorMsg: getString('fieldRequired', { field: 'Name' }) }),
+        identifier: IdentifierSchema(),
+        spec: getInfrastructureDefinitionValidationSchema(selectedDeploymentType as any, getString)
+      })}
     >
       {formikProps => {
         return (
@@ -277,7 +312,12 @@ function BootstrapDeployInfraSpecifications({
                       }}
                     />
                   </Card>
-                  <DeployInfraSpecifications />
+                  <SelectDeploymentType
+                    selectedDeploymentType={selectedDeploymentType}
+                    isReadonly={false}
+                    handleDeploymentTypeChange={handleDeploymentTypeChange}
+                  />
+                  {selectedDeploymentType && <DeployInfraSpecifications />}
                 </>
               ) : (
                 <YAMLBuilder
@@ -288,8 +328,12 @@ function BootstrapDeployInfraSpecifications({
                       orgIdentifier,
                       projectIdentifier,
                       envIdentifier: environmentIdentifier,
-                      type: (pipeline.stages?.[0].stage?.spec as any)?.infrastructure?.infrastructureDefinition?.type,
-                      spec: (pipeline.stages?.[0].stage?.spec as any)?.infrastructure?.infrastructureDefinition?.spec
+                      type: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure
+                        ?.infrastructureDefinition?.type,
+                      spec: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure
+                        ?.infrastructureDefinition?.spec,
+                      allowSimultaneousDeployments: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)
+                        ?.infrastructure.allowSimultaneousDeployments
                     } as InfrastructureDefinitionConfig
                   }}
                   schema={environmentSchema?.data}
