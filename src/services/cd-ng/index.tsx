@@ -309,7 +309,6 @@ export interface AccessControlCheckError {
     | 'SCM_UNAUTHORIZED'
     | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
-    | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'DATA'
     | 'CONTEXT'
     | 'PR_CREATION_ERROR'
@@ -340,6 +339,8 @@ export interface AccessControlCheckError {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
+    | 'SCM_UNAUTHORIZED_ERROR_V2'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -766,6 +767,11 @@ export interface Approvers {
 
 export interface ArtifactConfig {
   [key: string]: any
+}
+
+export interface ArtifactFileMetadata {
+  fileName?: string
+  url?: string
 }
 
 export interface ArtifactListConfig {
@@ -1294,6 +1300,29 @@ export interface Build {
   type: 'branch' | 'tag' | 'PR'
 }
 
+export interface BuildDetails {
+  artifactFileMetadataList?: ArtifactFileMetadata[]
+  artifactFileSize?: string
+  artifactPath?: string
+  buildDisplayName?: string
+  buildFullDisplayName?: string
+  buildParameters?: {
+    [key: string]: string
+  }
+  buildUrl?: string
+  description?: string
+  labels?: {
+    [key: string]: string
+  }
+  metadata?: {
+    [key: string]: string
+  }
+  number?: string
+  revision?: string
+  status?: 'FAILURE' | 'UNSTABLE' | 'SUCCESS'
+  uiDisplayName?: string
+}
+
 export interface BuildIdAndInstanceCount {
   buildId?: string
   count?: number
@@ -1477,6 +1506,10 @@ export interface CloudformationTemplateFileSpec {
   type?: string
 }
 
+export interface Cluster {
+  identifier?: string
+}
+
 export interface ClusterBasicDTO {
   identifier?: string
   name?: string
@@ -1517,6 +1550,35 @@ export interface Condition {
   key: string
   operator: 'equals' | 'not equals' | 'in' | 'not in'
   value?: string
+}
+
+export interface ConfigFile {
+  identifier: string
+  spec: ConfigFileAttributes
+}
+
+export interface ConfigFileAttributeStepParameters {
+  store?: StoreConfigWrapperParameters
+  type?: 'LocalFile' | 'Encrypted' | 'Remote'
+}
+
+export interface ConfigFileAttributes {
+  configFileAttributeStepParameters?: ConfigFileAttributeStepParameters
+  store: StoreConfigWrapper
+  type: 'LocalFile' | 'Encrypted' | 'Remote'
+}
+
+export interface ConfigFileOverrideSetWrapper {
+  overrideSet?: ConfigFileOverrideSets
+}
+
+export interface ConfigFileOverrideSets {
+  configFiles?: ConfigFileWrapper[]
+  identifier?: string
+}
+
+export interface ConfigFileWrapper {
+  configFile?: ConfigFile
 }
 
 export type ConnectedArgoGitOpsInfoDTO = GitOpsInfoDTO & {
@@ -1585,6 +1647,7 @@ export interface ConnectorCatalogueItem {
     | 'ErrorTracking'
     | 'Pdc'
     | 'AzureRepo'
+    | 'Jenkins'
   )[]
 }
 
@@ -1659,6 +1722,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'ErrorTracking'
     | 'Pdc'
     | 'AzureRepo'
+    | 'Jenkins'
   )[]
 }
 
@@ -1710,6 +1774,7 @@ export interface ConnectorInfoDTO {
     | 'ErrorTracking'
     | 'Pdc'
     | 'AzureRepo'
+    | 'Jenkins'
 }
 
 export interface ConnectorResponse {
@@ -1778,6 +1843,7 @@ export interface ConnectorTypeStatistics {
     | 'ErrorTracking'
     | 'Pdc'
     | 'AzureRepo'
+    | 'Jenkins'
 }
 
 export interface ConnectorValidationResult {
@@ -1912,7 +1978,7 @@ export type CustomRestrictionDTO = RestrictionDTO & { [key: string]: any }
 export type CustomRestrictionMetadataDTO = RestrictionMetadataDTO & {}
 
 export type CustomStageConfig = StageInfoConfig & {
-  steps: ExecutionWrapperConfig[]
+  execution: ExecutionElementConfig
 }
 
 export interface DOMConfiguration {
@@ -3004,7 +3070,6 @@ export interface Error {
     | 'SCM_UNAUTHORIZED'
     | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
-    | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'DATA'
     | 'CONTEXT'
     | 'PR_CREATION_ERROR'
@@ -3035,6 +3100,8 @@ export interface Error {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
+    | 'SCM_UNAUTHORIZED_ERROR_V2'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -3397,7 +3464,6 @@ export interface Failure {
     | 'SCM_UNAUTHORIZED'
     | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
-    | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'DATA'
     | 'CONTEXT'
     | 'PR_CREATION_ERROR'
@@ -3428,6 +3494,8 @@ export interface Failure {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
+    | 'SCM_UNAUTHORIZED_ERROR_V2'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -3734,27 +3802,10 @@ export interface FileStoreRequest {
   file: FileDTO
 }
 
-export interface FilesFilterProperties {
+export type FilesFilterProperties = FilterProperties & {
   createdBy?: EmbeddedUserDetailsDTO
   fileUsage?: 'MANIFEST_FILE' | 'CONFIG' | 'SCRIPT'
-  filterType?:
-    | 'Connector'
-    | 'DelegateProfile'
-    | 'Delegate'
-    | 'PipelineSetup'
-    | 'PipelineExecution'
-    | 'Deployment'
-    | 'Audit'
-    | 'Template'
-    | 'EnvironmentGroup'
-    | 'FileStore'
-    | 'CCMRecommendation'
-    | 'Anomaly'
-    | 'Environment'
   referencedBy?: EntityDetail
-  tags?: {
-    [key: string]: string
-  }
 }
 
 export interface Filter {
@@ -4896,6 +4947,15 @@ export interface HarnessServiceInfoNG {
   serviceId?: string
 }
 
+export type HarnessStore = StoreConfig & {
+  filePath: string
+  fileReference: string
+  /**
+   * io.harness.cdng.manifest.yaml.harness.HarnessFileType
+   */
+  fileType: 'FileStore' | 'Encrypted'
+}
+
 export interface HealthDeploymentDashboard {
   healthDeploymentInfo?: HealthDeploymentInfo
 }
@@ -4944,11 +5004,6 @@ export interface HelmManifestCommandFlag {
 
 export type HelmRollbackStepInfo = StepSpecType & {
   delegateSelectors?: string[]
-}
-
-export interface HoldingScope {
-  nodeSetupId: string
-  scope: string
 }
 
 export interface HostDTO {
@@ -5113,7 +5168,7 @@ export interface InfrastructureDef {
 }
 
 export interface InfrastructureDefinitionConfig {
-  allowSimultaneousDeployments?: ParameterFieldBoolean
+  allowSimultaneousDeployments?: boolean
   description?: string
   environmentRef?: string
   identifier: string
@@ -5271,6 +5326,35 @@ export interface Invite {
   userGroups?: string[]
 }
 
+export interface JenkinsAuthCredentialsDTO {
+  [key: string]: any
+}
+
+export interface JenkinsAuthenticationDTO {
+  spec?: JenkinsAuthCredentialsDTO
+  type: 'UsernamePassword' | 'Anonymous' | 'Bearer Token(HTTP Header)'
+}
+
+export type JenkinsBearerTokenDTO = JenkinsAuthCredentialsDTO & {
+  tokenRef: string
+}
+
+export type JenkinsConnectorDTO = ConnectorConfigDTO & {
+  auth?: JenkinsAuthenticationDTO
+  delegateSelectors?: string[]
+  jenkinsUrl: string
+}
+
+export interface JenkinsJobDetailsDTO {
+  jobDetails?: JobDetails[]
+}
+
+export type JenkinsUserNamePasswordDTO = JenkinsAuthCredentialsDTO & {
+  passwordRef: string
+  username?: string
+  usernameRef?: string
+}
+
 export type JexlCriteriaSpec = CriteriaSpec & {
   expression: string
 }
@@ -5322,7 +5406,7 @@ export interface JiraFieldNG {
 export interface JiraFieldSchemaNG {
   array?: boolean
   customType?: string
-  type: 'string' | 'number' | 'date' | 'datetime' | 'timetracking' | 'option'
+  type: 'string' | 'number' | 'date' | 'datetime' | 'timetracking' | 'option' | 'user'
   typeStr: string
 }
 
@@ -5382,6 +5466,20 @@ export type JiraUpdateStepInfo = StepSpecType & {
   fields?: JiraField[]
   issueKey: string
   transitionTo?: TransitionTo
+}
+
+export interface JobDetails {
+  folder?: boolean
+  jobName?: string
+  parameters?: JobParameter[]
+  url?: string
+}
+
+export interface JobParameter {
+  defaultValue?: string
+  description?: string
+  name?: string
+  options?: string[]
 }
 
 export interface JsonNode {
@@ -5901,7 +5999,6 @@ export interface NGEnvironmentInfoConfig {
   name: string
   orgIdentifier?: string
   projectIdentifier?: string
-  serviceOverrides?: NGServiceOverrides[]
   tags?: {
     [key: string]: string
   }
@@ -5917,17 +6014,11 @@ export interface NGServiceConfig {
   service?: NGServiceV2InfoConfig
 }
 
-export interface NGServiceOverrides {
-  serviceRef: string
-  variables: NGVariable[]
-}
-
 export interface NGServiceV2InfoConfig {
   description?: string
+  gitOpsEnabled?: boolean
   identifier: string
   name: string
-  orgIdentifier?: string
-  projectIdentifier?: string
   serviceDefinition?: ServiceDefinition
   tags?: {
     [key: string]: string
@@ -6259,6 +6350,16 @@ export interface PageActivitySummary {
 
 export interface PageApiKeyAggregateDTO {
   content?: ApiKeyAggregateDTO[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
+export interface PageCluster {
+  content?: Cluster[]
   empty?: boolean
   pageIndex?: number
   pageItemCount?: number
@@ -6873,7 +6974,15 @@ export interface PollingResponseDTO {
 
 export interface PrimaryArtifact {
   spec: ArtifactConfig
-  type: 'DockerRegistry' | 'Gcr' | 'Ecr' | 'Nexus3Registry' | 'ArtifactoryRegistry' | 'CustomArtifact' | 'Acr'
+  type:
+    | 'DockerRegistry'
+    | 'Gcr'
+    | 'Ecr'
+    | 'Nexus3Registry'
+    | 'ArtifactoryRegistry'
+    | 'CustomArtifact'
+    | 'Acr'
+    | 'Jenkins'
 }
 
 export interface Principal {
@@ -6954,6 +7063,7 @@ export type RateLimitRestrictionMetadataDTO = RestrictionMetadataDTO & {
 
 export interface ReferenceDTO {
   accountIdentifier?: string
+  count?: number
   identifier?: string
   name?: string
   orgIdentifier?: string
@@ -7009,7 +7119,7 @@ export type ReplaceOperation = PatchOperation & {
 
 export type ResourceConstraintStepInfo = StepSpecType & {
   acquireMode: 'ENSURE' | 'ACCUMULATE'
-  holdingScope: HoldingScope
+  holdingScope: 'PLAN' | 'PIPELINE' | 'STAGE' | 'STEP_GROUP'
   name: string
   permits: number
   resourceUnit: string
@@ -7047,6 +7157,8 @@ export interface ResourceDTO {
     | 'GOVERNANCE_POLICY_SET'
     | 'VARIABLE'
     | 'CHAOS_HUB'
+    | 'MONITORED_SERVICE'
+    | 'CHAOS_AGENT'
 }
 
 export interface ResourceGroup {
@@ -7573,6 +7685,13 @@ export interface ResponseInvite {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseJenkinsJobDetailsDTO {
+  correlationId?: string
+  data?: JenkinsJobDetailsDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseJiraIssueCreateMetadataNG {
   correlationId?: string
   data?: JiraIssueCreateMetadataNG
@@ -7632,6 +7751,13 @@ export interface ResponseListArtifactoryArtifactBuildDetailsDTO {
 export interface ResponseListAwsCFTemplateParamsData {
   correlationId?: string
   data?: AwsCFTemplateParamsData[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseListBuildDetails {
+  correlationId?: string
+  data?: BuildDetails[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -7760,6 +7886,7 @@ export interface ResponseListExecutionStatus {
     | 'Skipped'
     | 'Pausing'
     | 'ApprovalRejected'
+    | 'InputWaiting'
     | 'NOT_STARTED'
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
@@ -8264,7 +8391,6 @@ export interface ResponseMessage {
     | 'SCM_UNAUTHORIZED'
     | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
-    | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'DATA'
     | 'CONTEXT'
     | 'PR_CREATION_ERROR'
@@ -8295,6 +8421,8 @@ export interface ResponseMessage {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
+    | 'SCM_UNAUTHORIZED_ERROR_V2'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -8398,6 +8526,13 @@ export interface ResponsePageActivitySummary {
 export interface ResponsePageApiKeyAggregateDTO {
   correlationId?: string
   data?: PageApiKeyAggregateDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePageCluster {
+  correlationId?: string
+  data?: PageCluster
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -8696,13 +8831,6 @@ export interface ResponseSaasGitDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ResponseScmCommitFileResponseDTO {
-  correlationId?: string
-  data?: ScmCommitFileResponseDTO
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
 export interface ResponseScmConnectorResponse {
   correlationId?: string
   data?: ScmConnectorResponse
@@ -8854,6 +8982,7 @@ export interface ResponseSetupStatus {
     | 'DELEGATE_PROVISION_FAILURE'
     | 'K8S_CONNECTOR_PROVISION_FAILURE'
     | 'DOCKER_CONNECTOR_PROVISION_FAILURE'
+    | 'INCOMPATIBLE_LICENSE'
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -9322,6 +9451,14 @@ export interface SSOSettings {
   uuid: string
 }
 
+export type STOLicenseSummaryDTO = LicensesWithSummaryDTO & {
+  totalDevelopers?: number
+}
+
+export type STOModuleLicenseDTO = ModuleLicenseDTO & {
+  numberOfDevelopers?: number
+}
+
 export interface SaasGitDTO {
   saasGit?: boolean
 }
@@ -9452,11 +9589,6 @@ export interface ScimUser {
   roles?: JsonNode
   schemas?: string[]
   userName?: string
-}
-
-export interface ScmCommitFileResponseDTO {
-  blobId?: string
-  commitId?: string
 }
 
 export interface ScmConnectorDTO {
@@ -9974,6 +10106,7 @@ export interface ServiceResponseDTO {
 
 export interface ServiceSpec {
   artifacts?: ArtifactListConfig
+  configFiles?: ConfigFileWrapper[]
   manifests?: ManifestConfigWrapper[]
   variables?: NGVariable[]
 }
@@ -10084,7 +10217,15 @@ export type ShellScriptStepInfo = StepSpecType & {
 export interface SidecarArtifact {
   identifier: string
   spec: ArtifactConfig
-  type: 'DockerRegistry' | 'Gcr' | 'Ecr' | 'Nexus3Registry' | 'ArtifactoryRegistry' | 'CustomArtifact' | 'Acr'
+  type:
+    | 'DockerRegistry'
+    | 'Gcr'
+    | 'Ecr'
+    | 'Nexus3Registry'
+    | 'ArtifactoryRegistry'
+    | 'CustomArtifact'
+    | 'Acr'
+    | 'Jenkins'
 }
 
 export interface SidecarArtifactWrapper {
@@ -10202,6 +10343,7 @@ export interface StageInfoConfig {
 
 export interface StageOverridesConfig {
   artifacts?: ArtifactListConfig
+  configFiles?: ConfigFileWrapper[]
   manifests?: ManifestConfigWrapper[]
   variables?: NGVariable[]
 }
@@ -10320,6 +10462,12 @@ export interface StoreConfigWrapper {
     | 'Artifactory'
     | 'S3Url'
     | 'InheritFromManifest'
+    | 'Harness'
+}
+
+export interface StoreConfigWrapperParameters {
+  spec?: StoreConfig
+  type?: string
 }
 
 export type StringNGVariable = NGVariable & {
@@ -10961,6 +11109,7 @@ export type WinRmCredentialsValidationMetadata = SecretValidationMetaData & {
 
 export type WinRmServiceSpec = ServiceSpec & {
   artifactOverrideSets?: ArtifactOverrideSetWrapper[]
+  configFileOverrideSets?: ConfigFileOverrideSetWrapper[]
   manifestOverrideSets?: ManifestOverrideSetWrapper[]
   variableOverrideSets?: NGVariableOverrideSetWrapper[]
 }
@@ -11134,7 +11283,7 @@ export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody = string
 
-export type UnsubscribeBodyRequestBody = string[]
+export type ProcessPollingResultNgBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -14910,6 +15059,214 @@ export const validateArtifactImageForGcrPromise = (
     signal
   )
 
+export interface GetBuildsForJenkinsQueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  artifactPaths: string[]
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+}
+
+export interface GetBuildsForJenkinsPathParams {
+  jobName: string
+}
+
+export type GetBuildsForJenkinsProps = Omit<
+  GetProps<ResponseListBuildDetails, Failure | Error, GetBuildsForJenkinsQueryParams, GetBuildsForJenkinsPathParams>,
+  'path'
+> &
+  GetBuildsForJenkinsPathParams
+
+/**
+ * Gets Jenkins builds
+ */
+export const GetBuildsForJenkins = ({ jobName, ...props }: GetBuildsForJenkinsProps) => (
+  <Get<ResponseListBuildDetails, Failure | Error, GetBuildsForJenkinsQueryParams, GetBuildsForJenkinsPathParams>
+    path={`/artifacts/jenkins/job/${jobName}/builds`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetBuildsForJenkinsProps = Omit<
+  UseGetProps<ResponseListBuildDetails, Failure | Error, GetBuildsForJenkinsQueryParams, GetBuildsForJenkinsPathParams>,
+  'path'
+> &
+  GetBuildsForJenkinsPathParams
+
+/**
+ * Gets Jenkins builds
+ */
+export const useGetBuildsForJenkins = ({ jobName, ...props }: UseGetBuildsForJenkinsProps) =>
+  useGet<ResponseListBuildDetails, Failure | Error, GetBuildsForJenkinsQueryParams, GetBuildsForJenkinsPathParams>(
+    (paramsInPath: GetBuildsForJenkinsPathParams) => `/artifacts/jenkins/job/${paramsInPath.jobName}/builds`,
+    { base: getConfig('ng/api'), pathParams: { jobName }, ...props }
+  )
+
+/**
+ * Gets Jenkins builds
+ */
+export const getBuildsForJenkinsPromise = (
+  {
+    jobName,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseListBuildDetails,
+    Failure | Error,
+    GetBuildsForJenkinsQueryParams,
+    GetBuildsForJenkinsPathParams
+  > & { jobName: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseListBuildDetails,
+    Failure | Error,
+    GetBuildsForJenkinsQueryParams,
+    GetBuildsForJenkinsPathParams
+  >(getConfig('ng/api'), `/artifacts/jenkins/job/${jobName}/builds`, props, signal)
+
+export interface GetArtifactPathForJenkinsQueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+}
+
+export interface GetArtifactPathForJenkinsPathParams {
+  jobName: string
+}
+
+export type GetArtifactPathForJenkinsProps = Omit<
+  GetProps<
+    ResponseListString,
+    Failure | Error,
+    GetArtifactPathForJenkinsQueryParams,
+    GetArtifactPathForJenkinsPathParams
+  >,
+  'path'
+> &
+  GetArtifactPathForJenkinsPathParams
+
+/**
+ * Gets jenkins Artifact Paths
+ */
+export const GetArtifactPathForJenkins = ({ jobName, ...props }: GetArtifactPathForJenkinsProps) => (
+  <Get<ResponseListString, Failure | Error, GetArtifactPathForJenkinsQueryParams, GetArtifactPathForJenkinsPathParams>
+    path={`/artifacts/jenkins/job/${jobName}/paths`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetArtifactPathForJenkinsProps = Omit<
+  UseGetProps<
+    ResponseListString,
+    Failure | Error,
+    GetArtifactPathForJenkinsQueryParams,
+    GetArtifactPathForJenkinsPathParams
+  >,
+  'path'
+> &
+  GetArtifactPathForJenkinsPathParams
+
+/**
+ * Gets jenkins Artifact Paths
+ */
+export const useGetArtifactPathForJenkins = ({ jobName, ...props }: UseGetArtifactPathForJenkinsProps) =>
+  useGet<
+    ResponseListString,
+    Failure | Error,
+    GetArtifactPathForJenkinsQueryParams,
+    GetArtifactPathForJenkinsPathParams
+  >((paramsInPath: GetArtifactPathForJenkinsPathParams) => `/artifacts/jenkins/job/${paramsInPath.jobName}/paths`, {
+    base: getConfig('ng/api'),
+    pathParams: { jobName },
+    ...props
+  })
+
+/**
+ * Gets jenkins Artifact Paths
+ */
+export const getArtifactPathForJenkinsPromise = (
+  {
+    jobName,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseListString,
+    Failure | Error,
+    GetArtifactPathForJenkinsQueryParams,
+    GetArtifactPathForJenkinsPathParams
+  > & { jobName: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseListString,
+    Failure | Error,
+    GetArtifactPathForJenkinsQueryParams,
+    GetArtifactPathForJenkinsPathParams
+  >(getConfig('ng/api'), `/artifacts/jenkins/job/${jobName}/paths`, props, signal)
+
+export interface GetJobDetailsForJenkinsQueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  parentJobName?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+}
+
+export type GetJobDetailsForJenkinsProps = Omit<
+  GetProps<ResponseJenkinsJobDetailsDTO, Failure | Error, GetJobDetailsForJenkinsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets Job details for Jenkins
+ */
+export const GetJobDetailsForJenkins = (props: GetJobDetailsForJenkinsProps) => (
+  <Get<ResponseJenkinsJobDetailsDTO, Failure | Error, GetJobDetailsForJenkinsQueryParams, void>
+    path={`/artifacts/jenkins/jobs`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetJobDetailsForJenkinsProps = Omit<
+  UseGetProps<ResponseJenkinsJobDetailsDTO, Failure | Error, GetJobDetailsForJenkinsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets Job details for Jenkins
+ */
+export const useGetJobDetailsForJenkins = (props: UseGetJobDetailsForJenkinsProps) =>
+  useGet<ResponseJenkinsJobDetailsDTO, Failure | Error, GetJobDetailsForJenkinsQueryParams, void>(
+    `/artifacts/jenkins/jobs`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets Job details for Jenkins
+ */
+export const getJobDetailsForJenkinsPromise = (
+  props: GetUsingFetchProps<ResponseJenkinsJobDetailsDTO, Failure | Error, GetJobDetailsForJenkinsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseJenkinsJobDetailsDTO, Failure | Error, GetJobDetailsForJenkinsQueryParams, void>(
+    getConfig('ng/api'),
+    `/artifacts/jenkins/jobs`,
+    props,
+    signal
+  )
+
 export interface GetBuildDetailsForNexusArtifactQueryParams {
   repository?: string
   repositoryPort?: string
@@ -16506,6 +16863,7 @@ export interface GetConnectorListQueryParams {
     | 'ErrorTracking'
     | 'Pdc'
     | 'AzureRepo'
+    | 'Jenkins'
   category?:
     | 'CLOUD_PROVIDER'
     | 'SECRET_MANAGER'
@@ -16650,6 +17008,7 @@ export interface UpdateConnectorQueryParams {
   baseBranch?: string
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
+  lastCommitId?: string
 }
 
 export type UpdateConnectorProps = Omit<
@@ -16798,6 +17157,7 @@ export interface GetAllAllowedFieldValuesQueryParams {
     | 'ErrorTracking'
     | 'Pdc'
     | 'AzureRepo'
+    | 'Jenkins'
 }
 
 export type GetAllAllowedFieldValuesProps = Omit<
@@ -20973,6 +21333,7 @@ export interface UpdateEnvironmentGroupQueryParams {
   baseBranch?: string
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
+  lastCommitId?: string
 }
 
 export interface UpdateEnvironmentGroupPathParams {
@@ -21477,7 +21838,6 @@ export interface GetEnvironmentListQueryParams {
   searchTerm?: string
   envIdentifiers?: string[]
   sort?: string[]
-  filterIdentifier?: string
 }
 
 export type GetEnvironmentListProps = Omit<
@@ -25055,6 +25415,109 @@ export const updateGitSyncSettingPromise = (
     void
   >('PUT', getConfig('ng/api'), `/git-sync-settings`, props, signal)
 
+export interface GetGitSimplificationQueryParams {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type GetGitSimplificationProps = Omit<
+  GetProps<ResponseBoolean, unknown, GetGitSimplificationQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Git Simplification status for a project
+ */
+export const GetGitSimplification = (props: GetGitSimplificationProps) => (
+  <Get<ResponseBoolean, unknown, GetGitSimplificationQueryParams, void>
+    path={`/git-sync-settings/git-simplification`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetGitSimplificationProps = Omit<
+  UseGetProps<ResponseBoolean, unknown, GetGitSimplificationQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Git Simplification status for a project
+ */
+export const useGetGitSimplification = (props: UseGetGitSimplificationProps) =>
+  useGet<ResponseBoolean, unknown, GetGitSimplificationQueryParams, void>(`/git-sync-settings/git-simplification`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Get Git Simplification status for a project
+ */
+export const getGitSimplificationPromise = (
+  props: GetUsingFetchProps<ResponseBoolean, unknown, GetGitSimplificationQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseBoolean, unknown, GetGitSimplificationQueryParams, void>(
+    getConfig('ng/api'),
+    `/git-sync-settings/git-simplification`,
+    props,
+    signal
+  )
+
+export interface EnableGitSimplificationQueryParams {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type EnableGitSimplificationProps = Omit<
+  MutateProps<ResponseString, unknown, EnableGitSimplificationQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Enable Git Simplification for a project
+ */
+export const EnableGitSimplification = (props: EnableGitSimplificationProps) => (
+  <Mutate<ResponseString, unknown, EnableGitSimplificationQueryParams, void, void>
+    verb="POST"
+    path={`/git-sync-settings/git-simplification`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseEnableGitSimplificationProps = Omit<
+  UseMutateProps<ResponseString, unknown, EnableGitSimplificationQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Enable Git Simplification for a project
+ */
+export const useEnableGitSimplification = (props: UseEnableGitSimplificationProps) =>
+  useMutate<ResponseString, unknown, EnableGitSimplificationQueryParams, void, void>(
+    'POST',
+    `/git-sync-settings/git-simplification`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Enable Git Simplification for a project
+ */
+export const enableGitSimplificationPromise = (
+  props: MutateUsingFetchProps<ResponseString, unknown, EnableGitSimplificationQueryParams, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseString, unknown, EnableGitSimplificationQueryParams, void, void>(
+    'POST',
+    getConfig('ng/api'),
+    `/git-sync-settings/git-simplification`,
+    props,
+    signal
+  )
+
 export interface IsGitSyncEnabledQueryParams {
   accountIdentifier?: string
   projectIdentifier?: string
@@ -25393,6 +25856,58 @@ export const createClustersPromise = (
     'POST',
     getConfig('ng/api'),
     `/gitops/clusters/batch`,
+    props,
+    signal
+  )
+
+export interface GetClusterListFromSourceQueryParams {
+  page?: number
+  size?: number
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type GetClusterListFromSourceProps = Omit<
+  GetProps<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets cluster list from Gitops Service
+ */
+export const GetClusterListFromSource = (props: GetClusterListFromSourceProps) => (
+  <Get<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>
+    path={`/gitops/clusters/listFromGitops`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetClusterListFromSourceProps = Omit<
+  UseGetProps<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets cluster list from Gitops Service
+ */
+export const useGetClusterListFromSource = (props: UseGetClusterListFromSourceProps) =>
+  useGet<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>(
+    `/gitops/clusters/listFromGitops`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets cluster list from Gitops Service
+ */
+export const getClusterListFromSourcePromise = (
+  props: GetUsingFetchProps<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>(
+    getConfig('ng/api'),
+    `/gitops/clusters/listFromGitops`,
     props,
     signal
   )
@@ -29547,7 +30062,7 @@ export type ProcessPollingResultNgProps = Omit<
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    UnsubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >,
   'path' | 'verb'
@@ -29559,7 +30074,7 @@ export const ProcessPollingResultNg = ({ perpetualTaskId, ...props }: ProcessPol
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    UnsubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >
     verb="POST"
@@ -29574,7 +30089,7 @@ export type UseProcessPollingResultNgProps = Omit<
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    UnsubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >,
   'path' | 'verb'
@@ -29586,7 +30101,7 @@ export const useProcessPollingResultNg = ({ perpetualTaskId, ...props }: UseProc
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    UnsubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >(
     'POST',
@@ -29602,7 +30117,7 @@ export const processPollingResultNgPromise = (
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    UnsubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   > & { perpetualTaskId: string },
   signal?: RequestInit['signal']
@@ -29611,17 +30126,17 @@ export const processPollingResultNgPromise = (
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    UnsubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >('POST', getConfig('ng/api'), `/polling/delegate-response/${perpetualTaskId}`, props, signal)
 
 export type SubscribeProps = Omit<
-  MutateProps<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
+  MutateProps<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const Subscribe = (props: SubscribeProps) => (
-  <Mutate<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>
+  <Mutate<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>
     verb="POST"
     path={`/polling/subscribe`}
     base={getConfig('ng/api')}
@@ -29630,22 +30145,28 @@ export const Subscribe = (props: SubscribeProps) => (
 )
 
 export type UseSubscribeProps = Omit<
-  UseMutateProps<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
+  UseMutateProps<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const useSubscribe = (props: UseSubscribeProps) =>
-  useMutate<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>(
+  useMutate<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
     'POST',
     `/polling/subscribe`,
     { base: getConfig('ng/api'), ...props }
   )
 
 export const subscribePromise = (
-  props: MutateUsingFetchProps<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
+  props: MutateUsingFetchProps<
+    ResponsePollingResponseDTO,
+    Failure | Error,
+    void,
+    ProcessPollingResultNgBodyRequestBody,
+    void
+  >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>(
+  mutateUsingFetch<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
     'POST',
     getConfig('ng/api'),
     `/polling/subscribe`,
@@ -29654,12 +30175,12 @@ export const subscribePromise = (
   )
 
 export type UnsubscribeProps = Omit<
-  MutateProps<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
+  MutateProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const Unsubscribe = (props: UnsubscribeProps) => (
-  <Mutate<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>
+  <Mutate<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>
     verb="POST"
     path={`/polling/unsubscribe`}
     base={getConfig('ng/api')}
@@ -29668,21 +30189,22 @@ export const Unsubscribe = (props: UnsubscribeProps) => (
 )
 
 export type UseUnsubscribeProps = Omit<
-  UseMutateProps<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
+  UseMutateProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const useUnsubscribe = (props: UseUnsubscribeProps) =>
-  useMutate<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>('POST', `/polling/unsubscribe`, {
-    base: getConfig('ng/api'),
-    ...props
-  })
+  useMutate<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
+    'POST',
+    `/polling/unsubscribe`,
+    { base: getConfig('ng/api'), ...props }
+  )
 
 export const unsubscribePromise = (
-  props: MutateUsingFetchProps<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
+  props: MutateUsingFetchProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>(
+  mutateUsingFetch<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
     'POST',
     getConfig('ng/api'),
     `/polling/unsubscribe`,
@@ -31076,65 +31598,6 @@ export const updateScimUserPromise = (
     signal
   )
 
-export interface CreateFileQueryParams {
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  RepoName: string
-  branch?: string
-  filePath: string
-  ConnectorRef?: string
-  fileContent?: string
-  createPr?: boolean
-  isCommitToNewBranch?: boolean
-  newBranch?: string
-  commitMessage?: string
-}
-
-export type CreateFileProps = Omit<
-  GetProps<ResponseScmCommitFileResponseDTO, Failure | Error, CreateFileQueryParams, void>,
-  'path'
->
-
-/**
- * get file
- */
-export const CreateFile = (props: CreateFileProps) => (
-  <Get<ResponseScmCommitFileResponseDTO, Failure | Error, CreateFileQueryParams, void>
-    path={`/scm/create-file`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseCreateFileProps = Omit<
-  UseGetProps<ResponseScmCommitFileResponseDTO, Failure | Error, CreateFileQueryParams, void>,
-  'path'
->
-
-/**
- * get file
- */
-export const useCreateFile = (props: UseCreateFileProps) =>
-  useGet<ResponseScmCommitFileResponseDTO, Failure | Error, CreateFileQueryParams, void>(`/scm/create-file`, {
-    base: getConfig('ng/api'),
-    ...props
-  })
-
-/**
- * get file
- */
-export const createFilePromise = (
-  props: GetUsingFetchProps<ResponseScmCommitFileResponseDTO, Failure | Error, CreateFileQueryParams, void>,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<ResponseScmCommitFileResponseDTO, Failure | Error, CreateFileQueryParams, void>(
-    getConfig('ng/api'),
-    `/scm/create-file`,
-    props,
-    signal
-  )
-
 export interface CreatePRV2QueryParams {
   accountIdentifier: string
 }
@@ -31290,10 +31753,10 @@ export interface GetFileByBranchQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
-  RepoName: string
-  filePath: string
+  connectorRef?: string
+  repoName?: string
   branch?: string
-  ConnectorRef?: string
+  filePath: string
 }
 
 export type GetFileByBranchProps = Omit<
@@ -31336,60 +31799,6 @@ export const getFileByBranchPromise = (
   getUsingFetch<ResponseGetFileResponseDTO, Failure | Error, GetFileByBranchQueryParams, void>(
     getConfig('ng/api'),
     `/scm/get-file-by-branch`,
-    props,
-    signal
-  )
-
-export interface GetFileByCommitIdQueryParams {
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  RepoName: string
-  filePath: string
-  commitId?: string
-  ConnectorRef?: string
-}
-
-export type GetFileByCommitIdProps = Omit<
-  GetProps<ResponseGetFileResponseDTO, Failure | Error, GetFileByCommitIdQueryParams, void>,
-  'path'
->
-
-/**
- * get file by commit id
- */
-export const GetFileByCommitId = (props: GetFileByCommitIdProps) => (
-  <Get<ResponseGetFileResponseDTO, Failure | Error, GetFileByCommitIdQueryParams, void>
-    path={`/scm/get-file-by-commit-id`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetFileByCommitIdProps = Omit<
-  UseGetProps<ResponseGetFileResponseDTO, Failure | Error, GetFileByCommitIdQueryParams, void>,
-  'path'
->
-
-/**
- * get file by commit id
- */
-export const useGetFileByCommitId = (props: UseGetFileByCommitIdProps) =>
-  useGet<ResponseGetFileResponseDTO, Failure | Error, GetFileByCommitIdQueryParams, void>(
-    `/scm/get-file-by-commit-id`,
-    { base: getConfig('ng/api'), ...props }
-  )
-
-/**
- * get file by commit id
- */
-export const getFileByCommitIdPromise = (
-  props: GetUsingFetchProps<ResponseGetFileResponseDTO, Failure | Error, GetFileByCommitIdQueryParams, void>,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<ResponseGetFileResponseDTO, Failure | Error, GetFileByCommitIdQueryParams, void>(
-    getConfig('ng/api'),
-    `/scm/get-file-by-commit-id`,
     props,
     signal
   )
@@ -31440,6 +31849,62 @@ export const isSaasGitPromise = (
     'POST',
     getConfig('ng/api'),
     `/scm/isSaasGit`,
+    props,
+    signal
+  )
+
+export interface GetListOfAllReposByRefConnectorQueryParams {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  connectorRef?: string
+}
+
+export type GetListOfAllReposByRefConnectorProps = Omit<
+  GetProps<ResponseListUserRepoResponse, Failure | Error, GetListOfAllReposByRefConnectorQueryParams, void>,
+  'path'
+>
+
+/**
+ * Lists All Git Repos corresponding to given reference connector
+ */
+export const GetListOfAllReposByRefConnector = (props: GetListOfAllReposByRefConnectorProps) => (
+  <Get<ResponseListUserRepoResponse, Failure | Error, GetListOfAllReposByRefConnectorQueryParams, void>
+    path={`/scm/list-all-repos-by-connector`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetListOfAllReposByRefConnectorProps = Omit<
+  UseGetProps<ResponseListUserRepoResponse, Failure | Error, GetListOfAllReposByRefConnectorQueryParams, void>,
+  'path'
+>
+
+/**
+ * Lists All Git Repos corresponding to given reference connector
+ */
+export const useGetListOfAllReposByRefConnector = (props: UseGetListOfAllReposByRefConnectorProps) =>
+  useGet<ResponseListUserRepoResponse, Failure | Error, GetListOfAllReposByRefConnectorQueryParams, void>(
+    `/scm/list-all-repos-by-connector`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Lists All Git Repos corresponding to given reference connector
+ */
+export const getListOfAllReposByRefConnectorPromise = (
+  props: GetUsingFetchProps<
+    ResponseListUserRepoResponse,
+    Failure | Error,
+    GetListOfAllReposByRefConnectorQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListUserRepoResponse, Failure | Error, GetListOfAllReposByRefConnectorQueryParams, void>(
+    getConfig('ng/api'),
+    `/scm/list-all-repos-by-connector`,
     props,
     signal
   )
@@ -31668,67 +32133,6 @@ export const getListOfBranchesByConnectorPromise = (
   getUsingFetch<ResponseListString, Failure | Error, GetListOfBranchesByConnectorQueryParams, void>(
     getConfig('ng/api'),
     `/scm/listRepoBranches`,
-    props,
-    signal
-  )
-
-export interface UpdateFileQueryParams {
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  RepoName: string
-  branch?: string
-  filePath: string
-  ConnectorRef?: string
-  fileContent?: string
-  createPr?: boolean
-  isCommitToNewBranch?: boolean
-  baseBranch?: string
-  commitMessage?: string
-  oldFileSha?: string
-  oldCommitId?: string
-}
-
-export type UpdateFileProps = Omit<
-  GetProps<ResponseScmCommitFileResponseDTO, Failure | Error, UpdateFileQueryParams, void>,
-  'path'
->
-
-/**
- * get file
- */
-export const UpdateFile = (props: UpdateFileProps) => (
-  <Get<ResponseScmCommitFileResponseDTO, Failure | Error, UpdateFileQueryParams, void>
-    path={`/scm/update-file`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseUpdateFileProps = Omit<
-  UseGetProps<ResponseScmCommitFileResponseDTO, Failure | Error, UpdateFileQueryParams, void>,
-  'path'
->
-
-/**
- * get file
- */
-export const useUpdateFile = (props: UseUpdateFileProps) =>
-  useGet<ResponseScmCommitFileResponseDTO, Failure | Error, UpdateFileQueryParams, void>(`/scm/update-file`, {
-    base: getConfig('ng/api'),
-    ...props
-  })
-
-/**
- * get file
- */
-export const updateFilePromise = (
-  props: GetUsingFetchProps<ResponseScmCommitFileResponseDTO, Failure | Error, UpdateFileQueryParams, void>,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<ResponseScmCommitFileResponseDTO, Failure | Error, UpdateFileQueryParams, void>(
-    getConfig('ng/api'),
-    `/scm/update-file`,
     props,
     signal
   )
@@ -34833,27 +35237,6 @@ export const getAllUserReposPromise = (
     `/trial-signup/fetch-repo-list`,
     props,
     signal
-  )
-
-export interface GetListOfAllReposByRefConnectorQueryParams {
-  accountIdentifier?: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  connectorRef?: string
-}
-
-export type UseGetListOfAllReposByRefConnectorProps = Omit<
-  UseGetProps<ResponseListUserRepoResponse, Failure | Error, GetListOfAllReposByRefConnectorQueryParams, void>,
-  'path'
->
-
-/**
- * Lists All Git Repos corresponding to given reference connector
- */
-export const useGetListOfAllReposByRefConnector = (props: UseGetListOfAllReposByRefConnectorProps) =>
-  useGet<ResponseListUserRepoResponse, Failure | Error, GetListOfAllReposByRefConnectorQueryParams, void>(
-    `/scm/list-all-repos-by-connector`,
-    { base: getConfig('ng/api'), ...props }
   )
 
 export interface ProvisionResourcesForCIQueryParams {
@@ -39505,6 +39888,7 @@ export interface GetYamlSchemaQueryParams {
     | 'ErrorTracking'
     | 'Pdc'
     | 'AzureRepo'
+    | 'Jenkins'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'

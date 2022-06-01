@@ -3601,6 +3601,7 @@ export interface StringsMap {
   'cd.cloudFormation.templateFileConnector': string
   'cd.cloudFormation.templateFileStore': string
   'cd.cloudFormation.urls': string
+  'cd.clustersSelected': string
   'cd.componentsInstalled': string
   'cd.configFileDetails': string
   'cd.configFilePlaceHolder': string
@@ -3656,6 +3657,7 @@ export interface StringsMap {
   'cd.filePathRequired': string
   'cd.gitFetchTypeRequired': string
   'cd.gitOps': string
+  'cd.gitOpsCluster': string
   'cd.gitOpsWizardTitle': string
   'cd.harnessManagedGitOpsWizardTitle': string
   'cd.infrastructure.createNew': string
@@ -3713,6 +3715,7 @@ export interface StringsMap {
   'cd.searchPlaceholder': string
   'cd.secretManagerRequired': string
   'cd.selectArtifact': string
+  'cd.selectGitopsCluster': string
   'cd.selectRepository': string
   'cd.serverlessDeployCommandOptions': string
   'cd.serviceCreated': string
