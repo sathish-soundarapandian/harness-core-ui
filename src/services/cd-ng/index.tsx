@@ -1084,6 +1084,15 @@ export interface AzureCredentialSpec {
   [key: string]: any
 }
 
+export interface AzureDeploymentSlotDTO {
+  name: string
+  type: string
+}
+
+export interface AzureDeploymentSlotsDTO {
+  deploymentSlots?: AzureDeploymentSlotDTO[]
+}
+
 export type AzureInheritFromDelegateDetails = AzureCredentialSpec & {
   auth: AzureMSIAuth
 }
@@ -1198,6 +1207,10 @@ export type AzureSystemAssignedMSIAuth = AzureAuthCredentialDTO & { [key: string
 
 export type AzureUserAssignedMSIAuth = AzureAuthCredentialDTO & {
   clientId: string
+}
+
+export interface AzureWebAppNamesDTO {
+  webAppNames?: string[]
 }
 
 export interface BarrierInfoConfig {
@@ -1532,6 +1545,7 @@ export interface ClusterRequest {
 export interface ClusterResponse {
   clusterRef?: string
   envRef?: string
+  linkedAt?: number
   orgIdentifier?: string
   projectIdentifier?: string
 }
@@ -6206,10 +6220,9 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export interface OAuthSettings {
+export type OAuthSettings = NGAuthSettings & {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
-  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
@@ -7300,6 +7313,13 @@ export interface ResponseAzureClustersDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseAzureDeploymentSlotsDTO {
+  correlationId?: string
+  data?: AzureDeploymentSlotsDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseAzureResourceGroupsDTO {
   correlationId?: string
   data?: AzureResourceGroupsDTO
@@ -7310,6 +7330,13 @@ export interface ResponseAzureResourceGroupsDTO {
 export interface ResponseAzureSubscriptionsDTO {
   correlationId?: string
   data?: AzureSubscriptionsDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseAzureWebAppNamesDTO {
+  correlationId?: string
+  data?: AzureWebAppNamesDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -11283,7 +11310,7 @@ export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody = string
 
-export type ProcessPollingResultNgBodyRequestBody = string[]
+export type SubscribeBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -16646,6 +16673,189 @@ export const getAzureResourceGroupsBySubscriptionPromise = (
     GetAzureResourceGroupsBySubscriptionQueryParams,
     GetAzureResourceGroupsBySubscriptionPathParams
   >(getConfig('ng/api'), `/azure/subscriptions/${subscriptionId}/resourceGroups`, props, signal)
+
+export interface GetAzureWebAppNamesQueryParams {
+  connectorRef: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export interface GetAzureWebAppNamesPathParams {
+  subscriptionId: string
+  resourceGroup: string
+}
+
+export type GetAzureWebAppNamesProps = Omit<
+  GetProps<ResponseAzureWebAppNamesDTO, Failure | Error, GetAzureWebAppNamesQueryParams, GetAzureWebAppNamesPathParams>,
+  'path'
+> &
+  GetAzureWebAppNamesPathParams
+
+/**
+ * Gets azure app services names by subscriptionId and resourceGroup
+ */
+export const GetAzureWebAppNames = ({ subscriptionId, resourceGroup, ...props }: GetAzureWebAppNamesProps) => (
+  <Get<ResponseAzureWebAppNamesDTO, Failure | Error, GetAzureWebAppNamesQueryParams, GetAzureWebAppNamesPathParams>
+    path={`/azure/subscriptions/${subscriptionId}/resourceGroups/${resourceGroup}/app-services-names`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetAzureWebAppNamesProps = Omit<
+  UseGetProps<
+    ResponseAzureWebAppNamesDTO,
+    Failure | Error,
+    GetAzureWebAppNamesQueryParams,
+    GetAzureWebAppNamesPathParams
+  >,
+  'path'
+> &
+  GetAzureWebAppNamesPathParams
+
+/**
+ * Gets azure app services names by subscriptionId and resourceGroup
+ */
+export const useGetAzureWebAppNames = ({ subscriptionId, resourceGroup, ...props }: UseGetAzureWebAppNamesProps) =>
+  useGet<ResponseAzureWebAppNamesDTO, Failure | Error, GetAzureWebAppNamesQueryParams, GetAzureWebAppNamesPathParams>(
+    (paramsInPath: GetAzureWebAppNamesPathParams) =>
+      `/azure/subscriptions/${paramsInPath.subscriptionId}/resourceGroups/${paramsInPath.resourceGroup}/app-services-names`,
+    { base: getConfig('ng/api'), pathParams: { subscriptionId, resourceGroup }, ...props }
+  )
+
+/**
+ * Gets azure app services names by subscriptionId and resourceGroup
+ */
+export const getAzureWebAppNamesPromise = (
+  {
+    subscriptionId,
+    resourceGroup,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseAzureWebAppNamesDTO,
+    Failure | Error,
+    GetAzureWebAppNamesQueryParams,
+    GetAzureWebAppNamesPathParams
+  > & { subscriptionId: string; resourceGroup: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseAzureWebAppNamesDTO,
+    Failure | Error,
+    GetAzureWebAppNamesQueryParams,
+    GetAzureWebAppNamesPathParams
+  >(
+    getConfig('ng/api'),
+    `/azure/subscriptions/${subscriptionId}/resourceGroups/${resourceGroup}/app-services-names`,
+    props,
+    signal
+  )
+
+export interface GetAzureWebAppDeploymentSlotsQueryParams {
+  connectorRef: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export interface GetAzureWebAppDeploymentSlotsPathParams {
+  subscriptionId: string
+  resourceGroup: string
+  webAppName: string
+}
+
+export type GetAzureWebAppDeploymentSlotsProps = Omit<
+  GetProps<
+    ResponseAzureDeploymentSlotsDTO,
+    Failure | Error,
+    GetAzureWebAppDeploymentSlotsQueryParams,
+    GetAzureWebAppDeploymentSlotsPathParams
+  >,
+  'path'
+> &
+  GetAzureWebAppDeploymentSlotsPathParams
+
+/**
+ * Gets azure webApp deployment slots
+ */
+export const GetAzureWebAppDeploymentSlots = ({
+  subscriptionId,
+  resourceGroup,
+  webAppName,
+  ...props
+}: GetAzureWebAppDeploymentSlotsProps) => (
+  <Get<
+    ResponseAzureDeploymentSlotsDTO,
+    Failure | Error,
+    GetAzureWebAppDeploymentSlotsQueryParams,
+    GetAzureWebAppDeploymentSlotsPathParams
+  >
+    path={`/azure/subscriptions/${subscriptionId}/resourceGroups/${resourceGroup}/app-services/${webAppName}/slots`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetAzureWebAppDeploymentSlotsProps = Omit<
+  UseGetProps<
+    ResponseAzureDeploymentSlotsDTO,
+    Failure | Error,
+    GetAzureWebAppDeploymentSlotsQueryParams,
+    GetAzureWebAppDeploymentSlotsPathParams
+  >,
+  'path'
+> &
+  GetAzureWebAppDeploymentSlotsPathParams
+
+/**
+ * Gets azure webApp deployment slots
+ */
+export const useGetAzureWebAppDeploymentSlots = ({
+  subscriptionId,
+  resourceGroup,
+  webAppName,
+  ...props
+}: UseGetAzureWebAppDeploymentSlotsProps) =>
+  useGet<
+    ResponseAzureDeploymentSlotsDTO,
+    Failure | Error,
+    GetAzureWebAppDeploymentSlotsQueryParams,
+    GetAzureWebAppDeploymentSlotsPathParams
+  >(
+    (paramsInPath: GetAzureWebAppDeploymentSlotsPathParams) =>
+      `/azure/subscriptions/${paramsInPath.subscriptionId}/resourceGroups/${paramsInPath.resourceGroup}/app-services/${paramsInPath.webAppName}/slots`,
+    { base: getConfig('ng/api'), pathParams: { subscriptionId, resourceGroup, webAppName }, ...props }
+  )
+
+/**
+ * Gets azure webApp deployment slots
+ */
+export const getAzureWebAppDeploymentSlotsPromise = (
+  {
+    subscriptionId,
+    resourceGroup,
+    webAppName,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseAzureDeploymentSlotsDTO,
+    Failure | Error,
+    GetAzureWebAppDeploymentSlotsQueryParams,
+    GetAzureWebAppDeploymentSlotsPathParams
+  > & { subscriptionId: string; resourceGroup: string; webAppName: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseAzureDeploymentSlotsDTO,
+    Failure | Error,
+    GetAzureWebAppDeploymentSlotsQueryParams,
+    GetAzureWebAppDeploymentSlotsPathParams
+  >(
+    getConfig('ng/api'),
+    `/azure/subscriptions/${subscriptionId}/resourceGroups/${resourceGroup}/app-services/${webAppName}/slots`,
+    props,
+    signal
+  )
 
 export interface GetAzureClustersQueryParams {
   connectorRef: string
@@ -30062,7 +30272,7 @@ export type ProcessPollingResultNgProps = Omit<
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    ProcessPollingResultNgBodyRequestBody,
+    SubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >,
   'path' | 'verb'
@@ -30074,7 +30284,7 @@ export const ProcessPollingResultNg = ({ perpetualTaskId, ...props }: ProcessPol
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    ProcessPollingResultNgBodyRequestBody,
+    SubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >
     verb="POST"
@@ -30089,7 +30299,7 @@ export type UseProcessPollingResultNgProps = Omit<
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    ProcessPollingResultNgBodyRequestBody,
+    SubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >,
   'path' | 'verb'
@@ -30101,7 +30311,7 @@ export const useProcessPollingResultNg = ({ perpetualTaskId, ...props }: UseProc
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    ProcessPollingResultNgBodyRequestBody,
+    SubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >(
     'POST',
@@ -30117,7 +30327,7 @@ export const processPollingResultNgPromise = (
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    ProcessPollingResultNgBodyRequestBody,
+    SubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   > & { perpetualTaskId: string },
   signal?: RequestInit['signal']
@@ -30126,17 +30336,17 @@ export const processPollingResultNgPromise = (
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    ProcessPollingResultNgBodyRequestBody,
+    SubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >('POST', getConfig('ng/api'), `/polling/delegate-response/${perpetualTaskId}`, props, signal)
 
 export type SubscribeProps = Omit<
-  MutateProps<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
+  MutateProps<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const Subscribe = (props: SubscribeProps) => (
-  <Mutate<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>
+  <Mutate<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>
     verb="POST"
     path={`/polling/subscribe`}
     base={getConfig('ng/api')}
@@ -30145,28 +30355,22 @@ export const Subscribe = (props: SubscribeProps) => (
 )
 
 export type UseSubscribeProps = Omit<
-  UseMutateProps<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
+  UseMutateProps<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const useSubscribe = (props: UseSubscribeProps) =>
-  useMutate<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
+  useMutate<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>(
     'POST',
     `/polling/subscribe`,
     { base: getConfig('ng/api'), ...props }
   )
 
 export const subscribePromise = (
-  props: MutateUsingFetchProps<
-    ResponsePollingResponseDTO,
-    Failure | Error,
-    void,
-    ProcessPollingResultNgBodyRequestBody,
-    void
-  >,
+  props: MutateUsingFetchProps<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
+  mutateUsingFetch<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>(
     'POST',
     getConfig('ng/api'),
     `/polling/subscribe`,
@@ -30175,12 +30379,12 @@ export const subscribePromise = (
   )
 
 export type UnsubscribeProps = Omit<
-  MutateProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
+  MutateProps<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const Unsubscribe = (props: UnsubscribeProps) => (
-  <Mutate<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>
+  <Mutate<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>
     verb="POST"
     path={`/polling/unsubscribe`}
     base={getConfig('ng/api')}
@@ -30189,22 +30393,21 @@ export const Unsubscribe = (props: UnsubscribeProps) => (
 )
 
 export type UseUnsubscribeProps = Omit<
-  UseMutateProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
+  UseMutateProps<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const useUnsubscribe = (props: UseUnsubscribeProps) =>
-  useMutate<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
-    'POST',
-    `/polling/unsubscribe`,
-    { base: getConfig('ng/api'), ...props }
-  )
+  useMutate<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>('POST', `/polling/unsubscribe`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
 
 export const unsubscribePromise = (
-  props: MutateUsingFetchProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
+  props: MutateUsingFetchProps<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
+  mutateUsingFetch<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>(
     'POST',
     getConfig('ng/api'),
     `/polling/unsubscribe`,
