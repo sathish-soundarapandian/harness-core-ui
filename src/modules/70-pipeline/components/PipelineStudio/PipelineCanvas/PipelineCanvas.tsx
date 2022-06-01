@@ -432,7 +432,7 @@ export function PipelineCanvas({
       }
 
       if (updatedGitDetails) {
-        if (gitDetails?.objectId) {
+        if (gitDetails?.objectId || gitDetails.commitId) {
           updatedGitDetails = { ...gitDetails, ...updatedGitDetails }
         }
         updateGitDetails(updatedGitDetails).then(() => {
@@ -548,11 +548,7 @@ export function PipelineCanvas({
   function onCloseRunPipelineModal(): void {
     closeRunPipelineModal()
     setInputSetYaml('')
-    replaceQueryParams(
-      { repoIdentifier: repoIdentifier, branch: branch, connectorRef, storeType, repoName },
-      { skipNulls: true },
-      true
-    )
+    replaceQueryParams({ repoIdentifier, branch, connectorRef, storeType, repoName }, { skipNulls: true }, true)
   }
 
   React.useEffect(() => {
@@ -746,13 +742,16 @@ export function PipelineCanvas({
               }
             }
             setYamlError(false)
-            return (
+            const shouldBlockNavigation =
               !matchDefault?.isExact &&
               localUpdated &&
               !isReadonly &&
               !(pipelineIdentifier === DefaultNewPipelineId && isEmpty(pipeline?.name)) &&
               !(useTemplate && isEmpty(pipeline?.template))
-            )
+            if (!shouldBlockNavigation) {
+              !matchDefault?.isExact && deletePipelineCache(gitDetails)
+            }
+            return shouldBlockNavigation
           }}
           textProps={{
             contentText: isYamlError ? getString('navigationYamlError') : getString('navigationCheckText'),

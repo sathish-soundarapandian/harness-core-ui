@@ -784,7 +784,7 @@ const _deletePipelineCache = async (
     queryParams.orgIdentifier || '',
     queryParams.projectIdentifier || '',
     identifier,
-    gitDetails?.repoIdentifier || '',
+    getRepoIdentifierName(gitDetails),
     gitDetails?.branch || ''
   )
   deletePipelineCacheFromIDB(IdbPipeline, id)
@@ -795,7 +795,7 @@ const _deletePipelineCache = async (
     queryParams.orgIdentifier || '',
     queryParams.projectIdentifier || '',
     DefaultNewPipelineId,
-    gitDetails?.repoIdentifier || '',
+    getRepoIdentifierName(gitDetails),
     gitDetails?.branch || ''
   )
   deletePipelineCacheFromIDB(IdbPipeline, defaultId)
