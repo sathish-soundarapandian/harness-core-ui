@@ -17,7 +17,7 @@ delegatePermissions:
   specificNamespaceContent: '(Requires namespace admin roles) Specify the namespace where the Harness Delegate is installed. This Delegate will be able to perform tasks (deployments, capture change events etc.) only on the specific namespace.'
 delegateNamespaceRequired: 'Namespace is required'
 permissionRequired: 'Permission selection is required'
-delegateSizeUpTo: 'Run upto {{count}} parallel deployments/builds'
+delegateSizeUpTo: 'Run up to {{count}} parallel deployments/builds'
 lastUpdated: 'LAST UPDATED'
 usedBy: 'USED BY'
 delegateNameRegexIssue: 'Delegate name should be lowercase and can include only dash(-) between letters and cannot start or end with a number.'
