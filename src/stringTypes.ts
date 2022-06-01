@@ -2843,6 +2843,9 @@ export interface StringsMap {
   'pipeline.infraSpecifications.initTimeout': string
   'pipeline.infraSpecifications.initTimeoutPlaceholder': string
   'pipeline.infraSpecifications.namespacePlaceholder': string
+  'pipeline.infraSpecifications.os': string
+  'pipeline.infraSpecifications.osTypes.macos': string
+  'pipeline.infraSpecifications.osTypes.windows': string
   'pipeline.infraSpecifications.serviceAccountName': string
   'pipeline.infraSpecifications.serviceAccountNamePlaceholder': string
   'pipeline.infraSpecifications.validation.requiredExistingStage': string
@@ -5220,13 +5223,13 @@ export interface StringsMap {
   'ci.buildInfra.awsVM.architecture': string
   'ci.buildInfra.awsVM.isRequiredWhen': string
   'ci.buildInfra.awsVM.os': string
-  'ci.buildInfra.awsVMs': string
   'ci.buildInfra.infrastructureTypesLabel': string
   'ci.buildInfra.k8sLabel': string
   'ci.buildInfra.kubernetesHelpText': string
   'ci.buildInfra.label': string
   'ci.buildInfra.selectInfra': string
   'ci.buildInfra.useNewInfra': string
+  'ci.buildInfra.vMs': string
   'ci.buildInfra.vmLabel': string
   'ci.ciTrialHomePage.startTrial.description': string
   'ci.ciTrialHomePage.startTrial.startBtn.description': string

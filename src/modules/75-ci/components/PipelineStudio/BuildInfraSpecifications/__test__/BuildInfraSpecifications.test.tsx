@@ -300,6 +300,8 @@ describe('BuildInfraSpecifications snapshot tests for AWS Build Infra', () => {
     expect(container).toMatchSnapshot()
     const poolIdInputText = await getByText('pipeline.buildInfra.poolId')
     expect(poolIdInputText).toBeTruthy()
+    const osInputText = await getByText('pipeline.infraSpecifications.os')
+    expect(osInputText).toBeTruthy()
   })
 })
 

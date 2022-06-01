@@ -90,7 +90,7 @@ commitsTab:
 artifactoryConnectorLabel: Artifactory Connector
 buildInfra:
   label: Build Infrastructure is required
-  awsVMs: AWS VMs
+  vMs: VMs
   selectInfra: Select the infrastructure where you want your builds to run
   infrastructureTypesLabel: Infrastructure Types
   kubernetesHelpText: Use to run your builds on a Kubernetes Cluster, where each CI stage runs on an ephemeral Kubernetes pod.

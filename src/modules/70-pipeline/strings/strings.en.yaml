@@ -653,6 +653,10 @@ infraSpecifications:
   initTimeoutPlaceholder: Enter Init Timeout
   validation:
     requiredExistingStage: Existing stage is a required field
+  os: OS
+  osTypes:
+    windows: Windows
+    macos: MacOS
 imagePathLabel: Image Path
 artifactPathLabel: Artifact Path
 artifactPathFilterLabel: Artifact Path Filter

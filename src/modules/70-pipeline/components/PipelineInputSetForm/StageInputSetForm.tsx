@@ -40,6 +40,7 @@ import MultiTypeListInputSet from '@common/components/MultiTypeListInputSet/Mult
 import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
 import { MultiTypeMapInputSet } from '@common/components/MultiTypeMapInputSet/MultiTypeMapInputSet'
 import { MultiTypeCustomMap } from '@common/components/MultiTypeCustomMap/MultiTypeCustomMap'
+import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
 import Volumes from '@pipeline/components/Volumes/Volumes'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { TemplateStepNode } from 'services/pipeline-ng'
@@ -51,6 +52,7 @@ import {
   useGitScope
 } from '@pipeline/utils/CIUtils'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { FormConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
 import type { StringsMap } from 'stringTypes'
 import {
   getCustomStepProps,
@@ -69,10 +71,12 @@ import { StepWidget } from '../AbstractSteps/StepWidget'
 import { ConditionalExecutionForm } from './StageAdvancedInputSetForm'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StepViewType } from '../AbstractSteps/Step'
+import { OsTypes } from '../../utils/constants'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './PipelineInputSetForm.module.scss'
 
 const harnessImageConnectorRef = 'connectors.title.harnessImageConnectorRef'
+const osLabel = 'pipeline.infraSpecifications.os'
 
 function ServiceDependencyForm({
   template,
@@ -453,13 +457,15 @@ export function StageInputSetFormInternal({
       tooltipId,
       labelKey,
       placeholderKey,
-      fieldPath
+      fieldPath,
+      allowedTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
     }: {
       name: string
       tooltipId?: string
       labelKey: keyof StringsMap
       placeholderKey?: keyof StringsMap
       fieldPath: string
+      allowedTypes?: MultiTypeInputType[]
     }) => {
       if (!name) {
         return
@@ -474,7 +480,7 @@ export function StageInputSetFormInternal({
             selectItems={items}
             placeholder={placeholderKey ? getString(placeholderKey) : ''}
             multiTypeInputProps={{
-              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+              allowableTypes: allowedTypes,
               expressions,
               selectProps: { disabled: readonly, items }
             }}
@@ -770,11 +776,12 @@ export function StageInputSetFormInternal({
                       tooltipId: 'harnessImageConnectorRef',
                       labelKey: harnessImageConnectorRef,
                       placeholderKey: 'connectors.placeholder.harnessImageConnectorRef',
-                      fieldPath: 'spec.harnessImageConnectorRef'
+                      fieldPath: 'spec.harnessImageConnectorRef',
+                      allowedTypes: [MultiTypeInputType.FIXED]
                     })
                   ) : (
                     <Container className={stepCss.bottomMargin3}>
-                      <FormMultiTypeConnectorField
+                      <FormConnectorReferenceField
                         width={getConnectorRefWidth(viewType)}
                         name={`${namePath}infrastructure.spec.harnessImageConnectorRef`}
                         label={
@@ -787,8 +794,7 @@ export function StageInputSetFormInternal({
                         projectIdentifier={projectIdentifier}
                         orgIdentifier={orgIdentifier}
                         gitScope={gitScope}
-                        multiTypeProps={{ expressions, disabled: readonly, allowableTypes }}
-                        setRefValue
+                        disabled={readonly}
                         type={Connectors.DOCKER}
                       />
                     </Container>
@@ -814,6 +820,49 @@ export function StageInputSetFormInternal({
                     })}
                   </Container>
                 ) : null}
+                {(deploymentStageTemplate.infrastructure as any).spec?.spec?.os ? (
+                  shouldRenderRunTimeInputViewWithAllowedValues(
+                    'spec.spec.os',
+                    deploymentStageTemplate.infrastructure
+                  ) ? (
+                    renderMultiTypeInputWithAllowedValues({
+                      name: `${namePath}infrastructure.spec.spec.os`,
+                      tooltipId: 'os',
+                      labelKey: osLabel,
+                      placeholderKey: osLabel,
+                      fieldPath: 'spec.spec.os',
+                      allowedTypes: [MultiTypeInputType.FIXED]
+                    })
+                  ) : (
+                    <Container className={stepCss.bottomMargin3}>
+                      <MultiTypeSelectField
+                        label={
+                          <Text
+                            tooltipProps={{ dataTooltipId: 'os' }}
+                            font={{ variation: FontVariation.FORM_LABEL }}
+                            margin={{ bottom: 'xsmall' }}
+                          >
+                            {getString(osLabel)}
+                          </Text>
+                        }
+                        name={`${namePath}infrastructure.spec.spec.os`}
+                        style={{ width: 300, paddingBottom: 'var(--spacing-small)' }}
+                        multiTypeInputProps={{
+                          selectItems: [
+                            { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
+                            { label: getString('pipeline.infraSpecifications.osTypes.macos'), value: OsTypes.MacOS },
+                            { label: getString('pipeline.infraSpecifications.osTypes.windows'), value: OsTypes.Windows }
+                          ],
+                          multiTypeInputProps: {
+                            allowableTypes: [MultiTypeInputType.FIXED]
+                          },
+                          disabled: readonly
+                        }}
+                        useValue
+                      />
+                    </Container>
+                  )
+                ) : null}
                 {(deploymentStageTemplate.infrastructure as any).spec?.spec?.harnessImageConnectorRef ? (
                   shouldRenderRunTimeInputViewWithAllowedValues(
                     'spec.spec.harnessImageConnectorRef',
@@ -824,11 +873,12 @@ export function StageInputSetFormInternal({
                       tooltipId: 'harnessImageConnectorRef',
                       labelKey: harnessImageConnectorRef,
                       placeholderKey: 'connectors.placeholder.harnessImageConnectorRef',
-                      fieldPath: 'spec.spec.harnessImageConnectorRef'
+                      fieldPath: 'spec.spec.harnessImageConnectorRef',
+                      allowedTypes: [MultiTypeInputType.FIXED]
                     })
                   ) : (
                     <Container className={stepCss.bottomMargin3}>
-                      <FormMultiTypeConnectorField
+                      <FormConnectorReferenceField
                         width={getConnectorRefWidth(viewType)}
                         name={`${namePath}infrastructure.spec.spec.harnessImageConnectorRef`}
                         label={
@@ -841,8 +891,7 @@ export function StageInputSetFormInternal({
                         projectIdentifier={projectIdentifier}
                         orgIdentifier={orgIdentifier}
                         gitScope={gitScope}
-                        multiTypeProps={{ expressions, disabled: readonly, allowableTypes }}
-                        setRefValue
+                        disabled={readonly}
                         type={Connectors.DOCKER}
                       />
                     </Container>

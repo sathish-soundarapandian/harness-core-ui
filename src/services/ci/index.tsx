@@ -2455,6 +2455,7 @@ export type VmPoolYaml = VmInfraSpec & {
 export interface VmPoolYamlSpec {
   harnessImageConnectorRef?: string // hard coded for now
   identifier: string
+  os: string // hard coded for now - should be an enum
 }
 
 export interface WebhookBaseAttributes {
