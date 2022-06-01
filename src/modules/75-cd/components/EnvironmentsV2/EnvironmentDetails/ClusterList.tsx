@@ -60,7 +60,7 @@ const ClusterCard = (props: any): React.ReactElement => {
 const ClusterList = (props: any): React.ReactElement => {
   if (!props.loading && props?.clusters?.length) {
     return (
-      <div>
+      <div className={css.listContainer}>
         {props?.clusters?.map((cluster: any) => {
           return (
             <ClusterCard

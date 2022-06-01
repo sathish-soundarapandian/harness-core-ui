@@ -81,9 +81,45 @@
   font-weight: 600 !important;
 }
 
-.agentList {
-  display: grid;
+.listContainer {
   overflow: auto;
+}
+
+.listFooter {
+  width: 50% !important;
+  justify-content: space-between !important;
+  margin-top: 30px !important;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  /* identical to box height, or 133% */
+
+  letter-spacing: 0.2px;
+
+  /* Gray Scale/Gray Scale 700 */
+
+  color: var(--grey-700);
+}
+
+.checkBox {
+  font-weight: 500 !important;
+  font-size: 12px !important;
+  line-height: 16px !important;
+  /* identical to box height, or 133% */
+
+  letter-spacing: 0.2px !important;
+
+  /* Gray Scale/Gray Scale 700 */
+
+  color: var(--grey-700) !important;
+}
+
+.unlinkedCount {
+  align-self: center;
+}
+
+.clusterList {
+  display: grid;
   width: 55%;
   //height: 70%;
   border-right: 1px solid var(--grey-200);

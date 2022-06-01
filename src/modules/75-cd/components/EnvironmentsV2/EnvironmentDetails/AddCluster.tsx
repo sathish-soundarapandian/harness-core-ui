@@ -125,7 +125,7 @@ const AddCluster = (props: any): React.ReactElement => {
         <Layout.Vertical>
           <TextInput placeholder="Search" leftIcon="search" />
           <Layout.Horizontal className={css.contentContainer} height={'339px'}>
-            <div className={css.agentList}>
+            <div className={css.clusterList}>
               {loading || submitting ? <PageSpinner /> : null}
               {!loading ? (
                 <ClusterList
@@ -137,7 +137,7 @@ const AddCluster = (props: any): React.ReactElement => {
                   refetch={refetch}
                 />
               ) : null}
-              <div>
+              <Layout.Horizontal color={Color.GREY_700} className={css.listFooter}>
                 <Checkbox
                   label="Select All"
                   onClick={ev => {
@@ -147,15 +147,16 @@ const AddCluster = (props: any): React.ReactElement => {
                       setSelectedClusters([])
                     }
                   }}
+                  className={css.checkBox}
                 />
                 {selectedClusters.length ? (
-                  <span>
+                  <span className={css.unlinkedCount}>
                     ({selectedClusters.length}/{unlinkedClusters?.length})
                   </span>
                 ) : (
-                  <span>({unlinkedClusters.length})</span>
+                  <span className={css.unlinkedCount}>({unlinkedClusters.length})</span>
                 )}
-              </div>
+              </Layout.Horizontal>
             </div>
 
             <div className={css.subChild}>
@@ -172,18 +173,21 @@ const AddCluster = (props: any): React.ReactElement => {
                     <Text className={css.selectedHeader} color={Color.GREY_800}>
                       Selected
                     </Text>
-                    {selectedClusters.map((clstr: Cluster) => {
-                      return (
-                        <Text
-                          key={clstr.identifier}
-                          style={{ fontSize: '12' }}
-                          color={Color.GREY_800}
-                          className={css.selectedIdenfitier}
-                        >
-                          {clstr?.identifier}
-                        </Text>
-                      )
+                    {selectedClusters.map((clstr: Cluster, index: number) => {
+                      if (index < 10) {
+                        return (
+                          <Text
+                            key={clstr.identifier}
+                            style={{ fontSize: '12' }}
+                            color={Color.GREY_800}
+                            className={css.selectedIdenfitier}
+                          >
+                            {clstr?.identifier}
+                          </Text>
+                        )
+                      }
                     })}
+                    {selectedClusters.length > 10 ? <div>...</div> : null}
                   </>
                 ) : null}
               </Layout.Vertical>

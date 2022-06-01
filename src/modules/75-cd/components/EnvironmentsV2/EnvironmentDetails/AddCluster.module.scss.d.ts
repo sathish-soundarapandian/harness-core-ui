@@ -9,14 +9,15 @@
 declare const styles: {
   readonly addClusterDialog: string
   readonly agentIcon: string
-  readonly agentList: string
   readonly agentMeta: string
   readonly agentRefContainer: string
   readonly agentRefLabel: string
   readonly agentReferenceField: string
   readonly cancelBtn: string
+  readonly checkBox: string
   readonly clusterDetails: string
   readonly clusterId: string
+  readonly clusterList: string
   readonly clusterName: string
   readonly contentContainer: string
   readonly footerStyle: string
@@ -24,6 +25,8 @@ declare const styles: {
   readonly gitopsClusterCard: string
   readonly greenStatus: string
   readonly hasError: string
+  readonly listContainer: string
+  readonly listFooter: string
   readonly newAgentButton: string
   readonly notHealthy: string
   readonly paginationBlock: string
@@ -41,5 +44,6 @@ declare const styles: {
   readonly tabTitle: string
   readonly tabTitleContainer: string
   readonly tag: string
+  readonly unlinkedCount: string
 }
 export default styles
