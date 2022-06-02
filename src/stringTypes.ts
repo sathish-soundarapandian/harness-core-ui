@@ -326,6 +326,8 @@ export interface StringsMap {
   'common.git.validation.repoRequired': string
   'common.git.validation.sameBranches': string
   'common.git.validation.targetBranch': string
+  'common.git.validation.yamlPath': string
+  'common.git.validation.yamlPathInvalid': string
   'common.gitDetailsTitle': string
   'common.gitOps': string
   'common.gitSync.allRepositories': string

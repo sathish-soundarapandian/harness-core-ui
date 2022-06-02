@@ -43,6 +43,7 @@ import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import { yamlPathRegex } from '@common/utils/StringUtils'
 import { DefaultNewPipelineId } from '../PipelineContext/PipelineActions'
 import css from './PipelineCreate.module.scss'
 
@@ -159,7 +160,10 @@ export default function CreatePipelines({
               repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
               branch: Yup.string().trim().required(getString('common.git.validation.branchRequired')),
               connectorRef: Yup.string().trim().required(getString('validation.sshConnectorRequired')),
-              filePath: Yup.string().trim().required(getString('common.git.validation.filePath'))
+              filePath: Yup.string()
+                .trim()
+                .required(getString('common.git.validation.yamlPath'))
+                .matches(yamlPathRegex, getString('common.git.validation.yamlPathInvalid'))
             }
           : isGitSyncEnabled
           ? {

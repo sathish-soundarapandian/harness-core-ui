@@ -360,6 +360,8 @@ git:
   remoteStoreLabel: Pipeline content is stored in a Git repository
   validation:
     filePath: '{{$.common.git.filePath}} is required'
+    yamlPath: 'Yaml path is required'
+    yamlPathInvalid: 'Yaml path should begin with .harness/ and have a valid file/folder name and yaml extension'
     commitMessage: '{{$.common.git.commitMessage}} is required'
     sameBranches: 'Source and target branches cannot be same for a pull request'
     repoRequired: '{{ $.common.validation.repository }}'
