@@ -30,6 +30,7 @@ connectThroughDelegate: 'Connect through a Harness Delegate'
 connectThroughPlatformInfo: 'Use this option to connect to a SaaS Git provider. Secure communication with the Git provider is done through the Harness Platform. All credentials are encrypted and stored in the Secret Manager configured in Harness.'
 connectThroughDelegateInfo: 'Use this option to connect to a Git Provider behind your corporate firewall. Secure communication with the Git provider is through a Harness Delegate you install in your environment. The Delegate securely connects to the Harness Platform and performs tasks using your repositories.'
 pipeline: Pipeline
+templateStartLabel: Start with Template
 duplicateId: 'Duplicate Identifier'
 createPipeline: Create a Pipeline
 production: Production
