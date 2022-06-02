@@ -72,6 +72,17 @@ RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_WORKFLOW, {
   }
 })
 
+RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_AGENT, {
+  icon: 'ci-dev-exp',
+  label: 'chaos.chaosagent',
+  category: ResourceCategory.CHAOS,
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_CHAOSAGENT]: <LocaleString stringID="rbac.permissionLabels.view" />,
+    [PermissionIdentifier.EDIT_CHAOSAGENT]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+    [PermissionIdentifier.DELETE_CHAOSAGENT]: <LocaleString stringID="delete" />
+  }
+})
+
 const chaosSideNavProps: SidebarContext = {
   navComponent: ChaosSideNav,
   subtitle: 'Chaos',

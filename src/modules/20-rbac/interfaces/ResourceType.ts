@@ -44,7 +44,8 @@ export enum ResourceType {
   DELEGATE_TOKEN = 'DELEGATE_TOKEN',
   VARIABLE = 'VARIABLE',
   CHAOS_HUB = 'CHAOS_HUB',
-  CHAOS_WORKFLOW = 'CHAOS_WORKFLOW'
+  CHAOS_WORKFLOW = 'CHAOS_WORKFLOW',
+  CHAOS_AGENT = 'CHAOS_AGENT'
 }
 
 export enum ResourceCategory {

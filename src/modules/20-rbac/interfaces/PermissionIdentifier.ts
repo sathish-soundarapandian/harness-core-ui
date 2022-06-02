@@ -134,5 +134,8 @@ export enum PermissionIdentifier {
   DELETE_CHAOSHUB = 'chaos_chaoshub_delete',
   VIEW_CHAOSWORKFLOW = 'chaos_chaosworkflow_view',
   EDIT_CHAOSWORKFLOW = 'chaos_chaosworkflow_edit',
-  DELETE_CHAOSWORKFLOW = 'chaos_chaosworkflow_delete'
+  DELETE_CHAOSWORKFLOW = 'chaos_chaosworkflow_delete',
+  VIEW_CHAOSAGENT = 'chaos_chaosagent_view',
+  EDIT_CHAOSAGENT = 'chaos_chaosagent_edit',
+  DELETE_CHAOSAGENT = 'chaos_chaosagent_delete'
 }
