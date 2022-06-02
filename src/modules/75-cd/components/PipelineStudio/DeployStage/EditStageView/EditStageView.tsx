@@ -227,7 +227,10 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
   return (
     <div className={stageCss.deployStage}>
       <DeployServiceErrors domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
-      <div className={context ? stageCss.contentSection : css.contentSection} ref={scrollRef}>
+      <div
+        className={context ? cx(stageCss.contentSection, stageCss.paddedSection) : css.contentSection}
+        ref={scrollRef}
+      >
         {context ? (
           <div className={stageCss.tabHeading} id="stageOverview">
             {getString('stageOverview')}

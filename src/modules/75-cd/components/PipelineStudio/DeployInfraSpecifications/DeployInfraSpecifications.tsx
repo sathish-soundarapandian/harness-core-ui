@@ -10,6 +10,7 @@ import YAML from 'yaml'
 import { Accordion, Card, Container, RUNTIME_INPUT_VALUE, Text } from '@wings-software/uicore'
 import { debounce, defaultTo, get, isEmpty, isNil, omit, set } from 'lodash-es'
 import produce from 'immer'
+import cx from 'classnames'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import {
   getProvisionerExecutionStrategyYamlPromise,
@@ -508,7 +509,12 @@ export default function DeployInfraSpecifications(props: React.PropsWithChildren
   return (
     <div className={stageCss.deployStage} key="1">
       <DeployServiceErrors domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
-      <div className={stageCss.contentSection} ref={scrollRef}>
+      <div
+        className={cx(stageCss.contentSection, {
+          [stageCss.paddedSection]: contextType !== PipelineContextType.Standalone
+        })}
+        ref={scrollRef}
+      >
         {contextType !== PipelineContextType.Standalone && (
           <>
             <div className={stageCss.tabHeading} id="environment">

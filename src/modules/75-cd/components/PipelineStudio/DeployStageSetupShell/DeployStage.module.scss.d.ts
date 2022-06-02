@@ -14,6 +14,7 @@ declare const styles: {
   readonly deploymentTypeHeading: string
   readonly editServiceModal: string
   readonly info: string
+  readonly paddedSection: string
   readonly sectionCard: string
   readonly stageView: string
   readonly tabHeading: string

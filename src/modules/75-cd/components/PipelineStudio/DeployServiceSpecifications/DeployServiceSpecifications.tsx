@@ -7,6 +7,7 @@
 
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import cx from 'classnames'
 import {
   Card,
   Checkbox,
@@ -573,7 +574,7 @@ export default function DeployServiceSpecifications(props: React.PropsWithChildr
   return (
     <div className={stageCss.deployStage} ref={scrollRef}>
       <DeployServiceErrors domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
-      <div className={stageCss.contentSection}>
+      <div className={cx(stageCss.contentSection, stageCss.paddedSection)}>
         {previousStageList.length > 0 && (
           <Container margin={{ bottom: 'xlarge', left: 'xlarge' }}>
             <PropagateWidget
