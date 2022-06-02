@@ -47,7 +47,8 @@ import {
   getFilteredStage,
   TriggerTypes,
   eventTypes,
-  getTriggerInputSetsBranchQueryParameter
+  getTriggerInputSetsBranchQueryParameter,
+  DEFAULT_TRIGGER_BRANCH
 } from '../utils/TriggersWizardPageUtils'
 import css from './WebhookPipelineInputPanel.module.scss'
 
@@ -197,7 +198,7 @@ function WebhookPipelineInputPanelForm({
 
   const { getString } = useStrings()
   const ciCodebaseBuildValue = formikProps.values?.pipeline?.properties?.ci?.codebase?.build
-  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { repoIdentifier, branch, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
   const [selectedInputSets, setSelectedInputSets] = useState<InputSetSelectorProps['value']>(inputSetSelected)
   const [hasEverRendered, setHasEverRendered] = useState(
     typeof ciCodebaseBuildValue === 'object' && !isEmpty(ciCodebaseBuildValue)
@@ -217,7 +218,8 @@ function WebhookPipelineInputPanelForm({
       accountIdentifier: accountId,
       orgIdentifier,
       pipelineIdentifier,
-      projectIdentifier
+      projectIdentifier,
+      branch
     },
     body: {
       stageIdentifiers: []
@@ -276,6 +278,9 @@ function WebhookPipelineInputPanelForm({
       pipelineIdentifier,
       projectIdentifier,
       repoIdentifier,
+      connectorRef,
+      repoName,
+      storeType,
       branch: getTriggerInputSetsBranchQueryParameter({
         gitAwareForTriggerEnabled,
         pipelineBranchName: formikProps?.values?.pipelineBranchName,
@@ -289,6 +294,9 @@ function WebhookPipelineInputPanelForm({
       pipelineIdentifier,
       repoIdentifier,
       formikProps?.values?.pipelineBranchName,
+      connectorRef,
+      repoName,
+      storeType,
       branch,
       gitAwareForTriggerEnabled
     ]
@@ -389,6 +397,8 @@ function WebhookPipelineInputPanelForm({
     pipelineIdentifier,
     resolvedPipeline
   ])
+  const pipelineBranchNamePlaceHolder =
+    formikProps?.values?.triggerType === TriggerTypes.WEBHOOK ? DEFAULT_TRIGGER_BRANCH : getString('common.branchName')
 
   return (
     <Layout.Vertical className={css.webhookPipelineInputContainer} spacing="large" padding="none">
@@ -418,7 +428,7 @@ function WebhookPipelineInputPanelForm({
                   }}
                   value={selectedInputSets}
                   selectedValueClass={css.inputSetSelectedValue}
-                  selectedRepo={repoIdentifier}
+                  selectedRepo={gitAwareForTriggerEnabled ? repoName : repoIdentifier}
                   selectedBranch={getTriggerInputSetsBranchQueryParameter({
                     gitAwareForTriggerEnabled,
                     pipelineBranchName: formikProps?.values?.pipelineBranchName,
@@ -440,7 +450,7 @@ function WebhookPipelineInputPanelForm({
                   <HarnessDocTooltip tooltipId="pipelineReferenceBranch" useStandAlone={true} />
                 </Text>
                 <Container className={cx(css.refBranchOuter, css.halfWidth)}>
-                  <FormInput.Text name="pipelineBranchName" placeholder="<+trigger.branch>" />
+                  <FormInput.Text name="pipelineBranchName" placeholder={pipelineBranchNamePlaceHolder} />
                 </Container>
                 <div className={css.divider} />
               </Container>

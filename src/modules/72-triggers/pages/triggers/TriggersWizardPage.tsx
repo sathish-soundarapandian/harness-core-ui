@@ -45,7 +45,8 @@ import {
   NGTriggerConfigV2,
   NGTriggerSourceV2,
   useGetSchemaYaml,
-  ResponseNGTriggerResponse
+  ResponseNGTriggerResponse,
+  GetTriggerQueryParams
 } from 'services/pipeline-ng'
 import {
   isCloneCodebaseEnabledAtLeastOneStage,
@@ -56,7 +57,7 @@ import { useStrings } from 'framework/strings'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import type { PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { clearRuntimeInput, validatePipeline } from '@pipeline/components/PipelineStudio/StepUtil'
 import { ErrorsStrip } from '@pipeline/components/ErrorsStrip/ErrorsStrip'
@@ -73,7 +74,7 @@ import type {
   CompletionItemInterface
 } from '@common/interfaces/YAMLBuilderProps'
 import { memoizedParse, yamlStringify } from '@common/utils/YamlHelperMethods'
-import { useConfirmAction, useMutateAsGet, useDeepCompareEffect } from '@common/hooks'
+import { useConfirmAction, useMutateAsGet, useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import type { FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import {
@@ -253,7 +254,7 @@ const getArtifactManifestTriggerYaml = ({
     stageId,
     manifestType: onEditManifestType,
     artifactType,
-    pipelineBranchName = DEFAULT_TRIGGER_BRANCH,
+    pipelineBranchName = getDefaultPipelineReferenceBranch(formikValueTriggerType),
     inputSetRefs
   } = val
 
@@ -393,6 +394,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
   const { getString } = useStrings()
   // use passed params on new trigger
   const queryParamsOnNew = location?.search ? getQueryParamsOnNew(location.search) : undefined
+  const { branch } = useQueryParams<GitQueryParams>()
   const {
     sourceRepo: sourceRepoOnNew,
     triggerType: triggerTypeOnNew,
@@ -405,7 +407,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       accountIdentifier: accountId,
       orgIdentifier,
       pipelineIdentifier,
-      projectIdentifier
+      projectIdentifier,
+      branch
     },
     body: {
       stageIdentifiers: []
@@ -418,8 +421,9 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      targetIdentifier: pipelineIdentifier
-    }
+      targetIdentifier: pipelineIdentifier,
+      branch
+    } as GetTriggerQueryParams
     // lazy: true
   })
   const { data: pipelineResponse } = useGetPipeline({
@@ -428,7 +432,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      getTemplatesResolvedPipeline: true
+      getTemplatesResolvedPipeline: true,
+      branch
     }
   })
 
@@ -720,7 +725,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       jexlCondition,
       secureToken,
       autoAbortPreviousExecutions = false,
-      pipelineBranchName = DEFAULT_TRIGGER_BRANCH,
+      pipelineBranchName = getDefaultPipelineReferenceBranch(formikValueTriggerType),
       inputSetRefs
     } = val
 
@@ -911,7 +916,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
             description,
             tags,
             inputYaml,
-            pipelineBranchName = DEFAULT_TRIGGER_BRANCH,
+            pipelineBranchName = getDefaultPipelineReferenceBranch(TriggerTypes.WEBHOOK),
             inputSetRefs = [],
             source: {
               spec: {
@@ -1051,7 +1056,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
             description,
             tags,
             inputYaml,
-            pipelineBranchName = DEFAULT_TRIGGER_BRANCH,
+            pipelineBranchName = getDefaultPipelineReferenceBranch(),
             inputSetRefs = [],
             source: {
               spec: {
@@ -1123,7 +1128,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
           description,
           tags,
           inputYaml,
-          pipelineBranchName = DEFAULT_TRIGGER_BRANCH,
+          pipelineBranchName = getDefaultPipelineReferenceBranch(),
           inputSetRefs = [],
           source: {
             spec: {
@@ -1192,7 +1197,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
           description,
           tags,
           inputYaml,
-          pipelineBranchName = DEFAULT_TRIGGER_BRANCH,
+          pipelineBranchName = getDefaultPipelineReferenceBranch(),
           inputSetRefs = [],
           source: { type },
           source
@@ -1298,7 +1303,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       pipeline: pipelineRuntimeInput,
       triggerType: formikValueTriggerType,
       expression,
-      pipelineBranchName = DEFAULT_TRIGGER_BRANCH,
+      pipelineBranchName = getDefaultPipelineReferenceBranch(),
       inputSetRefs
     } = val
 
@@ -1330,18 +1335,22 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     })
   }
 
+  const [pipelineBranchNameError, setPipelineBranchNameError] = useState('')
   const [formErrors, setFormErrors] = useState<FormikErrors<FlatValidFormikValuesInterface>>({})
   const formikRef = useRef<FormikProps<any>>()
 
   // Fix https://harness.atlassian.net/browse/CI-3411
   useEffect(() => {
     if (Object.keys(formErrors || {}).length > 0) {
-      Object.entries(flattenKeys(formErrors)).forEach(([fieldName, fieldError]) => {
+      Object.entries({
+        ...flattenKeys(formErrors),
+        ...(pipelineBranchNameError ? { pipelineBranchName: pipelineBranchNameError } : {})
+      }).forEach(([fieldName, fieldError]) => {
         formikRef?.current?.setFieldTouched(fieldName, true, true)
         setTimeout(() => formikRef?.current?.setFieldError(fieldName, fieldError), 0)
       })
     }
-  }, [formErrors, formikRef])
+  }, [formErrors, formikRef, pipelineBranchNameError])
 
   const yamlTemplate = useMemo(() => {
     return parse(defaultTo(template?.data?.inputSetTemplateYaml, ''))?.pipeline
@@ -1545,7 +1554,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         resolvedPipeline,
         anyAction: false,
         autoAbortPreviousExecutions: false,
-        pipelineBranchName: DEFAULT_TRIGGER_BRANCH
+        pipelineBranchName: getDefaultPipelineReferenceBranch(triggerType)
       }
     } else if (triggerType === TriggerTypes.SCHEDULE) {
       return {
@@ -1556,7 +1565,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         pipeline: newPipeline,
         originalPipeline,
         resolvedPipeline,
-        pipelineBranchName: DEFAULT_TRIGGER_BRANCH,
+        pipelineBranchName: getDefaultPipelineReferenceBranch(triggerType),
         ...getDefaultExpressionBreakdownValues(scheduleTabsId.MINUTES)
       }
     } else if (isArtifactOrManifestTrigger(triggerType)) {
@@ -1572,7 +1581,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         originalPipeline,
         resolvedPipeline,
         inputSetTemplateYamlObj,
-        pipelineBranchName: DEFAULT_TRIGGER_BRANCH,
+        pipelineBranchName: getDefaultPipelineReferenceBranch(triggerTypeOnNew),
         selectedArtifact: {}
       }
     }
@@ -1894,6 +1903,17 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     latestYaml?: any // validate from YAML view
   }): Promise<FormikErrors<FlatValidWebhookFormikValuesInterface>> => {
     if (!formikProps) return {}
+    setPipelineBranchNameError('')
+
+    // Custom validation when pipeline Reference Branch Name is an expression for non-webhook triggers
+    if (gitAwareForTriggerEnabled && formikProps?.values?.triggerType !== TriggerTypes.WEBHOOK) {
+      const pipelineBranchName = (formikProps?.values?.pipelineBranchName || '').trim()
+
+      if (pipelineBranchName.startsWith('<+') && pipelineBranchName.endsWith('>')) {
+        setPipelineBranchNameError(getString('triggers.branchNameCantBeExpression'))
+      }
+    }
+
     const { values, setErrors, setSubmitting } = formikProps
     let latestPipelineFromYamlView
     const latestPipeline = {
@@ -2017,6 +2037,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         }}
         renderErrorsStrip={renderErrorsStrip}
         leftNav={titleWithSwitch}
+        onFormikEffect={onFormikEffect}
       >
         <ArtifactTriggerConfigPanel />
         <ArtifactConditionsPanel />
@@ -2064,6 +2085,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
           loading: loadingYamlSchema
         }}
         renderErrorsStrip={renderErrorsStrip}
+        onFormikEffect={onFormikEffect}
       >
         <TriggerOverviewPanel />
         <SchedulePanel />
@@ -2113,6 +2135,10 @@ function flattenKeys(object: any = {}, initialPathPrefix = 'pipeline'): Record<s
   return Object.keys(object)
     .flatMap(key => flattenKeys(object[key], Array.isArray(object) ? `${prefix}[${key}]` : `${prefix}${key}`))
     .reduce((acc, path) => ({ ...acc, ...path }), {})
+}
+
+function getDefaultPipelineReferenceBranch(triggerType = ''): string {
+  return triggerType === TriggerTypes.WEBHOOK ? DEFAULT_TRIGGER_BRANCH : ''
 }
 
 export default TriggersWizardPage

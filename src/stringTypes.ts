@@ -3414,6 +3414,7 @@ export interface StringsMap {
   'triggers.activityActivation': string
   'triggers.activityDays': string
   'triggers.addNewTrigger': string
+  'triggers.branchNameCantBeExpression': string
   'triggers.cannotParseInputValues': string
   'triggers.cannotParseInputYaml': string
   'triggers.cannotParseTriggersData': string

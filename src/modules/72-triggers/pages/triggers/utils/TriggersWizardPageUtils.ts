@@ -1926,7 +1926,11 @@ export function getTriggerInputSetsBranchQueryParameter({
   pipelineBranchName?: string
   branch?: string
 }): string {
-  return gitAwareForTriggerEnabled ? (pipelineBranchName === DEFAULT_TRIGGER_BRANCH ? '' : pipelineBranchName) : branch
+  return gitAwareForTriggerEnabled
+    ? pipelineBranchName === DEFAULT_TRIGGER_BRANCH
+      ? branch
+      : pipelineBranchName
+    : branch
 }
 
 export const UPDATING_INVALID_TRIGGER_IN_GIT =
