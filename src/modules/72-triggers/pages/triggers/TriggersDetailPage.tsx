@@ -21,7 +21,7 @@ import {
 import { Color } from '@harness/design-system'
 import React, { ReactNode, useMemo } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { isEmpty, get } from 'lodash-es'
+import { isEmpty, get, pickBy } from 'lodash-es'
 import { parse } from 'yaml'
 import type { MutateMethod } from 'restful-react'
 import { Page, useToaster } from '@common/exports'
@@ -384,10 +384,15 @@ export default function TriggersDetailPage(): JSX.Element {
 
   let pipelineInputSet
   if (gitAwareForTriggerEnabled) {
-    pipelineInputSet = yamlStringify({
-      pipelineBranchName: get(triggerObj, 'pipelineBranchName') ?? '',
-      inputSetRefs: get(triggerObj, 'inputSetRefs') ?? []
-    })
+    pipelineInputSet = yamlStringify(
+      pickBy(
+        {
+          pipelineBranchName: get(triggerObj, 'pipelineBranchName'),
+          inputSetRefs: get(triggerObj, 'inputSetRefs')
+        },
+        key => key !== undefined
+      )
+    )
   } else {
     pipelineInputSet = triggerObj?.inputYaml || ''
   }

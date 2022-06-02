@@ -390,13 +390,17 @@ function WebhookPipelineInputPanelForm({
     resolvedPipeline
   ])
 
+  const showPipelineInputSetForm = useMemo(() => {
+    return !isEmpty(pipeline) && template?.data?.inputSetTemplateYaml
+  }, [pipeline, template?.data?.inputSetTemplateYaml])
+
   return (
     <Layout.Vertical className={css.webhookPipelineInputContainer} spacing="large" padding="none">
       {loading || mergingInputSets ? (
         <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
           <PageSpinner />
         </div>
-      ) : !isEmpty(pipeline) && template?.data?.inputSetTemplateYaml ? (
+      ) : template?.data?.inputSetTemplateYaml || gitAwareForTriggerEnabled ? (
         <div className={css.inputsetGrid}>
           <div className={css.inputSetContent}>
             <div className={css.pipelineInputRow}>
@@ -404,28 +408,30 @@ function WebhookPipelineInputPanelForm({
                 {getString('triggers.pipelineInputLabel')}
                 <HarnessDocTooltip tooltipId="pipelineInputLabel" useStandAlone={true} />
               </Text>
-              <GitSyncStoreProvider>
-                <InputSetSelector
-                  pipelineIdentifier={pipelineIdentifier}
-                  onChange={value => {
-                    setSelectedInputSets(value)
-                    if (gitAwareForTriggerEnabled) {
-                      formikProps.setValues({
-                        ...formikProps.values,
-                        inputSetRefs: (value || []).map(v => v.value)
-                      })
-                    }
-                  }}
-                  value={selectedInputSets}
-                  selectedValueClass={css.inputSetSelectedValue}
-                  selectedRepo={repoIdentifier}
-                  selectedBranch={getTriggerInputSetsBranchQueryParameter({
-                    gitAwareForTriggerEnabled,
-                    pipelineBranchName: formikProps?.values?.pipelineBranchName,
-                    branch
-                  })}
-                />
-              </GitSyncStoreProvider>
+              {showPipelineInputSetForm ? (
+                <GitSyncStoreProvider>
+                  <InputSetSelector
+                    pipelineIdentifier={pipelineIdentifier}
+                    onChange={value => {
+                      setSelectedInputSets(value)
+                      if (gitAwareForTriggerEnabled) {
+                        formikProps.setValues({
+                          ...formikProps.values,
+                          inputSetRefs: (value || []).map(v => v.value)
+                        })
+                      }
+                    }}
+                    value={selectedInputSets}
+                    selectedValueClass={css.inputSetSelectedValue}
+                    selectedRepo={repoIdentifier}
+                    selectedBranch={getTriggerInputSetsBranchQueryParameter({
+                      gitAwareForTriggerEnabled,
+                      pipelineBranchName: formikProps?.values?.pipelineBranchName,
+                      branch
+                    })}
+                  />
+                </GitSyncStoreProvider>
+              ) : null}
               <div className={css.divider} />
             </div>
             {gitAwareForTriggerEnabled && (
@@ -445,19 +451,21 @@ function WebhookPipelineInputPanelForm({
                 <div className={css.divider} />
               </Container>
             )}
-            <PipelineInputSetForm
-              originalPipeline={resolvedPipeline}
-              template={defaultTo(
-                memoizedParse<Pipeline>(template?.data?.inputSetTemplateYaml)?.pipeline,
-                {} as PipelineInfoConfig
-              )}
-              path="pipeline"
-              viewType={StepViewType.InputSet}
-              maybeContainerClass={css.pipelineInputSetForm}
-              viewTypeMetadata={{ isTrigger: true }}
-              readonly={gitAwareForTriggerEnabled}
-              gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
-            />
+            {showPipelineInputSetForm && template?.data?.inputSetTemplateYaml ? (
+              <PipelineInputSetForm
+                originalPipeline={resolvedPipeline}
+                template={defaultTo(
+                  memoizedParse<Pipeline>(template?.data?.inputSetTemplateYaml)?.pipeline,
+                  {} as PipelineInfoConfig
+                )}
+                path="pipeline"
+                viewType={StepViewType.InputSet}
+                maybeContainerClass={css.pipelineInputSetForm}
+                viewTypeMetadata={{ isTrigger: true }}
+                readonly={gitAwareForTriggerEnabled}
+                gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
+              />
+            ) : null}
           </div>
         </div>
       ) : (

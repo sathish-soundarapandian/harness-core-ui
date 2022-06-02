@@ -297,7 +297,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
           />
         </>
       )}
-      {(isCloneCodebaseEnabledAtLeastAtOneStage || codebaseHasRuntimeInputs || gitAwareForTriggerEnabled) &&
+      {(isCloneCodebaseEnabledAtLeastAtOneStage || codebaseHasRuntimeInputs) &&
         getMultiTypeFromValue(finalTemplate?.properties?.ci?.codebase?.build as unknown as string) ===
           MultiTypeInputType.RUNTIME && (
           <>
