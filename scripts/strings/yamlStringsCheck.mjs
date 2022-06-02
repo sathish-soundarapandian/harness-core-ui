@@ -61,10 +61,7 @@ function validateReferences(str, path, restricedModules = [], isOld) {
 
 function validateStrings(data, parentPath = [], restricedModules = [], isOld) {
   if (!data) {
-    errors.push([
-      chalk.red('error'),
-      `No data found for path ${parentPath.join('.')}`
-    ])
+    errors.push([chalk.red('error'), `No data found for path ${parentPath.join('.')}`])
     return
   }
   Object.entries(data).forEach(([key, value]) => {

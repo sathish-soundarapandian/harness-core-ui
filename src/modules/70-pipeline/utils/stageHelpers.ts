@@ -44,11 +44,12 @@ export enum ServiceDeploymentType {
   amazonEcs = 'amazonEcs',
   amazonAmi = 'amazonAmi',
   awsCodeDeploy = 'awsCodeDeploy',
-  winrm = 'winrm',
+  WinRm = 'WinRm',
   awsLambda = 'awsLambda',
   pcf = 'pcf',
-  ssh = 'Ssh',
   Pdc = 'Pdc',
+  ssh = 'ssh',
+  Ssh = 'Ssh',
   ServerlessAwsLambda = 'ServerlessAwsLambda',
   ServerlessAzureFunctions = 'ServerlessAzureFunctions',
   ServerlessGoogleFunctions = 'ServerlessGoogleFunctions',
@@ -215,7 +216,7 @@ export const isServerlessDeploymentType = (deploymentType: string): boolean => {
     deploymentType === ServiceDeploymentType.ServerlessGoogleFunctions ||
     deploymentType === ServiceDeploymentType.AmazonSAM ||
     deploymentType === ServiceDeploymentType.AzureFunctions ||
-    deploymentType === ServiceDeploymentType.ssh
+    deploymentType === ServiceDeploymentType.Ssh
   )
 }
 
@@ -352,7 +353,12 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
   if (isServerlessDeploymentType(deploymentType)) {
     return StepType.ServerlessAwsLambda
   }
-  return StepType.K8sServiceSpec
+  switch (deploymentType) {
+    case 'Ssh':
+      return StepType.SshServiceSpec
+    default:
+      return StepType.K8sServiceSpec
+  }
 }
 export const STATIC_SERVICE_GROUP_NAME = 'static_service_group'
 export const getDefaultBuildDependencies = (serviceDependencies: DependencyElement[]): PipelineGraphState => ({
@@ -370,3 +376,11 @@ export const getDefaultBuildDependencies = (serviceDependencies: DependencyEleme
     steps: serviceDependencies.length ? [{ parallel: serviceDependencies.map(d => ({ step: d })) }] : []
   }
 })
+
+export const isSshOrWinrmDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.Ssh || deploymentType === ServiceDeploymentType.WinRm
+}
+
+export const withoutSideCar = (deploymentType: string): boolean => {
+  return isServerlessDeploymentType(deploymentType) || isSshOrWinrmDeploymentType(deploymentType)
+}

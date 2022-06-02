@@ -69,5 +69,6 @@ export enum StepType {
   ServerlessAwsInfra = 'ServerlessAwsInfra',
   CloudFormationRollbackStack = 'RollbackStack',
   CloudFormationDeleteStack = 'DeleteStack',
-  CloudFormationCreateStack = 'CreateStack'
+  CloudFormationCreateStack = 'CreateStack',
+  SshServiceSpec = 'SshServiceSpec'
 }

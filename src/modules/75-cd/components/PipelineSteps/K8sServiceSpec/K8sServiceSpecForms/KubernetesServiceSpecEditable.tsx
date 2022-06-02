@@ -10,6 +10,7 @@ import { Card, HarnessDocTooltip } from '@wings-software/uicore'
 import cx from 'classnames'
 import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/WorkflowVariables'
 import ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ArtifactsSelection'
+import ConfigFilesSelection from '@pipeline/components/ConfigFilesSelection/ConfigFilesSelection'
 import ManifestSelection from '@pipeline/components/ManifestSelection/ManifestSelection'
 import { getSelectedDeploymentType, isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
 import { useStrings } from 'framework/strings'
@@ -57,24 +58,29 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
     <div className={css.serviceDefinition}>
       {!!selectedDeploymentType && (
         <>
-          <Card
-            className={css.sectionCard}
-            id={getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')}
-          >
-            <div
-              className={cx(css.tabSubHeading, 'ng-tooltip-native')}
-              data-tooltip-id={getManifestsHeaderTooltipId(selectedDeploymentType)}
+          {selectedDeploymentType !== 'Ssh' && (
+            <Card
+              className={css.sectionCard}
+              id={getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')}
             >
-              {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')}
-              <HarnessDocTooltip tooltipId={getManifestsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
-            </div>
+              <div
+                className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+                data-tooltip-id={getManifestsHeaderTooltipId(selectedDeploymentType)}
+              >
+                {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')}
+                <HarnessDocTooltip
+                  tooltipId={getManifestsHeaderTooltipId(selectedDeploymentType)}
+                  useStandAlone={true}
+                />
+              </div>
 
-            <ManifestSelection
-              isPropagating={isPropagating}
-              deploymentType={selectedDeploymentType}
-              readonly={!!readonly}
-            />
-          </Card>
+              <ManifestSelection
+                readonly={!!readonly}
+                isPropagating={isPropagating}
+                deploymentType={selectedDeploymentType}
+              />
+            </Card>
+          )}
 
           <Card
             className={css.sectionCard}
@@ -93,6 +99,21 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
               readonly={!!readonly}
             />
           </Card>
+          {selectedDeploymentType === 'Ssh' && (
+            <Card className={css.sectionCard} id={getString('pipelineSteps.configFiles')}>
+              <div
+                className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+                data-tooltip-id={getArtifactsHeaderTooltipId(selectedDeploymentType)}
+              >
+                {getString('pipelineSteps.configFiles')}
+                <HarnessDocTooltip
+                  tooltipId={getArtifactsHeaderTooltipId(selectedDeploymentType)}
+                  useStandAlone={true}
+                />
+              </div>
+              <ConfigFilesSelection isPropagating={isPropagating} deploymentType={selectedDeploymentType} />
+            </Card>
+          )}
         </>
       )}
 

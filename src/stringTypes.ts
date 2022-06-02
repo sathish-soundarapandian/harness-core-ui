@@ -2617,6 +2617,9 @@ export interface StringsMap {
   'pipeline.conditionalExecution.toolTip.resolvedVariables': string
   'pipeline.conditionalExecution.toolTip.stageTitle': string
   'pipeline.conditionalExecution.toolTip.stepTitle': string
+  'pipeline.configFiles.details': string
+  'pipeline.configFiles.source': string
+  'pipeline.configFiles.title': string
   'pipeline.copyTemplate': string
   'pipeline.createANewPipeline': string
   'pipeline.createPipeline.choosePipelineSetupHeader': string
@@ -8705,6 +8708,10 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   'pipelineSteps.serviceTab.artifactList.addSidecar': string
+  /**
+   * @deprecated migrate this string to module level file
+   */
+  'pipelineSteps.serviceTab.configFileList.addConfigFile': string
   /**
    * @deprecated migrate this string to module level file
    */
