@@ -89,6 +89,17 @@ export class ServiceNowUpdate extends PipelineStep<ServiceNowUpdateData> {
         ticketType: getString?.('pipeline.serviceNowApprovalStep.validations.ticketType')
       }
     }
+    if (
+      typeof template?.spec?.ticketNumber === 'string' &&
+      isRequired &&
+      getMultiTypeFromValue(template?.spec?.ticketNumber) === MultiTypeInputType.RUNTIME &&
+      isEmpty(data?.spec?.ticketNumber)
+    ) {
+      errors.spec = {
+        ...errors.spec,
+        ticketNumber: getString?.('pipeline.serviceNowApprovalStep.validations.issueNumber')
+      }
+    }
 
     if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {
       let timeoutSchema = getDurationValidationSchema({ minimum: '10s' })
