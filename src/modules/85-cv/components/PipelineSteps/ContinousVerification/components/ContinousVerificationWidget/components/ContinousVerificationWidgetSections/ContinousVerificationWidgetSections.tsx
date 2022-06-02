@@ -11,6 +11,7 @@ import type { ContinousVerificationWidgetSectionsProps } from './types'
 import SelectVerificationType from './components/SelectVerificationType/SelectVerificationType'
 import ConfigureFields from './components/ConfigureFields/ConfigureFields'
 import MonitoredService from './components/MonitoredService/MonitoredService'
+import SelectMonitoredServiceType from './components/SelectMonitoredServiceType/SelectMonitoredServiceType'
 
 export function ContinousVerificationWidgetSections({
   formik,
@@ -27,6 +28,7 @@ export function ContinousVerificationWidgetSections({
         allowableTypes={allowableTypes}
       />
       <SelectVerificationType />
+      <SelectMonitoredServiceType />
       <MonitoredService formik={formik} />
       {formik?.values?.spec?.type ? <ConfigureFields formik={formik} allowableTypes={allowableTypes} /> : null}
     </>

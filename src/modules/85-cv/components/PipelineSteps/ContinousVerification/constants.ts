@@ -9,6 +9,7 @@ import type { SelectOption } from '@wings-software/uicore'
 import { ErrorType, Strategy } from '@pipeline/utils/FailureStrategyUtils'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { ContinousVerificationData } from './types'
+import { MONITORED_SERVICE_TYPES } from './components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/constants'
 
 export enum JobTypes {
   BLUE_GREEN = 'Bluegreen',
@@ -64,6 +65,9 @@ export const cvDefaultValues: ContinousVerificationData = {
       baseline: '',
       trafficsplit: '',
       deploymentTag: ''
+    },
+    monitoredService: {
+      type: MONITORED_SERVICE_TYPES.DEFAULT
     }
   },
   failureStrategies: [

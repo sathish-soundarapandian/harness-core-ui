@@ -10,10 +10,10 @@ import { FormInput, SelectOption } from '@wings-software/uicore'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import Card from '@cv/components/Card/Card'
-import { continousVerificationTypes, monitoredServiceTypes } from './constants'
+import { monitoredServiceTypes } from './constants'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-export default function SelectVerificationType(): React.ReactElement {
+export default function SelectMonitoredServiceType(): React.ReactElement {
   const { getString } = useStrings()
   return (
     <>
@@ -21,9 +21,9 @@ export default function SelectVerificationType(): React.ReactElement {
         <>
           <div className={cx(stepCss.formGroup)}>
             <FormInput.Select
-              name="spec.type"
-              label={getString('connectors.cdng.continousVerificationType')}
-              items={continousVerificationTypes as SelectOption[]}
+              name="spec.monitoredService.type"
+              label={'Monitored Service Type'}
+              items={monitoredServiceTypes as SelectOption[]}
             />
           </div>
         </>
