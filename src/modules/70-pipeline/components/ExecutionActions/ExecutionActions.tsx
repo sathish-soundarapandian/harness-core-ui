@@ -147,6 +147,8 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
     module,
     branch,
     repoIdentifier,
+    connectorRef,
+    repoName,
     stagesExecuted,
     storeType
   } = params
@@ -274,7 +276,7 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
   const { openRunPipelineModal } = useRunPipelineModal({
     pipelineIdentifier,
     executionId: executionIdentifier,
-    repoIdentifier,
+    repoIdentifier: defaultTo(repoIdentifier, repoName),
     branch,
     stagesExecuted,
     storeType
@@ -350,7 +352,10 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
                   accountId,
                   module,
                   branch,
-                  repoIdentifier
+                  repoIdentifier,
+                  connectorRef,
+                  repoName,
+                  storeType
                 })}
                 onClick={e => !canEdit && e.preventDefault()}
               >

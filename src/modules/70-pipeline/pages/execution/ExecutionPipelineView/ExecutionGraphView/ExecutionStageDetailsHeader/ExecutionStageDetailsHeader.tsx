@@ -134,14 +134,11 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
                 accountId,
                 executionIdentifier,
                 module,
-                repoIdentifier: defaultTo(
-                  pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.repoIdentifier,
-                  pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.repoName
-                ),
+                repoIdentifier: pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.repoIdentifier,
+                connectorRef: pipelineExecutionDetail?.pipelineExecutionSummary?.connectorRef,
+                repoName: pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.repoName,
                 branch: pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.branch,
-                storeType: pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.repoName
-                  ? StoreType.REMOTE
-                  : StoreType.INLINE
+                storeType: pipelineExecutionDetail?.pipelineExecutionSummary?.storeType as StoreType
               }}
               noMenu
               stageName={stageNode?.name}

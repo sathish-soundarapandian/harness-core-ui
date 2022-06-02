@@ -1035,7 +1035,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
           errorMap: errorMap,
           parentPath: `${stagePath}.stage.spec.execution.steps`
         })
-  }, [stage, state?.isRollback])
+  }, [stage, state?.isRollback, templateTypes])
 
   return (
     <div

@@ -1988,6 +1988,7 @@ export interface PipelineExecutionInfo {
 export interface PipelineExecutionSummary {
   allowStageExecutions?: boolean
   canRetry?: boolean
+  connectorRef?: string
   createdAt?: number
   endTs?: number
   executionErrorInfo?: ExecutionErrorInfo
@@ -2046,6 +2047,7 @@ export interface PipelineExecutionSummary {
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
     | 'Waiting'
+  storeType?: 'INLINE' | 'REMOTE'
   successfulStagesCount?: number
   tags?: NGTag[]
   totalStagesCount?: number
@@ -2270,6 +2272,7 @@ export interface ResourceDTO {
     | 'GOVERNANCE_POLICY_SET'
     | 'VARIABLE'
     | 'CHAOS_HUB'
+    | 'MONITORED_SERVICE'
     | 'CHAOS_AGENT'
 }
 
@@ -3272,10 +3275,13 @@ export interface SourceIdentifierConfig {
 }
 
 export interface StackTraceElement {
+  classLoaderName?: string
   className?: string
   fileName?: string
   lineNumber?: number
   methodName?: string
+  moduleName?: string
+  moduleVersion?: string
   nativeMethod?: boolean
 }
 
@@ -3648,7 +3654,7 @@ export type NGTriggerConfigV2RequestBody = NGTriggerConfigV2
 
 export type RunStageRequestDTORequestBody = RunStageRequestDTO
 
-export type UpdateInputSetForPipelineBodyRequestBody = string
+export type CreateOverlayInputSetForPipelineBodyRequestBody = string
 
 export type WebhookEndpointBodyRequestBody = string
 
@@ -4611,7 +4617,7 @@ export type CreateInputSetForPipelineProps = Omit<
     ResponseInputSetResponse,
     Failure | Error,
     CreateInputSetForPipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -4625,7 +4631,7 @@ export const CreateInputSetForPipeline = (props: CreateInputSetForPipelineProps)
     ResponseInputSetResponse,
     Failure | Error,
     CreateInputSetForPipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >
     verb="POST"
@@ -4640,7 +4646,7 @@ export type UseCreateInputSetForPipelineProps = Omit<
     ResponseInputSetResponse,
     Failure | Error,
     CreateInputSetForPipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -4654,7 +4660,7 @@ export const useCreateInputSetForPipeline = (props: UseCreateInputSetForPipeline
     ResponseInputSetResponse,
     Failure | Error,
     CreateInputSetForPipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >('POST', `/inputSets`, { base: getConfig('pipeline/api'), ...props })
 
@@ -4666,7 +4672,7 @@ export const createInputSetForPipelinePromise = (
     ResponseInputSetResponse,
     Failure | Error,
     CreateInputSetForPipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -4675,7 +4681,7 @@ export const createInputSetForPipelinePromise = (
     ResponseInputSetResponse,
     Failure | Error,
     CreateInputSetForPipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/inputSets`, props, signal)
 
@@ -4875,7 +4881,7 @@ export type CreateOverlayInputSetForPipelineProps = Omit<
     ResponseOverlayInputSetResponse,
     Failure | Error,
     CreateOverlayInputSetForPipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -4889,7 +4895,7 @@ export const CreateOverlayInputSetForPipeline = (props: CreateOverlayInputSetFor
     ResponseOverlayInputSetResponse,
     Failure | Error,
     CreateOverlayInputSetForPipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >
     verb="POST"
@@ -4904,7 +4910,7 @@ export type UseCreateOverlayInputSetForPipelineProps = Omit<
     ResponseOverlayInputSetResponse,
     Failure | Error,
     CreateOverlayInputSetForPipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -4918,7 +4924,7 @@ export const useCreateOverlayInputSetForPipeline = (props: UseCreateOverlayInput
     ResponseOverlayInputSetResponse,
     Failure | Error,
     CreateOverlayInputSetForPipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >('POST', `/inputSets/overlay`, { base: getConfig('pipeline/api'), ...props })
 
@@ -4930,7 +4936,7 @@ export const createOverlayInputSetForPipelinePromise = (
     ResponseOverlayInputSetResponse,
     Failure | Error,
     CreateOverlayInputSetForPipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -4939,7 +4945,7 @@ export const createOverlayInputSetForPipelinePromise = (
     ResponseOverlayInputSetResponse,
     Failure | Error,
     CreateOverlayInputSetForPipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/inputSets/overlay`, props, signal)
 
@@ -5401,7 +5407,7 @@ export type UpdateInputSetForPipelineProps = Omit<
     ResponseInputSetResponse,
     Failure | Error,
     UpdateInputSetForPipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     UpdateInputSetForPipelinePathParams
   >,
   'path' | 'verb'
@@ -5416,7 +5422,7 @@ export const UpdateInputSetForPipeline = ({ inputSetIdentifier, ...props }: Upda
     ResponseInputSetResponse,
     Failure | Error,
     UpdateInputSetForPipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     UpdateInputSetForPipelinePathParams
   >
     verb="PUT"
@@ -5431,7 +5437,7 @@ export type UseUpdateInputSetForPipelineProps = Omit<
     ResponseInputSetResponse,
     Failure | Error,
     UpdateInputSetForPipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     UpdateInputSetForPipelinePathParams
   >,
   'path' | 'verb'
@@ -5446,7 +5452,7 @@ export const useUpdateInputSetForPipeline = ({ inputSetIdentifier, ...props }: U
     ResponseInputSetResponse,
     Failure | Error,
     UpdateInputSetForPipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     UpdateInputSetForPipelinePathParams
   >('PUT', (paramsInPath: UpdateInputSetForPipelinePathParams) => `/inputSets/${paramsInPath.inputSetIdentifier}`, {
     base: getConfig('pipeline/api'),
@@ -5465,7 +5471,7 @@ export const updateInputSetForPipelinePromise = (
     ResponseInputSetResponse,
     Failure | Error,
     UpdateInputSetForPipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     UpdateInputSetForPipelinePathParams
   > & { inputSetIdentifier: string },
   signal?: RequestInit['signal']
@@ -5474,7 +5480,7 @@ export const updateInputSetForPipelinePromise = (
     ResponseInputSetResponse,
     Failure | Error,
     UpdateInputSetForPipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     UpdateInputSetForPipelinePathParams
   >('PUT', getConfig('pipeline/api'), `/inputSets/${inputSetIdentifier}`, props, signal)
 
@@ -5507,7 +5513,7 @@ export type SanitiseInputSetProps = Omit<
     ResponseInputSetSanitiseResponse,
     Failure | Error,
     SanitiseInputSetQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     SanitiseInputSetPathParams
   >,
   'path' | 'verb'
@@ -5522,7 +5528,7 @@ export const SanitiseInputSet = ({ inputSetIdentifier, ...props }: SanitiseInput
     ResponseInputSetSanitiseResponse,
     Failure | Error,
     SanitiseInputSetQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     SanitiseInputSetPathParams
   >
     verb="POST"
@@ -5537,7 +5543,7 @@ export type UseSanitiseInputSetProps = Omit<
     ResponseInputSetSanitiseResponse,
     Failure | Error,
     SanitiseInputSetQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     SanitiseInputSetPathParams
   >,
   'path' | 'verb'
@@ -5552,7 +5558,7 @@ export const useSanitiseInputSet = ({ inputSetIdentifier, ...props }: UseSanitis
     ResponseInputSetSanitiseResponse,
     Failure | Error,
     SanitiseInputSetQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     SanitiseInputSetPathParams
   >('POST', (paramsInPath: SanitiseInputSetPathParams) => `/inputSets/${paramsInPath.inputSetIdentifier}/sanitise`, {
     base: getConfig('pipeline/api'),
@@ -5571,7 +5577,7 @@ export const sanitiseInputSetPromise = (
     ResponseInputSetSanitiseResponse,
     Failure | Error,
     SanitiseInputSetQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     SanitiseInputSetPathParams
   > & { inputSetIdentifier: string },
   signal?: RequestInit['signal']
@@ -5580,7 +5586,7 @@ export const sanitiseInputSetPromise = (
     ResponseInputSetSanitiseResponse,
     Failure | Error,
     SanitiseInputSetQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     SanitiseInputSetPathParams
   >('POST', getConfig('pipeline/api'), `/inputSets/${inputSetIdentifier}/sanitise`, props, signal)
 
@@ -7638,7 +7644,7 @@ export type SubmitExecutionInputProps = Omit<
     ResponseExecutionInputStatus,
     Failure | Error,
     SubmitExecutionInputQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     SubmitExecutionInputPathParams
   >,
   'path' | 'verb'
@@ -7653,7 +7659,7 @@ export const SubmitExecutionInput = ({ nodeExecutionId, ...props }: SubmitExecut
     ResponseExecutionInputStatus,
     Failure | Error,
     SubmitExecutionInputQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     SubmitExecutionInputPathParams
   >
     verb="POST"
@@ -7668,7 +7674,7 @@ export type UseSubmitExecutionInputProps = Omit<
     ResponseExecutionInputStatus,
     Failure | Error,
     SubmitExecutionInputQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     SubmitExecutionInputPathParams
   >,
   'path' | 'verb'
@@ -7683,7 +7689,7 @@ export const useSubmitExecutionInput = ({ nodeExecutionId, ...props }: UseSubmit
     ResponseExecutionInputStatus,
     Failure | Error,
     SubmitExecutionInputQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     SubmitExecutionInputPathParams
   >(
     'POST',
@@ -7702,7 +7708,7 @@ export const submitExecutionInputPromise = (
     ResponseExecutionInputStatus,
     Failure | Error,
     SubmitExecutionInputQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     SubmitExecutionInputPathParams
   > & { nodeExecutionId: string },
   signal?: RequestInit['signal']
@@ -7711,7 +7717,7 @@ export const submitExecutionInputPromise = (
     ResponseExecutionInputStatus,
     Failure | Error,
     SubmitExecutionInputQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     SubmitExecutionInputPathParams
   >('POST', getConfig('pipeline/api'), `/pipeline/execution-input/${nodeExecutionId}`, props, signal)
 
@@ -7739,7 +7745,7 @@ export type CreatePipelineProps = Omit<
     ResponseString,
     Failure | Error,
     CreatePipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -7749,7 +7755,13 @@ export type CreatePipelineProps = Omit<
  * Create a Pipeline
  */
 export const CreatePipeline = (props: CreatePipelineProps) => (
-  <Mutate<ResponseString, Failure | Error, CreatePipelineQueryParams, UpdateInputSetForPipelineBodyRequestBody, void>
+  <Mutate<
+    ResponseString,
+    Failure | Error,
+    CreatePipelineQueryParams,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
+    void
+  >
     verb="POST"
     path={`/pipelines`}
     base={getConfig('pipeline/api')}
@@ -7762,7 +7774,7 @@ export type UseCreatePipelineProps = Omit<
     ResponseString,
     Failure | Error,
     CreatePipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -7772,11 +7784,13 @@ export type UseCreatePipelineProps = Omit<
  * Create a Pipeline
  */
 export const useCreatePipeline = (props: UseCreatePipelineProps) =>
-  useMutate<ResponseString, Failure | Error, CreatePipelineQueryParams, UpdateInputSetForPipelineBodyRequestBody, void>(
-    'POST',
-    `/pipelines`,
-    { base: getConfig('pipeline/api'), ...props }
-  )
+  useMutate<
+    ResponseString,
+    Failure | Error,
+    CreatePipelineQueryParams,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
+    void
+  >('POST', `/pipelines`, { base: getConfig('pipeline/api'), ...props })
 
 /**
  * Create a Pipeline
@@ -7786,7 +7800,7 @@ export const createPipelinePromise = (
     ResponseString,
     Failure | Error,
     CreatePipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -7795,7 +7809,7 @@ export const createPipelinePromise = (
     ResponseString,
     Failure | Error,
     CreatePipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/pipelines`, props, signal)
 
@@ -9100,7 +9114,7 @@ export type CreatePipelineV2Props = Omit<
     ResponsePipelineSaveResponse,
     Failure | Error,
     CreatePipelineV2QueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -9114,7 +9128,7 @@ export const CreatePipelineV2 = (props: CreatePipelineV2Props) => (
     ResponsePipelineSaveResponse,
     Failure | Error,
     CreatePipelineV2QueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >
     verb="POST"
@@ -9129,7 +9143,7 @@ export type UseCreatePipelineV2Props = Omit<
     ResponsePipelineSaveResponse,
     Failure | Error,
     CreatePipelineV2QueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -9143,7 +9157,7 @@ export const useCreatePipelineV2 = (props: UseCreatePipelineV2Props) =>
     ResponsePipelineSaveResponse,
     Failure | Error,
     CreatePipelineV2QueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >('POST', `/pipelines/v2`, { base: getConfig('pipeline/api'), ...props })
 
@@ -9155,7 +9169,7 @@ export const createPipelineV2Promise = (
     ResponsePipelineSaveResponse,
     Failure | Error,
     CreatePipelineV2QueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -9164,7 +9178,7 @@ export const createPipelineV2Promise = (
     ResponsePipelineSaveResponse,
     Failure | Error,
     CreatePipelineV2QueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/pipelines/v2`, props, signal)
 
@@ -9315,7 +9329,7 @@ export type PutPipelineV2Props = Omit<
     ResponsePipelineSaveResponse,
     Failure | Error,
     PutPipelineV2QueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     PutPipelineV2PathParams
   >,
   'path' | 'verb'
@@ -9330,7 +9344,7 @@ export const PutPipelineV2 = ({ pipelineIdentifier, ...props }: PutPipelineV2Pro
     ResponsePipelineSaveResponse,
     Failure | Error,
     PutPipelineV2QueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     PutPipelineV2PathParams
   >
     verb="PUT"
@@ -9345,7 +9359,7 @@ export type UsePutPipelineV2Props = Omit<
     ResponsePipelineSaveResponse,
     Failure | Error,
     PutPipelineV2QueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     PutPipelineV2PathParams
   >,
   'path' | 'verb'
@@ -9360,7 +9374,7 @@ export const usePutPipelineV2 = ({ pipelineIdentifier, ...props }: UsePutPipelin
     ResponsePipelineSaveResponse,
     Failure | Error,
     PutPipelineV2QueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     PutPipelineV2PathParams
   >('PUT', (paramsInPath: PutPipelineV2PathParams) => `/pipelines/v2/${paramsInPath.pipelineIdentifier}`, {
     base: getConfig('pipeline/api'),
@@ -9379,7 +9393,7 @@ export const putPipelineV2Promise = (
     ResponsePipelineSaveResponse,
     Failure | Error,
     PutPipelineV2QueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     PutPipelineV2PathParams
   > & { pipelineIdentifier: string },
   signal?: RequestInit['signal']
@@ -9388,7 +9402,7 @@ export const putPipelineV2Promise = (
     ResponsePipelineSaveResponse,
     Failure | Error,
     PutPipelineV2QueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     PutPipelineV2PathParams
   >('PUT', getConfig('pipeline/api'), `/pipelines/v2/${pipelineIdentifier}`, props, signal)
 
@@ -9457,7 +9471,7 @@ export type ValidatePipelineByYAMLProps = Omit<
     ResponseString,
     Failure | Error,
     ValidatePipelineByYAMLQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -9471,7 +9485,7 @@ export const ValidatePipelineByYAML = (props: ValidatePipelineByYAMLProps) => (
     ResponseString,
     Failure | Error,
     ValidatePipelineByYAMLQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >
     verb="POST"
@@ -9486,7 +9500,7 @@ export type UseValidatePipelineByYAMLProps = Omit<
     ResponseString,
     Failure | Error,
     ValidatePipelineByYAMLQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -9500,7 +9514,7 @@ export const useValidatePipelineByYAML = (props: UseValidatePipelineByYAMLProps)
     ResponseString,
     Failure | Error,
     ValidatePipelineByYAMLQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >('POST', `/pipelines/validate-yaml-with-schema`, { base: getConfig('pipeline/api'), ...props })
 
@@ -9512,7 +9526,7 @@ export const validatePipelineByYAMLPromise = (
     ResponseString,
     Failure | Error,
     ValidatePipelineByYAMLQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -9521,7 +9535,7 @@ export const validatePipelineByYAMLPromise = (
     ResponseString,
     Failure | Error,
     ValidatePipelineByYAMLQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/pipelines/validate-yaml-with-schema`, props, signal)
 
@@ -9741,7 +9755,7 @@ export type PutPipelineProps = Omit<
     ResponseString,
     Failure | Error,
     PutPipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     PutPipelinePathParams
   >,
   'path' | 'verb'
@@ -9756,7 +9770,7 @@ export const PutPipeline = ({ pipelineIdentifier, ...props }: PutPipelineProps) 
     ResponseString,
     Failure | Error,
     PutPipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     PutPipelinePathParams
   >
     verb="PUT"
@@ -9771,7 +9785,7 @@ export type UsePutPipelineProps = Omit<
     ResponseString,
     Failure | Error,
     PutPipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     PutPipelinePathParams
   >,
   'path' | 'verb'
@@ -9786,7 +9800,7 @@ export const usePutPipeline = ({ pipelineIdentifier, ...props }: UsePutPipelineP
     ResponseString,
     Failure | Error,
     PutPipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     PutPipelinePathParams
   >('PUT', (paramsInPath: PutPipelinePathParams) => `/pipelines/${paramsInPath.pipelineIdentifier}`, {
     base: getConfig('pipeline/api'),
@@ -9805,7 +9819,7 @@ export const putPipelinePromise = (
     ResponseString,
     Failure | Error,
     PutPipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     PutPipelinePathParams
   > & { pipelineIdentifier: string },
   signal?: RequestInit['signal']
@@ -9814,7 +9828,7 @@ export const putPipelinePromise = (
     ResponseString,
     Failure | Error,
     PutPipelineQueryParams,
-    UpdateInputSetForPipelineBodyRequestBody,
+    CreateOverlayInputSetForPipelineBodyRequestBody,
     PutPipelinePathParams
   >('PUT', getConfig('pipeline/api'), `/pipelines/${pipelineIdentifier}`, props, signal)
 

@@ -432,7 +432,7 @@ export function PipelineCanvas({
       }
 
       if (updatedGitDetails) {
-        if (gitDetails?.objectId || gitDetails.commitId) {
+        if (gitDetails?.objectId || gitDetails?.commitId) {
           updatedGitDetails = { ...gitDetails, ...updatedGitDetails }
         }
         updateGitDetails(updatedGitDetails).then(() => {

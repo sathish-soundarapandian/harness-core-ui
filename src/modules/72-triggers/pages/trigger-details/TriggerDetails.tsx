@@ -17,6 +17,7 @@ import { useStrings } from 'framework/strings'
 import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
+import type { StoreType } from '@common/constants/GitSyncTypes'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import css from './TriggerDetails.module.scss'
 
@@ -34,7 +35,7 @@ export const TriggerBreadcrumbs = ({
       triggerIdentifier: string
     }>
   >()
-  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { repoIdentifier, branch, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
 
   const { getString } = useStrings()
 
@@ -58,7 +59,10 @@ export const TriggerBreadcrumbs = ({
             pipelineIdentifier,
             module,
             repoIdentifier,
-            branch
+            connectorRef,
+            repoName,
+            branch,
+            storeType
           }),
           label: pipelineResponse?.data?.name || ''
         }
@@ -92,7 +96,10 @@ const GetTriggerRightNav = (pipelineResponse: ResponsePMSPipelineSummaryResponse
               accountId,
               module,
               branch: pipelineResponse?.data?.gitDetails?.branch,
-              repoIdentifier: pipelineResponse?.data?.gitDetails?.repoIdentifier
+              repoIdentifier: pipelineResponse?.data?.gitDetails?.repoIdentifier,
+              connectorRef: pipelineResponse?.data?.connectorRef,
+              repoName: pipelineResponse?.data?.gitDetails?.repoName,
+              storeType: pipelineResponse?.data?.storeType as StoreType
             })
           },
           {
@@ -104,7 +111,10 @@ const GetTriggerRightNav = (pipelineResponse: ResponsePMSPipelineSummaryResponse
               accountId,
               module,
               branch: pipelineResponse?.data?.gitDetails?.branch,
-              repoIdentifier: pipelineResponse?.data?.gitDetails?.repoIdentifier
+              repoIdentifier: pipelineResponse?.data?.gitDetails?.repoIdentifier,
+              connectorRef: pipelineResponse?.data?.connectorRef,
+              repoName: pipelineResponse?.data?.gitDetails?.repoName,
+              storeType: pipelineResponse?.data?.storeType as StoreType
             })
           },
           {
@@ -116,7 +126,10 @@ const GetTriggerRightNav = (pipelineResponse: ResponsePMSPipelineSummaryResponse
               accountId,
               module,
               branch: pipelineResponse?.data?.gitDetails?.branch,
-              repoIdentifier: pipelineResponse?.data?.gitDetails?.repoIdentifier
+              repoIdentifier: pipelineResponse?.data?.gitDetails?.repoIdentifier,
+              connectorRef: pipelineResponse?.data?.connectorRef,
+              repoName: pipelineResponse?.data?.gitDetails?.repoName,
+              storeType: pipelineResponse?.data?.storeType as StoreType
             })
           },
           {
@@ -128,7 +141,10 @@ const GetTriggerRightNav = (pipelineResponse: ResponsePMSPipelineSummaryResponse
               accountId,
               module,
               branch: pipelineResponse?.data?.gitDetails?.branch,
-              repoIdentifier: pipelineResponse?.data?.gitDetails?.repoIdentifier
+              repoIdentifier: pipelineResponse?.data?.gitDetails?.repoIdentifier,
+              connectorRef: pipelineResponse?.data?.connectorRef,
+              repoName: pipelineResponse?.data?.gitDetails?.repoName,
+              storeType: pipelineResponse?.data?.storeType as StoreType
             })
           }
         ]}

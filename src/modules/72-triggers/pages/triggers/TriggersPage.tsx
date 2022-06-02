@@ -28,7 +28,7 @@ const TriggersPage: React.FC = (): React.ReactElement => {
     }>
   >()
   const history = useHistory()
-  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { repoIdentifier, branch, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
   const onNewTriggerClick = (val: TriggerDataInterface): void => {
     const { triggerType, sourceRepo, manifestType, artifactType } = val
     history.push(
@@ -44,7 +44,10 @@ const TriggersPage: React.FC = (): React.ReactElement => {
         artifactType,
         module,
         repoIdentifier,
-        branch
+        connectorRef,
+        repoName,
+        branch,
+        storeType
       })
     )
   }
