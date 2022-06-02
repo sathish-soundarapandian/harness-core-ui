@@ -136,7 +136,6 @@ export class ServiceNowUpdate extends PipelineStep<ServiceNowUpdateData> {
       )?.value
 
       if (
-        descriptionFieldIndex > -1 &&
         typeof description === 'string' &&
         isRequired &&
         getMultiTypeFromValue(description) === MultiTypeInputType.RUNTIME &&
@@ -148,7 +147,6 @@ export class ServiceNowUpdate extends PipelineStep<ServiceNowUpdateData> {
         }
       }
       if (
-        shortDescriptionFieldIndex > -1 &&
         typeof shortDescription === 'string' &&
         isRequired &&
         getMultiTypeFromValue(shortDescription) === MultiTypeInputType.RUNTIME &&
