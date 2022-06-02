@@ -320,6 +320,7 @@ export function PipelineCanvas({
                 branch: branch || gitDetails.branch || '',
                 connectorRef: connectorRef || '',
                 storeType: storeType || '',
+                remoteType: 'create',
                 filePath: gitDetails.filePath
               })}
               closeModal={onCloseCreate}
