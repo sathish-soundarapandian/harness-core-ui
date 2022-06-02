@@ -119,7 +119,7 @@ export class ServiceNowCreate extends PipelineStep<ServiceNowCreateData> {
       }
     }
 
-    if (template?.spec?.fields?.length > 0) {
+    if (template?.spec?.fields && template?.spec?.fields.length > 0) {
       const descriptionFieldIndex = template?.spec?.fields?.findIndex(
         field => field.name === ServiceNowStaticFields.description
       )
@@ -150,12 +150,12 @@ export class ServiceNowCreate extends PipelineStep<ServiceNowCreateData> {
         getMultiTypeFromValue(shortDescription) === MultiTypeInputType.RUNTIME &&
         isEmpty(data?.spec?.fields[shortDescriptionFieldIndex].value)
       ) {
-        errorFields = errorFields?.length > 0 ? errorFields : new Array(template?.spec?.fields.length)
+        errorFields = errorFields ? errorFields : new Array(template?.spec?.fields.length)
         errorFields[shortDescriptionFieldIndex] = {
           value: getString?.('pipeline.serviceNowCreateStep.validations.shortDescription')
         }
       }
-      if (errorFields?.length > 0) {
+      if (errorFields && errorFields.length > 0) {
         errors.spec = {
           ...errors.spec,
           fields: errorFields
