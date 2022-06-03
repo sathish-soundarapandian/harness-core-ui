@@ -127,6 +127,7 @@ function RunPipelineFormBasic({
   executionView,
   branch,
   repoIdentifier,
+  connectorRef,
   storeType,
   executionInputSetTemplateYaml = '',
   stagesExecuted,
@@ -673,12 +674,17 @@ function RunPipelineFormBasic({
   let runPipelineFormContent: React.ReactElement | null = null
 
   if (validateTemplateInputsResponse?.data?.validYaml === false) {
+    // repoName={repoIdentifier} because values is calculated at top and one of them (repoIdentifier, repoName)
+    // will be undefined based on the enabled flag (isGitSyncEnabled)
     runPipelineFormContent = (
       <PipelineErrorView
         errorNodeSummary={validateTemplateInputsResponse.data.errorNodeSummary}
         pipelineIdentifier={pipelineIdentifier}
         repoIdentifier={repoIdentifier}
+        repoName={repoIdentifier}
         branch={branch}
+        connectorRef={connectorRef}
+        storeType={storeType}
       />
     )
   } else if (inputSetsError?.message) {

@@ -35,7 +35,7 @@ const CDPipelineStudio: React.FC = (): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier, module } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
 
-  const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
+  const { branch, repoIdentifier, repoName, connectorRef, storeType } = useQueryParams<GitQueryParams>()
 
   const history = useHistory()
 
@@ -63,6 +63,9 @@ const CDPipelineStudio: React.FC = (): JSX.Element => {
         module,
         branch,
         repoIdentifier,
+        repoName,
+        connectorRef,
+        storeType,
         runPipeline: true
       })
     )

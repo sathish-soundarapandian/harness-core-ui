@@ -99,7 +99,10 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
       accountId,
       module,
       repoIdentifier,
-      branch
+      branch,
+      repoName,
+      connectorRef,
+      storeType
     }
     // Pipeline View
     const isPipeLineStudioView = !!matchPath(location.pathname, {

@@ -389,6 +389,13 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       triggerIdentifier: string
     }>
   >()
+  const {
+    repoIdentifier,
+    connectorRef: pipelineConnectorRef,
+    repoName: pipelineRepoName,
+    branch,
+    storeType
+  } = useQueryParams<GitQueryParams>()
   const history = useHistory()
   const { location } = useHistory()
   const { getString } = useStrings()
@@ -687,7 +694,12 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         orgIdentifier,
         projectIdentifier,
         pipelineIdentifier,
-        module
+        module,
+        repoIdentifier,
+        connectorRef: pipelineConnectorRef,
+        repoName: pipelineRepoName,
+        branch,
+        storeType
       })
     )
   }
@@ -1444,7 +1456,12 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
               orgIdentifier,
               projectIdentifier,
               pipelineIdentifier,
-              module
+              module,
+              repoIdentifier,
+              connectorRef: pipelineConnectorRef,
+              repoName: pipelineRepoName,
+              branch,
+              storeType
             })
           )
         }
@@ -1487,7 +1504,12 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
               orgIdentifier,
               projectIdentifier,
               pipelineIdentifier,
-              module
+              module,
+              repoIdentifier,
+              connectorRef: pipelineConnectorRef,
+              repoName: pipelineRepoName,
+              branch,
+              storeType
             })
           )
         }

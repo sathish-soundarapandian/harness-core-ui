@@ -243,7 +243,10 @@ export function PipelineCanvas({
               accountId,
               module,
               branch: selectedBranch,
-              repoIdentifier: repoIdentifier
+              repoIdentifier,
+              repoName,
+              connectorRef,
+              storeType
             })
           )
           location.reload()

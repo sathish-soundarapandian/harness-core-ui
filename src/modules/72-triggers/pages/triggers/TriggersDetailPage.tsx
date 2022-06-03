@@ -236,7 +236,7 @@ const renderSwitch = ({
 
 export default function TriggersDetailPage(): JSX.Element {
   const { isGitSimplificationEnabled } = useAppStore()
-  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { repoIdentifier, branch, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
 
   const [selectedView, setSelectedView] = React.useState<SelectedView>(SelectedView.VISUAL)
 
@@ -307,7 +307,10 @@ export default function TriggersDetailPage(): JSX.Element {
         triggerType: triggerResponse?.data?.type,
         module,
         repoIdentifier,
-        branch
+        branch,
+        connectorRef,
+        repoName,
+        storeType
       })
     )
   }
