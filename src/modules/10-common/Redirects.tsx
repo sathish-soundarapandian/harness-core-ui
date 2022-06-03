@@ -12,7 +12,6 @@ import routes from '@common/RouteDefinitions'
 import type { Module, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { ModuleName } from 'framework/types/ModuleName'
-import type { ProjectModule } from 'services/cd-ng'
 
 export const RedirectToSubscriptionsFactory = (moduleName: ModuleName) => (): React.ReactElement => {
   const { accountId } = useParams<{ accountId: string }>() // eslint-disable-line react-hooks/rules-of-hooks
@@ -47,7 +46,7 @@ export const RedirectToProjectFactory =
     const { accountId } = useParams<ProjectPathProps>() // eslint-disable-line react-hooks/rules-of-hooks
     const { selectedProject } = useAppStore() // eslint-disable-line react-hooks/rules-of-hooks
 
-    if (selectedProject?.modules?.includes(moduleName as ProjectModule)) {
+    if (selectedProject?.modules?.includes(moduleName as any)) {
       return (
         <Redirect
           to={routes.toProjectOverview({

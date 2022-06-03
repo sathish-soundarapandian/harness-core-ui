@@ -6884,13 +6884,11 @@ export interface Principal {
   type: 'USER' | 'SERVICE' | 'API_KEY' | 'SERVICE_ACCOUNT'
 }
 
-export type ProjectModule = 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
-
 export interface Project {
   color?: string
   description?: string
   identifier: string
-  modules?: ProjectModule[]
+  modules?: ('CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE')[]
   name: string
   orgIdentifier?: string
   tags?: {
