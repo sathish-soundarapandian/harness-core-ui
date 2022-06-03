@@ -10,17 +10,19 @@ import { useParams } from 'react-router-dom'
 
 import { Button, ButtonSize, ButtonVariation, Container } from '@harness/uicore'
 import { useGetClusterList } from 'services/cd-ng'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 
 import AddCluster from '../AddCluster'
 import ClusterTableView from '../ClusterTableView'
 
 const GitOpsCluster = (props: any): React.ReactElement => {
   const [showSelectClusterModal, setShowClusterModal] = React.useState(false)
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<{
+  const { projectIdentifier, orgIdentifier } = useParams<{
     orgIdentifier: string
     projectIdentifier: string
-    accountId: string
   }>()
+
+  const { accountId } = useParams<AccountPathProps>()
 
   const { data, refetch, loading } = useGetClusterList({
     queryParams: {
@@ -47,14 +49,7 @@ const GitOpsCluster = (props: any): React.ReactElement => {
           Select Cluster
         </Button>
         <Container border={{ top: true }}>
-          <ClusterTableView
-            linkedClusters={data}
-            loading={loading}
-            accountIdentifier={accountId}
-            orgIdentifier
-            projectIdentifier
-            {...props}
-          />
+          <ClusterTableView linkedClusters={data} loading={loading} refetch={refetch} {...props} />
           {showSelectClusterModal ? (
             <AddCluster
               linkedClusters={data?.data?.content}

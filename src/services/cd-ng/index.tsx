@@ -1948,6 +1948,16 @@ export interface CreatePRResponse {
   prNumber?: number
 }
 
+export type CreatePRStepInfo = StepSpecType & {
+  commitMessage?: string
+  delegateSelectors?: string[]
+  isNewBranch?: boolean
+  prTitle?: string
+  store?: StoreConfigWrapper
+  stringMap?: ParameterFieldMapStringString
+  targetBranch?: string
+}
+
 export interface CriteriaSpec {
   [key: string]: any
 }
@@ -2518,6 +2528,7 @@ export interface EntityDetail {
   entityRef?: EntityReference
   name?: string
   type?:
+    | 'CreatePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -3138,6 +3149,12 @@ export type ErrorTrackingConnectorDTO = ConnectorConfigDTO & {
   apiKeyRef: string
   delegateSelectors?: string[]
   url: string
+}
+
+export interface ExcludeConfig {
+  exclude?: {
+    [key: string]: string
+  }
 }
 
 export type ExecutableElementsFilter = Filter & {
@@ -3797,6 +3814,7 @@ export interface FileDTO {
 }
 
 export type FileNodeDTO = FileStoreNodeDTO & {
+  content?: string
   description?: string
   fileUsage: 'MANIFEST_FILE' | 'CONFIG' | 'SCRIPT'
   mimeType?: string
@@ -4018,6 +4036,7 @@ export interface GitEnabledDTO {
 
 export interface GitEntityBranchFilterSummaryProperties {
   entityTypes?: (
+    | 'CreatePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -4103,6 +4122,7 @@ export interface GitEntityBranchFilterSummaryProperties {
 
 export interface GitEntityFilterProperties {
   entityTypes?: (
+    | 'CreatePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -4221,6 +4241,7 @@ export interface GitFullSyncEntityInfoDTO {
   accountIdentifier?: string
   branch?: string
   entityType?:
+    | 'CreatePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -4314,6 +4335,7 @@ export interface GitFullSyncEntityInfoDTO {
 
 export interface GitFullSyncEntityInfoFilterKeys {
   entityTypes?: (
+    | 'CreatePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -4445,7 +4467,7 @@ export interface GitPRCreateRequest {
   targetBranch: string
   title: string
   useUserFromToken?: boolean
-  yamlGitConfigRef: string
+  yamlGitConfigRef?: string
 }
 
 export interface GitRepositoryResponseDTO {
@@ -4485,6 +4507,7 @@ export interface GitSyncEntityDTO {
   entityName?: string
   entityReference?: EntityReference
   entityType?:
+    | 'CreatePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -4572,6 +4595,7 @@ export interface GitSyncEntityDTO {
 export interface GitSyncEntityListDTO {
   count?: number
   entityType?:
+    | 'CreatePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -4676,6 +4700,7 @@ export interface GitSyncErrorDTO {
   completeFilePath?: string
   createdAt?: number
   entityType?:
+    | 'CreatePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -4951,6 +4976,10 @@ export type HarnessApprovalStepInfo = StepSpecType & {
   approverInputs?: ApproverInputInfo[]
   approvers: Approvers
   includePipelineExecutionHistory: boolean
+}
+
+export interface HarnessForConfig {
+  iteration?: number
 }
 
 export interface HarnessServiceInfoNG {
@@ -5967,6 +5996,10 @@ export type MarkAsSuccessFailureActionConfig = FailureStrategyActionConfig & {
   type: 'MarkAsSuccess'
 }
 
+export interface MatrixConfig {
+  exclude?: ExcludeConfig[]
+}
+
 export interface Member {
   display?: string
   ref?: string
@@ -6220,9 +6253,10 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export type OAuthSettings = NGAuthSettings & {
+export interface OAuthSettings {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
@@ -6777,6 +6811,18 @@ export interface ParameterFieldBoolean {
   responseField?: string
   typeString?: boolean
   value?: boolean
+}
+
+export interface ParameterFieldMapStringString {
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: {
+    [key: string]: string
+  }
 }
 
 export interface ParameterFieldString {
@@ -7799,6 +7845,7 @@ export interface ResponseListConnectorResponse {
 export interface ResponseListEntityType {
   correlationId?: string
   data?: (
+    | 'CreatePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -8931,6 +8978,13 @@ export interface ResponseServiceHeaderInfo {
 export interface ResponseServiceInstanceUsageDTO {
   correlationId?: string
   data?: ServiceInstanceUsageDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseServiceOverrideResponseDTO {
+  correlationId?: string
+  data?: ServiceOverrideResponseDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -10084,6 +10138,23 @@ export type ServiceNowUpdateStepInfo = StepSpecType & {
   useServiceNowTemplate: boolean
 }
 
+export interface ServiceOverrideRequestDTO {
+  environmentRef?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  serviceRef?: string
+  yaml?: string
+}
+
+export interface ServiceOverrideResponseDTO {
+  accountId?: string
+  environmentRef?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  serviceRef?: string
+  yaml?: string
+}
+
 export interface ServiceOverrides {
   description?: string
   name?: string
@@ -10336,10 +10407,13 @@ export type SshWinRmAzureInfrastructure = Infrastructure & {
 }
 
 export interface StackTraceElement {
+  classLoaderName?: string
   className?: string
   fileName?: string
   lineNumber?: number
   methodName?: string
+  moduleName?: string
+  moduleVersion?: string
   nativeMethod?: boolean
 }
 
@@ -10350,6 +10424,7 @@ export interface StageElementConfig {
   identifier: string
   name: string
   spec?: StageInfoConfig
+  strategy?: StrategyConfig
   tags?: {
     [key: string]: string
   }
@@ -10408,6 +10483,7 @@ export interface StepCategory {
 export interface StepData {
   name?: string
   type?:
+    | 'CreatePR'
     | 'APPLY'
     | 'SCALE'
     | 'STAGE_DEPLOYMENT'
@@ -10495,6 +10571,12 @@ export interface StoreConfigWrapper {
 export interface StoreConfigWrapperParameters {
   spec?: StoreConfig
   type?: string
+}
+
+export interface StrategyConfig {
+  batchSize?: number
+  for?: HarnessForConfig
+  matrix?: MatrixConfig
 }
 
 export type StringNGVariable = NGVariable & {
@@ -11791,6 +11873,7 @@ export interface ListActivitiesQueryParams {
   endTime: number
   status?: 'SUCCESS' | 'FAILED'
   referredEntityType:
+    | 'CreatePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -11870,6 +11953,7 @@ export interface ListActivitiesQueryParams {
     | 'RollbackStack'
     | 'Infrastructure'
   referredByEntityType?:
+    | 'CreatePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -12053,6 +12137,7 @@ export interface GetActivitiesSummaryQueryParams {
   endTime: number
   timeGroupType: 'HOUR' | 'DAY' | 'WEEK'
   referredEntityType:
+    | 'CreatePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -12132,6 +12217,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'RollbackStack'
     | 'Infrastructure'
   referredByEntityType?:
+    | 'CreatePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -21080,6 +21166,7 @@ export interface ListReferredByEntitiesQueryParams {
   projectIdentifier?: string
   identifier?: string
   referredEntityType?:
+    | 'CreatePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -22437,6 +22524,138 @@ export const getEnvironmentListV2Promise = (
     void
   >('POST', getConfig('ng/api'), `/environmentsV2/listV2`, props, signal)
 
+export interface DeleteServiceOverrideQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  environmentIdentifier?: string
+  serviceIdentifier?: string
+}
+
+export type DeleteServiceOverrideProps = Omit<
+  MutateProps<ResponseBoolean, Failure | Error, DeleteServiceOverrideQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Delete a Service Override entity
+ */
+export const DeleteServiceOverride = (props: DeleteServiceOverrideProps) => (
+  <Mutate<ResponseBoolean, Failure | Error, DeleteServiceOverrideQueryParams, void, void>
+    verb="DELETE"
+    path={`/environmentsV2/serviceOverrides`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseDeleteServiceOverrideProps = Omit<
+  UseMutateProps<ResponseBoolean, Failure | Error, DeleteServiceOverrideQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Delete a Service Override entity
+ */
+export const useDeleteServiceOverride = (props: UseDeleteServiceOverrideProps) =>
+  useMutate<ResponseBoolean, Failure | Error, DeleteServiceOverrideQueryParams, void, void>(
+    'DELETE',
+    `/environmentsV2/serviceOverrides`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Delete a Service Override entity
+ */
+export const deleteServiceOverridePromise = (
+  props: MutateUsingFetchProps<ResponseBoolean, Failure | Error, DeleteServiceOverrideQueryParams, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseBoolean, Failure | Error, DeleteServiceOverrideQueryParams, void, void>(
+    'DELETE',
+    getConfig('ng/api'),
+    `/environmentsV2/serviceOverrides`,
+    props,
+    signal
+  )
+
+export interface UpsertServiceOverrideQueryParams {
+  accountIdentifier: string
+}
+
+export type UpsertServiceOverrideProps = Omit<
+  MutateProps<
+    ResponseServiceOverrideResponseDTO,
+    Failure | Error,
+    UpsertServiceOverrideQueryParams,
+    ServiceOverrideRequestDTO,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * upsert a Service Override
+ */
+export const UpsertServiceOverride = (props: UpsertServiceOverrideProps) => (
+  <Mutate<
+    ResponseServiceOverrideResponseDTO,
+    Failure | Error,
+    UpsertServiceOverrideQueryParams,
+    ServiceOverrideRequestDTO,
+    void
+  >
+    verb="POST"
+    path={`/environmentsV2/serviceOverrides`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseUpsertServiceOverrideProps = Omit<
+  UseMutateProps<
+    ResponseServiceOverrideResponseDTO,
+    Failure | Error,
+    UpsertServiceOverrideQueryParams,
+    ServiceOverrideRequestDTO,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * upsert a Service Override
+ */
+export const useUpsertServiceOverride = (props: UseUpsertServiceOverrideProps) =>
+  useMutate<
+    ResponseServiceOverrideResponseDTO,
+    Failure | Error,
+    UpsertServiceOverrideQueryParams,
+    ServiceOverrideRequestDTO,
+    void
+  >('POST', `/environmentsV2/serviceOverrides`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * upsert a Service Override
+ */
+export const upsertServiceOverridePromise = (
+  props: MutateUsingFetchProps<
+    ResponseServiceOverrideResponseDTO,
+    Failure | Error,
+    UpsertServiceOverrideQueryParams,
+    ServiceOverrideRequestDTO,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseServiceOverrideResponseDTO,
+    Failure | Error,
+    UpsertServiceOverrideQueryParams,
+    ServiceOverrideRequestDTO,
+    void
+  >('POST', getConfig('ng/api'), `/environmentsV2/serviceOverrides`, props, signal)
+
 export interface UpsertEnvironmentV2QueryParams {
   accountIdentifier: string
 }
@@ -23197,6 +23416,7 @@ export interface GetReferencedByInScopeQueryParams {
   orgIdentifier?: string
   projectIdentifier?: string
   entityType?:
+    | 'CreatePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -23643,6 +23863,7 @@ export interface GetReferencedByQueryParams {
   orgIdentifier?: string
   projectIdentifier?: string
   entityType?:
+    | 'CreatePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -24932,6 +25153,7 @@ export interface ListGitSyncEntitiesByTypeQueryParams {
 
 export interface ListGitSyncEntitiesByTypePathParams {
   entityType:
+    | 'CreatePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -25079,6 +25301,7 @@ export const listGitSyncEntitiesByTypePromise = (
     ListGitSyncEntitiesByTypePathParams
   > & {
     entityType:
+      | 'CreatePR'
       | 'Projects'
       | 'Pipelines'
       | 'PipelineSteps'
@@ -26076,6 +26299,7 @@ export interface GetClusterListFromSourceQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
+  searchTerm?: string
 }
 
 export type GetClusterListFromSourceProps = Omit<
@@ -29541,6 +29765,7 @@ export interface GetStepYamlSchemaQueryParams {
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
   entityType?:
+    | 'CreatePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -29748,6 +29973,7 @@ export interface GetEntityYamlSchemaQueryParams {
   projectIdentifier?: string
   orgIdentifier?: string
   entityType?:
+    | 'CreatePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -39975,6 +40201,7 @@ export const webhookEndpointPromise = (
 
 export interface GetYamlSchemaQueryParams {
   entityType:
+    | 'CreatePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'

@@ -1,25 +1,34 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Button, Intent, Layout, PageSpinner, TableV2, useConfirmationDialog, useToaster } from '@harness/uicore'
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import type { CellProps, Column, Renderer } from 'react-table'
+import ReactTimeago from 'react-timeago'
+import { defaultTo } from 'lodash-es'
 
 import { useStrings } from 'framework/strings'
 
 import { useDeleteCluster } from 'services/cd-ng'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+
 import css from './EnvironmentDetails.module.scss'
-import ReactTimeago from 'react-timeago'
-import { defaultTo } from 'lodash-es'
 
 const RenderColumnMenu = ({ row, column }: any): React.ReactElement => {
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const data = row.original.clusterRef
   const { getString } = useStrings()
   const toast = useToaster()
   const { mutate } = useDeleteCluster({
     queryParams: {
-      accountIdentifier: column.accountId,
-      orgIdentifier: column.orgIdentifier,
-      projectIdentifier: column.projectIdentifier,
+      accountIdentifier: accountId,
+      orgIdentifier: orgIdentifier,
+      projectIdentifier: projectIdentifier,
       environmentIdentifier: row.original.envRef
+    },
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
     }
   })
 
@@ -70,7 +79,7 @@ const RenderLastUpdatedBy: Renderer<CellProps<any>> = ({ row }): JSX.Element => 
 }
 
 const ClusterTableView = (props: any): React.ReactElement => {
-  const { accountId, orgIdentifier, projectIdentifier, loading, linkedClusters } = props
+  const { loading, linkedClusters } = props
   const columns: Array<Column<any>> = React.useMemo(
     () => [
       {
@@ -90,11 +99,7 @@ const ClusterTableView = (props: any): React.ReactElement => {
         id: 'menuBtn',
         width: '5%',
         disableSortBy: true,
-        // eslint-disable-next-line react/display-name
         Cell: RenderColumnMenu,
-        accountIdentifier: accountId,
-        orgIdentifier,
-        projectIdentifier,
         environmentIdentifier: props?.envRef,
         refetch: props?.refetch
       }

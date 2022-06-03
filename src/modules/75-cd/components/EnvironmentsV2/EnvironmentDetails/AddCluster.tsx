@@ -5,8 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import { debounce, identity } from 'lodash-es'
+import { Spinner } from '@blueprintjs/core'
 
 import {
   Button,
@@ -46,21 +48,26 @@ const AddCluster = (props: any): React.ReactElement => {
   const [selectedClusters, setSelectedClusters] = React.useState<any>([])
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
+  const [searching, setSearching] = useState(false)
+
   const [submitting, setSubmitting] = React.useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     orgIdentifier: string
     projectIdentifier: string
     accountId: string
   }>()
 
+  const defaultQueryParams = {
+    accountIdentifier: accountId,
+    orgIdentifier: orgIdentifier,
+    projectIdentifier: projectIdentifier,
+    page: 0,
+    size: 50
+  }
+
   const { data, loading, error, refetch } = useGetClusterListFromSource({
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier: orgIdentifier,
-      projectIdentifier: projectIdentifier,
-      page: 0,
-      size: 50
-    }
+    queryParams: defaultQueryParams
   })
 
   const unlinkedClusters = getUnlinkedClusters(data?.data?.content, props?.linkedClusters)
@@ -68,6 +75,24 @@ const AddCluster = (props: any): React.ReactElement => {
   const { mutate: createCluster } = useCreateClusters({
     queryParams: { accountIdentifier: accountId }
   })
+
+  useEffect(() => {
+    if (searchTerm) {
+      setSearching(true)
+      refetch({
+        queryParams: {
+          ...defaultQueryParams,
+          searchTerm
+        }
+      })
+    }
+  }, [searchTerm])
+
+  useEffect(() => {
+    if (!loading && searchTerm && searching) {
+      setSearching(false)
+    }
+  }, [searchTerm, loading, searching])
 
   const onSubmit = (): void => {
     if (selectedClusters && selectedClusters.length) {
@@ -99,6 +124,12 @@ const AddCluster = (props: any): React.ReactElement => {
     }
   }
 
+  const onChangeText = ev => {
+    if (ev.target.value) {
+      setSearchTerm(ev.target.value)
+    }
+  }
+
   return (
     <Dialog
       isOpen
@@ -123,10 +154,11 @@ const AddCluster = (props: any): React.ReactElement => {
           </Text>
         </Layout.Vertical>
         <Layout.Vertical>
-          <TextInput placeholder="Search" leftIcon="search" />
+          <TextInput placeholder="Search" leftIcon="search" onChange={debounce(onChangeText, 1200)} />
           <Layout.Horizontal className={css.contentContainer} height={'339px'}>
             <div className={css.clusterList}>
-              {loading || submitting ? <PageSpinner /> : null}
+              {(loading || submitting) && !searchTerm ? <PageSpinner /> : null}
+              {searching ? <Spinner /> : null}
               {!loading ? (
                 <ClusterList
                   setSelectedClusters={setSelectedClusters}
