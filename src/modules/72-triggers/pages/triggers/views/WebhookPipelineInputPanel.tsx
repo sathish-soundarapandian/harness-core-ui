@@ -231,7 +231,8 @@ function WebhookPipelineInputPanelForm({
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
-      pipelineIdentifier
+      pipelineIdentifier,
+      branch
     }
   })
 
