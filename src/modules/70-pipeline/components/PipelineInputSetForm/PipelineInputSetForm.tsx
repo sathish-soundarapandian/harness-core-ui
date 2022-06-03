@@ -327,7 +327,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
             </div>
           </>
         )}
-      {!gitAwareForTriggerEnabled ? (
+      {
         <>
           {finalTemplate?.stages?.map((stageObj, index) => {
             const pathPrefix = !isEmpty(finalPath) ? `${finalPath}.` : ''
@@ -368,7 +368,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
             }
           })}
         </>
-      ) : null}
+      }
     </Layout.Vertical>
   )
 }
