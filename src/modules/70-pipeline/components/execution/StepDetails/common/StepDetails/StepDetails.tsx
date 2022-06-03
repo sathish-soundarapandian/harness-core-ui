@@ -17,7 +17,11 @@ import routes from '@common/RouteDefinitions'
 
 import type { ProjectPathProps, AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { ExecutionStatusEnum, isExecutionCompletedWithBadState } from '@pipeline/utils/statusHelpers'
+import {
+  ExecutionStatusEnum,
+  isExecutionComplete,
+  isExecutionCompletedWithBadState
+} from '@pipeline/utils/statusHelpers'
 import { encodeURIWithReservedChars } from './utils'
 import css from './StepDetails.module.scss'
 
@@ -51,8 +55,12 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
     }
   }, [step.executableResponses])
 
-  const showDelegateRow = (delegateList: DelegateInfo[] | undefined, tasks: ExecutableResponse[]): boolean => {
-    return (delegateList && delegateList?.length > 0) || tasks?.length > 0
+  const showDelegateRow = (
+    delegateList: DelegateInfo[] | undefined,
+    tasks: ExecutableResponse[],
+    status: string | undefined
+  ): boolean => {
+    return ((delegateList && delegateList?.length > 0) || tasks?.length > 0) && isExecutionComplete(status)
   }
 
   const delegateListContainsTask = (delegateList: DelegateInfo[] | undefined, taskId: string): boolean => {
@@ -95,7 +103,7 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
             <td>{label.value}</td>
           </tr>
         ))}
-        {showDelegateRow(step.delegateInfoList, taskList) && (
+        {showDelegateRow(step.delegateInfoList, taskList, step.status) && (
           <tr className={css.delegateRow}>
             <th>
               {isExecutionCompletedWithBadState(step.status) && (
@@ -136,6 +144,7 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
                   ))}
                 {taskList &&
                   taskList.length > 0 &&
+                  isExecutionComplete(step.status) &&
                   taskList.map((item, index) =>
                     delegateListContainsTask(step.delegateInfoList, item.taskId) ? null : (
                       <div key={`${item.taskId}-${index}`}>
