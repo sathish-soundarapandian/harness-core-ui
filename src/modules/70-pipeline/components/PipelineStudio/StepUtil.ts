@@ -245,6 +245,8 @@ export const validateStage = ({
       }
     }
 
+    // TODO: errors
+
     if (stage.type === 'Deployment' && templateStageConfig?.infrastructure?.environmentRef) {
       const step = factory.getStep(StepType.DeployEnvironment)
       const errorsResponse = step?.validateInputSet({

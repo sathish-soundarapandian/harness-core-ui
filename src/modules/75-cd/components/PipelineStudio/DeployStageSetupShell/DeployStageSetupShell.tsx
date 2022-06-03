@@ -49,6 +49,7 @@ import DeployInfraSpecifications from '../DeployInfraSpecifications/DeployInfraS
 import DeployServiceSpecifications from '../DeployServiceSpecifications/DeployServiceSpecifications'
 import DeployStageSpecifications from '../DeployStageSpecifications/DeployStageSpecifications'
 import DeployAdvancedSpecifications from '../DeployAdvancedSpecifications/DeployAdvancedSpecifications'
+import DeployEnvSpecifications from '../DeployEnvSpecifications/DeployEnvSpecifications'
 import css from './DeployStageSetupShell.module.scss'
 
 export const MapStepTypeToIcon: { [key: string]: HarnessIconName } = {
@@ -72,6 +73,7 @@ const iconNames = { tick: 'tick' as IconName }
 export default function DeployStageSetupShell(): JSX.Element {
   const { getString } = useStrings()
   const isTemplatesEnabled = useFeatureFlag(FeatureFlag.NG_TEMPLATES)
+  const isNewEnvironmentEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
   const layoutRef = React.useRef<HTMLDivElement>(null)
   const pipelineContext = usePipelineContext()
   const {
@@ -104,7 +106,7 @@ export default function DeployStageSetupShell(): JSX.Element {
 
   React.useEffect(() => {
     const sectionId = (query as any).sectionId || ''
-    if (sectionId?.length && TabsOrder.includes(sectionId)) {
+    if (sectionId?.length && (TabsOrder.includes(sectionId) || sectionId === DeployTabs.ENVIRONMENT)) {
       setSelectedTabId(sectionId)
     } else {
       setSelectedSectionId(DeployTabs.SERVICE)
@@ -120,6 +122,13 @@ export default function DeployStageSetupShell(): JSX.Element {
   const { checkErrorsForTab } = React.useContext(StageErrorContext)
 
   const handleTabChange = (nextTab: DeployTabs): void => {
+    if (
+      isNewEnvironmentEnabled &&
+      isEmpty(selectedStage?.stage?.spec?.infrastructure) &&
+      nextTab === DeployTabs.INFRASTRUCTURE
+    ) {
+      nextTab = DeployTabs.ENVIRONMENT
+    }
     checkErrorsForTab(selectedTabId).then(_ => {
       setSelectedTabId(nextTab)
       setSelectedSectionId(nextTab)
@@ -216,6 +225,9 @@ export default function DeployStageSetupShell(): JSX.Element {
       if (!isEmpty(get(response.spec, 'serviceConfig'))) {
         newIncompleteTabs[DeployTabs.SERVICE] = true
       }
+      if (!isEmpty(get(response.spec, 'environment'))) {
+        newIncompleteTabs[DeployTabs.ENVIRONMENT] = true
+      }
       if (!isEmpty(get(response.spec, 'infrastructure'))) {
         newIncompleteTabs[DeployTabs.INFRASTRUCTURE] = true
       }
@@ -300,6 +312,8 @@ export default function DeployStageSetupShell(): JSX.Element {
           onClick={() => {
             if (selectedTabId === DeployTabs.EXECUTION) {
               updatePipelineView({ ...pipelineView, isSplitViewOpen: false, splitViewData: {} })
+            } else if (selectedTabId === DeployTabs.ENVIRONMENT) {
+              handleTabChange(DeployTabs.EXECUTION)
             } else {
               handleTabChange(TabsOrder[Math.min(TabsOrder.length, TabsOrder.indexOf(selectedTabId) + 1)])
             }
@@ -334,17 +348,33 @@ export default function DeployStageSetupShell(): JSX.Element {
           panel={<DeployServiceSpecifications>{navBtns}</DeployServiceSpecifications>}
           data-testid="service"
         />
-        <Tab
-          id={DeployTabs.INFRASTRUCTURE}
-          title={
-            <span className={css.title} data-completed={!incompleteTabs[DeployTabs.INFRASTRUCTURE]}>
-              <Icon name={incompleteTabs[DeployTabs.INFRASTRUCTURE] ? 'infrastructure' : iconNames.tick} size={16} />
-              {getString('infrastructureText')}
-            </span>
-          }
-          panel={<DeployInfraSpecifications>{navBtns}</DeployInfraSpecifications>}
-          data-testid="infrastructure"
-        />
+        {isNewEnvironmentEnabled && isEmpty(selectedStage?.stage?.spec?.infrastructure) && (
+          <Tab
+            id={DeployTabs.ENVIRONMENT}
+            title={
+              <span className={css.title} data-completed={!incompleteTabs[DeployTabs.ENVIRONMENT]}>
+                <Icon name={incompleteTabs[DeployTabs.ENVIRONMENT] ? 'environment' : iconNames.tick} size={16} />
+                {getString('environment')}
+              </span>
+            }
+            panel={<DeployEnvSpecifications>{navBtns}</DeployEnvSpecifications>}
+            data-testid="environment"
+          />
+        )}
+        {(!isNewEnvironmentEnabled ||
+          (isNewEnvironmentEnabled && !isEmpty(selectedStage?.stage?.spec?.infrastructure))) && (
+          <Tab
+            id={DeployTabs.INFRASTRUCTURE}
+            title={
+              <span className={css.title} data-completed={!incompleteTabs[DeployTabs.INFRASTRUCTURE]}>
+                <Icon name={incompleteTabs[DeployTabs.INFRASTRUCTURE] ? 'infrastructure' : iconNames.tick} size={16} />
+                {getString('infrastructureText')}
+              </span>
+            }
+            panel={<DeployInfraSpecifications>{navBtns}</DeployInfraSpecifications>}
+            data-testid="infrastructure"
+          />
+        )}
         <Tab
           id={DeployTabs.EXECUTION}
           title={

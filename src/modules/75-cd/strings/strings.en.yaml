@@ -97,7 +97,9 @@ secretManagerRequired: 'Secret Manager is required.'
 pipelineSteps:
   environmentTab:
     specifyYourEnvironment: Specify Environment
+    specifyYourInfrastructure: Specify Infrastructure
     selectEnvironment: '- Select Environment -'
+    selectInfrastructure: '- Select Infrastructure -'
     plusNewEnvironment: '+ {{$.newEnvironment}}'
     newEnvironment: '{{$.newEnvironment}}'
     environmentIsRequired: '{{ $.common.validation.environmentIsRequired }}'

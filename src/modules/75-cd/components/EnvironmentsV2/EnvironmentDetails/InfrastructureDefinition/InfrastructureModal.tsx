@@ -74,7 +74,13 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   }
 }
 
-export function InfrastructureModal({ hideModal, refetch, infrastructureToEdit, setInfrastructureToEdit }: any) {
+export function InfrastructureModal({
+  hideModal,
+  refetch,
+  infrastructureToEdit,
+  setInfrastructureToEdit,
+  envIdentifier
+}: any) {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getTemplate } = useTemplateSelector()
 
@@ -125,6 +131,7 @@ export function InfrastructureModal({ hideModal, refetch, infrastructureToEdit, 
         refetch={refetch}
         infrastructureDefinition={infrastructureDefinition}
         setInfrastructureToEdit={setInfrastructureToEdit}
+        envIdentifier={envIdentifier}
       />
     </InfrastructurePipelineProvider>
   )
@@ -134,7 +141,8 @@ function BootstrapDeployInfraSpecifications({
   hideModal,
   refetch,
   infrastructureDefinition,
-  setInfrastructureToEdit
+  setInfrastructureToEdit,
+  envIdentifier
 }: any) {
   const { accountId, orgIdentifier, projectIdentifier, environmentIdentifier } = useParams<
     ProjectPathProps & EnvironmentPathProps
@@ -231,7 +239,7 @@ function BootstrapDeployInfraSpecifications({
       orgIdentifier,
       projectIdentifier,
       type: (pipeline.stages?.[0].stage?.spec as any)?.infrastructure?.infrastructureDefinition?.type,
-      environmentRef: environmentIdentifier
+      environmentRef: environmentIdentifier || envIdentifier
     }
 
     mutateFn({
@@ -327,7 +335,7 @@ function BootstrapDeployInfraSpecifications({
                       ...formikProps.values,
                       orgIdentifier,
                       projectIdentifier,
-                      envIdentifier: environmentIdentifier,
+                      envIdentifier: environmentIdentifier || envIdentifier,
                       type: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure
                         ?.infrastructureDefinition?.type,
                       spec: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure
