@@ -401,7 +401,6 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
   const { getString } = useStrings()
   // use passed params on new trigger
   const queryParamsOnNew = location?.search ? getQueryParamsOnNew(location.search) : undefined
-  const { branch } = useQueryParams<GitQueryParams>()
   const {
     sourceRepo: sourceRepoOnNew,
     triggerType: triggerTypeOnNew,
