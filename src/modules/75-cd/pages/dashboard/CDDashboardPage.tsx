@@ -36,13 +36,21 @@ import {
 } from '@common/components/TimeRangeSelector/TimeRangeSelector'
 import { DeploymentsTimeRangeContext } from '@cd/components/Services/common'
 import { useLocalStorage } from '@common/hooks'
-import { validTimeFormat } from '@common/factories/LandingDashboardContext'
 
 import { TitleWithToolTipId } from '@common/components/Title/TitleWithToolTipId'
 import DeploymentsHealthCards from './DeploymentsHealthCards'
 import DeploymentExecutionsChart from './DeploymentExecutionsChart'
 import WorkloadCard from './DeploymentCards/WorkloadCard'
 import styles from './CDDashboardPage.module.scss'
+
+export const validTimeFormat = (timeRange: TimeRangeSelectorProps): TimeRangeSelectorProps => {
+  //convert to valid format if string
+  if (typeof timeRange.range[0] === 'string') {
+    timeRange.range[0] = new Date(defaultTo(timeRange.range[0], ''))
+    timeRange.range[1] = new Date(defaultTo(timeRange.range[1], ''))
+  }
+  return timeRange
+}
 
 /** TODO: fix types after BE merge */
 export function executionStatusInfoToExecutionSummary(info: ExecutionStatusInfo): PipelineExecutionSummary {
