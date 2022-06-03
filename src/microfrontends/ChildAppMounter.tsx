@@ -24,6 +24,7 @@ import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import { global401HandlerUtils } from '@common/utils/global401HandlerUtils'
 import ChildAppError from './ChildAppError'
 import type { ChildAppProps, Scope } from './index'
+import { useGetProjectAggregateDTOList } from 'services/cd-ng'
 
 const logger = loggerFor(ModuleName.FRAMEWORK)
 
@@ -89,6 +90,7 @@ export class ChildAppMounter<T = never> extends React.Component<
             YAMLBuilder,
             MonacoDiffEditor
           }}
+          getProject={useGetProjectAggregateDTOList}
           hooks={{
             useDocumentTitle
           }}
