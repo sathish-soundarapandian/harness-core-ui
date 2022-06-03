@@ -37,7 +37,7 @@ export function RenderGitPopover(props: GitPopoverProps): React.ReactElement | n
 
   const repoLabel = useMemo(() => {
     return isGitSyncEnabled ? data?.repoIdentifier : data?.repoName
-  }, [data?.repoIdentifier, data?.repoName])
+  }, [data?.repoIdentifier, data?.repoName, isGitSyncEnabled])
 
   const repo = getRepoDetailsByIndentifier(repoLabel, gitSyncRepos)
   const repoEntity: GitSyncEntityDTO = getRepoEntityObject(repo, data)
