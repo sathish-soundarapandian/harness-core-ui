@@ -57,24 +57,4 @@ const ClusterCard = (props: any): React.ReactElement => {
   )
 }
 
-const ClusterList = (props: any): React.ReactElement => {
-  if (!props.loading && props?.clusters?.length) {
-    return (
-      <div className={css.listContainer}>
-        {props?.clusters?.map((cluster: any) => {
-          return (
-            <ClusterCard
-              cluster={cluster}
-              key={cluster.identifier}
-              setSelectedClusters={props.setSelectedClusters}
-              selectedClusters={props.selectedClusters}
-            />
-          )
-        })}
-      </div>
-    )
-  }
-  return <div />
-}
-
-export default ClusterList
+export default ClusterCard

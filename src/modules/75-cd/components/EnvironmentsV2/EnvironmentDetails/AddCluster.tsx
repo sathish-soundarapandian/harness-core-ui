@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
-import { debounce, identity } from 'lodash-es'
+import { debounce } from 'lodash-es'
 import { Spinner } from '@blueprintjs/core'
 
 import {
@@ -25,9 +25,15 @@ import {
   useToaster
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { Cluster, useCreateClusters, useGetClusterListFromSource } from 'services/cd-ng'
+import { useInfiniteScroll } from '@common/hooks/useInfiniteScroll'
 
-import ClusterList from './ClusterList'
+import {
+  Cluster,
+  getClusterListFromSourcePromise,
+  useCreateClusters,
+  useGetClusterListFromSource
+} from 'services/cd-ng'
+import ClusterCard from './ClusterCard'
 import css from './AddCluster.module.scss'
 
 const getUnlinkedClusters = (clusters: any, linkedClusters: any[]): any[] => {
@@ -58,6 +64,8 @@ const AddCluster = (props: any): React.ReactElement => {
     accountId: string
   }>()
 
+  const loadMoreRef = useRef(null)
+
   const defaultQueryParams = {
     accountIdentifier: accountId,
     orgIdentifier: orgIdentifier,
@@ -76,23 +84,24 @@ const AddCluster = (props: any): React.ReactElement => {
     queryParams: { accountIdentifier: accountId }
   })
 
-  useEffect(() => {
-    if (searchTerm) {
-      setSearching(true)
-      refetch({
-        queryParams: {
-          ...defaultQueryParams,
-          searchTerm
-        }
+  const { items, attachRefToLastElement, fetching } = useInfiniteScroll({
+    getItems: options => {
+      return getClusterListFromSourcePromise({
+        queryParams: { ...defaultQueryParams, page: options.offset, size: options.limit, searchTerm }
       })
-    }
-  }, [searchTerm])
+    },
+    limit: 10,
+    loadMoreRef,
+    searchTerm
+  })
 
   useEffect(() => {
-    if (!loading && searchTerm && searching) {
+    if (searchTerm && fetching) {
+      setSearching(true)
+    } else if (!fetching) {
       setSearching(false)
     }
-  }, [searchTerm, loading, searching])
+  }, [searchTerm, fetching])
 
   const onSubmit = (): void => {
     if (selectedClusters && selectedClusters.length) {
@@ -125,9 +134,7 @@ const AddCluster = (props: any): React.ReactElement => {
   }
 
   const onChangeText = ev => {
-    if (ev.target.value) {
-      setSearchTerm(ev.target.value)
-    }
+    setSearchTerm(ev.target.value)
   }
 
   return (
@@ -160,14 +167,20 @@ const AddCluster = (props: any): React.ReactElement => {
               {(loading || submitting) && !searchTerm ? <PageSpinner /> : null}
               {searching ? <Spinner /> : null}
               {!loading ? (
-                <ClusterList
-                  setSelectedClusters={setSelectedClusters}
-                  selectedClusters={selectedClusters}
-                  clusters={unlinkedClusters}
-                  loading={loading}
-                  error={error}
-                  refetch={refetch}
-                />
+                <div className={css.listContainer}>
+                  {items?.map((cluster: any, index: number) => {
+                    return (
+                      <div ref={attachRefToLastElement(index) ? loadMoreRef : undefined} key={cluster.identifier}>
+                        <ClusterCard
+                          cluster={cluster}
+                          key={cluster.identifier}
+                          setSelectedClusters={setSelectedClusters}
+                          selectedClusters={selectedClusters}
+                        />
+                      </div>
+                    )
+                  })}
+                </div>
               ) : null}
               <Layout.Horizontal color={Color.GREY_700} className={css.listFooter}>
                 <Checkbox
