@@ -214,9 +214,12 @@ export const isServerlessDeploymentType = (deploymentType: string): boolean => {
     deploymentType === ServiceDeploymentType.ServerlessAzureFunctions ||
     deploymentType === ServiceDeploymentType.ServerlessGoogleFunctions ||
     deploymentType === ServiceDeploymentType.AmazonSAM ||
-    deploymentType === ServiceDeploymentType.AzureFunctions ||
-    deploymentType === ServiceDeploymentType.ssh
+    deploymentType === ServiceDeploymentType.AzureFunctions
   )
+}
+
+export const isSSHWinRMDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.winrm || deploymentType === ServiceDeploymentType.ssh
 }
 
 export const detailsHeaderName: Record<string, string> = {
