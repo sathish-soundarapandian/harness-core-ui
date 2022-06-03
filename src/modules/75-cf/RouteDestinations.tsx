@@ -6,7 +6,7 @@
  */
 
 import React, { FC } from 'react'
-import { Redirect, useParams } from 'react-router-dom'
+import { Redirect, Route, useParams } from 'react-router-dom'
 import { RouteWithLayout } from '@common/router'
 import routes from '@common/RouteDefinitions'
 import {
@@ -324,76 +324,58 @@ const CFRoutes: FC = () => {
         <CFWorkflowsPage />
       </RouteWithLayout>
 
-      {
-        TemplateRouteDestinations({
-          moduleParams,
-          licenseRedirectData,
-          sidebarProps: CFSideNavProps
-        })?.props.children
-      }
-
-      {
-        ConnectorRouteDestinations({
-          moduleParams,
-          licenseRedirectData,
-          sidebarProps: CFSideNavProps
-        })?.props.children
-      }
-
-      {
-        SecretRouteDestinations({
-          moduleParams,
-          licenseRedirectData,
-          sidebarProps: CFSideNavProps
-        })?.props.children
-      }
-
-      {
-        VariableRouteDestinations({
-          moduleParams,
-          licenseRedirectData,
-          sidebarProps: CFSideNavProps
-        })?.props.children
-      }
-
-      {
-        GitSyncRouteDestinations({
-          moduleParams,
-          licenseRedirectData,
-          sidebarProps: CFSideNavProps
-        })?.props.children
-      }
-
-      {
-        AccessControlRouteDestinations({
-          moduleParams,
-          licenseRedirectData,
-          sidebarProps: CFSideNavProps
-        })?.props.children
-      }
-
-      {FF_PIPELINE &&
-        PipelineRouteDestinations({
-          pipelineStudioComponent: CFPipelineStudioWrapper,
-          pipelineDeploymentListComponent: CFPipelineDeploymentList,
-          moduleParams,
-          licenseRedirectData,
-          sidebarProps: CFSideNavProps
-        })?.props.children}
-
-      {FF_PIPELINE &&
-        TriggersRouteDestinations({
-          moduleParams,
-          licenseRedirectData,
-          sidebarProps: CFSideNavProps
-        })?.props.children}
-
-      {
-        GovernanceRouteDestinations({
-          sidebarProps: CFSideNavProps,
-          pathProps: { ...accountPathProps, ...projectPathProps, ...moduleParams }
-        })?.props.children
-      }
+      <Route path="/account/:accountId/:module(cf)">
+        <TemplateRouteDestinations
+          moduleParams={moduleParams}
+          licenseRedirectData={licenseRedirectData}
+          sidebarProps={CFSideNavProps}
+        />
+        <ConnectorRouteDestinations
+          moduleParams={moduleParams}
+          licenseRedirectData={licenseRedirectData}
+          sidebarProps={CFSideNavProps}
+        />
+        <SecretRouteDestinations
+          moduleParams={moduleParams}
+          licenseRedirectData={licenseRedirectData}
+          sidebarProps={CFSideNavProps}
+        />
+        <VariableRouteDestinations
+          moduleParams={moduleParams}
+          licenseRedirectData={licenseRedirectData}
+          sidebarProps={CFSideNavProps}
+        />
+        <GitSyncRouteDestinations
+          moduleParams={moduleParams}
+          licenseRedirectData={licenseRedirectData}
+          sidebarProps={CFSideNavProps}
+        />
+        <AccessControlRouteDestinations
+          moduleParams={moduleParams}
+          licenseRedirectData={licenseRedirectData}
+          sidebarProps={CFSideNavProps}
+        />
+        {FF_PIPELINE && (
+          <>
+            <PipelineRouteDestinations
+              pipelineStudioComponent={CFPipelineStudioWrapper}
+              pipelineDeploymentListComponent={CFPipelineDeploymentList}
+              moduleParams={moduleParams}
+              licenseRedirectData={licenseRedirectData}
+              sidebarProps={CFSideNavProps}
+            />
+            <TriggersRouteDestinations
+              moduleParams={moduleParams}
+              licenseRedirectData={licenseRedirectData}
+              sidebarProps={CFSideNavProps}
+            />
+          </>
+        )}
+        <GovernanceRouteDestinations
+          sidebarProps={CFSideNavProps}
+          pathProps={{ ...accountPathProps, ...projectPathProps, ...moduleParams }}
+        />
+      </Route>
     </>
   )
 }

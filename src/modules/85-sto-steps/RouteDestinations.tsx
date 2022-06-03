@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Redirect, useParams } from 'react-router-dom'
+import { Redirect, Route, useParams } from 'react-router-dom'
 import { ConnectorRouteDestinations } from '@connectors/RouteDestinations'
 import { DelegateRouteDestinations } from '@delegates/RouteDestinations'
 import { GitSyncRouteDestinations } from '@gitsync/RouteDestinations'
@@ -102,85 +102,58 @@ export default (
       <ChildAppMounter ChildApp={STOApp} />
     </RouteWithLayout>
 
-    {
-      PipelineRouteDestinations({
-        pipelineStudioComponent: CIPipelineStudio,
-        pipelineDeploymentListComponent: CIPipelineDeploymentList,
-        moduleParams,
-        // licenseRedirectData,
-        sidebarProps: STOSideNavProps
-      })?.props.children
-    }
-
-    {
-      AccessControlRouteDestinations({
-        moduleParams,
-        // licenseRedirectData,
-        sidebarProps: STOSideNavProps
-      })?.props.children
-    }
-
-    {
-      ConnectorRouteDestinations({
-        moduleParams,
-        // licenseRedirectData,
-        sidebarProps: STOSideNavProps
-      })?.props.children
-    }
-
-    {
-      SecretRouteDestinations({
-        moduleParams,
-        // licenseRedirectData,
-        sidebarProps: STOSideNavProps
-      })?.props.children
-    }
-
-    {
-      VariableRouteDestinations({
-        moduleParams,
-        // licenseRedirectData,
-        sidebarProps: STOSideNavProps
-      })?.props.children
-    }
-
-    {
-      DelegateRouteDestinations({
-        moduleParams,
-        // licenseRedirectData,
-        sidebarProps: STOSideNavProps
-      })?.props.children
-    }
-
-    {
-      TemplateRouteDestinations({
-        moduleParams,
-        // licenseRedirectData,
-        sidebarProps: STOSideNavProps
-      })?.props.children
-    }
-
-    {
-      GitSyncRouteDestinations({
-        moduleParams,
-        // licenseRedirectData,
-        sidebarProps: STOSideNavProps
-      })?.props.children
-    }
-
-    {
-      TriggersRouteDestinations({
-        moduleParams,
-        // licenseRedirectData,
-        sidebarProps: STOSideNavProps
-      })?.props.children
-    }
-
-    {
-      GovernanceRouteDestinations({
-        sidebarProps: STOSideNavProps,
-        pathProps: { ...accountPathProps, ...projectPathProps, ...moduleParams }
-      })?.props.children
-    }
+    <Route path="/account/:accountId/:module(sto)">
+      <PipelineRouteDestinations
+        pipelineStudioComponent={CIPipelineStudio}
+        pipelineDeploymentListComponent={CIPipelineDeploymentList}
+        moduleParams={moduleParams}
+        // licenseRedirectData={licenseRedirectData}
+        sidebarProps={STOSideNavProps}
+      />
+      <AccessControlRouteDestinations
+        moduleParams={moduleParams}
+        // licenseRedirectData={licenseRedirectData}
+        sidebarProps={STOSideNavProps}
+      />
+      <ConnectorRouteDestinations
+        moduleParams={moduleParams}
+        // licenseRedirectData={licenseRedirectData}
+        sidebarProps={STOSideNavProps}
+      />
+      <SecretRouteDestinations
+        moduleParams={moduleParams}
+        // licenseRedirectData={licenseRedirectData}
+        sidebarProps={STOSideNavProps}
+      />
+      <VariableRouteDestinations
+        moduleParams={moduleParams}
+        // licenseRedirectData={licenseRedirectData}
+        sidebarProps={STOSideNavProps}
+      />
+      <DelegateRouteDestinations
+        moduleParams={moduleParams}
+        // licenseRedirectData={licenseRedirectData}
+        sidebarProps={STOSideNavProps}
+      />
+      <TemplateRouteDestinations
+        moduleParams={moduleParams}
+        // licenseRedirectData={licenseRedirectData}
+        sidebarProps={STOSideNavProps}
+      />
+      <GitSyncRouteDestinations
+        moduleParams={moduleParams}
+        // licenseRedirectData={licenseRedirectData}
+        sidebarProps={STOSideNavProps}
+      />
+      <TriggersRouteDestinations
+        moduleParams={moduleParams}
+        // licenseRedirectData={licenseRedirectData}
+        sidebarProps={STOSideNavProps}
+      />
+      <GovernanceRouteDestinations
+        sidebarProps={STOSideNavProps}
+        pathProps={{ ...accountPathProps, ...projectPathProps, ...moduleParams }}
+      />
+    </Route>
   </>
 )
