@@ -1550,11 +1550,6 @@ export interface ClusterResponse {
   projectIdentifier?: string
 }
 
-export interface ClusterYaml {
-  metadata?: string
-  ref: string
-}
-
 export interface CodeBase {
   build: Build
   connectorRef: string
@@ -2282,13 +2277,9 @@ export interface DeploymentInfo {
 }
 
 export type DeploymentStageConfig = StageInfoConfig & {
-  deploymentType?: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda'
-  environment?: EnvironmentYamlV2
-  environmentGroup?: EnvironmentGroupYaml
   execution: ExecutionElementConfig
-  infrastructure?: PipelineInfrastructure
-  service?: ServiceYamlV2
-  serviceConfig?: ServiceConfig
+  infrastructure: PipelineInfrastructure
+  serviceConfig: ServiceConfig
 }
 
 export interface DeploymentStatsSummary {
@@ -2759,13 +2750,6 @@ export interface EnvironmentGroupResponseDTO {
   }
 }
 
-export interface EnvironmentGroupYaml {
-  deployToAll?: boolean
-  envGroupConfig?: EnvironmentYamlV2[]
-  envGroupRef: string
-  metadata?: string
-}
-
 export interface EnvironmentInfoByServiceId {
   artifactImage?: string
   environmentId?: string
@@ -2821,17 +2805,6 @@ export interface EnvironmentYaml {
     [key: string]: string
   }
   type: 'PreProduction' | 'Production'
-}
-
-export interface EnvironmentYamlV2 {
-  deployToAll?: boolean
-  environmentInputs?: {
-    [key: string]: { [key: string]: any }
-  }
-  environmentRef: string
-  gitOpsClusters?: ClusterYaml[]
-  infrastructureDefinitions?: InfraStructureDefinitionYaml[]
-  metadata?: string
 }
 
 export interface Error {
@@ -5216,14 +5189,6 @@ export interface InfraExecutionSummary {
 export interface InfraOverrides {
   environment?: EnvironmentYaml
   infrastructureDefinition?: InfrastructureDef
-}
-
-export interface InfraStructureDefinitionYaml {
-  inputs?: {
-    [key: string]: { [key: string]: any }
-  }
-  metadata?: string
-  ref: string
 }
 
 export interface InfraUseFromStage {
@@ -10267,14 +10232,6 @@ export interface ServiceYaml {
   tags?: {
     [key: string]: string
   }
-}
-
-export interface ServiceYamlV2 {
-  metadata?: string
-  serviceInputs?: {
-    [key: string]: { [key: string]: any }
-  }
-  serviceRef: string
 }
 
 export interface ServicesCount {

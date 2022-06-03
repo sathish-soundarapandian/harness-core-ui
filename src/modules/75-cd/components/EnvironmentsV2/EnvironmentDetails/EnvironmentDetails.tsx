@@ -57,9 +57,11 @@ import { CustomVariablesEditableStage } from '@pipeline/components/PipelineSteps
 import type { AllNGVariables } from '@pipeline/utils/types'
 
 import { PageHeaderTitle, PageHeaderToolbar } from './EnvironmentDetailsPageHeader'
+import { ServiceOverride } from './ServiceOverride/ServiceOverride'
 import InfrastructureDefinition from './InfrastructureDefinition/InfrastructureDefinition'
 import { EnvironmentDetailsTab } from '../utils'
 
+import GitOpsCluster from './GitOpsCluster/GitOpsCluster'
 import css from './EnvironmentDetails.module.scss'
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
@@ -190,14 +192,22 @@ export default function EnvironmentDetails() {
   }
 
   const validate = (values: NGEnvironmentInfoConfig) => {
-    const { name: newName, description: newDescription, tags: newTags, type: newType, variables: newVariables } = values
+    const {
+      name: newName,
+      description: newDescription,
+      tags: newTags,
+      type: newType,
+      variables: newVariables,
+      serviceOverrides: newServiceOverrides
+    } = values
 
     if (
       name === newName &&
       description === newDescription &&
       isEqual(tags, newTags) &&
       type === newType &&
-      isEqual(variables, newVariables)
+      isEqual(variables, newVariables) &&
+      isEqual(serviceOverrides, newServiceOverrides)
     ) {
       setIsModified(false)
     } else {
@@ -221,6 +231,7 @@ export default function EnvironmentDetails() {
     [yaml]
   )
   const variables = defaultTo(parsedYamlEnvironment?.variables, [])
+  const serviceOverrides = defaultTo(parsedYamlEnvironment?.serviceOverrides, [])
 
   return (
     <>
@@ -244,7 +255,8 @@ export default function EnvironmentDetails() {
                 type: defaultTo(type, ''),
                 orgIdentifier: defaultTo(orgIdentifier, ''),
                 projectIdentifier: defaultTo(projectIdentifier, ''),
-                variables
+                variables,
+                serviceOverrides
               } as NGEnvironmentInfoConfig
             }
             formName="editEnvironment"
@@ -334,7 +346,12 @@ export default function EnvironmentDetails() {
                                 {/* #region Advanced section */}
                                 {data?.data && (
                                   <Accordion
-                                    activeId={formikProps?.values?.variables?.length ? 'advanced' : ''}
+                                    activeId={
+                                      Boolean(formikProps?.values?.variables?.length) ||
+                                      Boolean(formikProps?.values?.serviceOverrides?.length)
+                                        ? 'advanced'
+                                        : ''
+                                    }
                                     className={css.accordion}
                                   >
                                     <Accordion.Panel
@@ -381,7 +398,7 @@ export default function EnvironmentDetails() {
                                             />
                                           </Card>
 
-                                          {/* <Card className={css.sectionCard} id="serviceOverrides">
+                                          <Card className={css.sectionCard} id="serviceOverrides">
                                             <ServiceOverride
                                               formName="editEnvironment"
                                               initialValues={{
@@ -398,7 +415,7 @@ export default function EnvironmentDetails() {
                                                 formikProps.setFieldValue('serviceOverrides', values.serviceOverrides)
                                               }}
                                             />
-                                          </Card> */}
+                                          </Card>
                                         </Layout.Vertical>
                                       }
                                     />
@@ -433,6 +450,15 @@ export default function EnvironmentDetails() {
                           </Text>
                         ),
                         panel: <InfrastructureDefinition />
+                      },
+                      {
+                        id: EnvironmentDetailsTab.GITOPS,
+                        title: (
+                          <Text font={{ size: 'normal' }} color={Color.BLACK}>
+                            {getString('cd.gitOpsCluster')}
+                          </Text>
+                        ),
+                        panel: <GitOpsCluster envRef={identifier} />
                       }
                     ]}
                   >
