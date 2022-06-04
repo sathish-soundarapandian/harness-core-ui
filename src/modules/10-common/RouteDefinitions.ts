@@ -46,7 +46,8 @@ import type {
   EnvironmentGroupPathProps,
   EnvironmentGroupQueryParams,
   VariablesPathProps,
-  EnvironmentQueryParams
+  EnvironmentQueryParams,
+  AccountLevelGitOpsPathProps
 } from '@common/interfaces/RouteInterfaces'
 
 const CV_HOME = `/cv/home`
@@ -715,8 +716,8 @@ const routes = {
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/gitops`
   ),
-  toAccountResourcesGitOps: withAccountId(() => {
-    const path = `resources/gitops`
+  toAccountResourcesGitOps: withAccountId(({ entity }: AccountLevelGitOpsPathProps) => {
+    const path = `resources/gitops/${entity}`
     return getScopeBasedRoute({
       scope: {},
       path
