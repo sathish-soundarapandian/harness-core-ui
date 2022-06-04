@@ -227,3 +227,7 @@ export interface GovernancePathProps
   policySetIdentifier?: string
   evaluationId?: string
 }
+
+export interface AccountLevelGitOpsPathProps {
+  entity: string
+}
