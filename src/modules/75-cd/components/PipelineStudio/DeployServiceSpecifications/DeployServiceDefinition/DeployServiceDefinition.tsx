@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { Intent, Layout, useConfirmationDialog } from '@harness/uicore'
+import { Checkbox, Intent, Layout, useConfirmationDialog } from '@harness/uicore'
 import { debounce, defaultTo, get } from 'lodash-es'
 import produce from 'immer'
 import cx from 'classnames'
@@ -29,6 +29,7 @@ import { useServiceContext } from '@cd/context/ServiceContext'
 import { setupMode } from '../PropagateWidget/PropagateWidget'
 import SelectDeploymentType from '../SelectDeploymentType'
 import css from './DeployServiceDefinition.module.scss'
+import ServiceRepoListView from '@pipeline/components/ReleaseRepoSelection/ReleaseRepoListView'
 
 function DeployServiceDefinition(): React.ReactElement {
   const {
@@ -46,6 +47,7 @@ function DeployServiceDefinition(): React.ReactElement {
   const { index: stageIndex } = getStageIndexFromPipeline(pipeline, selectedStageId || '')
   const { getString } = useStrings()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
+  const [showServiceRepo, setShowServiceRepo] = useState<boolean>(false)
 
   const getDeploymentType = (): ServiceDeploymentType => {
     return get(stage, 'stage.spec.serviceConfig.serviceDefinition.type')
@@ -116,6 +118,14 @@ function DeployServiceDefinition(): React.ReactElement {
         isReadonly={isReadonly}
         handleDeploymentTypeChange={handleDeploymentTypeChange}
       />
+
+      <Checkbox
+        name="Gitops"
+        onChange={(ev: any) => {
+          setShowServiceRepo(ev.currentTarget.checked)
+        }}
+      />
+      {showServiceRepo ? <ServiceRepoListView /> : null}
       <Layout.Horizontal>
         <StepWidget<K8SDirectServiceStep>
           factory={factory}
