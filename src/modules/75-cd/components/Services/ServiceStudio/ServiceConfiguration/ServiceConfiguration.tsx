@@ -51,7 +51,6 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
 
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
-
   const { data: serviceSchema } = useGetEntityYamlSchema({
     queryParams: {
       entityType: 'Service',
@@ -102,6 +101,7 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
       {selectedView === SelectedView.VISUAL ? (
         <>
           <ServiceStepBasicInfo />
+
           <DeployServiceDefinition />
         </>
       ) : (
