@@ -240,7 +240,7 @@ function WebhookPipelineInputPanelForm({
       projectIdentifier,
       orgIdentifier,
       pipelineIdentifier,
-      branch: gitAwareForTriggerEnabled ? inputSetSelectedBranch : undefined
+      branch: gitAwareForTriggerEnabled ? inputSetSelectedBranch : branch
     }
   })
 
@@ -459,9 +459,16 @@ function WebhookPipelineInputPanelForm({
     [selectedInputSets]
   )
 
+  // Don't show spinner when fetching is triggered by typing from
+  // Pipeline Reference. Giving users a better experience
+  const isPipelineBranchNameInFocus = (): boolean =>
+    !!gitAwareForTriggerEnabled &&
+    !!document.activeElement &&
+    document.activeElement === document.querySelector('input[name="pipelineBranchName"]')
+
   return (
     <Layout.Vertical className={css.webhookPipelineInputContainer} spacing="large" padding="none">
-      {loading || mergingInputSets ? (
+      {(loading || mergingInputSets) && !isPipelineBranchNameInFocus() ? (
         <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
           <PageSpinner />
         </div>
@@ -494,7 +501,9 @@ function WebhookPipelineInputPanelForm({
                     selectedBranch={inputSetSelectedBranch}
                   />
                 </GitSyncStoreProvider>
-                {inputSetError ? <Text intent="danger">{inputSetError}</Text> : null}
+                {inputSetError || formikProps?.errors?.inputSetRefs ? (
+                  <Text intent="danger">{inputSetError || formikProps?.errors?.inputSetRefs}</Text>
+                ) : null}
                 <div className={css.divider} />
               </div>
             ) : null}

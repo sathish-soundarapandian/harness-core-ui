@@ -472,7 +472,10 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     confirmText: getString('continue'),
     message: (
       <Layout.Vertical spacing="medium">
-        <Text>{retrySavingConfirmationMessage}</Text>
+        <Text>
+          {retrySavingConfirmationMessage}
+          {getString('triggers.triggerSaveWithError')}
+        </Text>
         <Text>{getString('triggers.triggerCouldNotBeSavedContent')}</Text>
       </Layout.Vertical>
     ),
@@ -984,6 +987,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
             // set error
             setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
           }
+        } else if (gitAwareForTriggerEnabled) {
+          pipelineJson = resolvedPipeline
         }
 
         triggerValues = {
@@ -1095,6 +1100,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
             // set error
             setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
           }
+        } else if (gitAwareForTriggerEnabled) {
+          pipelineJson = resolvedPipeline
         }
 
         triggerValues = {
@@ -1166,6 +1173,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
           // set error
           setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
         }
+      } else if (gitAwareForTriggerEnabled) {
+        pipelineJson = resolvedPipeline
       }
       const expressionBreakdownValues = getBreakdownValues(expression)
       const newExpressionBreakdown = {
@@ -1259,6 +1268,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
           // set error
           setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
         }
+      } else if (gitAwareForTriggerEnabled) {
+        pipelineJson = resolvedPipeline
       }
       const eventConditions = source?.spec?.spec?.eventConditions || []
       const { value: versionValue, operator: versionOperator } =
@@ -1348,6 +1359,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
   }
 
   const [pipelineBranchNameError, setPipelineBranchNameError] = useState('')
+  const [inputSetRefsError, setInputSetRefsError] = useState('')
   const [formErrors, setFormErrors] = useState<FormikErrors<FlatValidFormikValuesInterface>>({})
   const formikRef = useRef<FormikProps<any>>()
 
@@ -1356,13 +1368,14 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     if (Object.keys(formErrors || {}).length > 0) {
       Object.entries({
         ...flattenKeys(formErrors),
-        ...(pipelineBranchNameError ? { pipelineBranchName: pipelineBranchNameError } : {})
+        ...(pipelineBranchNameError ? { pipelineBranchName: pipelineBranchNameError } : {}),
+        ...(inputSetRefsError ? { inputSetRefs: inputSetRefsError } : {})
       }).forEach(([fieldName, fieldError]) => {
         formikRef?.current?.setFieldTouched(fieldName, true, true)
         setTimeout(() => formikRef?.current?.setFieldError(fieldName, fieldError), 0)
       })
     }
-  }, [formErrors, formikRef, pipelineBranchNameError])
+  }, [formErrors, formikRef, pipelineBranchNameError, inputSetRefsError])
 
   const yamlTemplate = useMemo(() => {
     return parse(defaultTo(template?.data?.inputSetTemplateYaml, ''))?.pipeline
@@ -1926,13 +1939,20 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
   }): Promise<FormikErrors<FlatValidWebhookFormikValuesInterface>> => {
     if (!formikProps) return {}
     setPipelineBranchNameError('')
+    setInputSetRefsError('')
 
     // Custom validation when pipeline Reference Branch Name is an expression for non-webhook triggers
-    if (gitAwareForTriggerEnabled && formikProps?.values?.triggerType !== TriggerTypes.WEBHOOK) {
-      const pipelineBranchName = (formikProps?.values?.pipelineBranchName || '').trim()
+    if (gitAwareForTriggerEnabled) {
+      if (formikProps?.values?.triggerType !== TriggerTypes.WEBHOOK) {
+        const pipelineBranchName = (formikProps?.values?.pipelineBranchName || '').trim()
 
-      if (pipelineBranchName.startsWith('<+') && pipelineBranchName.endsWith('>')) {
-        setPipelineBranchNameError(getString('triggers.branchNameCantBeExpression'))
+        if (pipelineBranchName.startsWith('<+') && pipelineBranchName.endsWith('>')) {
+          setPipelineBranchNameError(getString('triggers.branchNameCantBeExpression'))
+        }
+      }
+
+      if (template?.data?.inputSetTemplateYaml && !formikProps?.values?.inputSetRefs?.length) {
+        setInputSetRefsError(getString('triggers.inputSetIsRequired'))
       }
     }
 

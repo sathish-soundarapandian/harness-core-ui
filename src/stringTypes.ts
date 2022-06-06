@@ -3444,6 +3444,7 @@ export interface StringsMap {
   'triggers.createTrigger': string
   'triggers.cronLabel': string
   'triggers.deleteTrigger': string
+  'triggers.inputSetIsRequired': string
   'triggers.lastActivationAt': string
   'triggers.lastActivationDetails': string
   'triggers.lastActivationLabel': string
@@ -3522,6 +3523,7 @@ export interface StringsMap {
   'triggers.triggerCouldNotBeSavedGenericError': string
   'triggers.triggerCouldNotBeSavedTitle': string
   'triggers.triggerOverviewPanel.title': string
+  'triggers.triggerSaveWithError': string
   'triggers.triggersSubLabel': string
   'triggers.updateTrigger': string
   'triggers.updateTriggerDetails': string
