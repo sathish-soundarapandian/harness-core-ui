@@ -93,7 +93,7 @@ export const addHotJarSuppressionAttribute = (): { [HOTJAR_SUPPRESSION_ATTR]: bo
   window.hj ? { [HOTJAR_SUPPRESSION_ATTR]: true } : undefined
 
 // Utility to check if environment is a PR environment
-export const isPR = (): boolean => {
+export function isPR(): boolean {
   return location.hostname === 'pr.harness.io'
 }
 
