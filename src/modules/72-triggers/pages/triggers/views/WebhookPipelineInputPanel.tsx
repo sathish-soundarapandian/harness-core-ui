@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import {
@@ -18,7 +18,7 @@ import {
   PageSpinner
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import { merge, cloneDeep, isEmpty, defaultTo } from 'lodash-es'
+import { merge, cloneDeep, isEmpty, defaultTo, get, debounce } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { InputSetSelector, InputSetSelectorProps } from '@pipeline/components/InputSetSelector/InputSetSelector'
 import type { PipelineInfoConfig, StageElementWrapperConfig } from 'services/cd-ng'
@@ -48,7 +48,8 @@ import {
   TriggerTypes,
   eventTypes,
   getTriggerInputSetsBranchQueryParameter,
-  DEFAULT_TRIGGER_BRANCH
+  DEFAULT_TRIGGER_BRANCH,
+  getErrorMessage
 } from '../utils/TriggersWizardPageUtils'
 import css from './WebhookPipelineInputPanel.module.scss'
 
@@ -225,14 +226,21 @@ function WebhookPipelineInputPanelForm({
       stageIdentifiers: []
     }
   })
+  const inputSetSelectedBranch = useMemo(() => {
+    return getTriggerInputSetsBranchQueryParameter({
+      gitAwareForTriggerEnabled,
+      pipelineBranchName: formikProps?.values?.pipelineBranchName,
+      branch
+    })
+  }, [gitAwareForTriggerEnabled, branch, formikProps?.values?.pipelineBranchName])
 
-  const { mutate: mergeInputSet } = useGetMergeInputSetFromPipelineTemplateWithListInput({
+  const { mutate: mergeInputSet, error: mergeInputSetError } = useGetMergeInputSetFromPipelineTemplateWithListInput({
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
       pipelineIdentifier,
-      branch
+      branch: gitAwareForTriggerEnabled ? inputSetSelectedBranch : undefined
     }
   })
 
@@ -308,12 +316,33 @@ function WebhookPipelineInputPanelForm({
   }, [inputSetSelected])
 
   const [fetchInputSetsInProgress, setFetchInputSetsInProgress] = useState(false)
+  const [inputSetError, setInputSetError] = useState('')
+
+  useEffect(() => {
+    setInputSetError(getErrorMessage(mergeInputSetError) || '')
+  }, [mergeInputSetError])
 
   useEffect(
     function fetchInputSetsFromInputSetRefs() {
       async function fetchInputSets(): Promise<void> {
+        setInputSetError('')
+
+        const inputSetRefs = formikProps?.values?.inputSetRefs
+        const inputSetRefsLength = formikProps?.values?.inputSetRefs?.length
+        const selectedInputSetsLength = selectedInputSets?.length
+
+        if (
+          inputSetRefsLength &&
+          selectedInputSetsLength &&
+          inputSetRefsLength === selectedInputSetsLength &&
+          inputSetRefs?.every((ref: string) => selectedInputSets?.find(item => item.value === ref))
+        ) {
+          // No need to fetch input sets if they are fetched already
+          return
+        }
+
         Promise.all(
-          formikProps?.values?.inputSetRefs?.map(async (inputSetIdentifier: string): Promise<any> => {
+          inputSetRefs.map(async (inputSetIdentifier: string): Promise<any> => {
             const data = await getInputSetForPipelinePromise({
               inputSetIdentifier,
               queryParams: inputSetQueryParams
@@ -323,19 +352,24 @@ function WebhookPipelineInputPanelForm({
           })
         )
           .then(results => {
-            const inputSets = (results as unknown as { data: InputSetResponse }[]).map(
-              ({ data: { identifier, name, gitDetails } }) => ({
-                label: name,
-                value: identifier,
-                type: 'INPUT_SET',
-                gitDetails
-              })
-            )
+            const error = (results || []).find(result => get(result, 'status') === 'ERROR')
+            if (error) {
+              setInputSetError(getErrorMessage(error))
+            } else if (results?.length) {
+              const inputSets = (results as unknown as { data: InputSetResponse }[]).map(
+                ({ data: { identifier, name, gitDetails } }) => ({
+                  label: name,
+                  value: identifier,
+                  type: 'INPUT_SET',
+                  gitDetails
+                })
+              )
 
-            setSelectedInputSets(inputSets as InputSetValue[])
+              setSelectedInputSets(inputSets as InputSetValue[])
+            }
           })
-          .catch(_exception => {
-            // TODO handle exception here
+          .catch(exception => {
+            setInputSetError(getErrorMessage(exception))
           })
           .finally(() => {
             setFetchInputSetsInProgress(false)
@@ -401,9 +435,29 @@ function WebhookPipelineInputPanelForm({
   const pipelineBranchNamePlaceHolder =
     formikProps?.values?.triggerType === TriggerTypes.WEBHOOK ? DEFAULT_TRIGGER_BRANCH : getString('common.branchName')
 
+  const showPipelineInputSetSelector = useMemo(
+    () => !isEmpty(pipeline) && !!template?.data?.inputSetTemplateYaml,
+    [pipeline, template?.data?.inputSetTemplateYaml]
+  )
+
   const showPipelineInputSetForm = useMemo(() => {
-    return !isEmpty(pipeline) && template?.data?.inputSetTemplateYaml
-  }, [pipeline, template?.data?.inputSetTemplateYaml])
+    // With GitX enabled, only show when at least one input set is selected
+    if (gitAwareForTriggerEnabled) {
+      return showPipelineInputSetSelector && !!selectedInputSets?.length
+    }
+
+    return showPipelineInputSetSelector
+  }, [showPipelineInputSetSelector, gitAwareForTriggerEnabled, selectedInputSets])
+
+  // When Pipeline Reference Branch is changed (by typing new value), re-merge Input Sets
+  const reevaluateInputSetMerge = useCallback(
+    debounce(() => {
+      if (selectedInputSets?.length) {
+        setSelectedInputSets([].concat(selectedInputSets as []))
+      }
+    }, 1000),
+    [selectedInputSets]
+  )
 
   return (
     <Layout.Vertical className={css.webhookPipelineInputContainer} spacing="large" padding="none">
@@ -414,16 +468,18 @@ function WebhookPipelineInputPanelForm({
       ) : template?.data?.inputSetTemplateYaml || gitAwareForTriggerEnabled ? (
         <div className={css.inputsetGrid}>
           <div className={css.inputSetContent}>
-            <div className={css.pipelineInputRow}>
-              <Text className={css.formContentTitle} inline={true} data-tooltip-id="pipelineInputLabel">
-                {getString('triggers.pipelineInputLabel')}
-                <HarnessDocTooltip tooltipId="pipelineInputLabel" useStandAlone={true} />
-              </Text>
-              {showPipelineInputSetForm ? (
+            {showPipelineInputSetSelector ? (
+              <div className={css.pipelineInputRow}>
+                <Text className={css.formContentTitle} inline={true} data-tooltip-id="pipelineInputLabel">
+                  {getString('triggers.pipelineInputLabel')}
+                  <HarnessDocTooltip tooltipId="pipelineInputLabel" useStandAlone={true} />
+                </Text>
+
                 <GitSyncStoreProvider>
                   <InputSetSelector
                     pipelineIdentifier={pipelineIdentifier}
                     onChange={value => {
+                      setInputSetError('')
                       setSelectedInputSets(value)
                       if (gitAwareForTriggerEnabled) {
                         formikProps.setValues({
@@ -435,16 +491,13 @@ function WebhookPipelineInputPanelForm({
                     value={selectedInputSets}
                     selectedValueClass={css.inputSetSelectedValue}
                     selectedRepo={gitAwareForTriggerEnabled ? repoName : repoIdentifier}
-                    selectedBranch={getTriggerInputSetsBranchQueryParameter({
-                      gitAwareForTriggerEnabled,
-                      pipelineBranchName: formikProps?.values?.pipelineBranchName,
-                      branch
-                    })}
+                    selectedBranch={inputSetSelectedBranch}
                   />
                 </GitSyncStoreProvider>
-              ) : null}
-              <div className={css.divider} />
-            </div>
+                {inputSetError ? <Text intent="danger">{inputSetError}</Text> : null}
+                <div className={css.divider} />
+              </div>
+            ) : null}
             {gitAwareForTriggerEnabled && (
               <Container padding={{ top: 'medium' }}>
                 <Text
@@ -457,7 +510,13 @@ function WebhookPipelineInputPanelForm({
                   <HarnessDocTooltip tooltipId="pipelineReferenceBranch" useStandAlone={true} />
                 </Text>
                 <Container className={cx(css.refBranchOuter, css.halfWidth)}>
-                  <FormInput.Text name="pipelineBranchName" placeholder={pipelineBranchNamePlaceHolder} />
+                  <FormInput.Text
+                    name="pipelineBranchName"
+                    placeholder={pipelineBranchNamePlaceHolder}
+                    inputGroup={{
+                      onInput: reevaluateInputSetMerge
+                    }}
+                  />
                 </Container>
                 <div className={css.divider} />
               </Container>

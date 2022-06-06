@@ -110,7 +110,8 @@ import {
   getModifiedTemplateValues,
   DEFAULT_TRIGGER_BRANCH,
   SAVING_INVALID_TRIGGER_IN_GIT,
-  UPDATING_INVALID_TRIGGER_IN_GIT
+  UPDATING_INVALID_TRIGGER_IN_GIT,
+  getErrorMessage
 } from './utils/TriggersWizardPageUtils'
 import {
   ArtifactTriggerConfigPanel,
@@ -1470,7 +1471,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
           err?.data?.message === UPDATING_INVALID_TRIGGER_IN_GIT &&
           gitAwareForTriggerEnabled
         ) {
-          retryTriggerSubmit({ message: getString('triggers.retryTriggerSave') })
+          retryTriggerSubmit({ message: getErrorMessage(err?.data) || getString('triggers.retryTriggerSave') })
         } else {
           setErrorToasterMessage(err?.data?.message)
         }
@@ -1518,7 +1519,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
           err?.data?.message === SAVING_INVALID_TRIGGER_IN_GIT &&
           gitAwareForTriggerEnabled
         ) {
-          retryTriggerSubmit({ message: getString('triggers.retryTriggerSave') })
+          retryTriggerSubmit({ message: getErrorMessage(err?.data) || getString('triggers.retryTriggerSave') })
         } else {
           setErrorToasterMessage(err?.data?.message)
         }
