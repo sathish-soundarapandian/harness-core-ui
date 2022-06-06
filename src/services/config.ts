@@ -8,6 +8,10 @@
 import SessionToken from 'framework/utils/SessionToken'
 import { mapKeys } from 'lodash-es'
 import qs from 'qs'
+import stringify from 'fast-json-stable-stringify'
+import digest from '@common/utils/digest'
+
+const CACHE: Map<string, any> = new Map()
 
 export const getConfig = (str: string): string => {
   return window.apiUrl ? `${window.apiUrl}/${str}` : window.location.pathname.replace('ng/', '') + str
@@ -26,9 +30,10 @@ export interface GetUsingFetchProps<
   pathParams?: TPathParams
   requestOptions?: RequestInit
   mock?: _TData
+  useCache?: boolean
 }
 
-export const getUsingFetch = <
+export const getUsingFetch = async <
   TData = any,
   _TError = any,
   TQueryParams = {
@@ -40,29 +45,60 @@ export const getUsingFetch = <
 >(
   base: string,
   path: string,
-  props: { queryParams?: TQueryParams; pathParams?: TPathParams; requestOptions?: RequestInit; mock?: TData },
+  props: {
+    queryParams?: TQueryParams
+    pathParams?: TPathParams
+    requestOptions?: RequestInit
+    mock?: TData
+    useCache?: boolean
+  },
   signal?: RequestInit['signal']
 ): Promise<TData> => {
   if (props.mock) return Promise.resolve(props.mock)
+  const useCache = !!props.useCache
+  let cacheKey = ''
+
+  if (useCache) {
+    cacheKey = await digest(stringify({ base, path, ...props }))
+
+    if (CACHE.has(cacheKey)) {
+      return CACHE.get(cacheKey)
+    }
+  }
+
   let url = base + path
+
   if (props.queryParams && Object.keys(props.queryParams).length) {
     url += `?${qs.stringify(props.queryParams)}`
   }
-  return fetch(url, {
+  const res = await fetch(url, {
     signal,
     ...(props.requestOptions || {}),
     headers: getHeaders(props.requestOptions?.headers)
-  }).then(res => {
-    // custom event to allow the app framework to handle api responses
-    const responseEvent = new CustomEvent('PROMISE_API_RESPONSE', { detail: { response: res } })
-    window.dispatchEvent(responseEvent) // this will be captured in App.tsx to handle 401 and token refresh
-
-    const contentType = res.headers.get('content-type') || ''
-    if (contentType.toLowerCase().indexOf('application/json') > -1) {
-      return res.json()
-    }
-    return res.text()
   })
+
+  // custom event to allow the app framework to handle api responses
+  const responseEvent = new CustomEvent('PROMISE_API_RESPONSE', { detail: { response: res } })
+  window.dispatchEvent(responseEvent) // this will be captured in App.tsx to handle 401 and token refresh
+
+  const contentType = res.headers.get('content-type') || ''
+  if (contentType.toLowerCase().indexOf('application/json') > -1) {
+    const json = await res.json()
+
+    if (useCache && cacheKey) {
+      CACHE.set(cacheKey, json)
+    }
+
+    return json
+  }
+
+  const text = await res.text()
+
+  if (useCache && cacheKey) {
+    CACHE.set(cacheKey, text)
+  }
+
+  return text as unknown as TData
 }
 
 export interface MutateUsingFetchProps<
@@ -81,9 +117,10 @@ export interface MutateUsingFetchProps<
   pathParams?: TPathParams
   requestOptions?: RequestInit
   mock?: _TData
+  useCache?: boolean
 }
 
-export const mutateUsingFetch = <
+export const mutateUsingFetch = async <
   TData = any,
   _TError = any,
   TQueryParams = {
@@ -103,14 +140,27 @@ export const mutateUsingFetch = <
     pathParams?: TPathParams
     requestOptions?: RequestInit
     mock?: TData
+    useCache?: boolean
   },
   signal?: RequestInit['signal']
 ): Promise<TData> => {
   if (props.mock) return Promise.resolve(props.mock)
+  const useCache = !!props.useCache
+  let cacheKey = ''
+
+  if (useCache) {
+    cacheKey = await digest(stringify({ base, path, ...props }))
+
+    if (CACHE.has(cacheKey)) {
+      return CACHE.get(cacheKey)
+    }
+  }
+
   let url = base + path
   if (method === 'DELETE' && typeof props.body === 'string') {
     url += `/${props.body}`
   }
+
   if (props.queryParams && Object.keys(props.queryParams).length) {
     url += `?${qs.stringify(props.queryParams)}`
   }
@@ -129,23 +179,36 @@ export const mutateUsingFetch = <
     body = props.body as any
   }
 
-  return fetch(url, {
+  const res = await fetch(url, {
     method,
     body,
     signal,
     ...(props.requestOptions || {}),
     headers: getHeaders(props.requestOptions?.headers)
-  }).then(res => {
-    // custom event to allow the app framework to handle api responses
-    const responseEvent = new CustomEvent('PROMISE_API_RESPONSE', { detail: { response: res } })
-    window.dispatchEvent(responseEvent) // this will be captured in App.tsx to handle 401 and token refresh
-
-    const contentType = res.headers.get('content-type') || ''
-    if (contentType.toLowerCase().indexOf('application/json') > -1) {
-      return res.json()
-    }
-    return res.text()
   })
+
+  // custom event to allow the app framework to handle api responses
+  const responseEvent = new CustomEvent('PROMISE_API_RESPONSE', { detail: { response: res } })
+  window.dispatchEvent(responseEvent) // this will be captured in App.tsx to handle 401 and token refresh
+
+  const contentType = res.headers.get('content-type') || ''
+  if (contentType.toLowerCase().indexOf('application/json') > -1) {
+    const json = await res.json()
+
+    if (useCache && cacheKey) {
+      CACHE.set(cacheKey, json)
+    }
+
+    return json
+  }
+
+  const text = await res.text()
+
+  if (useCache && cacheKey) {
+    CACHE.set(cacheKey, text)
+  }
+
+  return text as unknown as TData
 }
 
 const getHeaders = (headers: RequestInit['headers'] = {}): RequestInit['headers'] => {
