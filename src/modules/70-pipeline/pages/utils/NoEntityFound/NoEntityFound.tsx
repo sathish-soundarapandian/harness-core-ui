@@ -7,12 +7,14 @@
 
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
+import { defaultTo } from 'lodash-es'
 import { Layout, Text } from '@wings-software/uicore'
 import { String, useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'
-import { useQueryParams } from '@common/hooks'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type {
+  GitQueryParams,
   PipelineType,
   TemplateStudioPathProps,
   TemplateStudioQueryParams
@@ -25,7 +27,13 @@ import css from './NoEntityFound.module.scss'
 
 interface NoEntityFoundProps {
   identifier: string
-  entityType: string
+  entityType: 'pipeline' | 'inputSet' | 'template'
+}
+
+const entityTypeLabelMapping = {
+  pipeline: 'pipeline',
+  inputSet: 'input set',
+  template: 'template'
 }
 
 function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
@@ -36,6 +44,7 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
   const { getString } = useStrings()
   const history = useHistory()
   const { isGitSimplificationEnabled } = useAppStore()
+  const { replaceQueryParams } = useUpdateQueryParams<GitQueryParams>()
 
   const isPipelineRemote = isGitSimplificationEnabled && storeType === StoreType.REMOTE
 
@@ -72,6 +81,23 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
             })
           )
           location.reload()
+        } else if (entityType === 'inputSet') {
+          replaceQueryParams(
+            {
+              branch: selectedFilter.branch,
+              repoIdentifier: selectedFilter.repo,
+              ...(isPipelineRemote
+                ? {
+                    repoName,
+                    connectorRef,
+                    storeType
+                  }
+                : {})
+            },
+            { skipNulls: true },
+            true
+          )
+          location.reload()
         } else {
           history.push(
             routes.toTemplateStudio({
@@ -98,7 +124,10 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
         <img src={noEntityFoundImage} className={css.noPipelineFoundImage} />
 
         <Text className={css.noPipelineFound} margin={{ top: 'medium', bottom: 'small' }}>
-          <String stringID={'pipeline.gitExperience.noEntityFound'} vars={{ entityType: entityType }} />
+          <String
+            stringID={'pipeline.gitExperience.noEntityFound'}
+            vars={{ entityType: defaultTo(entityTypeLabelMapping[entityType], entityType) }}
+          />
         </Text>
         <Text className={css.selectDiffBranch} margin={{ top: 'xsmall', bottom: 'xlarge' }}>
           {getString('pipeline.gitExperience.selectDiffBranch')}
@@ -108,7 +137,7 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
             connectorRef={connectorRef}
             repoName={repoName}
             branch={branch}
-            flags={{ borderless: false, showRepo: false, normalInputStyle: true }}
+            flags={{ borderless: false, showRepo: false, normalInputStyle: true, fallbackDefaultBranch: true }}
             onBranchChange={onGitBranchChange}
           />
         )}

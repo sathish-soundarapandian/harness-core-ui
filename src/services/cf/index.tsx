@@ -398,7 +398,7 @@ export type FeatureState = 'on' | 'off'
  */
 export interface FeatureStatus {
   lastAccess: number
-  status: 'active' | 'inactive' | 'never-requested'
+  status: 'active' | 'inactive' | 'never-requested' | 'potentially-stale'
 }
 
 /**
@@ -406,6 +406,26 @@ export interface FeatureStatus {
  */
 export type Features = Pagination & {
   features?: Feature[]
+  /**
+   * The total number of items with lifetime marked 'permanent'
+   */
+  permanentCount?: number
+  /**
+   * The total number of items that are enabled
+   */
+  enabledCount?: number
+  /**
+   * The total number of items that were accesed in last 24hrs
+   */
+  recentlyActiveCount?: number
+  /**
+   * The total number of items currently active
+   */
+  activeCount?: number
+  /**
+   * The total number of items that may no longer be needed
+   */
+  potentiallyStaleCount?: number
 }
 
 /**

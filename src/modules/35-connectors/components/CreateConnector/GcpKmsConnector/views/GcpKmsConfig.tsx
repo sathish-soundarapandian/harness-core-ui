@@ -18,6 +18,7 @@ import { PageSpinner } from '@common/components'
 import { useStrings } from 'framework/strings'
 import { setupGcpKmsFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { Connectors } from '@connectors/constants'
+import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 import css from '../CreateGcpKmsConnector.module.scss'
 
 const defaultInitialFormData: GcpKmsConfigFormData = {
@@ -39,6 +40,7 @@ const GcpKmsConfig: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps
   const { getString } = useStrings()
   const [loadingFormData, setLoadingFormData] = useState(isEditMode)
   const [initialValues, setInitialValues] = useState(defaultInitialFormData)
+  useConnectorWizard({ helpPanel: { referenceId: 'GCPKeyManagementServiceDetails', contentWidth: 900 } })
 
   useEffect(() => {
     if (isEditMode && connectorInfo && accountId) {
@@ -52,7 +54,7 @@ const GcpKmsConfig: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps
   return loadingFormData ? (
     <PageSpinner />
   ) : (
-    <Container padding={{ top: 'medium' }} width="64%">
+    <Container padding={{ top: 'medium' }}>
       <Text font={{ size: 'medium' }} padding={{ bottom: 'xlarge' }}>
         {getString('details')}
       </Text>

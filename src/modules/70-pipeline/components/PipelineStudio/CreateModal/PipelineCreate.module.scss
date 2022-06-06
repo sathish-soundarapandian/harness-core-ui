@@ -26,12 +26,18 @@
     margin-bottom: var(--spacing-medium) !important;
   }
 
+  .gitSimplificationDivider {
+    margin-top: var(--spacing-xlarge);
+  }
+
   :global {
     [class*='InputWithIdentifier--txtNameContainer'] {
       width: 350px !important;
     }
 
-    input {
+    input,
+    .bp3-input-group,
+    .bp3-menu {
       width: 350px !important;
     }
   }

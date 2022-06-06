@@ -243,6 +243,13 @@ featureFlags:
     totalEvaluations: Total Evaluations
 featureFlagDetail:
   variationCount: '{{ count }} variations'
+flagFilters:
+  active: Active Flags
+  allFlags: All Flags
+  enabled: Enabled Flags
+  last24: Changed Last 24 Hours
+  permanent: Permanent
+  potentiallyStale: Potentially Stale
 targets:
   ID: '{{ $.common.ID }}'
   name: name
@@ -299,10 +306,14 @@ targetDetail:
   flagDisabled: This flag is disabled. The default off value will be served.
   addTargetToTargetGroup: Add Target to Target Group {{name}}
   noTargetGroupsAvailable: No Target Groups available
+  addFlagToTarget: Add Flag to Target
 targetManagementFlagConfiguration:
   allFlagsRemoved: All Feature Flags removed
   addFlag: Add Flag
+  addFlags: 'Add {{ flagCount }} Flags'
   removeFlag: Remove Flag
+  noFlagsAvailable: No flags available
+  selectVariation: select variation
 selectSegmentModal:
   searchSegmentPlaceholder: Search for Target Group by Name or Description
   flagsUsingSegment: '{{ counter }} flag'
@@ -497,12 +508,9 @@ segmentDetail:
   noFlags: There are no Flags specified for this Target Group
   headingFeatureFlag: FEATURE FLAG
   headingVariation: VARIATION
-  selectVariation: select variation
   variationIsRequired: Variation is required
   addFlagNameToTargetGroup: 'Add {{ flagName }} to Target Group'
   addFlagToTargetGroup: Add Flag to Target Group
-  addFlags: 'Add {{ flagCount }} Flags'
-  noFlagsAvailable: No flags available
   updateSuccessful: Update successful
   flagsAddedSuccessfully: Flag(s) added successfully
 selectFlagsModal:

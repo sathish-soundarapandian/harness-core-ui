@@ -19,7 +19,7 @@ import {
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { setupArtifactoryFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { setupArtifactoryFormData, useGetHelpPanel } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import type { ConnectorConfigDTO, ConnectorRequestBody, ConnectorInfoDTO } from 'services/cd-ng'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
 import TextReference, { ValueType, TextReferenceInterface } from '@secrets/components/TextReference/TextReference'
@@ -97,7 +97,7 @@ const StepArtifactoryAuthentication: React.FC<
   const handleSubmit = (formData: ConnectorConfigDTO) => {
     nextStep?.({ ...props.connectorInfo, ...prevStepData, ...formData } as StepArtifactoryAuthenticationProps)
   }
-
+  useGetHelpPanel('AritfactoryDetails', 900)
   return loadingConnectorSecrets ? (
     <PageSpinner />
   ) : (

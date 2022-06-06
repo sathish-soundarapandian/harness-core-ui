@@ -6,7 +6,9 @@
  */
 
 /* eslint-disable react/display-name */
-import React, { FC, useMemo } from 'react'
+import React, { FC, useCallback, useMemo } from 'react'
+import get from 'lodash/get'
+import { useFormikContext } from 'formik'
 import { TableV2 } from '@harness/uicore'
 import type { Column } from 'react-table'
 import type { Feature } from 'services/cf'
@@ -23,20 +25,32 @@ export interface TargetManagementFlagsListingProps {
   flags: Feature[]
   includePercentageRollout?: boolean
   includeAddFlagCheckbox?: boolean
-  disableRowVariations?: (flag: Feature) => boolean
   onRowDelete?: (flag: Feature) => void
   ReasonTooltip?: FC
 }
+
+const EmptyReasonTooltip: FC = ({ children }) => <>{children}</>
 
 const TargetManagementFlagsListing: FC<TargetManagementFlagsListingProps> = ({
   flags,
   includePercentageRollout = false,
   includeAddFlagCheckbox = false,
   onRowDelete,
-  disableRowVariations = () => false,
-  ReasonTooltip = ({ children }) => children
+  ReasonTooltip = EmptyReasonTooltip
 }) => {
   const { getString } = useStrings()
+  const { values } = useFormikContext()
+
+  const disableRowVariations = useCallback(
+    (flag: Feature) => {
+      if (!includeAddFlagCheckbox) {
+        return false
+      }
+
+      return !get(values, `flags.${flag.identifier}.added`, false)
+    },
+    [includeAddFlagCheckbox, values]
+  )
 
   const columns = useMemo<Column<Feature>[]>(() => {
     let flagColWidth = 100
@@ -60,10 +74,12 @@ const TargetManagementFlagsListing: FC<TargetManagementFlagsListingProps> = ({
         Header: getString('cf.segmentDetail.headingVariation'),
         id: 'variation',
         width: '300px',
-        accessor: (flag: Feature) => ({
-          disabled: disableRowVariations(flag),
-          ReasonTooltip
-        }),
+        accessor: (flag: Feature) => {
+          return {
+            disabled: disableRowVariations(flag),
+            ReasonTooltip
+          }
+        },
         Cell: includePercentageRollout ? VariationsWithPercentageRolloutCell : VariationsCell
       }
     ]
@@ -91,7 +107,7 @@ const TargetManagementFlagsListing: FC<TargetManagementFlagsListingProps> = ({
     }
 
     return cols
-  }, [disableRowVariations, includeAddFlagCheckbox, onRowDelete])
+  }, [ReasonTooltip, disableRowVariations, getString, includeAddFlagCheckbox, includePercentageRollout, onRowDelete])
 
   return (
     <TableV2<Feature>

@@ -28,7 +28,8 @@ export const ArtifactIconByType: Record<ArtifactType, IconName> = {
   Nexus3Registry: 'service-nexus',
   ArtifactoryRegistry: 'service-artifactory',
   CustomArtifact: 'custom-artifact',
-  Acr: 'service-azure'
+  Acr: 'service-azure',
+  Jenkins: 'service-jenkins'
 }
 
 export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
@@ -38,7 +39,8 @@ export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
   Nexus3Registry: 'connectors.nexus.nexusLabel',
   ArtifactoryRegistry: 'connectors.artifactory.artifactoryLabel',
   CustomArtifact: 'common.repo_provider.customLabel',
-  Acr: 'pipeline.ACR.name'
+  Acr: 'pipeline.ACR.name',
+  Jenkins: 'pipeline.Jenkins.name'
 }
 
 export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {

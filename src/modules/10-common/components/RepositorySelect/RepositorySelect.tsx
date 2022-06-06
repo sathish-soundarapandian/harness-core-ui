@@ -78,7 +78,7 @@ const RepositorySelect: React.FC<RepositorySelectProps<any>> = props => {
       if (!isEmpty(response?.data)) {
         const selectOptions = getRepoSelectOptions(response?.data)
         setRepoSelectOptions(selectOptions)
-        if (selectOptions.length === 1) {
+        if (selectOptions.length === 1 && isEmpty(formikProps?.values.repo)) {
           formikProps?.setFieldValue('repo', selectOptions[0].value)
           props.onChange?.(selectOptions[0], repoSelectOptions)
         }

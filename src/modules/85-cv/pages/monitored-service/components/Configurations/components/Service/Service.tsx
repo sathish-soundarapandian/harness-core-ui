@@ -188,7 +188,6 @@ function Service(
                 <MonitoredServiceOverview
                   formikProps={formik}
                   isEdit={isEdit}
-                  isTemplate={isTemplate}
                   onChangeMonitoredServiceType={type => {
                     if (type === formik.values.type) {
                       return

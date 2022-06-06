@@ -6,7 +6,6 @@
  */
 
 import React from 'react'
-import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import PipelineDeploymentList from '@pipeline/pages/pipeline-deployment-list/PipelineDeploymentList'
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
@@ -15,12 +14,14 @@ import { useGetPipelineSummary } from 'services/pipeline-ng'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useQueryParams } from '@common/hooks'
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 
 export default function CDPipelineDeploymentList(): React.ReactElement {
   const { pipelineIdentifier, orgIdentifier, projectIdentifier, accountId } =
     useParams<PipelineType<PipelinePathProps>>()
 
-  const { branch, repoIdentifier, storeType, repoName } = useQueryParams<GitQueryParams>()
+  const { branch, repoIdentifier, storeType, repoName, connectorRef } = useQueryParams<GitQueryParams>()
+  const { isGitSyncEnabled } = useAppStore()
   const { getString } = useStrings()
   useDocumentTitle([getString('pipelines'), getString('executionsText')])
 
@@ -29,8 +30,9 @@ export default function CDPipelineDeploymentList(): React.ReactElement {
   }
   const { openRunPipelineModal } = useRunPipelineModal({
     pipelineIdentifier,
-    repoIdentifier: defaultTo(repoIdentifier, repoName),
+    repoIdentifier: isGitSyncEnabled ? repoIdentifier : repoName,
     branch,
+    connectorRef,
     storeType
   })
 

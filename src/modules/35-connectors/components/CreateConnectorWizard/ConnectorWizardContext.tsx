@@ -41,16 +41,6 @@ export const ConnectorWizardContextProvider: React.FC = props => {
     return diffWidth > 50 ? diffWidth : 50
   }
 
-  const renderContent = () => {
-    return helpPanel ? (
-      <div className={css.contentContainer} style={{ width: helpPanel.contentWidth }}>
-        {props.children}
-      </div>
-    ) : (
-      props.children
-    )
-  }
-
   return (
     <ConnectorWizardContext.Provider
       value={{
@@ -58,7 +48,9 @@ export const ConnectorWizardContextProvider: React.FC = props => {
       }}
     >
       <div className={css.createConnectorWizard}>
-        {renderContent()}
+        <div className={css.contentContainer} style={{ width: helpPanel?.contentWidth || '100%' }}>
+          {props.children}
+        </div>
         {helpPanel ? (
           <div className={css.helpPanelContainer}>
             <div style={{ minWidth: getHelpPanelMinWidth(), height: 560 }}>

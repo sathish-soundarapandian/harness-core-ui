@@ -174,6 +174,7 @@ export type ModuleNameMatch =
   | ':module(cv)'
   | ':module(ce)'
   | ':module(sto)'
+  | ':module(chaos)'
 
 export type Module = ModuleName | ModuleNameMatch
 

@@ -143,6 +143,8 @@ export interface FlatValidScheduleFormikValuesInterface {
   sourceRepo: string
   triggerType: NGTriggerSourceV2['type']
   expression: string
+  pipelineBranchName?: string
+  inputSetRefs?: string[]
 }
 
 export interface FlatValidArtifactFormikValuesInterface {

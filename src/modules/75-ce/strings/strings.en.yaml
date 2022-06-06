@@ -28,6 +28,7 @@ pageErrorMsg:
   noBudgetMsg: No Budgets created yet
   noBudgetInfo: You budget amounts, thresholds and alerts on perspectives.
   noRecommendations: 'Currently there are no recommendations for your clusters.'
+  noFilteredRecommendations: There are no recommendations for the filters applied.
   recommendationDesc: 'Recommendations are shown only for cluster data (workloads and nodes). Add now to get started.'
 homepage:
   slogan: 'Get granular cloud cost visibility, enable powerful cost optimization through intelligent automation, and set vital budgets and forecasts for cost governance. Take your cloud cost management to the next level with Harness.'
@@ -564,6 +565,11 @@ recommendation:
       name: '{{ $.name }}'
       namespace: '{{ $.common.namespace }}'
       enterCost: Enter Cost
+      potentialSpend: Potential Spend ($)
+      savings: Savings ($)
+      spendPlaceholder: Enter minimum Potential spend
+      savingsPlaceholder: Enter minimum savings
+      resourceName: '{{ $.auditTrail.resourceNameLabel }}'
     listTableHeaders:
       monthlySavings: 'MONTHLY SAVINGS'
       resourceName: 'RESOURCE NAME'
@@ -819,6 +825,28 @@ perspectives:
       exceeds: exceeds
       percent: '% of Budget'
       createAlert: '+ add new alert'
+  folders:
+    heading: '{{ $.dashboards.homePage.folders }}'
+    customFolders: My Folders
+    newFolder: New folder
+    createNewFolderHeading: Create new Folder for Perspectives
+    folderNamePlaceholder: Enter folder name
+    selectPerspectiveLabel: Include perspectives
+    folderCreated: Perspective Folder created successfully!!
+    folderDeleted: Folder deleted successfully!!
+    moveFolderTitle: Move to folder
+    currentFolderLabel: Current Folder
+    moveExistingFolder: Move to an existing folder
+    createNewFolder: Create a new folder
+    folderNameLabel: '{{ $.dashboards.resourceModal.folders }}'
+    moveToLabel: Move to
+    folderMoved: Folder moved succesfully!!
+    folderNameRequired: Forder name is required!
+    folderSelectionRequired: Please select any folder to move.
+    deletedConfirmationTitle: Delete Folder
+    deletedConfirmationDesc: Deleting the folder will not delete the perspectives, all perspectives in the current folder will be moved to the default folder.
+  emptyStateTitle: You have not created any perspectives yet
+  emptyStateDesc: Create a new one or explore our Out of the box perspectives
 overview:
   title: '{{ $.overview }}'
   seeAll: See all
@@ -954,6 +982,13 @@ anomalyDetection:
     groupByNoneValue: none
     groupByPerspectivePlaceholder: All Perspectives
     groupByCloudProvidersPlaceholder: All Cloud Providers
+    awsFilters: AWS Filters
+    clusterFilters: Cluster Filters
+    gcpFilters: GCP Filters
+    azureFilters: Azure Filters
+    actualSpend: Actual Spend ($)
+    spendPlaceholder: Enter minimum spend
+    anomalousSpend: Anomalous Spend ($)
   summary:
     totalCountText: Anomalies Detected
     costImpacted: Total Cost Impact

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, ReactElement, useEffect, useMemo } from 'react'
+import React, { FC, useEffect, useMemo } from 'react'
 import { useFormikContext } from 'formik'
 import get from 'lodash/get'
 import { FormError, FormInput, SelectOption } from '@harness/uicore'
@@ -20,13 +20,13 @@ export interface VariationsWithPercentageRolloutCellProps {
   row: { original: Feature }
   value: {
     disabled?: boolean
-    ReasonTooltip?: FC
+    ReasonTooltip: FC
   }
 }
 
 const VariationsWithPercentageRolloutCell: FC<VariationsWithPercentageRolloutCellProps> = ({
   row: { original: flag },
-  value: { disabled = false, ReasonTooltip = ({ children }) => children as ReactElement }
+  value: { disabled = false, ReasonTooltip }
 }) => {
   const { getString } = useStrings()
   const { values, setFieldValue, errors } = useFormikContext()
@@ -72,7 +72,7 @@ const VariationsWithPercentageRolloutCell: FC<VariationsWithPercentageRolloutCel
     <fieldset disabled={disabled} className={css.wrapper}>
       <ReasonTooltip>
         <FormInput.Select
-          placeholder={getString('cf.segmentDetail.selectVariation')}
+          placeholder={getString('cf.targetManagementFlagConfiguration.selectVariation')}
           name={`${fieldPrefix}.variation`}
           items={flagItems}
           className={css.input}

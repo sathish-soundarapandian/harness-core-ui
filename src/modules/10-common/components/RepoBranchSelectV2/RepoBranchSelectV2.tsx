@@ -38,6 +38,7 @@ export interface RepoBranchSelectProps {
   selectProps?: Omit<SelectProps, 'value' | 'onChange' | 'items'>
   showIcons?: boolean
   showErrorInModal?: boolean
+  fallbackDefaultBranch?: boolean
 }
 
 export const getBranchSelectOptions = (data: GitBranchDetailsDTO[] = []): SelectOption[] => {
@@ -82,7 +83,8 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
     branchSelectorClassName,
     selectProps,
     showIcons = true,
-    showErrorInModal = false
+    showErrorInModal = false,
+    fallbackDefaultBranch = false
   } = props
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -106,15 +108,19 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
       size: 100
     },
     debounce: 500,
-    lazy: !hasToRefetchBranches(disabled, connectorIdentifierRef, repoName)
+    lazy: true
   })
 
   const responseMessages = (error?.data as Error)?.responseMessages
+  const defaultToBranch = fallbackDefaultBranch ? response?.data?.defaultBranch?.name || '' : ''
 
   useEffect(() => {
     setBranchSelectOptions([])
+    if (hasToRefetchBranches(disabled, connectorIdentifierRef, repoName)) {
+      refetch()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [connectorIdentifierRef, repoName])
+  }, [connectorIdentifierRef, repoName, disabled])
 
   useEffect(() => {
     if (loading) {
@@ -143,7 +149,7 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
         items={branchSelectOptions}
         label={noLabel ? '' : defaultTo(label, getString('gitBranch'))}
         placeholder={loading ? getString('loading') : getString('select')}
-        value={{ label: defaultTo(selectedValue, ''), value: defaultTo(selectedValue, '') }}
+        value={{ label: selectedValue || defaultToBranch, value: selectedValue || defaultToBranch }}
         onChange={selected => props.onChange?.(selected, branchSelectOptions)}
         selectProps={{ usePortal: true, popoverClassName: css.gitBranchSelectorPopover, ...selectProps }}
         className={cx(branchSelectorClassName, css.branchSelector)}

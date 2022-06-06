@@ -59,7 +59,7 @@ exports[`GitRemoteDetails test default rendering GitRemoteDetails 1`] = `
       class="Layout--horizontal StyledProps--main"
     >
       <div
-        class="bp3-form-group bp3-disabled branchSelector branchSelector"
+        class="bp3-form-group branchSelector branchSelector"
       >
         
         <div
@@ -72,14 +72,13 @@ exports[`GitRemoteDetails test default rendering GitRemoteDetails 1`] = `
               class="bp3-popover-target"
             >
               <div
-                class="bp3-input-group bp3-disabled"
+                class="bp3-input-group"
               >
                 <input
                   autocomplete="off"
                   class="bp3-input"
-                  disabled=""
                   name="remoteBranch"
-                  placeholder="- loading -"
+                  placeholder="- select -"
                   style="padding-right: 0px;"
                   type="text"
                   value="main"

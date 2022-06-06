@@ -30,6 +30,7 @@ import type { ConnectorConfigDTO, ConnectorInfoDTO } from 'services/cd-ng'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
 import { useStrings } from 'framework/strings'
 import { Connectors } from '@connectors/constants'
+import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import css from '../CreateGcpConnector.module.scss'
 
 interface GcpAuthenticationProps {
@@ -94,6 +95,7 @@ const GcpAuthentication: React.FC<StepProps<StepConfigureProps> & GcpAuthenticat
   const handleSubmit = (formData: ConnectorConfigDTO) => {
     nextStep?.({ ...props.connectorInfo, ...prevStepData, ...formData } as StepConfigureProps)
   }
+  useConnectorWizard({ helpPanel: { referenceId: 'GoogleCloudProviderDetails', contentWidth: 1100 } })
 
   return loadingConnectorSecrets ? (
     <PageSpinner />

@@ -35,12 +35,16 @@ import type { ProjectPathProps, GitQueryParams } from '@common/interfaces/RouteI
 import { useGetTemplate, useGetTemplateInputSetYaml } from 'services/template-ng'
 import { useToaster } from '@common/exports'
 import { PageSpinner } from '@common/components'
-import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import {
+  getIdentifierFromValue,
+  getScopeBasedProjectPathParams,
+  getScopeFromValue
+} from '@common/components/EntityReference/EntityReference'
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import { validateStep } from '@pipeline/components/PipelineStudio/StepUtil'
 import { StepForm } from '@pipeline/components/PipelineInputSetForm/StageInputSetForm'
 import { setTemplateInputs, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
-import { getScopeBasedQueryParams, getTemplateRuntimeInputsCount } from '@templates-library/utils/templatesUtils'
+import { getTemplateRuntimeInputsCount } from '@templates-library/utils/templatesUtils'
 import { useQueryParams } from '@common/hooks'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './TemplateStepWidget.module.scss'
@@ -84,7 +88,7 @@ function TemplateStepWidget(
   } = useGetTemplate({
     templateIdentifier: stepTemplateRef,
     queryParams: {
-      ...getScopeBasedQueryParams(queryParams, scope),
+      ...getScopeBasedProjectPathParams(queryParams, scope),
       versionLabel: defaultTo(initialValues.template.versionLabel, ''),
       repoIdentifier,
       branch,
@@ -100,7 +104,7 @@ function TemplateStepWidget(
   } = useGetTemplateInputSetYaml({
     templateIdentifier: stepTemplateRef,
     queryParams: {
-      ...getScopeBasedQueryParams(queryParams, scope),
+      ...getScopeBasedProjectPathParams(queryParams, scope),
       versionLabel: defaultTo(initialValues.template.versionLabel, ''),
       repoIdentifier,
       branch,

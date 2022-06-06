@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import {
@@ -18,7 +18,7 @@ import {
   PageSpinner
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import { merge, cloneDeep, isEmpty, defaultTo } from 'lodash-es'
+import { merge, cloneDeep, isEmpty, defaultTo, get, debounce } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { InputSetSelector, InputSetSelectorProps } from '@pipeline/components/InputSetSelector/InputSetSelector'
 import type { PipelineInfoConfig, StageElementWrapperConfig } from 'services/cd-ng'
@@ -47,7 +47,9 @@ import {
   getFilteredStage,
   TriggerTypes,
   eventTypes,
-  getTriggerInputSetsBranchQueryParameter
+  getTriggerInputSetsBranchQueryParameter,
+  DEFAULT_TRIGGER_BRANCH,
+  getErrorMessage
 } from '../utils/TriggersWizardPageUtils'
 import css from './WebhookPipelineInputPanel.module.scss'
 
@@ -197,7 +199,7 @@ function WebhookPipelineInputPanelForm({
 
   const { getString } = useStrings()
   const ciCodebaseBuildValue = formikProps.values?.pipeline?.properties?.ci?.codebase?.build
-  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { repoIdentifier, branch, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
   const [selectedInputSets, setSelectedInputSets] = useState<InputSetSelectorProps['value']>(inputSetSelected)
   const [hasEverRendered, setHasEverRendered] = useState(
     typeof ciCodebaseBuildValue === 'object' && !isEmpty(ciCodebaseBuildValue)
@@ -217,26 +219,35 @@ function WebhookPipelineInputPanelForm({
       accountIdentifier: accountId,
       orgIdentifier,
       pipelineIdentifier,
-      projectIdentifier
+      projectIdentifier,
+      branch
     },
     body: {
       stageIdentifiers: []
     }
   })
+  const inputSetSelectedBranch = useMemo(() => {
+    return getTriggerInputSetsBranchQueryParameter({
+      gitAwareForTriggerEnabled,
+      pipelineBranchName: formikProps?.values?.pipelineBranchName,
+      branch
+    })
+  }, [gitAwareForTriggerEnabled, branch, formikProps?.values?.pipelineBranchName])
 
-  const { mutate: mergeInputSet } = useGetMergeInputSetFromPipelineTemplateWithListInput({
+  const { mutate: mergeInputSet, error: mergeInputSetError } = useGetMergeInputSetFromPipelineTemplateWithListInput({
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
-      pipelineIdentifier
+      pipelineIdentifier,
+      branch: gitAwareForTriggerEnabled ? inputSetSelectedBranch : undefined
     }
   })
 
   useEffect(() => {
     const shouldInjectCloneCodebase = isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline)
 
-    if (!hasEverRendered && shouldInjectCloneCodebase && !isEdit) {
+    if (!gitAwareForTriggerEnabled && !hasEverRendered && shouldInjectCloneCodebase && !isEdit) {
       const formikValues = cloneDeep(formikProps.values)
       const isPipelineFromTemplate = !!formikValues?.pipeline?.template
       const newPipelineObject = getPipelineWithInjectedWithCloneCodebase({
@@ -245,13 +256,16 @@ function WebhookPipelineInputPanelForm({
         isPipelineFromTemplate
       })
 
-      formikValues.pipeline = mergeTemplateWithInputSetData({
+      const mergedPipeline = mergeTemplateWithInputSetData({
         inputSetPortion: { pipeline: newPipelineObject },
         templatePipeline: { pipeline: newPipelineObject },
         allValues: { pipeline: resolvedPipeline },
         shouldUseDefaultValues: triggerIdentifier === 'new'
       })
-      formikProps.setValues(formikValues)
+      formikProps.setValues({
+        ...formikValues,
+        pipeline: mergedPipeline.pipeline
+      })
     }
 
     setHasEverRendered(true)
@@ -262,7 +276,8 @@ function WebhookPipelineInputPanelForm({
     resolvedPipeline?.stages,
     resolvedPipeline,
     triggerIdentifier,
-    isEdit
+    isEdit,
+    gitAwareForTriggerEnabled
   ])
 
   const inputSetQueryParams = useMemo(
@@ -272,6 +287,9 @@ function WebhookPipelineInputPanelForm({
       pipelineIdentifier,
       projectIdentifier,
       repoIdentifier,
+      connectorRef,
+      repoName,
+      storeType,
       branch: getTriggerInputSetsBranchQueryParameter({
         gitAwareForTriggerEnabled,
         pipelineBranchName: formikProps?.values?.pipelineBranchName,
@@ -285,6 +303,9 @@ function WebhookPipelineInputPanelForm({
       pipelineIdentifier,
       repoIdentifier,
       formikProps?.values?.pipelineBranchName,
+      connectorRef,
+      repoName,
+      storeType,
       branch,
       gitAwareForTriggerEnabled
     ]
@@ -295,12 +316,33 @@ function WebhookPipelineInputPanelForm({
   }, [inputSetSelected])
 
   const [fetchInputSetsInProgress, setFetchInputSetsInProgress] = useState(false)
+  const [inputSetError, setInputSetError] = useState('')
+
+  useEffect(() => {
+    setInputSetError(getErrorMessage(mergeInputSetError) || '')
+  }, [mergeInputSetError])
 
   useEffect(
     function fetchInputSetsFromInputSetRefs() {
       async function fetchInputSets(): Promise<void> {
+        setInputSetError('')
+
+        const inputSetRefs = formikProps?.values?.inputSetRefs
+        const inputSetRefsLength = formikProps?.values?.inputSetRefs?.length
+        const selectedInputSetsLength = selectedInputSets?.length
+
+        if (
+          inputSetRefsLength &&
+          selectedInputSetsLength &&
+          inputSetRefsLength === selectedInputSetsLength &&
+          inputSetRefs?.every((ref: string) => selectedInputSets?.find(item => item.value === ref))
+        ) {
+          // No need to fetch input sets if they are fetched already
+          return
+        }
+
         Promise.all(
-          formikProps?.values?.inputSetRefs?.map(async (inputSetIdentifier: string): Promise<any> => {
+          inputSetRefs.map(async (inputSetIdentifier: string): Promise<any> => {
             const data = await getInputSetForPipelinePromise({
               inputSetIdentifier,
               queryParams: inputSetQueryParams
@@ -310,19 +352,24 @@ function WebhookPipelineInputPanelForm({
           })
         )
           .then(results => {
-            const inputSets = (results as unknown as { data: InputSetResponse }[]).map(
-              ({ data: { identifier, name, gitDetails } }) => ({
-                label: name,
-                value: identifier,
-                type: 'INPUT_SET',
-                gitDetails
-              })
-            )
+            const error = (results || []).find(result => get(result, 'status') === 'ERROR')
+            if (error) {
+              setInputSetError(getErrorMessage(error))
+            } else if (results?.length) {
+              const inputSets = (results as unknown as { data: InputSetResponse }[]).map(
+                ({ data: { identifier, name, gitDetails } }) => ({
+                  label: name,
+                  value: identifier,
+                  type: 'INPUT_SET',
+                  gitDetails
+                })
+              )
 
-            setSelectedInputSets(inputSets as InputSetValue[])
+              setSelectedInputSets(inputSets as InputSetValue[])
+            }
           })
-          .catch(_exception => {
-            // TODO handle exception here
+          .catch(exception => {
+            setInputSetError(getErrorMessage(exception))
           })
           .finally(() => {
             setFetchInputSetsInProgress(false)
@@ -385,6 +432,32 @@ function WebhookPipelineInputPanelForm({
     pipelineIdentifier,
     resolvedPipeline
   ])
+  const pipelineBranchNamePlaceHolder =
+    formikProps?.values?.triggerType === TriggerTypes.WEBHOOK ? DEFAULT_TRIGGER_BRANCH : getString('common.branchName')
+
+  const showPipelineInputSetSelector = useMemo(
+    () => !isEmpty(pipeline) && !!template?.data?.inputSetTemplateYaml,
+    [pipeline, template?.data?.inputSetTemplateYaml]
+  )
+
+  const showPipelineInputSetForm = useMemo(() => {
+    // With GitX enabled, only show when at least one input set is selected
+    if (gitAwareForTriggerEnabled) {
+      return showPipelineInputSetSelector && !!selectedInputSets?.length
+    }
+
+    return showPipelineInputSetSelector
+  }, [showPipelineInputSetSelector, gitAwareForTriggerEnabled, selectedInputSets])
+
+  // When Pipeline Reference Branch is changed (by typing new value), re-merge Input Sets
+  const reevaluateInputSetMerge = useCallback(
+    debounce(() => {
+      if (selectedInputSets?.length) {
+        setSelectedInputSets([].concat(selectedInputSets as []))
+      }
+    }, 1000),
+    [selectedInputSets]
+  )
 
   return (
     <Layout.Vertical className={css.webhookPipelineInputContainer} spacing="large" padding="none">
@@ -392,38 +465,39 @@ function WebhookPipelineInputPanelForm({
         <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
           <PageSpinner />
         </div>
-      ) : !isEmpty(pipeline) && template?.data?.inputSetTemplateYaml ? (
+      ) : template?.data?.inputSetTemplateYaml || gitAwareForTriggerEnabled ? (
         <div className={css.inputsetGrid}>
           <div className={css.inputSetContent}>
-            <div className={css.pipelineInputRow}>
-              <Text className={css.formContentTitle} inline={true} data-tooltip-id="pipelineInputLabel">
-                {getString('triggers.pipelineInputLabel')}
-                <HarnessDocTooltip tooltipId="pipelineInputLabel" useStandAlone={true} />
-              </Text>
-              <GitSyncStoreProvider>
-                <InputSetSelector
-                  pipelineIdentifier={pipelineIdentifier}
-                  onChange={value => {
-                    setSelectedInputSets(value)
-                    if (gitAwareForTriggerEnabled) {
-                      formikProps.setValues({
-                        ...formikProps.values,
-                        inputSetRefs: (value || []).map(v => v.value)
-                      })
-                    }
-                  }}
-                  value={selectedInputSets}
-                  selectedValueClass={css.inputSetSelectedValue}
-                  selectedRepo={repoIdentifier}
-                  selectedBranch={getTriggerInputSetsBranchQueryParameter({
-                    gitAwareForTriggerEnabled,
-                    pipelineBranchName: formikProps?.values?.pipelineBranchName,
-                    branch
-                  })}
-                />
-              </GitSyncStoreProvider>
-              <div className={css.divider} />
-            </div>
+            {showPipelineInputSetSelector ? (
+              <div className={css.pipelineInputRow}>
+                <Text className={css.formContentTitle} inline={true} data-tooltip-id="pipelineInputLabel">
+                  {getString('triggers.pipelineInputLabel')}
+                  <HarnessDocTooltip tooltipId="pipelineInputLabel" useStandAlone={true} />
+                </Text>
+
+                <GitSyncStoreProvider>
+                  <InputSetSelector
+                    pipelineIdentifier={pipelineIdentifier}
+                    onChange={value => {
+                      setInputSetError('')
+                      setSelectedInputSets(value)
+                      if (gitAwareForTriggerEnabled) {
+                        formikProps.setValues({
+                          ...formikProps.values,
+                          inputSetRefs: (value || []).map(v => v.value)
+                        })
+                      }
+                    }}
+                    value={selectedInputSets}
+                    selectedValueClass={css.inputSetSelectedValue}
+                    selectedRepo={gitAwareForTriggerEnabled ? repoName : repoIdentifier}
+                    selectedBranch={inputSetSelectedBranch}
+                  />
+                </GitSyncStoreProvider>
+                {inputSetError ? <Text intent="danger">{inputSetError}</Text> : null}
+                <div className={css.divider} />
+              </div>
+            ) : null}
             {gitAwareForTriggerEnabled && (
               <Container padding={{ top: 'medium' }}>
                 <Text
@@ -436,24 +510,32 @@ function WebhookPipelineInputPanelForm({
                   <HarnessDocTooltip tooltipId="pipelineReferenceBranch" useStandAlone={true} />
                 </Text>
                 <Container className={cx(css.refBranchOuter, css.halfWidth)}>
-                  <FormInput.Text name="pipelineBranchName" placeholder="<+trigger.branch>" />
+                  <FormInput.Text
+                    name="pipelineBranchName"
+                    placeholder={pipelineBranchNamePlaceHolder}
+                    inputGroup={{
+                      onInput: reevaluateInputSetMerge
+                    }}
+                  />
                 </Container>
                 <div className={css.divider} />
               </Container>
             )}
-            <PipelineInputSetForm
-              originalPipeline={resolvedPipeline}
-              template={defaultTo(
-                memoizedParse<Pipeline>(template?.data?.inputSetTemplateYaml)?.pipeline,
-                {} as PipelineInfoConfig
-              )}
-              path="pipeline"
-              viewType={StepViewType.InputSet}
-              maybeContainerClass={css.pipelineInputSetForm}
-              viewTypeMetadata={{ isTrigger: true }}
-              readonly={gitAwareForTriggerEnabled}
-              gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
-            />
+            {showPipelineInputSetForm && template?.data?.inputSetTemplateYaml ? (
+              <PipelineInputSetForm
+                originalPipeline={resolvedPipeline}
+                template={defaultTo(
+                  memoizedParse<Pipeline>(template?.data?.inputSetTemplateYaml)?.pipeline,
+                  {} as PipelineInfoConfig
+                )}
+                path="pipeline"
+                viewType={StepViewType.InputSet}
+                maybeContainerClass={css.pipelineInputSetForm}
+                viewTypeMetadata={{ isTrigger: true }}
+                readonly={gitAwareForTriggerEnabled}
+                gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
+              />
+            ) : null}
           </div>
         </div>
       ) : (

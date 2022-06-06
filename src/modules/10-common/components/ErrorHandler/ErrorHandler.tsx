@@ -26,13 +26,13 @@ export interface ErrorHandlerProps {
   errorHintsRenderer?: (item: ResponseMessage[]) => React.ReactElement
 }
 
-const extractInfo = (
-  responseMessages: ErrorHandlerProps['responseMessages']
-): {
+export interface ExtractedInfo {
   error?: ResponseMessage
   explanations?: ResponseMessage[]
   hints?: ResponseMessage[]
-}[] => {
+}
+
+export const extractInfo = (responseMessages: ResponseMessage[]): ExtractedInfo[] => {
   const errorObjects = []
   let explanations: ResponseMessage[] = []
   let hints: ResponseMessage[] = []

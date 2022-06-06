@@ -86,6 +86,23 @@ const FlagSettings: FC<FlagSettingsProps> = ({ target }) => {
     [initialValues, patchTarget, refetchFlags, showError]
   )
 
+  const onAdd = useCallback(
+    async (values: FormValues) => {
+      const instructions = buildInstructions(values, { flags: {} })
+
+      /* istanbul ignore else */
+      if (instructions.length) {
+        try {
+          await patchTarget({ instructions })
+          refetchFlags()
+        } catch (e) {
+          showError(getErrorInfoFromErrorObject(e))
+        }
+      }
+    },
+    [patchTarget, refetchFlags, showError]
+  )
+
   if (loadingFlags) {
     return <ContainerSpinner flex={{ align: 'center-center' }} />
   }
@@ -99,8 +116,10 @@ const FlagSettings: FC<FlagSettingsProps> = ({ target }) => {
       item={target}
       flags={flags?.features as Feature[]}
       onChange={onChange}
+      onAdd={onAdd}
       initialValues={initialValues}
       noFlagsMessage={getString('cf.targetDetail.noFlagConfigured')}
+      addFlagsDialogTitle={getString('cf.targetDetail.addFlagToTarget')}
     />
   )
 }

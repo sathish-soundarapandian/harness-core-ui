@@ -347,7 +347,7 @@ exports[`Organization Details Render 1`] = `
           </p>
         </div>
         <div
-          class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
+          class="cardsWrapper"
         >
           <div
             class="bp3-card bp3-elevation-0 Card--card card connectors"
@@ -568,7 +568,7 @@ exports[`Organization Details Render 1`] = `
           projectsOrgs.orgAccessControl
         </h1>
         <div
-          class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
+          class="cardsWrapper"
         >
           <div
             class="bp3-card bp3-elevation-0 Card--card card accessControl"

@@ -14,21 +14,17 @@ import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
-import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { TemplateSelectorLeftView } from '@templates-library/components/TemplateSelector/TemplateSelectorLeftView/TemplateSelectorLeftView'
 import { areTemplatesEqual, getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
+import { useTemplateSelectorContext } from '@templates-library/components/TemplateSelectorContext/TemplateSelectorContext'
 import { TemplateDetails } from '../TemplateDetails/TemplateDetails'
 import css from './TemplateSelector.module.scss'
 
 export const TemplateSelector: React.FC = (): JSX.Element => {
   const {
-    state: {
-      templateView: {
-        templateDrawerData: { data }
-      }
-    }
-  } = usePipelineContext()
-  const { onSubmit, selectedTemplate: defaultTemplate } = data?.selectorData || {}
+    state: { selectorData }
+  } = useTemplateSelectorContext()
+  const { onSubmit, selectedTemplate: defaultTemplate } = selectorData || {}
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateSummaryResponse | undefined>()
   const { getString } = useStrings()
   const { isGitSyncEnabled } = useAppStore()

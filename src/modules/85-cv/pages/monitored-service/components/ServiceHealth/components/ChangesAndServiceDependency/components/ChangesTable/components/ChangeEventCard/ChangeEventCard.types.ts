@@ -21,7 +21,8 @@ export interface ChangeDetailsDataInterface {
   details: {
     [key: string]: string | { name: string | ChangeEventDTO['type']; url?: string }
   }
-  executedBy?: React.ReactElement
+  executedBy?: { shouldVisible?: boolean; component: React.ReactElement } | null
+  name?: string
 }
 
 export interface ChangeTitleData {

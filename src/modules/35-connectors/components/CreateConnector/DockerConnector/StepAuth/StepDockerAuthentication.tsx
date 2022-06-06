@@ -29,6 +29,7 @@ import SecretInput from '@secrets/components/SecretInput/SecretInput'
 import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
 import { useStrings } from 'framework/strings'
 import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
+import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from '../CreateDockerConnector.module.scss'
 
@@ -119,7 +120,7 @@ const StepDockerAuthentication: React.FC<StepProps<StepDockerAuthenticationProps
     const handleSubmit = (formData: ConnectorConfigDTO) => {
       nextStep?.({ ...props.connectorInfo, ...prevStepData, ...formData } as StepDockerAuthenticationProps)
     }
-
+    useConnectorWizard({ helpPanel: { referenceId: 'DockerConnectorDetails', contentWidth: 900 } })
     return loadingConnectorSecrets ? (
       <PageSpinner />
     ) : (

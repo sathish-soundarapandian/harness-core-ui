@@ -7,6 +7,7 @@ import {
   findByText as findByTextGlobal,
   act
 } from '@testing-library/react'
+import { useToaster } from '@harness/uicore'
 import { TestWrapper, CurrentLocation } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -14,6 +15,11 @@ import { useClonePipeline } from 'services/pipeline-ng'
 import { useGetProjectAggregateDTOList } from 'services/cd-ng'
 
 import { ClonePipelineForm, ClonePipelineFormProps } from './ClonePipelineForm'
+
+jest.mock('@harness/uicore', () => ({
+  ...jest.requireActual('@harness/uicore'),
+  useToaster: jest.fn().mockReturnValue({ showSuccess: jest.fn() })
+}))
 
 const originalPipeline: ClonePipelineFormProps['originalPipeline'] = {
   name: 'My Pipeline',
@@ -144,40 +150,34 @@ describe('<ClonePipelineForm /> tests', () => {
   })
 
   test('handles errors', async () => {
+    const showError = jest.fn()
+    const showSuccess = jest.fn()
+    ;(useToaster as jest.Mock).mockReturnValue({ showError, showSuccess })
+
     const err_msg =
       'Pipeline [test1_Clone_Clone] under Project[defaultproject], Organization [default] already exists or has been deleted.'
-    const clonePipeline = jest.fn()
     ;(useClonePipeline as jest.Mock).mockImplementation().mockReturnValue({
-      mutate: clonePipeline,
-      error: {
+      mutate: jest.fn().mockRejectedValue({
         data: {
           status: 'ERROR',
           code: 'DUPLICATE_FIELD',
-          responseMessages: [
-            {
-              code: 'DUPLICATE_FIELD',
-              level: 'ERROR',
-              message: err_msg,
-              exception: null,
-              failureTypes: []
-            }
-          ],
-          metadata: null
+          message: err_msg
         }
-      }
+      })
     })
-    const { findByTestId, findByText } = render(
+    const { findByTestId } = render(
       <TestWrapper path={TEST_PATH} pathParams={PATH_PARAMS as any}>
         <ClonePipelineForm originalPipeline={originalPipeline} onClose={jest.fn()} isOpen />
       </TestWrapper>
     )
 
-    const form = await findByTestId(FORM_ID)
-    expect(form).toMatchSnapshot()
+    const clone = await findByTestId('clone')
 
-    const msg = await findByText(err_msg)
+    act(() => {
+      fireEvent.click(clone)
+    })
 
-    expect(msg).toBeTruthy()
+    await waitFor(() => expect(showError).toHaveBeenLastCalledWith(err_msg))
   })
 
   test('new projects are fetched, when org is changed', async () => {

@@ -260,14 +260,14 @@ exports[`Test Execution StageDiagram for Grouped Steps snapshot test 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main"
+                class="bp3-icon StyledProps--main StyledProps--color"
                 data-icon="command-shell-script"
                 style="pointer-events: none;"
               >
                 <svg
-                  height="28"
+                  height="20"
                   viewBox="0 0 14 11"
-                  width="28"
+                  width="20"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -401,14 +401,14 @@ exports[`Test Execution StageDiagram for Grouped Steps snapshot test 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main"
+                class="bp3-icon StyledProps--main StyledProps--color"
                 data-icon="command-shell-script"
                 style="pointer-events: none;"
               >
                 <svg
-                  height="28"
+                  height="20"
                   viewBox="0 0 14 11"
-                  width="28"
+                  width="20"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -630,14 +630,14 @@ exports[`Test Execution StageDiagram for Grouped Steps snapshot test 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main"
+                class="bp3-icon StyledProps--main StyledProps--color"
                 data-icon="services"
                 style="pointer-events: none;"
               >
                 <svg
-                  height="28"
+                  height="20"
                   viewBox="0 0 16 16"
-                  width="28"
+                  width="20"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -773,14 +773,14 @@ exports[`Test Execution StageDiagram for Grouped Steps snapshot test 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main"
+                class="bp3-icon StyledProps--main StyledProps--color"
                 data-icon="infrastructure"
                 style="pointer-events: none;"
               >
                 <svg
-                  height="28"
+                  height="20"
                   viewBox="0 0 16 16"
-                  width="28"
+                  width="20"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -1061,14 +1061,14 @@ exports[`Test Execution StageDiagram for Grouped Steps snapshot test 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main"
+                class="bp3-icon StyledProps--main StyledProps--color"
                 data-icon="command-shell-script"
                 style="pointer-events: none;"
               >
                 <svg
-                  height="28"
+                  height="20"
                   viewBox="0 0 14 11"
-                  width="28"
+                  width="20"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -1619,14 +1619,14 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main"
+                class="bp3-icon StyledProps--main StyledProps--color"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
                 <svg
-                  height="28"
+                  height="20"
                   viewBox="0 0 32 32"
-                  width="28"
+                  width="20"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -1780,14 +1780,14 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main"
+                class="bp3-icon StyledProps--main StyledProps--color"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
                 <svg
-                  height="28"
+                  height="20"
                   viewBox="0 0 32 32"
-                  width="28"
+                  width="20"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -1941,14 +1941,14 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main"
+                class="bp3-icon StyledProps--main StyledProps--color"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
                 <svg
-                  height="28"
+                  height="20"
                   viewBox="0 0 32 32"
-                  width="28"
+                  width="20"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -2102,14 +2102,14 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main"
+                class="bp3-icon StyledProps--main StyledProps--color"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
                 <svg
-                  height="28"
+                  height="20"
                   viewBox="0 0 32 32"
-                  width="28"
+                  width="20"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -2263,14 +2263,14 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main"
+                class="bp3-icon StyledProps--main StyledProps--color"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
                 <svg
-                  height="28"
+                  height="20"
                   viewBox="0 0 32 32"
-                  width="28"
+                  width="20"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -2424,14 +2424,14 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main"
+                class="bp3-icon StyledProps--main StyledProps--color"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
                 <svg
-                  height="28"
+                  height="20"
                   viewBox="0 0 32 32"
-                  width="28"
+                  width="20"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -2585,14 +2585,14 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main"
+                class="bp3-icon StyledProps--main StyledProps--color"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
                 <svg
-                  height="28"
+                  height="20"
                   viewBox="0 0 32 32"
-                  width="28"
+                  width="20"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -2834,14 +2834,14 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main"
+                class="bp3-icon StyledProps--main StyledProps--color"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
                 <svg
-                  height="28"
+                  height="20"
                   viewBox="0 0 32 32"
-                  width="28"
+                  width="20"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -3083,14 +3083,14 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main"
+                class="bp3-icon StyledProps--main StyledProps--color"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
                 <svg
-                  height="28"
+                  height="20"
                   viewBox="0 0 32 32"
-                  width="28"
+                  width="20"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -3244,14 +3244,14 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main"
+                class="bp3-icon StyledProps--main StyledProps--color"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
                 <svg
-                  height="28"
+                  height="20"
                   viewBox="0 0 32 32"
-                  width="28"
+                  width="20"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -3405,14 +3405,14 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main"
+                class="bp3-icon StyledProps--main StyledProps--color"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
                 <svg
-                  height="28"
+                  height="20"
                   viewBox="0 0 32 32"
-                  width="28"
+                  width="20"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -3566,14 +3566,14 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main"
+                class="bp3-icon StyledProps--main StyledProps--color"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
                 <svg
-                  height="28"
+                  height="20"
                   viewBox="0 0 32 32"
-                  width="28"
+                  width="20"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -3727,14 +3727,14 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main"
+                class="bp3-icon StyledProps--main StyledProps--color"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
                 <svg
-                  height="28"
+                  height="20"
                   viewBox="0 0 32 32"
-                  width="28"
+                  width="20"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -3888,14 +3888,14 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main"
+                class="bp3-icon StyledProps--main StyledProps--color"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
                 <svg
-                  height="28"
+                  height="20"
                   viewBox="0 0 32 32"
-                  width="28"
+                  width="20"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -4049,14 +4049,14 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main"
+                class="bp3-icon StyledProps--main StyledProps--color"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
                 <svg
-                  height="28"
+                  height="20"
                   viewBox="0 0 32 32"
-                  width="28"
+                  width="20"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -4298,14 +4298,14 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main"
+                class="bp3-icon StyledProps--main StyledProps--color"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
                 <svg
-                  height="28"
+                  height="20"
                   viewBox="0 0 32 32"
-                  width="28"
+                  width="20"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path

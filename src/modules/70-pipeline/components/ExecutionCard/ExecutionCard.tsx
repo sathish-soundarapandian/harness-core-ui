@@ -21,7 +21,7 @@ import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { StoreType } from '@common/constants/GitSyncTypes'
+import type { StoreType } from '@common/constants/GitSyncTypes'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -226,13 +226,12 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
                     executionIdentifier: defaultTo(pipelineExecution?.planExecutionId, ''),
                     projectIdentifier,
                     module,
-                    repoIdentifier: defaultTo(
-                      pipelineExecution?.gitDetails?.repoIdentifier,
-                      pipelineExecution?.gitDetails?.repoName
-                    ),
+                    repoIdentifier: pipelineExecution?.gitDetails?.repoIdentifier,
+                    connectorRef: pipelineExecution.connectorRef,
+                    repoName: pipelineExecution?.gitDetails?.repoName,
                     branch: pipelineExecution?.gitDetails?.branch,
                     stagesExecuted: pipelineExecution?.stagesExecuted,
-                    storeType: pipelineExecution?.gitDetails?.repoName ? StoreType.REMOTE : StoreType.INLINE
+                    storeType: pipelineExecution?.storeType as StoreType
                   }}
                   isPipelineInvalid={isPipelineInvalid}
                   canEdit={canEdit}

@@ -207,8 +207,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
     maybeContainerClass = '',
     executionIdentifier,
     viewTypeMetadata,
-    allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
-    gitAwareForTriggerEnabled
+    allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
   } = props
   const { getString } = useStrings()
   const isTemplatePipeline = !!template.template
@@ -297,7 +296,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
           />
         </>
       )}
-      {(isCloneCodebaseEnabledAtLeastAtOneStage || codebaseHasRuntimeInputs || gitAwareForTriggerEnabled) &&
+      {(isCloneCodebaseEnabledAtLeastAtOneStage || codebaseHasRuntimeInputs) &&
         getMultiTypeFromValue(finalTemplate?.properties?.ci?.codebase?.build as unknown as string) ===
           MultiTypeInputType.RUNTIME && (
           <>
@@ -327,7 +326,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
             </div>
           </>
         )}
-      {!gitAwareForTriggerEnabled ? (
+      {
         <>
           {finalTemplate?.stages?.map((stageObj, index) => {
             const pathPrefix = !isEmpty(finalPath) ? `${finalPath}.` : ''
@@ -368,7 +367,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
             }
           })}
         </>
-      ) : null}
+      }
     </Layout.Vertical>
   )
 }

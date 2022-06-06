@@ -21,9 +21,10 @@ import {
 import { String, useStrings, UseStringsReturn } from 'framework/strings'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import type { Module } from 'framework/types/ModuleName'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { Page, StringUtils } from '@common/exports'
 import { useQueryParams, useMutateAsGet, useUpdateQueryParams } from '@common/hooks'
-import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { UNSAVED_FILTER } from '@common/components/Filter/utils/FilterUtils'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -33,6 +34,7 @@ import PipelineSummaryCards from '@pipeline/components/Dashboards/PipelineSummar
 import PipelineBuildExecutionsChart from '@pipeline/components/Dashboards/BuildExecutionsChart/PipelineBuildExecutionsChart'
 import useTabVisible from '@common/hooks/useTabVisible'
 import { isCommunityPlan } from '@common/utils/utils'
+import type { StoreType } from '@common/constants/GitSyncTypes'
 import type { StringsMap } from 'stringTypes'
 import ExecutionsList from './ExecutionsList/ExecutionsList'
 import ExecutionsPagination from './ExecutionsPagination/ExecutionsPagination'
@@ -236,7 +238,7 @@ function NoDeployments(props: {
   )
 }
 
-function processQueryParams(params: StringQueryParams) {
+function processQueryParams(params: StringQueryParams & GitQueryParams) {
   let filters = {}
 
   try {
@@ -255,7 +257,10 @@ function processQueryParams(params: StringQueryParams) {
     searchTerm: params.searchTerm,
     filters,
     repoIdentifier: params.repoIdentifier,
-    branch: params.branch
+    repoName: params.repoName,
+    branch: params.branch,
+    connectorRef: params.connectorRef,
+    storeType: params.storeType
   }
 }
 
@@ -265,11 +270,12 @@ export default function PipelineDeploymentList(props: PipelineDeploymentListProp
   const [pollingRequest, setPollingRequest] = React.useState(false)
   const [pipelineDataElements, setData] = React.useState<number | undefined>()
   const history = useHistory()
-  const queryParams = useQueryParams<QueryParams>({ processQueryParams })
+  const queryParams = useQueryParams<QueryParams & GitQueryParams>({ processQueryParams })
   const { replaceQueryParams } = useUpdateQueryParams<Partial<GetListOfExecutionsQueryParams>>()
   const { module = 'cd' } = useModuleInfo()
+  const { isGitSyncEnabled } = useAppStore()
 
-  const { page, filterIdentifier, myDeployments, status, repoIdentifier, branch, searchTerm } = queryParams
+  const { page, filterIdentifier, myDeployments, status, repoIdentifier, repoName, branch, searchTerm } = queryParams
 
   const hasFilters = getHasFilters({
     queryParams,
@@ -318,7 +324,7 @@ export default function PipelineDeploymentList(props: PipelineDeploymentListProp
       filterIdentifier: hasFilterIdentifier ? filterIdentifier : undefined,
       myDeployments,
       status,
-      repoIdentifier,
+      repoIdentifier: isGitSyncEnabled ? repoIdentifier : repoName,
       branch,
       searchTerm
     },
@@ -393,7 +399,10 @@ export default function PipelineDeploymentList(props: PipelineDeploymentListProp
           accountId,
           module,
           branch: pipeline?.gitDetails?.branch,
-          repoIdentifier: pipeline?.gitDetails?.repoIdentifier
+          repoIdentifier: pipeline?.gitDetails?.repoIdentifier,
+          repoName: pipeline?.gitDetails?.repoName,
+          connectorRef: pipeline?.connectorRef,
+          storeType: pipeline?.storeType as StoreType
         })
       )
     },

@@ -127,6 +127,7 @@ function RunPipelineFormBasic({
   executionView,
   branch,
   repoIdentifier,
+  connectorRef,
   storeType,
   executionInputSetTemplateYaml = '',
   stagesExecuted,
@@ -670,15 +671,27 @@ function RunPipelineFormBasic({
     return <PageSpinner />
   }
 
+  function handleInputSetSave(newId?: string): void {
+    if (newId) {
+      setSelectedInputSets([{ label: newId, value: newId, type: 'INPUT_SET' }])
+    }
+    getTemplateFromPipeline()
+  }
+
   let runPipelineFormContent: React.ReactElement | null = null
 
   if (validateTemplateInputsResponse?.data?.validYaml === false) {
+    // repoName={repoIdentifier} because values is calculated at top and one of them (repoIdentifier, repoName)
+    // will be undefined based on the enabled flag (isGitSyncEnabled)
     runPipelineFormContent = (
       <PipelineErrorView
         errorNodeSummary={validateTemplateInputsResponse.data.errorNodeSummary}
         pipelineIdentifier={pipelineIdentifier}
         repoIdentifier={repoIdentifier}
+        repoName={repoIdentifier}
         branch={branch}
+        connectorRef={connectorRef}
+        storeType={storeType}
       />
     )
   } else if (inputSetsError?.message) {
@@ -854,11 +867,14 @@ function RunPipelineFormBasic({
                       accountId={accountId}
                       projectIdentifier={projectIdentifier}
                       orgIdentifier={orgIdentifier}
+                      connectorRef={connectorRef}
                       repoIdentifier={repoIdentifier}
                       branch={branch}
+                      storeType={storeType}
                       isGitSyncEnabled={isGitSyncEnabled}
+                      isGitSimplificationEnabled={isGitSimplificationEnabled}
                       setFormErrors={setFormErrors}
-                      refetchParentData={getTemplateFromPipeline}
+                      refetchParentData={handleInputSetSave}
                     />
                   </Layout.Horizontal>
                 )}

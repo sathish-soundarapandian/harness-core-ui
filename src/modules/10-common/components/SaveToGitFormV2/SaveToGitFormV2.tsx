@@ -65,6 +65,7 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
   const [isNewBranch, setIsNewBranch] = React.useState(false)
   const formikRef = useRef<FormikContextType<SaveToGitFormV2Interface>>()
   const [targetBranch, setTargetBranch] = useState<string>('')
+  const [createPR, setCreatePR] = useState<boolean>(false)
   const [disableBranchSelection, setDisableBranchSelection] = useState<boolean>(true)
 
   const defaultInitialFormData: SaveToGitFormV2Interface = {
@@ -101,6 +102,7 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
           label={getString('common.git.startPRLabel')}
           onChange={e => {
             formikRef.current?.setFieldValue('createPr', e.currentTarget.checked)
+            setCreatePR(e.currentTarget.checked)
             if (e.currentTarget.checked) {
               setDisableBranchSelection(false)
             } else {
@@ -128,7 +130,13 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
         />
       </Layout.Horizontal>
     )
-  }, [disableBranchSelection, isNewBranch, formikRef.current?.values, formikRef.current?.values?.targetBranch])
+  }, [
+    disableBranchSelection,
+    isNewBranch,
+    formikRef.current?.values,
+    formikRef.current?.values?.targetBranch,
+    createPR
+  ])
 
   return (
     <Container height={'inherit'} className={css.modalContainer}>
@@ -147,18 +155,16 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
           initialValues={defaultInitialFormData}
           formName="saveToGitFormV2"
           validationSchema={Yup.object().shape({
-            branch: Yup.string()
-              .trim()
-              .required(getString('validation.branchName'))
-              .when('createPr', {
-                is: true,
-                then: Yup.string().notOneOf([Yup.ref('targetBranch')], getString('common.git.validation.sameBranches'))
-              }),
+            branch: Yup.string().trim().required(getString('validation.branchName')),
             targetBranch: Yup.string()
               .trim()
               .when('createPr', {
                 is: true,
                 then: Yup.string().required(getString('common.git.validation.targetBranch'))
+              })
+              .when('createPr', {
+                is: true,
+                then: Yup.string().notOneOf([Yup.ref('branch')], getString('common.git.validation.sameBranches'))
               }),
             commitMsg: Yup.string().trim().min(1).required(getString('common.git.validation.commitMessage'))
           })}
@@ -223,7 +229,6 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
                         large
                         onChange={() => handleBranchTypeChange(true, formik)}
                         checked={isNewBranch}
-                        disabled={resource.type === 'InputSets'}
                       >
                         <Icon name="git-new-branch" color={Color.GREY_700}></Icon>
                         <Text inline margin={{ left: 'small' }}>

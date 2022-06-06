@@ -22,7 +22,7 @@ import {
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { setupHelmFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { setupHelmFormData, useGetHelpPanel } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import type { ConnectorRequestBody, ConnectorInfoDTO } from 'services/cd-ng'
 
@@ -98,7 +98,7 @@ const StepHelmAuthentication: React.FC<StepProps<StepHelmRepoAuthenticationProps
       }
     }
   }, [loadingConnectorSecrets])
-
+  useGetHelpPanel('HTTPHelmServerDetails', 900)
   return loadingConnectorSecrets ? (
     <PageSpinner />
   ) : (

@@ -88,7 +88,7 @@ interface FormikInputSetFormProps {
   executionView?: boolean
   isEdit: boolean
   isGitSyncEnabled?: boolean
-  gitSimplification?: boolean
+  isGitSimplificationEnabled?: boolean
   yamlHandler?: YamlBuilderHandlerBinding
   setYamlHandler: React.Dispatch<React.SetStateAction<YamlBuilderHandlerBinding | undefined>>
 }
@@ -207,7 +207,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
     executionView,
     isEdit,
     isGitSyncEnabled,
-    gitSimplification,
+    isGitSimplificationEnabled,
     yamlHandler,
     setYamlHandler
   } = props
@@ -358,7 +358,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                                 />
                               </GitSyncStoreProvider>
                             )}
-                            {!isGitSyncEnabled && gitSimplification && storeType === StoreType.REMOTE && (
+                            {isGitSimplificationEnabled && storeType === StoreType.REMOTE && (
                               <Container className={css.gitRemoteDetailsForm}>
                                 <GitSyncForm
                                   formikProps={formikProps as any}

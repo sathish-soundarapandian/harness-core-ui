@@ -31,10 +31,18 @@ export interface UseRunPipelineModalReturn {
 }
 
 export const useRunPipelineModal = (
-  runPipelineModaParams: RunPipelineModalParams & GitQueryParams
+  runPipelineModaParams: RunPipelineModalParams & Omit<GitQueryParams, 'repoName'>
 ): UseRunPipelineModalReturn => {
-  const { inputSetSelected, pipelineIdentifier, branch, repoIdentifier, executionId, stagesExecuted, storeType } =
-    runPipelineModaParams
+  const {
+    inputSetSelected,
+    pipelineIdentifier,
+    branch,
+    repoIdentifier,
+    connectorRef,
+    storeType,
+    executionId,
+    stagesExecuted
+  } = runPipelineModaParams
   const { projectIdentifier, orgIdentifier, accountId, module, executionIdentifier } =
     useParams<PipelineType<ExecutionPathProps>>()
 
@@ -113,13 +121,14 @@ export const useRunPipelineModal = (
               inputSetYAML={inputSetYaml || ''}
               repoIdentifier={repoIdentifier}
               branch={branch}
+              connectorRef={connectorRef}
+              storeType={storeType}
               inputSetSelected={getInputSetSelected()}
               onClose={() => {
                 hideRunPipelineModal()
               }}
               stagesExecuted={stagesExecuted}
               executionIdentifier={planExecutionId}
-              storeType={storeType}
             />
             <Button
               aria-label="close modal"

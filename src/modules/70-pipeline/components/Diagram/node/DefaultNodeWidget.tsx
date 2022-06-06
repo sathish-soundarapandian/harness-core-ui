@@ -8,6 +8,7 @@
 import React from 'react'
 import type { DiagramEngine } from '@projectstorm/react-diagrams-core'
 import { Icon, Text, Button, ButtonVariation } from '@wings-software/uicore'
+import { isNil } from 'lodash-es'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import { Position } from '@blueprintjs/core'
@@ -129,7 +130,8 @@ export function DefaultNodeWidget(props: DefaultNodeProps): JSX.Element {
   const marginAdjustment = -(128 - (options?.width || 64)) / 2
 
   const isSelected = options.defaultSelected ?? props.node.isSelected()
-
+  const iconSize = !isNil(options.iconSize) ? options.iconSize : 28
+  const iconColor = options.iconStyle?.color
   return (
     <div
       className={cx(css.defaultNode, 'default-node')}
@@ -211,7 +213,8 @@ export function DefaultNodeWidget(props: DefaultNodeProps): JSX.Element {
         Otherwise, the deployment icon becomes transparent and we do not see it when the stage is skipped. */}
         {options.icon && (
           <Icon
-            size={28}
+            size={iconSize}
+            color={iconColor}
             name={options.icon}
             inverse={isSelected}
             {...options.iconProps}

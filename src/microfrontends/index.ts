@@ -5,7 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-// eslint-disable-next-line import/order
 import type React from 'react'
 import type ReactMonacoEditor from 'react-monaco-editor'
 import type { MonacoDiffEditor } from 'react-monaco-editor'

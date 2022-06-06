@@ -21,13 +21,18 @@ export default function buildInstructions(values: FormValues, initialValues: For
     instructions.push(removeInstruction)
   }
 
+  const addInstruction = buildAddInstruction(values, initialValues)
+  if (addInstruction) {
+    instructions.push(addInstruction)
+  }
+
   return instructions
 }
 
 function buildUpdateInstruction(values: FormValues, initialValues: FormValues): Instruction | undefined {
-  const updated = Object.entries(values.flags).filter(
-    ([identifier, { variation }]) => initialValues.flags[identifier].variation !== variation
-  )
+  const updated = Object.entries(values.flags)
+    .filter(([identifier]) => identifier in initialValues.flags)
+    .filter(([identifier, { variation }]) => initialValues.flags[identifier].variation !== variation)
 
   if (updated.length) {
     return {
@@ -47,6 +52,19 @@ function buildRemoveInstruction(values: FormValues, initialValues: FormValues): 
       kind: 'removeTargetFromFlagsVariationTargetMap',
       parameters: {
         features: removed.map(([identifier, { variation }]) => ({ identifier, variation }))
+      }
+    } as unknown as Instruction
+  }
+}
+
+function buildAddInstruction(values: FormValues, initialValues: FormValues): Instruction | undefined {
+  const added = Object.entries(values.flags).filter(([identifier]) => !(identifier in initialValues.flags))
+
+  if (added.length) {
+    return {
+      kind: 'addTargetToFlagsVariationTargetMap',
+      parameters: {
+        features: added.map(([identifier, { variation }]) => ({ identifier, variation }))
       }
     } as unknown as Instruction
   }

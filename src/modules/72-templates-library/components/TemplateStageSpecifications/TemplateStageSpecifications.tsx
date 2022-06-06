@@ -20,7 +20,11 @@ import { useStrings } from 'framework/strings'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { PageSpinner } from '@common/components'
-import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import {
+  getIdentifierFromValue,
+  getScopeBasedProjectPathParams,
+  getScopeFromValue
+} from '@common/components/EntityReference/EntityReference'
 import type { ProjectPathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { useToaster } from '@common/exports'
@@ -35,7 +39,7 @@ import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinde
 import { useStageTemplateActions } from '@pipeline/utils/useStageTemplateActions'
 import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
 import { setTemplateInputs, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
-import { getScopeBasedQueryParams, getTemplateRuntimeInputsCount } from '@templates-library/utils/templatesUtils'
+import { getTemplateRuntimeInputsCount } from '@templates-library/utils/templatesUtils'
 import css from './TemplateStageSpecifications.module.scss'
 
 declare global {
@@ -88,7 +92,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
   } = useGetTemplate({
     templateIdentifier: templateRef,
     queryParams: {
-      ...getScopeBasedQueryParams(queryParams, scope),
+      ...getScopeBasedProjectPathParams(queryParams, scope),
       versionLabel: defaultTo(stage?.stage?.template?.versionLabel, ''),
       repoIdentifier,
       branch,
@@ -104,7 +108,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
   } = useGetTemplateInputSetYaml({
     templateIdentifier: templateRef,
     queryParams: {
-      ...getScopeBasedQueryParams(queryParams, scope),
+      ...getScopeBasedProjectPathParams(queryParams, scope),
       versionLabel: defaultTo(stage?.stage?.template?.versionLabel, ''),
       repoIdentifier,
       branch,

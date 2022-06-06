@@ -12,10 +12,10 @@ import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type {
   ResponseConnectorResponse,
   ResponseListServiceNowFieldNG,
+  ResponseListServiceNowTemplate,
   ResponseListServiceNowTicketTypeDTO,
   ResponsePageConnectorResponse,
-  ServiceNowFieldSchemaNG,
-  ResponseListServiceNowTemplate
+  ServiceNowFieldSchemaNG
 } from 'services/cd-ng'
 import type { ServiceNowFieldsRendererProps } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowFieldsRenderer'
 import type { ServiceNowCreateDeploymentModeProps, ServiceNowCreateStepModeProps } from '../types'
@@ -277,7 +277,8 @@ export const getServiceNowFieldRendererProps = (): ServiceNowFieldsRendererProps
     }
   ],
   readonly: false,
-  onDelete: jest.fn()
+  onDelete: jest.fn(),
+  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
 })
 export const mockTicketTypesErrorResponse: ResponseListServiceNowTicketTypeDTO = {
   // eslint-disable-next-line

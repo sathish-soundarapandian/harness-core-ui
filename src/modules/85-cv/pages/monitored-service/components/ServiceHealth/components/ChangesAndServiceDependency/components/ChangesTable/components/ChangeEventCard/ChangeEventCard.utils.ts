@@ -22,6 +22,19 @@ export const createChangeDetailsData = (resource: ChangeEventDTO | undefined) =>
     details: {
       service: { name: serviceName },
       environment: { name: environmentName },
+      source: { name: type as string, url: metadata?.htmlUrl }
+    }
+  }
+}
+export const createChangeDetailsDataForKubernetes = (resource: ChangeEventDTO | undefined) => {
+  const { type, category, metadata, name } = resource || {}
+  return {
+    type,
+    category,
+    status: metadata?.status,
+    name,
+    details: {
+      eventType: { name: `${category} (${name})` },
       source: { name: type, url: metadata?.htmlUrl }
     }
   }

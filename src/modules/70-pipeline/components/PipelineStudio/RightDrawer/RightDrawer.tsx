@@ -31,8 +31,6 @@ import type { DependencyElement } from 'services/ci'
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { PipelineGovernanceView } from '@governance/PipelineGovernanceView'
 import { getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
-import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
-import { useTemplateSelector } from '@pipeline/utils/useTemplateSelector'
 import { createTemplate } from '@pipeline/utils/templateUtils'
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import type { StringsMap } from 'stringTypes'
@@ -410,11 +408,11 @@ export function RightDrawer(): React.ReactElement {
     updatePipelineView,
     getStageFromPipeline,
     stepsFactory,
-    setSelectedStepId
+    setSelectedStepId,
+    getTemplate
   } = usePipelineContext()
   const { type, data, ...restDrawerProps } = drawerData
   const { trackEvent } = useTelemetry()
-  const { getTemplate } = useTemplateSelector()
 
   const { stage: selectedStage } = getStageFromPipeline(defaultTo(selectedStageId, ''))
   const stageType = selectedStage?.stage?.type
@@ -448,9 +446,7 @@ export function RightDrawer(): React.ReactElement {
   }
 
   if (stepData || templateStepTemplate) {
-    const stepType = stepData
-      ? stepData?.type
-      : get(templateTypes, getIdentifierFromValue(templateStepTemplate.templateRef))
+    const stepType = stepData ? stepData?.type : get(templateTypes, templateStepTemplate.templateRef)
     const toolTipType = type ? `_${type}` : ''
     title = (
       <RightDrawerTitle
@@ -477,7 +473,7 @@ export function RightDrawer(): React.ReactElement {
       if (!step) {
         drawerType = DrawerTypes.ConfigureService
         // 2. search for step in serviceDependencies
-        const depStep = (selectedStage?.stage as BuildStageElementConfig)?.spec?.serviceDependencies?.find(
+        const depStep = ((selectedStage?.stage as BuildStageElementConfig)?.spec?.serviceDependencies as any)?.find(
           (item: DependencyElement) => item.identifier === selectedStepId
         )
         step = depStep
@@ -524,11 +520,11 @@ export function RightDrawer(): React.ReactElement {
         ...((item as StepElementConfig).description && { description: (item as StepElementConfig).description }),
         spec: (item as StepElementConfig).spec
       }
-      if (!(pipelineStage.stage as BuildStageElementConfig)?.spec?.serviceDependencies?.length) {
+      if (!((pipelineStage.stage as BuildStageElementConfig)?.spec?.serviceDependencies as any)?.length) {
         set(pipelineStage, 'stage.spec.serviceDependencies', [])
       }
       addService(
-        defaultTo((pipelineStage.stage as BuildStageElementConfig)?.spec?.serviceDependencies, []),
+        defaultTo((pipelineStage.stage as BuildStageElementConfig)?.spec?.serviceDependencies as any, []),
         newServiceData
       )
       if (pipelineStage.stage) {
@@ -543,9 +539,11 @@ export function RightDrawer(): React.ReactElement {
     } else if (data?.stepConfig?.addOrEdit === 'edit' && pipelineStage) {
       const node = data?.stepConfig?.node as DependencyElement
       if (node) {
-        const serviceDependency = (pipelineStage.stage as BuildStageElementConfig)?.spec?.serviceDependencies?.find(
+        const serviceDependency = (
+          (pipelineStage.stage as BuildStageElementConfig)?.spec?.serviceDependencies as any
+        )?.find(
           // NOTE: "node.identifier" is used as item.identifier may contain changed identifier
-          dep => dep.identifier === node.identifier
+          (dep: DependencyElement) => dep.identifier === node.identifier
         )
 
         if (serviceDependency) {
@@ -664,7 +662,7 @@ export function RightDrawer(): React.ReactElement {
     try {
       const stepType =
         (data?.stepConfig?.node as StepElementConfig)?.type ||
-        get(templateTypes, getIdentifierFromValue((data?.stepConfig?.node as TemplateStepNode).template.templateRef))
+        get(templateTypes, (data?.stepConfig?.node as TemplateStepNode).template.templateRef)
       const { template, isCopied } = await getTemplate({
         templateType: 'Step',
         selectedChildType: stepType,
@@ -688,7 +686,7 @@ export function RightDrawer(): React.ReactElement {
     const processNode = produce({} as StepElementConfig, draft => {
       draft.name = node.name
       draft.identifier = node.identifier
-      draft.type = get(templateTypes, getIdentifierFromValue(node.template.templateRef))
+      draft.type = get(templateTypes, node.template.templateRef)
     })
     await updateNode(processNode)
   }

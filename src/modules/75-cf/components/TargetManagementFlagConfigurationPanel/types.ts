@@ -16,6 +16,7 @@ export enum STATUS {
 }
 
 export interface TargetManagementFlagConfigurationPanelFormRow {
+  added?: boolean
   variation: string
   percentageRollout?: {
     variations: WeightedVariation[]

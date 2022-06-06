@@ -31,6 +31,7 @@ import {
   StepDetailsProps
 } from '@connectors/interfaces/ConnectorInterface'
 import { PageSpinner } from '@common/components'
+import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 import AwsSecretManagerAccessKeyForm from './AwsSecretManagerAccessKeyForm'
 import css from '../CreateAwsSecretManagerConnector.module.scss'
 
@@ -75,6 +76,7 @@ const AwsSecretManagerConfig: React.FC<StepProps<StepDetailsProps> & ConnectorDe
 
   const [initialValues, setInitialValues] = useState(defaultInitialFormData)
   const [loadingFormData, setLoadingFormData] = useState(isEditMode)
+  useConnectorWizard({ helpPanel: { referenceId: 'AWSSecretManagerDetails', contentWidth: 900 } })
 
   React.useEffect(() => {
     if (isEditMode && connectorInfo) {
@@ -88,7 +90,7 @@ const AwsSecretManagerConfig: React.FC<StepProps<StepDetailsProps> & ConnectorDe
   return loadingFormData ? (
     <PageSpinner />
   ) : (
-    <Container padding={{ top: 'medium' }} width="64%">
+    <Container padding={{ top: 'medium' }}>
       <Text font={{ variation: FontVariation.H3 }} padding={{ bottom: 'xlarge' }}>
         {getString('details')}
       </Text>

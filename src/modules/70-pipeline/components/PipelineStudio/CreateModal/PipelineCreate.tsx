@@ -6,6 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
+import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { noop, omit } from 'lodash-es'
 import produce from 'immer'
@@ -43,6 +44,7 @@ import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import { yamlPathRegex } from '@common/utils/StringUtils'
 import { DefaultNewPipelineId } from '../PipelineContext/PipelineActions'
 import css from './PipelineCreate.module.scss'
 
@@ -159,7 +161,10 @@ export default function CreatePipelines({
               repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
               branch: Yup.string().trim().required(getString('common.git.validation.branchRequired')),
               connectorRef: Yup.string().trim().required(getString('validation.sshConnectorRequired')),
-              filePath: Yup.string().trim().required(getString('common.git.validation.filePath'))
+              filePath: Yup.string()
+                .trim()
+                .required(getString('common.git.validation.yamlPath'))
+                .matches(yamlPathRegex, getString('common.git.validation.yamlPathInvalid'))
             }
           : isGitSyncEnabled
           ? {
@@ -233,24 +238,6 @@ export default function CreatePipelines({
                 <GitContextForm formikProps={formikProps as any} gitDetails={gitDetails} />
               </GitSyncStoreProvider>
             )}
-            {!isEdit && isPipelineTemplateEnabled && (
-              <Container padding={{ top: 'xlarge' }}>
-                <Button
-                  text={'Start with Template'}
-                  icon={'template-library'}
-                  iconProps={{
-                    size: 12
-                  }}
-                  variation={ButtonVariation.SECONDARY}
-                  onClick={() => {
-                    formikProps.setFieldValue('useTemplate', true)
-                    window.requestAnimationFrame(() => {
-                      formikProps.submitForm()
-                    })
-                  }}
-                />
-              </Container>
-            )}
 
             {isGitSimplificationEnabled ? (
               <>
@@ -294,6 +281,29 @@ export default function CreatePipelines({
             {storeType?.type === StoreType.REMOTE ? (
               <GitSyncForm formikProps={formikProps as any} handleSubmit={noop} isEdit={isEdit} />
             ) : null}
+
+            {isGitSimplificationEnabled ? (
+              <Divider className={cx({ [css.gitSimplificationDivider]: storeType?.type === StoreType.INLINE })} />
+            ) : null}
+
+            {!isEdit && isPipelineTemplateEnabled && (
+              <Container padding={{ top: 'large' }}>
+                <Button
+                  text={getString('common.templateStartLabel')}
+                  icon={'template-library'}
+                  iconProps={{
+                    size: 12
+                  }}
+                  variation={ButtonVariation.SECONDARY}
+                  onClick={() => {
+                    formikProps.setFieldValue('useTemplate', true)
+                    window.requestAnimationFrame(() => {
+                      formikProps.submitForm()
+                    })
+                  }}
+                />
+              </Container>
+            )}
 
             <Container padding={{ top: 'xlarge' }}>
               <Button

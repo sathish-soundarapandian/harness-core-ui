@@ -20,6 +20,7 @@ cronLabel: 'Cron'
 scheduledLabel: 'Scheduled'
 triggerConfigurationLabel: 'Trigger Configuration'
 pipelineInputLabel: 'Pipeline Input'
+branchNameCantBeExpression: Branch Name cannot be an expresion for non-Webhook triggers
 updateTrigger: 'Update Trigger'
 createTrigger: 'Create Trigger'
 deleteTrigger: 'Delete Trigger'

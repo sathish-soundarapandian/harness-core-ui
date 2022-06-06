@@ -35,7 +35,7 @@ import { setSecretField } from '@secrets/utils/SecretField'
 import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import { transformStepHeadersAndParamsForPayload } from '@connectors/components/CreateConnector/CustomHealthConnector/components/CustomHealthHeadersAndParams/CustomHealthHeadersAndParams.utils'
 import { AuthTypes, GitAuthTypes, GitAPIAuthTypes } from './ConnectorHelper'
-
+import { useConnectorWizard } from '../../../components/CreateConnectorWizard/ConnectorWizardContext'
 export interface DelegateCardInterface {
   type: string
   info: string
@@ -174,6 +174,9 @@ export const buildKubPayload = (formData: FormData) => {
   return { connector: savedData }
 }
 
+export const useGetHelpPanel = (refernceId: string, width: number) => {
+  return useConnectorWizard({ helpPanel: { referenceId: refernceId, contentWidth: width } })
+}
 const getGitAuthSpec = (formData: FormData) => {
   const { authType = '' } = formData
   switch (authType) {

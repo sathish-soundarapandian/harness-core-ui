@@ -86,5 +86,6 @@ export enum PAGE_NAME {
   OnboardingPage = 'OnboardingPage',
   OnboardingDetailPage = 'OnboardingDetailPage',
   CFWorkflowsPage = 'CFWorkflowsPage',
-  SecretDetailsHomePage = 'SecretDetailsHomePage'
+  SecretDetailsHomePage = 'SecretDetailsHomePage',
+  ChaosHomePage = 'ChaosHomePage'
 }

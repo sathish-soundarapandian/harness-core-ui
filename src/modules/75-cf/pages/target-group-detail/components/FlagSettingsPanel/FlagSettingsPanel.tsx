@@ -17,7 +17,7 @@ import { PERCENTAGE_ROLLOUT_VALUE } from '@cf/constants'
 import type { TargetManagementFlagConfigurationPanelFormValues as FormValues } from '@cf/components/TargetManagementFlagConfigurationPanel/types'
 import TargetManagementFlagConfigurationPanel from '@cf/components/TargetManagementFlagConfigurationPanel/TargetManagementFlagConfigurationPanel'
 import useGetTargetGroupFlags from '../../hooks/useGetTargetGroupFlags'
-import { getFlagSettingsInstructions } from './flagSettingsInstructions'
+import { getAddFlagsInstruction, getFlagSettingsInstructions } from './flagSettingsInstructions'
 
 export interface FlagSettingsPanelProps {
   targetGroup: Segment
@@ -106,6 +106,21 @@ const FlagSettingsPanel: FC<FlagSettingsPanelProps> = ({ targetGroup }) => {
     ]
   )
 
+  const onAdd = useCallback(
+    async (values: FormValues) => {
+      const instructions = [getAddFlagsInstruction(values.flags)]
+
+      try {
+        await patchTargetGroup({ instructions })
+        showSuccess(getString('cf.segmentDetail.flagsAddedSuccessfully'))
+        refetch()
+      } catch (e) {
+        showError(getRBACErrorMessage(e))
+      }
+    },
+    [getRBACErrorMessage, patchTargetGroup, refetch, showError, showSuccess, targetGroup.identifier]
+  )
+
   if (error) {
     return <PageError message={getErrorMessage(error)} onClick={() => refetch()} />
   }
@@ -120,8 +135,10 @@ const FlagSettingsPanel: FC<FlagSettingsPanelProps> = ({ targetGroup }) => {
       item={targetGroup}
       flags={flags as Feature[]}
       onChange={onChange}
+      onAdd={onAdd}
       initialValues={initialValues}
       noFlagsMessage={getString('cf.segmentDetail.noFlags')}
+      addFlagsDialogTitle={getString('cf.segmentDetail.addFlagToTargetGroup')}
     />
   )
 }

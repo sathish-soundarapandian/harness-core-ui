@@ -93,7 +93,7 @@ export default function SLONotificationRuleRow({
         <Layout.Vertical spacing="xsmall" padding={{ right: 'small' }}>
           <Text>{getString('cv.notifications.condition')}</Text>
           <Select
-            name={`${id}.condition`}
+            name="condition"
             className={css.sloConditionField}
             value={condition}
             items={sloConditionOptions}
