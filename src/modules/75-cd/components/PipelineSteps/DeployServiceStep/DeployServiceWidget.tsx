@@ -15,7 +15,8 @@ import {
   Dialog,
   Layout,
   MultiTypeInputType,
-  SelectOption
+  SelectOption,
+  shouldShowError
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import * as Yup from 'yup'
@@ -164,7 +165,9 @@ function DeployServiceWidget({
   }, [])
 
   if (error?.message) {
-    showError(getRBACErrorMessage(error), undefined, 'cd.svc.list.error')
+    if (shouldShowError(error)) {
+      showError(getRBACErrorMessage(error))
+    }
   }
 
   const updateServicesList = (value: ServiceRequestDTO): void => {

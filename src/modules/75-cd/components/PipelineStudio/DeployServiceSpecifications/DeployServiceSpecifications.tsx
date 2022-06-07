@@ -415,7 +415,7 @@ export default function DeployServiceSpecifications(props: React.PropsWithChildr
       })
       await debounceUpdateStage(stageData?.stage)
 
-      if (value.serviceRef) {
+      if (NG_SVC_ENV_REDESIGN && value.serviceRef) {
         refetchServiceData({
           pathParams: {
             serviceIdentifier: value.serviceRef

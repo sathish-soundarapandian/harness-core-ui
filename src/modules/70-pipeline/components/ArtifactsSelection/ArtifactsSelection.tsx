@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { StepWizard, useToaster } from '@harness/uicore'
+import { shouldShowError, StepWizard, useToaster } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
@@ -304,7 +304,9 @@ export default function ArtifactsSelection({
         }
       }
     } catch (e) {
-      showError(getRBACErrorMessage(e))
+      if (shouldShowError(e)) {
+        showError(getRBACErrorMessage(e))
+      }
     }
   }, [fetchConnectors, getPrimaryConnectorList, getSidecarConnectorList, showError])
 
