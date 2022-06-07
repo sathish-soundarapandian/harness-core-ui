@@ -45,6 +45,7 @@ import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { yamlPathRegex } from '@common/utils/StringUtils'
+import type { CreatePipelinesValue } from '@common/interfaces/GitSyncInterface'
 import { DefaultNewPipelineId } from '../PipelineContext/PipelineActions'
 import css from './PipelineCreate.module.scss'
 
@@ -58,30 +59,6 @@ interface CardInterface {
   size: number
   disabled?: boolean
 }
-interface UseTemplate {
-  useTemplate?: boolean
-}
-
-interface PipelineInfoConfigWithGitDetails extends PipelineInfoConfig {
-  repo?: string
-  branch: string
-  connectorRef?:
-    | string
-    | {
-        label?: string
-        value?: string
-        scope?: string
-        live?: boolean
-        connector?: any
-      }
-  storeType?: string
-  remoteType?: string
-  importYaml?: string
-  filePath?: string
-}
-
-type CreatePipelinesValue = PipelineInfoConfigWithGitDetails & UseTemplate
-
 export interface PipelineCreateProps {
   afterSave?: (
     values: PipelineInfoConfig,

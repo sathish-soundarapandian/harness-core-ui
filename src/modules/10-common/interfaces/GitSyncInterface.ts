@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { GitSyncEntityDTO } from 'services/cd-ng'
+import type { GitSyncEntityDTO, PipelineInfoConfig } from 'services/cd-ng'
 
 export interface Entity {
   [key: string]: GitSyncEntityDTO['entityType']
@@ -35,3 +35,25 @@ export const Entities: Entity = {
   SERVICE: 'Service',
   TEMPLATE: 'Template'
 }
+export interface PipelineInfoConfigWithGitDetails extends PipelineInfoConfig {
+  repo?: string
+  branch: string
+  connectorRef?:
+    | string
+    | {
+        label?: string
+        value?: string
+        scope?: string
+        live?: boolean
+        connector?: any
+      }
+  storeType?: string
+  remoteType?: string
+  importYaml?: string
+  filePath?: string
+}
+export interface UseTemplate {
+  useTemplate?: boolean
+}
+
+export type CreatePipelinesValue = PipelineInfoConfigWithGitDetails & UseTemplate
