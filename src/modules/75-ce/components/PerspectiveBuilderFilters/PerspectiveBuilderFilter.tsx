@@ -166,7 +166,7 @@ const PerspectiveBuilderFilter: React.FC<FilterPillProps> = ({
 
   useEffect(() => {
     if (data?.perspectiveFilters?.values) {
-      const moreItemsPresent = data.perspectiveFilters.values.length >= LIMIT
+      const moreItemsPresent = data.perspectiveFilters.values.length === LIMIT
       const filteredVal = data.perspectiveFilters.values.filter(e => e) as string[]
       setPageInfo(prevInfo => ({
         loadMore: moreItemsPresent,
