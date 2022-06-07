@@ -19,7 +19,6 @@ import {
   K8SDirectInfrastructure,
   K8sGcpInfrastructure,
   PdcInfrastructure,
-  PipelineInfrastructure,
   StageElementConfig
 } from 'services/cd-ng'
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
@@ -57,6 +56,7 @@ import {
 import type { ServerlessAwsLambdaSpec } from '@cd/components/PipelineSteps/ServerlessAWSLambda/ServerlessAwsLambdaSpec'
 import type { ServerlessGCPSpec } from '@cd/components/PipelineSteps/ServerlessGCP/ServerlessGCPSpec'
 import type { ServerlessAzureSpec } from '@cd/components/PipelineSteps/ServerlessAzure/ServerlessAzureSpec'
+import type { PipelineInfrastructureV2 } from '@cd/components/PipelineSteps/DeployInfrastructureStep/utils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { cleanUpEmptyProvisioner, getInfraGroups, getInfrastructureDefaultValue } from './deployInfraHelper'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
@@ -490,9 +490,9 @@ export default function DeployInfraSpecifications(props: React.PropsWithChildren
   }
 
   const updateEnvStep = React.useCallback(
-    (value: PipelineInfrastructure) => {
+    (value: PipelineInfrastructureV2) => {
       const stageData = produce(stage, draft => {
-        const infraObj: PipelineInfrastructure = get(draft, 'stage.spec.infrastructure', {})
+        const infraObj: PipelineInfrastructureV2 = get(draft, 'stage.spec.infrastructure', {})
         if (value.environment?.identifier) {
           infraObj.environment = value.environment
           delete infraObj.environmentRef

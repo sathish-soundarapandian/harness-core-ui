@@ -83,12 +83,13 @@ export function InfrastructureModal({
 }: any) {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getTemplate } = useTemplateSelector()
+  console.log(infrastructureToEdit)
 
   const infrastructureDefinition = useMemo(() => {
     return (parse(defaultTo(infrastructureToEdit, '{}')) as InfrastructureConfig).infrastructureDefinition
   }, [infrastructureToEdit])
 
-  // const { type, spec } = defaultTo(infrastructureDefinition, {}) as InfrastructureDefinitionConfig
+  const { type, spec } = defaultTo(infrastructureDefinition, {}) as InfrastructureDefinitionConfig
 
   const pipeline = React.useMemo(
     () =>
@@ -103,8 +104,8 @@ export function InfrastructureModal({
             spec: {
               infrastructure: {
                 infrastructureDefinition: {
-                  // type: defaultTo(type, deploymentTypeInfraTypeMap.Kubernetes),
-                  // spec: defaultTo(spec, {})
+                  ...(Boolean(type) && { type }),
+                  ...(Boolean(type) && { spec })
                 }
               },
               serviceConfig: {
@@ -205,7 +206,7 @@ function BootstrapDeployInfraSpecifications({
   )
 
   const cleanBeforeClose = () => {
-    setInfrastructureToEdit()
+    setInfrastructureToEdit?.()
     hideModal()
   }
 
@@ -259,7 +260,14 @@ function BootstrapDeployInfraSpecifications({
             })
           )
           setIsSavingInfrastructure(false)
-          refetch()
+          if (envIdentifier) {
+            refetch({
+              label: response.data?.infrastructure?.name,
+              value: response.data?.infrastructure?.identifier
+            })
+          } else {
+            refetch()
+          }
           cleanBeforeClose()
         } else {
           throw response
@@ -320,12 +328,14 @@ function BootstrapDeployInfraSpecifications({
                       }}
                     />
                   </Card>
-                  <SelectDeploymentType
-                    selectedDeploymentType={selectedDeploymentType}
-                    isReadonly={false}
-                    handleDeploymentTypeChange={handleDeploymentTypeChange}
-                  />
-                  {selectedDeploymentType && <DeployInfraSpecifications />}
+                  {!infrastructureDefinition && (
+                    <SelectDeploymentType
+                      selectedDeploymentType={selectedDeploymentType}
+                      isReadonly={false}
+                      handleDeploymentTypeChange={handleDeploymentTypeChange}
+                    />
+                  )}
+                  {(selectedDeploymentType || infrastructureDefinition) && <DeployInfraSpecifications />}
                 </>
               ) : (
                 <YAMLBuilder
@@ -335,13 +345,13 @@ function BootstrapDeployInfraSpecifications({
                       ...formikProps.values,
                       orgIdentifier,
                       projectIdentifier,
-                      envIdentifier: environmentIdentifier || envIdentifier,
+                      environmentRef: environmentIdentifier || envIdentifier,
                       type: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure
                         ?.infrastructureDefinition?.type,
                       spec: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure
                         ?.infrastructureDefinition?.spec,
                       allowSimultaneousDeployments: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)
-                        ?.infrastructure.allowSimultaneousDeployments
+                        ?.infrastructure?.allowSimultaneousDeployments
                     } as InfrastructureDefinitionConfig
                   }}
                   schema={environmentSchema?.data}
@@ -360,7 +370,18 @@ function BootstrapDeployInfraSpecifications({
                     const latestYaml = defaultTo(yamlHandler?.getLatestYaml(), /* istanbul ignore next */ '')
                     onSubmit(parse(latestYaml)?.infrastructureDefinition)
                   } else {
-                    formikProps.submitForm()
+                    onSubmit({
+                      ...formikProps.values,
+                      orgIdentifier,
+                      projectIdentifier,
+                      environmentRef: environmentIdentifier || envIdentifier,
+                      type: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure
+                        ?.infrastructureDefinition?.type,
+                      spec: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure
+                        ?.infrastructureDefinition?.spec,
+                      allowSimultaneousDeployments: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)
+                        ?.infrastructure?.allowSimultaneousDeployments
+                    } as InfrastructureDefinitionConfig)
                   }
                 }}
                 disabled={isSavingInfrastructure}
