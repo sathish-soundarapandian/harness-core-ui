@@ -83,6 +83,11 @@ jest.mock('services/cd-ng', () => ({
   useGetTestConnectionResult: jest.fn()
 }))
 
+jest.mock('@harness/help-panel', () => ({
+  ...jest.requireActual('@harness/help-panel'),
+  HelpPanel: () => <>Help Panel</>
+}))
+
 describe('Connectors List Test', () => {
   const props = {
     data: connectorsData.data as any,
