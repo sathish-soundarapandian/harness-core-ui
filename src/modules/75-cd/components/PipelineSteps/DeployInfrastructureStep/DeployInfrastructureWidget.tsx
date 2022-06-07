@@ -47,16 +47,11 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
+import type { PipelineInfrastructureV2 } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { getEnvironmentRefSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import { InfrastructureModal } from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfrastructureModal'
-import {
-  DeployInfrastructureProps,
-  DeployInfrastructureState,
-  isEditEnvironment,
-  isEditInfrastructure,
-  PipelineInfrastructureV2
-} from './utils'
+import { DeployInfrastructureProps, DeployInfrastructureState, isEditEnvironment, isEditInfrastructure } from './utils'
 import { AddEditEnvironmentModal } from './AddEditEnvironmentModal'
 
 import css from './DeployInfrastructureStep.module.scss'
@@ -662,7 +657,7 @@ export function DeployInfrastructureWidget({
                         // onTypeChange: setEnvironmentRefType,
                         width: 280,
                         onChange: item => {
-                          if (values.environmentRef2 && (item as SelectOption).value !== values.environmentRef2) {
+                          if (values.environmentRef2 && (item as SelectOption).value !== values.environmentRef2.value) {
                             setFieldValue('environmentRef2', item as SelectOption)
                             infrastructuresRefetch({
                               queryParams: {

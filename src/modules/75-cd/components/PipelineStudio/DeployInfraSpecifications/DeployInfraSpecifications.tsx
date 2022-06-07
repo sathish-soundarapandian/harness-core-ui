@@ -23,7 +23,7 @@ import {
 } from 'services/cd-ng'
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
-import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { PipelineInfrastructureV2, StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type {
   InfraProvisioningData,
   ProvisionersOptions
@@ -56,7 +56,6 @@ import {
 import type { ServerlessAwsLambdaSpec } from '@cd/components/PipelineSteps/ServerlessAWSLambda/ServerlessAwsLambdaSpec'
 import type { ServerlessGCPSpec } from '@cd/components/PipelineSteps/ServerlessGCP/ServerlessGCPSpec'
 import type { ServerlessAzureSpec } from '@cd/components/PipelineSteps/ServerlessAzure/ServerlessAzureSpec'
-import type { PipelineInfrastructureV2 } from '@cd/components/PipelineSteps/DeployInfrastructureStep/utils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { cleanUpEmptyProvisioner, getInfraGroups, getInfrastructureDefaultValue } from './deployInfraHelper'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
