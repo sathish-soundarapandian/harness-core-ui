@@ -131,11 +131,15 @@ const ConfigureSlackNotifications: React.FC<ConfigureSlackNotificationsProps> = 
           validationSchema={Yup.object().shape({
             webhookUrl: Yup.string().test('isValidUrl', getString('validation.urlIsNotValid'), _webhookUrl => {
               // TODO: Create global validation function for url validation
-              try {
-                const url = new URL(_webhookUrl)
-                return url.protocol === 'http:' || url.protocol === 'https:'
-              } catch (_) {
-                return false
+              if (_webhookUrl) {
+                try {
+                  const url = new URL(_webhookUrl)
+                  return url.protocol === 'http:' || url.protocol === 'https:'
+                } catch (_) {
+                  return false
+                }
+              } else {
+                return true
               }
             })
           })}
