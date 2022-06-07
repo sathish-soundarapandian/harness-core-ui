@@ -17,7 +17,10 @@ import {
   Dialog,
   Layout,
   MultiTypeInputType,
-  SelectOption
+  SelectOption,
+  SplitButton,
+  SplitButtonOption
+  // SelectWithSubmenu
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import * as Yup from 'yup'
@@ -26,9 +29,10 @@ import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
 import {
+  EnvironmentGroupResponseDTO,
   EnvironmentResponseDTO,
   InfrastructureResponseDTO,
-  PipelineInfrastructure,
+  useGetEnvironmentGroupList,
   useGetEnvironmentListV2,
   useGetInfrastructureList
 } from 'services/cd-ng'
@@ -46,7 +50,13 @@ import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { getEnvironmentRefSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import { InfrastructureModal } from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfrastructureModal'
-import { DeployInfrastructureProps, DeployInfrastructureState, isEditEnvironment, isEditInfrastructure } from './utils'
+import {
+  DeployInfrastructureProps,
+  DeployInfrastructureState,
+  isEditEnvironment,
+  isEditInfrastructure,
+  PipelineInfrastructureV2
+} from './utils'
 import { AddEditEnvironmentModal } from './AddEditEnvironmentModal'
 
 import css from './DeployInfrastructureStep.module.scss'
@@ -81,10 +91,6 @@ export function DeployInfrastructureWidget({
     return () => unSubscribeForm({ tab: DeployTabs.ENVIRONMENT, form: formikRef })
   }, [])
 
-  const [environmentRefType, setEnvironmentRefType] = useState<MultiTypeInputType>(
-    getMultiTypeFromValue((formikRef?.current as any)?.values?.environmentRef)
-  )
-
   const {
     data: environmentsResponse,
     loading: environmentsLoading,
@@ -105,13 +111,13 @@ export function DeployInfrastructureWidget({
 
   useEffect(() => {
     if (!environmentsLoading && !environmentsResponse?.data?.empty) {
-      const enivronmentsList: EnvironmentResponseDTO[] = []
+      const environmentsList: EnvironmentResponseDTO[] = []
       if (environmentsResponse?.data?.content) {
         environmentsResponse.data.content.forEach(environmentObj => {
-          enivronmentsList.push({ ...environmentObj.environment })
+          environmentsList.push({ ...environmentObj.environment })
         })
       }
-      setEnvironments(enivronmentsList)
+      setEnvironments(environmentsList)
     }
   }, [environmentsLoading, environmentsResponse])
 
@@ -213,6 +219,139 @@ export function DeployInfrastructureWidget({
     permissions: [PermissionIdentifier.EDIT_ENVIRONMENT]
   })
 
+  const {
+    data: environmentGroupsResponse,
+    loading: environmentGroupsLoading,
+    error: environmentGroupsError
+  } = useMutateAsGet(useGetEnvironmentGroupList, {
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
+    body: {
+      filterType: 'EnvironmentGroup'
+    }
+  })
+
+  const [environmentGroups, setEnvironmentGroups] = useState<EnvironmentGroupResponseDTO[]>()
+  const [environmentGroupsSelectOptions, setEnvironmentGroupsSelectOptions] = useState<SelectOption[]>()
+
+  useEffect(() => {
+    if (!environmentGroupsLoading && !environmentGroupsResponse?.data?.empty) {
+      const environmentGroupsList: EnvironmentGroupResponseDTO[] = []
+      if (environmentGroupsResponse?.data?.content) {
+        environmentGroupsResponse.data.content.forEach(environmentObj => {
+          environmentGroupsList.push({ ...environmentObj.envGroup })
+        })
+      }
+      setEnvironmentGroups(environmentGroupsList)
+    }
+  }, [environmentGroupsLoading, environmentGroupsResponse])
+
+  useEffect(() => {
+    if (!isNil(environmentGroups)) {
+      setEnvironmentGroupsSelectOptions(
+        environmentGroups.map(environmentGroup => {
+          return { label: defaultTo(environmentGroup.name, ''), value: defaultTo(environmentGroup.identifier, '') }
+        })
+      )
+    }
+  }, [environments])
+
+  useEffect(() => {
+    if (
+      !isEmpty(environmentGroupsSelectOptions) &&
+      !isNil(environmentGroupsSelectOptions) &&
+      initialValues.environmentRef
+    ) {
+      if (getMultiTypeFromValue(initialValues.environmentRef) === MultiTypeInputType.FIXED) {
+        const doesExist =
+          environmentGroupsSelectOptions.filter(env => env.value === initialValues.environmentRef).length > 0
+        if (!doesExist) {
+          if (!readonly) {
+            formikRef.current?.setFieldValue('environmentRef', '')
+          } else {
+            const options = [...environmentGroupsSelectOptions]
+            options.push({
+              label: initialValues.environmentRef,
+              value: initialValues.environmentRef
+            })
+            setEnvironmentGroupsSelectOptions(options)
+          }
+        }
+      }
+    }
+  }, [environmentGroupsSelectOptions])
+
+  if (!isNil(environmentGroupsError)) {
+    showError(getRBACErrorMessage(environmentGroupsError), undefined, 'cd.env.list.error')
+  }
+
+  const updateEnvironmentGroupsList = (value: EnvironmentGroupResponseDTO) => {
+    formikRef.current?.setValues({ environmentRef: value.identifier, ...(state.isEnvironment && { environment: {} }) })
+    if (!isNil(environmentGroups) && !isEmpty(environmentGroups)) {
+      const newEnvironmentGroupsList = [...environmentGroups]
+      const existingIndex = newEnvironmentGroupsList.findIndex(item => item.identifier === value.identifier)
+      if (existingIndex >= 0) {
+        newEnvironmentGroupsList.splice(existingIndex, 1, value)
+      } else {
+        newEnvironmentGroupsList.unshift(value)
+      }
+      setEnvironmentGroups(newEnvironmentGroupsList)
+    }
+    onClose()
+  }
+
+  const [showEnvironmentGroupsModal, hideEnvironmentGroupsModal] = useModalHook(
+    () => (
+      <Dialog
+        isOpen={true}
+        enforceFocus={false}
+        onClose={onEnvGroupModalClose}
+        title={state.isEdit ? getString('editEnvironment') : getString('newEnvironment')}
+      >
+        <AddEditEnvironmentModal
+          data={{
+            name: defaultTo(state.data?.name, ''),
+            identifier: defaultTo(state.data?.identifier, ''),
+            orgIdentifier,
+            projectIdentifier,
+            ...state.data
+          }}
+          isEnvironment={state.isEnvironment}
+          isEdit={state.isEdit}
+          onCreateOrUpdate={updateEnvironmentGroupsList}
+          closeModal={onEnvGroupModalClose}
+        />
+      </Dialog>
+    ),
+    [state]
+  )
+
+  const onEnvGroupModalClose = useCallback(() => {
+    setState({ isEdit: false, isEnvironment: false })
+    hideEnvironmentGroupsModal()
+  }, [hideEnvironmentGroupsModal])
+
+  const [canEnvironmentGroupEdit] = usePermission({
+    resource: {
+      resourceType: ResourceType.ENVIRONMENT_GROUP,
+      resourceIdentifier: environmentGroups ? (environmentGroups[0]?.identifier as string) : ''
+    },
+    permissions: [PermissionIdentifier.EDIT_ENVIRONMENT_GROUP],
+    options: {
+      skipCondition: ({ resourceIdentifier }) => !resourceIdentifier
+    }
+  })
+
+  const [canEnvironmentGroupCreate] = usePermission({
+    resource: {
+      resourceType: ResourceType.ENVIRONMENT_GROUP
+    },
+    permissions: [PermissionIdentifier.EDIT_ENVIRONMENT_GROUP]
+  })
+
   const [infrastructureRefType, setInfrastructureRefType] = useState<MultiTypeInputType>(
     getMultiTypeFromValue((formikRef?.current as any)?.values?.infrastructureRef)
   )
@@ -220,17 +359,10 @@ export function DeployInfrastructureWidget({
   const {
     data: infrastructuresResponse,
     loading: infrastructuresLoading,
-    error: infrastructuresError
+    error: infrastructuresError,
+    refetch: infrastructuresRefetch
   } = useGetInfrastructureList({
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      environmentIdentifier: (formikRef?.current as any)?.values?.environmentRef
-    },
-    lazy:
-      !(formikRef?.current as any)?.values?.environmentRef &&
-      getMultiTypeFromValue((formikRef?.current as any)?.environmentRef) !== MultiTypeInputType.RUNTIME
+    lazy: true
   })
 
   const [infrastructures, setInfrastructures] = useState<InfrastructureResponseDTO[]>()
@@ -304,6 +436,8 @@ export function DeployInfrastructureWidget({
     onInfraModalClose()
   }
 
+  const [infrastructureToEdit, setInfrastructureToEdit] = useState<string | undefined>()
+
   const [showInfrastructuresModal, hideInfrastructuresModal] = useModalHook(
     () => (
       <Dialog
@@ -319,13 +453,13 @@ export function DeployInfrastructureWidget({
         <InfrastructureModal
           hideModal={hideInfrastructuresModal}
           refetch={updateInfrastructuresList}
-          envIdentifier={(formikRef.current as any)?.values.environmentRef}
-          // infrastructureToEdit={infrastructureToEdit}
-          // setInfrastructureToEdit={setInfrastructureToEdit}
+          envIdentifier={(formikRef.current as any)?.values.environmentRef?.value}
+          infrastructureToEdit={infrastructureToEdit}
+          setInfrastructureToEdit={setInfrastructureToEdit}
         />
       </Dialog>
     ),
-    [state, formikRef.current]
+    [state, formikRef.current, infrastructureToEdit, setInfrastructureToEdit]
   )
 
   const onInfraModalClose = useCallback(() => {
@@ -335,18 +469,38 @@ export function DeployInfrastructureWidget({
 
   return (
     <>
-      <Formik<PipelineInfrastructure>
+      <Formik<PipelineInfrastructureV2>
         formName="deployInfrastructureStepForm"
         onSubmit={noop}
-        validate={values => {
-          onUpdate?.({
-            environmentRef: values.environmentRef,
-            infrastructureRef: (values as any).infrastructureRef
-          } as any)
+        validate={(values: PipelineInfrastructureV2) => {
+          if (values.environmentRef2) {
+            onUpdate?.({
+              environmentGroup: {
+                envGroupRef: values.environmentOrEnvGroupRef?.value,
+                envGroupConfig: [
+                  {
+                    environmentRef: (values.environmentRef as any).value,
+                    infrastructureDefinitions: (values as any).infrastructureDefinitions.map((infra: string) => ({
+                      ref: infra
+                    }))
+                  }
+                ]
+              }
+            } as any)
+          } else {
+            onUpdate?.({
+              environment: {
+                environmentRef: (values.environmentOrEnvGroupRef as any).value,
+                infrastructureDefinitions: (values as any).infrastructureDefinitions.map((infra: string) => ({
+                  ref: infra
+                }))
+              }
+            } as any)
+          }
         }}
         initialValues={initialValues}
         validationSchema={Yup.object().shape({
-          environmentRef: getEnvironmentRefSchema(getString)
+          environmentOrEnvGroupRef: getEnvironmentRefSchema(getString)
         })}
       >
         {formik => {
@@ -358,41 +512,72 @@ export function DeployInfrastructureWidget({
               <Layout.Horizontal
                 className={css.formRow}
                 spacing="medium"
-                flex={{ alignItems: flexStart, justifyContent: flexStart }}
+                flex={{ alignItems: 'flex-end', justifyContent: flexStart }}
               >
-                <FormInput.MultiTypeInput
-                  label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironment')}
-                  tooltipProps={{ dataTooltipId: 'specifyYourEnvironment' }}
-                  name="environmentRef"
-                  useValue
-                  disabled={readonly || (environmentRefType === MultiTypeInputType.FIXED && environmentsLoading)}
-                  placeholder={
-                    environmentsLoading
-                      ? getString('loading')
-                      : getString('cd.pipelineSteps.environmentTab.selectEnvironment')
-                  }
-                  multiTypeInputProps={{
-                    onTypeChange: setEnvironmentRefType,
-                    width: 280,
-                    onChange: item => {
-                      if (values.environmentRef && (item as SelectOption).value !== values.environmentRef) {
-                        setFieldValue('environmentRef', (item as SelectOption)?.value)
+                <FormInput.SelectWithSubmenuTypeInput
+                  label={getString('cd.specifyEnvironmentOrGroup')}
+                  name="environmentOrEnvGroupRef"
+                  disabled={environmentsLoading || environmentGroupsLoading}
+                  selectWithSubmenuTypeInputProps={{
+                    items:
+                      environmentsLoading || environmentGroupsLoading
+                        ? [{ value: '', label: 'Loading...', submenuItems: [] }]
+                        : [
+                            {
+                              label: getString('environment'),
+                              value: getString('environment'),
+                              submenuItems: environmentsResponse?.data?.content?.map(environmentObject => ({
+                                label: environmentObject.environment?.name,
+                                value: environmentObject.environment?.identifier
+                              })) as SelectOption[]
+                            },
+                            {
+                              label: getString('common.environmentGroup.label'),
+                              value: getString('common.environmentGroup.label'),
+                              submenuItems: environmentGroupsResponse?.data?.content?.map(environmentGroupObject => ({
+                                label: environmentGroupObject.envGroup?.name,
+                                value: environmentGroupObject.envGroup?.identifier
+                              })) as SelectOption[]
+                            }
+                          ],
+                    onChange: (primaryOption: SelectOption, secondaryOption: SelectOption) => {
+                      if (primaryOption?.value === getString('environment')) {
+                        setFieldValue('environmentOrEnvGroupRef', secondaryOption)
+                        setFieldValue('environmentGroup.envGroupRef', '')
+                        infrastructuresRefetch({
+                          queryParams: {
+                            accountIdentifier: accountId,
+                            orgIdentifier,
+                            projectIdentifier,
+                            environmentIdentifier: secondaryOption?.value as string
+                          }
+                        })
+                      } else if (primaryOption?.value === getString('common.environmentGroup.label')) {
+                        setFieldValue('environmentOrEnvGroupRef', secondaryOption)
+                        setFieldValue('environmentGroup.envGroupRef', secondaryOption?.value)
+                      } else {
+                        setFieldValue('environmentOrEnvGroupRef', primaryOption)
                       }
-                    },
-                    selectProps: {
-                      addClearBtn: !readonly,
-                      items: defaultTo(environmentsSelectOptions, [])
-                    },
-                    expressions,
-                    allowableTypes
+                    }
                   }}
-                  selectItems={defaultTo(environmentsSelectOptions, [])}
                 />
-                {environmentRefType === MultiTypeInputType.FIXED && (
-                  <Button
+
+                {getMultiTypeFromValue(formik.values.environmentOrEnvGroupRef) === MultiTypeInputType.FIXED && (
+                  <SplitButton
+                    margin={{ bottom: 'small' }}
                     size={ButtonSize.SMALL}
                     variation={ButtonVariation.LINK}
-                    disabled={readonly || (isEditEnvironment(values) ? !canEdit : !canCreate)}
+                    disabled={
+                      readonly || isEditEnvironment(values)
+                        ? !canEdit && !canEnvironmentGroupEdit
+                        : !canCreate && !canEnvironmentGroupCreate
+                    }
+                    text={
+                      isEditEnvironment(values)
+                        ? getString('editEnvironment')
+                        : getString('cd.pipelineSteps.environmentTab.plusNewEnvironment')
+                    }
+                    id={isEditEnvironment(values) ? 'edit-environment' : 'add-new-environment'}
                     onClick={() => {
                       const isEdit = isEditEnvironment(values)
                       if (isEdit) {
@@ -420,16 +605,127 @@ export function DeployInfrastructureWidget({
                       }
                       showEnvironmentModal()
                     }}
-                    text={
-                      isEditEnvironment(values)
-                        ? getString('editEnvironment')
-                        : getString('cd.pipelineSteps.environmentTab.plusNewEnvironment')
-                    }
-                    id={isEditEnvironment(values) ? 'edit-environment' : 'add-new-environment'}
-                  />
+                  >
+                    {Boolean(formik?.values.environmentRef) && (
+                      <SplitButtonOption
+                        text={getString('common.environmentGroup.new')}
+                        onClick={() => {
+                          const isEdit = isEditEnvironment(values)
+                          if (isEdit) {
+                            if (values.environment?.identifier) {
+                              setState({
+                                isEdit,
+                                formik,
+                                isEnvironment: true,
+                                data: values.environment
+                              })
+                            } else {
+                              setState({
+                                isEdit,
+                                formik,
+                                isEnvironment: false,
+                                data: environments?.find(env => env.identifier === values.environmentRef)
+                              })
+                            }
+                          } else {
+                            setState({
+                              isEdit: false,
+                              isEnvironment: false,
+                              formik
+                            })
+                          }
+                          showEnvironmentGroupsModal()
+                        }}
+                      />
+                    )}
+                  </SplitButton>
                 )}
-                {Boolean(values.environmentRef) &&
-                  getMultiTypeFromValue(values.environmentRef) === MultiTypeInputType.FIXED && (
+
+                {Boolean(formik.values.environmentGroup?.envGroupRef) && (
+                  <>
+                    <FormInput.MultiTypeInput
+                      label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironment')}
+                      tooltipProps={{ dataTooltipId: 'specifyYourEnvironment' }}
+                      name="environmentRef2"
+                      disabled={
+                        readonly ||
+                        (getMultiTypeFromValue(formik.values.environmentGroup?.envGroupRef) ===
+                          MultiTypeInputType.FIXED &&
+                          environmentsLoading)
+                      }
+                      placeholder={
+                        environmentsLoading
+                          ? getString('loading')
+                          : getString('cd.pipelineSteps.environmentTab.selectEnvironment')
+                      }
+                      multiTypeInputProps={{
+                        // onTypeChange: setEnvironmentRefType,
+                        width: 280,
+                        onChange: item => {
+                          if (values.environmentRef2 && (item as SelectOption).value !== values.environmentRef2) {
+                            setFieldValue('environmentRef2', item as SelectOption)
+                            infrastructuresRefetch({
+                              queryParams: {
+                                accountIdentifier: accountId,
+                                orgIdentifier,
+                                projectIdentifier,
+                                environmentIdentifier: (item as SelectOption)?.value as string
+                              }
+                            })
+                          }
+                        },
+                        selectProps: {
+                          addClearBtn: !readonly,
+                          items: defaultTo(environmentsSelectOptions, [])
+                        },
+                        expressions,
+                        allowableTypes
+                      }}
+                      selectItems={defaultTo(environmentsSelectOptions, [])}
+                    />
+                    <Button
+                      margin={{ bottom: 'small' }}
+                      size={ButtonSize.SMALL}
+                      variation={ButtonVariation.LINK}
+                      disabled={readonly || isEditEnvironment(values) ? !canEdit : !canCreate}
+                      text={
+                        isEditEnvironment(values)
+                          ? getString('editEnvironment')
+                          : getString('cd.pipelineSteps.environmentTab.plusNewEnvironment')
+                      }
+                      id={isEditEnvironment(values) ? 'edit-environment' : 'add-new-environment'}
+                      onClick={() => {
+                        const isEdit = isEditEnvironment(values)
+                        if (isEdit) {
+                          if (values.environment?.identifier) {
+                            setState({
+                              isEdit,
+                              formik,
+                              isEnvironment: true,
+                              data: values.environment
+                            })
+                          } else {
+                            setState({
+                              isEdit,
+                              formik,
+                              isEnvironment: false,
+                              data: environments?.find(env => env.identifier === values.environmentRef)
+                            })
+                          }
+                        } else {
+                          setState({
+                            isEdit: false,
+                            isEnvironment: false,
+                            formik
+                          })
+                        }
+                        showEnvironmentModal()
+                      }}
+                    />
+                  </>
+                )}
+                {Boolean(values.environmentOrEnvGroupRef) &&
+                  getMultiTypeFromValue(values.environmentOrEnvGroupRef) === MultiTypeInputType.FIXED && (
                     <>
                       <FormInput.MultiTypeInput
                         label={getString('cd.pipelineSteps.environmentTab.specifyYourInfrastructure')}
@@ -448,11 +744,13 @@ export function DeployInfrastructureWidget({
                           onTypeChange: setInfrastructureRefType,
                           width: 280,
                           onChange: item => {
-                            if (
-                              (values as any).infrastructureRef &&
-                              (item as SelectOption).value !== (values as any).infrastructureRef
-                            ) {
+                            if ((item as SelectOption).value !== (values as any).infrastructureRef) {
                               setFieldValue('infrastructureDefinitions', [(item as SelectOption)?.value])
+                              setInfrastructureToEdit(
+                                infrastructures?.filter(
+                                  infra => infra.identifier === (item as SelectOption)?.value
+                                )?.[0].yaml
+                              )
                             }
                           },
                           selectProps: {
@@ -466,33 +764,34 @@ export function DeployInfrastructureWidget({
                       />
                       {infrastructureRefType === MultiTypeInputType.FIXED && (
                         <Button
+                          margin={{ bottom: 'small' }}
                           size={ButtonSize.SMALL}
                           variation={ButtonVariation.LINK}
                           disabled={readonly || (isEditEnvironment(values) ? !canEdit : !canCreate)}
                           onClick={() => {
                             const isEdit = isEditEnvironment(values)
                             if (isEdit) {
-                              //   if (values.environment?.identifier) {
-                              //     setState({
-                              //       isEdit,
-                              //       formik,
-                              //       isEnvironment: true,
-                              //       data: values.environment
-                              //     })
-                              //   } else {
-                              //     setState({
-                              //       isEdit,
-                              //       formik,
-                              //       isEnvironment: false,
-                              //       data: environments?.find(env => env.identifier === values.environmentRef)
-                              //     })
-                              //   }
-                              // } else {
-                              //   setState({
-                              //     isEdit: false,
-                              //     isEnvironment: false,
-                              //     formik
-                              //   })
+                              if (values.environment?.identifier) {
+                                setState({
+                                  isEdit,
+                                  formik,
+                                  isEnvironment: true,
+                                  data: values.environment
+                                })
+                              } else {
+                                setState({
+                                  isEdit,
+                                  formik,
+                                  isEnvironment: false,
+                                  data: environments?.find(env => env.identifier === values.infrastructureRef)
+                                })
+                              }
+                            } else {
+                              setState({
+                                isEdit: false,
+                                isEnvironment: false,
+                                formik
+                              })
                             }
                             showInfrastructuresModal()
                           }}
