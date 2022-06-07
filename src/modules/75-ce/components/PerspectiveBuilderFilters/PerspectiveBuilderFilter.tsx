@@ -76,16 +76,15 @@ const PerspectiveBuilderFilter: React.FC<FilterPillProps> = ({
     name: pillData.viewField.fieldName
   }
 
+  const [searchText, setSearchText] = useState('')
   const [pageInfo, setPageInfo] = useState<{
     filtersValuesData: string[]
     loadMore: boolean
     page: number
-    searchValue: string
   }>({
     filtersValuesData: [],
     loadMore: true,
-    page: 1,
-    searchValue: ''
+    page: 1
   })
 
   const operator: QlceViewFilterOperator = pillData.viewOperator
@@ -95,13 +94,7 @@ const PerspectiveBuilderFilter: React.FC<FilterPillProps> = ({
     providerData,
     serviceData
   ) => {
-    if (provider.id !== providerData.id || service.id !== serviceData.id) {
-      setPageInfo(prevInfo => ({
-        ...prevInfo,
-        filtersValuesData: [],
-        searchValue: ''
-      }))
-    }
+    onInputChange('')
     const changedData = {
       ...pillData,
       viewField: {
@@ -115,13 +108,8 @@ const PerspectiveBuilderFilter: React.FC<FilterPillProps> = ({
     onChange(id, changedData)
   }
 
-  const clearInput = () =>
-    setPageInfo(prevInfo => ({
-      ...prevInfo,
-      searchValue: ''
-    }))
-
   const onOperatorChange: (op: QlceViewFilterOperator) => void = op => {
+    onInputChange('')
     const changedData = {
       ...pillData,
       viewOperator: op
@@ -129,10 +117,8 @@ const PerspectiveBuilderFilter: React.FC<FilterPillProps> = ({
     if (op === QlceViewFilterOperator.Null || op === QlceViewFilterOperator.NotNull) {
       onChange(id, { ...changedData, values: [''] })
     } else if ([QlceViewFilterOperator.Null, QlceViewFilterOperator.NotNull].includes(operator)) {
-      clearInput()
       onChange(id, { ...changedData, values: [] })
     } else {
-      clearInput()
       onChange(id, changedData)
     }
   }
@@ -158,7 +144,7 @@ const PerspectiveBuilderFilter: React.FC<FilterPillProps> = ({
           identifierName: provider?.name
         },
         operator: QlceViewFilterOperator.In,
-        values: [pageInfo.searchValue]
+        values: [searchText]
       }
     } as QlceViewFilterWrapperInput
   ]
@@ -180,23 +166,19 @@ const PerspectiveBuilderFilter: React.FC<FilterPillProps> = ({
 
   useEffect(() => {
     if (data?.perspectiveFilters?.values) {
-      const moreItemsPresent = data.perspectiveFilters.values.length === LIMIT
+      const moreItemsPresent = data.perspectiveFilters.values.length >= LIMIT
       const filteredVal = data.perspectiveFilters.values.filter(e => e) as string[]
       setPageInfo(prevInfo => ({
-        ...prevInfo,
         loadMore: moreItemsPresent,
-        filtersValuesData: [...prevInfo.filtersValuesData, ...filteredVal]
+        filtersValuesData: pageInfo.page > 1 ? [...prevInfo.filtersValuesData, ...filteredVal] : filteredVal,
+        page: prevInfo.page
       }))
     }
   }, [data?.perspectiveFilters?.values])
 
   const onInputChange: (val: string) => void = val => {
-    setPageInfo({
-      filtersValuesData: val ? [] : ((data?.perspectiveFilters?.values?.filter(e => e) || []) as string[]),
-      loadMore: val ? true : false,
-      page: 1,
-      searchValue: val
-    })
+    setSearchText(val)
+    setPageInfo(prevInfo => ({ ...prevInfo, page: 1 }))
   }
 
   return (
@@ -224,10 +206,10 @@ const PerspectiveBuilderFilter: React.FC<FilterPillProps> = ({
         }}
         onInputChange={onInputChange}
         shouldFetchMore={pageInfo.loadMore}
-        fetching={!pageInfo.filtersValuesData.length && fetching}
+        fetching={fetching && pageInfo.page === 1}
         selectedVal={selectedVal}
         onValueChange={onValueChange}
-        searchText={pageInfo.searchValue}
+        searchText={searchText}
       />
 
       <Icon key="delete" name="delete" size={18} color={Color.ORANGE_700} onClick={removePill} />
