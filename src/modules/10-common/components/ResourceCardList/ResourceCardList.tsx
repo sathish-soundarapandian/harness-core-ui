@@ -46,7 +46,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   const { openCreateSmtpModal } = useCreateSmtpModal({ onCloseModal: refetchSmtpData })
   // showGitOpsCard defaults to false for now while the feature is being developed
   const showGitOpsCard = useMemo(
-    () => history?.location?.pathname.includes('resources') && false,
+    () => history?.location?.pathname.includes('resources') && true,
     [history?.location?.pathname]
   )
   const smtpResource: ResourceOption[] = [
