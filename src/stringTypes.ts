@@ -2617,8 +2617,6 @@ export interface StringsMap {
   'pipeline.conditionalExecution.toolTip.resolvedVariables': string
   'pipeline.conditionalExecution.toolTip.stageTitle': string
   'pipeline.conditionalExecution.toolTip.stepTitle': string
-  'pipeline.configFiles.details': string
-  'pipeline.configFiles.source': string
   'pipeline.configFiles.title': string
   'pipeline.copyTemplate': string
   'pipeline.createANewPipeline': string

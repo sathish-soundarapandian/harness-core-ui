@@ -1060,3 +1060,5 @@ ACR:
   repositoryPlaceholder: 'Select or add Repository'
   repositoryError: 'No repository found with given Registry'
   tagError: 'No tags found with given Connector, Subscription Id, Registry and Repository'
+configFiles:
+  title: 'Config Files Details'
