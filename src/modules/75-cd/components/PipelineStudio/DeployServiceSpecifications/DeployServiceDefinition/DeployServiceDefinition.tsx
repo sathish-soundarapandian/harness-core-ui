@@ -26,29 +26,33 @@ import {
 } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { useServiceContext } from '@cd/context/ServiceContext'
+import ReleaseRepoListView from '@pipeline/components/ReleaseRepoSelection/ReleaseRepoListView'
+
 import { setupMode } from '../PropagateWidget/PropagateWidget'
 import SelectDeploymentType from '../SelectDeploymentType'
+
 import css from './DeployServiceDefinition.module.scss'
-import ServiceRepoListView from '@pipeline/components/ReleaseRepoSelection/ReleaseRepoListView'
 
 function DeployServiceDefinition(): React.ReactElement {
   const {
     state: {
       pipeline,
+      //   pipeline: { service },
       selectionState: { selectedStageId }
     },
     getStageFromPipeline,
     updateStage,
     allowableTypes,
     isReadonly
+    // updatePipeline
   } = usePipelineContext()
+
   const { isServiceEntityModalView } = useServiceContext()
 
   const { index: stageIndex } = getStageIndexFromPipeline(pipeline, selectedStageId || '')
   const { getString } = useStrings()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const [showServiceRepo, setShowServiceRepo] = useState<boolean>(false)
-
   const getDeploymentType = (): ServiceDeploymentType => {
     return get(stage, 'stage.spec.serviceConfig.serviceDefinition.type')
   }
@@ -120,12 +124,15 @@ function DeployServiceDefinition(): React.ReactElement {
       />
 
       <Checkbox
-        name="Gitops"
+        label="Gitops"
+        name="gitOpsEnabled"
         onChange={(ev: any) => {
           setShowServiceRepo(ev.currentTarget.checked)
+
+          // updatePipeline({ ...service, gitOpsEnabled: true })
         }}
       />
-      {showServiceRepo ? <ServiceRepoListView /> : null}
+      {showServiceRepo ? <ReleaseRepoListView updateStage={updateStage} stage={stage} /> : null}
       <Layout.Horizontal>
         <StepWidget<K8SDirectServiceStep>
           factory={factory}

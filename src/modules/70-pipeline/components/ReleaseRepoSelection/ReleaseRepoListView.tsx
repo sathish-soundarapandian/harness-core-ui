@@ -2,11 +2,11 @@ import { Button, ButtonSize, ButtonVariation, Card } from '@harness/uicore'
 import React, { useState } from 'react'
 import cx from 'classnames'
 import { Classes, IDialogProps, Dialog } from '@blueprintjs/core'
+import type { StageElementConfig } from 'services/cd-ng'
 
 import ReleaseRepoWizard from './ReleaseRepoWizard'
-
-import css from './ReleaseRepo.module.scss'
 import type { ManifestStores } from '../ManifestSelection/ManifestInterface'
+import css from './ReleaseRepo.module.scss'
 
 const DIALOG_PROPS: IDialogProps = {
   isOpen: true,
@@ -18,11 +18,38 @@ const DIALOG_PROPS: IDialogProps = {
   style: { width: 1175, minHeight: 640, borderLeft: 0, paddingBottom: 0, position: 'relative', overflow: 'hidden' }
 }
 
-function ServiceRepoListView(): React.ReactElement {
+function ReleaseRepoListView({
+  updateStage,
+  stage
+}: {
+  updateStage: (stage: StageElementConfig) => Promise<void>
+  stage: any
+}): React.ReactElement {
   const [showServiceRepoModal, setShowServiceRepoModal] = useState(false)
   const [connectorView, setConnectorView] = useState(false)
   const [isEditMode, setIsEditMode] = useState(false)
-  const [manifestStore, setManifestStore] = useState('')
+  // const [manifestStore, setManifestStore] = useState('')
+
+  // const getDeploymentType = (): ServiceDeploymentType => {
+  //   return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests')
+  // }
+
+  // const listOfManifests = useMemo(() => {
+  //   if (!isReadonly && isReadOnlyServiceMode) {
+  //     const serviceData = selectedServiceResponse?.data?.service as ServiceResponseDTO
+  //     if (!isEmpty(serviceData?.yaml)) {
+  //       const parsedYaml = yamlParse<NGServiceConfig>(defaultTo(serviceData.yaml, ''))
+  //       const serviceInfo = parsedYaml.service?.serviceDefinition
+  //       return serviceInfo?.spec.manifests
+  //     }
+  //     return []
+  //   }
+  //   if (isPropagating) {
+  //     return get(stage, 'stage.spec.serviceConfig.stageOverrides.manifests', [])
+  //   }
+
+  //   return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests', [])
+  // }, [isPropagating, isReadonly, isReadOnlyServiceMode, selectedServiceResponse?.data?.service])
 
   const handleConnectorViewChange = (isConnectorView: boolean): void => {
     setConnectorView(isConnectorView)
@@ -32,9 +59,9 @@ function ServiceRepoListView(): React.ReactElement {
     setManifestStore(store || '')
   }
   return (
-    <Card id={'serviceRepos'} className={css.sectionCard}>
-      <div className={cx(css.tabSubHeading, 'ng-tooltip-native')} data-tooltip-id={'service-repos'}>
-        Service Repos
+    <Card id={'releaseRepoManifests'} className={css.sectionCard}>
+      <div className={cx(css.tabSubHeading, 'ng-tooltip-native')} data-tooltip-id={'release-repo-manifests'}>
+        Release Repo Manifests
       </div>
 
       <Button
@@ -46,7 +73,7 @@ function ServiceRepoListView(): React.ReactElement {
           setShowServiceRepoModal(true)
         }}
       >
-        Add Service Repo
+        Add Release Repo Manifest File
       </Button>
       {showServiceRepoModal ? (
         <Dialog
@@ -62,6 +89,11 @@ function ServiceRepoListView(): React.ReactElement {
               handleConnectorViewChange={handleConnectorViewChange}
               isEditMode={isEditMode}
               handleStoreChange={handleStoreChange}
+              handleSubmit={updateStage}
+              stage={stage}
+              onClose={() => {
+                setShowServiceRepoModal(false)
+              }}
             />
           </div>
           <Button
@@ -78,4 +110,4 @@ function ServiceRepoListView(): React.ReactElement {
   )
 }
 
-export default ServiceRepoListView
+export default ReleaseRepoListView
