@@ -1,14 +1,14 @@
+import React from 'react'
 import { ButtonVariation, NoDataCard } from '@harness/uicore'
+import { useHistory, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import slosEmptyState from '@cv/assets/slosEmptyState.svg'
-import React from 'react'
 import RbacButton from '@rbac/components/Button/Button'
 import routes from '@common/RouteDefinitions'
 import { monitoredService } from '@cv/pages/monitored-service/CVMonitoredService/__test__/CVMonitoredService.mock'
 import { PermissionIdentifier, ResourceType } from 'microfrontends'
-import { getClassNameForMonitoredServicePage } from '../CVSLOListingPage.utils'
-import { useHistory, useParams } from 'react-router-dom'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { getClassNameForMonitoredServicePage } from '../CVSLOListingPage.utils'
 import css from '../CVSLOsListingPage.module.scss'
 
 export const CVSLONoDataPage = () => {
