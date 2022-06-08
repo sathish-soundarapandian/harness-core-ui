@@ -23,7 +23,6 @@ import {
 } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
 import noData from '@cv/assets/noData.svg'
-import slosEmptyState from '@cv/assets/slosEmptyState.svg'
 import { Page } from '@common/exports'
 import routes from '@common/RouteDefinitions'
 import { useStrings } from 'framework/strings'
@@ -216,6 +215,12 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     [userJourneysData, monitoredServicesData]
   )
 
+  if (getIsDataEmpty(content?.length, riskCountResponse?.data?.riskCounts)) {
+    history.push({
+      pathname: routes.toCVSLOsNoData({ accountId, orgIdentifier, projectIdentifier, module: 'cv' })
+    })
+  }
+
   return (
     <>
       {!monitoredService?.identifier && !getIsDataEmpty(content?.length, riskCountResponse?.data?.riskCounts) && (
@@ -259,13 +264,6 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
           if (dashboardRiskCountError) {
             refetchRiskCount()
           }
-        }}
-        noData={{
-          when: () => getIsDataEmpty(content?.length, riskCountResponse?.data?.riskCounts),
-          messageTitle: getString('cv.slos.noData'),
-          message: getString('cv.slos.noSLOsStateMessage'),
-          button: getAddSLOButton(),
-          image: slosEmptyState
         }}
         className={css.pageBody}
       >

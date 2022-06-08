@@ -1280,6 +1280,11 @@ const routes = {
       return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos`
     }
   ),
+  toCVSLOsNoData: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module = 'cv' }: Partial<ProjectPathProps & { module?: string }>) => {
+      return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos/noData`
+    }
+  ),
   toCVSLODetailsPage: withAccountId(
     ({
       module = 'cv',

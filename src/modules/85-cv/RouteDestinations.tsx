@@ -79,6 +79,7 @@ import CVSLOsListingPage from './pages/slos/CVSLOsListingPage'
 import CVSLODetailsPage from './pages/slos/CVSLODetailsPage/CVSLODetailsPage'
 import CVCreateSLO from './pages/slos/components/CVCreateSLO/CVCreateSLO'
 import ChildAppMounter from '../../microfrontends/ChildAppMounter'
+import { CVSLONoDataPage } from './pages/slos/CVSLONoDataPage/CVSLONODataPage'
 
 PubSubPipelineActions.subscribe(
   PipelineActions.RunPipeline,
@@ -192,6 +193,13 @@ export default (
       path={routes.toCVSLOs({ ...accountPathProps, ...projectPathProps, module: cvModule })}
     >
       <CVSLOsListingPage />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      sidebarProps={CVSideNavProps}
+      path={routes.toCVSLOsNoData({ ...accountPathProps, ...projectPathProps, module: cvModule })}
+    >
+      <CVSLONoDataPage />
     </RouteWithLayout>
 
     <RouteWithLayout
