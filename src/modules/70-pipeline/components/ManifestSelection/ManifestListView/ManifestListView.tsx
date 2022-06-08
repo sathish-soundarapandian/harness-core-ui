@@ -683,7 +683,7 @@ function ManifestListView({
                           {manifest?.identifier}
                         </Text>
                       </div>
-                      <div>{getString(manifestTypeLabels[manifest?.type as ManifestTypes])}</div>
+                      {/* <div>{getString(manifestTypeLabels[manifest?.type as ManifestTypes])}</div> */}
                       {renderConnectorField(
                         manifest?.spec?.store.type,
                         manifest?.spec?.store?.spec.connectorRef,

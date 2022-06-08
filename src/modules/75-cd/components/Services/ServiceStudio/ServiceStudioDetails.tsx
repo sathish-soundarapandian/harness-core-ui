@@ -75,7 +75,7 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
   const saveAndPublishService = async (): Promise<void> => {
     clear()
     const body = {
-      ...omit(cloneDeep(props.serviceData.service), 'serviceDefinition', 'gitOpsEnabled'),
+      ...omit(cloneDeep(props.serviceData.service), 'serviceDefinition'),
       projectIdentifier,
       orgIdentifier,
       yaml: yamlStringify({ ...props.serviceData })
