@@ -67,7 +67,6 @@ import ServiceAccountDetails from '@rbac/pages/ServiceAccountDetails/ServiceAcco
 import ServiceAccountsPage from '@rbac/pages/ServiceAccounts/ServiceAccounts'
 import { PubSubPipelineActions } from '@pipeline/factories/PubSubPipelineAction'
 import { PipelineActions } from '@pipeline/factories/PubSubPipelineAction/types'
-// import TemplatesPage from '@templates-library/pages/TemplatesPage/TemplatesPage'
 import { TemplateStudioWrapper } from '@templates-library/components/TemplateStudio/TemplateStudioWrapper'
 import { inputSetTemplatePromise } from 'services/cv'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
@@ -79,7 +78,7 @@ import CVSLOsListingPage from './pages/slos/CVSLOsListingPage'
 import CVSLODetailsPage from './pages/slos/CVSLODetailsPage/CVSLODetailsPage'
 import CVCreateSLO from './pages/slos/components/CVCreateSLO/CVCreateSLO'
 import ChildAppMounter from '../../microfrontends/ChildAppMounter'
-import { CVSLONoDataPage } from './pages/slos/CVSLONoDataPage/CVSLONODataPage'
+import { CVSLONoDataPage } from './pages/slos/CVSLONoDataPage/CVSLONoDataPage'
 
 PubSubPipelineActions.subscribe(
   PipelineActions.RunPipeline,
