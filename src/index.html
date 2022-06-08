@@ -31,7 +31,7 @@
     <!-- apiurl -->
     <script type="text/javascript">
       window.getApiBaseUrl = str => {
-        return window.apiUrl ? `${window.apiUrl}/${str}` : window.location.pathname.replace('ng/', '') + str
+        return `${window.apiUrl || ''}/${str}`
       }
     </script>
     <!-- segmentToken -->
