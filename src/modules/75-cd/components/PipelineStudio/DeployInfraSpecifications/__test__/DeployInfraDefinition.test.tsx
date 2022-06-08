@@ -165,8 +165,7 @@ jest.mock('@pipeline/components/AbstractSteps/StepWidget', () => ({
   }
 }))
 
-// eslint-disable-next-line jest/no-disabled-tests
-describe.skip('Deploy infra specifications test', () => {
+describe('Deploy infra specifications test', () => {
   test('Should match snapshot', () => {
     const context = getOverrideContextValue()
     const { container } = render(
