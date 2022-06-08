@@ -10,7 +10,7 @@ import { mapKeys } from 'lodash-es'
 import qs from 'qs'
 
 export const getConfig = (str: string): string => {
-  return window.apiUrl ? `${window.apiUrl}/${str}` : window.location.pathname.replace('ng/', '') + str
+  return `${window.apiUrl || ''}/${str}`
 }
 export interface GetUsingFetchProps<
   _TData = any,

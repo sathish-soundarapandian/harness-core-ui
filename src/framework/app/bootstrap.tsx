@@ -7,7 +7,7 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { HashRouter, Route, Switch } from 'react-router-dom'
+import { Route, Switch, BrowserRouter } from 'react-router-dom'
 
 import languageLoader from 'strings/languageLoader'
 import type { LangLocale } from 'strings/languageLoader'
@@ -36,7 +36,7 @@ export default async function render(): Promise<void> {
   }
 
   ReactDOM.render(
-    <HashRouter>
+    <BrowserRouter>
       <Switch>
         <Route
           path={[
@@ -53,7 +53,7 @@ export default async function render(): Promise<void> {
           <AppWithoutAuthentication strings={strings} />
         </Route>
       </Switch>
-    </HashRouter>,
+    </BrowserRouter>,
     document.getElementById('react-root')
   )
 }
