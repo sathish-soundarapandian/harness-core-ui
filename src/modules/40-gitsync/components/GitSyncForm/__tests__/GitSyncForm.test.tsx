@@ -13,6 +13,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { GitSyncForm, GitSyncFormFields } from '../GitSyncForm'
 import { gitConnectorMock } from './mockData'
+// import { fillAtForm, InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
 
 const mockRepos = {
   status: 'SUCCESS',
@@ -42,7 +43,7 @@ jest.mock('services/cd-ng', () => ({
     return { data: gitConnectorMock.data.content[0], refetch: getGitConnector, loading: false }
   }),
   useGetListOfReposByRefConnector: jest.fn().mockImplementation(() => {
-    return { data: mockRepos, refetch: fetchRepos }
+    return { data: mockRepos, refetch: fetchRepos, loading: false }
   }),
   useGetListOfBranchesByRefConnectorV2: jest.fn().mockImplementation(() => {
     return { data: mockBranches, refetch: fetchBranches }
@@ -54,7 +55,7 @@ describe('GitSyncForm test', () => {
     fetchRepos.mockReset()
   })
 
-  test('rendering GitSyncForm for while create', async () => {
+  test('Rendering GitSyncForm for while create and filling form', async () => {
     const { container, getByText } = render(
       <TestWrapper
         path="/account/:accountId/ci/orgs/:orgIdentifier/projects/:projectIdentifier/pipelines/-1/pipeline-studio/"
@@ -82,8 +83,6 @@ describe('GitSyncForm test', () => {
     )
 
     const form = document.getElementsByClassName('gitSyncForm')[0] as HTMLElement
-    expect(form).toMatchSnapshot()
-
     const connnectorRefInput = queryByAttribute('data-testid', form, /connectorRef/)
     expect(connnectorRefInput).toBeTruthy()
     if (connnectorRefInput) {
@@ -94,7 +93,7 @@ describe('GitSyncForm test', () => {
 
     await act(async () => {
       const connectorSelectorDialog = document.getElementsByClassName('bp3-dialog')[0]
-      expect(connectorSelectorDialog).toMatchSnapshot()
+
       const githubConnector = await findAllByText(connectorSelectorDialog as HTMLElement, 'ValidGithubRepo')
       expect(githubConnector).toBeTruthy()
       fireEvent.click(githubConnector?.[0])
@@ -107,9 +106,59 @@ describe('GitSyncForm test', () => {
     await waitFor(() => expect(fetchRepos).toBeCalledTimes(1))
     expect(getByText('repository')).toBeInTheDocument()
     expect(container).toMatchSnapshot()
+
+    // const selectCaret = document.body
+    //   .querySelector(`[name="repo"] + [class*="bp3-input-action"]`)
+    //   ?.querySelector('[data-icon="chevron-down"]')
+
+    // console.log('repo selectCaret')
+
+    // await act(async () => {
+    //   expect(selectCaret).toBeTruthy()
+    //   if (selectCaret) {
+    //     fireEvent.click(selectCaret)
+    //   }
+    // })
+
+    // if (selectCaret) {
+    //   expect(document.body).toMatchSnapshot()
+    //   const options = document.querySelectorAll('[class*="menuItem"]')
+    //   console.log('repo options', options)
+    //   const targetIndex = Object.values(options || {}).findIndex(option => find(option, ['key', 'repo1']))
+
+    //   if (targetIndex) {
+    //     fireEvent.click(options[targetIndex])
+    //     await waitFor(() =>
+    //       expect(queryByAttribute('name', container, 'repo')?.getAttribute('value'))?.toEqual('repo1')
+    //     )
+    //   }
+    // }
+
+    // await act(async () => {
+    //   fillAtForm([
+    //     {
+    //       container: document.body,
+    //       fieldId: 'repo',
+    //       type: InputTypes.SELECT,
+    //       value: 'repo1'
+    //     }
+    //   ])
+    // })
+    // await waitFor(() => expect(fetchBranches).toBeCalledTimes(1))
+    // await act(async () => {
+    //   fillAtForm([
+    //     {
+    //       container: document.body,
+    //       fieldId: 'branch',
+    //       type: InputTypes.SELECT,
+    //       value: 'main-patch'
+    //     }
+    //   ])
+    // })
+    //expect(container).toMatchSnapshot()
   })
 
-  test('rendering GitSyncForm for while edit : all field should be disabled', async () => {
+  test('Rendering GitSyncForm for while edit : all field should be disabled', async () => {
     const { container, getByText } = render(
       <TestWrapper
         path="/account/:accountId/ci/orgs/:orgIdentifier/projects/:projectIdentifier/pipelines/-1/pipeline-studio/"
