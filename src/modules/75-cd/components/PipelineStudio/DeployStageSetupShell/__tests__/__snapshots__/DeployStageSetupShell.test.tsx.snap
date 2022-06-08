@@ -234,7 +234,7 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
             class="deployStage"
           >
             <div
-              class="contentSection"
+              class="contentSection paddedSection"
             >
               <div
                 class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xlarge StyledProps--margin-left-xlarge"
