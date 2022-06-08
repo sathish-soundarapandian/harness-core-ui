@@ -53,7 +53,7 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import { ServiceDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 
-import DeployInfraSpecifications from '@cd/components/PipelineStudio/DeployInfraSpecifications/DeployInfraSpecifications' // deploymentTypeInfraTypeMap
+import DeployInfraSpecifications from '@cd/components/PipelineStudio/DeployInfraSpecifications/DeployInfraSpecifications'
 import { DefaultNewStageId, DefaultNewStageName } from '@cd/components/Services/utils/ServiceUtils'
 import { getInfrastructureDefinitionValidationSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import SelectDeploymentType from '@cd/components/PipelineStudio/DeployServiceSpecifications/SelectDeploymentType'
@@ -83,7 +83,6 @@ export function InfrastructureModal({
 }: any) {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getTemplate } = useTemplateSelector()
-  console.log(infrastructureToEdit)
 
   const infrastructureDefinition = useMemo(() => {
     return (parse(defaultTo(infrastructureToEdit, '{}')) as InfrastructureConfig).infrastructureDefinition
