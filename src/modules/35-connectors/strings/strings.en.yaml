@@ -88,6 +88,7 @@ title:
   githubConnector: 'GitHub Connector'
   gitlabConnector: 'GitLab Connector'
   bitbucketConnector: 'Bitbucket Connector'
+  azureRepoConnector: 'Azure Repos Connector'
   hashicorpVault: 'HashiCorp Vault'
   jira: 'Jira'
   serviceNow: 'ServiceNow'
@@ -162,6 +163,7 @@ testConnectionStep:
     vault: Validating HashiCorp Vault authentication and permissions
     awsSecretManager: Validating AWS Secret Manager authentication and permissions
     bitbucket: Validating Bitbucket authentication and permissions
+    azureRepos: Validating Azure Repos authentication and permissions
     gitlab: Validating GitLab authentication and permissions
     github: Validating GitHub authentication and permissions
     git: Validating Git authentication and permissions
@@ -846,3 +848,4 @@ cantDeleteConnector: "Can't Delete Connector"
 policyEvaluations:
   failedToSave: Connector cannot be saved due to the policy evaluation failures
   warning: Connector saved with policy warnings
+sameCredentialsAsAbove: Same credentials as above

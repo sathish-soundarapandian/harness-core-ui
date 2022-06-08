@@ -18,6 +18,7 @@ import CreateGitConnector from '../CreateConnector/GitConnector/CreateGitConnect
 import CreateGithubConnector from '../CreateConnector/GithubConnector/CreateGithubConnector'
 import CreateGitlabConnector from '../CreateConnector/GitlabConnector/CreateGitlabConnector'
 import CreateBitbucketConnector from '../CreateConnector/BitbucketConnector/CreateBitbucketConnector'
+import CreateAzureRepoConnector from '../CreateConnector/AzureRepoConnector/CreateAzureRepoConnector'
 import CreateK8sConnector from '../CreateConnector/K8sConnector/CreateK8sConnector'
 import CreateHashiCorpVault from '../CreateConnector/HashiCorpVault/CreateHashiCorpVault'
 import CreateAppDynamicsConnector from '../CreateConnector/AppDynamicsConnector/CreateAppDynamicsConnector'
@@ -117,6 +118,8 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
       return <CreateGitlabConnector {...commonProps} />
     case Connectors.BITBUCKET:
       return <CreateBitbucketConnector {...commonProps} />
+    case Connectors.AZURE_REPO:
+      return <CreateAzureRepoConnector {...commonProps} />
     case Connectors.VAULT:
       return <CreateHashiCorpVault {...commonProps} />
     case Connectors.Jira:

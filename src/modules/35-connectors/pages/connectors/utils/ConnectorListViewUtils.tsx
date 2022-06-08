@@ -125,6 +125,7 @@ export const getConnectorDisplaySummary = (connector: ConnectorInfoDTO): JSX.Ele
     case Connectors.GITHUB:
     case Connectors.GITLAB:
     case Connectors.BITBUCKET:
+    case Connectors.AZURE_REPO:
       return getConnectorDisplaySummaryLabel('UrlLabel', linkRenderer(connector?.spec?.url))
     case Connectors.DOCKER:
       return getConnectorDisplaySummaryLabel('UrlLabel', linkRenderer(connector?.spec?.dockerRegistryUrl))

@@ -737,7 +737,8 @@ const getSchemaByType = (
     case Connectors.GITHUB:
     case Connectors.GITLAB:
     case Connectors.BITBUCKET:
-      return getGithubSchema(connector) // GitHub schema will work for GitLab, Bitbucket too
+    case Connectors.AZURE_REPO:
+      return getGithubSchema(connector) // GitHub schema will work for GitLab, Bitbucket and AzureRepos too
     case Connectors.DOCKER:
       return getDockerSchema(connector)
     case Connectors.HttpHelmRepo:

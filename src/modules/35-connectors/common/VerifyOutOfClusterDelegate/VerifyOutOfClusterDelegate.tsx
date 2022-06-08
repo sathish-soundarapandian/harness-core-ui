@@ -102,6 +102,7 @@ const RenderUrlInfo: React.FC<StepProps<VerifyOutOfClusterStepProps> & RenderUrl
       case 'Gcr':
         return getString('connectors.testConnectionStep.url.gcr')
       case Connectors.BITBUCKET:
+      case Connectors.AZURE_REPO:
       case Connectors.GITLAB:
       case Connectors.GITHUB:
       case Connectors.GIT:
@@ -133,6 +134,7 @@ const RenderUrlInfo: React.FC<StepProps<VerifyOutOfClusterStepProps> & RenderUrl
       case Connectors.VAULT:
         return props.prevStepData?.spec?.vaultUrl
       case Connectors.BITBUCKET:
+      case Connectors.AZURE_REPO:
       case Connectors.GITLAB:
       case Connectors.GITHUB:
       case Connectors.GIT:
@@ -219,6 +221,8 @@ const VerifyOutOfClusterDelegate: React.FC<StepProps<VerifyOutOfClusterStepProps
           return 'https://ngdocs.harness.io/article/5abnoghjgo-git-lab-connector-settings-reference'
         case Connectors.BITBUCKET:
           return 'https://ngdocs.harness.io/article/iz5tucdwyu-bitbucket-connector-settings-reference'
+        case Connectors.AZURE_REPO:
+          return '' // TODO
         case Connectors.Jira:
           return 'https://ngdocs.harness.io/article/e6s32ec7i7'
         case Connectors.SERVICE_NOW:

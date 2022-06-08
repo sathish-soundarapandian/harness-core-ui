@@ -280,6 +280,12 @@ export interface StringsMap {
   'common.git.APIAuthentication': string
   'common.git.addUserCredentialLabel': string
   'common.git.applicationId': string
+  'common.git.azureReposPlaceholderRepoSSH': string
+  'common.git.azureReposPlaceholderSSH': string
+  'common.git.azureReposProjectUrl': string
+  'common.git.azureReposRepoUrl': string
+  'common.git.azureReposUrlPlaceholder': string
+  'common.git.azureReposUrlPlaceholderRepoHttp': string
   'common.git.bitbucketAccountUrl': string
   'common.git.bitbucketPlaceholderSSH': string
   'common.git.bitbucketRepoUrl': string
@@ -312,10 +318,12 @@ export interface StringsMap {
   'common.git.noUserLabel': string
   'common.git.onlyDefaultBranchFound': string
   'common.git.privateKey': string
+  'common.git.projectNamePlaceholder': string
   'common.git.remoteStoreLabel': string
   'common.git.saveResourceLabel': string
   'common.git.selectRepoLabel': string
   'common.git.startPRLabel': string
+  'common.git.testProjectAndRepositoryDescription': string
   'common.git.testRepository': string
   'common.git.testRepositoryDescription': string
   'common.git.urlType': string
@@ -783,6 +791,7 @@ export interface StringsMap {
   'common.validation.testRepoIsRequired': string
   'common.validation.typeIsRequired': string
   'common.validation.urlIsRequired': string
+  'common.validation.validationProjectIsRequired': string
   'common.validation.valueIsRequired': string
   'common.validation.valueMustBeANumber': string
   'common.validation.valueMustBeGreaterThanOrEqualToN': string
@@ -2064,6 +2073,7 @@ export interface StringsMap {
   'connectors.reportNameRequired': string
   'connectors.requestMethod': string
   'connectors.roleARN': string
+  'connectors.sameCredentialsAsAbove': string
   'connectors.scopeError': string
   'connectors.secretManagerDetails': string
   'connectors.selectConnectivityMode': string
@@ -2112,6 +2122,7 @@ export interface StringsMap {
   'connectors.testConnectionStep.validationText.awsSecretManager': string
   'connectors.testConnectionStep.validationText.azure': string
   'connectors.testConnectionStep.validationText.azureKeyVault': string
+  'connectors.testConnectionStep.validationText.azureRepos': string
   'connectors.testConnectionStep.validationText.bitbucket': string
   'connectors.testConnectionStep.validationText.datadog': string
   'connectors.testConnectionStep.validationText.docker': string
@@ -2141,6 +2152,7 @@ export interface StringsMap {
   'connectors.title.awsSecretManager': string
   'connectors.title.azure': string
   'connectors.title.azureKeyVault': string
+  'connectors.title.azureRepoConnector': string
   'connectors.title.bitbucketConnector': string
   'connectors.title.ceAws': string
   'connectors.title.ceAzureConnector': string

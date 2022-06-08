@@ -68,6 +68,7 @@ export const Connectors: ConnectorType = {
   GITHUB: 'Github',
   GITLAB: 'Gitlab',
   BITBUCKET: 'Bitbucket',
+  AZURE_REPO: 'AzureRepo',
   VAULT: 'Vault',
   APP_DYNAMICS: 'AppDynamics',
   SPLUNK: 'Splunk',
