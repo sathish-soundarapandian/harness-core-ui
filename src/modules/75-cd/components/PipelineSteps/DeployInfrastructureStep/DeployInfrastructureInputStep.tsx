@@ -20,12 +20,11 @@ import { useModalHook } from '@harness/use-modal'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { connect, FormikProps } from 'formik'
-import { EnvironmentResponseDTO, useGetEnvironmentAccessList } from 'services/cd-ng'
+import { EnvironmentResponseDTO, PipelineInfrastructure, useGetEnvironmentAccessList } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useToaster } from '@common/exports'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import type { PipelineInfrastructureV2 } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -36,7 +35,7 @@ import { AddEditEnvironmentModal } from './AddEditEnvironmentModal'
 import type { DeployInfrastructureProps } from './utils'
 import css from './DeployInfrastructureStep.module.scss'
 
-export interface DeployInfrastructureData extends Omit<PipelineInfrastructureV2, 'environmentRef'> {
+export interface DeployInfrastructureData extends Omit<PipelineInfrastructure, 'environmentRef'> {
   environmentRef?: string
 }
 

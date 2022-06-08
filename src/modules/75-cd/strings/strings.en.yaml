@@ -294,4 +294,3 @@ cloudFormation:
     templateRequired: Template file required
   deploymentTypes:
     pdc: PDC
-specifyEnvironmentOrGroup: Specify environment or environment group

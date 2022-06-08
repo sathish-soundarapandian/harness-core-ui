@@ -9,19 +9,18 @@ import type { FormikProps } from 'formik'
 import { isEmpty } from 'lodash-es'
 
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
-import type { EnvironmentResponseDTO } from 'services/cd-ng'
+import type { EnvironmentResponseDTO, PipelineInfrastructure } from 'services/cd-ng'
 
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { PipelineInfrastructureV2 } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
 export interface DeployInfrastructureProps {
-  initialValues: PipelineInfrastructureV2
-  onUpdate?: (data: PipelineInfrastructureV2) => void
+  initialValues: PipelineInfrastructure
+  onUpdate?: (data: PipelineInfrastructure) => void
   readonly: boolean
   allowableTypes: MultiTypeInputType[]
   stepViewType?: StepViewType
   inputSetData?: {
-    template?: PipelineInfrastructureV2
+    template?: PipelineInfrastructure
     path?: string
     readonly?: boolean
   }
@@ -30,15 +29,14 @@ export interface DeployInfrastructureProps {
 export interface DeployInfrastructureState {
   isEdit: boolean
   isEnvironment: boolean
-  formik?: FormikProps<PipelineInfrastructureV2>
+  formik?: FormikProps<PipelineInfrastructure>
   data?: EnvironmentResponseDTO
 }
 
-export function isEditEnvironment(data: PipelineInfrastructureV2): boolean {
-  if (
-    getMultiTypeFromValue(data.environmentRef) !== MultiTypeInputType.RUNTIME &&
-    !isEmpty(data.environmentOrEnvGroupRef)
-  ) {
+export function isEditEnvironment(data: PipelineInfrastructure): boolean {
+  if (getMultiTypeFromValue(data.environmentRef) !== MultiTypeInputType.RUNTIME && !isEmpty(data.environmentRef)) {
+    return true
+  } else if (data.environment && !isEmpty(data.environment.identifier)) {
     return true
   }
   return false

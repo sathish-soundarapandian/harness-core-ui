@@ -18,7 +18,7 @@ import { ModuleName } from 'framework/types/ModuleName'
 
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { Step, StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
-import { PipelineInfrastructureV2, StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
 import { DeployInfrastructureWidget } from './DeployInfrastructureWidget'
 import DeployInfrastructureInputStep from './DeployInfrastructureInputStep'
@@ -26,7 +26,7 @@ import DeployInfrastructureInputStep from './DeployInfrastructureInputStep'
 const logger = loggerFor(ModuleName.CD)
 const EnvironmentRegex = /^.+stage\.spec\.environment\.environmentRef$/
 
-export class DeployInfrastructureStep extends Step<PipelineInfrastructureV2> {
+export class DeployInfrastructureStep extends Step<PipelineInfrastructure> {
   lastFetched: number
 
   protected invocationMap: Map<
@@ -39,7 +39,7 @@ export class DeployInfrastructureStep extends Step<PipelineInfrastructureV2> {
   protected stepName = 'Deploy Infrastructure'
   protected stepIcon: IconName = 'main-environments'
 
-  protected defaultValues: PipelineInfrastructureV2 = {}
+  protected defaultValues: PipelineInfrastructure = {}
 
   constructor() {
     super()
@@ -89,7 +89,7 @@ export class DeployInfrastructureStep extends Step<PipelineInfrastructureV2> {
     })
   }
 
-  renderStep(props: StepProps<PipelineInfrastructureV2>): JSX.Element {
+  renderStep(props: StepProps<PipelineInfrastructure>): JSX.Element {
     const { initialValues, onUpdate, stepViewType, inputSetData, readonly = false, allowableTypes } = props
     if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
       return (
