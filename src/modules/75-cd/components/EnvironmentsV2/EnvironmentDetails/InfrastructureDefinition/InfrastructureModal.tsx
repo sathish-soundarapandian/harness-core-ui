@@ -53,7 +53,7 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import { ServiceDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 
-import DeployInfraSpecifications from '@cd/components/PipelineStudio/DeployInfraSpecifications/DeployInfraSpecifications'
+import DeployInfraDefinition from '@cd/components/PipelineStudio/DeployInfraSpecifications/DeployInfraDefinition/DeployInfraDefinition'
 import { DefaultNewStageId, DefaultNewStageName } from '@cd/components/Services/utils/ServiceUtils'
 import { getInfrastructureDefinitionValidationSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import SelectDeploymentType from '@cd/components/PipelineStudio/DeployServiceSpecifications/SelectDeploymentType'
@@ -126,7 +126,7 @@ export function InfrastructureModal({
       isReadOnly={false}
       getTemplate={getTemplate}
     >
-      <BootstrapDeployInfraSpecifications
+      <BootstrapDeployInfraDefinition
         hideModal={hideModal}
         refetch={refetch}
         infrastructureDefinition={infrastructureDefinition}
@@ -137,7 +137,7 @@ export function InfrastructureModal({
   )
 }
 
-function BootstrapDeployInfraSpecifications({
+function BootstrapDeployInfraDefinition({
   hideModal,
   refetch,
   infrastructureDefinition,
@@ -325,7 +325,7 @@ function BootstrapDeployInfraSpecifications({
                     isReadonly={false}
                     handleDeploymentTypeChange={handleDeploymentTypeChange}
                   />
-                  {selectedDeploymentType && <DeployInfraSpecifications />}
+                  {selectedDeploymentType && <DeployInfraDefinition />}
                 </>
               ) : (
                 <YAMLBuilder
