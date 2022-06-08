@@ -10,11 +10,12 @@ declare const styles: {
   readonly accordion: string
   readonly cardListContainer: string
   readonly contentSection: string
+  readonly deployStage: string
+  readonly deploymentTypeHeading: string
   readonly editServiceModal: string
   readonly info: string
-  readonly nonModalView: string
   readonly sectionCard: string
-  readonly serviceOverrides: string
+  readonly stageView: string
   readonly tabHeading: string
   readonly tabSubHeading: string
   readonly thumbnailSelect: string

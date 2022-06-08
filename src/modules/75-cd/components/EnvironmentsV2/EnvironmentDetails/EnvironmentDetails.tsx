@@ -57,7 +57,6 @@ import { CustomVariablesEditableStage } from '@pipeline/components/PipelineSteps
 import type { AllNGVariables } from '@pipeline/utils/types'
 
 import { PageHeaderTitle, PageHeaderToolbar } from './EnvironmentDetailsPageHeader'
-import { ServiceOverride } from './ServiceOverride/ServiceOverride'
 import InfrastructureDefinition from './InfrastructureDefinition/InfrastructureDefinition'
 import { EnvironmentDetailsTab } from '../utils'
 
@@ -128,6 +127,10 @@ export default function EnvironmentDetails() {
       if (view === SelectedView.VISUAL) {
         const yaml = defaultTo(yamlHandler?.getLatestYaml(), '{}')
         const yamlVisual = parse(yaml).environment as NGEnvironmentInfoConfig
+        if (isModified && yamlHandler?.getYAMLValidationErrorMap()?.size) {
+          showError(getString('common.validation.invalidYamlText'))
+          return
+        }
         if (yamlVisual) {
           formikRef.current?.setValues({
             ...yamlVisual
@@ -187,22 +190,14 @@ export default function EnvironmentDetails() {
   }
 
   const validate = (values: NGEnvironmentInfoConfig) => {
-    const {
-      name: newName,
-      description: newDescription,
-      tags: newTags,
-      type: newType,
-      variables: newVariables,
-      serviceOverrides: newServiceOverrides
-    } = values
+    const { name: newName, description: newDescription, tags: newTags, type: newType, variables: newVariables } = values
 
     if (
       name === newName &&
       description === newDescription &&
       isEqual(tags, newTags) &&
       type === newType &&
-      isEqual(variables, newVariables) &&
-      isEqual(serviceOverrides, newServiceOverrides)
+      isEqual(variables, newVariables)
     ) {
       setIsModified(false)
     } else {
@@ -226,7 +221,6 @@ export default function EnvironmentDetails() {
     [yaml]
   )
   const variables = defaultTo(parsedYamlEnvironment?.variables, [])
-  const serviceOverrides = defaultTo(parsedYamlEnvironment?.serviceOverrides, [])
 
   return (
     <>
@@ -245,13 +239,12 @@ export default function EnvironmentDetails() {
               {
                 name: defaultTo(name, ''),
                 identifier: defaultTo(identifier, ''),
-                description: defaultTo(description, ''),
+                description,
                 tags: defaultTo(tags, {}),
                 type: defaultTo(type, ''),
                 orgIdentifier: defaultTo(orgIdentifier, ''),
                 projectIdentifier: defaultTo(projectIdentifier, ''),
-                variables: variables,
-                serviceOverrides: serviceOverrides
+                variables
               } as NGEnvironmentInfoConfig
             }
             formName="editEnvironment"
@@ -341,7 +334,7 @@ export default function EnvironmentDetails() {
                                 {/* #region Advanced section */}
                                 {data?.data && (
                                   <Accordion
-                                    activeId={variables?.length > 0 || serviceOverrides?.length > 0 ? 'advanced' : ''}
+                                    activeId={formikProps?.values?.variables?.length ? 'advanced' : ''}
                                     className={css.accordion}
                                   >
                                     <Accordion.Panel
@@ -388,7 +381,7 @@ export default function EnvironmentDetails() {
                                             />
                                           </Card>
 
-                                          <Card className={css.sectionCard} id="serviceOverrides">
+                                          {/* <Card className={css.sectionCard} id="serviceOverrides">
                                             <ServiceOverride
                                               formName="editEnvironment"
                                               initialValues={{
@@ -405,7 +398,7 @@ export default function EnvironmentDetails() {
                                                 formikProps.setFieldValue('serviceOverrides', values.serviceOverrides)
                                               }}
                                             />
-                                          </Card>
+                                          </Card> */}
                                         </Layout.Vertical>
                                       }
                                     />
@@ -445,7 +438,17 @@ export default function EnvironmentDetails() {
                   >
                     <Expander />
                     {(selectedTabId === EnvironmentDetailsTab.CONFIGURATION || selectedView === SelectedView.YAML) && (
-                      <Layout.Horizontal spacing="medium">
+                      <Layout.Horizontal spacing="medium" flex={{ alignItems: 'center' }}>
+                        {isModified && (
+                          <Text
+                            color={Color.ORANGE_600}
+                            font={{ size: 'small', weight: 'bold' }}
+                            icon={'dot'}
+                            iconProps={{ color: Color.ORANGE_600 }}
+                          >
+                            {getString('unsavedChanges')}
+                          </Text>
+                        )}
                         <Button
                           variation={ButtonVariation.PRIMARY}
                           type={'submit'}

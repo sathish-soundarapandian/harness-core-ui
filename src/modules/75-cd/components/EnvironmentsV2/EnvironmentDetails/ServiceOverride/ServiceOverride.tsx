@@ -25,7 +25,6 @@ import {
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 
-import type { NGServiceOverrides } from 'services/cd-ng'
 import { String, useStrings } from 'framework/strings'
 import type { UseStringsReturn } from 'framework/strings'
 
@@ -37,7 +36,7 @@ import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiT
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { getVariablesValidationField } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/validation'
 
-import { VariableType, labelStringMap } from './ServiceOverrideUtils'
+import { VariableType, labelStringMap, NGServiceOverrides } from './ServiceOverrideUtils'
 import AddEditServiceOverride, { VariableState } from './AddEditServiceOverride'
 
 import css from './ServiceOverrides.module.scss'
@@ -146,7 +145,7 @@ export function ServiceOverride({
                       }
 
                       return (
-                        <Container key={override.serviceRef}>
+                        <Container key={override.serviceRef} margin={{ bottom: 'medium' }}>
                           <Text
                             color={Color.BLACK}
                             font={{ variation: FontVariation.UPPERCASED, weight: 'bold' }}
@@ -236,7 +235,9 @@ export function ServiceOverride({
                                               <String className={css.tooltip} stringID="common.editVariableType" />
                                             }
                                             data-testid={`edit-variable-${index}`}
-                                            onClick={() => setSelectedVariable({ variable, index, serviceRef: '' })}
+                                            onClick={() =>
+                                              setSelectedVariable({ variable, index, serviceRef: override.serviceRef })
+                                            }
                                             minimal
                                           />
                                           <Button

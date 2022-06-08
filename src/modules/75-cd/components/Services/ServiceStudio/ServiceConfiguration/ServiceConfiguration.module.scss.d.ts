@@ -12,6 +12,7 @@ declare const styles: {
   readonly notwide: string
   readonly optionBtns: string
   readonly sectionCard: string
+  readonly serviceEntity: string
   readonly serviceModal: string
   readonly serviceStepBasicInfo: string
 }

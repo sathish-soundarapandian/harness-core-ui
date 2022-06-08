@@ -15,6 +15,7 @@ import { useStrings } from 'framework/strings'
 import type { RoleAssignmentMetadataDTO, RoleBinding } from 'services/cd-ng'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
+import { isAccountBasicRole } from '@rbac/utils/utils'
 import css from './RoleBindingsList.module.scss'
 
 interface RoleBindingsListProps {
@@ -62,8 +63,9 @@ const RoleBindingTag = ({ roleAssignment }: { roleAssignment: RoleBinding }): Re
 }
 
 const RoleBindingsList: React.FC<RoleBindingsListProps> = ({ data, length = data?.length, showNoData = false }) => {
-  const baseData = data?.slice(0, length)
-  const popoverData = data?.slice(length, data.length)
+  const filteredData = data?.filter(val => !isAccountBasicRole(val.roleIdentifier))
+  const baseData = filteredData?.slice(0, length)
+  const popoverData = filteredData?.slice(length, filteredData.length)
   const { getString } = useStrings()
   return (
     <>

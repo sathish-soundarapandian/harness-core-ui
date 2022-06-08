@@ -30,6 +30,7 @@ connectThroughDelegate: 'Connect through a Harness Delegate'
 connectThroughPlatformInfo: 'Use this option to connect to a SaaS Git provider. Secure communication with the Git provider is done through the Harness Platform. All credentials are encrypted and stored in the Secret Manager configured in Harness.'
 connectThroughDelegateInfo: 'Use this option to connect to a Git Provider behind your corporate firewall. Secure communication with the Git provider is through a Harness Delegate you install in your environment. The Delegate securely connects to the Harness Platform and performs tasks using your repositories.'
 pipeline: Pipeline
+templateStartLabel: Start with Template
 duplicateId: 'Duplicate Identifier'
 createPipeline: Create a Pipeline
 production: Production
@@ -116,6 +117,7 @@ configureOptions:
   jexlLabel: 'Values ({{ $.common.jexlExpression }})'
   values: 'Values'
   enterTags: 'Enter values'
+  askDuringExecution: Request input value when the stage/step is being executed
   validationErrors:
     regExIsRequired: 'Regex value is required'
     defaultRegExValid: Default value should validate with regex provided
@@ -168,6 +170,7 @@ validation:
   identifierIsRequired: '{{$.validation.identifierRequired}}'
   urlIsRequired: URL is required
   testRepoIsRequired: Test Repository is required
+  validationProjectIsRequired: Project Name is required
   email:
     required: Email is required
     format: Please input valid email address
@@ -176,6 +179,7 @@ validation:
   environmentIsRequired: 'Environment is required'
   subscription: 'Subscription is required'
   repository: 'Repository is required'
+  projectIsRequired: Project is required
 specify: Specify
 role: Role
 projectViewer: Project Viewer
@@ -268,6 +272,7 @@ purpose:
     moduleSelectionSubHeading: Take your feature rollout processes to the next level using our Harness Feature Flags
   sto:
     continuous: Security Tests
+    moduleSelectionSubHeading: Take your security tests to the next level using our Harness Security Tests
 trialInProgress: Trial in progress
 trialInProgressDescription: A Project contains your pipelines, resources, and team members. Get started by creating your first Project.
 letsGetYouStarted: Let’s get you started
@@ -282,6 +287,7 @@ repo_provider:
   awscodecommit: AWS Code Commit
   azureDev: Azure Devops
 gitSync:
+  branchFetchFailed: Branch fetch failed
   resourceLabel: '{{resource}} Name'
   rootFolderLabel: Root Folder
   harnessFolderLabel: Harness Folder
@@ -320,20 +326,26 @@ git:
   gitHubAccountUrl: 'GitHub Account URL'
   gitLabAccountUrl: 'GitLab Account URL'
   bitbucketAccountUrl: 'Bitbucket Account URL'
+  azureReposProjectUrl: 'Azure Repos Project URL'
   gitRepoUrl: 'Git Repository URL'
   gitHubRepoUrl: 'GitHub Repository URL'
   gitLabRepoUrl: 'GitLab Repository URL'
   bitbucketRepoUrl: 'Bitbucket Repository URL'
+  azureReposRepoUrl: 'Azure Repos Repository URL'
   gitHubUrlPlaceholder: 'https://www.github.com/account/'
   gitHubUrlPlaceholderSSH: 'git@github.com:account/'
   gitLabUrlPlaceholder: 'https://www.gitlab.com/account/'
   gitLabUrlPlaceholderSSH: 'git@gitlab.com:account/'
   bitbucketUrlPlaceholder: 'https://www.bitbucket.com/account/'
-  bitbucketOrgUrlPlaceholder: 'https://www.bitbucket.org/'
   bitbucketPlaceholderSSH: 'git@bitbucket.com:account/'
+  azureReposUrlPlaceholder: 'https://dev.azure.com/<organisationName>'
+  azureReposUrlPlaceholderRepoHttp: 'https://dev.azure.com/<organisationName>/<projectName>/<repositoryName>'
+  azureReposPlaceholderSSH: 'git@ssh.dev.azure.com:v3/<organisationName>'
+  azureReposPlaceholderRepoSSH: 'git@ssh.dev.azure.com:v3/<organisationName>/<projectName>/<repositoryName>'
   enableAPIAccess: 'Enable API access (recommended)'
   APIAccessDescription: 'API Access is required for using “Git Experience”, for creation of Git based triggers, Webhooks management and updating Git statuses'
   testRepositoryDescription: Please provide a repository to test the credentials. This is required just for checking connectivity. The connector will still be created at account level.
+  testProjectAndRepositoryDescription: Please provide a project and a repository to test the credentials. This is required just for checking connectivity. The connector will still be created at account level.
   APIAuthentication: 'API Authentication'
   gitHubApp: 'GitHub App'
   installationId: 'GitHub Installation Id'
@@ -344,6 +356,7 @@ git:
   addUserCredentialLabel: Update in user profile
   saveResourceLabel: 'Save {{resource}} to Git'
   selectRepoLabel: Repository Display Name
+  projectNamePlaceholder: 'Example: MyProject'
   filePath: File Path
   folderPath: Folder Path
   commitMessage: Commit message
@@ -354,6 +367,8 @@ git:
   startPRLabel: Start a pull request to merge
   noBranchesFound: No branches found for configured git repository
   onlyDefaultBranchFound: Cannot find additional branches to raise a pull request.
+  inlineStoreLabel: Pipeline content is stored in Harness
+  remoteStoreLabel: Pipeline content is stored in a Git repository
   validation:
     filePath: '{{$.common.git.filePath}} is required'
     commitMessage: '{{$.common.git.commitMessage}} is required'
@@ -368,6 +383,7 @@ options: Options
 note: Note
 link: link
 errorHandler:
+  possibleReasons: Possible reasons
   issueCouldBe: Issue could be
   tryTheseSuggestions: Try these suggestions
   contactLabel: 'Contact '
@@ -517,6 +533,7 @@ filters:
   saveNewFilter: Save New Filter
   unsavedFilter: Unsaved Filter
   noMatchingFilterData: No Results found matching the Filter criteria
+  noResultsFound: No results found
   clearFilters: Clear Filters
   noFilterSaved: No Filter Saved
 in: in
@@ -869,3 +886,10 @@ editName: Edit {{name}}
 selectName: Select {{name}}
 override: Override
 plusNewName: + New {{name}}
+fetchingBranches: Fetching branches
+download: Download
+gitOps: GitOps
+showHarnessManagedError: Harness Managed Resource cannot be edited
+
+# Chaos Module
+chaosText: Chaos

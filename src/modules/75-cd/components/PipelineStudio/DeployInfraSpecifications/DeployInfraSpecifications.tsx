@@ -17,6 +17,7 @@ import {
   K8sAzureInfrastructure,
   K8SDirectInfrastructure,
   K8sGcpInfrastructure,
+  PdcInfrastructure,
   PipelineInfrastructure,
   StageElementConfig
 } from 'services/cd-ng'
@@ -28,12 +29,14 @@ import type {
   ProvisionersOptions
 } from '@cd/components/PipelineSteps/InfraProvisioning/InfraProvisioning'
 import type { GcpInfrastructureSpec } from '@cd/components/PipelineSteps/GcpInfrastructureSpec/GcpInfrastructureSpec'
+import type { PDCInfrastructureSpec } from '@cd/components/PipelineSteps/PDCInfrastructureSpec/PDCInfrastructureSpec'
 import { useStrings } from 'framework/strings'
 import {
   PipelineContextType,
   usePipelineContext
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
+import { InfraDeploymentType } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import DeployServiceErrors from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceErrors'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
@@ -50,11 +53,11 @@ import {
   ServerlessInfraTypes,
   StageType
 } from '@pipeline/utils/stageHelpers'
-import { InfraDeploymentType } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import type { ServerlessAwsLambdaSpec } from '@cd/components/PipelineSteps/ServerlessAWSLambda/ServerlessAwsLambdaSpec'
 import type { ServerlessGCPSpec } from '@cd/components/PipelineSteps/ServerlessGCP/ServerlessGCPSpec'
 import type { ServerlessAzureSpec } from '@cd/components/PipelineSteps/ServerlessAzure/ServerlessAzureSpec'
-import { cleanUpEmptyProvisioner, getInfrastructureDefaultValue } from './deployInfraHelper'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { cleanUpEmptyProvisioner, getInfraGroups, getInfrastructureDefaultValue } from './deployInfraHelper'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 
 export const deploymentTypeInfraTypeMap = {
@@ -74,7 +77,12 @@ export const deploymentTypeInfraTypeMap = {
   AzureFunctions: InfraDeploymentType.AzureFunctions
 }
 
-type InfraTypes = K8SDirectInfrastructure | K8sGcpInfrastructure | ServerlessInfraTypes | K8sAzureInfrastructure
+type InfraTypes =
+  | K8SDirectInfrastructure
+  | K8sGcpInfrastructure
+  | ServerlessInfraTypes
+  | K8sAzureInfrastructure
+  | PdcInfrastructure
 
 export default function DeployInfraSpecifications(props: React.PropsWithChildren<unknown>): JSX.Element {
   const [initialInfrastructureDefinitionValues, setInitialInfrastructureDefinitionValues] =
@@ -84,7 +92,7 @@ export default function DeployInfraSpecifications(props: React.PropsWithChildren
   const { getString } = useStrings()
   const { submitFormsForTab } = React.useContext(StageErrorContext)
   const { errorMap } = useValidationErrors()
-
+  const { NG_AZURE } = useFeatureFlags()
   React.useEffect(() => {
     if (errorMap.size > 0) {
       submitFormsForTab(DeployTabs.INFRASTRUCTURE)
@@ -183,10 +191,26 @@ export default function DeployInfraSpecifications(props: React.PropsWithChildren
     )
   }, [stage, getStageFromPipeline])
 
+  const infraGroups = React.useMemo(
+    () =>
+      getInfraGroups(selectedDeploymentType, getString, {
+        NG_AZURE: defaultTo(NG_AZURE, false)
+      }),
+    [selectedDeploymentType, NG_AZURE]
+  )
+
+  const filteredInfraGroups = infraGroups.map(group => ({
+    ...group,
+    items: group.items.filter(item => !item.disabled)
+  }))
+
   React.useEffect(() => {
     const type =
       stage?.stage?.spec?.infrastructure?.infrastructureDefinition?.type ||
-      deploymentTypeInfraTypeMap[selectedDeploymentType]
+      (filteredInfraGroups.length > 1 || filteredInfraGroups[0].items.length > 1
+        ? undefined
+        : deploymentTypeInfraTypeMap[selectedDeploymentType])
+
     setSelectedInfrastructureType(type)
     const initialInfraDefValues = getInfrastructureDefaultValue(stage, type)
     setInitialInfrastructureDefinitionValues(initialInfraDefValues)
@@ -431,6 +455,33 @@ export default function DeployInfraSpecifications(props: React.PropsWithChildren
           />
         )
       }
+      case InfraDeploymentType.PDC: {
+        return (
+          <StepWidget<PDCInfrastructureSpec>
+            factory={factory}
+            key={stage?.stage?.identifier}
+            readonly={isReadonly}
+            initialValues={initialInfrastructureDefinitionValues as PDCInfrastructureSpec}
+            type={StepType.PDC}
+            stepViewType={StepViewType.Edit}
+            allowableTypes={allowableTypes}
+            onUpdate={value => {
+              onUpdateInfrastructureDefinition(
+                {
+                  connectorRef: value.connectorRef?.connector?.identifier,
+                  credentialsRef: value.sshKey?.identifier,
+                  attributeFilters: value.attributeFilters,
+                  hostFilters: value.hostFilters,
+                  hosts: value.hosts,
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  delegateSelectors: value.delegateSelectors
+                },
+                InfraDeploymentType.PDC
+              )
+            }}
+          />
+        )
+      }
       default: {
         return <div>{getString('cd.steps.common.undefinedType')}</div>
       }
@@ -455,7 +506,7 @@ export default function DeployInfraSpecifications(props: React.PropsWithChildren
   )
 
   return (
-    <div className={stageCss.serviceOverrides} key="1">
+    <div className={stageCss.deployStage} key="1">
       <DeployServiceErrors domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
       <div className={stageCss.contentSection} ref={scrollRef}>
         {contextType !== PipelineContextType.Standalone && (
@@ -498,7 +549,7 @@ export default function DeployInfraSpecifications(props: React.PropsWithChildren
             </Text>
           )}
           <SelectInfrastructureType
-            deploymentType={selectedDeploymentType}
+            infraGroups={infraGroups}
             isReadonly={isReadonly}
             selectedInfrastructureType={selectedInfrastructureType}
             onChange={deploymentType => {
@@ -552,11 +603,14 @@ export default function DeployInfraSpecifications(props: React.PropsWithChildren
             />
           </Accordion>
         ) : null}
-        <div className={stageCss.tabHeading} id="clusterDetails">
-          {defaultTo(detailsHeaderName[selectedInfrastructureType || ''], getString('cd.steps.common.clusterDetails'))}
-        </div>
-        <Card className={stageCss.sectionCard}>{getClusterConfigurationStep(selectedInfrastructureType || '')}</Card>
-
+        {selectedInfrastructureType && (
+          <>
+            <div className={stageCss.tabHeading} id="clusterDetails">
+              {defaultTo(detailsHeaderName[selectedInfrastructureType], getString('cd.steps.common.clusterDetails'))}
+            </div>
+            <Card className={stageCss.sectionCard}>{getClusterConfigurationStep(selectedInfrastructureType)}</Card>
+          </>
+        )}
         <Container margin={{ top: 'xxlarge' }}>{props.children}</Container>
       </div>
     </div>

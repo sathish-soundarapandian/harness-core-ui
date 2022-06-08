@@ -13,9 +13,24 @@ steps:
     clusterDetails: Cluster Details
     selectOrEnterClusterPlaceholder: Select or add Cluster
     releaseNamePlaceholder: Enter Release Name
+    specifyCredentials: Specify Credentials
     undefinedType: Undefined deployment type
   kubernetesGcpStep:
     stepName: Specify your GCP Connector
+  pdcStep:
+    no: No.
+    hostsPlaceholder: Specify list of host names here (comma or new line separated)
+    specificHostsPlaceholder: Specify list of comma separated hosts here
+    attributesPlaceholder: Specify list of comma separated attributes and values. E.g. hostType:DB, region:west
+    hostNameOption: Host names
+    hostAttributesOption: Host attributes
+    specifyHostsOption: Specify hosts here
+    preconfiguredHostsOption: Select preconfigured hosts from Physical Data Center
+    pdcConnectorLabel: Physical Datacentar Connector
+    deployAllHostsOption: Deploy to All hosts
+    deploySpecificHostsOption: Deploy to specific hosts based on
+    previewHosts: Preview Hosts
+    noHosts: No hosts provided
   azureInfraStep:
     azure: 'Microsoft Azure'
     subscription: '{{ $.common.subscriptionId }}'
@@ -36,7 +51,7 @@ serviceCreated: '{{ $.common.serviceCreated }}'
 serviceUpdated: '{{ $.common.serviceUpdated }}'
 environmentCreated: '{{ $.common.environmentCreated }}'
 environmentUpdated: '{{ $.common.environmentUpdated }}'
-preProduction: 'Pre Production'
+preProduction: 'Pre-Production'
 preProductionType: 'Pre-Prod'
 environmentDelete: '{{ $.common.deleteEnvironment.title }}'
 environmentDeleteMessage: 'Are you sure you want to delete environment <strong>{{name}}</strong>?'
@@ -74,6 +89,7 @@ specifyTfVarStore: Specify Terraform Var File Store
 addTFVarFileLabel: 'Add File Path'
 enterWorkDirectory: Enter Working Directory
 enterTragets: Enter Targets
+exportTerraformPlanJson: Export Json representation of Terraform Plan
 specifyTargetHost: Specify Target Host
 configurationFile: 'Configuration File Repository'
 terraformVarFiles: 'Terraform Var Files'
@@ -109,6 +125,7 @@ serviceDashboard:
   servicesInLast: 'Services added in {{period}}'
   serviceInstancesInLast: 'Active service instance trend in {{period}}'
   serviceInstances: 'Service Instances'
+  activeInstanceCount: 'Active Instance Count'
   nonProd: 'Non Prod'
   prod: 'Prod'
   in: 'in {{timeRange}}'
@@ -137,10 +154,11 @@ serviceDashboard:
   helmChartDetails: Helm Chart Details
   helmChartName: Helm Chart Name
   helmRopoUrl: Repo URL
+  manageServiceLabel: Manage Services
 noEnvironment:
   title: No Environments Available
   message: Create an environment and let’s start configuring the deployment
-gitOps: GitOps
+gitOps: '{{ $.common.gitOps }}'
 addService: Add Service
 addEnvironment: Add Environment
 editIdError: 'ID: {{id}} cannot be edited'
@@ -230,6 +248,8 @@ environment:
   deleted: Successfully deleted Environment {{ identifier }}
   fetchNext: Fetching Environments
   createSubTitle: An environment is the representation of where your deployments take place
+  filters:
+    environmentNamePlaceholder: Enter Environment Name
 infrastructure:
   infrastructureDefinitions: Infrastructure Definitions
   noInfrastructureInEnvironment: You have no infrastructures in this environment
@@ -239,6 +259,9 @@ infrastructure:
   deleteConfirmation: Are you sure you want to delete this Infrastructure?
   deleted: Successfully deleted Infrastructure {{ identifier }}
 cloudFormation:
+  createDescription: Provision resources using a CloudFormation template.
+  deleteDescription: Remove any CloudFormation stack you provisioned via Harness or other methods.
+  rollbackDescription: Roll back CloudFormation-provisioned resources to the last successful deployment of this stage.
   cfTemplateFile: Cloud Formation Template File
   templateFile: Template File
   specifyTemplateFile: Specify Template File
@@ -255,6 +278,8 @@ cloudFormation:
   templateFileStore: Template File Store
   retrieveNames: Retrieve Names from template
   awsURL: S3 URL
+  urls: URLs
+  parameterFilePaths: Parameter File Paths
   errors:
     region: AWS Region is required
     role: Role ARN required
@@ -264,3 +289,6 @@ cloudFormation:
     templateBody: Template body required
     awsURL: S3 url required
     getParam: AWS Connector, Region and Template File are required to retrieve parameters
+    templateRequired: Template file required
+  deploymentTypes:
+    pdc: PDC

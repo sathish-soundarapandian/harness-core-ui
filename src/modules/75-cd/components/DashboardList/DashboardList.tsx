@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { ExpandingSearchInput, Layout, Text, PageError, TableV2 } from '@wings-software/uicore'
 import type { TableProps } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -14,8 +14,6 @@ import { useStrings } from 'framework/strings'
 // import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelector'
 import { PageSpinner } from '@common/components'
 import ServiceDetailsEmptyState from '@cd/icons/ServiceDetailsEmptyState.svg'
-import { TimeRangeSelector } from '@common/components/TimeRangeSelector/TimeRangeSelector'
-import { DeploymentsTimeRangeContext } from '../Services/common'
 import css from '@cd/components/DashboardList/DashboardList.module.scss'
 
 const PAGE_SIZE = 10
@@ -58,19 +56,6 @@ const applySearch = (items: any[], searchTerm: string): any[] => {
       (item?.name || '').toLocaleLowerCase().indexOf(term) !== -1
     )
   })
-}
-
-const DeploymentTimeRangeSelector: React.FC = () => {
-  const { timeRange, setTimeRange } = useContext(DeploymentsTimeRangeContext)
-  return (
-    <Layout.Horizontal className={css.timeRangeSelector} width="25%" flex={{ alignItems: 'center' }}>
-      <div className={css.separator} />
-      <Layout.Horizontal padding={{ left: 'small', right: 'small' }}>
-        <TimeRangeSelector timeRange={timeRange?.range} setTimeRange={setTimeRange} minimal />
-      </Layout.Horizontal>
-      <div className={css.separator} />
-    </Layout.Horizontal>
-  )
 }
 
 export const DashboardList = <T extends Record<string, any>>(props: DashboardListProps<T>): React.ReactElement => {
@@ -148,7 +133,6 @@ export const DashboardList = <T extends Record<string, any>>(props: DashboardLis
       >
         <HeaderCustomPrimary total={filteredData.length} />
         <HeaderCustomSecondary onChange={onSearchChange} />
-        <DeploymentTimeRangeSelector />
       </Layout.Horizontal>
       {getComponent()}
     </Layout.Vertical>

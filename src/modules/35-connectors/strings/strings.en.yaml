@@ -74,6 +74,8 @@ addHeader: Add Header
 addParameter: Add Parameter
 baseURL: Base URL
 requestMethod: Request Method
+optionalAuthentication: Authentication (optional)
+bearerToken: Bearer Token(HTTP Header)
 connectivityMode:
   title: 'Connectivity Mode'
   validation: 'Please select connectivity mode'
@@ -88,6 +90,7 @@ title:
   githubConnector: 'GitHub Connector'
   gitlabConnector: 'GitLab Connector'
   bitbucketConnector: 'Bitbucket Connector'
+  azureRepoConnector: 'Azure Repos Connector'
   hashicorpVault: 'HashiCorp Vault'
   jira: 'Jira'
   serviceNow: 'ServiceNow'
@@ -162,6 +165,7 @@ testConnectionStep:
     vault: Validating HashiCorp Vault authentication and permissions
     awsSecretManager: Validating AWS Secret Manager authentication and permissions
     bitbucket: Validating Bitbucket authentication and permissions
+    azureRepos: Validating Azure Repos authentication and permissions
     gitlab: Validating GitLab authentication and permissions
     github: Validating GitHub authentication and permissions
     git: Validating Git authentication and permissions
@@ -285,6 +289,13 @@ docker:
   quay: 'Quay'
   other: 'Other (Docker V2 compliant)'
   dockerRepository: Docker Repository
+jenkins:
+  bearerTokenRequired: Bearer token is required
+  usernamePasswordAPIToken: 'Username and Password/APIToken'
+  passwordAPIToken: 'Password/APIToken'
+  jenkins: 'Jenkins'
+  jenkinsUrlRequired: 'Jenkins Registry URL is required'
+  jenkinsUrl: 'Jenkins Registry URL'
 helmRepo:
   helmRepoUrl: 'Helm Repository URL'
 aws:
@@ -789,7 +800,7 @@ ceGcp:
     step7: 'Select the BigQuery export tab (this tab is selected by default). On the BigQuery export tab, enable Daily cost detail.'
     otherLinks: 'Other Links:'
     link1: 'https://cloud.google.com/billing/docs/how-to/export-data-bigquery-setup'
-    link2: 'Harness Docs ()'
+    link2: 'Harness Docs (https://ngdocs.harness.io/article/kxnsritjls)'
   chooseRequirements:
     name: '{{ $.connectors.ceAws.steps.req }}'
     heading: '{{ $.connectors.ceAws.steps.req }}'
@@ -846,3 +857,4 @@ cantDeleteConnector: "Can't Delete Connector"
 policyEvaluations:
   failedToSave: Connector cannot be saved due to the policy evaluation failures
   warning: Connector saved with policy warnings
+sameCredentialsAsAbove: Same credentials as above

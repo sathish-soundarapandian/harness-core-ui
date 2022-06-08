@@ -22,6 +22,8 @@ Grouped Code Coverage report for master branch: [Coverage Report](https://github
    - Use Homebrew: `brew install node@16`
    - If you already have Node installed, use `nvm` or `n` to install/select correct version. (see https://www.npmjs.com/package/n)
 
+**Note:** Additional installation requirements for M1-based Macs found [here](./docs/M1_macs.md)
+
 2. Install **yarn** package manager
 
 ```

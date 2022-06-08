@@ -50,6 +50,7 @@ export type ArtifactType =
   | 'ArtifactoryRegistry'
   | 'CustomArtifact'
   | 'Acr'
+  | 'Jenkins'
 export interface OrganizationCreationType {
   type: ArtifactType
 }
@@ -128,6 +129,7 @@ export interface ArtifactTagHelperText {
   artifactDirectory?: string
   subscription?: string
   registry?: string
+  subscriptionId?: string
 }
 export interface ArtifactImagePathTagViewProps {
   selectedArtifact: ArtifactType

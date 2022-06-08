@@ -35,6 +35,8 @@ import ConnectorInstructionList from '@connectors/common/ConnectorCreationInstru
 import { connectorHelperUrls } from '@connectors/constants'
 import { FeatureFlag } from '@common/featureFlags'
 import { useConnectorGovernanceModal } from '@connectors/hooks/useConnectorGovernanceModal'
+import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
+import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import type { FeaturesString } from './CrossAccountRoleStep1'
 import type { CEAwsConnectorDTO } from './OverviewStep'
 import css from '../CreateCeAwsConnector.module.scss'
@@ -48,7 +50,7 @@ const CrossAccountRoleStep2: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
     accountId: string
   }>()
   const { prevStepData, nextStep, previousStep } = props
-  const [externalId, setExternalId] = useState<string>('')
+  const [externalId, setExternalId] = useState<string>(prevStepData?.spec.crossAccountAccess.externalId || '')
   const { mutate: createConnector } = useCreateConnector({
     queryParams: { accountIdentifier: accountId }
   })
@@ -132,7 +134,7 @@ const CrossAccountRoleStep2: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
   const instructionsList = [
     {
       type: 'hybrid',
-      renderer: function instructionRenderer() {
+      renderer: () => {
         return (
           <>
             <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_800}>
@@ -186,6 +188,12 @@ const CrossAccountRoleStep2: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
     }
   ]
 
+  const { trackEvent } = useTelemetry()
+
+  useTrackEvent(ConnectorActions.CENGAwsConnectorCrossAccountRoleStep2Load, {
+    category: Category.CONNECTOR
+  })
+
   return (
     <Layout.Vertical className={css.stepContainer}>
       <Text
@@ -204,7 +212,7 @@ const CrossAccountRoleStep2: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
           formName="crossAccountRoleStep2Form"
           initialValues={{
             crossAccountRoleArn: prevStepData?.spec.crossAccountAccess.crossAccountRoleArn || '',
-            externalId: prevStepData?.spec.crossAccountAccess.externalId || externalId || ''
+            externalId: externalId || ''
           }}
           validationSchema={Yup.object().shape({
             crossAccountRoleArn: Yup.string()
@@ -215,6 +223,9 @@ const CrossAccountRoleStep2: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
               .required(getString('connectors.ceAws.crossAccountRoleStep2.validation.roleArnRequired'))
           })}
           onSubmit={formData => {
+            trackEvent(ConnectorActions.CENGAwsConnectorCrossAccountRoleStep2Submit, {
+              category: Category.CONNECTOR
+            })
             handleSubmit(formData)
           }}
           enableReinitialize={true}

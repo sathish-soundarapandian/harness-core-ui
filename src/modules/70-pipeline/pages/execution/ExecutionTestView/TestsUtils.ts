@@ -199,7 +199,17 @@ export const setInitialStageAndSteps = ({
   if (selectedStepOptions?.length) {
     if (selectedStepOptions?.length > 1) {
       selectedStepOptions.unshift(AllStepsOption)
-      setSelectedStepId(selectedStepOptions[1])
+      // select id from previously selected step node on Pipeline tab
+      // otherwise default to first in the list
+      const preSelectedStepId = context.selectedStepId && context.allNodeMap?.[context.selectedStepId]?.identifier
+      const preselectedStepIndex = selectedStepOptions.findIndex(
+        (option: SelectOption) => option.value === preSelectedStepId
+      )
+      if (preselectedStepIndex > -1) {
+        setSelectedStepId(selectedStepOptions[preselectedStepIndex])
+      } else {
+        setSelectedStepId(selectedStepOptions[1])
+      }
     } else {
       setSelectedStepId(selectedStepOptions[0])
     }

@@ -12,7 +12,7 @@ import { Color } from '@harness/design-system'
 import { matchPath, useLocation, useParams, useRouteMatch } from 'react-router-dom'
 import { Page } from '@common/exports'
 import routes from '@common/RouteDefinitions'
-import { useGlobalEventListener, useQueryParams } from '@common/hooks'
+import { useGlobalEventListener, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useGetPipelineSummary } from 'services/pipeline-ng'
 import { useGetListOfBranchesWithStatus } from 'services/cd-ng'
 import { NavigatedToPage } from '@common/constants/TrackingConstants'
@@ -25,6 +25,8 @@ import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/Pipeli
 import GitPopover from '@pipeline/components/GitPopover/GitPopover'
 import GenericErrorHandler from '@common/pages/GenericErrorHandler/GenericErrorHandler'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
+import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
+import { StoreType } from '@common/constants/GitSyncTypes'
 import NoEntityFound from '../utils/NoEntityFound/NoEntityFound'
 import css from './PipelineDetails.module.scss'
 // add custom event to the global scope
@@ -37,10 +39,12 @@ declare global {
 export default function PipelineDetails({ children }: React.PropsWithChildren<unknown>): React.ReactElement {
   const { orgIdentifier, projectIdentifier, pipelineIdentifier, accountId, module } =
     useParams<PipelineType<PipelinePathProps>>()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled, isGitSimplificationEnabled } = useAppStore()
   const location = useLocation()
   const { trackEvent } = useTelemetry()
-  const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
+  const { branch, repoIdentifier, storeType, repoName, connectorRef } = useQueryParams<GitQueryParams>()
+  const { updateQueryParams } = useUpdateQueryParams()
+
   const {
     data: pipeline,
     refetch,
@@ -56,6 +60,9 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
     },
     lazy: true
   })
+
+  const isPipelineRemote =
+    isGitSimplificationEnabled && storeType === StoreType.REMOTE && pipeline?.data?.gitDetails?.branch
 
   const { data: branchesWithStatusData, refetch: getDefaultBranchName } = useGetListOfBranchesWithStatus({
     queryParams: {
@@ -73,18 +80,22 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
   const [triggerTabDisabled, setTriggerTabDisabled] = React.useState(false)
 
   React.useEffect(() => {
-    if (repoIdentifier) {
+    if (repoIdentifier && !storeType) {
       getDefaultBranchName()
     }
   }, [repoIdentifier])
 
   React.useEffect(() => {
-    if (branch && branchesWithStatusData?.data?.defaultBranch?.branchName !== branch) {
+    if (branch && branchesWithStatusData?.data?.defaultBranch?.branchName !== branch && !isGitSimplificationEnabled) {
       setTriggerTabDisabled(true)
     } else {
       setTriggerTabDisabled(false)
     }
-  }, [branchesWithStatusData])
+  }, [branchesWithStatusData, branch, isGitSimplificationEnabled])
+
+  React.useEffect(() => {
+    pipeline?.data?.gitDetails?.branch && updateQueryParams({ branch: pipeline?.data?.gitDetails?.branch })
+  }, [pipeline?.data?.gitDetails?.branch])
 
   React.useEffect(() => {
     const routeParams = {
@@ -94,7 +105,10 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
       accountId,
       module,
       repoIdentifier,
-      branch
+      branch,
+      repoName,
+      connectorRef,
+      storeType
     }
     // Pipeline View
     const isPipeLineStudioView = !!matchPath(location.pathname, {
@@ -166,11 +180,11 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
     })
   ) || { isExact: false }
 
-  if (error?.data && !isGitSyncEnabled) {
+  if (error?.data && !isGitSyncEnabled && !isGitSimplificationEnabled) {
     return <GenericErrorHandler errStatusCode={error?.status} errorMessage={(error?.data as Error)?.message} />
   }
 
-  if (error?.data && isEmpty(pipeline) && isGitSyncEnabled) {
+  if (error?.data && isEmpty(pipeline) && (isGitSyncEnabled || isGitSimplificationEnabled)) {
     return <NoEntityFound identifier={pipelineIdentifier} entityType={'pipeline'} />
   }
 
@@ -194,9 +208,18 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
                   <Heading level={2} color={Color.GREY_800} font={{ weight: 'bold' }}>
                     {pipelineName}
                   </Heading>
-                  {repoIdentifier && (
+                  {isPipelineRemote ? (
+                    <div className={css.gitRemoteDetailsWrapper}>
+                      <GitRemoteDetails
+                        repoName={pipeline?.data?.gitDetails?.repoName}
+                        branch={pipeline?.data?.gitDetails?.branch}
+                        filePath={pipeline?.data?.gitDetails?.filePath}
+                        flags={{ readOnly: true }}
+                      />
+                    </div>
+                  ) : isGitSyncEnabled && repoIdentifier ? (
                     <GitPopover data={{ repoIdentifier, branch }} iconProps={{ margin: { left: 'small' } }} />
-                  )}
+                  ) : null}
                 </Layout.Horizontal>
               )}
             </Layout.Vertical>
@@ -213,8 +236,11 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
                     pipelineIdentifier,
                     accountId,
                     module,
+                    connectorRef,
                     repoIdentifier,
-                    branch
+                    repoName,
+                    branch,
+                    storeType
                   })
                 },
                 {
@@ -225,8 +251,11 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
                     pipelineIdentifier,
                     accountId,
                     module,
+                    connectorRef,
                     repoIdentifier,
-                    branch
+                    repoName,
+                    branch,
+                    storeType
                   }),
                   disabled: pipelineIdentifier === DefaultNewPipelineId
                 },
@@ -238,8 +267,11 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
                     pipelineIdentifier,
                     accountId,
                     module,
+                    connectorRef,
                     repoIdentifier,
-                    branch
+                    repoName,
+                    branch,
+                    storeType
                   }),
                   disabled: pipelineIdentifier === DefaultNewPipelineId || triggerTabDisabled
                 },
@@ -251,8 +283,11 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
                     pipelineIdentifier,
                     accountId,
                     module,
+                    connectorRef,
                     repoIdentifier,
-                    branch
+                    repoName,
+                    branch,
+                    storeType
                   }),
                   disabled: pipelineIdentifier === DefaultNewPipelineId
                 }

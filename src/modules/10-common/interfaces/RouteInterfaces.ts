@@ -7,6 +7,7 @@
 
 import type { EntityGitDetails } from 'services/pipeline-ng'
 import type { Module as ModuleName } from 'framework/types/ModuleName'
+import type { StoreType } from '@common/constants/GitSyncTypes'
 
 export interface AccountPathProps {
   accountId: string
@@ -27,6 +28,10 @@ export interface OAuthRedirectParams extends AccountPathProps {
 export interface GitQueryParams {
   branch?: EntityGitDetails['branch']
   repoIdentifier?: EntityGitDetails['repoIdentifier']
+  repoName?: EntityGitDetails['repoName']
+  connectorRef?: string
+  storeType?: StoreType
+  filePathTouched?: string
 }
 
 export interface InputSetGitQueryParams extends GitQueryParams {
@@ -174,6 +179,7 @@ export type ModuleNameMatch =
   | ':module(cv)'
   | ':module(ce)'
   | ':module(sto)'
+  | ':module(chaos)'
 
 export type Module = ModuleName | ModuleNameMatch
 
@@ -225,4 +231,8 @@ export interface GovernancePathProps
   policyIdentifier?: string
   policySetIdentifier?: string
   evaluationId?: string
+}
+
+export interface AccountLevelGitOpsPathProps {
+  entity: string
 }

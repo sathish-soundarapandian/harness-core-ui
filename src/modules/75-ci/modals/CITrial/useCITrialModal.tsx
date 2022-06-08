@@ -39,7 +39,6 @@ const CITrialDialog = ({ actionProps, trialType, onCloseModal }: UseTrialModalPr
 
   useTelemetry({
     pageName: PageNames.TrialSetupPipelineModal,
-    category: Category.SIGNUP,
     properties: { module: 'ci' }
   })
 

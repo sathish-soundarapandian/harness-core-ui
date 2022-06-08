@@ -9,6 +9,7 @@ export enum StepType {
   HTTP = 'Http',
   SHELLSCRIPT = 'ShellScript',
   Barrier = 'Barrier',
+  Lock = 'Lock',
   K8sRollingRollback = 'K8sRollingRollback',
   K8sBlueGreenDeploy = 'K8sBlueGreenDeploy',
   K8sCanaryDeploy = 'K8sCanaryDeploy',
@@ -31,6 +32,7 @@ export enum StepType {
   Plugin = 'Plugin',
   Run = 'Run',
   GCR = 'BuildAndPushGCR',
+  PDC = 'Pdc',
   ECR = 'BuildAndPushECR',
   SaveCacheGCS = 'SaveCacheGCS',
   RestoreCacheGCS = 'RestoreCacheGCS',
@@ -67,5 +69,6 @@ export enum StepType {
   ServerlessAwsLambdaRollback = 'ServerlessAwsLambdaRollback',
   ServerlessAwsInfra = 'ServerlessAwsInfra',
   CloudFormationRollbackStack = 'RollbackStack',
-  CloudFormationDeleteStack = 'DeleteStack'
+  CloudFormationDeleteStack = 'DeleteStack',
+  CloudFormationCreateStack = 'CreateStack'
 }

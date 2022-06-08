@@ -33,9 +33,10 @@ import { ValueType } from '@secrets/components/TextReference/TextReference'
 import { useStrings } from 'framework/strings'
 import { setSecretField } from '@secrets/utils/SecretField'
 import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
+import { transformStepHeadersAndParamsForPayloadForPrometheus } from '@connectors/components/CreateConnector/PrometheusConnector/utils'
 import { transformStepHeadersAndParamsForPayload } from '@connectors/components/CreateConnector/CustomHealthConnector/components/CustomHealthHeadersAndParams/CustomHealthHeadersAndParams.utils'
 import { AuthTypes, GitAuthTypes, GitAPIAuthTypes } from './ConnectorHelper'
-
+import { useConnectorWizard } from '../../../components/CreateConnectorWizard/ConnectorWizardContext'
 export interface DelegateCardInterface {
   type: string
   info: string
@@ -174,6 +175,9 @@ export const buildKubPayload = (formData: FormData) => {
   return { connector: savedData }
 }
 
+export const useGetHelpPanel = (refernceId: string, width: number) => {
+  return useConnectorWizard({ helpPanel: { referenceId: refernceId, contentWidth: width } })
+}
 const getGitAuthSpec = (formData: FormData) => {
   const { authType = '' } = formData
   switch (authType) {
@@ -330,6 +334,46 @@ export const buildBitbucketPayload = (formData: FormData) => {
   return { connector: savedData }
 }
 
+export const buildAzureRepoPayload = (formData: FormData) => {
+  const savedData: any = {
+    name: formData.name,
+    description: formData?.description,
+    projectIdentifier: formData?.projectIdentifier,
+    orgIdentifier: formData?.orgIdentifier,
+    identifier: formData.identifier,
+    tags: formData?.tags,
+    type: Connectors.AZURE_REPO,
+    spec: {
+      ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
+      type: formData.urlType,
+      url: formData.url,
+      ...(formData.validationRepo ? { validationRepo: formData.validationRepo } : {}),
+      ...(formData.validationProject ? { validationProject: formData.validationProject } : {}),
+      authentication: {
+        type: formData.connectionType,
+        spec:
+          formData.connectionType === GitConnectionType.SSH
+            ? { sshKeyRef: formData.sshKey.referenceString }
+            : {
+                type: formData.authType,
+                spec: getGitAuthSpec(formData)
+              }
+      },
+      apiAccess: { type: formData.apiAuthType, spec: {} }
+    }
+  }
+
+  if (formData.enableAPIAccess) {
+    savedData.spec.apiAccess.spec = {
+      tokenRef: formData.apiAccessToken.referenceString
+    }
+  } else {
+    delete savedData.spec.apiAccess
+  }
+
+  return { connector: savedData }
+}
+
 export const setupGitFormData = async (connectorInfo: ConnectorInfoDTO, accountId: string): Promise<FormData> => {
   const scopeQueryParams: GetSecretV2QueryParams = {
     accountIdentifier: accountId,
@@ -423,6 +467,36 @@ export const setupBitbucketFormData = async (connectorInfo: ConnectorInfoDTO, ac
     accessToken: await setSecretField(connectorInfo?.spec?.apiAccess?.spec?.tokenRef, scopeQueryParams)
   }
 
+  return formData
+}
+
+export const setupAzureRepoFormData = async (connectorInfo: ConnectorInfoDTO, accountId: string): Promise<FormData> => {
+  const scopeQueryParams: GetSecretV2QueryParams = {
+    accountIdentifier: accountId,
+    projectIdentifier: connectorInfo.projectIdentifier,
+    orgIdentifier: connectorInfo.orgIdentifier
+  }
+
+  const authData = connectorInfo?.spec?.authentication
+  const formData = {
+    sshKey: await setSecretField(authData?.spec?.sshKeyRef, scopeQueryParams),
+    authType: authData?.spec?.type,
+    username:
+      authData?.spec?.spec?.username || authData?.spec?.spec?.usernameRef
+        ? {
+            value: authData?.spec?.spec?.username || authData?.spec?.spec?.usernameRef,
+            type: authData?.spec?.spec?.usernameRef ? ValueType.ENCRYPTED : ValueType.TEXT
+          }
+        : undefined,
+    password: await setSecretField(authData?.spec?.spec?.passwordRef, scopeQueryParams),
+    accessToken: await setSecretField(
+      authData?.spec?.spec?.tokenRef || connectorInfo?.spec?.apiAccess?.spec?.tokenRef,
+      scopeQueryParams
+    ),
+    enableAPIAccess: !!connectorInfo?.spec?.apiAccess,
+    apiAuthType: connectorInfo?.spec?.apiAccess?.type,
+    apiAccessToken: await setSecretField(connectorInfo?.spec?.apiAccess?.spec?.tokenRef, scopeQueryParams)
+  }
   return formData
 }
 
@@ -543,6 +617,35 @@ export const setupDockerFormData = async (connectorInfo: ConnectorInfoDTO, accou
       connectorInfo.spec.auth.type === AuthTypes.USER_PASSWORD
         ? await setSecretField(connectorInfo.spec.auth.spec.passwordRef, scopeQueryParams)
         : undefined
+  }
+  return formData
+}
+
+export const setupJenkinsFormData = async (connectorInfo: ConnectorInfoDTO, accountId: string): Promise<FormData> => {
+  const scopeQueryParams: GetSecretV2QueryParams = {
+    accountIdentifier: accountId,
+    projectIdentifier: connectorInfo.projectIdentifier,
+    orgIdentifier: connectorInfo.orgIdentifier
+  }
+
+  const formData = {
+    jenkinsUrl: connectorInfo.spec.jenkinsUrl,
+    authType: connectorInfo.spec.auth.type,
+    username:
+      connectorInfo.spec.auth.type === AuthTypes.USER_PASSWORD &&
+      (connectorInfo.spec.auth.spec.username || connectorInfo.spec.auth.spec.usernameRef)
+        ? {
+            value: connectorInfo.spec.auth.spec.username || connectorInfo.spec.auth.spec.usernameRef,
+            type: connectorInfo.spec.auth.spec.usernameRef ? ValueType.ENCRYPTED : ValueType.TEXT
+          }
+        : undefined,
+
+    password:
+      connectorInfo.spec.auth.type === AuthTypes.USER_PASSWORD
+        ? await setSecretField(connectorInfo.spec.auth.spec.passwordRef, scopeQueryParams)
+        : undefined,
+    bearerToken:
+      connectorInfo.spec.auth.type === AuthTypes.BEARER_TOKEN ? connectorInfo.spec.auth.spec.tokenRef : undefined
   }
   return formData
 }
@@ -938,6 +1041,39 @@ export const buildDockerPayload = (formData: FormData) => {
             }
           : {
               type: formData.authType
+            }
+    }
+  }
+  return { connector: savedData }
+}
+
+export const buildJenkinsPayload = (formData: FormData) => {
+  const savedData = {
+    name: formData.name,
+    description: formData.description,
+    projectIdentifier: formData.projectIdentifier,
+    identifier: formData.identifier,
+    orgIdentifier: formData.orgIdentifier,
+    tags: formData.tags,
+    type: Connectors.JENKINS,
+    spec: {
+      ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
+      jenkinsUrl: formData.jenkinsUrl.trim(),
+      auth:
+        formData.authType === AuthTypes.USER_PASSWORD
+          ? {
+              type: formData.authType,
+              spec: {
+                username: formData.username.type === ValueType.TEXT ? formData.username.value : undefined,
+                usernameRef: formData.username.type === ValueType.ENCRYPTED ? formData.username.value : undefined,
+                passwordRef: formData.password.referenceString
+              }
+            }
+          : {
+              type: formData.authType,
+              spec: {
+                tokenRef: formData.bearerToken.referenceString
+              }
             }
     }
   }
@@ -1391,9 +1527,12 @@ export const buildPrometheusPayload = (formData: FormData) => {
       projectIdentifier: formData.projectIdentifier,
       orgIdentifier: formData.orgIdentifier,
       spec: {
+        ...transformStepHeadersAndParamsForPayloadForPrometheus(formData.headers),
         delegateSelectors: formData.delegateSelectors || {},
         url: formData.url,
-        accountId: formData.accountId
+        accountId: formData.accountId,
+        username: formData.username,
+        passwordRef: formData?.passwordRef?.identifier
       }
     }
   }
@@ -1712,6 +1851,8 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
       return 'service-gotlab'
     case Connectors.BITBUCKET:
       return 'bitbucket-selected'
+    case Connectors.AZURE_REPO:
+      return 'service-azure'
     case Connectors.VAULT: // TODO: use enum when backend fixes it
       return 'hashiCorpVault'
     case Connectors.LOCAL: // TODO: use enum when backend fixes it
@@ -1771,6 +1912,8 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
       return 'error-tracking'
     case Connectors.AZURE:
       return 'microsoft-azure'
+    case Connectors.JENKINS:
+      return 'service-jenkins'
     default:
       return 'cog'
   }
@@ -1788,6 +1931,8 @@ export const getConnectorDisplayName = (type: string) => {
       return 'GitLab'
     case Connectors.BITBUCKET:
       return 'Bitbucket'
+    case Connectors.AZURE_REPO:
+      return 'Azure Repos'
     case Connectors.DOCKER:
       return 'Docker Registry'
     case Connectors.GCP:
@@ -1913,6 +2058,8 @@ export function GetTestConnectionValidationTextByType(type: ConnectorConfigDTO['
       return getString('connectors.testConnectionStep.validationText.gcpKms')
     case Connectors.BITBUCKET:
       return getString('connectors.testConnectionStep.validationText.bitbucket')
+    case Connectors.AZURE_REPO:
+      return getString('connectors.testConnectionStep.validationText.azureRepos')
     case Connectors.GITLAB:
       return getString('connectors.testConnectionStep.validationText.gitlab')
     case Connectors.GITHUB:
@@ -2005,6 +2152,8 @@ export const getInvocationPathsForSecrets = (type: ConnectorInfoDTO['type'] | 'U
       return new Set([/^.+\.secretKeyRef$/])
     case 'Aws':
       return new Set([/^.+\.accessKeyRef$/, /^.+\.secretKeyRef$/])
+    case 'Pdc':
+      return new Set([/^.+\.connectorRef$/, /^.+\.sshKeyRef$/])
     case 'Github':
       return new Set([
         /^.+\.usernameRef$/,

@@ -68,6 +68,7 @@ export const Connectors: ConnectorType = {
   GITHUB: 'Github',
   GITLAB: 'Gitlab',
   BITBUCKET: 'Bitbucket',
+  AZURE_REPO: 'AzureRepo',
   VAULT: 'Vault',
   APP_DYNAMICS: 'AppDynamics',
   SPLUNK: 'Splunk',
@@ -98,7 +99,9 @@ export const Connectors: ConnectorType = {
   SERVICE_NOW: 'ServiceNow',
   CUSTOM_HEALTH: 'CustomHealth',
   ERROR_TRACKING: 'ErrorTracking',
-  AZURE: 'Azure'
+  AZURE: 'Azure',
+  AWSSECRETMANAGER: 'AwsSecretManager',
+  JENKINS: 'Jenkins'
 }
 
 export const ConnectorInfoText = {

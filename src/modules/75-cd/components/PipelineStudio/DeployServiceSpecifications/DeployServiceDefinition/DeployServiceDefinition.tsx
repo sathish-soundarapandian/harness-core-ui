@@ -41,7 +41,7 @@ function DeployServiceDefinition(): React.ReactElement {
     allowableTypes,
     isReadonly
   } = usePipelineContext()
-  const { isEditServiceModal } = useServiceContext()
+  const { isServiceEntityModalView } = useServiceContext()
 
   const { index: stageIndex } = getStageIndexFromPipeline(pipeline, selectedStageId || '')
   const { getString } = useStrings()
@@ -82,7 +82,7 @@ function DeployServiceDefinition(): React.ReactElement {
       if (isConfirmed) {
         deleteStageData(currStageData)
         await debounceUpdateStage(currStageData)
-        setSelectedDeploymentType(currStageData?.spec?.serviceConfig.serviceDefinition?.type as ServiceDeploymentType)
+        setSelectedDeploymentType(currStageData?.spec?.serviceConfig?.serviceDefinition?.type as ServiceDeploymentType)
       }
     }
   })
@@ -106,11 +106,12 @@ function DeployServiceDefinition(): React.ReactElement {
     [stage, updateStage]
   )
   return (
-    <div className={cx(css.contentSection, isEditServiceModal ? css.editServiceModal : css.nonModalView)}>
+    <div className={cx(css.contentSection, isServiceEntityModalView ? css.editServiceModal : css.nonModalView)}>
       <div className={css.tabHeading} id="serviceDefinition">
         {getString('pipelineSteps.deploy.serviceSpecifications.serviceDefinition')}
       </div>
       <SelectDeploymentType
+        viewContext="setup"
         selectedDeploymentType={selectedDeploymentType}
         isReadonly={isReadonly}
         handleDeploymentTypeChange={handleDeploymentTypeChange}

@@ -21,6 +21,7 @@ import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { StoreType } from '@common/constants/GitSyncTypes'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -33,6 +34,8 @@ import { CardVariant } from '@pipeline/utils/constants'
 
 import type { ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactory/types'
 
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import MiniExecutionGraph from './MiniExecutionGraph/MiniExecutionGraph'
 import css from './ExecutionCard.module.scss'
 
@@ -41,6 +44,7 @@ export interface ExecutionCardProps {
   variant?: CardVariant
   staticCard?: boolean
   isPipelineInvalid?: boolean
+  showGitDetails?: boolean
 }
 
 function ExecutionCardFooter({ pipelineExecution, variant }: ExecutionCardProps): React.ReactElement {
@@ -107,7 +111,13 @@ function ExecutionCardFooter({ pipelineExecution, variant }: ExecutionCardProps)
 }
 
 export default function ExecutionCard(props: ExecutionCardProps): React.ReactElement {
-  const { pipelineExecution, variant = CardVariant.Default, staticCard = false, isPipelineInvalid } = props
+  const {
+    pipelineExecution,
+    variant = CardVariant.Default,
+    staticCard = false,
+    isPipelineInvalid,
+    showGitDetails = false
+  } = props
   const { orgIdentifier, projectIdentifier, accountId, module } = useParams<PipelineType<ProjectPathProps>>()
   const history = useHistory()
   const { getString } = useStrings()
@@ -118,6 +128,7 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
   const cdInfo = executionFactory.getCardInfo(StageType.DEPLOY)
   const ciInfo = executionFactory.getCardInfo(StageType.BUILD)
   const stoInfo = executionFactory.getCardInfo(StageType.SECURITY)
+  const { isGitSimplificationEnabled } = useAppStore()
 
   const [canEdit, canExecute] = usePermission(
     {
@@ -186,13 +197,24 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
                   }, {} as { [key: string]: string })}
                 />
               ) : null}
-              {pipelineExecution.gitDetails ? (
-                <GitPopover
-                  data={pipelineExecution.gitDetails}
-                  iconProps={{ size: 14 }}
-                  popoverProps={{ wrapperTagName: 'div', targetTagName: 'div' }}
-                />
-              ) : null}
+              {isGitSimplificationEnabled && pipelineExecution?.storeType === StoreType.REMOTE
+                ? showGitDetails && (
+                    <div className={css.gitRemoteDetailsWrapper}>
+                      <GitRemoteDetails
+                        repoName={pipelineExecution?.gitDetails?.repoName}
+                        branch={pipelineExecution?.gitDetails?.branch}
+                        filePath={pipelineExecution?.gitDetails?.filePath}
+                        flags={{ readOnly: true }}
+                      />
+                    </div>
+                  )
+                : pipelineExecution.gitDetails && (
+                    <GitPopover
+                      data={pipelineExecution.gitDetails}
+                      iconProps={{ size: 14 }}
+                      popoverProps={{ wrapperTagName: 'div', targetTagName: 'div' }}
+                    />
+                  )}
             </div>
             <div className={css.actions}>
               <div className={css.statusContainer}>
@@ -226,8 +248,11 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
                     projectIdentifier,
                     module,
                     repoIdentifier: pipelineExecution?.gitDetails?.repoIdentifier,
+                    connectorRef: pipelineExecution.connectorRef,
+                    repoName: pipelineExecution?.gitDetails?.repoName,
                     branch: pipelineExecution?.gitDetails?.branch,
-                    stagesExecuted: pipelineExecution?.stagesExecuted
+                    stagesExecuted: pipelineExecution?.stagesExecuted,
+                    storeType: pipelineExecution?.storeType as StoreType
                   }}
                   isPipelineInvalid={isPipelineInvalid}
                   canEdit={canEdit}

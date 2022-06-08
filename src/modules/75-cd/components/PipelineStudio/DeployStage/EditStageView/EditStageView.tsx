@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import {
   Text,
   Container,
@@ -16,13 +16,14 @@ import {
   Accordion,
   HarnessDocTooltip,
   ThumbnailSelect,
-  ButtonVariation
-} from '@wings-software/uicore'
+  ButtonVariation,
+  useConfirmationDialog
+} from '@harness/uicore'
 import type { Item } from '@wings-software/uicore/dist/components/ThumbnailSelect/ThumbnailSelect'
-import { Color } from '@harness/design-system'
+import { Color, Intent } from '@harness/design-system'
 import cx from 'classnames'
 import * as Yup from 'yup'
-import { omit, set } from 'lodash-es'
+import { get, isEmpty, omit, set } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -47,6 +48,9 @@ import { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { createTemplate, getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
+import { hasStageData, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import SelectDeploymentType from '../../DeployServiceSpecifications/SelectDeploymentType'
 import css from './EditStageView.module.scss'
 import stageCss from '../../DeployStageSetupShell/DeployStage.module.scss'
 
@@ -57,6 +61,7 @@ export interface EditStageViewProps {
   onChange?: (values: DeploymentStageElementConfig) => void
   context?: string
   isReadonly: boolean
+  updateDeploymentType?: (deploymentType: ServiceDeploymentType, isDeleteStage?: boolean) => void
 }
 
 interface Values {
@@ -65,6 +70,7 @@ interface Values {
   description?: string
   tags?: { [key: string]: string }
   serviceType: string
+  deploymentType: string | undefined
 }
 
 export const EditStageView: React.FC<EditStageViewProps> = ({
@@ -74,7 +80,8 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
   context,
   onChange,
   isReadonly,
-  children
+  children,
+  updateDeploymentType
 }): JSX.Element => {
   const {
     state: {
@@ -115,6 +122,13 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
   const { errorMap } = useValidationErrors()
   const { subscribeForm, unSubscribeForm, submitFormsForTab } = React.useContext(StageErrorContext)
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
+  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
+  const getDeploymentType = (): ServiceDeploymentType => {
+    return get(data, 'stage.spec.deploymentType')
+  }
+  const [selectedDeploymentType, setSelectedDeploymentType] = useState<ServiceDeploymentType | undefined>(
+    getDeploymentType()
+  )
 
   React.useEffect(() => {
     /* istanbul ignore else */
@@ -159,6 +173,9 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
       } else {
         data.stage.identifier = values.identifier
         data.stage.name = values.name
+        if (!isEmpty(values.deploymentType)) {
+          set(data, 'stage.spec.deploymentType', values.deploymentType)
+        }
         if (values.description) {
           data.stage.description = values.description
         }
@@ -166,19 +183,49 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
         if (values.tags) {
           data.stage.tags = values.tags
         }
-        if (!data.stage.spec?.serviceConfig) {
-          set(data, 'stage.spec.serviceConfig', {})
-        }
-        if (!data.stage.spec?.infrastructure) {
-          set(data, 'stage.spec.infrastructure', {})
-        }
         onSubmit?.(data, values.identifier)
       }
     }
   }
+  const { openDialog: openStageDataDeleteWarningDialog } = useConfirmationDialog({
+    cancelButtonText: getString('cancel'),
+    contentText: getString('pipeline.stageDataDeleteWarningContent'),
+    titleText: getString('pipeline.stageDataDeleteWarningTitle'),
+    confirmButtonText: getString('confirm'),
+    intent: Intent.WARNING,
+    onCloseDialog: async isConfirmed => {
+      if (isConfirmed) {
+        const newDeploymentType = (formikRef.current?.values as Values)?.deploymentType as ServiceDeploymentType
+        setSelectedDeploymentType(newDeploymentType)
+        updateDeploymentType && updateDeploymentType(newDeploymentType, true)
+      } else {
+        formikRef.current?.setFieldValue('deploymentType', selectedDeploymentType)
+      }
+    }
+  })
+
+  const handleDeploymentTypeChange = useCallback((deploymentType: ServiceDeploymentType): void => {
+    if (deploymentType !== selectedDeploymentType) {
+      formikRef.current?.setFieldValue('deploymentType', deploymentType)
+      if (hasStageData(data?.stage)) {
+        openStageDataDeleteWarningDialog()
+      } else {
+        setSelectedDeploymentType(deploymentType)
+        updateDeploymentType && updateDeploymentType(deploymentType)
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const shouldRenderDeploymentType = (): boolean => {
+    if (context) {
+      return !!NG_SVC_ENV_REDESIGN && !isEmpty(selectedDeploymentType)
+    }
+    return !!NG_SVC_ENV_REDESIGN
+  }
 
   return (
-    <div className={stageCss.serviceOverrides}>
+    <div className={stageCss.deployStage}>
       <DeployServiceErrors domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
       <div className={context ? stageCss.contentSection : css.contentSection} ref={scrollRef}>
         {context ? (
@@ -197,7 +244,8 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
               name: data?.stage?.name || '',
               description: data?.stage?.description,
               tags: data?.stage?.tags || {},
-              serviceType: newStageData[0].value
+              serviceType: newStageData[0].value,
+              deploymentType: selectedDeploymentType
             }}
             formName="cdEditStage"
             onSubmit={handleSubmit}
@@ -207,7 +255,7 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                 errors.name = getString('validation.identifierDuplicate')
               }
               if (context && data) {
-                onChange?.(omit(values as unknown as DeploymentStageElementConfig, 'serviceType'))
+                onChange?.(omit(values as unknown as DeploymentStageElementConfig, 'serviceType', 'deploymentType'))
               }
               return errors
             }}
@@ -271,6 +319,17 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                     whatToDeploy
                   ) : (
                     <Card className={stageCss.sectionCard}>{whatToDeploy}</Card>
+                  )}
+
+                  {shouldRenderDeploymentType() && (
+                    <div>
+                      <SelectDeploymentType
+                        viewContext={context}
+                        selectedDeploymentType={selectedDeploymentType}
+                        isReadonly={isReadonly}
+                        handleDeploymentTypeChange={handleDeploymentTypeChange}
+                      />
+                    </div>
                   )}
 
                   {!context && (

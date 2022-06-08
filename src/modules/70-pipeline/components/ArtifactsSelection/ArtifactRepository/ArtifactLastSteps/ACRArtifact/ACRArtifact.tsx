@@ -55,7 +55,6 @@ import type {
   ACRArtifactProps
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
-import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import SideCarArtifactIdentifier from '../SideCarArtifactIdentifier'
 import css from '../../ArtifactConnector.module.scss'
 
@@ -480,6 +479,7 @@ export function ACRArtifact({
                     name="subscriptionId"
                     selectItems={subscriptions}
                     multiTypeInputProps={{
+                      expressions,
                       onChange: /* istanbul ignore next */ (value, _typeValue, type) => {
                         if (type === MultiTypeInputType.FIXED) {
                           if (getValue(value)) {
@@ -696,7 +696,11 @@ export function ACRArtifact({
                         allowableTypes,
                         selectProps: {
                           defaultSelectedItem: formik.values?.tag as SelectOption,
-                          noResults: <NoTagResults tagError={acrTagError} />,
+                          noResults: (
+                            <Text padding={'small'}>
+                              {get(acrTagError, 'data.message', null) || getString('pipeline.ACR.tagError')}
+                            </Text>
+                          ),
                           items: tags,
                           addClearBtn: true,
                           allowCreatingNewItems: true

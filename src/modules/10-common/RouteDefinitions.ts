@@ -46,7 +46,8 @@ import type {
   EnvironmentGroupPathProps,
   EnvironmentGroupQueryParams,
   VariablesPathProps,
-  EnvironmentQueryParams
+  EnvironmentQueryParams,
+  AccountLevelGitOpsPathProps
 } from '@common/interfaces/RouteInterfaces'
 
 const CV_HOME = `/cv/home`
@@ -716,6 +717,13 @@ const routes = {
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/gitops`
   ),
+  toAccountResourcesGitOps: withAccountId(({ entity }: AccountLevelGitOpsPathProps) => {
+    const path = `resources/gitops/${entity}`
+    return getScopeBasedRoute({
+      scope: {},
+      path
+    })
+  }),
   toServices: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/services`
@@ -1523,9 +1531,30 @@ const routes = {
       `/dashboards/folder/${folderId ? folderId : 'shared'}/view/${viewId}`
   ),
   toCustomFolderHome: withAccountId(() => '/dashboards/folders'),
-  toViewCustomFolder: withAccountId(({ folderId }: { folderId: string }) => `/dashboards/folder/${folderId}`)
+  toViewCustomFolder: withAccountId(({ folderId }: { folderId: string }) => `/dashboards/folder/${folderId}`),
 
   /****************** Secret Usage************************************************************************************/
+
+  /****************** Chaos Module ************************************************************************************/
+  toChaos: withAccountId(() => `/chaos`),
+  toChaosMicroFrontend: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/`
+  ),
+
+  // These RoutesDestinations are defined in the MicroFrontend
+  toChaosWorkflows: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/workflows`
+  ),
+  toChaosHubs: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-hubs`
+  ),
+  toChaosAgents: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/agents`
+  )
 }
 
 export default routes

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { PREFERENCES_TOP_LEVEL_KEY } from 'framework/PreferenceStore/PreferenceStoreContext'
+const PREFERENCES_TOP_LEVEL_KEY = 'preferences'
 
 export function encode(arg: unknown): string | undefined {
   if (typeof arg != 'undefined') return btoa(encodeURIComponent(JSON.stringify(arg)))
@@ -33,6 +33,9 @@ export default class SecureStorage {
     }
 
     localStorage.clear()
+
+    /* adding this to clear sessionStorage on logout - because at harness we want user session to end once the user is logged out,
+       so we are clearing this from our end - because by default sessionStorage behavior doesn't care for login/logout events */
     sessionStorage.clear()
 
     Object.entries(storage).forEach(([key, val]) => {

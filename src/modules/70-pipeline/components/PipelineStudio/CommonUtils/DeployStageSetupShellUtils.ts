@@ -18,3 +18,6 @@ export enum DeployTabs {
 export const isEmptyServiceConfigPath = (stage: DeploymentStageElementConfig): boolean => {
   return isEmpty(stage?.spec?.serviceConfig?.serviceDefinition?.type)
 }
+export const getServiceEntityServiceRef = (stage: any): boolean => {
+  return !isEmpty((stage?.spec as any)?.service?.serviceRef)
+}

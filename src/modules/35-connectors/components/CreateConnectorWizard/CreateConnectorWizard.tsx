@@ -12,12 +12,13 @@ import type { ConnectorRequestBody, ConnectorInfoDTO } from 'services/cd-ng'
 import type { IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
 import type { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { useTelemetry } from '@common/hooks/useTelemetry'
+import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import CreateGitConnector from '../CreateConnector/GitConnector/CreateGitConnector'
 import CreateGithubConnector from '../CreateConnector/GithubConnector/CreateGithubConnector'
 import CreateGitlabConnector from '../CreateConnector/GitlabConnector/CreateGitlabConnector'
 import CreateBitbucketConnector from '../CreateConnector/BitbucketConnector/CreateBitbucketConnector'
+import CreateAzureRepoConnector from '../CreateConnector/AzureRepoConnector/CreateAzureRepoConnector'
 import CreateK8sConnector from '../CreateConnector/K8sConnector/CreateK8sConnector'
 import CreateHashiCorpVault from '../CreateConnector/HashiCorpVault/CreateHashiCorpVault'
 import CreateAppDynamicsConnector from '../CreateConnector/AppDynamicsConnector/CreateAppDynamicsConnector'
@@ -50,6 +51,7 @@ import CreateCustomHealthConnector from '../CreateConnector/CustomHealthConnecto
 import CreateErrorTrackingConnector from '../CreateConnector/ErrorTrackingConnector/CreateErrorTrackingConnector'
 import CreateAzureConnector from '../CreateConnector/AzureConnector/CreateAzureConnector'
 import { ConnectorWizardContextProvider } from './ConnectorWizardContext'
+import CreateJenkinsConnector from '../CreateConnector/JenkinsConnector/CreateJenkinsConnector'
 
 interface CreateConnectorWizardProps {
   accountId: string
@@ -72,8 +74,7 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
   const onSuccessWithEventTracking = (data?: ConnectorRequestBody): void | Promise<void> => {
     props.onSuccess(data)
     trackEvent(ConnectorActions.SaveCreateConnector, {
-      category: Category.CONNECTOR,
-      data
+      category: Category.CONNECTOR
     })
   }
 
@@ -97,12 +98,10 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
 
   const { ERROR_TRACKING_ENABLED, NG_AZURE } = useFeatureFlags()
 
-  React.useEffect(() => {
-    trackEvent(ConnectorActions.StartCreateConnector, {
-      category: Category.CONNECTOR
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  useTrackEvent(ConnectorActions.StartCreateConnector, {
+    category: Category.CONNECTOR,
+    connector_type: type
+  })
 
   switch (type) {
     case Connectors.CUSTOM:
@@ -117,6 +116,8 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
       return <CreateGitlabConnector {...commonProps} />
     case Connectors.BITBUCKET:
       return <CreateBitbucketConnector {...commonProps} />
+    case Connectors.AZURE_REPO:
+      return <CreateAzureRepoConnector {...commonProps} />
     case Connectors.VAULT:
       return <CreateHashiCorpVault {...commonProps} />
     case Connectors.Jira:
@@ -175,6 +176,8 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
       return ERROR_TRACKING_ENABLED ? <CreateErrorTrackingConnector {...commonProps} /> : null
     case Connectors.AZURE:
       return NG_AZURE ? <CreateAzureConnector {...commonProps} /> : null
+    case Connectors.JENKINS:
+      return <CreateJenkinsConnector {...commonProps} />
     default:
       return null
   }

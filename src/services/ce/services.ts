@@ -38,8 +38,8 @@ export function useCcmMetaDataQuery(options?: Omit<Urql.UseQueryArgs<CcmMetaData
   return Urql.useQuery<CcmMetaDataQuery>({ query: CcmMetaDataDocument, ...options })
 }
 export const FetchAllPerspectivesDocument = gql`
-  query FetchAllPerspectives {
-    perspectives {
+  query FetchAllPerspectives($folderId: String) {
+    perspectives(folderId: $folderId) {
       sampleViews {
         id
         name
@@ -60,6 +60,7 @@ export const FetchAllPerspectivesDocument = gql`
         timeRange
         reportScheduledConfigured
         dataSources
+        folderId
         groupBy {
           fieldId
           fieldName
@@ -726,7 +727,7 @@ export const FetchPerspectiveTimeSeriesDocument = gql`
       filters: $filters
       groupBy: $groupBy
       limit: $limit
-      includeOthers: false
+      preferences: { includeOthers: false, includeUnallocatedCost: false }
       aggregateFunction: [{ operationType: SUM, columnName: "cost" }]
       sortCriteria: [{ sortType: COST, sortOrder: DESCENDING }]
     ) {
@@ -1115,7 +1116,7 @@ export const FetchWorkloadTimeSeriesDocument = gql`
       groupBy: $groupBy
       limit: 100
       offset: 0
-      includeOthers: false
+      preferences: { includeOthers: false, includeUnallocatedCost: false }
     ) {
       cpuLimit {
         time
@@ -1208,7 +1209,9 @@ export type CcmMetaDataQuery = {
   } | null
 }
 
-export type FetchAllPerspectivesQueryVariables = Exact<{ [key: string]: never }>
+export type FetchAllPerspectivesQueryVariables = Exact<{
+  folderId: InputMaybe<Scalars['String']>
+}>
 
 export type FetchAllPerspectivesQuery = {
   __typename?: 'Query'
@@ -1236,6 +1239,7 @@ export type FetchAllPerspectivesQuery = {
       timeRange: ViewTimeRangeType | null
       reportScheduledConfigured: boolean
       dataSources: Array<ViewFieldIdentifier | null> | null
+      folderId: string | null
       groupBy: {
         __typename?: 'QLCEViewField'
         fieldId: string
@@ -1265,6 +1269,7 @@ export type RecommendationsQuery = {
       monthlyCost: number | null
       monthlySaving: number | null
       recommendationDetails:
+        | { __typename?: 'ECSRecommendationDTO' }
         | {
             __typename?: 'NodeRecommendationDTO'
             recommended: { __typename?: 'RecommendationResponse'; provider: string | null } | null
@@ -2257,29 +2262,6 @@ export enum AlertThresholdBase {
   ForecastedCost = 'FORECASTED_COST'
 }
 
-export type AnomalyData = {
-  __typename?: 'AnomalyData'
-  actualAmount: Maybe<Scalars['Float']>
-  anomalyScore: Maybe<Scalars['Float']>
-  comment: Maybe<Scalars['String']>
-  entity: Maybe<EntityInfo>
-  expectedAmount: Maybe<Scalars['Float']>
-  id: Maybe<Scalars['String']>
-  time: Maybe<Scalars['Long']>
-  userFeedback: Maybe<AnomalyFeedback>
-}
-
-export type AnomalyDataList = {
-  __typename?: 'AnomalyDataList'
-  data: Maybe<Array<Maybe<AnomalyData>>>
-}
-
-export enum AnomalyFeedback {
-  FalseAnomaly = 'FALSE_ANOMALY',
-  NotResponded = 'NOT_RESPONDED',
-  TrueAnomaly = 'TRUE_ANOMALY'
-}
-
 export type BillingData = {
   __typename?: 'BillingData'
   accountid: Maybe<Scalars['String']>
@@ -2548,21 +2530,6 @@ export type EfficiencyScoreStats = {
   statsValue: Maybe<Scalars['String']>
 }
 
-export type EntityInfo = {
-  __typename?: 'EntityInfo'
-  awsAccount: Maybe<Scalars['String']>
-  awsService: Maybe<Scalars['String']>
-  clusterId: Maybe<Scalars['String']>
-  clusterName: Maybe<Scalars['String']>
-  gcpProduct: Maybe<Scalars['String']>
-  gcpProject: Maybe<Scalars['String']>
-  gcpSKUDescription: Maybe<Scalars['String']>
-  gcpSKUId: Maybe<Scalars['String']>
-  namespace: Maybe<Scalars['String']>
-  workloadName: Maybe<Scalars['String']>
-  workloadType: Maybe<Scalars['String']>
-}
-
 export type FieldAggregationInput = {
   field: InputMaybe<Scalars['String']>
   operation: InputMaybe<AggregationOperation>
@@ -2772,6 +2739,7 @@ export type QlceView = {
   createdAt: Maybe<Scalars['Long']>
   createdBy: Maybe<Scalars['String']>
   dataSources: Maybe<Array<Maybe<ViewFieldIdentifier>>>
+  folderId: Maybe<Scalars['String']>
   groupBy: Maybe<QlceViewField>
   id: Maybe<Scalars['String']>
   lastUpdatedAt: Maybe<Scalars['Long']>
@@ -2779,6 +2747,7 @@ export type QlceView = {
   reportScheduledConfigured: Scalars['Boolean']
   timeRange: Maybe<ViewTimeRangeType>
   totalCost: Scalars['Float']
+  viewPreferences: Maybe<ViewPreferences>
   viewState: Maybe<ViewState>
   viewType: Maybe<ViewType>
 }
@@ -2862,6 +2831,11 @@ export type QlceViewMetadataFilterInput = {
   viewId: Scalars['String']
 }
 
+export type QlceViewPreferencesInput = {
+  includeOthers: InputMaybe<Scalars['Boolean']>
+  includeUnallocatedCost: InputMaybe<Scalars['Boolean']>
+}
+
 export type QlceViewRuleInput = {
   conditions: InputMaybe<Array<InputMaybe<QlceViewFilterInput>>>
 }
@@ -2904,8 +2878,6 @@ export type QlceViewTimeTruncGroupByInput = {
 /** Query root */
 export type Query = {
   __typename?: 'Query'
-  /** Get Anomalies for perspective */
-  anomaliesForPerspective: Maybe<AnomalyDataList>
   billingData: Maybe<Array<Maybe<BillingData>>>
   billingJobLastProcessedTime: Maybe<Scalars['Long']>
   billingdata: Maybe<Array<Maybe<BillingDataDemo>>>
@@ -2949,12 +2921,6 @@ export type Query = {
   recommendationStatsV2: Maybe<RecommendationOverviewStats>
   /** The list of all types of recommendations for overview page */
   recommendationsV2: Maybe<RecommendationsDto>
-}
-
-/** Query root */
-export type QueryAnomaliesForPerspectiveArgs = {
-  filters: InputMaybe<Array<InputMaybe<QlceViewFilterWrapperInput>>>
-  groupBy: InputMaybe<Array<InputMaybe<QlceViewGroupByInput>>>
 }
 
 /** Query root */
@@ -3051,10 +3017,10 @@ export type QueryPerspectiveTimeSeriesStatsArgs = {
   aggregateFunction: InputMaybe<Array<InputMaybe<QlceViewAggregationInput>>>
   filters: InputMaybe<Array<InputMaybe<QlceViewFilterWrapperInput>>>
   groupBy: InputMaybe<Array<InputMaybe<QlceViewGroupByInput>>>
-  includeOthers: Scalars['Boolean']
   isClusterQuery: InputMaybe<Scalars['Boolean']>
   limit: InputMaybe<Scalars['Int']>
   offset: InputMaybe<Scalars['Int']>
+  preferences: InputMaybe<QlceViewPreferencesInput>
   sortCriteria: InputMaybe<Array<InputMaybe<QlceViewSortCriteriaInput>>>
 }
 
@@ -3070,6 +3036,11 @@ export type QueryPerspectiveTrendStatsArgs = {
   aggregateFunction: InputMaybe<Array<InputMaybe<QlceViewAggregationInput>>>
   filters: InputMaybe<Array<InputMaybe<QlceViewFilterWrapperInput>>>
   isClusterQuery: InputMaybe<Scalars['Boolean']>
+}
+
+/** Query root */
+export type QueryPerspectivesArgs = {
+  folderId: InputMaybe<Scalars['String']>
 }
 
 /** Query root */
@@ -3260,6 +3231,12 @@ export enum ViewFieldIdentifier {
   Custom = 'CUSTOM',
   Gcp = 'GCP',
   Label = 'LABEL'
+}
+
+export type ViewPreferences = {
+  __typename?: 'ViewPreferences'
+  includeOthers: Maybe<Scalars['Boolean']>
+  includeUnallocatedCost: Maybe<Scalars['Boolean']>
 }
 
 export enum ViewState {

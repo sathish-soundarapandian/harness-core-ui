@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect } from 'react'
-import { Layout, PageSpinner } from '@wings-software/uicore'
+import { Layout } from '@wings-software/uicore'
 import { defaultTo, get, isEmpty, isEqual, set } from 'lodash-es'
 import produce from 'immer'
 import { useParams } from 'react-router-dom'
@@ -48,7 +48,7 @@ export default function WorkflowVariables({
   formName,
   factory,
   readonly: isReadOnlyServiceMode
-}: WorkflowVariablesProps): JSX.Element {
+}: WorkflowVariablesProps): JSX.Element | null {
   const {
     state: {
       pipeline,
@@ -135,7 +135,7 @@ export default function WorkflowVariables({
       if (!isEmpty(serviceData?.yaml)) {
         const parsedYaml = yamlParse<NGServiceConfig>(defaultTo(serviceData.yaml, ''))
         const serviceInfo = parsedYaml.service?.serviceDefinition
-        return serviceInfo?.spec.variables as Variable[]
+        return defaultTo(serviceInfo?.spec.variables, []) as Variable[]
       }
       return []
     }
@@ -154,7 +154,7 @@ export default function WorkflowVariables({
   }
 
   if (serviceLoading) {
-    return <PageSpinner />
+    return null
   }
 
   return (

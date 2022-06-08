@@ -44,6 +44,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { connectorsTrackEventMap } from '@connectors/utils/connectorEvents'
+import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 import Suggestions from '../ErrorSuggestions/ErrorSuggestionsCe'
 import css from './VerifyOutOfClusterDelegate.module.scss'
 
@@ -62,6 +63,7 @@ interface VerifyOutOfClusterDelegateProps {
   isLastStep?: boolean
   name?: string
   connectorInfo: ConnectorInfoDTO | void
+  helpPanelReferenceId?: string
   gitDetails?: EntityGitDetails
   stepIndex?: number // will make this mandatory once all usages sends the value
 }
@@ -100,6 +102,7 @@ const RenderUrlInfo: React.FC<StepProps<VerifyOutOfClusterStepProps> & RenderUrl
       case 'Gcr':
         return getString('connectors.testConnectionStep.url.gcr')
       case Connectors.BITBUCKET:
+      case Connectors.AZURE_REPO:
       case Connectors.GITLAB:
       case Connectors.GITHUB:
       case Connectors.GIT:
@@ -131,6 +134,7 @@ const RenderUrlInfo: React.FC<StepProps<VerifyOutOfClusterStepProps> & RenderUrl
       case Connectors.VAULT:
         return props.prevStepData?.spec?.vaultUrl
       case Connectors.BITBUCKET:
+      case Connectors.AZURE_REPO:
       case Connectors.GITLAB:
       case Connectors.GITHUB:
       case Connectors.GIT:
@@ -177,6 +181,9 @@ const VerifyOutOfClusterDelegate: React.FC<StepProps<VerifyOutOfClusterStepProps
       intent: Intent.WARNING,
       status: 'PROCESS'
     })
+    useConnectorWizard({
+      helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 900 } : undefined
+    })
 
     const showCustomErrorHints = showCustomErrorSuggestion(props.type)
     const showEditAndPermission = showEditAndViewPermission(props.type)
@@ -214,6 +221,8 @@ const VerifyOutOfClusterDelegate: React.FC<StepProps<VerifyOutOfClusterStepProps
           return 'https://ngdocs.harness.io/article/5abnoghjgo-git-lab-connector-settings-reference'
         case Connectors.BITBUCKET:
           return 'https://ngdocs.harness.io/article/iz5tucdwyu-bitbucket-connector-settings-reference'
+        case Connectors.AZURE_REPO:
+          return '' // TODO
         case Connectors.Jira:
           return 'https://ngdocs.harness.io/article/e6s32ec7i7'
         case Connectors.SERVICE_NOW:
