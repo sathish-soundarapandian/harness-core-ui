@@ -255,6 +255,14 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
 }
 
 export function AppWithoutAuthentication(props: AppProps): React.ReactElement {
+  const { pathname, hash } = window.location
+
+  // Redirect from `/#/account/...` to `/account/...`
+  if (hash && (pathname === '/' || pathname === '/ng')) {
+    const targetUrl = window.location.href.replace('/#/', '/')
+    window.location.href = targetUrl
+  }
+
   return (
     <RestfulProvider base="/">
       <StringsContextProvider initialStrings={props.strings}>
