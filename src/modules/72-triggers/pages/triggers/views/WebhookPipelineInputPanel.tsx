@@ -9,6 +9,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import {
+  Button,
   Container,
   FormInput,
   Layout,
@@ -52,6 +53,7 @@ import {
   getErrorMessage
 } from '../utils/TriggersWizardPageUtils'
 import css from './WebhookPipelineInputPanel.module.scss'
+import NewInputSetModal from './modals/NewInputSetModal'
 
 interface WebhookPipelineInputPanelPropsInterface {
   formikProps?: any
@@ -458,6 +460,7 @@ function WebhookPipelineInputPanelForm({
     }, 1000),
     [selectedInputSets]
   )
+  const [showNewInputSetModal, setShowNewInputSetModal] = useState(false)
 
   useEffect(() => {
     setInputSetError(formikProps?.errors?.inputSetRefs)
@@ -484,6 +487,7 @@ function WebhookPipelineInputPanelForm({
                 <Text className={css.formContentTitle} inline={true} data-tooltip-id="pipelineInputLabel">
                   {getString('triggers.pipelineInputLabel')}
                   <HarnessDocTooltip tooltipId="pipelineInputLabel" useStandAlone={true} />
+                  <Button onClick={() => setShowNewInputSetModal(true)}>+ New Input Set</Button>
                 </Text>
 
                 <GitSyncStoreProvider>
@@ -508,6 +512,13 @@ function WebhookPipelineInputPanelForm({
                 </GitSyncStoreProvider>
                 {inputSetError ? <Text intent="danger">{inputSetError}</Text> : null}
                 <div className={css.divider} />
+                {showNewInputSetModal && (
+                  <NewInputSetModal
+                    formikProps={formikProps}
+                    isModalOpen={showNewInputSetModal}
+                    closeModal={() => setShowNewInputSetModal(false)}
+                  />
+                )}
               </div>
             ) : null}
             {gitAwareForTriggerEnabled && (
