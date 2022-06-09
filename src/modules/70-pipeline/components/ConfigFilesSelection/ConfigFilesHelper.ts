@@ -42,7 +42,7 @@ export const allowedConfigFilesTypes: Record<string, Array<ConfigFileType>> = {
   Kubernetes: [],
   NativeHelm: [],
   ServerlessAwsLambda: [],
-  Ssh: [ConfigFilesMap.Harness],
+  Ssh: [ConfigFilesMap.Harness, ConfigFilesMap.Git],
   WinRm: [ConfigFilesMap.Harness]
 }
 
@@ -78,6 +78,6 @@ export const ConfigFilesToConnectorMap: Record<ConfigFileType | string, Connecto
   Git: Connectors.GIT,
   Github: Connectors.GITHUB,
   GitLab: Connectors.GITLAB,
-  Bitbucket: Connectors.BITBUCKET
-  //   Harness: 'Harness'
+  Bitbucket: Connectors.BITBUCKET,
+  Harness: 'Harness' as ConnectorInfoDTO['type']
 }

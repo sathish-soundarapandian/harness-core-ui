@@ -8,7 +8,7 @@
 import React, { useState, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { Layout, Button, ButtonSize, ButtonVariation, IconProps, StepWizard } from '@harness/uicore'
+import { Layout, Button, ButtonSize, ButtonVariation, IconProps, StepWizard, StepProps } from '@harness/uicore'
 import type { IDialogProps } from '@blueprintjs/core'
 import { Dialog, Classes } from '@blueprintjs/core'
 
@@ -51,7 +51,7 @@ import {
   ConfigFileIconByType,
   ConfigFilesToConnectorMap
 } from '../ConfigFilesHelper'
-
+import { HarnessConfigStep } from '../ConfigFilesWizard/ConfigFilesSteps/HarnessConfigStep'
 import css from '../ConfigFilesSelection.module.scss'
 
 function ConfigFilesListView({
@@ -112,6 +112,23 @@ ConfigFilesListViewProps): JSX.Element {
     connectorInfo: undefined
   }
 
+  const getLastSteps = useCallback((): Array<React.ReactElement<StepProps<any>>> => {
+    const arr: Array<React.ReactElement<StepProps<any>>> = []
+    let configDetailStep = null
+
+    switch (true) {
+      case configDetailStep === ConfigFilesToConnectorMap.Harness:
+        configDetailStep = <HarnessConfigStep stepName="Config Files Details" />
+        break
+      default:
+        configDetailStep = <HarnessConfigStep stepName="Config Files Details" />
+        break
+    }
+
+    arr.push(configDetailStep)
+    return arr
+  }, [configStore])
+
   const getBuildPayload = (type: ConnectorInfoDTO['type']) => {
     if (type === Connectors.GIT) {
       return buildGitPayload
@@ -130,9 +147,10 @@ ConfigFilesListViewProps): JSX.Element {
 
   const getNewConnectorSteps = useCallback((): JSX.Element => {
     const buildPayload = getBuildPayload(ConfigFilesToConnectorMap[configStore])
-
     switch (configStore) {
-      default:
+      case ConfigFilesToConnectorMap.Harness:
+        return <HarnessConfigStep stepName="Config Files Details" />
+      case ConfigFilesToConnectorMap.Git:
         return (
           <StepWizard title={getString('connectors.createNewConnector')}>
             <ConnectorDetailsStep
@@ -175,6 +193,8 @@ ConfigFilesListViewProps): JSX.Element {
             />
           </StepWizard>
         )
+      default:
+        return <></>
     }
   }, [newConnectorView, configStore, isEditMode])
 
@@ -227,7 +247,7 @@ ConfigFilesListViewProps): JSX.Element {
             handleStoreChange={handleChangeStore}
             // initialValues={getInitialValues()}
             newConnectorSteps={getNewConnectorSteps()}
-            // lastSteps={getLastSteps()}
+            lastSteps={getLastSteps()}
             deploymentType={deploymentType}
             iconsProps={getIconProps()}
             selectedConfig={selectedConfig}

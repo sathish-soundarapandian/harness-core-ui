@@ -31,7 +31,7 @@ export function ConfigFilesWizard({
   selectedConfigFile,
   newConnectorView,
   newConnectorSteps,
-  //   lastSteps,
+  lastSteps,
   //   changeConfigFileType,
   //   iconsProps,
   //   isReadonly,
@@ -80,7 +80,7 @@ export function ConfigFilesWizard({
 
       {newConnectorView ? newConnectorSteps : null}
 
-      {/* {lastSteps?.length ? lastSteps?.map(step => step) : null} */}
+      {lastSteps?.length ? lastSteps?.map((step: any) => step) : null}
     </StepWizard>
   )
 }
