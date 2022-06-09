@@ -20,7 +20,6 @@ import {
   SelectOption,
   SplitButton,
   SplitButtonOption
-  // SelectWithSubmenu
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import * as Yup from 'yup'
@@ -659,7 +658,6 @@ export function DeployInfrastructureWidget({
                           : getString('cd.pipelineSteps.environmentTab.selectEnvironment')
                       }
                       multiTypeInputProps={{
-                        // onTypeChange: setEnvironmentRefType,
                         width: 280,
                         onChange: item => {
                           if (values.environmentRef2 && (item as SelectOption).value !== values.environmentRef2) {
