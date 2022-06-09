@@ -25,6 +25,7 @@ export interface K8SDirectServiceStep extends ServiceSpec {
   handleTabChange?: (tab: string) => void
   customStepProps?: Record<string, any>
   deploymentType?: ServiceDefinition['type']
+  gitOpsEnabled?: boolean
 }
 export interface KubernetesServiceInputFormProps {
   initialValues: K8SDirectServiceStep
@@ -38,6 +39,7 @@ export interface KubernetesServiceInputFormProps {
   stageIdentifier: string
   formik?: any
   allowableTypes: MultiTypeInputType[]
+  gitOpsEnabled?: boolean
 }
 
 export interface LastQueryData {

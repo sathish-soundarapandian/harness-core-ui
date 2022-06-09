@@ -11,7 +11,18 @@ import { noop } from 'lodash-es'
 import { Classes, PopoverInteractionKind } from '@blueprintjs/core'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
-import { Card, Dialog, HarnessDocTooltip, Icon, Layout, Popover, Text, Thumbnail, Utils } from '@wings-software/uicore'
+import {
+  Card,
+  Dialog,
+  FormInput,
+  HarnessDocTooltip,
+  Icon,
+  Layout,
+  Popover,
+  Text,
+  Thumbnail,
+  Utils
+} from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
@@ -22,6 +33,8 @@ import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { StringsMap } from 'framework/strings/StringsContext'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+
 import { CDFirstGenTrial } from './CDFirstGenTrial'
 import type { DeploymentTypeItem } from './DeploymentInterface'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
@@ -38,6 +51,8 @@ export function getServiceDeploymentTypeSchema(
 interface SelectServiceDeploymentTypeProps {
   selectedDeploymentType?: ServiceDeploymentType
   isReadonly: boolean
+  gitOpsEnabled: boolean
+  setGitOpsEnabled: (gitOpsEnabled: boolean) => void
   handleDeploymentTypeChange: (deploymentType: ServiceDeploymentType) => void
 }
 
@@ -130,7 +145,11 @@ const getServerlessDeploymentTypes = (
 }
 
 export default function SelectDeploymentType(props: SelectServiceDeploymentTypeProps): JSX.Element {
-  const { selectedDeploymentType, isReadonly } = props
+  const { selectedDeploymentType, isReadonly, setGitOpsEnabled } = props
+  const {
+    state: { pipeline },
+    updatePipeline
+  } = usePipelineContext()
   const { getString } = useStrings()
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
@@ -367,10 +386,13 @@ export default function SelectDeploymentType(props: SelectServiceDeploymentTypeP
   }, [cgDeploymentTypes, ngSupportedDeploymentTypes, getString, isReadonly, props.handleDeploymentTypeChange])
 
   return (
-    <Formik<{ deploymentType: string }>
+    <Formik<{ deploymentType: string; gitOpsEnabled: boolean }>
       onSubmit={noop}
       enableReinitialize={true}
-      initialValues={{ deploymentType: selectedDeploymentType as string }}
+      initialValues={{
+        deploymentType: selectedDeploymentType as string,
+        gitOpsEnabled: (pipeline as any)?.gitOpsEnabled
+      }}
       validationSchema={Yup.object().shape({
         deploymentType: getServiceDeploymentTypeSchema(getString)
       })}
@@ -388,6 +410,19 @@ export default function SelectDeploymentType(props: SelectServiceDeploymentTypeP
               <HarnessDocTooltip tooltipId="stageOverviewDeploymentType" useStandAlone={true} />
             </div>
             {renderDeploymentTypes()}
+            {selectedDeploymentType === ServiceDeploymentType.Kubernetes ? (
+              <FormInput.CheckBox
+                label="Gitops"
+                name="gitOpsEnabled"
+                onChange={(ev: any) => {
+                  formik.setFieldValue('gitOpsEnabled', ev.currentTarget.checked)
+                  // setShowServiceRepo(ev.currentTarget.checked)
+                  setGitOpsEnabled(ev.currentTarget.checked)
+                  updatePipeline({ ...pipeline, gitOpsEnabled: ev.currentTarget.checked } as any)
+                  // updatePipeline({ ...service, gitOpsEnabled: true })
+                }}
+              />
+            ) : null}
           </Card>
         )
       }}

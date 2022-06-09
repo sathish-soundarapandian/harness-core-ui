@@ -26,6 +26,7 @@ export interface StepWidgetProps<T = unknown, U = unknown> extends Omit<StepProp
   onChange?: (data: any) => void
   readonly?: boolean
   allowableTypes: MultiTypeInputType[]
+  gitOpsEnabled?: boolean
 }
 
 export function StepWidget<T = unknown, U = unknown>(
@@ -42,7 +43,8 @@ export function StepWidget<T = unknown, U = unknown>(
     onChange,
     readonly,
     allowableTypes,
-    customStepProps
+    customStepProps,
+    gitOpsEnabled
   }: StepWidgetProps<T, U>,
   formikRef: StepFormikFowardRef<T>
 ): JSX.Element | null {
@@ -71,7 +73,8 @@ export function StepWidget<T = unknown, U = unknown>(
           readonly,
           path,
           customStepProps,
-          allowableTypes
+          allowableTypes,
+          gitOpsEnabled
         })}
       </>
     )

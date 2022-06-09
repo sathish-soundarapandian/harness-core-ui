@@ -458,8 +458,17 @@ export class KubernetesServiceSpec extends Step<ServiceSpec> {
   }
 
   renderStep(props: StepProps<K8SDirectServiceStep>): JSX.Element {
-    const { initialValues, onUpdate, stepViewType, inputSetData, factory, customStepProps, readonly, allowableTypes } =
-      props
+    const {
+      initialValues,
+      onUpdate,
+      stepViewType,
+      inputSetData,
+      factory,
+      customStepProps,
+      readonly,
+      allowableTypes,
+      gitOpsEnabled
+    } = props
     if (stepViewType === StepViewType.InputVariable) {
       return (
         <K8sServiceSpecVariablesForm
@@ -499,6 +508,7 @@ export class KubernetesServiceSpec extends Step<ServiceSpec> {
         path={inputSetData?.path}
         readonly={inputSetData?.readonly || readonly}
         allowableTypes={allowableTypes}
+        gitOpsEnabled={gitOpsEnabled}
       />
     )
   }

@@ -106,7 +106,8 @@ function ManifestListView({
   deploymentType,
   isReadonly,
   allowableTypes,
-  allowOnlyOne = false
+  allowOnlyOne = false,
+  gitOpsEnabled = false
 }: ManifestListViewProps): JSX.Element {
   const [selectedManifest, setSelectedManifest] = useState<ManifestTypes | null>(null)
   const [connectorView, setConnectorView] = useState(false)
@@ -150,6 +151,14 @@ function ManifestListView({
       allowedManifestTypes[deploymentType]?.length === 1 ? allowedManifestTypes[deploymentType][0] : null
     )
     showConnectorModal()
+  }
+
+  const addNewReleaseRepo = (): void => {
+    // setEditIndex(listOfManifests.length)
+    // setSelectedManifest(
+    //   allowedManifestTypes[deploymentType]?.length === 1 ? allowedManifestTypes[deploymentType][0] : null
+    // )
+    // showConnectorModal()
   }
 
   const editManifest = (manifestType: ManifestTypes, store: ManifestStores, index: number): void => {
@@ -784,7 +793,7 @@ function ManifestListView({
         </Layout.Vertical>
       </Layout.Vertical>
       <Layout.Vertical spacing={'medium'} flex={{ alignItems: 'flex-start' }}>
-        {showAddManifestBtn(isReadonly, allowOnlyOne, listOfManifests) && (
+        {showAddManifestBtn(isReadonly, allowOnlyOne, listOfManifests) && !gitOpsEnabled ? (
           <Button
             className={css.addManifest}
             id="add-manifest"
@@ -793,6 +802,16 @@ function ManifestListView({
             data-test-id="addManifest"
             onClick={addNewManifest}
             text={getString('pipelineSteps.serviceTab.manifestList.addManifest')}
+          />
+        ) : (
+          <Button
+            className={css.addManifest}
+            id="add-release-repo"
+            size={ButtonSize.SMALL}
+            variation={ButtonVariation.LINK}
+            data-test-id="add-release-repo"
+            onClick={addNewReleaseRepo}
+            text={'Add Release Repo Manifest'}
           />
         )}
       </Layout.Vertical>

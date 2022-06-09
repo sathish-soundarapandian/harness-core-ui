@@ -35,6 +35,7 @@ export interface ManifestSelectionProps {
   isPropagating?: boolean
   deploymentType: ServiceDefinition['type']
   readonly: boolean
+  gitOpsEnabled?: boolean
 }
 
 export interface ManifestListViewProps {
@@ -49,6 +50,7 @@ export interface ManifestListViewProps {
   deploymentType: ServiceDefinition['type']
   allowableTypes: MultiTypeInputType[]
   allowOnlyOne?: boolean
+  gitOpsEnabled?: boolean
 }
 
 export interface ManifestStepInitData {
