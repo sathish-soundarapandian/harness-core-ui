@@ -110,3 +110,31 @@
     }
   }
 }
+
+.inModal {
+  min-width: 1000px;
+  max-height: calc(100vh - 100px);
+
+  > div[class*='PageHeader--container'] {
+    padding: 0 0 var(--spacing-xxlarge) 0 !important;
+  }
+
+  > div[class*='PageBody--pageBody'] {
+    height: auto !important;
+    min-height: auto !important;
+  }
+
+  .formInModal {
+    [class*='OverlaySpinner--overlaySpinner'] {
+      .content {
+        height: calc(100vh - 335px) !important;
+        min-height: auto !important;
+      }
+
+      .footer {
+        position: sticky;
+        padding: var(--spacing-xxlarge) 0 0 0 !important;
+      }
+    }
+  }
+}

@@ -41,6 +41,7 @@ import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
 import { mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
 import { memoizedParse } from '@common/utils/YamlHelperMethods'
 import type { Pipeline } from '@pipeline/utils/types'
+import { NewInputSetModal } from '@pipeline/components/InputSetForm/NewInputSetModal'
 import {
   ciCodebaseBuild,
   ciCodebaseBuildPullRequest,
@@ -53,7 +54,6 @@ import {
   getErrorMessage
 } from '../utils/TriggersWizardPageUtils'
 import css from './WebhookPipelineInputPanel.module.scss'
-import NewInputSetModal from './modals/NewInputSetModal'
 
 interface WebhookPipelineInputPanelPropsInterface {
   formikProps?: any
@@ -514,7 +514,6 @@ function WebhookPipelineInputPanelForm({
                 <div className={css.divider} />
                 {showNewInputSetModal && (
                   <NewInputSetModal
-                    formikProps={formikProps}
                     isModalOpen={showNewInputSetModal}
                     closeModal={() => setShowNewInputSetModal(false)}
                   />

@@ -19,6 +19,7 @@ import {
 } from '@wings-software/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { parse } from 'yaml'
+import cx from 'classnames'
 import type { FormikErrors, FormikProps } from 'formik'
 import type {
   ResponsePMSPipelineResponseDTO,
@@ -91,6 +92,7 @@ interface FormikInputSetFormProps {
   isGitSimplificationEnabled?: boolean
   yamlHandler?: YamlBuilderHandlerBinding
   setYamlHandler: React.Dispatch<React.SetStateAction<YamlBuilderHandlerBinding | undefined>>
+  className?: string
 }
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
@@ -209,7 +211,8 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
     isGitSyncEnabled,
     isGitSimplificationEnabled,
     yamlHandler,
-    setYamlHandler
+    setYamlHandler,
+    className
   } = props
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
@@ -281,7 +284,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
   }, [inputSet, isEdit, resolvedPipeline])
 
   return (
-    <Container className={css.inputSetForm}>
+    <Container className={cx(css.inputSetForm, className)}>
       <Layout.Vertical
         spacing="medium"
         ref={ref => {

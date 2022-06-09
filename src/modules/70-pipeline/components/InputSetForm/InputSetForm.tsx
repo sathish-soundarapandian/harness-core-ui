@@ -87,6 +87,11 @@ const getDefaultInputSet = (
 
 export interface InputSetFormProps {
   executionView?: boolean
+
+  // Props to support embedding InputSetForm (create new) in a modal
+  // @see src/modules/72-triggers/pages/triggers/views/modals/NewInputSetModal.tsx
+  isNew?: boolean
+  className?: string
 }
 
 const getInputSet = (
@@ -149,7 +154,7 @@ const getInputSet = (
 }
 
 export function InputSetForm(props: InputSetFormProps): React.ReactElement {
-  const { executionView } = props
+  const { executionView, isNew, className } = props
   const { getString } = useStrings()
   const history = useHistory()
   const [isEdit, setIsEdit] = React.useState(false)
@@ -448,7 +453,7 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
   }, [inputSet.entityValidityDetails?.valid])
 
   React.useEffect(() => {
-    if (inputSetIdentifier !== '-1') {
+    if (inputSetIdentifier !== '-1' && !isNew) {
       setIsEdit(true)
       refetch({ pathParams: { inputSetIdentifier: inputSetIdentifier } })
       refetchTemplate()
@@ -533,6 +538,7 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
         isEdit={isEdit}
         isGitSyncEnabled={isGitSyncEnabled}
         isGitSimplificationEnabled={isGitSimplificationEnabled}
+        className={className}
       />
     ),
     [
