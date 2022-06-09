@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { Checkbox, Intent, Layout, useConfirmationDialog } from '@harness/uicore'
+import { Intent, Layout, useConfirmationDialog } from '@harness/uicore'
 import { debounce, defaultTo, get } from 'lodash-es'
 import produce from 'immer'
 import cx from 'classnames'
@@ -26,7 +26,6 @@ import {
 } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { useServiceContext } from '@cd/context/ServiceContext'
-import ReleaseRepoListView from '@pipeline/components/ReleaseRepoSelection/ReleaseRepoListView'
 
 import { setupMode } from '../PropagateWidget/PropagateWidget'
 import SelectDeploymentType from '../SelectDeploymentType'
@@ -52,7 +51,7 @@ function DeployServiceDefinition(): React.ReactElement {
   const { index: stageIndex } = getStageIndexFromPipeline(pipeline, selectedStageId || '')
   const { getString } = useStrings()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
-  const [showServiceRepo, setShowServiceRepo] = useState<boolean>(false)
+  const [gitOpsEnabled, setGitOpsEnabled] = useState(false)
   const getDeploymentType = (): ServiceDeploymentType => {
     return get(stage, 'stage.spec.serviceConfig.serviceDefinition.type')
   }
@@ -121,18 +120,11 @@ function DeployServiceDefinition(): React.ReactElement {
         selectedDeploymentType={selectedDeploymentType}
         isReadonly={isReadonly}
         handleDeploymentTypeChange={handleDeploymentTypeChange}
+        gitOpsEnabled={gitOpsEnabled}
+        setGitOpsEnabled={setGitOpsEnabled}
       />
 
-      <Checkbox
-        label="Gitops"
-        name="gitOpsEnabled"
-        onChange={(ev: any) => {
-          setShowServiceRepo(ev.currentTarget.checked)
-
-          // updatePipeline({ ...service, gitOpsEnabled: true })
-        }}
-      />
-      {showServiceRepo ? <ReleaseRepoListView updateStage={updateStage} stage={stage} /> : null}
+      {/* {showServiceRepo ? <ReleaseRepoListView updateStage={updateStage} stage={stage} /> : null} */}
       <Layout.Horizontal>
         <StepWidget<K8SDirectServiceStep>
           factory={factory}
@@ -145,6 +137,7 @@ function DeployServiceDefinition(): React.ReactElement {
           allowableTypes={allowableTypes}
           type={getStepTypeByDeploymentType(defaultTo(selectedDeploymentType, ''))}
           stepViewType={StepViewType.Edit}
+          gitOpsEnabled={gitOpsEnabled}
         />
       </Layout.Horizontal>
     </div>

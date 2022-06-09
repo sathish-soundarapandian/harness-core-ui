@@ -47,6 +47,7 @@ export interface ManifestSelectionProps {
   deploymentType: ServiceDefinition['type']
   isReadonlyServiceMode: boolean
   readonly: boolean
+  gitOpsEnabled?: boolean
 }
 
 export interface ManifestListViewProps {
@@ -61,6 +62,7 @@ export interface ManifestListViewProps {
   deploymentType: ServiceDefinition['type']
   allowableTypes: MultiTypeInputType[]
   allowOnlyOne?: boolean
+  gitOpsEnabled?: boolean
 }
 
 export interface ManifestStepInitData {

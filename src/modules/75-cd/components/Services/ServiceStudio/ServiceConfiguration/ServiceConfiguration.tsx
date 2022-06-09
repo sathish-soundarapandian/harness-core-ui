@@ -64,7 +64,8 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
     (view: SelectedView) => {
       if (view === SelectedView.VISUAL) {
         const yaml = defaultTo(yamlHandler?.getLatestYaml(), '')
-        const serviceSetYamlVisual = parse(yaml).service
+        const parsedYaml = parse(yaml)
+        const serviceSetYamlVisual = { ...parse(yaml).service, gitOpsEnabled: parsedYaml.gitOpsEnabled }
 
         if (serviceSetYamlVisual) {
           const newServiceData = produce({ ...service }, draft => {
@@ -75,6 +76,7 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
               'stages[0].stage.spec.serviceConfig.serviceDefinition',
               cloneDeep(serviceSetYamlVisual.serviceDefinition)
             )
+            set(draft, 'gitOpsEnabled', serviceSetYamlVisual.gitOpsEnabled)
           })
           updatePipeline(newServiceData)
         }

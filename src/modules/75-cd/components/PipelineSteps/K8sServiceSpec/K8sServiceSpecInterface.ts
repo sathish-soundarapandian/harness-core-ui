@@ -26,6 +26,7 @@ export interface K8SDirectServiceStep extends ServiceSpec {
   customStepProps?: Record<string, any>
   deploymentType?: ServiceDefinition['type']
   isReadonlyServiceMode?: boolean
+  gitOpsEnabled?: boolean
 }
 export interface KubernetesServiceInputFormProps {
   initialValues: K8SDirectServiceStep
@@ -39,6 +40,7 @@ export interface KubernetesServiceInputFormProps {
   stageIdentifier: string
   formik?: any
   allowableTypes: MultiTypeInputType[]
+  gitOpsEnabled?: boolean
 }
 
 export interface LastQueryData {
