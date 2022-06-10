@@ -34,11 +34,11 @@ import {
   // ManifestIdentifierValidation,
   gitFetchTypeList,
   GitFetchTypes
-} from '../ManifestSelection/Manifesthelper'
+} from '../Manifesthelper'
 
-import DragnDropPaths from '../ManifestSelection/DragnDropPaths'
+import DragnDropPaths from '../DragnDropPaths'
 // import type { ManifestTypes } from '../ManifestSelection/ManifestInterface'
-import css from './ReleaseRepo.module.scss'
+import css from '../../ReleaseRepoSelection/ReleaseRepo.module.scss'
 
 interface ReleaseRepoDataType {
   identifier: string
@@ -53,6 +53,7 @@ interface ReleaseRepoProps {
   expressions: string[]
   allowableTypes: MultiTypeInputType[]
   initialValues: ReleaseRepoManifest
+  manifest: any
   // selectedManifest: ManifestTypes | null
   handleSubmit: (data: ReleaseRepoManifest) => void
   // manifestIdsList: Array<string>
@@ -63,10 +64,10 @@ function RepoDetails({
   stepName,
   expressions,
   allowableTypes,
-  initialValues,
   handleSubmit,
   prevStepData,
   previousStep,
+  manifest,
   //manifestIdsList,
   isReadonly = false
 }: StepProps<ConnectorConfigDTO> & ReleaseRepoProps): React.ReactElement {
@@ -80,12 +81,12 @@ function RepoDetails({
       : GitRepoName.Account
 
   const getInitialValues = useCallback((): ReleaseRepoDataType => {
-    const specValues = get(initialValues, 'spec.store.spec', null)
+    const specValues = get(manifest, 'spec.store.spec', null)
 
     if (specValues) {
       return {
         ...specValues,
-        identifier: initialValues.identifier,
+        identifier: manifest.identifier,
 
         paths:
           typeof specValues.paths === 'string'

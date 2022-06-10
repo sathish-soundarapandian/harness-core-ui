@@ -90,6 +90,7 @@ import InheritFromManifest from '../ManifestWizardSteps/InheritFromManifest/Inhe
 import ConnectorField from './ConnectorField'
 import HelmWithOCI from '../ManifestWizardSteps/HelmWithOCI/HelmWithOCI'
 import { getConnectorPath } from '../ManifestWizardSteps/ManifestUtils'
+import ReleaseRepoWizard from '../ReleaseRepoWizard/ReleaseRepoWizard'
 import css from '../ManifestSelection.module.scss'
 
 const showAddManifestBtn = (isReadonly: boolean, allowOnlyOne: boolean, listOfManifests: Array<any>): boolean => {
@@ -162,6 +163,8 @@ function ManifestListView({
     //   allowedManifestTypes[deploymentType]?.length === 1 ? allowedManifestTypes[deploymentType][0] : null
     // )
     // showConnectorModal()
+
+    showReleaseRepoModal()
   }
 
   const editManifest = (manifestType: ManifestTypes, store: ManifestStores, index: number): void => {
@@ -169,7 +172,12 @@ function ManifestListView({
     setManifestStore(store)
     setConnectorView(false)
     setEditIndex(index)
-    showConnectorModal()
+
+    if (manifestType === 'ReleaseRepo') {
+      showReleaseRepoModal()
+    } else {
+      showConnectorModal()
+    }
   }
 
   const getLastStepInitialData = (): ManifestConfig => {
@@ -633,6 +641,55 @@ function ManifestListView({
             lastSteps={getLastSteps()}
             iconsProps={getIconProps()}
             isReadonly={isReadonly}
+          />
+        </div>
+        <Button minimal icon="cross" onClick={onClose} className={css.crossIcon} />
+      </Dialog>
+    )
+  }, [
+    selectedManifest,
+    connectorView,
+    manifestIndex,
+    manifestStore,
+    expressions.length,
+    expressions,
+    allowableTypes,
+    isEditMode
+  ])
+
+  const [showReleaseRepoModal, hideReleaseRepoModal] = useModalHook(() => {
+    const onClose = (): void => {
+      // setConnectorView(false)
+      hideReleaseRepoModal()
+      // setManifestStore('')
+      // setIsEditMode(false)
+      // setSelectedManifest(null)
+    }
+    const manifest = get(listOfManifests[manifestIndex], 'manifest', null)
+
+    return (
+      <Dialog onClose={onClose} {...DIALOG_PROPS} className={cx(css.modal, Classes.DIALOG)}>
+        <div className={css.createConnectorWizard}>
+          <ReleaseRepoWizard
+            types={allowedManifestTypes[deploymentType]}
+            manifestStoreTypes={ManifestTypetoStoreMap[selectedManifest as ManifestTypes]}
+            labels={getLabels()}
+            selectedManifest={selectedManifest}
+            newConnectorView={connectorView}
+            expressions={expressions}
+            allowableTypes={allowableTypes}
+            changeManifestType={changeManifestType}
+            handleConnectorViewChange={handleConnectorViewChange}
+            handleStoreChange={handleStoreChange}
+            initialValues={getInitialValues()}
+            manifest={manifest}
+            newConnectorSteps={getNewConnectorSteps()}
+            lastSteps={getLastSteps()}
+            iconsProps={getIconProps()}
+            isReadonly={isReadonly}
+            stage={stage}
+            updateStage={updateStage}
+            onClose={onClose}
           />
         </div>
         <Button minimal icon="cross" onClick={onClose} className={css.crossIcon} />

@@ -3,8 +3,8 @@ import React from 'react'
 import { produce } from 'immer'
 import { set } from 'lodash-es'
 
-import { usePipelineContext } from '../PipelineStudio/PipelineContext/PipelineContext'
-import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import RepoStore from './RepoStore'
 import RepoDetails from './RepoDetails'
 import css from './ReleaseRepo.module.scss'
@@ -16,7 +16,15 @@ function ReleaseRepoWizard(props: any): React.ReactElement {
   const updateStageData = (values: any): void => {
     const listOfManifests = stage?.stage?.spec?.serviceConfig?.serviceDefinition?.spec?.manifests || []
 
-    listOfManifests.push(values)
+    const filteredManifestIdx = listOfManifests.findIndex(
+      (item: any) => item.manifest.identifier === values.manifest.identifier
+    )
+
+    if (filteredManifestIdx) {
+      listOfManifests[filteredManifestIdx] = values
+    } else {
+      listOfManifests.push(values)
+    }
 
     const path = 'stage.stage.spec.serviceConfig.serviceDefinition.spec.manifests'
 
@@ -28,6 +36,7 @@ function ReleaseRepoWizard(props: any): React.ReactElement {
       )
     }
   }
+
   return (
     <StepWizard className={css.releaseRepoWizard} onCompleteWizard={props.onClose}>
       <RepoStore
@@ -38,10 +47,7 @@ function ReleaseRepoWizard(props: any): React.ReactElement {
         isReadonly={isReadonly}
         handleConnectorViewChange={() => props.handleConnectorViewChange(true)}
         handleStoreChange={props.handleStoreChange}
-        initialValues={{
-          store: 'Git',
-          connectorRef: undefined
-        }}
+        initialValues={props.initialValues}
       />
       <RepoDetails
         key={'RepoDetails'}
@@ -49,7 +55,8 @@ function ReleaseRepoWizard(props: any): React.ReactElement {
         expressions={expressions}
         allowableTypes={allowableTypes}
         stepName={'RepoDetails'}
-        initialValues={{}}
+        initialValues={props.initialValues}
+        manifest={props.manifest}
         handleSubmit={values => {
           updateStageData(values)
           props.onClose()

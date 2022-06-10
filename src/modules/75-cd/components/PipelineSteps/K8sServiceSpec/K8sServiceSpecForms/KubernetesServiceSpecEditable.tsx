@@ -38,7 +38,8 @@ const getArtifactsHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['
 const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
   initialValues: { stageIndex = 0, setupModeType, deploymentType, isReadonlyServiceMode },
   factory,
-  readonly
+  readonly,
+  gitOpsEnabled
 }) => {
   const { getString } = useStrings()
   const isPropagating = stageIndex > 0 && setupModeType === setupMode.PROPAGATE
@@ -74,6 +75,7 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
               deploymentType={selectedDeploymentType}
               isReadonlyServiceMode={isReadonlyServiceMode as boolean}
               readonly={!!readonly}
+              gitOpsEnabled={gitOpsEnabled}
             />
           </Card>
 
