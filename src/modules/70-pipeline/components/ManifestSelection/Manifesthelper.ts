@@ -93,7 +93,8 @@ export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
   OpenshiftTemplate: 'openshift',
   OpenshiftParam: 'openshift-params',
   KustomizePatches: 'kustomizeparam',
-  ServerlessAwsLambda: 'service-serverless-aws'
+  ServerlessAwsLambda: 'service-serverless-aws',
+  ReleaseRepo: 'service-kubernetes'
 }
 
 export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
@@ -104,7 +105,8 @@ export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
   OpenshiftTemplate: 'pipeline.manifestTypeLabels.OpenshiftTemplate',
   OpenshiftParam: 'pipeline.manifestTypeLabels.OpenshiftParam',
   KustomizePatches: 'pipeline.manifestTypeLabels.KustomizePatches',
-  ServerlessAwsLambda: 'pipeline.manifestTypeLabels.ServerlessAwsLambda'
+  ServerlessAwsLambda: 'pipeline.manifestTypeLabels.ServerlessAwsLambda',
+  ReleaseRepo: 'pipeline.manifestTypeLabels.K8sManifest'
 }
 
 export const helmVersions: Array<{ label: string; value: HelmVersionOptions }> = [

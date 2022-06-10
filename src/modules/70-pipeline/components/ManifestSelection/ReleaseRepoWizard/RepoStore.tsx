@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import {
   Layout,
@@ -35,15 +35,10 @@ import type { ConnectorSelectedValue } from '@connectors/components/ConnectorRef
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import {
-  ManifestStoreMap,
-  ManifestIconByType,
-  ManifestToConnectorMap,
-  manifestStoreTypes
-} from '../ManifestSelection/Manifesthelper'
-import type { ManifestStores, ManifestStepInitData } from '../ManifestSelection/ManifestInterface'
+import { ManifestStoreMap, ManifestIconByType, ManifestToConnectorMap, manifestStoreTypes } from '../Manifesthelper'
+import type { ManifestStores, ManifestStepInitData } from '../ManifestInterface'
 
-import css from './ReleaseRepo.module.scss'
+import css from '../../ReleaseRepoSelection/ReleaseRepo.module.scss'
 
 interface ReleaseRepoStorePropType {
   stepName: string
@@ -109,18 +104,18 @@ function RepoStore({
     setSelectedStore(storeSelected)
   }
 
-  const getInitialValues = useCallback((): ManifestStepInitData => {
-    const initValues = { ...initialValues }
+  // const getInitialValues = useCallback((): ManifestStepInitData => {
+  //   const initValues = { ...initialValues }
 
-    if (prevStepData?.connectorRef) {
-      initValues.connectorRef = prevStepData?.connectorRef
-      handleStoreChange(selectedStore)
-    }
-    if (selectedStore !== initValues.store) {
-      initValues.connectorRef = ''
-    }
-    return { ...initValues, store: selectedStore }
-  }, [selectedStore])
+  //   if (prevStepData?.connectorRef) {
+  //     initValues.connectorRef = prevStepData?.connectorRef
+  //     handleStoreChange(selectedStore)
+  //   }
+  //   if (selectedStore !== initValues.store) {
+  //     initValues.connectorRef = ''
+  //   }
+  //   return { ...initValues, store: selectedStore }
+  // }, [selectedStore])
 
   const supportedManifestTypes = useMemo(
     () =>
@@ -141,7 +136,7 @@ function RepoStore({
       </Text>
 
       <Formik
-        initialValues={getInitialValues()}
+        initialValues={initialValues}
         formName="manifestStore"
         validationSchema={Yup.object().shape({
           connectorRef: Yup.mixed().when('store', {

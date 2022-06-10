@@ -26,6 +26,7 @@ export type ManifestTypes =
   | 'OpenshiftParam'
   | 'KustomizePatches'
   | 'ServerlessAwsLambda'
+  | 'ReleaseRepo'
 
 export type PrimaryManifestType = 'K8sManifest' | 'HelmChart' | 'OpenshiftTemplate' | 'Kustomize'
 

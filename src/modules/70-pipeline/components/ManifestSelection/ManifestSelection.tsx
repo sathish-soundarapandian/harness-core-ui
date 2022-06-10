@@ -34,7 +34,8 @@ import ManifestListView from './ManifestListView/ManifestListView'
 export default function ManifestSelection({
   isPropagating,
   deploymentType,
-  readonly: isReadOnlyServiceMode
+  readonly: isReadOnlyServiceMode,
+  gitOpsEnabled
 }: ManifestSelectionProps): JSX.Element | null {
   const {
     state: {
@@ -156,6 +157,7 @@ export default function ManifestSelection({
         deploymentType={deploymentType}
         allowableTypes={allowableTypes}
         allowOnlyOne={isServerlessDeploymentType(deploymentType)}
+        gitOpsEnabled={gitOpsEnabled}
       />
     </Layout.Vertical>
   )
