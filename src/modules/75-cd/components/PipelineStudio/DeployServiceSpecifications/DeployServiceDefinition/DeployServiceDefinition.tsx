@@ -40,6 +40,7 @@ function DeployServiceDefinition(): React.ReactElement {
     },
     getStageFromPipeline,
     updateStage,
+    updatePipeline,
     allowableTypes,
     isReadonly
   } = usePipelineContext()
@@ -124,15 +125,15 @@ function DeployServiceDefinition(): React.ReactElement {
         label="Gitops"
         name="gitOpsEnabled"
         onChange={ev => {
-          const stageData = produce(stage, draft => {
-            const serviceDefinition = get(draft, 'stage.spec.serviceConfig.serviceDefinition', {})
-            serviceDefinition.gitOpsEnabled = ev.currentTarget.checked
-          })
-          updateStage(stageData?.stage as StageElementConfig)
+          // const stageData = produce(stage, draft => {
+          //   const serviceDefinition = get(draft, 'stage.spec.serviceConfig.serviceDefinition', {})
+          //   serviceDefinition.gitOpsEnabled = ev.currentTarget.checked
+          // })
+          // updateStage(stageData?.stage as StageElementConfig)
           // formik.setFieldValue('gitOpsEnabled', ev.currentTarget.checked)
           // setShowServiceRepo(ev.currentTarget.checked)
           setGitOpsEnabled(ev.currentTarget.checked)
-          // updatePipeline({ ...pipeline, gitOpsEnabled: ev.currentTarget.checked } as any)
+          updatePipeline({ ...pipeline, gitOpsEnabled: ev.currentTarget.checked } as any)
           // updatePipeline({ ...service, gitOpsEnabled: true })
         }}
       />

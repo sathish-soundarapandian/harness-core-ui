@@ -116,7 +116,7 @@ function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): R
 
     const updatedService = produce(currentService, draft => {
       setNameIDDescription(draft.service as PipelineInfoConfig, pipelineConfig)
-      set(draft as PipelineInfoConfig, 'gitOpsEnabled', (pipelineConfig as any).gitOpsEnabled)
+      set(draft, 'service.gitOpsEnabled', (pipelineConfig as any).gitOpsEnabled)
       set(draft, 'service.serviceDefinition', stage)
     })
     setCurrentService(updatedService)
