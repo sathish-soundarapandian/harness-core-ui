@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { Intent, Layout, useConfirmationDialog } from '@harness/uicore'
+import { FormInput, Intent, Layout, useConfirmationDialog } from '@harness/uicore'
 import { debounce, defaultTo, get } from 'lodash-es'
 import produce from 'immer'
 import cx from 'classnames'
@@ -36,14 +36,12 @@ function DeployServiceDefinition(): React.ReactElement {
   const {
     state: {
       pipeline,
-      //   pipeline: { service },
       selectionState: { selectedStageId }
     },
     getStageFromPipeline,
     updateStage,
     allowableTypes,
     isReadonly
-    // updatePipeline
   } = usePipelineContext()
 
   const { isServiceEntityModalView } = useServiceContext()
@@ -120,10 +118,24 @@ function DeployServiceDefinition(): React.ReactElement {
         selectedDeploymentType={selectedDeploymentType}
         isReadonly={isReadonly}
         handleDeploymentTypeChange={handleDeploymentTypeChange}
-        gitOpsEnabled={gitOpsEnabled}
-        setGitOpsEnabled={setGitOpsEnabled}
       />
 
+      <FormInput.CheckBox
+        label="Gitops"
+        name="gitOpsEnabled"
+        onChange={ev => {
+          const stageData = produce(stage, draft => {
+            const serviceDefinition = get(draft, 'stage.spec.serviceConfig.serviceDefinition', {})
+            serviceDefinition.gitOpsEnabled = ev.currentTarget.checked
+          })
+          updateStage(stageData?.stage as StageElementConfig)
+          // formik.setFieldValue('gitOpsEnabled', ev.currentTarget.checked)
+          // setShowServiceRepo(ev.currentTarget.checked)
+          setGitOpsEnabled(ev.currentTarget.checked)
+          // updatePipeline({ ...pipeline, gitOpsEnabled: ev.currentTarget.checked } as any)
+          // updatePipeline({ ...service, gitOpsEnabled: true })
+        }}
+      />
       {/* {showServiceRepo ? <ReleaseRepoListView updateStage={updateStage} stage={stage} /> : null} */}
       <Layout.Horizontal>
         <StepWidget<K8SDirectServiceStep>
@@ -137,6 +149,7 @@ function DeployServiceDefinition(): React.ReactElement {
           allowableTypes={allowableTypes}
           type={getStepTypeByDeploymentType(defaultTo(selectedDeploymentType, ''))}
           stepViewType={StepViewType.Edit}
+          //this is wrong. Gitops can be read from stage directly. need not pass it
           gitOpsEnabled={gitOpsEnabled}
         />
       </Layout.Horizontal>
