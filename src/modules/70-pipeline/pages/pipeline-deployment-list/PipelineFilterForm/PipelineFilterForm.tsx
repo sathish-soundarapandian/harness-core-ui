@@ -19,8 +19,8 @@ import {
 } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
 
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
-import css from './PipelineFilterForm.module.scss'
 import InputDatePicker from '@common/components/InputDatePicker/InputDatePicker'
+import css from './PipelineFilterForm.module.scss'
 
 export type FormView = 'PIPELINE-META'
 interface PipelineFilterFormProps<T> {
@@ -215,7 +215,7 @@ export default function PipelineFilterForm<
             }}
           />
         ) : null}
-        {type === 'PipelineExecution' ? <InputDatePicker name="timeRange" formikProps={formikProps} /> : null}
+        {type === 'PipelineExecution' ? <InputDatePicker formikProps={formikProps} /> : null}
       </>
     )
   }

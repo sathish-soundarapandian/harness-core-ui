@@ -1,36 +1,53 @@
-import React, { useState, useRef } from 'react'
-import { FormInput } from '@harness/uicore'
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+import React, { useState, useRef, useEffect } from 'react'
 import { useStrings } from 'framework/strings'
 import { DateRange, DateRangePicker } from '@blueprintjs/datetime'
 import { DynamicPopover } from '..'
 import type { DynamicPopoverHandlerBinding } from '@common/exports'
-import { useGlobalEventListener } from '@common/hooks'
+import { FormGroup, InputGroup } from '@blueprintjs/core'
 interface InputDatePickerProps {
-  name: string
   formikProps: any
-}
-
-declare global {
-  interface WindowEventMap {
-    CLOSE_DATE_PICKER_POPOVER: CustomEvent<string>
-  }
 }
 
 export default function InputDatePicker(props: InputDatePickerProps) {
   const { getString } = useStrings()
   const ref = useRef(null)
-  const { name, formikProps } = props
-  const [text, setText] = useState<string>('')
+  const { formikProps } = props
+  const getText = () => {
+    return formikProps.values?.timeRange
+      ? `${new Date(formikProps.values?.timeRange?.startTime)?.toLocaleDateString() || ''} - ${
+          new Date(formikProps.values?.timeRange?.endTime)?.toLocaleDateString() || ''
+        }`
+      : null
+  }
   const [dynamicPopoverHandler, setDynamicPopoverHandler] = React.useState<
     DynamicPopoverHandlerBinding<{}> | undefined
   >()
+  const [chartTimeRange, setChartTimeRange] = useState<{ startTime: number; endTime: number }>()
   const getValue = (): DateRange | undefined => {
     return [new Date(chartTimeRange?.startTime || 0), new Date(chartTimeRange?.endTime || 0)]
   }
-  const [chartTimeRange, setChartTimeRange] = useState<{ startTime: number; endTime: number }>()
-  useGlobalEventListener('CLOSE_DATE_PICKER_POPOVER', () => {
+
+  const hideDynamicPopover = () => {
     dynamicPopoverHandler?.hide()
-  })
+  }
+
+  useEffect(() => {
+    const filterForm = document.getElementsByClassName('FormikForm--main')[0]
+    if (filterForm) {
+      filterForm.addEventListener('click', hideDynamicPopover)
+    }
+    return () => {
+      filterForm.removeEventListener('click', hideDynamicPopover)
+    }
+  }, [])
+
   const renderPopover = () => {
     return (
       <div onBlur={() => dynamicPopoverHandler?.hide()}>
@@ -41,7 +58,6 @@ export default function InputDatePicker(props: InputDatePickerProps) {
           minDate={new Date(0)}
           maxDate={new Date()}
           onChange={selectedDates => {
-            const dateStr = `${selectedDates[0]?.toLocaleDateString()} - ${selectedDates[1]?.toLocaleDateString()}`
             formikProps?.setValues({
               ...formikProps.values,
               timeRange: {
@@ -49,7 +65,6 @@ export default function InputDatePicker(props: InputDatePickerProps) {
                 endTime: selectedDates[1]?.getTime()
               }
             })
-            setText(dateStr)
             setChartTimeRange?.({
               startTime: selectedDates[0]?.getTime() || 0,
               endTime: selectedDates[1]?.getTime() || 0
@@ -63,13 +78,15 @@ export default function InputDatePicker(props: InputDatePickerProps) {
     <>
       <div
         data-nodeid="inputDatePicker"
+        data-testid="inputDatePicker"
         ref={ref}
-        onClick={e => {
-          e.stopPropagation()
+        onClick={() => {
           dynamicPopoverHandler?.show(`[data-nodeid="inputDatePicker"]`, {})
         }}
       >
-        <FormInput.Text label={'Timeframe'} name={name} placeholder={text || getString('common.selectTimeFrame')} />
+        <FormGroup label={getString('pipeline.filters.timeFrame')}>
+          <InputGroup placeholder={getText() || getString('common.selectTimeFrame')} />
+        </FormGroup>
       </div>
       <DynamicPopover render={renderPopover} bind={setDynamicPopoverHandler} />
     </>
