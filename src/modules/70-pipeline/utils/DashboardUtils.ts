@@ -22,19 +22,17 @@ export const renderTooltipContent = ({
   failureRate,
   count,
   successCount,
-  failureCount,
-  dateOnClick
+  failureCount
 }: {
   time: string | number
   failureRate: string | number
   count?: number
   successCount?: number
   failureCount?: number
-  dateOnClick?: (e: any) => void
 }) => {
   return `<div style="padding: 16px; color: white; width: 282px; height: 128px;">
         <div style="display: flex; justify-content: space-between; border-bottom: 0.5px solid rgba(243, 243, 250); padding-bottom: 7px; margin-bottom: 15px;">
-          <div style="font-weight: normal; font-size: 12px; line-height: 18px; opacity: 0.8;" onclick=${dateOnClick}>${time}</div>
+          <div style="font-weight: normal; font-size: 12px; line-height: 18px; opacity: 0.8;">${time}</div>
           <div>
             <span style="white-space: pre; font-weight: bold; font-size: 12px; line-height: 18px; opacity: 0.8;">Deployments: </span>
             <span style="font-weight: bold; font-size: 12px; line-height: 18px;">${count}</span>
