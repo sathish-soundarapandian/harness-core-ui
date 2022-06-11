@@ -509,14 +509,13 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
                 height: 225
               },
               tooltip: {
-                hideDelay: 5000,
                 stickOnContact: true,
                 useHTML: true,
                 formatter: function () {
                   return getTooltip(this)
                 },
                 backgroundColor: Color.BLACK,
-                outside: false,
+                outside: true,
                 borderColor: 'black'
               },
               xAxis: {
