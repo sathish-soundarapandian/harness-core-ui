@@ -108,7 +108,7 @@ exports[`<PipelineFilterForm /> test snapshot testing 1`] = `
             <label
               class="bp3-label"
             >
-              pipeline.filters.timeFrame
+              common.timeframe
                
               <span
                 class="bp3-text-muted"

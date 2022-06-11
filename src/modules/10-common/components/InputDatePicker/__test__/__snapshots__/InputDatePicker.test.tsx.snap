@@ -21,7 +21,7 @@ exports[`Launch Button test Input date picker render  1`] = `
             <label
               class="bp3-label"
             >
-              pipeline.filters.timeFrame
+              common.timeframe
                
               <span
                 class="bp3-text-muted"
