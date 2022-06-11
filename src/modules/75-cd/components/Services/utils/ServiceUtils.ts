@@ -36,7 +36,8 @@ export const newServiceState = {
 const DefaultService = {
   serviceDefinition: {
     spec: {}
-  }
+  },
+  gitOpsEnabled: false
 }
 
 export const initialServiceState = {

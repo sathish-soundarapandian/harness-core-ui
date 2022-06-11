@@ -6,11 +6,11 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { FormInput, Intent, Layout, useConfirmationDialog } from '@harness/uicore'
+import { Checkbox, FormInput, Intent, Layout, useConfirmationDialog } from '@harness/uicore'
 import { debounce, defaultTo, get } from 'lodash-es'
 import produce from 'immer'
 import cx from 'classnames'
-import type { ServiceDefinition, StageElementConfig } from 'services/cd-ng'
+import type { NGServiceConfig, ServiceDefinition, StageElementConfig } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
@@ -32,7 +32,10 @@ import SelectDeploymentType from '../SelectDeploymentType'
 
 import css from './DeployServiceDefinition.module.scss'
 
-function DeployServiceDefinition(): React.ReactElement {
+interface ServiceConfigurationProps {
+  serviceData: NGServiceConfig
+}
+function DeployServiceDefinition({ serviceData }: ServiceConfigurationProps): React.ReactElement {
   const {
     state: {
       pipeline,
@@ -44,7 +47,7 @@ function DeployServiceDefinition(): React.ReactElement {
     allowableTypes,
     isReadonly
   } = usePipelineContext()
-
+  console.log(serviceData, 'sd')
   const { isServiceEntityModalView } = useServiceContext()
 
   const { index: stageIndex } = getStageIndexFromPipeline(pipeline, selectedStageId || '')
@@ -76,6 +79,10 @@ function DeployServiceDefinition(): React.ReactElement {
     }
   }, [stage?.stage?.spec?.serviceConfig?.serviceDefinition?.type])
 
+  useEffect(() => {
+    setGitOpsEnabled(serviceData.service?.gitOpsEnabled as boolean)
+  }, [serviceData.service?.gitOpsEnabled])
+
   const { openDialog: openStageDataDeleteWarningDialog } = useConfirmationDialog({
     cancelButtonText: getString('cancel'),
     contentText: getString('pipeline.stageDataDeleteWarningText'),
@@ -87,6 +94,21 @@ function DeployServiceDefinition(): React.ReactElement {
         deleteStageData(currStageData)
         await debounceUpdateStage(currStageData)
         setSelectedDeploymentType(currStageData?.spec?.serviceConfig?.serviceDefinition?.type as ServiceDeploymentType)
+      }
+    }
+  })
+
+  const { openDialog: gitopsStageDataDeleteWarningDialog } = useConfirmationDialog({
+    cancelButtonText: getString('cancel'),
+    contentText: getString('pipeline.stageDataDeleteWarningText'),
+    titleText: getString('pipeline.serviceDataDeleteWarningTitle'),
+    confirmButtonText: getString('confirm'),
+    intent: Intent.WARNING,
+    onCloseDialog: async isConfirmed => {
+      if (isConfirmed) {
+        deleteStageData(currStageData)
+        // setGitOpsEnabled(currStageData?.gitOpsEnabled as any)
+        updatePipeline({ ...pipeline, gitOpsEnabled } as any)
       }
     }
   })
@@ -109,6 +131,21 @@ function DeployServiceDefinition(): React.ReactElement {
     },
     [stage, updateStage]
   )
+
+  const handleOnChange = (checked: boolean) => {
+    const stageData = produce(stage, draft => {
+      const serviceConfig = get(draft, 'stage.spec.serviceConfig', {})
+      serviceConfig.gitOpsEnabled = checked
+    })
+    if (doesStageContainOtherData(stageData?.stage)) {
+      setCurrStageData(stageData?.stage)
+      // setGitOpsEnabled(checked)
+      gitopsStageDataDeleteWarningDialog()
+    } else {
+      setGitOpsEnabled(checked)
+      updatePipeline({ ...pipeline, gitOpsEnabled: checked } as any)
+    }
+  }
   return (
     <div className={cx(css.contentSection, isServiceEntityModalView ? css.editServiceModal : css.nonModalView)}>
       <div className={css.tabHeading} id="serviceDefinition">
@@ -121,20 +158,12 @@ function DeployServiceDefinition(): React.ReactElement {
         handleDeploymentTypeChange={handleDeploymentTypeChange}
       />
 
-      <FormInput.CheckBox
+      <Checkbox
         label="Gitops"
         name="gitOpsEnabled"
+        checked={gitOpsEnabled}
         onChange={ev => {
-          // const stageData = produce(stage, draft => {
-          //   const serviceDefinition = get(draft, 'stage.spec.serviceConfig.serviceDefinition', {})
-          //   serviceDefinition.gitOpsEnabled = ev.currentTarget.checked
-          // })
-          // updateStage(stageData?.stage as StageElementConfig)
-          // formik.setFieldValue('gitOpsEnabled', ev.currentTarget.checked)
-          // setShowServiceRepo(ev.currentTarget.checked)
-          setGitOpsEnabled(ev.currentTarget.checked)
-          updatePipeline({ ...pipeline, gitOpsEnabled: ev.currentTarget.checked } as any)
-          // updatePipeline({ ...service, gitOpsEnabled: true })
+          handleOnChange(ev.currentTarget.checked)
         }}
       />
       {/* {showServiceRepo ? <ReleaseRepoListView updateStage={updateStage} stage={stage} /> : null} */}

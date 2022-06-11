@@ -39,6 +39,7 @@ function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): R
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
   const { serviceResponse, isServiceCreateModalView } = useServiceContext()
+  console.log(serviceResponse, 'res')
   const { getTemplate } = useTemplateSelector()
 
   const [isEdit] = usePermission({
@@ -63,6 +64,7 @@ function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): R
       if (!isEmpty(serviceYaml?.service?.serviceDefinition)) {
         return serviceYaml
       }
+      console.log('out of if')
       return merge(serviceYaml, initialServiceState)
     }
   }, [])

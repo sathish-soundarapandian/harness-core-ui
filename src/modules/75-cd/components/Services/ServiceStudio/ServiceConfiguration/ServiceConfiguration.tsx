@@ -69,7 +69,7 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
         if (serviceSetYamlVisual) {
           const newServiceData = produce({ ...service }, draft => {
             setNameIDDescription(draft, serviceSetYamlVisual)
-            set(draft, 'service.gitOpsEnabled', serviceSetYamlVisual.gitOpsEnabled)
+            set(draft, 'gitOpsEnabled', serviceSetYamlVisual.gitOpsEnabled)
             set(
               draft,
               'stages[0].stage.spec.serviceConfig.serviceDefinition',
@@ -101,7 +101,7 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
       {selectedView === SelectedView.VISUAL ? (
         <>
           <ServiceStepBasicInfo />
-          <DeployServiceDefinition />
+          <DeployServiceDefinition serviceData={serviceData} />
         </>
       ) : (
         <Container>
