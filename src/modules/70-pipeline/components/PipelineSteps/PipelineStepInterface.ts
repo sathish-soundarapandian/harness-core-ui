@@ -5,10 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { SelectOption } from '@harness/uicore'
+import type { PipelineInfrastructure } from 'services/cd-ng'
+
 export enum StepType {
   HTTP = 'Http',
   SHELLSCRIPT = 'ShellScript',
   Barrier = 'Barrier',
+  Lock = 'Lock',
   K8sRollingRollback = 'K8sRollingRollback',
   K8sBlueGreenDeploy = 'K8sBlueGreenDeploy',
   K8sCanaryDeploy = 'K8sCanaryDeploy',
@@ -20,6 +24,7 @@ export enum StepType {
   StepGroup = 'StepGroup',
   DeployService = 'DeployService',
   DeployEnvironment = 'DeployEnvironment',
+  DeployInfrastructure = 'DeployInfrastructure',
   KubernetesDirect = 'KubernetesDirect',
   K8sServiceSpec = 'K8sServiceSpec',
   K8sRollingDeploy = 'K8sRollingDeploy',
@@ -69,5 +74,13 @@ export enum StepType {
   ServerlessAwsInfra = 'ServerlessAwsInfra',
   CloudFormationRollbackStack = 'RollbackStack',
   CloudFormationDeleteStack = 'DeleteStack',
-  CloudFormationCreateStack = 'CreateStack'
+  CloudFormationCreateStack = 'CreateStack',
+  CreatePR = 'CreatePR'
+}
+
+export interface PipelineInfrastructureV2 extends PipelineInfrastructure {
+  environmentOrEnvGroupRef?: SelectOption
+  environmentGroup?: any
+  environmentRef2?: SelectOption
+  infrastructureRef?: SelectOption
 }

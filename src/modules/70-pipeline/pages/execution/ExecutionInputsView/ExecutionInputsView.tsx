@@ -10,8 +10,9 @@ import { useParams } from 'react-router-dom'
 
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useGetInputsetYamlV2 } from 'services/pipeline-ng'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { PageSpinner } from '@common/components'
-import { StoreType } from '@common/constants/GitSyncTypes'
+import type { StoreType } from '@common/constants/GitSyncTypes'
 import { RunPipelineForm } from '@pipeline/components/RunPipelineModal/RunPipelineForm'
 import type { ResponseJsonNode } from 'services/cd-ng'
 
@@ -23,8 +24,10 @@ interface ExecutionInputsViewInterface {
 }
 
 export default function ExecutionInputsView(props: ExecutionInputsViewInterface): React.ReactElement {
-  const { projectIdentifier, orgIdentifier, pipelineIdentifier, accountId, module, executionIdentifier } =
+  const { projectIdentifier, orgIdentifier, pipelineIdentifier, accountId, module, executionIdentifier, source } =
     useParams<PipelineType<ExecutionPathProps>>()
+
+  const { isGitSyncEnabled } = useAppStore()
 
   const { pipelineExecutionDetail } = useExecutionContext()
 
@@ -67,15 +70,19 @@ export default function ExecutionInputsView(props: ExecutionInputsViewInterface)
         projectIdentifier={projectIdentifier}
         accountId={accountId}
         module={module}
+        source={source}
         inputSetYAML={inputSetYaml || ''}
         executionView
         branch={pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.branch}
-        repoIdentifier={pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.repoIdentifier}
+        repoIdentifier={
+          isGitSyncEnabled
+            ? pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.repoIdentifier
+            : pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.repoName
+        }
+        connectorRef={pipelineExecutionDetail?.pipelineExecutionSummary?.connectorRef}
         mockData={props.mockData}
         executionInputSetTemplateYaml={inputSetTemplateYaml}
-        storeType={
-          pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.repoName ? StoreType.REMOTE : StoreType.INLINE
-        }
+        storeType={pipelineExecutionDetail?.pipelineExecutionSummary?.storeType as StoreType}
       />
     </div>
   )

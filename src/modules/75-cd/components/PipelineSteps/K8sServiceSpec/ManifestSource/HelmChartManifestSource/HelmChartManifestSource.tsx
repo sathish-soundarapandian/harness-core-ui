@@ -18,6 +18,7 @@ import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/Manif
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeCheckboxField } from '@common/components'
+import List from '@common/components/List/List'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useListAwsRegions } from 'services/portal'
 import { GitConfigDTO, useGetBucketListForS3, useGetGCSBucketList } from 'services/cd-ng'
@@ -226,18 +227,24 @@ const Content = ({
     })
   }
 
+  // this OR condition is for OCI helm connector
+  const connectorRefPath =
+    manifest?.spec?.store?.type === 'OciHelmChart'
+      ? `${manifestPath}.spec.store.spec.config.spec.connectorRef`
+      : `${manifestPath}.spec.store.spec.connectorRef`
+
   return (
     <Layout.Vertical
       data-name="manifest"
       key={manifest?.identifier}
       className={cx(css.inputWidth, css.layoutVerticalSpacing)}
     >
-      {isFieldRuntime(`${manifestPath}.spec.store.spec.connectorRef`, template) && (
+      {isFieldRuntime(connectorRefPath, template) && (
         <div data-name="connectorRefContainer" className={css.verticalSpacingInput}>
           <FormMultiTypeConnectorField
-            disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.connectorRef`)}
-            name={`${path}.${manifestPath}.spec.store.spec.connectorRef`}
-            selected={get(initialValues, `${manifestPath}.spec.store.spec.connectorRef`, '')}
+            disabled={isFieldDisabled(connectorRefPath)}
+            name={`${path}.${connectorRefPath}`}
+            selected={get(initialValues, connectorRefPath, '')}
             label={getString('connector')}
             placeholder={''}
             setRefValue
@@ -349,6 +356,20 @@ const Content = ({
         </div>
       )}
 
+      {isFieldRuntime(`${manifestPath}.spec.store.spec.basePath`, template) && (
+        <div className={css.verticalSpacingInput}>
+          <FormInput.MultiTextInput
+            disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.basePath`)}
+            name={`${path}.${manifestPath}.spec.store.spec.basePath`}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
+            }}
+            label={getString('pipeline.manifestType.basePath')}
+          />
+        </div>
+      )}
+
       {isFieldRuntime(`${manifestPath}.spec.chartName`, template) && (
         <div className={css.verticalSpacingInput}>
           <FormInput.MultiTextInput
@@ -388,6 +409,21 @@ const Content = ({
               allowableTypes
             }}
             label={getString('pipeline.manifestType.http.chartVersion')}
+          />
+        </div>
+      )}
+
+      {isFieldRuntime(`${manifestPath}.spec.valuesPaths`, template) && (
+        <div className={css.verticalSpacingInput}>
+          <List
+            labelClassName={css.listLabel}
+            label={getString('pipeline.manifestType.valuesYamlPath')}
+            name={`${path}.${manifestPath}.spec.valuesPaths`}
+            placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+            disabled={isFieldDisabled(`${manifestPath}.spec.valuesPaths`)}
+            style={{ marginBottom: 'var(--spacing-small)' }}
+            expressions={expressions}
+            isNameOfArrayType
           />
         </div>
       )}

@@ -6,18 +6,20 @@
  */
 
 import React from 'react'
-import { act, getByRole, render, RenderResult, screen, waitFor } from '@testing-library/react'
+import { act, getByPlaceholderText, getByRole, render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { Feature } from 'services/cf'
+import * as cfServices from 'services/cf'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockTarget from '@cf/utils/testData/data/mockTarget'
+import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
 import type { TargetManagementFlagConfigurationPanelFormValues as FormValues } from '../types'
 import TargetManagementFlagConfigurationPanel, {
   TargetManagementFlagConfigurationPanelProps
 } from '../TargetManagementFlagConfigurationPanel'
 
-const buildTestFlags = (numberOfFlags = 20): Feature[] =>
-  [...new Array(numberOfFlags)].map(
+const buildTestFlags = (numberOfFlags = 20, offset = 0): Feature[] =>
+  [...new Array(numberOfFlags + offset)].slice(offset, offset + numberOfFlags).map(
     (_, index) =>
       ({
         identifier: `flag${index + 1}`,
@@ -49,7 +51,9 @@ const renderComponent = (props: Partial<TargetManagementFlagConfigurationPanelPr
         flags={flags}
         initialValues={initialValues}
         onChange={jest.fn()}
+        onAdd={jest.fn()}
         noFlagsMessage="NO FLAGS"
+        addFlagsDialogTitle="ADD FLAGS TITLE"
         {...props}
       />
     </TestWrapper>
@@ -57,6 +61,10 @@ const renderComponent = (props: Partial<TargetManagementFlagConfigurationPanelPr
 }
 
 describe('TargetManagementFlagConfigurationPanel', () => {
+  beforeEach(() => {
+    jest.resetAllMocks()
+  })
+
   test('it should display the No Flags message when flags is empty', async () => {
     const noFlagsMessage = 'No Flags to display'
     renderComponent({ flags: [], noFlagsMessage })
@@ -234,5 +242,79 @@ describe('TargetManagementFlagConfigurationPanel', () => {
       expect(page2Button).not.toBeInTheDocument()
       expect(screen.getAllByRole('row')).toHaveLength(16)
     })
+  })
+
+  test('it should open the Add Flags dialog and call the onAdd callback when submitted', async () => {
+    const onAddMock = jest.fn().mockResolvedValue(undefined)
+    const addFlagsDialogTitle = 'TEST TITLE'
+    const newFlag = buildTestFlags(1, 20)[0]
+
+    jest.spyOn(cfServices, 'useGetAllFeatures').mockReturnValue({
+      data: {
+        pageSize: CF_DEFAULT_PAGE_SIZE,
+        itemCount: 1,
+        pageCount: 1,
+        pageIndex: 0,
+        features: [newFlag]
+      },
+      loading: false,
+      error: null,
+      refetch: jest.fn()
+    } as any)
+
+    renderComponent({ onAdd: onAddMock, addFlagsDialogTitle })
+
+    expect(screen.queryByText(addFlagsDialogTitle)).not.toBeInTheDocument()
+
+    userEvent.click(screen.getByRole('button', { name: 'cf.targetManagementFlagConfiguration.addFlag' }))
+
+    await waitFor(() => expect(screen.getByText(addFlagsDialogTitle)).toBeInTheDocument())
+
+    const checkbox = screen.getByRole('checkbox')
+    userEvent.click(checkbox)
+    userEvent.click(
+      getByPlaceholderText(
+        checkbox.closest('[role="row"]') as HTMLElement,
+        '- cf.targetManagementFlagConfiguration.selectVariation -'
+      )
+    )
+
+    await waitFor(() => expect(screen.getByText(newFlag.variations[0].name as string)).toBeInTheDocument())
+    userEvent.click(screen.getByText(newFlag.variations[0].name as string))
+
+    const submitBtn = screen.getByRole('button', { name: 'cf.targetManagementFlagConfiguration.addFlags' })
+    await waitFor(() => expect(submitBtn).toBeEnabled())
+    userEvent.click(submitBtn)
+
+    await waitFor(() => expect(onAddMock).toHaveBeenCalled())
+  })
+
+  test('it should close the Add Flags dialog when the cancel button is clicked', async () => {
+    const addFlagsDialogTitle = 'TEST TITLE'
+
+    jest.spyOn(cfServices, 'useGetAllFeatures').mockReturnValue({
+      data: {
+        pageSize: CF_DEFAULT_PAGE_SIZE,
+        itemCount: 1,
+        pageCount: 1,
+        pageIndex: 0,
+        features: buildTestFlags(1, 20)
+      },
+      loading: false,
+      error: null,
+      refetch: jest.fn()
+    } as any)
+
+    renderComponent({ addFlagsDialogTitle })
+
+    expect(screen.queryByText(addFlagsDialogTitle)).not.toBeInTheDocument()
+
+    userEvent.click(screen.getByRole('button', { name: 'cf.targetManagementFlagConfiguration.addFlag' }))
+
+    await waitFor(() => expect(screen.getByText(addFlagsDialogTitle)).toBeInTheDocument())
+
+    userEvent.click(screen.getByRole('button', { name: 'cancel' }))
+
+    await waitFor(() => expect(screen.queryByText(addFlagsDialogTitle)).not.toBeInTheDocument())
   })
 })

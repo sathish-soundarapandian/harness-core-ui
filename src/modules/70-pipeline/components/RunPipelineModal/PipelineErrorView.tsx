@@ -22,6 +22,7 @@ import { matchPath, useHistory, useLocation, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
+import type { StoreType } from '@common/constants/GitSyncTypes'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -34,13 +35,19 @@ export interface PipelineErrorViewProps {
   pipelineIdentifier: string
   repoIdentifier?: string
   branch?: string
+  connectorRef?: string
+  repoName?: string
+  storeType?: StoreType
 }
 
 export function PipelineErrorView({
   errorNodeSummary,
   pipelineIdentifier,
   repoIdentifier,
-  branch
+  branch,
+  connectorRef,
+  repoName,
+  storeType
 }: PipelineErrorViewProps): React.ReactElement {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
@@ -54,7 +61,10 @@ export function PipelineErrorView({
     accountId,
     module,
     repoIdentifier,
-    branch
+    branch,
+    connectorRef,
+    repoName,
+    storeType
   }
 
   const onOpenInPipelineStudio = () => {

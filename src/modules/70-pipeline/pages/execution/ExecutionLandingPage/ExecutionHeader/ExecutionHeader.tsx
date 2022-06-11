@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { isEmpty } from 'lodash-es'
 import { ButtonSize, ButtonVariation } from '@wings-software/uicore'
 import routes from '@common/RouteDefinitions'
 import { Duration } from '@common/components/Duration/Duration'
@@ -23,24 +23,26 @@ import { usePermission } from '@rbac/hooks/usePermission'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import { StoreType } from '@common/constants/GitSyncTypes'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { TagsPopover } from '@common/components'
-import { StoreType } from '@common/constants/GitSyncTypes'
 
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import RetryHistory from '@pipeline/components/RetryPipeline/RetryHistory/RetryHistory'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import css from './ExecutionHeader.module.scss'
 
 export function ExecutionHeader(): React.ReactElement {
-  const { orgIdentifier, projectIdentifier, executionIdentifier, accountId, pipelineIdentifier, module } =
+  const { orgIdentifier, projectIdentifier, executionIdentifier, accountId, pipelineIdentifier, module, source } =
     useParams<PipelineType<ExecutionPathProps>>()
   const { refetch, pipelineExecutionDetail, selectedStageId, selectedStepId, allNodeMap, isPipelineInvalid } =
     useExecutionContext()
+  const { isGitSimplificationEnabled } = useAppStore()
   const { getString } = useStrings()
   const { pipelineExecutionSummary = {} } = pipelineExecutionDetail || {}
   const history = useHistory()
-
   const [canEdit, canExecute] = usePermission(
     {
       resourceScope: {
@@ -68,24 +70,36 @@ export function ExecutionHeader(): React.ReactElement {
     <header className={css.header}>
       <div className={css.headerTopRow}>
         <NGBreadcrumbs
-          links={[
-            {
-              url: routes.toPipelines({ orgIdentifier, projectIdentifier, accountId, module }),
-              label: getString('pipelines')
-            },
-            {
-              url: routes.toPipelineDeploymentList({
-                orgIdentifier,
-                projectIdentifier,
-                pipelineIdentifier,
-                accountId,
-                module,
-                branch: pipelineExecutionSummary?.gitDetails?.branch,
-                repoIdentifier: pipelineExecutionSummary?.gitDetails?.repoIdentifier
-              }),
-              label: pipelineExecutionSummary.name || getString('common.pipeline')
-            }
-          ]}
+          links={
+            source === 'deployments'
+              ? [
+                  {
+                    url: routes.toDeployments({ orgIdentifier, projectIdentifier, accountId, module }),
+                    label: module === 'ci' ? getString('buildsText') : getString('deploymentsText')
+                  }
+                ]
+              : [
+                  {
+                    url: routes.toPipelines({ orgIdentifier, projectIdentifier, accountId, module }),
+                    label: getString('pipelines')
+                  },
+                  {
+                    url: routes.toPipelineDeploymentList({
+                      orgIdentifier,
+                      projectIdentifier,
+                      pipelineIdentifier,
+                      accountId,
+                      module,
+                      repoIdentifier: pipelineExecutionSummary?.gitDetails?.repoIdentifier,
+                      connectorRef: pipelineExecutionSummary?.connectorRef,
+                      repoName: pipelineExecutionSummary?.gitDetails?.repoName,
+                      branch: pipelineExecutionSummary?.gitDetails?.branch,
+                      storeType: pipelineExecutionSummary?.storeType as StoreType
+                    }),
+                    label: pipelineExecutionSummary.name || getString('common.pipeline')
+                  }
+                ]
+          }
         />
         <div className={css.actionsBar}>
           {pipelineExecutionSummary.status ? (
@@ -138,7 +152,10 @@ export function ExecutionHeader(): React.ReactElement {
                   accountId,
                   module,
                   repoIdentifier: pipelineExecutionSummary?.gitDetails?.repoIdentifier,
+                  connectorRef: pipelineExecutionSummary?.connectorRef,
+                  repoName: pipelineExecutionSummary?.gitDetails?.repoName,
                   branch: pipelineExecutionSummary?.gitDetails?.branch,
+                  storeType: pipelineExecutionSummary?.storeType as StoreType,
                   stageId: matchedStageNode?.identifier,
                   stepId: matchedStepNode?.identifier
                 })
@@ -149,6 +166,7 @@ export function ExecutionHeader(): React.ReactElement {
           <ExecutionActions
             executionStatus={pipelineExecutionSummary.status as ExecutionStatus}
             refetch={refetch}
+            source={source}
             params={{
               orgIdentifier,
               pipelineIdentifier,
@@ -156,13 +174,12 @@ export function ExecutionHeader(): React.ReactElement {
               accountId,
               executionIdentifier,
               module,
-              repoIdentifier: defaultTo(
-                pipelineExecutionSummary?.gitDetails?.repoIdentifier,
-                pipelineExecutionSummary?.gitDetails?.repoName
-              ),
+              repoIdentifier: pipelineExecutionSummary?.gitDetails?.repoIdentifier,
+              connectorRef: pipelineExecutionSummary?.connectorRef,
+              repoName: pipelineExecutionSummary?.gitDetails?.repoName,
               branch: pipelineExecutionSummary?.gitDetails?.branch,
               stagesExecuted: pipelineExecutionSummary?.stagesExecuted,
-              storeType: pipelineExecutionSummary?.gitDetails?.repoName ? StoreType.REMOTE : StoreType.INLINE
+              storeType: pipelineExecutionSummary?.storeType as StoreType
             }}
             isPipelineInvalid={isPipelineInvalid}
             canEdit={canEdit}
@@ -192,12 +209,23 @@ export function ExecutionHeader(): React.ReactElement {
           />
         ) : null}
         {pipelineExecutionSummary.gitDetails ? (
-          <GitSyncStoreProvider>
-            <GitPopover
-              data={pipelineExecutionSummary.gitDetails}
-              popoverProps={{ targetTagName: 'div', wrapperTagName: 'div', className: css.git }}
-            />
-          </GitSyncStoreProvider>
+          isGitSimplificationEnabled && pipelineExecutionSummary?.storeType === StoreType.REMOTE ? (
+            <div className={css.gitRemoteDetailsWrapper}>
+              <GitRemoteDetails
+                repoName={pipelineExecutionSummary.gitDetails.repoName}
+                branch={pipelineExecutionSummary.gitDetails.branch}
+                filePath={pipelineExecutionSummary.gitDetails.filePath}
+                flags={{ readOnly: true }}
+              />
+            </div>
+          ) : (
+            <GitSyncStoreProvider>
+              <GitPopover
+                data={pipelineExecutionSummary.gitDetails}
+                popoverProps={{ targetTagName: 'div', wrapperTagName: 'div', className: css.git }}
+              />
+            </GitSyncStoreProvider>
+          )
         ) : null}
       </div>
     </header>

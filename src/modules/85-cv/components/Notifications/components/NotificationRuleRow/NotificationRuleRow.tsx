@@ -18,13 +18,12 @@ import {
 } from '@harness/uicore'
 import React from 'react'
 import HorizontalLineWithText from '@cv/components/HorizontalLineWithText/HorizontalLineWithText'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import { StringKeys, useStrings } from 'framework/strings'
 import {
   conditionOptions,
   changeTypeOptions,
   Condition
 } from '../ConfigureMonitoredServiceAlertConditions/ConfigureMonitoredServiceAlertConditions.constants'
-
 import type { NotificationRuleRowProps } from './NotificationRuleRow.types'
 import { getValueFromEvent } from './NotificationRuleRow.utils'
 import type { NotificationRule } from '../../NotificationsContainer.types'
@@ -39,7 +38,7 @@ const renderConnectedFields = (
     nextField?: string,
     nextFieldValue?: SelectOption | MultiSelectOption[] | string
   ) => void,
-  getString: UseStringsReturn['getString']
+  getString: (key: StringKeys) => string
 ): JSX.Element => {
   const { changeType, duration, id, condition, threshold } = notificationRule
   switch (condition?.value) {
@@ -61,7 +60,7 @@ const renderConnectedFields = (
           ) : null}
           {threshold ? (
             <Layout.Vertical spacing="xsmall" padding={{ left: 'small' }}>
-              <Text lineClamp={1} width={100}>
+              <Text lineClamp={1} width={150}>
                 {getString('cv.notifications.healthScoreBelow')}
               </Text>
               <TextInput
@@ -107,6 +106,7 @@ const renderConnectedFields = (
                 type="number"
                 required
                 min={0}
+                max={100}
                 value={threshold as string}
                 name={`${id}.threshold`}
                 className={css.numberField}

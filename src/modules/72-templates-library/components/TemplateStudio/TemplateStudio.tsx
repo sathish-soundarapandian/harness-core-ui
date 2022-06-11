@@ -42,6 +42,8 @@ import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import { TemplateVariablesContextProvider } from '@pipeline/components/TemplateVariablesContext/TemplateVariablesContext'
 import { RightBar } from '@templates-library/components/TemplateStudio/RightBar/RightBar'
 import { OutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
+import { TemplateSelectorContextProvider } from '@templates-library/components/TemplateSelectorContext/TemplateSelectorContext'
+import { TemplateSelectorDrawer } from '@templates-library/components/TemplateSelectorDrawer/TemplateSelectorDrawer'
 import { TemplateContext } from './TemplateContext/TemplateContext'
 import { getContentAndTitleStringKeys, isValidYaml } from './TemplateStudioUtils'
 import css from './TemplateStudio.module.scss'
@@ -251,76 +253,79 @@ export function TemplateStudio(): React.ReactElement {
   }, [isLoading])
 
   return (
-    <TemplateVariablesContextProvider template={template}>
-      <NavigationCheck
-        when={template?.identifier !== ''}
-        shouldBlockNavigation={nextLocation => {
-          const matchDefault = matchPath(nextLocation.pathname, {
-            path: routes.toTemplateStudio(getPathParams()),
-            exact: true
-          })
-          return (
-            !matchDefault?.isExact &&
-            isUpdated &&
-            !isReadonly &&
-            !(templateIdentifier === DefaultNewTemplateId && isEmpty(template?.name))
-          )
-        }}
-        textProps={{
-          contentText: getString(navigationContentText),
-          titleText: getString(navigationTitleText)
-        }}
-        navigate={newPath => {
-          const isTemplate = matchPath(newPath, {
-            path: routes.toTemplateStudio(getPathParams()),
-            exact: true
-          })
-          !isTemplate?.isExact && deleteTemplateCache()
-          history.push(newPath)
-        }}
-      />
-      <Page.Header
-        className={css.rightMargin}
-        size={'small'}
-        title={<TemplateStudioHeader templateType={templateType as TemplateType} />}
-      />
-      <Page.Body key={key} className={css.rightMargin}>
-        {isLoading && <PageSpinner />}
-        <Layout.Vertical height={'100%'}>
-          {!isLoading && isEmpty(template) && !isGitSyncEnabled && <GenericErrorHandler />}
-          {!isLoading && isEmpty(template) && isGitSyncEnabled && (
-            <NoEntityFound identifier={templateIdentifier} entityType="template" />
-          )}
-          {isInitialized && !isEmpty(template) && (
-            <>
-              <TemplateStudioSubHeader
-                onViewChange={onViewChange}
-                getErrors={getErrors}
-                onGitBranchChange={onGitBranchChange}
-              />
-              {templateInputsErrorNodeSummary && (
-                <OutOfSyncErrorStrip
-                  templateInputsErrorNodeSummary={templateInputsErrorNodeSummary}
-                  entity={'Template'}
-                  isReadOnly={isReadonly}
-                  onRefreshEntity={() => {
-                    fetchTemplate({ forceFetch: true, forceUpdate: true })
-                  }}
+    <TemplateSelectorContextProvider>
+      <TemplateVariablesContextProvider template={template}>
+        <NavigationCheck
+          when={template?.identifier !== ''}
+          shouldBlockNavigation={nextLocation => {
+            const matchDefault = matchPath(nextLocation.pathname, {
+              path: routes.toTemplateStudio(getPathParams()),
+              exact: true
+            })
+            return (
+              !matchDefault?.isExact &&
+              isUpdated &&
+              !isReadonly &&
+              !(templateIdentifier === DefaultNewTemplateId && isEmpty(template?.name))
+            )
+          }}
+          textProps={{
+            contentText: getString(navigationContentText),
+            titleText: getString(navigationTitleText)
+          }}
+          navigate={newPath => {
+            const isTemplate = matchPath(newPath, {
+              path: routes.toTemplateStudio(getPathParams()),
+              exact: true
+            })
+            !isTemplate?.isExact && deleteTemplateCache()
+            history.push(newPath)
+          }}
+        />
+        <Page.Header
+          className={css.rightMargin}
+          size={'small'}
+          title={<TemplateStudioHeader templateType={templateType as TemplateType} />}
+        />
+        <Page.Body key={key} className={css.rightMargin}>
+          {isLoading && <PageSpinner />}
+          <Layout.Vertical height={'100%'}>
+            {!isLoading && isEmpty(template) && !isGitSyncEnabled && <GenericErrorHandler />}
+            {!isLoading && isEmpty(template) && isGitSyncEnabled && (
+              <NoEntityFound identifier={templateIdentifier} entityType="template" />
+            )}
+            {isInitialized && !isEmpty(template) && (
+              <>
+                <TemplateStudioSubHeader
+                  onViewChange={onViewChange}
+                  getErrors={getErrors}
+                  onGitBranchChange={onGitBranchChange}
                 />
-              )}
-              <Container className={css.canvasContainer}>
-                {view === SelectedView.VISUAL ? (
-                  /* istanbul ignore next */
-                  templateFactory.getTemplate(templateType)?.renderTemplateCanvas({ formikRef: templateFormikRef })
-                ) : (
-                  <TemplateYamlView />
+                {templateInputsErrorNodeSummary && (
+                  <OutOfSyncErrorStrip
+                    templateInputsErrorNodeSummary={templateInputsErrorNodeSummary}
+                    entity={'Template'}
+                    isReadOnly={isReadonly}
+                    onRefreshEntity={() => {
+                      fetchTemplate({ forceFetch: true, forceUpdate: true })
+                    }}
+                  />
                 )}
-              </Container>
-            </>
-          )}
-          {templateType !== TemplateType.Pipeline && <RightBar />}
-        </Layout.Vertical>
-      </Page.Body>
-    </TemplateVariablesContextProvider>
+                <Container className={css.canvasContainer}>
+                  {view === SelectedView.VISUAL ? (
+                    /* istanbul ignore next */
+                    templateFactory.getTemplate(templateType)?.renderTemplateCanvas({ formikRef: templateFormikRef })
+                  ) : (
+                    <TemplateYamlView />
+                  )}
+                </Container>
+              </>
+            )}
+            {templateType !== TemplateType.Pipeline && <RightBar />}
+          </Layout.Vertical>
+        </Page.Body>
+      </TemplateVariablesContextProvider>
+      <TemplateSelectorDrawer />
+    </TemplateSelectorContextProvider>
   )
 }

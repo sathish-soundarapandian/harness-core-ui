@@ -21,7 +21,7 @@ import {
 import { Color } from '@harness/design-system'
 import React, { ReactNode, useMemo } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { isEmpty, get } from 'lodash-es'
+import { isEmpty, get, pickBy } from 'lodash-es'
 import { parse } from 'yaml'
 import type { MutateMethod } from 'restful-react'
 import { Page, useToaster } from '@common/exports'
@@ -236,7 +236,7 @@ const renderSwitch = ({
 
 export default function TriggersDetailPage(): JSX.Element {
   const { isGitSimplificationEnabled } = useAppStore()
-  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { repoIdentifier, branch, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
 
   const [selectedView, setSelectedView] = React.useState<SelectedView>(SelectedView.VISUAL)
 
@@ -307,7 +307,10 @@ export default function TriggersDetailPage(): JSX.Element {
         triggerType: triggerResponse?.data?.type,
         module,
         repoIdentifier,
-        branch
+        branch,
+        connectorRef,
+        repoName,
+        storeType
       })
     )
   }
@@ -378,16 +381,21 @@ export default function TriggersDetailPage(): JSX.Element {
   const isGitSyncEnabled = useMemo(() => !!pipeline?.data?.gitDetails?.branch, [pipeline])
 
   const gitAwareForTriggerEnabled = useMemo(
-    () => isGitSyncEnabled || isGitSimplificationEnabled,
+    () => isGitSyncEnabled && isGitSimplificationEnabled,
     [isGitSyncEnabled, isGitSimplificationEnabled]
   )
 
   let pipelineInputSet
   if (gitAwareForTriggerEnabled) {
-    pipelineInputSet = yamlStringify({
-      pipelineBranchName: get(triggerObj, 'pipelineBranchName') ?? '',
-      inputSetRefs: get(triggerObj, 'inputSetRefs') ?? []
-    })
+    pipelineInputSet = yamlStringify(
+      pickBy(
+        {
+          pipelineBranchName: get(triggerObj, 'pipelineBranchName'),
+          inputSetRefs: get(triggerObj, 'inputSetRefs')
+        },
+        key => key !== undefined
+      )
+    )
   } else {
     pipelineInputSet = triggerObj?.inputYaml || ''
   }
@@ -473,18 +481,22 @@ export default function TriggersDetailPage(): JSX.Element {
                     tags: triggerResponse?.data?.tags
                   })}
                 />
-                <DetailPageCard
-                  classname={css.inputSet}
-                  title={getString('details')}
-                  content={getDetailsContent({
-                    getString,
-                    conditionsExist,
-                    conditionsArr,
-                    jexlCondition,
-                    cronExpression,
-                    pipelineInputSet
-                  })}
-                />
+                {loadingTrigger ? (
+                  <PageSpinner />
+                ) : (
+                  <DetailPageCard
+                    classname={css.inputSet}
+                    title={getString('details')}
+                    content={getDetailsContent({
+                      getString,
+                      conditionsExist,
+                      conditionsArr,
+                      jexlCondition,
+                      cronExpression,
+                      pipelineInputSet
+                    })}
+                  />
+                )}
               </Layout.Horizontal>
             ) : (
               <div className={css.editor}>

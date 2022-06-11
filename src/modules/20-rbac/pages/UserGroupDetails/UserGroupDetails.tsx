@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Text, Layout, Button, Card, Container, ButtonVariation, PageError, Icon } from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
 import cx from 'classnames'
@@ -20,6 +20,7 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { PageSpinner } from '@common/components'
 import RoleBindingsList from '@rbac/components/RoleBindingsList/RoleBindingsList'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRoleAssignmentModal'
 import { useQueryParams } from '@common/hooks'
 import type { PrincipalScope } from '@common/interfaces/SecretsInterface'
@@ -39,6 +40,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
 import NotificationList from '@rbac/components/NotificationList/NotificationList'
 import { isCommunityPlan } from '@common/utils/utils'
+import UserGroupRefScopeList from '@rbac/components/UserGroupRefScopeList/UserGroupRefScopeList'
 import css from './UserGroupDetails.module.scss'
 
 const UserGroupDetails: React.FC = () => {
@@ -72,6 +74,7 @@ const UserGroupDetails: React.FC = () => {
 
   const userGroupAggregateResponse: UserGroupAggregateDTO | undefined = data?.data
   const userGroup = userGroupAggregateResponse?.userGroupDTO
+  const { INHERITED_USER_GROUP } = useFeatureFlags()
 
   useDocumentTitle([userGroup?.name || '', getString('common.userGroups')])
 
@@ -97,6 +100,7 @@ const UserGroupDetails: React.FC = () => {
     userGroupInherited
   )
   const ssoBtnTooltipText = ssoBtnTooltip ? <Text padding="medium">{ssoBtnTooltip}</Text> : undefined
+  const shouldRenderScopeList = !userGroupInherited && INHERITED_USER_GROUP
   return (
     <>
       <Page.Header
@@ -172,7 +176,7 @@ const UserGroupDetails: React.FC = () => {
         <Container width="50%" padding={{ bottom: 'large' }} className={css.membersContainer}>
           <Layout.Horizontal flex>
             <Layout.Horizontal flex={{ alignItems: 'baseline' }} spacing="medium">
-              <Text color={Color.BLACK} font={{ size: 'medium', weight: 'semi-bold' }}>
+              <Text font={{ variation: FontVariation.H5 }} color={Color.BLACK}>
                 {getString('members')}
               </Text>
               {userGroup.ssoLinked ? (
@@ -225,7 +229,7 @@ const UserGroupDetails: React.FC = () => {
         <Container width="50%" className={css.detailsContainer}>
           {!isCommunity && (
             <Layout.Vertical spacing="medium" padding={{ bottom: 'large' }}>
-              <Text color={Color.BLACK} font={{ size: 'medium', weight: 'semi-bold' }}>
+              <Text font={{ variation: FontVariation.H5 }} color={Color.BLACK}>
                 {getString('rbac.roleBinding')}
               </Text>
               <Card className={css.card}>
@@ -251,7 +255,7 @@ const UserGroupDetails: React.FC = () => {
             </Layout.Vertical>
           )}
           <Layout.Vertical spacing="medium">
-            <Text color={Color.BLACK} font={{ size: 'medium', weight: 'bold' }}>
+            <Text font={{ variation: FontVariation.H5 }} color={Color.BLACK}>
               {getString('common.notificationPreferences')}
             </Text>
             <NotificationList
@@ -261,6 +265,18 @@ const UserGroupDetails: React.FC = () => {
               onSubmit={refetch}
             />
           </Layout.Vertical>
+          {shouldRenderScopeList && (
+            <Layout.Vertical spacing="large" border={{ top: true }}>
+              <Text font={{ variation: FontVariation.H5 }} color={Color.BLACK} padding={{ top: 'large' }}>
+                {orgIdentifier
+                  ? getString('rbac.inheritedScope.orgScopeTitle')
+                  : getString('rbac.inheritedScope.accountScopeTitle')}
+              </Text>
+              <UserGroupRefScopeList
+                {...{ accountId, orgIdentifier, projectIdentifier, userGroupIdentifier, parentScope }}
+              />
+            </Layout.Vertical>
+          )}
         </Container>
       </Page.Body>
     </>

@@ -48,6 +48,22 @@ describe('buildInstructions', () => {
     ])
   })
 
+  test('it should build an instruction to add a new flag', async () => {
+    const newValues = cloneDeep(initialValues)
+    newValues.flags.newFlag = {
+      variation: 'false'
+    }
+
+    expect(buildInstructions(newValues, initialValues)).toEqual([
+      {
+        kind: 'addTargetToFlagsVariationTargetMap',
+        parameters: {
+          features: [{ identifier: 'newFlag', variation: 'false' }]
+        }
+      }
+    ])
+  })
+
   test('it should build instructions to update and remove flags', async () => {
     const newValues = omit(initialValues, 'flags.flag1')
     newValues.flags.flag2.variation = 'true'

@@ -17,6 +17,7 @@ import {
   Error,
   Failure,
   GitBranchDetailsDTO,
+  ResponseGitBranchesResponseDTO,
   ResponseMessage,
   useGetListOfBranchesByRefConnectorV2
 } from 'services/cd-ng'
@@ -38,6 +39,14 @@ export interface RepoBranchSelectProps {
   selectProps?: Omit<SelectProps, 'value' | 'onChange' | 'items'>
   showIcons?: boolean
   showErrorInModal?: boolean
+  fallbackDefaultBranch?: boolean
+}
+
+const getDefaultBranchOption = (defaultBranch: string): SelectOption => {
+  return {
+    label: defaultTo(defaultBranch, ''),
+    value: defaultTo(defaultBranch, '')
+  }
 }
 
 export const getBranchSelectOptions = (data: GitBranchDetailsDTO[] = []): SelectOption[] => {
@@ -48,11 +57,17 @@ export const getBranchSelectOptions = (data: GitBranchDetailsDTO[] = []): Select
     }
   })
 }
+const getDefaultSelectedOption = (defaultToBranch: string, selected?: string): SelectOption => {
+  return { label: selected || defaultToBranch, value: selected || defaultToBranch }
+}
+
 const hasToRefetchBranches = (
   disabled: boolean,
   connectorIdentifierRef: string | undefined,
   repoName: string | undefined
 ) => !disabled && connectorIdentifierRef && repoName
+
+const triggerOnChange = (disabled: boolean, selectedValue?: string) => !disabled && !selectedValue
 
 const showRefetchButon = (
   disabled: boolean,
@@ -69,6 +84,9 @@ const showRefetchButon = (
   )
 }
 
+const responseHasBranches = (response: ResponseGitBranchesResponseDTO | null): boolean =>
+  response?.status === 'SUCCESS' && !isEmpty(response?.data)
+
 const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
   const {
     connectorIdentifierRef,
@@ -82,7 +100,8 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
     branchSelectorClassName,
     selectProps,
     showIcons = true,
-    showErrorInModal = false
+    showErrorInModal = false,
+    fallbackDefaultBranch = true
   } = props
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -106,24 +125,33 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
       size: 100
     },
     debounce: 500,
-    lazy: !hasToRefetchBranches(disabled, connectorIdentifierRef, repoName)
+    lazy: true
   })
 
   const responseMessages = (error?.data as Error)?.responseMessages
+  const defaultToBranch = fallbackDefaultBranch ? defaultTo(response?.data?.defaultBranch?.name, '') : ''
 
   useEffect(() => {
     setBranchSelectOptions([])
+    if (hasToRefetchBranches(disabled, connectorIdentifierRef, repoName)) {
+      refetch()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [connectorIdentifierRef, repoName])
+  }, [connectorIdentifierRef, repoName, disabled])
 
   useEffect(() => {
     if (loading) {
       return
     }
 
-    if (response?.status === 'SUCCESS') {
-      if (!isEmpty(response?.data)) {
-        setBranchSelectOptions(getBranchSelectOptions(response.data?.branches))
+    if (responseHasBranches(response)) {
+      const branchOptions = getBranchSelectOptions(response?.data?.branches)
+      setBranchSelectOptions(branchOptions)
+
+      // If used in Formik, onChange will set branch after default selection to overcome form validation
+      // If consumer is sending preselected, we do not want to change to default branch
+      if (triggerOnChange(disabled, selectedValue)) {
+        props.onChange?.(getDefaultBranchOption(defaultToBranch), branchOptions)
       }
     }
 
@@ -143,7 +171,7 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
         items={branchSelectOptions}
         label={noLabel ? '' : defaultTo(label, getString('gitBranch'))}
         placeholder={loading ? getString('loading') : getString('select')}
-        value={{ label: defaultTo(selectedValue, ''), value: defaultTo(selectedValue, '') }}
+        value={getDefaultSelectedOption(defaultToBranch, selectedValue)}
         onChange={selected => props.onChange?.(selected, branchSelectOptions)}
         selectProps={{ usePortal: true, popoverClassName: css.gitBranchSelectorPopover, ...selectProps }}
         className={cx(branchSelectorClassName, css.branchSelector)}

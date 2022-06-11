@@ -7,20 +7,26 @@
 
 import React from 'react'
 import { noop } from 'lodash-es'
-import type { ServiceResponseDTO } from 'services/cd-ng'
+import type { ServiceResponseDTO, ServiceYaml } from 'services/cd-ng'
 
 export interface ServiceContextValues {
   serviceResponse: ServiceResponseDTO
   onCloseModal: () => void
+  onServiceCreate: (serviceInfo: ServiceYaml) => void
   isServiceEntityModalView: boolean
   isServiceEntityPage: boolean
+  isServiceCreateModalView: boolean
+  serviceCacheKey: string
 }
 
 export const ServiceContext = React.createContext<ServiceContextValues>({
   serviceResponse: {},
   onCloseModal: () => noop,
+  onServiceCreate: () => noop,
   isServiceEntityModalView: false,
-  isServiceEntityPage: false
+  isServiceEntityPage: false,
+  isServiceCreateModalView: false,
+  serviceCacheKey: ''
 })
 
 export interface ServiceContextProviderProps extends ServiceContextValues {

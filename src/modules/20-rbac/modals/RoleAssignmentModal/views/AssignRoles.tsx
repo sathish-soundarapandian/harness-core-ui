@@ -22,7 +22,12 @@ import { useToaster } from '@common/components'
 import { usePostRoleAssignments, RoleAssignment as RBACRoleAssignment } from 'services/rbac'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { getScopeBasedDefaultAssignment, isNewRoleAssignment, PrincipalType } from '@rbac/utils/utils'
+import {
+  getScopeBasedDefaultAssignment,
+  isAccountBasicRolePresent,
+  isNewRoleAssignment,
+  PrincipalType
+} from '@rbac/utils/utils'
 import {
   getIdentifierFromValue,
   getScopeFromDTO,
@@ -31,6 +36,7 @@ import {
 import UserGroupsInput from '@common/components/UserGroupsInput/UserGroupsInput'
 import { isCommunityPlan } from '@common/utils/utils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import RoleAssignmentForm from './RoleAssignmentForm'
 import type { RoleAssignmentValues } from './RoleAssignment'
 import type { Assignment, UserRoleAssignmentValues } from './UserRoleAssigment'
@@ -56,6 +62,7 @@ const AssignRoles: React.FC<UserGroupRoleAssignmentData> = props => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const scope = getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
   const { getString } = useStrings()
+  const { ACCOUNT_BASIC_ROLE } = useFeatureFlags()
   const { getRBACErrorMessage } = useRBACError()
   const isCommunity = isCommunityPlan()
   const { showSuccess } = useToaster()
@@ -64,7 +71,12 @@ const AssignRoles: React.FC<UserGroupRoleAssignmentData> = props => {
     queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
   })
 
-  const assignments: Assignment[] = getScopeBasedDefaultAssignment(scope, getString, isCommunity)
+  const assignments: Assignment[] = getScopeBasedDefaultAssignment(
+    scope,
+    getString,
+    isCommunity,
+    isAccountBasicRolePresent(scope, !!ACCOUNT_BASIC_ROLE)
+  )
 
   const handleRoleAssignment = async (values: UserGroupRoleAssignmentValues): Promise<void> => {
     /* istanbul ignore next */ if (values.assignments.length === 0) {

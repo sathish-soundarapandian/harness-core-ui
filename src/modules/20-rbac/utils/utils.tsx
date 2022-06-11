@@ -167,16 +167,25 @@ export const getScopeLevelManagedResourceGroup = (
   }
 }
 
+export const isAccountBasicRolePresent = (scope: Scope, flag: boolean): boolean => {
+  return flag && scope === Scope.ACCOUNT
+}
+
+export const isAccountBasicRole = (identifier: string): boolean => {
+  return identifier === '_account_basic'
+}
+
 export const getScopeBasedDefaultAssignment = (
   scope: Scope,
   getString: UseStringsReturn['getString'],
-  isCommunity: boolean
+  isCommunity: boolean,
+  isBasicRolePresent: boolean
 ): Assignment[] => {
   if (isCommunity) {
     return []
   } else {
     const resourceGroup: ResourceGroupOption = {
-      managedRoleAssignment: true,
+      managedRoleAssignment: !isBasicRolePresent,
       ...getScopeLevelManagedResourceGroup(scope, getString)
     }
     switch (scope) {
@@ -187,7 +196,7 @@ export const getScopeBasedDefaultAssignment = (
               label: getString('common.accViewer'),
               value: '_account_viewer',
               managed: true,
-              managedRoleAssignment: true
+              managedRoleAssignment: !isBasicRolePresent
             },
             resourceGroup
           }

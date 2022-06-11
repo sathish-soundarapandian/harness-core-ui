@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, ReactElement, useMemo } from 'react'
+import React, { FC, useMemo } from 'react'
 import { FormInput, SelectOption } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { Feature } from 'services/cf'
@@ -17,14 +17,11 @@ export interface VariationsCellProps {
   row: { original: Feature }
   value: {
     disabled?: boolean
-    ReasonTooltip?: FC
+    ReasonTooltip: FC
   }
 }
 
-const VariationsCell: FC<VariationsCellProps> = ({
-  row: { original: flag },
-  value: { disabled, ReasonTooltip = ({ children }) => children as ReactElement }
-}) => {
+const VariationsCell: FC<VariationsCellProps> = ({ row: { original: flag }, value: { disabled, ReasonTooltip } }) => {
   const { getString } = useStrings()
 
   const variations = useMemo<SelectOption[]>(
@@ -43,7 +40,7 @@ const VariationsCell: FC<VariationsCellProps> = ({
   return (
     <ReasonTooltip>
       <FormInput.Select
-        placeholder={getString('cf.segmentDetail.selectVariation')}
+        placeholder={getString('cf.targetManagementFlagConfiguration.selectVariation')}
         name={`flags.${flag.identifier}.variation`}
         items={variations}
         disabled={disabled}

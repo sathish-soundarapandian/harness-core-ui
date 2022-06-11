@@ -66,6 +66,8 @@ const getLabelByType = (type: string): string => {
       return 'connectors.name_labels.Kubernetes'
     case Connectors.HttpHelmRepo:
       return 'connectors.name_labels.HttpHelmRepo'
+    case Connectors.OciHelmRepo:
+      return 'connectors.name_labels.OCIHelm'
     case Connectors.GIT:
       return 'connectors.name_labels.Git'
     case Connectors.GITHUB:
@@ -291,6 +293,31 @@ const getDockerSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowI
   ]
 }
 
+const getJenkinsSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
+  return [
+    {
+      label: 'connectors.jenkins.jenkinsUrl',
+      value: connector?.spec?.jenkinsUrl
+    },
+    {
+      label: 'credType',
+      value: getLabelForAuthType(connector?.spec?.auth?.type)
+    },
+    {
+      label: 'username',
+      value: connector?.spec?.auth?.spec?.username || connector?.spec?.auth?.spec?.usernameRef
+    },
+    {
+      label: 'connectors.jenkins.passwordAPIToken',
+      value: connector?.spec?.auth?.spec?.passwordRef
+    },
+    {
+      label: 'connectors.bearerToken',
+      value: connector?.spec?.auth?.spec?.tokenRef
+    }
+  ]
+}
+
 const getJiraSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
   return [
     {
@@ -313,6 +340,27 @@ const getHelmHttpSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRo
   return [
     {
       label: 'connectors.httpHelm.httpHelmRepoUrl',
+      value: connector?.spec?.helmRepoUrl
+    },
+    {
+      label: 'credType',
+      value: getLabelForAuthType(connector?.spec?.auth?.type)
+    },
+    {
+      label: 'username',
+      value: connector?.spec?.auth?.spec?.username || connector?.spec?.auth?.spec?.usernameRef
+    },
+    {
+      label: 'password',
+      value: connector?.spec?.auth?.spec?.passwordRef
+    }
+  ]
+}
+//todoOci
+const getOCIHelmSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
+  return [
+    {
+      label: 'connectors.ociHelm.ociHelmUrl',
       value: connector?.spec?.helmRepoUrl
     },
     {
@@ -737,11 +785,14 @@ const getSchemaByType = (
     case Connectors.GITHUB:
     case Connectors.GITLAB:
     case Connectors.BITBUCKET:
-      return getGithubSchema(connector) // GitHub schema will work for GitLab, Bitbucket too
+    case Connectors.AZURE_REPO:
+      return getGithubSchema(connector) // GitHub schema will work for GitLab, Bitbucket and AzureRepos too
     case Connectors.DOCKER:
       return getDockerSchema(connector)
     case Connectors.HttpHelmRepo:
       return getHelmHttpSchema(connector)
+    case Connectors.OciHelmRepo:
+      return getOCIHelmSchema(connector)
     case Connectors.GCP:
       return getGCPSchema(connector)
     case Connectors.PDC:
@@ -773,6 +824,8 @@ const getSchemaByType = (
       return getServiceNowSchema(connector)
     case Connectors.AZURE:
       return getAzureSchema(connector)
+    case Connectors.JENKINS:
+      return getJenkinsSchema(connector)
     default:
       return []
   }

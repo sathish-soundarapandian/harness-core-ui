@@ -26,6 +26,7 @@ import ReactTimeago from 'react-timeago'
 import classNames from 'classnames'
 import { pick } from 'lodash-es'
 import defaultTo from 'lodash-es/defaultTo'
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
 import {
   ConnectorResponse,
@@ -350,7 +351,12 @@ const RenderColumnMenu: Renderer<CellProps<ConnectorResponse>> = ({ row, column 
               setMenuOpen(true)
             }}
           />
-          <Menu style={{ minWidth: 'unset' }}>
+          <Menu
+            style={{ minWidth: 'unset' }}
+            onClick={e => {
+              e.stopPropagation()
+            }}
+          >
             <Menu.Item icon="edit" text="Edit" onClick={handleEdit} disabled={!canUpdate} />
             <Menu.Item icon="trash" text="Delete" onClick={handleDelete} disabled={!canDelete} />
           </Menu>
@@ -430,23 +436,26 @@ const ConnectorsListView: React.FC<ConnectorListViewProps> = props => {
   }
 
   return (
-    <TableV2<ConnectorResponse>
-      className={css.table}
-      columns={columns}
-      data={listData}
-      name="ConnectorsListView"
-      onRowClick={connector => {
-        const url = routes.toConnectorDetails({ ...params, connectorId: connector.connector?.identifier })
-        history.push(connectorDetailsUrlWithGit(url, connector.gitDetails))
-      }}
-      pagination={{
-        itemCount: data?.totalItems || 0,
-        pageSize: data?.pageSize || 10,
-        pageCount: data?.totalPages || -1,
-        pageIndex: data?.pageIndex || 0,
-        gotoPage
-      }}
-    />
+    <>
+      <HelpPanel referenceId="connectors" type={HelpPanelType.FLOATING_CONTAINER} />
+      <TableV2<ConnectorResponse>
+        className={css.table}
+        columns={columns}
+        data={listData}
+        name="ConnectorsListView"
+        onRowClick={connector => {
+          const url = routes.toConnectorDetails({ ...params, connectorId: connector.connector?.identifier })
+          history.push(connectorDetailsUrlWithGit(url, connector.gitDetails))
+        }}
+        pagination={{
+          itemCount: data?.totalItems || 0,
+          pageSize: data?.pageSize || 10,
+          pageCount: data?.totalPages || -1,
+          pageIndex: data?.pageIndex || 0,
+          gotoPage
+        }}
+      />
+    </>
   )
 }
 

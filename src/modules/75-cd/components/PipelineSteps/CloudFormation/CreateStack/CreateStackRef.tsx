@@ -26,7 +26,7 @@ import {
   Icon,
   useToaster
 } from '@harness/uicore'
-import { map, get } from 'lodash-es'
+import { map, get, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
@@ -39,12 +39,14 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useListAwsRegions } from 'services/portal'
 import { useCFCapabilitiesForAws, useCFStatesForAws, useGetIamRolesForAws } from 'services/cd-ng'
 import { Connectors } from '@connectors/constants'
 import { TFMonaco } from '../../Common/Terraform/Editview/TFMonacoEditor'
 import CFRemoteWizard from './RemoteFilesForm/CFRemoteWizard'
 import { InlineParameterFile } from './InlineParameterFile'
+import { Tags } from './TagsInput/Tags'
 import type { Parameter, CloudFormationCreateStackProps } from '../CloudFormationInterfaces.types'
 import { onDragStart, onDragEnd, onDragLeave, onDragOver, onDrop } from '../DragHelper'
 
@@ -62,6 +64,7 @@ export const CreateStack = (
   formikRef: StepFormikFowardRef
 ): JSX.Element => {
   const { getString } = useStrings()
+  const { getRBACErrorMessage } = useRBACError()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { expressions } = useVariablesExpression()
   const [showModal, setShowModal] = useState(false)
@@ -134,16 +137,16 @@ export const CreateStack = (
 
   useEffect(() => {
     if (regionError) {
-      showError(regionError.message)
+      showError(getRBACErrorMessage(regionError as any))
     }
     if (capabilitiesError) {
-      showError(capabilitiesError.message)
+      showError(getRBACErrorMessage(capabilitiesError))
     }
     if (statesError) {
-      showError(statesError.message)
+      showError(getRBACErrorMessage(statesError))
     }
     if (rolesError) {
-      showError(rolesError.message)
+      showError(getRBACErrorMessage(rolesError))
     }
     /*  eslint-disable-next-line react-hooks/exhaustive-deps  */
   }, [regionError, capabilitiesError, statesError, rolesError])
@@ -157,7 +160,7 @@ export const CreateStack = (
       }
       setAwsRoles(roles)
     }
-    if (!roleData && awsRef) {
+    if (!roleData && !isEmpty(awsRef) && getMultiTypeFromValue(awsRef) === MultiTypeInputType.FIXED) {
       refetch()
     }
   }, [roleData, awsRef])
@@ -278,6 +281,7 @@ export const CreateStack = (
         const remoteParameterFiles = config?.parameters || []
         const awsRegion = config?.region
         const parameterOverrides = config?.parameterOverrides || []
+        const templateError = get(errors, 'spec.configuration.templateFile.spec.store.spec.connectorRef')
         return (
           <>
             <div className={cx(stepCss.formGroup, stepCss.lg)}>
@@ -341,12 +345,21 @@ export const CreateStack = (
                 width={300}
                 setRefValue
                 onChange={(value: any, _unused, _multiType) => {
-                  /* istanbul ignore next */
-                  if (value?.record?.identifier !== awsRef) {
-                    setAwsRef(value?.record?.identifier)
+                  const scope = value?.scope
+                  let newConnectorRef: string
+                  if (scope === 'org' || scope === 'account') {
+                    newConnectorRef = `${scope}.${value?.record?.identifier}`
+                  } else if (getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME) {
+                    newConnectorRef = value
+                  } else {
+                    newConnectorRef = value?.record?.identifier
                   }
                   /* istanbul ignore next */
-                  setFieldValue('spec.configuration.connectorRef', value?.record?.identifier || value)
+                  if (value?.record?.identifier !== awsRef) {
+                    setAwsRef(newConnectorRef)
+                  }
+                  /* istanbul ignore next */
+                  setFieldValue('spec.configuration.connectorRef', newConnectorRef)
                 }}
               />
             </div>
@@ -372,113 +385,136 @@ export const CreateStack = (
               </Layout.Horizontal>
             </Layout.Vertical>
             <div className={css.divider} />
-            <Layout.Vertical>
-              <Layout.Horizontal flex={{ alignItems: 'flex-start' }}>
+            <Layout.Horizontal flex={{ alignItems: 'flex-start' }}>
+              {(templateFileType === TemplateTypes.Remote || templateFileType === TemplateTypes.S3URL) && (
                 <Layout.Vertical>
-                  <Label style={{ color: Color.GREY_900 }} className={css.configLabel}>
-                    {(templateFileType === TemplateTypes.Remote || templateFileType === TemplateTypes.S3URL) &&
-                      templateFile}
+                  <Label
+                    data-tooltip-id={'cloudFormationTemplate'}
+                    style={{ color: Color.GREY_900 }}
+                    className={css.configLabel}
+                  >
+                    {templateFile}
                   </Label>
                 </Layout.Vertical>
-                <Layout.Vertical>
-                  <select
-                    className={css.templateDropdown}
-                    name="spec.configuration.templateFile.type"
-                    disabled={readonly}
-                    value={templateFileType}
-                    onChange={e => {
-                      /* istanbul ignore next */
-                      onSelectChange(e, setFieldValue)
-                    }}
-                    data-testid="templateOptions"
-                  >
-                    <option value={TemplateTypes.Remote}>{getString('remote')}</option>
-                    <option value={TemplateTypes.Inline}>{getString('inline')}</option>
-                    <option value={TemplateTypes.S3URL}>{getString('cd.cloudFormation.awsURL')}</option>
-                  </select>
-                </Layout.Vertical>
-              </Layout.Horizontal>
-              {templateFileType === TemplateTypes.Remote && (
-                <div
-                  className={cx(css.configFile, css.configField, css.addMarginBottom)}
-                  onClick={() => {
-                    /* istanbul ignore next */
-                    setShowModal(true)
-                  }}
-                  data-testid="remoteTemplate"
-                >
-                  <>
-                    <a className={css.configPlaceHolder}>
-                      {
-                        /* istanbul ignore next */
-                        getMultiTypeFromValue(remoteTemplateFile?.paths) === MultiTypeInputType.RUNTIME
-                          ? `/${remoteTemplateFile?.paths}`
-                          : remoteTemplateFile?.paths?.[0]
-                          ? remoteTemplateFile?.paths?.[0]
-                          : getString('cd.cloudFormation.specifyTemplateFile')
-                      }
-                    </a>
-                    <Button
-                      minimal
-                      icon="Edit"
-                      withoutBoxShadow
-                      iconProps={{ size: 16 }}
-                      data-name="config-edit"
-                      withoutCurrentColor={true}
-                    />
-                  </>
-                </div>
               )}
-              <Text className={cx(css.formikError, css.addMarginBottom)} intent="danger">
-                {templateFileType === TemplateTypes.Remote &&
-                  !remoteTemplateFile?.paths &&
-                  get(errors, 'spec.configuration.templateFile.spec.store.spec.connectorRef')}
-              </Text>
-              {templateFileType === TemplateTypes.Inline && (
-                <div className={cx(stepCss.formGroup, stepCss.alignStart, css.addMarginTop, css.addMarginBottom)}>
-                  <MultiTypeFieldSelector
-                    name="spec.configuration.templateFile.spec.templateBody"
-                    label={<Text style={{ color: 'rgb(11, 11, 13)' }}>{templateFile}</Text>}
-                    defaultValueToReset=""
-                    allowedTypes={allowableTypes}
-                    skipRenderValueInExpressionLabel
-                    disabled={readonly}
-                  >
-                    <TFMonaco
-                      name="spec.configuration.templateFile.spec.templateBody"
-                      formik={formik}
-                      title={templateFile}
-                    />
-                  </MultiTypeFieldSelector>
-                  {
+              <div className={css.templateSelect}>
+                <select
+                  className={css.templateDropdown}
+                  name="spec.configuration.templateFile.type"
+                  disabled={readonly}
+                  value={templateFileType}
+                  onChange={e => {
                     /* istanbul ignore next */
-                    getMultiTypeFromValue(inlineTemplateFile) === MultiTypeInputType.RUNTIME && (
-                      <ConfigureOptions
-                        value={inlineTemplateFile}
-                        type="String"
-                        variableName="spec.configuration.templateFile.spec.templateBody"
-                        showRequiredField={false}
-                        showDefaultField={false}
-                        showAdvanced={true}
-                        onChange={value => {
-                          setFieldValue('spec.configuration.templateFile.spec.templateBody', value)
-                        }}
-                        isReadonly={readonly}
+                    onSelectChange(e, setFieldValue)
+                  }}
+                  data-testid="templateOptions"
+                >
+                  <option value={TemplateTypes.Remote}>{getString('remote')}</option>
+                  <option value={TemplateTypes.Inline}>{getString('inline')}</option>
+                  <option value={TemplateTypes.S3URL}>{getString('cd.cloudFormation.awsURL')}</option>
+                </select>
+              </div>
+            </Layout.Horizontal>
+            {templateFileType === TemplateTypes.Remote && (
+              <div
+                className={cx(css.configFile, css.configField, css.addMarginTop, css.addMarginBottom)}
+                onClick={() => {
+                  /* istanbul ignore next */
+                  setShowModal(true)
+                }}
+                data-testid="remoteTemplate"
+              >
+                <>
+                  <a className={css.configPlaceHolder}>
+                    {
+                      /* istanbul ignore next */
+                      getMultiTypeFromValue(remoteTemplateFile?.paths) === MultiTypeInputType.RUNTIME
+                        ? `/${remoteTemplateFile?.paths}`
+                        : remoteTemplateFile?.paths?.[0]
+                        ? remoteTemplateFile?.paths?.[0]
+                        : getString('cd.cloudFormation.specifyTemplateFile')
+                    }
+                  </a>
+                  <Button
+                    minimal
+                    icon="Edit"
+                    withoutBoxShadow
+                    iconProps={{ size: 16 }}
+                    data-name="config-edit"
+                    withoutCurrentColor={true}
+                  />
+                </>
+              </div>
+            )}
+            {templateFileType === TemplateTypes.Inline && (
+              <>
+                <MultiTypeFieldSelector
+                  name="spec.configuration.templateFile.spec.templateBody"
+                  label={
+                    <Text data-tooltip-id={'cloudFormationTemplate'} style={{ color: 'rgb(11, 11, 13)' }}>
+                      {templateFile}
+                    </Text>
+                  }
+                  defaultValueToReset=""
+                  allowedTypes={allowableTypes}
+                  skipRenderValueInExpressionLabel
+                  disabled={readonly}
+                  expressionRender={() => {
+                    /* istanbul ignore next */
+                    return (
+                      <TFMonaco
+                        name="spec.configuration.templateFile.spec.templateBody"
+                        formik={formik}
+                        title={templateFile}
+                        expressions={expressions}
                       />
                     )
-                  }
-                </div>
-              )}
-              {templateFileType === TemplateTypes.S3URL && (
-                <div className={stepCss.formGroup}>
-                  <FormInput.Text
-                    name={'spec.configuration.templateFile.spec.templateUrl'}
-                    label={''}
-                    placeholder="http://www.test.com"
+                  }}
+                >
+                  <TFMonaco
+                    name="spec.configuration.templateFile.spec.templateBody"
+                    formik={formik}
+                    title={templateFile}
+                    expressions={expressions}
                   />
-                </div>
-              )}
-            </Layout.Vertical>
+                </MultiTypeFieldSelector>
+                {
+                  /* istanbul ignore next */
+                  getMultiTypeFromValue(inlineTemplateFile) === MultiTypeInputType.RUNTIME && (
+                    <ConfigureOptions
+                      value={inlineTemplateFile}
+                      type="String"
+                      variableName="spec.configuration.templateFile.spec.templateBody"
+                      showRequiredField={false}
+                      showDefaultField={false}
+                      showAdvanced={true}
+                      onChange={value => {
+                        setFieldValue('spec.configuration.templateFile.spec.templateBody', value)
+                      }}
+                      isReadonly={readonly}
+                    />
+                  )
+                }
+              </>
+            )}
+            {templateFileType === TemplateTypes.S3URL && (
+              <FormInput.Text
+                name={'spec.configuration.templateFile.spec.templateUrl'}
+                label={''}
+                placeholder="http://www.test.com"
+                className={css.addMarginTop}
+              />
+            )}
+            {templateFileType === TemplateTypes.Remote && templateError && (
+              <Text
+                icon="circle-cross"
+                iconProps={{ size: 12 }}
+                className={cx(css.formikError, css.addMarginTop, css.addMarginBottom)}
+                intent="danger"
+              >
+                {templateError}
+              </Text>
+            )}
             <div className={cx(stepCss.formGroup, stepCss.md)}>
               <FormInput.MultiTextInput
                 name="spec.configuration.stackName"
@@ -513,7 +549,11 @@ export const CreateStack = (
                 details={
                   <div className={css.optionalDetails}>
                     <Layout.Vertical>
-                      <Label style={{ color: Color.GREY_900 }} className={css.configLabel}>
+                      <Label
+                        data-tooltip-id={'cloudFormationParameterFiles'}
+                        style={{ color: Color.GREY_900 }}
+                        className={css.configLabel}
+                      >
                         {getString('optionalField', { name: getString('cd.cloudFormation.parameterFiles') })}
                       </Label>
                       {remoteParameterFiles && (
@@ -594,7 +634,11 @@ export const CreateStack = (
                       </Layout.Horizontal>
                     </Layout.Vertical>
                     <Layout.Vertical className={css.addMarginBottom}>
-                      <Label style={{ color: Color.GREY_900 }} className={css.configLabel}>
+                      <Label
+                        data-tooltip-id={'cloudFormationParameterOverrides'}
+                        style={{ color: Color.GREY_900 }}
+                        className={css.configLabel}
+                      >
                         {getString('optionalField', { name: getString('cd.cloudFormation.inlineParameterFiles') })}
                       </Label>
                       <div className={cx(css.configFile, css.addMarginBottom)}>
@@ -659,43 +703,7 @@ export const CreateStack = (
                     </MultiTypeFieldSelector>
 
                     <div className={css.divider} />
-                    <div className={cx(stepCss.formGroup, stepCss.alignStart, css.addMarginTop, css.addMarginBottom)}>
-                      <MultiTypeFieldSelector
-                        name="spec.configuration.tags.spec.content"
-                        label={
-                          <Text style={{ color: 'rgb(11, 11, 13)' }}>
-                            {getString('optionalField', { name: getString('tagsLabel') })}
-                          </Text>
-                        }
-                        defaultValueToReset=""
-                        allowedTypes={allowableTypes.filter(item => item !== MultiTypeInputType.EXPRESSION)}
-                        skipRenderValueInExpressionLabel
-                        disabled={readonly}
-                      >
-                        <TFMonaco
-                          name="spec.configuration.tags.spec.content"
-                          formik={formik}
-                          title={getString('tagsLabel')}
-                        />
-                      </MultiTypeFieldSelector>
-                      {
-                        /* istanbul ignore next */
-                        getMultiTypeFromValue(values.tags) === MultiTypeInputType.RUNTIME && (
-                          <ConfigureOptions
-                            value={values.spec?.configuration?.spec?.tags?.spec?.content}
-                            type="String"
-                            variableName="spec.configuration.tags.spec.content"
-                            showRequiredField={false}
-                            showDefaultField={false}
-                            showAdvanced={true}
-                            onChange={value => {
-                              setFieldValue('spec.configuration.tags.spec.content', value)
-                            }}
-                            isReadonly={readonly}
-                          />
-                        )
-                      }
-                    </div>
+                    <Tags formik={formik} allowableTypes={allowableTypes} readonly={readonly} regions={regions} />
                     <MultiTypeFieldSelector
                       name="spec.configuration.skipOnStackStatuses"
                       label={
@@ -760,7 +768,8 @@ export const CreateStack = (
                       isBranch: remoteTemplateFile?.gitFetchType === 'Branch',
                       filePath: remoteTemplateFile?.paths?.[0],
                       branch: remoteTemplateFile?.branch,
-                      commitId: remoteTemplateFile?.commitId
+                      commitId: remoteTemplateFile?.commitId,
+                      repoName: remoteTemplateFile?.repoName
                     }
                   : undefined
               }

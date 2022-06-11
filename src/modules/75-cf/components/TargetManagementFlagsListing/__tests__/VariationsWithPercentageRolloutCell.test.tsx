@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { FC } from 'react'
 import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Formik } from '@harness/uicore'
@@ -16,6 +16,8 @@ import { mockFeatures } from '@cf/pages/target-group-detail/__tests__/mocks'
 import VariationsWithPercentageRolloutCell, {
   VariationsWithPercentageRolloutCellProps
 } from '../VariationsWithPercentageRolloutCell'
+
+const MockReasonTooltip: FC = ({ children }) => <>{children}</>
 
 const renderComponent = (
   props: Partial<VariationsWithPercentageRolloutCellProps> = {},
@@ -33,7 +35,7 @@ const renderComponent = (
       >
         <VariationsWithPercentageRolloutCell
           row={{ original: mockFeatures[0] }}
-          value={{ disabled: false }}
+          value={{ disabled: false, ReasonTooltip: MockReasonTooltip }}
           {...props}
         />
       </Formik>
@@ -44,7 +46,7 @@ describe('VariationsWithPercentageRolloutCell', () => {
   test('it should display the variation select', async () => {
     renderComponent()
 
-    const input = screen.getByPlaceholderText('- cf.segmentDetail.selectVariation -')
+    const input = screen.getByPlaceholderText('- cf.targetManagementFlagConfiguration.selectVariation -')
     expect(input).toBeInTheDocument()
 
     userEvent.click(input)
@@ -61,7 +63,7 @@ describe('VariationsWithPercentageRolloutCell', () => {
 
     expect(screen.queryByTestId('variation-percentage-rollout')).not.toBeInTheDocument()
 
-    userEvent.click(screen.getByPlaceholderText('- cf.segmentDetail.selectVariation -'))
+    userEvent.click(screen.getByPlaceholderText('- cf.targetManagementFlagConfiguration.selectVariation -'))
 
     const btn = screen.getByText('cf.featureFlags.percentageRollout')
     expect(btn).toBeInTheDocument()
@@ -106,7 +108,7 @@ describe('VariationsWithPercentageRolloutCell', () => {
 
   test('it should disable the input when the value prop contains disabled true', async () => {
     renderComponent(
-      { value: { disabled: true } },
+      { value: { disabled: true, ReasonTooltip: MockReasonTooltip } },
       {
         flags: {
           [mockFeatures[0].identifier]: {
@@ -122,13 +124,13 @@ describe('VariationsWithPercentageRolloutCell', () => {
       }
     )
 
-    expect(screen.getByPlaceholderText('- cf.segmentDetail.selectVariation -')).toBeDisabled()
+    expect(screen.getByPlaceholderText('- cf.targetManagementFlagConfiguration.selectVariation -')).toBeDisabled()
     screen.getAllByRole('spinbutton').forEach(input => expect(input).toBeDisabled())
   })
 
   test('it should not disable the input when the value prop does not contain disabled true', async () => {
     renderComponent(
-      { value: {} },
+      { value: { ReasonTooltip: MockReasonTooltip } },
       {
         flags: {
           [mockFeatures[0].identifier]: {
@@ -144,7 +146,7 @@ describe('VariationsWithPercentageRolloutCell', () => {
       }
     )
 
-    expect(screen.getByPlaceholderText('- cf.segmentDetail.selectVariation -')).toBeEnabled()
+    expect(screen.getByPlaceholderText('- cf.targetManagementFlagConfiguration.selectVariation -')).toBeEnabled()
     screen.getAllByRole('spinbutton').forEach(input => expect(input).toBeEnabled())
   })
 })

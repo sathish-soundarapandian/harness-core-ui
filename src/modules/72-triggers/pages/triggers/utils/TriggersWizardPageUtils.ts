@@ -1123,6 +1123,9 @@ const getChartVersionAttribute = ({ artifact }: { artifact: ManifestConfigWrappe
 const getTag = ({ artifact }: { artifact: ManifestConfigWrapper }): string | undefined =>
   get(artifact, 'sidecar.spec.tag')
 
+const getStoreTypeAttribute = ({ artifact }: { artifact: ManifestConfigWrapper }): string | undefined =>
+  get(artifact, 'manifest.spec.store.type')
+
 export const getDetailsFromPipeline = ({
   manifests,
   manifestIdentifier,
@@ -1145,6 +1148,9 @@ export const getDetailsFromPipeline = ({
         type: matchedManifest?.manifest?.spec?.store?.type
       })
       details.chartVersion = getChartVersionAttribute({
+        artifact: matchedManifest
+      })
+      details.storeType = getStoreTypeAttribute({
         artifact: matchedManifest
       })
     }
@@ -1440,13 +1446,15 @@ export const getArtifactTableDataFromData = ({
       const stageOverridesManifests = getPipelineOverrideManifests(pipeline.stages, dataStageId)
       const { manifests = [] } = stageObject?.stage?.spec?.serviceConfig?.serviceDefinition?.spec || {}
       manifests.forEach((manifestObj: any) => {
-        const { location, chartVersion } = getDetailsFromPipeline({
+        const { location, chartVersion, storeType } = getDetailsFromPipeline({
           manifests: pipelineManifests,
           manifestIdentifier: manifestObj.manifest.identifier,
           manifestType: manifestObj.manifest.type,
           stageOverridesManifests
         })
-
+        if (storeType && storeType === ManifestStoreMap.OciHelmChart) {
+          return null
+        }
         const artifactRepository = getConnectorNameFromPipeline({
           manifests: pipelineManifests,
           manifestIdentifier: manifestObj.manifest.identifier,
@@ -1926,5 +1934,18 @@ export function getTriggerInputSetsBranchQueryParameter({
   pipelineBranchName?: string
   branch?: string
 }): string {
-  return gitAwareForTriggerEnabled ? (pipelineBranchName === DEFAULT_TRIGGER_BRANCH ? '' : pipelineBranchName) : branch
+  return gitAwareForTriggerEnabled
+    ? pipelineBranchName === DEFAULT_TRIGGER_BRANCH
+      ? branch
+      : pipelineBranchName
+    : branch
 }
+
+export const UPDATING_INVALID_TRIGGER_IN_GIT =
+  'Invalid request: Failed while updating Trigger: Please check the requested file path / branch / Github repo name if they exist or not.'
+
+export const SAVING_INVALID_TRIGGER_IN_GIT =
+  'Invalid request: Failed while Saving Trigger: Please check the requested file path / branch / Github repo name if they exist or not.'
+
+export const getErrorMessage = (error: any): string =>
+  get(error, 'data.error', get(error, 'data.message', error?.message))

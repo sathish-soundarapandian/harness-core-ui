@@ -46,7 +46,8 @@ import type {
   EnvironmentGroupPathProps,
   EnvironmentGroupQueryParams,
   VariablesPathProps,
-  EnvironmentQueryParams
+  EnvironmentQueryParams,
+  AccountLevelGitOpsPathProps
 } from '@common/interfaces/RouteInterfaces'
 
 const CV_HOME = `/cv/home`
@@ -715,6 +716,13 @@ const routes = {
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/gitops`
   ),
+  toAccountResourcesGitOps: withAccountId(({ entity }: AccountLevelGitOpsPathProps) => {
+    const path = `resources/gitops/${entity}`
+    return getScopeBasedRoute({
+      scope: {},
+      path
+    })
+  }),
   toServices: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/services`
@@ -904,9 +912,10 @@ const routes = {
       projectIdentifier,
       pipelineIdentifier,
       executionIdentifier,
-      module
+      module,
+      source
     }: PipelineType<ExecutionPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/executions/${executionIdentifier}`
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}`
   ),
   toExecutionPipelineView: withAccountId(
     ({
@@ -914,9 +923,10 @@ const routes = {
       projectIdentifier,
       pipelineIdentifier,
       executionIdentifier,
-      module
+      module,
+      source
     }: PipelineType<ExecutionPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/executions/${executionIdentifier}/pipeline`
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/pipeline`
   ),
   toExecutionInputsView: withAccountId(
     ({
@@ -924,9 +934,10 @@ const routes = {
       projectIdentifier,
       pipelineIdentifier,
       executionIdentifier,
-      module
+      module,
+      source
     }: PipelineType<ExecutionPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/executions/${executionIdentifier}/inputs`
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/inputs`
   ),
   toExecutionArtifactsView: withAccountId(
     ({
@@ -934,9 +945,10 @@ const routes = {
       projectIdentifier,
       pipelineIdentifier,
       executionIdentifier,
-      module
+      module,
+      source
     }: PipelineType<ExecutionPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/executions/${executionIdentifier}/artifacts`
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/artifacts`
   ),
   toExecutionTestsView: withAccountId(
     ({
@@ -944,9 +956,10 @@ const routes = {
       projectIdentifier,
       pipelineIdentifier,
       executionIdentifier,
-      module
+      module,
+      source
     }: PipelineType<ExecutionPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/executions/${executionIdentifier}/tests`
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/tests`
   ),
   toExecutionCommitsView: withAccountId(
     ({
@@ -954,9 +967,10 @@ const routes = {
       projectIdentifier,
       pipelineIdentifier,
       executionIdentifier,
-      module
+      module,
+      source
     }: PipelineType<ExecutionPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/executions/${executionIdentifier}/commits`
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/commits`
   ),
   toExecutionPolicyEvaluationsView: withAccountId(
     ({
@@ -964,9 +978,10 @@ const routes = {
       projectIdentifier,
       pipelineIdentifier,
       executionIdentifier,
-      module
+      module,
+      source
     }: PipelineType<ExecutionPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/executions/${executionIdentifier}/policy-evaluations`
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/policy-evaluations`
   ),
   toExecutionSecurityView: withAccountId(
     ({
@@ -974,9 +989,10 @@ const routes = {
       projectIdentifier,
       pipelineIdentifier,
       executionIdentifier,
-      module
+      module,
+      source
     }: PipelineType<ExecutionPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/executions/${executionIdentifier}/security`
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/security`
   ),
   /********************************************************************************************************************/
   toTemplates: withAccountId(
@@ -1286,11 +1302,6 @@ const routes = {
       return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/et`
     }
   ),
-  toErrorTrackingArc: withAccountId(
-    ({ orgIdentifier, projectIdentifier, module = 'cv' }: Partial<ProjectPathProps & { module?: string }>) => {
-      return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/et/arc`
-    }
-  ),
   toCVCreateSLOs: withAccountId(
     ({ orgIdentifier, projectIdentifier, module = 'cv' }: Partial<ProjectPathProps & { module?: string }>) => {
       return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos/create`
@@ -1522,9 +1533,30 @@ const routes = {
       `/dashboards/folder/${folderId ? folderId : 'shared'}/view/${viewId}`
   ),
   toCustomFolderHome: withAccountId(() => '/dashboards/folders'),
-  toViewCustomFolder: withAccountId(({ folderId }: { folderId: string }) => `/dashboards/folder/${folderId}`)
+  toViewCustomFolder: withAccountId(({ folderId }: { folderId: string }) => `/dashboards/folder/${folderId}`),
 
   /****************** Secret Usage************************************************************************************/
+
+  /****************** Chaos Module ************************************************************************************/
+  toChaos: withAccountId(() => `/chaos`),
+  toChaosMicroFrontend: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/`
+  ),
+
+  // These RoutesDestinations are defined in the MicroFrontend
+  toChaosWorkflows: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/workflows`
+  ),
+  toChaosHubs: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-hubs`
+  ),
+  toChaosAgents: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/agents`
+  )
 }
 
 export default routes

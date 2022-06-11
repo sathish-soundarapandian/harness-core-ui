@@ -40,6 +40,7 @@ import routes from '@common/RouteDefinitions'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import { usePermission } from '@rbac/hooks/usePermission'
 import type {
+  ExecutionPathProps,
   GitQueryParams,
   InputSetGitQueryParams,
   PipelinePathProps,
@@ -102,6 +103,7 @@ export interface RunPipelineFormProps extends PipelineType<PipelinePathProps & G
   executionInputSetTemplateYaml?: string
   stagesExecuted?: string[]
   executionIdentifier?: string
+  source: ExecutionPathProps['source']
 }
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
@@ -126,7 +128,9 @@ function RunPipelineFormBasic({
   module,
   executionView,
   branch,
+  source,
   repoIdentifier,
+  connectorRef,
   storeType,
   executionInputSetTemplateYaml = '',
   stagesExecuted,
@@ -490,7 +494,8 @@ function RunPipelineFormBasic({
                 projectIdentifier,
                 executionIdentifier: defaultTo(data?.planExecution?.uuid, ''),
                 accountId,
-                module
+                module,
+                source
               }),
               state: {
                 shouldShowGovernanceEvaluations:
@@ -670,15 +675,27 @@ function RunPipelineFormBasic({
     return <PageSpinner />
   }
 
+  function handleInputSetSave(newId?: string): void {
+    if (newId) {
+      setSelectedInputSets([{ label: newId, value: newId, type: 'INPUT_SET' }])
+    }
+    getTemplateFromPipeline()
+  }
+
   let runPipelineFormContent: React.ReactElement | null = null
 
   if (validateTemplateInputsResponse?.data?.validYaml === false) {
+    // repoName={repoIdentifier} because values is calculated at top and one of them (repoIdentifier, repoName)
+    // will be undefined based on the enabled flag (isGitSyncEnabled)
     runPipelineFormContent = (
       <PipelineErrorView
         errorNodeSummary={validateTemplateInputsResponse.data.errorNodeSummary}
         pipelineIdentifier={pipelineIdentifier}
         repoIdentifier={repoIdentifier}
+        repoName={repoIdentifier}
         branch={branch}
+        connectorRef={connectorRef}
+        storeType={storeType}
       />
     )
   } else if (inputSetsError?.message) {
@@ -854,11 +871,14 @@ function RunPipelineFormBasic({
                       accountId={accountId}
                       projectIdentifier={projectIdentifier}
                       orgIdentifier={orgIdentifier}
-                      repoIdentifier={repoIdentifier}
-                      branch={branch}
+                      connectorRef={connectorRef}
+                      repoIdentifier={repoIdentifier || pipelineResponse?.data?.gitDetails?.repoName}
+                      branch={branch || pipelineResponse?.data?.gitDetails?.branch}
+                      storeType={storeType}
                       isGitSyncEnabled={isGitSyncEnabled}
+                      isGitSimplificationEnabled={isGitSimplificationEnabled}
                       setFormErrors={setFormErrors}
-                      refetchParentData={getTemplateFromPipeline}
+                      refetchParentData={handleInputSetSave}
                     />
                   </Layout.Horizontal>
                 )}

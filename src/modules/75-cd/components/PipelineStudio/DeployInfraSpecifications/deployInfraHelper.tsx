@@ -11,7 +11,7 @@ import { InfraDeploymentType } from '@cd/components/PipelineSteps/PipelineStepsU
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { Infrastructure, ServiceDefinition } from 'services/cd-ng'
 import type { StringsMap } from 'stringTypes'
-import { isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
+import { isServerlessDeploymentType, isSSHWinRMDeploymentType } from '@pipeline/utils/stageHelpers'
 
 const DEFAULT_RELEASE_NAME = 'release-<+INFRA_KEY>'
 
@@ -154,55 +154,43 @@ export const getInfraGroups = (
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
   featureFlags: Record<string, boolean>
 ): InfrastructureGroup[] => {
-  const { NG_AZURE, SSH_NG } = featureFlags
+  const { NG_AZURE } = featureFlags
   return isServerlessDeploymentType(deploymentType)
     ? [
         {
           groupLabel: '',
-          items: SSH_NG
-            ? [
-                {
-                  label: getString('common.aws'),
-                  icon: 'service-aws',
-                  value: InfraDeploymentType.ServerlessAwsLambda
-                },
-                {
-                  label: getString('common.gcp'),
-                  icon: 'gcp',
-                  value: InfraDeploymentType.ServerlessGoogleFunctions,
-                  disabled: true
-                },
-                {
-                  label: getString('common.azure'),
-                  icon: 'service-azure',
-                  value: InfraDeploymentType.ServerlessAzureFunctions,
-                  disabled: true
-                },
-                {
-                  label: getString('connectors.title.pdcConnector'),
-                  icon: 'pdc',
-                  value: InfraDeploymentType.PDC
-                }
-              ]
-            : [
-                {
-                  label: getString('common.aws'),
-                  icon: 'service-aws',
-                  value: InfraDeploymentType.ServerlessAwsLambda
-                },
-                {
-                  label: getString('common.gcp'),
-                  icon: 'gcp',
-                  value: InfraDeploymentType.ServerlessGoogleFunctions,
-                  disabled: true
-                },
-                {
-                  label: getString('common.azure'),
-                  icon: 'service-azure',
-                  value: InfraDeploymentType.ServerlessAzureFunctions,
-                  disabled: true
-                }
-              ]
+          items: [
+            {
+              label: getString('common.aws'),
+              icon: 'service-aws',
+              value: InfraDeploymentType.ServerlessAwsLambda
+            },
+            {
+              label: getString('common.gcp'),
+              icon: 'gcp',
+              value: InfraDeploymentType.ServerlessGoogleFunctions,
+              disabled: true
+            },
+            {
+              label: getString('common.azure'),
+              icon: 'service-azure',
+              value: InfraDeploymentType.ServerlessAzureFunctions,
+              disabled: true
+            }
+          ]
+        }
+      ]
+    : isSSHWinRMDeploymentType(deploymentType)
+    ? [
+        {
+          groupLabel: '',
+          items: [
+            {
+              label: getString('connectors.title.pdcConnector'),
+              icon: 'pdc',
+              value: InfraDeploymentType.PDC
+            }
+          ]
         }
       ]
     : [

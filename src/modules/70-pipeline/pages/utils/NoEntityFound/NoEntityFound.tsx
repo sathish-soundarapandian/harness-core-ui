@@ -7,12 +7,14 @@
 
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { Layout, Text } from '@wings-software/uicore'
 import { String, useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'
-import { useQueryParams } from '@common/hooks'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type {
+  GitQueryParams,
   PipelineType,
   TemplateStudioPathProps,
   TemplateStudioQueryParams
@@ -20,22 +22,32 @@ import type {
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { StoreType } from '@common/constants/GitSyncTypes'
+import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
+import type { Error, ResponseMessage } from 'services/pipeline-ng'
 import noEntityFoundImage from './images/no-entity-found.svg'
 import css from './NoEntityFound.module.scss'
 
 interface NoEntityFoundProps {
   identifier: string
-  entityType: string
+  entityType: 'pipeline' | 'inputSet' | 'template'
+  errorObj?: Error
+}
+
+const entityTypeLabelMapping = {
+  pipeline: 'pipeline',
+  inputSet: 'input set',
+  template: 'template'
 }
 
 function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
-  const { identifier, entityType } = props
+  const { identifier, entityType, errorObj } = props
   const { repoIdentifier, branch, versionLabel, connectorRef, storeType, repoName } =
     useQueryParams<TemplateStudioQueryParams>()
 
   const { getString } = useStrings()
   const history = useHistory()
   const { isGitSimplificationEnabled } = useAppStore()
+  const { replaceQueryParams } = useUpdateQueryParams<GitQueryParams>()
 
   const isPipelineRemote = isGitSimplificationEnabled && storeType === StoreType.REMOTE
 
@@ -51,7 +63,11 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
 
   const onGitBranchChange = React.useMemo(
     () => (selectedFilter: GitFilterScope) => {
-      if (branch !== selectedFilter.branch) {
+      // Reason for adding branch check :
+      // For GitX, if branch is not given BranchSelectV2 will internally select default and
+      // notify parent with this callback. For that we do not want to reload the page.
+      // For old GitSync branch is always availble so this check for branch will not matter.
+      if (branch && branch !== selectedFilter.branch) {
         if (entityType === 'pipeline') {
           history.push(
             routes.toPipelineStudio({
@@ -70,6 +86,23 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
                   }
                 : {})
             })
+          )
+          location.reload()
+        } else if (entityType === 'inputSet') {
+          replaceQueryParams(
+            {
+              branch: selectedFilter.branch,
+              repoIdentifier: selectedFilter.repo,
+              ...(isPipelineRemote
+                ? {
+                    repoName,
+                    connectorRef,
+                    storeType
+                  }
+                : {})
+            },
+            { skipNulls: true },
+            true
           )
           location.reload()
         } else {
@@ -95,10 +128,18 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
   return (
     <div className={css.noPipelineFoundContainer}>
       <Layout.Vertical spacing="small" flex={{ justifyContent: 'center', alignItems: 'center' }}>
+        {!isEmpty(errorObj?.responseMessages) && (
+          <ErrorHandler
+            responseMessages={errorObj?.responseMessages as ResponseMessage[]}
+            className={css.errorHandler}
+          />
+        )}
         <img src={noEntityFoundImage} className={css.noPipelineFoundImage} />
-
         <Text className={css.noPipelineFound} margin={{ top: 'medium', bottom: 'small' }}>
-          <String stringID={'pipeline.gitExperience.noEntityFound'} vars={{ entityType: entityType }} />
+          <String
+            stringID={'pipeline.gitExperience.noEntityFound'}
+            vars={{ entityType: defaultTo(entityTypeLabelMapping[entityType], entityType) }}
+          />
         </Text>
         <Text className={css.selectDiffBranch} margin={{ top: 'xsmall', bottom: 'xlarge' }}>
           {getString('pipeline.gitExperience.selectDiffBranch')}

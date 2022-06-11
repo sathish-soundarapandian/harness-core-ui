@@ -54,7 +54,7 @@ import type {
 import routes from '@common/RouteDefinitions'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useStrings } from 'framework/strings'
-import { AppStoreContext, useAppStore } from 'framework/AppStore/AppStoreContext'
+import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import type { GitContextProps } from '@common/components/GitContextForm/GitContextForm'
@@ -63,6 +63,7 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { InputSetDTO, InputSetType } from '@pipeline/utils/types'
 import { clearNullUndefined, isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
+import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import { clearRuntimeInput } from '../PipelineStudio/StepUtil'
 import GitPopover from '../GitPopover/GitPopover'
 import FormikInputSetForm from './FormikInputSetForm'
@@ -157,8 +158,7 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
   >()
   const { repoIdentifier, branch, inputSetRepoIdentifier, inputSetBranch, connectorRef, repoName, storeType } =
     useQueryParams<InputSetGitQueryParams>()
-  const { isGitSyncEnabled } = React.useContext(AppStoreContext)
-  const { isGitSimplificationEnabled: gitSimplification } = useAppStore()
+  const { isGitSyncEnabled, isGitSimplificationEnabled } = React.useContext(AppStoreContext)
   const [inputSetUpdateResponse, setInputSetUpdateResponse] = React.useState<ResponseInputSetResponse>()
   const [filePath, setFilePath] = React.useState<string>()
   const {
@@ -189,7 +189,8 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
   const {
     data: inputSetResponse,
     refetch,
-    loading: loadingInputSet
+    loading: loadingInputSet,
+    error: inputSetError
   } = useGetInputSetForPipeline({
     queryParams: {
       accountIdentifier: accountId,
@@ -286,7 +287,7 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
         template,
         mergeTemplate,
         isGitSyncEnabled,
-        gitSimplification && inputSetResponse?.data?.storeType === StoreType.REMOTE
+        isGitSimplificationEnabled && inputSetResponse?.data?.storeType === StoreType.REMOTE
       )
     }
     return getInputSet(orgIdentifier, projectIdentifier, inputSetResponse, template, mergeTemplate, isGitSyncEnabled)
@@ -531,7 +532,7 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
         executionView={executionView}
         isEdit={isEdit}
         isGitSyncEnabled={isGitSyncEnabled}
-        gitSimplification={gitSimplification}
+        isGitSimplificationEnabled={isGitSimplificationEnabled}
       />
     ),
     [
@@ -555,6 +556,8 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
 
   return executionView ? (
     child()
+  ) : isGitSimplificationEnabled && !loadingInputSet && inputSetError ? (
+    <NoEntityFound identifier={inputSetIdentifier} entityType={'inputSet'} />
   ) : (
     <InputSetFormWrapper
       loading={

@@ -13,7 +13,6 @@ import type {
   TargetManagementFlagConfigurationPanelFormRow,
   TargetManagementFlagConfigurationPanelFormValues as FormValues
 } from '@cf/components/TargetManagementFlagConfigurationPanel/types'
-import type { FlagSettingsFormRow } from '../../TargetGroupDetailPage.types'
 
 export function getFlagSettingsInstructions(
   targetGroupIdentifier: string,
@@ -97,13 +96,13 @@ export function getUpdateFlagsInstruction(
   } as any as Instruction
 }
 
-export function getAddFlagsInstruction(flags: FlagSettingsFormRow[]): Instruction {
+export function getAddFlagsInstruction(flags: FormValues['flags']): Instruction {
   return {
     kind: 'addRule',
     parameters: {
-      features: flags.map(row => ({
-        identifier: row.identifier,
-        ...getVariationOrServe(row)
+      features: Object.entries(flags).map(([identifier, value]) => ({
+        identifier: identifier,
+        ...getVariationOrServe(value)
       }))
     }
   } as any as Instruction

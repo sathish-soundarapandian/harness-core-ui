@@ -78,7 +78,7 @@ const RepositorySelect: React.FC<RepositorySelectProps<any>> = props => {
       if (!isEmpty(response?.data)) {
         const selectOptions = getRepoSelectOptions(response?.data)
         setRepoSelectOptions(selectOptions)
-        if (selectOptions.length === 1) {
+        if (selectOptions.length === 1 && isEmpty(formikProps?.values.repo)) {
           formikProps?.setFieldValue('repo', selectOptions[0].value)
           props.onChange?.(selectOptions[0], repoSelectOptions)
         }
@@ -102,6 +102,7 @@ const RepositorySelect: React.FC<RepositorySelectProps<any>> = props => {
         items={repoSelectOptions}
         value={{ label: defaultTo(selectedValue, ''), value: defaultTo(selectedValue, '') }}
         onChange={(selected: SelectOption, event: React.SyntheticEvent<HTMLElement, Event> | undefined) => {
+          setErrorResponse?.([])
           props.onChange?.(selected, repoSelectOptions)
           event?.stopPropagation()
         }}

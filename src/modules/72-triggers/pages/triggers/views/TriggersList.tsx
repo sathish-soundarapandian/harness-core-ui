@@ -34,11 +34,12 @@ import css from './TriggersList.module.scss'
 interface TriggersListPropsInterface {
   onNewTriggerClick: (val: TriggerDataInterface) => void
   isPipelineInvalid?: boolean
+  gitAwareForTriggerEnabled?: boolean
 }
 
 export default function TriggersList(props: TriggersListPropsInterface & GitQueryParams): JSX.Element {
-  const { onNewTriggerClick, isPipelineInvalid } = props
-  const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
+  const { onNewTriggerClick, isPipelineInvalid, gitAwareForTriggerEnabled } = props
+  const { branch, repoIdentifier, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
 
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } = useParams<
     PipelineType<{
@@ -156,7 +157,10 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
         triggerType,
         module,
         repoIdentifier,
-        branch
+        branch,
+        connectorRef,
+        repoName,
+        storeType
       })
     )
   }
@@ -171,7 +175,10 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
         triggerIdentifier,
         module,
         repoIdentifier,
-        branch
+        branch,
+        connectorRef,
+        repoName,
+        storeType
       })
     )
   }
@@ -257,6 +264,7 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
           goToEditWizard={goToEditWizard}
           goToDetails={goToDetails}
           isPipelineInvalid={isPipelineInvalid}
+          gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
         />
       </Page.Body>
     </>

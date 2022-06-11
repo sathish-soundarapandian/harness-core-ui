@@ -64,6 +64,7 @@ import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useToaster } from '@common/exports'
 import routes from '@common/RouteDefinitions'
 import { useQueryParams } from '@common/hooks'
+import type { StoreType } from '@common/constants/GitSyncTypes'
 import { getFeaturePropsForRunPipelineButton, mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
 import type { InputSetDTO, Pipeline } from '@pipeline/utils/types'
 import { PipelineErrorView } from '@pipeline/components/RunPipelineModal/PipelineErrorView'
@@ -106,13 +107,17 @@ function RetryPipeline({
   const { getRBACErrorMessage } = useRBACError()
   const history = useHistory()
 
-  const { projectIdentifier, orgIdentifier, pipelineIdentifier, accountId, executionIdentifier, module } =
+  const { projectIdentifier, orgIdentifier, pipelineIdentifier, accountId, executionIdentifier, module, source } =
     useParams<PipelineType<ExecutionPathProps>>()
 
   const { pipelineExecutionDetail } = useExecutionContext()
 
-  const repoIdentifier = pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.repoIdentifier
+  const repoIdentifier = isGitSyncEnabled
+    ? pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.repoIdentifier
+    : pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.repoName
   const branch = pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.branch
+  const connectorRef = pipelineExecutionDetail?.pipelineExecutionSummary?.connectorRef
+  const storeType = pipelineExecutionDetail?.pipelineExecutionSummary?.storeType as StoreType
   const { inputSetType, inputSetValue, inputSetLabel, inputSetRepoIdentifier, inputSetBranch } = useQueryParams<
     GitQueryParams & RunPipelineQueryParams
   >()
@@ -460,7 +465,8 @@ function RetryPipeline({
                 projectIdentifier,
                 executionIdentifier: retryPipelineData?.planExecution?.uuid || '',
                 accountId,
-                module
+                module,
+                source
               })
             )
           }
@@ -607,12 +613,17 @@ function RetryPipeline({
   }
 
   if (validateTemplateInputsResponse?.data?.validYaml === false) {
+    // repoName={repoIdentifier} because values is calculated at top and one of them (repoIdentifier, repoName)
+    // will be undefined based on the enabled flag (isGitSyncEnabled)
     return (
       <PipelineErrorView
         errorNodeSummary={validateTemplateInputsResponse.data.errorNodeSummary}
         pipelineIdentifier={pipelineId}
         repoIdentifier={repoIdentifier}
+        repoName={repoIdentifier}
         branch={branch}
+        connectorRef={connectorRef}
+        storeType={storeType}
       />
     )
   }
@@ -847,7 +858,7 @@ function RetryPipeline({
                 branch={branch}
                 isGitSyncEnabled={isGitSyncEnabled}
                 setFormErrors={setFormErrors}
-                refetchParentData={getInputSetsList}
+                refetchParentData={() => getInputSetsList()}
               />
             </Layout.Horizontal>
           </Layout.Vertical>

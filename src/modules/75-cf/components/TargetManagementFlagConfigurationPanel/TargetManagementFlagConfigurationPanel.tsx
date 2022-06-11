@@ -12,18 +12,16 @@ import * as yup from 'yup'
 import { ButtonVariation, ExpandingSearchInput, Page, Pagination } from '@harness/uicore'
 import type { Feature, Segment, Target } from 'services/cf'
 import { useStrings } from 'framework/strings'
-import RbacButton from '@rbac/components/Button/Button'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
-import usePercentageRolloutValidationSchema from '@cf/pages/target-group-detail/hooks/usePercentageRolloutValidationSchema'
+import usePercentageRolloutValidationSchema from '@cf/hooks/usePercentageRolloutValidationSchema'
 import TargetManagementFlagsListing from '../TargetManagementFlagsListing/TargetManagementFlagsListing'
-import NoSearchResults from './NoSearchResults'
+import NoSearchResults from '../NoData/NoSearchResults'
 import NoFlags, { NoFlagsProps } from './NoFlags'
 import AllFlagsRemoved from './AllFlagsRemoved'
 import useProcessedFlags from './useProcessedFlags'
 import useFormDisabled from './useFormDisabled'
 import FormButtons from './FormButtons'
+import AddFlagButton from './AddFlagButton'
 import { STATUS, TargetManagementFlagConfigurationPanelFormValues as FormValues } from './types'
 
 import css from './TargetManagementFlagConfigurationPanel.module.scss'
@@ -31,19 +29,23 @@ import css from './TargetManagementFlagConfigurationPanel.module.scss'
 export interface TargetManagementFlagConfigurationPanelProps {
   item: Target | Segment
   flags: Feature[]
-  onChange: (values: FormValues) => void
+  onChange: (values: FormValues) => Promise<void>
+  onAdd: (values: FormValues) => Promise<void>
   initialValues: FormValues
   includePercentageRollout?: boolean
   noFlagsMessage: NoFlagsProps['message']
+  addFlagsDialogTitle: string
 }
 
 const TargetManagementFlagConfigurationPanel: FC<TargetManagementFlagConfigurationPanelProps> = ({
   item,
   flags,
   onChange,
+  onAdd,
   initialValues,
   includePercentageRollout = false,
-  noFlagsMessage
+  noFlagsMessage,
+  addFlagsDialogTitle
 }) => {
   const [removedFlags, setRemovedFlags] = useState<Feature[]>([])
   const [submitting, setSubmitting] = useState<boolean>(false)
@@ -124,8 +126,22 @@ const TargetManagementFlagConfigurationPanel: FC<TargetManagementFlagConfigurati
     return STATUS.ok
   }, [filteredFlags.length, flags.length, searchTerm, searchedFlags.length, submitting])
 
+  const existingFlagIds = useMemo<string[]>(() => flags.map(({ identifier }) => identifier), [flags])
+
   if (state === STATUS.noFlags) {
-    return <NoFlags message={noFlagsMessage} />
+    return (
+      <NoFlags message={noFlagsMessage}>
+        <AddFlagButton
+          item={item}
+          onAdd={onAdd}
+          existingFlagIds={existingFlagIds}
+          includePercentageRollout={includePercentageRollout}
+          planEnforcementProps={planEnforcementProps}
+          title={addFlagsDialogTitle}
+          variation={ButtonVariation.PRIMARY}
+        />
+      </NoFlags>
+    )
   }
 
   const pageCount = Math.ceil(searchedFlags.length / CF_DEFAULT_PAGE_SIZE)
@@ -143,14 +159,13 @@ const TargetManagementFlagConfigurationPanel: FC<TargetManagementFlagConfigurati
       {({ dirty, setFieldValue }) => (
         <Form className={css.layout}>
           <Page.SubHeader className={css.toolbar}>
-            <RbacButton
-              variation={ButtonVariation.SECONDARY}
-              text={getString('cf.targetManagementFlagConfiguration.addFlag')}
-              permission={{
-                permission: PermissionIdentifier.EDIT_FF_TARGETGROUP,
-                resource: { resourceType: ResourceType.ENVIRONMENT, resourceIdentifier: item.environment }
-              }}
-              {...planEnforcementProps}
+            <AddFlagButton
+              item={item}
+              onAdd={onAdd}
+              existingFlagIds={existingFlagIds}
+              includePercentageRollout={includePercentageRollout}
+              planEnforcementProps={planEnforcementProps}
+              title={addFlagsDialogTitle}
             />
             <ExpandingSearchInput alwaysExpanded onChange={onSearch} />
           </Page.SubHeader>

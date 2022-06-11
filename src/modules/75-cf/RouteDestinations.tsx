@@ -6,18 +6,14 @@
  */
 
 import React, { FC } from 'react'
-import { Redirect, useParams } from 'react-router-dom'
+import { Redirect, Route, useParams } from 'react-router-dom'
 import { RouteWithLayout } from '@common/router'
 import routes from '@common/RouteDefinitions'
 import {
   accountPathProps,
-  connectorPathProps,
   environmentPathProps,
   featureFlagPathProps,
-  modulePathProps,
-  pipelineModuleParams,
   projectPathProps,
-  secretPathProps,
   segmentPathProps,
   targetPathProps
 } from '@common/utils/routeUtils'
@@ -28,38 +24,32 @@ import FeatureFlagsDetailPage from '@cf/pages/feature-flags-detail/FeatureFlagsD
 import EnvironmentsPage from '@cf/pages/environments/EnvironmentsPage'
 import EnvironmentDetails from '@cf/pages/environment-details/EnvironmentDetails'
 import CFWorkflowsPage from '@cf/pages/workflows/CFWorkflowsPage'
-import ConnectorDetailsPage from '@connectors/pages/connectors/ConnectorDetailsPage/ConnectorDetailsPage'
-import SecretDetails from '@secrets/pages/secretDetails/SecretDetails'
-import { RedirectToSecretDetailHome } from '@secrets/RouteDestinations'
-import SecretReferences from '@secrets/pages/secretReferences/SecretReferences'
-import SecretDetailsHomePage from '@secrets/pages/secretDetailsHomePage/SecretDetailsHomePage'
+import { PipelineRouteDestinations } from '@pipeline/RouteDestinations'
+import { ConnectorRouteDestinations } from '@connectors/RouteDestinations'
+import { GitSyncRouteDestinations } from '@gitsync/RouteDestinations'
+import { VariableRouteDestinations } from '@variables/RouteDestinations'
+import { SecretRouteDestinations } from '@secrets/RouteDestinations'
+import { TemplateRouteDestinations } from '@templates-library/RouteDestinations'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
-import AdminRouteDestinations from '@cf/components/routing/AdminRouteDestinations'
-import PipelineRouteDestinations from '@cf/components/routing/PipelineRouteDestinations'
-import { licenseRedirectData } from '@cf/components/routing/License'
 import { CFSideNavProps } from '@cf/constants'
-import ConnectorsPage from '@connectors/pages/connectors/ConnectorsPage'
-import CreateConnectorFromYamlPage from '@connectors/pages/createConnectorFromYaml/CreateConnectorFromYamlPage'
-import SecretsPage from '@secrets/pages/secrets/SecretsPage'
-import CreateSecretFromYamlPage from '@secrets/pages/createSecretFromYaml/CreateSecretFromYamlPage'
+import CFPipelineDeploymentList from '@cf/pages/pipeline-deployment-list/CFPipelineDeploymentList'
+import CFPipelineStudioWrapper from '@cf/pages/pipeline-studio/CFPipelineStudioWrapper'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { TriggersRouteDestinations } from '@triggers/RouteDestinations'
 import featureFactory from 'framework/featureStore/FeaturesFactory'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { getBannerText } from '@cf/utils/UsageLimitUtils'
 import { String } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
-import GitSyncPage from '@gitsync/pages/GitSyncPage'
-import GitSyncRepoTab from '@gitsync/pages/repos/GitSyncRepoTab'
-import GitSyncEntityTab from '@gitsync/pages/entities/GitSyncEntityTab'
-import GitSyncErrors from '@gitsync/pages/errors/GitSyncErrors'
-import GitSyncConfigTab from '@gitsync/pages/config/GitSyncConfigTab'
-import VariablesPage from '@variables/pages/variables/VariablesPage'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+import { RedirectToModuleTrialHomeFactory, RedirectToSubscriptionsFactory } from '@common/Redirects'
+import { AccessControlRouteDestinations } from '@rbac/RouteDestinations'
+import { LICENSE_STATE_NAMES, LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import { registerFeatureFlagPipelineStage } from './pages/pipeline-studio/views/FeatureFlagStage'
 import { registerFlagConfigurationPipelineStep } from './components/PipelineSteps'
 import { TargetsPage } from './pages/target-management/targets/TargetsPage'
@@ -114,14 +104,14 @@ const RedirectToTargets = (): React.ReactElement => {
   return <Redirect to={withActiveEnvironment(routes.toCFTargets(params))} />
 }
 
-const RedirectToGitSyncHome = (): React.ReactElement => {
-  const { accountId, projectIdentifier, orgIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
-
-  return <Redirect to={routes.toGitSyncReposAdmin({ projectIdentifier, accountId, orgIdentifier, module })} />
+const moduleParams: ModulePathParams = {
+  module: ':module(cf)'
 }
 
-const cfModuleParams: ModulePathParams = {
-  module: ':module(cf)'
+const licenseRedirectData: LicenseRedirectProps = {
+  licenseStateName: LICENSE_STATE_NAMES.FF_LICENSE_STATE,
+  startTrialRedirect: RedirectToModuleTrialHomeFactory(ModuleName.CF),
+  expiredTrialRedirect: RedirectToSubscriptionsFactory(ModuleName.CF)
 }
 
 RbacFactory.registerResourceCategory(ResourceCategory.FEATUREFLAG_FUNCTIONS, {
@@ -334,183 +324,58 @@ const CFRoutes: FC = () => {
         <CFWorkflowsPage />
       </RouteWithLayout>
 
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        path={routes.toConnectors({ ...accountPathProps, ...projectPathProps, ...pipelineModuleParams })}
-        sidebarProps={CFSideNavProps}
-        exact
-        pageName={PAGE_NAME.ConnectorsPage}
-      >
-        <ConnectorsPage />
-      </RouteWithLayout>
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        sidebarProps={CFSideNavProps}
-        path={routes.toCreateConnectorFromYaml({ ...accountPathProps, ...projectPathProps, ...pipelineModuleParams })}
-        exact
-        pageName={PAGE_NAME.CreateConnectorFromYamlPage}
-      >
-        <CreateConnectorFromYamlPage />
-      </RouteWithLayout>
-
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        sidebarProps={CFSideNavProps}
-        path={routes.toConnectorDetails({
-          ...accountPathProps,
-          ...projectPathProps,
-          ...connectorPathProps,
-          ...cfModuleParams
-        })}
-        exact
-        pageName={PAGE_NAME.ConnectorDetailsPage}
-      >
-        <ConnectorDetailsPage />
-      </RouteWithLayout>
-
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        sidebarProps={CFSideNavProps}
-        path={routes.toSecrets({ ...accountPathProps, ...projectPathProps, ...pipelineModuleParams })}
-        exact
-        pageName={PAGE_NAME.SecretsPage}
-      >
-        <SecretsPage />
-      </RouteWithLayout>
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        sidebarProps={CFSideNavProps}
-        path={routes.toVariables({ ...accountPathProps, ...projectPathProps, ...pipelineModuleParams })}
-        exact
-      >
-        <VariablesPage />
-      </RouteWithLayout>
-
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        sidebarProps={CFSideNavProps}
-        path={routes.toCreateSecretFromYaml({
-          ...accountPathProps,
-          ...projectPathProps,
-          ...pipelineModuleParams
-        })}
-        exact
-        pageName={PAGE_NAME.CreateSecretFromYamlPage}
-      >
-        <CreateSecretFromYamlPage />
-      </RouteWithLayout>
-
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        sidebarProps={CFSideNavProps}
-        path={routes.toSecretDetails({
-          ...accountPathProps,
-          ...projectPathProps,
-          ...secretPathProps,
-          ...modulePathProps
-        })}
-        exact
-        pageName={PAGE_NAME.SecretDetails}
-      >
-        <RedirectToSecretDetailHome />
-      </RouteWithLayout>
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        sidebarProps={CFSideNavProps}
-        path={routes.toSecretDetailsOverview({
-          ...accountPathProps,
-          ...projectPathProps,
-          ...secretPathProps,
-          ...modulePathProps
-        })}
-        exact
-        pageName={PAGE_NAME.SecretDetails}
-      >
-        <SecretDetailsHomePage>
-          <SecretDetails />
-        </SecretDetailsHomePage>
-      </RouteWithLayout>
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        sidebarProps={CFSideNavProps}
-        path={routes.toSecretDetailsReferences({
-          ...accountPathProps,
-          ...projectPathProps,
-          ...secretPathProps,
-          ...modulePathProps
-        })}
-        exact
-        pageName={PAGE_NAME.SecretReferences}
-      >
-        <SecretDetailsHomePage>
-          <SecretReferences />
-        </SecretDetailsHomePage>
-      </RouteWithLayout>
-
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        sidebarProps={CFSideNavProps}
-        exact
-        path={[routes.toGitSyncAdmin({ ...accountPathProps, ...modulePathProps, ...projectPathProps })]}
-        pageName={PAGE_NAME.GitSyncRepoTab}
-      >
-        <RedirectToGitSyncHome />
-      </RouteWithLayout>
-
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        path={routes.toGitSyncReposAdmin({ ...accountPathProps, ...projectPathProps, ...cfModuleParams })}
-        sidebarProps={CFSideNavProps}
-        exact
-        pageName={PAGE_NAME.GitSyncRepoTab}
-      >
-        <GitSyncPage>
-          <GitSyncRepoTab />
-        </GitSyncPage>
-      </RouteWithLayout>
-
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        sidebarProps={CFSideNavProps}
-        path={routes.toGitSyncEntitiesAdmin({ ...accountPathProps, ...cfModuleParams, ...projectPathProps })}
-        exact
-        pageName={PAGE_NAME.GitSyncEntityTab}
-      >
-        <GitSyncPage>
-          <GitSyncEntityTab />
-        </GitSyncPage>
-      </RouteWithLayout>
-
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        sidebarProps={CFSideNavProps}
-        path={routes.toGitSyncErrors({ ...accountPathProps, ...cfModuleParams, ...projectPathProps })}
-        exact
-        pageName={PAGE_NAME.GitSyncErrors}
-      >
-        <GitSyncPage>
-          <GitSyncErrors />
-        </GitSyncPage>
-      </RouteWithLayout>
-
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        sidebarProps={CFSideNavProps}
-        path={routes.toGitSyncConfig({ ...accountPathProps, ...cfModuleParams, ...projectPathProps })}
-        exact
-        pageName={PAGE_NAME.GitSyncConfigTab}
-      >
-        <GitSyncPage>
-          <GitSyncConfigTab />
-        </GitSyncPage>
-      </RouteWithLayout>
-      <AdminRouteDestinations />
-      {FF_PIPELINE && <PipelineRouteDestinations />}
-
-      {GovernanceRouteDestinations({
-        sidebarProps: CFSideNavProps,
-        pathProps: { ...accountPathProps, ...projectPathProps, ...cfModuleParams }
-      })}
+      <Route path="/account/:accountId/:module(cf)">
+        <TemplateRouteDestinations
+          moduleParams={moduleParams}
+          licenseRedirectData={licenseRedirectData}
+          sidebarProps={CFSideNavProps}
+        />
+        <ConnectorRouteDestinations
+          moduleParams={moduleParams}
+          licenseRedirectData={licenseRedirectData}
+          sidebarProps={CFSideNavProps}
+        />
+        <SecretRouteDestinations
+          moduleParams={moduleParams}
+          licenseRedirectData={licenseRedirectData}
+          sidebarProps={CFSideNavProps}
+        />
+        <VariableRouteDestinations
+          moduleParams={moduleParams}
+          licenseRedirectData={licenseRedirectData}
+          sidebarProps={CFSideNavProps}
+        />
+        <GitSyncRouteDestinations
+          moduleParams={moduleParams}
+          licenseRedirectData={licenseRedirectData}
+          sidebarProps={CFSideNavProps}
+        />
+        <AccessControlRouteDestinations
+          moduleParams={moduleParams}
+          licenseRedirectData={licenseRedirectData}
+          sidebarProps={CFSideNavProps}
+        />
+        {FF_PIPELINE && (
+          <>
+            <PipelineRouteDestinations
+              pipelineStudioComponent={CFPipelineStudioWrapper}
+              pipelineDeploymentListComponent={CFPipelineDeploymentList}
+              moduleParams={moduleParams}
+              licenseRedirectData={licenseRedirectData}
+              sidebarProps={CFSideNavProps}
+            />
+            <TriggersRouteDestinations
+              moduleParams={moduleParams}
+              licenseRedirectData={licenseRedirectData}
+              sidebarProps={CFSideNavProps}
+            />
+          </>
+        )}
+        <GovernanceRouteDestinations
+          sidebarProps={CFSideNavProps}
+          pathProps={{ ...accountPathProps, ...projectPathProps, ...moduleParams }}
+        />
+      </Route>
     </>
   )
 }

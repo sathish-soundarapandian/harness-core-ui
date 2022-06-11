@@ -11,7 +11,7 @@ import produce from 'immer'
 import { useHistory, useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
-import { Button, Dialog, Formik, FormikForm, FormInput, Layout, SelectOption } from '@harness/uicore'
+import { Button, Dialog, Formik, FormikForm, FormInput, Layout, SelectOption, useToaster } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { NameIdDescriptionTags } from '@common/components'
 import type { ClonePipelineProperties, PMSPipelineSummaryResponse } from 'services/pipeline-ng'
@@ -26,8 +26,8 @@ import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInt
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { NameSchema, IdentifierSchema } from '@common/utils/Validation'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import routes from '@common/RouteDefinitions'
 
 import css from './ClonePipelineForm.module.scss'
@@ -70,7 +70,10 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
   const formikRef = React.useRef<FormikProps<FormState>>()
   const history = useHistory()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
-  const { mutate: clonePipeline, error: cloneError } = useClonePipeline({
+  const { showSuccess, showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
+
+  const { mutate: clonePipeline } = useClonePipeline({
     queryParams: {
       accountIdentifier: accountId
     }
@@ -133,31 +136,42 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
   }
 
   async function handleSubmit(formData: FormState): Promise<FormState> {
-    const data: Required<ClonePipelineProperties> = {
-      sourceConfig: { ...formData.sourceConfig },
-      destinationConfig: {
-        ...formData.destinationConfig,
-        pipelineIdentifier: formData.identifier,
-        pipelineName: formData.name,
-        description: formData.description,
-        tags: formData.tags
-      },
-      cloneConfig: { ...formData.cloneConfig }
+    try {
+      const data: Required<ClonePipelineProperties> = {
+        sourceConfig: { ...formData.sourceConfig },
+        destinationConfig: {
+          ...formData.destinationConfig,
+          pipelineIdentifier: formData.identifier,
+          pipelineName: formData.name,
+          description: formData.description,
+          tags: formData.tags
+        },
+        cloneConfig: { ...formData.cloneConfig }
+      }
+
+      await clonePipeline(data)
+
+      showSuccess(
+        getString('pipeline.cloneSuccess', {
+          name: originalPipeline.name,
+          cloneName: formData.name
+        })
+      )
+
+      history.push(
+        routes.toPipelineDetail({
+          module,
+          pipelineIdentifier: defaultTo(data.destinationConfig.pipelineIdentifier, ''),
+          orgIdentifier: defaultTo(data.destinationConfig.orgIdentifier, ''),
+          projectIdentifier: defaultTo(data.destinationConfig.projectIdentifier, ''),
+          accountId
+        })
+      )
+
+      onClose()
+    } catch (e: unknown) {
+      showError(getRBACErrorMessage(e as RBACError))
     }
-
-    await clonePipeline(data)
-
-    history.push(
-      routes.toPipelineDetail({
-        module,
-        pipelineIdentifier: defaultTo(data.destinationConfig.pipelineIdentifier, ''),
-        orgIdentifier: defaultTo(data.destinationConfig.orgIdentifier, ''),
-        projectIdentifier: defaultTo(data.destinationConfig.projectIdentifier, ''),
-        accountId
-      })
-    )
-
-    onClose()
 
     return formData
   }
@@ -188,8 +202,6 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
     [originalPipeline, orgIdentifier, projectIdentifier]
   )
 
-  const responseMessages = get(cloneError, 'data.responseMessages')
-
   return (
     <div data-testid="clone-pipeline-form" onClick={e => e.stopPropagation()}>
       <Formik<FormState>
@@ -211,28 +223,21 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
 
           return (
             <FormikForm className={css.form}>
-              <div className={css.section}>
-                <div>
-                  <NameIdDescriptionTags formikProps={formikProps} />
-                  <FormInput.Select
-                    selectProps={{ usePortal: true }}
-                    label={getString('orgLabel')}
-                    name="destinationConfig.orgIdentifier"
-                    items={organizations}
-                    onChange={handleOrgChange}
-                  />
-                  <FormInput.Select
-                    key={get(formikProps.values, 'destinationConfig.orgIdentifier')}
-                    selectProps={{ usePortal: true }}
-                    label={getString('projectLabel')}
-                    name="destinationConfig.projectIdentifier"
-                    items={projects}
-                  />
-                </div>
-                {Array.isArray(responseMessages) ? (
-                  <ErrorHandler responseMessages={responseMessages} className={css.error} />
-                ) : null}
-              </div>
+              <NameIdDescriptionTags formikProps={formikProps} />
+              <FormInput.Select
+                selectProps={{ usePortal: true }}
+                label={getString('orgLabel')}
+                name="destinationConfig.orgIdentifier"
+                items={organizations}
+                onChange={handleOrgChange}
+              />
+              <FormInput.Select
+                key={get(formikProps.values, 'destinationConfig.orgIdentifier')}
+                selectProps={{ usePortal: true }}
+                label={getString('projectLabel')}
+                name="destinationConfig.projectIdentifier"
+                items={projects}
+              />
               <Layout.Horizontal padding={{ top: 'large' }} spacing="medium">
                 <RbacButton
                   permission={{

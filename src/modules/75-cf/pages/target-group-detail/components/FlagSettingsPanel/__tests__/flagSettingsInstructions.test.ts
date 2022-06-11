@@ -5,9 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { cloneDeep, omit, pick } from 'lodash-es'
+import { cloneDeep, omit } from 'lodash-es'
 import { PERCENTAGE_ROLLOUT_VALUE } from '@cf/constants'
-import type { TargetManagementFlagConfigurationPanelFormRow } from '@cf/components/TargetManagementFlagConfigurationPanel/types'
+import type {
+  TargetManagementFlagConfigurationPanelFormRow,
+  TargetManagementFlagConfigurationPanelFormValues as FormValues
+} from '@cf/components/TargetManagementFlagConfigurationPanel/types'
 import {
   getAddFlagsInstruction,
   getFlagSettingsInstructions,
@@ -18,12 +21,7 @@ import {
   getUpdateFlagsInstruction,
   getVariationOrServe
 } from '../flagSettingsInstructions'
-import {
-  mockFeatures,
-  mockFlagSettingsFormDataValues,
-  mockSegmentFlags,
-  mockTargetGroup
-} from '../../../__tests__/mocks'
+import { mockFeatures, mockFlagSettingsFormDataValues, mockTargetGroup } from '../../../__tests__/mocks'
 
 describe('flagSettingsInstructions', () => {
   describe('getFlagSettingsInstructions', () => {
@@ -201,16 +199,19 @@ describe('flagSettingsInstructions', () => {
 
   describe('getAddFlagsInstruction', () => {
     test('it should return the appropriate instruction to add a single flag', async () => {
-      const flagToAdd = pick(mockSegmentFlags[0], 'identifier', 'variation')
-      flagToAdd.variation = 'v2'
+      const flagsToAdd: FormValues['flags'] = {
+        f1: {
+          variation: 'v1'
+        }
+      }
 
-      expect(getAddFlagsInstruction([flagToAdd])).toEqual({
+      expect(getAddFlagsInstruction(flagsToAdd)).toEqual({
         kind: 'addRule',
         parameters: {
           features: [
             {
-              identifier: flagToAdd.identifier,
-              variation: flagToAdd.variation
+              identifier: 'f1',
+              variation: 'v1'
             }
           ]
         }
@@ -218,24 +219,26 @@ describe('flagSettingsInstructions', () => {
     })
 
     test('it should return the appropriate instruction to add multiple flags', async () => {
-      const flagsToAdd = [
-        pick(mockSegmentFlags[0], 'identifier', 'variation'),
-        pick(mockSegmentFlags[1], 'identifier', 'variation')
-      ]
-      flagsToAdd[0].variation = 'v2'
-      flagsToAdd[1].variation = 'v1'
+      const flagsToAdd: FormValues['flags'] = {
+        f1: {
+          variation: 'v1'
+        },
+        f2: {
+          variation: 'v2'
+        }
+      }
 
       expect(getAddFlagsInstruction(flagsToAdd)).toEqual({
         kind: 'addRule',
         parameters: {
           features: [
             {
-              identifier: flagsToAdd[0].identifier,
-              variation: flagsToAdd[0].variation
+              identifier: 'f1',
+              variation: 'v1'
             },
             {
-              identifier: flagsToAdd[1].identifier,
-              variation: flagsToAdd[1].variation
+              identifier: 'f2',
+              variation: 'v2'
             }
           ]
         }

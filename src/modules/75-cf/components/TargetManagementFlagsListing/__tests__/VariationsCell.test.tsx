@@ -5,17 +5,23 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { FC } from 'react'
 import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { mockFeatures } from '@cf/pages/target-group-detail/__tests__/mocks'
 import VariationsCell, { VariationsCellProps } from '../VariationsCell'
 
+const MockReasonTooltip: FC = ({ children }) => <>{children}</>
+
 const renderComponent = (props: Partial<VariationsCellProps> = {}): RenderResult =>
   render(
     <TestWrapper>
-      <VariationsCell row={{ original: mockFeatures[0] }} value={{ disabled: false }} {...props} />
+      <VariationsCell
+        row={{ original: mockFeatures[0] }}
+        value={{ disabled: false, ReasonTooltip: MockReasonTooltip }}
+        {...props}
+      />
     </TestWrapper>
   )
 
@@ -23,7 +29,7 @@ describe('VariationsCell', () => {
   test('it should display the variation select', async () => {
     renderComponent()
 
-    const input = screen.getByPlaceholderText('- cf.segmentDetail.selectVariation -')
+    const input = screen.getByPlaceholderText('- cf.targetManagementFlagConfiguration.selectVariation -')
     expect(input).toBeInTheDocument()
 
     userEvent.click(input)
@@ -36,14 +42,14 @@ describe('VariationsCell', () => {
   })
 
   test('it should disable the input when the value prop contains disabled true', async () => {
-    renderComponent({ value: { disabled: true } })
+    renderComponent({ value: { disabled: true, ReasonTooltip: MockReasonTooltip } })
 
-    expect(screen.getByPlaceholderText('- cf.segmentDetail.selectVariation -')).toBeDisabled()
+    expect(screen.getByPlaceholderText('- cf.targetManagementFlagConfiguration.selectVariation -')).toBeDisabled()
   })
 
   test('it should not disable the input when the value prop does not contain disabled true', async () => {
-    renderComponent({ value: {} })
+    renderComponent({ value: { ReasonTooltip: MockReasonTooltip } })
 
-    expect(screen.getByPlaceholderText('- cf.segmentDetail.selectVariation -')).toBeEnabled()
+    expect(screen.getByPlaceholderText('- cf.targetManagementFlagConfiguration.selectVariation -')).toBeEnabled()
   })
 })

@@ -20,13 +20,15 @@ import ConfigureMSTeamsNotifications from '@notifications/modals/ConfigureNotifi
 
 export type NotificationMethodsProps = StepProps<NotificationRules> & {
   typeOptions?: SelectOption[]
+  expressions?: string[]
 }
 
 function NotificationMethods({
   prevStepData,
   nextStep,
   previousStep,
-  typeOptions
+  typeOptions,
+  expressions
 }: NotificationMethodsProps): React.ReactElement {
   const { getString } = useStrings()
   const [method, setMethod] = useState<SelectOption | undefined>(
@@ -54,6 +56,11 @@ function NotificationMethods({
             onChange={item => {
               setMethod(item)
             }}
+            inputProps={{
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              'data-testid': 'notificationType'
+            }}
           />
         </Layout.Vertical>
         {method?.value === NotificationType.MsTeams ? (
@@ -72,6 +79,7 @@ function NotificationMethods({
                 }
               })
             }}
+            expressions={expressions}
             hideModal={noop}
             isStep={true}
             onBack={data =>
@@ -149,6 +157,7 @@ function NotificationMethods({
                 }
               })
             }}
+            expressions={expressions}
             hideModal={noop}
             isStep={true}
             onBack={data =>
@@ -186,6 +195,7 @@ function NotificationMethods({
                 }
               })
             }}
+            expressions={expressions}
             hideModal={() => undefined}
             isStep={true}
             onBack={() => previousStep?.({ ...prevStepData })}

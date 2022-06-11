@@ -8,15 +8,17 @@
 import React, { useCallback, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Container, Tabs, Tab, Button, ButtonVariation, Layout, PageSpinner, useToaster } from '@harness/uicore'
-import { cloneDeep, omit } from 'lodash-es'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { cloneDeep, defaultTo, isEmpty, omit } from 'lodash-es'
+import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
-import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { NGServiceConfig, updateServiceV2Promise } from 'services/cd-ng'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { NGServiceConfig, useCreateServiceV2, useUpdateServiceV2 } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { useServiceContext } from '@cd/context/ServiceContext'
+import { useCache } from '@common/hooks/useCache'
 import ServiceConfiguration from './ServiceConfiguration/ServiceConfiguration'
 import { ServiceTabs } from '../utils/ServiceUtils'
 import css from '@cd/components/Services/ServiceStudio/ServiceStudio.module.scss'
@@ -28,7 +30,7 @@ interface ServiceStudioDetailsProps {
 }
 function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElement | null {
   const { getString } = useStrings()
-  const { accountId } = useParams<AccountPathProps>()
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { tab } = useQueryParams<{ tab: string }>()
   const { updateQueryParams } = useUpdateQueryParams()
   const {
@@ -38,12 +40,13 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
     isReadonly
   } = usePipelineContext()
 
-  const { isServiceEntityModalView, onCloseModal } = useServiceContext()
-
+  const { isServiceEntityModalView, isServiceCreateModalView, onServiceCreate, onCloseModal, serviceCacheKey } =
+    useServiceContext()
   const [selectedTabId, setSelectedTabId] = useState(tab ?? ServiceTabs.SUMMARY)
   const { showSuccess, showError, clear } = useToaster()
+  const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+  const { setCache } = useCache()
 
-  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
   const handleTabChange = useCallback(
     (nextTab: ServiceTabs): void => {
       setSelectedTabId(nextTab)
@@ -52,26 +55,53 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
     [updateQueryParams]
   )
 
-  const saveAndPublishService = async () => {
-    clear()
+  const { mutate: createService } = useCreateServiceV2({
+    queryParams: {
+      accountIdentifier: accountId
+    },
+    requestOptions: {
+      headers: {
+        'content-type': 'application/yaml'
+      }
+    }
+  })
+  const { mutate: updateService } = useUpdateServiceV2({
+    queryParams: {
+      accountIdentifier: accountId
+    },
+    requestOptions: {
+      headers: {
+        'content-type': 'application/yaml'
+      }
+    }
+  })
 
+  const saveAndPublishService = async (): Promise<void> => {
+    clear()
     const body = {
-      ...omit(cloneDeep(props.serviceData.service), 'serviceDefinition'),
+      ...omit(cloneDeep(props.serviceData.service), 'serviceDefinition', 'gitOpsEnabled'),
+      projectIdentifier,
+      orgIdentifier,
       yaml: yamlStringify({ ...props.serviceData })
     }
 
     try {
-      const response = await updateServiceV2Promise({
-        body,
-        queryParams: {
-          accountIdentifier: accountId
-        },
-        requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
-      })
-      // istanbul ignore else
+      const response = isServiceCreateModalView ? await createService(body) : await updateService(body)
       if (response.status === 'SUCCESS') {
         if (isServiceEntityModalView) {
-          onCloseModal?.()
+          if (isServiceCreateModalView) {
+            onServiceCreate?.({
+              identifier: props.serviceData.service?.identifier as string,
+              name: props.serviceData.service?.name as string
+            })
+          } else {
+            if (!isEmpty(response.data?.service?.yaml) && !isEmpty(serviceCacheKey)) {
+              const parsedYaml = yamlParse<NGServiceConfig>(defaultTo(response.data?.service?.yaml, ''))
+              const serviceInfo = parsedYaml.service?.serviceDefinition
+              setCache(serviceCacheKey, serviceInfo)
+            }
+            onCloseModal?.()
+          }
         } else {
           showSuccess(getString('common.serviceCreated'))
           fetchPipeline({ forceFetch: true, forceUpdate: true })
@@ -80,7 +110,6 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
         throw response
       }
     } catch (e: any) {
-      clear()
       showError(e?.data?.message || e?.message || getString('commonError'))
     }
   }
@@ -94,7 +123,7 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
     )
   }
 
-  if (NG_SVC_ENV_REDESIGN) {
+  if (isSvcEnvEntityEnabled) {
     if (isServiceEntityModalView) {
       return (
         <>
@@ -125,7 +154,7 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
           />
 
           <Tab id={ServiceTabs.REFERENCED_BY} title={getString('refrencedBy')} panel={props.refercedByPanel} />
-          <Tab id={ServiceTabs.ActivityLog} title={getString('activityLog')} panel={<></>} />
+          {/* <Tab id={ServiceTabs.ActivityLog} title={getString('activityLog')} panel={<></>} /> */}
         </Tabs>
         {selectedTabId === ServiceTabs.Configuration && (
           <Layout.Horizontal className={css.btnContainer}>

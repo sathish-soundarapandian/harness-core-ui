@@ -1,0 +1,14 @@
+.line {
+  border-bottom: 1px solid var(--grey-100);
+  padding: var(--spacing-medium) 0 !important;
+}
+
+.payingToday {
+  background-color: var(--primary-1) !important;
+  border-radius: 4px;
+  padding: var(--spacing-medium) !important;
+}
+
+.lineItem {
+  width: 33%;
+}

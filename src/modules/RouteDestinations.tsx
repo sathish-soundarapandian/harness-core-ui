@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
+import GitOpsRoutes from '@gitops/RouteDestinations'
 import auditTrailRoutes from '@audit-trail/RouteDestinations'
 import delegatesRoutes from '@delegates/RouteDestinations'
 import commonRoutes from '@common/RouteDestinations'
@@ -27,6 +28,7 @@ import CFRoutes from '@cf/RouteDestinations'
 import CERoutes from '@ce/RouteDestinations'
 import STORoutes from '@sto-steps/RouteDestinations'
 import GovernanceRoutes from '@governance/RouteDestinations'
+import ChaosRoutes from '@chaos/RouteDestinations'
 import DASHBOARDRoutes from '@dashboards/RouteDestinations'
 import AccountSideNav from '@common/components/AccountSideNav/AccountSideNav'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
@@ -71,7 +73,8 @@ RbacFactory.registerResourceTypeHandler(ResourceType.SLO, {
 })
 
 export default function RouteDestinations(): React.ReactElement {
-  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, SECURITY } = useFeatureFlags()
+  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, SECURITY, CHAOS_ENABLED } =
+    useFeatureFlags()
 
   return (
     <Switch>
@@ -87,10 +90,12 @@ export default function RouteDestinations(): React.ReactElement {
       {connectorRoutes.props.children}
       {tempatesRoutes.props.children}
       {userProfileRoutes.props.children}
+      {CHAOS_ENABLED ? ChaosRoutes.props.children : null}
       {CING_ENABLED ? CIRoutes.props.children : null}
       {CDNG_ENABLED ? CDRoutes.props.children : null}
       {CVNG_ENABLED ? CVRoutes.props.children : null}
-      {SECURITY && STORoutes.props.children}
+      {GitOpsRoutes.props.children}
+      {SECURITY ? STORoutes.props.children : null}
       <Route path="/account/:accountId/settings">
         <AuthSettingsRoutes />
       </Route>
@@ -99,7 +104,7 @@ export default function RouteDestinations(): React.ReactElement {
           <CERoutes />
         </Route>
       ) : null}
-      {CFNG_ENABLED && <CFRoutes />}
+      {CFNG_ENABLED ? CFRoutes({})?.props.children : null}
       <Route path="*">
         <NotFoundPage />
       </Route>

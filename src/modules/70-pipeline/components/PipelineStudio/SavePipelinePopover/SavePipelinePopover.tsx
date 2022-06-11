@@ -6,37 +6,29 @@
  */
 
 import React from 'react'
-import { Menu, Position } from '@blueprintjs/core'
 import {
   Button,
   ButtonVariation,
-  Icon,
-  IconName,
-  Popover,
-  Text,
   VisualYamlSelectedView as SelectedView,
-  useToaster
+  useToaster,
+  SplitButton,
+  SplitButtonOption,
+  PopoverProps
 } from '@wings-software/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty, noop, omit } from 'lodash-es'
-import cx from 'classnames'
-import type { PopoverProps } from '@wings-software/uicore/dist/components/Popover/Popover'
 import { parse } from 'yaml'
 import { useModalHook } from '@harness/use-modal'
 import { useStrings } from 'framework/strings'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { usePermission } from '@rbac/hooks/usePermission'
-import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useFeature } from '@common/hooks/useFeatures'
 import { savePipeline, usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
 import { UseSaveSuccessResponse, useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
-import {
-  DefaultNewPipelineId,
-  SplitViewTypes
-} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
+import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { PipelineActions } from '@common/constants/TrackingConstants'
 import { validateCICodebaseConfiguration } from '@pipeline/components/PipelineStudio/StepUtil'
 import { useQueryParams } from '@common/hooks'
@@ -49,54 +41,36 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { useSaveAsTemplate } from '@pipeline/components/PipelineStudio/SaveTemplateButton/useSaveAsTemplate'
-import { AppStoreContext, useAppStore } from 'framework/AppStore/AppStoreContext'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { PipelineInfoConfig } from 'services/cd-ng'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import type { GovernanceMetadata } from 'services/pipeline-ng'
-import PipelineErrors from '@pipeline/components/PipelineStudio/PipelineCanvas/PipelineErrors/PipelineErrors'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { AccessControlCheckError } from 'services/rbac'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { EvaluationModal } from '@governance/EvaluationModal'
 import type { SaveToGitFormV2Interface } from '@common/components/SaveToGitFormV2/SaveToGitFormV2'
 import { SCHEMA_VALIDATION_FAILED } from '@common/interfaces/GitSyncInterface'
-import css from './SavePipelinePopover.module.scss'
+import usePipelineErrors from '../PipelineCanvas/PipelineErrors/usePipelineErrors'
 
 export interface SavePipelinePopoverProps extends PopoverProps {
-  className?: string
   toPipelineStudio: PathFn<PipelineType<PipelinePathProps> & PipelineStudioQueryParams>
-  isValidYaml: () => boolean
 }
 
 interface SavePipelineObj {
   pipeline: PipelineInfoConfig
 }
 
-interface SavePipelineMenuItem {
-  icon?: IconName
-  label: string
-  onClick: () => void
-  disabled?: boolean
-}
-
-export function SavePipelinePopover({
-  toPipelineStudio,
-  isValidYaml,
-  className = '',
-  portalClassName,
-  ...popoverProps
-}: SavePipelinePopoverProps): React.ReactElement {
-  const { isGitSyncEnabled } = React.useContext(AppStoreContext)
+export function SavePipelinePopover({ toPipelineStudio }: SavePipelinePopoverProps): React.ReactElement {
+  const { isGitSyncEnabled, isGitSimplificationEnabled } = useAppStore()
 
   const {
-    state: { pipeline, yamlHandler, storeMetadata, gitDetails, pipelineView, isUpdated },
+    state: { pipeline, yamlHandler, storeMetadata, gitDetails, isUpdated },
     deletePipelineCache,
     fetchPipeline,
     view,
     setSchemaErrorView,
-    setSelection,
-    isReadonly,
-    updatePipelineView
+    isReadonly
   } = usePipelineContext()
   const [loading, setLoading] = React.useState<boolean>()
   const { branch, repoName, connectorRef, storeType, repoIdentifier } = useQueryParams<GitQueryParams>()
@@ -104,16 +78,15 @@ export function SavePipelinePopover({
   const { showSuccess, showError, clear } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
-  const { OPA_PIPELINE_GOVERNANCE } = useFeatureFlags()
-  const { isGitSimplificationEnabled } = useAppStore()
+  const {
+    OPA_PIPELINE_GOVERNANCE,
+    NG_TEMPLATES: templatesFeatureFlagEnabled,
+    NG_PIPELINE_TEMPLATE: pipelineTemplatesFeatureFlagEnabled
+  } = useFeatureFlags()
   const history = useHistory()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } =
     useParams<PipelineType<PipelinePathProps>>()
   const isYaml = view === SelectedView.YAML
-  const [menuOpen, setMenuOpen] = React.useState(false)
-  const templatesFeatureFlagEnabled = useFeatureFlag(FeatureFlag.NG_TEMPLATES)
-  const pipelineTemplatesFeatureFlagEnabled = useFeatureFlag(FeatureFlag.NG_PIPELINE_TEMPLATE)
-  const [updatePipelineAPIResponse, setUpdatePipelineAPIResponse] = React.useState<any>()
   const [governanceMetadata, setGovernanceMetadata] = React.useState<GovernanceMetadata>()
 
   const isPipelineRemote = isGitSimplificationEnabled && storeType === StoreType.REMOTE
@@ -153,12 +126,12 @@ export function SavePipelinePopover({
     templatesFeatureFlagEnabled &&
     pipelineTemplatesFeatureFlagEnabled &&
     canEdit &&
-    !pipeline.template
+    !pipeline?.template
 
   const isSaveEnabled = !isReadonly && isUpdated
 
   const { save } = useSaveAsTemplate({ data: pipeline, type: 'Pipeline', fireSuccessEvent: true })
-
+  const { openPipelineErrorsModal } = usePipelineErrors()
   const navigateToLocation = (newPipelineId: string, updatedGitDetails?: SaveToGitFormInterface): void => {
     history.replace(
       toPipelineStudio({
@@ -180,34 +153,6 @@ export function SavePipelinePopover({
     )
   }
 
-  const gotoViewWithDetails = React.useCallback(
-    ({ stageId, stepId, sectionId }: { stageId?: string; stepId?: string; sectionId?: string } = {}): void => {
-      hideErrorModal()
-      // If Yaml mode, or if pipeline error - stay on yaml mode
-      if (isYaml || (!stageId && !stepId)) {
-        return
-      }
-      setSelection(sectionId ? { stageId, stepId, sectionId } : { stageId, stepId })
-      updatePipelineView({
-        ...pipelineView,
-        isSplitViewOpen: true,
-        splitViewData: { type: SplitViewTypes.StageView }
-      })
-    },
-    [isYaml, pipelineView]
-  )
-
-  const [showErrorModal, hideErrorModal] = useModalHook(
-    () => (
-      <PipelineErrors
-        errors={updatePipelineAPIResponse?.metadata?.schemaErrors}
-        gotoViewWithDetails={gotoViewWithDetails}
-        onClose={hideErrorModal}
-      />
-    ),
-    [updatePipelineAPIResponse]
-  )
-
   const publishPipeline = async (newPipelineId: string, updatedGitDetails?: SaveToGitFormInterface) => {
     if (pipelineIdentifier === DefaultNewPipelineId) {
       await deletePipelineCache(gitDetails)
@@ -217,7 +162,7 @@ export function SavePipelinePopover({
       navigateToLocation(newPipelineId, updatedGitDetails)
       // note: without setTimeout does not redirect properly after save
       await fetchPipeline({ forceFetch: true, forceUpdate: true, newPipelineId })
-    } else if (updatedGitDetails?.isNewBranch === false) {
+    } else if (!updatedGitDetails || updatedGitDetails?.isNewBranch === false) {
       await fetchPipeline({ forceFetch: true, forceUpdate: true })
     }
     if (updatedGitDetails?.isNewBranch) {
@@ -275,12 +220,13 @@ export function SavePipelinePopover({
       clear()
       setSchemaErrorView(true)
       if ((response as any)?.metadata?.schemaErrors?.length) {
-        setUpdatePipelineAPIResponse(response)
-        showErrorModal()
-        if (isGitSyncEnabled || currStoreMetadata?.storeType == StoreType.REMOTE) {
+        openPipelineErrorsModal(response)
+        if (isGitSyncEnabled || currStoreMetadata?.storeType === StoreType.REMOTE) {
           // isGitSyncEnabled true
           throw { code: SCHEMA_VALIDATION_FAILED }
         }
+      } else if (isGitSyncEnabled || currStoreMetadata?.storeType === StoreType.REMOTE) {
+        throw response
       } else {
         showError(
           getRBACErrorMessage({ data: response as AccessControlCheckError }) || getString('errorWhileSaving'),
@@ -395,20 +341,6 @@ export function SavePipelinePopover({
     yamlHandler
   ])
 
-  const menuItems = (): SavePipelineMenuItem[] => {
-    return [
-      {
-        label: 'Save Pipeline',
-        onClick: saveAndPublish,
-        disabled: !isSaveEnabled
-      },
-      {
-        label: 'Save as Template',
-        onClick: save
-      }
-    ]
-  }
-
   if (loading) {
     return (
       <Button
@@ -417,7 +349,6 @@ export function SavePipelinePopover({
         text={getString('save')}
         onClick={noop}
         loading={true}
-        className={css.saveButton}
       />
     )
   }
@@ -430,7 +361,6 @@ export function SavePipelinePopover({
           text={getString('save')}
           onClick={saveAndPublish}
           icon="send-data"
-          className={css.saveButton}
           disabled={!isUpdated}
         />
       )
@@ -440,46 +370,14 @@ export function SavePipelinePopover({
   }
 
   return (
-    <Popover
-      isOpen={menuOpen}
-      onInteraction={nextOpenState => {
-        setMenuOpen(nextOpenState)
-      }}
-      position={Position.BOTTOM}
-      className={cx(css.main, className)}
-      portalClassName={cx(css.popover, portalClassName)}
-      usePortal={false}
-      minimal={true}
-      disabled={!isSaveEnabled && !isTemplatesEnabled}
-      {...popoverProps}
+    <SplitButton
+      disabled={!isSaveEnabled}
+      variation={ButtonVariation.PRIMARY}
+      text={getString('save')}
+      loading={loading}
+      onClick={saveAndPublish}
     >
-      <Button
-        variation={ButtonVariation.PRIMARY}
-        rightIcon="chevron-down"
-        text={getString('save')}
-        onClick={noop}
-        loading={loading}
-        className={css.saveButton}
-        disabled={!isSaveEnabled && !isTemplatesEnabled}
-      />
-      <Menu>
-        {menuItems().map(item => {
-          return (
-            <li
-              key={item.label}
-              className={cx(css.menuItem, { [css.disabled]: item.disabled })}
-              onClick={e => {
-                e.stopPropagation()
-                item.onClick()
-                setMenuOpen(false)
-              }}
-            >
-              {item.icon && <Icon name={item.icon} size={12} />}
-              <Text lineClamp={1}>{item.label}</Text>
-            </li>
-          )
-        })}
-      </Menu>
-    </Popover>
+      <SplitButtonOption onClick={save} text={getString('common.saveAsTemplate')} />
+    </SplitButton>
   )
 }

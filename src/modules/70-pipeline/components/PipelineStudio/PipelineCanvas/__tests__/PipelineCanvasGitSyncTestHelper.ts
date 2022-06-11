@@ -223,7 +223,6 @@ const pipelineContextMock: PipelineContextInterface = {
   renderPipelineStage: jest.fn(),
   fetchPipeline: () => new Promise<void>(() => undefined),
   updatePipelineView: jest.fn(),
-  updateTemplateView: () => undefined,
   updateStage: jest.fn().mockResolvedValue({}),
   getStageFromPipeline: () => ({ stage: stateMock.pipeline.stages[0] as any, parent: undefined }),
   setYamlHandler: () => undefined,
@@ -235,7 +234,8 @@ const pipelineContextMock: PipelineContextInterface = {
   setSelectedSectionId: (_selectedSectionId: string | undefined) => undefined,
   setSelection: (_selectedState: PipelineSelectionState) => undefined,
   getStagePathFromPipeline: () => '',
-  setTemplateTypes: () => undefined
+  setTemplateTypes: () => undefined,
+  getTemplate: jest.fn()
 }
 
 export const updateStageFnArg1 = {

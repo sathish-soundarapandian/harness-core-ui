@@ -249,3 +249,9 @@ resourceScope:
   includeOrgResources: Include Organization-level Resources
   includeProjResources: Include Project-level Resources
   noProjects: No Projects
+inheritedScope:
+  accountScopeTitle: Organizations or Projects using this Group
+  orgScopeTitle: Projects using this Group
+  projectOrg: '(Organization: {{orgName}})'
+  accountScopeNoData: No Organization or Project is using this Group
+  orgScopeNoData: No Project is using this Group

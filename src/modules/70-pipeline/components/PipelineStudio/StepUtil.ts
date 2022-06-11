@@ -6,16 +6,10 @@
  */
 
 import { FormikErrors, yupToFormErrors } from 'formik'
-import { getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
-import isEmpty from 'lodash-es/isEmpty'
-import has from 'lodash-es/has'
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { isEmpty, has, set, reduce, isObject, memoize, isBoolean, get } from 'lodash-es'
 import * as Yup from 'yup'
-import set from 'lodash-es/set'
-import reduce from 'lodash-es/reduce'
-import isObject from 'lodash-es/isObject'
-import memoize from 'lodash-es/memoize'
-import isBoolean from 'lodash-es/isBoolean'
-import get from 'lodash-es/get'
+import type { K8sDirectInfraYaml } from 'services/ci'
 import type {
   StageElementConfig,
   ExecutionWrapperConfig,
@@ -32,6 +26,10 @@ import type { TemplateStepNode } from 'services/pipeline-ng'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { getPrCloneStrategyOptions } from '@pipeline/utils/constants'
 import { CodebaseTypes, isCloneCodebaseEnabledAtLeastOneStage } from '@pipeline/utils/CIUtils'
+import {
+  INPUT_EXPRESSION_REGEX_STRING,
+  isExecionInput
+} from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 import factory from '../PipelineSteps/PipelineStepFactory'
 import { StepType } from '../PipelineSteps/PipelineStepInterface'
 // eslint-disable-next-line no-restricted-imports
@@ -42,9 +40,19 @@ import '@ci/components/PipelineSteps'
 import '@sto-steps/components/PipelineSteps'
 import { StepViewType } from '../AbstractSteps/Step'
 
+/**
+ * Loops over the pipeline and clears all the runtime inputs i.e. <+input>
+ * expect for execution time inputs i.e. <+input>.executionInput()
+ */
 export const clearRuntimeInput = (template: PipelineInfoConfig): PipelineInfoConfig => {
+  const INPUT_EXPRESSION_REGEX = new RegExp(`"${INPUT_EXPRESSION_REGEX_STRING}"`, 'g')
   return JSON.parse(
-    JSON.stringify(template || {}).replace(/"<\+input>.?(?:allowedValues\((.*?)\)|regex\((.*?)\))?"/g, '""')
+    JSON.stringify(template || {}).replace(
+      new RegExp(`"${INPUT_EXPRESSION_REGEX.source.slice(1).slice(0, -1)}"`, 'g'),
+      value => {
+        return isExecionInput(value) ? value : '""'
+      }
+    )
   )
 }
 
@@ -220,6 +228,7 @@ export const validateStage = ({
     const templateStageConfig = template?.spec as DeploymentStageConfig | undefined
     const originalStageConfig = originalStage?.spec as DeploymentStageConfig | undefined
     if (
+      viewType !== StepViewType.InputSet && // no fields are required on InputSet creation
       isEmpty((stageConfig?.infrastructure as Infrastructure)?.spec?.namespace) &&
       getMultiTypeFromValue((templateStageConfig?.infrastructure as Infrastructure)?.spec?.namespace) ===
         MultiTypeInputType.RUNTIME
@@ -230,7 +239,6 @@ export const validateStage = ({
         getString?.('fieldRequired', { field: getString?.('pipelineSteps.build.infraSpecifications.namespace') })
       )
     }
-
     if (stage.type === 'Deployment' && templateStageConfig?.serviceConfig?.serviceRef) {
       const step = factory.getStep(StepType.DeployService)
       const errorsResponse = step?.validateInputSet({
@@ -243,6 +251,8 @@ export const validateStage = ({
         set(errors, 'spec.serviceConfig', errorsResponse)
       }
     }
+
+    // TODO: errors
 
     if (stage.type === 'Deployment' && templateStageConfig?.infrastructure?.environmentRef) {
       const step = factory.getStep(StepType.DeployEnvironment)
@@ -271,6 +281,38 @@ export const validateStage = ({
         set(errors, 'spec.infrastructure.infrastructureDefinition.spec', errorsResponse)
       }
     }
+    // CI validation
+    if (
+      viewType !== StepViewType.InputSet &&
+      isEmpty((stageConfig?.infrastructure as K8sDirectInfraYaml)?.spec?.connectorRef) &&
+      (stageConfig?.infrastructure as K8sDirectInfraYaml)?.type === 'KubernetesDirect' &&
+      getMultiTypeFromValue((templateStageConfig?.infrastructure as Infrastructure)?.spec?.connectorRef) ===
+        MultiTypeInputType.RUNTIME
+    ) {
+      set(
+        errors,
+        'spec.infrastructure.spec.connectorRef',
+        getString?.('fieldRequired', {
+          field: getString?.('connectors.title.k8sCluster')
+        })
+      )
+    }
+    if (
+      viewType !== StepViewType.InputSet &&
+      isEmpty((stageConfig?.infrastructure as Infrastructure)?.spec?.spec?.poolName) &&
+      (stageConfig?.infrastructure as K8sDirectInfraYaml)?.type === 'VM' &&
+      getMultiTypeFromValue((templateStageConfig?.infrastructure as Infrastructure)?.spec?.spec?.poolName) ===
+        MultiTypeInputType.RUNTIME
+    ) {
+      set(
+        errors,
+        'spec.infrastructure.spec.spec.poolName',
+        getString?.('fieldRequired', {
+          field: getString?.('pipeline.buildInfra.poolName')
+        })
+      )
+    }
+
     if (stage?.variables) {
       const step = factory.getStep(StepType.CustomVariable)
       const errorsResponse: any = step?.validateInputSet({ data: stage, template, getString, viewType })

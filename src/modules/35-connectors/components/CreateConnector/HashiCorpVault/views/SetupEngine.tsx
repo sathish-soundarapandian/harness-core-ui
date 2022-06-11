@@ -49,8 +49,13 @@ import {
 } from 'services/cd-ng'
 import { useToaster } from '@common/exports'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
+import { connectorGovernanceModalProps } from '@connectors/utils/utils'
+import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
+import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
+import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { FeatureFlag } from '@common/featureFlags'
-import { useConnectorGovernanceModal } from '@connectors/hooks/useConnectorGovernanceModal'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 
 const defaultInitialFormData: SetupEngineFormData = {
   secretEngine: '',
@@ -76,10 +81,9 @@ const SetupEngine: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps>
   const [savingDataInProgress, setSavingDataInProgress] = useState<boolean>(false)
   const [secretEngineOptions, setSecretEngineOptions] = useState<SelectOption[]>([])
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding | undefined>()
-  const { hideOrShowGovernanceErrorModal } = useConnectorGovernanceModal({
-    errorOutOnGovernanceWarning: false,
-    featureFlag: FeatureFlag.OPA_CONNECTOR_GOVERNANCE
-  })
+
+  const opaFlagEnabled = useFeatureFlag(FeatureFlag.OPA_CONNECTOR_GOVERNANCE)
+  const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal(connectorGovernanceModalProps())
   const { mutate: getMetadata, loading } = useGetMetadata({ queryParams: { accountIdentifier: accountId } })
   const { mutate: createConnector, loading: creating } = useCreateConnector({
     queryParams: { accountIdentifier: accountId }
@@ -87,6 +91,7 @@ const SetupEngine: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps>
   const { mutate: updateConnector, loading: updating } = useUpdateConnector({
     queryParams: { accountIdentifier: accountId }
   })
+  useConnectorWizard({ helpPanel: { referenceId: 'HashiCorpVaultEngineSetup', contentWidth: 900 } })
 
   const engineTypeOptions: IOptionProps[] = [
     {
@@ -201,13 +206,17 @@ const SetupEngine: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps>
       try {
         setSavingDataInProgress(true)
         const response = isEditMode ? await updateConnector(data) : await createConnector(data)
-        const { canGoToNextStep } = await hideOrShowGovernanceErrorModal(response)
-        if (canGoToNextStep) {
+        const onSuccessCreateOrUpdate = () => {
           nextStep?.({ ...prevStepData, ...formData })
           onConnectorCreated?.(response.data)
           isEditMode
             ? showSuccess(getString('connectors.updatedSuccessfully'))
             : showSuccess(getString('connectors.createdSuccessfully'))
+        }
+        if (opaFlagEnabled && response.data?.governanceMetadata) {
+          conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, onSuccessCreateOrUpdate)
+        } else {
+          onSuccessCreateOrUpdate()
         }
       } catch (err) {
         /* istanbul ignore next */
@@ -218,10 +227,16 @@ const SetupEngine: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps>
     }
   }
 
+  const { trackEvent } = useTelemetry()
+
+  useTrackEvent(ConnectorActions.SetupEngineLoad, {
+    category: Category.CONNECTOR
+  })
+
   return loadingFormData || savingDataInProgress ? (
     <PageSpinner message={savingDataInProgress ? getString('connectors.hashiCorpVault.saveInProgress') : undefined} />
   ) : (
-    <Container padding={{ top: 'medium' }} width="64%">
+    <Container padding={{ top: 'medium' }}>
       <Text font={{ variation: FontVariation.H3 }} padding={{ bottom: 'xlarge' }} color={Color.BLACK}>
         {getString('connectors.hashiCorpVault.setupEngine')}
       </Text>
@@ -247,6 +262,9 @@ const SetupEngine: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps>
           })
         })}
         onSubmit={formData => {
+          trackEvent(ConnectorActions.SetupEngineSubmit, {
+            category: Category.CONNECTOR
+          })
           handleCreateOrEdit(formData)
         }}
       >

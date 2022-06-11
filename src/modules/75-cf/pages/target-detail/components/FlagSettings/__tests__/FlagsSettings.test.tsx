@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import { cloneDeep } from 'lodash-es'
+import { getByPlaceholderText, render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { Feature, Features } from 'services/cf'
 import * as cfServices from 'services/cf'
@@ -194,6 +195,85 @@ describe('FlagSettings', () => {
       expect(patchTargetMock).toHaveBeenCalled()
       expect(refetchMock).not.toHaveBeenCalled()
       expect(screen.getByText(message)).toBeInTheDocument()
+    })
+  })
+
+  describe('add flags modal', () => {
+    const openAndSubmitDialog = async (refetchMock: jest.Mock): Promise<void> => {
+      useGetAllFeaturesMock.mockReturnValue({
+        data: mockResponse(),
+        loading: false,
+        error: null,
+        refetch: refetchMock
+      } as any)
+
+      renderComponent()
+
+      const newFlag = cloneDeep(mockFlags[0])
+      newFlag.identifier = 'newFlag'
+      newFlag.name = 'NEW FLAG'
+
+      useGetAllFeaturesMock.mockReturnValue({
+        data: mockResponse([newFlag]),
+        loading: false,
+        error: null,
+        refetch: jest.fn()
+      } as any)
+
+      userEvent.click(screen.getByRole('button', { name: 'cf.targetManagementFlagConfiguration.addFlag' }))
+
+      await waitFor(() => expect(screen.getByText(newFlag.name)).toBeInTheDocument())
+
+      const checkbox = screen.getByRole('checkbox') as HTMLInputElement
+      userEvent.click(checkbox)
+      userEvent.click(
+        getByPlaceholderText(
+          checkbox.closest('[role="row"]') as HTMLElement,
+          '- cf.targetManagementFlagConfiguration.selectVariation -'
+        )
+      )
+
+      await waitFor(() => expect(screen.getByText(newFlag.variations[0].name as string)).toBeInTheDocument())
+      userEvent.click(screen.getByText(newFlag.variations[0].name as string))
+
+      const submitBtn = screen.getByRole('button', { name: 'cf.targetManagementFlagConfiguration.addFlags' })
+      expect(submitBtn).toBeInTheDocument()
+
+      await waitFor(() => {
+        expect(submitBtn).toBeEnabled()
+        expect(patchTargetMock).not.toHaveBeenCalled()
+        expect(refetchMock).not.toHaveBeenCalled()
+      })
+
+      userEvent.click(submitBtn)
+    }
+
+    test('it should call the patchTarget hook and reload the flags when a new flag is added', async () => {
+      const refetchMock = jest.fn()
+
+      patchTargetMock.mockResolvedValue(undefined)
+
+      await openAndSubmitDialog(refetchMock)
+
+      await waitFor(() => {
+        expect(patchTargetMock).toHaveBeenCalled()
+        expect(refetchMock).toHaveBeenCalled()
+      })
+    })
+
+    test('it should display an error and not refetch if the patchTarget hook fails', async () => {
+      const message = 'ERROR MESSAGE'
+      const refetchMock = jest.fn()
+
+      patchTargetMock.mockRejectedValue({ message })
+
+      await openAndSubmitDialog(refetchMock)
+
+      await waitFor(() => {
+        expect(patchTargetMock).toHaveBeenCalled()
+        expect(refetchMock).not.toHaveBeenCalled()
+        expect(screen.getByText(message)).toBeInTheDocument()
+      })
     })
   })
 })

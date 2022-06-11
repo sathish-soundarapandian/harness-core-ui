@@ -6,6 +6,7 @@
  */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-duplicate-imports */
 declare const __DEV__: boolean
 declare const Bugsnag: any
 declare const __BUGSNAG_RELEASE_VERSION__: string
@@ -73,6 +74,7 @@ declare interface Window {
 
 declare interface WindowEventMap {
   PROMISE_API_RESPONSE: CustomEvent
+  USE_CACHE_UPDATED: CustomEvent
 }
 
 declare interface Document {
@@ -87,6 +89,12 @@ declare module 'event-source-polyfill'
 declare module 'refiner-js'
 
 declare module 'gitopsui/MicroFrontendApp' {
+  import type { ChildAppComponent } from './microfrontends'
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'chaos/MicroFrontendApp' {
   import type { ChildAppComponent } from './microfrontends'
   const ChildApp: ChildAppComponent
   export default ChildApp

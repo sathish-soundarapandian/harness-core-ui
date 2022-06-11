@@ -23,6 +23,7 @@ interface GitRemoteDetailsProps {
     showRepo?: boolean
     normalInputStyle?: boolean
     readOnly?: boolean
+    fallbackDefaultBranch?: boolean
   }
 }
 

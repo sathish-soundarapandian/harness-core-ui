@@ -22,6 +22,7 @@ import { K8sCanaryDeleteStep } from './K8sCanaryDelete/K8sCanaryDeleteStep'
 import { K8sApplyStep } from './K8sApply/K8sApplyStep'
 import { K8sDeleteStep } from './K8sDelete/K8sDeleteStep'
 import { DeployEnvironmentStep } from './DeployEnvStep/DeployEnvStep'
+import { DeployInfrastructureStep } from './DeployInfrastructureStep/DeployInfrastructureStep'
 import { DeployServiceStep } from './DeployServiceStep/DeployServiceStep'
 import { HelmDeploy } from './HelmDeploy/HelmDeploy'
 import { HelmRollback } from './HelmRollback/HelmRollback'
@@ -42,6 +43,7 @@ import { ServerlessAwsLambdaServiceSpec } from './ServerlessAwsLambdaServiceSpec
 import { CFRollbackStack } from './CloudFormation/RollbackStack/RollbackStack'
 import { CFDeleteStack } from './CloudFormation/DeleteStack/DeleteStack'
 import { CFCreateStack } from './CloudFormation/CreateStack/CreateStack'
+import { CreatePr } from './CreatePrStep/CreatePrStep'
 
 factory.registerStep(new HttpStep())
 factory.registerStep(new K8RolloutDeployStep())
@@ -61,6 +63,7 @@ factory.registerStep(new ServerlessAwsLambdaSpec())
 factory.registerStep(new ServerlessAzureSpec())
 factory.registerStep(new ServerlessGCPSpec())
 factory.registerStep(new DeployEnvironmentStep())
+factory.registerStep(new DeployInfrastructureStep())
 factory.registerStep(new DeployServiceStep())
 factory.registerStep(new KubernetesServiceSpec())
 factory.registerStep(new ServerlessAwsLambdaServiceSpec())
@@ -78,3 +81,4 @@ factory.registerStep(new AzureInfrastructureSpec())
 factory.registerStep(new CFRollbackStack())
 factory.registerStep(new CFDeleteStack())
 factory.registerStep(new CFCreateStack())
+factory.registerStep(new CreatePr())

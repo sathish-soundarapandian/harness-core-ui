@@ -29,6 +29,7 @@ export default function useGetTargetGroupFlags({
   accountIdentifier
 }: UseGetTargetGroupFlagsArgs): UseGetTargetGroupFlagsPayload {
   const [refetching, setRefetching] = useState<boolean>(true)
+  const environmentIdentifier = targetGroup.environment as string
 
   const {
     data: targetGroupFlags,
@@ -41,7 +42,7 @@ export default function useGetTargetGroupFlags({
       accountIdentifier,
       orgIdentifier,
       projectIdentifier,
-      environmentIdentifier: targetGroup.environment as string
+      environmentIdentifier
     }
   })
 
@@ -50,9 +51,9 @@ export default function useGetTargetGroupFlags({
       accountIdentifier,
       orgIdentifier,
       projectIdentifier,
-      environmentIdentifier: targetGroup.environment as string
+      environmentIdentifier
     }),
-    [accountIdentifier, orgIdentifier, projectIdentifier, targetGroup.environment]
+    [accountIdentifier, orgIdentifier, projectIdentifier, environmentIdentifier]
   )
 
   const {

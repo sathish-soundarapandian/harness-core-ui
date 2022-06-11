@@ -65,7 +65,6 @@ import { createTemplate } from '@pipeline/utils/templateUtils'
 import StageBuilder from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilder'
 import { TemplatePipelineBuilder } from '@pipeline/components/PipelineStudio/PipelineTemplateBuilder/TemplatePipelineBuilder/TemplatePipelineBuilder'
 import { SavePipelinePopover } from '@pipeline/components/PipelineStudio/SavePipelinePopover/SavePipelinePopover'
-import { useTemplateSelector } from '@pipeline/utils/useTemplateSelector'
 import { useSaveTemplateListener } from '@pipeline/components/PipelineStudio/hooks/useSaveTemplateListener'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
@@ -89,6 +88,7 @@ interface PipelineWithGitContextFormProps extends PipelineInfoConfig {
   branch?: string
   connectorRef?: string
   filePath?: string
+  remoteType?: string
 }
 
 interface InputSetValue extends SelectOption {
@@ -139,7 +139,8 @@ export function PipelineCanvas({
     isReadonly,
     updatePipelineView,
     setSelectedStageId,
-    setSelectedSectionId
+    setSelectedSectionId,
+    getTemplate
   } = usePipelineContext()
   const {
     repoIdentifier,
@@ -183,7 +184,6 @@ export function PipelineCanvas({
     }> &
       GitQueryParams
   >()
-  const { getTemplate } = useTemplateSelector()
 
   const { data: template } = useMutateAsGet(useGetTemplateFromPipeline, {
     queryParams: {
@@ -243,7 +243,10 @@ export function PipelineCanvas({
               accountId,
               module,
               branch: selectedBranch,
-              repoIdentifier: repoIdentifier
+              repoIdentifier,
+              repoName,
+              connectorRef,
+              storeType
             })
           )
           location.reload()
@@ -319,6 +322,8 @@ export function PipelineCanvas({
                 repo: repoName || gitDetails.repoIdentifier || '',
                 branch: branch || gitDetails.branch || '',
                 connectorRef: connectorRef || '',
+                storeType: storeType || '',
+                remoteType: 'create',
                 filePath: gitDetails.filePath
               })}
               closeModal={onCloseCreate}
@@ -426,13 +431,14 @@ export function PipelineCanvas({
       delete (pipeline as PipelineWithGitContextFormProps).branch
       delete (pipeline as PipelineWithGitContextFormProps).connectorRef
       delete (pipeline as PipelineWithGitContextFormProps).filePath
+      delete (pipeline as PipelineWithGitContextFormProps).remoteType
       updatePipeline(pipeline)
       if (currStoreMetadata?.storeType) {
         updatePipelineStoreMetadata(currStoreMetadata, gitDetails)
       }
 
       if (updatedGitDetails) {
-        if (gitDetails?.objectId) {
+        if (gitDetails?.objectId || gitDetails?.commitId) {
           updatedGitDetails = { ...gitDetails, ...updatedGitDetails }
         }
         updateGitDetails(updatedGitDetails).then(() => {
@@ -548,7 +554,7 @@ export function PipelineCanvas({
   function onCloseRunPipelineModal(): void {
     closeRunPipelineModal()
     setInputSetYaml('')
-    replaceQueryParams({ repoIdentifier: repoIdentifier, branch: branch }, { skipNulls: true }, true)
+    replaceQueryParams({ repoIdentifier, branch, connectorRef, storeType, repoName }, { skipNulls: true }, true)
   }
 
   React.useEffect(() => {
@@ -579,8 +585,10 @@ export function PipelineCanvas({
               module={module}
               inputSetYAML={inputSetYaml || ''}
               inputSetSelected={getInputSetSelected()}
+              connectorRef={connectorRef}
               repoIdentifier={isPipelineRemote ? repoName : repoIdentifier}
               branch={branch}
+              source="executions"
               onClose={() => {
                 onCloseRunPipelineModal()
               }}
@@ -742,13 +750,16 @@ export function PipelineCanvas({
               }
             }
             setYamlError(false)
-            return (
+            const shouldBlockNavigation =
               !matchDefault?.isExact &&
               localUpdated &&
               !isReadonly &&
               !(pipelineIdentifier === DefaultNewPipelineId && isEmpty(pipeline?.name)) &&
               !(useTemplate && isEmpty(pipeline?.template))
-            )
+            if (!shouldBlockNavigation) {
+              !matchDefault?.isExact && deletePipelineCache(gitDetails)
+            }
+            return shouldBlockNavigation
           }}
           textProps={{
             contentText: isYamlError ? getString('navigationYamlError') : getString('navigationCheckText'),
@@ -833,7 +844,7 @@ export function PipelineCanvas({
                   </div>
                 )}
                 {isUpdated && !isReadonly && <div className={css.tagRender}>{getString('unsavedChanges')}</div>}
-                <SavePipelinePopover toPipelineStudio={toPipelineStudio} isValidYaml={isValidYaml} />
+                <SavePipelinePopover toPipelineStudio={toPipelineStudio} />
                 {pipelineIdentifier !== DefaultNewPipelineId && !isReadonly && (
                   <Button
                     disabled={!isUpdated}

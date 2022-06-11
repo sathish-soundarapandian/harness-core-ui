@@ -9,17 +9,16 @@ stepLabel: '{{name}} (Id: {{identifier}})'
 enableVerificationOptions: Enable verification options
 openInPipelineStudio: Open in Pipeline Studio
 closeStepConfig: Step Config
-stepConfigHasChanges: Form has some unsaved changed, Do you want to apply the changes?
+stepConfigHasChanges: Form has some unsaved changes, Do you want to apply the changes?
 clickHere: Click here
 stepDetails: Step details
 stageVariables: Stage Variables
 scriptInputVariables: Script Input Variables
 scriptOutputVariables: Script Output Variables
 executionTarget: Execution Target
-removeTemplate: The applied template will be removed from your stage.
-changeTemplate: 'Applying {{name}} to your {{entity}} might reset some fields.'
+removeTemplate: '<b>{{name}}</b> will be removed from this {{entity}}.'
+cloneSuccess: 'Pipeline {{name}} has been cloned successfully as {{cloneName}}'
 templateSaved: 'Template {{name}} has been published successfully. Applying {{name}} to your {{entity}} might reset some fields.'
-copyTemplate: Template configurations will be copied to your pipeline and made editable.
 collapseIsDisabledWhileStageIsRunning: Collapse is disable while stage is running
 changeTemplateLabel: Change Template
 removeTemplateLabel: Remove Template
@@ -106,6 +105,13 @@ approvalStep:
     REJECT: Rejected
   notAuthorizedExecution: User is not authorized to approve/reject the pipeline
   disallowedApproverExecution: This approval step has been configured to disallow pipeline executors to approve this stage.
+lockStep:
+  keyPlaceholder: Enter Resource Key
+  resourceKey: Resource Key
+  keyRequired: Resource Key is required
+  scopeRequired: Scope is required
+  scopePlaceholder: Select Scope
+  scope: Scope (to release constraint)
 jiraApprovalStep:
   connectToJira: Connect to Jira
   connectorRef: Jira Connector
@@ -234,14 +240,17 @@ serviceNowUpdateStep:
     applyFromTemplate: Apply from template
     updateFields: Update Fields
 manifestType:
-  attachPath: + Attach / Edit {{manifestPath}}
+  attachPath: + Attach {{manifestPath}}
   manifestTyperequired: Manifest Type is required
   gitConnectorLabel: 'Git'
   bitBucketLabel: 'Bitbucket'
   InheritFromManifest: 'Inherit From Manifest'
   httpHelmRepoConnectorLabel: 'HTTP Helm'
-  manifestIdentifier: Manifest Identifier
-  manifestPlaceholder: Enter Manifest Identifier
+  manifestIdentifier: Manifest Name
+  manifestPlaceholder: Enter Manifest Name
+  ociHelmConnectorLabel: OCI Helm
+  basePathPlaceholder: Enter Base Path
+  basePath: Base Path
   manifestSource: Manifest Source
   manifestDetails: Manifest Details
   manifestRepoType: '{{ $.manifestsText }} {{ $.typeLabel }}'
@@ -294,6 +303,9 @@ manifestType:
     chartNamePlaceHolder: 'Enter Chart Name'
     chartVersionPlaceHolder: 'Enter Chart Version'
     chartVersionRequired: 'Chart Version is required'
+  oci:
+    basePathRequired: 'Base Path is required'
+    chartVersionValidation: '"latest" tag is not supported as chart version'
 manifestTypeLabels:
   K8sManifest: K8s Manifest
   ValuesYaml: Values YAML
@@ -527,6 +539,8 @@ dashboards:
   successfulBuilds: Successful Builds
   pipelineHealth: Pipeline health
   totalExecutions: Total Executions
+  pipelineExecution: Pipeline Executions
+  executionsLabel: '# of Executions'
   successRate: Success Rate
   meanDuration: Mean Duration
   medianDuration: Median Duration
@@ -608,6 +622,7 @@ testsReports:
     addRunTestsStep: Add 'Run Tests step' to your Pipeline
     requiresEnterprisePlan: Requires Enterprise Plan to access Test Intelligence
 uniqueIdentifier: Identifier must be unique
+uniqueName: Name must be unique
 inputSets:
   inputSetNameLabel: Input Set Name
   applyInputSet: Apply Input Set
@@ -653,6 +668,10 @@ infraSpecifications:
   initTimeoutPlaceholder: Enter Init Timeout
   validation:
     requiredExistingStage: Existing stage is a required field
+  os: OS
+  osTypes:
+    windows: Windows
+    macos: MacOS
 imagePathLabel: Image Path
 artifactPathLabel: Artifact Path
 artifactPathFilterLabel: Artifact Path Filter
@@ -794,6 +813,7 @@ stepDescription:
   HTTP: Run HTTP requests containing URLs, methods, headers, assertions, and variables.
   SHELLSCRIPT: Execute scripts in the shell session. The scripts can be executed on the pod/instance running a Harness Delegate or on a remote host in the infrastructure.
   Barrier: Synchronize multiple Pipelines to coordinate deployments systematically.
+  Lock: Description of lock step comes here.
   K8sRollingRollback: Roll back the workloads deployed by the stage.
   K8sBlueGreenDeploy: Deploy your new app version to the stage environment.
   K8sCanaryDeploy: Define how many pods are deployed for a Canary test of your new service version.
@@ -833,6 +853,7 @@ stepDescription:
   Policy: Evaluate policy during pipeline execution
   ServerlessLambdaDeploy: Create the Lambda functions defined in this Stage.
   ServerlessLambdaRollback: Deploy the previous successful version as a new version.
+  createPR: Create PR
 executionStrategy:
   executionStrategies: Execution Strategies
   useStrategy: Use Strategy
@@ -890,6 +911,7 @@ gitPullRequest: Git Pull Request
 gitPullRequestNumber: Git Pull Request Number
 expressionsEvaluation: Expressions Evaluation
 deploymentFrequency: 'Deployment Frequency'
+executionFrequency: 'Execution Frequency'
 retryPipeline: Retry Failed Pipeline
 openInNewTab: Open in new tab
 stagetoRetryFrom: Select the stage that you would like to resume from
@@ -956,7 +978,7 @@ runtimeInputNotSupported: '{{field}} cannot be runtime inputs'
 runPipeline:
   ciCodebaseConfig: CI Codebase Configuration is missing. Codebase is required when the pipeline contains a CI stage that is set to clone codebase.
 buildInfra:
-  poolId: Pool Id
+  poolName: Pool Name
   nodeSelector: Node Selector
   tolerations: Tolerations
   volumes: Volumes
@@ -1006,6 +1028,7 @@ serviceDeploymentTypes:
 noArtifactPaths: No artifact paths found with given Artifact Directory
 stageDataDeleteWarningTitle: Discard Stage Data
 stageDataDeleteWarningText: Changing deployment type will delete existing stage data like artifacts, manifests, infrastructure details, steps etc. Do you still want to proceed?
+stageDataDeleteWarningContent: Changing deployment type will delete existing stage data like service, environments, steps etc. Do you still want to proceed?
 errorFramework:
   pipelineErrorsTitle: 'Pipeline cannot be saved because {{fields}} further configuration.'
   fixErrors: Fix Errors
@@ -1053,3 +1076,8 @@ ACR:
   repositoryPlaceholder: 'Select or add Repository'
   repositoryError: 'No repository found with given Registry'
   tagError: 'No tags found with given Connector, Subscription Id, Registry and Repository'
+OverviewEmptyStates:
+  createPipelineHeaderMsg: Set up a Pipeline and run your first deployment!
+  createPipelineInfo: A Harness Pipeline is a series of stages that performs operations like building and deploying software.
+  runPipelineHeaderMsg: You haven’t tried running your pipelines yet.
+  runPipelineInfo: Click the button below to select a pipeline and get your deployments started.
