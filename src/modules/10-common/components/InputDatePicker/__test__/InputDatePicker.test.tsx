@@ -51,6 +51,6 @@ describe('Launch Button test', () => {
     expect(datePickerInput).toBeTruthy()
     fireEvent.click(datePickerInput)
     debug(container)
-    expect(queryByText('common.timeframe')).toBeInTheDocument()
+    expect(queryByText('pipeline.filters.timeFrame')).toBeInTheDocument()
   })
 })

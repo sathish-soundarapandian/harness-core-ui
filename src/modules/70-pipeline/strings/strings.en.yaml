@@ -55,7 +55,6 @@ clickToExpandErrorDetails: Click to expand error details
 approvalStage:
   settingUpStage: Getting stage data
 filters:
-  timeFrame: Timeframe
   pipelineNamePlaceholder: Enter Pipeline Name
   deploymentTypePlaceholder: Search/Select Deployment Type
   servicePlaceholder: Search/Select Service

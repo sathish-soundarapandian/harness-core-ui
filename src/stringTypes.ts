@@ -732,6 +732,7 @@ export interface StringsMap {
   'common.test.inProgress': string
   'common.test.retest': string
   'common.timePstLabel': string
+  'common.timeframe': string
   'common.tokens': string
   'common.totalLines': string
   'common.totalSelected': string
@@ -2823,7 +2824,6 @@ export interface StringsMap {
   'pipeline.filters.environmentPlaceholder': string
   'pipeline.filters.pipelineNamePlaceholder': string
   'pipeline.filters.servicePlaceholder': string
-  'pipeline.filters.timeFrame': string
   'pipeline.gitDetails': string
   'pipeline.gitExperience.noEntityFound': string
   'pipeline.gitExperience.selectDiffBranch': string

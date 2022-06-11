@@ -123,7 +123,6 @@ const FilterRef = <T, U extends FilterInterface>(props: FilterProps<T, U>, filte
         initialValues={initialFilter.formValues}
         enableReinitialize={true}
         validate={values => {
-          console.log('values', values)
           return onValidate?.(values)
         }}
         validationSchema={validationSchema ?? Yup.object()}

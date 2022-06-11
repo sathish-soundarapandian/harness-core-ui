@@ -11,7 +11,6 @@ exports[`Launch Button test Input date picker render  1`] = `
     >
       <div>
         <div
-          class="inputDatePicker"
           data-nodeid="inputDatePicker"
           data-testid="inputDatePicker"
         >
@@ -22,7 +21,7 @@ exports[`Launch Button test Input date picker render  1`] = `
             <label
               class="bp3-label"
             >
-              common.timeframe
+              pipeline.filters.timeFrame
                
               <span
                 class="bp3-text-muted"

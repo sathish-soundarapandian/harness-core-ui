@@ -6,11 +6,11 @@
  */
 
 import React, { useState, useRef, useEffect } from 'react'
-import { useStrings } from 'framework/strings'
 import { DateRange, DateRangePicker } from '@blueprintjs/datetime'
-import { DynamicPopover } from '..'
-import type { DynamicPopoverHandlerBinding } from '@common/exports'
 import { FormGroup, InputGroup } from '@blueprintjs/core'
+import { useStrings } from 'framework/strings'
+import type { DynamicPopoverHandlerBinding } from '@common/exports'
+import { DynamicPopover } from '..'
 interface InputDatePickerProps {
   formikProps: any
 }
@@ -20,14 +20,14 @@ export default function InputDatePicker(props: InputDatePickerProps) {
   const ref = useRef(null)
   const { formikProps } = props
   const getText = () => {
-    return formikProps.values?.timeRange
-      ? `${new Date(formikProps.values?.timeRange?.startTime)?.toLocaleDateString() || ''} - ${
-          new Date(formikProps.values?.timeRange?.endTime)?.toLocaleDateString() || ''
+    return formikProps?.values?.timeRange
+      ? `${new Date(formikProps?.values?.timeRange?.startTime)?.toLocaleDateString() || ''} - ${
+          new Date(formikProps?.values?.timeRange?.endTime)?.toLocaleDateString() || ''
         }`
       : null
   }
   const [dynamicPopoverHandler, setDynamicPopoverHandler] = React.useState<
-    DynamicPopoverHandlerBinding<{}> | undefined
+    DynamicPopoverHandlerBinding<{ data: null }> | undefined
   >()
   const [chartTimeRange, setChartTimeRange] = useState<{ startTime: number; endTime: number }>()
   const getValue = (): DateRange | undefined => {
@@ -81,10 +81,10 @@ export default function InputDatePicker(props: InputDatePickerProps) {
         data-testid="inputDatePicker"
         ref={ref}
         onClick={() => {
-          dynamicPopoverHandler?.show(`[data-nodeid="inputDatePicker"]`, {})
+          dynamicPopoverHandler?.show(`[data-nodeid="inputDatePicker"]`, { data: null })
         }}
       >
-        <FormGroup label={getString('pipeline.filters.timeFrame')}>
+        <FormGroup label={getString('common.timeframe')}>
           <InputGroup placeholder={getText() || getString('common.selectTimeFrame')} />
         </FormGroup>
       </div>
