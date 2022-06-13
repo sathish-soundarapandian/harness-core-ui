@@ -6,10 +6,12 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { Checkbox, FormInput, Intent, Layout, useConfirmationDialog } from '@harness/uicore'
+import { Checkbox, Intent, Layout, useConfirmationDialog } from '@harness/uicore'
 import { debounce, defaultTo, get } from 'lodash-es'
 import produce from 'immer'
 import cx from 'classnames'
+import { yamlParse } from '@common/utils/YamlHelperMethods'
+
 import type { NGServiceConfig, ServiceDefinition, StageElementConfig } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
@@ -32,14 +34,10 @@ import SelectDeploymentType from '../SelectDeploymentType'
 
 import css from './DeployServiceDefinition.module.scss'
 
-interface ServiceConfigurationProps {
-  serviceData: NGServiceConfig
-}
-function DeployServiceDefinition({ serviceData }: ServiceConfigurationProps): React.ReactElement {
+function DeployServiceDefinition(): React.ReactElement {
   const {
     state: {
       pipeline,
-      pipeline: { service },
       selectionState: { selectedStageId }
     },
     getStageFromPipeline,
@@ -48,8 +46,12 @@ function DeployServiceDefinition({ serviceData }: ServiceConfigurationProps): Re
     allowableTypes,
     isReadonly
   } = usePipelineContext()
-  console.log(serviceData, 'sd', service)
-  const { isServiceEntityModalView } = useServiceContext()
+  const { isServiceEntityModalView, serviceResponse } = useServiceContext()
+
+  const serviceYaml = React.useMemo(
+    () => yamlParse<NGServiceConfig>(defaultTo(serviceResponse?.yaml, '')),
+    [serviceResponse?.yaml]
+  )
 
   const { index: stageIndex } = getStageIndexFromPipeline(pipeline, selectedStageId || '')
   const { getString } = useStrings()
@@ -81,8 +83,8 @@ function DeployServiceDefinition({ serviceData }: ServiceConfigurationProps): Re
   }, [stage?.stage?.spec?.serviceConfig?.serviceDefinition?.type])
 
   useEffect(() => {
-    setGitOpsEnabled(serviceData.service?.gitOpsEnabled as boolean)
-  }, [serviceData.service?.gitOpsEnabled])
+    setGitOpsEnabled(serviceYaml?.service?.gitOpsEnabled as boolean)
+  }, [serviceYaml, serviceYaml?.service?.gitOpsEnabled])
 
   const { openDialog: openStageDataDeleteWarningDialog } = useConfirmationDialog({
     cancelButtonText: getString('cancel'),
