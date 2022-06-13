@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 
 import cx from 'classnames'
 
-import { Layout, ButtonSize, ButtonVariation, Text, Icon, Button } from '@harness/uicore'
+import { Layout, ButtonSize, ButtonVariation, Text, Icon, Button, StepWizard } from '@harness/uicore'
 // import { getStatus, getConnectorNameFromValue } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { FontVariation, Color } from '@harness/design-system'
 
@@ -12,15 +12,15 @@ import { Classes, IDialogProps, Dialog } from '@blueprintjs/core'
 import produce from 'immer'
 import { get, set } from 'lodash-es'
 
-import type { ManifestConfigWrapper } from 'services/cd-ng'
+import type { ConnectorInfoDTO, ManifestConfigWrapper } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { getConnectorNameFromValue, getStatus } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import type { ConnectorRefLabelType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 
-import { allowedManifestTypes, manifestStoreTypes } from '../Manifesthelper'
+import { allowedManifestTypes, manifestStoreTypes, ManifestToConnectorMap } from '../Manifesthelper'
 import type { ManifestListViewProps, ManifestStores } from '../ManifestInterface'
 import { getConnectorPath } from '../ManifestWizardSteps/ManifestUtils'
 import { showAddManifestBtn } from '../ManifestListView/ManifestListView'
@@ -28,6 +28,22 @@ import ConnectorField from '../ManifestListView/ConnectorField'
 import ReleaseRepoWizard from '../ReleaseRepoWizard/ReleaseRepoWizard'
 
 import css from '../ManifestSelection.module.scss'
+import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import StepBitbucketAuthentication from '@connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
+import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
+import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
+import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
+import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
+import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
+import StepGitlabAuthentication from '@connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
+import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
+import {
+  buildGitPayload,
+  buildGithubPayload,
+  buildBitbucketPayload,
+  buildGitlabPayload
+} from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { useQueryParams } from '@common/hooks/useQueryParams'
 
 type ManifestType = 'ReleaseRepo'
 const ReleaseRepoIcon = 'service-kubernetes'
@@ -61,13 +77,14 @@ function ReleaseRepoListView({
   }
   const { getString } = useStrings()
   const [selectedManifest, setSelectedManifest] = useState<ManifestType | null>(null)
-  //   const [connectorView, setConnectorView] = useState(false)
+  const [connectorView, setConnectorView] = useState(false)
   const [manifestStore, setManifestStore] = useState('')
-  //   const [isEditMode, setIsEditMode] = useState(false)
+  const [isEditMode, setIsEditMode] = useState(false)
   const { expressions } = useVariablesExpression()
   const [manifestIndex, setEditIndex] = useState(0)
 
-  const { accountId } = useParams<ProjectPathProps>()
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
   const getLabels = (): ConnectorRefLabelType => {
     return {
@@ -83,24 +100,126 @@ function ReleaseRepoListView({
   }
 
   const editManifest = (manifestType: ManifestType, store: ManifestStores, index: number): void => {
-    // setSelectedManifest(manifestType)
-    // setManifestStore(store)
-    // setConnectorView(false)
-    // setEditIndex(index)
-
-    // if (manifestType === 'ReleaseRepo') {
-    //   showReleaseRepoModal()
-    // } else {
-    //   showConnectorModal()
-    // }
-    console.log('edit', manifestType, store, index)
+    setSelectedManifest(manifestType)
+    setManifestStore(store)
+    //   setConnectorView(false)
+    setEditIndex(index)
+    showReleaseRepoModal()
   }
+
+  const getBuildPayload = (type: ConnectorInfoDTO['type']) => {
+    if (type === Connectors.GIT) {
+      return buildGitPayload
+    }
+    if (type === Connectors.GITHUB) {
+      return buildGithubPayload
+    }
+    if (type === Connectors.BITBUCKET) {
+      return buildBitbucketPayload
+    }
+    if (type === Connectors.GITLAB) {
+      return buildGitlabPayload
+    }
+    return () => ({})
+  }
+
+  const getNewConnectorSteps = useCallback((): JSX.Element => {
+    const buildPayload = getBuildPayload(ManifestToConnectorMap[manifestStore])
+
+    return (
+      <StepWizard title={getString('connectors.createNewConnector')}>
+        <ConnectorDetailsStep
+          type={ManifestToConnectorMap[manifestStore]}
+          name={getString('overview')}
+          isEditMode={isEditMode}
+          gitDetails={{ repoIdentifier, branch, getDefaultFromOtherRepo: true }}
+        />
+        <GitDetailsStep
+          type={ManifestToConnectorMap[manifestStore]}
+          name={getString('details')}
+          isEditMode={isEditMode}
+          connectorInfo={undefined}
+        />
+        {ManifestToConnectorMap[manifestStore] === Connectors.GIT ? (
+          <StepGitAuthentication
+            name={getString('credentials')}
+            onConnectorCreated={() => {
+              // Handle on success
+            }}
+            isEditMode={isEditMode}
+            setIsEditMode={setIsEditMode}
+            connectorInfo={undefined}
+            accountId={accountId}
+            orgIdentifier={orgIdentifier}
+            projectIdentifier={projectIdentifier}
+          />
+        ) : null}
+        {ManifestToConnectorMap[manifestStore] === Connectors.GITHUB ? (
+          <StepGithubAuthentication
+            name={getString('credentials')}
+            onConnectorCreated={() => {
+              // Handle on success
+            }}
+            isEditMode={isEditMode}
+            setIsEditMode={setIsEditMode}
+            connectorInfo={undefined}
+            accountId={accountId}
+            orgIdentifier={orgIdentifier}
+            projectIdentifier={projectIdentifier}
+          />
+        ) : null}
+        {ManifestToConnectorMap[manifestStore] === Connectors.BITBUCKET ? (
+          <StepBitbucketAuthentication
+            name={getString('credentials')}
+            onConnectorCreated={() => {
+              // Handle on success
+            }}
+            isEditMode={isEditMode}
+            setIsEditMode={setIsEditMode}
+            connectorInfo={undefined}
+            accountId={accountId}
+            orgIdentifier={orgIdentifier}
+            projectIdentifier={projectIdentifier}
+          />
+        ) : null}
+        {ManifestToConnectorMap[manifestStore] === Connectors.GITLAB ? (
+          <StepGitlabAuthentication
+            name={getString('credentials')}
+            identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
+            onConnectorCreated={() => {
+              // Handle on success
+            }}
+            isEditMode={isEditMode}
+            setIsEditMode={setIsEditMode}
+            connectorInfo={undefined}
+            accountId={accountId}
+            orgIdentifier={orgIdentifier}
+            projectIdentifier={projectIdentifier}
+          />
+        ) : null}
+        <DelegateSelectorStep
+          name={getString('delegate.DelegateselectionLabel')}
+          isEditMode={isEditMode}
+          setIsEditMode={setIsEditMode}
+          buildPayload={buildPayload}
+          connectorInfo={undefined}
+        />
+        <VerifyOutOfClusterDelegate
+          name={getString('connectors.stepThreeName')}
+          connectorInfo={undefined}
+          isStep={true}
+          isLastStep={false}
+          type={ManifestToConnectorMap[manifestStore]}
+        />
+      </StepWizard>
+    )
+  }, [connectorView, manifestStore, isEditMode])
 
   const handleSubmit = (manifestObj: ManifestConfigWrapper): void => {
     // const isNewManifest = manifestIndex === listOfManifests.length
 
-    if (listOfManifests?.length > 0) {
-      listOfManifests.splice(manifestIndex, 1, manifestObj)
+    if (manifestIndex >= 0) {
+      listOfManifests[manifestIndex] = manifestObj
     } else {
       listOfManifests.push(manifestObj)
     }
@@ -148,8 +267,17 @@ function ReleaseRepoListView({
     //   allowedManifestTypes[deploymentType]?.length === 1 ? allowedManifestTypes[deploymentType][0] : null
     // )
     // showConnectorModal()
-
+    setEditIndex(-1)
     showReleaseRepoModal()
+    setConnectorView(false)
+    setManifestStore('')
+    setIsEditMode(false)
+    setSelectedManifest(null)
+  }
+
+  const handleConnectorViewChange = (isConnectorView: boolean): void => {
+    setConnectorView(isConnectorView)
+    setIsEditMode(false)
   }
 
   const [showReleaseRepoModal, hideReleaseRepoModal] = useModalHook(() => {
@@ -170,15 +298,15 @@ function ReleaseRepoListView({
             manifestStoreTypes={manifestStoreTypes}
             labels={getLabels()}
             selectedManifest={selectedManifest}
-            // newConnectorView={connectorView}
+            newConnectorView={connectorView}
             expressions={expressions}
             allowableTypes={allowableTypes}
             // changeManifestType={changeManifestType}
-            // handleConnectorViewChange={handleConnectorViewChange}
+            handleConnectorViewChange={handleConnectorViewChange}
             handleStoreChange={handleStoreChange}
             initialValues={getInitialValues()}
             manifest={manifest}
-            // newConnectorSteps={getNewConnectorSteps()}
+            newConnectorSteps={getNewConnectorSteps()}
             // lastSteps={getLastSteps()}
             // iconsProps={getIconProps()}
             handleSubmit={handleSubmit}

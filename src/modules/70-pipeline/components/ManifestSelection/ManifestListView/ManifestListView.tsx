@@ -177,11 +177,7 @@ function ManifestListView({
     setConnectorView(false)
     setEditIndex(index)
 
-    if (manifestType === 'ReleaseRepo') {
-      showReleaseRepoModal()
-    } else {
-      showConnectorModal()
-    }
+    showConnectorModal()
   }
 
   const getLastStepInitialData = (): ManifestConfig => {

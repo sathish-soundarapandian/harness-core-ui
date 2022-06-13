@@ -114,7 +114,7 @@ export default function ManifestSelection({
 
   return (
     <Layout.Vertical>
-      {gitOpsEnabled ? (
+      {!gitOpsEnabled ? (
         <ManifestListView
           isPropagating={isPropagating}
           pipeline={pipeline}

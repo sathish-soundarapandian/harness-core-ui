@@ -1,18 +1,15 @@
 import { StepWizard } from '@harness/uicore'
 import React from 'react'
-import { produce } from 'immer'
-import { set } from 'lodash-es'
 
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import RepoStore from './RepoStore'
 import RepoDetails from './RepoDetails'
 import css from './ReleaseRepo.module.scss'
-import type { StageElementConfig } from 'services/cd-ng'
 
 function ReleaseRepoWizard(props: any): React.ReactElement {
-  const { stage } = props
-  const { allowableTypes, isReadonly, updateStage } = usePipelineContext()
+  const { allowableTypes, isReadonly } = usePipelineContext()
+
   const { expressions } = useVariablesExpression()
 
   return (
@@ -27,6 +24,7 @@ function ReleaseRepoWizard(props: any): React.ReactElement {
         handleStoreChange={props.handleStoreChange}
         initialValues={props.initialValues}
       />
+      {props.newConnectorView ? props.newConnectorSteps : null}
       <RepoDetails
         key={'RepoDetails'}
         name={'RepoDetails'}
@@ -38,11 +36,9 @@ function ReleaseRepoWizard(props: any): React.ReactElement {
         handleSubmit={values => {
           props.handleSubmit(values)
           props.onClose()
-          // updateStage(values)
         }}
         isReadonly={isReadonly}
       />
-      {/* {lastSteps?.length ? lastSteps?.map(step => step) : null} */}
     </StepWizard>
   )
 }

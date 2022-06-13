@@ -35,11 +35,25 @@ import type { ConnectorSelectedValue } from '@connectors/components/ConnectorRef
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ManifestStoreMap, ManifestIconByType, ManifestToConnectorMap, manifestStoreTypes } from '../Manifesthelper'
+import {
+  ManifestStoreMap,
+  ManifestIconByType,
+  ManifestToConnectorMap,
+  manifestStoreTypes,
+  ManifestToConnectorLabelMap
+} from '../Manifesthelper'
 import type { ManifestStores, ManifestStepInitData } from '../ManifestInterface'
 
 import css from '../../ReleaseRepoSelection/ReleaseRepo.module.scss'
 
+const RepoStoreType = {
+  Git: 'pipeline.manifestType.gitConnectorLabel',
+  Github: 'common.repo_provider.githubLabel',
+  GitLab: 'common.repo_provider.gitlabLabel',
+  Bitbucket: 'pipeline.manifestType.bitBucketLabel'
+}
+
+type StoreTypes = 'Git' | 'Github' | 'GitLab' | 'Bitbucket'
 interface ReleaseRepoStorePropType {
   stepName: string
   expressions?: string[]
@@ -92,14 +106,14 @@ function RepoStore({
     )
   }
   const handleOptionSelection = (formikData: any, storeSelected: ManifestStoreExcludingInheritFromManifest): void => {
-    if (
-      getMultiTypeFromValue(formikData.connectorRef) !== MultiTypeInputType.FIXED &&
-      formikData.store !== storeSelected
-    ) {
-      setMultiTypeValue(MultiTypeInputType.FIXED)
-    } else if (multitypeInputValue !== undefined) {
-      setMultiTypeValue(undefined)
-    }
+    // if (
+    //   getMultiTypeFromValue(formikData.connectorRef) !== MultiTypeInputType.FIXED &&
+    //   formikData.store !== storeSelected
+    // ) {
+    //   setMultiTypeValue(MultiTypeInputType.FIXED)
+    // } else if (multitypeInputValue !== undefined) {
+    //   setMultiTypeValue(undefined)
+    // }
     handleStoreChange(storeSelected)
     setSelectedStore(storeSelected)
   }
@@ -172,7 +186,7 @@ function RepoStore({
                   />
                 </Layout.Horizontal>
 
-                {!isEmpty(formik.values.store) && selectedStore !== ManifestStoreMap.InheritFromManifest ? (
+                {!isEmpty(formik.values.store) ? (
                   <Layout.Horizontal
                     spacing={'medium'}
                     flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
@@ -184,13 +198,20 @@ function RepoStore({
                         setIsLoadingConnectors(false)
                       }}
                       name="connectorRef"
-                      label={getString('connector')}
-                      placeholder={getString('connector')}
+                      label={`${ManifestStoreMap[formik.values.store] as string} ${getString('connector')}`}
+                      placeholder={`${ManifestStoreMap[formik.values.store] as string} ${getString('connector')}`}
                       accountIdentifier={accountId}
                       projectIdentifier={projectIdentifier}
                       orgIdentifier={orgIdentifier}
                       width={400}
-                      multiTypeProps={{ expressions, allowableTypes }}
+                      multiTypeProps={{
+                        expressions,
+                        allowableTypes: [
+                          MultiTypeInputType.FIXED,
+                          MultiTypeInputType.RUNTIME,
+                          MultiTypeInputType.EXPRESSION
+                        ]
+                      }}
                       isNewConnectorLabelVisible={
                         !(
                           getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.RUNTIME &&
@@ -200,7 +221,6 @@ function RepoStore({
                       createNewLabel={newConnectorLabel}
                       type={ManifestToConnectorMap[formik.values.store]}
                       enableConfigureOptions={false}
-                      multitypeInputValue={multitypeInputValue}
                       gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                     />
                     {getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.RUNTIME ? (
@@ -238,7 +258,6 @@ function RepoStore({
               </Layout.Vertical>
 
               <Layout.Horizontal spacing="medium" className={css.saveBtn}>
-       
                 <Button
                   variation={ButtonVariation.PRIMARY}
                   type="submit"
