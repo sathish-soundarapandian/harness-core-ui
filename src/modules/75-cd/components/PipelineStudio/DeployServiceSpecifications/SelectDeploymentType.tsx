@@ -134,7 +134,7 @@ export default function SelectDeploymentType(props: SelectServiceDeploymentTypeP
   const { getString } = useStrings()
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
-  const { SERVERLESS_SUPPORT } = useFeatureFlags()
+  const { SERVERLESS_SUPPORT, SSH_NG } = useFeatureFlags()
 
   const { accountId } = useParams<{
     accountId: string
@@ -142,8 +142,8 @@ export default function SelectDeploymentType(props: SelectServiceDeploymentTypeP
   const [selectedDeploymentTypeInCG, setSelectedDeploymentTypeInCG] = React.useState('')
 
   // Supported in NG (Next Gen - The one for which you are coding right now)
-  const ngSupportedDeploymentTypes: DeploymentTypeItem[] = React.useMemo(
-    () => [
+  const ngSupportedDeploymentTypes: DeploymentTypeItem[] = React.useMemo(() => {
+    const baseTypes = [
       {
         label: getString('pipeline.serviceDeploymentTypes.kubernetes'),
         icon: 'service-kubernetes',
@@ -153,20 +153,21 @@ export default function SelectDeploymentType(props: SelectServiceDeploymentTypeP
         label: getString('pipeline.nativeHelm'),
         icon: 'service-helm',
         value: ServiceDeploymentType.NativeHelm
-      },
-      {
+      }
+    ]
+    if (SSH_NG) {
+      baseTypes.push({
         label: getString('pipeline.serviceDeploymentTypes.ssh'),
         icon: 'secret-ssh',
         value: ServiceDeploymentType.ssh
-      },
-      ...getServerlessDeploymentTypes(getString, SERVERLESS_SUPPORT)
-    ],
-    [getString, SERVERLESS_SUPPORT]
-  )
+      })
+    }
+    return [...baseTypes, ...getServerlessDeploymentTypes(getString, SERVERLESS_SUPPORT)] as DeploymentTypeItem[]
+  }, [getString, SERVERLESS_SUPPORT, SSH_NG])
 
   // Suppported in CG (First Gen - Old Version of Harness App)
-  const cgSupportedDeploymentTypes: DeploymentTypeItem[] = React.useMemo(
-    () => [
+  const cgSupportedDeploymentTypes: DeploymentTypeItem[] = React.useMemo(() => {
+    const types = [
       {
         label: getString('pipeline.serviceDeploymentTypes.amazonEcs'),
         icon: 'service-ecs',
@@ -197,9 +198,16 @@ export default function SelectDeploymentType(props: SelectServiceDeploymentTypeP
         icon: 'service-pivotal',
         value: ServiceDeploymentType.pcf
       }
-    ],
-    [getString]
-  )
+    ]
+    if (!SSH_NG) {
+      types.splice(3, 0, {
+        label: getString('pipeline.serviceDeploymentTypes.ssh'),
+        icon: 'secret-ssh',
+        value: ServiceDeploymentType.ssh
+      })
+    }
+    return types as DeploymentTypeItem[]
+  }, [getString])
 
   const [cgDeploymentTypes, setCgDeploymentTypes] = React.useState(cgSupportedDeploymentTypes)
   const [ngDeploymentTypes, setNgDeploymentTypes] = React.useState(ngSupportedDeploymentTypes)
