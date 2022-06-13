@@ -3832,6 +3832,7 @@ export interface StringsMap {
   'cd.preProduction': string
   'cd.preProductionType': string
   'cd.releaseNameValidation': string
+  'cd.releaseRepo': string
   'cd.requiredPermissions': string
   'cd.resourceCannotBeEmpty': string
   'cd.scriptRequired': string

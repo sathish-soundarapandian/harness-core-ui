@@ -39,6 +39,7 @@ function DeployServiceDefinition({ serviceData }: ServiceConfigurationProps): Re
   const {
     state: {
       pipeline,
+      pipeline: { service },
       selectionState: { selectedStageId }
     },
     getStageFromPipeline,
@@ -47,7 +48,7 @@ function DeployServiceDefinition({ serviceData }: ServiceConfigurationProps): Re
     allowableTypes,
     isReadonly
   } = usePipelineContext()
-  console.log(serviceData, 'sd')
+  console.log(serviceData, 'sd', service)
   const { isServiceEntityModalView } = useServiceContext()
 
   const { index: stageIndex } = getStageIndexFromPipeline(pipeline, selectedStageId || '')

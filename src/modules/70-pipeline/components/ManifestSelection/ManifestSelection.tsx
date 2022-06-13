@@ -25,6 +25,7 @@ import { useCache } from '@common/hooks/useCache'
 import type { ManifestSelectionProps } from './ManifestInterface'
 import ManifestListView from './ManifestListView/ManifestListView'
 import { getConnectorPath } from './ManifestWizardSteps/ManifestUtils'
+import ReleaseRepoListView from './ReleaseRepoListView/ReleaseRepoListView'
 
 export default function ManifestSelection({
   isPropagating,
@@ -113,20 +114,36 @@ export default function ManifestSelection({
 
   return (
     <Layout.Vertical>
-      <ManifestListView
-        isPropagating={isPropagating}
-        pipeline={pipeline}
-        updateStage={updateStage}
-        stage={stage}
-        connectors={fetchedConnectorResponse}
-        refetchConnectors={refetchConnectorList}
-        listOfManifests={listOfManifests}
-        isReadonly={readonly}
-        deploymentType={deploymentType}
-        allowableTypes={allowableTypes}
-        allowOnlyOne={isServerlessDeploymentType(deploymentType)}
-        gitOpsEnabled={gitOpsEnabled}
-      />
+      {gitOpsEnabled ? (
+        <ManifestListView
+          isPropagating={isPropagating}
+          pipeline={pipeline}
+          updateStage={updateStage}
+          stage={stage}
+          connectors={fetchedConnectorResponse}
+          refetchConnectors={refetchConnectorList}
+          listOfManifests={listOfManifests}
+          isReadonly={readonly}
+          deploymentType={deploymentType}
+          allowableTypes={allowableTypes}
+          allowOnlyOne={isServerlessDeploymentType(deploymentType)}
+          gitOpsEnabled={gitOpsEnabled}
+        />
+      ) : (
+        <ReleaseRepoListView
+          pipeline={pipeline}
+          updateStage={updateStage}
+          stage={stage}
+          connectors={fetchedConnectorResponse}
+          refetchConnectors={refetchConnectorList}
+          listOfManifests={listOfManifests}
+          isReadonly={readonly}
+          deploymentType={deploymentType}
+          allowableTypes={allowableTypes}
+          allowOnlyOne={isServerlessDeploymentType(deploymentType)}
+          gitOpsEnabled={gitOpsEnabled}
+        />
+      )}
     </Layout.Vertical>
   )
 }

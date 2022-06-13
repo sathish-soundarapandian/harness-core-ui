@@ -313,3 +313,4 @@ unLink: 'UnLink'
 unLinkedCluster: 'Unlinked Successfully'
 overrideYaml: Override Yaml Values
 manifestId: Manifest Id
+releaseRepo: Release Repo
