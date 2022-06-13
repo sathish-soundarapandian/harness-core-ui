@@ -33,7 +33,7 @@ export interface RepoBranchSelectProps {
   connectorIdentifierRef?: string
   repoName?: string
   selectedValue?: string
-  onChange?: (selected: SelectOption, options?: SelectOption[]) => void
+  onChange?: (selected: SelectOption, defaultSelected?: boolean) => void // defaultSelected will be true component selected default itself
   setErrorResponse?: React.Dispatch<React.SetStateAction<ResponseMessage[]>>
   branchSelectorClassName?: string
   selectProps?: Omit<SelectProps, 'value' | 'onChange' | 'items'>
@@ -151,7 +151,7 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
       // If used in Formik, onChange will set branch after default selection to overcome form validation
       // If consumer is sending preselected, we do not want to change to default branch
       if (triggerOnChange(disabled, selectedValue)) {
-        props.onChange?.(getDefaultBranchOption(defaultToBranch), branchOptions)
+        props.onChange?.(getDefaultBranchOption(defaultToBranch), true)
       }
     }
 
@@ -172,7 +172,7 @@ const RepoBranchSelectV2: React.FC<RepoBranchSelectProps> = props => {
         label={noLabel ? '' : defaultTo(label, getString('gitBranch'))}
         placeholder={loading ? getString('loading') : getString('select')}
         value={getDefaultSelectedOption(defaultToBranch, selectedValue)}
-        onChange={selected => props.onChange?.(selected, branchSelectOptions)}
+        onChange={selected => props.onChange?.(selected, false)}
         selectProps={{ usePortal: true, popoverClassName: css.gitBranchSelectorPopover, ...selectProps }}
         className={cx(branchSelectorClassName, css.branchSelector)}
       />

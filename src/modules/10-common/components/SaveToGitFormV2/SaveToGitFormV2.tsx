@@ -117,13 +117,9 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
           disabled={disableBranchSelection}
           connectorIdentifierRef={resource.storeMetadata?.connectorRef}
           repoName={resource.gitDetails?.repoName}
-          onChange={(selected: SelectOption, options?: SelectOption[]) => {
-            if (!options?.find(branch => branch.value === selected.value)) {
-              formikRef.current?.setFieldValue('targetBranch', '')
-            } else {
-              formikRef.current?.setFieldValue('targetBranch', selected.value)
-              setTargetBranch(selected.value as string)
-            }
+          onChange={(selected: SelectOption) => {
+            formikRef.current?.setFieldValue('targetBranch', selected.value)
+            setTargetBranch(selected.value as string)
           }}
           selectedValue={targetBranch}
           showErrorInModal
