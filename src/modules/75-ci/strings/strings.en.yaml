@@ -172,6 +172,10 @@ getStartedWithCI:
   fieldIsMissing: '{{field}} is missing'
   startProvisioning: Start Provisioning
   provisioningHelpText: Provision the '{{ $.ci.getStartedWithCI.hostedByHarness }}' Infrastructure (~2 mins)
+  gitProviderURLs:
+    github: 'https://github.com/account/'
+    gitlab: 'https://gitlab.com/account/'
+    bitbucket: 'https://bitbucket.org/'
   carousel:
     labels:
       harnessCIFeatures: Harness CI
