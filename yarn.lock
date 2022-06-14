@@ -1792,9 +1792,9 @@
     vscode-uri "^2.1.1"
 
 "@harness/ng-tooltip@^1.31.2":
-  version "1.31.2"
-  resolved "https://npm.pkg.github.com/download/@harness/ng-tooltip/1.31.2/236d041ed0432d2008d87bfaee644d00f2556ae2d97a4736da7916d5ea5b30fd#5b9849240ad4e13b645fbab58272440575facc2d"
-  integrity sha512-1mUFogTaJvGfIODg24IEfJRvh2a7XVfRhj2LABjhxsq/bGVGAExPrsyyg5IFtZcPjv9UAevp+PKvm4L+wVtNFA==
+  version "1.31.11"
+  resolved "https://npm.pkg.github.com/download/@harness/ng-tooltip/1.31.11/76639580157bb1acfac6a44b2ea025dcd356eb34390fbe53a1ae712c4c63cb68#6f9cd0f5813bab835a8d94d05076e3aad1797e15"
+  integrity sha512-cPV+6qju6AbIYF7Aksc9p1tCDwUG3O3Ocg2LbH359+idBBEEyfWE8z6t2JN3NtprZQxsBczgPkarOXwOBvYidg==
 
 "@harness/telemetry@^1.0.42":
   version "1.0.42"
