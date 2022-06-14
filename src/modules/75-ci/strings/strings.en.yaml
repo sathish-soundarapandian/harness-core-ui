@@ -175,7 +175,6 @@ getStartedWithCI:
   accessTokenLabel: Access Token
   codeRepoLabel: Code repository
   authMethodLabel: Authentication method
-  selectYourRepo: Select your Repository
   createPipeline: Create Pipeline
   codebaseHelptext: Harness will clone your codebase to your build infrastructure at Pipeline runtime.
   searchRepo: Search Repository
