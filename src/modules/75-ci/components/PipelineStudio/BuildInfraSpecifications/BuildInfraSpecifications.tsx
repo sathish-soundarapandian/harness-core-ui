@@ -724,8 +724,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           })
         }
       })
-
-      if (stageData.stage) {
+      const shouldUpdate = stageData.stage && JSON.stringify(stage.stage) !== JSON.stringify(stageData.stage)
+      if (stageData.stage && shouldUpdate) {
         updateStage(stageData.stage)
       }
 
