@@ -39,6 +39,7 @@ export interface LicenseStoreContextProps {
   readonly FF_LICENSE_STATE: LICENSE_STATE_VALUES
   readonly CCM_LICENSE_STATE: LICENSE_STATE_VALUES
   readonly CD_LICENSE_STATE: LICENSE_STATE_VALUES
+  readonly SRM_LICENSE_STATE: LICENSE_STATE_VALUES
 
   updateLicenseStore(data: Partial<Pick<LicenseStoreContextProps, 'licenseInformation'>>): void
 }
@@ -58,7 +59,8 @@ export const LICENSE_STATE_NAMES: { [T in licenseStateNames]: T } = {
   CI_LICENSE_STATE: 'CI_LICENSE_STATE',
   FF_LICENSE_STATE: 'FF_LICENSE_STATE',
   CCM_LICENSE_STATE: 'CCM_LICENSE_STATE',
-  CD_LICENSE_STATE: 'CD_LICENSE_STATE'
+  CD_LICENSE_STATE: 'CD_LICENSE_STATE',
+  SRM_LICENSE_STATE: 'SRM_LICENSE_STATE'
 }
 
 export const LicenseStoreContext = React.createContext<LicenseStoreContextProps>({
@@ -68,6 +70,7 @@ export const LicenseStoreContext = React.createContext<LicenseStoreContextProps>
   FF_LICENSE_STATE: LICENSE_STATE_VALUES.NOT_STARTED,
   CCM_LICENSE_STATE: LICENSE_STATE_VALUES.NOT_STARTED,
   CD_LICENSE_STATE: LICENSE_STATE_VALUES.NOT_STARTED,
+  SRM_LICENSE_STATE: LICENSE_STATE_VALUES.NOT_STARTED,
   updateLicenseStore: () => void 0
 })
 
@@ -103,6 +106,9 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
     },
     CE: {
       edition: Editions.FREE
+    },
+    SRM: {
+      edition: Editions.FREE
     }
   }
 
@@ -112,7 +118,8 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
     CI_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : LICENSE_STATE_VALUES.NOT_STARTED,
     FF_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : LICENSE_STATE_VALUES.NOT_STARTED,
     CCM_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : LICENSE_STATE_VALUES.NOT_STARTED,
-    CD_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : LICENSE_STATE_VALUES.NOT_STARTED
+    CD_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : LICENSE_STATE_VALUES.NOT_STARTED,
+    SRM_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : LICENSE_STATE_VALUES.NOT_STARTED
   })
 
   const {
@@ -276,7 +283,12 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
       updateData: Partial<
         Pick<
           LicenseStoreContextProps,
-          'licenseInformation' | 'CI_LICENSE_STATE' | 'FF_LICENSE_STATE' | 'CCM_LICENSE_STATE' | 'CD_LICENSE_STATE'
+          | 'licenseInformation'
+          | 'CI_LICENSE_STATE'
+          | 'FF_LICENSE_STATE'
+          | 'CCM_LICENSE_STATE'
+          | 'CD_LICENSE_STATE'
+          | 'SRM_LICENSE_STATE'
         >
       >
     ): void => {
@@ -284,6 +296,7 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
       const FFModuleLicenseData = updateData.licenseInformation?.['CF']
       const CCMModuleLicenseData = updateData.licenseInformation?.['CE']
       const CDModuleLicenseData = updateData.licenseInformation?.['CD']
+      const SRMModuleLicenseData = updateData.licenseInformation?.['SRM']
 
       setState(prevState => ({
         ...prevState,
@@ -299,7 +312,10 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
           : prevState.CCM_LICENSE_STATE,
         CD_LICENSE_STATE: CDModuleLicenseData?.expiryTime
           ? getLicenseState(CDModuleLicenseData.expiryTime)
-          : prevState.CD_LICENSE_STATE
+          : prevState.CD_LICENSE_STATE,
+        SRM_LICENSE_STATE: CDModuleLicenseData?.expiryTime
+          ? getLicenseState(CDModuleLicenseData.expiryTime)
+          : prevState.SRM_LICENSE_STATE
       }))
     },
     [getLicenseState]
@@ -326,6 +342,7 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
         CD_LICENSE_STATE: state.CD_LICENSE_STATE,
         CI_LICENSE_STATE: state.CI_LICENSE_STATE,
         FF_LICENSE_STATE: state.FF_LICENSE_STATE,
+        SRM_LICENSE_STATE: state.SRM_LICENSE_STATE,
         licenseInformation: state.licenseInformation,
         versionMap: state.versionMap,
         updateLicenseStore
@@ -349,7 +366,12 @@ export function handleUpdateLicenseStore(
     | Partial<
         Pick<
           LicenseStoreContextProps,
-          'licenseInformation' | 'CI_LICENSE_STATE' | 'FF_LICENSE_STATE' | 'CCM_LICENSE_STATE' | 'CD_LICENSE_STATE'
+          | 'licenseInformation'
+          | 'CI_LICENSE_STATE'
+          | 'FF_LICENSE_STATE'
+          | 'CCM_LICENSE_STATE'
+          | 'CD_LICENSE_STATE'
+          | 'SRM_LICENSE_STATE'
         >
       >
     | undefined
@@ -371,6 +393,11 @@ export function handleUpdateLicenseStore(
     }
   } else if (module.toUpperCase() === ModuleName.CD) {
     newLicenseInformation[ModuleName.CD] = data
+    licenseStoreData = {
+      licenseInformation: newLicenseInformation
+    }
+  } else if (module.toUpperCase() === ModuleName.CV) {
+    newLicenseInformation[ModuleName.CV] = data
     licenseStoreData = {
       licenseInformation: newLicenseInformation
     }
