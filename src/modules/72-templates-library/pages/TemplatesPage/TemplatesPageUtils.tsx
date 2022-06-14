@@ -154,20 +154,20 @@ export const getIconForTemplate = (
   getString: UseStringsReturn['getString'],
   template?: NGTemplateInfoConfigWithGitDetails | TemplateSummaryResponse
 ): IconName | undefined => {
-  const templateTye =
+  const templateType =
     (template as TemplateSummaryResponse)?.templateEntityType || (template as NGTemplateInfoConfigWithGitDetails)?.type
-  if (templateTye === TemplateType.SecretManager) {
+  if (templateType === TemplateType.SecretManager) {
     return 'script'
-  } else if (templateTye === TemplateType.Pipeline) {
+  } else if (templateType === TemplateType.Pipeline) {
     return 'pipeline'
-  } else if (templateTye === TemplateType.MonitoredService) {
+  } else if (templateType === TemplateType.MonitoredService) {
     return 'cv-main'
   } else {
     const childType =
       (template as TemplateSummaryResponse)?.childType ||
       get(template as NGTemplateInfoConfigWithGitDetails, 'spec.type')
     if (childType) {
-      switch (templateTye) {
+      switch (templateType) {
         case TemplateType.Step:
           return factory.getStepIcon(childType)
         case TemplateType.Stage:
