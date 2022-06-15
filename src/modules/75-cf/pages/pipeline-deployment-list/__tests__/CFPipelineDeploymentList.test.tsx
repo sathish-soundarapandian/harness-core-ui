@@ -45,6 +45,7 @@ jest.mock('services/pipeline-ng', () => ({
   useGetMergeInputSetFromPipelineTemplateWithListInput: jest.fn(() => ({ data: {} })),
   useHandleInterrupt: jest.fn(() => ({})),
   useHandleStageInterrupt: jest.fn(() => ({})),
+  useGetExecutionData: jest.fn(() => ({})),
   usePostPipelineExecuteWithInputSetYaml: jest.fn(() => ({ data: {} })),
   useGetFilterList: jest.fn().mockImplementation(() => {
     return { mutate: jest.fn(() => Promise.resolve(filters)), loading: false }
