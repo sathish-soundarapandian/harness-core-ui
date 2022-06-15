@@ -90,6 +90,7 @@ describe('<ExecutionActions /> tests', () => {
             source="executions"
             executionStatus={executionStatus}
             refetch={jest.fn()}
+            onViewCompiledYaml={jest.fn()}
           />
         </TestWrapper>
       )
@@ -130,6 +131,7 @@ describe('<ExecutionActions /> tests', () => {
             source="executions"
             executionStatus={executionStatus}
             refetch={jest.fn()}
+            onViewCompiledYaml={jest.fn()}
           />
         </TestWrapper>
       )
@@ -190,6 +192,7 @@ describe('<ExecutionActions /> tests', () => {
               executionStatus={executionStatus}
               refetch={jest.fn()}
               stageId={stageId}
+              onViewCompiledYaml={jest.fn()}
             />
           </TestWrapper>
         )
@@ -248,6 +251,7 @@ describe('<ExecutionActions /> tests', () => {
             params={pathParams as any}
             executionStatus="Expired"
             refetch={jest.fn()}
+            onViewCompiledYaml={jest.fn()}
             modules={['cd', 'ci']}
           />
         </TestWrapper>
@@ -275,6 +279,7 @@ describe('<ExecutionActions /> tests', () => {
             params={pathParams as any}
             executionStatus="Expired"
             refetch={jest.fn()}
+            onViewCompiledYaml={jest.fn()}
             showEditButton={false}
           />
         </TestWrapper>
@@ -316,6 +321,7 @@ describe('<ExecutionActions /> tests', () => {
           source="executions"
           executionStatus="Expired"
           refetch={jest.fn()}
+          onViewCompiledYaml={jest.fn()}
           showEditButton={false}
         />
       </TestWrapper>
@@ -344,6 +350,7 @@ describe('<ExecutionActions /> tests', () => {
           params={pathParams as any}
           executionStatus="Expired"
           refetch={jest.fn()}
+          onViewCompiledYaml={jest.fn()}
           source="executions"
           showEditButton={false}
         />
