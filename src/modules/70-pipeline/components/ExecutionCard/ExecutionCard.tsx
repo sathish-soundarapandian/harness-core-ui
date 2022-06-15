@@ -45,9 +45,13 @@ export interface ExecutionCardProps {
   staticCard?: boolean
   isPipelineInvalid?: boolean
   showGitDetails?: boolean
+  onViewCompiledYaml: () => void
 }
 
-function ExecutionCardFooter({ pipelineExecution, variant }: ExecutionCardProps): React.ReactElement {
+function ExecutionCardFooter({
+  pipelineExecution,
+  variant
+}: Pick<ExecutionCardProps, 'pipelineExecution' | 'variant'>): React.ReactElement {
   const fontVariation = variant === CardVariant.Minimal ? FontVariation.TINY : FontVariation.SMALL
   const variantSize = variant === CardVariant.Minimal ? 10 : 14
   return (
@@ -116,7 +120,8 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
     variant = CardVariant.Default,
     staticCard = false,
     isPipelineInvalid,
-    showGitDetails = false
+    showGitDetails = false,
+    onViewCompiledYaml
   } = props
   const { orgIdentifier, projectIdentifier, accountId, module, pipelineIdentifier } =
     useParams<PipelineType<PipelinePathProps>>()
@@ -258,6 +263,7 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
                   }}
                   isPipelineInvalid={isPipelineInvalid}
                   canEdit={canEdit}
+                  onViewCompiledYaml={onViewCompiledYaml}
                   source={source}
                   canExecute={canExecute}
                   canRetry={pipelineExecution.canRetry}
@@ -269,7 +275,7 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
           <div className={css.main}>
             <div className={css.modulesContainer}>
               {pipelineExecution?.stagesExecuted?.length ? (
-                <Tag className={css.singleExecutionTag}>{`${getString('pipeline.singleStageExecution')} 
+                <Tag className={css.singleExecutionTag}>{`${getString('pipeline.singleStageExecution')}
                 ${
                   !!pipelineExecution.stagesExecutedNames &&
                   Object.values(pipelineExecution.stagesExecutedNames).join(', ')

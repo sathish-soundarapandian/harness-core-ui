@@ -414,6 +414,7 @@ execution:
     pauseStage: Pause Stage
     abortStage: Abort Stage
     downloadLogs: Download logs
+    viewCompiledYaml: View Compiled Yaml
   layouts:
     bottom: Align to bottom
     right: Align to right

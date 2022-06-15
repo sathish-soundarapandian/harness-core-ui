@@ -46,6 +46,8 @@ import { isCommunityPlan } from '@common/utils/utils'
 import type { StoreType } from '@common/constants/GitSyncTypes'
 import type { StringsMap } from 'stringTypes'
 import pipelineIllustration from '@pipeline/pages/pipelines/images/deploypipeline-illustration.svg'
+import { ExecutionCompiledYaml } from '@pipeline/components/ExecutionCompiledYaml/ExecutionCompiledYaml'
+import type { PipelineExecutionSummary } from 'services/pipeline-ng'
 import ExecutionsList from './ExecutionsList/ExecutionsList'
 import ExecutionsPagination from './ExecutionsPagination/ExecutionsPagination'
 import { PipelineDeploymentListHeader } from './PipelineDeploymentListHeader/PipelineDeploymentListHeader'
@@ -363,6 +365,7 @@ export default function PipelineDeploymentList(props: PipelineDeploymentListProp
   const { module = 'cd' } = useModuleInfo()
   const { isCDOverview } = props
   const { isGitSyncEnabled } = useAppStore()
+  const [viewCompiledYaml, setViewCompiledYaml] = React.useState<PipelineExecutionSummary | undefined>(undefined)
 
   const { page, filterIdentifier, myDeployments, status, repoIdentifier, branch, searchTerm } = queryParams
 
@@ -540,7 +543,6 @@ export default function PipelineDeploymentList(props: PipelineDeploymentListProp
               <PipelineBuildExecutionsChart />
             </Container>
           )}
-
           {spinner ? (
             spinner
           ) : !pipelineExecutionSummary?.content?.length ? (
@@ -562,10 +564,12 @@ export default function PipelineDeploymentList(props: PipelineDeploymentListProp
               <ExecutionsList
                 pipelineExecutionSummary={pipelineExecutionSummary?.content}
                 isPipelineInvalid={props.isPipelineInvalid}
+                onViewCompiledYaml={executionSummary => setViewCompiledYaml(executionSummary)}
               />
               <ExecutionsPagination pipelineExecutionSummary={pipelineExecutionSummary} />
             </React.Fragment>
           )}
+          <ExecutionCompiledYaml onClose={() => setViewCompiledYaml(undefined)} executionSummary={viewCompiledYaml} />
         </Page.Body>
       </FilterContextProvider>
     </GitSyncStoreProvider>

@@ -2780,6 +2780,7 @@ export interface StringsMap {
   'pipeline.execution.actions.rerunStage': string
   'pipeline.execution.actions.resumePipeline': string
   'pipeline.execution.actions.resumeStage': string
+  'pipeline.execution.actions.viewCompiledYaml': string
   'pipeline.execution.currentExecution': string
   'pipeline.execution.dialogMessages.abortExecution': string
   'pipeline.execution.dialogMessages.abortTitle': string
