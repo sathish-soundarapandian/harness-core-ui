@@ -65,7 +65,7 @@ export function ExecutionCompiledYaml({ executionSummary, onClose }: ExecutionCo
           </Layout.Horizontal>
 
           {error ? (
-            <PageError message={(error.data as any)?.message || error.message} onClick={refetch as any} />
+            <PageError message={(error.data as Error)?.message || error.message} onClick={refetch as any} />
           ) : (
             <MonacoEditor
               data-testid="execution-compiled-yaml-viewer"
