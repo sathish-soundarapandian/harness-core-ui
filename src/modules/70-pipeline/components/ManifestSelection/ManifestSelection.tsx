@@ -32,7 +32,7 @@ export default function ManifestSelection({
   deploymentType,
   isReadonlyServiceMode,
   readonly,
-  gitOpsEnabled = true
+  gitOpsEnabled
 }: ManifestSelectionProps): JSX.Element | null {
   const {
     state: {
