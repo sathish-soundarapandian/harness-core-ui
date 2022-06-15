@@ -39,7 +39,7 @@ export interface LicenseStoreContextProps {
   readonly FF_LICENSE_STATE: LICENSE_STATE_VALUES
   readonly CCM_LICENSE_STATE: LICENSE_STATE_VALUES
   readonly CD_LICENSE_STATE: LICENSE_STATE_VALUES
-  readonly SRM_LICENSE_STATE: LICENSE_STATE_VALUES
+  readonly CV_LICENSE_STATE: LICENSE_STATE_VALUES
 
   updateLicenseStore(data: Partial<Pick<LicenseStoreContextProps, 'licenseInformation'>>): void
 }
@@ -60,7 +60,7 @@ export const LICENSE_STATE_NAMES: { [T in licenseStateNames]: T } = {
   FF_LICENSE_STATE: 'FF_LICENSE_STATE',
   CCM_LICENSE_STATE: 'CCM_LICENSE_STATE',
   CD_LICENSE_STATE: 'CD_LICENSE_STATE',
-  SRM_LICENSE_STATE: 'SRM_LICENSE_STATE'
+  CV_LICENSE_STATE: 'CV_LICENSE_STATE'
 }
 
 export const LicenseStoreContext = React.createContext<LicenseStoreContextProps>({
@@ -70,7 +70,7 @@ export const LicenseStoreContext = React.createContext<LicenseStoreContextProps>
   FF_LICENSE_STATE: LICENSE_STATE_VALUES.NOT_STARTED,
   CCM_LICENSE_STATE: LICENSE_STATE_VALUES.NOT_STARTED,
   CD_LICENSE_STATE: LICENSE_STATE_VALUES.NOT_STARTED,
-  SRM_LICENSE_STATE: LICENSE_STATE_VALUES.NOT_STARTED,
+  CV_LICENSE_STATE: LICENSE_STATE_VALUES.NOT_STARTED,
   updateLicenseStore: () => void 0
 })
 
@@ -107,7 +107,7 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
     CE: {
       edition: Editions.FREE
     },
-    SRM: {
+    CV: {
       edition: Editions.FREE
     }
   }
@@ -119,7 +119,7 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
     FF_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : LICENSE_STATE_VALUES.NOT_STARTED,
     CCM_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : LICENSE_STATE_VALUES.NOT_STARTED,
     CD_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : LICENSE_STATE_VALUES.NOT_STARTED,
-    SRM_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : LICENSE_STATE_VALUES.NOT_STARTED
+    CV_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : LICENSE_STATE_VALUES.NOT_STARTED
   })
 
   const {
@@ -257,11 +257,13 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
     const FFModuleLicenseData = licenses['CF']
     const CCMModuleLicenseData = licenses['CE']
     const CDModuleLicenseData = licenses['CD']
+    const CVModuleLicenseData = licenses['CV']
 
     const updatedCILicenseState: LICENSE_STATE_VALUES = getLicenseState(CIModuleLicenseData?.expiryTime)
     const updatedFFLicenseState: LICENSE_STATE_VALUES = getLicenseState(FFModuleLicenseData?.expiryTime)
     const updatedCCMLicenseState: LICENSE_STATE_VALUES = getLicenseState(CCMModuleLicenseData?.expiryTime)
     const updatedCDLicenseState: LICENSE_STATE_VALUES = getLicenseState(CDModuleLicenseData?.expiryTime)
+    const updatedCVLicenseState: LICENSE_STATE_VALUES = getLicenseState(CVModuleLicenseData?.expiryTime)
 
     setState(prevState => ({
       ...prevState,
@@ -269,7 +271,8 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
       CI_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : updatedCILicenseState,
       FF_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : updatedFFLicenseState,
       CCM_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : updatedCCMLicenseState,
-      CD_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : updatedCDLicenseState
+      CD_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : updatedCDLicenseState,
+      CV_LICENSE_STATE: shouldLicensesBeDisabled ? LICENSE_STATE_VALUES.ACTIVE : updatedCVLicenseState
     }))
 
     if (!getAccountLicensesLoading && !isEmpty(currentUserInfo)) {
@@ -288,7 +291,7 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
           | 'FF_LICENSE_STATE'
           | 'CCM_LICENSE_STATE'
           | 'CD_LICENSE_STATE'
-          | 'SRM_LICENSE_STATE'
+          | 'CV_LICENSE_STATE'
         >
       >
     ): void => {
@@ -296,7 +299,7 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
       const FFModuleLicenseData = updateData.licenseInformation?.['CF']
       const CCMModuleLicenseData = updateData.licenseInformation?.['CE']
       const CDModuleLicenseData = updateData.licenseInformation?.['CD']
-      const SRMModuleLicenseData = updateData.licenseInformation?.['SRM']
+      const CVModuleLicenseData = updateData.licenseInformation?.['CV']
 
       setState(prevState => ({
         ...prevState,
@@ -313,9 +316,9 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
         CD_LICENSE_STATE: CDModuleLicenseData?.expiryTime
           ? getLicenseState(CDModuleLicenseData.expiryTime)
           : prevState.CD_LICENSE_STATE,
-        SRM_LICENSE_STATE: CDModuleLicenseData?.expiryTime
-          ? getLicenseState(CDModuleLicenseData.expiryTime)
-          : prevState.SRM_LICENSE_STATE
+        CV_LICENSE_STATE: CVModuleLicenseData?.expiryTime
+          ? getLicenseState(CVModuleLicenseData.expiryTime)
+          : prevState.CV_LICENSE_STATE
       }))
     },
     [getLicenseState]
@@ -342,7 +345,7 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
         CD_LICENSE_STATE: state.CD_LICENSE_STATE,
         CI_LICENSE_STATE: state.CI_LICENSE_STATE,
         FF_LICENSE_STATE: state.FF_LICENSE_STATE,
-        SRM_LICENSE_STATE: state.SRM_LICENSE_STATE,
+        CV_LICENSE_STATE: state.CV_LICENSE_STATE,
         licenseInformation: state.licenseInformation,
         versionMap: state.versionMap,
         updateLicenseStore
@@ -371,7 +374,7 @@ export function handleUpdateLicenseStore(
           | 'FF_LICENSE_STATE'
           | 'CCM_LICENSE_STATE'
           | 'CD_LICENSE_STATE'
-          | 'SRM_LICENSE_STATE'
+          | 'CV_LICENSE_STATE'
         >
       >
     | undefined
