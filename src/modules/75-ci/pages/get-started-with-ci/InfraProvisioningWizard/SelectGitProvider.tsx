@@ -772,6 +772,14 @@ const SelectGitProviderRef = (
                             intent={authMethod === GitAuthenticationMethod.OAuth ? 'primary' : 'none'}
                             /* Disabling till OAuth support is ready */
                             disabled={true}
+                            tooltipProps={{
+                              isDark: true
+                            }}
+                            tooltip={
+                              <Text padding="small" color={Color.WHITE}>
+                                {getString('common.comingSoon2')}
+                              </Text>
+                            }
                           />
                           <Button
                             className={css.authMethodBtn}
