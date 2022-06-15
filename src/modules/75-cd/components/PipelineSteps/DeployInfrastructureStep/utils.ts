@@ -9,19 +9,12 @@ import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
 import { isEmpty } from 'lodash-es'
 import * as Yup from 'yup'
 
-import { getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
-import type { EnvironmentResponseDTO, PipelineInfrastructure } from 'services/cd-ng'
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { EnvironmentResponseDTO } from 'services/cd-ng'
 
 import { StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-
-export interface PipelineInfrastructureV2 extends PipelineInfrastructure {
-  environmentOrEnvGroupRef?: SelectOption
-  environmentGroup?: any
-  environmentRef2?: any
-  infrastructureRef?: any
-  deployToAll?: boolean
-}
+import type { PipelineInfrastructureV2 } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
 export interface DeployInfrastructureProps {
   initialValues: PipelineInfrastructureV2
