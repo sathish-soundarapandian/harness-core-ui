@@ -131,7 +131,7 @@ export function DefaultNodeWidget(props: DefaultNodeProps): JSX.Element {
 
   const isSelected = options.defaultSelected ?? props.node.isSelected()
   const iconSize = !isNil(options.iconSize) ? options.iconSize : 28
-  const iconColor = options.iconStyle?.color
+
   return (
     <div
       className={cx(css.defaultNode, 'default-node')}
@@ -214,7 +214,6 @@ export function DefaultNodeWidget(props: DefaultNodeProps): JSX.Element {
         {options.icon && (
           <Icon
             size={iconSize}
-            color={iconColor}
             name={options.icon}
             inverse={isSelected}
             {...options.iconProps}

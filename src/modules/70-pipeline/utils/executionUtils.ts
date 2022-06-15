@@ -723,16 +723,16 @@ export function getIconDataBasedOnType(nodeData?: ExecutionNode): {
       return { icon: 'traffic-lights', iconSize: 40 }
     }
     const icon = StepTypeIconsMap[nodeData?.stepType as NodeType] || factory.getStepIcon(nodeData?.stepType || '')
-    const iconSize = cloudFormationSteps.includes(nodeData.stepType as StepType) ? 32 : 28
+
     return {
       icon,
-      iconSize
+      iconSize: cloudFormationSteps.includes(nodeData.stepType as StepType) ? 32 : 20
     }
   }
 
   return {
     icon: 'cross',
-    iconSize: 28
+    iconSize: 20
   }
 }
 

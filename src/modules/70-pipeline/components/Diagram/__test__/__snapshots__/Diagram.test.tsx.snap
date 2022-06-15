@@ -38,7 +38,7 @@ exports[`Test Diagram App should test basic snapshot 1`] = `
                   class="execution-running-animation"
                 />
                 <span
-                  class="bp3-icon bp3-icon-add StyledProps--main StyledProps--color"
+                  class="bp3-icon bp3-icon-add StyledProps--main"
                   icon="add"
                   style="pointer-events: none;"
                 >
@@ -184,7 +184,7 @@ exports[`Test Diagram App should test basic snapshot 1`] = `
                   class="execution-running-animation"
                 />
                 <span
-                  class="bp3-icon bp3-icon-add StyledProps--main StyledProps--color"
+                  class="bp3-icon bp3-icon-add StyledProps--main"
                   icon="add"
                   style="pointer-events: none;"
                 >

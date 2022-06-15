@@ -260,7 +260,7 @@ exports[`Test Execution StageDiagram for Grouped Steps snapshot test 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main StyledProps--color"
+                class="bp3-icon StyledProps--main"
                 data-icon="command-shell-script"
                 style="pointer-events: none;"
               >
@@ -401,7 +401,7 @@ exports[`Test Execution StageDiagram for Grouped Steps snapshot test 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main StyledProps--color"
+                class="bp3-icon StyledProps--main"
                 data-icon="command-shell-script"
                 style="pointer-events: none;"
               >
@@ -630,7 +630,7 @@ exports[`Test Execution StageDiagram for Grouped Steps snapshot test 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main StyledProps--color"
+                class="bp3-icon StyledProps--main"
                 data-icon="services"
                 style="pointer-events: none;"
               >
@@ -773,7 +773,7 @@ exports[`Test Execution StageDiagram for Grouped Steps snapshot test 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main StyledProps--color"
+                class="bp3-icon StyledProps--main"
                 data-icon="infrastructure"
                 style="pointer-events: none;"
               >
@@ -1061,7 +1061,7 @@ exports[`Test Execution StageDiagram for Grouped Steps snapshot test 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main StyledProps--color"
+                class="bp3-icon StyledProps--main"
                 data-icon="command-shell-script"
                 style="pointer-events: none;"
               >
@@ -1619,7 +1619,7 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main StyledProps--color"
+                class="bp3-icon StyledProps--main"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
@@ -1780,7 +1780,7 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main StyledProps--color"
+                class="bp3-icon StyledProps--main"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
@@ -1941,7 +1941,7 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main StyledProps--color"
+                class="bp3-icon StyledProps--main"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
@@ -2102,7 +2102,7 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main StyledProps--color"
+                class="bp3-icon StyledProps--main"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
@@ -2263,7 +2263,7 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main StyledProps--color"
+                class="bp3-icon StyledProps--main"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
@@ -2424,7 +2424,7 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main StyledProps--color"
+                class="bp3-icon StyledProps--main"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
@@ -2585,7 +2585,7 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main StyledProps--color"
+                class="bp3-icon StyledProps--main"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
@@ -2834,7 +2834,7 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main StyledProps--color"
+                class="bp3-icon StyledProps--main"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
@@ -3083,7 +3083,7 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main StyledProps--color"
+                class="bp3-icon StyledProps--main"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
@@ -3244,7 +3244,7 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main StyledProps--color"
+                class="bp3-icon StyledProps--main"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
@@ -3405,7 +3405,7 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main StyledProps--color"
+                class="bp3-icon StyledProps--main"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
@@ -3566,7 +3566,7 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main StyledProps--color"
+                class="bp3-icon StyledProps--main"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
@@ -3727,7 +3727,7 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main StyledProps--color"
+                class="bp3-icon StyledProps--main"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
@@ -3888,7 +3888,7 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main StyledProps--color"
+                class="bp3-icon StyledProps--main"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
@@ -4049,7 +4049,7 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main StyledProps--color"
+                class="bp3-icon StyledProps--main"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
@@ -4298,7 +4298,7 @@ exports[`Test Execution StageDiagram should render the default snapshot 1`] = `
                 class="execution-running-animation"
               />
               <span
-                class="bp3-icon StyledProps--main StyledProps--color"
+                class="bp3-icon StyledProps--main"
                 data-icon="cd-main"
                 style="pointer-events: none;"
               >
