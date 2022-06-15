@@ -9,6 +9,7 @@ import React, { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import set from 'lodash-es/set'
 import get from 'lodash-es/get'
+import { isNull, isUndefined, omitBy } from 'lodash-es'
 import {
   Container,
   Button,
@@ -141,14 +142,16 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         return
       }
 
-      const pipelineInputYAML = {
-        identifier: pipelineId,
-        properties: {
-          ci: {
-            codebase: {
-              build: [eventTypes.PULL_REQUEST, eventTypes.MERGE_REQUEST].includes(eventType)
-                ? ciCodebaseBuildPullRequest
-                : ciCodebaseBuild
+      const pipelineInput = {
+        pipeline: {
+          identifier: pipelineId,
+          properties: {
+            ci: {
+              codebase: {
+                build: [eventTypes.PULL_REQUEST, eventTypes.MERGE_REQUEST].includes(eventType)
+                  ? ciCodebaseBuildPullRequest
+                  : ciCodebaseBuild
+              }
             }
           }
         }
@@ -168,7 +171,10 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             spec: {
               type: eventType,
               spec: {
-                connectorRef: selectGitProviderRef.current?.validatedConnector?.identifier,
+                connectorRef: `${ACCOUNT_SCOPE_PREFIX}${selectGitProviderRef.current?.validatedConnector?.identifier}`,
+                repoName: selectRepositoryRef.current?.repository
+                  ? getFullRepoName(selectRepositoryRef.current?.repository)
+                  : '',
                 autoAbortPreviousExecutions: false,
                 actions: [eventTypes.PULL_REQUEST, eventTypes.MERGE_REQUEST].includes(eventType)
                   ? getPRTriggerActions()
@@ -177,10 +183,14 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             }
           }
         },
-        inputYaml: yamlStringify(clearNullUndefined(pipelineInputYAML))
+        inputYaml: yamlStringify(omitBy(omitBy(pipelineInput, isUndefined), isNull))
       }
     },
-    [selectGitProviderRef.current?.validatedConnector?.identifier, selectGitProviderRef?.current?.values?.gitProvider]
+    [
+      selectGitProviderRef.current?.validatedConnector?.identifier,
+      selectGitProviderRef?.current?.values?.gitProvider,
+      selectRepositoryRef.current?.repository
+    ]
   )
 
   const [wizardStepStatus, setWizardStepStatus] = useState<Map<InfraProvisiongWizardStepId, StepStatus>>(

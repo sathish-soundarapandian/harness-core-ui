@@ -13,16 +13,17 @@ import { ProvisioningStatus } from './Constants'
 interface ProvisioningStatusProps {
   provisioningStatus?: ProvisioningStatus
   onStartProvisioning: () => void
+  showProvisioningStatus?: boolean
 }
 
 import css from './InfraProvisioningWizard.module.scss'
 
 export const ProvisioningStatusPill: React.FC<ProvisioningStatusProps> = props => {
-  const { provisioningStatus, onStartProvisioning } = props
+  const { provisioningStatus, onStartProvisioning, showProvisioningStatus = true } = props
   const { getString } = useStrings()
   switch (provisioningStatus) {
     case ProvisioningStatus.FAILURE:
-      return (
+      return showProvisioningStatus ? (
         <Layout.Vertical padding={{ top: 'large' }}>
           <Layout.Horizontal
             className={css.provisioningFailed}
@@ -44,9 +45,9 @@ export const ProvisioningStatusPill: React.FC<ProvisioningStatusProps> = props =
             minimal
           /> */}
         </Layout.Vertical>
-      )
+      ) : null
     case ProvisioningStatus.SUCCESS:
-      return (
+      return showProvisioningStatus ? (
         <Layout.Horizontal
           className={css.provisioningSuccessful}
           flex={{ justifyContent: 'flex-start' }}
@@ -58,7 +59,7 @@ export const ProvisioningStatusPill: React.FC<ProvisioningStatusProps> = props =
             {getString('ci.successful')}
           </Text>
         </Layout.Horizontal>
-      )
+      ) : null
     case ProvisioningStatus.TO_DO:
       return (
         <Button
