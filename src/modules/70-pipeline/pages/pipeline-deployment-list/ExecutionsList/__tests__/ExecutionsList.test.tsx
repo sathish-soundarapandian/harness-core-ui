@@ -42,7 +42,10 @@ describe('<ExecutionsList /> test', () => {
         }}
         defaultAppStoreValues={defaultAppStoreValues}
       >
-        <ExecutionsList pipelineExecutionSummary={data.data.content as PipelineExecutionSummary[]} />
+        <ExecutionsList
+          pipelineExecutionSummary={data.data.content as PipelineExecutionSummary[]}
+          onViewCompiledYaml={jest.fn()}
+        />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -60,7 +63,7 @@ describe('<ExecutionsList /> test', () => {
         }}
         defaultAppStoreValues={defaultAppStoreValues}
       >
-        <ExecutionsList pipelineExecutionSummary={[] as PipelineExecutionSummary[]} />
+        <ExecutionsList pipelineExecutionSummary={[] as PipelineExecutionSummary[]} onViewCompiledYaml={jest.fn()} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()

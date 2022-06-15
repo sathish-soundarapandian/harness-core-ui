@@ -66,7 +66,7 @@ export interface ExecutionActionsProps {
   showEditButton?: boolean
   isPipelineInvalid?: boolean
   source: ExecutionPathProps['source']
-  onViewCompiledYaml: () => void
+  onViewCompiledYaml?: () => void
 }
 
 function getValidExecutionActions(canExecute: boolean, executionStatus?: ExecutionStatus) {

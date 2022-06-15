@@ -45,7 +45,7 @@ export interface ExecutionCardProps {
   staticCard?: boolean
   isPipelineInvalid?: boolean
   showGitDetails?: boolean
-  onViewCompiledYaml: () => void
+  onViewCompiledYaml?: () => void
 }
 
 function ExecutionCardFooter({
