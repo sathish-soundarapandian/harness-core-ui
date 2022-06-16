@@ -20,24 +20,15 @@ import {
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import { Form } from 'formik'
-import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import * as Yup from 'yup'
 
-import { get, set } from 'lodash-es'
+import { defaultTo, get, set } from 'lodash-es'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ReleaseRepoManifest } from 'services/cd-ng'
-import {
-  ManifestStoreMap,
-  GitRepoName,
-  // ManifestIdentifierValidation,
-  gitFetchTypeList,
-  GitFetchTypes
-} from '../Manifesthelper'
+import { ManifestStoreMap, GitRepoName, gitFetchTypeList, GitFetchTypes } from '../Manifesthelper'
 
-import DragnDropPaths from '../DragnDropPaths'
-// import type { ManifestTypes } from '../ManifestSelection/ManifestInterface'
 import css from '../ManifestWizardSteps/K8sValuesManifest/ManifestDetails.module.scss'
 
 interface ReleaseRepoDataType {
@@ -54,9 +45,7 @@ interface ReleaseRepoProps {
   allowableTypes: MultiTypeInputType[]
   initialValues: ReleaseRepoManifest
   manifest: any
-  // selectedManifest: ManifestTypes | null
   handleSubmit: (data: ReleaseRepoManifest) => void
-  // manifestIdsList: Array<string>
   isReadonly?: boolean
 }
 
@@ -68,12 +57,12 @@ function RepoDetails({
   prevStepData,
   previousStep,
   manifest,
-  //manifestIdsList,
   isReadonly = false
 }: StepProps<ConnectorConfigDTO> & ReleaseRepoProps): React.ReactElement {
   const { getString } = useStrings()
 
-  const gitConnectionType: string = prevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
+  const gitConnectionType: string =
+    defaultTo(prevStepData, { store: '' }).store === ManifestStoreMap.Git ? 'connectionType' : 'type'
   const connectionType =
     prevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
     prevStepData?.urlType === GitRepoName.Repo
@@ -82,16 +71,11 @@ function RepoDetails({
 
   const getInitialValues = useCallback((): ReleaseRepoDataType => {
     const specValues = get(manifest, 'spec.store.spec', null)
-
     if (specValues) {
       return {
         ...specValues,
         identifier: manifest.identifier,
-
-        paths:
-          typeof specValues.paths === 'string'
-            ? specValues.paths
-            : specValues.paths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) }))
+        paths: specValues.paths[0]
       }
     }
     return {
@@ -99,7 +83,7 @@ function RepoDetails({
       branch: undefined,
       commitId: undefined,
       gitFetchType: 'Branch',
-      paths: [{ path: '', uuid: uuid('', nameSpace()) }]
+      paths: ''
     }
   }, [])
 
@@ -110,14 +94,11 @@ function RepoDetails({
         type: 'ReleaseRepo',
         spec: {
           store: {
-            type: formData?.store,
+            type: formData.store,
             spec: {
-              connectorRef: formData?.connectorRef,
-              gitFetchType: formData?.gitFetchType,
-              paths:
-                typeof formData?.paths === 'string'
-                  ? formData?.paths
-                  : formData?.paths?.map((path: { path: string }) => path.path)
+              connectorRef: formData.connectorRef,
+              gitFetchType: formData.gitFetchType,
+              paths: [formData.paths]
             }
           }
         }
@@ -127,11 +108,11 @@ function RepoDetails({
       set(manifestObj, 'manifest.spec.store.spec.repoName', formData?.repoName)
     }
 
-    if (manifestObj?.manifest?.spec?.store) {
-      if (formData?.gitFetchType === 'Branch') {
-        set(manifestObj, 'manifest.spec.store.spec.branch', formData?.branch)
-      } else if (formData?.gitFetchType === 'Commit') {
-        set(manifestObj, 'manifest.spec.store.spec.commitId', formData?.commitId)
+    if (manifestObj.manifest.spec.store) {
+      if (formData.gitFetchType === 'Branch') {
+        set(manifestObj, 'manifest.spec.store.spec.branch', defaultTo(formData.branch, ''))
+      } else if (formData.gitFetchType === 'Commit') {
+        set(manifestObj, 'manifest.spec.store.spec.commitId', defaultTo(formData.commitId, ''))
       }
     }
 
@@ -157,27 +138,18 @@ function RepoDetails({
             is: 'Commit',
             then: Yup.string().trim().required(getString('validation.commitId'))
           }),
-          paths: Yup.lazy((value): Yup.Schema<unknown> => {
-            if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
-              return Yup.array().of(
-                Yup.object().shape({
-                  path: Yup.string().min(1).required(getString('pipeline.manifestType.pathRequired'))
-                })
-              )
-            }
-            return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
-          })
+          paths: Yup.string().required()
         })}
         onSubmit={formData => {
           submitFormData({
             ...prevStepData,
             ...formData,
-            connectorRef: prevStepData?.connectorRef
-              ? getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
-                ? prevStepData?.connectorRef
-                : prevStepData?.connectorRef?.value
-              : prevStepData?.identifier
-              ? prevStepData?.identifier
+            connectorRef: defaultTo(prevStepData, { connectorRef: '' }).connectorRef
+              ? getMultiTypeFromValue(get(prevStepData, 'connectorRef', '')) !== MultiTypeInputType.FIXED
+                ? defaultTo(prevStepData, { connectorRef: '' }).connectorRef
+                : defaultTo(prevStepData, { connectorRef: '' }).connectorRef.value
+              : get(prevStepData, 'identifier', '')
+              ? get(prevStepData, 'identifier', '')
               : ''
           })
         }}
@@ -211,7 +183,7 @@ function RepoDetails({
                       <div
                         className={cx(css.halfWidth, {
                           [css.runtimeInput]:
-                            getMultiTypeFromValue(formik.values?.branch) === MultiTypeInputType.RUNTIME
+                            getMultiTypeFromValue(get(formik.values, 'branch', '')) === MultiTypeInputType.RUNTIME
                         })}
                       >
                         <FormInput.MultiTextInput
@@ -221,9 +193,9 @@ function RepoDetails({
                           name="branch"
                         />
 
-                        {getMultiTypeFromValue(formik.values?.branch) === MultiTypeInputType.RUNTIME && (
+                        {getMultiTypeFromValue(get(formik.values, 'branch', '')) === MultiTypeInputType.RUNTIME && (
                           <ConfigureOptions
-                            value={formik.values?.branch as string}
+                            value={get(formik.values, 'branch', '')}
                             type="String"
                             variableName="branch"
                             showRequiredField={false}
@@ -240,7 +212,7 @@ function RepoDetails({
                       <div
                         className={cx(css.halfWidth, {
                           [css.runtimeInput]:
-                            getMultiTypeFromValue(formik.values?.commitId) === MultiTypeInputType.RUNTIME
+                            getMultiTypeFromValue(get(formik.values, 'commitId', '')) === MultiTypeInputType.RUNTIME
                         })}
                       >
                         <FormInput.MultiTextInput
@@ -250,9 +222,9 @@ function RepoDetails({
                           name="commitId"
                         />
 
-                        {getMultiTypeFromValue(formik.values?.commitId) === MultiTypeInputType.RUNTIME && (
+                        {getMultiTypeFromValue(get(formik.values, 'commitId', '')) === MultiTypeInputType.RUNTIME && (
                           <ConfigureOptions
-                            value={formik.values?.commitId as string}
+                            value={get(formik.values, 'commitId', '')}
                             type="String"
                             variableName="commitId"
                             showRequiredField={false}
@@ -265,16 +237,38 @@ function RepoDetails({
                       </div>
                     )}
                   </Layout.Horizontal>
-                  <div className={css.halfWidth}>
-                    <DragnDropPaths
-                      formik={formik}
-                      allowOnlyOneFilePath={true}
-                      expressions={expressions}
-                      allowableTypes={allowableTypes}
-                      fieldPath="paths"
-                      pathLabel={getString('common.git.filePath')}
+                  <div
+                    className={cx(css.halfWidth, {
+                      [css.runtimeInput]:
+                        getMultiTypeFromValue(get(formik.values, 'paths', '')) === MultiTypeInputType.RUNTIME
+                    })}
+                  >
+                    <FormInput.MultiTextInput
+                      multiTextInputProps={{
+                        expressions,
+                        allowableTypes: [
+                          MultiTypeInputType.FIXED,
+                          MultiTypeInputType.RUNTIME,
+                          MultiTypeInputType.EXPRESSION
+                        ]
+                      }}
+                      label={getString('common.git.filePath')}
                       placeholder={getString('pipeline.manifestType.pathPlaceholder')}
+                      name="paths"
                     />
+
+                    {getMultiTypeFromValue(get(formik.values, 'paths', '')) === MultiTypeInputType.RUNTIME && (
+                      <ConfigureOptions
+                        value={get(formik.values, 'paths', '')}
+                        type="String"
+                        variableName="paths"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        showAdvanced={true}
+                        onChange={value => formik.setFieldValue('paths', value)}
+                        isReadonly={isReadonly}
+                      />
+                    )}
                   </div>
                 </div>
 

@@ -25,7 +25,7 @@ interface StepChangeData<SharedObject> {
   prevStepData: SharedObject
 }
 
-interface ManifestWizardStepsProps<T, U> {
+export interface ManifestWizardStepsProps<T, U> {
   handleConnectorViewChange: (isConnectorView: boolean) => void
   initialValues: ManifestStepInitData
   selectedManifest: ManifestTypes | null

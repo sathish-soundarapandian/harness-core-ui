@@ -62,12 +62,18 @@ export interface ManifestListViewProps {
   deploymentType: ServiceDefinition['type']
   allowableTypes: MultiTypeInputType[]
   allowOnlyOne?: boolean
+  gitOpsEnabled?: boolean
 }
 
 export interface ManifestStepInitData {
   connectorRef: string | undefined | ConnectorSelectedValue
   store: ManifestStores | string
   selectedManifest: ManifestTypes | null
+}
+
+export interface ReleaseRepoData {
+  connectorRef: string | undefined | ConnectorSelectedValue
+  store: ManifestStores | string
 }
 export interface K8sValuesManifestDataType {
   identifier: string

@@ -779,6 +779,7 @@ pipelineSteps:
       manifestType: Manifest Type
       manifestStore: '{{$.store}}'
       addManifest: + Add Manifest
+      addReleaseRepo: + Add Release Repo Manifest
   destroy: 'Destroy'
   configTypes:
     fromPlan: 'Inherit From Plan'

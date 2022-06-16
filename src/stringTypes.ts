@@ -8932,6 +8932,10 @@ export interface StringsMap {
   /**
    * @deprecated migrate this string to module level file
    */
+  'pipelineSteps.serviceTab.manifestList.addReleaseRepo': string
+  /**
+   * @deprecated migrate this string to module level file
+   */
   'pipelineSteps.serviceTab.manifestList.manifestFormat': string
   /**
    * @deprecated migrate this string to module level file

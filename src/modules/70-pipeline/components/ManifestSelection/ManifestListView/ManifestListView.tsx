@@ -64,7 +64,8 @@ import {
   manifestTypeLabels,
   allowedManifestTypes,
   ManifestTypetoStoreMap,
-  ManifestToPathKeyMap
+  ManifestToPathKeyMap,
+  manifestStoreTypes
 } from '../Manifesthelper'
 import type { ConnectorRefLabelType } from '../../ArtifactsSelection/ArtifactInterface'
 import type {
@@ -90,6 +91,7 @@ import InheritFromManifest from '../ManifestWizardSteps/InheritFromManifest/Inhe
 import ConnectorField from './ConnectorField'
 import HelmWithOCI from '../ManifestWizardSteps/HelmWithOCI/HelmWithOCI'
 import { getConnectorPath } from '../ManifestWizardSteps/ManifestUtils'
+import ReleaseRepoWizard from '../ReleaseRepoWizard/ReleaseRepoWizard'
 import css from '../ManifestSelection.module.scss'
 
 const showAddManifestBtn = (isReadonly: boolean, allowOnlyOne: boolean, listOfManifests: Array<any>): boolean => {
@@ -109,7 +111,8 @@ function ManifestListView({
   deploymentType,
   isReadonly,
   allowableTypes,
-  allowOnlyOne = false
+  allowOnlyOne = false,
+  gitOpsEnabled = true
 }: ManifestListViewProps): JSX.Element {
   const [selectedManifest, setSelectedManifest] = useState<ManifestTypes | null>(null)
   const [connectorView, setConnectorView] = useState(false)
@@ -292,6 +295,15 @@ function ManifestListView({
       firstStepName: getString('pipeline.manifestType.specifyManifestRepoType'),
       secondStepName: `${getString('common.specify')} ${
         selectedManifest && getString(manifestTypeLabels[selectedManifest])
+      } ${getString('store')}`
+    }
+  }
+
+  const getReleaseRepoLabels = (): ConnectorRefLabelType => {
+    return {
+      firstStepName: getString('pipeline.manifestType.specifyManifestRepoType'),
+      secondStepName: `${getString('common.specify')} ${
+        selectedManifest && getString('pipeline.manifestTypeLabels.K8sManifest')
       } ${getString('store')}`
     }
   }
@@ -604,27 +616,46 @@ function ManifestListView({
       setIsEditMode(false)
       setSelectedManifest(null)
     }
-
+    const manifest = get(listOfManifests[manifestIndex], 'manifest', null)
     return (
       <Dialog onClose={onClose} {...DIALOG_PROPS} className={cx(css.modal, Classes.DIALOG)}>
         <div className={css.createConnectorWizard}>
-          <ManifestWizard
-            types={allowedManifestTypes[deploymentType]}
-            manifestStoreTypes={ManifestTypetoStoreMap[selectedManifest as ManifestTypes]}
-            labels={getLabels()}
-            selectedManifest={selectedManifest}
-            newConnectorView={connectorView}
-            expressions={expressions}
-            allowableTypes={allowableTypes}
-            changeManifestType={changeManifestType}
-            handleConnectorViewChange={handleConnectorViewChange}
-            handleStoreChange={handleStoreChange}
-            initialValues={getInitialValues()}
-            newConnectorSteps={getNewConnectorSteps()}
-            lastSteps={getLastSteps()}
-            iconsProps={getIconProps()}
-            isReadonly={isReadonly}
-          />
+          {!gitOpsEnabled ? (
+            <ManifestWizard
+              types={allowedManifestTypes[deploymentType]}
+              manifestStoreTypes={ManifestTypetoStoreMap[selectedManifest as ManifestTypes]}
+              labels={getLabels()}
+              selectedManifest={selectedManifest}
+              newConnectorView={connectorView}
+              expressions={expressions}
+              allowableTypes={allowableTypes}
+              changeManifestType={changeManifestType}
+              handleConnectorViewChange={handleConnectorViewChange}
+              handleStoreChange={handleStoreChange}
+              initialValues={getInitialValues()}
+              newConnectorSteps={getNewConnectorSteps()}
+              lastSteps={getLastSteps()}
+              iconsProps={getIconProps()}
+              isReadonly={isReadonly}
+            />
+          ) : (
+            <ReleaseRepoWizard
+              types={allowedManifestTypes[deploymentType]}
+              manifestStoreTypes={manifestStoreTypes}
+              labels={getReleaseRepoLabels()}
+              newConnectorView={connectorView}
+              expressions={expressions}
+              allowableTypes={allowableTypes}
+              handleConnectorViewChange={handleConnectorViewChange}
+              handleStoreChange={handleStoreChange}
+              initialValues={getInitialValues() as any}
+              manifest={manifest}
+              newConnectorSteps={getNewConnectorSteps()}
+              handleSubmit={handleSubmit}
+              isReadonly={isReadonly}
+              onClose={onClose}
+            />
+          )}
         </div>
         <Button minimal icon="cross" onClick={onClose} className={css.crossIcon} />
       </Dialog>
@@ -658,7 +689,9 @@ function ManifestListView({
     },
     []
   )
-
+  const btnText = gitOpsEnabled
+    ? getString('pipelineSteps.serviceTab.manifestList.addReleaseRepo')
+    : getString('pipelineSteps.serviceTab.manifestList.addManifest')
   return (
     <Layout.Vertical style={{ width: '100%' }}>
       <Layout.Vertical spacing="small" style={{ flexShrink: 'initial' }}>
@@ -700,7 +733,11 @@ function ManifestListView({
                           {manifest?.identifier}
                         </Text>
                       </div>
-                      <div>{getString(manifestTypeLabels[manifest?.type as ManifestTypes])}</div>
+                      {gitOpsEnabled ? (
+                        <div>{getString('pipeline.releaseRepo')}</div>
+                      ) : (
+                        <div>{getString(manifestTypeLabels[manifest?.type as ManifestTypes])}</div>
+                      )}
                       {renderConnectorField(
                         manifest?.spec?.store.type,
                         getConnectorPath(manifest?.spec?.store?.type, manifest),
@@ -809,7 +846,7 @@ function ManifestListView({
             variation={ButtonVariation.LINK}
             data-test-id="addManifest"
             onClick={addNewManifest}
-            text={getString('pipelineSteps.serviceTab.manifestList.addManifest')}
+            text={btnText}
           />
         )}
       </Layout.Vertical>

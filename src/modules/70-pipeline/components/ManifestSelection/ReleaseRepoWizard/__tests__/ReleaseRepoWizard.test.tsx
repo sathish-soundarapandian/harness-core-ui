@@ -6,14 +6,23 @@
  */
 
 import React from 'react'
-import { findByText, fireEvent, render } from '@testing-library/react'
+import { render } from '@testing-library/react'
 
 import { TestWrapper } from '@common/utils/testUtils'
 
 import { ManifestDataType, manifestStoreTypes } from '../../Manifesthelper'
 import ReleaseRepoWizard from '../ReleaseRepoWizard'
 
+jest.mock('services/cd-ng', () => ({
+  useGetConnector: jest.fn().mockImplementation(() => {
+    return { data: { data: { content: [{}] } }, refetch: jest.fn() }
+  })
+}))
+
 const props = {
+  expressions: [],
+  allowableTypes: [],
+  lastSteps: [],
   types: [
     ManifestDataType.K8sManifest,
     ManifestDataType.Values,
@@ -33,6 +42,8 @@ const props = {
   handleConnectorViewChange: jest.fn(),
   handleStoreChange: jest.fn(),
   manifest: null,
+  changeManifestType: jest.fn(),
+  handleSubmit: jest.fn(),
   isReadonly: false,
   stage: {
     stage: {
@@ -63,21 +74,38 @@ describe('Release Repo wizard tests', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test(`new connector view works correctly`, async () => {
+  test('on edit', () => {
+    const editProps = {
+      ...props,
+      initialValues: {
+        connectorRef: 'testgotconnectora',
+        gitFetchType: 'Branch',
+        paths: ['sdfds'],
+        branch: 'sdfds',
+        store: 'Git',
+        selectedManifest: 'ReleaseRepo'
+      },
+      manifest: {
+        identifier: 'sdfdsfdfd',
+        type: 'ReleaseRepo',
+        spec: {
+          store: {
+            type: 'Git',
+            spec: {
+              connectorRef: 'testgotconnectora',
+              gitFetchType: 'Branch',
+              paths: ['sdfds'],
+              branch: 'sdfds'
+            }
+          }
+        }
+      }
+    }
     const { container } = render(
       <TestWrapper>
-        <ReleaseRepoWizard {...props} />
+        <ReleaseRepoWizard {...editProps} />
       </TestWrapper>
     )
-
-    const gitconnectorCard = container.getElementsByClassName('Thumbnail--squareCardContainer')[0]
-    fireEvent.click(gitconnectorCard)
-    const newConnectorLabel = await findByText(container, 'newLabel Git connector')
-    expect(newConnectorLabel).toBeDefined()
-    const newConnectorBtn = container.getElementsByClassName('addNewManifest')[0]
-    expect(newConnectorBtn).toBeDefined()
-    fireEvent.click(newConnectorLabel)
-
     expect(container).toMatchSnapshot()
   })
 })
