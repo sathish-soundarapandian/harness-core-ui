@@ -22,7 +22,7 @@ export interface ExecutionsListProps {
   onViewCompiledYaml: (pipelineExecutionSummary: PipelineExecutionSummary) => void
 }
 
-export default function ExecutionsList({
+function ExecutionsList({
   pipelineExecutionSummary,
   isPipelineInvalid,
   onViewCompiledYaml
@@ -62,3 +62,7 @@ export default function ExecutionsList({
     </div>
   )
 }
+
+export default React.memo(ExecutionsList, (prevProps, nextProps) => {
+  return prevProps.pipelineExecutionSummary?.length === nextProps.pipelineExecutionSummary?.length
+})

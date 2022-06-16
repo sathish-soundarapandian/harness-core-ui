@@ -48,6 +48,7 @@ import type { StringsMap } from 'stringTypes'
 import pipelineIllustration from '@pipeline/pages/pipelines/images/deploypipeline-illustration.svg'
 import { ExecutionCompiledYaml } from '@pipeline/components/ExecutionCompiledYaml/ExecutionCompiledYaml'
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
+import { ExecutionCompareProvider } from '@pipeline/components/ExecutionCompareYamls/ExecutionCompareContext'
 import ExecutionsList from './ExecutionsList/ExecutionsList'
 import ExecutionsPagination from './ExecutionsPagination/ExecutionsPagination'
 import { PipelineDeploymentListHeader } from './PipelineDeploymentListHeader/PipelineDeploymentListHeader'
@@ -525,52 +526,54 @@ export default function PipelineDeploymentList(props: PipelineDeploymentListProp
         refetchFilters={refetchFilters}
         queryParams={queryParams}
       >
-        {renderDeploymentListHeader({
-          pipelineExecutionSummary,
-          hasFilters,
-          onRunPipeline: props.onRunPipeline,
-          isPipelineInvalid: props.isPipelineInvalid
-        })}
-        <Page.Body
-          className={css.main}
-          key={pipelineIdentifier}
-          error={(error?.data as Error)?.message || error?.message}
-          retryOnError={() => fetchExecutions()}
-        >
-          {props.showHealthAndExecution && !isCommunityAndCDModule && (
-            <Container className={css.healthAndExecutions}>
-              <PipelineSummaryCards />
-              <PipelineBuildExecutionsChart />
-            </Container>
-          )}
-          {spinner ? (
-            spinner
-          ) : !pipelineExecutionSummary?.content?.length ? (
-            <NoDeployments
-              onRunPipeline={props.onRunPipeline}
-              hasFilters={hasFilters}
-              module={module}
-              getString={getString}
-              clearFilters={clearFilters}
-              runPipeline={runPipeline}
-              createPipeline={createPipeline}
-              goToPipeline={goToPipeline}
-              pipelineIdentifier={pipelineIdentifier}
-              queryParams={queryParams}
-              isPipelineInvalid={props.isPipelineInvalid}
-            />
-          ) : (
-            <React.Fragment>
-              <ExecutionsList
-                pipelineExecutionSummary={pipelineExecutionSummary?.content}
+        <ExecutionCompareProvider>
+          {renderDeploymentListHeader({
+            pipelineExecutionSummary,
+            hasFilters,
+            onRunPipeline: props.onRunPipeline,
+            isPipelineInvalid: props.isPipelineInvalid
+          })}
+          <Page.Body
+            className={css.main}
+            key={pipelineIdentifier}
+            error={(error?.data as Error)?.message || error?.message}
+            retryOnError={() => fetchExecutions()}
+          >
+            {props.showHealthAndExecution && !isCommunityAndCDModule && (
+              <Container className={css.healthAndExecutions}>
+                <PipelineSummaryCards />
+                <PipelineBuildExecutionsChart />
+              </Container>
+            )}
+            {spinner ? (
+              spinner
+            ) : !pipelineExecutionSummary?.content?.length ? (
+              <NoDeployments
+                onRunPipeline={props.onRunPipeline}
+                hasFilters={hasFilters}
+                module={module}
+                getString={getString}
+                clearFilters={clearFilters}
+                runPipeline={runPipeline}
+                createPipeline={createPipeline}
+                goToPipeline={goToPipeline}
+                pipelineIdentifier={pipelineIdentifier}
+                queryParams={queryParams}
                 isPipelineInvalid={props.isPipelineInvalid}
-                onViewCompiledYaml={executionSummary => setViewCompiledYaml(executionSummary)}
               />
-              <ExecutionsPagination pipelineExecutionSummary={pipelineExecutionSummary} />
-            </React.Fragment>
-          )}
-          <ExecutionCompiledYaml onClose={() => setViewCompiledYaml(undefined)} executionSummary={viewCompiledYaml} />
-        </Page.Body>
+            ) : (
+              <React.Fragment>
+                <ExecutionsList
+                  pipelineExecutionSummary={pipelineExecutionSummary?.content}
+                  isPipelineInvalid={props.isPipelineInvalid}
+                  onViewCompiledYaml={executionSummary => setViewCompiledYaml(executionSummary)}
+                />
+                <ExecutionsPagination pipelineExecutionSummary={pipelineExecutionSummary} />
+              </React.Fragment>
+            )}
+            <ExecutionCompiledYaml onClose={() => setViewCompiledYaml(undefined)} executionSummary={viewCompiledYaml} />
+          </Page.Body>
+        </ExecutionCompareProvider>
       </FilterContextProvider>
     </GitSyncStoreProvider>
   )

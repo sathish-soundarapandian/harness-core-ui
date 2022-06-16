@@ -33,6 +33,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { ExecutionPathProps, GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import RetryPipeline from '../RetryPipeline/RetryPipeline'
 import { useRunPipelineModal } from '../RunPipelineModal/useRunPipelineModal'
+import { useExecutionCompareContext } from '../ExecutionCompareYamls/ExecutionCompareContext'
 import css from './ExecutionActions.module.scss'
 
 const commonButtonProps: ButtonProps = {
@@ -67,6 +68,7 @@ export interface ExecutionActionsProps {
   isPipelineInvalid?: boolean
   source: ExecutionPathProps['source']
   onViewCompiledYaml?: () => void
+  onCompareYamls?: () => void
 }
 function getValidExecutionActions(canExecute: boolean, executionStatus?: ExecutionStatus) {
   return {
@@ -140,7 +142,8 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
     source,
     showEditButton = true,
     isPipelineInvalid,
-    onViewCompiledYaml
+    onViewCompiledYaml,
+    onCompareYamls
   } = props
   const {
     orgIdentifier,
@@ -168,6 +171,7 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
   const { getString } = useStrings()
   const location = useLocation()
   const { isGitSyncEnabled } = useAppStore()
+  const { isCompareMode } = useExecutionCompareContext()
 
   const { openDialog: openAbortDialog } = useConfirmationDialog({
     cancelButtonText: getString('cancel'),
@@ -382,6 +386,13 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
             <MenuItem text={getString(resumeText)} onClick={resumePipeline} disabled={!canResume} />
             {onViewCompiledYaml && (
               <MenuItem text={getString('pipeline.execution.actions.viewCompiledYaml')} onClick={onViewCompiledYaml} />
+            )}
+            {onCompareYamls && (
+              <MenuItem
+                text={getString('pipeline.execution.actions.compareYamls')}
+                onClick={onCompareYamls}
+                disabled={isCompareMode}
+              />
             )}
             {showRetryPipeline() && (
               <RbacMenuItem

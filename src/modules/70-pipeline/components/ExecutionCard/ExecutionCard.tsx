@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { Card, Icon, Tag, TagsPopover, Text } from '@wings-software/uicore'
+import React, { FormEvent, useRef } from 'react'
+import { Card, Icon, Tag, TagsPopover, Text, Checkbox } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import { Popover } from '@blueprintjs/core'
@@ -37,6 +37,7 @@ import type { ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactor
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import MiniExecutionGraph from './MiniExecutionGraph/MiniExecutionGraph'
+import { useExecutionCompareContext } from '../ExecutionCompareYamls/ExecutionCompareContext'
 import css from './ExecutionCard.module.scss'
 
 export interface ExecutionCardProps {
@@ -135,7 +136,9 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
   const ciInfo = executionFactory.getCardInfo(StageType.BUILD)
   const stoInfo = executionFactory.getCardInfo(StageType.SECURITY)
   const { isGitSimplificationEnabled } = useAppStore()
+  const { isCompareMode, compareItems, addToCompare, removeFromCompare } = useExecutionCompareContext()
 
+  const checkboxRef = useRef<HTMLDivElement>(null)
   const [canEdit, canExecute] = usePermission(
     {
       resourceScope: {
@@ -153,9 +156,10 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
   )
   const disabled = isExecutionNotStarted(pipelineExecution.status)
   const source: ExecutionPathProps['source'] = pipelineIdentifier ? 'executions' : 'deployments'
-  function handleClick(): void {
-    const { pipelineIdentifier: cardPipelineId, planExecutionId } = pipelineExecution
 
+  function handleClick(e: any): void {
+    if (checkboxRef.current?.contains(e.target)) return
+    const { pipelineIdentifier: cardPipelineId, planExecutionId } = pipelineExecution
     if (!disabled && cardPipelineId && planExecutionId) {
       history.push(
         routes.toExecutionPipelineView({
@@ -171,6 +175,18 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
     }
   }
 
+  const isCompareItem = compareItems.includes(pipelineExecution)
+
+  const onCompareToggle = (e: FormEvent<HTMLInputElement>) => {
+    e.stopPropagation()
+    e.preventDefault()
+    if (!isCompareItem) {
+      addToCompare(pipelineExecution)
+    } else {
+      removeFromCompare(pipelineExecution)
+    }
+  }
+
   return (
     <Card
       elevation={0}
@@ -183,6 +199,16 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
           <div className={css.header}>
             <div className={css.info}>
               <div className={css.nameGroup}>
+                {isCompareMode && (
+                  <div className={css.compareSelection} ref={checkboxRef}>
+                    <Checkbox
+                      size={12}
+                      checked={isCompareItem}
+                      onChange={onCompareToggle}
+                      disabled={compareItems.length === 2 && !isCompareItem}
+                    />
+                  </div>
+                )}
                 <div className={css.pipelineName}>{pipelineExecution?.name}</div>
                 {variant === CardVariant.Default ? (
                   <String
@@ -264,6 +290,7 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
                   isPipelineInvalid={isPipelineInvalid}
                   canEdit={canEdit}
                   onViewCompiledYaml={onViewCompiledYaml}
+                  onCompareYamls={() => addToCompare(pipelineExecution)}
                   source={source}
                   canExecute={canExecute}
                   canRetry={pipelineExecution.canRetry}

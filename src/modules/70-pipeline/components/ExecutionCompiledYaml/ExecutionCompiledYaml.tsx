@@ -10,7 +10,7 @@ import type { MonacoEditorProps } from 'react-monaco-editor'
 import { useParams } from 'react-router-dom'
 import { Drawer, Position } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
-import { Button, Heading, Layout, PageError } from '@wings-software/uicore'
+import { Button, Heading, Icon, Layout, PageError } from '@wings-software/uicore'
 import { PageSpinner } from '@common/components'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import { PipelineExecutionSummary, useGetExecutionData } from 'services/pipeline-ng'
@@ -54,19 +54,22 @@ export function ExecutionCompiledYaml({ executionSummary, onClose }: ExecutionCo
       ) : (
         <>
           <Layout.Horizontal
-            spacing="medium"
+            spacing="large"
             padding="xlarge"
             flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
           >
-            <Heading level={2} color={Color.GREY_800} font={{ weight: 'bold' }}>
-              {executionSummary?.name}
-            </Heading>
-            <String
-              className={css.executionId}
-              tagName="div"
-              stringID={module === 'cd' ? 'execution.pipelineIdentifierTextCD' : 'execution.pipelineIdentifierTextCI'}
-              vars={executionSummary}
-            />
+            <Icon name="pipeline-advanced" color={Color.PRIMARY_7} size={24} />
+            <Layout.Horizontal spacing="small" flex={{ alignItems: 'baseline' }}>
+              <Heading level={2} color={Color.GREY_800} font={{ weight: 'bold' }}>
+                {executionSummary?.name}
+              </Heading>
+              <String
+                className={css.executionId}
+                tagName="div"
+                stringID={module === 'cd' ? 'execution.pipelineIdentifierTextCD' : 'execution.pipelineIdentifierTextCI'}
+                vars={executionSummary}
+              />
+            </Layout.Horizontal>
           </Layout.Horizontal>
 
           {error ? (

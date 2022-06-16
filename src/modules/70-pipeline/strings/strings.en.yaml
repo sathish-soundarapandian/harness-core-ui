@@ -392,6 +392,8 @@ execution:
   retryStepCount: 'Retry #{{ num }}'
   currentExecution: Current Execution
   timePrefix: 'Execution Time: '
+  compareAction: Compare
+  compareExecutionsTitle: Select executions to compare the compiled Yaml’s
   ignoreFailedWarningText: A failed step was ignored because the step’s Failure Strategy is Ignore Failure. The step’s failure did not impact the Pipeline’s success.
   iotab:
     noInputText: No input found for current step
@@ -415,6 +417,7 @@ execution:
     abortStage: Abort Stage
     downloadLogs: Download logs
     viewCompiledYaml: View Compiled Yaml
+    compareYamls: Compare Yamls
   layouts:
     bottom: Align to bottom
     right: Align to right

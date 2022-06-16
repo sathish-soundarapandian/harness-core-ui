@@ -2773,6 +2773,7 @@ export interface StringsMap {
   'pipeline.estimatedTimeRemaining': string
   'pipeline.execution.actions.abortPipeline': string
   'pipeline.execution.actions.abortStage': string
+  'pipeline.execution.actions.compareYamls': string
   'pipeline.execution.actions.downloadLogs': string
   'pipeline.execution.actions.pausePipeline': string
   'pipeline.execution.actions.pauseStage': string
@@ -2781,6 +2782,8 @@ export interface StringsMap {
   'pipeline.execution.actions.resumePipeline': string
   'pipeline.execution.actions.resumeStage': string
   'pipeline.execution.actions.viewCompiledYaml': string
+  'pipeline.execution.compareAction': string
+  'pipeline.execution.compareExecutionsTitle': string
   'pipeline.execution.currentExecution': string
   'pipeline.execution.dialogMessages.abortExecution': string
   'pipeline.execution.dialogMessages.abortTitle': string
