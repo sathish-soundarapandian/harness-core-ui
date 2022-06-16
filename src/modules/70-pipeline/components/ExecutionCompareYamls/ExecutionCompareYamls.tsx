@@ -19,7 +19,7 @@ import { String } from 'framework/strings'
 
 import css from './ExecutionCompareYamls.module.scss'
 
-interface ExecutionCompareYamlsProps {
+export interface ExecutionCompareYamlsProps {
   compareItems?: PipelineExecutionSummary[]
   onClose: () => void
 }
@@ -49,7 +49,7 @@ export function ExecutionCompareYamls({ compareItems, onClose }: ExecutionCompar
       canOutsideClickClose={true}
       enforceFocus={false}
       hasBackdrop={true}
-      size="calc(100vw - 128px)"
+      size="calc(100vw - 272px)"
       isOpen
       position={Position.RIGHT}
     >
@@ -59,38 +59,29 @@ export function ExecutionCompareYamls({ compareItems, onClose }: ExecutionCompar
       ) : (
         <>
           <Layout.Horizontal>
-            <Layout.Horizontal
-              spacing="small"
-              padding="xlarge"
-              flex={{ alignItems: 'baseline', justifyContent: 'flex-start' }}
-              className={css.grow}
-            >
-              <Heading level={2} color={Color.GREY_800} font={{ weight: 'bold' }}>
-                {compareItems?.[0]?.name}
-              </Heading>
-              <String
-                className={css.executionId}
-                tagName="div"
-                stringID={module === 'cd' ? 'execution.pipelineIdentifierTextCD' : 'execution.pipelineIdentifierTextCI'}
-                vars={compareItems?.[0]}
-              />
-            </Layout.Horizontal>
-            <Layout.Horizontal
-              spacing="small"
-              padding="xlarge"
-              flex={{ alignItems: 'baseline', justifyContent: 'flex-start' }}
-              className={css.grow}
-            >
-              <Heading level={2} color={Color.GREY_800} font={{ weight: 'bold' }}>
-                {compareItems?.[1]?.name}
-              </Heading>
-              <String
-                className={css.executionId}
-                tagName="div"
-                stringID={module === 'cd' ? 'execution.pipelineIdentifierTextCD' : 'execution.pipelineIdentifierTextCI'}
-                vars={compareItems?.[1]}
-              />
-            </Layout.Horizontal>
+            {compareItems?.map(compareItem => {
+              return (
+                <Layout.Horizontal
+                  key={compareItem.planExecutionId}
+                  spacing="small"
+                  padding="xlarge"
+                  flex={{ alignItems: 'baseline', justifyContent: 'flex-start' }}
+                  className={css.grow}
+                >
+                  <Heading level={2} color={Color.GREY_800} font={{ weight: 'bold' }}>
+                    {compareItem?.name}
+                  </Heading>
+                  <String
+                    className={css.executionId}
+                    tagName="div"
+                    stringID={
+                      module === 'cd' ? 'execution.pipelineIdentifierTextCD' : 'execution.pipelineIdentifierTextCI'
+                    }
+                    vars={compareItem}
+                  />
+                </Layout.Horizontal>
+              )
+            })}
           </Layout.Horizontal>
           <MonacoDiffEditor
             data-testid="execution-compare-yaml-viewer"
