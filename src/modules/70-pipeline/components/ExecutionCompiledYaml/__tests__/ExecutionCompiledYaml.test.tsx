@@ -33,7 +33,7 @@ jest.mock('services/pipeline-ng', () => ({
 }))
 
 describe('ExecutionCompiledYaml view', () => {
-  test('should show dialog with title', () => {
+  test('should show dialog with title with warning', () => {
     render(
       <TestWrapper path={TEST_PATH} pathParams={pathParams}>
         <ExecutionCompiledYaml
@@ -47,5 +47,20 @@ describe('ExecutionCompiledYaml view', () => {
         name: /testrun/i
       })
     ).toBeInTheDocument()
+  })
+
+  test('should show dialog with valid response data', async () => {
+    jest.mock('services/pipeline-ng', () => ({
+      useGetExecutionData: jest.fn(() => ({ data: { data: { executionYaml: 'testcode' } } }))
+    }))
+    render(
+      <TestWrapper path={TEST_PATH} pathParams={pathParams}>
+        <ExecutionCompiledYaml
+          executionSummary={{ name: 'TestRun success', planExecutionId: 'planExecutionId', runSequence: 10 }}
+          onClose={jest.fn()}
+        />
+      </TestWrapper>
+    )
+    expect(screen.getByTestId('execution-compiled-yaml-viewer')).toBeInTheDocument()
   })
 })
