@@ -14,7 +14,7 @@ import { Button, Heading, Layout, PageError } from '@wings-software/uicore'
 import { PageSpinner } from '@common/components'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import { PipelineExecutionSummary, useGetExecutionData } from 'services/pipeline-ng'
-import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { String } from 'framework/strings'
 
 import css from './ExecutionCompiledYaml.module.scss'
@@ -25,8 +25,13 @@ interface ExecutionCompiledYamlProps {
 }
 
 export function ExecutionCompiledYaml({ executionSummary, onClose }: ExecutionCompiledYamlProps): ReactElement {
+  const { accountId } = useParams<AccountPathProps>()
+
   const { data, loading, error, refetch } = useGetExecutionData({
-    planExecutionId: executionSummary?.planExecutionId || ''
+    planExecutionId: executionSummary?.planExecutionId || '',
+    queryParams: {
+      accountIdentifier: accountId
+    }
   })
   const { module } = useParams<PipelineType<PipelinePathProps>>()
 
