@@ -25,7 +25,7 @@ jest.mock('services/pipeline-ng', () => ({
   }),
   useHandleInterrupt: jest.fn(() => ({})),
   useHandleStageInterrupt: jest.fn(() => ({})),
-  useGetExecutionData: jest.fn(() => ({})),
+  useGetExecutionData: jest.fn().mockReturnValue({}),
   useGetInputsetYaml: jest.fn(() => ({ data: null }))
 }))
 

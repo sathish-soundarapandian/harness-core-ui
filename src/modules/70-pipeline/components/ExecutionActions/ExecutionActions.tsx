@@ -68,7 +68,6 @@ export interface ExecutionActionsProps {
   source: ExecutionPathProps['source']
   onViewCompiledYaml?: () => void
 }
-
 function getValidExecutionActions(canExecute: boolean, executionStatus?: ExecutionStatus) {
   return {
     canAbort: isExecutionActive(executionStatus) && canExecute,
@@ -381,7 +380,9 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
             <MenuItem text={getString(pauseText)} onClick={pausePipeline} disabled={!canPause} />
             <MenuItem text={getString(abortText)} onClick={openAbortDialog} disabled={!canAbort} />
             <MenuItem text={getString(resumeText)} onClick={resumePipeline} disabled={!canResume} />
-            <MenuItem text={getString('pipeline.execution.actions.viewCompiledYaml')} onClick={onViewCompiledYaml} />
+            {onViewCompiledYaml && (
+              <MenuItem text={getString('pipeline.execution.actions.viewCompiledYaml')} onClick={onViewCompiledYaml} />
+            )}
             {showRetryPipeline() && (
               <RbacMenuItem
                 featuresProps={getFeaturePropsForRunPipelineButton({ modules, getString })}

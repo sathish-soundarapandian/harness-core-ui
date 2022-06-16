@@ -19,7 +19,7 @@ import { String } from 'framework/strings'
 
 import css from './ExecutionCompiledYaml.module.scss'
 
-interface ExecutionCompiledYamlProps {
+export interface ExecutionCompiledYamlProps {
   executionSummary?: PipelineExecutionSummary
   onClose: () => void
 }
