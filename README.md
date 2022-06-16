@@ -47,7 +47,13 @@ $ yarn setup-github-registry
 
 > Note: This is only needed if this is the first UI project you are installing on your machine
 
-5. Install/Update/Refresh dependencies
+5. Generate self-signed certificate 
+```
+$ yarn generate-certificate
+$ yarn global add npx
+```
+
+6. Install/Update/Refresh dependencies
 
 ```
 $ yarn
