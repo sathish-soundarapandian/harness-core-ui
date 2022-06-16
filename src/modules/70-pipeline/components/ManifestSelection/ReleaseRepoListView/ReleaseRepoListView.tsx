@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { useCallback, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
@@ -131,7 +138,6 @@ function ReleaseRepoListView({
 
   const getNewConnectorSteps = useCallback((): JSX.Element => {
     const buildPayload = getBuildPayload(ManifestToConnectorMap[manifestStore])
-
     return (
       <StepWizard title={getString('connectors.createNewConnector')}>
         <ConnectorDetailsStep
@@ -281,18 +287,18 @@ function ReleaseRepoListView({
     setSelectedManifest(null)
   }
 
-  const handleConnectorViewChange = (isConnectorView: boolean): void => {
-    setConnectorView(isConnectorView)
+  const handleConnectorViewChange = (): void => {
+    setConnectorView(true)
     setIsEditMode(false)
   }
 
   const [showReleaseRepoModal, hideReleaseRepoModal] = useModalHook(() => {
     const onClose = (): void => {
-      // setConnectorView(false)
+      setConnectorView(false)
       hideReleaseRepoModal()
-      // setManifestStore('')
-      // setIsEditMode(false)
-      // setSelectedManifest(null)
+      setManifestStore('')
+      setIsEditMode(false)
+      setSelectedManifest(null)
     }
     const manifest = get(listOfManifests[manifestIndex], 'manifest', null)
 

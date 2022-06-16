@@ -14,13 +14,24 @@ import RepoStore from './RepoStore'
 import RepoDetails from './RepoDetails'
 import css from '../ManifestWizard/ManifestWizard.module.scss'
 
+interface StepChangeData<SharedObject> {
+  prevStep?: number
+  nextStep?: number
+  prevStepData: SharedObject
+}
+
 function ReleaseRepoWizard(props: any): React.ReactElement {
   const { allowableTypes, isReadonly } = usePipelineContext()
 
   const { expressions } = useVariablesExpression()
 
+  const onStepChange = (arg: StepChangeData<any>): void => {
+    if (arg?.prevStep && arg?.nextStep && arg.prevStep > arg.nextStep && arg.nextStep <= 1) {
+      props.handleConnectorViewChange(false)
+    }
+  }
   return (
-    <StepWizard className={css.manifestWizard} onCompleteWizard={props.onClose}>
+    <StepWizard className={css.manifestWizard} onCompleteWizard={props.onClose} onStepChange={onStepChange}>
       <RepoStore
         stepName="Release Repo Store"
         name="Release Repo Store"
