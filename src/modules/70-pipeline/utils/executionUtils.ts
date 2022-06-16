@@ -521,6 +521,7 @@ const processNodeData = (
           item: {
             name: nodeData?.name || /* istanbul ignore next */ '',
             ...getIconDataBasedOnType(nodeData),
+            ...getFieldsBasedOnType(nodeData),
             identifier: item,
             skipCondition: nodeData?.skipInfo?.evaluatedCondition ? nodeData?.skipInfo.skipCondition : undefined,
             when: nodeData?.nodeRunInfo,
@@ -734,6 +735,14 @@ export function getIconDataBasedOnType(nodeData?: ExecutionNode): {
   return {
     icon: 'cross',
     iconSize: 20
+  }
+}
+
+export function getFieldsBasedOnType(nodeData?: ExecutionNode) {
+  if (nodeData) {
+    if (nodeData.stepType === StepType.HarnessApproval) {
+      return { callbackIds: nodeData.executableResponses?.[0]?.async?.callbackIds || [] }
+    }
   }
 }
 

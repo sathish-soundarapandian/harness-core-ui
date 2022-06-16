@@ -6,8 +6,7 @@
  */
 
 import React from 'react'
-import { Icon, Text, IconName, Button, Dialog, Layout, ButtonVariation } from '@wings-software/uicore'
-import { useModalHook } from '@harness/use-modal'
+import { Icon, Text, IconName } from '@wings-software/uicore'
 
 import cx from 'classnames'
 import { get, mapKeys, omit, defaultTo } from 'lodash-es'
@@ -28,6 +27,7 @@ import {
   isExecutionQueued,
   ExecutionStatusEnum
 } from '@pipeline/utils/statusHelpers'
+import { ApprovalNode } from './ApprovalNode'
 
 import css from './StepsTree.module.scss'
 
@@ -70,35 +70,9 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
     onStepSelect(identifier, retryId)
   }
 
-  const [showApproveRejectModal, hideApproveRejectModal] = useModalHook(
-    () => (
-      <Dialog
-        onClose={hideApproveRejectModal}
-        isOpen={true}
-        enforceFocus={false}
-        title={
-          <>
-            <String stringID="common.approve" /> / <String stringID="common.reject" />
-          </>
-        }
-      >
-        <Layout.Vertical>
-          <Layout.Horizontal>
-            <Button variation={ButtonVariation.PRIMARY} onClick={hideApproveRejectModal} intent="primary">
-              {getString('close')}
-            </Button>
-          </Layout.Horizontal>
-        </Layout.Vertical>
-      </Dialog>
-    ),
-    []
-  )
-
   const renderRightSection = (step: ExecutionPipelineNode<ExecutionNode>) => {
     return step.item?.data?.stepType === PipelineStepType.HarnessApproval ? (
-      <Button intent="primary" onClick={showApproveRejectModal} disabled={false}>
-        <String stringID="common.approve" />
-      </Button>
+      <ApprovalNode step={step}/>
     ) : (
       <Duration
         className={css.duration}
