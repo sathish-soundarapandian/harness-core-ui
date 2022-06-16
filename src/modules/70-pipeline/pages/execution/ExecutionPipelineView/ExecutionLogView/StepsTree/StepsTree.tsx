@@ -6,7 +6,9 @@
  */
 
 import React from 'react'
-import { Icon, Text, IconName } from '@wings-software/uicore'
+import { Icon, Text, IconName, Button, Dialog, Layout, ButtonVariation } from '@wings-software/uicore'
+import { useModalHook } from '@harness/use-modal'
+
 import cx from 'classnames'
 import { get, mapKeys, omit, defaultTo } from 'lodash-es'
 
@@ -18,6 +20,7 @@ import type {
 } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
 import { Duration } from '@common/components'
 import { ExecutionStatusIconMap } from '@pipeline/utils/executionUtils'
+import { StepType as PipelineStepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import {
   isExecutionRunning,
   isExecutionSuccess,
@@ -65,6 +68,46 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
     }
 
     onStepSelect(identifier, retryId)
+  }
+
+  const [showApproveRejectModal, hideApproveRejectModal] = useModalHook(
+    () => (
+      <Dialog
+        onClose={hideApproveRejectModal}
+        isOpen={true}
+        enforceFocus={false}
+        title={
+          <>
+            <String stringID="common.approve" /> / <String stringID="common.reject" />
+          </>
+        }
+      >
+        <Layout.Vertical>
+          <Layout.Horizontal>
+            <Button variation={ButtonVariation.PRIMARY} onClick={hideApproveRejectModal} intent="primary">
+              {getString('close')}
+            </Button>
+          </Layout.Horizontal>
+        </Layout.Vertical>
+      </Dialog>
+    ),
+    []
+  )
+
+  const renderRightSection = (step: ExecutionPipelineNode<ExecutionNode>) => {
+    return step.item?.data?.stepType === PipelineStepType.HarnessApproval ? (
+      <Button intent="primary" onClick={showApproveRejectModal} disabled={false}>
+        <String stringID="common.approve" />
+      </Button>
+    ) : (
+      <Duration
+        className={css.duration}
+        startTime={step.item?.data?.startTs}
+        endTime={step.item?.data?.endTs}
+        durationText={' '}
+        icon={null}
+      />
+    )
   }
 
   return (
@@ -137,13 +180,7 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
                 <Text lineClamp={1} className={css.name}>
                   {step.item.name}
                 </Text>
-                <Duration
-                  className={css.duration}
-                  startTime={step.item.data?.startTs}
-                  endTime={step.item.data?.endTs}
-                  durationText={' '}
-                  icon={null}
-                />
+                {renderRightSection(step)}
               </div>
             </li>
           )
