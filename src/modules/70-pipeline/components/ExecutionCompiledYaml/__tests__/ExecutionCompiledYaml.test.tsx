@@ -28,12 +28,11 @@ const pathParams = {
   stageId: 'selectedStageId'
 }
 
-jest.mock('services/pipeline-ng', () => ({
-  useGetExecutionData: jest.fn(() => ({ data: null }))
-}))
-
 describe('ExecutionCompiledYaml view', () => {
   test('should show dialog with title with warning', () => {
+    jest.mock('services/pipeline-ng', () => ({
+      useGetExecutionData: jest.fn(() => ({ error: { message: 'error occured' } }))
+    }))
     render(
       <TestWrapper path={TEST_PATH} pathParams={pathParams}>
         <ExecutionCompiledYaml
