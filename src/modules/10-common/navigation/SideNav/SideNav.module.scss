@@ -6,12 +6,18 @@
  */
 
 .main {
-  height: 100%;
+  // height: 100%;
   background: var(--theme-light-nav-panel-bg);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  position: relative;
+  // position: relative;
+  position: fixed;
+  top: 0;
+  height: 100vh;
+  margin-left: 88px;
+  z-index: 16;
+  width: 184px;
 
   .bottomContainer {
     position: relative;
@@ -42,7 +48,7 @@
       right: 0;
       overflow: hidden;
       height: 300px;
-      width: 192px;
+      width: 184px;
 
       .icon {
         position: absolute;
