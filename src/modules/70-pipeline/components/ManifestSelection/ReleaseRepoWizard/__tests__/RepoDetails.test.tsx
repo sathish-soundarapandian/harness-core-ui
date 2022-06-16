@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
-import { MultiTypeInputType } from '@harness/uicore'
+import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
 import { TestWrapper } from '@common/utils/testUtils'
 
@@ -33,8 +33,28 @@ describe('Repo Details testing', () => {
     )
     expect(container).toMatchSnapshot()
   })
+  test(`click on git card`, () => {
+    const { container } = render(
+      <TestWrapper>
+        <RepoDetails
+          name={'RepoDetails'}
+          stepName={'second step'}
+          expressions={[]}
+          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+          isReadonly={false}
+          initialValues={{}}
+          manifest={null}
+          handleSubmit={submitFn}
+        />
+      </TestWrapper>
+    )
+    const gitCard = container.querySelector('[data-icon=service-github]')
+    fireEvent.click(gitCard!)
 
-  test(`renders with initialValues`, () => {
+    expect(container).toMatchSnapshot()
+  })
+
+  test(`renders with initialValues for branch`, () => {
     const { container } = render(
       <TestWrapper>
         <RepoDetails
@@ -52,18 +72,133 @@ describe('Repo Details testing', () => {
             paths: ['test']
           }}
           manifest={{
-            manifest: {
-              identifier: 'test',
-              type: 'ReleaseRepo',
-              spec: {
-                store: {
-                  type: 'Git',
-                  spec: {
-                    connectorRef: 'dsfds',
-                    gitFetchType: 'Branch',
-                    paths: ['eqwewq'],
-                    branch: 'sdfds'
-                  }
+            identifier: 'test',
+            type: 'ReleaseRepo',
+            spec: {
+              store: {
+                type: 'Git',
+                spec: {
+                  connectorRef: 'dsfds',
+                  gitFetchType: 'Branch',
+                  paths: ['eqwewq'],
+                  branch: 'sdfds'
+                }
+              }
+            }
+          }}
+          handleSubmit={submitFn}
+        />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test(`renders with initialValues for commitId`, () => {
+    const { container } = render(
+      <TestWrapper>
+        <RepoDetails
+          name={'RepoDetails'}
+          stepName={'second step'}
+          expressions={[]}
+          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+          isReadonly={false}
+          initialValues={{
+            identifier: 'test',
+
+            commitId: 'test-commit',
+
+            gitFetchType: 'Commit',
+            paths: ['test']
+          }}
+          manifest={{
+            identifier: 'test',
+            type: 'ReleaseRepo',
+            spec: {
+              store: {
+                type: 'Git',
+                spec: {
+                  connectorRef: 'dsfds',
+                  gitFetchType: 'Commit',
+                  paths: ['eqwewq'],
+                  commitId: 'sdfds'
+                }
+              }
+            }
+          }}
+          handleSubmit={submitFn}
+        />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test(`runtime values for branch and paths`, () => {
+    const { container } = render(
+      <TestWrapper>
+        <RepoDetails
+          name={'RepoDetails'}
+          stepName={'second step'}
+          expressions={[]}
+          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+          isReadonly={false}
+          initialValues={{
+            identifier: 'test',
+
+            branch: RUNTIME_INPUT_VALUE,
+
+            gitFetchType: 'Branch',
+            paths: RUNTIME_INPUT_VALUE
+          }}
+          manifest={{
+            identifier: 'test',
+            type: 'ReleaseRepo',
+            spec: {
+              store: {
+                type: 'Git',
+                spec: {
+                  connectorRef: 'dsfds',
+                  gitFetchType: 'Branch',
+                  paths: RUNTIME_INPUT_VALUE,
+                  branch: RUNTIME_INPUT_VALUE
+                }
+              }
+            }
+          }}
+          handleSubmit={submitFn}
+        />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test(`runtime values for commitId and paths`, () => {
+    const { container } = render(
+      <TestWrapper>
+        <RepoDetails
+          name={'RepoDetails'}
+          stepName={'second step'}
+          expressions={[]}
+          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+          isReadonly={false}
+          initialValues={{
+            identifier: 'test',
+
+            commitId: RUNTIME_INPUT_VALUE,
+
+            gitFetchType: 'Commit',
+            paths: RUNTIME_INPUT_VALUE
+          }}
+          manifest={{
+            identifier: 'test',
+            type: 'ReleaseRepo',
+            spec: {
+              store: {
+                type: 'Git',
+                spec: {
+                  connectorRef: 'dsfds',
+                  gitFetchType: 'Commit',
+                  paths: RUNTIME_INPUT_VALUE,
+                  commitId: RUNTIME_INPUT_VALUE
                 }
               }
             }
@@ -127,6 +262,69 @@ describe('Repo Details testing', () => {
                 branch: 'testbranch',
                 connectorRef: '',
                 gitFetchType: 'Branch',
+                paths: ['eqwewq'],
+                repoName: undefined
+              },
+              type: undefined
+            }
+          }
+        }
+      })
+    })
+  })
+
+  test(`click submit with commitid`, async () => {
+    const { container } = render(
+      <TestWrapper>
+        <RepoDetails
+          name={'RepoDetails'}
+          stepName={'second step'}
+          expressions={[]}
+          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+          isReadonly={false}
+          initialValues={{
+            identifier: 'test',
+
+            type: 'ReleaseRepo',
+
+            commitId: 'testbranch',
+
+            gitFetchType: 'Commit',
+            paths: 'eqwewq'
+          }}
+          manifest={{
+            identifier: 'test',
+            type: 'ReleaseRepo',
+            spec: {
+              store: {
+                type: undefined,
+                spec: {
+                  connectorRef: 'dsfds',
+                  gitFetchType: 'Commit',
+                  commitId: 'testbranch',
+                  paths: ['eqwewq']
+                }
+              }
+            }
+          }}
+          handleSubmit={submitFn}
+        />
+      </TestWrapper>
+    )
+
+    fireEvent.click(container.querySelector('button[type="submit"]')!)
+    await waitFor(() => {
+      expect(submitFn).toBeCalled()
+      expect(submitFn).toHaveBeenCalledWith({
+        manifest: {
+          identifier: 'test',
+          type: 'ReleaseRepo',
+          spec: {
+            store: {
+              spec: {
+                commitId: 'testbranch',
+                connectorRef: '',
+                gitFetchType: 'Commit',
                 paths: ['eqwewq'],
                 repoName: undefined
               },

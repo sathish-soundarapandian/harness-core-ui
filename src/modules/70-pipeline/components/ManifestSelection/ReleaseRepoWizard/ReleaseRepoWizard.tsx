@@ -19,6 +19,7 @@ import RepoDetails from './RepoDetails'
 import type { ManifestStores, ManifestTypes } from '../ManifestInterface'
 
 import css from '../ManifestWizard/ManifestWizard.module.scss'
+import { useStrings } from 'framework/strings'
 
 interface StepChangeData<SharedObject> {
   prevStep?: number
@@ -55,12 +56,14 @@ function ReleaseRepoWizard({
   handleSubmit,
   manifest
 }: ReleaseRepoStepProps): React.ReactElement {
+  const { getString } = useStrings()
   const { allowableTypes, isReadonly } = usePipelineContext()
   const { expressions } = useVariablesExpression()
 
   const onStepChange = (arg: StepChangeData<any>): void => {
     /*istanbul ignore next */
     const prevStep = get(arg, 'prevStep', '')
+    /*istanbul ignore next */
     const nextStep = get(arg, 'nextStep', '')
     /*istanbul ignore next */
     /*istanbul ignore else */
@@ -86,22 +89,27 @@ function ReleaseRepoWizard({
         }
         handleStoreChange={handleStoreChange}
         initialValues={initialValues}
+        selectedManifest={manifest}
       />
       {/*istanbul ignore next */}
       {newConnectorView ? newConnectorSteps : null}
       <RepoDetails
-        key={'RepoDetails'}
-        name={'RepoDetails'}
+        key={getString('pipeline.manifestType.manifestDetails')}
+        name={getString('pipeline.manifestType.manifestDetails')}
         expressions={expressions}
         allowableTypes={allowableTypes}
         stepName={'RepoDetails'}
         initialValues={initialValues}
         manifest={manifest}
-        handleSubmit={values => {
+        handleSubmit={
           /*istanbul ignore next */
-          handleSubmit(values)
-          onClose()
-        }}
+          values => {
+            /*istanbul ignore next */
+            handleSubmit(values)
+            /*istanbul ignore next */
+            onClose()
+          }
+        }
         isReadonly={isReadonly}
       />
     </StepWizard>

@@ -15,7 +15,8 @@ import {
   MultiTypeInputType,
   Text,
   StepProps,
-  ButtonVariation
+  ButtonVariation,
+  RUNTIME_INPUT_VALUE
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
@@ -52,7 +53,6 @@ interface ReleaseRepoProps {
 function RepoDetails({
   stepName,
   expressions,
-  allowableTypes,
   handleSubmit,
   prevStepData,
   previousStep,
@@ -61,21 +61,15 @@ function RepoDetails({
 }: StepProps<ConnectorConfigDTO> & ReleaseRepoProps): React.ReactElement {
   const { getString } = useStrings()
 
-  const gitConnectionType: string =
-    defaultTo(prevStepData, { store: '' }).store === ManifestStoreMap.Git ? 'connectionType' : 'type'
-  const connectionType =
-    prevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
-    prevStepData?.urlType === GitRepoName.Repo
-      ? GitRepoName.Repo
-      : GitRepoName.Account
-
   const getInitialValues = useCallback((): ReleaseRepoDataType => {
     const specValues = get(manifest, 'spec.store.spec', null)
+    const pathValue =
+      get(specValues, 'paths', []) === RUNTIME_INPUT_VALUE ? specValues.paths : get(specValues, 'paths', [])[0]
     if (specValues) {
       return {
         ...specValues,
         identifier: manifest.identifier,
-        paths: specValues.paths[0]
+        paths: pathValue
       }
     }
     return {
@@ -104,14 +98,11 @@ function RepoDetails({
         }
       }
     }
-    if (connectionType === GitRepoName.Account) {
-      set(manifestObj, 'manifest.spec.store.spec.repoName', formData?.repoName)
-    }
-
+    /* istanbul ignore else */
     if (manifestObj.manifest.spec.store) {
       if (formData.gitFetchType === 'Branch') {
         set(manifestObj, 'manifest.spec.store.spec.branch', defaultTo(formData.branch, ''))
-      } else if (formData.gitFetchType === 'Commit') {
+      } /*istanbul ignore else */ else if (formData.gitFetchType === 'Commit') {
         set(manifestObj, 'manifest.spec.store.spec.commitId', defaultTo(formData.commitId, ''))
       }
     }
@@ -179,7 +170,7 @@ function RepoDetails({
                       />
                     </div>
 
-                    {formik.values?.gitFetchType === GitFetchTypes.Branch && (
+                    {get(formik.values, 'gitFetchType', '') === GitFetchTypes.Branch && (
                       <div
                         className={cx(css.halfWidth, {
                           [css.runtimeInput]:
@@ -187,7 +178,14 @@ function RepoDetails({
                         })}
                       >
                         <FormInput.MultiTextInput
-                          multiTextInputProps={{ expressions, allowableTypes }}
+                          multiTextInputProps={{
+                            expressions,
+                            allowableTypes: [
+                              MultiTypeInputType.FIXED,
+                              MultiTypeInputType.RUNTIME,
+                              MultiTypeInputType.EXPRESSION
+                            ]
+                          }}
                           label={getString('pipelineSteps.deploy.inputSet.branch')}
                           placeholder={getString('pipeline.manifestType.branchPlaceholder')}
                           name="branch"
@@ -201,14 +199,20 @@ function RepoDetails({
                             showRequiredField={false}
                             showDefaultField={false}
                             showAdvanced={true}
-                            onChange={value => formik.setFieldValue('branch', value)}
+                            onChange={
+                              /* istanbul ignore next */
+                              value => {
+                                /* istanbul ignore next */
+                                formik.setFieldValue('branch', value)
+                              }
+                            }
                             isReadonly={isReadonly}
                           />
                         )}
                       </div>
                     )}
 
-                    {formik.values?.gitFetchType === GitFetchTypes.Commit && (
+                    {get(formik.values, 'gitFetchType', '') === GitFetchTypes.Commit && (
                       <div
                         className={cx(css.halfWidth, {
                           [css.runtimeInput]:
@@ -216,7 +220,14 @@ function RepoDetails({
                         })}
                       >
                         <FormInput.MultiTextInput
-                          multiTextInputProps={{ expressions, allowableTypes }}
+                          multiTextInputProps={{
+                            expressions,
+                            allowableTypes: [
+                              MultiTypeInputType.FIXED,
+                              MultiTypeInputType.RUNTIME,
+                              MultiTypeInputType.EXPRESSION
+                            ]
+                          }}
                           label={getString('pipeline.manifestType.commitId')}
                           placeholder={getString('pipeline.manifestType.commitPlaceholder')}
                           name="commitId"
@@ -230,7 +241,13 @@ function RepoDetails({
                             showRequiredField={false}
                             showDefaultField={false}
                             showAdvanced={true}
-                            onChange={value => formik.setFieldValue('commitId', value)}
+                            onChange={
+                              /* istanbul ignore next */
+                              value => {
+                                /* istanbul ignore next */
+                                formik.setFieldValue('commitId', value)
+                              }
+                            }
                             isReadonly={isReadonly}
                           />
                         )}
@@ -265,7 +282,13 @@ function RepoDetails({
                         showRequiredField={false}
                         showDefaultField={false}
                         showAdvanced={true}
-                        onChange={value => formik.setFieldValue('paths', value)}
+                        onChange={
+                          /* istanbul ignore next */
+                          value => {
+                            /* istanbul ignore next */
+                            formik.setFieldValue('paths', value)
+                          }
+                        }
                         isReadonly={isReadonly}
                       />
                     )}
@@ -277,7 +300,13 @@ function RepoDetails({
                     variation={ButtonVariation.SECONDARY}
                     text={getString('back')}
                     icon="chevron-left"
-                    onClick={() => previousStep?.(prevStepData)}
+                    onClick={
+                      /* istanbul ignore next */
+                      () => {
+                        /* istanbul ignore next */
+                        previousStep?.(prevStepData)
+                      }
+                    }
                   />
                   <Button
                     variation={ButtonVariation.PRIMARY}

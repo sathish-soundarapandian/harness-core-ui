@@ -23,7 +23,7 @@ import {
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { isEmpty } from 'lodash-es'
+import { get, isEmpty } from 'lodash-es'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
@@ -49,6 +49,7 @@ interface ReleaseRepoStorePropType {
   initialValues?: any
   handleConnectorViewChange: () => void
   handleStoreChange: (store: ManifestStores) => void
+  selectedManifest?: any
 }
 type ManifestStoreExcludingInheritFromManifest = Exclude<ManifestStores, 'InheritFromManifest'>
 
@@ -60,13 +61,16 @@ function RepoStore({
   prevStepData,
   nextStep,
   handleStoreChange,
-  handleConnectorViewChange
+  handleConnectorViewChange,
+  selectedManifest
 }: StepProps<ConnectorConfigDTO> & ReleaseRepoStorePropType): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const [isLoadingConnectors, setIsLoadingConnectors] = React.useState<boolean>(true)
-  const [selectedStore, setSelectedStore] = useState(prevStepData?.store ?? initialValues?.store)
+  const prevStore = get(prevStepData, 'store', 'Git')
+  const initStore = get(initialValues, 'store', 'Git')
+  const [selectedStore, setSelectedStore] = useState(prevStore ?? initStore)
 
   const [canCreate] = usePermission({
     resource: {
@@ -80,43 +84,27 @@ function RepoStore({
   }
 
   function shouldGotoNextStep(connectorRefValue: ConnectorSelectedValue | string): boolean {
+    if (selectedManifest) {
+      return true
+    }
     return (
       !isLoadingConnectors &&
       !!selectedStore &&
       ((getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.FIXED &&
-        !isEmpty((connectorRefValue as ConnectorSelectedValue)?.connector)) ||
+        !isEmpty(get(connectorRefValue as ConnectorSelectedValue, 'connector', null))) ||
         !isEmpty(connectorRefValue))
     )
   }
+  /* istanbul ignore next */
   const handleOptionSelection = (storeSelected: ManifestStoreExcludingInheritFromManifest): void => {
-    // if (
-    //   getMultiTypeFromValue(formikData.connectorRef) !== MultiTypeInputType.FIXED &&
-    //   formikData.store !== storeSelected
-    // ) {
-    //   setMultiTypeValue(MultiTypeInputType.FIXED)
-    // } else if (multitypeInputValue !== undefined) {
-    //   setMultiTypeValue(undefined)
-    // }
+    /* istanbul ignore next */
     handleStoreChange(storeSelected)
     setSelectedStore(storeSelected)
   }
 
-  // const getInitialValues = useCallback((): ManifestStepInitData => {
-  //   const initValues = { ...initialValues }
-
-  //   if (prevStepData?.connectorRef) {
-  //     initValues.connectorRef = prevStepData?.connectorRef
-  //     handleStoreChange(selectedStore)
-  //   }
-  //   if (selectedStore !== initValues.store) {
-  //     initValues.connectorRef = ''
-  //   }
-  //   return { ...initValues, store: selectedStore }
-  // }, [selectedStore])
-
   const supportedManifestTypes = useMemo(
     () =>
-      manifestStoreTypes?.map(manifest => ({
+      manifestStoreTypes.map(manifest => ({
         label: manifest,
         icon: ManifestIconByType[manifest] as IconName,
         value: manifest
@@ -125,7 +113,6 @@ function RepoStore({
   )
 
   const newConnectorLabel = `${getString('newLabel')} ${selectedStore} ${getString('connector')}`
-
   return (
     <Layout.Vertical height={'inherit'} spacing="medium" className={css.optionsViewContainer}>
       <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
@@ -164,6 +151,7 @@ function RepoStore({
                     items={supportedManifestTypes}
                     isReadonly={isReadonly}
                     onChange={storeSelected => {
+                      /* istanbul ignore next */
                       handleOptionSelection(storeSelected as ManifestStoreExcludingInheritFromManifest)
                     }}
                   />
@@ -206,6 +194,7 @@ function RepoStore({
                       enableConfigureOptions={false}
                       gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                     />
+                    {/*istanbul ignore next */}
                     {getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.RUNTIME ? (
                       <ConfigureOptions
                         className={css.configureOptions}
@@ -215,9 +204,13 @@ function RepoStore({
                         showRequiredField={false}
                         showDefaultField={false}
                         showAdvanced={true}
-                        onChange={value => {
-                          formik.setFieldValue('connectorRef', value)
-                        }}
+                        onChange={
+                          /*istanbul ignore next */
+                          value => {
+                            /*istanbul ignore next */
+                            formik.setFieldValue('connectorRef', value)
+                          }
+                        }
                         isReadonly={isReadonly}
                       />
                     ) : (
@@ -230,10 +223,14 @@ function RepoStore({
                         className={css.addNewManifest}
                         icon="plus"
                         iconProps={{ size: 12 }}
-                        onClick={() => {
-                          handleConnectorViewChange()
-                          nextStep?.({ ...prevStepData, store: selectedStore })
-                        }}
+                        onClick={
+                          /*istanbul ignore next */
+                          () => {
+                            /*istanbul ignore next */
+                            handleConnectorViewChange()
+                            nextStep?.({ ...prevStepData, store: selectedStore })
+                          }
+                        }
                       />
                     )}
                   </Layout.Horizontal>

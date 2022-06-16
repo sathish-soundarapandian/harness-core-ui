@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { fireEvent, getByText, render } from '@testing-library/react'
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import RepoStore from '../RepoStore'
 
@@ -33,6 +33,53 @@ describe('ManifestSelection tests', () => {
     expect(container).toMatchSnapshot()
   })
 
+  test(`click on git card`, () => {
+    const { container } = render(
+      <TestWrapper>
+        <RepoStore
+          name={'manifestSource'}
+          stepName={'second step'}
+          expressions={[]}
+          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+          isReadonly={false}
+          handleConnectorViewChange={jest.fn()}
+          handleStoreChange={jest.fn()}
+          initialValues={{}}
+        />
+      </TestWrapper>
+    )
+
+    fireEvent.click(container.querySelector('[data-id=store-0]')!)
+    expect(container).toMatchSnapshot()
+  })
+
+  test('connector as runtime', () => {
+    const { container } = render(
+      <TestWrapper>
+        <RepoStore
+          name={'manifestSource'}
+          stepName={'second step'}
+          expressions={[]}
+          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+          isReadonly={false}
+          handleConnectorViewChange={jest.fn()}
+          handleStoreChange={jest.fn()}
+          initialValues={
+            {
+              connectorRef: RUNTIME_INPUT_VALUE,
+              gitFetchType: 'Branch',
+              paths: ['dsfs'],
+              repoName: 'demoRepo',
+              branch: 'demoBranch',
+              store: 'Github',
+              selectedManifest: 'K8sManifest'
+            } as any
+          }
+        />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
   test(`renders Git Store`, () => {
     const { container } = render(
       <TestWrapper>

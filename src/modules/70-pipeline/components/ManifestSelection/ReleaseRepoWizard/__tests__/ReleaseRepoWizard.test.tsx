@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
+import { act } from 'react-test-renderer'
 
 import { TestWrapper } from '@common/utils/testUtils'
 
@@ -19,10 +20,13 @@ jest.mock('services/cd-ng', () => ({
   })
 }))
 
+const submitFn = jest.fn()
+
 const props = {
   expressions: [],
   allowableTypes: [],
   lastSteps: [],
+  nextStep: submitFn,
   types: [
     ManifestDataType.K8sManifest,
     ManifestDataType.Values,
@@ -37,7 +41,6 @@ const props = {
     firstStepName: 'test1',
     secondStepName: 'test2'
   },
-  selectedManifest: null,
   newConnectorView: false,
   handleConnectorViewChange: jest.fn(),
   handleStoreChange: jest.fn(),
@@ -62,6 +65,7 @@ const props = {
   },
   updateStage: jest.fn(),
   onClose: jest.fn(),
+  newConnectorSteps: [],
   initialValues: { connectorRef: undefined, selectedManifest: null, store: 'Git' }
 }
 describe('Release Repo wizard tests', () => {
@@ -104,6 +108,54 @@ describe('Release Repo wizard tests', () => {
     const { container } = render(
       <TestWrapper>
         <ReleaseRepoWizard {...editProps} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('on click of continue', async () => {
+    const editProps = {
+      ...props,
+      initialValues: {
+        connectorRef: 'testgotconnectora',
+        gitFetchType: 'Branch',
+        paths: ['sdfds'],
+        branch: 'sdfds',
+        store: 'Git',
+        selectedManifest: 'ReleaseRepo'
+      },
+      manifest: {
+        identifier: 'sdfdsfdfd',
+        type: 'ReleaseRepo',
+        spec: {
+          store: {
+            type: 'Git',
+            spec: {
+              connectorRef: 'testgotconnectora',
+              gitFetchType: 'Branch',
+              paths: ['sdfds'],
+              branch: 'sdfds'
+            }
+          }
+        }
+      }
+    }
+    const { container } = render(
+      <TestWrapper>
+        <ReleaseRepoWizard {...editProps} />
+      </TestWrapper>
+    )
+
+    await act(() => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+    expect(container).toMatchSnapshot()
+  })
+
+  test('initial render when connectorview is true', () => {
+    const { container } = render(
+      <TestWrapper>
+        <ReleaseRepoWizard {...props} newConnectorView={true} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()

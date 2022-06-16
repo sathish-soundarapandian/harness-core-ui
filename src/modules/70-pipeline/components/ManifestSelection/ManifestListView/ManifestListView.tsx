@@ -12,7 +12,7 @@ import { FontVariation, Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
-import { get, set } from 'lodash-es'
+import { defaultTo, get, set } from 'lodash-es'
 
 import type { IconProps } from '@harness/icons'
 import produce from 'immer'
@@ -112,7 +112,7 @@ function ManifestListView({
   isReadonly,
   allowableTypes,
   allowOnlyOne = false,
-  gitOpsEnabled = false
+  gitOpsEnabled = true
 }: ManifestListViewProps): JSX.Element {
   const [selectedManifest, setSelectedManifest] = useState<ManifestTypes | null>(null)
   const [connectorView, setConnectorView] = useState(false)
@@ -723,14 +723,14 @@ function ManifestListView({
                   getConnectorPath(manifest?.spec?.store?.type, manifest),
                   connectors
                 )
-
+                console.log(manifest, 'manifest')
                 return (
                   <div className={css.rowItem} key={`${manifest?.identifier}-${index}`}>
                     <section className={css.manifestList}>
                       <div className={css.columnId}>
                         <Icon inline name={manifestTypeIcons[manifest?.type as ManifestTypes]} size={20} />
                         <Text inline width={150} className={css.type} color={Color.BLACK} lineClamp={1}>
-                          {manifest?.identifier}
+                          {get(manifest, 'identifier', '')}
                         </Text>
                       </div>
                       {gitOpsEnabled ? (
