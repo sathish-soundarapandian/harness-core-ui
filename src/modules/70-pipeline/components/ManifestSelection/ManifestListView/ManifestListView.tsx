@@ -112,7 +112,7 @@ function ManifestListView({
   isReadonly,
   allowableTypes,
   allowOnlyOne = false,
-  gitOpsEnabled = true
+  gitOpsEnabled = false
 }: ManifestListViewProps): JSX.Element {
   const [selectedManifest, setSelectedManifest] = useState<ManifestTypes | null>(null)
   const [connectorView, setConnectorView] = useState(false)
