@@ -481,7 +481,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         <li className={css.item} title={value} key={key}>
           {getString('yamlBuilder.lineNumberLabel')}&nbsp;
           {key + 1},&nbsp;
-          {truncate(value.toLowerCase(), { length: MAX_ERR_MSSG_LENGTH })}
+          {truncate(value, { length: MAX_ERR_MSSG_LENGTH })}
         </li>
       )
       errors.push(error)
