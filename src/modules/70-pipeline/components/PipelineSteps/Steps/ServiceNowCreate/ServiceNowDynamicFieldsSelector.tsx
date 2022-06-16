@@ -29,6 +29,8 @@ import {
 } from './types'
 
 import css from './ServiceNowDynamicFieldsSelector.module.scss'
+import * as Yup from 'yup'
+
 function SelectFieldList(props: ServiceNowDynamicFieldsSelectorInterface) {
   const { getString } = useStrings()
   const { selectedTicketTypeKey, ticketTypeBasedFieldList } = props
@@ -107,7 +109,17 @@ function ProvideFieldList(props: ServiceNowDynamicFieldsSelectorInterface) {
         props.provideFieldList(values)
       }}
       formName="ServiceNowFields"
-      initialValues={[]}
+      initialValues={[{ name: 'test', value: '' }]}
+      validationSchema={Yup.object().shape({
+        fieldList: Yup.array()
+          .of(
+            Yup.object().shape({
+              'fieldList[0].name': Yup.string().trim().required(getString('common.validation.keyIsRequired')),
+              'fieldList[0].value': Yup.string().trim().required(getString('common.validation.valueIsRequired'))
+            })
+          )
+          .required('Must have fields')
+      })}
     >
       {(formik: FormikProps<{ fieldList: ServiceNowCreateFieldType[] }>) => {
         return (
