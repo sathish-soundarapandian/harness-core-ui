@@ -39,6 +39,7 @@ export interface KubernetesServiceInputFormProps {
   stageIdentifier: string
   formik?: any
   allowableTypes: MultiTypeInputType[]
+  gitOpsEnabled?: boolean
 }
 
 export interface LastQueryData {

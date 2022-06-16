@@ -3190,6 +3190,7 @@ export interface StringsMap {
   'pipeline.reconcileDialog.updateEntityLabel': string
   'pipeline.reconcileDialog.updatedTemplateInfo': string
   'pipeline.regionPlaceholder': string
+  'pipeline.releaseRepo': string
   'pipeline.removeTemplate': string
   'pipeline.removeTemplateLabel': string
   'pipeline.replacedExpressions': string
@@ -3225,6 +3226,7 @@ export interface StringsMap {
   'pipeline.selectOrCreatePipeline.setupHeader': string
   'pipeline.selectStage': string
   'pipeline.selectStagePlaceholder': string
+  'pipeline.serviceDataDeleteWarningTitle': string
   'pipeline.serviceDependenciesText': string
   'pipeline.serviceDependencyText': string
   'pipeline.serviceDeploymentTypes.amazonAmi': string
@@ -8928,6 +8930,10 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   'pipelineSteps.serviceTab.manifestList.addManifest': string
+  /**
+   * @deprecated migrate this string to module level file
+   */
+  'pipelineSteps.serviceTab.manifestList.addReleaseRepo': string
   /**
    * @deprecated migrate this string to module level file
    */

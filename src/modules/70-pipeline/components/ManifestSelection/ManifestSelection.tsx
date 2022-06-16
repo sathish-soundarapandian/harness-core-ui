@@ -30,7 +30,8 @@ export default function ManifestSelection({
   isPropagating,
   deploymentType,
   isReadonlyServiceMode,
-  readonly
+  readonly,
+  gitOpsEnabled
 }: ManifestSelectionProps): JSX.Element | null {
   const {
     state: {
@@ -123,7 +124,8 @@ export default function ManifestSelection({
         isReadonly={readonly}
         deploymentType={deploymentType}
         allowableTypes={allowableTypes}
-        allowOnlyOne={isServerlessDeploymentType(deploymentType)}
+        allowOnlyOne={isServerlessDeploymentType(deploymentType) || gitOpsEnabled}
+        gitOpsEnabled={gitOpsEnabled}
       />
     </Layout.Vertical>
   )

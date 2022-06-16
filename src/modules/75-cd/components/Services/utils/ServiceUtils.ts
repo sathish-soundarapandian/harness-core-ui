@@ -24,6 +24,7 @@ export const newServiceState = {
     name: '',
     identifier: '',
     description: '',
+    gitOpsEnabled: false,
     tags: {},
     serviceDefinition: {
       type: '' as ServiceDefinition['type'],
@@ -35,7 +36,8 @@ export const newServiceState = {
 const DefaultService = {
   serviceDefinition: {
     spec: {}
-  }
+  },
+  gitOpsEnabled: false
 }
 
 export const initialServiceState = {
