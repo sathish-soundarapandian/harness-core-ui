@@ -7,43 +7,52 @@
 
 import React from 'react'
 import type { FormikErrors } from 'formik'
-import { isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 
 import { getMultiTypeFromValue, IconName, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { DeploymentStageConfig } from 'services/cd-ng'
 
-import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { Step, StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
 import { DeployInfrastructureWidget } from './DeployInfrastructureWidget'
 import DeployInfrastructureInputStep from './DeployInfrastructureInputStep'
 
-export interface Temp extends DeploymentStageConfig {
-  infrastructureRef: string
+export interface DeployInfrastructureStepConfig extends Omit<DeploymentStageConfig, 'execution'> {
+  infrastructureRef?: string
 }
 
-export class DeployInfrastructureStep extends Step<Temp> {
+export class DeployInfrastructureStep extends Step<DeployInfrastructureStepConfig> {
   lastFetched: number
-
-  protected invocationMap: Map<
-    RegExp,
-    (path: string, yaml: string, params: Record<string, unknown>) => Promise<CompletionItemInterface[]>
-  > = new Map()
 
   protected stepPaletteVisible = false
   protected type = StepType.DeployInfrastructure
   protected stepName = 'Deploy Infrastructure'
   protected stepIcon: IconName = 'main-environments'
 
-  protected defaultValues: Temp = {} as Temp
+  protected defaultValues: DeployInfrastructureStepConfig = {} as DeployInfrastructureStepConfig
 
   constructor() {
     super()
     this.lastFetched = new Date().getTime()
   }
 
-  private processFormData(data: Temp): any {
+  private processInitialValues(initialValues: DeployInfrastructureStepConfig): DeployInfrastructureStepConfig {
+    return {
+      gitOpsEnabled: initialValues.gitOpsEnabled,
+      ...(initialValues.gitOpsEnabled === false && {
+        environment: {
+          environmentRef: defaultTo(initialValues.environment?.environmentRef, ''),
+          deployToAll: defaultTo(initialValues.environment?.deployToAll, false)
+        },
+        infrastructureRef: (initialValues.environment?.infrastructureDefinitions?.[0].ref ||
+          initialValues.environment?.infrastructureDefinitions ||
+          '') as string
+      })
+    }
+  }
+
+  private processFormData(data: DeployInfrastructureStepConfig): any {
     return {
       environment: {
         ...data.environment,
@@ -59,7 +68,7 @@ export class DeployInfrastructureStep extends Step<Temp> {
     }
   }
 
-  renderStep(props: StepProps<Temp>): JSX.Element {
+  renderStep(props: StepProps<DeployInfrastructureStepConfig>): JSX.Element {
     const { initialValues, onUpdate, stepViewType, inputSetData, readonly = false, allowableTypes } = props
     if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
       return (
@@ -76,7 +85,7 @@ export class DeployInfrastructureStep extends Step<Temp> {
 
     return (
       <DeployInfrastructureWidget
-        initialValues={initialValues}
+        initialValues={this.processInitialValues(initialValues)}
         readonly={readonly}
         onUpdate={data => onUpdate?.(this.processFormData(data as any))}
         stepViewType={stepViewType}
@@ -85,8 +94,13 @@ export class DeployInfrastructureStep extends Step<Temp> {
     )
   }
 
-  validateInputSet({ data, template, getString, viewType }: ValidateInputSetProps<Temp>): FormikErrors<Temp> {
-    const errors: FormikErrors<Temp> = {}
+  validateInputSet({
+    data,
+    template,
+    getString,
+    viewType
+  }: ValidateInputSetProps<DeployInfrastructureStepConfig>): FormikErrors<DeployInfrastructureStepConfig> {
+    const errors: FormikErrors<DeployInfrastructureStepConfig> = {}
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     if (
       isEmpty(data?.environment?.environmentRef) &&

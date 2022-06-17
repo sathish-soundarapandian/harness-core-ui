@@ -10,12 +10,10 @@ import { debounce, get, isEmpty, set } from 'lodash-es'
 import produce from 'immer'
 import cx from 'classnames'
 
-import { Card, Container, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import { Card, Container } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import type { StageElementConfig } from 'services/cd-ng'
-
-import { Scope } from '@common/interfaces/SecretsInterface'
 
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -48,7 +46,6 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
       selectionState: { selectedStageId }
     },
     isReadonly,
-    scope,
     allowableTypes,
     getStageFromPipeline,
     updateStage
@@ -109,19 +106,13 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
         <Card>
           <StepWidget
             type={StepType.DeployInfrastructure}
-            readonly={isReadonly || scope !== Scope.PROJECT}
+            readonly={isReadonly}
             initialValues={{
-              environment: {
-                environmentRef:
-                  scope === Scope.PROJECT
-                    ? get(stage, 'stage.spec.environment.environmentRef', '')
-                    : RUNTIME_INPUT_VALUE,
-                deployToAll: get(stage, 'stage.spec.environment.deployToAll', false)
-              },
-              infrastructureRef:
-                scope === Scope.PROJECT
-                  ? get(stage, 'stage.spec.environment.infrastructureDefinitions[0].ref', '')
-                  : RUNTIME_INPUT_VALUE
+              gitOpsEnabled: get(stage, 'stage.spec.gitOpsEnabled', false),
+              ...(get(stage, 'stage.spec.environment', false) && { environment: get(stage, 'stage.spec.environment') }),
+              ...(get(stage, 'stage.spec.environmentGroup', false) && {
+                environmentGroup: get(stage, 'stage.spec.environmentGroup')
+              })
             }}
             allowableTypes={allowableTypes}
             onUpdate={val => updateEnvStep(val)}

@@ -13,20 +13,19 @@ import * as Yup from 'yup'
 import { Formik, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
-import type { DeploymentStageConfig } from 'services/cd-ng'
 
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
-import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 
 import { getEnvironmentRefSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 
-import DeployEnvironment from './DeployEnvironment/DeployEnvironment'
+import type { DeployInfrastructureStepConfig } from './DeployInfrastructureStep'
 import type { DeployInfrastructureProps } from './utils'
+import DeployEnvironment from './DeployEnvironment/DeployEnvironment'
+import DeployInfrastructures from './DeployInfrastructures/DeployInfrastructures'
+// import { DeployEnvironmentOrEnvGroup } from './DeployEnvironmentOrEnvGroup/DeployEnvironmentOrEnvGroup'
 
 import css from './DeployInfrastructureStep.module.scss'
-import DeployInfrastructures from './DeployInfrastructures/DeployInfrastructures'
 
 // SONAR recommendation
 const flexStart = 'flex-start'
@@ -39,7 +38,7 @@ export function DeployInfrastructureWidget({
 }: DeployInfrastructureProps): JSX.Element {
   const { getString } = useStrings()
 
-  const formikRef = useRef<FormikProps<DeploymentStageConfig> | null>(null)
+  const formikRef = useRef<FormikProps<DeployInfrastructureStepConfig> | null>(null)
 
   const { subscribeForm, unSubscribeForm } = useContext(StageErrorContext)
   useEffect(() => {
@@ -47,20 +46,12 @@ export function DeployInfrastructureWidget({
     return () => unSubscribeForm({ tab: DeployTabs.ENVIRONMENT, form: formikRef as any })
   }, [])
 
-  const {
-    state: {
-      selectionState: { selectedStageId }
-    },
-    getStageFromPipeline
-  } = usePipelineContext()
-  const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
-
   return (
-    <Formik<DeploymentStageConfig>
+    <Formik<DeployInfrastructureStepConfig>
       formName="deployInfrastructureStepForm"
       onSubmit={noop}
-      validate={(values: DeploymentStageConfig) => {
-        ;(onUpdate as any)?.({ ...values }, stage)
+      validate={(values: DeployInfrastructureStepConfig) => {
+        onUpdate?.({ ...values })
         // const commonConfig = {
         //   deployToAll: defaultTo(values.deployToAll, false),
         //   ...(!stage?.stage?.spec?.gitOpsEnabled && {
@@ -115,21 +106,27 @@ export function DeployInfrastructureWidget({
             spacing="medium"
             flex={{ alignItems: flexStart, justifyContent: flexStart }}
           >
-            <DeployEnvironment
-              initialValues={initialValues}
-              allowableTypes={allowableTypes}
-              readonly={readonly}
-              formikRef={formikRef}
-            />
-            {formik.values.environment?.environmentRef &&
-              getMultiTypeFromValue(formik.values.environment?.environmentRef) === MultiTypeInputType.FIXED && (
-                <DeployInfrastructures
+            {!initialValues.gitOpsEnabled ? (
+              <>
+                <DeployEnvironment
                   initialValues={initialValues}
                   allowableTypes={allowableTypes}
                   readonly={readonly}
                   formikRef={formikRef}
                 />
-              )}
+                {formik.values.environment?.environmentRef &&
+                  getMultiTypeFromValue(formik.values.environment?.environmentRef) === MultiTypeInputType.FIXED && (
+                    <DeployInfrastructures
+                      initialValues={initialValues}
+                      allowableTypes={allowableTypes}
+                      readonly={readonly}
+                      formikRef={formikRef}
+                    />
+                  )}
+              </>
+            ) : (
+              <div />
+            )}
             {/* {Boolean(values.environmentGroup?.envGroupRef) &&
               selectedEnvironmentGroup &&
               environmentOrEnvGroupRefType === MultiTypeInputType.FIXED && (

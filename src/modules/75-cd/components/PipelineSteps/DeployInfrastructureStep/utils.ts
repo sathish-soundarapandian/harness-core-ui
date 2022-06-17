@@ -16,16 +16,16 @@ import { getDurationValidationSchema } from '@common/components/MultiTypeDuratio
 
 import { StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 
-import type { Temp } from './DeployInfrastructureStep'
+import type { DeployInfrastructureStepConfig } from './DeployInfrastructureStep'
 
 export interface DeployInfrastructureProps {
-  initialValues: Temp
-  onUpdate?: (data: DeploymentStageConfig) => void
+  initialValues: DeployInfrastructureStepConfig
+  onUpdate?: (data: DeployInfrastructureStepConfig) => void
   readonly: boolean
   allowableTypes: MultiTypeInputType[]
   stepViewType?: StepViewType
   inputSetData?: {
-    template?: DeploymentStageConfig
+    template?: DeployInfrastructureStepConfig
     path?: string
     readonly?: boolean
   }

@@ -39,6 +39,14 @@ import AddEditEnvironmentModal from '../AddEditEnvironmentModal'
 import { isEditEnvironment } from '../utils'
 import css from '../DeployInfrastructureStep.module.scss'
 
+// TODO: Forward ref with formik
+// interface DeployEnvironmentProps {
+//   formikRef: React.MutableRefObject<FormikProps<DeploymentStageConfig> | null>
+//   readonly?: boolean
+//   // environmentIdentifier: string
+//   allowableTypes: MultiTypeInputType[]
+// }
+
 export default function DeployEnvironment({ initialValues, readonly, formikRef, allowableTypes, expressions }: any) {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { getString } = useStrings()

@@ -198,9 +198,9 @@ function DeployInfrastructureInputStepInternal({
             <Button
               size={ButtonSize.SMALL}
               variation={ButtonVariation.LINK}
-              disabled={inputSetData?.readonly || (isEditEnvironment(initialValues) ? !canEdit : !canCreate)}
+              disabled={inputSetData?.readonly || (isEditEnvironment(initialValues as any) ? !canEdit : !canCreate)}
               onClick={() => {
-                const isEdit = isEditEnvironment(initialValues)
+                const isEdit = isEditEnvironment(initialValues as any)
                 if (isEdit) {
                   setState({
                     isEdit,
@@ -213,7 +213,7 @@ function DeployInfrastructureInputStepInternal({
                 showModal()
               }}
               text={
-                isEditEnvironment(initialValues)
+                isEditEnvironment(initialValues as any)
                   ? getString('editEnvironment')
                   : getString('cd.pipelineSteps.environmentTab.plusNewEnvironment')
               }

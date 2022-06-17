@@ -25,12 +25,7 @@ import {
 import { useModalHook } from '@harness/use-modal'
 
 import { useStrings } from 'framework/strings'
-import {
-  DeploymentStageConfig,
-  InfrastructureResponse,
-  InfrastructureResponseDTO,
-  useGetInfrastructureList
-} from 'services/cd-ng'
+import { InfrastructureResponse, InfrastructureResponseDTO, useGetInfrastructureList } from 'services/cd-ng'
 
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 
@@ -44,15 +39,15 @@ import InfrastructureModal from '@cd/components/EnvironmentsV2/EnvironmentDetail
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
 import { isEditInfrastructure } from '../utils'
-import type { Temp } from '../DeployInfrastructureStep'
+import type { DeployInfrastructureStepConfig } from '../DeployInfrastructureStep'
 
 import css from './DeployInfrastructures.module.scss'
 
 interface DeployInfrastructuresProps {
-  formikRef: React.MutableRefObject<FormikProps<DeploymentStageConfig> | null>
+  formikRef: React.MutableRefObject<FormikProps<DeployInfrastructureStepConfig> | null>
   readonly?: boolean
   allowableTypes: MultiTypeInputType[]
-  initialValues: Temp
+  initialValues: DeployInfrastructureStepConfig
 }
 
 export default function DeployInfrastructures({
