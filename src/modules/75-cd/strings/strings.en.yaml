@@ -40,7 +40,7 @@ steps:
     clusterError: 'No cluster found with given Resource Group'
   serverless:
     regionPlaceholder: Specify a region
-    stagePlaceholder: Specify a stage
+    stagePlaceholder: Specify a stageDataDeleteWarningTitle
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'

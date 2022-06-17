@@ -6,11 +6,13 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { Intent, Layout, useConfirmationDialog } from '@harness/uicore'
+import { Checkbox, Intent, Layout, useConfirmationDialog } from '@harness/uicore'
 import { debounce, defaultTo, get } from 'lodash-es'
 import produce from 'immer'
 import cx from 'classnames'
-import type { ServiceDefinition, StageElementConfig } from 'services/cd-ng'
+import { yamlParse } from '@common/utils/YamlHelperMethods'
+
+import type { NGServiceConfig, ServiceDefinition, StageElementConfig } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
@@ -19,15 +21,17 @@ import type { K8SDirectServiceStep } from '@cd/components/PipelineSteps/K8sServi
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import {
-  deleteServiceData,
+  deleteStageData,
   doesStageContainOtherData,
   getStepTypeByDeploymentType,
   ServiceDeploymentType
 } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { useServiceContext } from '@cd/context/ServiceContext'
+
 import { setupMode } from '../PropagateWidget/PropagateWidget'
 import SelectDeploymentType from '../SelectDeploymentType'
+
 import css from './DeployServiceDefinition.module.scss'
 
 function DeployServiceDefinition(): React.ReactElement {
@@ -38,23 +42,22 @@ function DeployServiceDefinition(): React.ReactElement {
     },
     getStageFromPipeline,
     updateStage,
+    updatePipeline,
     allowableTypes,
     isReadonly
   } = usePipelineContext()
-  const {
-    isServiceEntityModalView,
-    isServiceCreateModalView,
-    selectedDeploymentType: defaultDeploymentType
-  } = useServiceContext()
+  const { isServiceEntityModalView, serviceResponse } = useServiceContext()
+
+  const serviceYaml = React.useMemo(
+    () => yamlParse<NGServiceConfig>(defaultTo(serviceResponse?.yaml, '')),
+    [serviceResponse?.yaml]
+  )
 
   const { index: stageIndex } = getStageIndexFromPipeline(pipeline, selectedStageId || '')
   const { getString } = useStrings()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
-
+  const [gitOpsEnabled, setGitOpsEnabled] = useState(false)
   const getDeploymentType = (): ServiceDeploymentType => {
-    if (isServiceCreateModalView) {
-      return defaultDeploymentType
-    }
     return get(stage, 'stage.spec.serviceConfig.serviceDefinition.type')
   }
   const [selectedDeploymentType, setSelectedDeploymentType] = useState<ServiceDeploymentType | undefined>(
@@ -79,17 +82,36 @@ function DeployServiceDefinition(): React.ReactElement {
     }
   }, [stage?.stage?.spec?.serviceConfig?.serviceDefinition?.type])
 
+  useEffect(() => {
+    setGitOpsEnabled(serviceYaml?.service?.gitOpsEnabled as boolean)
+  }, [serviceYaml, serviceYaml?.service?.gitOpsEnabled])
+
   const { openDialog: openStageDataDeleteWarningDialog } = useConfirmationDialog({
     cancelButtonText: getString('cancel'),
-    contentText: getString('pipeline.serviceDataDeleteWarningText'),
+    contentText: getString('pipeline.stageDataDeleteWarningText'),
+    titleText: getString('pipeline.stageDataDeleteWarningTitle'),
+    confirmButtonText: getString('confirm'),
+    intent: Intent.WARNING,
+    onCloseDialog: async isConfirmed => {
+      if (isConfirmed) {
+        deleteStageData(currStageData)
+        await debounceUpdateStage(currStageData)
+        setSelectedDeploymentType(currStageData?.spec?.serviceConfig?.serviceDefinition?.type as ServiceDeploymentType)
+      }
+    }
+  })
+
+  const { openDialog: gitopsStageDataDeleteWarningDialog } = useConfirmationDialog({
+    cancelButtonText: getString('cancel'),
+    contentText: getString('pipeline.stageDataDeleteWarningText'),
     titleText: getString('pipeline.serviceDataDeleteWarningTitle'),
     confirmButtonText: getString('confirm'),
     intent: Intent.WARNING,
     onCloseDialog: async isConfirmed => {
       if (isConfirmed) {
-        deleteServiceData(currStageData)
-        await debounceUpdateStage(currStageData)
-        setSelectedDeploymentType(currStageData?.spec?.serviceConfig?.serviceDefinition?.type as ServiceDeploymentType)
+        deleteStageData(currStageData)
+        // setGitOpsEnabled(currStageData?.gitOpsEnabled as any)
+        updatePipeline({ ...pipeline, gitOpsEnabled } as any)
       }
     }
   })
@@ -112,6 +134,21 @@ function DeployServiceDefinition(): React.ReactElement {
     },
     [stage, updateStage]
   )
+
+  const handleOnChange = (checked: boolean) => {
+    const stageData = produce(stage, draft => {
+      const serviceConfig = get(draft, 'stage.spec.serviceConfig', {})
+      serviceConfig.gitOpsEnabled = checked
+    })
+    if (doesStageContainOtherData(stageData?.stage)) {
+      setCurrStageData(stageData?.stage)
+      // setGitOpsEnabled(checked)
+      gitopsStageDataDeleteWarningDialog()
+    } else {
+      setGitOpsEnabled(checked)
+      updatePipeline({ ...pipeline, gitOpsEnabled: checked } as any)
+    }
+  }
   return (
     <div className={cx(css.contentSection, isServiceEntityModalView ? css.editServiceModal : css.nonModalView)}>
       <div className={css.tabHeading} id="serviceDefinition">
@@ -120,9 +157,19 @@ function DeployServiceDefinition(): React.ReactElement {
       <SelectDeploymentType
         viewContext="setup"
         selectedDeploymentType={selectedDeploymentType}
-        isReadonly={isServiceEntityModalView ? true : isReadonly}
+        isReadonly={isReadonly}
         handleDeploymentTypeChange={handleDeploymentTypeChange}
       />
+
+      <Checkbox
+        label="Gitops"
+        name="gitOpsEnabled"
+        checked={gitOpsEnabled}
+        onChange={ev => {
+          handleOnChange(ev.currentTarget.checked)
+        }}
+      />
+      {/* {showServiceRepo ? <ReleaseRepoListView updateStage={updateStage} stage={stage} /> : null} */}
       <Layout.Horizontal>
         <StepWidget<K8SDirectServiceStep>
           factory={factory}
@@ -135,6 +182,7 @@ function DeployServiceDefinition(): React.ReactElement {
           allowableTypes={allowableTypes}
           type={getStepTypeByDeploymentType(defaultTo(selectedDeploymentType, ''))}
           stepViewType={StepViewType.Edit}
+          //this is wrong. Gitops can be read from stage directly. need not pass it
         />
       </Layout.Horizontal>
     </div>
