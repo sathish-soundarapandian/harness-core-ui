@@ -74,7 +74,7 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   }
 }
 
-export function InfrastructureModal({
+export default function InfrastructureModal({
   hideModal,
   refetch,
   infrastructureToEdit,
@@ -209,7 +209,9 @@ function BootstrapDeployInfraDefinition({
   )
 
   const cleanBeforeClose = () => {
-    setInfrastructureToEdit?.()
+    if (!envIdentifier) {
+      setInfrastructureToEdit?.()
+    }
     hideModal()
   }
 
@@ -261,16 +263,13 @@ function BootstrapDeployInfraDefinition({
       .then(response => {
         if (response.status === 'SUCCESS') {
           showSuccess(
-            getString('cd.infrastructure.created', {
+            getString(infrastructureDefinition ? 'cd.infrastructure.updated' : 'cd.infrastructure.created', {
               identifier: response.data?.infrastructure?.identifier
             })
           )
           setIsSavingInfrastructure(false)
           if (envIdentifier) {
-            refetch({
-              label: response.data?.infrastructure?.name,
-              value: response.data?.infrastructure?.identifier
-            })
+            refetch(response.data?.infrastructure)
           } else {
             refetch()
           }

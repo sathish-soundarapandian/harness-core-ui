@@ -3804,8 +3804,10 @@ export interface StringsMap {
   'cd.infrastructure.delete': string
   'cd.infrastructure.deleteConfirmation': string
   'cd.infrastructure.deleted': string
+  'cd.infrastructure.edit': string
   'cd.infrastructure.infrastructureDefinitions': string
   'cd.infrastructure.noInfrastructureInEnvironment': string
+  'cd.infrastructure.updated': string
   'cd.installAdapterHelperText': string
   'cd.launchArgo': string
   'cd.learnMore': string

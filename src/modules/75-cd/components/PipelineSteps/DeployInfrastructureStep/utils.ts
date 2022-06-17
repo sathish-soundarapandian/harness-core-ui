@@ -10,20 +10,22 @@ import { isEmpty } from 'lodash-es'
 import * as Yup from 'yup'
 
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
-import type { EnvironmentResponseDTO } from 'services/cd-ng'
+import type { DeploymentStageConfig, EnvironmentResponseDTO } from 'services/cd-ng'
+
+import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 
 import { StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
-import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import type { PipelineInfrastructureV2 } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+
+import type { Temp } from './DeployInfrastructureStep'
 
 export interface DeployInfrastructureProps {
-  initialValues: PipelineInfrastructureV2
-  onUpdate?: (data: PipelineInfrastructureV2) => void
+  initialValues: Temp
+  onUpdate?: (data: DeploymentStageConfig) => void
   readonly: boolean
   allowableTypes: MultiTypeInputType[]
   stepViewType?: StepViewType
   inputSetData?: {
-    template?: PipelineInfrastructureV2
+    template?: DeploymentStageConfig
     path?: string
     readonly?: boolean
   }
@@ -32,25 +34,19 @@ export interface DeployInfrastructureProps {
 export interface DeployInfrastructureState {
   isEdit: boolean
   isEnvironment: boolean
-  formik?: FormikProps<PipelineInfrastructureV2>
+  formik?: FormikProps<DeploymentStageConfig>
   data?: EnvironmentResponseDTO
 }
 
-export function isEditEnvironment(data: PipelineInfrastructureV2): boolean {
-  if (
-    getMultiTypeFromValue(data.environmentOrEnvGroupRef) !== MultiTypeInputType.RUNTIME &&
-    !isEmpty(data.environmentOrEnvGroupRef)
-  ) {
+export function isEditEnvironment(data?: EnvironmentResponseDTO): boolean {
+  if (!isEmpty(data?.identifier)) {
     return true
   }
   return false
 }
 
-export function isEditInfrastructure(data: any): boolean {
-  if (
-    getMultiTypeFromValue(data.infrastructureRef) !== MultiTypeInputType.RUNTIME &&
-    !isEmpty(data.infrastructureRef)
-  ) {
+export function isEditInfrastructure(data?: string): boolean {
+  if (!isEmpty(data)) {
     return true
   }
   return false

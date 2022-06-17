@@ -19,7 +19,7 @@ import type { EnvironmentPathProps, ProjectPathProps } from '@common/interfaces/
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 
 import { InfrastructureList } from './InfrastructureList/InfrastructureList'
-import { InfrastructureModal } from './InfrastructureModal'
+import InfrastructureModal from './InfrastructureModal'
 
 import css from './InfrastructureDefinition.module.scss'
 

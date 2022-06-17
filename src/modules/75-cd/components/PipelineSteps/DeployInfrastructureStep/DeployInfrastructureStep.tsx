@@ -7,26 +7,23 @@
 
 import React from 'react'
 import type { FormikErrors } from 'formik'
-import { get, isEmpty } from 'lodash-es'
-import { parse } from 'yaml'
-import { CompletionItemKind } from 'vscode-languageserver-types'
+import { isEmpty } from 'lodash-es'
 
-import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
-import { getEnvironmentListPromise, PipelineInfrastructure } from 'services/cd-ng'
-import { loggerFor } from 'framework/logging/logging'
-import { ModuleName } from 'framework/types/ModuleName'
+import { getMultiTypeFromValue, IconName, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import type { DeploymentStageConfig } from 'services/cd-ng'
 
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { Step, StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
-import { PipelineInfrastructureV2, StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
 import { DeployInfrastructureWidget } from './DeployInfrastructureWidget'
 import DeployInfrastructureInputStep from './DeployInfrastructureInputStep'
 
-const logger = loggerFor(ModuleName.CD)
-const EnvironmentRegex = /^.+stage\.spec\.environment\.environmentRef$/
+export interface Temp extends DeploymentStageConfig {
+  infrastructureRef: string
+}
 
-export class DeployInfrastructureStep extends Step<PipelineInfrastructureV2> {
+export class DeployInfrastructureStep extends Step<Temp> {
   lastFetched: number
 
   protected invocationMap: Map<
@@ -39,64 +36,37 @@ export class DeployInfrastructureStep extends Step<PipelineInfrastructureV2> {
   protected stepName = 'Deploy Infrastructure'
   protected stepIcon: IconName = 'main-environments'
 
-  protected defaultValues: PipelineInfrastructureV2 = {}
+  protected defaultValues: Temp = {} as Temp
 
   constructor() {
     super()
     this.lastFetched = new Date().getTime()
-    this.invocationMap.set(EnvironmentRegex, this.getEnvironmentListForYaml.bind(this))
   }
 
-  protected getEnvironmentListForYaml(
-    path: string,
-    yaml: string,
-    params: Record<string, unknown>
-  ): Promise<CompletionItemInterface[]> {
-    let pipelineObj
-    try {
-      pipelineObj = parse(yaml)
-    } catch (err: any) {
-      logger.error('Error while parsing the yaml', err)
-    }
-    const { accountId, projectIdentifier, orgIdentifier } = params as {
-      accountId: string
-      orgIdentifier: string
-      projectIdentifier: string
-    }
-    if (pipelineObj) {
-      const obj = get(pipelineObj, path.replace('.spec.infrastructure.environmentRef', ''))
-      if (obj.type === 'Deployment') {
-        return getEnvironmentListPromise({
-          queryParams: {
-            accountIdentifier: accountId,
-            orgIdentifier,
-            projectIdentifier
-          }
-        }).then(response => {
-          const data =
-            response?.data?.content?.map(service => ({
-              label: service.environment?.name || '',
-              insertText: service.environment?.identifier || '',
-              kind: CompletionItemKind.Field
-            })) || []
-          return data
-        })
+  private processFormData(data: Temp): any {
+    return {
+      environment: {
+        ...data.environment,
+        infrastructureDefinitions:
+          data.infrastructureRef === RUNTIME_INPUT_VALUE
+            ? RUNTIME_INPUT_VALUE
+            : [
+                {
+                  ref: data.infrastructureRef
+                }
+              ]
       }
     }
-
-    return new Promise(resolve => {
-      resolve([])
-    })
   }
 
-  renderStep(props: StepProps<PipelineInfrastructureV2>): JSX.Element {
+  renderStep(props: StepProps<Temp>): JSX.Element {
     const { initialValues, onUpdate, stepViewType, inputSetData, readonly = false, allowableTypes } = props
     if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
       return (
         <DeployInfrastructureInputStep
           initialValues={initialValues}
           readonly={readonly}
-          onUpdate={onUpdate}
+          onUpdate={data => onUpdate?.(this.processFormData(data as any))}
           stepViewType={stepViewType}
           allowableTypes={allowableTypes}
           inputSetData={inputSetData}
@@ -108,27 +78,22 @@ export class DeployInfrastructureStep extends Step<PipelineInfrastructureV2> {
       <DeployInfrastructureWidget
         initialValues={initialValues}
         readonly={readonly}
-        onUpdate={onUpdate}
+        onUpdate={data => onUpdate?.(this.processFormData(data as any))}
         stepViewType={stepViewType}
         allowableTypes={allowableTypes}
       />
     )
   }
 
-  validateInputSet({
-    data,
-    template,
-    getString,
-    viewType
-  }: ValidateInputSetProps<PipelineInfrastructure>): FormikErrors<PipelineInfrastructure> {
-    const errors: FormikErrors<PipelineInfrastructure> = {}
+  validateInputSet({ data, template, getString, viewType }: ValidateInputSetProps<Temp>): FormikErrors<Temp> {
+    const errors: FormikErrors<Temp> = {}
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     if (
-      isEmpty(data?.environmentRef) &&
+      isEmpty(data?.environment?.environmentRef) &&
       isRequired &&
-      getMultiTypeFromValue(template?.environmentRef) === MultiTypeInputType.RUNTIME
+      getMultiTypeFromValue(template?.environment?.environmentRef) === MultiTypeInputType.RUNTIME
     ) {
-      errors.environmentRef = getString?.('cd.pipelineSteps.environmentTab.environmentIsRequired')
+      errors.environment = getString?.('cd.pipelineSteps.environmentTab.environmentIsRequired')
     }
     return errors
   }

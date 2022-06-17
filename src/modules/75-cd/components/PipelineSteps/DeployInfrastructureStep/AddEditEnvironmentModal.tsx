@@ -26,10 +26,10 @@ import { Color } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
 import {
-  EnvironmentRequestDTO,
   useUpsertEnvironmentV2,
   NGEnvironmentInfoConfig,
-  NGEnvironmentConfig
+  NGEnvironmentConfig,
+  EnvironmentResponseDTO
 } from 'services/cd-ng'
 
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
@@ -42,17 +42,17 @@ import EnvironmentConfiguration from '@cd/components/EnvironmentsV2/EnvironmentD
 
 export interface AddEditEnvironmentModalProps {
   data: NGEnvironmentConfig
-  onCreateOrUpdate(data: EnvironmentRequestDTO): void
+  onCreateOrUpdate(data: EnvironmentResponseDTO): void
   closeModal?: () => void
   isEdit: boolean
 }
 
-export const AddEditEnvironmentModal: React.FC<AddEditEnvironmentModalProps> = ({
+export default function AddEditEnvironmentModal({
   data,
   onCreateOrUpdate,
   closeModal,
   isEdit
-}): JSX.Element => {
+}: AddEditEnvironmentModalProps) {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
   const { showSuccess, showError, clear } = useToaster()
@@ -64,7 +64,6 @@ export const AddEditEnvironmentModal: React.FC<AddEditEnvironmentModalProps> = (
     queryParams: {
       accountIdentifier: accountId
     }
-    // requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
   })
   const inputRef = useRef<HTMLInputElement | null>(null)
   const formikRef = useRef<FormikProps<NGEnvironmentInfoConfig>>()
@@ -90,7 +89,7 @@ export const AddEditEnvironmentModal: React.FC<AddEditEnvironmentModalProps> = (
         if (response.status === 'SUCCESS') {
           clear()
           showSuccess(getString(isEdit ? 'cd.environmentUpdated' : 'cd.environmentCreated'))
-          onCreateOrUpdate(values)
+          onCreateOrUpdate(defaultTo(response.data?.environment, {}))
         }
       } catch (e: any) {
         showError(getErrorInfoFromErrorObject(e, true))
@@ -177,13 +176,13 @@ export const AddEditEnvironmentModal: React.FC<AddEditEnvironmentModalProps> = (
                     }
                   }
                 }
-                loading={upsertLoading}
+                disabled={upsertLoading}
               />
               <Button
                 variation={ButtonVariation.TERTIARY}
                 text={getString('cancel')}
                 onClick={closeModal}
-                loading={upsertLoading}
+                disabled={upsertLoading}
               />
             </Layout.Horizontal>
           </>

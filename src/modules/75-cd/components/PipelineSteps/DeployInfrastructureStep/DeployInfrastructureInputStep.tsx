@@ -20,23 +20,27 @@ import { useModalHook } from '@harness/use-modal'
 import { isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { connect, FormikProps } from 'formik'
-import { EnvironmentResponseDTO, NGEnvironmentConfig, useGetEnvironmentAccessList } from 'services/cd-ng'
+import {
+  DeploymentStageConfig,
+  EnvironmentResponseDTO,
+  NGEnvironmentConfig,
+  useGetEnvironmentAccessList
+} from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useToaster } from '@common/exports'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import type { PipelineInfrastructureV2 } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
-import { AddEditEnvironmentModal } from './AddEditEnvironmentModal'
+import AddEditEnvironmentModal from './AddEditEnvironmentModal'
 import type { DeployInfrastructureProps } from './utils'
 import css from './DeployInfrastructureStep.module.scss'
 
-export interface DeployInfrastructureData extends Omit<PipelineInfrastructureV2, 'environmentRef'> {
+export interface DeployInfrastructureData extends Omit<DeploymentStageConfig, 'environmentRef'> {
   environmentRef?: string
 }
 
@@ -50,7 +54,7 @@ interface DeployInfrastructureState {
 function isEditEnvironment(data: DeployInfrastructureData): boolean {
   if (getMultiTypeFromValue(data.environmentRef) !== MultiTypeInputType.RUNTIME && !isEmpty(data.environmentRef)) {
     return true
-  } else if (data.environment && !isEmpty(data.environment.identifier)) {
+  } else if (data.environment && !isEmpty(data.environment.environmentInputs)) {
     return true
   }
   return false
@@ -169,7 +173,7 @@ function DeployInfrastructureInputStepInternal({
   }
   return (
     <>
-      {getMultiTypeFromValue(inputSetData?.template?.environmentRef) === MultiTypeInputType.RUNTIME && (
+      {getMultiTypeFromValue(inputSetData?.template?.environment?.environmentRef) === MultiTypeInputType.RUNTIME && (
         <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
           <ExperimentalInput
             label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironment')}
@@ -190,7 +194,7 @@ function DeployInfrastructureInputStepInternal({
             className={css.inputWidth}
             formik={formik}
           />
-          {getMultiTypeFromValue(initialValues?.environmentRef) === MultiTypeInputType.FIXED && (
+          {getMultiTypeFromValue(initialValues?.environment?.environmentRef) === MultiTypeInputType.FIXED && (
             <Button
               size={ButtonSize.SMALL}
               variation={ButtonVariation.LINK}
@@ -202,7 +206,7 @@ function DeployInfrastructureInputStepInternal({
                     isEdit,
                     isEnvironment: false,
                     data: environmentsResponse?.data?.filter(
-                      env => env.environment?.identifier === initialValues.environmentRef
+                      env => env.environment?.identifier === initialValues.environment?.environmentRef
                     )?.[0]?.environment as EnvironmentResponseDTO
                   })
                 }

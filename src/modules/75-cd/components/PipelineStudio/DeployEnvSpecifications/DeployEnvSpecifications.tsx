@@ -111,11 +111,16 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
             type={StepType.DeployInfrastructure}
             readonly={isReadonly || scope !== Scope.PROJECT}
             initialValues={{
-              environmentRef:
-                scope === Scope.PROJECT ? get(stage, 'stage.spec.environment.environmentRef', '') : RUNTIME_INPUT_VALUE,
+              environment: {
+                environmentRef:
+                  scope === Scope.PROJECT
+                    ? get(stage, 'stage.spec.environment.environmentRef', '')
+                    : RUNTIME_INPUT_VALUE,
+                deployToAll: get(stage, 'stage.spec.environment.deployToAll', false)
+              },
               infrastructureRef:
                 scope === Scope.PROJECT
-                  ? get(stage, 'stage.spec.environment.infrastructureDefinitions', [])?.[0]
+                  ? get(stage, 'stage.spec.environment.infrastructureDefinitions[0].ref', '')
                   : RUNTIME_INPUT_VALUE
             }}
             allowableTypes={allowableTypes}
