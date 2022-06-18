@@ -51,7 +51,6 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
 
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
-
   const { data: serviceSchema } = useGetEntityYamlSchema({
     queryParams: {
       entityType: 'Service',
@@ -70,7 +69,7 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
         if (serviceSetYamlVisual) {
           const newServiceData = produce({ ...service }, draft => {
             setNameIDDescription(draft, serviceSetYamlVisual)
-
+            set(draft, 'gitOpsEnabled', serviceSetYamlVisual.gitOpsEnabled)
             set(
               draft,
               'stages[0].stage.spec.serviceConfig.serviceDefinition',
@@ -102,6 +101,7 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
       {selectedView === SelectedView.VISUAL ? (
         <>
           <ServiceStepBasicInfo />
+          {/* serviceData={serviceData}  */}
           <DeployServiceDefinition />
         </>
       ) : (
