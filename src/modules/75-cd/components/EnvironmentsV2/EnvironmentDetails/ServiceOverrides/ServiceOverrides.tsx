@@ -150,7 +150,7 @@ export function ServiceOverrides(): React.ReactElement {
           body: null as any
         })
         if (response.status === 'SUCCESS') {
-          showSuccess(getString('cd.serviceOverrides.deletedOneVariable'))
+          showSuccess(getString('cd.serviceOverrides.deleted'))
           refetchServiceOverrides()
         } else {
           throw response

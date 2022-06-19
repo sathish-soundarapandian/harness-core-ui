@@ -47,7 +47,6 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 
 import type { AllNGVariables } from '@pipeline/utils/types'
-import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
 import { getVariableTypeOptions, VariableType } from './ServiceOverridesUtils'
 
@@ -64,7 +63,6 @@ interface VariableOverride {
 
 interface AddEditServiceOverrideFormProps {
   serviceRef?: string
-  serviceYaml?: SelectOption
   environmentRef?: string
   variableOverride?: VariableOverride
   variables?: VariableOverride[]
@@ -99,19 +97,19 @@ export default function AddEditServiceOverride({
   const { accountId, orgIdentifier, projectIdentifier, environmentIdentifier } = useParams<
     PipelinePathProps & EnvironmentPathProps
   >()
-
-  const [servicesAvailable, setServicesAvailable] = useState<SelectOption[]>([])
-  const [variablesAvailable, setVariablesAvailable] = useState<SelectOption[]>([])
-  const [isModified, setIsModified] = useState<boolean>(false)
-  const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
-  const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
-
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const { expressions } = useVariablesExpression()
 
-  const formikRef = useRef<FormikProps<AddEditServiceOverrideFormProps | undefined>>()
+  const formikRef = useRef<FormikProps<AddEditServiceOverrideFormProps>>()
+
+  const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
+  const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
+  const [isModified, setIsModified] = useState<boolean>(false)
+
+  const [servicesOptions, setServicesOptions] = useState<SelectOption[]>([])
+  const [serviceVariables, setServiceVariables] = useState<NGVariable[]>([])
+  const [variablesOptions, setVariablesOptions] = useState<SelectOption[]>([])
 
   useEffect(() => {
     if (services) {
@@ -122,18 +120,20 @@ export default function AddEditServiceOverride({
 
         const serviceAvailable = {
           label: defaultTo(serviceToBeSelected?.service?.name, ''),
-          value: defaultTo(yamlParse(defaultTo(serviceToBeSelected?.service?.yaml, '{}')), '')
-        } as SelectOption
+          value: defaultTo(serviceToBeSelected?.service?.identifier, '')
+        }
 
-        setServicesAvailable([serviceAvailable])
+        setServicesOptions([serviceAvailable])
+        formikRef.current?.setFieldValue('serviceRef', serviceAvailable.value)
+        handleServiceChange(serviceAvailable)
       } else {
-        setServicesAvailable(
+        setServicesOptions(
           defaultTo(
-            services?.data?.content?.map(item => {
+            services.data?.content?.map(item => {
               try {
                 return {
-                  label: defaultTo(item?.service?.name, ''),
-                  value: defaultTo(yamlParse(defaultTo(item.service?.yaml, '{}')), '')
+                  label: defaultTo(item.service?.name, ''),
+                  value: defaultTo(item.service?.identifier, '')
                 }
               } catch (e: any) {
                 return {
@@ -147,44 +147,58 @@ export default function AddEditServiceOverride({
         )
       }
     }
-  }, [])
+  }, [selectedVariable?.serviceRef])
 
   const handleServiceChange = (item: SelectOption) => {
-    setVariablesAvailable(
-      defaultTo(
-        (item?.value as NGServiceConfig)?.service?.serviceDefinition?.spec?.variables?.map(variable => ({
-          label: defaultTo(variable.name, ''),
-          value: defaultTo((variable as AllNGVariables).value, ''),
-          type: variable.type
-        })),
-        []
-      )
-    )
+    const serviceSelected = services?.data?.content?.find(serviceObj => serviceObj.service?.identifier === item.value)
 
-    formikRef.current?.setValues({
-      ...formikRef.current.values,
-      serviceRef: (item?.value as NGServiceConfig).service?.identifier,
-      variableOverride: {
-        name: '',
-        value: '',
-        type: 'String'
-      }
-    })
+    if (serviceSelected) {
+      const parsedServiceYaml = defaultTo(
+        yamlParse(defaultTo(serviceSelected?.service?.yaml, '{}')),
+        ''
+      ) as NGServiceConfig
+      const serviceVars = defaultTo(parsedServiceYaml?.service?.serviceDefinition?.spec?.variables, [])
+      setServiceVariables(serviceVars)
+      setVariablesOptions(
+        defaultTo(
+          serviceVars?.map(variable => ({
+            label: defaultTo(variable.name, ''),
+            value: defaultTo((variable as AllNGVariables).name, '')
+          })),
+          []
+        )
+      )
+    }
   }
 
   const handleVariableChange = (item: SelectOption) => {
-    formikRef.current?.setValues({
-      ...formikRef.current.values,
-      variableOverride: {
-        name: item.label,
-        value: item.value as string,
-        type: defaultTo((item as AllNGVariables).type, 'String')
-      }
-    })
+    const variableSelected = serviceVariables?.find(serviceVariable => serviceVariable.name === item.value)
+    if (variableSelected) {
+      formikRef.current?.setFieldValue('variableOverride', {
+        name: variableSelected?.name,
+        value: (variableSelected as AllNGVariables)?.value,
+        type: variableSelected?.type
+      })
+    } else {
+      formikRef.current?.setFieldValue('variableOverride', {
+        name: item.value,
+        value: item.value,
+        type: 'String'
+      })
+      setServiceVariables([
+        ...serviceVariables,
+        {
+          name: item.label,
+          value: item.value,
+          type: 'String'
+        } as NGVariable
+      ])
+      setVariablesOptions([...variablesOptions, { label: item.label, value: item.value }])
+    }
   }
 
   const validate = (values: AddEditServiceOverrideFormProps) => {
-    const { name, type, value } = formikRef.current?.values as any
+    const { name, type, value } = defaultTo(formikRef.current?.values.variableOverride, {})
     const { variableOverride: { name: newName, type: newType, value: newValue } = {} } = values
 
     if (name === newName && type === newType && value === newValue) {
@@ -244,13 +258,13 @@ export default function AddEditServiceOverride({
     try {
       const response = await upsertServiceOverride({
         environmentRef: environmentIdentifier,
-        serviceRef: (values as any).serviceRef,
+        serviceRef: values.serviceRef,
         orgIdentifier,
         projectIdentifier,
         yaml: yamlStringify({
           serviceOverrides: {
             environmentRef: environmentIdentifier,
-            serviceRef: (values as any).serviceRef,
+            serviceRef: values.serviceRef,
             variables:
               values.variables ||
               formVariableOverrideObject(
@@ -295,7 +309,7 @@ export default function AddEditServiceOverride({
       validate={validate}
     >
       {formikProps => {
-        formikRef.current = formikProps as any
+        formikRef.current = formikProps
         return (
           <Container margin={{ left: 'small', right: 'small' }}>
             <Layout.Horizontal
@@ -313,8 +327,8 @@ export default function AddEditServiceOverride({
             {selectedView === SelectedView.VISUAL ? (
               <Container>
                 <FormInput.Select
-                  name="serviceYaml"
-                  items={servicesAvailable}
+                  name="serviceRef"
+                  items={servicesOptions}
                   label={getString('service')}
                   placeholder={getString('common.selectName', { name: getString('service') })}
                   onChange={handleServiceChange}
@@ -333,7 +347,7 @@ export default function AddEditServiceOverride({
                   selectProps={{
                     allowCreatingNewItems: true
                   }}
-                  items={variablesAvailable}
+                  items={variablesOptions}
                   label={getString('variableNameLabel')}
                   placeholder={getString('common.selectName', { name: getString('variableLabel') })}
                   onChange={handleVariableChange}
@@ -353,7 +367,6 @@ export default function AddEditServiceOverride({
                     label={getString('cd.overrideValue')}
                     multiTextInputProps={{
                       defaultValueToReset: '',
-                      expressions,
                       textProps: {
                         type: formikProps?.values?.variableOverride?.type === VariableType.Number ? 'number' : 'text'
                       }
