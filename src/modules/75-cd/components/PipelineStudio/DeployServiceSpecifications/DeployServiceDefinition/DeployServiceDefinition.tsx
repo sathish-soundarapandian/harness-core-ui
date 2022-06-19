@@ -115,24 +115,28 @@ function DeployServiceDefinition(): React.ReactElement {
     ...serviceDataDialogProps,
     onCloseDialog: async isConfirmed => {
       if (isConfirmed) {
-        if (stage?.stage) {
-          delete stage?.stage?.spec?.serviceConfig?.serviceDefinition?.spec.manifests
-        }
+        deleteServiceData(currStageData)
         await debounceUpdateStage(currStageData)
-      } else {
-        setGitOpsEnabled(!gitOpsEnabled)
-        updatePipeline({ ...pipeline, gitOpsEnabled: !gitOpsEnabled } as ServicePipelineConfig)
+        setGitOpsEnabled(currStageData?.spec?.serviceConfig?.gitOpsEnabled as boolean)
       }
     }
   })
 
   const handleGitOpsCheckChanged = (ev: React.FormEvent<HTMLInputElement>): void => {
     const checked = ev.currentTarget.checked
-    setGitOpsEnabled(checked)
-    updatePipeline({ ...pipeline, gitOpsEnabled: checked } as ServicePipelineConfig)
 
+    // updatePipeline({ ...pipeline, gitOpsEnabled: checked } as ServicePipelineConfig)
+    const stageData = produce(stage, draft => {
+      const serviceDefinition = get(draft, 'stage.spec.serviceConfig', {})
+      serviceDefinition.gitOpsEnabled = checked
+    })
     if (doesStageContainOtherData(stage?.stage)) {
+      setCurrStageData(stageData?.stage)
+
       openManifestDataDeleteWarningDialog()
+    } else {
+      setGitOpsEnabled(checked)
+      updatePipeline({ ...pipeline, gitOpsEnabled: checked } as ServicePipelineConfig)
     }
   }
 
@@ -164,18 +168,10 @@ function DeployServiceDefinition(): React.ReactElement {
         selectedDeploymentType={selectedDeploymentType}
         isReadonly={disabledState}
         handleDeploymentTypeChange={handleDeploymentTypeChange}
+        onGitOpsEnabledChange={handleGitOpsCheckChanged}
+        gitOpsEnabled={gitOpsEnabled}
       />
-      {selectedDeploymentType === ServiceDeploymentType['Kubernetes'] && (
-        <Checkbox
-          label="Gitops"
-          name="gitOpsEnabled"
-          checked={gitOpsEnabled}
-          onChange={handleGitOpsCheckChanged}
-          // disabled={disabledState}
-          //GitOps checkbox is disabled temporarily until Release repo manifest is added
-          disabled={true}
-        />
-      )}
+
       <Layout.Horizontal>
         <StepWidget<K8SDirectServiceStep>
           factory={factory}
@@ -183,7 +179,8 @@ function DeployServiceDefinition(): React.ReactElement {
           initialValues={{
             stageIndex,
             setupModeType: setupMode.DIFFERENT,
-            deploymentType: selectedDeploymentType as ServiceDefinition['type']
+            deploymentType: selectedDeploymentType as ServiceDefinition['type'],
+            gitOpsEnabled
           }}
           allowableTypes={allowableTypes}
           type={getStepTypeByDeploymentType(defaultTo(selectedDeploymentType, ''))}

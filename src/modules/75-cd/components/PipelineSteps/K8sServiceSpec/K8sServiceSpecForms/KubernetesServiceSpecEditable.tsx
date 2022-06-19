@@ -21,6 +21,7 @@ import VariableListReadOnlyView from '@pipeline/components/WorkflowVariablesSele
 import { setupMode } from '../K8sServiceSpecHelper'
 import type { KubernetesServiceInputFormProps } from '../K8sServiceSpecInterface'
 import css from '../K8sServiceSpec.module.scss'
+import { useServiceContext } from '@cd/context/ServiceContext'
 
 const getManifestsHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
   if (isServerlessDeploymentType(selectedDeploymentType)) {
@@ -37,7 +38,7 @@ const getArtifactsHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['
 }
 
 const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
-  initialValues: { stageIndex = 0, setupModeType, deploymentType, isReadonlyServiceMode },
+  initialValues: { stageIndex = 0, setupModeType, deploymentType, isReadonlyServiceMode, gitOpsEnabled },
   factory,
   readonly
 }) => {
@@ -75,6 +76,7 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
               deploymentType={selectedDeploymentType}
               isReadonlyServiceMode={isReadonlyServiceMode as boolean}
               readonly={!!readonly}
+              gitOpsEnabled={gitOpsEnabled}
             />
           </Card>
 

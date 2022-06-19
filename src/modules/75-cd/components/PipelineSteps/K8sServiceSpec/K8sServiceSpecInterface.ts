@@ -26,7 +26,9 @@ export interface K8SDirectServiceStep extends ServiceSpec {
   customStepProps?: Record<string, any>
   deploymentType?: ServiceDefinition['type']
   isReadonlyServiceMode?: boolean
+  gitOpsEnabled?: boolean
 }
+
 export interface KubernetesServiceInputFormProps {
   initialValues: K8SDirectServiceStep
   onUpdate?: ((data: ServiceSpec) => void) | undefined

@@ -92,7 +92,11 @@ import HelmWithOCI from '../ManifestWizardSteps/HelmWithOCI/HelmWithOCI'
 import { getConnectorPath } from '../ManifestWizardSteps/ManifestUtils'
 import css from '../ManifestSelection.module.scss'
 
-const showAddManifestBtn = (isReadonly: boolean, allowOnlyOne: boolean, listOfManifests: Array<any>): boolean => {
+export const showAddManifestBtn = (
+  isReadonly: boolean,
+  allowOnlyOne: boolean,
+  listOfManifests: Array<any>
+): boolean => {
   if (allowOnlyOne && listOfManifests.length === 1) {
     return false
   }

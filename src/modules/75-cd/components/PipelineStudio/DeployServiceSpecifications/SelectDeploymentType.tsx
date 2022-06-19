@@ -11,7 +11,18 @@ import { noop } from 'lodash-es'
 import { Classes, PopoverInteractionKind } from '@blueprintjs/core'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
-import { Card, Dialog, HarnessDocTooltip, Icon, Layout, Popover, Text, Thumbnail, Utils } from '@wings-software/uicore'
+import {
+  Card,
+  Checkbox,
+  Dialog,
+  HarnessDocTooltip,
+  Icon,
+  Layout,
+  Popover,
+  Text,
+  Thumbnail,
+  Utils
+} from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
@@ -40,6 +51,8 @@ interface SelectServiceDeploymentTypeProps {
   handleDeploymentTypeChange: (deploymentType: ServiceDeploymentType) => void
   selectedDeploymentType?: ServiceDeploymentType
   viewContext?: string
+  gitOpsEnabled?: boolean
+  onGitOpsEnabledChange: (ev: React.FormEvent<HTMLInputElement>) => void
 }
 
 interface CardListProps {
@@ -131,7 +144,7 @@ const getServerlessDeploymentTypes = (
 }
 
 export default function SelectDeploymentType(props: SelectServiceDeploymentTypeProps): JSX.Element {
-  const { selectedDeploymentType, isReadonly } = props
+  const { selectedDeploymentType, isReadonly, gitOpsEnabled, onGitOpsEnabledChange } = props
   const { getString } = useStrings()
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
@@ -401,19 +414,39 @@ export default function SelectDeploymentType(props: SelectServiceDeploymentTypeP
                 <HarnessDocTooltip tooltipId="stageOverviewDeploymentType" useStandAlone={true} />
               </div>
               {renderDeploymentTypes()}
+              <Layout.Vertical border={{ top: true }} padding={{ top: 'medium' }} margin={{ top: 'medium' }}>
+                {selectedDeploymentType === ServiceDeploymentType['Kubernetes'] && (
+                  <Checkbox
+                    label="Gitops"
+                    name="gitOpsEnabled"
+                    checked={gitOpsEnabled}
+                    onChange={onGitOpsEnabledChange}
+                  />
+                )}
+              </Layout.Vertical>
             </Card>
           )
         } else {
           return (
             <div className={stageCss.stageView}>
-              <div
-                className={cx(stageCss.deploymentTypeHeading, 'ng-tooltip-native')}
-                data-tooltip-id="stageOverviewDeploymentType"
-              >
-                {getString('deploymentTypeText')}
-                <HarnessDocTooltip tooltipId="stageOverviewDeploymentType" useStandAlone={true} />
-              </div>
-              {renderDeploymentTypes()}
+              <Layout.Vertical border={{ bottom: true }}>
+                <div
+                  className={cx(stageCss.deploymentTypeHeading, 'ng-tooltip-native')}
+                  data-tooltip-id="stageOverviewDeploymentType"
+                >
+                  {getString('deploymentTypeText')}
+                  <HarnessDocTooltip tooltipId="stageOverviewDeploymentType" useStandAlone={true} />
+                </div>
+                {renderDeploymentTypes()}
+                {selectedDeploymentType === ServiceDeploymentType['Kubernetes'] && (
+                  <Checkbox
+                    label="Gitops"
+                    name="gitOpsEnabled"
+                    checked={gitOpsEnabled}
+                    onChange={onGitOpsEnabledChange}
+                  />
+                )}
+              </Layout.Vertical>
             </div>
           )
         }
