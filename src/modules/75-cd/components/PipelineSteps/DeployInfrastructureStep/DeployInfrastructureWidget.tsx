@@ -23,7 +23,7 @@ import type { DeployInfrastructureStepConfig } from './DeployInfrastructureStep'
 import type { DeployInfrastructureProps } from './utils'
 import DeployEnvironment from './DeployEnvironment/DeployEnvironment'
 import DeployInfrastructures from './DeployInfrastructures/DeployInfrastructures'
-// import { DeployEnvironmentOrEnvGroup } from './DeployEnvironmentOrEnvGroup/DeployEnvironmentOrEnvGroup'
+import { DeployEnvironmentOrEnvGroup } from './DeployEnvironmentOrEnvGroup/DeployEnvironmentOrEnvGroup'
 
 import css from './DeployInfrastructureStep.module.scss'
 
@@ -125,7 +125,12 @@ export function DeployInfrastructureWidget({
                   )}
               </>
             ) : (
-              <div />
+              <DeployEnvironmentOrEnvGroup
+                initialValues={initialValues}
+                allowableTypes={allowableTypes}
+                readonly={readonly}
+                formikRef={formikRef}
+              />
             )}
             {/* {Boolean(values.environmentGroup?.envGroupRef) &&
               selectedEnvironmentGroup &&

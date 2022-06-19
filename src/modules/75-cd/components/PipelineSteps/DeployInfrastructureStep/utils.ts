@@ -45,6 +45,13 @@ export function isEditEnvironment(data?: EnvironmentResponseDTO): boolean {
   return false
 }
 
+export function isEditEnvironmentOrEnvGroup(data?: EnvironmentResponseDTO): boolean {
+  if (!isEmpty(data?.identifier)) {
+    return true
+  }
+  return false
+}
+
 export function isEditInfrastructure(data?: string): boolean {
   if (!isEmpty(data)) {
     return true

@@ -47,7 +47,7 @@ import css from '../DeployInfrastructureStep.module.scss'
 //   allowableTypes: MultiTypeInputType[]
 // }
 
-export default function DeployEnvironment({ initialValues, readonly, formikRef, allowableTypes, expressions }: any) {
+export default function DeployEnvironment({ initialValues, readonly, formikRef, allowableTypes }: any) {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
   const { showError } = useToaster()
@@ -200,7 +200,6 @@ export default function DeployEnvironment({ initialValues, readonly, formikRef, 
             addClearBtn: !readonly,
             items: defaultTo(environmentsSelectOptions, [])
           },
-          expressions,
           allowableTypes
         }}
         selectItems={defaultTo(environmentsSelectOptions, [])}

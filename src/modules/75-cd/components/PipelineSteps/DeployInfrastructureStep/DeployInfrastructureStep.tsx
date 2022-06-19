@@ -9,7 +9,7 @@ import React from 'react'
 import type { FormikErrors } from 'formik'
 import { defaultTo, isEmpty } from 'lodash-es'
 
-import { getMultiTypeFromValue, IconName, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import { getMultiTypeFromValue, IconName, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 import type { DeploymentStageConfig } from 'services/cd-ng'
 
 import { Step, StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
@@ -20,6 +20,10 @@ import DeployInfrastructureInputStep from './DeployInfrastructureInputStep'
 
 export interface DeployInfrastructureStepConfig extends Omit<DeploymentStageConfig, 'execution'> {
   infrastructureRef?: string
+  environmentOrEnvGroupRef?: SelectOption | string
+  environmentInEnvGroupRef?: string
+  clusterRef?: SelectOption[] | string
+  isEnvGroup?: boolean
 }
 
 export class DeployInfrastructureStep extends Step<DeployInfrastructureStepConfig> {
@@ -38,9 +42,11 @@ export class DeployInfrastructureStep extends Step<DeployInfrastructureStepConfi
   }
 
   private processInitialValues(initialValues: DeployInfrastructureStepConfig): DeployInfrastructureStepConfig {
+    const gitOpsEnabled = initialValues.gitOpsEnabled
+    const isEnvGroup = Boolean(initialValues.environmentGroup)
     return {
-      gitOpsEnabled: initialValues.gitOpsEnabled,
-      ...(initialValues.gitOpsEnabled === false && {
+      gitOpsEnabled,
+      ...(gitOpsEnabled === false && {
         environment: {
           environmentRef: defaultTo(initialValues.environment?.environmentRef, ''),
           deployToAll: defaultTo(initialValues.environment?.deployToAll, false)
@@ -48,23 +54,59 @@ export class DeployInfrastructureStep extends Step<DeployInfrastructureStepConfi
         infrastructureRef: (initialValues.environment?.infrastructureDefinitions?.[0].ref ||
           initialValues.environment?.infrastructureDefinitions ||
           '') as string
+      }),
+      ...(gitOpsEnabled === true && {
+        ...(!isEnvGroup && {
+          isEnvGroup,
+          environmentOrEnvGroupRef: defaultTo(initialValues.environment?.environmentRef, ''),
+          deployToAll: defaultTo(initialValues.environment?.deployToAll, false),
+          clusterRef:
+            getMultiTypeFromValue(initialValues.environment?.gitOpsClusters as any) === MultiTypeInputType.RUNTIME
+              ? RUNTIME_INPUT_VALUE
+              : initialValues.environment?.gitOpsClusters?.map(cluster => {
+                  return {
+                    label: cluster.ref,
+                    value: cluster.ref
+                  }
+                })
+        })
       })
     }
   }
 
   private processFormData(data: DeployInfrastructureStepConfig): any {
+    const gitOpsEnabled = data.gitOpsEnabled
+    const isEnvGroup = Boolean(data.environmentGroup)
+
     return {
-      environment: {
-        ...data.environment,
-        infrastructureDefinitions:
-          data.infrastructureRef === RUNTIME_INPUT_VALUE
-            ? RUNTIME_INPUT_VALUE
-            : [
-                {
-                  ref: data.infrastructureRef
-                }
-              ]
-      }
+      ...(gitOpsEnabled === false && {
+        environment: {
+          ...data.environment,
+          infrastructureDefinitions:
+            data.infrastructureRef === RUNTIME_INPUT_VALUE
+              ? RUNTIME_INPUT_VALUE
+              : [
+                  {
+                    ref: data.infrastructureRef
+                  }
+                ]
+        }
+      }),
+      ...(gitOpsEnabled === true && {
+        ...(!isEnvGroup && {
+          environment: {
+            environmentRef:
+              data.environmentOrEnvGroupRef === RUNTIME_INPUT_VALUE
+                ? RUNTIME_INPUT_VALUE
+                : defaultTo((data.environmentOrEnvGroupRef as SelectOption)?.value, ''),
+            deployToAll: defaultTo(data.environment?.deployToAll, false),
+            gitOpsClusters:
+              data.clusterRef === RUNTIME_INPUT_VALUE
+                ? RUNTIME_INPUT_VALUE
+                : (data.clusterRef as SelectOption[])?.map(cluster => ({ ref: cluster.value }))
+          }
+        })
+      })
     }
   }
 
