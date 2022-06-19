@@ -26,7 +26,14 @@ import {
 import { useModalHook } from '@harness/use-modal'
 
 import { useStrings } from 'framework/strings'
-import { EnvironmentResponse, EnvironmentResponseDTO, useGetEnvironmentListV2 } from 'services/cd-ng'
+import {
+  EnvironmentGroupResponse,
+  EnvironmentGroupResponseDTO,
+  EnvironmentResponse,
+  EnvironmentResponseDTO,
+  useGetEnvironmentGroupList,
+  useGetEnvironmentListV2
+} from 'services/cd-ng'
 
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { useToaster } from '@common/exports'
@@ -34,10 +41,13 @@ import { useMutateAsGet } from '@common/hooks'
 
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
+import CreateEnvironmentGroupModal from '@cd/components/EnvironmentGroups/CreateEnvironmentGroupModal'
+
 import type { DeployInfrastructureStepConfig } from '../DeployInfrastructureStep'
 import AddEditEnvironmentModal from '../AddEditEnvironmentModal'
 import { isEditEnvironmentOrEnvGroup } from '../utils'
 import DeployClusters from '../DeployClusters/DeployClusters'
+import DeployEnvironmentInEnvGroup from '../DeployEnvironmentInEnvGroup/DeployEnvironmentInEnvGroup'
 
 import css from '../DeployInfrastructureStep.module.scss'
 
@@ -78,6 +88,7 @@ export function DeployEnvironmentOrEnvGroup({
   const [environments, setEnvironments] = useState<EnvironmentResponseDTO[]>()
   const [selectedEnvironment, setSelectedEnvironment] = useState<EnvironmentResponseDTO>()
   const [environmentsSelectOptions, setEnvironmentsSelectOptions] = useState<SelectOption[]>()
+  // TODO: handle for both
   const [environmentOrEnvGroupRefType, setEnvironmentOrEnvGroupRefType] = useState<MultiTypeInputType>(
     getMultiTypeFromValue(initialValues.environmentOrEnvGroupRef)
   )
@@ -115,22 +126,24 @@ export function DeployEnvironmentOrEnvGroup({
         const existingEnvironment = environmentsSelectOptions.find(
           env => env.value === initialValues.environmentOrEnvGroupRef
         )
-        if (!existingEnvironment) {
-          if (!readonly) {
-            formikRef.current?.setFieldValue('environmentOrEnvGroupRef', '')
+        if (!initialValues.isEnvGroup) {
+          if (!existingEnvironment) {
+            if (!readonly) {
+              formikRef.current?.setFieldValue('environmentOrEnvGroupRef', '')
+            } else {
+              const options = [...environmentsSelectOptions]
+              options.push({
+                label: initialValues.environmentOrEnvGroupRef,
+                value: initialValues.environmentOrEnvGroupRef
+              } as SelectOption)
+              setEnvironmentsSelectOptions(options)
+            }
           } else {
-            const options = [...environmentsSelectOptions]
-            options.push({
-              label: initialValues.environmentOrEnvGroupRef,
-              value: initialValues.environmentOrEnvGroupRef
-            } as SelectOption)
-            setEnvironmentsSelectOptions(options)
+            formikRef.current?.setFieldValue('environmentOrEnvGroupRef', existingEnvironment)
+            setSelectedEnvironment(
+              environments?.find(environment => environment.identifier === existingEnvironment?.value)
+            )
           }
-        } else {
-          formikRef.current?.setFieldValue('environmentOrEnvGroupRef', existingEnvironment)
-          setSelectedEnvironment(
-            environments?.find(environment => environment.identifier === existingEnvironment?.value)
-          )
         }
       }
     }
@@ -143,18 +156,16 @@ export function DeployEnvironmentOrEnvGroup({
   }, [environmentsError])
 
   const updateEnvironmentsList = (values: EnvironmentResponseDTO) => {
-    formikRef.current?.setFieldValue('environmentOrEnvGroupRef', { label: values.name, value: values.identifier })
-    if (!isNil(environments) && !isEmpty(environments)) {
-      const newEnvironmentsList = [...environments]
-      const existingIndex = newEnvironmentsList.findIndex(item => item.identifier === values.identifier)
-      if (existingIndex >= 0) {
-        newEnvironmentsList.splice(existingIndex, 1, values)
-      } else {
-        newEnvironmentsList.unshift(values)
-      }
-      setEnvironments(newEnvironmentsList)
-      setSelectedEnvironment(newEnvironmentsList?.find(environment => environment.identifier === values?.identifier))
+    const newEnvironmentsList = [...defaultTo(environments, [])]
+    const existingIndex = newEnvironmentsList.findIndex(item => item.identifier === values.identifier)
+    if (existingIndex >= 0) {
+      newEnvironmentsList.splice(existingIndex, 1, values)
+    } else {
+      newEnvironmentsList.unshift(values)
     }
+    setEnvironments(newEnvironmentsList)
+    setSelectedEnvironment(newEnvironmentsList?.find(environment => environment.identifier === values?.identifier))
+    formikRef.current?.setFieldValue('environmentOrEnvGroupRef', { label: values.name, value: values.identifier })
     hideEnvironmentModal()
   }
 
@@ -182,6 +193,124 @@ export function DeployEnvironmentOrEnvGroup({
     )
   }, [environments, updateEnvironmentsList])
 
+  const {
+    data: environmentGroupsResponse,
+    loading: environmentGroupsLoading,
+    error: environmentGroupsError
+  } = useMutateAsGet(useGetEnvironmentGroupList, {
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
+    body: {
+      filterType: 'EnvironmentGroup'
+    }
+  })
+
+  const [environmentGroups, setEnvironmentGroups] = useState<EnvironmentGroupResponseDTO[]>()
+  const [selectedEnvironmentGroup, setSelectedEnvironmentGroup] = useState<EnvironmentGroupResponseDTO>()
+  const [environmentGroupsSelectOptions, setEnvironmentGroupsSelectOptions] = useState<SelectOption[]>()
+
+  useEffect(() => {
+    if (!environmentGroupsLoading && !get(environmentGroupsResponse, 'data.empty')) {
+      setEnvironmentGroups(
+        defaultTo(
+          get(environmentGroupsResponse, 'data.content', [])?.map((envGroupObj: EnvironmentGroupResponse) => ({
+            ...envGroupObj.envGroup
+          })),
+          []
+        )
+      )
+    }
+  }, [environmentGroupsLoading, environmentGroupsResponse])
+
+  useEffect(() => {
+    if (!isNil(environmentGroups)) {
+      setEnvironmentGroupsSelectOptions(
+        environmentGroups.map(envGroup => {
+          return { label: defaultTo(envGroup.name, ''), value: defaultTo(envGroup.identifier, '') }
+        })
+      )
+    }
+  }, [environmentGroups])
+
+  useEffect(() => {
+    if (
+      !isEmpty(environmentGroupsSelectOptions) &&
+      !isNil(environmentGroupsSelectOptions) &&
+      initialValues.environmentOrEnvGroupRef
+    ) {
+      if (getMultiTypeFromValue(initialValues.environmentOrEnvGroupRef) === MultiTypeInputType.FIXED) {
+        const existingEnvironmentGroup = environmentGroupsSelectOptions.find(
+          envGroup => envGroup.value === initialValues.environmentOrEnvGroupRef
+        )
+        if (initialValues.isEnvGroup) {
+          if (!existingEnvironmentGroup) {
+            if (!readonly) {
+              formikRef.current?.setFieldValue('environmentOrEnvGroupRef', '')
+            } else {
+              const options = [...environmentGroupsSelectOptions]
+              options.push({
+                label: initialValues.environmentOrEnvGroupRef,
+                value: initialValues.environmentOrEnvGroupRef
+              } as SelectOption)
+              setEnvironmentGroupsSelectOptions(options)
+            }
+          } else {
+            formikRef.current?.setFieldValue('environmentOrEnvGroupRef', existingEnvironmentGroup)
+            setSelectedEnvironmentGroup(
+              environmentGroups?.find(envGroup => envGroup.identifier === existingEnvironmentGroup?.value)
+            )
+          }
+        }
+      }
+    }
+  }, [environmentGroupsSelectOptions])
+
+  useEffect(() => {
+    if (!isNil(environmentGroupsError)) {
+      showError(getRBACErrorMessage(environmentGroupsError))
+    }
+  }, [environmentGroupsError])
+
+  const updateEnvironmentGroupsList = (values: EnvironmentGroupResponseDTO) => {
+    const newEnvironmentGroupsList = [...defaultTo(environmentGroups, [])]
+    const existingIndex = newEnvironmentGroupsList.findIndex(item => item.identifier === values.identifier)
+    if (existingIndex >= 0) {
+      newEnvironmentGroupsList.splice(existingIndex, 1, values)
+    } else {
+      newEnvironmentGroupsList.unshift(values)
+    }
+    setEnvironmentGroups(newEnvironmentGroupsList)
+    setSelectedEnvironmentGroup(newEnvironmentGroupsList?.find(envGroup => envGroup.identifier === values?.identifier))
+    formikRef.current?.setFieldValue('environmentOrEnvGroupRef', { label: values.name, value: values.identifier })
+    hideEnvironmentGroupModal()
+  }
+
+  const [showEnvironmentGroupModal, hideEnvironmentGroupModal] = useModalHook(() => {
+    return (
+      <Dialog
+        isOpen={true}
+        enforceFocus={false}
+        onClose={hideEnvironmentGroupModal}
+        title={
+          isEditEnvironmentOrEnvGroup(selectedEnvironmentGroup)
+            ? getString('common.editName', { name: getString('common.environmentGroup.label') })
+            : getString('common.addName', { name: getString('common.environmentGroup.label') })
+        }
+        className={css.dialogStyles}
+      >
+        <CreateEnvironmentGroupModal
+          data={selectedEnvironmentGroup}
+          onCreateOrUpdate={updateEnvironmentGroupsList}
+          closeModal={hideEnvironmentGroupModal}
+          isEdit={Boolean(selectedEnvironmentGroup)}
+        />
+      </Dialog>
+    )
+  }, [environmentGroups, updateEnvironmentGroupsList])
+
   return (
     <Layout.Horizontal
       className={css.formRow}
@@ -191,9 +320,9 @@ export function DeployEnvironmentOrEnvGroup({
       <FormInput.SelectWithSubmenuTypeInput
         label={getString('cd.pipelineSteps.environmentTab.specifyEnvironmentOrGroup')}
         name="environmentOrEnvGroupRef"
-        disabled={environmentsLoading} //|| environmentGroupsLoading}
+        disabled={environmentsLoading || environmentGroupsLoading}
         selectItems={
-          environmentsLoading // || environmentGroupsLoading
+          environmentsLoading || environmentGroupsLoading
             ? [{ value: '', label: 'Loading...', submenuItems: [] }]
             : [
                 {
@@ -201,59 +330,66 @@ export function DeployEnvironmentOrEnvGroup({
                   value: getString('environment'),
                   submenuItems: defaultTo(environmentsSelectOptions, []),
                   hasSubItems: true
+                },
+                {
+                  label: getString('common.environmentGroup.label'),
+                  value: getString('common.environmentGroup.label'),
+                  submenuItems: defaultTo(environmentGroupsSelectOptions, []),
+                  hasSubItems: true
                 }
-                // {
-                //   label: getString('common.environmentGroup.label'),
-                //   value: getString('common.environmentGroup.label'),
-                //   submenuItems: defaultTo(environmentGroupsSelectOptions, []),
-                //   hasSubItems: true
-                // }
               ]
         }
         selectWithSubmenuTypeInputProps={{
           onTypeChange: setEnvironmentOrEnvGroupRefType,
-          width: 300,
+          width: 280,
           allowableTypes,
           selectWithSubmenuProps: {
             addClearBtn: !readonly,
-            items: environmentsLoading
-              ? [{ value: '', label: 'Loading...', submenuItems: [] }]
-              : [
-                  {
-                    label: getString('environment'),
-                    value: getString('environment'),
-                    submenuItems: defaultTo(environmentsSelectOptions, []),
-                    hasSubItems: true
-                  }
-                  // {
-                  //   label: getString('common.environmentGroup.label'),
-                  //   value: getString('common.environmentGroup.label'),
-                  //   submenuItems: defaultTo(environmentGroupsSelectOptions, []),
-                  //   hasSubItems: true
-                  // }
-                ],
+            items:
+              environmentsLoading || environmentGroupsLoading
+                ? [{ value: '', label: 'Loading...', submenuItems: [] }]
+                : [
+                    {
+                      label: getString('environment'),
+                      value: getString('environment'),
+                      submenuItems: defaultTo(environmentsSelectOptions, []),
+                      hasSubItems: true
+                    },
+                    {
+                      label: getString('common.environmentGroup.label'),
+                      value: getString('common.environmentGroup.label'),
+                      submenuItems: defaultTo(environmentGroupsSelectOptions, []),
+                      hasSubItems: true
+                    }
+                  ],
             onChange: (primaryOption?: SelectOption, secondaryOption?: SelectOption) => {
               if (primaryOption?.value === getString('environment')) {
                 formikRef.current?.setValues({
-                  ...formikRef,
+                  ...formikRef.current.values,
+                  isEnvGroup: false,
                   environmentOrEnvGroupRef: secondaryOption,
                   clusterRef: []
                 })
                 setSelectedEnvironment(
                   environments?.find(environment => environment.identifier === secondaryOption?.value)
                 )
-              }
-              // else if (primaryOption?.value === getString('common.environmentGroup.label')) {
-              //   setFieldValue('environmentOrEnvGroupRef', secondaryOption)
-              //   setFieldValue('environmentGroup.envGroupRef', secondaryOption?.value)
-              //   setSelectedEnvironment(undefined)
-              //   setSelectedEnvironmentGroup(
-              //     environmentGroups?.find(environmentGroup => environmentGroup.identifier === secondaryOption?.value)
-              //   )
-              // }
-              else {
+                setSelectedEnvironmentGroup(undefined)
+              } else if (primaryOption?.value === getString('common.environmentGroup.label')) {
+                formikRef.current?.setValues({
+                  ...formikRef.current.values,
+                  isEnvGroup: true,
+                  environmentOrEnvGroupRef: secondaryOption,
+                  environmentInEnvGroupRef: '',
+                  clusterRef: []
+                })
+                setSelectedEnvironment(undefined)
+                setSelectedEnvironmentGroup(
+                  environmentGroups?.find(environmentGroup => environmentGroup.identifier === secondaryOption?.value)
+                )
+              } else {
                 formikRef.current?.setFieldValue('environmentOrEnvGroupRef', primaryOption)
                 setSelectedEnvironment(undefined)
+                setSelectedEnvironmentGroup(undefined)
               }
             }
           }
@@ -265,28 +401,32 @@ export function DeployEnvironmentOrEnvGroup({
           size={ButtonSize.SMALL}
           variation={ButtonVariation.LINK}
           text={
-            isEditEnvironmentOrEnvGroup(selectedEnvironment)
+            isEditEnvironmentOrEnvGroup(selectedEnvironmentGroup)
+              ? getString('common.editName', { name: getString('common.environmentGroup.label') })
+              : isEditEnvironmentOrEnvGroup(selectedEnvironment)
               ? getString('editEnvironment')
               : getString('cd.pipelineSteps.environmentTab.plusNewEnvironment')
           }
           id={isEditEnvironmentOrEnvGroup(selectedEnvironment) ? 'edit-environment' : 'add-new-environment'}
-          onClick={showEnvironmentModal}
+          onClick={
+            isEditEnvironmentOrEnvGroup(selectedEnvironmentGroup) ? showEnvironmentGroupModal : showEnvironmentModal
+          }
         >
-          <SplitButtonOption text={getString('common.environmentGroup.new')} onClick={showEnvironmentModal} />
+          <SplitButtonOption text={getString('common.environmentGroup.new')} onClick={showEnvironmentGroupModal} />
         </SplitButton>
       )}
-      {/* {Boolean(values.environmentGroup?.envGroupRef) &&
-              selectedEnvironmentGroup &&
-              environmentOrEnvGroupRefType === MultiTypeInputType.FIXED && (
-                <DeployEnvironmentInEnvGroup
-                  selectedEnvironmentGroup={selectedEnvironmentGroup}
-                  setSelectedEnvironment={setSelectedEnvironment}
-                  formikRef={formikRef}
-                  initialValues={initialValues}
-                  allowableTypes={allowableTypes}
-                  readonly={readonly}
-                />
-              )} */}
+      {Boolean(formikRef.current?.values?.environmentOrEnvGroupRef && Boolean(formikRef.current?.values.isEnvGroup)) &&
+        selectedEnvironmentGroup &&
+        environmentOrEnvGroupRefType === MultiTypeInputType.FIXED && (
+          <DeployEnvironmentInEnvGroup
+            selectedEnvironmentGroup={selectedEnvironmentGroup}
+            setSelectedEnvironment={setSelectedEnvironment}
+            formikRef={formikRef}
+            initialValues={initialValues}
+            allowableTypes={allowableTypes}
+            readonly={readonly}
+          />
+        )}
       {Boolean((formikRef.current?.values?.environmentOrEnvGroupRef as SelectOption)?.value) &&
         environmentOrEnvGroupRefType === MultiTypeInputType.FIXED &&
         selectedEnvironment?.identifier && (

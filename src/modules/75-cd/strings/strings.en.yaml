@@ -105,6 +105,9 @@ pipelineSteps:
     newEnvironment: '{{$.newEnvironment}}'
     environmentIsRequired: '{{ $.common.validation.environmentIsRequired }}'
     infrastructureIsRequired: 'Infrastructure is required'
+    environmentOrEnvGroupIsRequired: 'Environment or Environment Group is required'
+    environmentInEnvGroupIsRequired: 'Environment in Environment Group is required'
+    clusterIsRequired: 'Clusters are required'
     deployToAll: Deploy in parallel on all infrastructure
   serviceTab:
     stageOverrides: Stage Overrides

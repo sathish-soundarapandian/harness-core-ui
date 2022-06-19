@@ -21,6 +21,8 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
 import type { DeployInfrastructureStepConfig } from '../DeployInfrastructureStep'
 
+import css from './DeployClusters.module.scss'
+
 interface DeployClusterProps {
   formikRef: React.MutableRefObject<FormikProps<DeployInfrastructureStepConfig> | null>
   readonly?: boolean
@@ -100,6 +102,7 @@ export default function DeployClusters({
       label={getString('cd.pipelineSteps.environmentTab.specifyGitOpsClusters')}
       tooltipProps={{ dataTooltipId: 'specifyGitOpsClusters' }}
       name="clusterRef"
+      className={css.clusterMultiSelect}
       disabled={readonly || (clustersRefType === MultiTypeInputType.FIXED && clustersLoading)}
       placeholder={
         clustersLoading ? getString('loading') : getString('cd.pipelineSteps.environmentTab.specifyGitOpsClusters')

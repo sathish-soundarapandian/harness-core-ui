@@ -28,6 +28,7 @@ import {
   createEnvironmentGroupPromise,
   EnvironmentGroupResponseDTO,
   EnvironmentResponse,
+  updateEnvironmentGroupPromise,
   useGetYamlSchema
 } from 'services/cd-ng'
 
@@ -49,6 +50,8 @@ import css from './EnvironmentGroups.module.scss'
 interface CreateEnvironmentGroupModalProps {
   closeModal: () => void
   onCreateOrUpdate?: (values: EnvironmentGroupResponseDTO) => void
+  data?: EnvironmentGroupResponseDTO
+  isEdit?: boolean
 }
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
@@ -66,7 +69,9 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
 
 export default function CreateEnvironmentGroupModal({
   closeModal,
-  onCreateOrUpdate
+  onCreateOrUpdate,
+  data,
+  isEdit
 }: CreateEnvironmentGroupModalProps): JSX.Element {
   const { orgIdentifier, projectIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -97,23 +102,40 @@ export default function CreateEnvironmentGroupModal({
           })
         )
       )
-      const response = await createEnvironmentGroupPromise({
-        body: {
-          identifier: values.identifier,
-          orgIdentifier: values.orgIdentifier,
-          projectIdentifier: values.projectIdentifier,
-          yaml: valuesYaml
-        },
-        queryParams: {
-          accountIdentifier: accountId
-        },
-        requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
-      })
+
+      const response = isEdit
+        ? await updateEnvironmentGroupPromise({
+            body: {
+              identifier: values.identifier,
+              orgIdentifier: values.orgIdentifier,
+              projectIdentifier: values.projectIdentifier,
+              yaml: valuesYaml
+            },
+            envGroupIdentifier: defaultTo(values.identifier, ''),
+            queryParams: {
+              accountIdentifier: accountId
+            },
+            requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
+          })
+        : await createEnvironmentGroupPromise({
+            body: {
+              identifier: values.identifier,
+              orgIdentifier: values.orgIdentifier,
+              projectIdentifier: values.projectIdentifier,
+              yaml: valuesYaml
+            },
+            queryParams: {
+              accountIdentifier: accountId
+            },
+            requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
+          })
 
       // istanbul ignore else
       if (response.status === 'SUCCESS') {
         clear()
-        showSuccess(getString('common.environmentGroup.created'))
+        showSuccess(
+          isEdit ? getString('common.environmentGroup.updated') : getString('common.environmentGroup.created')
+        )
         if (onCreateOrUpdate) {
           onCreateOrUpdate(defaultTo(response.data?.envGroup, {}))
         } else {
@@ -201,13 +223,13 @@ export default function CreateEnvironmentGroupModal({
       <Formik<EnvironmentGroupResponseDTO>
         initialValues={
           {
-            name: '',
-            identifier: '',
-            description: '',
+            name: defaultTo(data?.name, ''),
+            identifier: defaultTo(data?.identifier, ''),
+            description: defaultTo(data?.description, ''),
             orgIdentifier,
             projectIdentifier,
-            tags: {},
-            envIdentifiers: []
+            tags: defaultTo(data?.tags, {}),
+            envIdentifiers: defaultTo(data?.envIdentifiers, [])
           } as EnvironmentGroupResponseDTO
         }
         formName="createEnvGroup"
@@ -241,7 +263,8 @@ export default function CreateEnvironmentGroupModal({
                           inputGroup: {
                             inputRef: ref => (inputRef.current = ref)
                           }
-                        }
+                        },
+                        isIdentifierEditable: !isEdit
                       }}
                     />
 

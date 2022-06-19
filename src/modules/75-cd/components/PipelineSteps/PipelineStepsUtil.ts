@@ -119,13 +119,8 @@ export function getNonGitOpsEnvironmentRefSchema(getString: UseStringsReturn['ge
   })
 }
 
-export function getGitOpsEnvironmentRefSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
-  return Yup.object().shape({
-    environment: Yup.object().shape({
-      environmentRef: Yup.string().required(getString('cd.pipelineSteps.environmentTab.environmentIsRequired'))
-    }),
-    infrastructureRef: Yup.string().required(getString('cd.pipelineSteps.environmentTab.infrastructureIsRequired'))
-  })
+export function getGitOpsEnvironmentRefSchema(): Yup.ObjectSchema {
+  return Yup.object()
 }
 
 export function getServiceDeploymentTypeSchema(

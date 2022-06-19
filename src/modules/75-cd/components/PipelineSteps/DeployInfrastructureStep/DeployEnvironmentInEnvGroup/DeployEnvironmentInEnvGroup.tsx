@@ -15,12 +15,12 @@ import { useStrings } from 'framework/strings'
 import type { EnvironmentResponse, EnvironmentResponseDTO } from 'services/cd-ng'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import type { PipelineInfrastructureV2 } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import type { DeployInfrastructureStepConfig } from '../DeployInfrastructureStep'
 
 interface DeployEnvironmentInEnvGroupProps {
-  formikRef: React.MutableRefObject<FormikProps<PipelineInfrastructureV2> | null>
+  formikRef: React.MutableRefObject<FormikProps<DeployInfrastructureStepConfig> | null>
   readonly: boolean
-  initialValues?: PipelineInfrastructureV2
+  initialValues?: DeployInfrastructureStepConfig
   selectedEnvironmentGroup: any
   allowableTypes: MultiTypeInputType[]
   setSelectedEnvironment: any
@@ -36,12 +36,6 @@ export default function DeployEnvironmentInEnvGroup({
 }: DeployEnvironmentInEnvGroupProps) {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-
-  const [infrastructureRefType, setInfrastructureRefType] = useState<MultiTypeInputType>(
-    getMultiTypeFromValue((formikRef.current as any)?.values?.infrastructureRef)
-  )
-
-  const infrastructuresLoading = false
 
   const [environments, setEnvironments] = useState<EnvironmentResponseDTO[]>()
   const [environmentsSelectOptions, setEnvironmentsSelectOptions] = useState<SelectOption[]>()
@@ -73,24 +67,28 @@ export default function DeployEnvironmentInEnvGroup({
     if (
       !isEmpty(environmentsSelectOptions) &&
       !isNil(environmentsSelectOptions) &&
-      formikRef.current?.values?.infrastructureRef
+      formikRef.current?.values?.environmentInEnvGroupRef
     ) {
-      if (getMultiTypeFromValue(formikRef.current?.values?.infrastructureRef) === MultiTypeInputType.FIXED) {
-        const existingEnvironment = environmentsSelectOptions.find(
-          environment => environment.value === formikRef.current?.values?.infrastructureRef
+      if (getMultiTypeFromValue(formikRef.current?.values?.environmentInEnvGroupRef) === MultiTypeInputType.FIXED) {
+        const existingEnvironment = environments?.find(
+          environment => environment.identifier === formikRef.current?.values?.environmentInEnvGroupRef
         )
         if (!existingEnvironment) {
           if (!readonly) {
-            formikRef.current?.setFieldValue('infrastructureRef', '')
+            formikRef.current?.setFieldValue('environmentInEnvGroupRef', '')
           } else {
             const options = [...environmentsSelectOptions]
             options.push({
-              label: formikRef.current?.values?.infrastructureRef,
-              value: formikRef.current?.values?.infrastructureRef
+              label: formikRef.current?.values?.environmentInEnvGroupRef as string,
+              value: formikRef.current?.values?.environmentInEnvGroupRef as string
             })
             setEnvironmentsSelectOptions(options)
           }
         } else {
+          formikRef.current?.setFieldValue('environmentInEnvGroupRef', {
+            label: existingEnvironment.name,
+            value: existingEnvironment.identifier
+          })
           setSelectedEnvironment(existingEnvironment)
         }
       }
@@ -101,19 +99,18 @@ export default function DeployEnvironmentInEnvGroup({
     <FormInput.MultiTypeInput
       label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironment')}
       tooltipProps={{ dataTooltipId: 'specifyYourEnvironment' }}
-      name="environmentInEnvGrouRef"
-      disabled={readonly || (infrastructureRefType === MultiTypeInputType.FIXED && infrastructuresLoading)}
-      placeholder={
-        infrastructuresLoading
-          ? getString('loading')
-          : getString('cd.pipelineSteps.environmentTab.specifyYourEnvironment')
-      }
+      name="environmentInEnvGroupRef"
+      disabled={readonly}
+      placeholder={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironment')}
       multiTypeInputProps={{
-        onTypeChange: setInfrastructureRefType,
         width: 280,
         onChange: item => {
-          if ((item as SelectOption).value !== (formikRef.current?.values as any)?.environmentRef2) {
-            formikRef.current?.setFieldValue('environmentRef2', item)
+          if ((item as SelectOption).value !== formikRef.current?.values?.environmentInEnvGroupRef) {
+            formikRef.current?.setValues({
+              ...formikRef.current.values,
+              environmentInEnvGroupRef: item as SelectOption,
+              clusterRef: []
+            })
             setSelectedEnvironment(
               environments?.find(environment => environment.identifier === (item as SelectOption).value)
             )

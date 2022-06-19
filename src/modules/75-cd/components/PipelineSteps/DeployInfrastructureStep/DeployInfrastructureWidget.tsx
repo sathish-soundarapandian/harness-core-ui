@@ -55,53 +55,14 @@ export function DeployInfrastructureWidget({
       onSubmit={noop}
       validate={(values: DeployInfrastructureStepConfig) => {
         onUpdate?.({ ...values })
-        // const commonConfig = {
-        //   deployToAll: defaultTo(values.deployToAll, false),
-        //   ...(!stage?.stage?.spec?.gitOpsEnabled && {
-        //     infrastructureDefinitions:
-        //       getMultiTypeFromValue(values.infrastructureRef) === MultiTypeInputType.RUNTIME
-        //         ? values.infrastructureRef
-        //         : values.infrastructureDefinitions?.map((infra: string) => ({
-        //             ref: infra
-        //           }))
-        //   }),
-        //   ...(stage?.stage?.spec?.gitOpsEnabled && {
-        //     gitOpsClusters:
-        //       getMultiTypeFromValue(values.clusterRef) === MultiTypeInputType.RUNTIME
-        //         ? values.clusterRef
-        //         : (values as any).gitOpsClusters?.map((infra: string) => ({
-        //             ref: infra
-        //           }))
-        //   })
-        // }
-        // if (values.environmentRef2) {
-        //   onUpdate?.({
-        //     environmentGroup: {
-        //       envGroupRef: values.environmentOrEnvGroupRef?.value,
-        //       envGroupConfig: [
-        //         {
-        //           environmentRef: values.environmentRef2?.value,
-        //           ...commonConfig
-        //         }
-        //       ]
-        //     }
-        //   })
-        // } else {
-        //   onUpdate?.({
-        //     environment: {
-        //       environmentRef: values.environmentOrEnvGroupRef?.value,
-        //       ...commonConfig
-        //     }
-        //   } as any)
-        // }
       }}
       initialValues={initialValues}
       validationSchema={Yup.object()
         .required()
         .when('gitOpsEnabled', {
-          is: gitOpsEnabled => gitOpsEnabled,
-          then: getGitOpsEnvironmentRefSchema(getString),
-          otherwise: getNonGitOpsEnvironmentRefSchema(getString)
+          is: false,
+          then: getNonGitOpsEnvironmentRefSchema(getString),
+          otherwise: getGitOpsEnvironmentRefSchema()
         })}
     >
       {formik => {
@@ -139,34 +100,6 @@ export function DeployInfrastructureWidget({
                 formikRef={formikRef}
               />
             )}
-            {/* {Boolean(values.environmentGroup?.envGroupRef) &&
-              selectedEnvironmentGroup &&
-              environmentOrEnvGroupRefType === MultiTypeInputType.FIXED && (
-                <DeployEnvironmentInEnvGroup
-                  selectedEnvironmentGroup={selectedEnvironmentGroup}
-                  setSelectedEnvironment={setSelectedEnvironment}
-                  formikRef={formikRef}
-                  initialValues={initialValues}
-                  allowableTypes={allowableTypes}
-                  readonly={readonly}
-                />
-              )} */}
-            {/* {(Boolean(values.environmentOrEnvGroupRef) || Boolean(values.environmentRef2)) &&
-            environmentOrEnvGroupRefType === MultiTypeInputType.FIXED &&
-            selectedEnvironment?.identifier ? (
-              stage?.stage?.spec?.gitOpsEnabled ? (
-                <DeployClusters
-                  environmentIdentifier={selectedEnvironment?.identifier}
-                  formikRef={formikRef}
-                  allowableTypes={allowableTypes}
-                />
-              ) : ( 
-                <DeployInfrastructures
-                  formikRef={formikRef}
-                  allowableTypes={allowableTypes}
-                />
-             )
-            ) : null} */}
           </Layout.Horizontal>
         )
       }}

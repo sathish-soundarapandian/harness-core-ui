@@ -10,7 +10,7 @@ import { debounce, get, isEmpty, set } from 'lodash-es'
 import produce from 'immer'
 import cx from 'classnames'
 
-import { Card, Container } from '@harness/uicore'
+import { Card, Container, Text } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import type { StageElementConfig } from 'services/cd-ng'
@@ -100,9 +100,9 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
     <div className={stageCss.deployStage} key="1">
       <DeployServiceErrors domRef={scrollRef as MutableRefObject<HTMLElement | undefined>} />
       <div className={cx(stageCss.contentSection, stageCss.paddedSection)} ref={scrollRef}>
-        <div className={stageCss.tabHeading} id="environment">
+        <Text className={stageCss.tabHeading} id="environment" margin={{ bottom: 'small' }}>
           {getString('environment')}
-        </div>
+        </Text>
         <Card>
           <StepWidget
             type={StepType.DeployInfrastructure}

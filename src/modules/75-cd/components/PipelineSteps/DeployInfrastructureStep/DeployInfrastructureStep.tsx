@@ -21,7 +21,7 @@ import DeployInfrastructureInputStep from './DeployInfrastructureInputStep'
 export interface DeployInfrastructureStepConfig extends Omit<DeploymentStageConfig, 'execution'> {
   infrastructureRef?: string
   environmentOrEnvGroupRef?: SelectOption | string
-  environmentInEnvGroupRef?: string
+  environmentInEnvGroupRef?: SelectOption | string
   clusterRef?: SelectOption[] | string
   isEnvGroup?: boolean
 }
@@ -69,6 +69,24 @@ export class DeployInfrastructureStep extends Step<DeployInfrastructureStepConfi
                     value: cluster.ref
                   }
                 })
+        }),
+        ...(isEnvGroup && {
+          isEnvGroup,
+          environmentOrEnvGroupRef: defaultTo(initialValues.environmentGroup?.envGroupRef, ''),
+          environmentInEnvGroupRef:
+            typeof initialValues.environmentGroup?.envGroupConfig === 'string'
+              ? RUNTIME_INPUT_VALUE
+              : defaultTo(initialValues.environmentGroup?.envGroupConfig?.[0].environmentRef, ''),
+          deployToAll: defaultTo(initialValues.environment?.deployToAll, false),
+          clusterRef:
+            typeof initialValues.environmentGroup?.envGroupConfig?.[0]?.gitOpsClusters === 'string'
+              ? RUNTIME_INPUT_VALUE
+              : initialValues.environmentGroup?.envGroupConfig?.[0]?.gitOpsClusters?.map(cluster => {
+                  return {
+                    label: cluster.ref,
+                    value: cluster.ref
+                  }
+                })
         })
       })
     }
@@ -76,7 +94,7 @@ export class DeployInfrastructureStep extends Step<DeployInfrastructureStepConfi
 
   private processFormData(data: DeployInfrastructureStepConfig): any {
     const gitOpsEnabled = data.gitOpsEnabled
-    const isEnvGroup = Boolean(data.environmentGroup)
+    const isEnvGroup = data.isEnvGroup
 
     return {
       ...(gitOpsEnabled === false && {
@@ -93,17 +111,39 @@ export class DeployInfrastructureStep extends Step<DeployInfrastructureStepConfi
         }
       }),
       ...(gitOpsEnabled === true && {
-        ...(!isEnvGroup && {
-          environment: {
-            environmentRef:
+        ...(!isEnvGroup &&
+          data.environmentOrEnvGroupRef !== RUNTIME_INPUT_VALUE && {
+            environment: {
+              environmentRef:
+                data.environmentOrEnvGroupRef === RUNTIME_INPUT_VALUE
+                  ? RUNTIME_INPUT_VALUE
+                  : defaultTo((data.environmentOrEnvGroupRef as SelectOption)?.value, ''),
+              deployToAll: defaultTo(data.environment?.deployToAll, false),
+              gitOpsClusters:
+                data.clusterRef === RUNTIME_INPUT_VALUE
+                  ? RUNTIME_INPUT_VALUE
+                  : (data.clusterRef as SelectOption[])?.map(cluster => ({ ref: cluster.value }))
+            }
+          }),
+        ...((isEnvGroup || data.environmentOrEnvGroupRef === RUNTIME_INPUT_VALUE) && {
+          environmentGroup: {
+            envGroupRef:
               data.environmentOrEnvGroupRef === RUNTIME_INPUT_VALUE
                 ? RUNTIME_INPUT_VALUE
                 : defaultTo((data.environmentOrEnvGroupRef as SelectOption)?.value, ''),
-            deployToAll: defaultTo(data.environment?.deployToAll, false),
-            gitOpsClusters:
-              data.clusterRef === RUNTIME_INPUT_VALUE
+            envGroupConfig:
+              data.environmentInEnvGroupRef === RUNTIME_INPUT_VALUE
                 ? RUNTIME_INPUT_VALUE
-                : (data.clusterRef as SelectOption[])?.map(cluster => ({ ref: cluster.value }))
+                : [
+                    {
+                      environmentRef: (data.environmentInEnvGroupRef as SelectOption)?.value,
+                      deployToAll: defaultTo(data.environment?.deployToAll, false),
+                      gitOpsClusters:
+                        data.clusterRef === RUNTIME_INPUT_VALUE
+                          ? RUNTIME_INPUT_VALUE
+                          : (data.clusterRef as SelectOption[])?.map(cluster => ({ ref: cluster.value }))
+                    }
+                  ]
           }
         })
       })
@@ -144,7 +184,6 @@ export class DeployInfrastructureStep extends Step<DeployInfrastructureStepConfi
   }: ValidateInputSetProps<DeployInfrastructureStepConfig>): FormikErrors<DeployInfrastructureStepConfig> {
     const errors: FormikErrors<DeployInfrastructureStepConfig> = {}
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
-    console.log(errors)
     if (
       isEmpty(data?.environment?.environmentRef) &&
       isRequired &&
