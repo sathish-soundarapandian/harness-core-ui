@@ -6,17 +6,62 @@
  */
 
 import React from 'react'
-import type { ExecutionNode } from 'services/pipeline-ng'
+import { useParams } from 'react-router'
+import {
+  ExecutionNode,
+  ResourceConstraintDetail,
+  ResponseResourceConstraintExecutionInfo,
+  useGetResourceConstraintsExecutionInfo
+} from 'services/pipeline-ng'
+import type { ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
 import css from '../StepDetailsTab/StepDetailsTab.module.scss'
 
 export interface ExecutionStepDetailsTabProps {
   step: ExecutionNode
 }
+
 export function QueuedExecutionsTab(props: ExecutionStepDetailsTabProps): React.ReactElement {
   const { step } = props
+  const resourceUnit = step?.stepParameters?.spec?.resourceUnit
+  const { accountId } = useParams<ExecutionPathProps>()
+
+  const {
+    data: resourceConstraintsData,
+    loading: resourceConstraintsLoading,
+    refetch: fetchResourceConstraints
+  } = useGetResourceConstraintsExecutionInfo({
+    lazy: true
+  })
+
+  React.useEffect(() => {
+    if (resourceUnit) {
+      fetchResourceConstraints({
+        queryParams: {
+          resourceUnit,
+          accountId
+        }
+      })
+    }
+  }, [resourceUnit])
+
+  const renderData = (resourceConstraintsData: ResponseResourceConstraintExecutionInfo | null) => {
+    const resourceConstraints = resourceConstraintsData?.data?.resourceConstraints || []
+    if (!resourceConstraints.length) {
+      return 'Empty Data'
+    }
+    return resourceConstraints.map((resourceConstraint: ResourceConstraintDetail) => (
+      <div>
+        <div>{resourceConstraint.pipelineIdentifier}</div>
+        {/*<div>{resourceConstraint.startTs}</div>*/}
+        <div>{resourceConstraint.state}</div>
+      </div>
+    ))
+  }
+
   return (
     <div className={css.detailsTab} data-step={step}>
-      hello
+      <div>Header</div>
+      {resourceConstraintsLoading ? 'loading' : renderData(resourceConstraintsData)}
     </div>
   )
 }
