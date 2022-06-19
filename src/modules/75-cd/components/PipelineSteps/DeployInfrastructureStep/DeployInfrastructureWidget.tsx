@@ -17,7 +17,10 @@ import { useStrings } from 'framework/strings'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 
-import { getEnvironmentRefSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
+import {
+  getGitOpsEnvironmentRefSchema,
+  getNonGitOpsEnvironmentRefSchema
+} from '@cd/components/PipelineSteps/PipelineStepsUtil'
 
 import type { DeployInfrastructureStepConfig } from './DeployInfrastructureStep'
 import type { DeployInfrastructureProps } from './utils'
@@ -93,9 +96,13 @@ export function DeployInfrastructureWidget({
         // }
       }}
       initialValues={initialValues}
-      validationSchema={Yup.object().shape({
-        environmentOrEnvGroupRef: getEnvironmentRefSchema(getString)
-      })}
+      validationSchema={Yup.object()
+        .required()
+        .when('gitOpsEnabled', {
+          is: gitOpsEnabled => gitOpsEnabled,
+          then: getGitOpsEnvironmentRefSchema(getString),
+          otherwise: getNonGitOpsEnvironmentRefSchema(getString)
+        })}
     >
       {formik => {
         window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.ENVIRONMENT }))

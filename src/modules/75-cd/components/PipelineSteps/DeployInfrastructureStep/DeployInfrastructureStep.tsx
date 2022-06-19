@@ -144,6 +144,7 @@ export class DeployInfrastructureStep extends Step<DeployInfrastructureStepConfi
   }: ValidateInputSetProps<DeployInfrastructureStepConfig>): FormikErrors<DeployInfrastructureStepConfig> {
     const errors: FormikErrors<DeployInfrastructureStepConfig> = {}
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
+    console.log(errors)
     if (
       isEmpty(data?.environment?.environmentRef) &&
       isRequired &&

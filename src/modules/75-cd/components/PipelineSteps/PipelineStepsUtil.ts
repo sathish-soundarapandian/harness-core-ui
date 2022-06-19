@@ -110,6 +110,24 @@ export function getEnvironmentRefSchema(
   return Yup.string().trim().required(getString('cd.pipelineSteps.environmentTab.environmentIsRequired'))
 }
 
+export function getNonGitOpsEnvironmentRefSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
+  return Yup.object().shape({
+    environment: Yup.object().shape({
+      environmentRef: Yup.string().required(getString('cd.pipelineSteps.environmentTab.environmentIsRequired'))
+    }),
+    infrastructureRef: Yup.string().required(getString('cd.pipelineSteps.environmentTab.infrastructureIsRequired'))
+  })
+}
+
+export function getGitOpsEnvironmentRefSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
+  return Yup.object().shape({
+    environment: Yup.object().shape({
+      environmentRef: Yup.string().required(getString('cd.pipelineSteps.environmentTab.environmentIsRequired'))
+    }),
+    infrastructureRef: Yup.string().required(getString('cd.pipelineSteps.environmentTab.infrastructureIsRequired'))
+  })
+}
+
 export function getServiceDeploymentTypeSchema(
   getString: UseStringsReturn['getString']
 ): Yup.StringSchema<string | undefined> {
