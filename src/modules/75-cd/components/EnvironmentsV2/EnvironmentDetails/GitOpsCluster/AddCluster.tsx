@@ -15,6 +15,8 @@ import {
   ButtonVariation,
   Checkbox,
   Color,
+  Container,
+  ExpandingSearchInput,
   FontVariation,
   Icon,
   Layout,
@@ -85,14 +87,14 @@ const UnLinkedClstrsList = ({
     <div className={css.listContainer}>
       {defaultTo(unlinkedClusters, []).map((cluster: Cluster, index: number) => {
         return (
-          <div ref={attachRefToLastElement(index) ? loadMoreRef : undefined} key={cluster.identifier}>
+          <Layout.Vertical ref={attachRefToLastElement(index) ? loadMoreRef : undefined} key={cluster.identifier}>
             <ClusterCard
               cluster={cluster}
               key={cluster.identifier}
               setSelectedClusters={setSelectedClusters}
               selectedClusters={selectedClusters}
             />
-          </div>
+          </Layout.Vertical>
         )
       })}
     </div>
@@ -211,7 +213,7 @@ const AddCluster = (props: AddClusterProps): React.ReactElement => {
   })
   const linkedClusters = get(props.linkedClusterResponse, 'data.content', [])
 
-  const unlinkedClusters = getUnlinkedClusters(items, linkedClusters)
+  const unlinkedClusters = linkedClusters // getUnlinkedClusters(items, linkedClusters)
 
   useEffect(() => {
     /* istanbul ignore next */
@@ -262,80 +264,74 @@ const AddCluster = (props: AddClusterProps): React.ReactElement => {
         })
     }
   }
-  // istanbul ignore next
-  const onChangeText = (ev: React.ChangeEvent<HTMLInputElement>) => {
-    // istanbul ignore next
-    setSearchTerm(ev.target.value)
-  }
+  // // istanbul ignore next
+  // const onChangeText = (ev: React.ChangeEvent<HTMLInputElement>) => {
+  //   // istanbul ignore next
+  //   setSearchTerm(ev.target.value)
+  // }
 
   return (
-    <Dialog
-      isOpen
-      style={{
-        width: 648,
-        height: 551,
-        borderLeft: 0,
-        padding: 24
-      }}
-      enforceFocus={false}
-      usePortal
-      canOutsideClickClose={false}
-      onClose={props.onHide}
-      title={returnTitle(getString('cd.selectGitopsCluster'))}
-      isCloseButtonShown={true}
-    >
-      <div className={css.addClusterDialog}>
-        <Layout.Vertical>
-          <TextInput
-            placeholder="Search"
-            leftIcon="search"
-            onChange={debounce(onChangeText, 1200)}
-            data-test-id="search"
-          />
-          <Layout.Horizontal className={css.contentContainer} height={'339px'}>
-            <div className={css.clusterList}>
-              {(fetching || submitting) && !searchTerm ? <PageSpinner /> : null}
-              {searching ? <Spinner /> : null}
-              {!searching ? (
-                <UnLinkedClstrsList
-                  unlinkedClusters={unlinkedClusters}
-                  attachRefToLastElement={attachRefToLastElement}
-                  loadMoreRef={loadMoreRef}
-                  selectedClusters={selectedClusters}
-                  setSelectedClusters={setSelectedClusters}
-                />
-              ) : null}
-              <SelectAllCheckBox
+    <Layout.Vertical>
+      <Container margin={{ bottom: 'small' }}>
+        <ExpandingSearchInput
+          alwaysExpanded
+          placeholder={'Search Clusters'}
+          autoFocus={false}
+          width={'100%'}
+          onChange={setSearchTerm}
+          throttle={200}
+          data-test-id="search"
+        />
+      </Container>
+
+      <Layout.Vertical>
+        <Layout.Horizontal className={css.contentContainer} height={'339px'}>
+          <div className={css.clusterList}>
+            {(fetching || submitting) && !searchTerm ? <PageSpinner /> : null}
+            {searching ? <Spinner /> : null}
+            {!searching ? (
+              <UnLinkedClstrsList
                 unlinkedClusters={unlinkedClusters}
+                attachRefToLastElement={attachRefToLastElement}
+                loadMoreRef={loadMoreRef}
                 selectedClusters={selectedClusters}
                 setSelectedClusters={setSelectedClusters}
               />
-            </div>
+            ) : null}
+            <SelectAllCheckBox
+              unlinkedClusters={unlinkedClusters}
+              selectedClusters={selectedClusters}
+              setSelectedClusters={setSelectedClusters}
+            />
+          </div>
 
-            <div className={css.subChild}>
-              <div className={css.gitOpsSelectedClusters}>
-                <Icon name="gitops-clusters" />
-                <Text color={Color.GREY_800} className={css.selectedClusters}>
-                  {getString('cd.clustersSelected')}({selectedClusters.length})
-                </Text>
-              </div>
-              <div className={css.separator}></div>
-              <SelectedClustersList selectedClusters={selectedClusters} selectedLabel={getString('cd.selectedLabel')} />
-            </div>
-          </Layout.Horizontal>
-        </Layout.Vertical>
-
-        <Layout.Horizontal className={css.footerStyle}>
-          <Button
-            variation={ButtonVariation.PRIMARY}
-            text={'Add'}
-            onClick={onSubmit}
-            disabled={!selectedClusters.length}
-          />
-          <Button text="Cancel" variation={ButtonVariation.TERTIARY} onClick={props.onHide} />
+          <Layout.Vertical
+            flex={{ justifyContent: 'center', alignItems: 'flex-start' }}
+            padding={{ left: 'huge', right: 'huge' }}
+          >
+            <Text
+              font={{ variation: FontVariation.H5 }}
+              padding={{ bottom: 'medium' }}
+              margin={{ bottom: 'medium' }}
+              border={{ bottom: true }}
+            >
+              {getString('cd.clustersSelected')}({selectedClusters.length})
+            </Text>
+            <SelectedClustersList selectedClusters={selectedClusters} selectedLabel={getString('cd.selectedLabel')} />
+          </Layout.Vertical>
         </Layout.Horizontal>
-      </div>
-    </Dialog>
+      </Layout.Vertical>
+
+      <Layout.Horizontal className={css.footerStyle}>
+        <Button
+          variation={ButtonVariation.PRIMARY}
+          text={'Add'}
+          onClick={onSubmit}
+          disabled={!selectedClusters.length}
+        />
+        <Button text="Cancel" variation={ButtonVariation.TERTIARY} onClick={props.onHide} />
+      </Layout.Horizontal>
+    </Layout.Vertical>
   )
 }
 
