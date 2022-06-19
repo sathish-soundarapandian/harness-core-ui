@@ -60,6 +60,7 @@ import { JiraApprovalView } from '@pipeline/components/execution/StepDetails/vie
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { ServiceNowApprovalView } from '@pipeline/components/execution/StepDetails/views/ServiceNowApprovalView/ServiceNowApprovalView'
 import { PolicyEvaluationView } from '@pipeline/components/execution/StepDetails/views/PolicyEvaluationView/PolicyEvaluationView'
+import { QueueStepView } from '@pipeline/components/execution/StepDetails/views/QueueStepView/QueueStepView'
 import type { ResourceDTO } from 'services/audit'
 import AuditTrailFactory, { ResourceScope } from '@audit-trail/factories/AuditTrailFactory'
 import routes from '@common/RouteDefinitions'
@@ -154,6 +155,10 @@ ExecFactory.registerStepDetails(StepType.ServiceNowUpdate, {
 
 ExecFactory.registerStepDetails(StepType.Policy, {
   component: PolicyEvaluationView
+})
+
+ExecFactory.registerStepDetails(StepType.Queue, {
+  component: QueueStepView
 })
 
 /**
