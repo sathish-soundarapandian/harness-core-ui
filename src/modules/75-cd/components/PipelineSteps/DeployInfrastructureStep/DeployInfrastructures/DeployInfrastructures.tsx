@@ -147,18 +147,16 @@ export default function DeployInfrastructures({
   }, [infrastructuresError])
 
   const updateInfrastructuresList = (values: InfrastructureResponseDTO) => {
-    formikRef.current?.setFieldValue('infrastructureRef', values.identifier)
-    if (!isNil(infrastructures) && !isEmpty(infrastructures)) {
-      const newInfrastructureList = [...infrastructures]
-      const existingIndex = newInfrastructureList.findIndex(item => item.identifier === values.identifier)
-      if (existingIndex >= 0) {
-        newInfrastructureList.splice(existingIndex, 1, values)
-      } else {
-        newInfrastructureList.unshift(values)
-      }
-      setInfrastructures(newInfrastructureList)
-      setSelectedInfrastructure(newInfrastructureList[existingIndex >= 0 ? existingIndex : 0]?.yaml)
+    const newInfrastructureList = [...defaultTo(infrastructures, [])]
+    const existingIndex = newInfrastructureList.findIndex(item => item.identifier === values.identifier)
+    if (existingIndex >= 0) {
+      newInfrastructureList.splice(existingIndex, 1, values)
+    } else {
+      newInfrastructureList.unshift(values)
     }
+    setInfrastructures(newInfrastructureList)
+    setSelectedInfrastructure(newInfrastructureList[existingIndex >= 0 ? existingIndex : 0]?.yaml)
+    formikRef.current?.setFieldValue('infrastructureRef', values.identifier)
     hideInfrastructuresModal()
   }
 

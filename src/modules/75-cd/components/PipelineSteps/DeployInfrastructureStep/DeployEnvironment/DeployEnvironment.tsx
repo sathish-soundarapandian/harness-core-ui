@@ -9,6 +9,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
 import { parse } from 'yaml'
+import type { FormikProps } from 'formik'
 
 import {
   ButtonSize,
@@ -37,17 +38,24 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
 import AddEditEnvironmentModal from '../AddEditEnvironmentModal'
 import { isEditEnvironment } from '../utils'
+import type { DeployInfrastructureStepConfig } from '../DeployInfrastructureStep'
+
 import css from '../DeployInfrastructureStep.module.scss'
 
 // TODO: Forward ref with formik
-// interface DeployEnvironmentProps {
-//   formikRef: React.MutableRefObject<FormikProps<DeploymentStageConfig> | null>
-//   readonly?: boolean
-//   // environmentIdentifier: string
-//   allowableTypes: MultiTypeInputType[]
-// }
+interface DeployEnvironmentProps {
+  initialValues: DeployInfrastructureStepConfig
+  formikRef: React.MutableRefObject<FormikProps<DeployInfrastructureStepConfig> | null>
+  readonly?: boolean
+  allowableTypes: MultiTypeInputType[]
+}
 
-export default function DeployEnvironment({ initialValues, readonly, formikRef, allowableTypes }: any) {
+export default function DeployEnvironment({
+  initialValues,
+  readonly,
+  formikRef,
+  allowableTypes
+}: DeployEnvironmentProps) {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
   const { showError } = useToaster()
@@ -72,7 +80,7 @@ export default function DeployEnvironment({ initialValues, readonly, formikRef, 
   const [selectedEnvironment, setSelectedEnvironment] = useState<EnvironmentResponseDTO>()
   const [environmentsSelectOptions, setEnvironmentsSelectOptions] = useState<SelectOption[]>()
   const [environmentRefType, setEnvironmentRefType] = useState<MultiTypeInputType>(
-    getMultiTypeFromValue(initialValues.environment.environmentRef)
+    getMultiTypeFromValue(initialValues.environment?.environmentRef)
   )
 
   useEffect(() => {
@@ -102,11 +110,11 @@ export default function DeployEnvironment({ initialValues, readonly, formikRef, 
     if (
       !isEmpty(environmentsSelectOptions) &&
       !isNil(environmentsSelectOptions) &&
-      initialValues.environment.environmentRef
+      initialValues.environment?.environmentRef
     ) {
-      if (getMultiTypeFromValue(initialValues.environment.environmentRef) === MultiTypeInputType.FIXED) {
+      if (getMultiTypeFromValue(initialValues.environment?.environmentRef) === MultiTypeInputType.FIXED) {
         const existingEnvironment = environmentsSelectOptions.find(
-          env => env.value === initialValues.environment.environmentRef
+          env => env.value === initialValues.environment?.environmentRef
         )
         if (!existingEnvironment) {
           if (!readonly) {
@@ -136,18 +144,16 @@ export default function DeployEnvironment({ initialValues, readonly, formikRef, 
   }, [environmentsError])
 
   const updateEnvironmentsList = (values: EnvironmentResponseDTO) => {
-    formikRef.current?.setFieldValue('environment.environmentRef', values.identifier)
-    if (!isNil(environments) && !isEmpty(environments)) {
-      const newEnvironmentsList = [...environments]
-      const existingIndex = newEnvironmentsList.findIndex(item => item.identifier === values.identifier)
-      if (existingIndex >= 0) {
-        newEnvironmentsList.splice(existingIndex, 1, values)
-      } else {
-        newEnvironmentsList.unshift(values)
-      }
-      setEnvironments(newEnvironmentsList)
-      setSelectedEnvironment(newEnvironmentsList?.find(environment => environment.identifier === values?.identifier))
+    const newEnvironmentsList = [...defaultTo(environments, [])]
+    const existingIndex = newEnvironmentsList.findIndex(item => item.identifier === values.identifier)
+    if (existingIndex >= 0) {
+      newEnvironmentsList.splice(existingIndex, 1, values)
+    } else {
+      newEnvironmentsList.unshift(values)
     }
+    setEnvironments(newEnvironmentsList)
+    setSelectedEnvironment(newEnvironmentsList?.find(environment => environment.identifier === values?.identifier))
+    formikRef.current?.setFieldValue('environment.environmentRef', values.identifier)
     hideEnvironmentModal()
   }
 
