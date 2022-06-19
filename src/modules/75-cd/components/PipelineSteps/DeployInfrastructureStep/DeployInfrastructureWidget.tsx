@@ -26,7 +26,7 @@ import type { DeployInfrastructureStepConfig } from './DeployInfrastructureStep'
 import type { DeployInfrastructureProps } from './utils'
 import DeployEnvironment from './DeployEnvironment/DeployEnvironment'
 import DeployInfrastructures from './DeployInfrastructures/DeployInfrastructures'
-import { DeployEnvironmentOrEnvGroup } from './DeployEnvironmentOrEnvGroup/DeployEnvironmentOrEnvGroup'
+import DeployEnvironmentOrEnvGroup from './DeployEnvironmentOrEnvGroup/DeployEnvironmentOrEnvGroup'
 
 import css from './DeployInfrastructureStep.module.scss'
 
@@ -76,19 +76,13 @@ export function DeployInfrastructureWidget({
           >
             {!initialValues.gitOpsEnabled ? (
               <>
-                <DeployEnvironment
-                  initialValues={initialValues}
-                  allowableTypes={allowableTypes}
-                  readonly={readonly}
-                  formikRef={formikRef}
-                />
+                <DeployEnvironment initialValues={initialValues} allowableTypes={allowableTypes} readonly={readonly} />
                 {formik.values.environment?.environmentRef &&
                   getMultiTypeFromValue(formik.values.environment?.environmentRef) === MultiTypeInputType.FIXED && (
                     <DeployInfrastructures
                       initialValues={initialValues}
                       allowableTypes={allowableTypes}
                       readonly={readonly}
-                      formikRef={formikRef}
                     />
                   )}
               </>
@@ -97,7 +91,6 @@ export function DeployInfrastructureWidget({
                 initialValues={initialValues}
                 allowableTypes={allowableTypes}
                 readonly={readonly}
-                formikRef={formikRef}
               />
             )}
           </Layout.Horizontal>

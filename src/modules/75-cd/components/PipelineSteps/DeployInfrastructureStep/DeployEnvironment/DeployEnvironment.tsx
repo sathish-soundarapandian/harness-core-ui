@@ -9,7 +9,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
 import { parse } from 'yaml'
-import type { FormikProps } from 'formik'
+import { connect, FormikProps } from 'formik'
 
 import {
   ButtonSize,
@@ -42,20 +42,14 @@ import type { DeployInfrastructureStepConfig } from '../DeployInfrastructureStep
 
 import css from '../DeployInfrastructureStep.module.scss'
 
-// TODO: Forward ref with formik
 interface DeployEnvironmentProps {
   initialValues: DeployInfrastructureStepConfig
-  formikRef: React.MutableRefObject<FormikProps<DeployInfrastructureStepConfig> | null>
+  formik?: FormikProps<DeployInfrastructureStepConfig>
   readonly?: boolean
   allowableTypes: MultiTypeInputType[]
 }
 
-export default function DeployEnvironment({
-  initialValues,
-  readonly,
-  formikRef,
-  allowableTypes
-}: DeployEnvironmentProps) {
+function DeployEnvironment({ initialValues, readonly, formik, allowableTypes }: DeployEnvironmentProps) {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
   const { showError } = useToaster()
@@ -118,7 +112,7 @@ export default function DeployEnvironment({
         )
         if (!existingEnvironment) {
           if (!readonly) {
-            formikRef.current?.setFieldValue('environment.environmentRef', '')
+            formik?.setFieldValue('environment.environmentRef', '')
           } else {
             const options = [...environmentsSelectOptions]
             options.push({
@@ -128,7 +122,7 @@ export default function DeployEnvironment({
             setEnvironmentsSelectOptions(options)
           }
         } else {
-          formikRef.current?.setFieldValue('environment.environmentRef', existingEnvironment?.value)
+          formik?.setFieldValue('environment.environmentRef', existingEnvironment?.value)
           setSelectedEnvironment(
             environments?.find(environment => environment.identifier === existingEnvironment?.value)
           )
@@ -153,7 +147,7 @@ export default function DeployEnvironment({
     }
     setEnvironments(newEnvironmentsList)
     setSelectedEnvironment(newEnvironmentsList?.find(environment => environment.identifier === values?.identifier))
-    formikRef.current?.setFieldValue('environment.environmentRef', values.identifier)
+    formik?.setFieldValue('environment.environmentRef', values.identifier)
     hideEnvironmentModal()
   }
 
@@ -234,3 +228,5 @@ export default function DeployEnvironment({
     </Layout.Horizontal>
   )
 }
+
+export default connect(DeployEnvironment)

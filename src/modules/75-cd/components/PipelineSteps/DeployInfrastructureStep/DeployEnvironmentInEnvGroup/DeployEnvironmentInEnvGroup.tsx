@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
-import type { FormikProps } from 'formik'
+import { connect, FormikProps } from 'formik'
 
 import { FormInput, getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
 
@@ -18,18 +18,16 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import type { DeployInfrastructureStepConfig } from '../DeployInfrastructureStep'
 
 interface DeployEnvironmentInEnvGroupProps {
-  formikRef: React.MutableRefObject<FormikProps<DeployInfrastructureStepConfig> | null>
+  formik?: FormikProps<DeployInfrastructureStepConfig>
   readonly: boolean
-  initialValues?: DeployInfrastructureStepConfig
   selectedEnvironmentGroup: any
   allowableTypes: MultiTypeInputType[]
   setSelectedEnvironment: any
 }
 
-export default function DeployEnvironmentInEnvGroup({
-  formikRef,
+function DeployEnvironmentInEnvGroup({
+  formik,
   readonly,
-  // initialValues,
   selectedEnvironmentGroup,
   allowableTypes,
   setSelectedEnvironment
@@ -67,25 +65,25 @@ export default function DeployEnvironmentInEnvGroup({
     if (
       !isEmpty(environmentsSelectOptions) &&
       !isNil(environmentsSelectOptions) &&
-      formikRef.current?.values?.environmentInEnvGroupRef
+      formik?.values?.environmentInEnvGroupRef
     ) {
-      if (getMultiTypeFromValue(formikRef.current?.values?.environmentInEnvGroupRef) === MultiTypeInputType.FIXED) {
+      if (getMultiTypeFromValue(formik?.values?.environmentInEnvGroupRef) === MultiTypeInputType.FIXED) {
         const existingEnvironment = environments?.find(
-          environment => environment.identifier === formikRef.current?.values?.environmentInEnvGroupRef
+          environment => environment.identifier === formik?.values?.environmentInEnvGroupRef
         )
         if (!existingEnvironment) {
           if (!readonly) {
-            formikRef.current?.setFieldValue('environmentInEnvGroupRef', '')
+            formik?.setFieldValue('environmentInEnvGroupRef', '')
           } else {
             const options = [...environmentsSelectOptions]
             options.push({
-              label: formikRef.current?.values?.environmentInEnvGroupRef as string,
-              value: formikRef.current?.values?.environmentInEnvGroupRef as string
+              label: formik?.values?.environmentInEnvGroupRef as string,
+              value: formik?.values?.environmentInEnvGroupRef as string
             })
             setEnvironmentsSelectOptions(options)
           }
         } else {
-          formikRef.current?.setFieldValue('environmentInEnvGroupRef', {
+          formik?.setFieldValue('environmentInEnvGroupRef', {
             label: existingEnvironment.name,
             value: existingEnvironment.identifier
           })
@@ -105,9 +103,9 @@ export default function DeployEnvironmentInEnvGroup({
       multiTypeInputProps={{
         width: 280,
         onChange: item => {
-          if ((item as SelectOption).value !== formikRef.current?.values?.environmentInEnvGroupRef) {
-            formikRef.current?.setValues({
-              ...formikRef.current.values,
+          if ((item as SelectOption).value !== formik?.values?.environmentInEnvGroupRef) {
+            formik?.setValues({
+              ...formik.values,
               environmentInEnvGroupRef: item as SelectOption,
               clusterRef: []
             })
@@ -127,3 +125,5 @@ export default function DeployEnvironmentInEnvGroup({
     />
   )
 }
+
+export default connect(DeployEnvironmentInEnvGroup)

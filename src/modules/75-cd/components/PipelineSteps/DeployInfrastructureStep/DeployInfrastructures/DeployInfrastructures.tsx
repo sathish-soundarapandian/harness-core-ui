@@ -8,7 +8,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
-import type { FormikProps } from 'formik'
+import { connect, FormikProps } from 'formik'
 import cx from 'classnames'
 
 import {
@@ -44,18 +44,13 @@ import type { DeployInfrastructureStepConfig } from '../DeployInfrastructureStep
 import css from './DeployInfrastructures.module.scss'
 
 interface DeployInfrastructuresProps {
-  formikRef: React.MutableRefObject<FormikProps<DeployInfrastructureStepConfig> | null>
+  formik?: FormikProps<DeployInfrastructureStepConfig>
   readonly?: boolean
   allowableTypes: MultiTypeInputType[]
   initialValues: DeployInfrastructureStepConfig
 }
 
-export default function DeployInfrastructures({
-  initialValues,
-  formikRef,
-  readonly,
-  allowableTypes
-}: DeployInfrastructuresProps) {
+function DeployInfrastructures({ initialValues, formik, readonly, allowableTypes }: DeployInfrastructuresProps) {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
   const { showError } = useToaster()
@@ -63,8 +58,8 @@ export default function DeployInfrastructures({
   const { expressions } = useVariablesExpression()
 
   const environmentIdentifier = useMemo(() => {
-    return formikRef?.current?.values?.environment?.environmentRef
-  }, [formikRef?.current?.values?.environment?.environmentRef])
+    return formik?.values?.environment?.environmentRef
+  }, [formik?.values?.environment?.environmentRef])
 
   const {
     data: infrastructuresResponse,
@@ -121,7 +116,7 @@ export default function DeployInfrastructures({
         )
         if (!existingInfrastructure) {
           if (!readonly) {
-            formikRef.current?.setFieldValue('infrastructureRef', '')
+            formik?.setFieldValue('infrastructureRef', '')
           } else {
             const options = [...infrastructuresSelectOptions]
             options.push({
@@ -131,7 +126,7 @@ export default function DeployInfrastructures({
             setInfrastructuresSelectOptions(options)
           }
         } else {
-          formikRef.current?.setFieldValue('infrastructureRef', existingInfrastructure.value)
+          formik?.setFieldValue('infrastructureRef', existingInfrastructure.value)
           setSelectedInfrastructure(
             infrastructures?.filter(infra => infra.identifier === existingInfrastructure?.value)?.[0]?.yaml
           )
@@ -156,7 +151,7 @@ export default function DeployInfrastructures({
     }
     setInfrastructures(newInfrastructureList)
     setSelectedInfrastructure(newInfrastructureList[existingIndex >= 0 ? existingIndex : 0]?.yaml)
-    formikRef.current?.setFieldValue('infrastructureRef', values.identifier)
+    formik?.setFieldValue('infrastructureRef', values.identifier)
     hideInfrastructuresModal()
   }
 
@@ -185,7 +180,7 @@ export default function DeployInfrastructures({
         />
       </Dialog>
     ),
-    [formikRef.current, selectedInfrastructure, setSelectedInfrastructure]
+    [environmentIdentifier, selectedInfrastructure, setSelectedInfrastructure]
   )
 
   return (
@@ -246,3 +241,5 @@ export default function DeployInfrastructures({
     </Layout.Horizontal>
   )
 }
+
+export default connect(DeployInfrastructures)

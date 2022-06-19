@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty, isEqual, isNil, uniqBy } from 'lodash-es'
-import type { FormikProps } from 'formik'
+import { connect, FormikProps } from 'formik'
 
 import { FormInput, getMultiTypeFromValue, MultiTypeInputType, SelectOption, useToaster } from '@harness/uicore'
 
@@ -24,25 +24,20 @@ import type { DeployInfrastructureStepConfig } from '../DeployInfrastructureStep
 import css from './DeployClusters.module.scss'
 
 interface DeployClusterProps {
-  formikRef: React.MutableRefObject<FormikProps<DeployInfrastructureStepConfig> | null>
+  formik?: FormikProps<DeployInfrastructureStepConfig>
   readonly?: boolean
   environmentIdentifier: string
   allowableTypes: MultiTypeInputType[]
 }
 
-export default function DeployClusters({
-  formikRef,
-  readonly,
-  environmentIdentifier,
-  allowableTypes
-}: DeployClusterProps) {
+function DeployClusters({ formik, readonly, environmentIdentifier, allowableTypes }: DeployClusterProps) {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
 
   const [clustersRefType, setClustersRefType] = useState<MultiTypeInputType>(
-    getMultiTypeFromValue(formikRef.current?.values?.clusterRef)
+    getMultiTypeFromValue(formik?.values?.clusterRef)
   )
 
   const {
@@ -78,10 +73,10 @@ export default function DeployClusters({
   }, [clusters])
 
   useEffect(() => {
-    if (!isEmpty(clustersSelectOptions) && !isNil(clustersSelectOptions) && formikRef.current?.values?.clusterRef) {
-      if (getMultiTypeFromValue(formikRef.current?.values?.clusterRef) === MultiTypeInputType.FIXED) {
+    if (!isEmpty(clustersSelectOptions) && !isNil(clustersSelectOptions) && formik?.values?.clusterRef) {
+      if (getMultiTypeFromValue(formik?.values?.clusterRef) === MultiTypeInputType.FIXED) {
         const allClusterOptions = [...clustersSelectOptions]
-        allClusterOptions.push(...(formikRef.current?.values?.clusterRef as SelectOption[]))
+        allClusterOptions.push(...(formik?.values?.clusterRef as SelectOption[]))
         const filteredClusterOptions = uniqBy(allClusterOptions, 'value')
 
         if (!isEqual(clustersSelectOptions, filteredClusterOptions)) {
@@ -119,3 +114,5 @@ export default function DeployClusters({
     />
   )
 }
+
+export default connect(DeployClusters)

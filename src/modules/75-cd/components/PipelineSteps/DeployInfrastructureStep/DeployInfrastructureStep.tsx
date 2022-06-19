@@ -99,15 +99,21 @@ export class DeployInfrastructureStep extends Step<DeployInfrastructureStepConfi
     return {
       ...(gitOpsEnabled === false && {
         environment: {
-          ...data.environment,
-          infrastructureDefinitions:
-            data.infrastructureRef === RUNTIME_INPUT_VALUE
+          environmentRef:
+            data.environment?.environmentRef === RUNTIME_INPUT_VALUE
               ? RUNTIME_INPUT_VALUE
-              : [
-                  {
-                    ref: data.infrastructureRef
-                  }
-                ]
+              : data.environment?.environmentRef,
+          deployToAll: defaultTo(data.environment?.deployToAll, false),
+          ...(data.infrastructureRef && {
+            infrastructureDefinitions:
+              data.infrastructureRef === RUNTIME_INPUT_VALUE
+                ? RUNTIME_INPUT_VALUE
+                : [
+                    {
+                      ref: data.infrastructureRef
+                    }
+                  ]
+          })
         }
       }),
       ...(gitOpsEnabled === true && {

@@ -9,7 +9,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
 import { parse } from 'yaml'
-import type { FormikProps } from 'formik'
+import { connect, FormikProps } from 'formik'
 
 import {
   getMultiTypeFromValue,
@@ -54,15 +54,15 @@ import css from '../DeployInfrastructureStep.module.scss'
 // SONAR recommendation
 const flexStart = 'flex-start'
 
-export function DeployEnvironmentOrEnvGroup({
+function DeployEnvironmentOrEnvGroup({
   initialValues,
   readonly,
-  formikRef,
+  formik,
   allowableTypes
 }: {
   initialValues: DeployInfrastructureStepConfig
   readonly: boolean
-  formikRef: React.MutableRefObject<FormikProps<DeployInfrastructureStepConfig> | null>
+  formik?: FormikProps<DeployInfrastructureStepConfig>
   allowableTypes: MultiTypeInputType[]
 }): JSX.Element {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
@@ -129,7 +129,7 @@ export function DeployEnvironmentOrEnvGroup({
         if (!initialValues.isEnvGroup) {
           if (!existingEnvironment) {
             if (!readonly) {
-              formikRef.current?.setFieldValue('environmentOrEnvGroupRef', '')
+              formik?.setFieldValue('environmentOrEnvGroupRef', '')
             } else {
               const options = [...environmentsSelectOptions]
               options.push({
@@ -139,7 +139,7 @@ export function DeployEnvironmentOrEnvGroup({
               setEnvironmentsSelectOptions(options)
             }
           } else {
-            formikRef.current?.setFieldValue('environmentOrEnvGroupRef', existingEnvironment)
+            formik?.setFieldValue('environmentOrEnvGroupRef', existingEnvironment)
             setSelectedEnvironment(
               environments?.find(environment => environment.identifier === existingEnvironment?.value)
             )
@@ -165,7 +165,7 @@ export function DeployEnvironmentOrEnvGroup({
     }
     setEnvironments(newEnvironmentsList)
     setSelectedEnvironment(newEnvironmentsList?.find(environment => environment.identifier === values?.identifier))
-    formikRef.current?.setFieldValue('environmentOrEnvGroupRef', { label: values.name, value: values.identifier })
+    formik?.setFieldValue('environmentOrEnvGroupRef', { label: values.name, value: values.identifier })
     hideEnvironmentModal()
   }
 
@@ -248,7 +248,7 @@ export function DeployEnvironmentOrEnvGroup({
         if (initialValues.isEnvGroup) {
           if (!existingEnvironmentGroup) {
             if (!readonly) {
-              formikRef.current?.setFieldValue('environmentOrEnvGroupRef', '')
+              formik?.setFieldValue('environmentOrEnvGroupRef', '')
             } else {
               const options = [...environmentGroupsSelectOptions]
               options.push({
@@ -258,7 +258,7 @@ export function DeployEnvironmentOrEnvGroup({
               setEnvironmentGroupsSelectOptions(options)
             }
           } else {
-            formikRef.current?.setFieldValue('environmentOrEnvGroupRef', existingEnvironmentGroup)
+            formik?.setFieldValue('environmentOrEnvGroupRef', existingEnvironmentGroup)
             setSelectedEnvironmentGroup(
               environmentGroups?.find(envGroup => envGroup.identifier === existingEnvironmentGroup?.value)
             )
@@ -284,7 +284,7 @@ export function DeployEnvironmentOrEnvGroup({
     }
     setEnvironmentGroups(newEnvironmentGroupsList)
     setSelectedEnvironmentGroup(newEnvironmentGroupsList?.find(envGroup => envGroup.identifier === values?.identifier))
-    formikRef.current?.setFieldValue('environmentOrEnvGroupRef', { label: values.name, value: values.identifier })
+    formik?.setFieldValue('environmentOrEnvGroupRef', { label: values.name, value: values.identifier })
     hideEnvironmentGroupModal()
   }
 
@@ -364,8 +364,8 @@ export function DeployEnvironmentOrEnvGroup({
                   ],
             onChange: (primaryOption?: SelectOption, secondaryOption?: SelectOption) => {
               if (primaryOption?.value === getString('environment')) {
-                formikRef.current?.setValues({
-                  ...formikRef.current.values,
+                formik?.setValues({
+                  ...formik.values,
                   isEnvGroup: false,
                   environmentOrEnvGroupRef: secondaryOption,
                   clusterRef: []
@@ -375,8 +375,8 @@ export function DeployEnvironmentOrEnvGroup({
                 )
                 setSelectedEnvironmentGroup(undefined)
               } else if (primaryOption?.value === getString('common.environmentGroup.label')) {
-                formikRef.current?.setValues({
-                  ...formikRef.current.values,
+                formik?.setValues({
+                  ...formik.values,
                   isEnvGroup: true,
                   environmentOrEnvGroupRef: secondaryOption,
                   environmentInEnvGroupRef: '',
@@ -387,7 +387,7 @@ export function DeployEnvironmentOrEnvGroup({
                   environmentGroups?.find(environmentGroup => environmentGroup.identifier === secondaryOption?.value)
                 )
               } else {
-                formikRef.current?.setFieldValue('environmentOrEnvGroupRef', primaryOption)
+                formik?.setFieldValue('environmentOrEnvGroupRef', primaryOption)
                 setSelectedEnvironment(undefined)
                 setSelectedEnvironmentGroup(undefined)
               }
@@ -415,27 +415,23 @@ export function DeployEnvironmentOrEnvGroup({
           <SplitButtonOption text={getString('common.environmentGroup.new')} onClick={showEnvironmentGroupModal} />
         </SplitButton>
       )}
-      {Boolean(formikRef.current?.values?.environmentOrEnvGroupRef && Boolean(formikRef.current?.values.isEnvGroup)) &&
+      {Boolean(formik?.values?.environmentOrEnvGroupRef && Boolean(formik?.values.isEnvGroup)) &&
         selectedEnvironmentGroup &&
         environmentOrEnvGroupRefType === MultiTypeInputType.FIXED && (
           <DeployEnvironmentInEnvGroup
             selectedEnvironmentGroup={selectedEnvironmentGroup}
             setSelectedEnvironment={setSelectedEnvironment}
-            formikRef={formikRef}
-            initialValues={initialValues}
             allowableTypes={allowableTypes}
             readonly={readonly}
           />
         )}
-      {Boolean((formikRef.current?.values?.environmentOrEnvGroupRef as SelectOption)?.value) &&
+      {Boolean((formik?.values?.environmentOrEnvGroupRef as SelectOption)?.value) &&
         environmentOrEnvGroupRefType === MultiTypeInputType.FIXED &&
         selectedEnvironment?.identifier && (
-          <DeployClusters
-            environmentIdentifier={selectedEnvironment?.identifier}
-            formikRef={formikRef}
-            allowableTypes={allowableTypes}
-          />
+          <DeployClusters environmentIdentifier={selectedEnvironment?.identifier} allowableTypes={allowableTypes} />
         )}
     </Layout.Horizontal>
   )
 }
+
+export default connect(DeployEnvironmentOrEnvGroup)
