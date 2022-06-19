@@ -63,6 +63,19 @@ export interface ManifestListViewProps {
   allowOnlyOne?: boolean
 }
 
+export interface ReleaseRepoListViewProps {
+  updateStage: (stage: StageElementConfig) => Promise<void>
+  stage: StageElementWrapper | undefined
+  isPropagating?: boolean
+  connectors: PageConnectorResponse | undefined
+  refetchConnectors: () => void
+  listOfManifests: Array<any>
+  isReadonly: boolean
+  deploymentType: ServiceDefinition['type']
+  allowableTypes: MultiTypeInputType[]
+  allowOnlyOne?: boolean
+}
+
 export interface ManifestStepInitData {
   connectorRef: string | undefined | ConnectorSelectedValue
   store: ManifestStores | string
