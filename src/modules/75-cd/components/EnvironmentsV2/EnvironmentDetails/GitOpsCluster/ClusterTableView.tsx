@@ -146,6 +146,7 @@ const ClusterTableView = (props: ClusterTableViewProps): React.ReactElement => {
     return <PageSpinner />
   }
   const content = get(linkedClusters, 'data.content', [])
+  console.log(content, 'cjsdhfjkdshfds')
   if (content.length) {
     return (
       <TableV2
