@@ -13,12 +13,14 @@ import type { ExecutionNode } from 'services/pipeline-ng'
 import type { StepDetailProps } from '@pipeline/factories/ExecutionFactory/types'
 import { StepDetailsTab } from '@pipeline/components/execution/StepDetails/tabs/StepDetailsTab/StepDetailsTab'
 import { InputOutputTab } from '@pipeline/components/execution/StepDetails/tabs/InputOutputTab/InputOutputTab'
+import { QueuedExecutionsTab } from '@pipeline/components/execution/StepDetails/tabs/QueuedExecutionsTab/QueuedExecutionsTab'
 import tabCss from '@pipeline/components/execution/StepDetails/views/DefaultView/DefaultView.module.scss'
 
 enum StepDetailTab {
   STEP_DETAILS = 'STEP_DETAILS',
   INPUT = 'INPUT',
-  OUTPUT = 'OUTPUT'
+  OUTPUT = 'OUTPUT',
+  QUEUED_EXECUTIONS = 'QUEUED_EXECUTIONS'
 }
 
 export interface QueueStepViewProps extends StepDetailProps {
@@ -31,6 +33,11 @@ export function QueueStepView(props: QueueStepViewProps): React.ReactElement | n
   return (
     <div className={tabCss.tabs}>
       <Tabs id="step-details" renderAllTabPanels={false}>
+        <Tab
+          id={StepDetailTab.QUEUED_EXECUTIONS}
+          title={getString('pipeline.queueStep.queuedExecutions')}
+          panel={<QueuedExecutionsTab step={step} />}
+        />
         <Tab id={StepDetailTab.STEP_DETAILS} title={getString('details')} panel={<StepDetailsTab step={step} />} />
         <Tab
           id={StepDetailTab.INPUT}
