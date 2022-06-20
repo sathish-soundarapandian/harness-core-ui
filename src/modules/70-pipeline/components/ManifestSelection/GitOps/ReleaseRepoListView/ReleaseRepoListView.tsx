@@ -179,9 +179,13 @@ function ReleaseRepoListView({
         {ManifestToConnectorMap[manifestStore] === Connectors.GIT ? (
           <StepGitAuthentication
             name={getString('credentials')}
-            onConnectorCreated={() => {
-              // Handle on success
-            }}
+            onConnectorCreated={
+              /* istanbul ignore next */
+              () => {
+                /* istanbul ignore next */
+                // Handle on success
+              }
+            }
             isEditMode={isEditMode}
             setIsEditMode={setIsEditMode}
             connectorInfo={undefined}
@@ -194,9 +198,13 @@ function ReleaseRepoListView({
         {ManifestToConnectorMap[manifestStore] === Connectors.GITHUB ? (
           <StepGithubAuthentication
             name={getString('credentials')}
-            onConnectorCreated={() => {
-              // Handle on success
-            }}
+            onConnectorCreated={
+              /* istanbul ignore next */
+              () => {
+                /* istanbul ignore next */
+                // Handle on success
+              }
+            }
             isEditMode={isEditMode}
             setIsEditMode={setIsEditMode}
             connectorInfo={undefined}
@@ -209,9 +217,13 @@ function ReleaseRepoListView({
         {ManifestToConnectorMap[manifestStore] === Connectors.BITBUCKET ? (
           <StepBitbucketAuthentication
             name={getString('credentials')}
-            onConnectorCreated={() => {
-              // Handle on success
-            }}
+            onConnectorCreated={
+              /* istanbul ignore next */
+              () => {
+                /* istanbul ignore next */
+                // Handle on success
+              }
+            }
             isEditMode={isEditMode}
             setIsEditMode={setIsEditMode}
             connectorInfo={undefined}
@@ -225,9 +237,13 @@ function ReleaseRepoListView({
           <StepGitlabAuthentication
             name={getString('credentials')}
             identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
-            onConnectorCreated={() => {
-              // Handle on success
-            }}
+            onConnectorCreated={
+              /* istanbul ignore next */
+              () => {
+                /* istanbul ignore next */
+                // Handle on success
+              }
+            }
             isEditMode={isEditMode}
             setIsEditMode={setIsEditMode}
             connectorInfo={undefined}
@@ -255,7 +271,8 @@ function ReleaseRepoListView({
   }, [connectorView, manifestStore, isEditMode])
 
   const handleSubmit = (manifestObj: ManifestConfigWrapper): void => {
-    if (listOfManifests?.length > 0) {
+    /* istanbul ignore else */
+    if (defaultTo(listOfManifests, []).length > 0) {
       listOfManifests.splice(manifestIndex, 1, manifestObj)
     } else {
       listOfManifests.push(manifestObj)
@@ -296,8 +313,11 @@ function ReleaseRepoListView({
     showReleaseRepoModal()
   }
 
+  /* istanbul ignore next */
   const handleConnectorViewChange = (isConnectorView: boolean): void => {
+    /* istanbul ignore next */
     setConnectorView(isConnectorView)
+    /* istanbul ignore next */
     setIsEditMode(false)
   }
 
@@ -350,7 +370,7 @@ function ReleaseRepoListView({
 
   const removeManifestConfig = (index: number): void => {
     listOfManifests.splice(index, 1)
-    /* istanbul ignore elae */
+    /* istanbul ignore else */
     if (stage) {
       const newStage = produce(stage, draft => {
         set(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests', listOfManifests)
@@ -385,7 +405,7 @@ function ReleaseRepoListView({
   return (
     <Layout.Vertical style={{ width: '100%' }}>
       <Layout.Vertical spacing="small" style={{ flexShrink: 'initial' }}>
-        {!!defaultTo(listOfManifests, [])?.length && (
+        {!!defaultTo(listOfManifests, []).length && (
           <div className={cx(css.manifestList, css.listHeader)}>
             <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('common.ID')}</Text>
             <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
@@ -433,11 +453,7 @@ function ReleaseRepoListView({
                       {!!get(manifest, 'spec.store.spec.paths', []).length && (
                         <span>
                           <Text lineClamp={1} width={200}>
-                            <span className={css.noWrap}>
-                              {typeof get(manifest, 'spec.store.spec.paths', '') === 'string'
-                                ? get(manifest, 'spec.store.spec.paths', '')
-                                : get(manifest, 'spec.store.spec.paths', '')}
-                            </span>
+                            <span className={css.noWrap}>{get(manifest, 'spec.store.spec.paths', '')}</span>
                           </Text>
                         </span>
                       )}
