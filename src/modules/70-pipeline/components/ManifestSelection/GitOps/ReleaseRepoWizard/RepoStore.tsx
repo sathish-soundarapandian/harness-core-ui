@@ -35,10 +35,10 @@ import type { ConnectorSelectedValue } from '@connectors/components/ConnectorRef
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ManifestStoreMap, ManifestIconByType, ManifestToConnectorMap, manifestStoreTypes } from '../Manifesthelper'
-import type { ManifestStores, ManifestStepInitData } from '../ManifestInterface'
+import { ManifestStoreMap, ManifestIconByType, ManifestToConnectorMap, manifestStoreTypes } from '../../Manifesthelper'
+import type { ManifestStores, ManifestStepInitData } from '../../ManifestInterface'
 
-import css from '../ManifestWizardSteps/ManifestWizardSteps.module.scss'
+import css from '../../ManifestWizardSteps/ManifestWizardSteps.module.scss'
 
 interface ReleaseRepoStorePropType {
   stepName: string

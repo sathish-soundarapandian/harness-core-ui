@@ -13,7 +13,7 @@ import { renderHook } from '@testing-library/react-hooks'
 import { TestWrapper } from '@common/utils/testUtils'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
-import { ManifestDataType, manifestStoreTypes } from '../../Manifesthelper'
+import { ManifestDataType, manifestStoreTypes } from '../../../Manifesthelper'
 import ReleaseRepoWizard from '../ReleaseRepoWizard'
 
 jest.mock('services/cd-ng', () => ({

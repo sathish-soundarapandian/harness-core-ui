@@ -16,9 +16,9 @@ import { useStrings } from 'framework/strings'
 
 import RepoStore from './RepoStore'
 import RepoDetails from './RepoDetails'
-import type { ManifestStores, ManifestTypes } from '../ManifestInterface'
+import type { ManifestStores, ManifestTypes } from '../../ManifestInterface'
 
-import css from '../ManifestWizard/ManifestWizard.module.scss'
+import css from '../../ManifestWizard/ManifestWizard.module.scss'
 
 interface StepChangeData<SharedObject> {
   prevStep?: number

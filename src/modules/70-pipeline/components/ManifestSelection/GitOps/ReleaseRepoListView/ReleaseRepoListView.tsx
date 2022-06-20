@@ -43,19 +43,19 @@ import {
   buildGitlabPayload
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { useQueryParams } from '@common/hooks/useQueryParams'
-import { allowedManifestTypes, manifestStoreTypes, ManifestToConnectorMap } from '../Manifesthelper'
+import { allowedManifestTypes, manifestStoreTypes, ManifestToConnectorMap } from '../../Manifesthelper'
 
-import type { ManifestStores, ReleaseRepoListViewProps } from '../ManifestInterface'
+import type { ManifestStores, ReleaseRepoListViewProps } from '../../ManifestInterface'
 
-import { getConnectorPath } from '../ManifestWizardSteps/ManifestUtils'
+import { getConnectorPath } from '../../ManifestWizardSteps/ManifestUtils'
 
-import { showAddManifestBtn } from '../ManifestListView/ManifestListView'
+import { showAddManifestBtn } from '../../ManifestListView/ManifestListView'
 
-import ConnectorField from '../ManifestListView/ConnectorField'
+import ConnectorField from '../../ManifestListView/ConnectorField'
 
 import ReleaseRepoWizard from '../ReleaseRepoWizard/ReleaseRepoWizard'
 
-import css from '../ManifestSelection.module.scss'
+import css from '../../ManifestSelection.module.scss'
 
 type ManifestType = 'ReleaseRepo'
 const ReleaseRepoIcon = 'service-kubernetes'
