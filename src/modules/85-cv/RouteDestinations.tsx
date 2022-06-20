@@ -119,7 +119,7 @@ AuditTrailFactory.registerResourceHandler(ResourceType.MONITORED_SERVICE, {
   }
 })
 
-/*AuditTrailFactory.registerResourceHandler(ResourceType.SLO, {
+AuditTrailFactory.registerResourceHandler(ResourceType.SERVICE_LEVEL_OBJECTIVE, {
   moduleIcon: {
     name: 'cv-main'
   },
@@ -138,7 +138,7 @@ AuditTrailFactory.registerResourceHandler(ResourceType.MONITORED_SERVICE, {
     }
     return undefined
   }
-})*/
+})
 
 const CVSideNavProps: SidebarContext = {
   navComponent: SideNav,
