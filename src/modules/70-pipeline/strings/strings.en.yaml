@@ -114,6 +114,7 @@ queueStep:
   scopeRequired: Scope is required
   scopePlaceholder: Select Scope
   scope: Scope (to release constraint)
+  queuedExecutions: Queued Executions
 jiraApprovalStep:
   connectToJira: Connect to Jira
   connectorRef: Jira Connector
