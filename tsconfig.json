@@ -55,6 +55,6 @@
     }
   },
   "types": ["cypress"],
-  "include": ["src/"],
+  "include": ["src/", "openapi-codegen.config.ts"],
   "exclude": ["node_modules"]
 }
