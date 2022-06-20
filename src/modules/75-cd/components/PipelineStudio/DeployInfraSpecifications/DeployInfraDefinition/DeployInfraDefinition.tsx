@@ -18,11 +18,12 @@ import {
   K8SDirectInfrastructure,
   K8sGcpInfrastructure,
   PdcInfrastructure,
+  PipelineInfrastructure,
   StageElementConfig
 } from 'services/cd-ng'
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
-import { PipelineInfrastructureV2, StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type {
   InfraProvisioningData,
   ProvisionersOptions
@@ -476,9 +477,9 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
   }
 
   const updateEnvStep = React.useCallback(
-    (value: PipelineInfrastructureV2) => {
+    (value: PipelineInfrastructure) => {
       const stageData = produce(stage, draft => {
-        const infraObj: PipelineInfrastructureV2 = get(draft, 'stage.spec.infrastructure', {})
+        const infraObj: PipelineInfrastructure = get(draft, 'stage.spec.infrastructure', {})
         if (value.environment?.identifier) {
           infraObj.environment = value.environment
           delete infraObj.environmentRef

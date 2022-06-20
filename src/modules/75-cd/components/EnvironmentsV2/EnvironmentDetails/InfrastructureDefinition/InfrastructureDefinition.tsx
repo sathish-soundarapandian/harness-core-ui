@@ -18,11 +18,12 @@ import { useStrings } from 'framework/strings'
 import type { EnvironmentPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+
 import InfrastructureList from './InfrastructureList/InfrastructureList'
 import InfrastructureModal from './InfrastructureModal'
 
 import css from './InfrastructureDefinition.module.scss'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
 export default function InfrastructureDefinition() {
   const { accountId, orgIdentifier, projectIdentifier, environmentIdentifier } = useParams<

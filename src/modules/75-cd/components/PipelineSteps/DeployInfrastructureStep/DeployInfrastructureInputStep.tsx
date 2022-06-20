@@ -35,9 +35,12 @@ import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+
 import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
 import AddEditEnvironmentModal from './AddEditEnvironmentModal'
 import type { DeployInfrastructureProps } from './utils'
+import type { DeployInfrastructureStepConfig } from './DeployInfrastructureStep'
+
 import css from './DeployInfrastructureStep.module.scss'
 
 export interface DeployInfrastructureData extends Omit<DeploymentStageConfig, 'environmentRef'> {
@@ -51,13 +54,15 @@ interface DeployInfrastructureState {
   data?: EnvironmentResponseDTO
 }
 
-function isEditEnvironment(data: DeployInfrastructureData): boolean {
-  if (getMultiTypeFromValue(data.environmentRef) !== MultiTypeInputType.RUNTIME && !isEmpty(data.environmentRef)) {
+function isEditEnvironment(data: DeployInfrastructureStepConfig): boolean {
+  if (
+    getMultiTypeFromValue(data.environment?.environmentRef) !== MultiTypeInputType.RUNTIME &&
+    !isEmpty(data.environment?.environmentRef)
+  ) {
     return true
-  } else if (data.environment && !isEmpty(data.environment.environmentInputs)) {
-    return true
+  } else {
+    return false
   }
-  return false
 }
 
 function DeployInfrastructureInputStepInternal({
@@ -198,9 +203,9 @@ function DeployInfrastructureInputStepInternal({
             <Button
               size={ButtonSize.SMALL}
               variation={ButtonVariation.LINK}
-              disabled={inputSetData?.readonly || (isEditEnvironment(initialValues as any) ? !canEdit : !canCreate)}
+              disabled={inputSetData?.readonly || (isEditEnvironment(initialValues) ? !canEdit : !canCreate)}
               onClick={() => {
-                const isEdit = isEditEnvironment(initialValues as any)
+                const isEdit = isEditEnvironment(initialValues)
                 if (isEdit) {
                   setState({
                     isEdit,
@@ -213,7 +218,7 @@ function DeployInfrastructureInputStepInternal({
                 showModal()
               }}
               text={
-                isEditEnvironment(initialValues as any)
+                isEditEnvironment(initialValues)
                   ? getString('editEnvironment')
                   : getString('cd.pipelineSteps.environmentTab.plusNewEnvironment')
               }
