@@ -3810,6 +3810,7 @@ export interface StringsMap {
   'templatesLibrary.referencedBy': string
   'templatesLibrary.sampleTemplateAuditComment': string
   'templatesLibrary.saveAsNewLabelModal.heading': string
+  'templatesLibrary.script': string
   'templatesLibrary.selectTemplateToPreview': string
   'templatesLibrary.setAsStableText': string
   'templatesLibrary.setAsStableTitle': string

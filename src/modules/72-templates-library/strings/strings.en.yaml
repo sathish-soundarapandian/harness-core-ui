@@ -17,6 +17,7 @@ openInTemplateStudio: Open in Template Studio
 templateHasBeenDeleted: The selected template has been deleted. Please refresh the page.
 changeTemplate: 'Applying <b>{{name}}</b> to this {{entity}} might reset some fields.'
 copyTemplate: 'Configurations of <b>{{name}}</b> will be copied to this {{entity}} and made editable.'
+script: Script
 templatesPage:
   noTemplates: There are no templates in your {{scope}}.
 editModal:
