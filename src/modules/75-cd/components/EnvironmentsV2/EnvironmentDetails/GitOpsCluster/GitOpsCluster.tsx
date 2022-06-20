@@ -20,7 +20,6 @@ import { useStrings } from 'framework/strings'
 
 import AddCluster from './AddCluster'
 import ClusterTableView from './ClusterTableView'
-import clusters from './clusters.json'
 import css from './AddCluster.module.scss'
 
 const GitOpsCluster = (props: { envRef: string }): React.ReactElement => {
@@ -70,7 +69,6 @@ const GitOpsCluster = (props: { envRef: string }): React.ReactElement => {
 
   const { getString } = useStrings()
 
-  console.log(data)
   return (
     <Container padding={{ left: 'medium', right: 'medium' }}>
       <>
