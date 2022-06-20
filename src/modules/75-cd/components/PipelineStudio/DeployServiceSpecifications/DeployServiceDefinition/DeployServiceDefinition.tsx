@@ -115,10 +115,11 @@ function DeployServiceDefinition(): React.ReactElement {
     ...serviceDataDialogProps,
     onCloseDialog: async isConfirmed => {
       if (isConfirmed) {
-        if (stage?.stage) {
-          delete stage?.stage?.spec?.serviceConfig?.serviceDefinition?.spec.manifests
-        }
-        await debounceUpdateStage(currStageData)
+        deleteServiceData(stage?.stage)
+        await debounceUpdateStage(stage?.stage)
+        setGitOpsEnabled(!gitOpsEnabled)
+
+        updatePipeline({ ...pipeline, gitOpsEnabled } as ServicePipelineConfig)
       } else {
         setGitOpsEnabled(!gitOpsEnabled)
         updatePipeline({ ...pipeline, gitOpsEnabled: !gitOpsEnabled } as ServicePipelineConfig)
@@ -127,9 +128,9 @@ function DeployServiceDefinition(): React.ReactElement {
   })
 
   const handleGitOpsCheckChanged = (ev: React.FormEvent<HTMLInputElement>): void => {
-    const checked = ev.currentTarget.checked
-    setGitOpsEnabled(checked)
-    updatePipeline({ ...pipeline, gitOpsEnabled: checked } as ServicePipelineConfig)
+    // const checked = ev.currentTarget.checked
+    // setGitOpsEnabled(checked)
+    // updatePipeline({ ...pipeline, gitOpsEnabled: checked } as ServicePipelineConfig)
 
     if (doesStageContainOtherData(stage?.stage)) {
       openManifestDataDeleteWarningDialog()
@@ -171,9 +172,8 @@ function DeployServiceDefinition(): React.ReactElement {
           name="gitOpsEnabled"
           checked={gitOpsEnabled}
           onChange={handleGitOpsCheckChanged}
-          // disabled={disabledState}
+          disabled={disabledState}
           //GitOps checkbox is disabled temporarily until Release repo manifest is added
-          disabled={true}
         />
       )}
       <Layout.Horizontal>
