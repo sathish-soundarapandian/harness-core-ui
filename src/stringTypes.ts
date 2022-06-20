@@ -3190,6 +3190,7 @@ export interface StringsMap {
   'pipeline.provisionerSteps': string
   'pipeline.queueStep.keyPlaceholder': string
   'pipeline.queueStep.keyRequired': string
+  'pipeline.queueStep.queuedByResourceKey': string
   'pipeline.queueStep.queuedExecutions': string
   'pipeline.queueStep.resourceKey': string
   'pipeline.queueStep.scope': string
@@ -3441,6 +3442,7 @@ export interface StringsMap {
   'pipeline.testsReports.viewCallgraph': string
   'pipeline.testsReports.willBeDisplayedIfAvailable': string
   'pipeline.timeRemainingSuffix': string
+  'pipeline.totalCount': string
   'pipeline.uniqueIdentifier': string
   'pipeline.uniqueName': string
   'pipeline.unsupportedImagesWarning': string

@@ -53,6 +53,7 @@ nodesLabel: Nodes
 poweredByHarness: powered by Harness
 outOf: Out Of
 clickToExpandErrorDetails: Click to expand error details
+totalCount: 'Total: {{ count }}'
 approvalStage:
   settingUpStage: Getting stage data
 filters:
@@ -115,6 +116,7 @@ queueStep:
   scopePlaceholder: Select Scope
   scope: Scope (to release constraint)
   queuedExecutions: Queued Executions
+  queuedByResourceKey: 'Queued by Resource Key:'
 jiraApprovalStep:
   connectToJira: Connect to Jira
   connectorRef: Jira Connector
