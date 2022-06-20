@@ -321,7 +321,7 @@ clustersSelected: 'Clusters Selected'
 selectClusterLabel: 'Select Cluster(s)'
 noLinkedClusters: 'No Linked Clusters Available'
 selectedLabel: 'Selected'
-successfullyLinkedClusters: 'SuccessFully Linked Clusters'
+successfullyLinkedClusters: 'Successfully Linked Clusters'
 unLink: 'UnLink'
 unLinkedCluster: 'Unlinked Successfully'
 overrideYaml: Override Yaml Values

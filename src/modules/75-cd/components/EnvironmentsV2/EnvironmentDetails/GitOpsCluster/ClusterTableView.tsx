@@ -58,7 +58,7 @@ const RenderColumnMenu: Renderer<CellProps<ClusterResponse>> = ({ row, column })
   })
 
   const { openDialog } = useConfirmationDialog({
-    contentText: 'Are you sure you want to unlink the cluster',
+    contentText: 'Are you sure you want to unlink the cluster?',
     titleText: 'Unlink cluster',
     confirmButtonText: getString('cd.unLink'),
     cancelButtonText: getString('cancel'),
@@ -146,7 +146,6 @@ const ClusterTableView = (props: ClusterTableViewProps): React.ReactElement => {
     return <PageSpinner />
   }
   const content = get(linkedClusters, 'data.content', [])
-  console.log(content, 'cjsdhfjkdshfds')
   if (content.length) {
     return (
       <TableV2

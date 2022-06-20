@@ -73,9 +73,10 @@
 }
 
 .footerStyle {
-  margin-top: 15px !important;
+  margin-top: 30px !important;
   width: 28% !important;
   justify-content: space-between !important;
+  display: flex;
 }
 
 .selected {

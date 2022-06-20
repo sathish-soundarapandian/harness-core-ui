@@ -7,8 +7,8 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
-import { debounce, defaultTo, get } from 'lodash-es'
-import { Dialog, Spinner } from '@blueprintjs/core'
+import { defaultTo, get } from 'lodash-es'
+import { Spinner } from '@blueprintjs/core'
 
 import {
   Button,
@@ -18,11 +18,9 @@ import {
   Container,
   ExpandingSearchInput,
   FontVariation,
-  Icon,
   Layout,
   PageSpinner,
   Text,
-  TextInput,
   useToaster
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
@@ -58,16 +56,6 @@ const getUnlinkedClusters = (clusters: Cluster[] | any, linkedClusters: ClusterR
     }
   }
   return unlinkedClusters
-}
-
-const returnTitle = (title: string): React.ReactElement => {
-  return (
-    <Layout.Vertical spacing="xsmall" padding="medium">
-      <Text font={{ variation: FontVariation.H4 }} color={Color.BLACK}>
-        {title}
-      </Text>
-    </Layout.Vertical>
-  )
 }
 
 const UnLinkedClstrsList = ({
@@ -213,7 +201,7 @@ const AddCluster = (props: AddClusterProps): React.ReactElement => {
   })
   const linkedClusters = get(props.linkedClusterResponse, 'data.content', [])
 
-  const unlinkedClusters = linkedClusters // getUnlinkedClusters(items, linkedClusters)
+  const unlinkedClusters = getUnlinkedClusters(items, linkedClusters)
 
   useEffect(() => {
     /* istanbul ignore next */
@@ -271,7 +259,7 @@ const AddCluster = (props: AddClusterProps): React.ReactElement => {
   // }
 
   return (
-    <Layout.Vertical>
+    <Container>
       <Container margin={{ bottom: 'small' }}>
         <ExpandingSearchInput
           alwaysExpanded
@@ -322,7 +310,7 @@ const AddCluster = (props: AddClusterProps): React.ReactElement => {
         </Layout.Horizontal>
       </Layout.Vertical>
 
-      <Layout.Horizontal className={css.footerStyle}>
+      <Container className={css.footerStyle} margin={{ top: 'medium !important' }}>
         <Button
           variation={ButtonVariation.PRIMARY}
           text={'Add'}
@@ -330,8 +318,8 @@ const AddCluster = (props: AddClusterProps): React.ReactElement => {
           disabled={!selectedClusters.length}
         />
         <Button text="Cancel" variation={ButtonVariation.TERTIARY} onClick={props.onHide} />
-      </Layout.Horizontal>
-    </Layout.Vertical>
+      </Container>
+    </Container>
   )
 }
 
