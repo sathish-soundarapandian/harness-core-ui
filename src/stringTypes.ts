@@ -5836,6 +5836,7 @@ export interface StringsMap {
   'cv.healthSource.selectHealthSource': string
   'cv.healthSource.seriveEnvironmentNote': string
   'cv.healthSource.serviceLabel': string
+  'cv.healthSource.splunkMetric.queryTextareaPlaceholder': string
   'cv.healthSource.table.environmentMapping': string
   'cv.healthSource.table.serviceMapping': string
   'cv.hostNamePlaceholder': string
@@ -6128,8 +6129,10 @@ export interface StringsMap {
   'cv.monitoringSources.riskProfile': string
   'cv.monitoringSources.serviceInstanceIdentifier': string
   'cv.monitoringSources.serviceValidation': string
+  'cv.monitoringSources.splunk.defaultSplunkMetricName': string
   'cv.monitoringSources.splunk.savedSearchQuery': string
   'cv.monitoringSources.splunk.splunkLogsQuery': string
+  'cv.monitoringSources.splunk.splunkMetric': string
   'cv.monitoringSources.splunk.staleRecordsWarning': string
   'cv.monitoringSources.splunk.submitQueryToSeeRecords': string
   'cv.monitoringSources.totalMappedQueries': string

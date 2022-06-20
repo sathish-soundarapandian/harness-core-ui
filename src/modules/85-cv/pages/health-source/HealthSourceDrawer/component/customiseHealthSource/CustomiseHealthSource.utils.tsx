@@ -13,6 +13,8 @@ import AppDHealthSourceContainer from '@cv/pages/health-source/connectors/AppDyn
 import { PrometheusHealthSource } from '@cv/pages/health-source/connectors/PrometheusHealthSource/PrometheusHealthSource'
 import NewrelicMonitoredSourceContainer from '@cv/pages/health-source/connectors/NewRelic/NewRelicHealthSourceContainer'
 import { Connectors } from '@connectors/constants'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { GCOMetricsHealthSource } from '@cv/pages/health-source/connectors/GCOMetricsHealthSource/GCOMetricsHealthSource'
 import { GCOProduct } from '@cv/pages/health-source/connectors/GCOMetricsHealthSource/GCOMetricsHealthSource.utils'
 import { HealthSourceTypes } from '@cv/pages/health-source/types'
@@ -24,7 +26,9 @@ import ErrorTrackingHealthSource from '@cv/pages/health-source/connectors/ErrorT
 import DynatraceHealthSourceContainer from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSourceContainer'
 import CustomHealthLogSource from '@cv/pages/health-source/connectors/CustomHealthLogSource/CustomHealthLogSource'
 import { CustomHealthProduct } from '@cv/pages/health-source/connectors/CustomHealthSource/CustomHealthSource.constants'
+import { SplunkMetricsHealthSource } from '@cv/pages/health-source/connectors/SplunkMetricsHealthSourceV2/SplunkMetricsHealthSource'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawerContent.types'
+import { SplunkProduct } from '../defineHealthSource/DefineHealthSource.constant'
 
 export const LoadSourceByType = ({
   type,
@@ -38,7 +42,9 @@ export const LoadSourceByType = ({
   onSubmit: (formdata: any, healthSourceList: UpdatedHealthSource) => Promise<void>
   isTemplate?: boolean
   expressions?: string[]
-}): JSX.Element => {
+}): JSX.Element | null => {
+  const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
+
   switch (type) {
     case HealthSourceTypes.AppDynamics:
       return (
@@ -71,7 +77,19 @@ export const LoadSourceByType = ({
     case Connectors.DYNATRACE:
       return <DynatraceHealthSourceContainer data={data} onSubmit={onSubmit} />
     case Connectors.SPLUNK:
-      return <SplunkHealthSource data={data} onSubmit={onSubmit} />
+      if (data?.product?.value === SplunkProduct.SPLUNK_METRICS) {
+        if (!isSplunkMetricEnabled) {
+          return null
+        }
+        return <SplunkMetricsHealthSource data={data} onSubmit={onSubmit} />
+      } else {
+        return <SplunkHealthSource data={data} onSubmit={onSubmit} />
+      }
+    case HealthSourceTypes.SplunkMetric:
+      if (!isSplunkMetricEnabled) {
+        return null
+      }
+      return <SplunkMetricsHealthSource data={data} onSubmit={onSubmit} />
     case HealthSourceTypes.CustomHealth:
       if (data.product?.value === CustomHealthProduct.METRICS) {
         return <CustomHealthSource data={data} onSubmit={onSubmit} />

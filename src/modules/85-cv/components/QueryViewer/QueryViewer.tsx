@@ -28,7 +28,8 @@ export function QueryContent(props: QueryContentProps): JSX.Element {
     textAreaName,
     isAutoFetch = false,
     mandatoryFields = [],
-    staleRecordsWarning
+    staleRecordsWarning,
+    textAreaPlaceholder
   } = props
   const { getString } = useStrings()
 
@@ -58,6 +59,7 @@ export function QueryContent(props: QueryContentProps): JSX.Element {
         name={textAreaName || MapGCPLogsToServiceFieldNames.QUERY}
         textArea={textAreaProps}
         className={cx(css.formQueryBox)}
+        placeholder={textAreaPlaceholder ?? ''}
       />
       {!isAutoFetch && (
         <Layout.Horizontal spacing={'large'}>
@@ -129,6 +131,7 @@ export function QueryViewer(props: QueryViewerProps): JSX.Element {
         isAutoFetch={isAutoFetch}
         mandatoryFields={queryContentMandatoryProps}
       />
+
       <Records
         fetchRecords={handleFetchRecords}
         recordsClassName={recordsClassName}

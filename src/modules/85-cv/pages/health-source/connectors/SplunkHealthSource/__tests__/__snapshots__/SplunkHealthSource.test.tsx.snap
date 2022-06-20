@@ -392,6 +392,7 @@ exports[`test splunkHealthsource check snapshot 1`] = `
                                 class="bp3-input bp3-fill"
                                 maxlength="1024"
                                 name="query"
+                                placeholder=""
                               >
                                 error OR failed OR severe OR ( sourcetype=access_* ( 404 OR 500 OR 503 ) )
                               </textarea>
