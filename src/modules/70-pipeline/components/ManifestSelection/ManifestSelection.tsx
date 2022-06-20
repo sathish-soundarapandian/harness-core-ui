@@ -25,6 +25,7 @@ import { useCache } from '@common/hooks/useCache'
 import type { ManifestSelectionProps } from './ManifestInterface'
 import ManifestListView from './ManifestListView/ManifestListView'
 import { getConnectorPath } from './ManifestWizardSteps/ManifestUtils'
+import ReleaseRepoListView from './GitOps/ReleaseRepoListView/ReleaseRepoListView'
 
 export default function ManifestSelection({
   isPropagating,
@@ -112,19 +113,34 @@ export default function ManifestSelection({
 
   return (
     <Layout.Vertical>
-      <ManifestListView
-        isPropagating={isPropagating}
-        pipeline={pipeline}
-        updateStage={updateStage}
-        stage={stage}
-        connectors={fetchedConnectorResponse}
-        refetchConnectors={refetchConnectorList}
-        listOfManifests={listOfManifests}
-        isReadonly={readonly}
-        deploymentType={deploymentType}
-        allowableTypes={allowableTypes}
-        allowOnlyOne={isServerlessDeploymentType(deploymentType)}
-      />
+      {!(pipeline as any).gitOpsEnabled ? (
+        <ManifestListView
+          isPropagating={isPropagating}
+          pipeline={pipeline}
+          updateStage={updateStage}
+          stage={stage}
+          connectors={fetchedConnectorResponse}
+          refetchConnectors={refetchConnectorList}
+          listOfManifests={listOfManifests}
+          isReadonly={readonly}
+          deploymentType={deploymentType}
+          allowableTypes={allowableTypes}
+          allowOnlyOne={isServerlessDeploymentType(deploymentType)}
+        />
+      ) : (
+        <ReleaseRepoListView
+          isPropagating={isPropagating}
+          updateStage={updateStage}
+          stage={stage}
+          connectors={fetchedConnectorResponse}
+          refetchConnectors={refetchConnectorList}
+          listOfManifests={listOfManifests}
+          isReadonly={readonly}
+          deploymentType={deploymentType}
+          allowableTypes={allowableTypes}
+          allowOnlyOne={true}
+        />
+      )}
     </Layout.Vertical>
   )
 }
