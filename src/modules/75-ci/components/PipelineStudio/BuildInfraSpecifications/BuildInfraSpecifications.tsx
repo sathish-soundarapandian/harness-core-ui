@@ -119,6 +119,7 @@ interface KubernetesBuildInfraFormValues {
   tolerations?: { effect?: string; key?: string; operator?: string; value?: string }[]
   nodeSelector?: MultiTypeMapUIType
   harnessImageConnectorRef?: string
+  os?: string
 }
 
 interface ContainerSecurityContext {
@@ -482,7 +483,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
         (stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.nodeSelector || {}
       ),
       harnessImageConnectorRef: (stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-        ?.harnessImageConnectorRef
+        ?.harnessImageConnectorRef,
+      os: (stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.os || OsTypes.Linux
     }
   }, [stage])
 
@@ -657,7 +659,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             if (containerSecurityContext.capabilities && isEmpty(containerSecurityContext.capabilities)) {
               delete containerSecurityContext.capabilities
             }
-            if (!isEmpty(containerSecurityContext)) {
+            if (!isEmpty(containerSecurityContext) && values.os !== OsTypes.Windows) {
               additionalKubernetesFields.containerSecurityContext = containerSecurityContext
             }
           }
@@ -684,7 +686,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                     ...(filteredTolerations?.length ? { tolerations: filteredTolerations } : {}),
                     nodeSelector: getMapValues(values.nodeSelector),
                     ...additionalKubernetesFields,
-                    harnessImageConnectorRef
+                    harnessImageConnectorRef,
+                    os: values.os
                   }
                 }
               : _buildInfraType === CIBuildInfrastructureType.VM
@@ -712,7 +715,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
 
           if (
             values.runAsUser &&
-            (draft?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.containerSecurityContext?.runAsUser
+            ((draft?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.containerSecurityContext?.runAsUser ||
+              values.os === OsTypes.Windows)
           ) {
             // move deprecated runAsUser to containerSecurityContext
             delete (draft.stage?.spec?.infrastructure as K8sDirectInfraYaml).spec.runAsUser
@@ -1204,6 +1208,32 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             }}
           />
         </div>
+        <div className={cx(css.fieldsGroup, css.withoutSpacing)}>
+          <MultiTypeSelectField
+            label={
+              <Text
+                tooltipProps={{ dataTooltipId: 'os' }}
+                font={{ variation: FontVariation.FORM_LABEL }}
+                margin={{ bottom: 'xsmall' }}
+              >
+                {getString('pipeline.infraSpecifications.os')}
+              </Text>
+            }
+            name={'os'}
+            style={{ width: 300, paddingBottom: 'var(--spacing-small)' }}
+            multiTypeInputProps={{
+              selectItems: [
+                { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
+                { label: getString('pipeline.infraSpecifications.osTypes.windows'), value: OsTypes.Windows }
+              ],
+              multiTypeInputProps: {
+                allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
+                disabled: isReadonly
+              }
+            }}
+            useValue
+          />
+        </div>
         {renderHarnessImageConnectorRefField()}
       </>
     )
@@ -1212,6 +1242,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
   const renderAccordianDetailSection = React.useCallback(
     ({ formik }: { formik: any }): React.ReactElement => {
       const tolerationsValue = get(formik?.values, 'tolerations')
+      const showContainerSecurityContext = get(formik?.values, 'os') !== OsTypes.Windows
       return (
         <>
           <Container className={css.bottomMargin7}>
@@ -1262,7 +1293,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           <Container className={css.bottomMargin7}>
             {renderMultiTypeMap({ fieldName: 'annotations', stringKey: 'ci.annotations' })}
           </Container>
-          {renderContainerSecurityContext({ formik })}
+          {showContainerSecurityContext && renderContainerSecurityContext({ formik })}
           <Container className={css.bottomMargin7}>
             <MultiTypeTextField
               label={
@@ -1437,7 +1468,19 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           dropCapabilities: yup.lazy(value => validateUniqueList({ value, getString })),
           tolerations: yup.lazy(value =>
             validateUniqueList({ value, getString, uniqueKey: 'key', stringKey: 'pipeline.ci.validations.keyUnique' })
-          )
+          ),
+          os: yup
+            .string()
+            .test(
+              'OS required only for New configuration',
+              getString('fieldRequired', { field: getString('pipeline.infraSpecifications.os') }) || '',
+              function (os) {
+                if (isEmpty(os) && currentMode === Modes.NewConfiguration) {
+                  return false
+                }
+                return true
+              }
+            )
         })
       case CIBuildInfrastructureType.VM:
         return yup.object().shape({
@@ -1601,10 +1644,26 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                                         >
                                           {getString(harnessImageConnectorRefKey)}
                                         </Text>
-                                        <Text color="var(--black)">
+                                        <Text color="var(--black)" margin={{ bottom: 'medium' }}>
                                           {
                                             (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
                                               ?.harnessImageConnectorRef
+                                          }
+                                        </Text>
+                                      </>
+                                    )}
+                                    {(propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.os && (
+                                      <>
+                                        <Text
+                                          font={{ variation: FontVariation.FORM_LABEL }}
+                                          margin={{ bottom: 'xsmall' }}
+                                        >
+                                          {getString('pipeline.infraSpecifications.os')}
+                                        </Text>
+                                        <Text color="black">
+                                          {
+                                            (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                                              ?.os
                                           }
                                         </Text>
                                       </>
@@ -1901,7 +1960,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                                                   annotations: {},
                                                   labels: {},
                                                   nodeSelector: {},
-                                                  harnessImageConnectorRef: ''
+                                                  harnessImageConnectorRef: '',
+                                                  os: ''
                                                 }
                                               }
                                             : buildInfraType === CIBuildInfrastructureType.VM
@@ -1994,11 +2054,20 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                                     onChange={val => {
                                       const infraType = val as Infrastructure['type']
                                       setBuildInfraType(infraType)
+
+                                      // macOs is only supported for VMs - default to linux
+                                      const os =
+                                        formik?.values?.os === OsTypes.MacOS &&
+                                        infraType !== CIBuildInfrastructureType.VM
+                                          ? OsTypes.Linux
+                                          : formik?.values?.os
+
                                       formik.setValues({
                                         ...formik.values,
                                         buildInfraType: infraType,
                                         automountServiceAccountToken:
-                                          infraType === CIBuildInfrastructureType.KubernetesDirect ? true : undefined
+                                          infraType === CIBuildInfrastructureType.KubernetesDirect ? true : undefined,
+                                        os
                                       })
                                     }}
                                   />

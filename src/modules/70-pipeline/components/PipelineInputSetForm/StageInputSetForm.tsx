@@ -865,6 +865,48 @@ export function StageInputSetFormInternal({
                     })}
                   </Container>
                 )}
+                {(deploymentStageTemplate.infrastructure as any).spec?.os ? (
+                  shouldRenderRunTimeInputViewWithAllowedValues(
+                    'spec.spec.os',
+                    deploymentStageTemplate.infrastructure
+                  ) ? (
+                    renderMultiTypeInputWithAllowedValues({
+                      name: `${namePath}infrastructure.spec.os`,
+                      tooltipId: 'os',
+                      labelKey: osLabel,
+                      placeholderKey: osLabel,
+                      fieldPath: 'spec.os',
+                      allowedTypes: [MultiTypeInputType.FIXED]
+                    })
+                  ) : (
+                    <Container className={stepCss.bottomMargin3}>
+                      <MultiTypeSelectField
+                        label={
+                          <Text
+                            tooltipProps={{ dataTooltipId: 'os' }}
+                            font={{ variation: FontVariation.FORM_LABEL }}
+                            margin={{ bottom: 'xsmall' }}
+                          >
+                            {getString(osLabel)}
+                          </Text>
+                        }
+                        name={`${namePath}infrastructure.spec.os`}
+                        style={{ width: 300, paddingBottom: 'var(--spacing-small)' }}
+                        multiTypeInputProps={{
+                          selectItems: [
+                            { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
+                            { label: getString('pipeline.infraSpecifications.osTypes.windows'), value: OsTypes.Windows }
+                          ],
+                          multiTypeInputProps: {
+                            allowableTypes: [MultiTypeInputType.FIXED]
+                          },
+                          disabled: readonly
+                        }}
+                        useValue
+                      />
+                    </Container>
+                  )
+                ) : null}
                 {(deploymentStageTemplate.infrastructure as any).spec?.harnessImageConnectorRef ? (
                   shouldRenderRunTimeInputViewWithAllowedValues(
                     'spec.harnessImageConnectorRef',
