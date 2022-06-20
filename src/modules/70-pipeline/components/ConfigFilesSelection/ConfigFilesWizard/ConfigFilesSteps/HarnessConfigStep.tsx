@@ -6,23 +6,18 @@
  */
 
 import React from 'react'
-import {
-  Button,
-  ButtonVariation,
-  Text,
-  Container,
-  Formik,
-  //   IconName,
-  Layout,
-  StepProps
-  //   ThumbnailSelect
-} from '@wings-software/uicore'
+import { Button, ButtonVariation, Text, Container, Formik, Layout, StepProps } from '@harness/uicore'
 import { Form } from 'formik'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { useStrings } from 'framework/strings'
+import { Radio, RadioGroup } from '@blueprintjs/core'
+import cx from 'classnames'
 
+import { useStrings } from 'framework/strings'
+import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
+import { MultiConfigSelectField } from './MultiConfigSelectField/MultiConfigSelectField'
+
 // import { ConfigFileIconByType, ConfigFileTypeTitle } from '../../ConfigFilesHelper'
 // import type { ConfigFileType } from '../../ConfigFilesInterface'
 import css from './ConfigFilesType.module.scss'
@@ -34,6 +29,13 @@ interface ConfigFilesPropType {
   //   configFileInitialValue?: any
   stepName: string
 }
+
+// interface ConfigFileData {
+//   name: string
+//   identifier: string
+//   fileType: string
+//   files: any[]
+// }
 
 export function HarnessConfigStep({
   //   selectedConfigFile,
@@ -48,6 +50,7 @@ export function HarnessConfigStep({
   }
 
   const { getString } = useStrings()
+
   return (
     <Container className={css.optionsViewContainer}>
       <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
@@ -55,38 +58,79 @@ export function HarnessConfigStep({
       </Text>
       <Formik
         initialValues={{
-          name: ''
+          name: '',
+          identifier: '',
+          fileType: '',
+          files: [],
+          multi: ''
         }}
-        formName="configFileType"
+        formName="configFileDetails"
         validationSchema={Yup.object().shape({
           name: Yup.string().required(getString('pipeline.artifactsSelection.artifactTyperequired'))
         })}
         onSubmit={gotoNextStep}
         enableReinitialize={true}
       >
-        {() => (
-          <Form>
-            <div className={css.headerContainer}>
-              {/* <Layout.Horizontal spacing="large">
-                <ThumbnailSelect
-                  className={css.thumbnailSelect}
-                  name={'configFileType'}
-                  items={supportedConfigFilesTypes}
-                  onChange={handleOptionSelection}
+        {formikProps => {
+          return (
+            <Form>
+              <div className={css.headerContainer}>
+                <NameId
+                  identifierProps={{
+                    inputName: 'name',
+                    isIdentifierEditable: true
+                    //   inputGroupProps: { disabled: true }
+                  }}
                 />
-              </Layout.Horizontal> */}
-            </div>
-            <Layout.Horizontal>
-              <Button
-                variation={ButtonVariation.PRIMARY}
-                type="submit"
-                // disabled={selectedConfigFile === null}
-                text={getString('continue')}
-                rightIcon="chevron-right"
-              />
-            </Layout.Horizontal>
-          </Form>
-        )}
+                <RadioGroup
+                  selectedValue={formikProps.values.fileType}
+                  disabled={false}
+                  name="fileType"
+                  onChange={e => {
+                    formikProps.setFieldValue('fileType', e.currentTarget.value)
+                  }}
+                >
+                  <Radio
+                    value={'plainText'}
+                    // label={getString('pipeline.conditionalExecution.statusOption.success')}
+                    label="Plain Text"
+                    className={cx(css.blackText, {
+                      [css.active]: formikProps.values.fileType === 'plaintText'
+                    })}
+                  />
+                  <Radio
+                    value={'encrypted'}
+                    label={getString('encrypted')}
+                    className={cx(css.blackText, {
+                      [css.active]: formikProps.values.fileType === 'encrypted'
+                    })}
+                  />
+                </RadioGroup>
+                {/* {formikProps.values.fileType === 'encrypted' && <SelectEncrypted name="files" formik={formikProps} />} */}
+                <MultiConfigSelectField
+                  name="multi"
+                  multiTypeFieldSelectorProps={{
+                    disableTypeSelection: true,
+                    label: (
+                      <Text style={{ display: 'flex', alignItems: 'center', color: 'rgb(11, 11, 13)' }}>
+                        {getString('optionalField', { name: getString('environmentVariables') })}
+                      </Text>
+                    )
+                  }}
+                />
+              </div>
+              <Layout.Horizontal>
+                <Button
+                  variation={ButtonVariation.PRIMARY}
+                  type="submit"
+                  // disabled={selectedConfigFile === null}
+                  text={getString('continue')}
+                  rightIcon="chevron-right"
+                />
+              </Layout.Horizontal>
+            </Form>
+          )
+        }}
       </Formik>
     </Container>
   )

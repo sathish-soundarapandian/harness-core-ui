@@ -7,9 +7,11 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly active: string
   readonly addNewArtifact: string
   readonly addNewConfigFiles: string
   readonly artifactIcon: string
+  readonly blackText: string
   readonly bp3Button: string
   readonly configFileSelect: string
   readonly configFilesForm: string

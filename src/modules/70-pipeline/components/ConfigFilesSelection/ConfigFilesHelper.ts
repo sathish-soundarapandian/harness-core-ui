@@ -42,7 +42,7 @@ export const allowedConfigFilesTypes: Record<string, Array<ConfigFileType>> = {
   Kubernetes: [],
   NativeHelm: [],
   ServerlessAwsLambda: [],
-  Ssh: [ConfigFilesMap.Harness, ConfigFilesMap.Git],
+  Ssh: [ConfigFilesMap.Harness],
   WinRm: [ConfigFilesMap.Harness]
 }
 
