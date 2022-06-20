@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { Checkbox, Intent, Layout, useConfirmationDialog } from '@harness/uicore'
+import { Card, Checkbox, Intent, Layout, useConfirmationDialog } from '@harness/uicore'
 import { debounce, defaultTo, get } from 'lodash-es'
 import produce from 'immer'
 import cx from 'classnames'
@@ -29,6 +29,8 @@ import { useServiceContext } from '@cd/context/ServiceContext'
 import type { ServicePipelineConfig } from '@cd/components/Services/utils/ServiceUtils'
 import { setupMode } from '../PropagateWidget/PropagateWidget'
 import SelectDeploymentType from '../SelectDeploymentType'
+import stageCss from '../../DeployStageSetupShell/DeployStage.module.scss'
+
 import css from './DeployServiceDefinition.module.scss'
 
 function DeployServiceDefinition(): React.ReactElement {
@@ -165,16 +167,18 @@ function DeployServiceDefinition(): React.ReactElement {
         isReadonly={disabledState}
         handleDeploymentTypeChange={handleDeploymentTypeChange}
       />
+
       {selectedDeploymentType === ServiceDeploymentType['Kubernetes'] && (
-        <Checkbox
-          label="Gitops"
-          name="gitOpsEnabled"
-          checked={gitOpsEnabled}
-          onChange={handleGitOpsCheckChanged}
-          // disabled={disabledState}
-          //GitOps checkbox is disabled temporarily until Release repo manifest is added
-          disabled={true}
-        />
+        <Card className={stageCss.sectionCard}>
+          <Checkbox
+            label="Gitops"
+            name="gitOpsEnabled"
+            checked={gitOpsEnabled}
+            onChange={handleGitOpsCheckChanged}
+            disabled={disabledState}
+            //GitOps checkbox is disabled temporarily until Release repo manifest is added
+          />
+        </Card>
       )}
       <Layout.Horizontal>
         <StepWidget<K8SDirectServiceStep>
