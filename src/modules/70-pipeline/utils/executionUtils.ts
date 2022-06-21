@@ -75,7 +75,8 @@ export enum NodeType {
   APPROVAL_STAGE = 'APPROVAL_STAGE',
   NG_SECTION_WITH_ROLLBACK_INFO = 'NG_SECTION_WITH_ROLLBACK_INFO',
   NG_EXECUTION = 'NG_EXECUTION',
-  StepGroupNode = 'StepGroupNode'
+  StepGroupNode = 'StepGroupNode',
+  'GITOPS CLUSTERS' = 'GITOPS CLUSTERS'
 }
 
 export const NonSelectableNodes: NodeType[] = [
@@ -106,7 +107,8 @@ export const StepTypeIconsMap: { [key in NodeType]: IconName } = {
   NG_FORK: 'fork',
   DEPLOYMENT_STAGE_STEP: 'circle',
   APPROVAL_STAGE: 'approval-stage-icon',
-  StepGroupNode: 'step-group'
+  StepGroupNode: 'step-group',
+  'GITOPS CLUSTERS': 'gitops-clusters'
 }
 
 export const ExecutionStatusIconMap: Record<ExecutionStatus, IconName> = {
@@ -725,6 +727,14 @@ export function getIconDataBasedOnType(nodeData?: ExecutionNode): {
       return { icon: 'traffic-lights', iconSize: 40 }
     }
     const icon = StepTypeIconsMap[nodeData?.stepType as NodeType] || factory.getStepIcon(nodeData?.stepType || '')
+    console.log(
+      icon,
+      'ic',
+      nodeData?.stepType,
+      'steptype',
+      StepTypeIconsMap[nodeData?.stepType as NodeType],
+      'sdfjdslkjfds'
+    )
     return {
       icon,
       iconSize: cloudFormationSteps.includes(nodeData.stepType as StepType) ? 32 : 20

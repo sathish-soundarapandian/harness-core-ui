@@ -278,19 +278,21 @@ const AddCluster = (props: AddClusterProps): React.ReactElement => {
             {(fetching || submitting) && !searchTerm ? <PageSpinner /> : null}
             {searching ? <Spinner /> : null}
             {!searching ? (
-              <UnLinkedClstrsList
-                unlinkedClusters={unlinkedClusters}
-                attachRefToLastElement={attachRefToLastElement}
-                loadMoreRef={loadMoreRef}
-                selectedClusters={selectedClusters}
-                setSelectedClusters={setSelectedClusters}
-              />
+              <>
+                <UnLinkedClstrsList
+                  unlinkedClusters={unlinkedClusters}
+                  attachRefToLastElement={attachRefToLastElement}
+                  loadMoreRef={loadMoreRef}
+                  selectedClusters={selectedClusters}
+                  setSelectedClusters={setSelectedClusters}
+                />
+                <SelectAllCheckBox
+                  unlinkedClusters={unlinkedClusters}
+                  selectedClusters={selectedClusters}
+                  setSelectedClusters={setSelectedClusters}
+                />
+              </>
             ) : null}
-            <SelectAllCheckBox
-              unlinkedClusters={unlinkedClusters}
-              selectedClusters={selectedClusters}
-              setSelectedClusters={setSelectedClusters}
-            />
           </div>
 
           <Layout.Vertical
