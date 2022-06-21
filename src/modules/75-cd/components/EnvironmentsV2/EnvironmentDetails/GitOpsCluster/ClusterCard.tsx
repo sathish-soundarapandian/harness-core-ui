@@ -53,6 +53,7 @@ const ClusterCard = (props: ClusterCardProps): React.ReactElement => {
           font={{ variation: FontVariation.FORM_LABEL }}
           color={Color.GREY_400}
           className={css.clusterId}
+          margin={{ left: 'medium' }}
         >
           ID: {cluster.identifier}
         </Text>
