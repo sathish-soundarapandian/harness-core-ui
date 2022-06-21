@@ -572,7 +572,7 @@ export function OverlayInputSetForm({
           <Formik<OverlayInputSetDTO & GitContextProps & StoreMetadata>
             initialValues={{
               ...omit(inputSet, 'gitDetails', 'entityValidityDetails'),
-              repo: defaultTo(repoIdentifier, ''),
+              repo: isGitSyncEnabled ? defaultTo(repoIdentifier, '') : defaultTo(repoName, ''),
               branch: defaultTo(branch, ''),
               connectorRef: defaultTo(connectorRef, ''),
               repoName: defaultTo(repoName, ''),
