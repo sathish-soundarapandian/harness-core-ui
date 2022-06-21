@@ -249,12 +249,14 @@ export default function DeployStageSetupShell(): JSX.Element {
         if (!selectedStage?.stage?.spec?.execution) {
           const stageType = selectedStage?.stage?.type
           const openExecutionStrategy = stageType ? stagesMap[stageType].openExecutionStrategy : true
+          const gitOpsEnabled = selectedStage?.stage?.spec?.gitOpsEnabled
           const isServerlessDeploymentTypeSelected = isServerlessDeploymentType(selectedDeploymentType)
           // Show executiomn strategies when openExecutionStrategy is true and deployment type is not serverless
           if (
             openExecutionStrategy &&
             !isServerlessDeploymentTypeSelected &&
-            selectedSectionId === DeployTabs.EXECUTION
+            selectedSectionId === DeployTabs.EXECUTION &&
+            !gitOpsEnabled
           ) {
             updatePipelineView({
               ...pipelineView,
@@ -264,8 +266,40 @@ export default function DeployStageSetupShell(): JSX.Element {
                 hasBackdrop: true
               }
             })
+          } else if (gitOpsEnabled) {
+            if (!selectedStage?.stage?.spec?.execution) {
+              selectedStage.stage.spec = {
+                gitOpsEnabled,
+                execution: {
+                  steps: []
+                }
+              }
+            }
+
+            selectedStage.stage.spec.execution.steps = [
+              {
+                step: {
+                  type: 'CreatePR',
+                  name: 'test-create-pr',
+                  identifier: 'test-create-pr',
+                  spec: {
+                    overrideConfig: false
+                  },
+                  timeout: '10m'
+                }
+              },
+              {
+                step: {
+                  type: 'MergePR',
+                  name: 'test-merge-pr',
+                  identifier: 'test-merge-pr',
+                  timeout: '10m'
+                }
+              }
+            ]
+            // updateStage(selectedStage)
           }
-        } else {
+        } else if (!selectedStage?.stage?.spec?.gitOpsEnabled) {
           // set default (empty) values
           // NOTE: this cannot be set in advance as data.stage.spec.execution===undefined is a trigger to open ExecutionStrategy for CD stage
           /* istanbul ignore else */
@@ -277,11 +311,49 @@ export default function DeployStageSetupShell(): JSX.Element {
               selectedStage.stage.spec.execution.rollbackSteps = []
             }
           }
+        } else {
+          if (!selectedStage?.stage?.spec?.execution) {
+            selectedStage.stage.spec = {
+              gitOpsEnabled: selectedStage?.stage?.spec?.gitOpsEnabled,
+              execution: {
+                steps: []
+              }
+            }
+          }
+
+          selectedStage.stage.spec.execution.steps = [
+            {
+              step: {
+                type: 'CreatePR',
+                name: 'test-create-pr',
+                identifier: 'test-create-pr',
+                spec: {
+                  overrideConfig: false
+                },
+                timeout: '10m'
+              }
+            },
+            {
+              step: {
+                type: 'MergePR',
+                name: 'test-merge-pr',
+                identifier: 'test-merge-pr',
+                timeout: '10m'
+              }
+            }
+          ]
         }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedStage, selectedTabId, selectedStageId, selectedDeploymentType, selectedSectionId])
+  }, [
+    selectedStage,
+    selectedTabId,
+    selectedStageId,
+    selectedDeploymentType,
+    selectedSectionId,
+    selectedStage?.stage?.spec?.gitOpsEnabled
+  ])
 
   React.useEffect(() => {
     validate()

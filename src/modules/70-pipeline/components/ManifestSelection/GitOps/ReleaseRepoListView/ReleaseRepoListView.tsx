@@ -500,7 +500,7 @@ function ReleaseRepoListView({
             variation={ButtonVariation.LINK}
             data-test-id="add-release-repo"
             onClick={addNewReleaseRepo}
-            text={'Add Release Repo Manifest'}
+            text={getString('pipeline.addReleaseRepo')}
           />
         ) : null}
       </Layout.Vertical>

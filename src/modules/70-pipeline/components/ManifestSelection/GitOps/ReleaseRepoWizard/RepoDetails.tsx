@@ -218,7 +218,7 @@ function RepoDetails({
             is: 'Commit',
             then: Yup.string().trim().required(getString('validation.commitId'))
           }),
-          paths: Yup.string().required()
+          paths: Yup.string().required(getString('pipeline.manifestType.pathRequired'))
         })}
         onSubmit={formData => {
           submitFormData(
