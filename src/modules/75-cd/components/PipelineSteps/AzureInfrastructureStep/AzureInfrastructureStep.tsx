@@ -254,7 +254,7 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
       getMultiTypeFromValue(subscriptionId) === MultiTypeInputType.FIXED &&
       resourceGroup &&
       getMultiTypeFromValue(resourceGroup) === MultiTypeInputType.FIXED
-    ) {
+    ) {  
       refetchClusters({
         queryParams: {
           accountIdentifier: accountId,
@@ -409,7 +409,7 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
             label={getString(resourceGroupLabel)}
             multiTypeInputProps={{
               onChange: /* istanbul ignore next */ (value, _typeValue, type) => {
-                if (value && type === MultiTypeInputType.FIXED) {
+                if (value && type === MultiTypeInputType.FIXED) {                 
                   refetchClusters({
                     queryParams: {
                       accountIdentifier: accountId,
@@ -573,7 +573,7 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
   }, [subscriptions])
 
   React.useEffect(() => {
-    if (initialValues.connectorRef && getMultiTypeFromValue(initialValues.connectorRef) === MultiTypeInputType.FIXED) {
+    if (initialValues.connectorRef && getMultiTypeFromValue(initialValues.connectorRef) === MultiTypeInputType.FIXED) {    
       refetchSubscriptions({
         queryParams: {
           accountIdentifier: accountId,
@@ -665,7 +665,7 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
       getMultiTypeFromValue(initialValues.subscriptionId) === MultiTypeInputType.FIXED &&
       initialValues.resourceGroup &&
       getMultiTypeFromValue(initialValues.resourceGroup) === MultiTypeInputType.FIXED
-    ) {
+    ) {    
       refetchClusters({
         queryParams: {
           connectorRef: initialValues?.connectorRef,
@@ -922,7 +922,7 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
                   }
                   multiTypeInputProps={{
                     onChange: /* istanbul ignore next */ (value, _typeValue, type) => {
-                      if (value && type === MultiTypeInputType.FIXED) {
+                      if (value && type === MultiTypeInputType.FIXED) {                      
                         refetchClusters({
                           queryParams: {
                             accountIdentifier: accountId,
@@ -937,7 +937,7 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
                         })
 
                         getMultiTypeFromValue(getValue(formik?.values?.cluster)) === MultiTypeInputType.FIXED &&
-                          formik.setFieldValue('cluster', '')
+                        formik.setFieldValue('cluster', '')
                       } else {
                         setClusters([])
                       }
