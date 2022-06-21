@@ -11,9 +11,6 @@ import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import * as infiniteScrollHook from '@common/hooks/useInfiniteScroll'
 
 import AddCluster from '../AddCluster'
-import { ModalProvider, useModalHook } from '@harness/use-modal'
-import { AddDrawer } from '@common/components'
-import { Container } from '@harness/uicore'
 
 const clusters = [
   {
@@ -106,26 +103,6 @@ const props = {
   refetch: jest.fn(),
   envRef: 'test-env'
 }
-
-// function WrapperComponent(): JSX.Element {
-//   const [openDrawer, hideDrawer] = useModalHook(() => (
-//     <TestWrapper>
-//       <AddCluster {...props} />
-//     </TestWrapper>
-//   ))
-
-//   return (
-//     <Container>
-//       <button
-//         onClick={() => {
-//           openDrawer()
-//         }}
-//         className="openModal"
-//       />
-//       <button className="closeModal" onClick={() => hideDrawer()} />
-//     </Container>
-//   )
-// }
 describe('AddCluster tests', () => {
   test('when no clusters', () => {
     jest.mock('services/cd-ng', () => ({
@@ -145,12 +122,11 @@ describe('AddCluster tests', () => {
       envRef: 'test-env'
     }
     render(
-      <ModalProvider>
+      <TestWrapper>
         <AddCluster {...testProps} />
-      </ModalProvider>
+      </TestWrapper>
     )
     const form = findDialogContainer()
-    expect(form).toBeTruthy()
     expect(form).toMatchSnapshot()
   })
   test('initial render', () => {

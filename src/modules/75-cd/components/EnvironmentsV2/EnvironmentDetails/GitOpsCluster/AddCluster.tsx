@@ -8,7 +8,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get } from 'lodash-es'
-import { Spinner } from '@blueprintjs/core'
+import { Dialog, Spinner } from '@blueprintjs/core'
 
 import {
   Button,
@@ -160,6 +160,16 @@ const SelectedClustersList = ({
   )
 }
 
+const returnTitle = (title: string): React.ReactElement => {
+  return (
+    <Layout.Vertical spacing="xsmall" padding="medium">
+      <Text font={{ variation: FontVariation.H4 }} color={Color.BLACK}>
+        {title}
+      </Text>
+    </Layout.Vertical>
+  )
+}
+
 const AddCluster = (props: AddClusterProps): React.ReactElement => {
   const [selectedClusters, setSelectedClusters] = React.useState<Cluster | any>([])
   const { getString } = useStrings()
@@ -252,76 +262,86 @@ const AddCluster = (props: AddClusterProps): React.ReactElement => {
         })
     }
   }
-  // // istanbul ignore next
-  // const onChangeText = (ev: React.ChangeEvent<HTMLInputElement>) => {
-  //   // istanbul ignore next
-  //   setSearchTerm(ev.target.value)
-  // }
-
   return (
-    <Container>
-      <Container margin={{ bottom: 'small' }}>
-        <ExpandingSearchInput
-          alwaysExpanded
-          placeholder={'Search Clusters'}
-          autoFocus={false}
-          width={'100%'}
-          onChange={setSearchTerm}
-          throttle={200}
-          data-test-id="search"
-        />
-      </Container>
+    <Dialog
+      isOpen
+      style={{
+        width: 648,
+        height: 551,
+        borderLeft: 0,
+        padding: 24
+      }}
+      enforceFocus={false}
+      usePortal
+      canOutsideClickClose={false}
+      onClose={props.onHide}
+      title={returnTitle(getString('cd.selectGitopsCluster'))}
+      isCloseButtonShown={true}
+    >
+      <Container>
+        <Container margin={{ bottom: 'small' }}>
+          <ExpandingSearchInput
+            alwaysExpanded
+            placeholder={'Search Clusters'}
+            autoFocus={false}
+            width={'100%'}
+            onChange={setSearchTerm}
+            throttle={200}
+            data-test-id="search"
+          />
+        </Container>
 
-      <Layout.Vertical>
-        <Layout.Horizontal className={css.contentContainer} height={'339px'}>
-          <div className={css.clusterList}>
-            {(fetching || submitting) && !searchTerm ? <PageSpinner /> : null}
-            {searching ? <Spinner /> : null}
-            {!searching ? (
-              <>
-                <UnLinkedClstrsList
-                  unlinkedClusters={unlinkedClusters}
-                  attachRefToLastElement={attachRefToLastElement}
-                  loadMoreRef={loadMoreRef}
-                  selectedClusters={selectedClusters}
-                  setSelectedClusters={setSelectedClusters}
-                />
-                <SelectAllCheckBox
-                  unlinkedClusters={unlinkedClusters}
-                  selectedClusters={selectedClusters}
-                  setSelectedClusters={setSelectedClusters}
-                />
-              </>
-            ) : null}
-          </div>
+        <Layout.Vertical>
+          <Layout.Horizontal className={css.contentContainer} height={'339px'}>
+            <div className={css.clusterList}>
+              {(fetching || submitting) && !searchTerm ? <PageSpinner /> : null}
+              {searching ? <Spinner /> : null}
+              {!searching ? (
+                <>
+                  <UnLinkedClstrsList
+                    unlinkedClusters={unlinkedClusters}
+                    attachRefToLastElement={attachRefToLastElement}
+                    loadMoreRef={loadMoreRef}
+                    selectedClusters={selectedClusters}
+                    setSelectedClusters={setSelectedClusters}
+                  />
+                  <SelectAllCheckBox
+                    unlinkedClusters={unlinkedClusters}
+                    selectedClusters={selectedClusters}
+                    setSelectedClusters={setSelectedClusters}
+                  />
+                </>
+              ) : null}
+            </div>
 
-          <Layout.Vertical
-            flex={{ justifyContent: 'center', alignItems: 'flex-start' }}
-            padding={{ left: 'huge', right: 'huge' }}
-          >
-            <Text
-              font={{ variation: FontVariation.H5 }}
-              padding={{ bottom: 'medium' }}
-              margin={{ bottom: 'medium' }}
-              border={{ bottom: true }}
+            <Layout.Vertical
+              flex={{ justifyContent: 'center', alignItems: 'flex-start' }}
+              padding={{ left: 'huge', right: 'huge' }}
             >
-              {getString('cd.clustersSelected')}({selectedClusters.length})
-            </Text>
-            <SelectedClustersList selectedClusters={selectedClusters} selectedLabel={getString('cd.selectedLabel')} />
-          </Layout.Vertical>
-        </Layout.Horizontal>
-      </Layout.Vertical>
+              <Text
+                font={{ variation: FontVariation.H5 }}
+                padding={{ bottom: 'medium' }}
+                margin={{ bottom: 'medium' }}
+                border={{ bottom: true }}
+              >
+                {getString('cd.clustersSelected')}({selectedClusters.length})
+              </Text>
+              <SelectedClustersList selectedClusters={selectedClusters} selectedLabel={getString('cd.selectedLabel')} />
+            </Layout.Vertical>
+          </Layout.Horizontal>
+        </Layout.Vertical>
 
-      <Container className={css.footerStyle} margin={{ top: 'medium !important' }}>
-        <Button
-          variation={ButtonVariation.PRIMARY}
-          text={'Add'}
-          onClick={onSubmit}
-          disabled={!selectedClusters.length}
-        />
-        <Button text="Cancel" variation={ButtonVariation.TERTIARY} onClick={props.onHide} />
+        <Container className={css.footerStyle} margin={{ top: 'medium !important' }}>
+          <Button
+            variation={ButtonVariation.PRIMARY}
+            text={'Add'}
+            onClick={onSubmit}
+            disabled={!selectedClusters.length}
+          />
+          <Button text="Cancel" variation={ButtonVariation.TERTIARY} onClick={props.onHide} />
+        </Container>
       </Container>
-    </Container>
+    </Dialog>
   )
 }
 
