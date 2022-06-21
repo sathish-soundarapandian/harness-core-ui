@@ -1756,10 +1756,10 @@
     "@contentful/rich-text-react-renderer" "^15.12.0"
     contentful "^9.1.20"
 
-"@harness/icons@^1.24.0":
-  version "1.24.0"
-  resolved "https://npm.pkg.github.com/download/@harness/icons/1.24.0/894424e39d949befc685c8ea627096c198d85a3499d0e8e0e3e232bf932cf071#c90afa980f493baf47c4a414b750d5e3cee7ff18"
-  integrity sha512-q6yRLRklHe3XhrQWWJYx7P9nGP9UIkkZBtTaoXjaTOFCzph9mcA/XBBT1GS380LywBVIjM2YFwyFAYF3o3YTdg==
+"@harness/icons@^1.25.0":
+  version "1.25.0"
+  resolved "https://npm.pkg.github.com/download/@harness/icons/1.25.0/706e8815dc65b4525c1e8a195b0c8e6be1e47e09f4c38ad3be9f5668aacbefc4#3c1190a986b4bd53bba428e076ecb47412fbd690"
+  integrity sha512-9YOeSHDRPq+zVo1n7f55FTYjaOliMB37MsrTNvr0IiJyc4KS2Vo3TcPTJ7C3P5qtk25ERtJZkSX6naCM6awIiQ==
 
 "@harness/jarvis@0.16.0":
   version "0.16.0"
@@ -1802,9 +1802,9 @@
   integrity sha512-pwjPYnQ8du1UswlX7A/apewGVDmbmaKKWTQSXtSHhKf9ekZ8WCwVvFcrM8ZIq/QbTn7Z8BXFYtMJdSG25oNtOg==
 
 "@harness/uicore@^3.35.0":
-  version "3.36.0"
-  resolved "https://npm.pkg.github.com/download/@harness/uicore/3.36.0/b79a138ce20077e78b0d8cc08cafe5eee2f676488c8495ead1fe3070f6a61aa2#dc4a5cb5c1e3524578f235f26191c44d961c125c"
-  integrity sha512-BpAqPEipPQso7+TmI/UGeKQ/6RBGEM8to/K9tzOreIuaBAME6yj3c0mAmF9IDjlluJ5yb996FypHZgqgMk6rZg==
+  version "3.37.0"
+  resolved "https://npm.pkg.github.com/download/@harness/uicore/3.37.0/0560968bef6eb937ad95df0912b0bef47128775d9a1d7d8bbc08cedea5824741#27299b0db4b01bb2b4db273b2c2a3aeeb46352d7"
+  integrity sha512-/6bETgbQmOKoK9Jqh64Z2jn9nxNZRE+0bsOYafu/qoFr6fMvJRz11tVKYrANqRf5oqlMo0z6xDbWR14UyUptUw==
 
 "@harness/use-modal@1.1.0":
   version "1.1.0"
