@@ -19,7 +19,6 @@ import {
 } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
 
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
-import InputDatePicker from '@common/components/InputDatePicker/InputDatePicker'
 import css from './PipelineFilterForm.module.scss'
 
 export type FormView = 'PIPELINE-META'
@@ -183,7 +182,6 @@ export default function PipelineFilterForm<
 
   const getPipelineFormCommonFields = (): React.ReactElement => {
     const isPipeSetupType = type === 'PipelineSetup'
-
     return (
       <>
         <FormInput.Text
@@ -215,7 +213,6 @@ export default function PipelineFilterForm<
             }}
           />
         ) : null}
-        {type === 'PipelineExecution' ? <InputDatePicker formikProps={formikProps} /> : null}
       </>
     )
   }

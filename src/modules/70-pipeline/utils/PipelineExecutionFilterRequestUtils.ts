@@ -118,12 +118,7 @@ export const createRequestBodyPayload = ({
     metadata: { name: _name, filterVisibility, identifier },
     formValues
   } = data
-  const {
-    pipelineName,
-    status: _statuses,
-    timeRange,
-    moduleProperties: _moduleProperties
-  } = getValidFilterArguments(formValues)
+  const { pipelineName, status: _statuses, moduleProperties: _moduleProperties } = getValidFilterArguments(formValues)
   return {
     name: _name,
     identifier: isUpdate ? identifier : StringUtils.getIdentifierFromName(_name),
@@ -134,7 +129,6 @@ export const createRequestBodyPayload = ({
       filterType: 'PipelineExecution',
       pipelineName: pipelineName || '',
       status: _statuses,
-      timeRange: timeRange || [],
       moduleProperties: _moduleProperties as PipelineExecutionFilterProperties['moduleProperties']
     } as PipelineExecutionFilterProperties
   }
