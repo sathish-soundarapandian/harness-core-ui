@@ -76,8 +76,6 @@ variables: Variables
 copyVariableName: Copy variable name
 copyFqn: Copy fully qualified name
 selectType: Select Type
-timeframe: Timeframe
-selectTimeFrame: Select Timeframe
 accountSetting:
   connector:
     loading: 'Loading settings...'

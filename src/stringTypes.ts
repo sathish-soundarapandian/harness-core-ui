@@ -629,7 +629,6 @@ export interface StringsMap {
   'common.selectBranch': string
   'common.selectDefaultExperience': string
   'common.selectName': string
-  'common.selectTimeFrame': string
   'common.selectType': string
   'common.selectUserGroups': string
   'common.selectVersion': string
@@ -756,7 +755,6 @@ export interface StringsMap {
   'common.test.connectionSuccessful': string
   'common.test.inProgress': string
   'common.test.retest': string
-  'common.timeframe': string
   'common.tokens': string
   'common.totalLines': string
   'common.totalSelected': string
