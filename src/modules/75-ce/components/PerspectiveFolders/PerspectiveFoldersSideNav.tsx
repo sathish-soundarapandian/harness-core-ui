@@ -137,7 +137,7 @@ export const SideNavItem: React.FC<SidebarLinkProps> = ({
               data-testid={'deleteFolder'}
             />
             <Icon
-              name={pinned ? /* istanbul ignore next */ 'unpin' : 'pin'}
+              name={pinned ? /* istanbul ignore next */ 'main-unpin' : 'main-pin'}
               size={16}
               color={Color.PRIMARY_6}
               onClick={onPinClick}

@@ -354,7 +354,7 @@ export function DeployInfrastructureWidget({
         window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.ENVIRONMENT }))
         formikRef.current = formik as FormikProps<unknown> | null
 
-        const { values, setFieldValue } = formik
+        const { values } = formik
         return (
           <>
             <Layout.Horizontal
@@ -367,49 +367,74 @@ export function DeployInfrastructureWidget({
                 label={getString('cd.pipelineSteps.environmentTab.specifyEnvironmentOrGroup')}
                 name="environmentOrEnvGroupRef"
                 disabled={environmentsLoading || environmentGroupsLoading}
+                selectItems={
+                  environmentsLoading || environmentGroupsLoading
+                    ? [{ value: '', label: 'Loading...', submenuItems: [] }]
+                    : [
+                        {
+                          label: getString('environment'),
+                          value: getString('environment'),
+                          submenuItems: defaultTo(environmentsSelectOptions, []),
+                          hasSubItems: true
+                        },
+                        {
+                          label: getString('common.environmentGroup.label'),
+                          value: getString('common.environmentGroup.label'),
+                          submenuItems: defaultTo(environmentGroupsSelectOptions, []),
+                          hasSubItems: true
+                        }
+                      ]
+                }
                 selectWithSubmenuTypeInputProps={{
-                  items:
-                    environmentsLoading || environmentGroupsLoading
-                      ? [{ value: '', label: 'Loading...', submenuItems: [] }]
-                      : [
-                          {
-                            label: getString('environment'),
-                            value: getString('environment'),
-                            submenuItems: defaultTo(environmentsSelectOptions, []),
-                            hasSubItems: true
-                          },
-                          {
-                            label: getString('common.environmentGroup.label'),
-                            value: getString('common.environmentGroup.label'),
-                            submenuItems: defaultTo(environmentGroupsSelectOptions, []),
-                            hasSubItems: true
-                          }
-                        ],
-                  onChange: (
-                    primaryOption?: SelectOption,
-                    secondaryOption?: SelectOption,
-                    type?: MultiTypeInputType
-                  ) => {
-                    if (primaryOption?.value === getString('environment')) {
-                      setFieldValue('environmentOrEnvGroupRef', secondaryOption)
-                      setFieldValue('environmentGroup.envGroupRef', '')
-                      setSelectedEnvironment(
-                        environments?.find(environment => environment.identifier === secondaryOption?.value)
-                      )
-                      setSelectedEnvironmentGroup(undefined)
-                    } else if (primaryOption?.value === getString('common.environmentGroup.label')) {
-                      setFieldValue('environmentOrEnvGroupRef', secondaryOption)
-                      setFieldValue('environmentGroup.envGroupRef', secondaryOption?.value)
-                      setSelectedEnvironment(undefined)
-                      setSelectedEnvironmentGroup(
-                        environmentGroups?.find(
-                          environmentGroup => environmentGroup.identifier === secondaryOption?.value
+                  onTypeChange: setEnvironmentOrEnvGroupRefType,
+                  width: 280,
+                  allowableTypes,
+                  selectWithSubmenuProps: {
+                    addClearBtn: !readonly,
+                    items:
+                      environmentsLoading || environmentGroupsLoading
+                        ? [{ value: '', label: 'Loading...', submenuItems: [] }]
+                        : [
+                            {
+                              label: getString('environment'),
+                              value: getString('environment'),
+                              submenuItems: defaultTo(environmentsSelectOptions, []),
+                              hasSubItems: true
+                            },
+                            {
+                              label: getString('common.environmentGroup.label'),
+                              value: getString('common.environmentGroup.label'),
+                              submenuItems: defaultTo(environmentGroupsSelectOptions, []),
+                              hasSubItems: true
+                            }
+                          ],
+                    onChange: (primaryOption?: SelectOption, secondaryOption?: SelectOption) => {
+                      if (primaryOption?.value === getString('environment')) {
+                        formik?.setValues({
+                          ...formik.values,
+                          environmentOrEnvGroupRef: secondaryOption
+                        })
+                        setSelectedEnvironment(
+                          environments?.find(environment => environment.identifier === secondaryOption?.value)
                         )
-                      )
-                    } else {
-                      setFieldValue('environmentOrEnvGroupRef', primaryOption)
+                        setSelectedEnvironmentGroup(undefined)
+                      } else if (primaryOption?.value === getString('common.environmentGroup.label')) {
+                        formik?.setValues({
+                          ...formik.values,
+                          environmentOrEnvGroupRef: secondaryOption
+                        })
+                        setSelectedEnvironment(undefined)
+                        setSelectedEnvironmentGroup(
+                          environmentGroups?.find(
+                            environmentGroup => environmentGroup.identifier === secondaryOption?.value
+                          )
+                        )
+                      } else {
+                        formik?.setFieldValue('environmentOrEnvGroupRef', primaryOption)
+                        setSelectedEnvironment(undefined)
+                        setSelectedEnvironmentGroup(undefined)
+                      }
                     }
-                    setEnvironmentOrEnvGroupRefType(defaultTo(type, MultiTypeInputType.FIXED))
                   }
                 }}
               />
