@@ -15,7 +15,7 @@ import { useStrings, StringKeys } from 'framework/strings'
 import type { Module } from 'framework/types/ModuleName'
 import {
   ExecutionNode,
-  // ResourceConstraintDetail,
+  ResourceConstraintDetail,
   ResponseResourceConstraintExecutionInfo,
   useGetResourceConstraintsExecutionInfo
 } from 'services/pipeline-ng'
@@ -56,8 +56,7 @@ const renderData = (
     <>
       <div className={css.totalCount}>{getString('pipeline.totalCount', { count: resourceConstraints.length })}</div>
       <div className={css.queuedExecutionsList}>
-        {resourceConstraints.map((resourceConstraint: any) => {
-          // any -> ResourceConstraintDetail - update swagger
+        {resourceConstraints.map((resourceConstraint: ResourceConstraintDetail) => {
           const isCurrent = executionIdentifier === resourceConstraint.planExecutionId
           const route = routes.toExecutionPipelineView({
             orgIdentifier,
