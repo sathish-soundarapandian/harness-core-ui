@@ -55,14 +55,6 @@ export function ConfigFilesWizard({
       title={`${ConfigWizard.label} ${getString('pipeline.configFiles.title')}`}
       //   initialStep={isServerlessManifestType(selectedManifest) ? 2 : undefined}
     >
-      {/* <ConfigFilesType
-        configFilesTypes={types}
-        name={getString('pipeline.configFiles.source')}
-        stepName={getString('pipeline.configFiles.source')}
-        selectedConfigFile={selectedConfigFile}
-        changeConfigFileType={changeConfigFileType}
-        // initialValues={initialValues}
-      /> */}
       <ConfigFilesConnector
         configFilesStoreTypes={types}
         name={getString('pipeline.configFiles.title')}

@@ -15,7 +15,7 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   MultiTextInputProps
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { FieldArray, connect, FormikContextType } from 'formik'
 import { get } from 'lodash-es'
@@ -25,7 +25,7 @@ import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/Conf
 import MultiTypeFieldSelector, {
   MultiTypeFieldSelectorProps
 } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-import useCreateOrSelectSecretModal from '@secrets/modals/CreateOrSelectSecretModal/useCreateOrSelectSecretModal'
+import FileSelectField from './EncryptedSelect/FileSelectField'
 import css from './MultiConfigSelectField.module.scss'
 
 export type MapValue = { id: string; key: string; value: string }[]
@@ -50,36 +50,6 @@ export interface MultiTypeMapProps {
   keyLabel?: string
   valueLabel?: string
   restrictToSingleEntry?: boolean
-}
-
-interface SelectEncryptedProps {
-  name: string
-  formik: any
-}
-
-function SelectEncrypted(props: SelectEncryptedProps): React.ReactElement {
-  const { formik, name } = props
-  //   const { getString } = useStrings()
-
-  const { openCreateOrSelectSecretModal } = useCreateOrSelectSecretModal(
-    {
-      type: 'SecretFile',
-      onSuccess: secret => {
-        formik.setFieldValue(name, secret)
-        /* istanbul ignore next */
-        // console.log(secret)
-      }
-      //   secretsListMockData,
-      //   connectorTypeContext: connectorTypeContext
-    },
-    [name, formik]
-  )
-
-  return (
-    <>
-      <Button onClick={openCreateOrSelectSecretModal}>OPEN</Button>
-    </>
-  )
 }
 
 export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactElement {
@@ -118,63 +88,64 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
       >
         <FieldArray
           name={name}
-          render={({ push, remove }) => (
-            <>
-              {Array.isArray(value) &&
-                value.map(({ id }, index: number) => (
-                  <div className={cx(css.group, css.withoutAligning)} key={id}>
-                    {/* <div>
-                      {index === 0 && (
-                        <Text font={{ variation: FontVariation.FORM_LABEL }} margin={{ bottom: 'xsmall' }}>
-                          {keyLabel ?? getString('keyLabel')}
-                        </Text>
-                      )}
-                      <FormInput.Text name={`${name}[${index}].key`} disabled={disabled} />
-                    </div> */}
-
-                    <div>
-                      {index === 0 && (
-                        <Text font={{ variation: FontVariation.FORM_LABEL }} margin={{ bottom: 'xsmall' }}>
-                          {valueLabel ?? getString('valueLabel')}
-                        </Text>
-                      )}
-                      <div className={cx(css.group, css.withoutAligning, css.withoutSpacing)}>
-                        {/* <FormInput.MultiTextInput
-                          label=""
-                          name={`${name}[${index}].value`}
-                          multiTextInputProps={{
-                            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
-                            ...valueMultiTextInputProps
-                          }}
-                          disabled={disabled}
-                        /> */}
-                        <SelectEncrypted name={`${name}[${index}]`} formik={formik} />
-                        <Button
-                          icon="main-trash"
-                          iconProps={{ size: 20 }}
-                          minimal
-                          data-testid={`remove-${name}-[${index}]`}
-                          onClick={() => remove(index)}
-                          disabled={disabled}
-                        />
+          render={({ push, remove, replace }) => {
+            return (
+              <>
+                {Array.isArray(value) &&
+                  value.map((field: any, index: number) => {
+                    const { id, ...restValue } = field
+                    return (
+                      <div className={cx(css.group, css.withoutAligning)} key={id}>
+                        <div>
+                          {index === 0 && (
+                            <Text font={{ variation: FontVariation.FORM_LABEL }} margin={{ bottom: 'xsmall' }}>
+                              {valueLabel ?? getString('valueLabel')}
+                            </Text>
+                          )}
+                          <div className={cx(css.group, css.withoutAligning, css.withoutSpacing)}>
+                            <FileSelectField
+                              index={index}
+                              name={`${name}[${index}]`}
+                              formik={formik}
+                              id={id}
+                              onChange={(newValue, i) => {
+                                replace(i, {
+                                  ...restValue,
+                                  value: newValue
+                                })
+                              }}
+                              field={field}
+                            />
+                            <Button
+                              icon="main-trash"
+                              iconProps={{ size: 20 }}
+                              minimal
+                              data-testid={`remove-${name}-[${index}]`}
+                              onClick={() => remove(index)}
+                              disabled={disabled}
+                            />
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                ))}
+                    )
+                  })}
 
-              {restrictToSingleEntry && Array.isArray(value) && value?.length === 1 ? null : (
-                <Button
-                  intent="primary"
-                  minimal
-                  text={getString('plusAdd')}
-                  data-testid={`add-${name}`}
-                  onClick={() => push({ id: uuid('', nameSpace()), key: '', value: '' })}
-                  disabled={disabled}
-                  style={{ padding: 0 }}
-                />
-              )}
-            </>
-          )}
+                {restrictToSingleEntry && Array.isArray(value) && value?.length === 1 ? null : (
+                  <Button
+                    intent="primary"
+                    minimal
+                    text={getString('plusAdd')}
+                    data-testid={`add-${name}`}
+                    onClick={() => {
+                      push({ id: uuid('', nameSpace()), key: '', value: '' })
+                    }}
+                    disabled={disabled}
+                    style={{ padding: 0 }}
+                  />
+                )}
+              </>
+            )
+          }}
         />
       </MultiTypeFieldSelector>
 

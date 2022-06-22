@@ -60,7 +60,7 @@ function ConfigFilesListView({
   //   isPropagating,
   //   connectors,
   //   refetchConnectors,
-  //   listOfManifests,
+  listOfConfigFiles,
   deploymentType,
   isReadonly,
   allowableTypes,
@@ -275,6 +275,10 @@ ConfigFilesListViewProps): JSX.Element {
 
   return (
     <Layout.Vertical style={{ width: '100%' }}>
+      {listOfConfigFiles &&
+        listOfConfigFiles.map(configFile => {
+          return <div key={configFile}>{configFile}</div>
+        })}
       <Layout.Vertical spacing={'medium'} flex={{ alignItems: 'flex-start' }}>
         <Button
           //   className={css.addManifest}

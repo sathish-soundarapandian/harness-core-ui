@@ -61,12 +61,18 @@ export function HarnessConfigStep({
           name: '',
           identifier: '',
           fileType: '',
-          files: [],
-          multi: ''
+          files: []
         }}
         formName="configFileDetails"
         validationSchema={Yup.object().shape({
-          name: Yup.string().required(getString('pipeline.artifactsSelection.artifactTyperequired'))
+          name: Yup.string().required(getString('pipeline.artifactsSelection.artifactTyperequired')),
+          files: Yup.array()
+            .of(
+              Yup.object().shape({
+                value: Yup.object().required('Must have file')
+              })
+            )
+            .required('Must have files')
         })}
         onSubmit={gotoNextStep}
         enableReinitialize={true}
@@ -106,20 +112,28 @@ export function HarnessConfigStep({
                     })}
                   />
                 </RadioGroup>
-                {/* {formikProps.values.fileType === 'encrypted' && <SelectEncrypted name="files" formik={formikProps} />} */}
-                <MultiConfigSelectField
-                  name="multi"
-                  multiTypeFieldSelectorProps={{
-                    disableTypeSelection: true,
-                    label: (
-                      <Text style={{ display: 'flex', alignItems: 'center', color: 'rgb(11, 11, 13)' }}>
-                        {getString('optionalField', { name: getString('environmentVariables') })}
-                      </Text>
-                    )
-                  }}
-                />
+                {formikProps.values.fileType === 'encrypted' && (
+                  <MultiConfigSelectField
+                    name="files"
+                    formik={formikProps}
+                    multiTypeFieldSelectorProps={{
+                      disableTypeSelection: true,
+                      label: (
+                        <Text style={{ display: 'flex', alignItems: 'center', color: 'rgb(11, 11, 13)' }}>
+                          {getString('optionalField', { name: getString('environmentVariables') })}
+                        </Text>
+                      )
+                    }}
+                  />
+                )}
               </div>
               <Layout.Horizontal>
+                <Button
+                  text={getString('back')}
+                  icon="chevron-left"
+                  variation={ButtonVariation.SECONDARY}
+                  //   onClick={() => previousStep?.(prevStepData)}
+                />
                 <Button
                   variation={ButtonVariation.PRIMARY}
                   type="submit"

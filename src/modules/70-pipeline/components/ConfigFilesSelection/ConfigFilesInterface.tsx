@@ -26,6 +26,7 @@ export interface ConfigFilesListViewProps {
   updateStage: (stage: StageElementConfig) => Promise<void>
   selectedConfig: ConfigFileType
   setSelectedConfig: (config: ConfigFileType) => void
+  listOfConfigFiles: any[]
 }
 
 export type ConfigFileType = 'Harness' | 'Git' | 'Gitlab' | 'Github' | 'Bitbucket'
