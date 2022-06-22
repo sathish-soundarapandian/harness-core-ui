@@ -80,9 +80,7 @@ export function BaseScript(
       validationSchema={validationSchema}
     >
       {(formik: FormikProps<ShellScriptFormData>) => {
-        // this is required
         setFormikRef(formikRef, formik)
-        // console.log(formik)
         if (formik.dirty) {
           updateTemplate?.(formik.values)
         }

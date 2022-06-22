@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Container, MultiTypeInputType, Tab, Tabs } from '@wings-software/uicore'
 
 import type { NGTemplateInfoConfig } from 'services/template-ng'
@@ -35,9 +35,6 @@ export default function ScriptTemplateForm(
 
   return (
     <Container>
-      {/* {(loadingGetMonitoredService || loadingFetchMonitoredServiceYAML || loadingUpdateMonitoredService) && (
-        <PageSpinner />
-      )} */}
       <Tabs id="configurationTabs" selectedTabId={selectedTabID} onChange={nextTab => setselectedTabID(nextTab)}>
         <Tab
           id={getString('script')}
@@ -47,7 +44,6 @@ export default function ScriptTemplateForm(
             <BaseScriptWithRef
               initialValues={{ name: '', identifier: '', spec: { shell: 'Bash' }, type: 'Script', ...template }}
               updateTemplate={updateTemplate}
-              // onChange={data => onChange?.(this.processFormData(data))}
               allowableTypes={[]}
               stepViewType={StepViewType.Template}
               isNewStep={true}
@@ -63,7 +59,6 @@ export default function ScriptTemplateForm(
           panel={
             <OptionalConfigurationWithRef
               ref={formikRef as any}
-              // isNewStep={true}
               updateTemplate={updateTemplate}
               readonly={false}
               allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
