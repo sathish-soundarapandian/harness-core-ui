@@ -51,7 +51,7 @@ interface RowData extends NotificationSettingConfigDTO {
   recipient?: string
   slackWebhookUrl?: string
   pagerDutyKey?: string
-  msTeamKeys?: string
+  microsoftTeamsWebhookUrl?: string
 }
 export interface NotificationOption {
   label: string
@@ -120,7 +120,7 @@ const ChannelRow: React.FC<ChannelRow> = ({
         }
       case 'MSTEAMS':
         return {
-          name: 'msTeamKeys',
+          name: 'microsoftTeamsWebhookUrl',
           textPlaceholder: getString('notifications.labelMSTeam')
         }
       default:
@@ -222,7 +222,7 @@ const ChannelRow: React.FC<ChannelRow> = ({
             is: 'PAGERDUTY',
             then: Yup.string().trim().required(getString('notifications.validationPDKey'))
           }),
-          msTeamKeys: Yup.string().when(['type'], {
+          microsoftTeamsWebhookUrl: Yup.string().when(['type'], {
             is: 'MSTEAMS',
             then:
               selectedInputType === MultiTypeInputType.EXPRESSION
@@ -309,7 +309,13 @@ const ChannelRow: React.FC<ChannelRow> = ({
                     ) : null}
                     {!inherited ? (
                       enableEdit ? (
-                        <Button text={getString('save')} minimal type="submit" disabled={loading} />
+                        <Button
+                          data-testid="saveBtn"
+                          text={getString('save')}
+                          minimal
+                          type="submit"
+                          disabled={loading}
+                        />
                       ) : (
                         <>
                           <Button icon="edit" minimal onClick={() => setEdit(true)} className={css.button} />
