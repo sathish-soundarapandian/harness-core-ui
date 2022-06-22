@@ -12,6 +12,7 @@ import { ExecutionTemplate } from '@templates-library/components/Templates/Execu
 import { InfrastructureTemplate } from '@templates-library/components/Templates/InfrastructureTemplate/InfrastructureTemplate'
 import { ServiceTemplate } from '@templates-library/components/Templates/ServiceTemplate/ServiceTemplate'
 import { StepGroupTemplate } from '@templates-library/components/Templates/StepGroupTemplate/StepGroupTemplate'
+import { ScriptTemplate } from '@templates-library/components/Templates/ScriptTemplate/ScriptTemplate'
 import templateFactory from './TemplatesFactory'
 
 // common
@@ -22,3 +23,4 @@ templateFactory.registerTemplate(new ExecutionTemplate())
 templateFactory.registerTemplate(new InfrastructureTemplate())
 templateFactory.registerTemplate(new ServiceTemplate())
 templateFactory.registerTemplate(new StepGroupTemplate())
+templateFactory.registerTemplate(new ScriptTemplate())

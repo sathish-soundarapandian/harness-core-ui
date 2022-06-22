@@ -53,7 +53,7 @@ export default function BaseShellScript(props: {
 
   return (
     <>
-      {stepViewType !== StepViewType.Template && (
+      {stepViewType !== StepViewType.Template && stepViewType !== StepViewType.NoStep && (
         <div className={cx(stepCss.formGroup, stepCss.lg)}>
           <FormInput.InputWithIdentifier
             inputLabel={getString('pipelineSteps.stepNameLabel')}
@@ -65,30 +65,32 @@ export default function BaseShellScript(props: {
           />
         </div>
       )}
-      <div className={cx(stepCss.formGroup, stepCss.sm)}>
-        <FormMultiTypeDurationField
-          name="timeout"
-          label={getString('pipelineSteps.timeoutLabel')}
-          multiTypeDurationProps={{ enableConfigureOptions: false, expressions, disabled: readonly, allowableTypes }}
-          className={stepCss.duration}
-          disabled={readonly}
-        />
-        {getMultiTypeFromValue(formValues?.timeout) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            value={formValues?.timeout as string}
-            type="String"
-            variableName="step.timeout"
-            showRequiredField={false}
-            showDefaultField={false}
-            showAdvanced={true}
-            onChange={value => {
-              setFieldValue('timeout', value)
-            }}
-            isReadonly={readonly}
+      {stepViewType !== StepViewType.NoStep && (
+        <div className={cx(stepCss.formGroup, stepCss.sm)}>
+          <FormMultiTypeDurationField
+            name="timeout"
+            label={getString('pipelineSteps.timeoutLabel')}
+            multiTypeDurationProps={{ enableConfigureOptions: false, expressions, disabled: readonly, allowableTypes }}
+            className={stepCss.duration}
+            disabled={readonly}
           />
-        )}
-      </div>
-      <div className={stepCss.divider} />
+          {getMultiTypeFromValue(formValues?.timeout) === MultiTypeInputType.RUNTIME && (
+            <ConfigureOptions
+              value={formValues?.timeout as string}
+              type="String"
+              variableName="step.timeout"
+              showRequiredField={false}
+              showDefaultField={false}
+              showAdvanced={true}
+              onChange={value => {
+                setFieldValue('timeout', value)
+              }}
+              isReadonly={readonly}
+            />
+          )}
+        </div>
+      )}
+      {stepViewType !== StepViewType.NoStep && <div className={stepCss.divider} />}
       <div className={cx(stepCss.formGroup, stepCss.sm)}>
         <FormInput.Select
           items={shellScriptType}
@@ -125,19 +127,20 @@ export default function BaseShellScript(props: {
             expressions={expressions}
           />
         </MultiTypeFieldSelector>
-        {getMultiTypeFromValue(formValues.spec.source?.spec?.script) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            value={formValues.spec.source?.spec?.script as string}
-            type="String"
-            variableName="spec.source.spec.script"
-            className={css.minConfigBtn}
-            showRequiredField={false}
-            showDefaultField={false}
-            showAdvanced={true}
-            onChange={value => setFieldValue('spec.source.spec.script', value)}
-            isReadonly={readonly}
-          />
-        )}
+        {/* {stepViewType !== StepViewType.NoStep &&
+          getMultiTypeFromValue(formValues.spec?.source?.spec?.script) === MultiTypeInputType.RUNTIME && (
+            <ConfigureOptions
+              value={formValues.spec?.source?.spec?.script as string}
+              type="String"
+              variableName="spec.source.spec.script"
+              className={css.minConfigBtn}
+              showRequiredField={false}
+              showDefaultField={false}
+              showAdvanced={true}
+              onChange={value => setFieldValue('spec.source.spec.script', value)}
+              isReadonly={readonly}
+            />
+          )} */}
       </div>
     </>
   )
