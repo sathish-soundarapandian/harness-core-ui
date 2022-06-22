@@ -14,6 +14,7 @@ import common from '@common/strings/strings.en.yaml'
 import notifications from '@notifications/strings/strings.en.yaml'
 import auditTrail from '@audit-trail/strings/strings.en.yaml'
 import rbac from '@rbac/strings/strings.en.yaml'
+import defaultSettings from '@default-settings/strings/strings.en.yaml'
 import governance from '@governance/strings/strings.en.yaml'
 import sto from '@sto/strings/strings.en.yaml'
 import delegates from '@delegates/strings/strings.en.yaml'
@@ -43,6 +44,7 @@ export default function languageLoader() {
     notifications,
     auditTrail,
     rbac,
+    defaultSettings,
     governance,
     sto,
     delegates,

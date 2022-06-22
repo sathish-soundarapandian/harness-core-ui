@@ -182,6 +182,7 @@ export interface StringsMap {
   'common.datePickerShortcuts.Yesterday': string
   'common.default': string
   'common.defaultExperience': string
+  'common.defaultSettings': string
   'common.defineDelegateSelector': string
   'common.delegateForTask': string
   'common.delegateTokenLabel': string
@@ -1122,6 +1123,7 @@ export interface StringsMap {
   'rbac.usersPage.validation.role': string
   'rbac.youAreMissingTheFollowingPermission': string
   'rbac.youAreNotAuthorizedTo': string
+  'defaultSettings.defaultSettings1': string
   'governance.permissions.governancePolicies': string
   'governance.permissions.governancePolicySets': string
   'delegates.GBRam': string

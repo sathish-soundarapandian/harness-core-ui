@@ -900,6 +900,7 @@ download: Download
 gitOps: GitOps
 showHarnessManagedError: Harness Managed Resource cannot be edited
 contentRequired: Content is required
+defaultSettings: Default Settings
 
 # Chaos Module
 chaosText: Chaos

@@ -27,5 +27,5 @@ export function useFeatureFlag(flag: FeatureFlag): boolean {
 
 export function useFeatureFlags(): FeatureFlagMap {
   const { featureFlags } = useContext(AppStoreContext)
-  return featureFlags
+  return { ...featureFlags, HELM_OCI_SUPPORT: true }
 }

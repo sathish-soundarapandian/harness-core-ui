@@ -29,6 +29,7 @@ rules:
         - modules/85-sto-steps/*
         - modules/90-gitops/*
         - '@rbac/*'
+        - '@defaultSettings/*'
         - '@governance/*'
         - '@sto/*'
         - '@delegates/*'

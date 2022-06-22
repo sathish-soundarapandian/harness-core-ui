@@ -94,6 +94,15 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       selectable: true
     } as ResourceOption
   ]
+  const defaultSettingsCard: ResourceOption[] = [
+    {
+      label: <String stringID="common.defaultSettings" />,
+      icon: 'nav-settings',
+      onClick: toggleShowGitOpsEntities,
+      selectable: true
+    } as ResourceOption
+  ]
+
   const options: ResourceOption[] = items || [
     {
       label: <String stringID="connectorsLabel" />,
@@ -134,7 +143,8 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
           } as ResourceOption
         ]
       : []),
-    ...(showGitOpsCard ? gitOpsCard : [])
+    ...(showGitOpsCard ? gitOpsCard : []),
+    ...defaultSettingsCard
   ]
 
   const gitOpsEntities = [
