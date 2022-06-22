@@ -26,7 +26,8 @@ import {
   useGetTemplateFromPipeline,
   getInputSetForPipelinePromise,
   useGetMergeInputSetFromPipelineTemplateWithListInput,
-  InputSetResponse
+  InputSetResponse,
+  ResponseInputSetResponse
 } from 'services/pipeline-ng'
 import { PipelineInputSetForm } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
 import { isCloneCodebaseEnabledAtLeastOneStage } from '@pipeline/utils/CIUtils'
@@ -512,6 +513,27 @@ function WebhookPipelineInputPanelForm({
         } as unknown as InputSetDTO)
       : undefined
   }, [formikProps, pipeline?.properties?.ci?.codebase])
+  const onNewInputSetSuccess = useCallback(
+    (response: ResponseInputSetResponse) => {
+      const inputSet = response.data as InputSetResponse
+      const _inputSetSelected = (selectedInputSets || []).concat({
+        label: inputSet.name as string,
+        value: inputSet.identifier as string,
+        type: 'INPUT_SET',
+        gitDetails: inputSet.gitDetails
+      })
+
+      setInputSetError('')
+      setSelectedInputSets(_inputSetSelected)
+
+      formikProps.setValues({
+        ...formikProps.values,
+        inputSetSelected: _inputSetSelected,
+        inputSetRefs: _inputSetSelected.map(_inputSet => _inputSet.value)
+      })
+    },
+    [formikProps, selectedInputSets]
+  )
 
   useEffect(() => {
     setInputSetError(formikProps?.errors?.inputSetRefs)
@@ -569,24 +591,7 @@ function WebhookPipelineInputPanelForm({
                     inputSetInitialValue={inputSetInitialValue}
                     isModalOpen={showNewInputSetModal}
                     closeModal={() => setShowNewInputSetModal(false)}
-                    onCreateSuccess={response => {
-                      const inputSet = response.data as InputSetResponse
-                      const _inputSetSelected = (selectedInputSets || []).concat({
-                        label: inputSet.name as string,
-                        value: inputSet.identifier as string,
-                        type: 'INPUT_SET',
-                        gitDetails: inputSet.gitDetails
-                      })
-
-                      setInputSetError('')
-                      setSelectedInputSets(_inputSetSelected)
-
-                      formikProps.setValues({
-                        ...formikProps.values,
-                        inputSetSelected: _inputSetSelected,
-                        inputSetRefs: (formikProps.values.inputSetRefs || []).concat(inputSet.identifier)
-                      })
-                    }}
+                    onCreateSuccess={onNewInputSetSuccess}
                   />
                 )}
               </div>

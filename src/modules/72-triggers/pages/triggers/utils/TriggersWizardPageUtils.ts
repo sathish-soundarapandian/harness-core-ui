@@ -1966,3 +1966,5 @@ export const TriggerGitEventTypes: Readonly<string[]> = [
   TriggerGitEvent.ISSUE_COMMENT,
   TriggerGitEvent.PUSH
 ]
+
+export const isHarnessExpression = (str = ''): boolean => str.startsWith('<+') && str.endsWith('>')

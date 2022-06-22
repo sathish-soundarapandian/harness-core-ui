@@ -76,6 +76,7 @@ import type {
 import { memoizedParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useConfirmAction, useMutateAsGet, useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import type { FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
+import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import {
   scheduleTabsId,
@@ -112,7 +113,8 @@ import {
   TriggerGitEvent,
   ciCodebaseBuild,
   ciCodebaseBuildIssueComment,
-  ciCodebaseBuildPullRequest
+  ciCodebaseBuildPullRequest,
+  isHarnessExpression
 } from './utils/TriggersWizardPageUtils'
 import {
   ArtifactTriggerConfigPanel,
@@ -462,9 +464,28 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       orgIdentifier,
       projectIdentifier,
       targetIdentifier: pipelineIdentifier,
-      ignoreError: gitAwareForTriggerEnabled ? ignoreError : undefined
+      ...(gitAwareForTriggerEnabled
+        ? {
+            ignoreError,
+            branch,
+            connectorRef: pipelineConnectorRef,
+            repoName: pipelineRepoName,
+            storeType
+          }
+        : undefined)
     }),
-    [accountId, orgIdentifier, projectIdentifier, pipelineIdentifier, ignoreError, gitAwareForTriggerEnabled]
+    [
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      pipelineIdentifier,
+      ignoreError,
+      gitAwareForTriggerEnabled,
+      branch,
+      pipelineConnectorRef,
+      pipelineRepoName,
+      storeType
+    ]
   )
   const retryFn = useRef<() => void>(noop)
   const [retrySavingConfirmationMessage, setRetrySavingConfirmation] = useState('')
@@ -525,6 +546,9 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
 
       if (gitAwareForTriggerEnabled) {
         delete res.inputYaml
+        if (values.inputSetSelected?.length) {
+          res.inputSetRefs = values.inputSetSelected.map((inputSet: InputSetValue) => inputSet.value)
+        }
       }
 
       return { trigger: res }
@@ -532,6 +556,9 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       const res = getScheduleTriggerYaml({ values })
       if (gitAwareForTriggerEnabled) {
         delete res.inputYaml
+        if (values.inputSetSelected?.length) {
+          res.inputSetRefs = values.inputSetSelected.map((inputSet: InputSetValue) => inputSet.value)
+        }
       }
       return { trigger: res }
     } else if (values.triggerType === TriggerTypes.MANIFEST || values.triggerType === TriggerTypes.ARTIFACT) {
@@ -547,6 +574,9 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       })
       if (gitAwareForTriggerEnabled) {
         delete res.inputYaml
+        if (values.inputSetSelected?.length) {
+          res.inputSetRefs = values.inputSetSelected.map((inputSet: InputSetValue) => inputSet.value)
+        }
       }
       return { trigger: res }
     }
@@ -742,9 +772,9 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       jexlCondition,
       secureToken,
       autoAbortPreviousExecutions = false,
-      pipelineBranchName = getDefaultPipelineReferenceBranch(formikValueTriggerType, event),
-      inputSetRefs
+      pipelineBranchName = getDefaultPipelineReferenceBranch(formikValueTriggerType, event)
     } = val
+    const inputSetRefs = get(val, 'inputSetSelected', []).map((_inputSet: InputSetValue) => _inputSet.value)
 
     const stringifyPipelineRuntimeInput = yamlStringify({
       pipeline: clearNullUndefined(pipelineRuntimeInput)
@@ -1490,7 +1520,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         if (err?.data?.status === ResponseStatus.ERROR && gitAwareForTriggerEnabled) {
           retryTriggerSubmit({ message: getErrorMessage(err?.data) || getString('triggers.retryTriggerSave') })
         } else {
-          setErrorToasterMessage(err?.data?.message)
+          setErrorToasterMessage(getErrorMessage(err))
         }
       } finally {
         setIgnoreError(false)
@@ -1716,12 +1746,28 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     lazy: true
   })
 
-  const onFormikEffect: FormikEffectProps['onChange'] = ({ formik, nextValues }) => {
+  const onFormikEffect: FormikEffectProps['onChange'] = ({ formik, prevValues, nextValues }) => {
     formikRef.current = formik
 
-    // Clear Errors Trip when Input Set Refs is changed
-    if (formErrors && Object.keys(formErrors).length && nextValues.inputSetRefs?.length) {
+    // Clear Errors Trip when Input Set Refs is changed (from users)
+    if (
+      formErrors &&
+      Object.keys(formErrors).length &&
+      nextValues.inputSetRefs?.length &&
+      prevValues.inputSetRefs?.length !== nextValues.inputSetRefs?.length
+    ) {
       setFormErrors({})
+    }
+
+    // Set pipelineBranchName to proper default expression when event is changed
+    if (prevValues.event !== nextValues.event) {
+      const { triggerType, event, pipelineBranchName } = nextValues
+      if (!(pipelineBranchName || '').trim() || isHarnessExpression(pipelineBranchName)) {
+        const defaultBranchName = getDefaultPipelineReferenceBranch(triggerType, event)
+        if (pipelineBranchName !== defaultBranchName) {
+          formik.setFieldValue('pipelineBranchName', defaultBranchName)
+        }
+      }
     }
   }
 
@@ -1951,13 +1997,13 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       if (formikProps?.values?.triggerType !== TriggerTypes.WEBHOOK) {
         const pipelineBranchName = (formikProps?.values?.pipelineBranchName || '').trim()
 
-        if (pipelineBranchName.startsWith('<+') && pipelineBranchName.endsWith('>')) {
+        if (isHarnessExpression(pipelineBranchName)) {
           _pipelineBranchNameError = getString('triggers.branchNameCantBeExpression')
         }
       }
 
       // inputSetRefs is required if Input Set is required to run pipeline
-      if (template?.data?.inputSetTemplateYaml && !formikProps?.values?.inputSetRefs?.length) {
+      if (template?.data?.inputSetTemplateYaml && !formikProps?.values?.inputSetSelected?.length) {
         _inputSetRefsError = getString('triggers.inputSetIsRequired')
       }
     }
@@ -1987,13 +2033,12 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       ...runPipelineFormErrors
     }
 
-    if (gitXErrors) {
+    if (gitXErrors && Object.keys(gitXErrors).length) {
       setErrors(gitXErrors)
       setFormErrors(gitXErrors)
       return gitXErrors
     } else if (!isEmpty(runPipelineFormErrors)) {
       setErrors(runPipelineFormErrors)
-      // To do: have errors outlines display
       return runPipelineFormErrors
     }
     return errors
