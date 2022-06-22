@@ -127,12 +127,14 @@ const OrgSelectionRenderer: React.FC<OrgSelectionRendererProps> = ({
           </Layout.Horizontal>
         </Layout.Vertical>
       )}
-      <AccountProjectSelectionRenderer
-        projects={projects}
-        onDelete={project => {
-          onProjectChange(projects.filter(id => id !== project))
-        }}
-      />
+      {projectSelection === SelectionType.SPECIFIED && projects.length ? (
+        <AccountProjectSelectionRenderer
+          projects={projects}
+          onDelete={project => {
+            onProjectChange(projects.filter(id => id !== project))
+          }}
+        />
+      ) : null}
     </Layout.Vertical>
   )
 }
