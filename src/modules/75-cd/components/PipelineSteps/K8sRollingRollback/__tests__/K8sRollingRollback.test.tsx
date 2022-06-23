@@ -41,7 +41,7 @@ describe('Test K8sRollingRollback Step', () => {
           identifier: 'Test_A',
           type: StepType.K8sRollingRollback,
           timeout: RUNTIME_INPUT_VALUE,
-          spec: { skipDryRun: RUNTIME_INPUT_VALUE }
+          spec: {}
         }}
         allValues={{
           type: StepType.K8sRollingRollback,
@@ -86,8 +86,7 @@ describe('Test K8sRollingRollback Step', () => {
           identifier: 'Test_A',
           type: StepType.K8sRollingRollback,
           spec: {
-            timeout: '10m',
-            skipDryRun: false
+            timeout: '10m'
           }
         }}
         customStepProps={{
@@ -105,12 +104,6 @@ describe('Test K8sRollingRollback Step', () => {
                 fqn: 'pipeline.stages.qaStage.execution.steps.rollingRollback.timeout',
                 localName: 'step.rollingRollback.timeout'
               }
-            },
-            'step-skip': {
-              yamlProperties: {
-                fqn: 'pipeline.stages.qaStage.execution.steps.rollingRollback.skipDryRun',
-                localName: 'step.rollingRollback.skipDryRun'
-              }
             }
           },
           variablesData: {
@@ -118,8 +111,7 @@ describe('Test K8sRollingRollback Step', () => {
             identifier: 'rollingDeploy',
             type: 'K8sRollingRollback',
             spec: {
-              timeout: 'step-timeout',
-              skipDryRun: 'step-skip'
+              timeout: 'step-timeout'
             }
           }
         }}
@@ -136,18 +128,14 @@ describe('Test K8sRollingRollback Step', () => {
         identifier: 'Test A',
         timeout: '5s',
         type: StepType.K8sRollingRollback,
-        spec: {
-          skipDryRun: false
-        }
+        spec: {}
       },
       template: {
         name: 'Test A',
         identifier: 'Test A',
         timeout: '<+input>',
         type: StepType.K8sRollingRollback,
-        spec: {
-          skipDryRun: false
-        }
+        spec: {}
       },
       viewType: StepViewType.TriggerForm
     })
@@ -157,18 +145,18 @@ describe('Test K8sRollingRollback Step', () => {
     const ref = React.createRef<StepFormikRef<unknown>>()
     const { container } = render(
       <TestStepWidget
-        initialValues={{ identifier: 'Test_A', type: 'K8sRollingRollback', spec: { skipDryRun: false } }}
+        initialValues={{ identifier: 'Test_A', type: 'K8sRollingRollback', spec: {} }}
         template={{
           identifier: 'Test_A',
           type: 'K8sRollingRollback',
           timeout: RUNTIME_INPUT_VALUE,
-          spec: { skipDryRun: RUNTIME_INPUT_VALUE }
+          spec: {}
         }}
         allValues={{
           type: 'K8sRollingRollback',
           name: 'Test A',
           identifier: 'Test_A',
-          spec: { skipDryRun: RUNTIME_INPUT_VALUE, timeout: '<+input>' }
+          spec: { timeout: '<+input>' }
         }}
         type={StepType.K8sRollingRollback}
         stepViewType={StepViewType.InputSet}
@@ -191,7 +179,6 @@ describe('Test K8sRollingRollback Step', () => {
           timeout: '5s',
           type: StepType.K8sRollingRollback,
           spec: {
-            skipDryRun: false,
             timeout: '10m'
           }
         }}

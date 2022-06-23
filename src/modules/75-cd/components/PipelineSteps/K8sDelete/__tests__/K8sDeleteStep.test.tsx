@@ -393,8 +393,7 @@ describe('Test K8sDeleteStep', () => {
           deleteResources: {
             type: 'ResourceName',
             spec: {
-              resourceNames: '<+input>' as unknown as string[],
-              skipDryRun: false
+              resourceNames: '<+input>' as unknown as string[]
             }
           }
         }

@@ -81,12 +81,6 @@ K8sRollingRollback.args = {
           fqn: 'pipeline.stages.qaStage.execution.steps.rollingRollback.timeout',
           localName: 'step.rollingRollback.timeout'
         }
-      },
-      'step-skip': {
-        yamlProperties: {
-          fqn: 'pipeline.stages.qaStage.execution.steps.rollingRollback.skipDryRun',
-          localName: 'step.rollingRollback.skipDryRun'
-        }
       }
     },
     variablesData: {
@@ -94,8 +88,7 @@ K8sRollingRollback.args = {
       identifier: 'rollingDeploy',
       type: 'K8sRollingRollback',
       spec: {
-        timeout: 'step-timeout',
-        skipDryRun: 'step-skip'
+        timeout: 'step-timeout'
       }
     }
   }

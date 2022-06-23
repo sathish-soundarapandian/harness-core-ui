@@ -65,7 +65,7 @@ export interface K8sBGSwapServicesVariablesStepProps {
   variablesData: K8sBGSwapServicesData
 }
 
-const withUpdatedPayload = (values: StepElementConfig) => ({ ...values, spec: { ...values.spec, skipDryRun: false } })
+const withUpdatedPayload = (values: StepElementConfig) => ({ ...values, spec: { ...values.spec } })
 
 function K8sBGSwapWidget(
   props: K8sBGSwapProps,
@@ -285,8 +285,6 @@ export class K8sBGSwapServices extends PipelineStep<K8sBGSwapServicesData> {
     identifier: '',
     type: StepType.K8sBGSwapServices,
     timeout: '10m',
-    spec: {
-      skipDryRun: false
-    }
+    spec: {}
   }
 }

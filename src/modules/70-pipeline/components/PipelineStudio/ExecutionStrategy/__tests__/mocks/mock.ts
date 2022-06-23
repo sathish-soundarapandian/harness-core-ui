@@ -236,9 +236,6 @@ export const blueGreenUpdateStageFnArg = {
           step: {
             identifier: 'bgSwapServices',
             name: 'Swap primary with stage service',
-            spec: {
-              skipDryRun: false
-            },
             timeout: '10m',
             type: 'K8sBGSwapServices'
           }
@@ -249,9 +246,6 @@ export const blueGreenUpdateStageFnArg = {
           step: {
             identifier: 'rollbackBgSwapServices',
             name: 'Swap primary with stage service',
-            spec: {
-              skipDryRun: false
-            },
             timeout: '10m',
             type: 'K8sBGSwapServices'
           }

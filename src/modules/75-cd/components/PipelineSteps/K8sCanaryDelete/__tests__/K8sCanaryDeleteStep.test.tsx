@@ -48,7 +48,7 @@ describe('Test K8sCanaryDeleteStep', () => {
           type: 'K8sCanaryDelete',
           name: 'Test A',
           timeout: RUNTIME_INPUT_VALUE,
-          spec: { skipDryRun: RUNTIME_INPUT_VALUE }
+          spec: {}
         }}
         allValues={{
           type: 'K8sCanaryDelete',
@@ -75,7 +75,7 @@ describe('Test K8sCanaryDeleteStep', () => {
           type: 'K8sCanaryDelete',
           name: 'Test A',
           timeout: RUNTIME_INPUT_VALUE,
-          spec: { skipDryRun: RUNTIME_INPUT_VALUE }
+          spec: {}
         }}
         path={'/abc'}
         type={StepType.K8sCanaryDelete}
@@ -130,18 +130,14 @@ describe('Test K8sCanaryDeleteStep', () => {
         identifier: 'Test A',
         timeout: '1s',
         type: 'K8sCanaryDelete',
-        spec: {
-          skipDryRun: false
-        }
+        spec: {}
       },
       template: {
         name: 'Test A',
         identifier: 'Test A',
         timeout: '<+input>',
         type: 'K8sCanaryDelete',
-        spec: {
-          skipDryRun: false
-        }
+        spec: {}
       },
       viewType: StepViewType.TriggerForm
     })
@@ -159,9 +155,7 @@ describe('Test K8sCanaryDeleteStep', () => {
           identifier: 'Test A',
           timeout: '1s',
           type: 'K8sCanaryDelete',
-          spec: {
-            skipDryRun: false
-          }
+          spec: {}
         }}
         type={StepType.K8sCanaryDelete}
         stepViewType={StepViewType.Edit}
@@ -181,9 +175,7 @@ describe('Test K8sCanaryDeleteStep', () => {
       identifier: 'newName',
       timeout: '5s',
       type: 'K8sCanaryDelete',
-      spec: {
-        skipDryRun: false
-      }
+      spec: {}
     })
 
     //timeout validation on submit

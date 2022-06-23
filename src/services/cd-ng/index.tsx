@@ -5814,7 +5814,6 @@ export type K8sAzureInfrastructure = Infrastructure & {
 
 export type K8sBGSwapServicesStepInfo = StepSpecType & {
   delegateSelectors?: string[]
-  skipDryRun?: boolean
 }
 
 export type K8sBlueGreenStepInfo = StepSpecType & {
@@ -5824,7 +5823,6 @@ export type K8sBlueGreenStepInfo = StepSpecType & {
 
 export type K8sCanaryDeleteStepInfo = StepSpecType & {
   delegateSelectors?: string[]
-  skipDryRun?: boolean
 }
 
 export type K8sCanaryStepInfo = StepSpecType & {
@@ -5847,7 +5845,6 @@ export interface K8sContainer {
 export type K8sDeleteStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   deleteResources: DeleteResourcesWrapper
-  skipDryRun?: boolean
 }
 
 export type K8sGcpInfrastructure = Infrastructure & {
@@ -5881,7 +5878,6 @@ export type K8sManifest = ManifestAttributes & {
 
 export type K8sRollingRollbackStepInfo = StepSpecType & {
   delegateSelectors?: string[]
-  skipDryRun?: boolean
 }
 
 export type K8sRollingStepInfo = StepSpecType & {
@@ -5892,7 +5888,6 @@ export type K8sRollingStepInfo = StepSpecType & {
 export type K8sScaleStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   instanceSelection: InstanceSelectionWrapper
-  skipDryRun?: boolean
   skipSteadyStateCheck?: boolean
   workload: string
 }

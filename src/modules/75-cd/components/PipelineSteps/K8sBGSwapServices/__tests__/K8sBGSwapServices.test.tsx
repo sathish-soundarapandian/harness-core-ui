@@ -32,9 +32,7 @@ describe('Test K8sBlueGreenDeployStep', () => {
           type: 'K8sBGSwapServices',
           name: 'Test A',
           timeout: RUNTIME_INPUT_VALUE,
-          spec: {
-            skipDryRun: RUNTIME_INPUT_VALUE
-          }
+          spec: {}
         }}
         type={StepType.K8sBGSwapServices}
         stepViewType={StepViewType.Edit}
@@ -52,9 +50,7 @@ describe('Test K8sBlueGreenDeployStep', () => {
           type: 'K8sBGSwapServices',
           name: 'Test A',
           timeout: RUNTIME_INPUT_VALUE,
-          spec: {
-            skipDryRun: RUNTIME_INPUT_VALUE
-          }
+          spec: {}
         }}
         path={'/abc'}
         type={StepType.K8sBGSwapServices}
@@ -73,9 +69,7 @@ describe('Test K8sBlueGreenDeployStep', () => {
           type: 'K8sBGSwapServices',
           name: 'Test A',
           timeout: '10m',
-          spec: {
-            skipDryRun: true
-          }
+          spec: {}
         }}
         type={StepType.K8sBGSwapServices}
         stepViewType={StepViewType.InputVariable}
@@ -108,18 +102,14 @@ describe('Test K8sBlueGreenDeployStep', () => {
         identifier: 'Test A',
         timeout: '1s',
         type: 'K8sBGSwapService',
-        spec: {
-          skipDryRun: false
-        }
+        spec: {}
       },
       template: {
         name: 'Test A',
         identifier: 'Test A',
         timeout: '<+input>',
         type: 'K8sBGSwapService',
-        spec: {
-          skipDryRun: false
-        }
+        spec: {}
       },
       viewType: StepViewType.TriggerForm
     })
@@ -137,9 +127,7 @@ describe('Test K8sBlueGreenDeployStep', () => {
           identifier: 'Test A',
           timeout: '1s',
           type: 'K8sBGSwapService',
-          spec: {
-            skipDryRun: false
-          }
+          spec: {}
         }}
         type={StepType.K8sBGSwapServices}
         stepViewType={StepViewType.Edit}
@@ -159,9 +147,7 @@ describe('Test K8sBlueGreenDeployStep', () => {
       identifier: 'newName',
       timeout: '5s',
       type: 'K8sBGSwapService',
-      spec: {
-        skipDryRun: false
-      }
+      spec: {}
     })
 
     //timeout validation on submit

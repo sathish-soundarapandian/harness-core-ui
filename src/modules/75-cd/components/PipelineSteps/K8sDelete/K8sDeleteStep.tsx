@@ -66,13 +66,11 @@ interface K8sDeleteFormSpec {
   resourceNames?: string[] | K8sDeleteConfigHeader[]
   deleteNamespace?: boolean
   manifestPaths?: string[] | K8sDeleteConfigHeader[]
-  skipDryRun?: boolean
 }
 interface K8sDeleteSpec {
   resourceNames?: K8sDeleteConfigHeader[] | string
   deleteNamespace?: boolean
   manifestPaths?: K8sDeleteConfigHeader[] | string
-  skipDryRun?: boolean
 }
 
 interface K8sDeleteConfigHeader {

@@ -456,7 +456,6 @@
             "skipCondition": null,
             "type": "K8sRollingRollback",
             "spec": {
-              "skipDryRun": null,
               "delegateSelectors": null,
               "rollingStepFqn": "pipeline.stages.testStage_Cypress.spec.execution.steps.rolloutDeployment"
             },

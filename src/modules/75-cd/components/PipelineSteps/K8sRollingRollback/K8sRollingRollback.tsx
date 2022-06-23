@@ -29,14 +29,13 @@ import {
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 
-import { FormMultiTypeCheckboxField } from '@common/components/MultiTypeCheckbox/MultiTypeCheckbox'
 import type { StringsMap } from 'stringTypes'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 interface K8sRollingRollbackData extends StepElementConfig {
-  spec: Omit<K8sRollingRollbackStepInfo, 'skipDryRun'> & { skipDryRun: boolean }
+  spec: K8sRollingRollbackStepInfo
 }
 
 export interface K8RollingRollbackVariableStepProps {
@@ -73,12 +72,12 @@ function K8sRollingRollbackWidget(
     <>
       <Formik<K8sRollingRollbackData>
         onSubmit={(values: K8sRollingRollbackData) => {
-          onUpdate?.({ ...values, spec: { skipDryRun: false } })
+          onUpdate?.({ ...values, spec: {} })
         }}
         formName="k8RollingRB"
         initialValues={initialValues}
         validate={data => {
-          onChange?.({ ...data, spec: { skipDryRun: false } })
+          onChange?.({ ...data, spec: {} })
         }}
         validationSchema={Yup.object().shape({
           ...getNameAndIdentifierSchema(getString, stepViewType),
@@ -156,21 +155,6 @@ const K8sRollingRollbackInputStep: React.FC<K8sRollingRollbackProps> = ({ inputS
               disabled: inputSetData?.readonly
             }}
             disabled={inputSetData?.readonly}
-          />
-        </div>
-      )}
-      {getMultiTypeFromValue(inputSetData?.template?.spec?.skipDryRun) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeCheckboxField
-            multiTypeTextbox={{
-              expressions,
-              allowableTypes: allowableTypes
-            }}
-            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.skipDryRun`}
-            className={stepCss.checkbox}
-            label={getString('pipelineSteps.skipDryRun')}
-            disabled={inputSetData?.readonly}
-            setToFalseWhenEmpty={true}
           />
         </div>
       )}
@@ -292,8 +276,6 @@ export class K8sRollingRollbackStep extends PipelineStep<K8sRollingRollbackData>
     name: '',
     type: StepType.K8sRollingRollback,
     timeout: '10m',
-    spec: {
-      skipDryRun: false
-    }
+    spec: {}
   }
 }
