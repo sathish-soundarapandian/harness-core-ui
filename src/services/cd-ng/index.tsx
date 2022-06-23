@@ -339,6 +339,11 @@ export interface AccessControlCheckError {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
     | 'SPOTINST_NULL_ERROR'
@@ -976,6 +981,13 @@ export interface AwsCurAttributes {
   s3Prefix?: string
 }
 
+export interface AwsInstanceFilter {
+  tags?: {
+    [key: string]: string
+  }
+  vpcs?: string[]
+}
+
 export interface AwsKmsConnectorCredential {
   spec?: AwsKmsCredentialSpec
   type: 'AssumeIAMRole' | 'AssumeSTSRole' | 'ManualConfig'
@@ -1007,6 +1019,16 @@ export type AwsKmsCredentialSpecAssumeSTS = AwsKmsCredentialSpec & {
 export type AwsKmsCredentialSpecManualConfig = AwsKmsCredentialSpec & {
   accessKey: string
   secretKey: string
+}
+
+export interface AwsListInstancesFilter {
+  autoScalingGroupName?: string
+  region: string
+  tags?: {
+    [key: string]: string
+  }
+  vpcIds?: string[]
+  winRm?: boolean
 }
 
 export type AwsManualConfigSpec = AwsCredentialSpec & {
@@ -1043,6 +1065,11 @@ export type AwsSecretManagerDTO = ConnectorConfigDTO & {
   delegateSelectors?: string[]
   region: string
   secretNamePrefix?: string
+}
+
+export interface AwsVPC {
+  id?: string
+  name?: string
 }
 
 export interface AzureAuthCredentialDTO {
@@ -1224,11 +1251,28 @@ export type AzureWebAppInfrastructure = Infrastructure & {
   deploymentSlot: string
   resourceGroup: string
   subscriptionId: string
-  targetSlot: string
 }
 
 export interface AzureWebAppNamesDTO {
   webAppNames?: string[]
+}
+
+export type AzureWebAppRollbackStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+}
+
+export type AzureWebAppSlotDeploymentStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+}
+
+export type AzureWebAppSwapSlotStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  targetSlot?: string
+}
+
+export type AzureWebAppTrafficShiftStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  traffic?: string
 }
 
 export interface BarrierInfoConfig {
@@ -1375,6 +1419,7 @@ export type CDModuleLicenseDTO = ModuleLicenseDTO & {
 }
 
 export interface CDPipelineModuleInfo {
+  envGroupIdentifiers?: string[]
   envIdentifiers?: string[]
   environmentTypes?: ('PreProduction' | 'Production')[]
   infrastructureTypes?: string[]
@@ -1555,8 +1600,8 @@ export interface CloudformationTemplateFileSpec {
 }
 
 export interface Cluster {
+  cluster?: ClusterInternal
   identifier?: string
-  name?: string
 }
 
 export interface ClusterBasicDTO {
@@ -1571,6 +1616,10 @@ export interface ClusterBatchRequest {
   orgIdentifier?: string
   projectIdentifier?: string
   searchTerm?: string
+}
+
+export interface ClusterInternal {
+  name?: string
 }
 
 export interface ClusterRequest {
@@ -1588,11 +1637,6 @@ export interface ClusterResponse {
   projectIdentifier?: string
 }
 
-export interface ClusterYaml {
-  metadata?: string
-  ref: string
-}
-
 export interface CodeBase {
   build: Build
   connectorRef: string
@@ -1602,6 +1646,22 @@ export interface CodeBase {
   repoName?: string
   resources?: ContainerResource
   sslVerify?: boolean
+}
+
+export type CommandStepInfo = StepSpecType & {
+  commandUnits?: CommandUnitWrapper[]
+  delegateSelectors?: string[]
+  environmentVariables?: NGVariable[]
+  metadata?: string
+  onDelegate: boolean
+}
+
+export interface CommandUnitBaseSpec {
+  type?: string
+}
+
+export interface CommandUnitWrapper {
+  commandUnit?: StepCommandUnit
 }
 
 export interface Condition {
@@ -1965,15 +2025,13 @@ export interface ContextElement {
   uuid?: string
 }
 
-export type CountInstanceSelection = InstanceSelectionBase & {
-  count?: ParameterFieldString
+export type CopyCommandUnitSpec = CommandUnitBaseSpec & {
+  destinationPath: string
+  sourceType: 'Artifact' | 'Config'
 }
 
-export interface CreateInvite {
-  inviteType: 'USER_INITIATED_INVITE' | 'ADMIN_INITIATED_INVITE' | 'SCIM_INITIATED_INVITE'
-  roleBindings?: RoleBinding[]
-  userGroups?: string[]
-  users: string[]
+export type CountInstanceSelection = InstanceSelectionBase & {
+  count?: ParameterFieldString
 }
 
 export interface CreatePRDTO {
@@ -1995,16 +2053,11 @@ export interface CreatePRResponse {
 }
 
 export type CreatePRStepInfo = StepSpecType & {
-  commitMessage?: string
   delegateSelectors?: string[]
-  isNewBranch?: boolean
   overrideConfig: boolean
-  prTitle?: string
-  shell: 'Bash' | 'PowerShell'
-  source: CreatePRStepUpdateConfigScriptWrapper
-  store?: StoreConfigWrapper
+  shell: 'Bash'
+  source?: CreatePRStepUpdateConfigScriptWrapper
   stringMap?: ParameterFieldMapStringString
-  targetBranch?: string
 }
 
 export interface CreatePRStepUpdateConfigScriptBaseSource {
@@ -2139,6 +2192,7 @@ export interface DelegateEntityOwner {
 export type DelegateFilterProperties = FilterProperties & {
   delegateGroupIdentifier?: string
   delegateName?: string
+  delegateTags?: string[]
   delegateType?: string
   description?: string
   hostName?: string
@@ -2352,14 +2406,9 @@ export interface DeploymentInfo {
 }
 
 export type DeploymentStageConfig = StageInfoConfig & {
-  deploymentType?: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda'
-  environment?: EnvironmentYamlV2
-  environmentGroup?: EnvironmentGroupYaml
   execution: ExecutionElementConfig
-  gitOpsEnabled?: boolean
-  infrastructure?: PipelineInfrastructure
-  service?: ServiceYamlV2
-  serviceConfig?: ServiceConfig
+  infrastructure: PipelineInfrastructure
+  serviceConfig: ServiceConfig
 }
 
 export interface DeploymentStatsSummary {
@@ -2609,6 +2658,7 @@ export interface EntityDetail {
   name?: string
   type?:
     | 'CreatePR'
+    | 'MergePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -2687,12 +2737,19 @@ export interface EntityDetail {
     | 'CustomStage'
     | 'RollbackStack'
     | 'Infrastructure'
+    | 'Command'
+    | 'StrategyNode'
+    | 'AzureSlotDeployment'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
 }
 
 export interface EntityGitDetails {
   branch?: string
   commitId?: string
   filePath?: string
+  fileUrl?: string
   objectId?: string
   repoIdentifier?: string
   repoName?: string
@@ -2830,13 +2887,6 @@ export interface EnvironmentGroupResponseDTO {
   }
 }
 
-export interface EnvironmentGroupYaml {
-  deployToAll?: boolean
-  envGroupConfig?: EnvironmentYamlV2[]
-  envGroupRef: string
-  metadata?: string
-}
-
 export interface EnvironmentInfoByServiceId {
   artifactImage?: string
   environmentId?: string
@@ -2892,19 +2942,6 @@ export interface EnvironmentYaml {
     [key: string]: string
   }
   type: 'PreProduction' | 'Production'
-}
-
-export interface EnvironmentYamlV2 {
-  deployToAll: boolean
-  environmentInputs?: {
-    [key: string]: { [key: string]: any }
-  }
-  environmentRef: string
-  gitOpsClusters?: ClusterYaml[]
-  infrastructureDefinitions?: InfraStructureDefinitionYaml[]
-  serviceOverrideInputs?: {
-    [key: string]: { [key: string]: any }
-  }
 }
 
 export interface Error {
@@ -3225,6 +3262,11 @@ export interface Error {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
     | 'SPOTINST_NULL_ERROR'
@@ -3626,6 +3668,11 @@ export interface Failure {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
     | 'SPOTINST_NULL_ERROR'
@@ -3695,6 +3742,11 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'CREATE_STACK'
     | 'DELETE_STACK'
     | 'ROLLBACK_STACK'
+    | 'COMMAND'
+    | 'AZURE_SLOT_DEPLOYMENT'
+    | 'AZURE_TRAFFIC_SHIFT'
+    | 'AZURE_SWAP_SLOT'
+    | 'AZURE_WEBAPP_ROLLBACK'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -3751,6 +3803,11 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'CREATE_STACK'
     | 'DELETE_STACK'
     | 'ROLLBACK_STACK'
+    | 'COMMAND'
+    | 'AZURE_SLOT_DEPLOYMENT'
+    | 'AZURE_TRAFFIC_SHIFT'
+    | 'AZURE_SWAP_SLOT'
+    | 'AZURE_WEBAPP_ROLLBACK'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -3809,6 +3866,11 @@ export interface FeatureRestrictionDetailsDTO {
     | 'CREATE_STACK'
     | 'DELETE_STACK'
     | 'ROLLBACK_STACK'
+    | 'COMMAND'
+    | 'AZURE_SLOT_DEPLOYMENT'
+    | 'AZURE_TRAFFIC_SHIFT'
+    | 'AZURE_SWAP_SLOT'
+    | 'AZURE_WEBAPP_ROLLBACK'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -3875,6 +3937,11 @@ export interface FeatureRestrictionMetadataDTO {
     | 'CREATE_STACK'
     | 'DELETE_STACK'
     | 'ROLLBACK_STACK'
+    | 'COMMAND'
+    | 'AZURE_SLOT_DEPLOYMENT'
+    | 'AZURE_TRAFFIC_SHIFT'
+    | 'AZURE_SWAP_SLOT'
+    | 'AZURE_WEBAPP_ROLLBACK'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -4152,6 +4219,7 @@ export interface GitEnabledDTO {
 export interface GitEntityBranchFilterSummaryProperties {
   entityTypes?: (
     | 'CreatePR'
+    | 'MergePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -4230,6 +4298,12 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'CustomStage'
     | 'RollbackStack'
     | 'Infrastructure'
+    | 'Command'
+    | 'StrategyNode'
+    | 'AzureSlotDeployment'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
   )[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
   searchTerm?: string
@@ -4238,6 +4312,7 @@ export interface GitEntityBranchFilterSummaryProperties {
 export interface GitEntityFilterProperties {
   entityTypes?: (
     | 'CreatePR'
+    | 'MergePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -4316,6 +4391,12 @@ export interface GitEntityFilterProperties {
     | 'CustomStage'
     | 'RollbackStack'
     | 'Infrastructure'
+    | 'Command'
+    | 'StrategyNode'
+    | 'AzureSlotDeployment'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
@@ -4357,6 +4438,7 @@ export interface GitFullSyncEntityInfoDTO {
   branch?: string
   entityType?:
     | 'CreatePR'
+    | 'MergePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -4435,6 +4517,12 @@ export interface GitFullSyncEntityInfoDTO {
     | 'CustomStage'
     | 'RollbackStack'
     | 'Infrastructure'
+    | 'Command'
+    | 'StrategyNode'
+    | 'AzureSlotDeployment'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -4451,6 +4539,7 @@ export interface GitFullSyncEntityInfoDTO {
 export interface GitFullSyncEntityInfoFilterKeys {
   entityTypes?: (
     | 'CreatePR'
+    | 'MergePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -4529,6 +4618,12 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'CustomStage'
     | 'RollbackStack'
     | 'Infrastructure'
+    | 'Command'
+    | 'StrategyNode'
+    | 'AzureSlotDeployment'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -4623,6 +4718,7 @@ export interface GitSyncEntityDTO {
   entityReference?: EntityReference
   entityType?:
     | 'CreatePR'
+    | 'MergePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -4701,6 +4797,12 @@ export interface GitSyncEntityDTO {
     | 'CustomStage'
     | 'RollbackStack'
     | 'Infrastructure'
+    | 'Command'
+    | 'StrategyNode'
+    | 'AzureSlotDeployment'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -4711,6 +4813,7 @@ export interface GitSyncEntityListDTO {
   count?: number
   entityType?:
     | 'CreatePR'
+    | 'MergePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -4789,6 +4892,12 @@ export interface GitSyncEntityListDTO {
     | 'CustomStage'
     | 'RollbackStack'
     | 'Infrastructure'
+    | 'Command'
+    | 'StrategyNode'
+    | 'AzureSlotDeployment'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -4816,6 +4925,7 @@ export interface GitSyncErrorDTO {
   createdAt?: number
   entityType?:
     | 'CreatePR'
+    | 'MergePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -4894,6 +5004,12 @@ export interface GitSyncErrorDTO {
     | 'CustomStage'
     | 'RollbackStack'
     | 'Infrastructure'
+    | 'Command'
+    | 'StrategyNode'
+    | 'AzureSlotDeployment'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -4931,7 +5047,7 @@ export interface GitSyncSettingsDTO {
 
 export interface GithubApiAccess {
   spec?: GithubApiAccessSpecDTO
-  type: 'GithubApp' | 'Token'
+  type: 'GithubApp' | 'Token' | 'OAuth'
 }
 
 export interface GithubApiAccessSpecDTO {
@@ -4965,11 +5081,15 @@ export interface GithubCredentialsDTO {
 
 export type GithubHttpCredentials = GithubCredentialsDTO & {
   spec: GithubHttpCredentialsSpecDTO
-  type: 'UsernamePassword' | 'UsernameToken'
+  type: 'UsernamePassword' | 'UsernameToken' | 'OAuth'
 }
 
 export interface GithubHttpCredentialsSpecDTO {
   [key: string]: any
+}
+
+export type GithubOauth = GithubHttpCredentialsSpecDTO & {
+  tokenRef: string
 }
 
 export type GithubSCMDTO = SourceCodeManagerDTO & {
@@ -5087,7 +5207,7 @@ export interface GovernanceMetadata {
 }
 
 export type HarnessApprovalStepInfo = StepSpecType & {
-  approvalMessage: string
+  approvalMessage?: string
   approverInputs?: ApproverInputInfo[]
   approvers: Approvers
   includePipelineExecutionHistory: boolean
@@ -5095,6 +5215,7 @@ export type HarnessApprovalStepInfo = StepSpecType & {
 
 export interface HarnessForConfig {
   iteration?: number
+  maxConcurrency?: number
 }
 
 export interface HarnessServiceInfoNG {
@@ -5307,14 +5428,6 @@ export interface InfraOverrides {
   infrastructureDefinition?: InfrastructureDef
 }
 
-export interface InfraStructureDefinitionYaml {
-  inputs?: {
-    [key: string]: { [key: string]: any }
-  }
-  metadata?: string
-  ref: string
-}
-
 export interface InfraUseFromStage {
   overrides?: InfraOverrides
   stage: string
@@ -5339,6 +5452,7 @@ export interface InfrastructureDef {
     | 'SshWinRmAzure'
     | 'ServerlessAwsLambda'
     | 'AzureWebApp'
+    | 'SshWinRmAws'
 }
 
 export interface InfrastructureDefinitionConfig {
@@ -5361,6 +5475,7 @@ export interface InfrastructureDefinitionConfig {
     | 'SshWinRmAzure'
     | 'ServerlessAwsLambda'
     | 'AzureWebApp'
+    | 'SshWinRmAws'
 }
 
 export interface InfrastructureDetails {
@@ -5385,6 +5500,7 @@ export interface InfrastructureRequestDTO {
     | 'SshWinRmAzure'
     | 'ServerlessAwsLambda'
     | 'AzureWebApp'
+    | 'SshWinRmAws'
   yaml?: string
 }
 
@@ -5413,6 +5529,7 @@ export interface InfrastructureResponseDTO {
     | 'SshWinRmAzure'
     | 'ServerlessAwsLambda'
     | 'AzureWebApp'
+    | 'SshWinRmAws'
   yaml?: string
 }
 
@@ -6176,14 +6293,23 @@ export type MarkAsSuccessFailureActionConfig = FailureStrategyActionConfig & {
   type: 'MarkAsSuccess'
 }
 
-export interface MatrixConfig {
+export type MatrixConfig = MatrixConfigInterface & {
   exclude?: ExcludeConfig[]
+  maxConcurrency?: number
+}
+
+export interface MatrixConfigInterface {
+  [key: string]: any
 }
 
 export interface Member {
   display?: string
   ref?: string
   value?: string
+}
+
+export type MergePRStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
 }
 
 export type MicrosoftTeamsConfig = NotificationSettingConfig & {
@@ -6459,8 +6585,11 @@ export interface OAuthSettings {
 }
 
 export interface OAuthSignupDTO {
+  edition?: 'COMMUNITY' | 'FREE' | 'TEAM' | 'ENTERPRISE'
   email?: string
+  intent?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
   name?: string
+  signupAction?: 'REGULAR' | 'TRIAL' | 'SUBSCRIBE'
   utmInfo?: UtmInfo
 }
 
@@ -7421,6 +7550,7 @@ export interface ReferencedByDTO {
   name?: string
   type?:
     | 'CreatePR'
+    | 'MergePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -7499,6 +7629,12 @@ export interface ReferencedByDTO {
     | 'CustomStage'
     | 'RollbackStack'
     | 'Infrastructure'
+    | 'Command'
+    | 'StrategyNode'
+    | 'AzureSlotDeployment'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
 }
 
 export type ReleaseRepoManifest = ManifestAttributes & {
@@ -8222,6 +8358,13 @@ export interface ResponseListAwsCFTemplateParamsData {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseListAwsVPC {
+  correlationId?: string
+  data?: AwsVPC[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseListBuildDetails {
   correlationId?: string
   data?: BuildDetails[]
@@ -8240,6 +8383,7 @@ export interface ResponseListEntityType {
   correlationId?: string
   data?: (
     | 'CreatePR'
+    | 'MergePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -8318,6 +8462,12 @@ export interface ResponseListEntityType {
     | 'CustomStage'
     | 'RollbackStack'
     | 'Infrastructure'
+    | 'Command'
+    | 'StrategyNode'
+    | 'AzureSlotDeployment'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -8396,22 +8546,6 @@ export interface ResponseListGitSyncEntityListDTO {
 export interface ResponseListHostValidationDTO {
   correlationId?: string
   data?: HostValidationDTO[]
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponseListInviteOperationResponse {
-  correlationId?: string
-  data?: (
-    | 'ACCOUNT_INVITE_ACCEPTED_NEED_PASSWORD'
-    | 'ACCOUNT_INVITE_ACCEPTED'
-    | 'USER_INVITED_SUCCESSFULLY'
-    | 'USER_ALREADY_ADDED'
-    | 'USER_ALREADY_INVITED'
-    | 'FAIL'
-    | 'INVITE_EXPIRED'
-    | 'INVITE_INVALID'
-  )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -8896,6 +9030,11 @@ export interface ResponseMessage {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
     | 'SPOTINST_NULL_ERROR'
@@ -10151,6 +10290,13 @@ export interface ScopingRuleDetailsNg {
   environmentTypeId?: string
 }
 
+export type ScriptCommandUnitSpec = CommandUnitBaseSpec & {
+  shell: 'Bash'
+  source: ShellScriptSourceWrapper
+  tailFiles?: TailFilePattern[]
+  workingDirectory?: string
+}
+
 export type ScriptStateExecutionData = DelegateResponseData & {
   activityId?: string
   delegateMetaInfo?: DelegateMetaInfo
@@ -10678,14 +10824,6 @@ export interface ServiceYaml {
   }
 }
 
-export interface ServiceYamlV2 {
-  metadata?: string
-  serviceInputs?: {
-    [key: string]: { [key: string]: any }
-  }
-  serviceRef: string
-}
-
 export interface ServicesCount {
   newCount?: number
   totalCount?: number
@@ -10760,7 +10898,7 @@ export type ShellScriptStepInfo = StepSpecType & {
   metadata?: string
   onDelegate: boolean
   outputVariables?: NGVariable[]
-  shell: 'Bash' | 'PowerShell'
+  shell: 'Bash'
   source: ShellScriptSourceWrapper
 }
 
@@ -10845,6 +10983,18 @@ export type SplunkConnectorDTO = ConnectorConfigDTO & {
 }
 
 export type SshServiceSpec = ServiceSpec & {}
+
+export type SshWinRmAwsInfrastructure = Infrastructure & {
+  autoScalingGroupName?: string
+  awsInstanceFilter?: AwsInstanceFilter
+  connectorRef: string
+  credentialsRef: string
+  delegateSelectors?: string[]
+  hostNameConvention: string
+  loadBalancer: string
+  region: string
+  useAutoScalingGroup?: boolean
+}
 
 export type SshWinRmAzureInfrastructure = Infrastructure & {
   connectorRef: string
@@ -10931,10 +11081,17 @@ export interface StepCategory {
   stepsData?: StepData[]
 }
 
+export interface StepCommandUnit {
+  name: string
+  spec?: CommandUnitBaseSpec
+  type: string
+}
+
 export interface StepData {
   name?: string
   type?:
     | 'CreatePR'
+    | 'MergePR'
     | 'APPLY'
     | 'SCALE'
     | 'STAGE_DEPLOYMENT'
@@ -10962,6 +11119,7 @@ export interface StepData {
     | 'TEMPLATIZED_SECRET_MANAGER'
     | 'ServerlessAwsLambdaDeploy'
     | 'ServerlessAwsLambdaRollback'
+    | 'Command'
 }
 
 export interface StepElementConfig {
@@ -11026,9 +11184,9 @@ export interface StoreConfigWrapperParameters {
 }
 
 export interface StrategyConfig {
-  batchSize?: number
   for?: HarnessForConfig
-  matrix?: MatrixConfig
+  matrix?: MatrixConfigInterface
+  parallelism?: number
 }
 
 export type StringNGVariable = NGVariable & {
@@ -11087,6 +11245,11 @@ export type TGTPasswordSpecDTO = TGTGenerationSpecDTO & {
 
 export type TagBuildSpec = BuildSpec & {
   tag: string
+}
+
+export interface TailFilePattern {
+  tailFile?: ParameterFieldString
+  tailPattern?: ParameterFieldString
 }
 
 export interface TechStack {
@@ -11790,8 +11953,6 @@ export type ApiKeyDTORequestBody = ApiKeyDTO
 
 export type CFParametersForAwsBodyRequestBody = string
 
-export type ClusterRequestRequestBody = ClusterRequest
-
 export type ConnectorRequestBody = Connector
 
 export type CustomerDTORequestBody = CustomerDTO
@@ -11844,9 +12005,9 @@ export type ScimUserRequestBody = ScimUser
 
 export type ScopingRuleDetailsNgArrayRequestBody = ScopingRuleDetailsNg[]
 
-export type SecretRequestWrapperRequestBody = void
+export type SecretRequestWrapperRequestBody = SecretRequestWrapper
 
-export type SecretRequestWrapper2RequestBody = SecretRequestWrapper
+export type SecretRequestWrapper2RequestBody = void
 
 export type ServiceAccountDTORequestBody = ServiceAccountDTO
 
@@ -11876,7 +12037,7 @@ export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody = string
 
-export type ProcessPollingResultNgBodyRequestBody = string[]
+export type SubscribeBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -12358,6 +12519,7 @@ export interface ListActivitiesQueryParams {
   status?: 'SUCCESS' | 'FAILED'
   referredEntityType:
     | 'CreatePR'
+    | 'MergePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -12436,8 +12598,15 @@ export interface ListActivitiesQueryParams {
     | 'CustomStage'
     | 'RollbackStack'
     | 'Infrastructure'
+    | 'Command'
+    | 'StrategyNode'
+    | 'AzureSlotDeployment'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
   referredByEntityType?:
     | 'CreatePR'
+    | 'MergePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -12516,6 +12685,12 @@ export interface ListActivitiesQueryParams {
     | 'CustomStage'
     | 'RollbackStack'
     | 'Infrastructure'
+    | 'Command'
+    | 'StrategyNode'
+    | 'AzureSlotDeployment'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -12622,6 +12797,7 @@ export interface GetActivitiesSummaryQueryParams {
   timeGroupType: 'HOUR' | 'DAY' | 'WEEK'
   referredEntityType:
     | 'CreatePR'
+    | 'MergePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -12700,8 +12876,15 @@ export interface GetActivitiesSummaryQueryParams {
     | 'CustomStage'
     | 'RollbackStack'
     | 'Infrastructure'
+    | 'Command'
+    | 'StrategyNode'
+    | 'AzureSlotDeployment'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
   referredByEntityType?:
     | 'CreatePR'
+    | 'MergePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -12780,6 +12963,12 @@ export interface GetActivitiesSummaryQueryParams {
     | 'CustomStage'
     | 'RollbackStack'
     | 'Infrastructure'
+    | 'Command'
+    | 'StrategyNode'
+    | 'AzureSlotDeployment'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -16849,6 +17038,58 @@ export const updateWhitelistedDomainsPromise = (
     void
   >('PUT', getConfig('ng/api'), `/authentication-settings/whitelisted-domains`, props, signal)
 
+export interface AutoScalingGroupsQueryParams {
+  awsConnectorRef: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  region: string
+}
+
+export type AutoScalingGroupsProps = Omit<
+  GetProps<ResponseListString, Failure | Error, AutoScalingGroupsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get auto scaling groups
+ */
+export const AutoScalingGroups = (props: AutoScalingGroupsProps) => (
+  <Get<ResponseListString, Failure | Error, AutoScalingGroupsQueryParams, void>
+    path={`/aws/aws-helper/auto-scaling-groups`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseAutoScalingGroupsProps = Omit<
+  UseGetProps<ResponseListString, Failure | Error, AutoScalingGroupsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get auto scaling groups
+ */
+export const useAutoScalingGroups = (props: UseAutoScalingGroupsProps) =>
+  useGet<ResponseListString, Failure | Error, AutoScalingGroupsQueryParams, void>(
+    `/aws/aws-helper/auto-scaling-groups`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get auto scaling groups
+ */
+export const autoScalingGroupsPromise = (
+  props: GetUsingFetchProps<ResponseListString, Failure | Error, AutoScalingGroupsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListString, Failure | Error, AutoScalingGroupsQueryParams, void>(
+    getConfig('ng/api'),
+    `/aws/aws-helper/auto-scaling-groups`,
+    props,
+    signal
+  )
+
 export type CFCapabilitiesForAwsProps = Omit<GetProps<ResponseListString, Failure | Error, void, void>, 'path'>
 
 /**
@@ -17013,6 +17254,54 @@ export const cFStatesForAwsPromise = (
     signal
   )
 
+export interface FilterHostsQueryParams {
+  awsConnectorRef: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type FilterHostsProps = Omit<GetProps<ResponseListString, Failure | Error, FilterHostsQueryParams, void>, 'path'>
+
+/**
+ * Get all the IAM hosts
+ */
+export const FilterHosts = (props: FilterHostsProps) => (
+  <Get<ResponseListString, Failure | Error, FilterHostsQueryParams, void>
+    path={`/aws/aws-helper/hosts`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseFilterHostsProps = Omit<
+  UseGetProps<ResponseListString, Failure | Error, FilterHostsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get all the IAM hosts
+ */
+export const useFilterHosts = (props: UseFilterHostsProps) =>
+  useGet<ResponseListString, Failure | Error, FilterHostsQueryParams, void>(`/aws/aws-helper/hosts`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Get all the IAM hosts
+ */
+export const filterHostsPromise = (
+  props: GetUsingFetchProps<ResponseListString, Failure | Error, FilterHostsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListString, Failure | Error, FilterHostsQueryParams, void>(
+    getConfig('ng/api'),
+    `/aws/aws-helper/hosts`,
+    props,
+    signal
+  )
+
 export interface GetIamRolesForAwsQueryParams {
   awsConnectorRef: string
   accountIdentifier: string
@@ -17064,6 +17353,58 @@ export const getIamRolesForAwsPromise = (
     signal
   )
 
+export interface LoadBalancersQueryParams {
+  awsConnectorRef: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  region: string
+}
+
+export type LoadBalancersProps = Omit<
+  GetProps<ResponseListString, Failure | Error, LoadBalancersQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get load balancers
+ */
+export const LoadBalancers = (props: LoadBalancersProps) => (
+  <Get<ResponseListString, Failure | Error, LoadBalancersQueryParams, void>
+    path={`/aws/aws-helper/load-balancers`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseLoadBalancersProps = Omit<
+  UseGetProps<ResponseListString, Failure | Error, LoadBalancersQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get load balancers
+ */
+export const useLoadBalancers = (props: UseLoadBalancersProps) =>
+  useGet<ResponseListString, Failure | Error, LoadBalancersQueryParams, void>(`/aws/aws-helper/load-balancers`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Get load balancers
+ */
+export const loadBalancersPromise = (
+  props: GetUsingFetchProps<ResponseListString, Failure | Error, LoadBalancersQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListString, Failure | Error, LoadBalancersQueryParams, void>(
+    getConfig('ng/api'),
+    `/aws/aws-helper/load-balancers`,
+    props,
+    signal
+  )
+
 export type RegionsForAwsProps = Omit<GetProps<ResponseMapStringString, Failure | Error, void, void>, 'path'>
 
 /**
@@ -17098,6 +17439,98 @@ export const regionsForAwsPromise = (
   getUsingFetch<ResponseMapStringString, Failure | Error, void, void>(
     getConfig('ng/api'),
     `/aws/aws-helper/regions`,
+    props,
+    signal
+  )
+
+export interface TagsQueryParams {
+  awsConnectorRef: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  region: string
+}
+
+export type TagsProps = Omit<GetProps<ResponseSetString, Failure | Error, TagsQueryParams, void>, 'path'>
+
+/**
+ * Get all the tags
+ */
+export const Tags = (props: TagsProps) => (
+  <Get<ResponseSetString, Failure | Error, TagsQueryParams, void>
+    path={`/aws/aws-helper/tags`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseTagsProps = Omit<UseGetProps<ResponseSetString, Failure | Error, TagsQueryParams, void>, 'path'>
+
+/**
+ * Get all the tags
+ */
+export const useTags = (props: UseTagsProps) =>
+  useGet<ResponseSetString, Failure | Error, TagsQueryParams, void>(`/aws/aws-helper/tags`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Get all the tags
+ */
+export const tagsPromise = (
+  props: GetUsingFetchProps<ResponseSetString, Failure | Error, TagsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseSetString, Failure | Error, TagsQueryParams, void>(
+    getConfig('ng/api'),
+    `/aws/aws-helper/tags`,
+    props,
+    signal
+  )
+
+export interface VpcsQueryParams {
+  awsConnectorRef: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  region: string
+}
+
+export type VpcsProps = Omit<GetProps<ResponseListAwsVPC, Failure | Error, VpcsQueryParams, void>, 'path'>
+
+/**
+ * Get all the vpcs
+ */
+export const Vpcs = (props: VpcsProps) => (
+  <Get<ResponseListAwsVPC, Failure | Error, VpcsQueryParams, void>
+    path={`/aws/aws-helper/vpcs`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseVpcsProps = Omit<UseGetProps<ResponseListAwsVPC, Failure | Error, VpcsQueryParams, void>, 'path'>
+
+/**
+ * Get all the vpcs
+ */
+export const useVpcs = (props: UseVpcsProps) =>
+  useGet<ResponseListAwsVPC, Failure | Error, VpcsQueryParams, void>(`/aws/aws-helper/vpcs`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Get all the vpcs
+ */
+export const vpcsPromise = (
+  props: GetUsingFetchProps<ResponseListAwsVPC, Failure | Error, VpcsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListAwsVPC, Failure | Error, VpcsQueryParams, void>(
+    getConfig('ng/api'),
+    `/aws/aws-helper/vpcs`,
     props,
     signal
   )
@@ -21689,6 +22122,11 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'CREATE_STACK'
     | 'DELETE_STACK'
     | 'ROLLBACK_STACK'
+    | 'COMMAND'
+    | 'AZURE_SLOT_DEPLOYMENT'
+    | 'AZURE_TRAFFIC_SHIFT'
+    | 'AZURE_SWAP_SLOT'
+    | 'AZURE_WEBAPP_ROLLBACK'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -21815,6 +22253,11 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'CREATE_STACK'
       | 'DELETE_STACK'
       | 'ROLLBACK_STACK'
+      | 'COMMAND'
+      | 'AZURE_SLOT_DEPLOYMENT'
+      | 'AZURE_TRAFFIC_SHIFT'
+      | 'AZURE_SWAP_SLOT'
+      | 'AZURE_WEBAPP_ROLLBACK'
       | 'SECURITY'
       | 'DEVELOPERS'
       | 'MONTHLY_ACTIVE_USERS'
@@ -21837,6 +22280,7 @@ export interface ListReferredByEntitiesQueryParams {
   identifier?: string
   referredEntityType?:
     | 'CreatePR'
+    | 'MergePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -21915,6 +22359,12 @@ export interface ListReferredByEntitiesQueryParams {
     | 'CustomStage'
     | 'RollbackStack'
     | 'Infrastructure'
+    | 'Command'
+    | 'StrategyNode'
+    | 'AzureSlotDeployment'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -24609,6 +25059,7 @@ export interface GetReferencedByQueryParams {
   projectIdentifier?: string
   entityType?:
     | 'CreatePR'
+    | 'MergePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -24687,6 +25138,12 @@ export interface GetReferencedByQueryParams {
     | 'CustomStage'
     | 'RollbackStack'
     | 'Infrastructure'
+    | 'Command'
+    | 'StrategyNode'
+    | 'AzureSlotDeployment'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
   searchTerm?: string
 }
 
@@ -25899,6 +26356,7 @@ export interface ListGitSyncEntitiesByTypeQueryParams {
 export interface ListGitSyncEntitiesByTypePathParams {
   entityType:
     | 'CreatePR'
+    | 'MergePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -25977,6 +26435,12 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'CustomStage'
     | 'RollbackStack'
     | 'Infrastructure'
+    | 'Command'
+    | 'StrategyNode'
+    | 'AzureSlotDeployment'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -26047,6 +26511,7 @@ export const listGitSyncEntitiesByTypePromise = (
   > & {
     entityType:
       | 'CreatePR'
+      | 'MergePR'
       | 'Projects'
       | 'Pipelines'
       | 'PipelineSteps'
@@ -26125,6 +26590,12 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'CustomStage'
       | 'RollbackStack'
       | 'Infrastructure'
+      | 'Command'
+      | 'StrategyNode'
+      | 'AzureSlotDeployment'
+      | 'AzureTrafficShift'
+      | 'AzureSwapSlot'
+      | 'AzureWebAppRollback'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -26872,7 +27343,7 @@ export interface LinkClusterQueryParams {
 }
 
 export type LinkClusterProps = Omit<
-  MutateProps<ResponseClusterResponse, Failure | Error, LinkClusterQueryParams, ClusterRequestRequestBody, void>,
+  MutateProps<ResponseClusterResponse, Failure | Error, LinkClusterQueryParams, ClusterRequest, void>,
   'path' | 'verb'
 >
 
@@ -26880,7 +27351,7 @@ export type LinkClusterProps = Omit<
  * Link a gitops cluster to an environment
  */
 export const LinkCluster = (props: LinkClusterProps) => (
-  <Mutate<ResponseClusterResponse, Failure | Error, LinkClusterQueryParams, ClusterRequestRequestBody, void>
+  <Mutate<ResponseClusterResponse, Failure | Error, LinkClusterQueryParams, ClusterRequest, void>
     verb="POST"
     path={`/gitops/clusters`}
     base={getConfig('ng/api')}
@@ -26889,7 +27360,7 @@ export const LinkCluster = (props: LinkClusterProps) => (
 )
 
 export type UseLinkClusterProps = Omit<
-  UseMutateProps<ResponseClusterResponse, Failure | Error, LinkClusterQueryParams, ClusterRequestRequestBody, void>,
+  UseMutateProps<ResponseClusterResponse, Failure | Error, LinkClusterQueryParams, ClusterRequest, void>,
   'path' | 'verb'
 >
 
@@ -26897,7 +27368,7 @@ export type UseLinkClusterProps = Omit<
  * Link a gitops cluster to an environment
  */
 export const useLinkCluster = (props: UseLinkClusterProps) =>
-  useMutate<ResponseClusterResponse, Failure | Error, LinkClusterQueryParams, ClusterRequestRequestBody, void>(
+  useMutate<ResponseClusterResponse, Failure | Error, LinkClusterQueryParams, ClusterRequest, void>(
     'POST',
     `/gitops/clusters`,
     { base: getConfig('ng/api'), ...props }
@@ -26907,74 +27378,11 @@ export const useLinkCluster = (props: UseLinkClusterProps) =>
  * Link a gitops cluster to an environment
  */
 export const linkClusterPromise = (
-  props: MutateUsingFetchProps<
-    ResponseClusterResponse,
-    Failure | Error,
-    LinkClusterQueryParams,
-    ClusterRequestRequestBody,
-    void
-  >,
+  props: MutateUsingFetchProps<ResponseClusterResponse, Failure | Error, LinkClusterQueryParams, ClusterRequest, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponseClusterResponse, Failure | Error, LinkClusterQueryParams, ClusterRequestRequestBody, void>(
+  mutateUsingFetch<ResponseClusterResponse, Failure | Error, LinkClusterQueryParams, ClusterRequest, void>(
     'POST',
-    getConfig('ng/api'),
-    `/gitops/clusters`,
-    props,
-    signal
-  )
-
-export interface UpdateClusterQueryParams {
-  accountIdentifier: string
-}
-
-export type UpdateClusterProps = Omit<
-  MutateProps<ResponseClusterResponse, Failure | Error, UpdateClusterQueryParams, ClusterRequestRequestBody, void>,
-  'path' | 'verb'
->
-
-/**
- * Update a cluster by identifier
- */
-export const UpdateCluster = (props: UpdateClusterProps) => (
-  <Mutate<ResponseClusterResponse, Failure | Error, UpdateClusterQueryParams, ClusterRequestRequestBody, void>
-    verb="PUT"
-    path={`/gitops/clusters`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseUpdateClusterProps = Omit<
-  UseMutateProps<ResponseClusterResponse, Failure | Error, UpdateClusterQueryParams, ClusterRequestRequestBody, void>,
-  'path' | 'verb'
->
-
-/**
- * Update a cluster by identifier
- */
-export const useUpdateCluster = (props: UseUpdateClusterProps) =>
-  useMutate<ResponseClusterResponse, Failure | Error, UpdateClusterQueryParams, ClusterRequestRequestBody, void>(
-    'PUT',
-    `/gitops/clusters`,
-    { base: getConfig('ng/api'), ...props }
-  )
-
-/**
- * Update a cluster by identifier
- */
-export const updateClusterPromise = (
-  props: MutateUsingFetchProps<
-    ResponseClusterResponse,
-    Failure | Error,
-    UpdateClusterQueryParams,
-    ClusterRequestRequestBody,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<ResponseClusterResponse, Failure | Error, UpdateClusterQueryParams, ClusterRequestRequestBody, void>(
-    'PUT',
     getConfig('ng/api'),
     `/gitops/clusters`,
     props,
@@ -28515,65 +28923,6 @@ export const getInvitesPromise = (
   signal?: RequestInit['signal']
 ) =>
   getUsingFetch<ResponsePageInvite, Failure | Error, GetInvitesQueryParams, void>(
-    getConfig('ng/api'),
-    `/invites`,
-    props,
-    signal
-  )
-
-export interface SendInviteQueryParams {
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-}
-
-export type SendInviteProps = Omit<
-  MutateProps<ResponseListInviteOperationResponse, Failure | Error, SendInviteQueryParams, CreateInvite, void>,
-  'path' | 'verb'
->
-
-/**
- * Add a new invite for the specified project/organization
- */
-export const SendInvite = (props: SendInviteProps) => (
-  <Mutate<ResponseListInviteOperationResponse, Failure | Error, SendInviteQueryParams, CreateInvite, void>
-    verb="POST"
-    path={`/invites`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseSendInviteProps = Omit<
-  UseMutateProps<ResponseListInviteOperationResponse, Failure | Error, SendInviteQueryParams, CreateInvite, void>,
-  'path' | 'verb'
->
-
-/**
- * Add a new invite for the specified project/organization
- */
-export const useSendInvite = (props: UseSendInviteProps) =>
-  useMutate<ResponseListInviteOperationResponse, Failure | Error, SendInviteQueryParams, CreateInvite, void>(
-    'POST',
-    `/invites`,
-    { base: getConfig('ng/api'), ...props }
-  )
-
-/**
- * Add a new invite for the specified project/organization
- */
-export const sendInvitePromise = (
-  props: MutateUsingFetchProps<
-    ResponseListInviteOperationResponse,
-    Failure | Error,
-    SendInviteQueryParams,
-    CreateInvite,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<ResponseListInviteOperationResponse, Failure | Error, SendInviteQueryParams, CreateInvite, void>(
-    'POST',
     getConfig('ng/api'),
     `/invites`,
     props,
@@ -30564,6 +30913,7 @@ export interface GetStepYamlSchemaQueryParams {
   scope?: 'account' | 'org' | 'project' | 'unknown'
   entityType?:
     | 'CreatePR'
+    | 'MergePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -30642,6 +30992,12 @@ export interface GetStepYamlSchemaQueryParams {
     | 'CustomStage'
     | 'RollbackStack'
     | 'Infrastructure'
+    | 'Command'
+    | 'StrategyNode'
+    | 'AzureSlotDeployment'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
   yamlGroup?: string
 }
 
@@ -30772,6 +31128,7 @@ export interface GetEntityYamlSchemaQueryParams {
   orgIdentifier?: string
   entityType?:
     | 'CreatePR'
+    | 'MergePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -30850,6 +31207,12 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'CustomStage'
     | 'RollbackStack'
     | 'Infrastructure'
+    | 'Command'
+    | 'StrategyNode'
+    | 'AzureSlotDeployment'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -31296,7 +31659,7 @@ export type ProcessPollingResultNgProps = Omit<
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    ProcessPollingResultNgBodyRequestBody,
+    SubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >,
   'path' | 'verb'
@@ -31308,7 +31671,7 @@ export const ProcessPollingResultNg = ({ perpetualTaskId, ...props }: ProcessPol
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    ProcessPollingResultNgBodyRequestBody,
+    SubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >
     verb="POST"
@@ -31323,7 +31686,7 @@ export type UseProcessPollingResultNgProps = Omit<
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    ProcessPollingResultNgBodyRequestBody,
+    SubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >,
   'path' | 'verb'
@@ -31335,7 +31698,7 @@ export const useProcessPollingResultNg = ({ perpetualTaskId, ...props }: UseProc
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    ProcessPollingResultNgBodyRequestBody,
+    SubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >(
     'POST',
@@ -31351,7 +31714,7 @@ export const processPollingResultNgPromise = (
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    ProcessPollingResultNgBodyRequestBody,
+    SubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   > & { perpetualTaskId: string },
   signal?: RequestInit['signal']
@@ -31360,17 +31723,17 @@ export const processPollingResultNgPromise = (
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    ProcessPollingResultNgBodyRequestBody,
+    SubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >('POST', getConfig('ng/api'), `/polling/delegate-response/${perpetualTaskId}`, props, signal)
 
 export type SubscribeProps = Omit<
-  MutateProps<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
+  MutateProps<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const Subscribe = (props: SubscribeProps) => (
-  <Mutate<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>
+  <Mutate<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>
     verb="POST"
     path={`/polling/subscribe`}
     base={getConfig('ng/api')}
@@ -31379,28 +31742,22 @@ export const Subscribe = (props: SubscribeProps) => (
 )
 
 export type UseSubscribeProps = Omit<
-  UseMutateProps<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
+  UseMutateProps<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const useSubscribe = (props: UseSubscribeProps) =>
-  useMutate<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
+  useMutate<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>(
     'POST',
     `/polling/subscribe`,
     { base: getConfig('ng/api'), ...props }
   )
 
 export const subscribePromise = (
-  props: MutateUsingFetchProps<
-    ResponsePollingResponseDTO,
-    Failure | Error,
-    void,
-    ProcessPollingResultNgBodyRequestBody,
-    void
-  >,
+  props: MutateUsingFetchProps<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
+  mutateUsingFetch<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>(
     'POST',
     getConfig('ng/api'),
     `/polling/subscribe`,
@@ -31409,12 +31766,12 @@ export const subscribePromise = (
   )
 
 export type UnsubscribeProps = Omit<
-  MutateProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
+  MutateProps<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const Unsubscribe = (props: UnsubscribeProps) => (
-  <Mutate<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>
+  <Mutate<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>
     verb="POST"
     path={`/polling/unsubscribe`}
     base={getConfig('ng/api')}
@@ -31423,22 +31780,21 @@ export const Unsubscribe = (props: UnsubscribeProps) => (
 )
 
 export type UseUnsubscribeProps = Omit<
-  UseMutateProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
+  UseMutateProps<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const useUnsubscribe = (props: UseUnsubscribeProps) =>
-  useMutate<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
-    'POST',
-    `/polling/unsubscribe`,
-    { base: getConfig('ng/api'), ...props }
-  )
+  useMutate<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>('POST', `/polling/unsubscribe`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
 
 export const unsubscribePromise = (
-  props: MutateUsingFetchProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
+  props: MutateUsingFetchProps<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
+  mutateUsingFetch<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>(
     'POST',
     getConfig('ng/api'),
     `/polling/unsubscribe`,
@@ -34967,6 +35323,94 @@ export const getServiceAccessListPromise = (
     signal
   )
 
+export interface GetRuntimeInputsServiceEntityQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface GetRuntimeInputsServiceEntityPathParams {
+  serviceIdentifier: string
+}
+
+export type GetRuntimeInputsServiceEntityProps = Omit<
+  GetProps<
+    ResponseString,
+    Failure | Error,
+    GetRuntimeInputsServiceEntityQueryParams,
+    GetRuntimeInputsServiceEntityPathParams
+  >,
+  'path'
+> &
+  GetRuntimeInputsServiceEntityPathParams
+
+/**
+ * This api returns runtime input YAML
+ */
+export const GetRuntimeInputsServiceEntity = ({ serviceIdentifier, ...props }: GetRuntimeInputsServiceEntityProps) => (
+  <Get<
+    ResponseString,
+    Failure | Error,
+    GetRuntimeInputsServiceEntityQueryParams,
+    GetRuntimeInputsServiceEntityPathParams
+  >
+    path={`/servicesV2/runtimeInputs/${serviceIdentifier}`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetRuntimeInputsServiceEntityProps = Omit<
+  UseGetProps<
+    ResponseString,
+    Failure | Error,
+    GetRuntimeInputsServiceEntityQueryParams,
+    GetRuntimeInputsServiceEntityPathParams
+  >,
+  'path'
+> &
+  GetRuntimeInputsServiceEntityPathParams
+
+/**
+ * This api returns runtime input YAML
+ */
+export const useGetRuntimeInputsServiceEntity = ({
+  serviceIdentifier,
+  ...props
+}: UseGetRuntimeInputsServiceEntityProps) =>
+  useGet<
+    ResponseString,
+    Failure | Error,
+    GetRuntimeInputsServiceEntityQueryParams,
+    GetRuntimeInputsServiceEntityPathParams
+  >(
+    (paramsInPath: GetRuntimeInputsServiceEntityPathParams) =>
+      `/servicesV2/runtimeInputs/${paramsInPath.serviceIdentifier}`,
+    { base: getConfig('ng/api'), pathParams: { serviceIdentifier }, ...props }
+  )
+
+/**
+ * This api returns runtime input YAML
+ */
+export const getRuntimeInputsServiceEntityPromise = (
+  {
+    serviceIdentifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseString,
+    Failure | Error,
+    GetRuntimeInputsServiceEntityQueryParams,
+    GetRuntimeInputsServiceEntityPathParams
+  > & { serviceIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseString,
+    Failure | Error,
+    GetRuntimeInputsServiceEntityQueryParams,
+    GetRuntimeInputsServiceEntityPathParams
+  >(getConfig('ng/api'), `/servicesV2/runtimeInputs/${serviceIdentifier}`, props, signal)
+
 export interface UpsertServiceV2QueryParams {
   accountIdentifier: string
 }
@@ -36447,7 +36891,7 @@ export const listPaymentMethodsPromise = (
 
 export interface RetrieveProductPricesQueryParams {
   accountIdentifier: string
-  moduleType: string
+  moduleType: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
 }
 
 export type RetrieveProductPricesProps = Omit<
@@ -40469,7 +40913,7 @@ export type PostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -40479,7 +40923,7 @@ export type PostSecretProps = Omit<
  * Create a secret
  */
 export const PostSecret = (props: PostSecretProps) => (
-  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapper2RequestBody, void>
+  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapperRequestBody, void>
     verb="POST"
     path={`/v2/secrets`}
     base={getConfig('ng/api')}
@@ -40492,7 +40936,7 @@ export type UsePostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -40506,7 +40950,7 @@ export const usePostSecret = (props: UsePostSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', `/v2/secrets`, { base: getConfig('ng/api'), ...props })
 
@@ -40518,7 +40962,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -40527,7 +40971,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets`, props, signal)
 
@@ -40920,7 +41364,7 @@ export type PostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -40934,7 +41378,7 @@ export const PostSecretViaYaml = (props: PostSecretViaYamlProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >
     verb="POST"
@@ -40949,7 +41393,7 @@ export type UsePostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -40963,7 +41407,7 @@ export const usePostSecretViaYaml = (props: UsePostSecretViaYamlProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', `/v2/secrets/yaml`, { base: getConfig('ng/api'), ...props })
 
@@ -40975,7 +41419,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -40984,7 +41428,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets/yaml`, props, signal)
 
@@ -41119,7 +41563,7 @@ export type PutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -41134,7 +41578,7 @@ export const PutSecret = ({ identifier, ...props }: PutSecretProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >
     verb="PUT"
@@ -41149,7 +41593,7 @@ export type UsePutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -41164,7 +41608,7 @@ export const usePutSecret = ({ identifier, ...props }: UsePutSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >('PUT', (paramsInPath: PutSecretPathParams) => `/v2/secrets/${paramsInPath.identifier}`, {
     base: getConfig('ng/api'),
@@ -41183,7 +41627,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -41192,7 +41636,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}`, props, signal)
 
@@ -41211,7 +41655,7 @@ export type PutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -41226,7 +41670,7 @@ export const PutSecretViaYaml = ({ identifier, ...props }: PutSecretViaYamlProps
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >
     verb="PUT"
@@ -41241,7 +41685,7 @@ export type UsePutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -41256,7 +41700,7 @@ export const usePutSecretViaYaml = ({ identifier, ...props }: UsePutSecretViaYam
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >('PUT', (paramsInPath: PutSecretViaYamlPathParams) => `/v2/secrets/${paramsInPath.identifier}/yaml`, {
     base: getConfig('ng/api'),
@@ -41275,7 +41719,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -41284,7 +41728,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}/yaml`, props, signal)
 
@@ -41799,6 +42243,7 @@ export const webhookEndpointPromise = (
 export interface GetYamlSchemaQueryParams {
   entityType:
     | 'CreatePR'
+    | 'MergePR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -41877,6 +42322,12 @@ export interface GetYamlSchemaQueryParams {
     | 'CustomStage'
     | 'RollbackStack'
     | 'Infrastructure'
+    | 'Command'
+    | 'StrategyNode'
+    | 'AzureSlotDeployment'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
   subtype?:
     | 'K8sCluster'
     | 'Git'

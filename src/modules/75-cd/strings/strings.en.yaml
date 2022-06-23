@@ -41,6 +41,20 @@ steps:
   serverless:
     regionPlaceholder: Specify a region
     stagePlaceholder: Specify a stage
+  awsInfraStep:
+    placeholders:
+      loadBalancer: Select Load Balancer
+      connectionAttribute: Select Connection Attribute
+      hostConnectionType: Select Host Connection Type
+      autoScallingGroup: Select Auto Scalling Group
+      vcp: Select VCP
+    labels:
+      connectionAttribute: Connection Attribute
+      useAutoScallingGroup: Use Auto Scalling Group
+      autoScallingGroup: Auto Scalling Group
+      useAwsInstanceFilter: Use AWS Instance Filter
+      hostConnectionType: Host Connection Type
+      vcp: VCP
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'

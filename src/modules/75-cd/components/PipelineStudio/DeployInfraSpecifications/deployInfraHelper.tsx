@@ -189,6 +189,11 @@ export const getInfraGroups = (
               label: getString('connectors.title.pdcConnector'),
               icon: 'pdc',
               value: InfraDeploymentType.PDC
+            },
+            {
+              label: getString('common.aws'),
+              icon: 'service-aws',
+              value: InfraDeploymentType.SshWinRmAws
             }
           ]
         }

@@ -29,6 +29,7 @@ import type {
 } from '@cd/components/PipelineSteps/InfraProvisioning/InfraProvisioning'
 import type { GcpInfrastructureSpec } from '@cd/components/PipelineSteps/GcpInfrastructureSpec/GcpInfrastructureSpec'
 import type { PDCInfrastructureSpec } from '@cd/components/PipelineSteps/PDCInfrastructureSpec/PDCInfrastructureSpec'
+import type { SshWinRmAwsInfrastructureSpec } from '@cd/components/PipelineSteps/SshWinRmAwsInfrastructureSpec/SshWinRmAwsInfrastructureSpec'
 import { useStrings } from 'framework/strings'
 import {
   PipelineContextType,
@@ -464,6 +465,33 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   delegateSelectors: value.delegateSelectors
                 },
                 InfraDeploymentType.PDC
+              )
+            }}
+          />
+        )
+      }
+      case InfraDeploymentType.SshWinRmAws: {
+        return (
+          <StepWidget<SshWinRmAwsInfrastructureSpec>
+            factory={factory}
+            key={stage?.stage?.identifier}
+            readonly={isReadonly}
+            initialValues={initialInfrastructureDefinitionValues as SshWinRmAwsInfrastructureSpec}
+            type={StepType.SshWinRmAws}
+            stepViewType={StepViewType.Edit}
+            allowableTypes={allowableTypes}
+            onUpdate={value => {
+              onUpdateInfrastructureDefinition(
+                {
+                  connectorRef: value.connectorRef?.connector?.identifier,
+                  credentialsRef: value.sshKey?.identifier,
+                  attributeFilters: value.attributeFilters,
+                  hostFilters: value.hostFilters,
+                  hosts: value.hosts,
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  delegateSelectors: value.delegateSelectors
+                },
+                InfraDeploymentType.SshWinRmAws
               )
             }}
           />
