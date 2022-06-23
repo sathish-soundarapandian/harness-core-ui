@@ -34,6 +34,7 @@ import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import { usePipelineSchema } from '../PipelineSchema/PipelineSchemaContext'
 
+import { MatrixStrategy } from './MatrixStrategy'
 import css from './LoopingStrategy.module.scss'
 
 export interface LoopingStrategyProps {
@@ -121,6 +122,8 @@ export function LoopingStrategy({
   }
 
   const renderCustomHeader = (): JSX.Element => <Container></Container>
+
+  return <MatrixStrategy />
 
   return (
     <React.Fragment>

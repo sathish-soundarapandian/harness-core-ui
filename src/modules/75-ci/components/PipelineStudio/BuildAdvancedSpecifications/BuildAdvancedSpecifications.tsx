@@ -78,7 +78,7 @@ const BuildAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childre
             </Layout.Horizontal>
           </Card>
         )}
-        {PIPELINE_MATRIX ? (
+        {true ? (
           <React.Fragment>
             <div className={css.tabHeading}>
               <span data-tooltip-id="loopingStrategyBuildStage">
