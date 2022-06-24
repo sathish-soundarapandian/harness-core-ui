@@ -456,6 +456,7 @@ export function PipelineListView({
         pageIndex: data?.number || 0,
         gotoPage
       }}
+      rowDataTestID={(_, index) => `pipeline-item-${index}`}
     />
   )
 }

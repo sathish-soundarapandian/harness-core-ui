@@ -22,7 +22,7 @@ exports[`Launch Button test Input date picker render  1`] = `
               class="bp3-label"
             >
               common.timeframe
-               
+
               <span
                 class="bp3-text-muted"
               />
@@ -35,7 +35,7 @@ exports[`Launch Button test Input date picker render  1`] = `
               >
                 <input
                   class="bp3-input"
-                  placeholder="10/10/1970 - 10/10/1970"
+                  placeholder="15/01/1970 - 15/02/1970"
                   type="text"
                 />
               </div>

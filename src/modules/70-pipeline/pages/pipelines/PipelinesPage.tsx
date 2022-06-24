@@ -14,8 +14,6 @@ import {
   OverlaySpinner,
   SelectOption,
   Text,
-  GridListToggle,
-  Views,
   DropDown,
   shouldShowError,
   PageSpinner,
@@ -80,10 +78,8 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { deploymentTypeLabel } from '@pipeline/utils/DeploymentTypeUtils'
 import useImportResource from '@pipeline/components/ImportResource/useImportResource'
 import CreatePipelineButton from '@pipeline/components/CreatePipelineButton/CreatePipelineButton'
-import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import type { StoreType } from '@common/constants/GitSyncTypes'
 import { ResourceType } from '@common/interfaces/GitSyncInterface'
-import { PipelineGridView } from './views/PipelineGridView'
 import { PipelineListView } from './views/PipelineListView'
 import PipelineFilterForm from '../pipeline-deployment-list/PipelineFilterForm/PipelineFilterForm'
 import pipelineIllustration from './images/deploypipeline-illustration.svg'
@@ -136,12 +132,6 @@ function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
   const [filters, setFilters] = useState<FilterDTO[]>()
   const [isRefreshingFilters, setIsRefreshingFilters] = useState<boolean>(false)
   const [error, setError] = useState<Error | null>(null)
-  const { preference: savedPipelineView, setPreference: setSavedPipelineView } = usePreferenceStore<Views | undefined>(
-    PreferenceScope.USER,
-    'pipelineViewType'
-  )
-  const initialSelectedView = savedPipelineView || Views.GRID
-  const [view, setView] = useState<Views>(initialSelectedView)
   const [appliedFilter, setAppliedFilter] = useState<FilterDTO | null>()
 
   // Set Default to LastUpdated
@@ -219,11 +209,6 @@ function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
     : isCFModule
     ? flagpipelineIllustration
     : pipelineIllustration
-
-  const setPipelineView = (viewType: Views): void => {
-    setView(viewType)
-    setSavedPipelineView(viewType)
-  }
 
   useDeepCompareEffect(() => {
     setAppliedFilter(
@@ -783,7 +768,6 @@ function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
                 </Layout.Horizontal>
               )}
             </>
-            <GridListToggle initialSelectedView={initialSelectedView} onViewToggle={setPipelineView} />
           </Layout.Horizontal>
         </Page.SubHeader>
       )}
@@ -863,31 +847,17 @@ function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
           </div>
         ) : (
           <GitSyncStoreProvider>
-            {view === Views.GRID ? (
-              <PipelineGridView
-                gotoPage={/* istanbul ignore next */ pageNumber => updateQueryParams({ page: pageNumber.toString() })}
-                data={pipelineList}
-                goToPipelineDetail={goToPipelineDetail}
-                goToPipelineStudio={goToPipeline}
-                refetchPipeline={fetchPipelines}
-                onDeletePipeline={onDeletePipeline}
-                onDelete={(pipeline: PMSPipelineSummaryResponse) => {
-                  setPipelineToDelete(pipeline)
-                }}
-              />
-            ) : (
-              <PipelineListView
-                gotoPage={/* istanbul ignore next */ pageNumber => updateQueryParams({ page: pageNumber.toString() })}
-                data={pipelineList}
-                goToPipelineDetail={goToPipelineDetail}
-                goToPipelineStudio={goToPipeline}
-                refetchPipeline={fetchPipelines}
-                onDelete={(pipeline: PMSPipelineSummaryResponse) => {
-                  setPipelineToDelete(pipeline)
-                }}
-                onDeletePipeline={onDeletePipeline}
-              />
-            )}
+            <PipelineListView
+              gotoPage={/* istanbul ignore next */ pageNumber => updateQueryParams({ page: pageNumber.toString() })}
+              data={pipelineList}
+              goToPipelineDetail={goToPipelineDetail}
+              goToPipelineStudio={goToPipeline}
+              refetchPipeline={fetchPipelines}
+              onDelete={(pipeline: PMSPipelineSummaryResponse) => {
+                setPipelineToDelete(pipeline)
+              }}
+              onDeletePipeline={onDeletePipeline}
+            />
           </GitSyncStoreProvider>
         )}
       </Page.Body>
