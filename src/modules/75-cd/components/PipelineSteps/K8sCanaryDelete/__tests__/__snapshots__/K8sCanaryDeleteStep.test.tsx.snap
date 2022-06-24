@@ -94,18 +94,6 @@ exports[`Test K8sCanaryDeleteStep inputset with path 1`] = `
           <div
             class="Layout--horizontal StyledProps--main MultiTypeInput--main"
           >
-            <label
-              class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input StyledProps--main"
-            >
-              <input
-                name="/abc.spec.skipDryRun"
-                type="checkbox"
-              />
-              <span
-                class="bp3-control-indicator"
-              />
-              pipelineSteps.skipDryRun
-            </label>
             <span
               class="bp3-popover-wrapper MultiTypeInput--wrapper"
             >
@@ -135,10 +123,6 @@ exports[`Test K8sCanaryDeleteStep inputset with path 1`] = `
               </span>
             </span>
           </div>
-          <span
-            class="Tooltip--acenter tooltip"
-            data-tooltip-id="stepTestUtilForm_/abc.spec.skipDryRun"
-          />
         </div>
       </div>
     </div>
@@ -666,18 +650,6 @@ exports[`Test K8sCanaryDeleteStep should render edit view for inputset 1`] = `
           <div
             class="Layout--horizontal StyledProps--main MultiTypeInput--main"
           >
-            <label
-              class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input StyledProps--main"
-            >
-              <input
-                name="spec.skipDryRun"
-                type="checkbox"
-              />
-              <span
-                class="bp3-control-indicator"
-              />
-              pipelineSteps.skipDryRun
-            </label>
             <span
               class="bp3-popover-wrapper MultiTypeInput--wrapper"
             >
@@ -707,10 +679,6 @@ exports[`Test K8sCanaryDeleteStep should render edit view for inputset 1`] = `
               </span>
             </span>
           </div>
-          <span
-            class="Tooltip--acenter tooltip"
-            data-tooltip-id="stepTestUtilForm_spec.skipDryRun"
-          />
         </div>
       </div>
     </div>

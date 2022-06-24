@@ -94,18 +94,6 @@ exports[`Test K8sRollingRollback Step inputSet 1`] = `
           <div
             class="Layout--horizontal StyledProps--main MultiTypeInput--main"
           >
-            <label
-              class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input StyledProps--main"
-            >
-              <input
-                name="/abc.spec.skipDryRun"
-                type="checkbox"
-              />
-              <span
-                class="bp3-control-indicator"
-              />
-              pipelineSteps.skipDryRun
-            </label>
             <span
               class="bp3-popover-wrapper MultiTypeInput--wrapper"
             >
@@ -135,10 +123,6 @@ exports[`Test K8sRollingRollback Step inputSet 1`] = `
               </span>
             </span>
           </div>
-          <span
-            class="Tooltip--acenter tooltip"
-            data-tooltip-id="stepTestUtilForm_/abc.spec.skipDryRun"
-          />
         </div>
       </div>
     </div>
@@ -714,18 +698,6 @@ exports[`Test K8sRollingRollback Step should render inputSet view 1`] = `
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
               >
-                <label
-                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input StyledProps--main"
-                >
-                  <input
-                    name="spec.skipDryRun"
-                    type="checkbox"
-                  />
-                  <span
-                    class="bp3-control-indicator"
-                  />
-                  pipelineSteps.skipDryRun
-                </label>
                 <span
                   class="bp3-popover-wrapper MultiTypeInput--wrapper"
                 >
@@ -755,10 +727,6 @@ exports[`Test K8sRollingRollback Step should render inputSet view 1`] = `
                   </span>
                 </span>
               </div>
-              <span
-                class="Tooltip--acenter tooltip"
-                data-tooltip-id="stepTestUtilForm_spec.skipDryRun"
-              />
             </div>
           </div>
         </div>
@@ -871,11 +839,6 @@ exports[`Test K8sRollingRollback Step should render variable view 1`] = `
         <div
           class="variableListRow variable-list-row"
         >
-          <span
-            class="nameSection"
-          >
-            skipDryRun
-          </span>
           <p
             class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
             style="--text-line-clamp: 1;"
