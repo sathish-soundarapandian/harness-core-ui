@@ -26,13 +26,16 @@ import { DialogExtensionContext } from '@connectors/common/ConnectorExtention/Di
 import { Connectors } from '@connectors/constants'
 import { useStrings } from 'framework/strings'
 import { useCloudCostK8sClusterSetup } from 'services/ce'
-import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CE_K8S_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
 import { useMutateAsGet } from '@common/hooks'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
+import { connectorGovernanceModalProps } from '@connectors/utils/utils'
+import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
+import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
-import { useConnectorGovernanceModal } from '@connectors/hooks/useConnectorGovernanceModal'
 import CopyCodeSection from './components/CopyCodeSection'
 import PermissionYAMLPreview from './PermissionYAMLPreview'
 import css from './CEK8sConnector.module.scss'
@@ -67,11 +70,10 @@ const ProvidePermissions: React.FC<StepProps<StepSecretManagerProps> & ProvidePe
   const { mutate: updateConnector } = useUpdateConnector({
     queryParams: { accountIdentifier: accountId }
   })
-  const { hideOrShowGovernanceErrorModal } = useConnectorGovernanceModal({
-    errorOutOnGovernanceWarning: false,
-    featureFlag: FeatureFlag.OPA_CONNECTOR_GOVERNANCE
-  })
-  const { data: permissionsYaml } = useMutateAsGet(useCloudCostK8sClusterSetup, {
+
+  const opaFlagEnabled = useFeatureFlag(FeatureFlag.OPA_CONNECTOR_GOVERNANCE)
+  const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal(connectorGovernanceModalProps())
+  const { data: permissionsYaml, loading: yamlLoading } = useMutateAsGet(useCloudCostK8sClusterSetup, {
     queryParams: {
       accountIdentifier: accountId
     },
@@ -94,6 +96,10 @@ const ProvidePermissions: React.FC<StepProps<StepSecretManagerProps> & ProvidePe
   }
 
   const saveAndContinue = async (): Promise<void> => {
+    trackEvent(ConnectorActions.ProvidePermissionsSubmit, {
+      category: Category.CONNECTOR,
+      connector_type: Connectors.CEK8
+    })
     setIsSaving(true)
     try {
       modalErrorHandler?.hide()
@@ -105,10 +111,14 @@ const ProvidePermissions: React.FC<StepProps<StepSecretManagerProps> & ProvidePe
         } as ConnectorInfoDTO
       }
       const response = props.isEditMode ? await updateConnector(connector) : await createConnector(connector)
-      const { canGoToNextStep } = await hideOrShowGovernanceErrorModal(response)
-      if (canGoToNextStep) {
+      const nextSteps = () => {
         props.onSuccess?.(response?.data as ConnectorRequestBody)
         props.nextStep?.({ ...props.prevStepData } as ConnectorInfoDTO)
+      }
+      if (opaFlagEnabled && response.data?.governanceMetadata) {
+        conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, nextSteps)
+      } else {
+        nextSteps()
       }
     } catch (e) {
       modalErrorHandler?.showDanger(getRBACErrorMessage(e))
@@ -116,6 +126,11 @@ const ProvidePermissions: React.FC<StepProps<StepSecretManagerProps> & ProvidePe
       setIsSaving(false)
     }
   }
+
+  useTrackEvent(ConnectorActions.ProvidePermissionsLoad, {
+    category: Category.CONNECTOR,
+    connector_type: Connectors.CEK8
+  })
 
   return (
     <Layout.Vertical spacing={'xlarge'} className={css.providePermissionContainer}>
@@ -158,6 +173,7 @@ const ProvidePermissions: React.FC<StepProps<StepSecretManagerProps> & ProvidePe
             onClick={handleDownload}
             text={getString('connectors.ceK8.providePermissionsStep.downloadYamlBtnText')}
             className={css.stepBtn}
+            disabled={yamlLoading}
           />
         )}
         {isDownloadComplete && (

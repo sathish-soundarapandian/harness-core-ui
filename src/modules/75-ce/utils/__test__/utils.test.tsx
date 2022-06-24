@@ -225,7 +225,10 @@ describe('test cases for anomalyUtils', () => {
         awsInstancetype: 'Instance Type',
         awsUsageType: 'Usage Type',
         workloadType: 'Workload Type',
-        awsAccount: 'Account'
+        awsAccount: 'Account',
+        azureSubscriptionGuid: 'Subscription ID',
+        azureMeterCategory: 'Meter category',
+        azureResourceGroup: 'Resource group name'
       },
       {
         gcpProduct: 'Product1',
@@ -239,7 +242,10 @@ describe('test cases for anomalyUtils', () => {
         awsInstancetype: 'Instance Type1',
         awsUsageType: 'Usage Type1',
         workloadType: 'Workload Type1',
-        awsAccount: 'Account1'
+        awsAccount: 'Account1',
+        azureSubscriptionGuid: 'Subscription ID1',
+        azureMeterCategory: 'Meter category1',
+        azureResourceGroup: 'Resource group name1'
       }
     ]
 
@@ -288,6 +294,42 @@ describe('test cases for anomalyUtils', () => {
         operator: 'IN',
         type: 'VIEW_ID_CONDITION',
         values: ['Usage Type', 'Usage Type1']
+      }
+    ])
+
+    expect(getFiltersFromEnityMap(entityMapArray, CloudProvider.AZURE)).toEqual([
+      {
+        field: {
+          fieldId: 'azureSubscriptionGuid',
+          fieldName: 'Subscription ID',
+          identifier: 'AZURE',
+          identifierName: 'AZURE'
+        },
+        operator: 'IN',
+        type: 'VIEW_ID_CONDITION',
+        values: ['Subscription ID', 'Subscription ID1']
+      },
+      {
+        field: {
+          fieldId: 'azureMeterCategory',
+          fieldName: 'Meter category',
+          identifier: 'AZURE',
+          identifierName: 'AZURE'
+        },
+        operator: 'IN',
+        type: 'VIEW_ID_CONDITION',
+        values: ['Meter category', 'Meter category1']
+      },
+      {
+        field: {
+          fieldId: 'azureResourceGroup',
+          fieldName: 'Resource group name',
+          identifier: 'AZURE',
+          identifierName: 'AZURE'
+        },
+        operator: 'IN',
+        type: 'VIEW_ID_CONDITION',
+        values: ['Resource group name', 'Resource group name1']
       }
     ])
   })

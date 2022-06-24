@@ -1748,18 +1748,18 @@
   resolved "https://npm.pkg.github.com/download/@harness/design-system/1.0.0/4961fc151ffa0dd1f3d86b37572f9a5cd575d592c646cd5e68d508e1045c9d96#e463410da2c7ad9bff84eaa43fbe4ba9ba347da1"
   integrity sha512-sMsLP5Rxg08t87dJamTgpzEfRAef06C14bZO92SGqiXYtXsK01evjnXaOAiUS4gO36gMGi5cYJAqkJ0XBkERIg==
 
-"@harness/help-panel@1.5.0":
-  version "1.5.0"
-  resolved "https://npm.pkg.github.com/download/@harness/help-panel/1.5.0/2b497728eba9bbd3caba92e9efc457b5d95687cd4f554033ea4dcf7c834712c0#90d51018500a12ff8765f7c2d5cdb7e4a495fce8"
-  integrity sha512-zkQ8xW9lF3k66lb3oaW3Pp32/ctQ+rTw6vHAjloHJfPNUEBLeq97qWlEL02qW7PUuqNB3ZkSAQ5AvOMFAw1dMQ==
+"@harness/help-panel@1.8.0":
+  version "1.8.0"
+  resolved "https://npm.pkg.github.com/download/@harness/help-panel/1.8.0/c54df68f7aa0a819c42b31a5d0d3ac2cf3ac98f10230d47040800dfa0bb1f28b#49d4558caeb2fb1e5941dd425f5775c3a97e0e5a"
+  integrity sha512-9BbIDxD49imw6UKd3yx7784R95RoUQdHiNM4uVVOL0BUVs4i2l/Q6px1MiI4Z4M43Ot7T79Yg2GhDOoHvTcy2A==
   dependencies:
     "@contentful/rich-text-react-renderer" "^15.12.0"
     contentful "^9.1.20"
 
-"@harness/icons@1.13.0":
-  version "1.13.0"
-  resolved "https://npm.pkg.github.com/download/@harness/icons/1.13.0/ebb54d86245d11cf90a9aee34765bc3c82a35ca2659e34e4583dbcbd97634da6#46b387f368449d51dc8410b9f80061fd6d21eb09"
-  integrity sha512-lAEhQvtpKLmnBxrmJtebST+iyzjjT+phk6rvj9oFdNSUeSoIM8LFCsws171B9+2sDGJdfQiA4upCYaY5b/L2MA==
+"@harness/icons@^1.24.0":
+  version "1.24.0"
+  resolved "https://npm.pkg.github.com/download/@harness/icons/1.24.0/894424e39d949befc685c8ea627096c198d85a3499d0e8e0e3e232bf932cf071#c90afa980f493baf47c4a414b750d5e3cee7ff18"
+  integrity sha512-q6yRLRklHe3XhrQWWJYx7P9nGP9UIkkZBtTaoXjaTOFCzph9mcA/XBBT1GS380LywBVIjM2YFwyFAYF3o3YTdg==
 
 "@harness/jarvis@0.16.0":
   version "0.16.0"
@@ -1791,20 +1791,20 @@
     vscode-languageserver "^5.2.1"
     vscode-uri "^2.1.1"
 
-"@harness/ng-tooltip@^1.30.75":
-  version "1.30.98"
-  resolved "https://npm.pkg.github.com/download/@harness/ng-tooltip/1.30.98/f43af84141f912541db4e0c30e6c33c4fa4c516fef4897a305ff7632a96437c8#f29ac62f6982a5dc23b0ef4a0d208a13336bc098"
-  integrity sha512-f1x8gESjZlw3Bb4EkLQzOMzXVRn+ik6mIyvXncnORbmW+hl97v5+c7VDJW48RKOd7mt8dtMxpH2i1KLsYW/1WA==
+"@harness/ng-tooltip@^1.31.2":
+  version "1.31.11"
+  resolved "https://npm.pkg.github.com/download/@harness/ng-tooltip/1.31.11/76639580157bb1acfac6a44b2ea025dcd356eb34390fbe53a1ae712c4c63cb68#6f9cd0f5813bab835a8d94d05076e3aad1797e15"
+  integrity sha512-cPV+6qju6AbIYF7Aksc9p1tCDwUG3O3Ocg2LbH359+idBBEEyfWE8z6t2JN3NtprZQxsBczgPkarOXwOBvYidg==
 
 "@harness/telemetry@^1.0.42":
   version "1.0.42"
   resolved "https://npm.pkg.github.com/download/@harness/telemetry/1.0.42/60bc34c133bb40f0e0aa08f80620a1b23f3f089070e8550767e9d3fce8ca6e25#4d3f71026a03c898992d902f13a6c6d9cb0edac6"
   integrity sha512-pwjPYnQ8du1UswlX7A/apewGVDmbmaKKWTQSXtSHhKf9ekZ8WCwVvFcrM8ZIq/QbTn7Z8BXFYtMJdSG25oNtOg==
 
-"@harness/uicore@3.7.0":
-  version "3.7.0"
-  resolved "https://npm.pkg.github.com/download/@harness/uicore/3.7.0/c39cb1c991ce65e19bfe78797f3fb5a005ccc796f34155bf7937cb5e2251d6d5#a5bce85ffd5681fba2e0094a2ab4158321edf9a9"
-  integrity sha512-hJhpArF1DWG2TV82wNGrCQVmqmivcnecvC3X85sj0AFNZjtB4mR+RjjYuSt/JUxQQEnm444YcWgKERA2WLqJvQ==
+"@harness/uicore@^3.35.0":
+  version "3.36.0"
+  resolved "https://npm.pkg.github.com/download/@harness/uicore/3.36.0/b79a138ce20077e78b0d8cc08cafe5eee2f676488c8495ead1fe3070f6a61aa2#dc4a5cb5c1e3524578f235f26191c44d961c125c"
+  integrity sha512-BpAqPEipPQso7+TmI/UGeKQ/6RBGEM8to/K9tzOreIuaBAME6yj3c0mAmF9IDjlluJ5yb996FypHZgqgMk6rZg==
 
 "@harness/use-modal@1.1.0":
   version "1.1.0"
@@ -3156,6 +3156,18 @@
     regenerator-runtime "^0.13.7"
     resolve-from "^5.0.0"
     store2 "^2.12.0"
+
+"@stripe/react-stripe-js@^1.7.2":
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/@stripe/react-stripe-js/-/react-stripe-js-1.8.1.tgz#b646e3a8775dbb0432e234c6e1d67b19c4c0462d"
+  integrity sha512-8TpHu87zWSX/PhMMIC2C0jYXKl53kdiHz7bDSfLDs2oIynbV5L9cyoCZ1NuTllrNvFtd28fOqPc4IikZYRRDew==
+  dependencies:
+    prop-types "^15.7.2"
+
+"@stripe/stripe-js@^1.29.0":
+  version "1.31.0"
+  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-1.31.0.tgz#2920bdddc3eabb5734f9ca794824e25b378533ac"
+  integrity sha512-drlXsNvd/s9S1+Ghja0aDB81N3Wr/6iRAZ7MOzKv7AtKxVdvGpOwESw3z1lHl/Wx/rvPpA7whKdB3W2CnVSArw==
 
 "@swc/core-android-arm-eabi@1.2.139":
   version "1.2.139"

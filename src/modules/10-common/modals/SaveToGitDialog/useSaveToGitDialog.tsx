@@ -49,6 +49,7 @@ export interface OpenSaveToGitDialogValue<T> {
   isEditing: boolean
   resource: GitResourceInterface
   payload: T
+  disableCreatingNewBranch?: boolean
   _modalProps?: IDialogProps
 }
 
@@ -61,6 +62,7 @@ export function useSaveToGitDialog<T = Record<string, string>>(
   props: UseSaveToGitDialogProps<T>
 ): UseSaveToGitDialogReturn<T> {
   const [isEditMode, setIsEditMode] = useState(false)
+  const [_disableCreatingNewBranch, setDisableCreatingNewBranch] = useState(false)
   const [payloadData, setPayloadData] = useState<T>()
   const [resource, setResource] = useState<GitResourceInterface>({
     type: Entities.CONNECTORS,
@@ -89,6 +91,7 @@ export function useSaveToGitDialog<T = Record<string, string>>(
   const [nextCallback, setNextCallback] = useState<UseSaveSuccessResponse['nextCallback']>()
   /* TODO Don't see proper types for this new errors format, replace Record<string, any> with more stricter type when available */
   const [error, setError] = useState<Record<string, any>>({})
+  const [createPRError, setCreatePRError] = useState<Record<string, any> | undefined>()
   const [createUpdateStatus, setCreateUpdateStatus] = useState<StepStatus>()
   const { mutate: createPullRequest, loading: creatingPR } = useCreatePR({})
   const { mutate: createPullRequestV2, loading: creatingPRV2 } = useCreatePRV2({
@@ -107,7 +110,9 @@ export function useSaveToGitDialog<T = Record<string, string>>(
       />
     ),
     finalLabel: getErrorInfoFromErrorObject(error),
-    error: error?.data
+    error: error?.data || error
+    // ErrorHandling intergrated APIs do not have data, errors are as hints, explanations in responsemessages[]
+    // So, for better handling passing error and ProgressOverlay takes care of responsemessages[]
   }
   const fromBranch = defaultTo(prMetaData?.branch, '')
   const toBranch = defaultTo(prMetaData?.targetBranch, '')
@@ -147,7 +152,8 @@ export function useSaveToGitDialog<T = Record<string, string>>(
         useRichText
       />
     ),
-    finalLabel: getString('common.gitSync.unableToCreatePR')
+    finalLabel: getString('common.gitSync.unableToCreatePR'),
+    error: createPRError
   }
 
   const handleCreateUpdateSuccess = (status?: string): void => {
@@ -158,7 +164,12 @@ export function useSaveToGitDialog<T = Record<string, string>>(
 
   const handleCreateUpdateError = (e: any, data: SaveToGitFormInterface | SaveToGitFormV2Interface): void => {
     if (e.code === SCHEMA_VALIDATION_FAILED) {
-      hideCreateUpdateModal()
+      if (data?.createPr) {
+        hideCreateUpdateWithPRCreationModal()
+      } else {
+        hideCreateUpdateModal()
+      }
+
       return
     }
     setError(e)
@@ -204,7 +215,7 @@ export function useSaveToGitDialog<T = Record<string, string>>(
         style={{
           minWidth: 600,
           paddingBottom: 0,
-          maxHeight: 500
+          maxHeight: 600
         }}
         enforceFocus={false}
       >
@@ -282,7 +293,10 @@ export function useSaveToGitDialog<T = Record<string, string>>(
       .then(_response => {
         setPRCreateStatus(_response?.status)
       })
-      .catch(() => setPRCreateStatus('ERROR'))
+      .catch(prError => {
+        setCreatePRError(prError?.data)
+        setPRCreateStatus('ERROR')
+      })
   }
 
   const abortPR = (errorResponse: UseSaveSuccessResponse, data: SaveToGitFormInterface): void => {
@@ -373,6 +387,7 @@ export function useSaveToGitDialog<T = Record<string, string>>(
             orgIdentifier={orgIdentifier}
             projectIdentifier={projectIdentifier}
             isEditing={isEditMode}
+            disableCreatingNewBranch={_disableCreatingNewBranch}
             resource={resource}
             onSuccess={data => {
               handleSuccessV2(data, payloadData, resource.gitDetails?.objectId)
@@ -387,6 +402,7 @@ export function useSaveToGitDialog<T = Record<string, string>>(
               orgIdentifier={orgIdentifier}
               projectIdentifier={projectIdentifier}
               isEditing={isEditMode}
+              disableCreatingNewBranch={_disableCreatingNewBranch}
               resource={resource}
               onSuccess={data => {
                 handleSuccess(data, payloadData, resource.gitDetails?.objectId)
@@ -402,8 +418,15 @@ export function useSaveToGitDialog<T = Record<string, string>>(
   }, [isEditMode, resource])
 
   return {
-    openSaveToGitDialog: ({ isEditing, resource: resourceData, _modalProps, payload }: OpenSaveToGitDialogValue<T>) => {
+    openSaveToGitDialog: ({
+      isEditing,
+      resource: resourceData,
+      _modalProps,
+      payload,
+      disableCreatingNewBranch
+    }: OpenSaveToGitDialogValue<T>) => {
       setIsEditMode(isEditing)
+      setDisableCreatingNewBranch(Boolean(disableCreatingNewBranch))
       setPayloadData(payload)
       setResource(resourceData)
       setModalProps(defaultTo(_modalProps, modalProps))

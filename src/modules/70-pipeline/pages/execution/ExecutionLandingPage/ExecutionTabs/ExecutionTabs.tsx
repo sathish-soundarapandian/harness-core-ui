@@ -13,6 +13,7 @@ import { NavLink, useParams, useLocation, matchPath } from 'react-router-dom'
 import routes from '@common/RouteDefinitions'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { accountPathProps, executionPathProps, pipelineModuleParams } from '@common/utils/routeUtils'
+import { useAnyEnterpriseLicense } from '@common/hooks/useModuleLicenses'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import type { CIWebhookInfoDTO } from 'services/ci'
 import type { ExecutionQueryParams } from '@pipeline/utils/executionUtils'
@@ -30,7 +31,8 @@ const TAB_ID_MAP = {
   COMMITS: 'commits_view',
   TESTS: 'tests_view',
   POLICY_EVALUATIONS: 'policy_evaluations',
-  STO_SECURITY: 'sto_security'
+  STO_SECURITY: 'sto_security',
+  ERROR_TRACKING: 'error_tracking'
 }
 
 interface ExecutionTabsProps {
@@ -52,12 +54,15 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
   const opaBasedGovernanceEnabled = useFeatureFlag(FeatureFlag.OPA_PIPELINE_GOVERNANCE)
   const stoCDPipelineSecurityEnabled = useFeatureFlag(FeatureFlag.STO_CD_PIPELINE_SECURITY)
   const stoCIPipelineSecurityEnabled = useFeatureFlag(FeatureFlag.STO_CI_PIPELINE_SECURITY)
+  const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.ERROR_TRACKING_ENABLED)
+  const canUsePolicyEngine = useAnyEnterpriseLicense()
 
   const routeParams = { ...accountPathProps, ...executionPathProps, ...pipelineModuleParams }
   const isLogView =
     view === SavedExecutionViewTypes.LOG || (!view && initialSelectedView === SavedExecutionViewTypes.LOG)
   const isCD = params.module === 'cd'
   const isCI = params.module === 'ci'
+  const isSTO = params.module === 'sto'
   const isCIInPipeline = pipelineExecutionDetail?.pipelineExecutionSummary?.moduleInfo?.ci
 
   const ciData = pipelineExecutionDetail?.pipelineExecutionSummary?.moduleInfo?.ci
@@ -120,6 +125,12 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     if (isSecurityView) {
       return setSelectedTabId(TAB_ID_MAP.STO_SECURITY)
     }
+    const isErrorTrackingView = !!matchPath(location.pathname, {
+      path: routes.toExecutionErrorTrackingView(routeParams)
+    })
+    if (isErrorTrackingView) {
+      return setSelectedTabId(TAB_ID_MAP.ERROR_TRACKING)
+    }
     // Defaults to Pipelines Tab
     return setSelectedTabId(TAB_ID_MAP.PIPELINE)
   }, [location.pathname])
@@ -156,7 +167,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     })
   }
 
-  if (opaBasedGovernanceEnabled) {
+  if (canUsePolicyEngine && opaBasedGovernanceEnabled) {
     tabList.push({
       id: TAB_ID_MAP.POLICY_EVALUATIONS,
       title: (
@@ -219,7 +230,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     })
   }
 
-  if ((isCD && stoCDPipelineSecurityEnabled) || (isCI && stoCIPipelineSecurityEnabled)) {
+  if ((isCD && stoCDPipelineSecurityEnabled) || ((isCI || isSTO) && stoCIPipelineSecurityEnabled)) {
     tabList.push({
       id: TAB_ID_MAP.STO_SECURITY,
       title: (
@@ -230,6 +241,22 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
         >
           <Icon name="sto-grey" size={16} />
           <span>{getString('common.purpose.sto.continuous')}</span>
+        </NavLink>
+      )
+    })
+  }
+
+  if (isCI && isErrorTrackingEnabled) {
+    tabList.push({
+      id: TAB_ID_MAP.ERROR_TRACKING,
+      title: (
+        <NavLink
+          to={routes.toExecutionErrorTrackingView(params) + '/events' + location.search}
+          className={css.tabLink}
+          activeClassName={css.activeLink}
+        >
+          <Icon name="error-tracking" size={16} />
+          <span>{getString('common.purpose.errorTracking.title')}</span>
         </NavLink>
       )
     })

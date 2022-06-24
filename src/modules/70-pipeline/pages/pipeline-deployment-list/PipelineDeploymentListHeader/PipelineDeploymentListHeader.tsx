@@ -7,8 +7,8 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { ButtonVariation, Checkbox, ExpandingSearchInput } from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
+import { Button, ButtonVariation, Checkbox, ExpandingSearchInput, Layout, Text } from '@wings-software/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { String, useStrings } from 'framework/strings'
 import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
@@ -16,7 +16,7 @@ import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteIn
 import StatusSelect from '@pipeline/components/StatusSelect/StatusSelect'
 import NewPipelineSelect from '@pipeline/components/NewPipelineSelect/NewPipelineSelect'
 import { getFeaturePropsForRunPipelineButton, getRbacButtonModules } from '@pipeline/utils/runPipelineUtils'
-import { useUpdateQueryParams } from '@common/hooks'
+import { useBooleanStatus, useUpdateQueryParams } from '@common/hooks'
 import { Page } from '@common/exports'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import type { GetListOfExecutionsQueryParams } from 'services/pipeline-ng'
@@ -24,6 +24,8 @@ import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
+import { ExecutionCompareYamls } from '@pipeline/components/ExecutionCompareYamls/ExecutionCompareYamls'
+import { useExecutionCompareContext } from '@pipeline/components/ExecutionCompareYamls/ExecutionCompareContext'
 import { useFiltersContext } from '../FiltersContext/FiltersContext'
 import { ExecutionFilters } from './ExecutionFilters/ExecutionFilters'
 import type { QuickStatusParam } from '../types'
@@ -47,6 +49,9 @@ export function PipelineDeploymentListHeader(props: PipelineDeploymentListHeader
   const { updateQueryParams } = useUpdateQueryParams<Partial<GetListOfExecutionsQueryParams>>()
   const rbacButtonModules = getRbacButtonModules(module)
   const { getString } = useStrings()
+  const { isCompareMode, cancelCompareMode, compareItems } = useExecutionCompareContext()
+  const { state: showCompareExecutionDrawer, close, open } = useBooleanStatus(false)
+
   function handleQueryChange(query: string): void {
     if (query) {
       updateQueryParams({ searchTerm: query })
@@ -82,6 +87,38 @@ export function PipelineDeploymentListHeader(props: PipelineDeploymentListHeader
     }
   }
 
+  if (isCompareMode) {
+    return (
+      <>
+        <Page.SubHeader className={css.main}>
+          <Text font={{ variation: FontVariation.LEAD }}>{getString('pipeline.execution.compareExecutionsTitle')}</Text>
+          <Layout.Horizontal spacing="small" flex={{ alignItems: 'flex-end', justifyContent: 'flex-start' }}>
+            <Button
+              text={getString('pipeline.execution.compareAction')}
+              variation={ButtonVariation.PRIMARY}
+              onClick={() => open()}
+              disabled={compareItems.length < 2}
+            />
+            <Button
+              text={getString('cancel')}
+              variation={ButtonVariation.TERTIARY}
+              onClick={() => cancelCompareMode()}
+            />
+          </Layout.Horizontal>
+        </Page.SubHeader>
+        {showCompareExecutionDrawer && (
+          <ExecutionCompareYamls
+            compareItems={compareItems}
+            onClose={() => {
+              close()
+              cancelCompareMode()
+            }}
+          />
+        )}
+      </>
+    )
+  }
+
   return (
     <Page.SubHeader className={css.main}>
       <div className={css.lhs}>
@@ -108,7 +145,20 @@ export function PipelineDeploymentListHeader(props: PipelineDeploymentListHeader
         <Checkbox
           font={{ size: 'small', weight: 'semi-bold' }}
           color={Color.GREY_800}
-          label={getString(module === 'ci' ? 'pipeline.myBuildsText' : 'pipeline.myDeploymentsText')}
+          label={getString(
+            (() => {
+              switch (module) {
+                case 'ci':
+                  return 'pipeline.myBuildsText'
+                case 'cd':
+                  return 'pipeline.myDeploymentsText'
+                case 'sto':
+                  return 'pipeline.mySecurityTestsText'
+                default:
+                  return 'pipeline.myPipelineRunsText'
+              }
+            })()
+          )}
           checked={queryParams.myDeployments}
           onChange={e => handleMyDeployments(e.currentTarget.checked)}
           className={cx(css.myDeploymentsCheckbox, { [css.selected]: queryParams.myDeployments })}

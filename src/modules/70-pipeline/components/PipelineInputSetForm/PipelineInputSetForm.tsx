@@ -24,9 +24,10 @@ import DelegateSelectorPanel from '@pipeline/components/PipelineSteps/AdvancedSt
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { PubSubPipelineActions } from '@pipeline/factories/PubSubPipelineAction'
 import { PipelineActions } from '@pipeline/factories/PubSubPipelineAction/types'
-import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useDeepCompareEffect } from '@common/hooks'
 import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isCodebaseFieldsRuntimeInputs } from '@pipeline/utils/CIUtils'
 import { StageInputSetForm } from './StageInputSetForm'
 import { StageAdvancedInputSetForm } from './StageAdvancedInputSetForm'
@@ -55,7 +56,7 @@ export interface PipelineInputSetFormProps {
   isRunPipelineForm?: boolean
   listOfSelectedStages?: string[]
   isRetryFormStageSelected?: boolean
-  allowableTypes?: MultiTypeInputType[]
+  allowableTypes: MultiTypeInputType[]
   viewTypeMetadata?: Record<string, boolean>
   gitAwareForTriggerEnabled?: boolean
 }
@@ -207,9 +208,9 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
     maybeContainerClass = '',
     executionIdentifier,
     viewTypeMetadata,
-    allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
-    gitAwareForTriggerEnabled
+    allowableTypes
   } = props
+  const { module } = useParams<Partial<PipelineType<PipelinePathProps>>>()
   const { getString } = useStrings()
   const isTemplatePipeline = !!template.template
   const finalTemplate = isTemplatePipeline ? (template?.template?.templateInputs as PipelineInfoConfig) : template
@@ -284,7 +285,8 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
               variables: (originalPipeline.variables || []) as AllNGVariables[],
               canAddVariable: true
             }}
-            allowableTypes={allowableTypes}
+            // pipeline varibales do not support execution time inputs
+            allowableTypes={allowableTypes.filter(type => type !== MultiTypeInputType.RUNTIME)}
             readonly={readonly}
             type={StepType.CustomVariable}
             stepViewType={viewType}
@@ -297,7 +299,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
           />
         </>
       )}
-      {(isCloneCodebaseEnabledAtLeastAtOneStage || codebaseHasRuntimeInputs || gitAwareForTriggerEnabled) &&
+      {(isCloneCodebaseEnabledAtLeastAtOneStage || codebaseHasRuntimeInputs) &&
         getMultiTypeFromValue(finalTemplate?.properties?.ci?.codebase?.build as unknown as string) ===
           MultiTypeInputType.RUNTIME && (
           <>
@@ -306,9 +308,27 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                 data-name="ci-codebase-title"
                 color={Color.BLACK_100}
                 font={{ weight: 'semi-bold' }}
-                tooltipProps={{ dataTooltipId: 'ciCodebase' }}
+                tooltipProps={{
+                  dataTooltipId: (() => {
+                    switch (module) {
+                      case 'ci':
+                        return 'ciCodebase'
+                      default:
+                        return 'codebase'
+                    }
+                  })()
+                }}
               >
-                {getString('ciCodebase')}
+                {getString(
+                  (() => {
+                    switch (module) {
+                      case 'ci':
+                        return 'ciCodebase'
+                      default:
+                        return 'codebase'
+                    }
+                  })()
+                )}
               </Text>
             </Layout.Horizontal>
             <div className={css.topAccordion}>
@@ -327,7 +347,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
             </div>
           </>
         )}
-      {!gitAwareForTriggerEnabled ? (
+      {
         <>
           {finalTemplate?.stages?.map((stageObj, index) => {
             const pathPrefix = !isEmpty(finalPath) ? `${finalPath}.` : ''
@@ -368,13 +388,15 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
             }
           })}
         </>
-      ) : null}
+      }
     </Layout.Vertical>
   )
 }
-export function PipelineInputSetForm(props: PipelineInputSetFormProps): React.ReactElement {
+export function PipelineInputSetForm(props: Omit<PipelineInputSetFormProps, 'allowableTypes'>): React.ReactElement {
   const [template, setTemplate] = React.useState(props.template)
   const accountPathProps = useParams<AccountPathProps>()
+  const { NG_EXECUTION_INPUT } = useFeatureFlags()
+
   useDeepCompareEffect(() => {
     if (props.isRunPipelineForm) {
       PubSubPipelineActions.publish(PipelineActions.RunPipeline, {
@@ -389,5 +411,15 @@ export function PipelineInputSetForm(props: PipelineInputSetFormProps): React.Re
     }
   }, [props?.template])
 
-  return <PipelineInputSetFormInternal {...props} template={template} />
+  return (
+    <PipelineInputSetFormInternal
+      {...props}
+      template={template}
+      allowableTypes={
+        NG_EXECUTION_INPUT
+          ? [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+          : [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+      }
+    />
+  )
 }

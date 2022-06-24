@@ -40,6 +40,26 @@ export const getServiceNowCreateEditModeProps = (): ServiceNowCreateStepModeProp
   stepViewType: StepViewType.Edit
 })
 
+export const getServiceNowCreateTemplateTypeEditModeProps = (): ServiceNowCreateStepModeProps => ({
+  initialValues: {
+    name: '',
+    identifier: '',
+    type: 'ServiceNowCreate',
+    timeout: '5s',
+    spec: {
+      connectorRef: 'cid1',
+      ticketType: 'INCIDENT',
+      fields: [],
+      fieldType: FieldType.CreateFromTemplate,
+      useServiceNowTemplate: true,
+      templateName: 'templateName'
+    }
+  },
+  onUpdate: jest.fn(),
+  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  stepViewType: StepViewType.Edit
+})
+
 export const getServiceNowCreateEditModePropsWithConnectorId = (): ServiceNowCreateStepModeProps => ({
   initialValues: {
     name: '',
@@ -128,6 +148,57 @@ export const getServiceNowCreateDeploymentModeProps = (): ServiceNowCreateDeploy
             name: 'short_description',
             value: RUNTIME_INPUT_VALUE
           }
+        ]
+      }
+    }
+  },
+  onUpdate: jest.fn(),
+  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+})
+export const getServiceNowCreateDeploymentModeWithCustomFieldsProps = (): ServiceNowCreateDeploymentModeProps => ({
+  stepViewType: StepViewType.InputSet,
+  initialValues: {
+    name: '',
+    identifier: '',
+    type: 'ServiceNowCreate',
+    spec: {
+      connectorRef: 'cid1',
+      ticketType: 'INCIDENT',
+      fieldType: FieldType.ConfigureFields,
+      useServiceNowTemplate: false,
+      fields: [
+        {
+          name: 'description',
+          value: ''
+        },
+        {
+          name: 'short_description',
+          value: ''
+        }
+      ]
+    }
+  },
+  inputSetData: {
+    path: '/ab/',
+    template: {
+      name: '',
+      identifier: '',
+      type: 'ServiceNowCreate',
+      spec: {
+        connectorRef: 'cid1',
+        ticketType: 'INCIDENT',
+        fieldType: FieldType.ConfigureFields,
+        useServiceNowTemplate: false,
+        fields: [
+          {
+            name: 'description',
+            value: RUNTIME_INPUT_VALUE
+          },
+          {
+            name: 'short_description',
+            value: RUNTIME_INPUT_VALUE
+          },
+          { name: 'priority', value: RUNTIME_INPUT_VALUE }
         ]
       }
     }
@@ -333,6 +404,14 @@ export const mockServiceNowTemplateResponse: UseGetMockData<ResponseListServiceN
     correlationId: '',
     status: 'SUCCESS',
     metaData: null as unknown as undefined,
-    data: []
+    data: [
+      {
+        fields: {
+          fieldName: { displayValue: 'value', value: 'value' }
+        },
+        name: 'field1',
+        sys_id: 'field1'
+      }
+    ]
   }
 }

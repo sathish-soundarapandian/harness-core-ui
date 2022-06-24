@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import * as Yup from 'yup'
 import { defaultTo, isEmpty, omit, isUndefined, noop } from 'lodash-es'
 import {
@@ -19,6 +19,7 @@ import {
 } from '@wings-software/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { parse } from 'yaml'
+import cx from 'classnames'
 import type { FormikErrors, FormikProps } from 'formik'
 import type {
   ResponsePMSPipelineResponseDTO,
@@ -46,6 +47,7 @@ import {
   getPipelineWithoutCodebaseInputs
 } from '@pipeline/utils/CIUtils'
 import { mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
+import { getYamlFileName } from '@pipeline/utils/yamlUtils'
 import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetForm'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import { factory } from '../PipelineSteps/Steps/__tests__/StepTestUtil'
@@ -91,6 +93,9 @@ interface FormikInputSetFormProps {
   isGitSimplificationEnabled?: boolean
   yamlHandler?: YamlBuilderHandlerBinding
   setYamlHandler: React.Dispatch<React.SetStateAction<YamlBuilderHandlerBinding | undefined>>
+  className?: string
+  onCancel?: () => void
+  filePath?: string
 }
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
@@ -179,11 +184,12 @@ const onSubmitClick = (
         formikProps.values,
         {
           repoIdentifier: formikProps.values.repo,
-          branch: formikProps.values.branch
+          branch: formikProps.values.branch,
+          repoName: formikProps.values.repo
         },
         {
           connectorRef: formikProps.values.connectorRef,
-          repoName: formikProps.values.repoName,
+          repoName: formikProps.values.repo,
           branch: formikProps.values.branch,
           filePath: formikProps.values.filePath,
           storeType: formikProps.values.storeType
@@ -209,7 +215,10 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
     isGitSyncEnabled,
     isGitSimplificationEnabled,
     yamlHandler,
-    setYamlHandler
+    setYamlHandler,
+    className,
+    onCancel,
+    filePath
   } = props
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
@@ -279,9 +288,23 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
       shouldUseDefaultValues: !isEdit
     })
   }, [inputSet, isEdit, resolvedPipeline])
+  const hasError = useMemo(() => {
+    return formErrors && Object.keys(formErrors).length > 0
+  }, [formErrors])
+
+  const storeMetadata = {
+    repo: isGitSyncEnabled ? defaultTo(repoIdentifier, '') : defaultTo(repoName, ''),
+    branch: defaultTo(branch, ''),
+    connectorRef: defaultTo(connectorRef, ''),
+    repoName: defaultTo(repoName, ''),
+    storeType: defaultTo(storeType, StoreType.INLINE),
+    filePath: defaultTo(inputSet.gitDetails?.filePath, filePath)
+  }
+
+  const isPipelineRemote = isGitSimplificationEnabled && storeType === StoreType.REMOTE
 
   return (
-    <Container className={css.inputSetForm}>
+    <Container className={cx(css.inputSetForm, className, hasError ? css.withError : '')}>
       <Layout.Vertical
         spacing="medium"
         ref={ref => {
@@ -291,12 +314,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
         <Formik<InputSetDTO & GitContextProps & StoreMetadata>
           initialValues={{
             ...init,
-            repo: defaultTo(repoIdentifier, ''),
-            branch: defaultTo(branch, ''),
-            connectorRef: defaultTo(connectorRef, ''),
-            repoName: defaultTo(repoName, ''),
-            storeType: defaultTo(storeType, StoreType.INLINE),
-            filePath: inputSet.gitDetails?.filePath
+            ...storeMetadata
           }}
           enableReinitialize={true}
           formName="inputSetForm"
@@ -307,11 +325,12 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
               values,
               {
                 repoIdentifier: values.repo,
-                branch: values.branch
+                branch: values.branch,
+                repoName: values.repo
               },
               {
                 connectorRef: values.connectorRef,
-                repoName: values.repoName,
+                repoName: values.repo,
                 branch: values.branch,
                 filePath: values.filePath,
                 storeType: values.storeType
@@ -358,13 +377,13 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                                 />
                               </GitSyncStoreProvider>
                             )}
-                            {isGitSimplificationEnabled && storeType === StoreType.REMOTE && (
+                            {isPipelineRemote && (
                               <Container className={css.gitRemoteDetailsForm}>
                                 <GitSyncForm
                                   formikProps={formikProps as any}
                                   handleSubmit={noop}
                                   isEdit={isEdit}
-                                  showRemoteTypeSelection={false}
+                                  initialValues={storeMetadata}
                                   disableFields={
                                     !isEdit
                                       ? {
@@ -403,7 +422,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                           &nbsp; &nbsp;
                           <Button
                             variation={ButtonVariation.TERTIARY}
-                            onClick={history.goBack}
+                            onClick={onCancel || history.goBack}
                             text={getString('cancel')}
                           />
                         </Layout.Horizontal>
@@ -426,8 +445,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                             'connectorRef',
                             'repoName',
                             'filePath',
-                            'storeType',
-                            'remoteType'
+                            'storeType'
                           )
                         }}
                         bind={setYamlHandler}
@@ -437,6 +455,11 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                         width="calc(100vw - 350px)"
                         showSnippetSection={false}
                         isEditModeSupported={isEditable}
+                        fileName={getYamlFileName({
+                          isPipelineRemote,
+                          filePath: inputSet?.gitDetails?.filePath,
+                          defaultName: yamlBuilderReadOnlyModeProps.fileName
+                        })}
                       />
                     </Layout.Vertical>
                     <Layout.Horizontal className={css.footer} padding="xlarge">
@@ -448,6 +471,9 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                         onClick={() => {
                           const latestYaml = defaultTo(yamlHandler?.getLatestYaml(), '')
                           const inputSetDto: InputSetDTO = parse(latestYaml)?.inputSet
+                          const identifier = inputSetDto.identifier
+                          const defaultFilePath = identifier ? `.harness/${identifier}.yaml` : ''
+
                           handleSubmit(
                             inputSetDto,
                             {
@@ -458,7 +484,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                               connectorRef: formikProps.values.connectorRef,
                               repoName: formikProps.values.repoName,
                               branch: formikProps.values.branch,
-                              filePath: formikProps.values.filePath,
+                              filePath: defaultTo(formikProps.values.filePath, defaultFilePath),
                               storeType: formikProps.values.storeType
                             }
                           )
@@ -467,9 +493,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                       &nbsp; &nbsp;
                       <Button
                         variation={ButtonVariation.TERTIARY}
-                        onClick={() => {
-                          history.goBack()
-                        }}
+                        onClick={onCancel || history.goBack}
                         text={getString('cancel')}
                       />
                     </Layout.Horizontal>

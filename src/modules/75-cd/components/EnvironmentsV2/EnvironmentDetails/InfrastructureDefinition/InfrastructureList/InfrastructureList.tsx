@@ -30,7 +30,7 @@ import { InfrastructureMenu, InfrastructureName, LastUpdatedBy, withInfrastructu
 
 import EmptyInfrastructure from '../images/EmptyInfrastructure.svg'
 
-export function InfrastructureList({
+export default function InfrastructureList({
   list,
   showModal,
   refetch,

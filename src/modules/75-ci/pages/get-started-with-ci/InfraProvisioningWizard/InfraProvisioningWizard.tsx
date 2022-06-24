@@ -8,6 +8,8 @@
 import React, { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import set from 'lodash-es/set'
+import get from 'lodash-es/get'
+import { isNull, isUndefined, omitBy } from 'lodash-es'
 import {
   Container,
   Button,
@@ -15,7 +17,7 @@ import {
   Layout,
   MultiStepProgressIndicator,
   PageSpinner,
-  RUNTIME_INPUT_VALUE
+  useToaster
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useSideNavContext } from 'framework/SideNavStore/SideNavContext'
@@ -32,7 +34,12 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { Status } from '@common/utils/CIConstants'
 import { Connectors } from '@connectors/constants'
-import { eventTypes, clearNullUndefined } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
+import {
+  eventTypes,
+  clearNullUndefined,
+  ciCodebaseBuild,
+  ciCodebaseBuildPullRequest
+} from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import type { TriggerConfigDTO } from '@triggers/pages/triggers/interface/TriggersWizardInterface'
 import {
   InfraProvisioningWizardProps,
@@ -66,6 +73,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const selectGitProviderRef = React.useRef<SelectGitProviderRef | null>(null)
   const selectRepositoryRef = React.useRef<SelectRepositoryRef | null>(null)
   const { setShowGetStartedTabInMainMenu } = useSideNavContext()
+  const { showError: showErrorToaster } = useToaster()
 
   const { mutate: createTrigger } = useCreateTrigger({
     queryParams: {
@@ -134,12 +142,16 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         return
       }
 
-      const pipelineInputYAML = {
-        identifier: pipelineId,
-        properties: {
-          ci: {
-            codebase: {
-              build: RUNTIME_INPUT_VALUE
+      const pipelineInput = {
+        pipeline: {
+          identifier: pipelineId,
+          properties: {
+            ci: {
+              codebase: {
+                build: [eventTypes.PULL_REQUEST, eventTypes.MERGE_REQUEST].includes(eventType)
+                  ? ciCodebaseBuildPullRequest
+                  : ciCodebaseBuild
+              }
             }
           }
         }
@@ -159,7 +171,10 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             spec: {
               type: eventType,
               spec: {
-                connectorRef: selectGitProviderRef.current?.validatedConnector?.identifier,
+                connectorRef: `${ACCOUNT_SCOPE_PREFIX}${selectGitProviderRef.current?.validatedConnector?.identifier}`,
+                repoName: selectRepositoryRef.current?.repository
+                  ? getFullRepoName(selectRepositoryRef.current?.repository)
+                  : '',
                 autoAbortPreviousExecutions: false,
                 actions: [eventTypes.PULL_REQUEST, eventTypes.MERGE_REQUEST].includes(eventType)
                   ? getPRTriggerActions()
@@ -168,10 +183,14 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             }
           }
         },
-        inputYaml: yamlStringify(clearNullUndefined(pipelineInputYAML))
+        inputYaml: yamlStringify(omitBy(omitBy(pipelineInput, isUndefined), isNull))
       }
     },
-    [selectGitProviderRef.current?.validatedConnector?.identifier, selectGitProviderRef?.current?.values?.gitProvider]
+    [
+      selectGitProviderRef.current?.validatedConnector?.identifier,
+      selectGitProviderRef?.current?.values?.gitProvider,
+      selectRepositoryRef.current?.repository
+    ]
   )
 
   const [wizardStepStatus, setWizardStepStatus] = useState<Map<InfraProvisiongWizardStepId, StepStatus>>(
@@ -256,94 +275,105 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                   getFullRepoName(selectRepositoryRef?.current?.repository || {})
                 ),
                 'spec.authentication.spec.spec.username',
-                OAUTH2_USER_NAME
+                get(selectGitProviderRef.current.validatedConnector, 'spec.authentication.spec.spec.username') ??
+                  OAUTH2_USER_NAME
               ),
               secret: selectGitProviderRef?.current?.validatedSecret
             }).then((validateRepositoryResponse: ResponseScmConnectorResponse) => {
               if (validateRepositoryResponse.status === Status.SUCCESS) {
-                createPipelineV2Promise({
-                  body: constructPipelinePayload(selectedRepo) || '',
-                  queryParams: {
-                    accountIdentifier: accountId,
-                    orgIdentifier,
-                    projectIdentifier
-                  },
-                  requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
-                })
-                  .then((createPipelineResponse: ResponsePipelineSaveResponse) => {
-                    const { status } = createPipelineResponse
-                    if (status === Status.SUCCESS && createPipelineResponse?.data?.identifier) {
-                      const commonQueryParams = {
-                        accountIdentifier: accountId,
-                        orgIdentifier,
-                        projectIdentifier,
-                        targetIdentifier: createPipelineResponse?.data?.identifier
-                      }
+                try {
+                  createPipelineV2Promise({
+                    body: constructPipelinePayload(selectedRepo) || '',
+                    queryParams: {
+                      accountIdentifier: accountId,
+                      orgIdentifier,
+                      projectIdentifier
+                    },
+                    requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
+                  })
+                    .then((createPipelineResponse: ResponsePipelineSaveResponse) => {
+                      const { status } = createPipelineResponse
+                      if (status === Status.SUCCESS && createPipelineResponse?.data?.identifier) {
+                        const commonQueryParams = {
+                          accountIdentifier: accountId,
+                          orgIdentifier,
+                          projectIdentifier,
+                          targetIdentifier: createPipelineResponse?.data?.identifier
+                        }
 
-                      const createPushTrigger = createTrigger(
-                        yamlStringify({
-                          trigger: clearNullUndefined(
-                            constructTriggerPayload({
-                              pipelineId: createPipelineResponse?.data?.identifier,
-                              eventType:
-                                selectGitProviderRef?.current?.values?.gitProvider?.type &&
-                                [Connectors.GITHUB, Connectors.BITBUCKET].includes(
-                                  selectGitProviderRef?.current?.values?.gitProvider?.type
+                        const createPRTrigger = createTrigger(
+                          yamlStringify({
+                            trigger: clearNullUndefined(
+                              constructTriggerPayload({
+                                pipelineId: createPipelineResponse?.data?.identifier,
+                                eventType:
+                                  selectGitProviderRef?.current?.values?.gitProvider?.type &&
+                                  [Connectors.GITHUB, Connectors.BITBUCKET].includes(
+                                    selectGitProviderRef?.current?.values?.gitProvider?.type
+                                  )
+                                    ? eventTypes.PULL_REQUEST
+                                    : eventTypes.MERGE_REQUEST
+                              }) || {}
+                            )
+                          }) as any,
+                          { queryParams: commonQueryParams }
+                        )
+
+                        const createPushTrigger = createTrigger(
+                          yamlStringify({
+                            trigger: clearNullUndefined(
+                              constructTriggerPayload({
+                                pipelineId: createPipelineResponse?.data?.identifier,
+                                eventType: eventTypes.PUSH
+                              }) || {}
+                            )
+                          }) as any,
+                          { queryParams: commonQueryParams }
+                        )
+
+                        Promise.all([createPushTrigger, createPRTrigger])
+                          .then((createTriggerResponses: [ResponseNGTriggerResponse, ResponseNGTriggerResponse]) => {
+                            const [createPushTriggerResponse, createPRTriggerResponse] = createTriggerResponses
+                            if (
+                              createPushTriggerResponse?.status === Status.SUCCESS &&
+                              createPRTriggerResponse?.status === Status.SUCCESS
+                            ) {
+                              setDisableBtn(false)
+                              setShowPageLoader(false)
+                              setShowGetStartedTabInMainMenu(false)
+                              if (createPipelineResponse?.data?.identifier) {
+                                history.push(
+                                  routes.toPipelineStudio({
+                                    accountId: accountId,
+                                    module: 'ci',
+                                    orgIdentifier,
+                                    projectIdentifier,
+                                    pipelineIdentifier: createPipelineResponse?.data?.identifier,
+                                    stageId: getString('buildText')
+                                  })
                                 )
-                                  ? eventTypes.PULL_REQUEST
-                                  : eventTypes.MERGE_REQUEST
-                            }) || {}
-                          )
-                        }) as any,
-                        { queryParams: commonQueryParams }
-                      )
-
-                      const createPRTrigger = createTrigger(
-                        yamlStringify({
-                          trigger: clearNullUndefined(
-                            constructTriggerPayload({
-                              pipelineId: createPipelineResponse?.data?.identifier,
-                              eventType: eventTypes.PUSH
-                            }) || {}
-                          )
-                        }) as any,
-                        { queryParams: commonQueryParams }
-                      )
-
-                      Promise.all([createPushTrigger, createPRTrigger])
-                        .then((createTriggerResponses: [ResponseNGTriggerResponse, ResponseNGTriggerResponse]) => {
-                          const [createPushTriggerResponse, createPRTriggerResponse] = createTriggerResponses
-                          if (
-                            createPushTriggerResponse?.status === Status.SUCCESS &&
-                            createPRTriggerResponse?.status === Status.SUCCESS
-                          ) {
+                              }
+                            }
+                          })
+                          .catch(triggerCreationError => {
+                            showErrorToaster(triggerCreationError?.data?.message)
                             setDisableBtn(false)
                             setShowPageLoader(false)
-                            setShowGetStartedTabInMainMenu(false)
-                            if (createPipelineResponse?.data?.identifier) {
-                              history.push(
-                                routes.toPipelineStudio({
-                                  accountId: accountId,
-                                  module: 'ci',
-                                  orgIdentifier,
-                                  projectIdentifier,
-                                  pipelineIdentifier: createPipelineResponse?.data?.identifier,
-                                  stageId: getString('buildText')
-                                })
-                              )
-                            }
-                          }
-                        })
-                        .catch(() => {
-                          setDisableBtn(false)
-                          setShowPageLoader(false)
-                        })
-                    }
-                  })
-                  .catch(() => {
-                    setDisableBtn(false)
-                    setShowPageLoader(false)
-                  })
+                          })
+                      } else {
+                        showErrorToaster((createPipelineResponse as Error)?.message)
+                        setDisableBtn(false)
+                        setShowPageLoader(false)
+                      }
+                    })
+                    .catch(() => {
+                      setDisableBtn(false)
+                      setShowPageLoader(false)
+                    })
+                } catch (e) {
+                  setDisableBtn(false)
+                  setShowPageLoader(false)
+                }
               }
             })
           } else {

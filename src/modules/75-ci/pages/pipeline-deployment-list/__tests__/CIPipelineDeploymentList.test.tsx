@@ -30,6 +30,7 @@ jest.mock('@pipeline/components/Dashboards/BuildExecutionsChart/PipelineBuildExe
 const mockGetCallFunction = jest.fn()
 
 jest.mock('services/pipeline-ng', () => ({
+  useGetExecutionData: jest.fn().mockReturnValue({}),
   useGetPipelineSummary: getMockFor_useGetPipeline,
   useGetListOfExecutions: jest.fn(() => ({
     mutate: jest.fn(() => Promise.resolve(data)),
@@ -115,7 +116,7 @@ describe('<CIPipelineDeploymentList /> tests', () => {
     jest.spyOn(global.Date, 'now').mockReset()
   })
   test('snapshot test', async () => {
-    const { container, findByText } = render(
+    const { container, findAllByText } = render(
       <TestWrapper
         path={TEST_PATH}
         pathParams={{
@@ -131,7 +132,7 @@ describe('<CIPipelineDeploymentList /> tests', () => {
       </TestWrapper>
     )
 
-    await waitFor(() => findByText('http_pipeline', { selector: '.pipelineName' }))
+    await waitFor(() => findAllByText('http_pipeline', { selector: '.pipelineName' }))
 
     expect(container).toMatchSnapshot()
   })

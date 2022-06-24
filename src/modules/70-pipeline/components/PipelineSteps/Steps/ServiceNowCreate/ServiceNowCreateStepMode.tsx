@@ -609,7 +609,10 @@ function FormContent({
                     />
                   )}
                 </div>
-                <ServiceNowTemplateFieldsRenderer templateFields={formik.values.spec.templateFields} />
+                <ServiceNowTemplateFieldsRenderer
+                  templateFields={formik.values.spec.templateFields}
+                  templateName={formik.values.spec.templateName}
+                />
               </>
             )}
           </div>

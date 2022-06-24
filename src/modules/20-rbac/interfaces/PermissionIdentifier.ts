@@ -67,6 +67,10 @@ export enum PermissionIdentifier {
   DELETE_VARIABLE = 'core_variable_delete',
   VIEW_VARIABLE = 'core_variable_view',
   ACCESS_VARIABLE = 'core_variable_access',
+  EDIT_FILE = 'core_file_edit',
+  DELETE_FILE = 'core_file_delete',
+  VIEW_FILE = 'core_file_view',
+  ACCESS_FILE = 'core_file_access',
 
   // FEATURE FLAG PERMISSIONS
   DELETE_FF_FEATUREFLAG = 'ff_featureflag_delete',
@@ -126,5 +130,10 @@ export enum PermissionIdentifier {
   DELETE_GITOPS_GPGKEY = 'gitops_gpgkey_delete',
   VIEW_GITOPS_CERT = 'gitops_cert_view',
   EDIT_GITOPS_CERT = 'gitops_cert_edit',
-  DELETE_GITOPS_CERT = 'gitops_cert_delete'
+  DELETE_GITOPS_CERT = 'gitops_cert_delete',
+
+  // Chaos Permissions
+  VIEW_CHAOSHUB = 'chaos_chaoshub_view',
+  EDIT_CHAOSHUB = 'chaos_chaoshub_edit',
+  DELETE_CHAOSHUB = 'chaos_chaoshub_delete'
 }

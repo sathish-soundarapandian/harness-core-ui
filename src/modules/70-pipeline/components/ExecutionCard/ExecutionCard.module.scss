@@ -49,6 +49,10 @@ $actions-translate: 10px;
         display: flex;
         align-items: center;
         column-gap: var(--spacing-4);
+
+        .gitRemoteDetailsWrapper {
+          margin-left: var(--spacing-xlarge) !important;
+        }
       }
 
       & .nameGroup {
@@ -228,4 +232,8 @@ $actions-translate: 10px;
   font-weight: bold;
   border: solid 1px var(--primary-2);
   margin-bottom: var(--spacing-small);
+}
+.compareSelection {
+  margin-right: var(--spacing-2);
+  padding: var(--spacing-2);
 }

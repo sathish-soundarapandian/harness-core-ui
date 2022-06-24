@@ -103,7 +103,7 @@ export default function K8sChangeEventCard({ data }: { data: ChangeEventDTO }): 
       {data.eventTime && data.monitoredServiceIdentifier && (
         <>
           <ChangeEventServiceHealth
-            monitoredServiceIdentifier={data.monitoredServiceIdentifier}
+            monitoredServiceIdentifier={data?.metadata?.dependentMonitoredService || data.monitoredServiceIdentifier}
             startTime={data.eventTime}
             eventType={data.type}
             timeStamps={timeStamps}
@@ -112,7 +112,7 @@ export default function K8sChangeEventCard({ data }: { data: ChangeEventDTO }): 
           <SLOAndErrorBudget
             eventType={data.type}
             eventTime={data.eventTime}
-            monitoredServiceIdentifier={data.monitoredServiceIdentifier}
+            monitoredServiceIdentifier={data?.metadata?.dependentMonitoredService || data.monitoredServiceIdentifier}
             startTime={timeStamps[0] || data.eventTime}
             endTime={timeStamps[1] || data.eventTime + TWO_HOURS_IN_MILLISECONDS}
           />

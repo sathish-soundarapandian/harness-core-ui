@@ -6,20 +6,22 @@
  */
 
 import React from 'react'
-import { Button, ButtonVariation, Text, Container, Formik, Layout, StepProps } from '@harness/uicore'
+import { Button, ButtonVariation, Text, Container, Formik, Layout, StepProps, FormInput } from '@harness/uicore'
 import { Form } from 'formik'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { Radio, RadioGroup } from '@blueprintjs/core'
-import cx from 'classnames'
+// import { defaultTo, merge } from 'lodash-es'
+// import set from 'lodash-es/set'
+// import produce from 'immer'
+import type { ConfigFileWrapper, StoreConfigWrapper } from 'services/cd-ng'
+import { StringUtils } from '@common/exports'
 
 import { useStrings } from 'framework/strings'
-import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
-import type { ConnectorConfigDTO } from 'services/cd-ng'
+import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { MultiConfigSelectField } from './MultiConfigSelectField/MultiConfigSelectField'
 
 // import { ConfigFileIconByType, ConfigFileTypeTitle } from '../../ConfigFilesHelper'
-// import type { ConfigFileType } from '../../ConfigFilesInterface'
+import type { ConfigFileHarnessDataType } from '../../ConfigFilesInterface'
 import css from './ConfigFilesType.module.scss'
 
 interface ConfigFilesPropType {
@@ -28,6 +30,7 @@ interface ConfigFilesPropType {
   //   selectedConfigFile: ConfigFileType | null
   //   configFileInitialValue?: any
   stepName: string
+  handleSubmit: any
 }
 
 // interface ConfigFileData {
@@ -43,13 +46,39 @@ export function HarnessConfigStep({
   //   changeConfigFileType,
   stepName = 'step name',
   // configFileInitialValue,
-  nextStep
-}: StepProps<ConnectorConfigDTO> & ConfigFilesPropType): React.ReactElement {
-  const gotoNextStep = (): void => {
-    nextStep?.()
-  }
+  prevStepData,
+  previousStep,
+  //   nextStep,
+  handleSubmit
+}: StepProps<any> & ConfigFilesPropType): React.ReactElement {
+  //   const gotoNextStep = (): void => {
+  //     nextStep?.()
+  //   }
 
   const { getString } = useStrings()
+
+  const submitFormData = (formData: ConfigFileHarnessDataType & { store?: string }): void => {
+    const configFileObj: ConfigFileWrapper = {
+      configFile: {
+        identifier: formData.identifier,
+        spec: {
+          store: {
+            type: formData?.store as StoreConfigWrapper['type'],
+            spec: {
+              files: formData?.files.map(({ path, scope }) => ({
+                path,
+                scope
+              })),
+              secretFiles: formData?.secretFiles
+            }
+          }
+          // configOverridePath: formData.configOverridePath
+        }
+      }
+    }
+    console.log('confgiObj', configFileObj)
+    handleSubmit(configFileObj)
+  }
 
   return (
     <Container className={css.optionsViewContainer}>
@@ -58,81 +87,82 @@ export function HarnessConfigStep({
       </Text>
       <Formik
         initialValues={{
-          name: '',
           identifier: '',
-          fileType: '',
+          fileType: FILE_TYPE_VALUES.FILE_STORE,
           files: []
         }}
         formName="configFileDetails"
         validationSchema={Yup.object().shape({
-          name: Yup.string().required(getString('pipeline.artifactsSelection.artifactTyperequired')),
-          files: Yup.array()
-            .of(
-              Yup.object().shape({
-                value: Yup.object().required('Must have file')
-              })
-            )
-            .required('Must have files')
+          identifier: Yup.string().required(getString('pipeline.configFiles.error.identifier')),
+          fileType: Yup.string().required(getString('pipeline.configFiles.error.fileType'))
+          //   files: Yup.array()
+          //     .of(
+          //       Yup.object().shape({
+          //         value: Yup.object().required(getString('pipeline.configFiles.error.file'))
+          //       })
+          //     )
+          //     .required(getString('pipeline.configFiles.error.files'))
         })}
-        onSubmit={gotoNextStep}
+        onSubmit={formData => {
+          submitFormData({
+            ...formData,
+            ...prevStepData
+          })
+        }}
         enableReinitialize={true}
       >
         {formikProps => {
+          console.log('formikProps', formikProps)
           return (
             <Form>
               <div className={css.headerContainer}>
-                <NameId
-                  identifierProps={{
-                    inputName: 'name',
-                    isIdentifierEditable: true
-                    //   inputGroupProps: { disabled: true }
+                <FormInput.Text
+                  name="identifier"
+                  label={getString('pipeline.configFiles.identifierLabel')}
+                  className={css.identifierField}
+                  onChange={e => {
+                    formikProps.setFieldValue('identifier', StringUtils.getIdentifierFromName(e.target.value))
                   }}
                 />
-                <RadioGroup
-                  selectedValue={formikProps.values.fileType}
-                  disabled={false}
+                <FormInput.RadioGroup
                   name="fileType"
-                  onChange={e => {
-                    formikProps.setFieldValue('fileType', e.currentTarget.value)
+                  className={css.selectFileType}
+                  radioGroup={{ inline: true }}
+                  label={getString('pipeline.configFiles.selectFileType')}
+                  onChange={() => {
+                    formikProps.setFieldValue('files', [])
                   }}
-                >
-                  <Radio
-                    value={'plainText'}
-                    // label={getString('pipeline.conditionalExecution.statusOption.success')}
-                    label="Plain Text"
-                    className={cx(css.blackText, {
-                      [css.active]: formikProps.values.fileType === 'plaintText'
-                    })}
-                  />
-                  <Radio
-                    value={'encrypted'}
-                    label={getString('encrypted')}
-                    className={cx(css.blackText, {
-                      [css.active]: formikProps.values.fileType === 'encrypted'
-                    })}
-                  />
-                </RadioGroup>
-                {formikProps.values.fileType === 'encrypted' && (
-                  <MultiConfigSelectField
-                    name="files"
-                    formik={formikProps}
-                    multiTypeFieldSelectorProps={{
-                      disableTypeSelection: true,
-                      label: (
-                        <Text style={{ display: 'flex', alignItems: 'center', color: 'rgb(11, 11, 13)' }}>
-                          {getString('optionalField', { name: getString('environmentVariables') })}
-                        </Text>
-                      )
-                    }}
-                  />
-                )}
+                  items={[
+                    {
+                      label: getString('resourcePage.fileStore'),
+                      value: FILE_TYPE_VALUES.FILE_STORE,
+                      disabled: false
+                    },
+                    { label: getString('encrypted'), value: FILE_TYPE_VALUES.ENCRYPTED }
+                  ]}
+                />
+                <MultiConfigSelectField
+                  name="files"
+                  fileType={formikProps.values.fileType}
+                  formik={formikProps}
+                  multiTypeFieldSelectorProps={{
+                    disableTypeSelection: true,
+                    label: (
+                      <Text style={{ display: 'flex', alignItems: 'center', color: 'rgb(11, 11, 13)' }}>
+                        {formikProps.values.fileType === FILE_TYPE_VALUES.FILE_STORE
+                          ? getString('fileFolderPathText')
+                          : getString('pipeline.configFiles.encryptedFiles')}
+                      </Text>
+                    )
+                  }}
+                />
               </div>
               <Layout.Horizontal>
                 <Button
                   text={getString('back')}
                   icon="chevron-left"
                   variation={ButtonVariation.SECONDARY}
-                  //   onClick={() => previousStep?.(prevStepData)}
+                  onClick={() => previousStep?.()}
                 />
                 <Button
                   variation={ButtonVariation.PRIMARY}

@@ -19,11 +19,13 @@ import css from './ExecutionList.module.scss'
 export interface ExecutionsListProps {
   pipelineExecutionSummary: PipelineExecutionSummary[] | undefined
   isPipelineInvalid?: boolean
+  onViewCompiledYaml: (pipelineExecutionSummary: PipelineExecutionSummary) => void
 }
 
 export default function ExecutionsList({
   pipelineExecutionSummary,
-  isPipelineInvalid
+  isPipelineInvalid,
+  onViewCompiledYaml
 }: ExecutionsListProps): React.ReactElement {
   const { trackEvent } = useTelemetry()
   const location = useLocation()
@@ -35,11 +37,12 @@ export default function ExecutionsList({
       accountId: string
     }>
   >()
-  React.useEffect(() => {
-    const isDeploymentsPage = !!matchPath(location.pathname, {
-      path: routes.toDeployments({ projectIdentifier, orgIdentifier, accountId, module })
-    })
 
+  const isDeploymentsPage = !!matchPath(location.pathname, {
+    path: routes.toDeployments({ projectIdentifier, orgIdentifier, accountId, module })
+  })
+
+  React.useEffect(() => {
     if (isDeploymentsPage) {
       trackEvent(NavigatedToPage.DeploymentsPage, {})
     }
@@ -52,6 +55,8 @@ export default function ExecutionsList({
           pipelineExecution={pipelineExecution}
           key={pipelineExecution.planExecutionId}
           isPipelineInvalid={isPipelineInvalid}
+          showGitDetails={isDeploymentsPage}
+          onViewCompiledYaml={() => onViewCompiledYaml(pipelineExecution)}
         />
       ))}
     </div>

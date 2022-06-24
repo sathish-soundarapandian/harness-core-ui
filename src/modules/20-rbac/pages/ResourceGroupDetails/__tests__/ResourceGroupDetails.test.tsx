@@ -161,14 +161,19 @@ describe('Resource Groups Page', () => {
       fireEvent.click(scope)
     })
 
-    let form = findDialogContainer()
-    expect(form).toBeTruthy()
-
-    const customScope = getByText(form!, 'rbac.scopeItems.specificOrgsAndProjects')
+    const dropdown = findPopoverContainer()
+    const customScope = getByText(dropdown!, 'rbac.scopeItems.specificOrgsAndProjects')
     act(() => {
       fireEvent.click(customScope)
     })
 
+    const editScope = getByText(container, 'edit')
+    act(() => {
+      fireEvent.click(editScope)
+    })
+
+    let form = findDialogContainer()
+    expect(form).toBeTruthy()
     const includeCurrentScope = getByText(form!, 'rbac.resourceScope.includeAccResources')
     act(() => {
       fireEvent.click(includeCurrentScope)
@@ -180,10 +185,12 @@ describe('Resource Groups Page', () => {
     })
 
     const selectOrg = getByText(form!, 'Select')
-    act(() => {
+    await act(async () => {
       fireEvent.click(selectOrg)
     })
-    const popover = findPopoverContainer()
+
+    const popover = (document.querySelectorAll('.bp3-popover-content')?.[1] ||
+      document.querySelectorAll('.bp3-popover-content')?.[0]) as HTMLElement
     expect(popover).toBeTruthy()
 
     const defaultOrg = getByText(popover!, 'default')
@@ -191,9 +198,27 @@ describe('Resource Groups Page', () => {
       fireEvent.click(defaultOrg)
     })
 
-    const includeProjects = getByText(form!, 'rbac.resourceScope.includeProjResources')
+    const specifiedProjects = getByText(form!, 'common.specified')
     act(() => {
-      fireEvent.click(includeProjects)
+      fireEvent.click(specifiedProjects)
+    })
+    const addProjects = getByText(form!, 'plusNumber')
+    await act(async () => {
+      fireEvent.click(addProjects)
+    })
+
+    const projectForm = document.querySelectorAll('.bp3-dialog')?.[1] as HTMLElement
+    expect(projectForm).toBeTruthy()
+
+    const project1 = getByText(projectForm, 'TestCiproject')
+    act(() => {
+      fireEvent.click(project1)
+    })
+
+    const submit = getByText(projectForm, 'add 1 projectsText')
+
+    act(() => {
+      fireEvent.click(submit)
     })
 
     act(() => {
@@ -239,8 +264,7 @@ test('Account Scope Resource Group Details', async () => {
       <ResourceGroupDetails />
     </TestWrapper>
   )
-
-  let scope = getByText(container, 'rbac.scopeItems.specificOrgsAndProjects')
+  const scope = getByText(container, 'edit')
   act(() => {
     fireEvent.click(scope)
   })
@@ -259,13 +283,6 @@ test('Account Scope Resource Group Details', async () => {
   })
   form = findDialogContainer()
   expect(form).toBeFalsy()
-
-  scope = getByText(container, 'rbac.scopeItems.specificOrgsAndProjects')
-  act(() => {
-    fireEvent.click(scope)
-  })
-  form = findDialogContainer()
-  expect(form).toBeTruthy()
 })
 
 test('Org Scope Resource Group Details', async () => {
@@ -286,7 +303,7 @@ test('Org Scope Resource Group Details', async () => {
     </TestWrapper>
   )
 
-  const scope = getByText(container, 'rbac.scopeItems.specificProjects')
+  const scope = getByText(container, 'edit')
   act(() => {
     fireEvent.click(scope)
   })

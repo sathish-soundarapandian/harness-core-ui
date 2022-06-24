@@ -122,7 +122,7 @@ const DashboardList: React.FC<DashboardListProps> = ({
       Header: getString('name'),
       id: 'name',
       accessor: row => row.title,
-      width: '30%',
+      width: '40%',
       Cell: RenderDashboardName
     },
     {
@@ -137,12 +137,6 @@ const DashboardList: React.FC<DashboardListProps> = ({
       id: 'view_count',
       accessor: row => row.view_count,
       width: '15%'
-    },
-    {
-      Header: getString('dashboards.dashboardList.headerFavoriteCount'),
-      id: 'favorite_count',
-      accessor: row => row.favorite_count,
-      width: '10%'
     },
     {
       Header: '',

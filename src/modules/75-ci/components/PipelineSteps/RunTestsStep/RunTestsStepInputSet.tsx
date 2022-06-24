@@ -17,18 +17,24 @@ import { ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/She
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
+import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { ConnectorReferenceProps } from '@common/components/MultiTypeList/MultiTypeList'
+import { MultiTypeListInputSet } from '@common/components/MultiTypeListInputSet/MultiTypeListInputSet'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
 import type { RunTestsStepProps } from './RunTestsStep'
+import { getBuildEnvironmentOptions, getCSharpBuildToolOptions, getFrameworkVersionOptions } from './RunTestsStepBase'
 import { CIStep } from '../CIStep/CIStep'
 import { ConnectorRefWithImage } from '../CIStep/ConnectorRefWithImage'
 import { getOptionalSubLabel, renderMultiTypeInputWithAllowedValues } from '../CIStep/CIStepOptionalConfig'
+import { SupportedInputTypesForListItems } from '../CIStep/StepUtils'
 import { RunAndRunTestStepInputCommonFields } from '../CIStep/RunAndRunTestStepInputCommonFields'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = props => {
-  const { template, path, readonly, stepViewType, allowableTypes } = props
+  const { template, path, readonly, stepViewType, allowableTypes, formik } = props
   const { getString } = useStrings()
 
   const { expressions } = useVariablesExpression()
@@ -83,6 +89,68 @@ export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = props => {
     []
   )
 
+  const renderMultiTypeListInputSet = React.useCallback(
+    ({
+      name,
+      tooltipId,
+      labelKey,
+      placeholderKey,
+      withObjectStructure,
+      keyName,
+      allowedTypes,
+      allowedTypesForEntries,
+      showConnectorRef,
+      connectorTypes,
+      connectorRefRenderer,
+      restrictToSingleEntry
+    }: {
+      name: string
+      tooltipId: string
+      labelKey: keyof StringsMap
+      placeholderKey?: keyof StringsMap
+      withObjectStructure?: boolean
+      keyName?: string
+      allowedTypes: MultiTypeInputType[]
+      allowedTypesForEntries: MultiTypeInputType[]
+      restrictToSingleEntry?: boolean
+    } & ConnectorReferenceProps) => (
+      <MultiTypeListInputSet
+        name={name}
+        multiTextInputProps={{
+          expressions,
+          allowableTypes: allowedTypesForEntries
+        }}
+        multiTypeFieldSelectorProps={{
+          label: (
+            <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}>
+              <Text
+                tooltipProps={tooltipId ? { dataTooltipId: tooltipId } : {}}
+                style={{ display: 'flex', alignItems: 'center' }}
+                className={css.inpLabel}
+                color={Color.GREY_800}
+                font={{ size: 'small', weight: 'semi-bold' }}
+              >
+                {getString(labelKey)}
+              </Text>
+            </Layout.Horizontal>
+          ),
+          allowedTypes: allowedTypes
+        }}
+        placeholder={placeholderKey ? getString(placeholderKey) : ''}
+        disabled={readonly}
+        formik={formik}
+        withObjectStructure={withObjectStructure}
+        keyName={keyName}
+        showConnectorRef={showConnectorRef}
+        connectorTypes={connectorTypes}
+        connectorRefRenderer={connectorRefRenderer}
+        restrictToSingleEntry={restrictToSingleEntry}
+        persistEmptyStringDefault={true}
+      />
+    ),
+    [expressions]
+  )
+
   return (
     <FormikForm className={css.removeBpPopoverWrapperTopMargin}>
       <CIStep
@@ -95,6 +163,96 @@ export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = props => {
         }}
         path={path || ''}
       />
+      <ConnectorRefWithImage
+        readonly={readonly}
+        showConnectorRef={getMultiTypeFromValue(template?.spec?.connectorRef) === MultiTypeInputType.RUNTIME}
+        showImage={getMultiTypeFromValue(template?.spec?.image) === MultiTypeInputType.RUNTIME}
+        stepViewType={stepViewType}
+        path={path || ''}
+        template={template}
+        isInputSetView={true}
+      />
+      {getMultiTypeFromValue(template?.spec?.buildEnvironment) === MultiTypeInputType.RUNTIME && (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          <MultiTypeSelectField
+            label={
+              <Text
+                className={css.inpLabel}
+                color={Color.GREY_600}
+                font={{ size: 'small', weight: 'semi-bold' }}
+                tooltipProps={{ dataTooltipId: 'buildEnvironment' }}
+              >
+                {getString('ci.runTestsStep.buildEnvironment')}
+              </Text>
+            }
+            name={`${prefix}spec.buildEnvironment`}
+            useValue
+            multiTypeInputProps={{
+              selectItems: getBuildEnvironmentOptions(getString),
+              placeholder: getString('select'),
+              multiTypeInputProps: {
+                expressions,
+                allowableTypes: [MultiTypeInputType.FIXED]
+              }
+            }}
+            disabled={readonly}
+          />
+        </Container>
+      )}
+      {getMultiTypeFromValue(template?.spec?.frameworkVersion) === MultiTypeInputType.RUNTIME && (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          <MultiTypeSelectField
+            label={
+              <Text
+                className={css.inpLabel}
+                color={Color.GREY_600}
+                font={{ size: 'small', weight: 'semi-bold' }}
+                tooltipProps={{ dataTooltipId: 'frameworkVersion' }}
+              >
+                {getString('ci.runTestsStep.frameworkVersion')}
+              </Text>
+            }
+            name={`${prefix}spec.frameworkVersion`}
+            useValue
+            multiTypeInputProps={{
+              selectItems: getFrameworkVersionOptions(getString),
+              placeholder: getString('select'),
+              multiTypeInputProps: {
+                expressions,
+                allowableTypes: [MultiTypeInputType.FIXED]
+              }
+            }}
+            disabled={readonly}
+          />
+        </Container>
+      )}
+      {getMultiTypeFromValue(template?.spec?.buildTool) === MultiTypeInputType.RUNTIME && (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          <MultiTypeSelectField
+            label={
+              <Text
+                className={css.inpLabel}
+                color={Color.GREY_600}
+                font={{ size: 'small', weight: 'semi-bold' }}
+                tooltipProps={{ dataTooltipId: 'runTestsBuildTool' }}
+              >
+                {getString('buildToolLabel')}
+              </Text>
+            }
+            name={`${prefix}spec.buildTool`}
+            useValue
+            multiTypeInputProps={{
+              selectItems: getCSharpBuildToolOptions(getString),
+              placeholder: getString('select'),
+              multiTypeInputProps: {
+                expressions,
+                allowableTypes: [MultiTypeInputType.FIXED]
+              }
+            }}
+            disabled={readonly}
+          />
+        </Container>
+      )}
       {getMultiTypeFromValue(template?.spec?.args) === MultiTypeInputType.RUNTIME && (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           <MultiTypeTextField
@@ -120,28 +278,43 @@ export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = props => {
           />
         </Container>
       )}
-      <ConnectorRefWithImage
-        readonly={readonly}
-        showConnectorRef={getMultiTypeFromValue(template?.spec?.connectorRef) === MultiTypeInputType.RUNTIME}
-        showImage={getMultiTypeFromValue(template?.spec?.image) === MultiTypeInputType.RUNTIME}
-        stepViewType={stepViewType}
-        path={path || ''}
-        template={template}
-        isInputSetView={true}
-      />
       {getMultiTypeFromValue(template?.spec?.packages) === MultiTypeInputType.RUNTIME && (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           <MultiTypeTextField
             className={css.removeBpLabelMargin}
             name={`${prefix}spec.packages`}
             label={
+              <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}>
+                <Text className={css.inpLabel} color={Color.GREY_600} font={{ size: 'small', weight: 'semi-bold' }}>
+                  {getString('packagesLabel')}
+                </Text>
+                &nbsp;
+                {getOptionalSubLabel(getString, 'runTestsPackages')}
+              </Layout.Horizontal>
+            }
+            multiTextInputProps={{
+              multiTextInputProps: {
+                expressions,
+                allowableTypes
+              },
+              disabled: readonly
+            }}
+          />
+        </Container>
+      )}
+      {getMultiTypeFromValue(template?.spec?.namespaces) === MultiTypeInputType.RUNTIME && (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          <MultiTypeTextField
+            className={css.removeBpLabelMargin}
+            name={`${prefix}spec.namespaces`}
+            label={
               <Text
                 className={css.inpLabel}
                 color={Color.GREY_600}
                 font={{ size: 'small', weight: 'semi-bold' }}
-                tooltipProps={{ dataTooltipId: 'runTestsPackages' }}
+                tooltipProps={{ dataTooltipId: 'runTestsNamespaces' }}
               >
-                {getString('packagesLabel')}
+                {getString('ci.runTestsStep.namespaces')}
               </Text>
             }
             multiTextInputProps={{
@@ -192,6 +365,19 @@ export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = props => {
           />
         </Container>
       )}
+      {getMultiTypeFromValue(template?.spec?.reports?.spec?.paths) === MultiTypeInputType.RUNTIME && (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          {renderMultiTypeListInputSet({
+            name: `${prefix}spec.reports.spec.paths`,
+            placeholderKey: 'pipelineSteps.reportPathsPlaceholder',
+            labelKey: 'ci.runTestsStep.testReportPaths',
+            allowedTypes: [MultiTypeInputType.FIXED],
+            allowedTypesForEntries: SupportedInputTypesForListItems,
+            tooltipId: 'reportPaths'
+          })}
+        </Container>
+      )}
+
       {getMultiTypeFromValue(template?.spec?.preCommand) === MultiTypeInputType.RUNTIME ? (
         shouldRenderRunTimeInputViewWithAllowedValues('spec.preCommand', template) ? (
           <Container className={cx(css.formGroup, stepCss)}>
@@ -228,7 +414,7 @@ export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = props => {
           renderCommandEditor(`${prefix}spec.postCommand`, 'ci.postCommandLabel', 'runTestsPostCommand')
         )
       ) : null}
-      <RunAndRunTestStepInputCommonFields {...props} />
+      <RunAndRunTestStepInputCommonFields {...props} stepType={StepType.RunTests} />
     </FormikForm>
   )
 }

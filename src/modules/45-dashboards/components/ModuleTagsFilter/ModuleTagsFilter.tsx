@@ -9,10 +9,11 @@ import React from 'react'
 import { Checkbox, Layout } from '@harness/uicore'
 import { useStrings, StringKeys } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { DashboardTags, MappedDashboardTagOptions } from '@dashboards/types/DashboardTypes'
 import moduleTagCss from '@dashboards/common/ModuleTags.module.scss'
 
 export interface ModuleTagsFilterProps {
-  selectedFilter: Record<string, boolean>
+  selectedFilter: MappedDashboardTagOptions
   setPredefinedFilter: (moduleName: string, checked: boolean) => void
 }
 
@@ -20,7 +21,7 @@ const ModuleTagsFilter: React.FC<ModuleTagsFilterProps> = ({ selectedFilter, set
   const { getString } = useStrings()
   const { CENG_ENABLED, CING_ENABLED, CDNG_ENABLED, CFNG_ENABLED, CUSTOM_DASHBOARD_V2 } = useFeatureFlags()
 
-  const renderTagsFilter = (moduleName: string, cssClass: string, text: StringKeys, isEnabled = false) => {
+  const renderTagsFilter = (moduleName: DashboardTags, cssClass: string, text: StringKeys, isEnabled = false) => {
     return (
       isEnabled && (
         <Layout.Horizontal flex={{ alignItems: 'center' }}>
@@ -38,12 +39,17 @@ const ModuleTagsFilter: React.FC<ModuleTagsFilterProps> = ({ selectedFilter, set
 
   return (
     <>
-      {renderTagsFilter('HARNESS', moduleTagCss.harnessTag, 'dashboards.modules.harness', true)}
-      {renderTagsFilter('CE', moduleTagCss.ceTag, 'common.purpose.ce.cloudCost', CENG_ENABLED)}
-      {renderTagsFilter('CI', moduleTagCss.ciTag, 'buildsText', CING_ENABLED)}
-      {renderTagsFilter('CD', moduleTagCss.cdTag, 'deploymentsText', CDNG_ENABLED)}
-      {renderTagsFilter('CF', moduleTagCss.cfTag, 'common.purpose.cf.continuous', CFNG_ENABLED)}
-      {renderTagsFilter('CG_CD', moduleTagCss.cgCdTag, 'dashboards.modules.cgDeployments', CUSTOM_DASHBOARD_V2)}
+      {renderTagsFilter(DashboardTags.HARNESS, moduleTagCss.harnessTag, 'dashboards.modules.harness', true)}
+      {renderTagsFilter(DashboardTags.CE, moduleTagCss.ceTag, 'common.purpose.ce.cloudCost', CENG_ENABLED)}
+      {renderTagsFilter(DashboardTags.CI, moduleTagCss.ciTag, 'buildsText', CING_ENABLED)}
+      {renderTagsFilter(DashboardTags.CD, moduleTagCss.cdTag, 'deploymentsText', CDNG_ENABLED)}
+      {renderTagsFilter(DashboardTags.CF, moduleTagCss.cfTag, 'common.purpose.cf.continuous', CFNG_ENABLED)}
+      {renderTagsFilter(
+        DashboardTags.CG_CD,
+        moduleTagCss.cgCdTag,
+        'dashboards.modules.cgDeployments',
+        CUSTOM_DASHBOARD_V2
+      )}
     </>
   )
 }

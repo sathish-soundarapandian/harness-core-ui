@@ -10,7 +10,7 @@ import { clone } from 'lodash-es'
 import cx from 'classnames'
 
 import { Button, ButtonVariation, Layout, Text } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { getIconByType, InputSetValue, onDragEnd, onDragLeave, onDragOver, onDragStart } from './utils'
 import css from './InputSetSelector.module.scss'
@@ -20,13 +20,17 @@ export function RenderValue({
   onChange,
   setSelectedInputSets,
   setOpenInputSetsList,
-  selectedValueClass
+  selectedValueClass,
+  showNewInputSet,
+  onNewInputSetClick
 }: {
   value: InputSetValue[]
   onChange?: (value?: InputSetValue[]) => void
   setSelectedInputSets: Dispatch<SetStateAction<InputSetValue[]>>
   setOpenInputSetsList: Dispatch<SetStateAction<boolean>>
   selectedValueClass?: string
+  showNewInputSet?: boolean
+  onNewInputSetClick?: () => void
 }): JSX.Element {
   const onDrop = React.useCallback(
     (event: React.DragEvent<HTMLLIElement>, droppedLocation: InputSetValue) => {
@@ -56,74 +60,106 @@ export function RenderValue({
 
   const { getString } = useStrings()
   return (
-    <div className={cx(css.renderSelectedValue, selectedValueClass)}>
-      {value?.map((item, index) => (
-        <li
-          key={index + item.label}
-          data-testid={item.value}
-          className={css.selectedInputSetLi}
-          draggable={true}
-          onDragStart={event => {
-            onDragStart(event, item)
-          }}
-          onDragEnd={onDragEnd}
-          onDragOver={onDragOver}
-          onDragLeave={onDragLeave}
-          onDrop={event => onDrop(event, item)}
-        >
+    <>
+      {showNewInputSet && (
+        <Layout.Horizontal spacing="medium">
           <Button
-            data-testid={`button-${item.label}`}
-            round={true}
-            rightIcon="cross"
-            iconProps={{
-              onClick: event => {
-                event.stopPropagation()
-                const valuesAfterRemoval = value.filter(inputset => inputset.value !== item.value)
-                setSelectedInputSets(valuesAfterRemoval)
-                onChange?.(valuesAfterRemoval)
-              },
-              style: {
-                cursor: 'pointer'
-              }
-            }}
-            text={
-              <Layout.Horizontal flex={{ alignItems: 'center' }} spacing="small">
-                <Button
-                  round={true}
-                  withoutBoxShadow={true}
-                  font={{ weight: 'semi-bold' }}
-                  width={20}
-                  height={20}
-                  className={css.selectedInputSetOrder}
-                >
-                  {index + 1}
-                </Button>
-                <Text
-                  color={Color.PRIMARY_8}
-                  icon={getIconByType(item.type)}
-                  className={css.selectedInputSetLabel}
-                  iconProps={{ className: css.selectedInputSetTypeIcon }}
-                >
-                  {item.label}
-                </Text>
-              </Layout.Horizontal>
-            }
-            margin={{ top: 'small', bottom: 'small', left: 0, right: 'small' }}
-            className={css.selectedInputSetCard}
+            icon="small-plus"
+            className={css.addInputSetButton}
+            onClick={onNewInputSetClick}
             color={Color.PRIMARY_7}
-          />
-        </li>
-      ))}
-      <Button
-        icon="small-plus"
-        className={css.addInputSetButton}
-        onClick={() => setOpenInputSetsList(true)}
-        color={Color.PRIMARY_7}
-        minimal
-        variation={ButtonVariation.LINK}
-      >
-        {getString('pipeline.inputSets.selectPlaceholder')}
-      </Button>
-    </div>
+            minimal
+            variation={ButtonVariation.LINK}
+          >
+            {getString('pipeline.inputSets.createNewInputSet')}
+          </Button>
+          <Text font={{ variation: FontVariation.FORM_LABEL }} color={Color.GREY_200} style={{ alignSelf: 'center' }}>
+            |
+          </Text>
+          <Button
+            icon="small-plus"
+            className={css.addInputSetButton}
+            onClick={() => setOpenInputSetsList(true)}
+            color={Color.PRIMARY_7}
+            minimal
+            variation={ButtonVariation.LINK}
+          >
+            {getString('pipeline.inputSets.selectPlaceholder')}
+          </Button>
+        </Layout.Horizontal>
+      )}
+
+      <div className={cx(css.renderSelectedValue, selectedValueClass)}>
+        {value?.map((item, index) => (
+          <li
+            key={index + item.label}
+            data-testid={item.value}
+            className={css.selectedInputSetLi}
+            draggable={true}
+            onDragStart={event => {
+              onDragStart(event, item)
+            }}
+            onDragEnd={onDragEnd}
+            onDragOver={onDragOver}
+            onDragLeave={onDragLeave}
+            onDrop={event => onDrop(event, item)}
+          >
+            <Button
+              data-testid={`button-${item.label}`}
+              round={true}
+              rightIcon="cross"
+              iconProps={{
+                onClick: event => {
+                  event.stopPropagation()
+                  const valuesAfterRemoval = value.filter(inputset => inputset.value !== item.value)
+                  setSelectedInputSets(valuesAfterRemoval)
+                  onChange?.(valuesAfterRemoval)
+                },
+                style: {
+                  cursor: 'pointer'
+                }
+              }}
+              text={
+                <Layout.Horizontal flex={{ alignItems: 'center' }} spacing="small">
+                  <Button
+                    round={true}
+                    withoutBoxShadow={true}
+                    font={{ weight: 'semi-bold' }}
+                    width={20}
+                    height={20}
+                    className={css.selectedInputSetOrder}
+                  >
+                    {index + 1}
+                  </Button>
+                  <Text
+                    color={Color.PRIMARY_8}
+                    icon={getIconByType(item.type)}
+                    className={css.selectedInputSetLabel}
+                    iconProps={{ className: css.selectedInputSetTypeIcon }}
+                  >
+                    {item.label}
+                  </Text>
+                </Layout.Horizontal>
+              }
+              margin={{ top: 'small', bottom: 'small', left: 0, right: 'small' }}
+              className={css.selectedInputSetCard}
+              color={Color.PRIMARY_7}
+            />
+          </li>
+        ))}
+        {!showNewInputSet && (
+          <Button
+            icon="small-plus"
+            className={css.addInputSetButton}
+            onClick={() => setOpenInputSetsList(true)}
+            color={Color.PRIMARY_7}
+            minimal
+            variation={ButtonVariation.LINK}
+          >
+            {getString('pipeline.inputSets.selectPlaceholder')}
+          </Button>
+        )}
+      </div>
+    </>
   )
 }

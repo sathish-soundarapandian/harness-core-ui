@@ -28,9 +28,12 @@ import {
 } from 'services/cv'
 import type { NGTemplateInfoConfig } from 'services/template-ng'
 import { PageSpinner, useToaster, NavigationCheck } from '@common/components'
+import { DefaultNewTemplateId } from 'framework/Templates/templates'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
+import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
 import { ChangeSourceCategoryName } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useStrings } from 'framework/strings'
 import { SLODetailsPageTabIds } from '@cv/pages/slos/CVSLODetailsPage/CVSLODetailsPage.types'
 import Service, { ServiceWithRef } from './components/Service/Service'
@@ -51,11 +54,15 @@ export default function Configurations(
   formikRef: TemplateFormRef
 ): JSX.Element {
   const { getString } = useStrings()
+
+  useDocumentTitle([getString('cv.srmTitle'), getString('cv.monitoredServices.title')])
+
   const { showWarning, showError, showSuccess } = useToaster()
   const history = useHistory()
   const { isTemplate } = useMonitoredServiceContext()
-  const { orgIdentifier, projectIdentifier, accountId, identifier } = useParams<
-    ProjectPathProps & { identifier: string }
+  const { expressions } = useVariablesExpression()
+  const { orgIdentifier, projectIdentifier, accountId, identifier, templateIdentifier } = useParams<
+    ProjectPathProps & { identifier: string; templateIdentifier?: string }
   >()
   const { view, redirectToSLO, sloIdentifier, monitoredServiceIdentifier } = useQueryParams<{
     view?: Views.GRID
@@ -176,7 +183,7 @@ export default function Configurations(
       getInitFormData(
         dataMonitoredServiceById?.data?.monitoredService,
         defaultMonitoredService,
-        !!identifier,
+        isTemplate ? templateIdentifier !== DefaultNewTemplateId : !!identifier,
         isTemplate,
         templateValue
       ),
@@ -352,6 +359,7 @@ export default function Configurations(
               setDBData={setDBData}
               onDiscard={onDiscard}
               isTemplate={isTemplate}
+              expressions={expressions}
               updateTemplate={updateTemplate}
               onChangeMonitoredServiceType={updatedDTO => {
                 setDefaultMonitoredService(omit(updatedDTO, ['isEdit']) as MonitoredServiceDTO)

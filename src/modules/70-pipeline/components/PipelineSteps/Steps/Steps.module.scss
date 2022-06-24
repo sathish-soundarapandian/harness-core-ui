@@ -231,3 +231,10 @@
     }
   }
 }
+
+.shellScriptMonacoField {
+  min-height: 180px !important;
+  > div {
+    height: 180px !important;
+  }
+}

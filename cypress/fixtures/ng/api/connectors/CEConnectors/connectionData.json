@@ -1,0 +1,11 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "externalId": "harness:108817434118:EfOfrUbHTtupeZjUqxlHBg",
+    "harnessAccountId": "108817434118",
+    "cloudFormationTemplateLink": "https://continuous-efficiency.s3.us-east-2.amazonaws.com/setup/v1/ng/HarnessAWSTemplate.yaml",
+    "stackLaunchTemplateLink": "https://console.aws.amazon.com/cloudformation/home?#/stacks/quickcreate?stackName=harness-ce-iam-role-stack&templateURL=https://continuous-efficiency.s3.us-east-2.amazonaws.com/setup/v1/ng/HarnessAWSTemplate.yaml"
+  },
+  "metaData": null,
+  "correlationId": "1d24e120-6d23-44ae-a72c-4f6630d2a10e"
+}

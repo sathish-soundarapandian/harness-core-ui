@@ -7,8 +7,9 @@
 
 import React from 'react'
 import { waitFor, act, fireEvent, findByText, findAllByText, render } from '@testing-library/react'
-import { cloneDeep } from 'lodash-es'
+import { cloneDeep, set } from 'lodash-es'
 import * as featureFlags from '@common/hooks/useFeatureFlag'
+import * as hostedBuilds from '@common/hooks/useHostedBuild'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { UseGetReturnData } from '@common/utils/testUtils'
 import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
@@ -81,6 +82,23 @@ jest.mock('services/cd-ng', () => ({
           data: 'SUCCESS',
           status: 'SUCCESS'
         } as ResponseSetupStatus)
+    }
+  })
+}))
+
+const mockGetCallFunction = jest.fn()
+jest.mock('services/portal', () => ({
+  useGetDelegateGroupByIdentifier: jest.fn().mockImplementation(args => {
+    mockGetCallFunction(args)
+    return {
+      data: {
+        resource: {
+          activelyConnected: false
+        }
+      },
+      refetch: jest.fn(),
+      error: null,
+      loading: false
     }
   })
 }))
@@ -400,5 +418,67 @@ describe('BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build I
       fireEvent.click(advancedSummary)
     })
     await waitFor(() => expect(getByText('pipeline.infraSpecifications.serviceAccountName')).toBeDefined())
+  })
+})
+
+describe('Hosted by Harness', () => {
+  test('Renders view for delegate not yet provisioned', () => {
+    jest.spyOn(hostedBuilds, 'useHostedBuilds').mockReturnValue({
+      enabledHostedBuildsForFreeUsers: true,
+      enabledHostedBuilds: false
+    })
+    const { container, findByText: getByText } = render(
+      <TestWrapper pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}>
+        <PipelineContext.Provider
+          value={
+            {
+              ...set(contextMock, 'state.pipeline.stages', [
+                {
+                  stage: {
+                    name: 'Build',
+                    identifier: 'Build',
+                    type: 'CI',
+                    spec: {
+                      cloneCodebase: true,
+                      infrastructure: {
+                        type: 'KubernetesHosted'
+                      },
+                      execution: {
+                        steps: [
+                          {
+                            step: {
+                              type: 'Run',
+                              name: 'Echo Welcome Message',
+                              identifier: 'Run',
+                              spec: {
+                                connectorRef: 'account.harnessImage',
+                                image: 'alpine',
+                                shell: 'Sh',
+                                command: 'echo "Welcome to Harness CI" '
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]),
+              getStageFromPipeline: jest.fn(() => {
+                return { stage: contextMock.state.pipeline.stages[0], parent: undefined }
+              }),
+              updatePipeline: jest.fn,
+              updateStage: jest.fn
+            } as any
+          }
+        >
+          <BuildInfraSpecifications />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    const buildInfraTypeTiles = container.querySelectorAll('input[type="checkbox"]')
+    expect(buildInfraTypeTiles.length).toBe(2)
+    fireEvent.click(buildInfraTypeTiles[0])
+    expect(getByText('ci.getStartedWithCI.provisioningHelpText')).toBeTruthy()
   })
 })

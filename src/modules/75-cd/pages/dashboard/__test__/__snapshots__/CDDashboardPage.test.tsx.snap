@@ -134,55 +134,262 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
           class="StyledProps--font StyledProps--main healthCards"
         >
           <div
-            class="StyledProps--font StyledProps--main healthCard totalDepCard StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey600"
+            class="StyledProps--font StyledProps--main healthCard StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey600"
           >
+            <p
+              class="StyledProps--font StyledProps--main cardHeader"
+            >
+              Total Executions
+            </p>
             <div
               class="StyledProps--font StyledProps--main"
             >
-              <p
-                class="StyledProps--font StyledProps--main cardHeader"
-              >
-                Total Deployments
-              </p>
               <div
-                class="StyledProps--font StyledProps--main textAndRate"
+                class="StyledProps--font StyledProps--main layoutParent"
               >
-                <p
-                  class="StyledProps--font StyledProps--main cardText"
+                <div
+                  class="StyledProps--font StyledProps--main textAndRate"
                 >
-                  19
-                </p>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main cardText"
+                    style="--text-line-clamp: 1;"
+                  >
+                    19
+                  </p>
+                  <div
+                    class="StyledProps--font StyledProps--main StyledProps--flex"
+                  >
+                    <span
+                      class="bp3-icon bp3-icon-caret-right StyledProps--main StyledProps--margin-left-small"
+                      icon="caret-right"
+                    >
+                      <svg
+                        data-icon="caret-right"
+                        height="14"
+                        viewBox="0 0 16 16"
+                        width="14"
+                      >
+                        <desc>
+                          caret-right
+                        </desc>
+                        <path
+                          d="M11 8c0-.15-.07-.28-.17-.37l-4-3.5A.495.495 0 006 4.5v7a.495.495 0 00.83.37l4-3.5c.1-.09.17-.22.17-.37z"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                    <p
+                      class="StyledProps--font StyledProps--main"
+                    >
+                      0%
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="StyledProps--font StyledProps--main chartWrap"
+                >
+                  <div />
+                </div>
+              </div>
+              <div
+                class="StyledProps--font StyledProps--main childCard"
+              >
+                <div
+                  class="StyledProps--font StyledProps--main healthCard StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey600"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main cardHeader"
+                  >
+                    Successful
+                  </p>
+                  <div
+                    class="StyledProps--font StyledProps--main"
+                  >
+                    <div
+                      class="StyledProps--font StyledProps--main layoutParent"
+                    >
+                      <div
+                        class="StyledProps--font StyledProps--main textAndRate"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main cardText"
+                          style="--text-line-clamp: 1;"
+                        >
+                          8
+                        </p>
+                      </div>
+                      <div
+                        class="StyledProps--font StyledProps--main chartWrap"
+                      >
+                        <div />
+                        <div
+                          class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                        >
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--margin-left-xsmall"
+                          >
+                            700
+                            %
+                          </p>
+                          <span
+                            class="bp3-icon bp3-icon-caret-up StyledProps--main"
+                            icon="caret-up"
+                          >
+                            <svg
+                              data-icon="caret-up"
+                              height="14"
+                              viewBox="0 0 16 16"
+                              width="14"
+                            >
+                              <desc>
+                                caret-up
+                              </desc>
+                              <path
+                                d="M11.87 9.17s.01 0 0 0l-3.5-4C8.28 5.07 8.15 5 8 5s-.28.07-.37.17l-3.5 4a.495.495 0 00.37.83h7a.495.495 0 00.37-.83z"
+                                fill-rule="evenodd"
+                              />
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="StyledProps--font StyledProps--main childCard"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="StyledProps--font StyledProps--main healthCard StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey600"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main cardHeader"
+                  >
+                    Failed
+                  </p>
+                  <div
+                    class="StyledProps--font StyledProps--main"
+                  >
+                    <div
+                      class="StyledProps--font StyledProps--main layoutParent"
+                    >
+                      <div
+                        class="StyledProps--font StyledProps--main textAndRate"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main cardText"
+                          style="--text-line-clamp: 1;"
+                        >
+                          1
+                        </p>
+                      </div>
+                      <div
+                        class="StyledProps--font StyledProps--main chartWrap"
+                      >
+                        <div />
+                        <div
+                          class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                        >
+                          <span
+                            class="bp3-icon bp3-icon-caret-right StyledProps--main"
+                            icon="caret-right"
+                          >
+                            <svg
+                              data-icon="caret-right"
+                              height="14"
+                              viewBox="0 0 16 16"
+                              width="14"
+                            >
+                              <desc>
+                                caret-right
+                              </desc>
+                              <path
+                                d="M11 8c0-.15-.07-.28-.17-.37l-4-3.5A.495.495 0 006 4.5v7a.495.495 0 00.83.37l4-3.5c.1-.09.17-.22.17-.37z"
+                                fill-rule="evenodd"
+                              />
+                            </svg>
+                          </span>
+                          <p
+                            class="StyledProps--font StyledProps--main"
+                          >
+                            0%
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="StyledProps--font StyledProps--main childCard"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="StyledProps--font StyledProps--main healthCard StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey600"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main cardHeader"
+                  >
+                    Active
+                  </p>
+                  <div
+                    class="StyledProps--font StyledProps--main"
+                  >
+                    <div
+                      class="StyledProps--font StyledProps--main layoutParent"
+                    >
+                      <div
+                        class="StyledProps--font StyledProps--main textAndRate"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main cardText"
+                          style="--text-line-clamp: 1;"
+                        >
+                          0
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      class="StyledProps--font StyledProps--main childCard"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey600"
+          >
             <div
-              class="separator"
-            />
-            <div
-              class="StyledProps--font StyledProps--main chartWrap"
+              class="Layout--vertical StyledProps--main totalCard"
             >
+              <div
+                class="StyledProps--font StyledProps--main"
+                style="display: flex; justify-content: space-between;"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main cardHeader"
+                >
+                  Environment Changes
+                </p>
+              </div>
               <div
                 class="Layout--horizontal StyledProps--main topDepPiechart StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-distribution-space-between"
                 style="height: 100%;"
               >
                 <div
-                  class="Layout--vertical StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-end StyledProps--padding-top-xsmall StyledProps--padding-bottom-xsmall StyledProps--padding-right-large"
-                  style="height: 100%;"
+                  class="Layout--vertical StyledProps--main labelStyles"
                 >
                   <ul>
-                    <li
-                      style="font-weight: 500; font-size: 15px;"
-                    >
+                    <li>
                       <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey500"
+                        class="StyledProps--font Text--lineclamp StyledProps--main listStyles"
+                        style="--text-line-clamp: 1;"
                       >
                         cd.serviceDashboard.nonProd (2)
                       </p>
                     </li>
-                    <li
-                      style="font-weight: 500; font-size: 15px;"
-                    >
+                    <li>
                       <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey500"
+                        class="StyledProps--font Text--lineclamp StyledProps--main listStyles"
+                        style="--text-line-clamp: 1;"
                       >
                         cd.serviceDashboard.prod (5)
                       </p>
@@ -190,86 +397,6 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
                   </ul>
                 </div>
                 <div />
-              </div>
-            </div>
-          </div>
-          <div
-            class="StyledProps--font StyledProps--main healthCard StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey600"
-          >
-            <p
-              class="StyledProps--font StyledProps--main cardHeader"
-            >
-              Successful Deployments
-            </p>
-            <div
-              class="StyledProps--font StyledProps--main"
-              style="display: flex; justify-content: space-between;"
-            >
-              <div
-                class="StyledProps--font StyledProps--main textAndRate"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main cardText"
-                >
-                  8
-                </p>
-              </div>
-              <div
-                class="StyledProps--font StyledProps--main chartWrap"
-              >
-                <div />
-                <div
-                  class="StyledProps--font StyledProps--main StyledProps--flex"
-                >
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--margin-left-xsmall"
-                  >
-                    700
-                    %
-                  </p>
-                  <span
-                    class="bp3-icon bp3-icon-caret-up StyledProps--main"
-                    icon="caret-up"
-                  >
-                    <svg
-                      data-icon="caret-up"
-                      height="14"
-                      viewBox="0 0 16 16"
-                      width="14"
-                    >
-                      <desc>
-                        caret-up
-                      </desc>
-                      <path
-                        d="M11.87 9.17s.01 0 0 0l-3.5-4C8.28 5.07 8.15 5 8 5s-.28.07-.37.17l-3.5 4a.495.495 0 00.37.83h7a.495.495 0 00.37-.83z"
-                        fill-rule="evenodd"
-                      />
-                    </svg>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="StyledProps--font StyledProps--main healthCard StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey600"
-          >
-            <p
-              class="StyledProps--font StyledProps--main cardHeader"
-            >
-              Failed Deployments
-            </p>
-            <div
-              class="StyledProps--font StyledProps--main"
-              style="display: flex; justify-content: space-between;"
-            >
-              <div
-                class="StyledProps--font StyledProps--main textAndRate"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main cardText"
-                >
-                  1
-                </p>
               </div>
             </div>
           </div>
@@ -281,7 +408,7 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
         <p
           class="StyledProps--font StyledProps--main healthCardTitle"
         >
-          Deployments
+          executionsText
         </p>
         <div
           class="StyledProps--font StyledProps--main emptyView"
@@ -322,8 +449,9 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
                 class="StyledProps--font StyledProps--main title"
               >
                 services
-                 
-                (1)
+                 (
+                1
+                )
               </p>
             </div>
           </div>
@@ -332,100 +460,80 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
           class="StyledProps--font StyledProps--main content"
         >
           <div
-            class="StyledProps--font StyledProps--main repositoryCard buildStatus hoverService"
+            class="bp3-card bp3-elevation-0 Card--card repositoryCard hoverService"
           >
-            <p
-              class="StyledProps--font Text--lineclamp StyledProps--main title StyledProps--color StyledProps--color-black"
-              style="--text-line-clamp: 1;"
-            >
-              <div
-                class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
-                style="align-items: center;"
-              >
-                <span
-                  class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary5"
-                  data-icon="services"
-                >
-                  <svg
-                    height="30"
-                    viewBox="0 0 16 16"
-                    width="30"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      clip-rule="evenodd"
-                      d="M6.74 2.098a.6.6 0 01.6-.6h1.2a.6.6 0 01.6.6v1.4a4.57 4.57 0 011.083.448l.996-.993a.6.6 0 01.847 0l.85.847a.6.6 0 010 .85l-.993.99c.191.333.342.692.445 1.071h1.408a.6.6 0 01.6.6v1.2a.6.6 0 01-.6.6h-1.408a4.54 4.54 0 01-.447 1.073l.994.99a.6.6 0 010 .85l-.85.846a.6.6 0 01-.848 0l-.996-.992a4.574 4.574 0 01-1.08.445v1.401a.6.6 0 01-.6.6h-1.2a.6.6 0 01-.6-.6v-1.4a4.573 4.573 0 01-1.082-.447l-.996.992a.6.6 0 01-.847 0l-.85-.846a.6.6 0 010-.85l.993-.99a4.536 4.536 0 01-.447-1.072H2.106a.6.6 0 01-.6-.6v-1.2a.6.6 0 01.6-.6h1.406a4.52 4.52 0 01.446-1.072l-.993-.989a.6.6 0 010-.85l.85-.847a.6.6 0 01.847 0l.996.992c.336-.192.7-.343 1.083-.446V2.098zm.8.2v1.353a.607.607 0 01-.47.59c-.402.094-.78.252-1.122.462a.607.607 0 01-.747-.084L4.24 3.66l-.567.565.96.956a.607.607 0 01.084.75c-.21.339-.368.713-.463 1.111a.607.607 0 01-.588.47h-1.36v.8h1.36c.29 0 .526.204.588.468.095.399.253.773.463 1.112a.607.607 0 01-.084.75l-.96.955.567.565.963-.959a.607.607 0 01.747-.084c.341.21.719.369 1.121.463.265.061.47.297.47.589v1.353h.8v-1.353a.61.61 0 01.47-.59 3.773 3.773 0 001.121-.462.607.607 0 01.747.085l.963.959.567-.565-.96-.955a.607.607 0 01-.084-.75c.21-.34.369-.714.463-1.113a.607.607 0 01.59-.469h1.359v-.8h-1.36a.607.607 0 01-.589-.469 3.735 3.735 0 00-.462-1.11.607.607 0 01.085-.75l.96-.957-.567-.564-.963.959a.607.607 0 01-.747.084A3.773 3.773 0 008.81 4.24a.607.607 0 01-.47-.59V2.298h-.8zM8.016 6.1a1.9 1.9 0 100 3.8 1.9 1.9 0 000-3.8zM5.315 8a2.7 2.7 0 115.4 0 2.7 2.7 0 01-5.4 0z"
-                      fill="currentColor"
-                      fill-rule="evenodd"
-                    />
-                  </svg>
-                </span>
-              </div>
-            </p>
             <div
-              class="StyledProps--font StyledProps--main mainContent"
+              class="content"
             >
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main title"
+                style="--text-line-clamp: 1;"
+              />
               <div
-                class="StyledProps--font StyledProps--main"
+                class="StyledProps--font StyledProps--main mainContent"
               >
                 <div
-                  class="StyledProps--font StyledProps--main cardStats"
+                  class="StyledProps--font StyledProps--main"
                 >
-                  <p
-                    class="StyledProps--font StyledProps--main statHeader StyledProps--font-size-small"
-                  >
-                    DEPLOYMENTS
-                  </p>
-                  <p
-                    class="StyledProps--font StyledProps--main statHeader StyledProps--font-size-small"
-                  >
-                    PIPELINE.DASHBOARDS.SUCCESSRATE
-                  </p>
-                  <p
-                    class="StyledProps--font StyledProps--main statContent"
-                  />
                   <div
-                    class="StyledProps--font StyledProps--main statWrap"
+                    class="StyledProps--font StyledProps--main cardStats"
                   >
+                    <p
+                      class="StyledProps--font StyledProps--main statHeader"
+                    >
+                      Deployments
+                    </p>
+                    <p
+                      class="StyledProps--font StyledProps--main statHeader"
+                    >
+                      pipeline.dashboards.successRate
+                    </p>
                     <p
                       class="StyledProps--font StyledProps--main statContent"
+                    />
+                    <div
+                      class="StyledProps--font StyledProps--main statWrap"
                     >
-                      0
-                      %
-                    </p>
-                    <span
-                      class="bp3-icon bp3-icon-caret-down StyledProps--main"
-                      icon="caret-down"
-                    >
-                      <svg
-                        data-icon="caret-down"
-                        height="14"
-                        viewBox="0 0 16 16"
-                        width="14"
+                      <p
+                        class="StyledProps--font StyledProps--main statContent"
                       >
-                        <desc>
-                          caret-down
-                        </desc>
-                        <path
-                          d="M12 6.5c0-.28-.22-.5-.5-.5h-7a.495.495 0 00-.37.83l3.5 4c.09.1.22.17.37.17s.28-.07.37-.17l3.5-4c.08-.09.13-.2.13-.33z"
-                          fill-rule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                    <p
-                      class="StyledProps--font StyledProps--main rateDiffValue"
-                    >
-                      NaN
-                      %
-                    </p>
+                        0
+                        %
+                      </p>
+                      <span
+                        class="bp3-icon bp3-icon-caret-down StyledProps--main"
+                        icon="caret-down"
+                      >
+                        <svg
+                          data-icon="caret-down"
+                          height="14"
+                          viewBox="0 0 16 16"
+                          width="14"
+                        >
+                          <desc>
+                            caret-down
+                          </desc>
+                          <path
+                            d="M12 6.5c0-.28-.22-.5-.5-.5h-7a.495.495 0 00-.37.83l3.5 4c.09.1.22.17.37.17s.28-.07.37-.17l3.5-4c.08-.09.13-.2.13-.33z"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                      <p
+                        class="StyledProps--font StyledProps--main rateDiffValue"
+                      >
+                        NaN
+                        %
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div
-                class="StyledProps--font StyledProps--main chartWrapper StyledProps--margin-left-medium"
-                style="height: 40px;"
-              >
-                <div />
+                <div
+                  class="StyledProps--font StyledProps--main chartWrapper StyledProps--margin-left-medium"
+                  style="height: 40px;"
+                >
+                  <div />
+                </div>
               </div>
             </div>
             <div
@@ -437,40 +545,46 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
               <div
                 class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main times StyledProps--flex StyledProps--flex-justifyContent-end"
               >
-                <div
-                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex"
+                <span
+                  class="bp3-popover-wrapper bp3-dark"
                 >
                   <span
-                    class="bp3-icon bp3-icon-calendar StyledProps--main StyledProps--color StyledProps--color-grey900"
-                    icon="calendar"
+                    class="bp3-popover-target"
                   >
-                    <svg
-                      data-icon="calendar"
-                      height="10"
-                      viewBox="0 0 16 16"
-                      width="10"
+                    <p
+                      class="StyledProps--font StyledProps--main timeAgo StyledProps--inline StyledProps--font-variation-tiny"
+                      style="display: flex; align-items: center;"
+                      tabindex="0"
                     >
-                      <desc>
-                        calendar
-                      </desc>
-                      <path
-                        d="M11 3c.6 0 1-.5 1-1V1c0-.6-.4-1-1-1s-1 .4-1 1v1c0 .5.4 1 1 1zm3-2h-1v1c0 1.1-.9 2-2 2s-2-.9-2-2V1H6v1c0 1.1-.9 2-2 2s-2-.9-2-2V1H1c-.6 0-1 .5-1 1v12c0 .6.4 1 1 1h13c.6 0 1-.4 1-1V2c0-.6-.5-1-1-1zM5 13H2v-3h3v3zm0-4H2V6h3v3zm4 4H6v-3h3v3zm0-4H6V6h3v3zm4 4h-3v-3h3v3zm0-4h-3V6h3v3zM4 3c.6 0 1-.5 1-1V1c0-.6-.4-1-1-1S3 .4 3 1v1c0 .5.4 1 1 1z"
-                        fill-rule="evenodd"
-                      />
-                    </svg>
+                      <span
+                        class="bp3-icon bp3-icon-calendar StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-grey900"
+                        icon="calendar"
+                      >
+                        <svg
+                          data-icon="calendar"
+                          height="10"
+                          viewBox="0 0 16 16"
+                          width="10"
+                        >
+                          <desc>
+                            calendar
+                          </desc>
+                          <path
+                            d="M11 3c.6 0 1-.5 1-1V1c0-.6-.4-1-1-1s-1 .4-1 1v1c0 .5.4 1 1 1zm3-2h-1v1c0 1.1-.9 2-2 2s-2-.9-2-2V1H6v1c0 1.1-.9 2-2 2s-2-.9-2-2V1H1c-.6 0-1 .5-1 1v12c0 .6.4 1 1 1h13c.6 0 1-.4 1-1V2c0-.6-.5-1-1-1zM5 13H2v-3h3v3zm0-4H2V6h3v3zm4 4H6v-3h3v3zm0-4H6V6h3v3zm4 4h-3v-3h3v3zm0-4h-3V6h3v3zM4 3c.6 0 1-.5 1-1V1c0-.6-.4-1-1-1S3 .4 3 1v1c0 .5.4 1 1 1z"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                      dummy date
+                    </p>
                   </span>
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-tiny"
-                    style="--text-line-clamp: 1;"
-                  >
-                    in a month
-                  </p>
-                </div>
-                <div
-                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex"
+                </span>
+                <span
+                  class="StyledProps--font StyledProps--main duration StyledProps--inline StyledProps--font-variation-tiny"
+                  style="display: inline-flex; align-items: center;"
                 >
                   <span
-                    class="bp3-icon bp3-icon-time StyledProps--main StyledProps--color StyledProps--color-grey900"
+                    class="bp3-icon bp3-icon-time StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-grey900"
                     icon="time"
                   >
                     <svg
@@ -488,12 +602,9 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
                       />
                     </svg>
                   </span>
-                  <p
-                    class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny"
-                  >
-                    9m
-                  </p>
-                </div>
+                   
+                  9m 59s
+                </span>
               </div>
             </div>
           </div>
@@ -535,8 +646,9 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
                 class="StyledProps--font StyledProps--main title"
               >
                 pipeline.dashboards.failedDeployments
-                 
-                
+                 (
+                1
+                )
               </p>
             </div>
           </div>
@@ -766,8 +878,9 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
                 class="StyledProps--font StyledProps--main title"
               >
                 pipeline.dashboards.activeDeployments
-                 
-                
+                 (
+                2
+                )
               </p>
             </div>
           </div>

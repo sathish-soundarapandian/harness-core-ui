@@ -1624,27 +1624,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                 >
                                   <div
                                     class="variablesListTable variablePaddingL2"
-                                  >
-                                    <div
-                                      class="variableListRow variable-list-row"
-                                    >
-                                      <span
-                                        class="nameSection"
-                                      >
-                                        name
-                                      </span>
-                                      <p
-                                        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
-                                        style="--text-line-clamp: 1;"
-                                      >
-                                        <span
-                                          class=""
-                                        >
-                                          test_svc
-                                        </span>
-                                      </p>
-                                    </div>
-                                  </div>
+                                  />
                                 </div>
                               </div>
                             </div>
@@ -2943,27 +2923,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                 >
                                   <div
                                     class="variablesListTable variablePaddingL2"
-                                  >
-                                    <div
-                                      class="variableListRow variable-list-row"
-                                    >
-                                      <span
-                                        class="nameSection"
-                                      >
-                                        name
-                                      </span>
-                                      <p
-                                        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
-                                        style="--text-line-clamp: 1;"
-                                      >
-                                        <span
-                                          class=""
-                                        >
-                                          test_svc
-                                        </span>
-                                      </p>
-                                    </div>
-                                  </div>
+                                  />
                                 </div>
                               </div>
                             </div>
@@ -3840,7 +3800,11 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                 <div
                                   class="Accordion--details"
                                   data-testid="pipeline.parallel_stage_.Service-details"
-                                />
+                                >
+                                  <div
+                                    class="variablesListTable variablePaddingL2"
+                                  />
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -4716,7 +4680,11 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                 <div
                                   class="Accordion--details"
                                   data-testid="pipeline.parallel_stage_2.Service-details"
-                                />
+                                >
+                                  <div
+                                    class="variablesListTable variablePaddingL2"
+                                  />
+                                </div>
                               </div>
                             </div>
                           </div>

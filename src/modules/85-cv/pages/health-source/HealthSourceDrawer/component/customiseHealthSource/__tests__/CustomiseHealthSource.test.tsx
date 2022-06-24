@@ -6,14 +6,20 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import routes from '@common/RouteDefinitions'
+import * as hooks from '@common/hooks/useFeatureFlag'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { SetupSourceTabs } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
-import { sourceData } from './CustomiseHealthSource.mock'
+import { sourceData, sourceDataSplunkMetric } from './CustomiseHealthSource.mock'
 import CustomiseHealthSource from '../CustomiseHealthSource'
+
 import { LoadSourceByType } from '../CustomiseHealthSource.utils'
+
+jest.mock('@cv/pages/health-source/connectors/SplunkMetricsHealthSourceV2/SplunkMetricsHealthSource', () => ({
+  SplunkMetricsHealthSource: () => <div data-testid="SplunkMetricsHealthSource" />
+}))
 
 const testWrapperProps: TestWrapperProps = {
   path: routes.toCVAddMonitoringServicesSetup({ ...accountPathProps, ...projectPathProps }),
@@ -100,5 +106,29 @@ describe('CustomiseHealthSource', () => {
     )
 
     expect(getByText('cv.monitoringSources.prometheus.querySpecificationsAndMappings')).toBeVisible()
+  })
+
+  test('should load Splunk metric health source', () => {
+    const useFeatureFlags = jest.spyOn(hooks, 'useFeatureFlag')
+    useFeatureFlags.mockReturnValue(true)
+    jest.mock('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs', () => ({
+      ...(jest.requireActual('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs') as any),
+      get SetupSourceTabsContext() {
+        return React.createContext({
+          tabsInfo: [],
+          sourceData,
+          onNext: onNextMock,
+          onPrevious: onPrevious
+        })
+      }
+    }))
+
+    render(
+      <TestWrapper {...testWrapperProps}>
+        <LoadSourceByType type="SplunkMetric" data={sourceDataSplunkMetric} onSubmit={jest.fn()} />
+      </TestWrapper>
+    )
+
+    expect(screen.getByTestId('SplunkMetricsHealthSource')).toBeInTheDocument()
   })
 })

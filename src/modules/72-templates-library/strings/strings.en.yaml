@@ -1,8 +1,8 @@
 templateStudio: TemplateStudio
 addNewTemplate: New Template
 openEditTemplate: Open/Edit Template
-useTemplate: Use Template
-copyToPipeline: Copy to Pipeline
+useTemplateLabel: Use Template
+copyTemplateLabel: Copy Template
 deleteTemplate: Delete Template
 copyToNewPipeline: Copy to New Pipeline
 templateSettings: Template Settings
@@ -15,6 +15,8 @@ inputsCount: 'Total Inputs: {{count}}'
 templateUpdatedError: The Template was updated by another user. If you update the Template their changes will overwrite your changes. Would you like to update the Template?
 openInTemplateStudio: Open in Template Studio
 templateHasBeenDeleted: The selected template has been deleted. Please refresh the page.
+changeTemplate: 'Applying <b>{{name}}</b> to this {{entity}} might reset some fields.'
+copyTemplate: 'Configurations of <b>{{name}}</b> will be copied to this {{entity}} and made editable.'
 templatesPage:
   noTemplates: There are no templates in your {{scope}}.
 editModal:

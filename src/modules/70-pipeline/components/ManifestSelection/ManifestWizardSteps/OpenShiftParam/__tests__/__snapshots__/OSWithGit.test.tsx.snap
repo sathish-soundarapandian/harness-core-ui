@@ -669,7 +669,6 @@ exports[`Open shift params with git tests renders without crashing 1`] = `
                       >
                         <div
                           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                          draggable="true"
                           style="align-items: baseline;"
                         >
                           <span
@@ -692,8 +691,7 @@ exports[`Open shift params with git tests renders without crashing 1`] = `
                             </svg>
                           </span>
                           <p
-                            class="StyledProps--font StyledProps--main"
-                            style="width: 12px;"
+                            class="StyledProps--font StyledProps--main text"
                           >
                             1.
                           </p>

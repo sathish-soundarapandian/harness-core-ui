@@ -35,3 +35,10 @@ export interface ConfigFileStepTitle {
   label: string
   icon: IconName
 }
+
+export interface ConfigFileHarnessDataType {
+  identifier: string
+  fileType: string
+  files: any[]
+  secretFiles: any[]
+}

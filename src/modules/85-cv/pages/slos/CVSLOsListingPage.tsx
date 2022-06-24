@@ -22,7 +22,6 @@ import {
   HarnessDocTooltip
 } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
-import noData from '@cv/assets/noData.svg'
 import slosEmptyState from '@cv/assets/slosEmptyState.svg'
 import { Page } from '@common/exports'
 import routes from '@common/RouteDefinitions'
@@ -43,6 +42,7 @@ import {
 } from 'services/cv'
 import RbacButton from '@rbac/components/Button/Button'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
+import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import SLOCardSelect from './components/SLOCardSelect/SLOCardSelect'
 import type { CVSLOsListingPageProps, SLORiskFilter } from './CVSLOsListingPage.types'
 import {
@@ -50,7 +50,6 @@ import {
   getIsSLODashboardAPIsLoading,
   getSLORiskTypeFilter,
   getIsWidgetDataEmpty,
-  getIsDataEmpty,
   getIsSetPreviousPage,
   sloFilterReducer,
   SLODashboardFilterActions,
@@ -70,6 +69,12 @@ import css from './CVSLOsListingPage.module.scss'
 const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService }) => {
   const history = useHistory()
   const { getString } = useStrings()
+
+  useDocumentTitle([
+    getString('cv.srmTitle'),
+    monitoredService?.identifier ? getString('cv.monitoredServices.title') : getString('cv.slos.title')
+  ])
+
   const { showError, showSuccess } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
 
@@ -211,7 +216,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
 
   return (
     <>
-      {!monitoredService?.identifier && !getIsDataEmpty(content?.length, riskCountResponse?.data?.riskCounts) && (
+      {!monitoredService?.identifier && (
         <>
           <Page.Header
             breadcrumbs={<NGBreadcrumbs />}
@@ -252,13 +257,6 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
           if (dashboardRiskCountError) {
             refetchRiskCount()
           }
-        }}
-        noData={{
-          when: () => getIsDataEmpty(content?.length, riskCountResponse?.data?.riskCounts),
-          messageTitle: getString('cv.slos.noData'),
-          message: getString('cv.slos.noSLOsStateMessage'),
-          button: getAddSLOButton(),
-          image: slosEmptyState
         }}
         className={css.pageBody}
       >
@@ -316,12 +314,11 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
           )}
 
           {getIsWidgetDataEmpty(content?.length, dashboardWidgetsLoading) && (
-            <NoDataCard image={noData} message={getString('cv.slos.noMatchingData')} />
+            <NoDataCard image={slosEmptyState} message={getString('cv.slos.noMatchingData')} />
           )}
         </Layout.Vertical>
       </Page.Body>
     </>
   )
 }
-
 export default CVSLOsListingPage

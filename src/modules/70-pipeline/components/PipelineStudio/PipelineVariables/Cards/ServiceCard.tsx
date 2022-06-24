@@ -68,8 +68,8 @@ export function ServiceCard(props: ServiceCardProps): React.ReactElement {
   return (
     <React.Fragment>
       <VariablesListTable
-        data={serviceConfig.service}
-        originalData={originalServiceConfig.service}
+        data={serviceConfig}
+        originalData={originalServiceConfig}
         metadataMap={metadataMap}
         className={css.variablePaddingL2}
       />

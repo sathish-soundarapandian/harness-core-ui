@@ -6,6 +6,8 @@ discard: '{{ $.common.discard }}'
 serviceDependencyText: Service Dependency
 serviceDependenciesText: Service Dependencies
 stepLabel: '{{name}} (Id: {{identifier}})'
+numOfStage: 1 stage
+numOfStages: '{{n}} stages'
 enableVerificationOptions: Enable verification options
 openInPipelineStudio: Open in Pipeline Studio
 closeStepConfig: Step Config
@@ -16,10 +18,9 @@ stageVariables: Stage Variables
 scriptInputVariables: Script Input Variables
 scriptOutputVariables: Script Output Variables
 executionTarget: Execution Target
-removeTemplate: The applied template will be removed from your stage.
-changeTemplate: 'Applying {{name}} to your {{entity}} might reset some fields.'
+removeTemplate: '<b>{{name}}</b> will be removed from this {{entity}}.'
+cloneSuccess: 'Pipeline {{name}} has been cloned successfully as {{cloneName}}'
 templateSaved: 'Template {{name}} has been published successfully. Applying {{name}} to your {{entity}} might reset some fields.'
-copyTemplate: Template configurations will be copied to your pipeline and made editable.
 collapseIsDisabledWhileStageIsRunning: Collapse is disable while stage is running
 changeTemplateLabel: Change Template
 removeTemplateLabel: Remove Template
@@ -29,6 +30,7 @@ templateInputs: Template Inputs
 onlyPositiveInteger: Only positive integer values
 depth: Depth
 advancedOptions: Advanced Options
+additionalConfiguration: Additional Configuration
 pipelineTimeoutSettings: Pipeline Timeout Settings
 pipelineTimeoutHelpText: Enter a timeout for the entire Pipeline. You can change this setting at any time.
 stageExecutionSettings: Stage Execution Settings
@@ -50,6 +52,7 @@ startedOn: Started On
 nodes: nodes
 nodesLabel: Nodes
 poweredByHarness: powered by Harness
+linuxOnly: Supported on Linux only
 outOf: Out Of
 clickToExpandErrorDetails: Click to expand error details
 approvalStage:
@@ -106,6 +109,13 @@ approvalStep:
     REJECT: Rejected
   notAuthorizedExecution: User is not authorized to approve/reject the pipeline
   disallowedApproverExecution: This approval step has been configured to disallow pipeline executors to approve this stage.
+queueStep:
+  keyPlaceholder: Enter Resource Key
+  resourceKey: Resource Key
+  keyRequired: Resource Key is required
+  scopeRequired: Scope is required
+  scopePlaceholder: Select Scope
+  scope: Scope (to release constraint)
 jiraApprovalStep:
   connectToJira: Connect to Jira
   connectorRef: Jira Connector
@@ -242,6 +252,9 @@ manifestType:
   httpHelmRepoConnectorLabel: 'HTTP Helm'
   manifestIdentifier: Manifest Name
   manifestPlaceholder: Enter Manifest Name
+  ociHelmConnectorLabel: OCI Helm
+  basePathPlaceholder: Enter Base Path
+  basePath: Base Path
   manifestSource: Manifest Source
   manifestDetails: Manifest Details
   manifestRepoType: '{{ $.manifestsText }} {{ $.typeLabel }}'
@@ -294,6 +307,9 @@ manifestType:
     chartNamePlaceHolder: 'Enter Chart Name'
     chartVersionPlaceHolder: 'Enter Chart Version'
     chartVersionRequired: 'Chart Version is required'
+  oci:
+    basePathRequired: 'Base Path is required'
+    chartVersionValidation: '"latest" tag is not supported as chart version'
 manifestTypeLabels:
   K8sManifest: K8s Manifest
   ValuesYaml: Values YAML
@@ -380,6 +396,8 @@ execution:
   retryStepCount: 'Retry #{{ num }}'
   currentExecution: Current Execution
   timePrefix: 'Execution Time: '
+  compareAction: Compare
+  compareExecutionsTitle: Select executions to compare the compiled YAML’s
   ignoreFailedWarningText: A failed step was ignored because the step’s Failure Strategy is Ignore Failure. The step’s failure did not impact the Pipeline’s success.
   iotab:
     noInputText: No input found for current step
@@ -402,6 +420,8 @@ execution:
     pauseStage: Pause Stage
     abortStage: Abort Stage
     downloadLogs: Download logs
+    viewCompiledYaml: View Compiled YAML
+    compareYamls: Compare YAML’s
   layouts:
     bottom: Align to bottom
     right: Align to right
@@ -480,6 +500,11 @@ startTime: Start time
 duration: Duration
 and: '{{ $.common.andCaps }}'
 gitDetails: git details
+runtimeInputs: Runtime Inputs
+releaseRepo: Release Repo
+addReleaseRepo: + Add Release Repo Manifest
+releaseRepoStore: Release Repo Store
+runtimeInputsSubmittedMsg: Inputs have been submitted successfully
 pipelineInputPanel:
   noRuntimeInputs: 'No Runtime Inputs'
   automaticallyExtractedFromText: Automatically extracted from event payload
@@ -621,6 +646,7 @@ inputSets:
   noRuntimeInputsWhileExecution: No runtime inputs were present in the pipeline during this execution
   inputSetPlaceholder: Enter Input Sets
   selectPlaceholder: Select Input Set(s)
+  createNewInputSet: Create New Input Set
   aboutInputSets: A Harness Input Set is a group of Pipeline settings and values. You create Input Sets and use them when you run a Pipeline. Input Sets let you use one Pipeline for many scenarios.
   overlayISHelperText: Selected inputs will be applied in the order listed. Drag to reorder the input sets.
   invalidInputSet1: Your Input Set form contains invalid fields because they are no longer a pipeline runtime input. Would you like us to remove all invalid fields in your form?
@@ -794,13 +820,17 @@ artifactPathDependencyRequired: required to fetch the artifact paths
 artifactRepositoryDependencyRequired: 'Artifactory Connector is required to fetch repositories. You can make this field Runtime input otherwise.'
 myDeploymentsText: My Deployments
 myBuildsText: My Builds
+mySecurityTestsText: My Security Tests
+myPipelineRunsText: My Pipeline Runs
 noBuckets: No buckets found with given region
 gitRepo: Git Repo
 buildRepo: Build Repo
+failureTypetext: Select Failure Type
 stepDescription:
   HTTP: Run HTTP requests containing URLs, methods, headers, assertions, and variables.
   SHELLSCRIPT: Execute scripts in the shell session. The scripts can be executed on the pod/instance running a Harness Delegate or on a remote host in the infrastructure.
   Barrier: Synchronize multiple Pipelines to coordinate deployments systematically.
+  Queue: Queue pipeline executions to prevent multiple stages or pipelines from requesting the same deployment resources simultaneously.
   K8sRollingRollback: Roll back the workloads deployed by the stage.
   K8sBlueGreenDeploy: Deploy your new app version to the stage environment.
   K8sCanaryDeploy: Define how many pods are deployed for a Canary test of your new service version.
@@ -812,17 +842,17 @@ stepDescription:
   K8sRollingDeploy: Use a rolling update to schedule new pods on nodes with available resources. This step uses the number of replicas you specified in the Deployment manifest.
   Plugin: Use Docker containers to perform predefined tasks like deploy code, publish artifacts, send notifications, and more.
   Run: Execute one or more commands on a container image in a CI stage.
-  GCR: Build an image and push it to Google Container Registry (GCR).
-  ECR: Build an image and push it to AWS Elastic Container Registry (ECR).
+  GCR: Build a Docker image and push it to Google Container Registry (GCR).
+  ECR: Build a Docker image and push it to AWS Elastic Container Registry (ECR).
   SaveCacheGCS: Preserve files and directories between builds using Google Cloud Storage (GCS).
   RestoreCacheGCS: Restore saved files and directories between builds using Google Cloud Storage (GCS).
   SaveCacheS3: Preserve files and directories between builds using AWS S3.
   RestoreCacheS3: Restore saved files and directories between builds using AWS S3.
-  DockerHub: Build a Docker image from a Dockerfile and push it to a Docker registry.
+  DockerHub: Build a Docker image and push it to a Docker registry.
   GCS: Upload artifacts to Google Cloud Storage (GCS).
   S3: Upload artifacts to AWS S3.
   JFrogArtifactory: Upload artifacts to JFrog Artifactory.
-  RunTests: Execute unit, integration, and other tests on a CI container image.
+  RunTests: Execute unit tests for Java and .NET with Harness Test Intelligence. For all other tests, use the "Run" step
   HarnessApproval: Add manual approvals as steps and stages.
   JiraApproval: Use Jira issues to approve steps and stages.
   Verify: Verify a deployment using your monitoring tools.
@@ -840,6 +870,8 @@ stepDescription:
   Policy: Evaluate policy during pipeline execution
   ServerlessLambdaDeploy: Create the Lambda functions defined in this Stage.
   ServerlessLambdaRollback: Deploy the previous successful version as a new version.
+  createPR: Create PR
+  mergePR: Merge PR
 executionStrategy:
   executionStrategies: Execution Strategies
   useStrategy: Use Strategy
@@ -897,6 +929,7 @@ gitPullRequest: Git Pull Request
 gitPullRequestNumber: Git Pull Request Number
 expressionsEvaluation: Expressions Evaluation
 deploymentFrequency: 'Deployment Frequency'
+executionFrequency: 'Execution Frequency'
 retryPipeline: Retry Failed Pipeline
 openInNewTab: Open in new tab
 stagetoRetryFrom: Select the stage that you would like to resume from
@@ -1012,7 +1045,9 @@ serviceDeploymentTypes:
   azureFunctions: Azure Functions
 noArtifactPaths: No artifact paths found with given Artifact Directory
 stageDataDeleteWarningTitle: Discard Stage Data
+serviceDataDeleteWarningTitle: Discard Service Data
 stageDataDeleteWarningText: Changing deployment type will delete existing stage data like artifacts, manifests, infrastructure details, steps etc. Do you still want to proceed?
+serviceDataDeleteWarningText: Changing deployment type will delete existing service data like artifacts, manifests etc. Do you still want to proceed?
 errorFramework:
   pipelineErrorsTitle: 'Pipeline cannot be saved because {{fields}} further configuration.'
   fixErrors: Fix Errors
@@ -1061,4 +1096,20 @@ ACR:
   repositoryError: 'No repository found with given Registry'
   tagError: 'No tags found with given Connector, Subscription Id, Registry and Repository'
 configFiles:
-  title: 'Config Files Details'
+  title: 'Config File Detailss'
+  source: 'Config File Source'
+  selectFileType: 'Select file type'
+  plainText: 'Plain text'
+  identifierLabel: 'Config File Identifier'
+  encryptedFiles: 'Encrypted file(s)'
+  fileType: 'File Type'
+  error:
+    fileType: 'File type is required'
+    identifier: 'Config file identifier is required'
+    files: 'File(s) is required'
+    file: 'This field is required'
+OverviewEmptyStates:
+  createPipelineHeaderMsg: Set up a Pipeline and run your first deployment!
+  createPipelineInfo: A Harness Pipeline is a series of stages that performs operations like building and deploying software.
+  runPipelineHeaderMsg: You haven’t tried running your pipelines yet.
+  runPipelineInfo: Click the button below to select a pipeline and get your deployments started.

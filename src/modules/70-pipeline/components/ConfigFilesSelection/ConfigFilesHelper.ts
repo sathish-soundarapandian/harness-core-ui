@@ -81,3 +81,8 @@ export const ConfigFilesToConnectorMap: Record<ConfigFileType | string, Connecto
   Bitbucket: Connectors.BITBUCKET,
   Harness: 'Harness' as ConnectorInfoDTO['type']
 }
+
+export enum FILE_TYPE_VALUES {
+  ENCRYPTED = 'encrypted',
+  FILE_STORE = 'fileStore'
+}

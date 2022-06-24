@@ -190,7 +190,7 @@ export default function ExecutionStageDetails(props: ExecutionStageDetailsProps)
       event.target,
       {
         event,
-        data: stageData
+        data: { data: stageData }
       },
       { useArrows: true, darkMode: false, fixedPosition: false, placement: 'top' }
     )
@@ -306,6 +306,7 @@ export default function ExecutionStageDetails(props: ExecutionStageDetailsProps)
         render={renderPopover}
         bind={setDynamicPopoverHandler as any}
         closeOnMouseOut
+        usePortal
       />
     </div>
   )

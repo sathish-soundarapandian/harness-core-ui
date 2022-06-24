@@ -45,6 +45,7 @@ export enum ServiceDeploymentType {
   amazonAmi = 'amazonAmi',
   awsCodeDeploy = 'awsCodeDeploy',
   WinRm = 'WinRm',
+  winrm = 'winrm',
   awsLambda = 'awsLambda',
   pcf = 'pcf',
   Pdc = 'Pdc',
@@ -220,6 +221,10 @@ export const isServerlessDeploymentType = (deploymentType: string): boolean => {
   )
 }
 
+export const isSSHWinRMDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.winrm || deploymentType === ServiceDeploymentType.ssh
+}
+
 export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessAwsLambda]: 'Amazon Web Services Details',
   [ServiceDeploymentType.ServerlessAzureFunctions]: 'Azure Details',
@@ -245,6 +250,12 @@ export const getSelectedDeploymentType = (
     return get(parentStage, 'stage.stage.spec.serviceConfig.serviceDefinition.type', null)
   }
   return get(stage, 'stage.spec.serviceConfig.serviceDefinition.type', null)
+}
+
+export const getDeploymentTypeWithSvcEnvFF = (
+  stage: StageElementWrapper<DeploymentStageElementConfig> | undefined
+): ServiceDefinition['type'] => {
+  return get(stage, 'stage.spec.deploymentType', null)
 }
 
 export const getStageDeploymentType = (
@@ -321,6 +332,17 @@ export const isInfraDefinitionPresent = (stage: DeploymentStageElementConfig): b
   return !!stage.spec?.infrastructure?.infrastructureDefinition
 }
 
+export const isServiceEntityPresent = (stage: any): boolean => {
+  return !!stage.spec?.service?.serviceRef
+}
+
+export const isEnvironmentGroupPresent = (stage: any): boolean => {
+  return !!stage.spec?.environmentGroup?.envGroupRef
+}
+export const isEnvironmentPresent = (stage: any): boolean => {
+  return !!stage.spec?.environment?.environmentRef
+}
+
 export const isExecutionFieldPresent = (stage: DeploymentStageElementConfig): boolean => {
   return !!(stage.spec?.execution && stage.spec?.execution.steps && stage.spec?.execution.steps?.length > 0)
 }
@@ -332,12 +354,42 @@ export const doesStageContainOtherData = (stage?: DeploymentStageElementConfig):
   return isArtifactManifestPresent(stage) || isInfraDefinitionPresent(stage) || isExecutionFieldPresent(stage)
 }
 
+export const hasStageData = (stage?: any): boolean => {
+  if (!stage) {
+    return false
+  }
+  return (
+    isServiceEntityPresent(stage) ||
+    isEnvironmentPresent(stage) ||
+    isEnvironmentGroupPresent(stage) ||
+    isExecutionFieldPresent(stage)
+  )
+}
+
 export const deleteStageData = (stage?: DeploymentStageElementConfig): void => {
   if (stage) {
     delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.artifacts
     delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.manifests
     delete stage?.spec?.infrastructure?.allowSimultaneousDeployments
     delete stage?.spec?.infrastructure?.infrastructureDefinition
+    if (stage?.spec?.execution?.steps) {
+      stage.spec.execution.steps.splice(0)
+    }
+    delete stage?.spec?.execution?.rollbackSteps
+  }
+}
+export const deleteServiceData = (stage?: DeploymentStageElementConfig): void => {
+  if (stage) {
+    delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.artifacts
+    delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.manifests
+  }
+}
+//This is to delete stage data in case of new service/ env entity
+export const deleteStageInfo = (stage?: any): void => {
+  if (stage) {
+    delete stage?.spec?.service
+    delete stage?.spec?.environment
+    delete stage?.spec?.environmentGroup
     if (stage?.spec?.execution?.steps) {
       stage.spec.execution.steps.splice(0)
     }

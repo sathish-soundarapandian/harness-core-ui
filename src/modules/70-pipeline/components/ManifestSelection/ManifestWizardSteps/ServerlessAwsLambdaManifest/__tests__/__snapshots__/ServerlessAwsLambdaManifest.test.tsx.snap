@@ -293,7 +293,6 @@ exports[`Manifest Details tests expand advanced section - when type is k8smanife
                       >
                         <div
                           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                          draggable="true"
                           style="align-items: baseline;"
                         >
                           <div
@@ -831,7 +830,6 @@ exports[`Manifest Details tests initial rendering 1`] = `
                       >
                         <div
                           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                          draggable="true"
                           style="align-items: baseline;"
                         >
                           <div
@@ -1291,7 +1289,6 @@ exports[`Manifest Details tests renders form in edit mode - when gitfetchtype is
                       >
                         <div
                           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                          draggable="true"
                           style="align-items: baseline;"
                         >
                           <div
@@ -1751,7 +1748,6 @@ exports[`Manifest Details tests renders form in edit mode 1`] = `
                       >
                         <div
                           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                          draggable="true"
                           style="align-items: baseline;"
                         >
                           <div
@@ -2211,7 +2207,6 @@ exports[`Manifest Details tests runtime value for connector should make runtime 
                       >
                         <div
                           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                          draggable="true"
                           style="align-items: baseline;"
                         >
                           <div
@@ -3128,7 +3123,6 @@ exports[`Manifest Details tests when connectionType is of repo 1`] = `
                       >
                         <div
                           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                          draggable="true"
                           style="align-items: baseline;"
                         >
                           <div
@@ -3626,7 +3620,6 @@ exports[`Manifest Details tests when gitfetchtype is Commit and commitId is Runt
                       >
                         <div
                           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                          draggable="true"
                           style="align-items: baseline;"
                         >
                           <div
@@ -4086,7 +4079,6 @@ exports[`Manifest Details tests when prevStepData is not passed in props 1`] = `
                       >
                         <div
                           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                          draggable="true"
                           style="align-items: baseline;"
                         >
                           <div
@@ -4546,7 +4538,6 @@ exports[`Manifest Details tests when prevStepData is passed with connectorRef as
                       >
                         <div
                           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                          draggable="true"
                           style="align-items: baseline;"
                         >
                           <div
@@ -5006,7 +4997,6 @@ exports[`Manifest Details tests when scope is of account 1`] = `
                       >
                         <div
                           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                          draggable="true"
                           style="align-items: baseline;"
                         >
                           <div

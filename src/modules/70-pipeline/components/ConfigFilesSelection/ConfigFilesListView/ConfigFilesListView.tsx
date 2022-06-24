@@ -8,14 +8,26 @@
 import React, { useState, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { Layout, Button, ButtonSize, ButtonVariation, IconProps, StepWizard, StepProps } from '@harness/uicore'
+import {
+  Layout,
+  Button,
+  ButtonSize,
+  ButtonVariation,
+  IconProps,
+  StepWizard,
+  StepProps,
+  Text,
+  Icon
+} from '@harness/uicore'
 import type { IDialogProps } from '@blueprintjs/core'
 import { Dialog, Classes } from '@blueprintjs/core'
+import { FontVariation, Color } from '@harness/design-system'
 
 import cx from 'classnames'
-
+import set from 'lodash-es/set'
+import produce from 'immer'
 import { useModalHook } from '@harness/use-modal'
-import type { ConnectorInfoDTO } from 'services/cd-ng'
+import type { ConnectorInfoDTO, ConfigFileWrapper, StageElementConfig } from 'services/cd-ng'
 
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -55,9 +67,9 @@ import { HarnessConfigStep } from '../ConfigFilesWizard/ConfigFilesSteps/Harness
 import css from '../ConfigFilesSelection.module.scss'
 
 function ConfigFilesListView({
-  //   updateStage,
-  //   stage,
-  //   isPropagating,
+  updateStage,
+  stage,
+  isPropagating,
   //   connectors,
   //   refetchConnectors,
   listOfConfigFiles,
@@ -96,6 +108,7 @@ ConfigFilesListViewProps): JSX.Element {
   const [newConnectorView, setNewConnectorView] = useState(false)
   const [isEditMode, setIsEditMode] = useState(false)
   const [configStore, setConfigStore] = useState('')
+  const [configFileIndex, setEditIndex] = useState(0)
 
   const { expressions } = useVariablesExpression()
 
@@ -112,22 +125,74 @@ ConfigFilesListViewProps): JSX.Element {
     connectorInfo: undefined
   }
 
+  const updateStageData = (): void => {
+    const path = isPropagating
+      ? 'stage.spec.serviceConfig.stageOverrides.configFiles'
+      : 'stage.spec.serviceConfig.serviceDefinition.spec.configFiles'
+
+    if (stage) {
+      updateStage(
+        produce(stage, draft => {
+          set(draft, path, listOfConfigFiles)
+        }).stage as StageElementConfig
+      )
+    }
+  }
+
+  const handleSubmit = (configFileObj: ConfigFileWrapper): void => {
+    // const isNewConfigFile = configFileIndex === listOfConfigFiles.length
+    if (isPropagating) {
+      if (listOfConfigFiles?.length > 0) {
+        listOfConfigFiles.splice(configFileIndex, 1, configFileObj)
+      } else {
+        listOfConfigFiles.push(configFileObj)
+      }
+    } else {
+      if (listOfConfigFiles?.length > 0) {
+        listOfConfigFiles.splice(configFileIndex, 1, configFileObj)
+      } else {
+        listOfConfigFiles.push(configFileObj)
+      }
+    }
+    updateStageData()
+
+    hideConnectorModal()
+    // setConnectorView(false)
+    // setSelectedManifest(null)
+    setConfigStore('')
+    // refetchConnectors()
+  }
+  const commonLastStepProps = {
+    handleSubmit
+  }
   const getLastSteps = useCallback((): Array<React.ReactElement<StepProps<any>>> => {
     const arr: Array<React.ReactElement<StepProps<any>>> = []
     let configDetailStep = null
 
     switch (true) {
       case configDetailStep === ConfigFilesToConnectorMap.Harness:
-        configDetailStep = <HarnessConfigStep stepName="Config Files Details" />
+        configDetailStep = (
+          <HarnessConfigStep
+            stepName={getString('pipeline.configFiles.title')}
+            name={getString('pipeline.configFiles.title')}
+            {...commonLastStepProps}
+          />
+        )
         break
       default:
-        configDetailStep = <HarnessConfigStep stepName="Config Files Details" />
+        configDetailStep = (
+          <HarnessConfigStep
+            stepName={getString('pipeline.configFiles.title')}
+            name={getString('pipeline.configFiles.title')}
+            {...commonLastStepProps}
+          />
+        )
         break
     }
 
     arr.push(configDetailStep)
     return arr
-  }, [configStore])
+  }, [configStore, commonLastStepProps, getString])
 
   const getBuildPayload = (type: ConnectorInfoDTO['type']) => {
     if (type === Connectors.GIT) {
@@ -149,7 +214,13 @@ ConfigFilesListViewProps): JSX.Element {
     const buildPayload = getBuildPayload(ConfigFilesToConnectorMap[configStore])
     switch (configStore) {
       case ConfigFilesToConnectorMap.Harness:
-        return <HarnessConfigStep stepName="Config Files Details" />
+        return (
+          <HarnessConfigStep
+            stepName={getString('pipeline.configFiles.title')}
+            name={getString('pipeline.configFiles.title')}
+            handleSubmit={handleSubmit}
+          />
+        )
       case ConfigFilesToConnectorMap.Git:
         return (
           <StepWizard title={getString('connectors.createNewConnector')}>
@@ -203,7 +274,7 @@ ConfigFilesListViewProps): JSX.Element {
     setIsEditMode(false)
   }
 
-  const handleChangeStore = (store: ConfigFileType) => {
+  const handleChangeStore = (store: ConfigFileType): void => {
     setConfigStore(store || '')
   }
 
@@ -221,6 +292,28 @@ ConfigFilesListViewProps): JSX.Element {
       name: ConfigFileIconByType[selectedConfig as ConfigFileType]
     }
     return iconProps
+  }
+
+  const editConfigFile = (configFileType: ConfigFileType, index: number): void => {
+    setConfigStore(configFileType)
+    setSelectedConfig(configFileType)
+    setNewConnectorView(false)
+    setEditIndex(index)
+    showConnectorModal()
+  }
+
+  const removeConfigFileConfig = (index: number): void => {
+    listOfConfigFiles.splice(index, 1)
+
+    if (stage) {
+      const newStage = produce(stage, draft => {
+        set(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.configFiles', listOfConfigFiles)
+      }).stage
+
+      if (newStage) {
+        updateStage(newStage)
+      }
+    }
   }
 
   const [showConnectorModal, hideConnectorModal] = useModalHook(() => {
@@ -275,11 +368,77 @@ ConfigFilesListViewProps): JSX.Element {
 
   return (
     <Layout.Vertical style={{ width: '100%' }}>
-      {listOfConfigFiles &&
-        listOfConfigFiles.map(configFile => {
-          return <div key={configFile}>{configFile}</div>
-        })}
       <Layout.Vertical spacing={'medium'} flex={{ alignItems: 'flex-start' }}>
+        {!!listOfConfigFiles?.length && (
+          <div className={cx(css.configFilesList, css.listHeader)}>
+            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('common.ID')}</Text>
+            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('pipeline.configFiles.fileType')}</Text>
+            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
+              {getString('pipelineSteps.serviceTab.manifestList.manifestStore')}
+            </Text>
+            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('location')}</Text>
+            <span></span>
+          </div>
+        )}
+        <Layout.Vertical style={{ flexShrink: 'initial' }}>
+          <section>
+            {listOfConfigFiles &&
+              listOfConfigFiles.map((data: ConfigFileWrapper, index: number) => {
+                const configFile = data['configFile']
+                const filesType = configFile?.spec?.store?.spec?.files.length ? 'Plain text' : 'Encrypted'
+
+                return (
+                  <div className={css.rowItem} key={`${configFile?.identifier}-${index}`}>
+                    <section className={css.configFilesList}>
+                      <div className={css.columnId}>
+                        <Text inline width={150} className={css.type} color={Color.BLACK} lineClamp={1}>
+                          {configFile?.identifier}
+                        </Text>
+                      </div>
+                      <div>{filesType}</div>
+                      <div className={css.columnStore}>
+                        <Icon
+                          inline
+                          name={ConfigFileIconByType[configFile?.spec?.store?.type as ConfigFileType]}
+                          size={20}
+                        />
+                        <Text
+                          margin={{ left: 'xsmall' }}
+                          inline
+                          width={150}
+                          className={css.type}
+                          color={Color.BLACK}
+                          lineClamp={1}
+                        >
+                          {getString(ConfigFileTypeTitle[configFile?.spec?.store?.type as ConfigFileType])}
+                        </Text>
+                      </div>
+                      <div>{filesType}</div>
+                      {!isReadonly && (
+                        <span>
+                          <Layout.Horizontal>
+                            <Button
+                              icon="Edit"
+                              iconProps={{ size: 18 }}
+                              onClick={() => editConfigFile(configFile?.type as ConfigFileType, index)}
+                              minimal
+                            />
+
+                            <Button
+                              iconProps={{ size: 18 }}
+                              icon="main-trash"
+                              onClick={() => removeConfigFileConfig(index)}
+                              minimal
+                            />
+                          </Layout.Horizontal>
+                        </span>
+                      )}
+                    </section>
+                  </div>
+                )
+              })}
+          </section>
+        </Layout.Vertical>
         <Button
           //   className={css.addManifest}
           id="add-config-file"

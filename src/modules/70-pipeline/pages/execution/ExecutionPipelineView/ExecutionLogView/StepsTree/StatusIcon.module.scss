@@ -1,0 +1,19 @@
+.statusIcon {
+  color: var(--icon-color, var(--grey-450));
+  --intent-color: var(--icon-color);
+
+  &.success {
+    --icon-color: var(--green-500);
+  }
+
+  &.failed,
+  &.expired,
+  &.aborted,
+  &.suspended {
+    --icon-color: var(--red-500);
+  }
+
+  &.running {
+    --icon-color: var(--primary-7);
+  }
+}

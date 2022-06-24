@@ -489,13 +489,12 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
       {formikProps => {
         return (
           <FormikForm>
-            <Container className={css.formContainer}>
+            <Container className={css.formContainer} height={FFM_1513 ? undefined : '100vh'}>
               <Layout.Horizontal className={css.environmentHeaderContainer} flex={{ alignItems: 'center' }}>
                 <FlexExpander />
                 <CFEnvironmentSelect component={<EnvironmentSelect />} />
               </Layout.Horizontal>
-
-              <Container data-tab-container className={css.tabContainer}>
+              <Container data-is-new-targetting-rules={FFM_1513} className={css.tabContainer}>
                 {flagData && (
                   <>
                     <Tabs

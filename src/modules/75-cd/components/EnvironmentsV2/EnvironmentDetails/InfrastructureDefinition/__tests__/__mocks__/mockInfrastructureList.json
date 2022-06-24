@@ -1,0 +1,95 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "totalPages": 1,
+    "totalItems": 5,
+    "pageItemCount": 5,
+    "pageSize": 100,
+    "content": [
+      {
+        "infrastructure": {
+          "accountId": "dummy",
+          "identifier": "Infra_5",
+          "orgIdentifier": "dummy",
+          "projectIdentifier": "dummy",
+          "environmentRef": "Env_1",
+          "name": "Infra 5",
+          "description": "Some desc",
+          "tags": { "tag 1": "" },
+          "type": "KubernetesDirect",
+          "yaml": "infrastructureDefinition:\n  name: \"Infra 5\"\n  identifier: \"Infra_5\"\n  orgIdentifier: \"dummy\"\n  projectIdentifier: \"dummy\"\n  environmentRef: \"Env_1\"\n  description: \"Some desc\"\n  tags:\n    tag 1: \"\"\n  allowSimultaneousDeployments: true\n  type: \"KubernetesDirect\"\n  spec:\n    connectorRef: \"Test\"\n    namespace: \"testasdsaa\"\n    releaseName: \"release-<+INFRA_KEY>\"\n"
+        },
+        "createdAt": 1655450453892,
+        "lastModifiedAt": 1655690308350
+      },
+      {
+        "infrastructure": {
+          "accountId": "dummy",
+          "identifier": "Infra_4",
+          "orgIdentifier": "dummy",
+          "projectIdentifier": "dummy",
+          "environmentRef": "Env_1",
+          "name": "Infra 4",
+          "description": "",
+          "tags": {},
+          "type": "KubernetesDirect",
+          "yaml": "infrastructureDefinition:\n  name: \"Infra 4\"\n  identifier: \"Infra_4\"\n  orgIdentifier: \"dummy\"\n  projectIdentifier: \"dummy\"\n  environmentRef: \"Env_1\"\n  description: \"\"\n  tags: {}\n  allowSimultaneousDeployments: false\n  type: \"KubernetesDirect\"\n  spec:\n    connectorRef: \"Test\"\n    namespace: \"test\"\n    releaseName: \"release-<+INFRA_KEY>\"\n"
+        },
+        "createdAt": 1655445452968,
+        "lastModifiedAt": 1655445452968
+      },
+      {
+        "infrastructure": {
+          "accountId": "dummy",
+          "identifier": "Infra_3",
+          "orgIdentifier": "dummy",
+          "projectIdentifier": "dummy",
+          "environmentRef": "Env_1",
+          "name": "Infra 3",
+          "description": "",
+          "tags": {},
+          "type": "KubernetesDirect",
+          "yaml": "infrastructureDefinition:\n  name: \"Infra 3\"\n  identifier: \"Infra_3\"\n  orgIdentifier: \"dummy\"\n  projectIdentifier: \"dummy\"\n  environmentRef: \"Env_1\"\n  description: \"\"\n  tags: {}\n  allowSimultaneousDeployments: true\n  type: \"KubernetesDirect\"\n  spec:\n    connectorRef: \"Test\"\n    namespace: \"test\"\n    releaseName: \"release-<+INFRA_KEY>\"\n"
+        },
+        "createdAt": 1655445340885,
+        "lastModifiedAt": 1655445340885
+      },
+      {
+        "infrastructure": {
+          "accountId": "dummy",
+          "identifier": "Infra_2",
+          "orgIdentifier": "dummy",
+          "projectIdentifier": "dummy",
+          "environmentRef": "Env_1",
+          "name": "Infra 2",
+          "description": "",
+          "tags": {},
+          "type": "KubernetesDirect",
+          "yaml": "infrastructureDefinition:\n  name: \"Infra 2\"\n  identifier: \"Infra_2\"\n  orgIdentifier: \"dummy\"\n  projectIdentifier: \"dummy\"\n  environmentRef: \"Env_1\"\n  description: \"\"\n  tags: {}\n  allowSimultaneousDeployments: true\n  type: \"KubernetesDirect\"\n  spec:\n    connectorRef: \"Test\"\n    namespace: \"test\"\n    releaseName: \"release-<+INFRA_KEY>\"\n"
+        },
+        "createdAt": 1655445243429,
+        "lastModifiedAt": 1655648248775
+      },
+      {
+        "infrastructure": {
+          "accountId": "dummy",
+          "identifier": "Infra_1",
+          "orgIdentifier": "dummy",
+          "projectIdentifier": "dummy",
+          "environmentRef": "Env_1",
+          "name": "Infra 1",
+          "description": "",
+          "tags": {},
+          "type": "KubernetesDirect",
+          "yaml": "infrastructureDefinition:\n  name: \"Infra 1\"\n  identifier: \"Infra_1\"\n  orgIdentifier: \"dummy\"\n  projectIdentifier: \"dummy\"\n  environmentRef: \"Env_1\"\n  description: \"\"\n  tags: {}\n  allowSimultaneousDeployments: true\n  type: \"KubernetesDirect\"\n  spec:\n    connectorRef: \"Test\"\n    namespace: \"test\"\n    releaseName: \"release-<+INFRA_KEY>\"\n"
+        },
+        "createdAt": 1655281836514,
+        "lastModifiedAt": 1655295908746
+      }
+    ],
+    "pageIndex": 0,
+    "empty": false
+  },
+  "metaData": null,
+  "correlationId": "46fe5e7d-9a0f-4f43-99f6-1a72219ad333"
+}

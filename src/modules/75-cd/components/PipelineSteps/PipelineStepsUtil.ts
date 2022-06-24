@@ -110,6 +110,19 @@ export function getEnvironmentRefSchema(
   return Yup.string().trim().required(getString('cd.pipelineSteps.environmentTab.environmentIsRequired'))
 }
 
+export function getNonGitOpsEnvironmentRefSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
+  return Yup.object().shape({
+    environment: Yup.object().shape({
+      environmentRef: Yup.string().required(getString('cd.pipelineSteps.environmentTab.environmentIsRequired'))
+    }),
+    infrastructureRef: Yup.string().required(getString('cd.pipelineSteps.environmentTab.infrastructureIsRequired'))
+  })
+}
+
+export function getGitOpsEnvironmentRefSchema(): Yup.ObjectSchema {
+  return Yup.object()
+}
+
 export function getServiceDeploymentTypeSchema(
   getString: UseStringsReturn['getString']
 ): Yup.StringSchema<string | undefined> {
@@ -126,7 +139,7 @@ export function getInfraDeploymentTypeSchema(
     .required(getString('cd.pipelineSteps.infraTab.deploymentType'))
 }
 
-const getInfrastructureDefinitionValidationSchema = (
+export const getInfrastructureDefinitionValidationSchema = (
   deploymentType: GetExecutionStrategyYamlQueryParams['serviceDefinitionType'],
   getString: UseStringsReturn['getString']
 ) => {
@@ -163,21 +176,37 @@ const getInfrastructureDefinitionValidationSchema = (
   }
 }
 
+function getServiceSchema(
+  getString: UseStringsReturn['getString'],
+  isNewServiceEnvEntity: boolean
+): Record<string, Yup.Schema<unknown>> {
+  return isNewServiceEnvEntity
+    ? {
+        service: Yup.object().shape({
+          serviceRef: getServiceRefSchema(getString)
+        })
+      }
+    : {
+        serviceConfig: Yup.object().shape({
+          serviceRef: getServiceRefSchema(getString),
+          serviceDefinition: Yup.object().shape({
+            type: getServiceDeploymentTypeSchema(getString),
+            spec: Yup.object().shape(getVariablesValidationField(getString))
+          })
+        })
+      }
+}
+
 export function getCDStageValidationSchema(
   getString: UseStringsReturn['getString'],
   deploymentType: GetExecutionStrategyYamlQueryParams['serviceDefinitionType'],
+  isNewServiceEnvEntity: boolean,
   contextType?: string
 ): Yup.Schema<unknown> {
   return Yup.object().shape({
     ...getNameAndIdentifierSchema(getString, contextType),
     spec: Yup.object().shape({
-      serviceConfig: Yup.object().shape({
-        serviceRef: getServiceRefSchema(getString),
-        serviceDefinition: Yup.object().shape({
-          type: getServiceDeploymentTypeSchema(getString),
-          spec: Yup.object().shape(getVariablesValidationField(getString))
-        })
-      }),
+      ...getServiceSchema(getString, isNewServiceEnvEntity),
       infrastructure: Yup.object().shape({
         environmentRef: getEnvironmentRefSchema(getString),
         infrastructureDefinition: Yup.object().shape({

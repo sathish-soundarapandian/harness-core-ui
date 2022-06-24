@@ -727,13 +727,13 @@ export function StageInputSetFormInternal({
     if (scope !== Scope.PROJECT) {
       if (
         deploymentStageTemplate?.serviceConfig?.serviceRef &&
-        deploymentStageInputSet?.serviceConfig?.serviceRef !== RUNTIME_INPUT_VALUE
+        isEmpty(deploymentStageInputSet?.serviceConfig?.serviceRef)
       ) {
         formik?.setValues(set(formik?.values, `${path}.serviceConfig.serviceRef`, RUNTIME_INPUT_VALUE))
       }
       if (
         deploymentStageTemplate?.infrastructure?.environmentRef &&
-        deploymentStageInputSet?.infrastructure?.environmentRef !== RUNTIME_INPUT_VALUE
+        isEmpty(deploymentStageInputSet?.infrastructure?.environmentRef)
       ) {
         formik?.setValues(set(formik?.values, `${path}.infrastructure.environmentRef`, RUNTIME_INPUT_VALUE))
       }
@@ -754,8 +754,12 @@ export function StageInputSetFormInternal({
                 type={StepType.DeployService}
                 stepViewType={viewType}
                 path={`${path}.serviceConfig`}
-                allowableTypes={allowableTypes}
-                readonly={readonly || scope !== Scope.PROJECT}
+                allowableTypes={
+                  scope === Scope.PROJECT
+                    ? allowableTypes
+                    : allowableTypes.filter(item => item !== MultiTypeInputType.FIXED)
+                }
+                readonly={readonly}
                 customStepProps={{ stageIdentifier }}
               />
             )}
@@ -865,6 +869,48 @@ export function StageInputSetFormInternal({
                     })}
                   </Container>
                 )}
+                {(deploymentStageTemplate.infrastructure as any).spec?.os ? (
+                  shouldRenderRunTimeInputViewWithAllowedValues(
+                    'spec.spec.os',
+                    deploymentStageTemplate.infrastructure
+                  ) ? (
+                    renderMultiTypeInputWithAllowedValues({
+                      name: `${namePath}infrastructure.spec.os`,
+                      tooltipId: 'os',
+                      labelKey: osLabel,
+                      placeholderKey: osLabel,
+                      fieldPath: 'spec.os',
+                      allowedTypes: [MultiTypeInputType.FIXED]
+                    })
+                  ) : (
+                    <Container className={stepCss.bottomMargin3}>
+                      <MultiTypeSelectField
+                        label={
+                          <Text
+                            tooltipProps={{ dataTooltipId: 'os' }}
+                            font={{ variation: FontVariation.FORM_LABEL }}
+                            margin={{ bottom: 'xsmall' }}
+                          >
+                            {getString(osLabel)}
+                          </Text>
+                        }
+                        name={`${namePath}infrastructure.spec.os`}
+                        style={{ width: 300, paddingBottom: 'var(--spacing-small)' }}
+                        multiTypeInputProps={{
+                          selectItems: [
+                            { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
+                            { label: getString('pipeline.infraSpecifications.osTypes.windows'), value: OsTypes.Windows }
+                          ],
+                          multiTypeInputProps: {
+                            allowableTypes: [MultiTypeInputType.FIXED]
+                          },
+                          disabled: readonly
+                        }}
+                        useValue
+                      />
+                    </Container>
+                  )
+                ) : null}
                 {(deploymentStageTemplate.infrastructure as any).spec?.harnessImageConnectorRef ? (
                   shouldRenderRunTimeInputViewWithAllowedValues(
                     'spec.harnessImageConnectorRef',
@@ -1109,9 +1155,13 @@ export function StageInputSetFormInternal({
                 template={deploymentStageTemplate?.infrastructure || {}}
                 type={StepType.DeployEnvironment}
                 stepViewType={viewType}
-                allowableTypes={allowableTypes}
+                allowableTypes={
+                  scope === Scope.PROJECT
+                    ? allowableTypes
+                    : allowableTypes.filter(item => item !== MultiTypeInputType.FIXED)
+                }
                 path={`${path}.infrastructure`}
-                readonly={readonly || scope !== Scope.PROJECT}
+                readonly={readonly}
               />
             )}
             {deploymentStageTemplate.infrastructure.infrastructureDefinition && (
@@ -1162,7 +1212,7 @@ export function StageInputSetFormInternal({
                 executionIdentifier={executionIdentifier}
                 stepsTemplate={deploymentStageTemplate.infrastructure.infrastructureDefinition?.provisioner?.steps}
                 path={`${path}.infrastructure.infrastructureDefinition.provisioner.steps`}
-                allValues={deploymentStage?.infrastructure.infrastructureDefinition?.provisioner?.steps}
+                allValues={deploymentStage?.infrastructure?.infrastructureDefinition?.provisioner?.steps}
                 values={deploymentStageInputSet?.infrastructure?.infrastructureDefinition?.provisioner?.steps}
                 formik={formik}
                 readonly={readonly}
@@ -1177,7 +1227,7 @@ export function StageInputSetFormInternal({
                   deploymentStageTemplate.infrastructure.infrastructureDefinition?.provisioner?.rollbackSteps
                 }
                 path={`${path}.infrastructure.infrastructureDefinition.provisioner.rollbackSteps`}
-                allValues={deploymentStage?.infrastructure.infrastructureDefinition?.provisioner?.rollbackSteps}
+                allValues={deploymentStage?.infrastructure?.infrastructureDefinition?.provisioner?.rollbackSteps}
                 values={deploymentStageInputSet?.infrastructure?.infrastructureDefinition?.provisioner?.rollbackSteps}
                 formik={formik}
                 readonly={readonly}

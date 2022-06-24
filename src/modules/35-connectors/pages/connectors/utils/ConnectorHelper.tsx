@@ -16,7 +16,8 @@ export const AuthTypes = {
   USER_PASSWORD: 'UsernamePassword',
   SERVICE_ACCOUNT: 'ServiceAccount',
   OIDC: 'OpenIdConnect',
-  ANNONYMOUS: 'Anonymous'
+  ANNONYMOUS: 'Anonymous',
+  BEARER_TOKEN: 'Bearer Token(HTTP Header)'
 }
 
 export const GitAuthTypes = {
@@ -81,6 +82,8 @@ export const getConnectorTitleIdByType = (type: string): StringKeys => {
       return 'connectors.title.k8sCluster'
     case Connectors.HttpHelmRepo:
       return 'connectors.title.helmConnector'
+    case Connectors.OciHelmRepo:
+      return 'connectors.title.ociHelmConnector'
     case Connectors.GIT:
       return 'connectors.title.gitConnector'
     case Connectors.GITHUB:
@@ -89,6 +92,8 @@ export const getConnectorTitleIdByType = (type: string): StringKeys => {
       return 'connectors.title.gitlabConnector'
     case Connectors.BITBUCKET:
       return 'connectors.title.bitbucketConnector'
+    case Connectors.AZURE_REPO:
+      return 'connectors.title.azureRepoConnector'
     case Connectors.VAULT:
       return 'connectors.title.hashicorpVault'
     case Connectors.GCP_KMS:
@@ -101,6 +106,8 @@ export const getConnectorTitleIdByType = (type: string): StringKeys => {
       return 'connectors.title.splunk'
     case Connectors.DOCKER:
       return 'dockerRegistry'
+    case Connectors.JENKINS:
+      return 'connectors.jenkins.jenkins'
     case Connectors.CEAWS:
       return 'connectors.title.ceAws'
     case Connectors.AWS:
@@ -134,7 +141,7 @@ export const getConnectorTitleIdByType = (type: string): StringKeys => {
     case Connectors.AZURE_KEY_VAULT:
       return 'connectors.title.azureKeyVault'
     case Connectors.ERROR_TRACKING:
-      return 'connectors.title.errorTracking'
+      return 'common.purpose.errorTracking.title'
     case Connectors.AZURE:
       return 'connectors.title.azure'
     default:
@@ -151,6 +158,8 @@ export const getConnectorIconByType = (type: string): IconName => {
       return 'service-github'
     case Connectors.HttpHelmRepo:
       return 'service-helm'
+    case Connectors.OciHelmRepo:
+      return 'helm-oci'
     case Connectors.GITHUB:
       return 'github'
     case Connectors.GITLAB:
@@ -173,6 +182,8 @@ export const getConnectorIconByType = (type: string): IconName => {
       return 'service-prometheus'
     case Connectors.DYNATRACE:
       return 'service-dynatrace'
+    case Connectors.JENKINS:
+      return 'service-jenkins-inverse'
     case Connectors.DOCKER:
     case 'Dockerhub':
       return 'service-dockerhub'
@@ -197,6 +208,7 @@ export const getConnectorIconByType = (type: string): IconName => {
     case Connectors.AWS_KMS:
       return 'aws-kms'
     case Connectors.CE_AZURE:
+    case Connectors.AZURE_REPO:
       return 'service-azure'
     case Connectors.DATADOG:
       return 'service-datadog'

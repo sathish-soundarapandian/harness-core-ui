@@ -9,7 +9,8 @@
   padding-top: var(--spacing-large);
   min-width: 700px;
   :global {
-    input {
+    input,
+    .bp3-form-helper-text {
       width: 350px !important;
     }
   }

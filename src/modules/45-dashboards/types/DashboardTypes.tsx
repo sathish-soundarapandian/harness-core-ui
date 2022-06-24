@@ -11,9 +11,20 @@ export enum DashboardType {
 }
 
 export enum DashboardLayoutViews {
-  LIST,
-  GRID
+  GRID = 'grid',
+  LIST = 'list'
 }
+
+export enum DashboardTags {
+  HARNESS = 'HARNESS',
+  CD = 'CD',
+  CE = 'CE',
+  CF = 'CF',
+  CI = 'CI',
+  CG_CD = 'CG_CD'
+}
+
+export type MappedDashboardTagOptions = Record<DashboardTags, boolean>
 
 export interface IDashboardFormData {
   id: string

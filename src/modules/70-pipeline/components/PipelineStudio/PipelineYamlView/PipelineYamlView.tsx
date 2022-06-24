@@ -20,6 +20,7 @@ import { StoreType } from '@common/constants/GitSyncTypes'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { EntityValidityDetails } from 'services/pipeline-ng'
+import { getYamlFileName } from '@pipeline/utils/yamlUtils'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { useVariablesExpression } from '../PiplineHooks/useVariablesExpression'
 import { usePipelineSchema } from '../PipelineSchema/PipelineSchemaContext'
@@ -40,6 +41,7 @@ export const YamlBuilderMemo = React.memo(YAMLBuilder, (prevProps, nextProps) =>
 
 let Interval: number | undefined
 const defaultFileName = 'Pipeline.yaml'
+
 function PipelineYamlView(): React.ReactElement {
   const {
     state: {
@@ -66,6 +68,7 @@ function PipelineYamlView(): React.ReactElement {
   >()
   const { pipelineSchema } = usePipelineSchema()
   const { isGitSyncEnabled, isGitSimplificationEnabled } = useAppStore()
+  const isPipelineRemote = isGitSimplificationEnabled && storeMetadata?.storeType === StoreType.REMOTE
   const [yamlHandler, setYamlHandler] = React.useState<YamlBuilderHandlerBinding | undefined>()
   const [yamlFileName, setYamlFileName] = React.useState<string>(defaultFileName)
   const { getString } = useStrings()
@@ -74,6 +77,16 @@ function PipelineYamlView(): React.ReactElement {
   expressionRef.current = expressions
   const updateEntityValidityDetailsRef = React.useRef<(entityValidityDetails: EntityValidityDetails) => Promise<void>>()
   updateEntityValidityDetailsRef.current = updateEntityValidityDetails
+
+  const remoteFileName = React.useMemo(
+    () =>
+      getYamlFileName({
+        isPipelineRemote,
+        filePath: gitDetails?.filePath,
+        defaultName: defaultFileName
+      }),
+    [gitDetails?.filePath, isPipelineRemote]
+  )
 
   // setup polling
   React.useEffect(() => {
@@ -113,7 +126,7 @@ function PipelineYamlView(): React.ReactElement {
   }, [yamlHandler, setYamlHandlerContext])
 
   React.useEffect(() => {
-    if (isGitSyncEnabled || (isGitSimplificationEnabled && storeMetadata?.storeType === StoreType.REMOTE)) {
+    if (isGitSyncEnabled && !isPipelineRemote) {
       if (gitDetails?.objectId) {
         const filePathArr = gitDetails.filePath?.split('/')
         const fileName = filePathArr?.length ? filePathArr[filePathArr?.length - 1] : 'Pipeline.yaml'
@@ -121,7 +134,7 @@ function PipelineYamlView(): React.ReactElement {
       }
       setYamlFileName(pipeline?.identifier + '.yaml')
     }
-  }, [gitDetails, isGitSyncEnabled, pipeline?.identifier])
+  }, [gitDetails, isGitSyncEnabled, isPipelineRemote, pipeline?.identifier])
 
   const yamlOrJsonProp =
     entityValidityDetails?.valid === false && entityValidityDetails?.invalidYaml
@@ -134,7 +147,7 @@ function PipelineYamlView(): React.ReactElement {
         {!isDrawerOpened && (
           <YamlBuilderMemo
             key={isYamlEditable.toString()}
-            fileName={defaultTo(yamlFileName, defaultFileName)}
+            fileName={isPipelineRemote ? remoteFileName : defaultTo(yamlFileName, defaultFileName)}
             entityType="Pipelines"
             isReadOnlyMode={isReadonly || !isYamlEditable}
             bind={setYamlHandler}

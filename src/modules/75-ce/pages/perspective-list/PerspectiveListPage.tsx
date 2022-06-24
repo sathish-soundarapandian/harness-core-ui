@@ -17,16 +17,26 @@ import {
   FlexExpander,
   Page,
   Icon,
-  IconName
+  IconName,
+  ExpandingSearchInputHandle
 } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { defaultTo, pick, sortBy } from 'lodash-es'
+import { defaultTo, pick } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import { PageSpinner, useToaster } from '@common/components'
 import { useTelemetry } from '@common/hooks/useTelemetry'
+import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
-import { useCreatePerspective, useDeletePerspective, CEView, useClonePerspective } from 'services/ce'
+import {
+  useCreatePerspective,
+  useDeletePerspective,
+  CEView,
+  useClonePerspective,
+  useGetFolders,
+  useDeleteFolder,
+  useUpdateFolder
+} from 'services/ce'
 import {
   CcmMetaData,
   QlceView,
@@ -46,6 +56,10 @@ import { PAGE_NAMES, USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import RbacButton from '@rbac/components/Button/Button'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import PerspectiveFoldersSideNav from '@ce/components/PerspectiveFolders/PerspectiveFoldersSideNav'
+import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
+import EmptyPage from '@ce/common/EmptyPage/EmptyPage'
+import { folderViewType } from '@ce/constants'
 import bgImage from './images/perspectiveBg.png'
 import css from './PerspectiveListPage.module.scss'
 
@@ -232,7 +246,6 @@ const NoDataPerspectivePage: (props: NoDataPerspectivePageProps) => JSX.Element 
 
 interface PerspectiveListGridViewProps {
   pespectiveList: QlceView[]
-  recentViewList: QlceView[]
   navigateToPerspectiveDetailsPage: (
     perspectiveId: string,
     viewState: ViewState,
@@ -244,19 +257,22 @@ interface PerspectiveListGridViewProps {
   clonePerspective: (perspectiveId: string, perspectiveName: string) => void
   filteredPerspectiveData: QlceView[]
   view: Views
+  setRefetchFolders: React.Dispatch<React.SetStateAction<boolean>>
+  setSelectedFolder: (newState: string) => void
+  setRefetchPerspectives: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const PerspectiveListGridView: (props: PerspectiveListGridViewProps) => JSX.Element | null = ({
   pespectiveList,
-  recentViewList,
   navigateToPerspectiveDetailsPage,
   deletePerpsective,
   clonePerspective,
   filteredPerspectiveData,
-  view
+  view,
+  setRefetchFolders,
+  setSelectedFolder,
+  setRefetchPerspectives
 }) => {
-  const { getString } = useStrings()
-
   if (!pespectiveList) {
     return null
   }
@@ -264,47 +280,14 @@ const PerspectiveListGridView: (props: PerspectiveListGridViewProps) => JSX.Elem
   if (view === Views.GRID) {
     return (
       <>
-        {recentViewList?.length ? (
-          <Container
-            margin={{
-              bottom: 'xxlarge'
-            }}
-          >
-            <Text
-              margin={{
-                left: 'small',
-                bottom: 'small'
-              }}
-              font={{ variation: FontVariation.SMALL_BOLD }}
-            >
-              {getString('ce.perspectives.recentPerspectiveTxt', {
-                count: recentViewList.length
-              })}
-            </Text>
-            <PerspectiveGridView
-              pespectiveData={recentViewList}
-              navigateToPerspectiveDetailsPage={navigateToPerspectiveDetailsPage}
-              deletePerpsective={deletePerpsective}
-              clonePerspective={clonePerspective}
-            />
-          </Container>
-        ) : null}
-        <Text
-          margin={{
-            left: 'small',
-            bottom: 'small'
-          }}
-          font={{ variation: FontVariation.SMALL_BOLD }}
-        >
-          {getString('ce.perspectives.allPerspectiveTxt', {
-            count: filteredPerspectiveData.length
-          })}
-        </Text>
         <PerspectiveGridView
           pespectiveData={filteredPerspectiveData}
           navigateToPerspectiveDetailsPage={navigateToPerspectiveDetailsPage}
           deletePerpsective={deletePerpsective}
           clonePerspective={clonePerspective}
+          setRefetchFolders={setRefetchFolders}
+          setSelectedFolder={setSelectedFolder}
+          setRefetchPerspectives={setRefetchPerspectives}
         />
       </>
     )
@@ -312,47 +295,14 @@ const PerspectiveListGridView: (props: PerspectiveListGridViewProps) => JSX.Elem
 
   return (
     <>
-      {recentViewList?.length ? (
-        <Container
-          margin={{
-            bottom: 'xxlarge'
-          }}
-        >
-          <Text
-            margin={{
-              left: 'small',
-              bottom: 'small'
-            }}
-            font={{ variation: FontVariation.SMALL_BOLD }}
-          >
-            {getString('ce.perspectives.recentPerspectiveTxt', {
-              count: recentViewList.length
-            })}
-          </Text>
-          <PerspectiveListView
-            pespectiveData={recentViewList}
-            navigateToPerspectiveDetailsPage={navigateToPerspectiveDetailsPage}
-            deletePerpsective={deletePerpsective}
-            clonePerspective={clonePerspective}
-          />
-        </Container>
-      ) : null}
-      <Text
-        margin={{
-          left: 'small',
-          bottom: 'small'
-        }}
-        font={{ variation: FontVariation.SMALL_BOLD }}
-      >
-        {getString('ce.perspectives.allPerspectiveTxt', {
-          count: filteredPerspectiveData.length
-        })}
-      </Text>
       <PerspectiveListView
         pespectiveData={filteredPerspectiveData}
         navigateToPerspectiveDetailsPage={navigateToPerspectiveDetailsPage}
         deletePerpsective={deletePerpsective}
         clonePerspective={clonePerspective}
+        setRefetchFolders={setRefetchFolders}
+        setSelectedFolder={setSelectedFolder}
+        setRefetchPerspectives={setRefetchPerspectives}
       />
     </>
   )
@@ -370,9 +320,70 @@ const PerspectiveListPage: React.FC = () => {
   const [view, setView] = useState(Views.GRID)
   const [quickFilters, setQuickFilters] = useState<Record<string, boolean>>({})
   const { trackPage, trackEvent } = useTelemetry()
+  const [defaultFolderId, setDefaultFolderId] = useState('')
+  const [sampleFolderId, setSampleFolderId] = useState('')
+  const [selectedFolderId, setSelectedFolder] = useQueryParamsState<string | undefined>('folderId', defaultFolderId)
+  const [isRefetchFolders, setRefetchFolders] = useState(false)
+  const [refetchPerspectives, setRefetchPerspectives] = useState(false)
+  const searchRef = React.useRef<ExpandingSearchInputHandle>()
 
-  const [result, executeQuery] = useFetchAllPerspectivesQuery()
+  useDocumentTitle(getString('ce.perspectives.sideNavText'), true)
+
+  const [result, executeQuery] = useFetchAllPerspectivesQuery({
+    variables: {
+      folderId: selectedFolderId || defaultFolderId
+    }
+  })
   const { data, fetching } = result
+
+  const {
+    data: foldersListResullt,
+    loading: foldersLoading,
+    refetch: fetchFoldersList
+  } = useGetFolders({
+    queryParams: {
+      accountIdentifier: accountId
+    }
+  })
+
+  const foldersList = foldersListResullt?.data || []
+
+  useEffect(() => {
+    if (isRefetchFolders) {
+      fetchFoldersList()
+      setRefetchFolders(false)
+    }
+  }, [fetchFoldersList, isRefetchFolders])
+
+  useEffect(() => {
+    executeQuery({
+      requestPolicy: 'network-only'
+    })
+    if (searchParam) {
+      searchRef.current?.clear()
+    }
+  }, [selectedFolderId])
+
+  useEffect(() => {
+    if (refetchPerspectives) {
+      executeQuery({
+        requestPolicy: 'network-only'
+      })
+      setRefetchPerspectives(false)
+    }
+  }, [refetchPerspectives])
+
+  useEffect(() => {
+    if (foldersList) {
+      const defaultFolder = foldersList.filter(folders => folders.viewType === folderViewType.DEFAULT)
+      const sampleFolder = foldersList.filter(folders => folders.viewType === folderViewType.SAMPLE)
+      setDefaultFolderId(defaultFolder[0]?.uuid || '')
+      setSampleFolderId(sampleFolder[0]?.uuid || '')
+      if (!selectedFolderId) {
+        setSelectedFolder(defaultFolderId)
+      }
+    }
+  }, [foldersList])
 
   const { mutate: createView, loading: createViewLoading } = useCreatePerspective({
     queryParams: {
@@ -395,6 +406,18 @@ const PerspectiveListPage: React.FC = () => {
     }
   })
 
+  const { mutate: deletePerspectiveFolder } = useDeleteFolder({
+    queryParams: {
+      accountIdentifier: accountId
+    }
+  })
+
+  const { mutate: updatePerspectiveFolder } = useUpdateFolder({
+    queryParams: {
+      accountIdentifier: accountId
+    }
+  })
+
   const [ccmMetaResult] = useFetchCcmMetaDataQuery()
   const { data: ccmData, fetching: fetchingCCMMetaData } = ccmMetaResult
 
@@ -407,8 +430,10 @@ const PerspectiveListPage: React.FC = () => {
       viewVersion: 'v1'
     }
 
+    const folderId = selectedFolderId === sampleFolderId ? defaultFolderId : selectedFolderId
+
     formData['name'] = `Perspective-${generateId(6).toUpperCase()}`
-    formData = { ...CREATE_CALL_OBJECT, ...formData }
+    formData = { ...CREATE_CALL_OBJECT, ...formData, folderId }
 
     try {
       const response = await createView(formData as CEView)
@@ -491,6 +516,39 @@ const PerspectiveListPage: React.FC = () => {
     }
   }
 
+  const deleteFolder = async (folderId: string) => {
+    try {
+      await deletePerspectiveFolder(folderId, {
+        headers: {
+          'content-type': 'application/json'
+        }
+      })
+      showSuccess(getString('ce.perspectives.folders.folderDeleted'))
+      fetchFoldersList()
+      if (folderId === selectedFolderId) {
+        setSelectedFolder(defaultFolderId)
+      }
+    } catch (e) {
+      const errMessage = e.data.message
+      showError(errMessage)
+    }
+  }
+
+  const updateFolder = async (folderId: string, folderName: string, isPinned: boolean) => {
+    try {
+      await updatePerspectiveFolder({
+        uuid: folderId,
+        name: folderName,
+        pinned: isPinned
+      })
+      showSuccess(getString('ce.perspectives.folders.folderUpdated'))
+      fetchFoldersList()
+    } catch (e) {
+      const errMessage = e.data.message
+      showError(errMessage)
+    }
+  }
+
   const navigateToPerspectiveDetailsPage: (
     perspectiveId: string,
     viewState: ViewState,
@@ -555,12 +613,6 @@ const PerspectiveListPage: React.FC = () => {
     return <NoDataPerspectivePage />
   }
 
-  let recentViewList = sortBy(
-    filteredPerspectiveData?.filter(v => v.viewState === 'COMPLETED'),
-    ['lastUpdatedAt']
-  ).reverse()
-  recentViewList = recentViewList.slice(0, 5)
-
   return (
     <>
       <Page.Header
@@ -575,85 +627,104 @@ const PerspectiveListPage: React.FC = () => {
         }
         breadcrumbs={<NGBreadcrumbs />}
       />
-      <Layout.Horizontal spacing="large" className={css.header}>
-        <Layout.Horizontal spacing="large" style={{ alignItems: 'center' }}>
-          <RbacButton
-            intent="primary"
-            text={getString('ce.perspectives.newPerspective')}
-            icon="plus"
-            featuresProps={{
-              featuresRequest: {
-                featureNames: [FeatureIdentifier.PERSPECTIVES]
-              }
-            }}
-            onClick={() => {
-              trackEvent(USER_JOURNEY_EVENTS.CREATE_NEW_PERSPECTIVE, {})
-              createNewPerspective({})
-            }}
-          />
-        </Layout.Horizontal>
-        <FlexExpander />
-
-        <QuickFilters quickFilters={quickFilters} setQuickFilters={setQuickFilters} countInfo={countInfo} />
-        <ExpandingSearchInput
-          placeholder={getString('ce.perspectives.searchPerspectives')}
-          onChange={text => {
-            setSearchParam(text.trim())
-          }}
-          className={css.search}
+      <Layout.Horizontal className={css.bodyWrapper}>
+        <PerspectiveFoldersSideNav
+          setSelectedFolder={setSelectedFolder}
+          selectedFolderId={selectedFolderId || ''}
+          foldersList={foldersList}
+          setRefetchFolders={setRefetchFolders}
+          foldersLoading={foldersLoading}
+          defaultFolderId={defaultFolderId}
+          deleteFolder={deleteFolder}
+          updateFolder={updateFolder}
         />
-        <Layout.Horizontal>
-          <Button
-            minimal
-            icon="grid-view"
-            intent={view === Views.GRID ? 'primary' : undefined}
-            onClick={() => {
-              setView(Views.GRID)
-            }}
-          />
-          <Button
-            minimal
-            icon="list"
-            intent={view === Views.LIST ? 'primary' : undefined}
-            onClick={() => {
-              setView(Views.LIST)
-            }}
-          />
-        </Layout.Horizontal>
+        <div style={{ flex: 1 }}>
+          {pespectiveList.length ? (
+            <Layout.Horizontal spacing="large" className={css.header}>
+              <Layout.Horizontal spacing="large" style={{ alignItems: 'center' }}>
+                <RbacButton
+                  intent="primary"
+                  text={getString('ce.perspectives.newPerspective')}
+                  icon="plus"
+                  featuresProps={{
+                    featuresRequest: {
+                      featureNames: [FeatureIdentifier.PERSPECTIVES]
+                    }
+                  }}
+                  onClick={() => {
+                    trackEvent(USER_JOURNEY_EVENTS.CREATE_NEW_PERSPECTIVE, {})
+                    createNewPerspective({})
+                  }}
+                />
+              </Layout.Horizontal>
+              <FlexExpander />
+
+              <QuickFilters quickFilters={quickFilters} setQuickFilters={setQuickFilters} countInfo={countInfo} />
+              <ExpandingSearchInput
+                placeholder={getString('ce.perspectives.searchPerspectives')}
+                onChange={text => {
+                  setSearchParam(text.trim())
+                }}
+                ref={searchRef}
+                className={css.search}
+              />
+              <Layout.Horizontal>
+                <Button
+                  minimal
+                  icon="grid-view"
+                  intent={view === Views.GRID ? 'primary' : undefined}
+                  onClick={() => {
+                    setView(Views.GRID)
+                  }}
+                />
+                <Button
+                  minimal
+                  icon="list"
+                  intent={view === Views.LIST ? 'primary' : undefined}
+                  onClick={() => {
+                    setView(Views.LIST)
+                  }}
+                />
+              </Layout.Horizontal>
+            </Layout.Horizontal>
+          ) : null}
+          <Page.Body>
+            {(fetching || createViewLoading) && <Page.Spinner />}
+            {!pespectiveList.length ? (
+              <EmptyPage
+                title={getString('ce.perspectives.emptyStateTitle')}
+                subtitle={getString('ce.perspectives.emptyStateDesc')}
+                buttonText={getString('ce.perspectives.newPerspective')}
+                buttonAction={() => {
+                  trackEvent(USER_JOURNEY_EVENTS.CREATE_NEW_PERSPECTIVE, {})
+                  createNewPerspective({})
+                }}
+              />
+            ) : null}
+            <Container
+              padding={{
+                right: 'xxxlarge',
+                left: 'xxxlarge',
+                bottom: 'large',
+                top: 'large'
+              }}
+            >
+              <PerspectiveListGridView
+                pespectiveList={pespectiveList}
+                navigateToPerspectiveDetailsPage={navigateToPerspectiveDetailsPage}
+                deletePerpsective={deletePerpsective}
+                createNewPerspective={createNewPerspective}
+                clonePerspective={clonePerspective}
+                filteredPerspectiveData={filteredPerspectiveData}
+                view={view}
+                setRefetchFolders={setRefetchFolders}
+                setSelectedFolder={setSelectedFolder}
+                setRefetchPerspectives={setRefetchPerspectives}
+              />
+            </Container>
+          </Page.Body>
+        </div>
       </Layout.Horizontal>
-      <Page.Body>
-        {(fetching || createViewLoading) && <Page.Spinner />}
-        <Container
-          padding={{
-            right: 'xxxlarge',
-            left: 'xxxlarge',
-            bottom: 'large',
-            top: 'large'
-          }}
-        >
-          <Text
-            font={{ variation: FontVariation.H6 }}
-            margin={{
-              left: 'small',
-              bottom: 'large'
-            }}
-          >
-            {getString('ce.common.totalCount', {
-              count: filteredPerspectiveData.length
-            })}
-          </Text>
-          <PerspectiveListGridView
-            pespectiveList={pespectiveList}
-            recentViewList={recentViewList}
-            navigateToPerspectiveDetailsPage={navigateToPerspectiveDetailsPage}
-            deletePerpsective={deletePerpsective}
-            createNewPerspective={createNewPerspective}
-            clonePerspective={clonePerspective}
-            filteredPerspectiveData={filteredPerspectiveData}
-            view={view}
-          />
-        </Container>
-      </Page.Body>
     </>
   )
 }

@@ -23,7 +23,7 @@ const useGetAllTagsMock = useGetAllTags as jest.Mock
 const renderComponent = (props: Partial<FilterTagsSideBarProps> = {}): RenderResult =>
   render(
     <TestWrapper path={routes.toCustomDashboardHome({ accountId })} pathParams={{ accountId: accountId }}>
-      <FilterTagsSideBar setFilteredTags={jest.fn()} {...props} />
+      <FilterTagsSideBar onTagClicked={jest.fn()} {...props} />
     </TestWrapper>
   )
 
@@ -73,7 +73,7 @@ describe('FilterTagsSideBar', () => {
     const setFilteredTagsMock = jest.fn()
     useGetAllTagsMock.mockReturnValue(buildTagsResponse(false, 'one,two'))
 
-    renderComponent({ setFilteredTags: setFilteredTagsMock })
+    renderComponent({ onTagClicked: setFilteredTagsMock })
     expect(setFilteredTagsMock).not.toHaveBeenCalled()
 
     const tagButton = screen.getByText('one') as HTMLButtonElement
@@ -82,24 +82,24 @@ describe('FilterTagsSideBar', () => {
     })
 
     await waitFor(() => expect(setFilteredTagsMock).toHaveBeenCalled())
-    const anonFunction = setFilteredTagsMock.mock.calls[0][0]
-    expect(anonFunction.call(null, ['zero'])).toEqual(['zero', 'one'])
+    const clickedTag = setFilteredTagsMock.mock.calls[0][0]
+    expect(clickedTag).toEqual('one')
   })
 
   test('it should not add duplicate tags when clicked', async () => {
     const setFilteredTagsMock = jest.fn()
     useGetAllTagsMock.mockReturnValue(buildTagsResponse(false, 'one,two'))
 
-    renderComponent({ setFilteredTags: setFilteredTagsMock })
+    renderComponent({ onTagClicked: setFilteredTagsMock })
     expect(setFilteredTagsMock).not.toHaveBeenCalled()
 
-    const tagButton = screen.getByText('one') as HTMLButtonElement
+    const tagButton = screen.getByText('two') as HTMLButtonElement
     await act(async () => {
       userEvent.click(tagButton)
     })
 
     await waitFor(() => expect(setFilteredTagsMock).toHaveBeenCalled())
-    const anonFunction = setFilteredTagsMock.mock.calls[0][0]
-    expect(anonFunction.call(null, ['one'])).toEqual(['one'])
+    const clickedTag = setFilteredTagsMock.mock.calls[0][0]
+    expect(clickedTag).toEqual('two')
   })
 })

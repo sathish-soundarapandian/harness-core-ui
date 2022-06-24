@@ -28,7 +28,7 @@ interface FormikFileSelectInput extends SelectEncryptedProps {
 
 function FileSelectField(props: SelectEncryptedProps) {
   const { getString } = useStrings()
-  const { formik, name, placeholder, readonly = false, index, onChange, field } = props
+  const { formik, name, placeholder, readonly = false, field } = props
   const fileSelectedValue = field.value
   // const modalFileStore = useFileStoreModal({
   //   applySelected: value => formik.setFieldValue(name, value)
@@ -36,9 +36,7 @@ function FileSelectField(props: SelectEncryptedProps) {
   const { openCreateOrSelectSecretModal } = useCreateOrSelectSecretModal(
     {
       type: 'SecretFile',
-      onSuccess: secret => {
-        onChange(secret, index)
-      }
+      onSuccess: value => formik.setFieldValue(name, value)
     },
     []
   )

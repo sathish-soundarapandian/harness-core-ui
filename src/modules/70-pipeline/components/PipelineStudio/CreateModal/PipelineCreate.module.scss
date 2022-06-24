@@ -26,6 +26,10 @@
     margin-bottom: var(--spacing-medium) !important;
   }
 
+  .gitSimplificationDivider {
+    margin-top: var(--spacing-xlarge);
+  }
+
   :global {
     [class*='InputWithIdentifier--txtNameContainer'] {
       width: 350px !important;

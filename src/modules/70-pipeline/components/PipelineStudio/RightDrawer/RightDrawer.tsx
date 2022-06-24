@@ -99,7 +99,7 @@ const checkDuplicateStep = (
 export const updateStepWithinStage = (
   execution: ExecutionElementConfig,
   processingNodeIdentifier: string,
-  processedNode: StepElementConfig
+  processedNode: StepElementConfig | TemplateStepNode
 ): void => {
   // Finds the step in the stage, and updates with the processed node
   execution?.steps?.forEach(stepWithinStage => {
@@ -641,24 +641,31 @@ export function RightDrawer(): React.ReactElement {
     updatePipelineView({ ...pipelineView, isDrawerOpened: false, drawerData: { type: DrawerTypes.AddStep } })
   }
 
-  const updateNode = async (processNode: StepElementConfig | TemplateStepNode) => {
+  const updateNode = async (processNode: StepElementConfig | TemplateStepNode, drawerType: DrawerTypes) => {
     const newPipelineView = produce(pipelineView, draft => {
       set(draft, 'drawerData.data.stepConfig.node', processNode)
     })
     updatePipelineView(newPipelineView)
     const processingNodeIdentifier = defaultTo(drawerData.data?.stepConfig?.node?.identifier, '')
     const stageData = produce(selectedStage, draft => {
-      if (draft?.stage?.spec?.execution) {
-        updateStepWithinStage(draft.stage.spec.execution, processingNodeIdentifier, processNode as any)
+      if (drawerType === DrawerTypes.StepConfig && draft?.stage?.spec?.execution) {
+        updateStepWithinStage(draft.stage.spec.execution, processingNodeIdentifier, processNode)
+      } else if (drawerType === DrawerTypes.ProvisionerStepConfig) {
+        const provisionerInternal = (draft?.stage as DeploymentStageElementConfig)?.spec?.infrastructure
+          ?.infrastructureDefinition?.provisioner
+        if (provisionerInternal) {
+          updateStepWithinStage(provisionerInternal, processingNodeIdentifier, processNode)
+        }
       }
     })
+
     if (stageData?.stage) {
       await updateStage(stageData.stage)
     }
     drawerData.data?.stepConfig?.onUpdate?.(processNode)
   }
 
-  const addOrUpdateTemplate = async (selectedTemplate?: TemplateSummaryResponse) => {
+  const addOrUpdateTemplate = async (selectedTemplate: TemplateSummaryResponse, drawerType: DrawerTypes) => {
     try {
       const stepType =
         (data?.stepConfig?.node as StepElementConfig)?.type ||
@@ -675,20 +682,20 @@ export function RightDrawer(): React.ReactElement {
             draft.identifier = defaultTo(node?.identifier, '')
           })
         : createTemplate<TemplateStepNode>(node as unknown as TemplateStepNode, template)
-      await updateNode(processNode)
+      await updateNode(processNode, drawerType)
     } catch (_) {
       // Do nothing.. user cancelled template selection
     }
   }
 
-  const removeTemplate = async () => {
+  const removeTemplate = async (drawerType: DrawerTypes) => {
     const node = drawerData.data?.stepConfig?.node as TemplateStepNode
     const processNode = produce({} as StepElementConfig, draft => {
       draft.name = node.name
       draft.identifier = node.identifier
       draft.type = get(templateTypes, node.template.templateRef)
     })
-    await updateNode(processNode)
+    await updateNode(processNode, drawerType)
   }
 
   const onDiscard = () => {
@@ -768,8 +775,8 @@ export function RightDrawer(): React.ReactElement {
           }
           viewType={StepCommandsViews.Pipeline}
           allowableTypes={allowableTypes}
-          onUseTemplate={addOrUpdateTemplate}
-          onRemoveTemplate={removeTemplate}
+          onUseTemplate={(selectedTemplate: TemplateSummaryResponse) => addOrUpdateTemplate(selectedTemplate, type)}
+          onRemoveTemplate={() => removeTemplate(type)}
           isStepGroup={data.stepConfig.isStepGroup}
           hiddenPanels={data.stepConfig.hiddenAdvancedPanels}
           stageType={stageType as StageType}
@@ -932,6 +939,8 @@ export function RightDrawer(): React.ReactElement {
           isStepGroup={data.stepConfig.isStepGroup}
           hiddenPanels={data.stepConfig.hiddenAdvancedPanels}
           stageType={stageType as StageType}
+          onUseTemplate={(selectedTemplate: TemplateSummaryResponse) => addOrUpdateTemplate(selectedTemplate, type)}
+          onRemoveTemplate={() => removeTemplate(type)}
         />
       )}
     </Drawer>

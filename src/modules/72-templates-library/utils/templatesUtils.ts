@@ -22,8 +22,7 @@ export enum TemplateType {
 
 export const getAllowedTemplateTypes = (
   getString: UseStringsReturn['getString'],
-  module?: string,
-  isPipelineTemplateEnabled?: boolean
+  module?: string
 ): { label: string; value: string; disabled?: boolean }[] => {
   const AllowedTemplateTypes = [
     {
@@ -39,7 +38,7 @@ export const getAllowedTemplateTypes = (
     {
       label: getString('common.pipeline'),
       value: TemplateType.Pipeline,
-      disabled: !isPipelineTemplateEnabled
+      disabled: false
     },
     {
       label: getString('service'),

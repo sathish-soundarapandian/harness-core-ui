@@ -63,7 +63,7 @@ describe('<TemplateSelector /> tests', () => {
 
     expect(container).toMatchSnapshot()
 
-    const copyTemplateBtn = getByRole('button', { name: 'templatesLibrary.copyToPipeline' })
+    const copyTemplateBtn = getByRole('button', { name: 'templatesLibrary.copyTemplateLabel' })
     await act(async () => {
       fireEvent.click(copyTemplateBtn)
     })
@@ -72,7 +72,7 @@ describe('<TemplateSelector /> tests', () => {
       true
     )
 
-    const useTemplateBtn = getByRole('button', { name: 'templatesLibrary.useTemplate' })
+    const useTemplateBtn = getByRole('button', { name: 'templatesLibrary.useTemplateLabel' })
     await act(async () => {
       fireEvent.click(useTemplateBtn)
     })
@@ -94,7 +94,7 @@ describe('<TemplateSelector /> tests', () => {
       </TemplateSelectorContext.Provider>
     )
 
-    const useTemplateBtn = getByRole('button', { name: 'templatesLibrary.useTemplate' })
+    const useTemplateBtn = getByRole('button', { name: 'templatesLibrary.useTemplateLabel' })
     expect(useTemplateBtn).toBeDisabled()
   })
 
@@ -113,7 +113,7 @@ describe('<TemplateSelector /> tests', () => {
       </TemplateSelectorContext.Provider>
     )
 
-    const copyTemplateBtn = getByRole('button', { name: 'templatesLibrary.copyToPipeline' })
+    const copyTemplateBtn = getByRole('button', { name: 'templatesLibrary.copyTemplateLabel' })
     await act(async () => {
       fireEvent.click(copyTemplateBtn)
     })
@@ -123,7 +123,7 @@ describe('<TemplateSelector /> tests', () => {
     })
     expect(context.state.selectorData?.onSubmit).toBeCalledWith(mockTemplates.data?.content?.[0], true)
 
-    const useTemplateBtn = getByRole('button', { name: 'templatesLibrary.useTemplate' })
+    const useTemplateBtn = getByRole('button', { name: 'templatesLibrary.useTemplateLabel' })
     await act(async () => {
       fireEvent.click(useTemplateBtn)
     })

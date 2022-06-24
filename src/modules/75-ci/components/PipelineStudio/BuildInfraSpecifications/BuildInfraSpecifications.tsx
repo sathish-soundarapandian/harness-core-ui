@@ -21,7 +21,8 @@ import {
   Container,
   getMultiTypeFromValue,
   Icon,
-  MultiTypeInputType
+  MultiTypeInputType,
+  PageSpinner
 } from '@wings-software/uicore'
 import type { Item } from '@wings-software/uicore/dist/components/ThumbnailSelect/ThumbnailSelect'
 import { isEmpty, isUndefined, set, uniqBy, get } from 'lodash-es'
@@ -30,6 +31,7 @@ import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { produce } from 'immer'
 import type { FormikProps } from 'formik'
+import { useGetDelegateGroupByIdentifier } from 'services/portal'
 import Volumes, { VolumesTypes } from '@pipeline/components/Volumes/Volumes'
 import MultiTypeCustomMap from '@common/components/MultiTypeCustomMap/MultiTypeCustomMap'
 import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
@@ -61,6 +63,7 @@ import type {
 import { useGitScope } from '@pipeline/utils/CIUtils'
 import { MultiTypeList } from '@common/components/MultiTypeList/MultiTypeList'
 import { useHostedBuilds } from '@common/hooks/useHostedBuild'
+import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { BuildStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import type {
@@ -96,6 +99,7 @@ const logger = loggerFor(ModuleName.CD)
 const k8sClusterKeyRef = 'connectors.title.k8sCluster'
 const namespaceKeyRef = 'pipelineSteps.build.infraSpecifications.namespace'
 const poolNameKeyRef = 'pipeline.buildInfra.poolName'
+const provisionedByHarnessDelegateIdentifier = '_harness_kubernetes_delegate' // unique identifier of delegate installed and managed by Harness for Hosted by Harness infra offering
 
 interface KubernetesBuildInfraFormValues {
   connectorRef?: string
@@ -118,6 +122,7 @@ interface KubernetesBuildInfraFormValues {
   tolerations?: { effect?: string; key?: string; operator?: string; value?: string }[]
   nodeSelector?: MultiTypeMapUIType
   harnessImageConnectorRef?: string
+  os?: string
 }
 
 interface ContainerSecurityContext {
@@ -306,6 +311,7 @@ const renderUseFromStageVM = ({
 }
 
 export default function BuildInfraSpecifications({ children }: React.PropsWithChildren<unknown>): JSX.Element {
+  const { module } = useParams<Partial<PipelineType<PipelinePathProps>>>()
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const gitScope = useGitScope()
@@ -324,12 +330,22 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
     orgIdentifier: string
     accountId: string
   }>()
+  const {
+    data: delegateDetails,
+    refetch: fetchDelegateDetails,
+    loading: fetchingDelegateDetails
+  } = useGetDelegateGroupByIdentifier({
+    identifier: provisionedByHarnessDelegateIdentifier,
+    queryParams: { accountId },
+    lazy: true
+  })
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
   const formikRef = React.useRef<FormikProps<BuildInfraFormValues>>()
   const { initiateProvisioning, delegateProvisioningStatus } = useProvisionDelegateForHostedBuilds()
   const { CI_VM_INFRASTRUCTURE } = useFeatureFlags()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
   const showThumbnailSelect = CI_VM_INFRASTRUCTURE || enabledHostedBuildsForFreeUsers
+  const [isProvisionedByHarnessDelegateHealthy, setIsProvisionedByHarnessDelegateHealthy] = useState<boolean>(false)
 
   const BuildInfraTypes: ThumbnailSelectProps['items'] = [
     ...(enabledHostedBuildsForFreeUsers
@@ -350,7 +366,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
       ? [
           {
             label: getString('ci.buildInfra.vMs'),
-            icon: 'service-aws',
+            icon: 'service-vm',
             value: CIBuildInfrastructureType.VM
           } as Item
         ]
@@ -377,6 +393,18 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
   const [buildInfraType, setBuildInfraType] = useState<Infrastructure['type'] | undefined>(
     showThumbnailSelect ? undefined : CIBuildInfrastructureType.KubernetesDirect
   )
+
+  React.useEffect(() => {
+    if (!fetchingDelegateDetails && delegateDetails?.resource && delegateDetails.resource?.activelyConnected) {
+      setIsProvisionedByHarnessDelegateHealthy(true)
+    }
+  }, [fetchingDelegateDetails, delegateDetails])
+
+  React.useEffect(() => {
+    if (isProvisionedByHarnessDelegateHealthy) {
+      formikRef?.current?.validateForm()
+    }
+  }, [isProvisionedByHarnessDelegateHealthy])
 
   React.useEffect(() => {
     if (delegateProvisioningStatus === ProvisioningStatus.IN_PROGRESS) {
@@ -480,7 +508,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
         (stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.nodeSelector || {}
       ),
       harnessImageConnectorRef: (stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-        ?.harnessImageConnectorRef
+        ?.harnessImageConnectorRef,
+      os: (stage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.os || OsTypes.Linux
     }
   }, [stage])
 
@@ -655,7 +684,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             if (containerSecurityContext.capabilities && isEmpty(containerSecurityContext.capabilities)) {
               delete containerSecurityContext.capabilities
             }
-            if (!isEmpty(containerSecurityContext)) {
+            if (!isEmpty(containerSecurityContext) && values.os !== OsTypes.Windows) {
               additionalKubernetesFields.containerSecurityContext = containerSecurityContext
             }
           }
@@ -682,7 +711,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                     ...(filteredTolerations?.length ? { tolerations: filteredTolerations } : {}),
                     nodeSelector: getMapValues(values.nodeSelector),
                     ...additionalKubernetesFields,
-                    harnessImageConnectorRef
+                    harnessImageConnectorRef,
+                    os: values.os
                   }
                 }
               : _buildInfraType === CIBuildInfrastructureType.VM
@@ -710,22 +740,26 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
 
           if (
             values.runAsUser &&
-            (draft?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.containerSecurityContext?.runAsUser
+            ((draft?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.containerSecurityContext?.runAsUser ||
+              values.os === OsTypes.Windows)
           ) {
             // move deprecated runAsUser to containerSecurityContext
             delete (draft.stage?.spec?.infrastructure as K8sDirectInfraYaml).spec.runAsUser
           }
         } else {
-          set(draft, 'stage.spec.infrastructure', {
-            type: CIBuildInfrastructureType.KubernetesHosted,
-            ...(delegateProvisioningStatus === ProvisioningStatus.SUCCESS && {
-              spec: { identifier: KUBERNETES_HOSTED_INFRA_ID }
+          if (get(stage, 'stage.spec.infrastructure.spec.identifier') !== KUBERNETES_HOSTED_INFRA_ID) {
+            set(draft, 'stage.spec.infrastructure', {
+              type: CIBuildInfrastructureType.KubernetesHosted,
+              ...((isProvisionedByHarnessDelegateHealthy ||
+                delegateProvisioningStatus === ProvisioningStatus.SUCCESS) && {
+                spec: { identifier: KUBERNETES_HOSTED_INFRA_ID }
+              })
             })
-          })
+          }
         }
       })
-
-      if (stageData.stage) {
+      const shouldUpdate = stageData.stage && JSON.stringify(stage.stage) !== JSON.stringify(stageData.stage)
+      if (stageData.stage && shouldUpdate) {
         updateStage(stageData.stage)
       }
 
@@ -813,7 +847,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
         />
       </Container>
     ),
-    []
+    [expressions]
   )
 
   const renderContainerSecurityContext = React.useCallback(
@@ -906,7 +940,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
         </>
       )
     },
-    []
+    [expressions]
   )
 
   const renderKubernetesBuildInfraAdvancedSection = React.useCallback(
@@ -940,7 +974,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
         </Container>
       )
     },
-    []
+    [expressions]
   )
 
   const renderPropagateKeyValuePairs = ({
@@ -1053,8 +1087,13 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
       case CIBuildInfrastructureType.VM:
         return renderAWSVMBuildInfraForm()
       case CIBuildInfrastructureType.KubernetesHosted:
-        /* For Hosted K8s Build Infra, we populate infrastructure yaml only once provisioning is done. Once done, option to provision should not be shown. */
-        return !(stage?.stage?.spec?.infrastructure as any)?.spec?.identifier ? (
+        /* Button to start provisioning should be shown only if provisioned delegate is not healthy */
+        return fetchingDelegateDetails ? (
+          <PageSpinner />
+        ) : isProvisionedByHarnessDelegateHealthy ? (
+          <></>
+        ) : !(stage?.stage?.spec?.infrastructure as any)?.spec?.identifier ? (
+          /* For Hosted K8s Build Infra, populate infrastructure yaml only once provisioning is done. Once done, button to start provisioning should go away. */
           <Layout.Vertical spacing="medium">
             <Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>
               {getString('ci.getStartedWithCI.provisioningHelpText')}
@@ -1064,6 +1103,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
               <ProvisioningStatusPill
                 provisioningStatus={delegateProvisioningStatus}
                 onStartProvisioning={() => initiateProvisioning()}
+                showProvisioningStatus={false}
               />
             </Container>
           </Layout.Vertical>
@@ -1073,7 +1113,13 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
       default:
         return <></>
     }
-  }, [buildInfraType, delegateProvisioningStatus, stage])
+  }, [
+    buildInfraType,
+    delegateProvisioningStatus,
+    stage,
+    isProvisionedByHarnessDelegateHealthy,
+    fetchingDelegateDetails
+  ])
 
   const renderHarnessImageConnectorRefField = React.useCallback((): React.ReactElement => {
     return (
@@ -1199,131 +1245,161 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             }}
           />
         </div>
+        <div className={cx(css.fieldsGroup, css.withoutSpacing)}>
+          <MultiTypeSelectField
+            label={
+              <Text
+                tooltipProps={{ dataTooltipId: 'os' }}
+                font={{ variation: FontVariation.FORM_LABEL }}
+                margin={{ bottom: 'xsmall' }}
+              >
+                {getString('pipeline.infraSpecifications.os')}
+              </Text>
+            }
+            name={'os'}
+            style={{ width: 300, paddingBottom: 'var(--spacing-small)' }}
+            multiTypeInputProps={{
+              selectItems: [
+                { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
+                { label: getString('pipeline.infraSpecifications.osTypes.windows'), value: OsTypes.Windows }
+              ],
+              multiTypeInputProps: {
+                allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
+                disabled: isReadonly
+              }
+            }}
+            useValue
+          />
+        </div>
         {renderHarnessImageConnectorRefField()}
       </>
     )
-  }, [])
+  }, [expressions])
 
-  const renderAccordianDetailSection = React.useCallback(({ formik }: { formik: any }): React.ReactElement => {
-    const tolerationsValue = get(formik?.values, 'tolerations')
-    return (
-      <>
-        <Container className={css.bottomMargin7}>
-          <Volumes
-            name="volumes"
-            formik={formik}
-            expressions={expressions}
-            disabled={isReadonly}
-            allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
-          />
-        </Container>
-        <Container className={css.bottomMargin4}>
-          <MultiTypeTextField
-            label={
-              <Text
-                font={{ variation: FontVariation.FORM_LABEL }}
-                margin={{ bottom: 'xsmall' }}
-                tooltipProps={{ dataTooltipId: 'serviceAccountName' }}
-              >
-                {getString('pipeline.infraSpecifications.serviceAccountName')}
-              </Text>
-            }
-            name="serviceAccountName"
-            style={{ width: 300 }}
-            multiTextInputProps={{
-              multiTextInputProps: { expressions, allowableTypes },
-              disabled: isReadonly,
-              placeholder: getString('pipeline.infraSpecifications.serviceAccountNamePlaceholder')
-            }}
-          />
-        </Container>
-        <Container width={300}>
-          <FormMultiTypeCheckboxField
-            name="automountServiceAccountToken"
-            label={getString('pipeline.buildInfra.automountServiceAccountToken')}
-            multiTypeTextbox={{
-              expressions,
-              allowableTypes,
-              disabled: isReadonly
-            }}
-            tooltipProps={{ dataTooltipId: 'automountServiceAccountToken' }}
-            disabled={isReadonly}
-          />
-        </Container>
-        <Container className={css.bottomMargin7}>
-          {renderMultiTypeMap({ fieldName: 'labels', stringKey: 'ci.labels' })}
-        </Container>
-        <Container className={css.bottomMargin7}>
-          {renderMultiTypeMap({ fieldName: 'annotations', stringKey: 'ci.annotations' })}
-        </Container>
-        {renderContainerSecurityContext({ formik })}
-        <Container className={css.bottomMargin7}>
-          <MultiTypeTextField
-            label={
-              <Text
-                font={{ variation: FontVariation.FORM_LABEL }}
-                margin={{ bottom: 'xsmall' }}
-                tooltipProps={{ dataTooltipId: 'priorityClassName' }}
-              >
-                {getString(priorityClassNameStringKey)}
-              </Text>
-            }
-            name="priorityClassName"
-            style={{ width: 300, marginBottom: 'var(--spacing-xsmall)' }}
-            multiTextInputProps={{
-              multiTextInputProps: { expressions, allowableTypes },
-              disabled: isReadonly
-            }}
-          />
-        </Container>
-        <Container className={css.bottomMargin7}>
-          {renderMultiTypeMap({
-            fieldName: 'nodeSelector',
-            stringKey: 'pipeline.buildInfra.nodeSelector'
-          })}
-        </Container>
-        <Container className={css.bottomMargin7}>
-          <Container
-            className={cx(stepCss.formGroup, css.bottomMargin7)}
-            {...(typeof tolerationsValue === 'string' &&
-              getMultiTypeFromValue(tolerationsValue) === MultiTypeInputType.RUNTIME && { width: 300 })}
-          >
-            <MultiTypeCustomMap
-              name="tolerations"
-              appearance={'minimal'}
-              cardStyle={{ width: '50%' }}
-              valueMultiTextInputProps={{
-                expressions,
-                allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
-              }}
+  const renderAccordianDetailSection = React.useCallback(
+    ({ formik }: { formik: any }): React.ReactElement => {
+      const tolerationsValue = get(formik?.values, 'tolerations')
+      const showContainerSecurityContext = get(formik?.values, 'os') !== OsTypes.Windows
+      return (
+        <>
+          <Container className={css.bottomMargin7}>
+            <Volumes
+              name="volumes"
               formik={formik}
-              multiTypeFieldSelectorProps={{
-                label: (
-                  <Text
-                    font={{ variation: FontVariation.FORM_LABEL }}
-                    margin={{ bottom: 'xsmall' }}
-                    tooltipProps={{ dataTooltipId: 'tolerations' }}
-                  >
-                    {getString('pipeline.buildInfra.tolerations')}
-                  </Text>
-                ),
-                allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
-              }}
+              expressions={expressions}
               disabled={isReadonly}
-              multiTypeMapKeys={[
-                { label: 'Effect', value: 'effect' },
-                { label: 'Key', value: 'key' },
-                { label: 'Operator', value: 'operator' },
-                { label: 'Value', value: 'value' }
-              ]}
-              enableConfigureOptions={false}
+              allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
             />
           </Container>
-        </Container>
-        {renderTimeOutFields()}
-      </>
-    )
-  }, [])
+          <Container className={css.bottomMargin4}>
+            <MultiTypeTextField
+              label={
+                <Text
+                  font={{ variation: FontVariation.FORM_LABEL }}
+                  margin={{ bottom: 'xsmall' }}
+                  tooltipProps={{ dataTooltipId: 'serviceAccountName' }}
+                >
+                  {getString('pipeline.infraSpecifications.serviceAccountName')}
+                </Text>
+              }
+              name="serviceAccountName"
+              style={{ width: 300 }}
+              multiTextInputProps={{
+                multiTextInputProps: { expressions, allowableTypes },
+                disabled: isReadonly,
+                placeholder: getString('pipeline.infraSpecifications.serviceAccountNamePlaceholder')
+              }}
+            />
+          </Container>
+          <Container width={300}>
+            <FormMultiTypeCheckboxField
+              name="automountServiceAccountToken"
+              label={getString('pipeline.buildInfra.automountServiceAccountToken')}
+              multiTypeTextbox={{
+                expressions,
+                allowableTypes,
+                disabled: isReadonly
+              }}
+              tooltipProps={{ dataTooltipId: 'automountServiceAccountToken' }}
+              disabled={isReadonly}
+            />
+          </Container>
+          <Container className={css.bottomMargin7}>
+            {renderMultiTypeMap({ fieldName: 'labels', stringKey: 'ci.labels' })}
+          </Container>
+          <Container className={css.bottomMargin7}>
+            {renderMultiTypeMap({ fieldName: 'annotations', stringKey: 'ci.annotations' })}
+          </Container>
+          {showContainerSecurityContext && renderContainerSecurityContext({ formik })}
+          <Container className={css.bottomMargin7}>
+            <MultiTypeTextField
+              label={
+                <Text
+                  font={{ variation: FontVariation.FORM_LABEL }}
+                  margin={{ bottom: 'xsmall' }}
+                  tooltipProps={{ dataTooltipId: 'priorityClassName' }}
+                >
+                  {getString(priorityClassNameStringKey)}
+                </Text>
+              }
+              name="priorityClassName"
+              style={{ width: 300, marginBottom: 'var(--spacing-xsmall)' }}
+              multiTextInputProps={{
+                multiTextInputProps: { expressions, allowableTypes },
+                disabled: isReadonly
+              }}
+            />
+          </Container>
+          <Container className={css.bottomMargin7}>
+            {renderMultiTypeMap({
+              fieldName: 'nodeSelector',
+              stringKey: 'pipeline.buildInfra.nodeSelector'
+            })}
+          </Container>
+          <Container className={css.bottomMargin7}>
+            <Container
+              className={cx(stepCss.formGroup, css.bottomMargin7)}
+              {...(typeof tolerationsValue === 'string' &&
+                getMultiTypeFromValue(tolerationsValue) === MultiTypeInputType.RUNTIME && { width: 300 })}
+            >
+              <MultiTypeCustomMap
+                name="tolerations"
+                appearance={'minimal'}
+                cardStyle={{ width: '50%' }}
+                valueMultiTextInputProps={{
+                  expressions,
+                  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+                }}
+                formik={formik}
+                multiTypeFieldSelectorProps={{
+                  label: (
+                    <Text
+                      font={{ variation: FontVariation.FORM_LABEL }}
+                      margin={{ bottom: 'xsmall' }}
+                      tooltipProps={{ dataTooltipId: 'tolerations' }}
+                    >
+                      {getString('pipeline.buildInfra.tolerations')}
+                    </Text>
+                  ),
+                  allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+                }}
+                disabled={isReadonly}
+                multiTypeMapKeys={[
+                  { label: 'Effect', value: 'effect' },
+                  { label: 'Key', value: 'key' },
+                  { label: 'Operator', value: 'operator' },
+                  { label: 'Value', value: 'value' }
+                ]}
+                enableConfigureOptions={false}
+              />
+            </Container>
+          </Container>
+          {renderTimeOutFields()}
+        </>
+      )
+    },
+    [expressions]
+  )
 
   const getValidationSchema = React.useCallback((): yup.Schema<unknown> => {
     switch (buildInfraType) {
@@ -1429,7 +1505,19 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           dropCapabilities: yup.lazy(value => validateUniqueList({ value, getString })),
           tolerations: yup.lazy(value =>
             validateUniqueList({ value, getString, uniqueKey: 'key', stringKey: 'pipeline.ci.validations.keyUnique' })
-          )
+          ),
+          os: yup
+            .string()
+            .test(
+              'OS required only for New configuration',
+              getString('fieldRequired', { field: getString('pipeline.infraSpecifications.os') }) || '',
+              function (os) {
+                if (isEmpty(os) && currentMode === Modes.NewConfiguration) {
+                  return false
+                }
+                return true
+              }
+            )
         })
       case CIBuildInfrastructureType.VM:
         return yup.object().shape({
@@ -1509,7 +1597,16 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             return (
               <Layout.Vertical>
                 <Text font={{ variation: FontVariation.H5 }} id="infrastructureDefinition">
-                  {getString('pipelineSteps.build.infraSpecifications.whereToRun')}
+                  {getString(
+                    (() => {
+                      switch (module) {
+                        case 'sto':
+                          return 'ci.pipelineSteps.build.infraSpecifications.whereToRunSTO'
+                        default:
+                          return 'pipelineSteps.build.infraSpecifications.whereToRun'
+                      }
+                    })()
+                  )}
                 </Text>
                 <FormikForm>
                   <Layout.Horizontal spacing="xxlarge">
@@ -1584,10 +1681,26 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                                         >
                                           {getString(harnessImageConnectorRefKey)}
                                         </Text>
-                                        <Text color="var(--black)">
+                                        <Text color="var(--black)" margin={{ bottom: 'medium' }}>
                                           {
                                             (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
                                               ?.harnessImageConnectorRef
+                                          }
+                                        </Text>
+                                      </>
+                                    )}
+                                    {(propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.os && (
+                                      <>
+                                        <Text
+                                          font={{ variation: FontVariation.FORM_LABEL }}
+                                          margin={{ bottom: 'xsmall' }}
+                                        >
+                                          {getString('pipeline.infraSpecifications.os')}
+                                        </Text>
+                                        <Text color="black">
+                                          {
+                                            (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                                              ?.os
                                           }
                                         </Text>
                                       </>
@@ -1884,7 +1997,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                                                   annotations: {},
                                                   labels: {},
                                                   nodeSelector: {},
-                                                  harnessImageConnectorRef: ''
+                                                  harnessImageConnectorRef: '',
+                                                  os: ''
                                                 }
                                               }
                                             : buildInfraType === CIBuildInfrastructureType.VM
@@ -1977,11 +2091,23 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                                     onChange={val => {
                                       const infraType = val as Infrastructure['type']
                                       setBuildInfraType(infraType)
+                                      if (infraType === CIBuildInfrastructureType.KubernetesHosted) {
+                                        fetchDelegateDetails()
+                                      }
+
+                                      // macOs is only supported for VMs - default to linux
+                                      const os =
+                                        formik?.values?.os === OsTypes.MacOS &&
+                                        infraType !== CIBuildInfrastructureType.VM
+                                          ? OsTypes.Linux
+                                          : formik?.values?.os
+
                                       formik.setValues({
                                         ...formik.values,
                                         buildInfraType: infraType,
                                         automountServiceAccountToken:
-                                          infraType === CIBuildInfrastructureType.KubernetesDirect ? true : undefined
+                                          infraType === CIBuildInfrastructureType.KubernetesDirect ? true : undefined,
+                                        os
                                       })
                                     }}
                                   />

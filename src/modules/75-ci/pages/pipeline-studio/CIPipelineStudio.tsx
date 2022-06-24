@@ -49,7 +49,9 @@ const CIPipelineStudio: React.FC = (): JSX.Element => {
       onCloseModal: onClose
     })
 
-  const { modal, branch, repoIdentifier } = useQueryParams<{ modal?: ModuleLicenseType } & GitQueryParams>()
+  const { modal, branch, repoIdentifier, connectorRef, repoName, storeType } = useQueryParams<
+    { modal?: ModuleLicenseType } & GitQueryParams
+  >()
 
   const getOtherModal = modal ? getTrialPipelineCreateForm : undefined
 
@@ -62,6 +64,10 @@ const CIPipelineStudio: React.FC = (): JSX.Element => {
         pipelineIdentifier,
         module,
         branch,
+        repoIdentifier,
+        connectorRef,
+        repoName,
+        storeType,
         runPipeline: true
       })
     )

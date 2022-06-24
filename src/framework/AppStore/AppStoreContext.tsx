@@ -90,7 +90,7 @@ const getRedirectionUrl = (accountId: string, source: string | undefined): strin
   return source === 'signup' ? onboardingUrl : dashboardUrl
 }
 
-const LOCAL_FF_PREFERENCE_STORE_ENABLED = false
+const LOCAL_FF_PREFERENCE_STORE_ENABLED = true
 
 export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React.ReactElement {
   const { showError } = useToaster()
@@ -107,8 +107,7 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
   const {
     preference: savedProject,
     setPreference: setSavedProject,
-    clearPreference: clearSavedProject,
-    updatePreferenceStore
+    clearPreference: clearSavedProject
   } = usePreferenceStore<SavedProjectDetails>(PreferenceScope.USER, 'savedProject')
 
   const [state, setState] = React.useState<Omit<AppStoreContextProps, 'updateAppStore' | 'strings'>>({
@@ -168,7 +167,6 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
     if (userInfo?.data?.email && telemetry.initialized) {
       telemetry.identify({ userId: userInfo?.data?.email })
     }
-    updatePreferenceStore({ currentUserInfo: userInfo?.data })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userInfo?.data?.email, telemetry])
 

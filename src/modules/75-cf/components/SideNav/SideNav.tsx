@@ -21,6 +21,7 @@ import NavExpandable from '@common/navigation/NavExpandable/NavExpandable'
 import { useFeatureFlagTelemetry } from '@cf/hooks/useFeatureFlagTelemetry'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
+import { useAnyEnterpriseLicense } from '@common/hooks/useModuleLicenses'
 
 export default function CFSideNav(): React.ReactElement {
   const { getString } = useStrings()
@@ -31,6 +32,7 @@ export default function CFSideNav(): React.ReactElement {
   const { withActiveEnvironment } = useActiveEnvironment()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
   const events = useFeatureFlagTelemetry()
+  const canUsePolicyEngine = useAnyEnterpriseLicense()
 
   const { FF_GITSYNC, FF_PIPELINE, OPA_FF_GOVERNANCE, NG_TEMPLATES } = useFeatureFlags()
 
@@ -109,8 +111,7 @@ export default function CFSideNav(): React.ReactElement {
                   to={routes.toTemplates({ ...params, module: 'cf' })}
                 />
               )}
-
-              {OPA_FF_GOVERNANCE && (
+              {canUsePolicyEngine && OPA_FF_GOVERNANCE && (
                 <SidebarLink
                   label={getString('common.governance')}
                   to={routes.toGovernance({ accountId, orgIdentifier, projectIdentifier, module: 'cf' })}

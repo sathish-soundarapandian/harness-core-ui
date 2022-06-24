@@ -49,7 +49,7 @@ export function HarnessApprovalView(props: HarnessApprovalViewProps): React.Reac
   // store the data in state because the approve/reject call returns the updated state
   // hence we can save one additional call to the server
   const [approvalData, setApprovalData] = React.useState<ApprovalData>(null)
-  const shouldFetchData = isWaiting && approvalInstanceId
+  const shouldFetchData = !!approvalInstanceId
 
   const {
     data,

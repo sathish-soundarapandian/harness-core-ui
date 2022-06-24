@@ -138,13 +138,6 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
                 >
                   {dashboard?.view_count}
                 </Text>
-                <Text
-                  icon="star-empty"
-                  iconProps={{ padding: { right: 'small' } }}
-                  font={{ variation: FontVariation.CARD_TITLE }}
-                >
-                  {dashboard?.favorite_count}
-                </Text>
               </Layout.Horizontal>
             )}
           </Layout.Vertical>

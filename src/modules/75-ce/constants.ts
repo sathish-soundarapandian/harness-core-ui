@@ -118,7 +118,9 @@ export enum RESOURCES {
   KUBERNETES = 'KUBERNETES',
   ECS = 'ECS',
   RDS = 'RDS',
-  IG = 'IG'
+  IG = 'IG',
+  AZURE_INSTANCES = 'AZURE_INSTANCES',
+  GCP_INSTANCES = 'GCP_INSTANCES'
 }
 
 export const CONFIG_TOTAL_STEP_COUNTS = {
@@ -204,4 +206,16 @@ export const channelImgMap = {
 export enum RulesMode {
   ACTIVE = 'active',
   DRY = 'dryrun'
+}
+
+export const folderViewType = {
+  SAMPLE: 'SAMPLE',
+  CUSTOMER: 'CUSTOMER',
+  DEFAULT_AZURE: 'DEFAULT_AZURE',
+  DEFAULT: 'DEFAULT'
+}
+
+export const moveFolderType = {
+  NEW: 'NEW',
+  EXISTING: 'EXISTING'
 }

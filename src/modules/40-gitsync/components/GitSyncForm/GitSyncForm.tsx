@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import type { FormikContextType } from 'formik'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 
 import { Container, FormInput, Layout, SelectOption } from '@harness/uicore'
@@ -18,53 +18,64 @@ import {
 } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import { useQueryParams } from '@common/hooks'
 import RepositorySelect from '@common/components/RepositorySelect/RepositorySelect'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import RepoBranchSelectV2 from '@common/components/RepoBranchSelectV2/RepoBranchSelectV2'
 import type { ResponseMessage } from 'services/cd-ng'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import css from './GitSyncForm.module.scss'
 
-interface GitSyncFormProps<T> {
-  identifier?: string
-  formikProps: FormikContextType<T>
-  isEdit: boolean
-  defaultValue?: any
-  modalErrorHandler?: any
-  handleSubmit: () => void
-  closeModal?: () => void
-  showRemoteTypeSelection?: boolean
-  disableFields?: {
-    [key: string]: boolean
-  }
-}
-
 export interface GitSyncFormFields {
   identifier?: string
-  remoteType?: string
   connectorRef?: ConnectorSelectedValue
   repo?: string
   branch?: string
   filePath?: string
+}
+interface GitSyncFormProps<T> {
+  identifier?: string
+  formikProps: FormikContextType<T>
+  isEdit: boolean
+  modalErrorHandler?: any
+  handleSubmit: () => void
+  closeModal?: () => void
+  disableFields?: {
+    [key: string]: boolean
+  }
+  initialValues?: StoreMetadata
+  errorData?: ResponseMessage[]
 }
 
 const getConnectorIdentifierWithScope = (scope: Scope, identifier: string): string => {
   return scope === Scope.ORG || scope === Scope.ACCOUNT ? `${scope}.${identifier}` : identifier
 }
 
-export function GitSyncForm(props: GitSyncFormProps<GitSyncFormFields>): React.ReactElement {
-  const { formikProps, isEdit, showRemoteTypeSelection = true, disableFields = {} } = props
+export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
+  props: GitSyncFormProps<T>
+): React.ReactElement {
+  const { formikProps, isEdit, disableFields = {}, initialValues, errorData } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { branch, connectorRef, repoName } = useQueryParams<GitQueryParams>()
-  const { updateQueryParams } = useUpdateQueryParams()
   const { getString } = useStrings()
-  const [errorResponse, setErrorResponse] = useState<ResponseMessage[]>([])
+  const [errorResponse, setErrorResponse] = useState<ResponseMessage[]>(errorData ?? [])
+  const [filePathTouched, setFilePathTouched] = useState<boolean>()
 
   useEffect(() => {
-    !isEdit &&
-      formikProps?.values?.identifier &&
+    setErrorResponse(errorData as ResponseMessage[])
+  }, [errorData])
+
+  useEffect(() => {
+    if (!isEdit && formikProps?.values?.identifier && isEmpty(initialValues?.filePath) && !filePathTouched) {
       formikProps.setFieldValue('filePath', `.harness/${formikProps.values.identifier}.yaml`)
-  }, [formikProps?.values?.identifier, isEdit])
+    }
+  }, [formikProps?.values?.identifier, isEdit, filePathTouched])
+
+  useEffect(() => {
+    if (!filePathTouched && formikProps.touched.filePath) {
+      setFilePathTouched(true)
+    }
+  }, [filePathTouched, formikProps.touched.filePath])
 
   useEffect(() => {
     setErrorResponse([])
@@ -72,25 +83,6 @@ export function GitSyncForm(props: GitSyncFormProps<GitSyncFormFields>): React.R
 
   return (
     <Container padding={{ top: 'large' }} className={css.gitSyncForm}>
-      {showRemoteTypeSelection && (
-        <FormInput.RadioGroup
-          name="remoteType"
-          radioGroup={{ inline: true }}
-          items={[
-            { label: 'Use Existing Yaml', value: 'import', disabled: true },
-            { label: 'Create New Yaml', value: 'create', disabled: isEdit }
-          ]}
-          onChange={elm => {
-            formikProps.setFieldValue(
-              'filePath',
-              (elm.target as HTMLInputElement).value === 'import'
-                ? ''
-                : `.harness/${formikProps?.values?.identifier}.yaml`
-            )
-          }}
-        />
-      )}
-
       <Layout.Horizontal>
         <Layout.Vertical>
           <ConnectorReferenceField
@@ -98,8 +90,8 @@ export function GitSyncForm(props: GitSyncFormProps<GitSyncFormFields>): React.R
             width={350}
             type={['Github', 'Bitbucket']}
             selected={formikProps.values.connectorRef || connectorRef}
-            error={formikProps.submitCount > 0 ? formikProps?.errors?.connectorRef : undefined}
-            label={'Select Git Connector'}
+            error={formikProps.submitCount > 0 ? (formikProps?.errors?.connectorRef as string) : undefined}
+            label={getString('connectors.title.gitConnector')}
             placeholder={`- ${getString('select')} -`}
             accountIdentifier={accountId}
             projectIdentifier={projectIdentifier}
@@ -116,7 +108,6 @@ export function GitSyncForm(props: GitSyncFormProps<GitSyncFormFields>): React.R
               })
               formikProps.setFieldValue?.('repo', '')
               formikProps.setFieldValue?.('branch', '')
-              updateQueryParams({ connectorRef: connectorRefWithScope, repoName: [] as any, branch: [] as any })
             }}
             disabled={isEdit || disableFields.connectorRef}
           />
@@ -124,10 +115,9 @@ export function GitSyncForm(props: GitSyncFormProps<GitSyncFormFields>): React.R
           <RepositorySelect
             formikProps={formikProps}
             connectorRef={formikProps.values.connectorRef?.value || connectorRef}
-            onChange={(selected: SelectOption) => {
+            onChange={() => {
               if (errorResponse?.length === 0) {
                 formikProps.setFieldValue?.('branch', '')
-                updateQueryParams({ repoName: selected.value as string, branch: [] as any })
               }
             }}
             selectedValue={formikProps?.values?.repo || repoName}
@@ -138,8 +128,9 @@ export function GitSyncForm(props: GitSyncFormProps<GitSyncFormFields>): React.R
             connectorIdentifierRef={formikProps.values.connectorRef?.value || connectorRef}
             repoName={formikProps?.values?.repo}
             onChange={(selected: SelectOption) => {
-              if (errorResponse?.length === 0) {
-                updateQueryParams({ branch: selected.value as string })
+              // This is to handle auto fill after default selection, without it form validation will fail
+              if (formikProps.values.branch !== selected.value) {
+                formikProps.setFieldValue?.('branch', selected.value)
               }
             }}
             selectedValue={formikProps.values.branch || branch}
@@ -148,8 +139,8 @@ export function GitSyncForm(props: GitSyncFormProps<GitSyncFormFields>): React.R
           />
           <FormInput.Text
             name="filePath"
-            label={'Yaml Path'}
-            placeholder={'Enter Yaml path'}
+            label={getString('gitsync.gitSyncForm.yamlPathLabel')}
+            placeholder={getString('gitsync.gitSyncForm.enterYamlPath')}
             disabled={isEdit || disableFields.filePath}
           />
         </Layout.Vertical>

@@ -28,11 +28,13 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
+import MultiTypeList, { ConnectorReferenceProps } from '@common/components/MultiTypeList/MultiTypeList'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { useStrings } from 'framework/strings'
+import { useStrings, UseStringsReturn } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import StepCommonFields, {
   GetImagePullPolicyOptions,
@@ -49,7 +51,8 @@ import { CIStepOptionalConfig, getOptionalSubLabel } from '../CIStep/CIStepOptio
 import {
   AllMultiTypeInputTypesForStep,
   useGetPropagatedStageById,
-  validateConnectorRefAndImageDepdendency
+  validateConnectorRefAndImageDepdendency,
+  SupportedInputTypesForListItems
 } from '../CIStep/StepUtils'
 import { CIStep } from '../CIStep/CIStep'
 import { ConnectorRefWithImage } from '../CIStep/ConnectorRefWithImage'
@@ -61,20 +64,41 @@ interface FieldRenderProps {
   fieldLabelKey: keyof StringsMap
   tooltipId: string
   allowableTypes: MultiTypeInputType[]
+  placeholder?: string
   renderOptionalSublabel?: boolean
   selectFieldOptions?: SelectOption[]
   onSelectChange?: (SelectOption: any) => void
+  disabled?: boolean
 }
 
-const javaBuildToolOptions = [
-  { label: 'Bazel', value: 'Bazel' },
-  { label: 'Maven', value: 'Maven' },
-  { label: 'Gradle', value: 'Gradle' }
+const qaLocation = 'https://qa.harness.io'
+
+const BuildTool = {
+  BAZEL: 'Bazel',
+  MAVEN: 'Maven',
+  GRADLE: 'Gradle',
+  DOTNET: 'Dotnet',
+  NUNITCONSOLE: 'Nunitconsole'
+}
+
+const getJavaBuildToolOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
+  { label: getString('ci.runTestsStep.bazel'), value: BuildTool.BAZEL },
+  { label: getString('ci.runTestsStep.maven'), value: BuildTool.MAVEN },
+  { label: getString('ci.runTestsStep.gradle'), value: BuildTool.GRADLE }
 ]
 
-const cSharpBuildToolOptions = [
-  { label: 'Dotnet', value: 'Dotnet' },
-  { label: 'Nunit Console', value: 'Nunitconsole' }
+export const getBuildEnvironmentOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
+  { label: getString('ci.runTestsStep.dotNetCore'), value: 'Core' }
+]
+
+export const getFrameworkVersionOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
+  { label: getString('ci.runTestsStep.sixPointZero'), value: '6.0' },
+  { label: getString('ci.runTestsStep.fivePointZero'), value: '5.0' }
+]
+
+export const getCSharpBuildToolOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
+  { label: getString('ci.runTestsStep.dotnet'), value: BuildTool.DOTNET },
+  { label: getString('ci.runTestsStep.nUnitConsole'), value: BuildTool.NUNITCONSOLE }
 ]
 
 const enum Language {
@@ -82,13 +106,34 @@ const enum Language {
   Csharp = 'Csharp'
 }
 
-const getBuildToolOptions = (language?: string): SelectOption[] | undefined => {
+const getLanguageOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
+  { label: getString('ci.runTestsStep.csharp'), value: Language.Csharp },
+  { label: getString('ci.runTestsStep.java'), value: Language.Java }
+]
+
+const getBuildToolOptions = (
+  getString: UseStringsReturn['getString'],
+  language?: string
+): SelectOption[] | undefined => {
   if (language === Language.Java) {
-    return javaBuildToolOptions
+    return getJavaBuildToolOptions(getString)
   } else if (language === Language.Csharp) {
-    return cSharpBuildToolOptions
+    return getCSharpBuildToolOptions(getString)
   }
   return undefined
+}
+
+const getArgsPlaceholder = (buildTool?: string): string => {
+  if (buildTool === BuildTool.MAVEN || buildTool === BuildTool.GRADLE) {
+    return 'clean test'
+  } else if (buildTool === BuildTool.BAZEL) {
+    return 'test'
+  } else if (buildTool === BuildTool.DOTNET) {
+    return '/path/to/test.dll /path/to/testProject.dll'
+  } else if (buildTool === BuildTool.NUNITCONSOLE) {
+    return '. "path/to/nunit3-console.exe" path/to/TestProject.dll --result="UnitTestResults.xml"'
+  }
+  return ''
 }
 
 export const RunTestsStepBase = (
@@ -100,27 +145,16 @@ export const RunTestsStepBase = (
       selectionState: { selectedStageId }
     }
   } = usePipelineContext()
-
+  const { TI_DOTNET } = useFeatureFlags()
+  // temporary enable in QA for docs
+  const isQAEnvironment = window.location.origin === qaLocation
   const [mavenSetupQuestionAnswer, setMavenSetupQuestionAnswer] = React.useState('yes')
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
   const buildInfrastructureType: CIBuildInfrastructureType = get(currentStage, 'stage.spec.infrastructure.type')
-  const [languageOptions, setLanguageOptions] = React.useState<SelectOption[]>([
-    { label: 'Csharp', value: Language.Csharp },
-    { label: 'Java', value: Language.Java }
-  ])
-
-  React.useEffect(() => {
-    if (buildInfrastructureType !== CIBuildInfrastructureType.VM) {
-      setLanguageOptions([{ label: 'Java', value: Language.Java }])
-    }
-  }, [buildInfrastructureType])
-
-  const [buildToolOptions, setBuildToolOptions] = React.useState<SelectOption[]>(
-    getBuildToolOptions(initialValues?.spec?.language) || []
-  )
-
   const { getString } = useStrings()
-
+  const [buildToolOptions, setBuildToolOptions] = React.useState<SelectOption[]>(
+    getBuildToolOptions(getString, initialValues?.spec?.language) || []
+  )
   const { expressions } = useVariablesExpression()
 
   // TODO: Right now we do not support Image Pull Policy but will do in the future
@@ -132,7 +166,14 @@ export const RunTestsStepBase = (
   // })
 
   const renderMultiTypeTextField = React.useCallback(
-    ({ name, fieldLabelKey, tooltipId, allowableTypes, renderOptionalSublabel = false }: FieldRenderProps) => {
+    ({
+      name,
+      fieldLabelKey,
+      tooltipId,
+      allowableTypes,
+      renderOptionalSublabel = false,
+      placeholder
+    }: FieldRenderProps) => {
       return (
         <MultiTypeTextField
           name={name}
@@ -156,7 +197,8 @@ export const RunTestsStepBase = (
           }
           multiTextInputProps={{
             multiTextInputProps: { expressions, allowableTypes },
-            disabled: readonly
+            disabled: readonly,
+            placeholder: placeholder
           }}
           style={{ marginBottom: 'var(--spacing-small)' }}
         />
@@ -166,19 +208,35 @@ export const RunTestsStepBase = (
   )
 
   const renderMultiTypeSelectField = React.useCallback(
-    ({ name, fieldLabelKey, tooltipId, selectFieldOptions = [], onSelectChange, allowableTypes }: FieldRenderProps) => {
+    ({
+      name,
+      fieldLabelKey,
+      tooltipId,
+      selectFieldOptions = [],
+      renderOptionalSublabel = false,
+      onSelectChange,
+      allowableTypes
+    }: FieldRenderProps) => {
       return (
         <MultiTypeSelectField
           name={name}
           label={
-            <Text
-              className={css.inpLabel}
-              color={Color.GREY_600}
-              font={{ size: 'small', weight: 'semi-bold' }}
-              tooltipProps={{ dataTooltipId: tooltipId }}
-            >
-              {getString(fieldLabelKey)}
-            </Text>
+            <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}>
+              <Text
+                className={css.inpLabel}
+                color={Color.GREY_600}
+                font={{ size: 'small', weight: 'semi-bold' }}
+                tooltipProps={renderOptionalSublabel ? {} : { dataTooltipId: tooltipId }}
+              >
+                {getString(fieldLabelKey)}
+              </Text>
+              {renderOptionalSublabel ? (
+                <>
+                  &nbsp;
+                  {getOptionalSubLabel(getString, tooltipId)}
+                </>
+              ) : null}
+            </Layout.Horizontal>
           }
           multiTypeInputProps={{
             selectItems: selectFieldOptions,
@@ -225,11 +283,70 @@ export const RunTestsStepBase = (
           style={{ flexGrow: 1, marginBottom: 0 }}
           disableTypeSelection={readonly}
         >
-          <ShellScriptMonacoField name={name} scriptType="Bash" disabled={readonly} />
+          <ShellScriptMonacoField
+            className={css.shellScriptMonacoField}
+            name={name}
+            scriptType="Bash"
+            disabled={readonly}
+          />
         </MultiTypeFieldSelector>
       )
     },
     []
+  )
+
+  const renderMultiTypeList = React.useCallback(
+    ({
+      name,
+      tooltipId,
+      labelKey,
+      placeholderKey,
+      allowedTypes,
+      allowedTypesForEntries,
+      showConnectorRef,
+      connectorTypes,
+      connectorRefRenderer,
+      restrictToSingleEntry
+    }: {
+      name: string
+      tooltipId?: string
+      labelKey: keyof StringsMap
+      placeholderKey?: keyof StringsMap
+      allowedTypes: MultiTypeInputType[]
+      allowedTypesForEntries: MultiTypeInputType[]
+      restrictToSingleEntry?: boolean
+    } & ConnectorReferenceProps) => (
+      <MultiTypeList
+        name={name}
+        placeholder={placeholderKey ? getString(placeholderKey) : ''}
+        multiTextInputProps={{
+          expressions,
+          allowableTypes: allowedTypesForEntries
+        }}
+        multiTypeFieldSelectorProps={{
+          label: (
+            <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}>
+              <Text
+                tooltipProps={tooltipId ? { dataTooltipId: tooltipId } : {}}
+                style={{ display: 'flex', alignItems: 'center' }}
+                className={css.inpLabel}
+                color={Color.GREY_600}
+                font={{ size: 'small', weight: 'semi-bold' }}
+              >
+                {getString(labelKey)}
+              </Text>
+            </Layout.Horizontal>
+          ),
+          allowedTypes: allowedTypes
+        }}
+        disabled={readonly}
+        showConnectorRef={showConnectorRef}
+        connectorTypes={connectorTypes}
+        connectorRefRenderer={connectorRefRenderer}
+        restrictToSingleEntry={restrictToSingleEntry}
+      />
+    ),
+    [expressions]
   )
 
   return (
@@ -239,9 +356,11 @@ export const RunTestsStepBase = (
         transformValuesFieldsConfig,
         {
           buildToolOptions,
-          languageOptions,
+          languageOptions: getLanguageOptions(getString),
           imagePullPolicyOptions: GetImagePullPolicyOptions(),
-          shellOptions: GetShellOptions(getString)
+          shellOptions: GetShellOptions(getString),
+          buildEnvironmentOptions: getBuildEnvironmentOptions(getString),
+          frameworkVersionOptions: getFrameworkVersionOptions(getString)
         }
       )}
       formName="ciRunTests"
@@ -260,7 +379,10 @@ export const RunTestsStepBase = (
         onChange?.(schemaValues)
         return validate(
           valuesToValidate,
-          getEditViewValidateFieldsConfig(buildInfrastructureType),
+          getEditViewValidateFieldsConfig(
+            buildInfrastructureType,
+            (valuesToValidate?.spec?.language as any)?.value === Language.Csharp
+          ),
           {
             initialValues,
             steps: currentStage?.stage?.spec?.execution?.steps || {},
@@ -281,7 +403,8 @@ export const RunTestsStepBase = (
       {(formik: FormikProps<RunTestsStepData>) => {
         // This is required
         setFormikRef?.(formikRef, formik)
-
+        const selectedLanguageValue = (formik.values?.spec?.language as any)?.value
+        const buildTool = (formik.values?.spec?.buildTool as any)?.value
         return (
           <FormikForm>
             <CIStep
@@ -302,69 +425,104 @@ export const RunTestsStepBase = (
                 name: 'spec.language',
                 fieldLabelKey: 'languageLabel',
                 tooltipId: 'runTestsLanguage',
-                selectFieldOptions: languageOptions,
-                onSelectChange: (option?: SelectOption) => {
-                  const newBuildToolOptions = getBuildToolOptions(option?.value as string)
+                selectFieldOptions:
+                  isQAEnvironment || TI_DOTNET
+                    ? getLanguageOptions(getString)
+                    : getLanguageOptions(getString).slice(1, 2),
+                onSelectChange: option => {
+                  const newBuildToolOptions = getBuildToolOptions(getString, option?.value as string)
+                  const newValues = { ...formik.values }
                   if (newBuildToolOptions) {
                     setBuildToolOptions(newBuildToolOptions)
-                    formik.setFieldValue('spec.buildTool', '')
+                  }
+                  if (option) {
+                    // reset downstream values if language changed
+                    newValues.spec.language = option
+                    newValues.spec.testAnnotations = undefined
+                    newValues.spec.buildEnvironment = undefined
+                    newValues.spec.frameworkVersion = undefined
+                    newValues.spec.packages = undefined
+                    newValues.spec.namespaces = undefined
+                    newValues.spec.buildTool = ''
+                    newValues.spec.args = ''
+                    formik.setValues({ ...newValues })
                   }
                 },
-                allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+                allowableTypes: [MultiTypeInputType.FIXED]
               })}
             </Container>
+            {selectedLanguageValue === Language.Csharp && (
+              <>
+                <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
+                  {renderMultiTypeSelectField({
+                    name: 'spec.buildEnvironment',
+                    fieldLabelKey: 'ci.runTestsStep.buildEnvironment',
+                    tooltipId: 'buildEnvironment',
+                    selectFieldOptions: getBuildEnvironmentOptions(getString),
+                    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+                  })}
+                </Container>
+                <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
+                  {renderMultiTypeSelectField({
+                    name: 'spec.frameworkVersion',
+                    fieldLabelKey: 'ci.runTestsStep.frameworkVersion',
+                    tooltipId: 'frameworkVersion',
+                    selectFieldOptions: getFrameworkVersionOptions(getString),
+                    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+                  })}
+                </Container>
+              </>
+            )}
             <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
               {renderMultiTypeSelectField({
                 name: 'spec.buildTool',
                 fieldLabelKey: 'buildToolLabel',
                 tooltipId: 'runTestsBuildTool',
                 selectFieldOptions: buildToolOptions,
-                allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+                allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
               })}
             </Container>
-            {(formik.values?.spec?.language as any)?.value === Language.Java &&
-              (formik.values?.spec?.buildTool as any)?.value === 'Maven' && (
-                <>
-                  <Text margin={{ top: 'small', bottom: 'small' }} color="grey800">
-                    {getString('ci.runTestsMavenSetupTitle')}
-                  </Text>
-                  <Text font={{ size: 'small' }}>{getString('ci.runTestsMavenSetupText1')}</Text>
-                  <RadioButtonGroup
-                    name="run-tests-maven-setup"
-                    inline={true}
-                    selectedValue={mavenSetupQuestionAnswer}
-                    onChange={(e: FormEvent<HTMLInputElement>) => {
-                      setMavenSetupQuestionAnswer(e.currentTarget.value)
-                    }}
-                    options={[
-                      { label: 'Yes', value: 'yes' },
-                      { label: 'No', value: 'no' }
-                    ]}
-                    margin={{ bottom: 'small' }}
-                  />
-                  {mavenSetupQuestionAnswer === 'yes' && (
-                    <Container className={cx(css.bottomMargin5)}>
-                      <Text
-                        font={{ size: 'small' }}
-                        margin={{ bottom: 'xsmall' }}
-                        tooltipProps={{ dataTooltipId: 'runTestsMavenSetupText2' }}
-                      >
-                        {getString('ci.runTestsMavenSetupText2')}
-                      </Text>
-                      <CodeBlock format="pre" snippet={getString('ci.runTestsMavenSetupSample')} />
-                    </Container>
-                  )}
-                </>
-              )}
-            {(formik.values?.spec?.language as any)?.value === Language.Java &&
-              (formik.values?.spec?.buildTool as any)?.value === 'Gradle' && (
-                <>
-                  <Text margin={{ top: 'small', bottom: 'small' }} color="grey800">
-                    {getString('ci.gradleNotesTitle')}
-                  </Text>
-                  <CodeBlock
-                    allowCopy
-                    codeToCopy={`tasks.withType(Test) {
+            {(formik.values?.spec?.language as any)?.value === Language.Java && buildTool === BuildTool.MAVEN && (
+              <>
+                <Text margin={{ top: 'small', bottom: 'small' }} color="grey800">
+                  {getString('ci.runTestsMavenSetupTitle')}
+                </Text>
+                <Text font={{ size: 'small' }}>{getString('ci.runTestsMavenSetupText1')}</Text>
+                <RadioButtonGroup
+                  name="run-tests-maven-setup"
+                  inline={true}
+                  selectedValue={mavenSetupQuestionAnswer}
+                  onChange={(e: FormEvent<HTMLInputElement>) => {
+                    setMavenSetupQuestionAnswer(e.currentTarget.value)
+                  }}
+                  options={[
+                    { label: 'Yes', value: 'yes' },
+                    { label: 'No', value: 'no' }
+                  ]}
+                  margin={{ bottom: 'small' }}
+                />
+                {mavenSetupQuestionAnswer === 'yes' && (
+                  <Container className={cx(css.bottomMargin5)}>
+                    <Text
+                      font={{ size: 'small' }}
+                      margin={{ bottom: 'xsmall' }}
+                      tooltipProps={{ dataTooltipId: 'runTestsMavenSetupText2' }}
+                    >
+                      {getString('ci.runTestsMavenSetupText2')}
+                    </Text>
+                    <CodeBlock format="pre" snippet={getString('ci.runTestsMavenSetupSample')} />
+                  </Container>
+                )}
+              </>
+            )}
+            {(formik.values?.spec?.language as any)?.value === Language.Java && buildTool === BuildTool.GRADLE && (
+              <>
+                <Text margin={{ top: 'small', bottom: 'small' }} color="grey800">
+                  {getString('ci.gradleNotesTitle')}
+                </Text>
+                <CodeBlock
+                  allowCopy
+                  codeToCopy={`tasks.withType(Test) {
   if(System.getProperty("HARNESS_JAVA_AGENT")) {
     jvmArgs += [System.getProperty("HARNESS_JAVA_AGENT")]
   }
@@ -377,34 +535,105 @@ gradle.projectsEvaluated {
             }
         }
 }`}
-                    format="pre"
-                    snippet={getString('ci.gradleNote1')}
-                  />
-                  <Text margin={{ top: 'small' }} color="grey800">
-                    {getString('ci.gradleNote2')}
-                  </Text>
-                </>
-              )}
-            <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
-              {renderMultiTypeTextField({
-                name: 'spec.args',
-                fieldLabelKey: 'argsLabel',
-                tooltipId: 'runTestsArgs',
-                allowableTypes: AllMultiTypeInputTypesForStep
+                  format="pre"
+                  snippet={getString('ci.gradleNote1')}
+                />
+                <Text margin={{ top: 'small', bottom: 'medium' }} color="grey800">
+                  {getString('ci.gradleNote2')}
+                </Text>
+              </>
+            )}
+            {buildTool && (
+              <Container className={cx(css.formGroup, css.lg)}>
+                {renderMultiTypeTextField({
+                  name: 'spec.args',
+                  fieldLabelKey: 'pipelineSteps.buildArgsLabel',
+                  tooltipId: 'runTestsArgs',
+                  placeholder: getArgsPlaceholder(buildTool),
+                  allowableTypes: AllMultiTypeInputTypesForStep
+                })}
+              </Container>
+            )}
+            {selectedLanguageValue === Language.Java && (
+              <Container className={cx(css.formGroup, css.lg)}>
+                {renderMultiTypeTextField({
+                  name: 'spec.packages',
+                  fieldLabelKey: 'packagesLabel',
+                  tooltipId: 'runTestsPackages',
+                  renderOptionalSublabel: true,
+                  allowableTypes: AllMultiTypeInputTypesForStep
+                })}
+              </Container>
+            )}
+            {selectedLanguageValue === Language.Csharp && (
+              <Container className={cx(css.formGroup, css.lg)}>
+                {renderMultiTypeTextField({
+                  name: 'spec.namespaces',
+                  fieldLabelKey: 'ci.runTestsStep.namespaces',
+                  tooltipId: 'runTestsNamespaces',
+                  allowableTypes: AllMultiTypeInputTypesForStep
+                })}
+              </Container>
+            )}
+            <Container className={css.bottomMargin5}>
+              {renderMultiTypeList({
+                name: 'spec.reportPaths',
+                placeholderKey: 'pipelineSteps.reportPathsPlaceholder',
+                labelKey: 'ci.runTestsStep.testReportPaths',
+                allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
+                allowedTypesForEntries: SupportedInputTypesForListItems
               })}
             </Container>
-            <Container className={cx(css.formGroup, css.lg)}>
-              {renderMultiTypeTextField({
-                name: 'spec.packages',
-                fieldLabelKey: 'packagesLabel',
-                tooltipId: 'runTestsPackages',
-                allowableTypes: AllMultiTypeInputTypesForStep
-              })}
+            <Container className={css.bottomMargin5}>
+              <div className={cx(css.fieldsGroup, css.withoutSpacing)} style={{ marginBottom: 'var(--spacing-small)' }}>
+                {renderMultiTypeFieldSelector({
+                  name: 'spec.preCommand',
+                  fieldLabelKey: 'ci.preCommandLabel',
+                  tooltipId: '',
+                  allowableTypes: AllMultiTypeInputTypesForStep
+                })}
+                {getMultiTypeFromValue(formik?.values?.spec?.preCommand) === MultiTypeInputType.RUNTIME && (
+                  <ConfigureOptions
+                    style={{ marginTop: 17 }}
+                    value={formik?.values?.spec?.preCommand as string}
+                    type={getString('string')}
+                    variableName="spec.preCommand"
+                    showRequiredField={false}
+                    showDefaultField={false}
+                    showAdvanced={true}
+                    onChange={value => formik?.setFieldValue('spec.preCommand', value)}
+                    isReadonly={readonly}
+                  />
+                )}
+              </div>
+            </Container>
+            <Container className={css.bottomMargin5}>
+              <div className={cx(css.fieldsGroup, css.withoutSpacing)} style={{ marginBottom: 'var(--spacing-small)' }}>
+                {renderMultiTypeFieldSelector({
+                  name: 'spec.postCommand',
+                  fieldLabelKey: 'ci.postCommandLabel',
+                  tooltipId: '',
+                  allowableTypes: AllMultiTypeInputTypesForStep
+                })}
+                {getMultiTypeFromValue(formik?.values?.spec?.postCommand) === MultiTypeInputType.RUNTIME && (
+                  <ConfigureOptions
+                    style={{ marginTop: 17 }}
+                    value={formik?.values?.spec?.postCommand as string}
+                    type={getString('string')}
+                    variableName="spec.postCommand"
+                    showRequiredField={false}
+                    showDefaultField={false}
+                    showAdvanced={true}
+                    onChange={value => formik?.setFieldValue('spec.postCommand', value)}
+                    isReadonly={readonly}
+                  />
+                )}
+              </div>
             </Container>
             <Accordion className={css.accordion}>
               <Accordion.Panel
                 id="optional-config"
-                summary={getString('common.optionalConfig')}
+                summary={getString('pipeline.additionalConfiguration')}
                 details={
                   <Container margin={{ top: 'medium' }}>
                     {buildInfrastructureType === CIBuildInfrastructureType.VM ? (
@@ -427,72 +656,21 @@ gradle.projectsEvaluated {
                         disabled={readonly}
                       />
                     </Container>
-                    <Container className={cx(css.formGroup, css.sm, css.bottomMargin5)}>
-                      {renderMultiTypeTextField({
-                        name: 'spec.testAnnotations',
-                        fieldLabelKey: 'testAnnotationsLabel',
-                        tooltipId: '',
-                        renderOptionalSublabel: true,
-                        allowableTypes: AllMultiTypeInputTypesForStep
-                      })}
-                    </Container>
-                    <Container className={css.bottomMargin5}>
-                      <div
-                        className={cx(css.fieldsGroup, css.withoutSpacing)}
-                        style={{ marginBottom: 'var(--spacing-small)' }}
-                      >
-                        {renderMultiTypeFieldSelector({
-                          name: 'spec.preCommand',
-                          fieldLabelKey: 'ci.preCommandLabel',
+                    {selectedLanguageValue === Language.Java && (
+                      <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
+                        {renderMultiTypeTextField({
+                          name: 'spec.testAnnotations',
+                          fieldLabelKey: 'testAnnotationsLabel',
                           tooltipId: '',
+                          renderOptionalSublabel: true,
                           allowableTypes: AllMultiTypeInputTypesForStep
                         })}
-                        {getMultiTypeFromValue(formik?.values?.spec?.preCommand) === MultiTypeInputType.RUNTIME && (
-                          <ConfigureOptions
-                            style={{ marginTop: 17 }}
-                            value={formik?.values?.spec?.preCommand as string}
-                            type={getString('string')}
-                            variableName="spec.preCommand"
-                            showRequiredField={false}
-                            showDefaultField={false}
-                            showAdvanced={true}
-                            onChange={value => formik?.setFieldValue('spec.preCommand', value)}
-                            isReadonly={readonly}
-                          />
-                        )}
-                      </div>
-                    </Container>
-                    <Container className={css.bottomMargin5}>
-                      <div
-                        className={cx(css.fieldsGroup, css.withoutSpacing)}
-                        style={{ marginBottom: 'var(--spacing-small)' }}
-                      >
-                        {renderMultiTypeFieldSelector({
-                          name: 'spec.postCommand',
-                          fieldLabelKey: 'ci.postCommandLabel',
-                          tooltipId: '',
-                          allowableTypes: AllMultiTypeInputTypesForStep
-                        })}
-                        {getMultiTypeFromValue(formik?.values?.spec?.postCommand) === MultiTypeInputType.RUNTIME && (
-                          <ConfigureOptions
-                            style={{ marginTop: 17 }}
-                            value={formik?.values?.spec?.postCommand as string}
-                            type={getString('string')}
-                            variableName="spec.postCommand"
-                            showRequiredField={false}
-                            showDefaultField={false}
-                            showAdvanced={true}
-                            onChange={value => formik?.setFieldValue('spec.postCommand', value)}
-                            isReadonly={readonly}
-                          />
-                        )}
-                      </div>
-                    </Container>
+                      </Container>
+                    )}
                     <CIStepOptionalConfig
                       stepViewType={stepViewType}
                       readonly={readonly}
                       enableFields={{
-                        'spec.reportPaths': {},
                         'spec.envVariables': { tooltipId: 'environmentVariables' },
                         'spec.outputVariables': {}
                       }}

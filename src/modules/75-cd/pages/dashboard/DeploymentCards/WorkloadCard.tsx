@@ -6,13 +6,11 @@
  */
 
 import React, { useMemo } from 'react'
-import { Layout, Icon } from '@wings-software/uicore'
 import { useHistory, useParams } from 'react-router-dom'
-import { Color } from '@harness/design-system'
-import RepositoryCard from '@pipeline/components/Dashboards/BuildCards/RepositoryCard'
 import type { WorkloadDateCountInfo, LastWorkloadInfo } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import ServiceCardWithChart from './CardWithChart'
 import css from '../CDDashboardPage.module.scss'
 export interface WorkloadCardProps {
   serviceName: string
@@ -50,18 +48,12 @@ export default function WorkloadCard({
       }))
     }
   }, [workload])
-
   const gotoServices = (): void => {
     history.push(routes.toServiceStudio({ accountId, orgIdentifier, projectIdentifier, serviceId, module }))
   }
   return (
-    <RepositoryCard
-      title={
-        <Layout.Horizontal spacing="xsmall" style={{ alignItems: 'center' }}>
-          <Icon size={30} name={'services'} color={Color.PRIMARY_5} />
-          {serviceName}
-        </Layout.Horizontal>
-      }
+    <ServiceCardWithChart
+      title={serviceName}
       message={lastMessage!}
       username={username}
       startTime={lastExecuted?.startTime as number}

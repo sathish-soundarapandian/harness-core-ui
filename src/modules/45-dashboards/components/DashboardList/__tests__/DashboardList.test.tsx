@@ -70,12 +70,10 @@ describe('DashboardList', () => {
 
     const headerName: StringKeys = 'name'
     const headerTags: StringKeys = 'tagsLabel'
-    const headerFavoriteCount: StringKeys = 'dashboards.dashboardList.headerFavoriteCount'
     const headerViewCount: StringKeys = 'dashboards.dashboardList.headerViewCount'
 
     expect(screen.getByText(headerName)).toBeInTheDocument()
     expect(screen.getByText(headerTags)).toBeInTheDocument()
-    expect(screen.getByText(headerFavoriteCount)).toBeInTheDocument()
     expect(screen.getByText(headerViewCount)).toBeInTheDocument()
   })
 

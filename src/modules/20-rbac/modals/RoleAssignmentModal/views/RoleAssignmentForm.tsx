@@ -16,7 +16,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetResourceGroupListV2 } from 'services/resourcegroups'
 import { errorCheck } from '@common/utils/formikHelpers'
 import { useToaster } from '@common/components'
-import { getScopeBasedDefaultResourceGroup, isAssignmentFieldDisabled } from '@rbac/utils/utils'
+import { getScopeBasedDefaultResourceGroup, isAccountBasicRole, isAssignmentFieldDisabled } from '@rbac/utils/utils'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import NewUserRoleDropdown from '@rbac/components/NewUserRoleDropdown/NewUserRoleDropdown'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -61,14 +61,17 @@ const RoleAssignmentForm: React.FC<RoleAssignmentFormProps> = ({ noRoleAssignmen
 
   const roles: RoleOption[] = useMemo(
     () =>
-      roleList?.data?.content?.map(response => {
-        return {
-          label: response.role.name,
-          value: response.role.identifier,
-          managed: defaultTo(response.harnessManaged, false),
-          managedRoleAssignment: false
+      roleList?.data?.content?.reduce((acc: RoleOption[], response) => {
+        if (!isAccountBasicRole(response.role.identifier)) {
+          acc.push({
+            label: response.role.name,
+            value: response.role.identifier,
+            managed: defaultTo(response.harnessManaged, false),
+            managedRoleAssignment: false
+          })
         }
-      }) || [],
+        return acc
+      }, []) || [],
     [roleList]
   )
 

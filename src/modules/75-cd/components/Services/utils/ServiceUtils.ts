@@ -5,13 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { set } from 'lodash-es'
+import { defaultTo, set } from 'lodash-es'
 import type { PipelineInfoConfig, ServiceDefinition } from 'services/cd-ng'
+
+export type ServicePipelineConfig = PipelineInfoConfig & { gitOpsEnabled: boolean }
 
 export enum ServiceTabs {
   SUMMARY = 'summaryTab',
   Configuration = 'configuration',
-  REFERENCED_BY = 'refrencedByTab',
+  REFERENCED_BY = 'referencedByTab',
   ActivityLog = 'activityLog'
 }
 
@@ -25,6 +27,7 @@ export const newServiceState = {
     identifier: '',
     description: '',
     tags: {},
+    gitOpsEnabled: false,
     serviceDefinition: {
       type: '' as ServiceDefinition['type'],
       spec: {}
@@ -49,9 +52,10 @@ export const initialServiceState = {
   // entityValidityDetails: {}
 }
 
-export const setNameIDDescription = (draftData: PipelineInfoConfig, updatedData: PipelineInfoConfig): void => {
+export const setNameIDDescription = (draftData: PipelineInfoConfig, updatedData: ServicePipelineConfig): void => {
   set(draftData, 'identifier', updatedData.identifier)
   set(draftData, 'name', updatedData.name)
   set(draftData, 'description', updatedData.description)
   set(draftData, 'tags', updatedData.tags)
+  set(draftData, 'gitOpsEnabled', defaultTo(updatedData.gitOpsEnabled, false))
 }

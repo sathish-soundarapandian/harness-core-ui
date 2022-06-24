@@ -18,6 +18,7 @@ import type { ServiceDefinition } from 'services/cd-ng'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
+import VariableListReadOnlyView from '@pipeline/components/WorkflowVariablesSelection/VariableListReadOnlyView'
 import { setupMode } from '../K8sServiceSpecHelper'
 import type { KubernetesServiceInputFormProps } from '../K8sServiceSpecInterface'
 import css from '../K8sServiceSpec.module.scss'
@@ -37,7 +38,7 @@ const getArtifactsHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['
 }
 
 const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
-  initialValues: { stageIndex = 0, setupModeType, deploymentType },
+  initialValues: { stageIndex = 0, setupModeType, deploymentType, isReadonlyServiceMode },
   factory,
   readonly
 }) => {
@@ -75,13 +76,13 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
               </div>
 
               <ManifestSelection
-                readonly={!!readonly}
                 isPropagating={isPropagating}
                 deploymentType={selectedDeploymentType}
+                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                readonly={!!readonly}
               />
             </Card>
           )}
-
           <Card
             className={css.sectionCard}
             id={getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
@@ -96,6 +97,7 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
             <ArtifactsSelection
               isPropagating={isPropagating}
               deploymentType={selectedDeploymentType}
+              isReadonlyServiceMode={isReadonlyServiceMode as boolean}
               readonly={!!readonly}
             />
           </Card>
@@ -123,13 +125,17 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
         </div>
         <Card className={css.sectionCard} id={getString('common.variables')}>
           <div className={css.tabSubHeading}>{getString('common.variables')}</div>
-          <WorkflowVariables
-            tabName={DeployTabs.SERVICE}
-            formName={'addEditServiceCustomVariableForm'}
-            factory={factory as any}
-            isPropagating={isPropagating}
-            readonly={!!readonly}
-          />
+          {isReadonlyServiceMode ? (
+            <VariableListReadOnlyView />
+          ) : (
+            <WorkflowVariables
+              tabName={DeployTabs.SERVICE}
+              formName={'addEditServiceCustomVariableForm'}
+              factory={factory as any}
+              isPropagating={isPropagating}
+              readonly={!!readonly}
+            />
+          )}
         </Card>
       </div>
     </div>

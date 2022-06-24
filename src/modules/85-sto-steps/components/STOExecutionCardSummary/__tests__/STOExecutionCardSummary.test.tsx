@@ -42,9 +42,16 @@ const testParams = {
   module: 'sto'
 }
 
-const pipelineExecutionSummary = {
+const successPipelineExecutionSummary = {
   pipelineIdentifier: 'pipeline-id',
-  planExecutionId: 'execution-id'
+  planExecutionId: 'execution-id',
+  status: 'Success'
+} as PipelineExecutionSummary
+
+const failedPipelineExecutionSummary = {
+  pipelineIdentifier: 'pipeline-id',
+  planExecutionId: 'execution-id',
+  status: 'Failed'
 } as PipelineExecutionSummary
 
 describe('STOExecutionCardSummary', () => {
@@ -59,7 +66,7 @@ describe('STOExecutionCardSummary', () => {
     const { container } = render(
       <TestWrapper path={testPath} pathParams={testParams}>
         <STOExecutionCardSummary
-          data={pipelineExecutionSummary}
+          data={successPipelineExecutionSummary}
           nodeMap={{}}
           startingNodeId={'foo'}
           variant={CardVariant.Default}
@@ -80,7 +87,7 @@ describe('STOExecutionCardSummary', () => {
     const { queryByTestId } = render(
       <TestWrapper path={testPath} pathParams={testParams}>
         <STOExecutionCardSummary
-          data={pipelineExecutionSummary}
+          data={successPipelineExecutionSummary}
           nodeMap={{}}
           startingNodeId={'foo'}
           variant={CardVariant.Default}
@@ -111,7 +118,7 @@ describe('STOExecutionCardSummary', () => {
     const { queryByTestId } = render(
       <TestWrapper path={testPath} pathParams={testParams}>
         <STOExecutionCardSummary
-          data={pipelineExecutionSummary}
+          data={successPipelineExecutionSummary}
           nodeMap={{}}
           startingNodeId={'foo'}
           variant={CardVariant.Default}
@@ -135,7 +142,7 @@ describe('STOExecutionCardSummary', () => {
     const { container } = render(
       <TestWrapper path={testPath} pathParams={testParams} getString={id => id}>
         <STOExecutionCardSummary
-          data={pipelineExecutionSummary}
+          data={successPipelineExecutionSummary}
           nodeMap={{}}
           startingNodeId={'foo'}
           variant={CardVariant.Default}
@@ -156,7 +163,7 @@ describe('STOExecutionCardSummary', () => {
     render(
       <TestWrapper path={testPath} pathParams={testParams} getString={id => id}>
         <STOExecutionCardSummary
-          data={pipelineExecutionSummary}
+          data={successPipelineExecutionSummary}
           nodeMap={{}}
           startingNodeId={'foo'}
           variant={CardVariant.Default}
@@ -177,7 +184,28 @@ describe('STOExecutionCardSummary', () => {
     render(
       <TestWrapper path={testPath} pathParams={testParams} getString={id => id}>
         <STOExecutionCardSummary
-          data={pipelineExecutionSummary}
+          data={successPipelineExecutionSummary}
+          nodeMap={{}}
+          startingNodeId={'foo'}
+          variant={CardVariant.Default}
+        />
+      </TestWrapper>
+    )
+    expect(screen.getByText('stoSteps.noSecurityTests'))
+  })
+
+  test('shows no security tests message on pipeline failure', () => {
+    jest.spyOn(stoService, 'useIssueCounts').mockReturnValue({
+      data: { critical: 1, high: 2, medium: 3, low: 4, info: 5, unassigned: 0 },
+      loading: false,
+      response: null,
+      error: null
+    })
+
+    render(
+      <TestWrapper path={testPath} pathParams={testParams}>
+        <STOExecutionCardSummary
+          data={failedPipelineExecutionSummary}
           nodeMap={{}}
           startingNodeId={'foo'}
           variant={CardVariant.Default}
@@ -198,7 +226,7 @@ describe('STOExecutionCardSummary', () => {
     render(
       <TestWrapper path={testPath} pathParams={testParams} getString={id => id}>
         <STOExecutionCardSummary
-          data={pipelineExecutionSummary}
+          data={successPipelineExecutionSummary}
           nodeMap={{}}
           startingNodeId={'foo'}
           variant={CardVariant.Default}

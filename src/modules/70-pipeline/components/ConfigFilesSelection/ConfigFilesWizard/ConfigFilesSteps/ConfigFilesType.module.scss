@@ -16,6 +16,10 @@
   }
 }
 
+.radioGroupContainer {
+  display: flex;
+}
+
 .firstep {
   padding: var(--spacing-small) 0 0 var(--spacing-small) !important;
   height: 100%;
@@ -147,4 +151,17 @@
     color: var(--grey-900);
     font-weight: 500;
   }
+}
+
+.encOption {
+  margin-left: var(--spacing-medium);
+}
+.identifierField {
+  width: 340px;
+  margin-bottom: var(--spacing-xlarge);
+  margin-top: var(--spacing-xlarge);
+}
+.selectFileType {
+  margin-top: var(--spacing-large);
+  margin-bottom: var(--spacing-xxlarge);
 }

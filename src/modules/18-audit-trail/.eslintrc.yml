@@ -8,6 +8,8 @@ rules:
         - modules/20-rbac/*
         - modules/25-governance/*
         - modules/27-sto/*
+        - modules/28-et/*
+        - modules/28-filestore/*
         - modules/30-delegates/*
         - modules/30-secrets/*
         - modules/31-variables/*
@@ -23,6 +25,7 @@ rules:
         - modules/75-cd/*
         - modules/75-ce/*
         - modules/75-cf/*
+        - modules/75-chaos/*
         - modules/75-ci/*
         - modules/85-cv/*
         - modules/85-sto-steps/*
@@ -30,6 +33,8 @@ rules:
         - '@rbac/*'
         - '@governance/*'
         - '@sto/*'
+        - '@et/*'
+        - '@filestore/*'
         - '@delegates/*'
         - '@secrets/*'
         - '@variables/*'
@@ -45,6 +50,7 @@ rules:
         - '@cd/*'
         - '@ce/*'
         - '@cf/*'
+        - '@chaos/*'
         - '@ci/*'
         - '@cv/*'
         - '@sto-steps/*'

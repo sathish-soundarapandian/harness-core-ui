@@ -97,6 +97,7 @@ export class ECRStep extends PipelineStep<ECRStepData> {
   protected stepName = 'Build and Push to ECR'
   protected stepIcon: IconName = 'ecr-step'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ECR'
+  protected stepAdditionalInfo: keyof StringsMap = 'pipeline.linuxOnly'
   protected stepPaletteVisible = false
 
   protected defaultValues: ECRStepData = {

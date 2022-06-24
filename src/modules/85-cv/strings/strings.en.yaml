@@ -1,4 +1,5 @@
 continuous: '{{$.common.purpose.cv.serviceReliability}}'
+srmTitle: SRM
 methodLabel: Method Label
 request: '{{ $.common.request }}'
 response: Response
@@ -370,9 +371,11 @@ monitoringSources:
       recordCount: Current query yields too many records. Please change query to yield one record.
   splunk:
     splunkLogsQuery: SPLUNK Logs Query
+    splunkMetric: Splunk Metrics
     savedSearchQuery: Select saved query
     submitQueryToSeeRecords: Submit query to see records from Splunk
     staleRecordsWarning: Records not upated with latest query. Please fetch records
+    defaultSplunkMetricName: Splunk Metric
   gcoLogs:
     query: QUERY
     gcoLogsServiceInstance: Add service instance
@@ -626,6 +629,7 @@ healthSource:
       trierLabel: Find an AppDynamics tier
       tierPlaceholder: Type an tier name
       metricPackLabel: Select Metric Packs to be monitored
+      serviceInstance: Specify a service instance path
       validation:
         application: Please select applications
         tier: Please select tier
@@ -649,7 +653,10 @@ healthSource:
       defaultMetricName: Dynatrace metric
       submitQueryLabel: Submit query to see Dynatrace metrics
       keyRequestRequiredLabel: Only services with marked Key Requests are shown
-
+  splunkMetric:
+    queryTextareaPlaceholder: 'Please write a splunk query that outputs table for time, value. Use span of 1m. Example: source="access_log" status < 400 | bucket _time span=1m | stats p99(response_time) as value by _time | rename _time as time | fields time value'
+templates:
+  healthSourceDetails: Health Source Details
 slos:
   title: SLOs
   deleteSLO: Delete SLO
@@ -658,7 +665,7 @@ slos:
   sloCreated: SLO created successfully
   sloUpdated: SLO updated successfully
   noData: You don’t have any SLO created yet
-  noMatchingData: No matching data
+  noMatchingData: No matching data for applied filters
   monitoredServiceText: A Monitored Service is automatically created by Harness by concatenating the names of the Service and Environment.
   createMonitoredService: Create a Monitored Service
   confirmDeleteSLO: 'Are you sure you want to delete SLO: {{ name }}?'

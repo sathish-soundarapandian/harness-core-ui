@@ -39,7 +39,7 @@ interface TriggersListPropsInterface {
 
 export default function TriggersList(props: TriggersListPropsInterface & GitQueryParams): JSX.Element {
   const { onNewTriggerClick, isPipelineInvalid, gitAwareForTriggerEnabled } = props
-  const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
+  const { branch, repoIdentifier, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
 
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } = useParams<
     PipelineType<{
@@ -157,7 +157,10 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
         triggerType,
         module,
         repoIdentifier,
-        branch
+        branch,
+        connectorRef,
+        repoName,
+        storeType
       })
     )
   }
@@ -172,7 +175,10 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
         triggerIdentifier,
         module,
         repoIdentifier,
-        branch
+        branch,
+        connectorRef,
+        repoName,
+        storeType
       })
     )
   }

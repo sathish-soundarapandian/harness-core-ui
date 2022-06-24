@@ -7,8 +7,18 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly columnId: string
+  readonly columnStore: string
+  readonly configFilesList: string
+  readonly configFilesLocation: string
+  readonly connectorName: string
+  readonly connectorNameField: string
   readonly createConnectorWizard: string
   readonly crossIcon: string
+  readonly listHeader: string
   readonly modal: string
+  readonly noWrap: string
+  readonly rowItem: string
+  readonly type: string
 }
 export default styles

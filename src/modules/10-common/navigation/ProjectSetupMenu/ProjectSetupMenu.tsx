@@ -13,6 +13,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useHostedBuilds } from '@common/hooks/useHostedBuild'
 import type { GovernancePathProps, Module, PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
+import { useAnyEnterpriseLicense } from '@common/hooks/useModuleLicenses'
 import { useSideNavContext } from 'framework/SideNavStore/SideNavContext'
 import { SidebarLink } from '../SideNav/SideNav'
 import NavExpandable from '../NavExpandable/NavExpandable'
@@ -24,13 +25,16 @@ interface ProjectSetupMenuProps {
 const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module }) => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<PipelineType<ProjectPathProps>>()
-  const { NG_TEMPLATES, OPA_PIPELINE_GOVERNANCE, NG_VARIABLES, NG_GIT_EXPERIENCE } = useFeatureFlags()
+  const { NG_TEMPLATES, OPA_PIPELINE_GOVERNANCE, NG_VARIABLES, CVNG_TEMPLATE_MONITORED_SERVICE, NG_FILE_STORE } =
+    useFeatureFlags()
   const { showGetStartedTabInMainMenu } = useSideNavContext()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
   const params = { accountId, orgIdentifier, projectIdentifier, module }
+  const isCIorCDorSTO = module === 'ci' || module === 'cd' || module === 'sto'
   const isCIorCD = module === 'ci' || module === 'cd'
-  // const isCV = module === 'cv'
-  const getGitSyncEnabled = (isCIorCD || !module) && !NG_GIT_EXPERIENCE
+  const isCV = module === 'cv'
+  const canUsePolicyEngine = useAnyEnterpriseLicense()
+  const getGitSyncEnabled = isCIorCDorSTO || !module
 
   return (
     <NavExpandable title={getString('common.projectSetup')} route={routes.toSetup(params)}>
@@ -46,15 +50,20 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module }) => {
             to={routes.toGitSyncAdmin({ accountId, orgIdentifier, projectIdentifier, module })}
           />
         ) : null}
-        {/* 
-         To enable templates for CV
-         Replace isCIorCD with (isCIorCD || isCV) 
-         */}
-        {NG_TEMPLATES && isCIorCD && (
+        {NG_TEMPLATES && isCIorCDorSTO && (
           <SidebarLink label={getString('common.templates')} to={routes.toTemplates(params)} />
         )}
-        {OPA_PIPELINE_GOVERNANCE && isCIorCD && (
+        {CVNG_TEMPLATE_MONITORED_SERVICE && isCV && (
+          <SidebarLink
+            label={getString('common.templates')}
+            to={routes.toTemplates({ ...params, templateType: 'MonitoredService' })}
+          />
+        )}
+        {OPA_PIPELINE_GOVERNANCE && isCIorCDorSTO && canUsePolicyEngine && (
           <SidebarLink label={getString('common.governance')} to={routes.toGovernance(params as GovernancePathProps)} />
+        )}
+        {isCIorCD && NG_FILE_STORE && (
+          <SidebarLink label={getString('resourcePage.fileStore')} to={routes.toFileStore(params)} />
         )}
         {enabledHostedBuildsForFreeUsers && !showGetStartedTabInMainMenu && module === 'ci' && (
           <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCI({ ...params, module })} />

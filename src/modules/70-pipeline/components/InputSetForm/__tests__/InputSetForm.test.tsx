@@ -39,6 +39,7 @@ import {
   MergedPipelineResponse
 } from './InputSetMocks'
 import FormikInputSetForm, { isYamlPresent, showPipelineInputSetForm } from '../FormikInputSetForm'
+import NewInputSetModal from '../NewInputSetModal'
 
 const successResponse = (): Promise<{ status: string }> => Promise.resolve({ status: 'SUCCESS' })
 jest.mock('@common/utils/YamlUtils', () => ({}))
@@ -136,7 +137,7 @@ const TEST_INPUT_SET_FORM_PATH = routes.toInputSetForm({
   ...pipelineModuleParams
 })
 
-const renderSetup = () =>
+const renderSetup = (form = <EnhancedInputSetForm />) =>
   render(
     <TestWrapper
       path={TEST_INPUT_SET_FORM_PATH}
@@ -161,7 +162,7 @@ const renderSetup = () =>
           } as any
         }
       >
-        <EnhancedInputSetForm />
+        {form}
       </PipelineContext.Provider>
     </TestWrapper>
   )
@@ -453,7 +454,7 @@ describe('Render Forms - Snapshot Testing', () => {
         storeType: 'INLINE',
         pipeline: { identifier: 'testqqq', name: '' }
       },
-      { branch: '', repoIdentifier: '' },
+      { branch: '', repoIdentifier: '', repoName: '' },
       { branch: '', connectorRef: '', filePath: undefined, repoName: '', storeType: 'INLINE' }
     )
     //ErrorStrip
@@ -494,5 +495,30 @@ describe('Render Forms - Snapshot Testing', () => {
       fireEvent.click(getByText('save'))
     })
     expect(container).toMatchSnapshot()
+  })
+
+  test('render NewInputSetModal', async () => {
+    renderSetup(
+      <NewInputSetModal
+        inputSetInitialValue={
+          {
+            pipeline: {
+              properties: {
+                ci: {
+                  codebase: {
+                    build: { type: 'branch', spec: { branch: '<+trigger.branch>' } }
+                  }
+                }
+              }
+            }
+          } as unknown as InputSetDTO
+        }
+        isModalOpen={true}
+        closeModal={jest.fn()}
+        onCreateSuccess={jest.fn()}
+      />
+    )
+
+    expect(document.body.querySelector('.bp3-portal')).toMatchSnapshot()
   })
 })

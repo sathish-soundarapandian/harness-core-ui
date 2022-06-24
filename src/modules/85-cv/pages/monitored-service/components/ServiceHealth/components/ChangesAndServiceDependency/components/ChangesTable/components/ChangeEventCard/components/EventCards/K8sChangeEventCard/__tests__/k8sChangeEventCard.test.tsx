@@ -47,7 +47,7 @@ describe('Unit tests for K8sChangeEventCard', () => {
         getByText(
           `Workload: ${mockK8sChangeResponse.metadata.workload} - Namespace: ${mockK8sChangeResponse.metadata.namespace}`
         )
-      ).not.toBeNull()
+      ).toBeInTheDocument()
     )
 
     // expand yaml

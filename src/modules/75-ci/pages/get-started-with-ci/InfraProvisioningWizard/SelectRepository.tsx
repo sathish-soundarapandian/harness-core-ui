@@ -110,7 +110,9 @@ const SelectRepositoryRef = (
 
   useEffect(() => {
     if (query) {
-      setRepositories((repoData?.data || []).filter(item => item.name?.includes(query)))
+      setRepositories(
+        (repoData?.data || []).filter(item => getFullRepoName(item).toLowerCase().includes(query.toLowerCase()))
+      )
     } else {
       setRepositories(repoData?.data)
     }
@@ -206,7 +208,7 @@ function RepositorySelectionTable({ repositories, onRowClick }: RepositorySelect
         width: '100%',
         Cell: ({ row }: CellProps<UserRepoResponse>) => {
           const { name: repositoryName } = row.original
-          const isRowSelected = repositoryName === selectedRow?.name
+          const isRowSelected = selectedRow && getFullRepoName(row.original) === getFullRepoName(selectedRow)
           return (
             <Layout.Horizontal
               data-testid={repositoryName}

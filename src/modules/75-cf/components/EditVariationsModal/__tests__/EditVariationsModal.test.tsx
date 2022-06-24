@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import { cloneDeep } from 'lodash-es'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
@@ -15,7 +16,7 @@ import * as cfServiceMock from 'services/cf'
 import mockFeature from '@cf/utils/testData/data/mockFeature'
 import mockPermission from '@cf/utils/testData/data/mockPermission'
 import mockGitSync from '@cf/utils/testData/data/mockGitSync'
-import { EditVariationsModal } from '../EditVariationsModal'
+import { EditVariationsModal, EditVariationsModalProps } from '../EditVariationsModal'
 
 jest.mock('services/cf')
 
@@ -23,7 +24,7 @@ jest.mock('@cf/hooks/useEnvironmentSelectV2', () => ({
   useEnvironmentSelectV2: jest.fn().mockReturnValue({ data: [], loading: false })
 }))
 
-const renderComponent = (): void => {
+const renderComponent = async (props: Partial<EditVariationsModalProps> = {}): Promise<void> => {
   render(
     <TestWrapper
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
@@ -38,40 +39,42 @@ const renderComponent = (): void => {
         permission={mockPermission}
         onSuccess={jest.fn()}
         setGovernanceMetadata={jest.fn()}
+        {...props}
       />
     </TestWrapper>
   )
+
+  userEvent.click(screen.getByTestId('open-edit-variations-modal'))
+
+  await waitFor(() => expect(screen.getByTestId('edit-variation-modal')).toBeInTheDocument())
 }
 
 describe('EditVariationsModal', () => {
+  const usePatchFeatureMock = jest.spyOn(cfServiceMock, 'usePatchFeature')
+
+  beforeEach(() => {
+    usePatchFeatureMock.mockReturnValue({ loading: false, mutate: jest.fn() } as any)
+  })
+
   test('it should render correctly', async () => {
-    jest.spyOn(cfServiceMock, 'usePatchFeature').mockReturnValue({ loading: false, mutate: jest.fn() } as any)
-
-    renderComponent()
-
-    userEvent.click(screen.getByTestId('open-edit-variations-modal'))
-
-    await waitFor(() => expect(screen.getByTestId('edit-variation-modal')).toBeInTheDocument())
+    await renderComponent()
 
     expect(screen.getByTestId('edit-variation-modal')).toMatchSnapshot()
   })
 
-  // eslint-disable-next-line jest/no-disabled-tests
-  test.skip('it should call onSubmit correctly when variation changed', async () => {
+  test('it should call onSubmit correctly when variation changed', async () => {
     const patchMock = jest.fn()
-    jest.spyOn(cfServiceMock, 'usePatchFeature').mockReturnValue({ loading: false, mutate: patchMock } as any)
+    usePatchFeatureMock.mockReturnValue({ loading: false, mutate: patchMock } as any)
 
-    renderComponent()
-
-    userEvent.click(screen.getByTestId('open-edit-variations-modal'))
-
-    await waitFor(() => expect(screen.getByTestId('edit-variation-modal')).toBeInTheDocument())
+    await renderComponent()
 
     const variation1 = document.getElementsByName('variations.0.name')[0]
     userEvent.clear(variation1)
-    await userEvent.type(variation1, 'new variation')
+    await userEvent.type(variation1, 'new variation', { allAtOnce: true })
 
-    await userEvent.type(screen.getByPlaceholderText('common.git.commitMessage'), 'test commit message')
+    await userEvent.type(screen.getByPlaceholderText('common.git.commitMessage'), 'test commit message', {
+      allAtOnce: true
+    })
     userEvent.click(screen.getByText('save'))
 
     await waitFor(() =>
@@ -88,5 +91,81 @@ describe('EditVariationsModal', () => {
         ]
       })
     )
+  })
+
+  test('it should hide delete variation buttons for boolean flags', async () => {
+    const boolFeature = cloneDeep(mockFeature)
+    boolFeature.kind = 'boolean'
+
+    await renderComponent({ feature: boolFeature })
+
+    expect(screen.queryAllByRole('button', { name: 'cf.editVariation.remove' })).toHaveLength(0)
+  })
+
+  test('it should show delete variation buttons for multivariate flags', async () => {
+    const multiFeature = cloneDeep(mockFeature)
+    multiFeature.kind = 'string'
+
+    await renderComponent({ feature: multiFeature })
+
+    expect(screen.getAllByRole('button', { name: 'cf.editVariation.remove' })).toHaveLength(
+      mockFeature.variations.length
+    )
+  })
+
+  test('it should remove the variation when the delete variation button is clicked', async () => {
+    const multiFeature = cloneDeep(mockFeature)
+    multiFeature.kind = 'string'
+
+    await renderComponent({ feature: multiFeature })
+
+    expect(screen.getAllByRole('button', { name: 'cf.editVariation.remove' })).toHaveLength(
+      mockFeature.variations.length
+    )
+
+    userEvent.click(screen.getAllByRole('button', { name: 'cf.editVariation.remove' })[0])
+
+    await waitFor(() =>
+      expect(screen.getAllByRole('button', { name: 'cf.editVariation.remove' })).toHaveLength(
+        mockFeature.variations.length - 1
+      )
+    )
+  })
+
+  test('it should add a new variation when the add variation button is clicked', async () => {
+    const multiFeature = cloneDeep(mockFeature)
+    multiFeature.kind = 'string'
+
+    await renderComponent({ feature: multiFeature })
+
+    expect(screen.getAllByRole('button', { name: 'cf.editVariation.remove' })).toHaveLength(
+      mockFeature.variations.length
+    )
+
+    userEvent.click(screen.getByRole('button', { name: 'small-plus cf.shared.variation' }))
+
+    await waitFor(() =>
+      expect(screen.getAllByRole('button', { name: 'cf.editVariation.remove' })).toHaveLength(
+        mockFeature.variations.length + 1
+      )
+    )
+  })
+
+  test('it should show the add variation button for multivariate flags', async () => {
+    const multiFeature = cloneDeep(mockFeature)
+    multiFeature.kind = 'string'
+
+    await renderComponent({ feature: multiFeature })
+
+    expect(screen.getByRole('button', { name: 'small-plus cf.shared.variation' })).toBeInTheDocument()
+  })
+
+  test('it should hide the add variation button for boolean flags', async () => {
+    const boolFeature = cloneDeep(mockFeature)
+    boolFeature.kind = 'boolean'
+
+    await renderComponent({ feature: boolFeature })
+
+    expect(screen.queryByRole('button', { name: 'small-plus cf.shared.variation' })).not.toBeInTheDocument()
   })
 })

@@ -33,7 +33,8 @@ const context: PipelineContextInterface = {
         description: '',
         spec: {
           execution: {}
-        }
+        },
+        failureStrategies: {}
       }
     }
   }),
@@ -115,9 +116,11 @@ describe('DeployStageSetupShell tests', () => {
     const { container, findByTestId } = render(
       <TestWrapper>
         <Formik initialValues={{}} onSubmit={noop} formName="test">
-          <StageErrorContext.Provider value={errorContextProvider}>
-            <DeployStageSetupShell />
-          </StageErrorContext.Provider>
+          <PipelineContext.Provider value={context}>
+            <StageErrorContext.Provider value={errorContextProvider}>
+              <DeployStageSetupShell />
+            </StageErrorContext.Provider>
+          </PipelineContext.Provider>
         </Formik>
       </TestWrapper>
     )
@@ -146,9 +149,11 @@ describe('DeployStageSetupShell tests', () => {
     const { container, findByTestId } = render(
       <TestWrapper>
         <Formik initialValues={{}} onSubmit={noop} formName="test">
-          <StageErrorContext.Provider value={errorContextProvider}>
-            <DeployStageSetupShell />
-          </StageErrorContext.Provider>
+          <PipelineContext.Provider value={context}>
+            <StageErrorContext.Provider value={errorContextProvider}>
+              <DeployStageSetupShell />
+            </StageErrorContext.Provider>
+          </PipelineContext.Provider>
         </Formik>
       </TestWrapper>
     )
@@ -179,9 +184,11 @@ describe('DeployStageSetupShell tests', () => {
     const { findByTestId } = render(
       <TestWrapper>
         <Formik initialValues={{}} onSubmit={noop} formName="test">
-          <StageErrorContext.Provider value={errorContextProvider}>
-            <DeployStageSetupShell />
-          </StageErrorContext.Provider>
+          <PipelineContext.Provider value={context}>
+            <StageErrorContext.Provider value={errorContextProvider}>
+              <DeployStageSetupShell />
+            </StageErrorContext.Provider>
+          </PipelineContext.Provider>
         </Formik>
       </TestWrapper>
     )
@@ -201,8 +208,7 @@ describe('DeployStageSetupShell tests', () => {
     await waitFor(() => expect(executionIcon).toBeInTheDocument)
 
     const advancedTab = await findByTestId('advanced')
-    const advancedIcon = await advancedTab.querySelector('[data-icon="tick"]')
-    await waitFor(() => expect(advancedIcon).toBeInTheDocument())
+    await waitFor(() => expect(advancedTab).toBeInTheDocument())
   })
 
   test('Should selectedTab be Execution', async () => {

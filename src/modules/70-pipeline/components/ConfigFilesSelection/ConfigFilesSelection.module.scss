@@ -21,3 +21,64 @@
   right: var(--spacing-large);
   top: var(--spacing-large);
 }
+
+.configFilesList {
+  display: grid;
+  grid-template-columns: 180px 230px 230px minmax(10px, 1fr) 80px;
+  column-gap: var(--spacing-medium);
+  align-items: center;
+  &.list-header {
+    border-bottom: solid 1px var(--grey-100);
+    padding-bottom: var(--spacing-medium);
+    text-transform: uppercase;
+  }
+  .configFilesLocation {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.rowItem {
+  padding: var(--spacing-medium) 0;
+  border-bottom: solid 1px var(--grey-100);
+  span.type {
+    color: var(--grey-900) !important;
+    font-weight: 900;
+    display: grid;
+    grid-template-columns: 1fr 10px;
+  }
+  font-size: 14px !important;
+  > p {
+    cursor: pointer;
+    color: var(--primary-7) !important;
+  }
+  .columnId {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    gap: var(--spacing-small);
+    align-items: start;
+    margin-top: 2px;
+    padding-left: var(--spacing-xsmall);
+  }
+  .columnStore {
+    display: flex;
+    align-items: center;
+  }
+  .connectorNameField {
+    display: flex;
+    align-items: center;
+
+    .connectorName {
+      display: inline-flex;
+      color: var(--grey-500);
+      max-width: 236px;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+.noWrap {
+  white-space: nowrap;
+}

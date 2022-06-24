@@ -71,7 +71,7 @@ export function getStepPaletteModuleInfosFromStage(
     const propagateFromStage = stages.find(
       currStage => (currStage as DeploymentStageElementConfigWrapper).stage.identifier === propagateFromStageId
     ) as DeploymentStageElementConfigWrapper
-    deploymentType = propagateFromStage?.stage.spec?.serviceConfig.serviceDefinition?.type
+    deploymentType = propagateFromStage?.stage.spec?.serviceConfig?.serviceDefinition?.type
   }
 
   let category = initialCategory
@@ -107,7 +107,7 @@ export function getStepPaletteModuleInfosFromStage(
     case StageType.SECURITY:
       return [
         {
-          module: 'ci',
+          module: 'sto',
           shouldShowCommonSteps: false
         }
       ]

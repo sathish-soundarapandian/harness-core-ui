@@ -74,8 +74,10 @@ export abstract class Step<T> {
   protected abstract defaultValues: T
   protected abstract stepIcon: IconName
   protected stepIconColor?: string
+  protected stepIconSize?: number
   protected abstract stepName: string
   protected stepDescription: keyof StringsMap | undefined
+  protected stepAdditionalInfo?: keyof StringsMap
   protected _hasStepVariables = false
   protected _hasDelegateSelectionVisible = false
   protected isHarnessSpecific = false
@@ -107,8 +109,16 @@ export abstract class Step<T> {
     return this.stepIconColor
   }
 
+  getIconSize(): number | undefined {
+    return this.stepIconSize
+  }
+
   getDescription(): keyof StringsMap | undefined {
     return this.stepDescription
+  }
+
+  getAdditionalInfo(): keyof StringsMap | undefined {
+    return this.stepAdditionalInfo
   }
 
   getStepName(): string {

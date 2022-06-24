@@ -97,6 +97,7 @@ export interface TriggerPathProps extends PipelinePathProps {
 
 export interface ExecutionPathProps extends PipelinePathProps {
   executionIdentifier: string
+  source: 'deployments' | 'executions' | 'builds' | ':source(deployments|executions|builds)'
 }
 
 export interface BuildPathProps extends ProjectPathProps {
@@ -147,7 +148,7 @@ export interface EnvironmentPathProps {
 }
 
 export interface EnvironmentQueryParams {
-  sectionId?: 'CONFIGURATION' | 'INFRASTRUCTURE'
+  sectionId?: 'CONFIGURATION' | 'INFRASTRUCTURE' | 'SERVICE_OVERRIDES' | 'GITOPS'
 }
 
 export interface EnvironmentGroupPathProps {
@@ -174,6 +175,7 @@ export type ModuleNameMatch =
   | ':module(cv)'
   | ':module(ce)'
   | ':module(sto)'
+  | ':module(chaos)'
 
 export type Module = ModuleName | ModuleNameMatch
 
@@ -225,4 +227,8 @@ export interface GovernancePathProps
   policyIdentifier?: string
   policySetIdentifier?: string
   evaluationId?: string
+}
+
+export interface AccountLevelGitOpsPathProps {
+  entity: string
 }

@@ -15,6 +15,7 @@ allowpaths:
   - /splunk/validation
   - /splunk/saved-searches
   - /splunk/sample-data
+  - /splunk/metric-sample-data
   - /timeseries/metric-group-data
   - /timeseries/metric-template
   - /heatmap
@@ -101,6 +102,7 @@ allowpaths:
   - /monitored-service/service-environment
   - /monitored-service/{identifier}/health-monitoring-flag
   - /monitored-service/yaml-template
+  - /monitored-service/yaml
   - /monitored-service/{identifier}/overall-health-score
   - /monitored-service/list
   - /monitored-service/{monitoredServiceIdentifier}/service-details

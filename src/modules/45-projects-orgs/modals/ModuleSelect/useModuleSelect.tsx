@@ -96,7 +96,17 @@ const getModulesWithSubscriptionsRoutesMap = ({
       }
     ],
     [ModuleName.CD, cdCiPath],
-    [ModuleName.CI, cdCiPath]
+    [ModuleName.CI, cdCiPath],
+    [
+      ModuleName.STO,
+      {
+        pathname: routes.toSTOProjectOverview({
+          orgIdentifier: projectData?.orgIdentifier || '',
+          projectIdentifier: projectData.identifier,
+          accountId
+        })
+      }
+    ]
   ])
 }
 
@@ -214,7 +224,7 @@ export const useModuleSelectModal = ({
   const [selectedModuleName, setSelectedModuleName] = React.useState<ModuleName>()
   const [projectData, setProjectData] = React.useState<Project>()
 
-  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
+  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, SECURITY } = useFeatureFlags()
   const modalProps: IDialogProps = {
     isOpen: true,
     enforceFocus: false,
@@ -251,6 +261,11 @@ export const useModuleSelectModal = ({
   if (CVNG_ENABLED) {
     infoCards.push({
       name: ModuleName.CV
+    })
+  }
+  if (SECURITY) {
+    infoCards.push({
+      name: ModuleName.STO
     })
   }
 

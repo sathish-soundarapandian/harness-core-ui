@@ -74,6 +74,8 @@ addHeader: Add Header
 addParameter: Add Parameter
 baseURL: Base URL
 requestMethod: Request Method
+optionalAuthentication: Authentication (optional)
+bearerToken: Bearer Token(HTTP Header)
 connectivityMode:
   title: 'Connectivity Mode'
   validation: 'Please select connectivity mode'
@@ -84,10 +86,12 @@ title:
   gcpConnector: 'Google Cloud Provider'
   pdcConnector: 'Physical Data Center'
   helmConnector: 'HTTP Helm Repo'
+  ociHelmConnector: 'OCI Helm Registry'
   gitConnector: 'Git Connector'
   githubConnector: 'GitHub Connector'
   gitlabConnector: 'GitLab Connector'
   bitbucketConnector: 'Bitbucket Connector'
+  azureRepoConnector: 'Azure Repos Connector'
   hashicorpVault: 'HashiCorp Vault'
   jira: 'Jira'
   serviceNow: 'ServiceNow'
@@ -107,7 +111,6 @@ title:
   sumologic: 'SumoLogic'
   ceAws: 'AWS Connector '
   gcpKms: GCP Key Management Service
-  errorTracking: 'Error Tracking'
   azure: 'Azure Cloud Provider'
   harnessImageConnectorRef: 'Override Image Connector'
 placeholder:
@@ -115,6 +118,7 @@ placeholder:
 name_labels:
   Kubernetes: 'Kubernetes Connector Name'
   HttpHelmRepo: 'Helm Http Connector Name'
+  OCIHelm: 'Helm OCI Connector Name'
   Git: 'Git Connector Name'
   Github: 'GitHub Connector Name'
   Gitlab: 'GitLab Connector Name'
@@ -162,6 +166,7 @@ testConnectionStep:
     vault: Validating HashiCorp Vault authentication and permissions
     awsSecretManager: Validating AWS Secret Manager authentication and permissions
     bitbucket: Validating Bitbucket authentication and permissions
+    azureRepos: Validating Azure Repos authentication and permissions
     gitlab: Validating GitLab authentication and permissions
     github: Validating GitHub authentication and permissions
     git: Validating Git authentication and permissions
@@ -179,6 +184,8 @@ validation:
   personalAccessToken: Personal Access Token is required
 httpHelm:
   httpHelmRepoUrl: 'Helm Repo URL'
+ociHelm:
+  ociHelmUrl: 'OCI Helm URL'
 jira:
   jiraUrl: 'Jira URL'
 serviceNow:
@@ -285,6 +292,13 @@ docker:
   quay: 'Quay'
   other: 'Other (Docker V2 compliant)'
   dockerRepository: Docker Repository
+jenkins:
+  bearerTokenRequired: Bearer token is required
+  usernamePasswordAPIToken: 'Username and Password/APIToken'
+  passwordAPIToken: 'Password/APIToken'
+  jenkins: 'Jenkins'
+  jenkinsUrlRequired: 'Jenkins Registry URL is required'
+  jenkinsUrl: 'Jenkins Registry URL'
 helmRepo:
   helmRepoUrl: 'Helm Repository URL'
 aws:
@@ -351,6 +365,7 @@ customHealth:
 cdng:
   jobName: Job Name
   continousVerificationType: Continous Verification Type
+  monitoredServiceType: Monitored Service Type
   artifactTag: Artifact Tag
   defineVerificationJob: Define Verification Job
   baseline: Baseline
@@ -365,6 +380,7 @@ cdng:
   monitoredService:
     label: Monitored Service
     fetchingMonitoredService: Fetching Monitored service ...
+    fetchingHealthSources: Fetching Health Sources ...
     creatingMonitoredService: Creating Monitored service ...
     fetchingMonitoredServiceError: Failed to fetch monitored service . Please try again by reopening the Verify Step
     autoCreateMonitoredService: Click to autocreate a monitored service
@@ -846,3 +862,4 @@ cantDeleteConnector: "Can't Delete Connector"
 policyEvaluations:
   failedToSave: Connector cannot be saved due to the policy evaluation failures
   warning: Connector saved with policy warnings
+sameCredentialsAsAbove: Same credentials as above

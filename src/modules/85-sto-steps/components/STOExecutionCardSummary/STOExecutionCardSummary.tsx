@@ -20,56 +20,80 @@ export default function STOExecutionCardSummary(
   props: ExecutionCardInfoProps<PipelineExecutionSummary>
 ): React.ReactElement {
   const { data } = props
-  const { pipelineIdentifier = '', planExecutionId: executionId = '' } = data
+  const { pipelineIdentifier = '', planExecutionId: executionId = '', status: pipelineStatus = '' } = data
 
   const { getString } = useStrings()
   const { data: issueCounts, loading, error } = useIssueCounts(pipelineIdentifier, executionId)
 
-  if (!pipelineIdentifier || !executionId) {
+  if (!pipelineIdentifier || !executionId || !pipelineStatus) {
     return <></>
   }
 
-  if (loading) {
-    return (
-      <div className={css.spinnerWrapper}>
-        <Spinner size={Spinner.SIZE_SMALL} />
-      </div>
-    )
-  }
-
-  // Determine if an informational message should be shown, instead of Security Issue counts
-  let message: JSX.Element | undefined = undefined
-  if (!issueCounts || error) {
-    if (error?.status === 404) {
-      message = <Text>{getString('stoSteps.noSecurityTests')}</Text>
-    } else {
-      message = (
-        <Text icon="error" intent="danger">
-          {getString('stoSteps.failedToGetIssueCounts')}
-        </Text>
+  switch (pipelineStatus) {
+    case 'Running':
+    case 'Waiting':
+    case 'AsyncWaiting':
+    case 'TaskWaiting':
+    case 'TimedWaiting':
+    case 'NotStarted':
+      return (
+        <div className={css.spinnerWrapper}>
+          <Spinner size={Spinner.SIZE_SMALL} />
+        </div>
       )
-    }
-  } else if (!(issueCounts?.critical || issueCounts?.high || issueCounts?.medium || issueCounts?.low)) {
-    message = (
-      <Text icon={'tick-circle'} iconProps={{ intent: 'success' }}>
-        {getString('stoSteps.noSecurityIssues')}
-      </Text>
-    )
-  }
+    case 'Success':
+      if (loading) {
+        return (
+          <div className={css.spinnerWrapper}>
+            <Spinner size={Spinner.SIZE_SMALL} />
+          </div>
+        )
+      } else {
+        // Determine if an informational message should be shown, instead of Security Issue counts
+        let message: JSX.Element | undefined = undefined
+        if (!issueCounts || error) {
+          if (error?.status === 404) {
+            message = <Text>{getString('stoSteps.noSecurityTests')}</Text>
+          } else {
+            message = (
+              <Text icon="error" intent="danger">
+                {getString('stoSteps.failedToGetIssueCounts')}
+              </Text>
+            )
+          }
+        } else if (!(issueCounts?.critical || issueCounts?.high || issueCounts?.medium || issueCounts?.low)) {
+          message = (
+            <Text icon={'tick-circle'} iconProps={{ intent: 'success' }}>
+              {getString('stoSteps.noSecurityIssues')}
+            </Text>
+          )
+        }
 
-  // Render the message
-  if (message) {
-    return <div className={css.main}>{message}</div>
+        // Render the message or display issue counts
+        if (message) {
+          return <div className={css.main}>{message}</div>
+        } else {
+          return (
+            <div className={css.main}>
+              {issueCounts?.critical ? (
+                <SeverityPill severity={SeverityCode.Critical} value={issueCounts.critical} />
+              ) : null}
+              {issueCounts?.high ? <SeverityPill severity={SeverityCode.High} value={issueCounts.high} /> : null}
+              {issueCounts?.medium ? <SeverityPill severity={SeverityCode.Medium} value={issueCounts.medium} /> : null}
+              {issueCounts?.low ? <SeverityPill severity={SeverityCode.Low} value={issueCounts.low} /> : null}
+            </div>
+          )
+        }
+      }
+    case 'Failed':
+    case 'Errored':
+    case 'Aborted':
+      return (
+        <div className={css.main}>
+          <Text>{getString('stoSteps.noSecurityTests')}</Text>
+        </div>
+      )
+    default:
+      return <div className={css.main}></div>
   }
-
-  // Otherwise, render the Security Issue counts
-  return (
-    <div className={css.main}>
-      {(issueCounts?.critical && <SeverityPill severity={SeverityCode.Critical} value={issueCounts.critical} />) ||
-        null}
-      {(issueCounts?.high && <SeverityPill severity={SeverityCode.High} value={issueCounts.high} />) || null}
-      {(issueCounts?.medium && <SeverityPill severity={SeverityCode.Medium} value={issueCounts.medium} />) || null}
-      {(issueCounts?.low && <SeverityPill severity={SeverityCode.Low} value={issueCounts.low} />) || null}
-    </div>
-  )
 }

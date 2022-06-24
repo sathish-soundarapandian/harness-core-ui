@@ -41,8 +41,13 @@ import {
   setupAzureKeyVaultNameFormData
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
+import { connectorGovernanceModalProps } from '@connectors/utils/utils'
+import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
+import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
+import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
-import { useConnectorGovernanceModal } from '@connectors/hooks/useConnectorGovernanceModal'
 
 export interface SetupVaultFormData {
   vaultName?: string
@@ -78,10 +83,9 @@ const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> 
   const { mutate: updateConnector, loading: updating } = useUpdateConnector({
     queryParams: { accountIdentifier: accountId }
   })
-  const { hideOrShowGovernanceErrorModal } = useConnectorGovernanceModal({
-    errorOutOnGovernanceWarning: false,
-    featureFlag: FeatureFlag.OPA_CONNECTOR_GOVERNANCE
-  })
+
+  const opaFlagEnabled = useFeatureFlag(FeatureFlag.OPA_CONNECTOR_GOVERNANCE)
+  const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal(connectorGovernanceModalProps())
   useEffect(() => {
     if (isEditMode && connectorInfo) {
       setupAzureKeyVaultNameFormData(connectorInfo).then(data => {
@@ -90,6 +94,7 @@ const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> 
       })
     }
   }, [isEditMode, connectorInfo])
+  useConnectorWizard({ helpPanel: { referenceId: 'AzureKeyVaultSetupVault', contentWidth: 900 } })
 
   const handleFetchEngines = async (formData: ConnectorConfigDTO): Promise<void> => {
     modalErrorHandler?.hide()
@@ -142,13 +147,17 @@ const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> 
 
       try {
         const response = isEditMode ? await updateConnector(data) : await createConnector(data)
-        const { canGoToNextStep } = await hideOrShowGovernanceErrorModal(response)
-        if (canGoToNextStep) {
+        const onSuccessCreateOrUpdateNextSteps = () => {
           nextStep?.({ ...prevStepData, ...formData })
           onConnectorCreated?.(response.data)
           isEditMode
             ? showSuccess(getString('secretManager.editmessageSuccess'))
             : showSuccess(getString('secretManager.createmessageSuccess'))
+        }
+        if (opaFlagEnabled && response.data?.governanceMetadata) {
+          conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, onSuccessCreateOrUpdateNextSteps)
+        } else {
+          onSuccessCreateOrUpdateNextSteps()
         }
       } catch (err) {
         /* istanbul ignore next */
@@ -157,10 +166,16 @@ const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> 
     }
   }
 
+  const { trackEvent } = useTelemetry()
+
+  useTrackEvent(ConnectorActions.SetupVaultLoad, {
+    category: Category.CONNECTOR
+  })
+
   return loadingFormData ? (
     <PageSpinner />
   ) : (
-    <Container padding={{ top: 'medium' }} width="64%">
+    <Container padding={{ top: 'medium' }}>
       <Text font={{ variation: FontVariation.H3 }}>{getString('connectors.azureKeyVault.labels.setupVault')}</Text>
       <Container margin={{ bottom: 'xlarge' }}>
         <ModalErrorHandler bind={setModalErrorHandler} />
@@ -173,6 +188,9 @@ const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> 
           vaultName: Yup.string().required(getString('connectors.azureKeyVault.validation.vaultName'))
         })}
         onSubmit={formData => {
+          trackEvent(ConnectorActions.SetupVaultSubmit, {
+            category: Category.CONNECTOR
+          })
           handleCreateOrEdit(formData)
         }}
       >

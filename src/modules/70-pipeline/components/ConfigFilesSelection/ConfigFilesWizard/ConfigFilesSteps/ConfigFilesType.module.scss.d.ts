@@ -18,16 +18,20 @@ declare const styles: {
   readonly configureOptions: string
   readonly connectorContainer: string
   readonly connectorForm: string
+  readonly encOption: string
   readonly existingDocker: string
   readonly firstep: string
   readonly headerContainer: string
   readonly heading: string
+  readonly identifierField: string
   readonly imagePathContainer: string
   readonly optionsViewContainer: string
   readonly optionsViewGrid: string
   readonly padSmall: string
   readonly radioGroup: string
+  readonly radioGroupContainer: string
   readonly saveBtn: string
+  readonly selectFileType: string
   readonly squareCardContainer: string
   readonly tagGroup: string
   readonly tagInputButton: string

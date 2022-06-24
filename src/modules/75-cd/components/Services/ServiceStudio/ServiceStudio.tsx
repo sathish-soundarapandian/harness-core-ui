@@ -15,6 +15,7 @@ import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/Rout
 import { ServiceContextProvider } from '@cd/context/ServiceContext'
 import ServiceDetailsSummary from '@cd/components/ServiceDetails/ServiceDetailsContent/ServiceDetailsSummary'
 import EntitySetupUsage from '@common/pages/entityUsage/EntityUsage'
+import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import ServiceConfigurationWrapper from './ServiceConfigWrapper/ServiceConfigWrapper'
 
 function ServiceStudio(): React.ReactElement | null {
@@ -42,6 +43,9 @@ function ServiceStudio(): React.ReactElement | null {
         onServiceCreate={noop}
         isServiceEntityPage={true}
         isServiceCreateModalView={false}
+        serviceCacheKey={''}
+        selectedDeploymentType={'' as ServiceDeploymentType}
+        gitOpsEnabled={false}
       >
         <ServiceConfigurationWrapper
           summaryPanel={<ServiceDetailsSummary />}

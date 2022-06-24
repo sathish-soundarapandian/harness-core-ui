@@ -41,6 +41,23 @@ remoteCacheImage:
   dockerInfo: The remote cache repository needs to be created in the same account and organization as the build image. The repository must already exist for caching to work
 remoteCacheRepository:
   label: Remote Cache Repository
+runTestsStep:
+  buildEnvironment: Build Environment
+  frameworkVersion: Framework Version
+  csharp: C#
+  java: Java
+  dotNetCore: .NET Core
+  bazel: Bazel
+  maven: Maven
+  gradle: Gradle
+  dotnet: Dotnet
+  nUnitConsole: Nunit Console
+  fivePointZero: '5.0'
+  sixPointZero: '6.0'
+  namespaces: Namespaces
+  testReportPaths: Test Report Paths
+  validation:
+    namespacesRequiredWhenCsharp: 'Namespaces is required in case Language is C#'
 runTestsMavenSetupTitle: Maven setup
 runTestsMavenSetupText1: Does your pom.xml contain <argLine>? Or do you attach Jacoco or any agent while running unit tests?
 runTestsMavenSetupText2: Update pom.xml by adding the following plugin with <harnessArgLine>
@@ -81,7 +98,7 @@ gradleNote1: |
               }
           }
   }
-gradleNote2: Test intelligence assumes ./gradlew is present in the root of the project. If not, it falls back to the gradle tool to run the tests. As long as the gradle version has test filtering support, it will be able to run test intelligence
+gradleNote2: Test intelligence assumes ./gradlew is present in the root of the project. If not, it falls back to the gradle tool to run the tests. As long as the gradle version has test filtering support, it will be able to run test intelligence.
 testSummary: Test Summary
 successful: Successful
 commitsTab:
@@ -102,6 +119,10 @@ buildInfra:
     os: Operating System
     architecture: Achitecture
     isRequiredWhen: '{{field1}} is required in case {{field2}} is provided'
+pipelineSteps:
+  build:
+    infraSpecifications:
+      whereToRunSTO: Where do you want the security tests to run?
 preCommandLabel: Pre-Command
 postCommandLabel: Post-Command
 portBindings: Port Bindings
@@ -157,6 +178,10 @@ getStartedWithCI:
   authMethodLabel: Authentication method
   selectYourRepo: Select your Repository
   createPipeline: Create Pipeline
+  gitProviderURLs:
+    github: 'https://github.com/account/'
+    gitlab: 'https://gitlab.com/account/'
+    bitbucket: 'https://bitbucket.org/'
   codebaseHelptext: Harness will clone your codebase to your build infrastructure at Pipeline runtime.
   searchRepo: Search Repository
   learnMoreAboutPermissions: Learn more about the required permissions

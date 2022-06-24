@@ -452,9 +452,8 @@ describe('ServerlessAwsLambda as deployment type', () => {
 
     // Select Stage
     cy.contains('p', 'Stage 1').click()
-    cy.wait(1000)
     cy.wait('@servicesCall')
-    cy.wait('@cdFailureStrategiesYaml')
+    cy.wait(1000)
     cy.wait('@stepLibrary')
     cy.wait(1000)
 
@@ -517,7 +516,6 @@ describe('ServerlessAwsLambda as deployment type', () => {
     cy.contains('p', 'Stage 1').click()
     cy.wait(1000)
     cy.wait('@servicesCall')
-    cy.wait('@cdFailureStrategiesYaml')
     cy.wait('@stepLibrary')
     cy.wait(1000)
 

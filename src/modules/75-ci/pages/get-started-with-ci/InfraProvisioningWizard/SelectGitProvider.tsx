@@ -209,13 +209,13 @@ const SelectGitProviderRef = (
     let url = ''
     switch (gitProvider?.type) {
       case Connectors.GITHUB:
-        url = getString('common.git.gitHubUrlPlaceholder')
+        url = getString('ci.getStartedWithCI.gitProviderURLs.github')
         break
       case Connectors.BITBUCKET:
-        url = getString('common.git.bitbucketOrgUrlPlaceholder')
+        url = getString('ci.getStartedWithCI.gitProviderURLs.bitbucket')
         break
       case Connectors.GITLAB:
-        url = getString('common.git.gitLabUrlPlaceholder')
+        url = getString('ci.getStartedWithCI.gitProviderURLs.gitlab')
         break
     }
     return url ? url.replace('/account/', '') : ''
@@ -772,6 +772,14 @@ const SelectGitProviderRef = (
                             intent={authMethod === GitAuthenticationMethod.OAuth ? 'primary' : 'none'}
                             /* Disabling till OAuth support is ready */
                             disabled={true}
+                            tooltipProps={{
+                              isDark: true
+                            }}
+                            tooltip={
+                              <Text padding="small" color={Color.WHITE}>
+                                {getString('common.comingSoon2')}
+                              </Text>
+                            }
                           />
                           <Button
                             className={css.authMethodBtn}

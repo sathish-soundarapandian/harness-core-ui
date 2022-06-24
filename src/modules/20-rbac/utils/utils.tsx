@@ -167,31 +167,43 @@ export const getScopeLevelManagedResourceGroup = (
   }
 }
 
+export const isAccountBasicRolePresent = (scope: Scope, flag: boolean): boolean => {
+  return flag && scope === Scope.ACCOUNT
+}
+
+export const isAccountBasicRole = (identifier: string): boolean => {
+  return identifier === '_account_basic'
+}
+
 export const getScopeBasedDefaultAssignment = (
   scope: Scope,
   getString: UseStringsReturn['getString'],
-  isCommunity: boolean
+  isCommunity: boolean,
+  isBasicRolePresent: boolean,
+  disableDefaultAssignment: boolean
 ): Assignment[] => {
   if (isCommunity) {
     return []
   } else {
     const resourceGroup: ResourceGroupOption = {
-      managedRoleAssignment: true,
+      managedRoleAssignment: !isBasicRolePresent,
       ...getScopeLevelManagedResourceGroup(scope, getString)
     }
     switch (scope) {
       case Scope.ACCOUNT:
-        return [
-          {
-            role: {
-              label: getString('common.accViewer'),
-              value: '_account_viewer',
-              managed: true,
-              managedRoleAssignment: true
-            },
-            resourceGroup
-          }
-        ]
+        return disableDefaultAssignment
+          ? []
+          : [
+              {
+                role: {
+                  label: getString('common.accViewer'),
+                  value: '_account_viewer',
+                  managed: true,
+                  managedRoleAssignment: !isBasicRolePresent
+                },
+                resourceGroup
+              }
+            ]
       case Scope.ORG:
         return [
           {
@@ -357,10 +369,12 @@ export const getUserGroupActionTooltipText = (
     orgIdentifier,
     projectIdentifier
   })
+  const parentScope = mapfromScopetoPrincipalScope(getScopeFromUserGroupDTO(userGroup))
+  const currentScope = mapfromScopetoPrincipalScope(scope)
   if (userGroupInherited) {
     const vars = {
-      parentScope: mapfromScopetoPrincipalScope(getScopeFromUserGroupDTO(userGroup)),
-      childScope: mapfromScopetoPrincipalScope(scope)
+      parentScope: parentScope ? parentScope.charAt(0).toUpperCase() + parentScope.slice(1) : undefined,
+      childScope: currentScope ? currentScope.charAt(0).toUpperCase() + currentScope.slice(1) : undefined
     }
     return <String stringID="rbac.unableToEditInheritedMembershipDetailed" vars={vars} />
   }
@@ -381,10 +395,11 @@ export const getUserGroupMenuOptionText = (
   userGroupInherited?: boolean
 ): React.ReactElement | undefined => {
   const { externallyManaged } = userGroup
+  const parentScope = mapfromScopetoPrincipalScope(getScopeFromUserGroupDTO(userGroup))
   if (userGroupInherited) {
     const vars = {
       action: action.toLowerCase(),
-      parentScope: mapfromScopetoPrincipalScope(getScopeFromUserGroupDTO(userGroup))
+      parentScope: parentScope ? parentScope.charAt(0).toUpperCase() + parentScope.slice(1) : undefined
     }
     return <String stringID="rbac.manageInheritedGroupText" vars={vars} />
   }

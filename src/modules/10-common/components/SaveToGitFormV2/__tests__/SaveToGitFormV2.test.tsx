@@ -45,6 +45,7 @@ describe('SaveToGitFormV2 test', () => {
         <SaveToGitFormV2
           {...pathParams}
           isEditing={false}
+          disableCreatingNewBranch={false}
           resource={{
             type: 'Pipelines',
             name: 'testPipeline',

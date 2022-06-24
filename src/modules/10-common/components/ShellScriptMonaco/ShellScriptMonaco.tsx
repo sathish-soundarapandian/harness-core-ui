@@ -8,6 +8,7 @@
 import React from 'react'
 import type { MonacoEditorProps } from 'react-monaco-editor'
 import { Dialog, Classes } from '@blueprintjs/core'
+import cx from 'classnames'
 import { FormikProps, connect } from 'formik'
 import { get } from 'lodash-es'
 import { Button } from '@wings-software/uicore'
@@ -31,6 +32,7 @@ export interface ShellScriptMonacoProps {
   name: string
   disabled?: boolean
   expressions?: string[]
+  className?: string
 }
 
 export interface ConnectedShellScriptMonacoProps extends ShellScriptMonacoProps {
@@ -40,7 +42,7 @@ export interface ConnectedShellScriptMonacoProps extends ShellScriptMonacoProps 
 const VAR_REGEX = /.*<\+.*?/
 
 export function ShellScriptMonaco(props: ConnectedShellScriptMonacoProps): React.ReactElement {
-  const { scriptType, formik, name, disabled, expressions, title } = props
+  const { scriptType, formik, name, disabled, expressions, title, className } = props
   const [isFullScreen, setFullScreen] = React.useState(false)
   const { getString } = useStrings()
   const value = get(formik.values, name) || ''
@@ -88,7 +90,7 @@ export function ShellScriptMonaco(props: ConnectedShellScriptMonacoProps): React
 
   const editor = (
     <div
-      className={css.monacoWrapper}
+      className={cx(css.monacoWrapper, !isFullScreen && className)}
       onKeyDown={event => {
         if (event.key === 'Enter') {
           event.stopPropagation()

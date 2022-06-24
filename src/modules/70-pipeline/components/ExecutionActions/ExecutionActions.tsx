@@ -28,10 +28,12 @@ import {
 import { getFeaturePropsForRunPipelineButton } from '@pipeline/utils/runPipelineUtils'
 import { useStrings } from 'framework/strings'
 import type { StringKeys } from 'framework/strings'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 
-import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { ExecutionPathProps, GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import RetryPipeline from '../RetryPipeline/RetryPipeline'
 import { useRunPipelineModal } from '../RunPipelineModal/useRunPipelineModal'
+import { useExecutionCompareContext } from '../ExecutionCompareYamls/ExecutionCompareContext'
 import css from './ExecutionActions.module.scss'
 
 const commonButtonProps: ButtonProps = {
@@ -64,8 +66,10 @@ export interface ExecutionActionsProps {
   modules?: string[]
   showEditButton?: boolean
   isPipelineInvalid?: boolean
+  source: ExecutionPathProps['source']
+  onViewCompiledYaml?: () => void
+  onCompareYamls?: () => void
 }
-
 function getValidExecutionActions(canExecute: boolean, executionStatus?: ExecutionStatus) {
   return {
     canAbort: isExecutionActive(executionStatus) && canExecute,
@@ -135,8 +139,11 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
     stageName,
     canRetry = false,
     modules,
+    source,
     showEditButton = true,
-    isPipelineInvalid
+    isPipelineInvalid,
+    onViewCompiledYaml,
+    onCompareYamls
   } = props
   const {
     orgIdentifier,
@@ -149,8 +156,8 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
     repoIdentifier,
     connectorRef,
     repoName,
-    stagesExecuted,
-    storeType
+    storeType,
+    stagesExecuted
   } = params
   const { mutate: interrupt } = useHandleInterrupt({
     planExecutionId: executionIdentifier
@@ -163,6 +170,8 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
   const { showSuccess, showError, clear } = useToaster()
   const { getString } = useStrings()
   const location = useLocation()
+  const { isGitSyncEnabled } = useAppStore()
+  const { isCompareMode } = useExecutionCompareContext()
 
   const { openDialog: openAbortDialog } = useConfirmationDialog({
     cancelButtonText: getString('cancel'),
@@ -184,6 +193,7 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
   const interruptMethod = stageId ? stageInterrupt : interrupt
 
   const executionPipelineViewRoute = routes.toExecutionPipelineView({
+    source,
     orgIdentifier,
     pipelineIdentifier,
     executionIdentifier,
@@ -276,10 +286,11 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
   const { openRunPipelineModal } = useRunPipelineModal({
     pipelineIdentifier,
     executionId: executionIdentifier,
-    repoIdentifier: defaultTo(repoIdentifier, repoName),
+    repoIdentifier: isGitSyncEnabled ? repoIdentifier : repoName,
     branch,
-    stagesExecuted,
-    storeType
+    connectorRef,
+    storeType,
+    stagesExecuted
   })
 
   /*--------------------------------------Run Pipeline---------------------------------------------*/
@@ -373,6 +384,16 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
             <MenuItem text={getString(pauseText)} onClick={pausePipeline} disabled={!canPause} />
             <MenuItem text={getString(abortText)} onClick={openAbortDialog} disabled={!canAbort} />
             <MenuItem text={getString(resumeText)} onClick={resumePipeline} disabled={!canResume} />
+            {onViewCompiledYaml && (
+              <MenuItem text={getString('pipeline.execution.actions.viewCompiledYaml')} onClick={onViewCompiledYaml} />
+            )}
+            {onCompareYamls && (
+              <MenuItem
+                text={getString('pipeline.execution.actions.compareYamls')}
+                onClick={onCompareYamls}
+                disabled={isCompareMode}
+              />
+            )}
             {showRetryPipeline() && (
               <RbacMenuItem
                 featuresProps={getFeaturePropsForRunPipelineButton({ modules, getString })}

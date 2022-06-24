@@ -10,6 +10,5 @@ declare const styles: {
   readonly cloneForm: string
   readonly error: string
   readonly form: string
-  readonly section: string
 }
 export default styles

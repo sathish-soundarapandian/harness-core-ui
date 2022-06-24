@@ -1,11 +1,12 @@
 import {
   cdFailureStrategiesYaml,
   gitSyncEnabledCall,
+  pageHeaderClassName,
   pipelinesRoute,
   pipelineVariablesCall
 } from '../../support/70-pipeline/constants'
 
-describe.skip('Pipeline Variables', () => {
+describe('Pipeline Variables', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -20,6 +21,7 @@ describe.skip('Pipeline Variables', () => {
     cy.initializeRoute()
 
     cy.visit(pipelinesRoute)
+    cy.visitPageAssertion(pageHeaderClassName)
 
     cy.contains('span', 'Create a Pipeline').click()
 
@@ -34,7 +36,6 @@ describe.skip('Pipeline Variables', () => {
     cy.clickSubmit()
 
     cy.contains('span', 'Variables').click()
-    cy.wait('@cdFailureStrategiesYaml')
 
     cy.intercept('POST', pipelineVariablesCall, {
       fixture: 'pipeline/api/runpipeline/pipelines.variables'
@@ -72,7 +73,8 @@ describe.skip('Pipeline Variables', () => {
 
     cy.get('input[name="variables[0].value"]').fillField('variables[0].value', 'test1')
 
-    cy.get('div[data-testid="pipeline.variables-panel"]').get('.MultiTypeInput--FIXED').eq(1).click({ force: true })
+    cy.get('div[data-testid="pipeline.variables-panel"]').get('.MultiTypeInput--FIXED').click()
+    cy.findByText('Runtime input').click({ force: true })
 
     cy.get('.bp3-menu>li>a').eq(1).click({ force: true })
     cy.wait(1000)
@@ -103,7 +105,8 @@ describe.skip('Pipeline Variables', () => {
 
     cy.get('input[name="variables[0].value"]').fillField('variables[0].value', 'test1')
 
-    cy.get('div[data-testid="pipeline.variables-panel"]').get('.MultiTypeInput--FIXED').eq(1).click({ force: true })
+    cy.get('div[data-testid="pipeline.variables-panel"]').get('.MultiTypeInput--FIXED').click()
+    cy.findByText('Runtime input').click({ force: true })
 
     cy.get('.bp3-menu>li>a').eq(1).click({ force: true })
     cy.wait(1000)

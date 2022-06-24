@@ -6,61 +6,67 @@
  */
 
 import React, { useState } from 'react'
-import { MultiSelectOption, Layout, Checkbox, MultiSelect, Radio } from '@harness/uicore'
-import produce from 'immer'
-import { defaultTo } from 'lodash-es'
+import { Layout, Checkbox, Radio, Button, ButtonVariation } from '@harness/uicore'
 import { SelectionType } from '@rbac/utils/utils'
 import { useStrings } from 'framework/strings'
-import { useGetProjectList } from 'services/cd-ng'
 import type { ScopeSelector } from 'services/resourcegroups'
+import { useProjectSelectionModal } from '@rbac/modals/ProjectSelectionRenderer/useProjectSelection'
+import AccountProjectSelectionRenderer from './AccountProjectSelectionRenderer'
 
 interface OrgSelectionRendererProps {
   accountIdentifier: string
   orgIdentifier: string
-  index: number
-  setSelectedScopes: React.Dispatch<React.SetStateAction<ScopeSelector[][]>>
+  onChange: (scopes: ScopeSelector[]) => void
   includeProjects?: boolean
   projects?: string[]
 }
+
 const OrgSelectionRenderer: React.FC<OrgSelectionRendererProps> = ({
   accountIdentifier,
   orgIdentifier,
   includeProjects,
-  projects,
-  index,
-  setSelectedScopes
+  projects = [],
+  onChange
 }) => {
   const { getString } = useStrings()
-  const [searchTerm, setSearchTerm] = useState('')
-  const { data } = useGetProjectList({
-    queryParams: {
-      accountIdentifier,
-      orgIdentifier,
-      searchTerm
-    },
-    debounce: 300
-  })
   const [includeProjectResources, setIncludeProjectResources] = useState(includeProjects)
   const [projectSelection, setProjectSelection] = useState<SelectionType>(
     projects?.length ? SelectionType.SPECIFIED : SelectionType.ALL
   )
-  const projectOpts: MultiSelectOption[] = defaultTo(
-    /* istanbul ignore next */ data?.data?.content?.map(res => ({
-      label: res.project.name,
-      value: res.project.identifier
-    })),
-    []
-  )
 
-  /* istanbul ignore next */ const selectedScopes = data?.data?.content?.reduce((acc: MultiSelectOption[], curr) => {
-    if (projects?.includes(curr.project.identifier)) {
-      acc.push({
-        label: curr.project.name,
-        value: curr.project.identifier
-      })
-    }
-    return acc
-  }, [])
+  const onProjectChange = (items: string[]): void => {
+    onChange(
+      items.length === 0
+        ? [including_child_scopes]
+        : [
+            excluding_child_scopes,
+            ...items.map(
+              item =>
+                ({
+                  accountIdentifier,
+                  orgIdentifier,
+                  projectIdentifier: item,
+                  filter: 'EXCLUDING_CHILD_SCOPES'
+                } as ScopeSelector)
+            )
+          ]
+    )
+  }
+
+  const { openProjectSelectionModal } = useProjectSelectionModal({
+    onSuccess: onProjectChange
+  })
+
+  const excluding_child_scopes: ScopeSelector = {
+    accountIdentifier,
+    orgIdentifier,
+    filter: 'EXCLUDING_CHILD_SCOPES'
+  }
+  const including_child_scopes: ScopeSelector = {
+    accountIdentifier,
+    orgIdentifier,
+    filter: 'INCLUDING_CHILD_SCOPES'
+  }
 
   return (
     <Layout.Vertical padding={{ top: 'medium' }}>
@@ -70,22 +76,23 @@ const OrgSelectionRenderer: React.FC<OrgSelectionRendererProps> = ({
         checked={includeProjectResources}
         onChange={event => {
           setIncludeProjectResources(event.currentTarget.checked)
-          setSelectedScopes(oldVal =>
-            produce(oldVal, draft => {
-              draft[index] = [
-                {
-                  accountIdentifier,
-                  orgIdentifier,
-                  filter: event?.currentTarget?.checked ? 'INCLUDING_CHILD_SCOPES' : 'EXCLUDING_CHILD_SCOPES'
-                }
-              ]
-            })
-          )
+          onChange([
+            {
+              accountIdentifier,
+              orgIdentifier,
+              filter: event?.currentTarget?.checked ? 'INCLUDING_CHILD_SCOPES' : 'EXCLUDING_CHILD_SCOPES'
+            }
+          ])
         }}
       />
       {includeProjectResources && (
         <Layout.Vertical spacing="small" padding={{ top: 'xsmall' }}>
-          <Layout.Horizontal spacing="huge" margin={{ left: 'xxlarge' }}>
+          <Layout.Horizontal
+            spacing="huge"
+            margin={{ left: 'xxlarge' }}
+            padding={{ left: 'large' }}
+            flex={{ justifyContent: 'flex-start' }}
+          >
             <Radio
               label={getString('rbac.resourceGroup.all')}
               data-testid={`${orgIdentifier}-INCLUDE-ALL-PROJECTS`}
@@ -93,17 +100,7 @@ const OrgSelectionRenderer: React.FC<OrgSelectionRendererProps> = ({
               value={SelectionType.ALL}
               checked={projectSelection === SelectionType.ALL}
               onChange={e => {
-                setSelectedScopes(oldVal =>
-                  produce(oldVal, draft => {
-                    draft[index] = [
-                      {
-                        accountIdentifier,
-                        orgIdentifier,
-                        filter: 'INCLUDING_CHILD_SCOPES'
-                      }
-                    ]
-                  })
-                )
+                onChange([including_child_scopes])
                 setProjectSelection(e.currentTarget.value as SelectionType)
               }}
             />
@@ -114,69 +111,28 @@ const OrgSelectionRenderer: React.FC<OrgSelectionRendererProps> = ({
               value={SelectionType.SPECIFIED}
               checked={projectSelection === SelectionType.SPECIFIED}
               onChange={e => {
-                setSelectedScopes(oldVal =>
-                  produce(oldVal, draft => {
-                    draft[index] = [
-                      {
-                        accountIdentifier,
-                        orgIdentifier,
-                        filter: 'EXCLUDING_CHILD_SCOPES'
-                      }
-                    ]
-                  })
-                )
+                onChange([excluding_child_scopes])
                 setProjectSelection(e.currentTarget.value as SelectionType)
               }}
             />
+            {projectSelection === SelectionType.SPECIFIED && (
+              <Button
+                text={getString('plusNumber', { number: getString('add') })}
+                variation={ButtonVariation.LINK}
+                onClick={() => {
+                  openProjectSelectionModal(projects, { accountIdentifier, orgIdentifier })
+                }}
+              />
+            )}
           </Layout.Horizontal>
-          {projectSelection === SelectionType.SPECIFIED && (
-            <MultiSelect
-              fill
-              items={projectOpts}
-              value={selectedScopes}
-              onQueryChange={
-                /* istanbul ignore next */ item => {
-                  setSearchTerm(item)
-                }
-              }
-              allowCreatingNewItems={false}
-              onChange={
-                /* istanbul ignore next */ items => {
-                  setSelectedScopes(oldVal =>
-                    produce(oldVal, draft => {
-                      draft[index] =
-                        items.length === 0
-                          ? [
-                              {
-                                accountIdentifier,
-                                orgIdentifier,
-                                filter: 'INCLUDING_CHILD_SCOPES'
-                              }
-                            ]
-                          : [
-                              {
-                                accountIdentifier,
-                                orgIdentifier,
-                                filter: 'EXCLUDING_CHILD_SCOPES'
-                              },
-                              ...items.map(
-                                item =>
-                                  ({
-                                    accountIdentifier,
-                                    orgIdentifier,
-                                    projectIdentifier: item.value.toString(),
-                                    filter: 'EXCLUDING_CHILD_SCOPES'
-                                  } as ScopeSelector)
-                              )
-                            ]
-                    })
-                  )
-                }
-              }
-            />
-          )}
         </Layout.Vertical>
       )}
+      <AccountProjectSelectionRenderer
+        projects={projects}
+        onDelete={project => {
+          onProjectChange(projects.filter(id => id !== project))
+        }}
+      />
     </Layout.Vertical>
   )
 }

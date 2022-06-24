@@ -71,7 +71,9 @@ export function ShellScriptWidget(
       ...initialValues.spec,
       executionTarget: {
         ...initialValues.spec.executionTarget,
-        connectorRef: undefined
+        connectorRef:
+          (initialValues.spec.executionTarget?.connectorRef?.value as string) ||
+          initialValues.spec.executionTarget?.connectorRef?.toString()
       }
     }
   }

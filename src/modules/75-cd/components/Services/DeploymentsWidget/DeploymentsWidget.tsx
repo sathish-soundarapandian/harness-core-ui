@@ -302,8 +302,13 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
                     margin={{ right: 'xsmall' }}
                     data-test="tickerText"
                   >
-                    {item.value}
+                    {index ? item.value : `${item.value}%`}
                   </Text>
+                  {index ? (
+                    <Text font={{ size: 'xsmall' }} className={css.unitText}>
+                      {getString('cd.serviceDashboard.unitDay')}
+                    </Text>
+                  ) : null}
                 </Ticker>
               </Layout.Vertical>
             )

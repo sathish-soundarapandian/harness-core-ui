@@ -12,16 +12,19 @@ import {
   queryByAttribute,
   fireEvent,
   findByText as findByTextGlobal,
-  act
+  act,
+  screen
 } from '@testing-library/react'
 import { useLocation } from 'react-router-dom'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
 import routes from '@common/RouteDefinitions'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
-import { useGetListOfExecutions } from 'services/pipeline-ng'
+import { useGetListOfExecutions, useGetExecutionData } from 'services/pipeline-ng'
 
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
+import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
 import PipelineDeploymentList from '../PipelineDeploymentList'
 import data from './execution-list.json'
 import pipelines from '../../../components/PipelineModalListView/__tests__/RunPipelineListViewMocks'
@@ -38,6 +41,10 @@ jest.mock('@pipeline/components/Dashboards/BuildExecutionsChart/PipelineBuildExe
 
 const mockGetCallFunction = jest.fn()
 
+jest.mock('react-monaco-editor', () => ({
+  MonacoDiffEditor: MonacoEditor
+}))
+
 jest.mock('services/pipeline-ng', () => ({
   useGetListOfExecutions: jest.fn(() => ({
     mutate: jest.fn(() => Promise.resolve(data)),
@@ -49,6 +56,10 @@ jest.mock('services/pipeline-ng', () => ({
     return { mutate: jest.fn(() => Promise.resolve(pipelines)), cancel: jest.fn(), loading: false }
   }),
   useHandleInterrupt: jest.fn(() => ({})),
+  useGetExecutionData: jest.fn().mockImplementation(() => ({
+    data: jest.fn(() => Promise.resolve({ executionYaml: 'testyaml' })),
+    loading: false
+  })),
   useHandleStageInterrupt: jest.fn(() => ({})),
   useGetFilterList: jest.fn().mockImplementation(() => {
     return { mutate: jest.fn(() => Promise.resolve(filters)), loading: false }
@@ -127,7 +138,7 @@ describe('Test Pipeline Deployment list', () => {
   })
 
   test('should render deployment list', async () => {
-    const { container, findByText } = render(
+    const { container, findAllByText } = render(
       <TestWrapper
         path={routes.toPipelineDeploymentList({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })}
         pathParams={{
@@ -142,7 +153,7 @@ describe('Test Pipeline Deployment list', () => {
         <PipelineDeploymentList onRunPipeline={jest.fn()} />
       </TestWrapper>
     )
-    await waitFor(() => findByText('http_pipeline', { selector: '.pipelineName' }))
+    await waitFor(() => findAllByText('http_pipeline', { selector: '.pipelineName' }))
     expect(container).toMatchSnapshot()
   })
 
@@ -431,5 +442,41 @@ describe('Test Pipeline Deployment list', () => {
         branch: undefined
       }
     })
+  })
+
+  test('should compare executions of various deployments', async () => {
+    render(
+      <TestWrapper {...testWrapperProps}>
+        <ComponentWrapper />
+      </TestWrapper>
+    )
+    await waitFor(() => screen.findAllByText('http_pipeline', { selector: '.pipelineName' }))
+
+    const moreOptions = screen.getAllByRole('button', {
+      name: /more/i
+    })[0]
+    expect(moreOptions).toBeInTheDocument()
+    userEvent.click(moreOptions)
+    const compareYamls = await screen.findByText('pipeline.execution.actions.compareYamls')
+    userEvent.click(compareYamls)
+
+    expect(screen.getByText('pipeline.execution.compareExecutionsTitle')).toBeInTheDocument()
+    const compareButton = screen.getByRole('button', {
+      name: /compare/i
+    })
+    expect(compareButton).toBeDisabled() // disabled until two checkboxes are selected
+
+    const checkboxesForCompare = screen.getAllByRole('checkbox')
+    expect(checkboxesForCompare[0]).toBeChecked() // auto selected for the execution chosen for compare
+    userEvent.click(checkboxesForCompare[1])
+    expect(compareButton).toBeEnabled() // enabled once two items are chosen
+    expect(checkboxesForCompare[2]).toBeDisabled()
+    userEvent.click(checkboxesForCompare[0]) // unselect one of two items
+    userEvent.click(checkboxesForCompare[2]) // click happened with item being selected
+
+    expect(compareButton).toBeEnabled() // enabled once two items are chosen
+    userEvent.click(compareButton) // click happened with compare being enabled
+    expect(useGetExecutionData).toHaveBeenCalled()
+    expect(screen.getByTestId('execution-compare-yaml-viewer')).toBeInTheDocument()
   })
 })

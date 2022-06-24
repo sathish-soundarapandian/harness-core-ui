@@ -57,8 +57,8 @@ export function ConfigFilesWizard({
     >
       <ConfigFilesConnector
         configFilesStoreTypes={types}
-        name={getString('pipeline.configFiles.title')}
-        stepName={getString('pipeline.configFiles.title')}
+        name={getString('pipeline.configFiles.source')}
+        stepName={getString('pipeline.configFiles.source')}
         // name={'Config File Details'}
         // stepName={'Config File Details'}
         // selectedConfigFile={selectedConfigFile}

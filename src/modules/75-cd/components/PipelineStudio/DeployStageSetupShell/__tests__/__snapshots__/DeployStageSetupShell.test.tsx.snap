@@ -198,23 +198,34 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
           >
             <span
               class="title"
-              data-completed="true"
+              data-completed="false"
             >
               <span
-                class="bp3-icon bp3-icon-tick StyledProps--main"
-                icon="tick"
+                class="bp3-icon StyledProps--main"
+                data-icon="advanced"
               >
                 <svg
-                  data-icon="tick"
                   height="16"
                   viewBox="0 0 16 16"
                   width="16"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <desc>
-                    tick
-                  </desc>
                   <path
-                    d="M14 3c-.28 0-.53.11-.71.29L6 10.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l8-8A1.003 1.003 0 0014 3z"
+                    clip-rule="evenodd"
+                    d="M3.557 4.017a.5.5 0 00-.5.492v7.005a.5.5 0 00.5.507h8.98a.5.5 0 00.5-.5l.001-2.554a.5.5 0 111 0v2.554a1.5 1.5 0 01-1.5 1.5h-8.98a1.5 1.5 0 01-1.5-1.522V4.495a1.5 1.5 0 011.5-1.478h2.951a.5.5 0 010 1H3.557z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                  <path
+                    clip-rule="evenodd"
+                    d="M11.002 3.694a1.3 1.3 0 100 2.6 1.3 1.3 0 000-2.6zm-2.3 1.3a2.3 2.3 0 114.6 0 2.3 2.3 0 01-4.6 0z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                  <path
+                    clip-rule="evenodd"
+                    d="M10.502 2.949v-.953h1v.953h-1zm0 5.051V6.98h1V8h-1zm2.549-3.502h.953v1h-.953v-1zM8 4.498h1.02v1H8v-1zm4.805 1.596l.674.674-.708.707-.673-.674.707-.707zM9.233 2.522l.722.722-.708.707-.721-.722.707-.707zm2.865.674l.673-.674.708.708-.674.673-.707-.707zM8.526 6.768l.722-.722.707.708-.722.721-.707-.707z"
+                    fill="currentColor"
                     fill-rule="evenodd"
                   />
                 </svg>
@@ -234,7 +245,7 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
             class="deployStage"
           >
             <div
-              class="contentSection"
+              class="contentSection paddedSection"
             >
               <div
                 class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xlarge StyledProps--margin-left-xlarge"
@@ -355,7 +366,7 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
                     class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-flex-start"
                   >
                     <div
-                      class="bp3-form-group bp3-disabled"
+                      class="bp3-form-group"
                     >
                       <label
                         class="bp3-label"
@@ -395,43 +406,9 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
                               />
                             </div>
                           </div>
-                          <button
-                            class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
-                            disabled=""
-                          >
-                            <span
-                              class="bp3-icon StyledProps--main"
-                              data-icon="runtime-input"
-                            >
-                              <svg
-                                height="12"
-                                viewBox="0 0 10 7.97"
-                                width="12"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M8.14 4L8 3.72a2.53 2.53 0 01-.12-.3l-.16-.35c-.11-.25-.22-.38-.32-.38s-.28.15-.37.44C7 3.1 7 3.07 7 3a.73.73 0 01.24-.46.66.66 0 01.42-.26c.25 0 .5.35.76 1.05l.07.17.07-.12c.47-.73.86-1.1 1.18-1.1a.71.71 0 01.29.07l-.4.42h-.11c-.24 0-.52.28-.86.83l-.09.16.07.2c.29.79.53 1.18.71 1.18s.31-.12.4-.36q.09.06.09.12t-.27.39a.74.74 0 01-.45.23c-.25 0-.51-.36-.77-1.07l-.12-.25-.1.17c-.44.76-.87 1.14-1.28 1.14a.65.65 0 01-.39-.12L6.84 5a.32.32 0 00.23.1c.25 0 .53-.25.83-.74l.17-.28zm-4-.32L1.7.59h2.47S5 .52 5.35 1a3.28 3.28 0 01.42 1.14h.31L5.94 0H0v.31l3.06 3.74L0 7.62V8h6.08l.38-2.36-.31-.07a2.43 2.43 0 01-.52 1c-.42.48-2 .41-2 .41H1.39z"
-                                  fill="current-color"
-                                />
-                              </svg>
-                            </span>
-                          </button>
                         </div>
                       </div>
                     </div>
-                    <button
-                      class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
-                      disabled=""
-                      id="add-new-service"
-                      tabindex="-1"
-                      type="button"
-                    >
-                      <span
-                        class="bp3-button-text"
-                      >
-                        cd.pipelineSteps.serviceTab.plusNewService
-                      </span>
-                    </button>
                   </div>
                 </div>
               </div>
@@ -454,7 +431,7 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
                   class="Layout--horizontal StyledProps--main StyledProps--margin-top-medium"
                 >
                   <div
-                    class="Layout--vertical StyledProps--main StyledProps--border StyledProps--border-right StyledProps--margin-right-huge StyledProps--padding-right-huge"
+                    class="Layout--vertical StyledProps--main StyledProps--padding-right-huge"
                   >
                     <div
                       class="tabSubHeading ng-tooltip-native"
@@ -541,74 +518,10 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
                           value="NativeHelm"
                         />
                       </label>
-                      <label
-                        class="Thumbnail--squareCardContainer"
-                      >
-                        <div
-                          class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
-                          tabindex="0"
-                        >
-                          <span
-                            class="bp3-icon StyledProps--main"
-                            data-icon="secret-ssh"
-                          >
-                            <svg
-                              height="26"
-                              viewBox="0 0 89 73"
-                              width="26"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <g
-                                fill="none"
-                                fill-rule="evenodd"
-                                transform="translate(-1 -1)"
-                              >
-                                <path
-                                  d="M86 0H5a5 5 0 00-5 5v65a5 5 0 005 5h81a5 5 0 005-5V5a5 5 0 00-5-5z"
-                                  fill="#1C1C28"
-                                  fill-rule="nonzero"
-                                />
-                                <path
-                                  d="M5 2h81a3 3 0 013 3v65a3 3 0 01-3 3H5a3 3 0 01-3-3V5a3 3 0 013-3z"
-                                  fill="#FFE981"
-                                  fill-rule="nonzero"
-                                />
-                                <path
-                                  d="M69.5 16.5v2H.5v-2zm16.5 0v2H74v-2zM7 6a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1zm6 0a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1zm6 0a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1zm6 0a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1zm6 0a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1zm6 0a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1zm6 0a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1zm6 0a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1zm6 0a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1zm6 0a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1zm6 0a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1zm6 0a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1zm6 0a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1zm6 0a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1z"
-                                  fill="#1C1C28"
-                                  fill-rule="nonzero"
-                                />
-                                <path
-                                  d="M16.2 52.8c.633 0 1.167-.217 1.6-.65l8.4-8.4c.067-.067.1-.117.1-.15.167-.167.3-.383.4-.65.1-.267.15-.517.15-.75v-.05c0-.333-.067-.633-.2-.9-.133-.3-.283-.517-.45-.65l-8.4-8.4c-.2-.2-.442-.35-.725-.45a3.922 3.922 0 00-.875-.2c-.567-.033-1.083.183-1.55.65-.233.2-.408.45-.525.75a2.34 2.34 0 00-.175.85c0 .6.233 1.133.7 1.6l4.75 4.75c.567.567.85 1.242.85 2.025 0 .783-.283 1.458-.85 2.025l-.975.975c-.317.317-.642.625-.975.925-.467.467-.933.942-1.4 1.425-.467.483-.933.958-1.4 1.425-.4.4-.633.933-.7 1.6 0 .3.067.583.2.85s.3.517.5.75c.167.2.4.358.7.475.3.117.583.175.85.175z"
-                                  fill="#22272D"
-                                  fill-rule="nonzero"
-                                />
-                                <rect
-                                  fill="#1C1C28"
-                                  height="3"
-                                  rx="1.5"
-                                  width="40"
-                                  x="28"
-                                  y="50"
-                                />
-                              </g>
-                            </svg>
-                          </span>
-                        </div>
-                        <p
-                          class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
-                        >
-                          pipeline.serviceDeploymentTypes.ssh
-                        </p>
-                        <input
-                          type="checkbox"
-                          value="Ssh"
-                        />
-                      </label>
                     </div>
                   </div>
                   <div
-                    class="Layout--vertical StyledProps--main"
+                    class="Layout--vertical StyledProps--main StyledProps--border StyledProps--border-left StyledProps--padding-left-huge"
                   >
                     <div
                       class="Layout--horizontal StyledProps--main"
@@ -619,7 +532,7 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
                         common.comingSoon
                       </div>
                       <div
-                        class="tabSubHeading ng-tooltip-native"
+                        class="tabSubHeading currentGenSupported ng-tooltip-native"
                         data-tooltip-id="supportedInFirstGeneration"
                       >
                         common.currentlySupportedOn
@@ -1034,6 +947,83 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
                                 disabled=""
                                 type="checkbox"
                                 value="awsCodeDeploy"
+                              />
+                            </label>
+                          </div>
+                        </span>
+                      </span>
+                      <span
+                        class="bp3-popover-wrapper"
+                      >
+                        <span
+                          class="bp3-popover-target"
+                        >
+                          <div
+                            class=""
+                            tabindex="0"
+                          >
+                            <label
+                              class="Thumbnail--squareCardContainer"
+                            >
+                              <div
+                                class="bp3-card bp3-elevation-0 Card--card Thumbnail--squareCard Card--disabled"
+                              >
+                                <span
+                                  class="bp3-icon StyledProps--main"
+                                  data-icon="secret-ssh"
+                                >
+                                  <svg
+                                    height="26"
+                                    viewBox="0 0 89 73"
+                                    width="26"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <g
+                                      fill="none"
+                                      fill-rule="evenodd"
+                                      transform="translate(-1 -1)"
+                                    >
+                                      <path
+                                        d="M86 0H5a5 5 0 00-5 5v65a5 5 0 005 5h81a5 5 0 005-5V5a5 5 0 00-5-5z"
+                                        fill="#1C1C28"
+                                        fill-rule="nonzero"
+                                      />
+                                      <path
+                                        d="M5 2h81a3 3 0 013 3v65a3 3 0 01-3 3H5a3 3 0 01-3-3V5a3 3 0 013-3z"
+                                        fill="#FFE981"
+                                        fill-rule="nonzero"
+                                      />
+                                      <path
+                                        d="M69.5 16.5v2H.5v-2zm16.5 0v2H74v-2zM7 6a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1zm6 0a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1zm6 0a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1zm6 0a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1zm6 0a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1zm6 0a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1zm6 0a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1zm6 0a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1zm6 0a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1zm6 0a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1zm6 0a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1zm6 0a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1zm6 0a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1zm6 0a1 1 0 011 1v5a1 1 0 01-2 0V7a1 1 0 011-1z"
+                                        fill="#1C1C28"
+                                        fill-rule="nonzero"
+                                      />
+                                      <path
+                                        d="M16.2 52.8c.633 0 1.167-.217 1.6-.65l8.4-8.4c.067-.067.1-.117.1-.15.167-.167.3-.383.4-.65.1-.267.15-.517.15-.75v-.05c0-.333-.067-.633-.2-.9-.133-.3-.283-.517-.45-.65l-8.4-8.4c-.2-.2-.442-.35-.725-.45a3.922 3.922 0 00-.875-.2c-.567-.033-1.083.183-1.55.65-.233.2-.408.45-.525.75a2.34 2.34 0 00-.175.85c0 .6.233 1.133.7 1.6l4.75 4.75c.567.567.85 1.242.85 2.025 0 .783-.283 1.458-.85 2.025l-.975.975c-.317.317-.642.625-.975.925-.467.467-.933.942-1.4 1.425-.467.483-.933.958-1.4 1.425-.4.4-.633.933-.7 1.6 0 .3.067.583.2.85s.3.517.5.75c.167.2.4.358.7.475.3.117.583.175.85.175z"
+                                        fill="#22272D"
+                                        fill-rule="nonzero"
+                                      />
+                                      <rect
+                                        fill="#1C1C28"
+                                        height="3"
+                                        rx="1.5"
+                                        width="40"
+                                        x="28"
+                                        y="50"
+                                      />
+                                    </g>
+                                  </svg>
+                                </span>
+                              </div>
+                              <p
+                                class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey500 StyledProps--margin-top-small"
+                              >
+                                pipeline.serviceDeploymentTypes.ssh
+                              </p>
+                              <input
+                                disabled=""
+                                type="checkbox"
+                                value="Ssh"
                               />
                             </label>
                           </div>

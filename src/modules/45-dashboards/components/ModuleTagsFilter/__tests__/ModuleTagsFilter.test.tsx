@@ -10,12 +10,22 @@ import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as useFeatureFlag from '@common/hooks/useFeatureFlag'
+import type { MappedDashboardTagOptions } from '@dashboards/types/DashboardTypes'
 import ModuleTagsFilter, { ModuleTagsFilterProps } from '../ModuleTagsFilter'
+
+const DEFAULT_FILTER: MappedDashboardTagOptions = {
+  HARNESS: false,
+  CE: false,
+  CD: false,
+  CI: false,
+  CF: false,
+  CG_CD: false
+}
 
 const renderComponent = (props: Partial<ModuleTagsFilterProps> = {}): RenderResult =>
   render(
     <TestWrapper>
-      <ModuleTagsFilter selectedFilter={{}} setPredefinedFilter={jest.fn()} {...props} />
+      <ModuleTagsFilter selectedFilter={DEFAULT_FILTER} setPredefinedFilter={jest.fn()} {...props} />
     </TestWrapper>
   )
 
@@ -80,7 +90,8 @@ describe('ModuleTagsFilter', () => {
       CE: true,
       CI: true,
       CD: false,
-      CF: false
+      CF: false,
+      CG_CD: false
     }
     renderComponent({ selectedFilter })
 

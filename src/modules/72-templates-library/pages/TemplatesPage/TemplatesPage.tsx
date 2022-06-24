@@ -30,7 +30,7 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { NewTemplatePopover } from '@templates-library/pages/TemplatesPage/views/NewTemplatePopover/NewTemplatePopover'
 import { DeleteTemplateModal } from '@templates-library/components/DeleteTemplateModal/DeleteTemplateModal'
 import routes from '@common/RouteDefinitions'
-import { useMutateAsGet } from '@common/hooks'
+import { useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
 import TemplatesView from '@templates-library/pages/TemplatesPage/views/TemplatesView/TemplatesView'
 import ResultsViewHeader from '@templates-library/pages/TemplatesPage/views/ResultsViewHeader/ResultsViewHeader'
@@ -41,17 +41,16 @@ import { getScopeFromDTO } from '@common/components/EntityReference/EntityRefere
 import { getAllowedTemplateTypes, TemplateType } from '@templates-library/utils/templatesUtils'
 import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import css from './TemplatesPage.module.scss'
 
 export default function TemplatesPage(): React.ReactElement {
   const { getString } = useStrings()
   const history = useHistory()
+  const { templateType } = useQueryParams<{ templateType?: TemplateType }>()
+  const { updateQueryParams } = useUpdateQueryParams<{ templateType?: TemplateType }>()
   const [page, setPage] = useState(0)
   const [view, setView] = useState<Views>(Views.GRID)
   const [sort, setSort] = useState<string[]>([SortFields.LastUpdatedAt, Sort.DESC])
-  const [type, setType] = useState<keyof typeof TemplateType | null>(null)
   const [searchParam, setSearchParam] = useState('')
   const [templateToDelete, setTemplateToDelete] = React.useState<TemplateSummaryResponse>({})
   const [templateIdentifierToSettings, setTemplateIdentifierToSettings] = React.useState<string>()
@@ -61,10 +60,7 @@ export default function TemplatesPage(): React.ReactElement {
   const { projectIdentifier, orgIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { isGitSyncEnabled } = useAppStore()
   const scope = getScopeFromDTO({ projectIdentifier, orgIdentifier, accountIdentifier: accountId })
-  const pipelineTemplatesFeatureFlagEnabled = useFeatureFlag(FeatureFlag.NG_PIPELINE_TEMPLATE)
-  const allowedTemplateTypes = getAllowedTemplateTypes(getString, module, pipelineTemplatesFeatureFlagEnabled).filter(
-    item => !item.disabled
-  )
+  const allowedTemplateTypes = getAllowedTemplateTypes(getString, module).filter(item => !item.disabled)
 
   useDocumentTitle([getString('common.templates')])
 
@@ -76,7 +72,7 @@ export default function TemplatesPage(): React.ReactElement {
   } = useMutateAsGet(useGetTemplateList, {
     body: {
       filterType: 'Template',
-      ...(type && { templateEntityTypes: [type] })
+      ...(templateType && { templateEntityTypes: [templateType] })
     },
     queryParams: {
       accountIdentifier: accountId,
@@ -98,9 +94,9 @@ export default function TemplatesPage(): React.ReactElement {
 
   const reset = React.useCallback((): void => {
     searchRef.current.clear()
-    setType(null)
+    updateQueryParams({ templateType: [] as any })
     setGitFilter(null)
-  }, [searchRef.current, setType, setGitFilter])
+  }, [searchRef.current, updateQueryParams, setGitFilter])
 
   const [showDeleteTemplatesModal, hideDeleteTemplatesModal] = useModalHook(() => {
     const content = (
@@ -172,9 +168,9 @@ export default function TemplatesPage(): React.ReactElement {
           <NewTemplatePopover />
           <DropDown
             onChange={item => {
-              setType(item.value as TemplateType)
+              updateQueryParams({ templateType: (item.value || []) as TemplateType })
             }}
-            value={type}
+            value={templateType}
             filterable={false}
             addClearBtn={true}
             items={allowedTemplateTypes}
@@ -219,7 +215,7 @@ export default function TemplatesPage(): React.ReactElement {
         <Container height={'100%'} style={{ overflow: 'auto' }}>
           {!templateData?.data?.content?.length && (
             <NoResultsView
-              hasSearchParam={!!searchParam || !!type}
+              hasSearchParam={!!searchParam || !!templateType}
               onReset={reset}
               text={getString('templatesLibrary.templatesPage.noTemplates', { scope })}
             />

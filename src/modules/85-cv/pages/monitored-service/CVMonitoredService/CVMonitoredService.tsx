@@ -21,6 +21,7 @@ import {
 } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
+import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useGetMonitoredServiceListEnvironments, useGetCountOfServices } from 'services/cv'
@@ -28,7 +29,9 @@ import routes from '@common/RouteDefinitions'
 import { useQueryParams } from '@common/hooks'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import RbacButton from '@rbac/components/Button/Button'
+import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useTemplateSelector } from '@templates-library/hooks/useTemplateSelector'
 import { getCVMonitoringServicesSearchParam, getErrorMessage, getEnvironmentOptions } from '@cv/utils/CommonUtils'
 import ServiceDependencyGraph from '@cv/pages/monitored-service/CVMonitoredService/components/MonitoredServiceGraphView/MonitoredServiceGraphView'
 import { getEnvironmentIdentifier } from './CVMonitoredService.utils'
@@ -38,6 +41,9 @@ import css from './CVMonitoredService.module.scss'
 
 const MonitoredService: React.FC = () => {
   const { getString } = useStrings()
+
+  useDocumentTitle([getString('cv.srmTitle'), getString('cv.monitoredServices.title')])
+
   const history = useHistory()
   const { view } = useQueryParams<{ view?: Views.GRID }>()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -87,26 +93,66 @@ const MonitoredService: React.FC = () => {
     }
   }
 
-  const createButton = (
-    <RbacButton
-      variation={ButtonVariation.PRIMARY}
-      icon="plus"
-      text={getString('cv.monitoredServices.newMonitoredServices')}
-      onClick={() => {
-        history.push({
-          pathname: routes.toCVAddMonitoringServicesSetup(pathParams),
-          search: getCVMonitoringServicesSearchParam({ view: selectedView })
-        })
-      }}
-      permission={{
-        permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
-        resource: {
-          resourceType: ResourceType.MONITOREDSERVICE,
-          resourceIdentifier: projectIdentifier
-        }
-      }}
-    />
-  )
+  const { getTemplate } = useTemplateSelector()
+
+  const onUseTemplate = async () => {
+    const { template } = await getTemplate({ templateType: 'MonitoredService' })
+    const templateRefData = {
+      identifier: template?.identifier,
+      accountId: template?.accountId,
+      orgIdentifier: template?.orgIdentifier,
+      projectIdentifier: template?.projectIdentifier,
+      versionLabel: template?.versionLabel
+    }
+    history.push({
+      pathname: routes.toCVMonitoringServicesInputSets(pathParams),
+      search: getCVMonitoringServicesSearchParam({
+        view: selectedView,
+        templateRef: JSON.stringify(templateRefData)
+      })
+    })
+  }
+
+  const createButton = (hasMonitoredServices: boolean) => {
+    {
+      const LayoutOrientation = hasMonitoredServices ? Layout.Horizontal : Layout.Vertical
+      return (
+        <LayoutOrientation spacing="large">
+          <RbacButton
+            variation={ButtonVariation.PRIMARY}
+            icon="plus"
+            text={getString('cv.monitoredServices.newMonitoredServices')}
+            onClick={() => {
+              history.push({
+                pathname: routes.toCVAddMonitoringServicesSetup(pathParams),
+                search: getCVMonitoringServicesSearchParam({ view: selectedView })
+              })
+            }}
+            permission={{
+              permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
+              resource: {
+                resourceType: ResourceType.MONITOREDSERVICE,
+                resourceIdentifier: projectIdentifier
+              }
+            }}
+          />
+          {hasMonitoredServices && (
+            <RbacButton
+              text={getString('common.useTemplate')}
+              variation={ButtonVariation.SECONDARY}
+              icon="template-library"
+              onClick={onUseTemplate}
+              featuresProps={{
+                featuresRequest: {
+                  featureNames: [FeatureIdentifier.TEMPLATE_SERVICE]
+                }
+              }}
+            />
+          )}
+        </LayoutOrientation>
+      )
+    }
+  }
 
   return (
     <>
@@ -120,7 +166,7 @@ const MonitoredService: React.FC = () => {
         }
       />
       <Page.Header
-        title={createButton}
+        title={createButton(Boolean(serviceCountData?.allServicesCount))}
         toolbar={
           <Layout.Horizontal>
             <Select
@@ -149,7 +195,7 @@ const MonitoredService: React.FC = () => {
           page={page}
           setPage={setPage}
           environmentIdentifier={getEnvironmentIdentifier(environment)}
-          createButton={createButton}
+          createButton={createButton(Boolean(!serviceCountData?.allServicesCount))}
           selectedFilter={selectedFilter}
           onFilter={onFilter}
           serviceCountData={serviceCountData}
@@ -165,7 +211,7 @@ const MonitoredService: React.FC = () => {
           onFilter={onFilter}
           refetchServiceCountData={refetchServiceCountData}
           serviceCountLoading={serviceCountLoading}
-          createButton={createButton}
+          createButton={createButton(Boolean(!serviceCountData?.allServicesCount))}
           environmentIdentifier={getEnvironmentIdentifier(environment)}
           serviceCountErrorMessage={getErrorMessage(serviceCountError)}
         />

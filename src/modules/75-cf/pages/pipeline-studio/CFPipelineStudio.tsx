@@ -37,7 +37,7 @@ const CIPipelineStudio: React.FC = (): JSX.Element => {
     pipelineIdentifier,
     module
   } = useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
-  const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
+  const { branch, repoIdentifier, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const { getTemplate } = useTemplateSelector()
   const history = useHistory()
@@ -51,6 +51,9 @@ const CIPipelineStudio: React.FC = (): JSX.Element => {
         module,
         branch,
         repoIdentifier,
+        connectorRef,
+        repoName,
+        storeType,
         runPipeline: true
       })
     )

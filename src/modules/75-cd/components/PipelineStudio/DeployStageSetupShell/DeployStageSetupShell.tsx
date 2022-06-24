@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Layout, Tabs, Tab, Button, Icon, ButtonVariation } from '@wings-software/uicore'
+import { Layout, Tabs, Tab, Button, Icon, ButtonVariation, PageSpinner } from '@wings-software/uicore'
 import cx from 'classnames'
 import type { HarnessIconName } from '@harness/icons'
 import { Expander, IconName } from '@blueprintjs/core'
@@ -32,8 +32,7 @@ import { useStrings } from 'framework/strings'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { useQueryParams } from '@common/hooks'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
 import { useAddStepTemplate } from '@pipeline/hooks/useAddStepTemplate'
 import {
@@ -49,6 +48,7 @@ import DeployInfraSpecifications from '../DeployInfraSpecifications/DeployInfraS
 import DeployServiceSpecifications from '../DeployServiceSpecifications/DeployServiceSpecifications'
 import DeployStageSpecifications from '../DeployStageSpecifications/DeployStageSpecifications'
 import DeployAdvancedSpecifications from '../DeployAdvancedSpecifications/DeployAdvancedSpecifications'
+import DeployEnvSpecifications from '../DeployEnvSpecifications/DeployEnvSpecifications'
 import css from './DeployStageSetupShell.module.scss'
 
 export const MapStepTypeToIcon: { [key: string]: HarnessIconName } = {
@@ -71,7 +71,7 @@ const iconNames = { tick: 'tick' as IconName }
 
 export default function DeployStageSetupShell(): JSX.Element {
   const { getString } = useStrings()
-  const isTemplatesEnabled = useFeatureFlag(FeatureFlag.NG_TEMPLATES)
+  const { NG_TEMPLATES, NG_SVC_ENV_REDESIGN = false } = useFeatureFlags()
   const layoutRef = React.useRef<HTMLDivElement>(null)
   const pipelineContext = usePipelineContext()
   const {
@@ -104,7 +104,7 @@ export default function DeployStageSetupShell(): JSX.Element {
 
   React.useEffect(() => {
     const sectionId = (query as any).sectionId || ''
-    if (sectionId?.length && TabsOrder.includes(sectionId)) {
+    if (sectionId?.length && (TabsOrder.includes(sectionId) || sectionId === DeployTabs.ENVIRONMENT)) {
       setSelectedTabId(sectionId)
     } else {
       setSelectedSectionId(DeployTabs.SERVICE)
@@ -120,6 +120,13 @@ export default function DeployStageSetupShell(): JSX.Element {
   const { checkErrorsForTab } = React.useContext(StageErrorContext)
 
   const handleTabChange = (nextTab: DeployTabs): void => {
+    if (
+      NG_SVC_ENV_REDESIGN &&
+      isEmpty(selectedStage?.stage?.spec?.infrastructure) &&
+      nextTab === DeployTabs.INFRASTRUCTURE
+    ) {
+      nextTab = DeployTabs.ENVIRONMENT
+    }
     checkErrorsForTab(selectedTabId).then(_ => {
       setSelectedTabId(nextTab)
       setSelectedSectionId(nextTab)
@@ -179,7 +186,7 @@ export default function DeployStageSetupShell(): JSX.Element {
     if (!loading && selectedStage?.stage && isEmpty(selectedStage?.stage?.spec?.execution)) {
       if (!stageYamlSnippet?.data) {
         // fetch data on first load of new stage
-        refetch()
+        setTimeout(() => refetch(), 20000)
       } else {
         // update the new stage with the fetched data
         updateStage(
@@ -196,10 +203,13 @@ export default function DeployStageSetupShell(): JSX.Element {
 
   const validate = React.useCallback(() => {
     try {
-      getCDStageValidationSchema(getString, selectedDeploymentType, contextType).validateSync(selectedStage?.stage, {
-        abortEarly: false,
-        context: selectedStage?.stage
-      })
+      getCDStageValidationSchema(getString, selectedDeploymentType, NG_SVC_ENV_REDESIGN, contextType).validateSync(
+        selectedStage?.stage,
+        {
+          abortEarly: false,
+          context: selectedStage?.stage
+        }
+      )
       setIncompleteTabs({})
     } catch (error) {
       if (error.name !== 'ValidationError') {
@@ -215,6 +225,9 @@ export default function DeployStageSetupShell(): JSX.Element {
       }
       if (!isEmpty(get(response.spec, 'serviceConfig'))) {
         newIncompleteTabs[DeployTabs.SERVICE] = true
+      }
+      if (!isEmpty(get(response.spec, 'environment'))) {
+        newIncompleteTabs[DeployTabs.ENVIRONMENT] = true
       }
       if (!isEmpty(get(response.spec, 'infrastructure'))) {
         newIncompleteTabs[DeployTabs.INFRASTRUCTURE] = true
@@ -300,6 +313,8 @@ export default function DeployStageSetupShell(): JSX.Element {
           onClick={() => {
             if (selectedTabId === DeployTabs.EXECUTION) {
               updatePipelineView({ ...pipelineView, isSplitViewOpen: false, splitViewData: {} })
+            } else if (selectedTabId === DeployTabs.ENVIRONMENT) {
+              handleTabChange(DeployTabs.EXECUTION)
             } else {
               handleTabChange(TabsOrder[Math.min(TabsOrder.length, TabsOrder.indexOf(selectedTabId) + 1)])
             }
@@ -311,143 +326,165 @@ export default function DeployStageSetupShell(): JSX.Element {
 
   return (
     <section ref={layoutRef} key={selectedStageId} className={cx(css.setupShell)}>
-      <Tabs id="stageSetupShell" onChange={handleTabChange} selectedTabId={selectedTabId} data-tabId={selectedTabId}>
-        <Tab
-          id={DeployTabs.OVERVIEW}
-          panel={<DeployStageSpecifications>{navBtns}</DeployStageSpecifications>}
-          title={
-            <span className={css.title} data-completed={!incompleteTabs[DeployTabs.OVERVIEW]}>
-              <Icon name={incompleteTabs[DeployTabs.OVERVIEW] ? 'cd-main' : iconNames.tick} size={16} />
-              {getString('overview')}
-            </span>
-          }
-          data-testid="overview"
-        />
-        <Tab
-          id={DeployTabs.SERVICE}
-          title={
-            <span className={css.title} data-completed={!incompleteTabs[DeployTabs.SERVICE]}>
-              <Icon name={incompleteTabs[DeployTabs.SERVICE] ? 'services' : iconNames.tick} size={16} />
-              {getString('service')}
-            </span>
-          }
-          panel={<DeployServiceSpecifications>{navBtns}</DeployServiceSpecifications>}
-          data-testid="service"
-        />
-        <Tab
-          id={DeployTabs.INFRASTRUCTURE}
-          title={
-            <span className={css.title} data-completed={!incompleteTabs[DeployTabs.INFRASTRUCTURE]}>
-              <Icon name={incompleteTabs[DeployTabs.INFRASTRUCTURE] ? 'infrastructure' : iconNames.tick} size={16} />
-              {getString('infrastructureText')}
-            </span>
-          }
-          panel={<DeployInfraSpecifications>{navBtns}</DeployInfraSpecifications>}
-          data-testid="infrastructure"
-        />
-        <Tab
-          id={DeployTabs.EXECUTION}
-          title={
-            <span className={css.title} data-completed={!incompleteTabs[DeployTabs.EXECUTION]}>
-              <Icon name={incompleteTabs[DeployTabs.EXECUTION] ? 'execution' : iconNames.tick} size={16} />
-              {getString('executionText')}
-            </span>
-          }
-          className={cx(css.fullHeight, css.stepGroup)}
-          panel={
-            <ExecutionGraph
-              allowAddGroup={true}
-              hasRollback={true}
-              isReadonly={isReadonly}
-              hasDependencies={false}
-              stepsFactory={stepsFactory}
-              originalStage={originalStage}
-              ref={executionRef}
-              pathToStage={`${stagePath}.stage.spec.execution`}
-              templateTypes={templateTypes}
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              stage={selectedStage!}
-              updateStage={stageData => {
-                if (stageData.stage) updateStage(stageData.stage)
-              }}
-              onAddStep={(event: ExecutionGraphAddStepEvent) => {
-                if (event.isTemplate) {
-                  addTemplate(event)
-                } else {
+      {loading || !selectedStage?.stage?.failureStrategies ? (
+        <PageSpinner />
+      ) : (
+        <Tabs id="stageSetupShell" onChange={handleTabChange} selectedTabId={selectedTabId} data-tabId={selectedTabId}>
+          <Tab
+            id={DeployTabs.OVERVIEW}
+            panel={<DeployStageSpecifications>{navBtns}</DeployStageSpecifications>}
+            title={
+              <span className={css.title} data-completed={!incompleteTabs[DeployTabs.OVERVIEW]}>
+                <Icon name={incompleteTabs[DeployTabs.OVERVIEW] ? 'cd-main' : iconNames.tick} size={16} />
+                {getString('overview')}
+              </span>
+            }
+            data-testid="overview"
+          />
+          <Tab
+            id={DeployTabs.SERVICE}
+            title={
+              <span className={css.title} data-completed={!incompleteTabs[DeployTabs.SERVICE]}>
+                <Icon name={incompleteTabs[DeployTabs.SERVICE] ? 'services' : iconNames.tick} size={16} />
+                {getString('service')}
+              </span>
+            }
+            panel={<DeployServiceSpecifications>{navBtns}</DeployServiceSpecifications>}
+            data-testid="service"
+          />
+          {NG_SVC_ENV_REDESIGN && isEmpty(selectedStage?.stage?.spec?.infrastructure) && (
+            <Tab
+              id={DeployTabs.ENVIRONMENT}
+              title={
+                <span className={css.title} data-completed={!incompleteTabs[DeployTabs.ENVIRONMENT]}>
+                  <Icon name={incompleteTabs[DeployTabs.ENVIRONMENT] ? 'environment' : iconNames.tick} size={16} />
+                  {getString('environment')}
+                </span>
+              }
+              panel={<DeployEnvSpecifications>{navBtns}</DeployEnvSpecifications>}
+              data-testid="environment"
+            />
+          )}
+          {(!NG_SVC_ENV_REDESIGN || (NG_SVC_ENV_REDESIGN && !isEmpty(selectedStage?.stage?.spec?.infrastructure))) && (
+            <Tab
+              id={DeployTabs.INFRASTRUCTURE}
+              title={
+                <span className={css.title} data-completed={!incompleteTabs[DeployTabs.INFRASTRUCTURE]}>
+                  <Icon
+                    name={incompleteTabs[DeployTabs.INFRASTRUCTURE] ? 'infrastructure' : iconNames.tick}
+                    size={16}
+                  />
+                  {getString('infrastructureText')}
+                </span>
+              }
+              panel={<DeployInfraSpecifications>{navBtns}</DeployInfraSpecifications>}
+              data-testid="infrastructure"
+            />
+          )}
+          <Tab
+            id={DeployTabs.EXECUTION}
+            title={
+              <span className={css.title} data-completed={!incompleteTabs[DeployTabs.EXECUTION]}>
+                <Icon name={incompleteTabs[DeployTabs.EXECUTION] ? 'execution' : iconNames.tick} size={16} />
+                {getString('executionText')}
+              </span>
+            }
+            className={cx(css.fullHeight, css.stepGroup)}
+            panel={
+              <ExecutionGraph
+                allowAddGroup={true}
+                hasRollback={true}
+                isReadonly={isReadonly}
+                hasDependencies={false}
+                stepsFactory={stepsFactory}
+                originalStage={originalStage}
+                ref={executionRef}
+                pathToStage={`${stagePath}.stage.spec.execution`}
+                templateTypes={templateTypes}
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                stage={selectedStage!}
+                updateStage={stageData => {
+                  if (stageData.stage) updateStage(stageData.stage)
+                }}
+                onAddStep={(event: ExecutionGraphAddStepEvent) => {
+                  if (event.isTemplate) {
+                    addTemplate(event)
+                  } else {
+                    updatePipelineView({
+                      ...pipelineView,
+                      isDrawerOpened: true,
+                      drawerData: {
+                        type: DrawerTypes.AddStep,
+                        data: {
+                          paletteData: {
+                            entity: event.entity,
+                            stepsMap: event.stepsMap,
+                            onUpdate: executionRef.current?.stepGroupUpdated,
+                            // isAddStepOverride: true,
+                            isRollback: event.isRollback,
+                            isParallelNodeClicked: event.isParallel,
+                            hiddenAdvancedPanels: [AdvancedPanels.PreRequisites]
+                          }
+                        }
+                      }
+                    })
+                  }
+                }}
+                onEditStep={(event: ExecutionGraphEditStepEvent) => {
                   updatePipelineView({
                     ...pipelineView,
                     isDrawerOpened: true,
                     drawerData: {
-                      type: DrawerTypes.AddStep,
+                      type: DrawerTypes.StepConfig,
                       data: {
-                        paletteData: {
-                          entity: event.entity,
+                        stepConfig: {
+                          node: event.node as any,
                           stepsMap: event.stepsMap,
                           onUpdate: executionRef.current?.stepGroupUpdated,
-                          // isAddStepOverride: true,
-                          isRollback: event.isRollback,
-                          isParallelNodeClicked: event.isParallel,
+                          isStepGroup: event.isStepGroup,
+                          isUnderStepGroup: event.isUnderStepGroup,
+                          addOrEdit: event.addOrEdit,
                           hiddenAdvancedPanels: [AdvancedPanels.PreRequisites]
                         }
                       }
                     }
                   })
-                }
-              }}
-              onEditStep={(event: ExecutionGraphEditStepEvent) => {
-                updatePipelineView({
-                  ...pipelineView,
-                  isDrawerOpened: true,
-                  drawerData: {
-                    type: DrawerTypes.StepConfig,
-                    data: {
-                      stepConfig: {
-                        node: event.node as any,
-                        stepsMap: event.stepsMap,
-                        onUpdate: executionRef.current?.stepGroupUpdated,
-                        isStepGroup: event.isStepGroup,
-                        isUnderStepGroup: event.isUnderStepGroup,
-                        addOrEdit: event.addOrEdit,
-                        hiddenAdvancedPanels: [AdvancedPanels.PreRequisites]
-                      }
-                    }
-                  }
-                })
-              }}
-              onSelectStep={(stepId: string) => {
-                setSelectedStepId(stepId)
-              }}
-              selectedStepId={selectedStepId}
-            />
-          }
-          data-testid="execution"
-        />
-        <Tab
-          id={DeployTabs.ADVANCED}
-          title={
-            <span className={css.title} data-completed={!incompleteTabs[DeployTabs.ADVANCED]}>
-              <Icon name={incompleteTabs[DeployTabs.ADVANCED] ? 'advanced' : iconNames.tick} size={16} />
-              Advanced
-            </span>
-          }
-          className={css.fullHeight}
-          panel={<DeployAdvancedSpecifications>{navBtns}</DeployAdvancedSpecifications>}
-          data-testid="advanced"
-        />
-        {isTemplatesEnabled && isContextTypeNotStageTemplate(contextType) && selectedStage?.stage && (
-          <>
-            <Expander />
-            <SaveTemplateButton
-              data={selectedStage.stage}
-              type={'Stage'}
-              buttonProps={{
-                margin: { right: 'medium' },
-                disabled: !!selectedStage.stage.spec?.serviceConfig?.useFromStage
-              }}
-            />
-          </>
-        )}
-      </Tabs>
+                }}
+                onSelectStep={(stepId: string) => {
+                  setSelectedStepId(stepId)
+                }}
+                selectedStepId={selectedStepId}
+              />
+            }
+            data-testid="execution"
+          />
+          <Tab
+            id={DeployTabs.ADVANCED}
+            title={
+              <span className={css.title} data-completed={!incompleteTabs[DeployTabs.ADVANCED]}>
+                <Icon name={incompleteTabs[DeployTabs.ADVANCED] ? 'advanced' : iconNames.tick} size={16} />
+                Advanced
+              </span>
+            }
+            className={css.fullHeight}
+            panel={<DeployAdvancedSpecifications>{navBtns}</DeployAdvancedSpecifications>}
+            data-testid="advanced"
+          />
+          {NG_TEMPLATES && isContextTypeNotStageTemplate(contextType) && selectedStage?.stage && (
+            <>
+              <Expander />
+              <SaveTemplateButton
+                data={selectedStage.stage}
+                type={'Stage'}
+                buttonProps={{
+                  margin: { right: 'medium' },
+                  disabled: !!selectedStage.stage.spec?.serviceConfig?.useFromStage
+                }}
+              />
+            </>
+          )}
+        </Tabs>
+      )}
     </section>
   )
 }

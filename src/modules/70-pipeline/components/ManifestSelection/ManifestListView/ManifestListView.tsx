@@ -42,7 +42,8 @@ import {
   buildGithubPayload,
   buildGitlabPayload,
   buildGitPayload,
-  buildHelmPayload
+  buildHelmPayload,
+  buildOCIHelmPayload
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import GcpAuthentication from '@connectors/components/CreateConnector/GcpConnector/StepAuth/GcpAuthentication'
@@ -63,7 +64,8 @@ import {
   manifestTypeLabels,
   allowedManifestTypes,
   ManifestTypetoStoreMap,
-  ManifestToPathKeyMap
+  ManifestToPathKeyMap,
+  showAddManifestBtn
 } from '../Manifesthelper'
 import type { ConnectorRefLabelType } from '../../ArtifactsSelection/ArtifactInterface'
 import type {
@@ -87,14 +89,9 @@ import ServerlessAwsLambdaManifest from '../ManifestWizardSteps/ServerlessAwsLam
 import AttachPathYamlFlow from './AttachPathYamlFlow'
 import InheritFromManifest from '../ManifestWizardSteps/InheritFromManifest/InheritFromManifest'
 import ConnectorField from './ConnectorField'
+import HelmWithOCI from '../ManifestWizardSteps/HelmWithOCI/HelmWithOCI'
+import { getConnectorPath } from '../ManifestWizardSteps/ManifestUtils'
 import css from '../ManifestSelection.module.scss'
-
-const showAddManifestBtn = (isReadonly: boolean, allowOnlyOne: boolean, listOfManifests: Array<any>): boolean => {
-  if (allowOnlyOne && listOfManifests.length === 1) {
-    return false
-  }
-  return !isReadonly
-}
 
 function ManifestListView({
   updateStage,
@@ -175,7 +172,10 @@ function ManifestListView({
       const values = {
         ...initValues,
         store: listOfManifests[manifestIndex]?.manifest.spec?.store?.type,
-        connectorRef: initValues?.connectorRef,
+        connectorRef: getConnectorPath(
+          listOfManifests[manifestIndex]?.manifest.spec?.store?.type,
+          listOfManifests[manifestIndex].manifest
+        ),
         selectedManifest: get(listOfManifests[manifestIndex], 'manifest.type', null)
       }
       return values
@@ -331,7 +331,9 @@ function ManifestListView({
       case selectedManifest === ManifestDataType.HelmChart && manifestStore === ManifestStoreMap.Http:
         manifestDetailStep = <HelmWithHttp {...lastStepProps()} />
         break
-
+      case selectedManifest === ManifestDataType.HelmChart && manifestStore === ManifestStoreMap.OciHelmChart:
+        manifestDetailStep = <HelmWithOCI {...lastStepProps()} />
+        break
       case selectedManifest === ManifestDataType.HelmChart && manifestStore === ManifestStoreMap.S3:
         manifestDetailStep = <HelmWithS3 {...lastStepProps()} />
         break
@@ -379,6 +381,7 @@ function ManifestListView({
     const buildPayload = getBuildPayload(ManifestToConnectorMap[manifestStore])
     switch (manifestStore) {
       case ManifestStoreMap.Http:
+      case ManifestStoreMap.OciHelmChart:
         return (
           <StepWizard title={getString('connectors.createNewConnector')}>
             <ConnectorDetailsStep
@@ -396,13 +399,14 @@ function ManifestListView({
               isEditMode={isEditMode}
               connectorInfo={undefined}
               setIsEditMode={setIsEditMode}
+              isOCIHelm={manifestStore === ManifestStoreMap.OciHelmChart}
             />
             <DelegateSelectorStep
               name={getString('delegate.DelegateselectionLabel')}
               isEditMode={isEditMode}
               setIsEditMode={setIsEditMode}
               connectorInfo={undefined}
-              buildPayload={buildHelmPayload}
+              buildPayload={manifestStore === ManifestStoreMap.Http ? buildHelmPayload : buildOCIHelmPayload}
             />
 
             <VerifyOutOfClusterDelegate
@@ -671,8 +675,15 @@ function ManifestListView({
               listOfManifests.map((data: ManifestConfigWrapper, index: number) => {
                 const manifest = data['manifest']
 
-                const { color } = getStatus(manifest?.spec?.store?.spec?.connectorRef, connectors, accountId)
-                const connectorName = getConnectorNameFromValue(manifest?.spec?.store?.spec?.connectorRef, connectors)
+                const { color } = getStatus(
+                  getConnectorPath(manifest?.spec?.store?.type, manifest),
+                  connectors,
+                  accountId
+                )
+                const connectorName = getConnectorNameFromValue(
+                  getConnectorPath(manifest?.spec?.store?.type, manifest),
+                  connectors
+                )
 
                 return (
                   <div className={css.rowItem} key={`${manifest?.identifier}-${index}`}>
@@ -686,7 +697,7 @@ function ManifestListView({
                       <div>{getString(manifestTypeLabels[manifest?.type as ManifestTypes])}</div>
                       {renderConnectorField(
                         manifest?.spec?.store.type,
-                        manifest?.spec?.store?.spec.connectorRef,
+                        getConnectorPath(manifest?.spec?.store?.type, manifest),
                         connectorName,
                         color
                       )}

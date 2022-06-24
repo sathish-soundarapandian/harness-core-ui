@@ -10,7 +10,7 @@ import { Button, ButtonVariation, Container, Layout, useConfirmationDialog } fro
 import { Intent } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import type { TemplateSummaryResponse } from 'services/template-ng'
-import { useStrings } from 'framework/strings'
+import { String, useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
@@ -51,11 +51,17 @@ export const TemplateSelector: React.FC = (): JSX.Element => {
   const { openDialog: openChangeTemplateDialog } = useConfirmationDialog({
     intent: Intent.WARNING,
     cancelButtonText: getString('cancel'),
-    contentText: getString('pipeline.changeTemplate', {
-      name: selectedTemplate?.name,
-      entity: selectedTemplate?.templateEntityType?.toLowerCase()
-    }),
-    titleText: `Change to Template ${getTemplateNameWithLabel(selectedTemplate)}?`,
+    contentText: (
+      <String
+        stringID="templatesLibrary.changeTemplate"
+        vars={{
+          name: getTemplateNameWithLabel(selectedTemplate),
+          entity: selectedTemplate?.templateEntityType?.toLowerCase()
+        }}
+        useRichText={true}
+      />
+    ),
+    titleText: `${getString('pipeline.changeTemplateLabel')}?`,
     confirmButtonText: getString('confirm'),
     onCloseDialog: async isConfirmed => {
       if (isConfirmed) {
@@ -67,8 +73,17 @@ export const TemplateSelector: React.FC = (): JSX.Element => {
   const { openDialog: openCopyTemplateDialog } = useConfirmationDialog({
     intent: Intent.WARNING,
     cancelButtonText: getString('cancel'),
-    contentText: getString('pipeline.copyTemplate', { name: selectedTemplate?.name }),
-    titleText: `Copy Template ${getTemplateNameWithLabel(selectedTemplate)}?`,
+    contentText: (
+      <String
+        stringID="templatesLibrary.copyTemplate"
+        vars={{
+          name: getTemplateNameWithLabel(selectedTemplate),
+          entity: selectedTemplate?.templateEntityType?.toLowerCase()
+        }}
+        useRichText={true}
+      />
+    ),
+    titleText: `${getString('templatesLibrary.copyTemplateLabel')}?`,
     confirmButtonText: getString('confirm'),
     onCloseDialog: async isConfirmed => {
       if (isConfirmed) {
@@ -116,13 +131,13 @@ export const TemplateSelector: React.FC = (): JSX.Element => {
                 >
                   <Button
                     variation={ButtonVariation.PRIMARY}
-                    text={getString('templatesLibrary.useTemplate')}
+                    text={getString('templatesLibrary.useTemplateLabel')}
                     disabled={areTemplatesEqual(defaultTemplate, selectedTemplate)}
                     onClick={onUseTemplateClick}
                   />
                   <Button
                     variation={ButtonVariation.LINK}
-                    text={getString('templatesLibrary.copyToPipeline')}
+                    text={getString('templatesLibrary.copyTemplateLabel')}
                     onClick={onCopyTemplateClick}
                   />
                 </Layout.Horizontal>

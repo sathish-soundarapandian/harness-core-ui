@@ -9,6 +9,7 @@ import React from 'react'
 import { Card, Container, HarnessDocTooltip, Layout } from '@wings-software/uicore'
 import { produce } from 'immer'
 import { set, isEmpty, unset } from 'lodash-es'
+import cx from 'classnames'
 import { StepActions } from '@common/constants/TrackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -54,7 +55,7 @@ const DeployAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childr
   return (
     <div className={stageCss.deployStage}>
       <DeployServiceErrors domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
-      <div className={stageCss.contentSection} ref={scrollRef}>
+      <div className={cx(stageCss.contentSection, stageCss.paddedSection)} ref={scrollRef}>
         <div className={stageCss.tabHeading}>
           <span data-tooltip-id="delegateSelectorDeployStage">
             {getString('pipeline.delegate.DelegateSelectorOptional')}
@@ -91,7 +92,6 @@ const DeployAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childr
             </div>
           </Layout.Horizontal>
         </Card>
-        <Container margin={{ top: 'xxlarge' }}>{children}</Container>
 
         <div className={stageCss.tabHeading}>
           <span data-tooltip-id="conditionalExecutionDeployStage">

@@ -16,8 +16,9 @@ interface GitRemoteDetailsProps {
   connectorRef?: string
   repoName?: string
   filePath?: string
+  fileUrl?: string
   branch?: string
-  onBranchChange?: (selectedFilter: { branch: string }) => void
+  onBranchChange?: (selectedFilter: { branch: string }, selectedByUser?: boolean) => void
   flags?: {
     borderless?: boolean
     showRepo?: boolean
@@ -27,19 +28,28 @@ interface GitRemoteDetailsProps {
   }
 }
 
+const getTooltipContent = (filePath: string, fileUrl?: string) => {
+  // fileUrl will available only once entity is saved in Git,
+  // it will not be available while creating the entities
+  if (fileUrl) {
+    return (
+      <a href={fileUrl} target="_blank" rel="noopener noreferrer">
+        <Text className={css.tooltip}>{fileUrl}</Text>
+      </a>
+    )
+  } else {
+    return <Text className={css.tooltip}>{filePath}</Text>
+  }
+}
+
 const GitRemoteDetails = ({
   connectorRef,
   repoName,
   filePath,
+  fileUrl,
   branch = '',
   onBranchChange,
-  flags: {
-    borderless = true,
-    showRepo = true,
-    normalInputStyle = false,
-    readOnly = false,
-    fallbackDefaultBranch = false
-  } = {}
+  flags: { borderless = true, showRepo = true, normalInputStyle = false, readOnly = false } = {}
 }: GitRemoteDetailsProps): React.ReactElement => {
   return (
     <div className={cx(css.wrapper, { [css.normalInputStyle]: normalInputStyle })}>
@@ -53,7 +63,7 @@ const GitRemoteDetails = ({
             }}
           />
           <Text
-            tooltip={filePath && <Text className={css.tooltip}>{filePath}</Text>}
+            tooltip={filePath && getTooltipContent(filePath, fileUrl)}
             tooltipProps={{
               isDark: true,
               interactionKind: PopoverInteractionKind.HOVER,
@@ -85,16 +95,18 @@ const GitRemoteDetails = ({
           noLabel={true}
           connectorIdentifierRef={connectorRef}
           repoName={repoName}
-          onChange={(selected: SelectOption): void => {
-            onBranchChange?.({
-              branch: selected.value as string
-            })
+          onChange={(selected: SelectOption, defaultSelected = false): void => {
+            onBranchChange?.(
+              {
+                branch: selected.value as string
+              },
+              defaultSelected
+            )
           }}
           selectedValue={branch}
           branchSelectorClassName={css.branchSelector}
-          selectProps={{ borderless, popoverClassName: '' }}
+          selectProps={{ borderless }}
           showIcons={false}
-          fallbackDefaultBranch={fallbackDefaultBranch}
           showErrorInModal
         />
       )}

@@ -137,6 +137,7 @@ exports[`AddDrawer Triggers tests Renders/snapshots Initial Render - Trigger Lis
                   >
                     <section
                       class="step"
+                      data-cy="New Artifact/Manifest_New Artifact"
                     >
                       <div
                         class="bp3-card bp3-elevation-0 Card--card"
@@ -178,6 +179,7 @@ exports[`AddDrawer Triggers tests Renders/snapshots Initial Render - Trigger Lis
                     </section>
                     <section
                       class="step"
+                      data-cy="New Artifact/Manifest_New Manifest"
                     >
                       <div
                         class="bp3-card bp3-elevation-0 Card--card"
@@ -236,6 +238,7 @@ exports[`AddDrawer Triggers tests Renders/snapshots Initial Render - Trigger Lis
                   >
                     <section
                       class="step"
+                      data-cy="Scheduled_On Schedule"
                     >
                       <div
                         class="bp3-card bp3-elevation-0 Card--card"
@@ -298,6 +301,7 @@ exports[`AddDrawer Triggers tests Renders/snapshots Initial Render - Trigger Lis
                   >
                     <section
                       class="step"
+                      data-cy="Webhook_GitHub"
                     >
                       <div
                         class="bp3-card bp3-elevation-0 Card--card"
@@ -326,6 +330,7 @@ exports[`AddDrawer Triggers tests Renders/snapshots Initial Render - Trigger Lis
                     </section>
                     <section
                       class="step"
+                      data-cy="Webhook_GitLab"
                     >
                       <div
                         class="bp3-card bp3-elevation-0 Card--card"
@@ -379,6 +384,7 @@ exports[`AddDrawer Triggers tests Renders/snapshots Initial Render - Trigger Lis
                     </section>
                     <section
                       class="step"
+                      data-cy="Webhook_BitBucket"
                     >
                       <div
                         class="bp3-card bp3-elevation-0 Card--card"

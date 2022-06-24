@@ -444,10 +444,11 @@ function KustomizePatchDetails({
                                 expressions,
                                 allowableTypes
                               })}
+
+                              {formik.values?.paths?.length > 1 && (
+                                <Button minimal icon="main-trash" onClick={() => arrayHelpers.remove(index)} />
+                              )}
                             </Layout.Horizontal>
-                            {formik.values?.paths?.length > 1 && (
-                              <Button minimal icon="main-trash" onClick={() => arrayHelpers.remove(index)} />
-                            )}
                           </Layout.Horizontal>
                         ))}
                         <span>

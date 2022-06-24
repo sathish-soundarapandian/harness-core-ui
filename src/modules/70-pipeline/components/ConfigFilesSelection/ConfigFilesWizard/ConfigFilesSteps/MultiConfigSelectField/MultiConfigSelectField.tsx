@@ -16,7 +16,6 @@ import {
   MultiTypeInputType,
   MultiTextInputProps
 } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
 import { FieldArray, connect, FormikContextType } from 'formik'
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
@@ -25,7 +24,11 @@ import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/Conf
 import MultiTypeFieldSelector, {
   MultiTypeFieldSelectorProps
 } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
+import FileStoreSelectField from '@filestore/components/FileStoreSelectField/FileStoreSelectField'
+
 import FileSelectField from './EncryptedSelect/FileSelectField'
+
 import css from './MultiConfigSelectField.module.scss'
 
 export type MapValue = { id: string; key: string; value: string }[]
@@ -50,6 +53,7 @@ export interface MultiTypeMapProps {
   keyLabel?: string
   valueLabel?: string
   restrictToSingleEntry?: boolean
+  fileType: string
 }
 
 export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactElement {
@@ -66,6 +70,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
     keyLabel,
     valueLabel,
     restrictToSingleEntry,
+    fileType,
     ...restProps
   } = props
 
@@ -95,27 +100,30 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                   value.map((field: any, index: number) => {
                     const { id, ...restValue } = field
                     return (
-                      <div className={cx(css.group, css.withoutAligning)} key={id}>
-                        <div>
-                          {index === 0 && (
-                            <Text font={{ variation: FontVariation.FORM_LABEL }} margin={{ bottom: 'xsmall' }}>
-                              {valueLabel ?? getString('valueLabel')}
-                            </Text>
-                          )}
+                      <div className={cx(css.group, css.withoutAligning)} key={Math.random()}>
+                        <Text margin={{ right: 'small' }}>{index}.</Text>
+                        <div className={css.multiSelectField}>
                           <div className={cx(css.group, css.withoutAligning, css.withoutSpacing)}>
-                            <FileSelectField
-                              index={index}
-                              name={`${name}[${index}]`}
-                              formik={formik}
-                              id={id}
-                              onChange={(newValue, i) => {
-                                replace(i, {
-                                  ...restValue,
-                                  value: newValue
-                                })
-                              }}
-                              field={field}
-                            />
+                            {fileType === FILE_TYPE_VALUES.ENCRYPTED ? (
+                              <FileSelectField
+                                index={index}
+                                name={`${name}[${index}]`}
+                                formik={formik}
+                                id={id}
+                                onChange={(newValue, i) => {
+                                  replace(i, {
+                                    ...restValue,
+                                    value: newValue
+                                  })
+                                }}
+                                field={field}
+                              />
+                            ) : (
+                              <div className={css.fieldWrapper}>
+                                <FileStoreSelectField name={`${name}[${index}]`} />
+                              </div>
+                            )}
+
                             <Button
                               icon="main-trash"
                               iconProps={{ size: 20 }}

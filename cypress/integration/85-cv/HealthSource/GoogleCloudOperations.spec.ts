@@ -18,7 +18,7 @@ import {
 import { errorResponse } from '../../../support/85-cv/slos/constants'
 import { Connectors } from '../../../utils/connctors-utils'
 
-describe.skip('Health Source - Google Cloud Operations', () => {
+describe('Health Source - Google Cloud Operations', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       return false

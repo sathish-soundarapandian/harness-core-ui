@@ -46,7 +46,9 @@ import type {
   EnvironmentGroupPathProps,
   EnvironmentGroupQueryParams,
   VariablesPathProps,
-  EnvironmentQueryParams
+  EnvironmentQueryParams,
+  AccountLevelGitOpsPathProps,
+  TemplateType
 } from '@common/interfaces/RouteInterfaces'
 
 const CV_HOME = `/cv/home`
@@ -252,6 +254,21 @@ const routes = {
       })
     }
   ),
+
+  toFileStore: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
+      const path = `resources/file-store`
+      return getScopeBasedRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path
+      })
+    }
+  ),
+
   toVariables: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
       const path = `resources/variables`
@@ -715,8 +732,8 @@ const routes = {
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/gitops`
   ),
-  toAccountResourcesGitOps: withAccountId(() => {
-    const path = `resources/gitops`
+  toAccountResourcesGitOps: withAccountId(({ entity }: AccountLevelGitOpsPathProps) => {
+    const path = `resources/gitops/${entity}`
     return getScopeBasedRoute({
       scope: {},
       path
@@ -911,9 +928,10 @@ const routes = {
       projectIdentifier,
       pipelineIdentifier,
       executionIdentifier,
-      module
+      module,
+      source
     }: PipelineType<ExecutionPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/executions/${executionIdentifier}`
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}`
   ),
   toExecutionPipelineView: withAccountId(
     ({
@@ -921,9 +939,10 @@ const routes = {
       projectIdentifier,
       pipelineIdentifier,
       executionIdentifier,
-      module
+      module,
+      source
     }: PipelineType<ExecutionPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/executions/${executionIdentifier}/pipeline`
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/pipeline`
   ),
   toExecutionInputsView: withAccountId(
     ({
@@ -931,9 +950,10 @@ const routes = {
       projectIdentifier,
       pipelineIdentifier,
       executionIdentifier,
-      module
+      module,
+      source
     }: PipelineType<ExecutionPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/executions/${executionIdentifier}/inputs`
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/inputs`
   ),
   toExecutionArtifactsView: withAccountId(
     ({
@@ -941,9 +961,10 @@ const routes = {
       projectIdentifier,
       pipelineIdentifier,
       executionIdentifier,
-      module
+      module,
+      source
     }: PipelineType<ExecutionPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/executions/${executionIdentifier}/artifacts`
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/artifacts`
   ),
   toExecutionTestsView: withAccountId(
     ({
@@ -951,9 +972,10 @@ const routes = {
       projectIdentifier,
       pipelineIdentifier,
       executionIdentifier,
-      module
+      module,
+      source
     }: PipelineType<ExecutionPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/executions/${executionIdentifier}/tests`
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/tests`
   ),
   toExecutionCommitsView: withAccountId(
     ({
@@ -961,9 +983,10 @@ const routes = {
       projectIdentifier,
       pipelineIdentifier,
       executionIdentifier,
-      module
+      module,
+      source
     }: PipelineType<ExecutionPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/executions/${executionIdentifier}/commits`
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/commits`
   ),
   toExecutionPolicyEvaluationsView: withAccountId(
     ({
@@ -971,9 +994,10 @@ const routes = {
       projectIdentifier,
       pipelineIdentifier,
       executionIdentifier,
-      module
+      module,
+      source
     }: PipelineType<ExecutionPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/executions/${executionIdentifier}/policy-evaluations`
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/policy-evaluations`
   ),
   toExecutionSecurityView: withAccountId(
     ({
@@ -981,14 +1005,31 @@ const routes = {
       projectIdentifier,
       pipelineIdentifier,
       executionIdentifier,
-      module
+      module,
+      source
     }: PipelineType<ExecutionPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/executions/${executionIdentifier}/security`
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/security`
+  ),
+  toExecutionErrorTrackingView: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      pipelineIdentifier,
+      executionIdentifier,
+      module,
+      source
+    }: PipelineType<ExecutionPathProps>) =>
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/et`
   ),
   /********************************************************************************************************************/
   toTemplates: withAccountId(
-    ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
-      const path = `resources/templates`
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      module,
+      templateType
+    }: Partial<(ProjectPathProps & ModulePathParams) & { templateType?: TemplateType }>) => {
+      const path = templateType ? `resources/templates?templateType=${templateType}` : 'resources/templates'
       return getScopeBasedRoute({
         scope: {
           orgIdentifier,
@@ -1274,6 +1315,12 @@ const routes = {
       return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/monitoringservices`
     }
   ),
+
+  toCVMonitoringServicesInputSets: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module = 'cv' }: Partial<ProjectPathProps & { module?: string }>) => {
+      return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/monitoringservicesinputset`
+    }
+  ),
   toCVSLOs: withAccountId(
     ({ orgIdentifier, projectIdentifier, module = 'cv' }: Partial<ProjectPathProps & { module?: string }>) => {
       return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos`
@@ -1291,11 +1338,6 @@ const routes = {
   toErrorTracking: withAccountId(
     ({ orgIdentifier, projectIdentifier, module = 'cv' }: Partial<ProjectPathProps & { module?: string }>) => {
       return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/et`
-    }
-  ),
-  toErrorTrackingArc: withAccountId(
-    ({ orgIdentifier, projectIdentifier, module = 'cv' }: Partial<ProjectPathProps & { module?: string }>) => {
-      return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/et/arc`
     }
   ),
   toCVCreateSLOs: withAccountId(
@@ -1420,7 +1462,9 @@ const routes = {
     ({ gatewayIdentifier }: { gatewayIdentifier: string }) => `/ce/autostopping-rules/edit/${gatewayIdentifier}`
   ),
   toCECOAccessPoints: withAccountId(() => `/ce/access-points`),
-  toCECORules: withAccountId(() => `/ce/autostopping-rules`),
+  toCECORules: withAccountId(
+    ({ params }: { params: string }) => `/ce/autostopping-rules` + (params ? `?${params}` : '')
+  ),
   toCERecommendations: withAccountId(() => `/ce/recommendations`),
   toCERecommendationDetails: withAccountId(
     ({ recommendation, recommendationName }: { recommendation: string; recommendationName: string }) =>
@@ -1529,9 +1573,30 @@ const routes = {
       `/dashboards/folder/${folderId ? folderId : 'shared'}/view/${viewId}`
   ),
   toCustomFolderHome: withAccountId(() => '/dashboards/folders'),
-  toViewCustomFolder: withAccountId(({ folderId }: { folderId: string }) => `/dashboards/folder/${folderId}`)
+  toViewCustomFolder: withAccountId(({ folderId }: { folderId: string }) => `/dashboards/folder/${folderId}`),
 
   /****************** Secret Usage************************************************************************************/
+
+  /****************** Chaos Module ************************************************************************************/
+  toChaos: withAccountId(() => `/chaos`),
+  toChaosMicroFrontend: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/`
+  ),
+
+  // These RoutesDestinations are defined in the MicroFrontend
+  toChaosWorkflows: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/workflows`
+  ),
+  toChaosHubs: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-hubs`
+  ),
+  toChaosAgents: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/agents`
+  )
 }
 
 export default routes

@@ -28,6 +28,7 @@ pageErrorMsg:
   noBudgetMsg: No Budgets created yet
   noBudgetInfo: You budget amounts, thresholds and alerts on perspectives.
   noRecommendations: 'Currently there are no recommendations for your clusters.'
+  noFilteredRecommendations: There are no recommendations for the filters applied.
   recommendationDesc: 'Recommendations are shown only for cluster data (workloads and nodes). Add now to get started.'
 homepage:
   slogan: 'Get granular cloud cost visibility, enable powerful cost optimization through intelligent automation, and set vital budgets and forecasts for cost governance. Take your cloud cost management to the next level with Harness.'
@@ -54,6 +55,8 @@ co:
   noDataForDryRunMsg: 'There are no AutoStopping Rules in Dry Run mode.'
   noDataForActiveRulesMsg: 'There are no AutoStopping Rules.'
   deleteRuleSuccessMessage: 'Rule {{name}} deleted successfully'
+  createAsRule: 'Create AutoStopping Rule'
+  editAsRule: 'Edit AutoStopping Rule'
   landingPageText:
     '<b>AutoStopping Rules</b> dynamically make sure that your <i>non-production workloads</i> are <b>running (and costing you)
     only when you’re using them</b>, and never when they are idle. Additionally, run your workloads on fully
@@ -61,6 +64,8 @@ co:
   breadCrumb:
     rules: 'AutoStopping Rules'
   noData: 'No data available. Please check after sometime'
+  noDataForDateRange: 'No data available for this date range.'
+  noDataForSearchAndDateRange: 'No data available for this search term and date range.'
   ruleDrawer:
     usageTime: 'Usage Time'
     logs: '{{ $.pipeline.verification.analysisTab.logs }}'
@@ -83,6 +88,7 @@ co:
             kubernetes: '{{$.connectors.title.k8sCluster}}'
             gcpVms: 'GCE VM(s)'
             ec2Vms: 'EC2 VM(s)'
+            azureVms: 'Azure VM(s)'
             ecsService: 'ECS Service'
             rdsInstances: 'RDS Instance'
             ig: Instance groups
@@ -463,6 +469,9 @@ co:
     hostName: 'Host name'
     computeType: 'Compute type'
     customDomain: 'Custom domain'
+  filters:
+    resourceTypeLabelWithExample: 'Resource Type (ECS, K8s, RDS, etc.)'
+    namespaceLabel: 'Namespaces (kubernetes only)'
 
 learnMore: Learn more about Cloud Cost Management
 ceTrialHomePage:
@@ -564,6 +573,11 @@ recommendation:
       name: '{{ $.name }}'
       namespace: '{{ $.common.namespace }}'
       enterCost: Enter Cost
+      potentialSpend: Potential Spend ($)
+      savings: Savings ($)
+      spendPlaceholder: Enter minimum Potential spend
+      savingsPlaceholder: Enter minimum savings
+      resourceName: '{{ $.auditTrail.resourceNameLabel }}'
     listTableHeaders:
       monthlySavings: 'MONTHLY SAVINGS'
       resourceName: 'RESOURCE NAME'
@@ -681,6 +695,7 @@ perspectives:
       memoryUnitPrice: 'Memory Unit Price'
       podCapacity: 'Pod Capacity'
   nodeDetails:
+    header: Node Details
     nodeDetailsText: 'NODE DETAILS'
     aggregation:
       average: Average
@@ -819,6 +834,28 @@ perspectives:
       exceeds: exceeds
       percent: '% of Budget'
       createAlert: '+ add new alert'
+  folders:
+    customFolders: '{{ $.dashboards.homePage.folders }}'
+    newFolder: New folder
+    createNewFolderHeading: Create new Folder for Perspectives
+    folderNamePlaceholder: Enter folder name
+    selectPerspectiveLabel: Include perspectives
+    folderCreated: Perspective Folder created successfully!!
+    folderDeleted: Folder deleted successfully!!
+    folderUpdated: Folder updated successfully!!
+    moveFolderTitle: Move to folder
+    currentFolderLabel: Current Folder
+    moveExistingFolder: Move to an existing folder
+    createNewFolder: Create a new folder
+    folderNameLabel: '{{ $.dashboards.resourceModal.folders }}'
+    moveToLabel: Move to
+    folderMoved: Folder moved succesfully!!
+    folderNameRequired: Forder name is required!
+    folderSelectionRequired: Please select any folder to move.
+    deletedConfirmationTitle: Delete Folder
+    deletedConfirmationDesc: Deleting the folder will not delete the perspectives, all perspectives in the current folder will be moved to the default folder.
+  emptyStateTitle: You have not created any perspectives yet in this folder
+  emptyStateDesc: Create a new one or explore our Out of the box perspectives
 overview:
   title: '{{ $.overview }}'
   seeAll: See all
@@ -954,6 +991,13 @@ anomalyDetection:
     groupByNoneValue: none
     groupByPerspectivePlaceholder: All Perspectives
     groupByCloudProvidersPlaceholder: All Cloud Providers
+    awsFilters: AWS Filters
+    clusterFilters: Cluster Filters
+    gcpFilters: GCP Filters
+    azureFilters: Azure Filters
+    actualSpend: Actual Spend ($)
+    spendPlaceholder: Enter minimum spend
+    anomalousSpend: Anomalous Spend ($)
   summary:
     totalCountText: Anomalies Detected
     costImpacted: Total Cost Impact

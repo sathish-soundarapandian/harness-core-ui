@@ -36,6 +36,7 @@ export class CFRollbackStack extends PipelineStep<RollbackStackStepInfo> {
   protected stepIcon: IconName = 'cloud-formation-rollback'
   protected stepName = 'CloudFormation Rollback Stack'
   protected stepDescription: keyof StringsMap = 'cd.cloudFormation.rollbackDescription'
+  protected stepIconSize = 32
 
   protected defaultValues = {
     type: StepType.CloudFormationRollbackStack,

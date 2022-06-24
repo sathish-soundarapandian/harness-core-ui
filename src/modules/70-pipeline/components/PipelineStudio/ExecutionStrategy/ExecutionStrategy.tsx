@@ -36,7 +36,13 @@ import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
 import { PageSpinner } from '@common/components'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
-import { getSelectedDeploymentType, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import {
+  getDeploymentTypeWithSvcEnvFF,
+  getSelectedDeploymentType,
+  ServiceDeploymentType
+} from '@pipeline/utils/stageHelpers'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerTypes } from '../PipelineContext/PipelineActions'
 import Default from './resources/BlankCanvas.png'
@@ -48,6 +54,7 @@ import CanaryVideo from './resources/Canary-deployment.mp4'
 import Rolling from './resources/Rolling-Update-deployment.png'
 import BlueGreen from './resources/Blue-Green-deployment.png'
 import Canary from './resources/Canary-deployment.png'
+import { isNewServiceEnvEntity } from '../CommonUtils/DeployStageSetupShellUtils'
 import css from './ExecutionStrategy.module.scss'
 
 export interface ExecutionStrategyProps {
@@ -101,20 +108,25 @@ function ExecutionStrategyRef(
     getStageFromPipeline
   } = usePipelineContext()
   const { getString } = useStrings()
+  const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+
   const [strategiesByDeploymentType, setStrategies] = useState([])
   const [isSubmitDisabled, disableSubmit] = useState(false)
   const [isVerifyEnabled, setIsVerifyEnabled] = useState(false)
   const [showPlayButton, setShowPlayButton] = useState<boolean>(false)
   const logger = loggerFor(ModuleName.CD)
+
   const serviceDefinitionType = useCallback((): GetExecutionStrategyYamlQueryParams['serviceDefinitionType'] => {
     const isPropagating = get(selectedStage, 'stage.spec.serviceConfig.useFromStage', null)
+    if (isNewServiceEnvEntity(isSvcEnvEntityEnabled, selectedStage?.stage as DeploymentStageElementConfig)) {
+      return getDeploymentTypeWithSvcEnvFF(selectedStage as StageElementWrapper<DeploymentStageElementConfig>)
+    }
     return getSelectedDeploymentType(
       selectedStage as StageElementWrapper<DeploymentStageElementConfig>,
       getStageFromPipeline,
       isPropagating
     )
-  }, [getStageFromPipeline, selectedStage])
-
+  }, [getStageFromPipeline, isSvcEnvEntityEnabled, selectedStage])
   const [selectedStrategy, setSelectedStrategy] = useState<StrategyType>(
     serviceDefinitionType() === ServiceDeploymentType.ServerlessAwsLambda ? 'Basic' : 'Rolling'
   )

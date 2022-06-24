@@ -1,6 +1,6 @@
 import { aliasQuery } from '../../utils/graphql-utils'
 
-describe('CCM Budget Creation flow', () => {
+describe('CCM Perspective Creation flow', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -53,6 +53,13 @@ describe('CCM Budget Creation flow', () => {
       }
     ).as('getPerspective')
 
+    cy.intercept('GET', 'ccm/api/perspectiveFolders?routingId=accountId&accountIdentifier=accountId', req => {
+      req.reply({
+        statusCode: 200,
+        fixture: 'ccm/api/FetchFolders'
+      })
+    }).as('getFolders')
+
     cy.intercept(
       'GET',
       'ccm/api/budgets/perspectiveBudgets?routingId=accountId&accountIdentifier=accountId&perspectiveId=sampleUUID',
@@ -75,6 +82,7 @@ describe('CCM Budget Creation flow', () => {
     cy.wait('@gqlFetchCcmMetaDataQuery')
 
     cy.contains('p', 'Perspectives').click()
+    cy.wait('@getFolders')
 
     cy.contains('span', 'New Perspective').click()
     cy.wait('@getPerspective')

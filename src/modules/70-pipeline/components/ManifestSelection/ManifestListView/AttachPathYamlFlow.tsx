@@ -98,7 +98,7 @@ function AttachPathYamlFlow({
                   allowableTypes={allowableTypes}
                   fieldPath="valuesPaths"
                   pathLabel={ManifestToPathLabelMap[manifestType] && getString(ManifestToPathLabelMap[manifestType])}
-                  placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                  placeholder={getString('pipeline.manifestType.pathPlaceholder')}
                 />
                 <Layout.Horizontal>
                   <Button

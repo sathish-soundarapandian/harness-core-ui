@@ -34,7 +34,6 @@ import css from '../../../ChangeEventCard.module.scss'
 export default function HarnessNextGenEventCard({ data }: { data: ChangeEventDTO }): JSX.Element {
   const { getString } = useStrings()
   const [timeStamps, setTimestamps] = useState<[number, number]>([0, 0])
-  const changeTitleData: ChangeTitleData = useMemo(() => createChangeTitleData(data), [])
   const changeDetailsData: ChangeDetailsDataInterface = useMemo(() => createChangeDetailsData(data), [])
   const metadata: HarnessCDEventMetadata = defaultTo(data.metadata, {})
   const { artifactType = '', artifactTag = '', verifyStepSummaries } = metadata
@@ -52,6 +51,13 @@ export default function HarnessNextGenEventCard({ data }: { data: ChangeEventDTO
   })
 
   const { pipelineExecutionSummary } = defaultTo(executionDetails?.data, {})
+  const { pipelineIdentifier, runSequence, status } = defaultTo(pipelineExecutionSummary, {})
+
+  const changeTitleData: ChangeTitleData = useMemo(
+    () => createChangeTitleData(data, pipelineIdentifier, runSequence, status),
+    [pipelineExecutionSummary]
+  )
+
   const timePassed = useMemo(() => {
     /* istanbul ignore else */ if (metadata.deploymentStartTime && metadata.deploymentEndTime) {
       return durationAsString(metadata.deploymentEndTime, moment().valueOf())

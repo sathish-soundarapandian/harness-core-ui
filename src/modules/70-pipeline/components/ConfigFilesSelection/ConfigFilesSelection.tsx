@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useCallback, useMemo } from 'react'
+import React, { useState, useMemo } from 'react'
 import { Layout } from '@wings-software/uicore'
 
 import { useParams } from 'react-router-dom'
@@ -14,12 +14,12 @@ import { useParams } from 'react-router-dom'
 import get from 'lodash-es/get'
 // import set from 'lodash-es/set'
 
-import { defaultTo, isEmpty } from 'lodash-es'
+// import { defaultTo, isEmpty, merge } from 'lodash-es'
 
-import { useGetServiceV2, ServiceResponseDTO, NGServiceConfig } from 'services/cd-ng'
+import { useGetServiceV2 } from 'services/cd-ng'
 // import { useGetConnectorListV2 } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { yamlParse } from '@common/utils/YamlHelperMethods'
+// import { yamlParse } from '@common/utils/YamlHelperMethods'
 
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 // import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
@@ -68,6 +68,7 @@ export default function ConfigFilesSelection({
     queryParams: { accountIdentifier: accountId, orgIdentifier: orgIdentifier, projectIdentifier: projectIdentifier },
     lazy: true
   })
+
   //   const { showError } = useToaster()
   //   const { getRBACErrorMessage } = useRBACError()
 
@@ -88,35 +89,25 @@ export default function ConfigFilesSelection({
     setSelectedConfig(configFile)
   }
 
-  //   const listOfManifests = useMemo(() => {
-  //     if (isPropagating) {
-  //       return get(stage, 'stage.spec.serviceConfig.stageOverrides.manifests', [])
+  //   const getServiceData = useCallback(() => {
+  //     const serviceData = selectedServiceResponse?.data?.service as ServiceResponseDTO
+  //     if (!isEmpty(serviceData?.yaml)) {
+  //       const parsedYaml = yamlParse<NGServiceConfig>(defaultTo(serviceData.yaml, ''))
+  //       return parsedYaml.service?.serviceDefinition
+  //     }
+  //   }, [selectedServiceResponse?.data?.service])
+
+  //   const getConfigFilesPath = useCallback((): any => {
+  //     if (!isReadonly) {
+  //       const serviceData = getServiceData()
+  //       return serviceData?.spec?.configFiles
   //     }
 
-  //     return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests', [])
-  //   }, [isPropagating, stage])
-
-  const getServiceData = useCallback(() => {
-    const serviceData = selectedServiceResponse?.data?.service as ServiceResponseDTO
-    if (!isEmpty(serviceData?.yaml)) {
-      const parsedYaml = yamlParse<NGServiceConfig>(defaultTo(serviceData.yaml, ''))
-      return parsedYaml.service?.serviceDefinition
-    }
-  }, [selectedServiceResponse?.data?.service])
-
-  const getConfigFilesPath = useCallback((): any => {
-    if (!isReadonly) {
-      const serviceData = getServiceData()
-      return serviceData?.spec?.configFiles
-    }
-
-    if (isPropagating) {
-      return get(stage, 'stage.spec.serviceConfig.stageOverrides.configFiles', [])
-    }
-    return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.configFiles', {})
-  }, [getServiceData, isPropagating, isReadonly, stage])
-
-  const configFiles = getConfigFilesPath()
+  //     if (isPropagating) {
+  //       return get(stage, 'stage.spec.serviceConfig.stageOverrides.configFiles', [])
+  //     }
+  //     return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.configFiles', [])
+  //   }, [getServiceData, isPropagating, isReadonly, stage])
 
   //   const updateStageData = () => {
   //     return produce(stage, draft => {
@@ -129,21 +120,21 @@ export default function ConfigFilesSelection({
   //   }
 
   const listOfConfigFiles = useMemo(() => {
-    if (!isReadonly) {
-      const serviceData = selectedServiceResponse?.data?.service as ServiceResponseDTO
-      if (!isEmpty(serviceData?.yaml)) {
-        const parsedYaml = yamlParse<NGServiceConfig>(defaultTo(serviceData.yaml, ''))
-        const serviceInfo = parsedYaml.service?.serviceDefinition
-        return serviceInfo?.spec.manifests
-      }
-      return []
-    }
+    // if (!isReadonly) {
+    //   const serviceData = selectedServiceResponse?.data?.service as ServiceResponseDTO
+    //   if (!isEmpty(serviceData?.yaml)) {
+    //     const parsedYaml = yamlParse<NGServiceConfig>(defaultTo(serviceData.yaml, ''))
+    //     const serviceInfo = parsedYaml.service?.serviceDefinition
+    //     return serviceInfo?.spec.configFiles
+    //   }
+    //   return []
+    // }
     if (isPropagating) {
       return get(stage, 'stage.spec.serviceConfig.stageOverrides.configFiles', [])
     }
 
     return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.configFiles', [])
-  }, [isPropagating, isReadonly, selectedServiceResponse?.data?.service, stage, configFiles])
+  }, [isPropagating, isReadonly, selectedServiceResponse?.data?.service, stage])
 
   return (
     <Layout.Vertical>
@@ -162,20 +153,6 @@ export default function ConfigFilesSelection({
         allowableTypes={allowableTypes}
         allowOnlyOne={isServerlessDeploymentType(deploymentType)}
       />
-      {/* <button
-        onClick={() => {
-          if (stage) {
-            const path = 'stage.spec.serviceConfig.serviceDefinition.spec.configFiles'
-            updateStage(
-              produce(stage, draft => {
-                set(draft, path, ['test'])
-              }).stage as StageElementConfig
-            )
-          }
-        }}
-      >
-        click
-      </button> */}
     </Layout.Vertical>
   )
 }

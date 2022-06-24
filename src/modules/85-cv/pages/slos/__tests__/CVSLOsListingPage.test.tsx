@@ -111,16 +111,13 @@ describe('CVSLOsListingPage', () => {
 
     expect(screen.queryByText('cv.slos.title')).toBeInTheDocument()
     expect(screen.getByText('cv.slos.createSLO')).toBeInTheDocument()
+    expect(document.title).toBe('cv.srmTitle | cv.slos.title | harness')
   })
 
   test('With monitoredServiceIdentifier it should not render with the page headers', () => {
-    render(
-      <ComponentWrapper
-        monitoredService={{ identifier: 'monitored_service_identifier', name: 'monitored_service_identifier' }}
-      />
-    )
+    render(<ComponentWrapper />)
 
-    expect(screen.queryByText('cv.slos.title')).not.toBeInTheDocument()
+    expect(screen.queryByText('cv.slos.title')).toBeInTheDocument()
     expect(screen.getByText('cv.slos.createSLO')).toBeInTheDocument()
   })
 
@@ -133,20 +130,11 @@ describe('CVSLOsListingPage', () => {
   })
 
   test('it should have monitored service identifier query param when adding new SLO from MS details page', () => {
-    render(
-      <ComponentWrapper
-        monitoredService={{ identifier: 'monitored_service_identifier', name: 'monitored_service_identifier' }}
-      />
-    )
+    render(<ComponentWrapper />)
 
     userEvent.click(screen.getByText('cv.slos.createSLO'))
 
-    expect(
-      screen.getByText(
-        routes.toCVCreateSLOs({ ...pathParams, module: 'cv' }) +
-          '?monitoredServiceIdentifier=monitored_service_identifier'
-      )
-    ).toBeInTheDocument()
+    expect(screen.getByText(routes.toCVCreateSLOs({ ...pathParams, module: 'cv' }))).toBeInTheDocument()
   })
 
   test('it should show the loader while fetching the user journeys', () => {

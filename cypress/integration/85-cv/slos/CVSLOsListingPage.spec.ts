@@ -36,14 +36,14 @@ import {
   resetErrorBudget
 } from '../../../support/85-cv/slos/constants'
 
-describe('CVSLOsListingPage', () => {
+describe.skip('CVSLOsListingPage', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => false)
     cy.login('test', 'test')
     cy.visitChangeIntelligence()
   })
 
-  it('it should ensure SLO card features are working fine', () => {
+  it.skip('it should ensure SLO card features are working fine', () => {
     cy.intercept('GET', listSLOsCall, errorResponse)
     cy.intercept('DELETE', deleteSLOData, errorResponse).as('deleteSLOData')
     cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
@@ -94,7 +94,7 @@ describe('CVSLOsListingPage', () => {
     cy.contains('span', 'Oops, something went wrong on our end. Please contact Harness Support.').should('be.visible')
   })
 
-  it('should verify filters', () => {
+  it.skip('should verify filters', () => {
     cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
     cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponse)
     cy.intercept('GET', listSLOsCallWithUserJourneySecondJourney, listSLOsCallResponse)
@@ -168,7 +168,7 @@ describe('CVSLOsListingPage', () => {
     cy.contains('h2', 'SLO-1').should('be.visible')
   })
 
-  it('should not render Error Budget reset option for type Rolling', () => {
+  it.skip('should not render Error Budget reset option for type Rolling', () => {
     cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponse)
     cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
     cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse)

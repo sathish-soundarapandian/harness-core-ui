@@ -12,6 +12,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps } from '@common/utils/routeUtils'
 import * as customDashboardServices from 'services/custom-dashboards'
+import type { StringKeys } from 'framework/strings/StringsContext'
 import * as dashboardsContext from '../../DashboardsContext'
 import HomePage from '../HomePage'
 
@@ -48,15 +49,21 @@ describe('HomePage', () => {
   test('it should change the sort order when a sort option is clicked', async () => {
     renderComponent()
 
+    const mostViewedSelectionText: StringKeys = 'dashboards.dashboardSortingOptions.mostViewed'
+
     const sortByButton = screen.getByRole('button', { name: 'dashboards.sortBy Select Option chevron-down' })
     userEvent.click(sortByButton)
-    await waitFor(() => expect(screen.getByText('Most Viewed')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText(mostViewedSelectionText)).toBeInTheDocument())
 
-    const mostViewedButton = screen.getByText('Most Viewed')
+    const mostViewedButton = screen.getByText(mostViewedSelectionText)
     userEvent.click(mostViewedButton)
 
     await waitFor(() =>
-      expect(screen.getByRole('button', { name: 'dashboards.sortBy Most Viewed chevron-down' })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', {
+          name: 'dashboards.sortBy dashboards.dashboardSortingOptions.mostViewed chevron-down'
+        })
+      ).toBeInTheDocument()
     )
   })
 

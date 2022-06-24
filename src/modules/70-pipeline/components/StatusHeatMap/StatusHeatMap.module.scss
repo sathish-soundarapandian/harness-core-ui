@@ -1,0 +1,54 @@
+.statusHeatMap {
+  display: flex;
+  align-items: flex-start;
+  column-gap: var(--spacing-2);
+
+  &Cell {
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    flex: 0 0 auto;
+    background-color: var(--grey-200);
+
+    &[data-status='failed'],
+    &[data-status='errored'],
+    &[data-status='rejected'],
+    &[data-status='suspended'],
+    &[data-status='approvalrejected'] {
+      background-color: var(--red-400);
+    }
+
+    &[data-status='skipped'],
+    &[data-status='queued'],
+    &[data-status='aborted'],
+    &[data-status='discontinuing'],
+    &[data-status='expired'],
+    &[data-status='notstarted'] {
+      background-color: var(--grey-300);
+    }
+
+    &[data-status='success'],
+    &[data-status='ignorefailed'] {
+      background-color: var(--green-600);
+    }
+
+    &[data-status='running'],
+    &[data-status='asyncwaiting'],
+    &[data-status='taskwaiting'],
+    &[data-status='timedwaiting'] {
+      background-color: var(--primary-7);
+    }
+
+    &[data-status='resourcewaiting'],
+    &[data-status='approvalwaiting'],
+    &[data-status='interventionwaiting'],
+    &[data-status='inputwaiting'] {
+      background-color: var(--yellow-500);
+    }
+
+    &[data-status='pausing'],
+    &[data-status='paused'] {
+      background-color: var(--primary-2);
+    }
+  }
+}

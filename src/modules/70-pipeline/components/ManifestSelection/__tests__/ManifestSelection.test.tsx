@@ -17,6 +17,7 @@ import {
 import ManifestSelection from '../ManifestSelection'
 import ManifestListView from '../ManifestListView/ManifestListView'
 import pipelineContextMock from './pipeline_mock.json'
+import gitOpsEnabledPipeline from './gitops_pipeline.json'
 import connectorsData from './connectors_mock.json'
 
 const fetchConnectors = (): Promise<unknown> => Promise.resolve(connectorsData)
@@ -37,11 +38,20 @@ const getContextValue = (): PipelineContextInterface => {
   } as any
 }
 
+const getGitOpsContextValue = (): PipelineContextInterface => {
+  return {
+    ...gitOpsEnabledPipeline,
+    getStageFromPipeline: jest.fn(() => {
+      return { stage: gitOpsEnabledPipeline.state.pipeline.stages[0], parent: undefined }
+    })
+  } as any
+}
+
 describe('ManifestSelection tests', () => {
   test(`renders without crashing`, () => {
     const { container } = render(
       <TestWrapper>
-        <ManifestSelection readonly={false} deploymentType="Kubernetes" />
+        <ManifestSelection isReadonlyServiceMode={false} readonly={false} deploymentType="Kubernetes" />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -51,7 +61,7 @@ describe('ManifestSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ManifestSelection readonly={false} deploymentType="Kubernetes" />
+          <ManifestSelection isReadonlyServiceMode={false} readonly={false} deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -72,7 +82,7 @@ describe('ManifestSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ManifestSelection readonly={false} deploymentType="Kubernetes" />
+          <ManifestSelection isReadonlyServiceMode={false} readonly={false} deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -97,7 +107,7 @@ describe('ManifestSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ManifestSelection readonly={false} deploymentType="Kubernetes" />
+          <ManifestSelection isReadonlyServiceMode={false} readonly={false} deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -115,7 +125,7 @@ describe('ManifestSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ManifestSelection readonly={false} deploymentType="Kubernetes" />
+          <ManifestSelection isReadonlyServiceMode={false} readonly={false} deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -133,7 +143,12 @@ describe('ManifestSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ManifestSelection readonly={false} deploymentType="Kubernetes" isPropagating={false} />
+          <ManifestSelection
+            isReadonlyServiceMode={false}
+            readonly={false}
+            deploymentType="Kubernetes"
+            isPropagating={false}
+          />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -144,7 +159,12 @@ describe('ManifestSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ManifestSelection readonly={false} deploymentType="Kubernetes" isPropagating={true} />
+          <ManifestSelection
+            isReadonlyServiceMode={false}
+            readonly={false}
+            deploymentType="Kubernetes"
+            isPropagating={true}
+          />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -361,5 +381,17 @@ describe('ManifestSelection tests', () => {
       findByText(portal as HTMLElement, 'pipeline.manifestType.manifestRepoType')
     )
     expect(manifestLabel).toBeDefined()
+  })
+
+  test('when gitopsenabled is true', () => {
+    const { container } = render(
+      <TestWrapper>
+        <PipelineContext.Provider value={getGitOpsContextValue()}>
+          <ManifestSelection isReadonlyServiceMode={false} readonly={false} deploymentType="Kubernetes" />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    expect(container).toMatchSnapshot()
   })
 })

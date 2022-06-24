@@ -6,7 +6,6 @@
  */
 
 import React from 'react'
-import { defaultTo } from 'lodash-es'
 import type { CellProps, Column, Renderer } from 'react-table'
 import cx from 'classnames'
 import {
@@ -38,7 +37,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacButton from '@rbac/components/Button/Button'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { formatCount } from '@common/utils/utils'
-import { StoreType } from '@common/constants/GitSyncTypes'
+import type { StoreType } from '@common/constants/GitSyncTypes'
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
 import { Badge } from '@pipeline/pages/utils/Badge/Badge'
 import { getFeaturePropsForRunPipelineButton } from '@pipeline/utils/runPipelineUtils'
@@ -104,9 +103,10 @@ const RenderColumnMenu: Renderer<CellProps<PipelineDTO>> = ({ row, column }) => 
 
   const { openRunPipelineModal } = useRunPipelineModal({
     pipelineIdentifier: (data.identifier || '') as string,
-    repoIdentifier: defaultTo(data.gitDetails?.repoIdentifier, data.gitDetails?.repoName),
+    repoIdentifier: isGitSyncEnabled ? data.gitDetails?.repoIdentifier : data.gitDetails?.repoName,
     branch: data.gitDetails?.branch,
-    storeType: data.gitDetails?.repoName ? StoreType.REMOTE : StoreType.INLINE
+    connectorRef: data.connectorRef,
+    storeType: data.storeType as StoreType
   })
 
   const {
@@ -331,6 +331,7 @@ const RenderRunPipeline: Renderer<CellProps<PipelineDTO>> = ({ row }): JSX.Eleme
   const rowdata = row.original
 
   const { getString } = useStrings()
+  const { isGitSyncEnabled } = useAppStore()
 
   const runPipeline = (): void => {
     openRunPipelineModal()
@@ -338,9 +339,10 @@ const RenderRunPipeline: Renderer<CellProps<PipelineDTO>> = ({ row }): JSX.Eleme
 
   const { openRunPipelineModal } = useRunPipelineModal({
     pipelineIdentifier: (rowdata.identifier || '') as string,
-    repoIdentifier: defaultTo(rowdata.gitDetails?.repoIdentifier, rowdata.gitDetails?.repoName),
+    repoIdentifier: isGitSyncEnabled ? rowdata.gitDetails?.repoIdentifier : rowdata.gitDetails?.repoName,
     branch: rowdata.gitDetails?.branch,
-    storeType: rowdata.gitDetails?.repoName ? StoreType.REMOTE : StoreType.INLINE
+    connectorRef: rowdata.connectorRef,
+    storeType: rowdata.storeType as StoreType
   })
 
   return (

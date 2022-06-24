@@ -28,7 +28,7 @@ export interface ChangeDetailsDataInterface {
 export interface ChangeTitleData {
   name: string | undefined
   type: ChangeEventDTO['type']
-  executionId: string
+  executionId: string | number
   url?: string
   status?: string
   serviceIdentifier?: string

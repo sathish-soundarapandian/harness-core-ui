@@ -57,7 +57,8 @@ export const DynatraceProductNames = {
 }
 
 export const SplunkProduct = {
-  SPLUNK_LOGS: 'Splunk Cloud Logs'
+  SPLUNK_LOGS: 'Splunk Cloud Logs',
+  SPLUNK_METRICS: 'Splunk Metric'
 }
 
 export const ConnectorRefFieldName = 'connectorRef'

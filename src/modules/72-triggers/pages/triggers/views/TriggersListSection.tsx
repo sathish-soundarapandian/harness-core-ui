@@ -23,9 +23,10 @@ import {
   tagsType,
   useConfirmationDialog,
   useToaster,
-  TableV2
+  TableV2,
+  HarnessDocTooltip
 } from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import copy from 'clipboard-copy'
 import { Classes, Intent, Menu, Position } from '@blueprintjs/core'
 import { isUndefined, isEmpty, sum, get } from 'lodash-es'
@@ -527,7 +528,9 @@ const RenderPipelineReferenceBranch: Renderer<CellProps<NGTriggerDetailsResponse
     data = parse(row.original?.yaml || '')
     return (
       <Container flex>
-        <Text lineClamp={1}>{get(data, 'trigger.pipelineBranchName')}</Text>
+        <Text icon="git-new-branch" iconProps={{ size: 14 }} lineClamp={1}>
+          {get(data, 'trigger.pipelineBranchName')}
+        </Text>
       </Container>
     )
   } catch (e) {
@@ -593,7 +596,15 @@ export const TriggersListSection: React.FC<TriggersListSectionProps> = ({
       ...(gitAwareForTriggerEnabled
         ? [
             {
-              Header: getString('triggers.pipelineReferenceBranch').toUpperCase(),
+              Header: (
+                <Text
+                  font={{ variation: FontVariation.TABLE_HEADERS }}
+                  data-tooltip-id="triggerPipelineReferenceBranch"
+                >
+                  {getString('triggers.pipelineReferenceBranch').toUpperCase()}
+                  <HarnessDocTooltip tooltipId="triggerPipelineReferenceBranch" useStandAlone={true} />
+                </Text>
+              ),
               accessor: 'yaml',
               width: '20%',
               disableSortBy: true,

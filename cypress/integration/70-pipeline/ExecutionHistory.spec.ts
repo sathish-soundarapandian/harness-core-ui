@@ -1,6 +1,7 @@
 import {
   accountId,
   executionHistoryRoute,
+  executionMetadata,
   orgIdentifier,
   pipelineExecutionCall,
   pipelineExecutionSummaryAPI,
@@ -49,9 +50,12 @@ describe('Pipeline Execution History', () => {
     }).as('executionSummary')
     cy.visitPageAssertion()
     // Check Run button in header
-    cy.get('.PageSubHeader--container').within(() => {
-      cy.findByText('Run').click()
-    })
+    cy.wait(1000)
+    cy.get('.PageSubHeader--container')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Run').click()
+      })
     cy.get('.RunPipelineForm-module_footer_BfhlT2').within(() => {
       cy.findByText('Run Pipeline').should('exist')
       cy.findByText('Cancel').should('exist')
@@ -273,5 +277,35 @@ describe('Pipeline Execution History', () => {
       `account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/executions/og6igi2RRcWUVLPqUUeAHQ/pipeline`
     )
     cy.go('back')
+  })
+
+  it('Compare various executions', () => {
+    cy.intercept('GET', pipelineSummaryCallAPI, {
+      fixture: 'pipeline/api/executionHistory/executionSummary.json'
+    }).as('executionSummary')
+    cy.intercept('POST', pipelineExecutionSummaryAPI, {
+      fixture: 'pipeline/api/executionHistory/executionSummary.json'
+    }).as('executionListSummary')
+    cy.intercept('GET', executionMetadata, {
+      fixture: 'pipeline/api/pipelineExecution/executionMetadata.json'
+    }).as('executionMetadata')
+
+    cy.visitPageAssertion()
+    cy.wait('@executionListSummary')
+    cy.findAllByRole('button', {
+      name: /more/i
+    })
+      .first()
+      .click()
+    cy.findByText('Compare YAML’s').click()
+    cy.findByRole('button', {
+      name: /compare/i
+    }).should('be.disabled')
+    cy.findAllByRole('checkbox').eq(1).click({ force: true })
+    cy.findByRole('button', {
+      name: /compare/i
+    }).click()
+    cy.wait('@executionMetadata')
+    cy.findAllByRole('heading', { name: 'testPipeline_Cypress' }).should('have.length', 2)
   })
 })

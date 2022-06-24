@@ -23,7 +23,7 @@ import {
 import { Color } from '@harness/design-system'
 import { Classes, Intent, Menu, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { useParams, useHistory } from 'react-router-dom'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { isEmpty } from 'lodash-es'
 import cx from 'classnames'
 import { isExecutionComplete } from '@pipeline/utils/statusHelpers'
 import { TimeAgoPopover } from '@common/exports'
@@ -113,9 +113,10 @@ function ContextMenu({
 
   const { openRunPipelineModal } = useRunPipelineModal({
     pipelineIdentifier: (pipeline.identifier || '') as string,
-    repoIdentifier: defaultTo(pipeline?.gitDetails?.repoIdentifier, pipeline?.gitDetails?.repoName),
+    repoIdentifier: isGitSyncEnabled ? pipeline?.gitDetails?.repoIdentifier : pipeline?.gitDetails?.repoName,
     branch: pipeline?.gitDetails?.branch,
-    storeType: pipeline.gitDetails?.repoName ? StoreType.REMOTE : StoreType.INLINE
+    connectorRef: pipeline?.connectorRef,
+    storeType: pipeline?.storeType as StoreType
   })
 
   const isPipelineInvalid = pipeline?.entityValidityDetails?.valid === false
@@ -261,7 +262,8 @@ export function PipelineCard({
           projectIdentifier,
           executionIdentifier: executionId,
           accountId,
-          module
+          module,
+          source: 'executions'
         })
       )
     }
@@ -276,9 +278,10 @@ export function PipelineCard({
 
   const { openRunPipelineModal } = useRunPipelineModal({
     pipelineIdentifier: (pipeline.identifier || '') as string,
-    repoIdentifier: defaultTo(pipeline?.gitDetails?.repoIdentifier, pipeline?.gitDetails?.repoName),
+    repoIdentifier: isGitSyncEnabled ? pipeline?.gitDetails?.repoIdentifier : pipeline?.gitDetails?.repoName,
     branch: pipeline?.gitDetails?.branch,
-    storeType: pipeline.gitDetails?.repoName ? StoreType.REMOTE : StoreType.INLINE
+    connectorRef: pipeline?.connectorRef,
+    storeType: pipeline?.storeType as StoreType
   })
   const {
     open: openClonePipelineModal,

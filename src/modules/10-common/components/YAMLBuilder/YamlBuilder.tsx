@@ -54,7 +54,11 @@ import {
   KEY_CODE_FOR_PERIOD,
   KEY_CODE_FOR_SPACE,
   KEY_CODE_FOR_CHAR_Z,
-  MAX_ERR_MSSG_LENGTH
+  MAX_ERR_MSSG_LENGTH,
+  CONTROL_EVENT_KEY_CODE,
+  META_EVENT_KEY_CODE,
+  KEY_CODE_FOR_CHAR_V,
+  KEY_CODE_FOR_CHAR_C
 } from './YAMLBuilderConstants'
 import CopyToClipboard from '../CopyToClipBoard/CopyToClipBoard'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
@@ -98,6 +102,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     existingYaml,
     isReadOnlyMode,
     isEditModeSupported = true,
+    isHarnessManaged = false,
     hideErrorMesageOnReadOnlyMode = false,
     showSnippetSection = true,
     invocationMap,
@@ -255,6 +260,13 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     []
   )
 
+  const showHarnessManagedError = useCallback(
+    throttle(() => {
+      showError(getString('common.showHarnessManagedError'), 5000)
+    }, 5000),
+    []
+  )
+
   const editorDidMount = (editor: editor.IStandaloneCodeEditor): void => {
     // editor.addAction({
     //   id: 'Paste',
@@ -388,8 +400,17 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   })
 
   const handleEditorKeyDownEvent = (event: IKeyboardEvent, editor: any): void => {
-    if (props.isReadOnlyMode && isEditModeSupported) {
-      openDialog()
+    if (isHarnessManaged) {
+      showHarnessManagedError()
+    } else if (props.isReadOnlyMode && isEditModeSupported) {
+      const { keyCode, code, ctrlKey, metaKey } = event
+      const isMetaOrControlKeyPressed = [CONTROL_EVENT_KEY_CODE, META_EVENT_KEY_CODE].includes(keyCode)
+      const isMetaOrControlKeyPressedForCopyPaste =
+        (ctrlKey || metaKey) && [KEY_CODE_FOR_CHAR_V, KEY_CODE_FOR_CHAR_C].includes(code)
+      if (!(isMetaOrControlKeyPressed || isMetaOrControlKeyPressedForCopyPaste)) {
+        // this is to avoid showing warning dialog if user just wants to copy paste
+        openDialog()
+      }
     } else if (props.isReadOnlyMode && !isEditModeSupported && !hideErrorMesageOnReadOnlyMode) {
       showNoPermissionError()
     }
@@ -460,7 +481,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         <li className={css.item} title={value} key={key}>
           {getString('yamlBuilder.lineNumberLabel')}&nbsp;
           {key + 1},&nbsp;
-          {truncate(value.toLowerCase(), { length: MAX_ERR_MSSG_LENGTH })}
+          {truncate(value, { length: MAX_ERR_MSSG_LENGTH })}
         </li>
       )
       errors.push(error)

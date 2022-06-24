@@ -103,7 +103,7 @@ describe('Configure Datadog health source', () => {
     cy.findByText('Monitored Service created').should('be.visible')
   })
 
-  it.skip('Add new Datadog logs health source for a monitored service ', () => {
+  it('Add new Datadog logs health source for a monitored service ', () => {
     cy.addNewMonitoredServiceWithServiceAndEnv()
     cy.populateDefineHealthSource(Connectors.DATADOG, connectorIdentifier, 'Data dog')
 

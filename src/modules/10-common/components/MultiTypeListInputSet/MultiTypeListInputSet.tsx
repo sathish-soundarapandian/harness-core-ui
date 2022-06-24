@@ -51,6 +51,7 @@ export interface MultiTypeListProps {
   style?: React.CSSProperties
   disabled?: boolean
   restrictToSingleEntry?: boolean
+  persistEmptyStringDefault?: boolean // required to save empty string and pass schema validation
 }
 
 const generateNewValue: () => { id: string; value: string } = () => ({
@@ -74,6 +75,7 @@ export const MultiTypeListInputSet = (props: MultiTypeListProps & ConnectorRefer
     showConnectorRef,
     connectorTypes,
     connectorRefRenderer,
+    persistEmptyStringDefault,
     ...restProps
   } = props
 
@@ -159,14 +161,19 @@ export const MultiTypeListInputSet = (props: MultiTypeListProps & ConnectorRefer
     let valueInCorrectFormat: ListType = []
     if (Array.isArray(value)) {
       valueInCorrectFormat = value
-        .filter(item => !!item.value && typeof item.value === 'string')
+        .filter(item => (persistEmptyStringDefault || !!item.value) && typeof item.value === 'string')
         .map(item => {
           return withObjectStructure && keyName ? { [keyName]: item.value } : item.value
         }) as ListType
     }
-
-    if (get(formik?.values, name, '') !== RUNTIME_INPUT_VALUE) {
-      if (isEmpty(valueInCorrectFormat)) {
+    const nameValue = get(formik?.values, name, '')
+    if (nameValue !== RUNTIME_INPUT_VALUE) {
+      if (!withObjectStructure && persistEmptyStringDefault && valueInCorrectFormat[0] === '') {
+        if (nameValue !== '') {
+          // need to set new empty string value
+          formik?.setFieldValue(name, '')
+        }
+      } else if (isEmpty(valueInCorrectFormat)) {
         formik?.setFieldValue(name, undefined)
       } else {
         formik?.setFieldValue(name, valueInCorrectFormat)

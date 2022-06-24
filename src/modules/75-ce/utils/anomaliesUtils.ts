@@ -11,7 +11,7 @@ import { DEFAULT_GROUP_BY } from './perspectiveUtils'
 
 const gcpEntities = ['gcpProduct', 'gcpProjectId', 'gcpSKUDescription']
 const awsEntities = ['awsUsageAccountId', 'awsServiceCode', 'awsInstancetype', 'awsUsageType']
-const azureEntities: string[] = []
+const azureEntities = ['azureSubscriptionGuid', 'azureMeterCategory', 'azureResourceGroup']
 const clusterEntities = ['clusterName', 'namespace', 'workloadName', 'workloadType']
 
 const cloudProviderToEntityMapping = {
@@ -20,6 +20,56 @@ const cloudProviderToEntityMapping = {
   [CloudProvider.CLUSTER]: clusterEntities,
   [CloudProvider.AZURE]: azureEntities
 }
+
+export const anomalyFilterValueColumns = [
+  'clustername',
+  'namespace',
+  'workloadname',
+  'gcpproject',
+  'gcpproduct',
+  'gcpskudescription',
+  'awsaccount',
+  'awsservice',
+  'awsusagetype',
+  'azuresubscriptionguid',
+  'azureresourcegroup',
+  'azuremetercategory'
+]
+
+export const filterKeyToKeyMapping: Record<string, string> = {
+  gcpProducts: 'gcpproduct',
+  gcpProjects: 'gcpproject',
+  gcpSKUDescriptions: 'gcpskudescription',
+  k8sClusterNames: 'clustername',
+  k8sNamespaces: 'namespace',
+  k8sWorkloadNames: 'workloadname',
+  awsAccounts: 'awsaccount',
+  awsServices: 'awsservice',
+  awsUsageTypes: 'awsusagetype',
+  azureSubscriptionGuids: 'azuresubscriptionguid',
+  azureResourceGroups: 'azureresourcegroup',
+  azureMeterCategories: 'azuremetercategory'
+}
+
+export const filterKeyToLabelMapping: Record<string, string> = {
+  gcpProducts: 'GCP Product',
+  gcpProjects: 'GCP Project',
+  gcpSKUDescriptions: 'GCP SKU Description',
+  k8sClusterNames: 'Cluster Name',
+  k8sNamespaces: 'Namespace',
+  k8sWorkloadNames: 'Workload',
+  awsAccounts: 'AWS Account',
+  awsServices: 'AWS Service',
+  awsUsageTypes: 'AWS Usage Type',
+  azureSubscriptionGuids: 'AZURE Subscription',
+  azureMeterCategories: 'AZURE Meter Categories',
+  azureResourceGroups: 'AZURE Resource'
+}
+
+export const k8sFilterKeys = ['k8sClusterNames', 'k8sNamespaces', 'k8sWorkloadNames']
+export const gcpFilterKeys = ['gcpProjects', 'gcpProducts', 'gcpSKUDescriptions']
+export const awsFilterKeys = ['awsAccounts', 'awsServices', 'awsUsageTypes']
+export const azureFilterKeys = ['azureSubscriptionGuids', 'azureMeterCategories', 'azureResourceGroups']
 
 const fieldToFieldNameMapping: Record<string, string> = {
   gcpProduct: 'Product',
@@ -33,7 +83,10 @@ const fieldToFieldNameMapping: Record<string, string> = {
   awsInstancetype: 'Instance Type',
   awsUsageType: 'Usage Type',
   workloadType: 'Workload Type',
-  gcpSkuDescription: 'SKUs'
+  gcpSkuDescription: 'SKUs',
+  azureSubscriptionGuid: 'Subscription ID',
+  azureMeterCategory: 'Meter category',
+  azureResourceGroup: 'Resource group name'
 }
 
 export function generateFilters(
@@ -42,7 +95,7 @@ export function generateFilters(
 ): QlceViewFilterInput[] {
   const filters: any = []
   const relatedEntities = cloudProviderToEntityMapping[cloudProvider]
-  relatedEntities.length &&
+  relatedEntities?.length &&
     relatedEntities.forEach(entity => {
       if (entityMap[entity]) {
         filters.push({
@@ -79,6 +132,9 @@ export function getCloudProviderFromFields(entityMap: Record<string, string | nu
   }
   if (entityMap.awsUsageAccountId) {
     return CloudProvider.AWS
+  }
+  if (entityMap.azureSubscriptionGuid) {
+    return CloudProvider.AZURE
   }
   return CloudProvider.CLUSTER
 }

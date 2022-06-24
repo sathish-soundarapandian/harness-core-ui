@@ -7,8 +7,10 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly fieldWrapper: string
   readonly group: string
   readonly minimalCard: string
+  readonly multiSelectField: string
   readonly withoutAligning: string
   readonly withoutSpacing: string
 }

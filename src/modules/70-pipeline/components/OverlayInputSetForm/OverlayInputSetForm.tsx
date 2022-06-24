@@ -68,6 +68,7 @@ import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext
 import type { CreateUpdateInputSetsReturnType, InputSetDTO } from '@pipeline/utils/types'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { getOverlayErrors } from '@pipeline/utils/runPipelineUtils'
+import { getYamlFileName } from '@pipeline/utils/yamlUtils'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
 import { InputSetSelector, InputSetSelectorProps } from '../InputSetSelector/InputSetSelector'
 import {
@@ -175,6 +176,7 @@ export function OverlayInputSetForm({
   const { showSuccess, showError, clear } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const [formErrors, setFormErrors] = React.useState<Record<string, any>>({})
+  const isPipelineRemote = gitSimplification && storeType === StoreType.REMOTE
   const commonQueryParams = useMemo(() => {
     return {
       accountIdentifier: accountId,
@@ -455,8 +457,7 @@ export function OverlayInputSetForm({
         'connectorRef',
         'repoName',
         'filePath',
-        'storeType',
-        'remoteType'
+        'storeType'
       )
       setSavedInputSetObj(inputSetObj)
       setInitialGitDetails(defaultTo(isEdit ? overlayInputSetResponse?.data?.gitDetails : gitDetails, {}))
@@ -573,7 +574,7 @@ export function OverlayInputSetForm({
           <Formik<OverlayInputSetDTO & GitContextProps & StoreMetadata>
             initialValues={{
               ...omit(inputSet, 'gitDetails', 'entityValidityDetails'),
-              repo: defaultTo(repoIdentifier, ''),
+              repo: isGitSyncEnabled ? defaultTo(repoIdentifier, '') : defaultTo(repoName, ''),
               branch: defaultTo(branch, ''),
               connectorRef: defaultTo(connectorRef, ''),
               repoName: defaultTo(repoName, ''),
@@ -589,10 +590,10 @@ export function OverlayInputSetForm({
             onSubmit={values => {
               handleSubmit(
                 { ...values, inputSetReferences: selectedInputSetReferences },
-                { repoIdentifier: values.repo, branch: values.branch },
+                { repoIdentifier: values.repo, branch: values.branch, repoName: values.repo },
                 {
                   connectorRef: values.connectorRef,
-                  repoName: values.repoName,
+                  repoName: values.repo,
                   branch: values.branch,
                   filePath: values.filePath,
                   storeType: values.storeType
@@ -641,13 +642,12 @@ export function OverlayInputSetForm({
                               />
                             </GitSyncStoreProvider>
                           )}
-                          {!isGitSyncEnabled && gitSimplification && storeType === StoreType.REMOTE && (
+                          {!isGitSyncEnabled && isPipelineRemote && (
                             <Container>
                               <GitSyncForm
                                 formikProps={formikProps as any}
                                 handleSubmit={noop}
                                 isEdit={isEdit}
-                                showRemoteTypeSelection={false}
                                 disableFields={
                                   !isEdit
                                     ? {
@@ -716,8 +716,7 @@ export function OverlayInputSetForm({
                                 'connectorRef',
                                 'repoName',
                                 'filePath',
-                                'storeType',
-                                'remoteType'
+                                'storeType'
                               ),
                               inputSetReferences: selectedInputSetReferences
                             }
@@ -728,6 +727,11 @@ export function OverlayInputSetForm({
                           isReadOnlyMode={isReadOnly}
                           showSnippetSection={false}
                           isEditModeSupported={!isReadOnly}
+                          fileName={getYamlFileName({
+                            isPipelineRemote,
+                            filePath: inputSet?.gitDetails?.filePath,
+                            defaultName: yamlBuilderReadOnlyModeProps.fileName
+                          })}
                         />
                       )}
                       <Layout.Horizontal padding={{ top: 'medium' }}>
@@ -742,11 +746,12 @@ export function OverlayInputSetForm({
                               parse(latestYaml)?.overlayInputSet,
                               {
                                 repoIdentifier: formikProps.values.repo,
-                                branch: formikProps.values.branch
+                                branch: formikProps.values.branch,
+                                repoName: formikProps.values.repo
                               },
                               {
                                 connectorRef: formikProps.values.connectorRef,
-                                repoName: formikProps.values.repoName,
+                                repoName: formikProps.values.repo,
                                 branch: formikProps.values.branch,
                                 filePath: formikProps.values.filePath,
                                 storeType: formikProps.values.storeType

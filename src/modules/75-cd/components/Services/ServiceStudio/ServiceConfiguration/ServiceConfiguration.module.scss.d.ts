@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly buttonsWrapper: string
   readonly nameIdDescriptionTags: string
   readonly nonModalView: string
   readonly notwide: string
@@ -15,5 +16,6 @@ declare const styles: {
   readonly serviceEntity: string
   readonly serviceModal: string
   readonly serviceStepBasicInfo: string
+  readonly yamlBuilder: string
 }
 export default styles

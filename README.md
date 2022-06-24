@@ -39,7 +39,7 @@ $ git clone git@github.com:harness/harness-core-ui.git
 $ cd harness-core-ui
 ```
 
-4. Add config to make Harness Github Package Registry accessible
+4. Add config to make Harness Github Package Registry accessible. Before running this step, make sure your github personal access token is authorized for both "wings-software" and "harness", step is here: https://docs.github.com/en/enterprise-cloud@latest/authentication/authenticating-with-saml-single-sign-on/authorizing-a-personal-access-token-for-use-with-saml-single-sign-on
 
 ```
 $ yarn setup-github-registry
@@ -47,7 +47,12 @@ $ yarn setup-github-registry
 
 > Note: This is only needed if this is the first UI project you are installing on your machine
 
-5. Install/Update/Refresh dependencies
+5. Create self-assigned certificate before running the app
+```
+$ yarn generate-certificate
+```
+
+6. Install/Update/Refresh dependencies
 
 ```
 $ yarn
@@ -57,7 +62,7 @@ $ yarn
 
 > Note: This is a shorthand for the command `yarn install`. Read more here: https://classic.yarnpkg.com/en/docs/usage
 
-6. Compile/Build the code **and** start the web-server in watch mode
+7. Compile/Build the code **and** start the web-server in watch mode
 
 ```
 $ yarn dev
@@ -65,6 +70,11 @@ $ yarn dev
 
 > Note: This will start the local server in watch mode with hot reloading. Any code changes will trigger fast patch rebuilds and refresh the page in the browser.
 
+8. View in the browser
+
+```
+https://localhost:8181
+```
 </details>
 
 ### Publishing
