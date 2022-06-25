@@ -118,6 +118,20 @@ export const getInfrastructureDefaultValue = (
         allowSimultaneousDeployments
       }
     }
+    case InfraDeploymentType.KubernetesAzureWebApp: {
+      const connectorRef = infrastructure?.spec?.connectorRef
+      const subscriptionId = infrastructure?.spec?.subscriptionId
+      const resourceGroup = infrastructure?.spec?.resourceGroup
+      const webApp = infrastructure?.spec?.webApp
+
+      return {
+        connectorRef,
+        subscriptionId,
+        resourceGroup,
+        webApp,
+        allowSimultaneousDeployments
+      }
+    }
     case InfraDeploymentType.PDC: {
       const { connectorRef, credentialsRef, delegateSelectors, hostFilters, hosts, attributeFilters } =
         infrastructure?.spec || {}
@@ -164,10 +178,11 @@ export interface InfrastructureGroup {
 
 export const getInfraGroups = (
   deploymentType: ServiceDefinition['type'],
-  getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
-  featureFlags: Record<string, boolean>
+  getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
+  // featureFlags: Record<string, boolean>
 ): InfrastructureGroup[] => {
-  const { NG_AZURE } = featureFlags
+  // const { NG_AZURE } = featureFlags
+  const NG_AZURE = true
   return isServerlessDeploymentType(deploymentType)
     ? [
         {
@@ -235,6 +250,11 @@ export const getInfraGroups = (
                   label: getString('cd.steps.azureInfraStep.azure'),
                   icon: 'microsoft-azure',
                   value: InfraDeploymentType.KubernetesAzure
+                },
+                {
+                  label: 'Azure Web App',
+                  icon: 'microsoft-azure',
+                  value: InfraDeploymentType.KubernetesAzureWebApp
                 }
               ]
             : [

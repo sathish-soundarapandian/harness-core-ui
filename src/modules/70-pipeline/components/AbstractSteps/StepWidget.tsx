@@ -47,6 +47,7 @@ export function StepWidget<T = unknown, U = unknown>(
   formikRef: StepFormikFowardRef<T>
 ): JSX.Element | null {
   const step = factory?.getStep<T>(type)
+  console.log(step, factory)
   if (!step) {
     return __DEV__ ? <Text intent="warning">Step not found</Text> : null
   } else if (stepViewType === StepViewType.InputVariable && !step.hasStepVariables) {

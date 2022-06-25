@@ -5435,6 +5435,7 @@ export interface InfrastructureDef {
     | 'KubernetesDirect'
     | 'KubernetesGcp'
     | 'KubernetesAzure'
+    | 'KubernetesAzureWebApp'
     | 'Pdc'
     | 'SshWinRmAzure'
     | 'ServerlessAwsLambda'
@@ -5458,6 +5459,7 @@ export interface InfrastructureDefinitionConfig {
     | 'KubernetesDirect'
     | 'KubernetesGcp'
     | 'KubernetesAzure'
+    | 'KubernetesAzureWebApp'
     | 'Pdc'
     | 'SshWinRmAzure'
     | 'ServerlessAwsLambda'
@@ -5483,6 +5485,7 @@ export interface InfrastructureRequestDTO {
     | 'KubernetesDirect'
     | 'KubernetesGcp'
     | 'KubernetesAzure'
+    | 'KubernetesAzureWebApp'
     | 'Pdc'
     | 'SshWinRmAzure'
     | 'ServerlessAwsLambda'
@@ -5512,6 +5515,7 @@ export interface InfrastructureResponseDTO {
     | 'KubernetesDirect'
     | 'KubernetesGcp'
     | 'KubernetesAzure'
+    | 'KubernetesAzureWebApp'
     | 'Pdc'
     | 'SshWinRmAzure'
     | 'ServerlessAwsLambda'
@@ -5816,6 +5820,15 @@ export type K8sAzureInfrastructure = Infrastructure & {
   releaseName: string
   resourceGroup: string
   subscriptionId: string
+  useClusterAdminCredentials?: boolean
+}
+
+export type K8sAzureWebAppInfrastructure = Infrastructure & {
+  connectorRef: string
+  deploymentSlot?: string
+  resourceGroup: string
+  subscriptionId: string
+  webApp: string
   useClusterAdminCredentials?: boolean
 }
 

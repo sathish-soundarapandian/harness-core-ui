@@ -27,6 +27,7 @@ export enum InfraDeploymentType {
   KubernetesGcp = 'KubernetesGcp',
   PDC = 'Pdc',
   KubernetesAzure = 'KubernetesAzure',
+  KubernetesAzureWebApp = 'KubernetesAzureWebApp',
   ServerlessAwsLambda = 'ServerlessAwsLambda',
   ServerlessGoogleFunctions = 'ServerlessGoogleFunctions',
   ServerlessAzureFunctions = 'ServerlessAzureFunctions',

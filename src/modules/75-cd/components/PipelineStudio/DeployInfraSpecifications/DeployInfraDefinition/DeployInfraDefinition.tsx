@@ -15,6 +15,7 @@ import {
   getProvisionerExecutionStrategyYamlPromise,
   Infrastructure,
   K8sAzureInfrastructure,
+  K8sAzureWebAppInfrastructure,
   K8SDirectInfrastructure,
   K8sGcpInfrastructure,
   PdcInfrastructure,
@@ -42,6 +43,7 @@ import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipelin
 import SelectInfrastructureType from '@cd/components/PipelineStudio/DeployInfraSpecifications/SelectInfrastructureType/SelectInfrastructureType'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { AzureInfrastructureSpec } from '@cd/components/PipelineSteps/AzureInfrastructureStep/AzureInfrastructureStep'
+import type { AzureWebAppInfrastructureSpec } from '@cd/components/PipelineSteps/AzureWebAppInfrastructureStep/AzureWebAppInfrastructureStep'
 import {
   detailsHeaderName,
   getCustomStepProps,
@@ -81,13 +83,15 @@ type InfraTypes =
   | ServerlessInfraTypes
   | K8sAzureInfrastructure
   | PdcInfrastructure
+  | K8sAzureWebAppInfrastructure
 
 export default function DeployInfraDefinition(props: React.PropsWithChildren<unknown>): JSX.Element {
   const [initialInfrastructureDefinitionValues, setInitialInfrastructureDefinitionValues] =
     React.useState<Infrastructure>({})
 
   const { getString } = useStrings()
-  const { NG_AZURE } = useFeatureFlags()
+  // const { NG_AZURE } = useFeatureFlags()
+  const NG_AZURE = true
 
   const {
     state: {
@@ -363,6 +367,31 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   allowSimultaneousDeployments: value.allowSimultaneousDeployments
                 },
                 InfraDeploymentType.KubernetesAzure
+              )
+            }
+          />
+        )
+      }
+      case InfraDeploymentType.KubernetesAzureWebApp: {
+        return (
+          <StepWidget<AzureWebAppInfrastructureSpec>
+            factory={factory}
+            key={stage?.stage?.identifier}
+            readonly={isReadonly}
+            initialValues={initialInfrastructureDefinitionValues as AzureWebAppInfrastructureSpec}
+            type={StepType.KubernetesAzureWebApp}
+            stepViewType={StepViewType.Edit}
+            allowableTypes={allowableTypes}
+            onUpdate={value =>
+              onUpdateInfrastructureDefinition(
+                {
+                  connectorRef: value.connectorRef,
+                  subscriptionId: value.subscriptionId,
+                  resourceGroup: value.resourceGroup,
+                  webApp: value.webApp,
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                },
+                InfraDeploymentType.KubernetesAzureWebApp
               )
             }
           />
