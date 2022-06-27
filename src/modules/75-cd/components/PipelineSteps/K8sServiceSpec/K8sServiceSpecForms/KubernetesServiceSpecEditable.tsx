@@ -16,6 +16,7 @@ import {
   isServerlessDeploymentType,
   ServiceDeploymentType
 } from '@pipeline/utils/stageHelpers'
+import StartupScriptSelection from '@pipeline/components/StartupScriptSelection/StartupScriptSelection'
 import { useStrings } from 'framework/strings'
 import type { ServiceDefinition } from 'services/cd-ng'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
@@ -32,6 +33,13 @@ const getManifestsHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['
     return 'serverlessDeploymentTypeManifests'
   }
   return 'deploymentTypeManifests'
+}
+
+const getStartupScriptHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
+  if (isServerlessDeploymentType(selectedDeploymentType)) {
+    return 'serverlessDeploymentTypeStartupScript'
+  }
+  return 'deploymentTypeStartupScript'
 }
 
 const getArtifactsHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
@@ -81,7 +89,6 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
               {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')}
               <HarnessDocTooltip tooltipId={getManifestsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
             </div>
-
             <ManifestSelection
               isPropagating={isPropagating}
               deploymentType={selectedDeploymentType}
@@ -91,24 +98,44 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
           </Card>
 
           {selectedDeploymentType === ServiceDeploymentType.AzureWebApps && (
-            <Card className={css.sectionCard} id={getString('pipeline.appServiceConfig.title')}>
-              <div
-                className={cx(css.tabSubHeading, 'ng-tooltip-native')}
-                data-tooltip-id={getAppConfigHeaderTooltipId(selectedDeploymentType)}
-              >
-                {getString('pipeline.appServiceConfig.title')}
-                <HarnessDocTooltip
-                  tooltipId={getAppConfigHeaderTooltipId(selectedDeploymentType)}
-                  useStandAlone={true}
+            <>
+              <Card className={css.sectionCard} id={getString('pipeline.startupScript.name')}>
+                <div
+                  className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+                  data-tooltip-id={getStartupScriptHeaderTooltipId(selectedDeploymentType)}
+                >
+                  {getString('pipeline.startupScript.name')}
+                  <HarnessDocTooltip
+                    tooltipId={getStartupScriptHeaderTooltipId(selectedDeploymentType)}
+                    useStandAlone={true}
+                  />
+                </div>
+                <StartupScriptSelection
+                  isPropagating={isPropagating}
+                  deploymentType={selectedDeploymentType}
+                  isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                  readonly={!!readonly}
                 />
-              </div>
-              <AzureWebAppConfigSelection
-                isPropagating={isPropagating}
-                deploymentType={selectedDeploymentType}
-                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
-                readonly={!!readonly}
-              />
-            </Card>
+              </Card>
+              <Card className={css.sectionCard} id={getString('pipeline.appServiceConfig.title')}>
+                <div
+                  className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+                  data-tooltip-id={getAppConfigHeaderTooltipId(selectedDeploymentType)}
+                >
+                  {getString('pipeline.appServiceConfig.title')}
+                  <HarnessDocTooltip
+                    tooltipId={getAppConfigHeaderTooltipId(selectedDeploymentType)}
+                    useStandAlone={true}
+                  />
+                </div>
+                <AzureWebAppConfigSelection
+                  isPropagating={isPropagating}
+                  deploymentType={selectedDeploymentType}
+                  isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                  readonly={!!readonly}
+                />
+              </Card>
+            </>
           )}
 
           <Card
