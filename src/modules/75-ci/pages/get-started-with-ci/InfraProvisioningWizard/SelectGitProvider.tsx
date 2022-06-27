@@ -49,8 +49,8 @@ import { Status } from '@common/utils/Constants'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { Connectors } from '@connectors/constants'
 import {
-  getBackendServerUrl,
-  isEnvironmentAllowedForOAuth,
+  // getBackendServerUrl,
+  // isEnvironmentAllowedForOAuth,
   OAUTH_REDIRECT_URL_PREFIX,
   OAUTH_PLACEHOLDER_VALUE
 } from '@connectors/components/CreateConnector/CreateConnectorUtils'

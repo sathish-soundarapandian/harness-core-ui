@@ -50,8 +50,8 @@ import { useStrings } from 'framework/strings'
 import { GitAuthTypes, GitAPIAuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import {
   ConnectorSecretScope,
-  getBackendServerUrl,
-  isEnvironmentAllowedForOAuth,
+  // getBackendServerUrl,
+  // isEnvironmentAllowedForOAuth,
   OAUTH_PLACEHOLDER_VALUE,
   OAUTH_REDIRECT_URL_PREFIX
 } from '../../CreateConnectorUtils'
