@@ -268,12 +268,11 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
   // update stage/step selection
   React.useEffect(() => {
     if (loading) {
-      setSelectedStageExecutionId((queryParams?.stageExecId as string) || autoStageNodeExecutionId)
       setSelectedStageId((queryParams.stage as string) || autoSelectedStageId)
     }
     setSelectedStageExecutionId((queryParams?.stageExecId as string) || autoStageNodeExecutionId)
     setSelectedStepId((queryParams.step as string) || autoSelectedStepId)
-    setAutoStageNodeExecutionId(queryParams?.stageExecId || '')
+    queryParams?.stage && !queryParams?.stageExecId && setAutoStageNodeExecutionId(queryParams?.stageExecId || '')
   }, [loading, queryParams, autoSelectedStageId, autoSelectedStepId, autoStageNodeExecutionId])
 
   return (

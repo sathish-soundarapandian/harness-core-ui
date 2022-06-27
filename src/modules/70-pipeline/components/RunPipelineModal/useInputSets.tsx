@@ -131,16 +131,22 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
 
   const inputSet = useMemo((): Pipeline => {
     const shouldUseDefaultValues = isUndefined(executionIdentifier)
+    const parsedRunPipelineYaml = clearRuntimeInput(
+      memoizedParse(inputSetYamlResponse?.data?.inputSetTemplateYaml || 'pipeline: {}').pipeline
+    )
 
     if (rerunInputSetYaml) {
-      return memoizedParse(rerunInputSetYaml)
+      const parsedRerunPipelineYaml = memoizedParse(rerunInputSetYaml)
+
+      return mergeTemplateWithInputSetData({
+        templatePipeline: { pipeline: parsedRunPipelineYaml },
+        inputSetPortion: parsedRerunPipelineYaml,
+        allValues: { pipeline: defaultTo(resolvedPipeline, {} as PipelineInfoConfig) },
+        shouldUseDefaultValues
+      })
     }
 
     if (hasRuntimeInputs) {
-      const parsedRunPipelineYaml = clearRuntimeInput(
-        memoizedParse(defaultTo(inputSetYamlResponse?.data?.inputSetTemplateYaml, '')).pipeline
-      )
-
       if (shouldFetchInputSets && inputSetData?.data?.pipelineYaml) {
         setIsInputSetApplied(true)
         const parsedInputSets = clearRuntimeInput(memoizedParse(inputSetData.data.pipelineYaml).pipeline)

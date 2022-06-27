@@ -175,6 +175,7 @@ export function getPipelineStagesMap(
           // register nodes in case of strategy
           if (isNodeTypeMatrixOrFor(layoutNodeMap?.[item]?.nodeType)) {
             recursiveSetInMap(layoutNodeMap[item])
+            return
           }
           const nodeId = isNodeTypeMatrixOrFor(node.nodeType)
             ? defaultTo(layoutNodeMap[item]?.nodeExecutionId, layoutNodeMap[item].nodeUuid)
