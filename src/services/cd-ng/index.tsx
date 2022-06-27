@@ -11049,6 +11049,18 @@ export type ShellScriptStepInfo = StepSpecType & {
   shell: 'Bash'
   source: ShellScriptSourceWrapper
 }
+export type CustomApprovalStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  environmentVariables?: NGVariable[]
+  onDelegate: boolean
+  outputVariables?: NGVariable[]
+  shell: 'Bash' | 'PowerShell'
+  source: ShellScriptSourceWrapper
+  scriptTimeout: string
+  retryInterval: string
+  approvalCriteria: CriteriaSpecWrapper
+  rejectionCriteria?: CriteriaSpecWrapper
+}
 
 export interface SidecarArtifact {
   identifier: string

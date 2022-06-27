@@ -821,7 +821,8 @@ export const StepTypeToPipelineIconMap: Record<any, IconName> = {
   [PipelineStepType.HarnessApproval]: 'harness-with-color',
   [PipelineStepType.JiraCreate]: 'jira-create',
   [PipelineStepType.JiraUpdate]: 'jira-update',
-  [PipelineStepType.Barrier]: 'barrier-open'
+  [PipelineStepType.Barrier]: 'barrier-open',
+  [PipelineStepType.CustomApproval]: 'other-workload'
 }
 
 export const isServiceDependenciesSupported = (stageType: string): boolean => {

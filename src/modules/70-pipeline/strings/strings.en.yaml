@@ -150,8 +150,6 @@ jiraApprovalStep:
     wasRejected: 'Rejection Criteria was met for Jira Ticket:'
     wasExpired: 'Jira approval expired for Ticket:'
     jiraTicket: 'JIRA Ticket Pending Approval:'
-    allConditionsMsg: 'If all of the following conditions are met:'
-    anyConditionsMsg: 'If any of the following conditions is met:'
     conditions:
       equals: '{{ key }} equals'
       not_equals: '{{ key }} does not equals'
@@ -253,6 +251,28 @@ serviceNowUpdateStep:
   fieldType:
     applyFromTemplate: Apply from template
     updateFields: Update Fields
+commonApprovalStep:
+  execution:
+    allConditionsMsg: 'If all of the following conditions are met:'
+    anyConditionsMsg: 'If any of the following conditions is met:'
+customApprovalStep:
+  scriptTimeout: Script Timeout
+  retryInterval: Retry interval
+  execution:
+    wasApproved: 'Approval Criteria was met for Custom Shell Script Approval'
+    wasRejected: 'Rejection Criteria was met for Custom Shell Script Approval'
+    wasExpired: 'Custom Shell Script Approval expired'
+    customApprovalTicket: 'Custom Shell Script Approval Pending Approval'
+    conditions:
+      equals: '{{ key }} equals'
+      not_equals: '{{ key }} does not equals'
+      in: '{{ key }} is in'
+      not_in: '{{ key }} is not in'
+  validation:
+    outputVariable: Output Variable(s) is required
+    retryIntervalIsRequired: Retry interval is required
+    scriptTimeoutIsRequired: Script timeout is required
+    atLeastOneOutputVariableIsRequired: At least one output field must be set
 manifestType:
   attachPath: + Attach {{manifestPath}}
   manifestTyperequired: Manifest Type is required
@@ -899,6 +919,7 @@ stepDescription:
   createPR: Create PR
   mergePR: Merge PR
   AzureSlotDeployment: Select the Web App and source and target deployment slots for the deployment.
+  CustomApproval: Custom Approval
 executionStrategy:
   executionStrategies: Execution Strategies
   useStrategy: Use Strategy
