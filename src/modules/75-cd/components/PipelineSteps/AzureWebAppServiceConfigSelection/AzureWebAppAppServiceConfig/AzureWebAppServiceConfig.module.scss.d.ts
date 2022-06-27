@@ -8,5 +8,8 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly addNew: string
+  readonly createConnectorWizard: string
+  readonly crossIcon: string
+  readonly modal: string
 }
 export default styles
