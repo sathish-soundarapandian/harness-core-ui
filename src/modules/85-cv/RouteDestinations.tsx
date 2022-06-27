@@ -53,6 +53,29 @@ import CVSLODetailsPage from './pages/slos/CVSLODetailsPage/CVSLODetailsPage'
 import CVCreateSLO from './pages/slos/components/CVCreateSLO/CVCreateSLO'
 import { MonitoredServiceProvider } from './pages/monitored-service/MonitoredServiceContext'
 import MonitoredServiceInputSetsTemplate from './pages/monitored-service/MonitoredServiceInputSetsTemplate'
+import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
+import featureFactory from 'framework/featureStore/FeaturesFactory'
+import { BannerType } from '@common/layouts/Constants'
+
+featureFactory.registerFeaturesByModule('cv', {
+  features: [FeatureIdentifier.SRM_SERVICES],
+  renderMessage: (...a) => {
+    console.log('params', a)
+
+    /**
+     * 1. Handle expiry - Summary API will give this data
+     * 2. Handle usage is or above 75% of limit for Team and Free - Info
+     * 3. Handle usage === limit for Team and free - Level up
+     * 4. ??? How to handle trial expiry and usage limit?
+     * 5.
+     */
+
+    return {
+      message: () => 'User message here',
+      bannerType: BannerType.INFO
+    }
+  }
+})
 
 PubSubPipelineActions.subscribe(
   PipelineActions.RunPipeline,

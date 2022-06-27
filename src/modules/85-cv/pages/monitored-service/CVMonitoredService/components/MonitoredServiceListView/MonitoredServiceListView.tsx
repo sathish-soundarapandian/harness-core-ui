@@ -190,8 +190,11 @@ const MonitoredServiceListView: React.FC<MonitoredServiceListViewProps> = ({
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
 
   const { content, pageSize = 0, pageIndex = 0, totalPages = 0, totalItems = 0 } = monitoredServiceListData || {}
+
   const RenderStatusToggle: Renderer<CellProps<MonitoredServiceListItemDTO>> = ({ row }) => {
     const monitoredService = row.original
+
+    // serviceLicenseEnabled
 
     const [canToggle] = usePermission(
       {
@@ -203,6 +206,8 @@ const MonitoredServiceListView: React.FC<MonitoredServiceListViewProps> = ({
       },
       [projectIdentifier]
     )
+
+    // const isToggleEnabled = canToggle && (monitoredService.serviceLicenseEnabled && ** check limit count !== usage count from enforcement API)
 
     const onCopy = (): void => {
       const environmentVariables = `ET_COLLECTOR_URL: <check documentation for value>
@@ -289,6 +294,11 @@ ET_DEPLOYMENT_NAME: <replace with deployment version>`
                 Cell: CategoryProps
               },
               {
+                Header: getString('enabledLabel'),
+                width: '8%',
+                Cell: RenderStatusToggle
+              },
+              {
                 Header: getString('name'),
                 width: '12.5%',
                 Cell: RenderServiceName
@@ -317,11 +327,6 @@ ET_DEPLOYMENT_NAME: <replace with deployment version>`
                 Header: getString('cv.monitoredServices.dependenciesHealth'),
                 width: '15%',
                 Cell: RenderDependenciesHealth
-              },
-              {
-                Header: getString('enabledLabel'),
-                width: '8%',
-                Cell: RenderStatusToggle
               }
             ]}
             data={content}

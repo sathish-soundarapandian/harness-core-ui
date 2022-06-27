@@ -257,9 +257,27 @@ export function FeaturesProvider(props: React.PropsWithChildren<unknown>): React
     }
 
     try {
-      const res = await getFeatureDetails({
-        name: featureName as FeatureRestrictionDetailRequestDTO['name']
-      })
+      // const res = await getFeatureDetails({
+      //   name: featureName as FeatureRestrictionDetailRequestDTO['name']
+      // })
+
+      const res = {
+        status: 'SUCCESS',
+        data: {
+          name: 'SRM_SERVICES',
+          description: 'Maximum active services at any point in time',
+          moduleType: 'CV',
+          allowed: true,
+          restrictionType: 'STATIC_LIMIT',
+          restriction: {
+            restrictionType: 'STATIC_LIMIT',
+            limit: 5,
+            count: 4
+          }
+        },
+        metaData: null,
+        correlationId: 'cbb40ca5-2077-4147-9e61-1525b509951b'
+      }
 
       // remove the request from queque
       pendingLimitRequests = pendingLimitRequests.filter(request => request !== featureRequest)
@@ -321,7 +339,7 @@ export function FeaturesProvider(props: React.PropsWithChildren<unknown>): React
   function getHighestEdition({ licenseInformation, licenseState }: GetHighestEditionProps): Editions {
     let edition = Editions.FREE
 
-    const { CI_LICENSE_STATE, CD_LICENSE_STATE, FF_LICENSE_STATE, CCM_LICENSE_STATE } = licenseState
+    const { CI_LICENSE_STATE, CD_LICENSE_STATE, FF_LICENSE_STATE, CCM_LICENSE_STATE, CV_LICENSE_STATE } = licenseState
 
     if (CI_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE) {
       edition = compareEditions(licenseInformation?.['CI']?.edition as Editions, edition)
@@ -336,6 +354,10 @@ export function FeaturesProvider(props: React.PropsWithChildren<unknown>): React
     }
 
     if (CCM_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE) {
+      edition = compareEditions(licenseInformation?.['CE']?.edition as Editions, edition)
+    }
+
+    if (CV_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE) {
       edition = compareEditions(licenseInformation?.['CE']?.edition as Editions, edition)
     }
 
@@ -357,7 +379,7 @@ export function FeaturesProvider(props: React.PropsWithChildren<unknown>): React
       return Editions.COMMUNITY
     }
 
-    const { CI_LICENSE_STATE, CD_LICENSE_STATE, FF_LICENSE_STATE, CCM_LICENSE_STATE } = licenseState
+    const { CI_LICENSE_STATE, CD_LICENSE_STATE, FF_LICENSE_STATE, CCM_LICENSE_STATE, CV_LICENSE_STATE } = licenseState
 
     switch (moduleType) {
       case 'CORE': {
