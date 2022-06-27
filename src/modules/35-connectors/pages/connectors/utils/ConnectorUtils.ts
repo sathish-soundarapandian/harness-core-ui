@@ -2155,8 +2155,6 @@ export const getUrlValueByType = (type: ConnectorInfoDTO['type'], connector: Con
       return connector.spec.credential.spec?.masterUrl
     case Connectors.DOCKER:
       return connector.spec.dockerRegistryUrl
-    case Connectors.JENKINS:
-      return connector.spec.jenkinsUrl
     case Connectors.NEXUS:
       return connector.spec.nexusServerUrl
 

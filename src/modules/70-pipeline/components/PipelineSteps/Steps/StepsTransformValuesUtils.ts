@@ -35,8 +35,7 @@ export enum Types {
   ImagePullPolicy,
   Shell,
   BuildEnvironment,
-  FrameworkVersion,
-  JobParameter
+  FrameworkVersion
 }
 
 interface Field {
@@ -330,9 +329,6 @@ export function getFormValuesInCorrectFormat<T, U>(formValues: T, fields: Field[
     if (type === Types.Provisioner) {
       const _value = get(formValues, 'provisioner.stage.spec.execution')
       set(values, 'provisioner', _value)
-    }
-    if (type === Types.JobParameter) {
-      set(values, 'spec.jobParameter', get(formValues, 'spec.jobParameter'))
     }
   })
 

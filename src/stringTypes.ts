@@ -781,7 +781,6 @@ export interface StringsMap {
   'common.userLabel': string
   'common.validation.clientIdIsRequired': string
   'common.validation.clientSecretRequired': string
-  'common.validation.connectorRef': string
   'common.validation.email.format': string
   'common.validation.email.required': string
   'common.validation.entityIdIsRequired': string
@@ -1669,6 +1668,7 @@ export interface StringsMap {
   'connectors.cdng.error': string
   'connectors.cdng.healthSources.label': string
   'connectors.cdng.healthSources.noHealthSourcesDefined': string
+  'connectors.cdng.jobName': string
   'connectors.cdng.jobTypes.blueGreen': string
   'connectors.cdng.jobTypes.canary': string
   'connectors.cdng.jobTypes.health': string
@@ -2129,11 +2129,8 @@ export interface StringsMap {
   'connectors.ifReq': string
   'connectors.jenkins.bearerTokenRequired': string
   'connectors.jenkins.jenkins': string
-  'connectors.jenkins.jenkinsConnectorLabel': string
   'connectors.jenkins.jenkinsUrl': string
   'connectors.jenkins.jenkinsUrlRequired': string
-  'connectors.jenkins.jobNameLabel': string
-  'connectors.jenkins.jobParameterLabel': string
   'connectors.jenkins.passwordAPIToken': string
   'connectors.jenkins.usernamePasswordAPIToken': string
   'connectors.jira.jiraUrl': string
@@ -3079,11 +3076,6 @@ export interface StringsMap {
   'pipeline.inputSets.removeInvalidFields': string
   'pipeline.inputSets.selectPlaceholder': string
   'pipeline.invalidRequest': string
-  'pipeline.jenkinsStep.captureEnvironmentVariable': string
-  'pipeline.jenkinsStep.jobNamePlaceholder': string
-  'pipeline.jenkinsStep.jobParameter': string
-  'pipeline.jenkinsStep.unstableStatusAsSuccess': string
-  'pipeline.jenkinsStep.validations.jobName': string
   'pipeline.jiraApprovalStep.connectToJira': string
   'pipeline.jiraApprovalStep.connectorRef': string
   'pipeline.jiraApprovalStep.execution.conditions.equals': string
@@ -3439,7 +3431,6 @@ export interface StringsMap {
   'pipeline.stepDescription.HelmDeploy': string
   'pipeline.stepDescription.HelmRollback': string
   'pipeline.stepDescription.JFrogArtifactory': string
-  'pipeline.stepDescription.Jenkins': string
   'pipeline.stepDescription.JiraApproval': string
   'pipeline.stepDescription.JiraCreate': string
   'pipeline.stepDescription.JiraUpdate': string
@@ -4289,6 +4280,7 @@ export interface StringsMap {
   'ce.co.accessPoint.success': string
   'ce.co.accessPoint.successfulCreation': string
   'ce.co.accessPoint.successfulEdition': string
+  'ce.co.accessPoint.validation.connector': string
   'ce.co.accessPoint.validation.domainRequired': string
   'ce.co.accessPoint.validation.name': string
   'ce.co.accessPoint.validation.nonValidDomain': string

@@ -362,6 +362,7 @@ co:
       subnet: 'Select Subnet'
       machineType: 'Select Machine type'
     validation:
+      connector: 'Connector is a required field'
       name: 'Access point Name is a required field'
       vpc: 'VPC is a required field'
       subnets: 'Atleast 2 subnets are mandatory'

@@ -79,8 +79,7 @@ export enum StepType {
   CreatePR = 'CreatePR',
   MergePR = 'MergePR',
   AzureWebAppsRollback = 'AzureWebAppRollback',
-  AzureSlotDeployment = 'AzureSlotDeployment',
-  JenkinsBuild = 'JenkinsBuild'
+  AzureSlotDeployment = 'AzureSlotDeployment'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

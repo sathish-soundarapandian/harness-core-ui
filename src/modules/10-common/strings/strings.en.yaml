@@ -148,7 +148,6 @@ datePickerShortcuts:
   LastMonth: Last Month
   Last2Months: Last 2 Months
 validation:
-  connectorRef: Connector is a required field
   namePatternIsNotValid: 'Name can only contain alphanumerics, _ and -'
   provisionerIdentifierPatternIsNotValid: 'Provisioner Identifier should not contain special characters and spaces'
   provisionerIdentifierIsRequired: 'Provisioner Identifier is required'
