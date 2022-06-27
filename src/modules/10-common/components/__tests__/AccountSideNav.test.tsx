@@ -44,8 +44,8 @@ describe('AccountSideNav', () => {
       <TestWrapper
         defaultLicenseStoreValues={{
           licenseInformation: {
-            CI: { edition: 'ENTERPRISE', licenseType: 'PAID' },
-            CD: { edition: 'FREE', licenseType: 'TRIAL' }
+            CI: { edition: 'ENTERPRISE', status: 'ACTIVE' },
+            CD: { edition: 'FREE', status: 'EXPIRED' }
           }
         }}
       >
@@ -65,8 +65,8 @@ describe('AccountSideNav', () => {
       <TestWrapper
         defaultLicenseStoreValues={{
           licenseInformation: {
-            CI: { edition: 'ENTERPRISE', licenseType: 'PAID' },
-            CD: { edition: 'FREE', licenseType: 'TRIAL' }
+            CI: { edition: 'ENTERPRISE', status: 'ACTIVE' },
+            CD: { edition: 'FREE', status: 'EXPIRED' }
           }
         }}
       >

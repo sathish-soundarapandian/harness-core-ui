@@ -26,6 +26,8 @@ import { useGetSchemaYaml } from 'services/pipeline-ng'
 import { useGetListOfBranchesWithStatus } from 'services/cd-ng'
 import SessionToken from 'framework/utils/SessionToken'
 import { global401HandlerUtils } from '@common/utils/global401HandlerUtils'
+import { useAnyEnterpriseLicense, useCurrentEnterpriseLicense } from '@common/hooks/useModuleLicenses'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 
 // Due to some typing complexity, governance/App is lazily imported
 // from a .js file for now
@@ -60,7 +62,10 @@ export const GovernanceRemoteComponentMounter = props => {
             useGitSyncStore,
             useSaveToGitDialog,
             useGetListOfBranchesWithStatus,
-            useGetToken
+            useGetToken,
+            useAnyEnterpriseLicense,
+            useCurrentEnterpriseLicense,
+            useLicenseStore
           }}
           components={{
             NGBreadcrumbs,
