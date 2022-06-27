@@ -39,6 +39,24 @@ const fetchConnectors = (): Promise<unknown> => Promise.resolve({})
 jest.mock('services/cd-ng', () => ({
   useGetConnectorListV2: jest.fn().mockImplementation(() => ({ mutate: fetchConnectors })),
   getConnectorListV2Promise: () => Promise.resolve(mockManifestConnector),
+  useGetBuildDetailsForArtifactoryArtifactWithYaml: jest.fn().mockReturnValue({
+    mutate: jest.fn().mockResolvedValue({
+      data: {
+        data: [
+          {
+            name: 'Build1',
+            value: 'build1'
+          }
+        ],
+        status: 'SUCCESS',
+        metaData: null,
+        correlationId: '2cb9bf82-4b64-4ac6-8512-1d379d4aa3b2'
+      },
+      refetch: jest.fn(),
+      error: null,
+      loading: false
+    })
+  }),
   getBuildDetailsForArtifactoryArtifactWithYamlPromise: () => Promise.resolve(mockBuildList),
   useGetConnector: jest.fn(() => mockConnectorResponse),
   useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() })),
@@ -129,7 +147,7 @@ describe('ServerlessAwsLambdaServiceSpec tests', () => {
     })
 
     // eslint-disable-next-line jest/no-disabled-tests
-    test.skip('when artifactPath is runtime input', async () => {
+    test('when artifactPath is runtime input', async () => {
       const onUpdateHandler = jest.fn()
       const { getByText } = render(
         <TestStepWidget
@@ -147,7 +165,7 @@ describe('ServerlessAwsLambdaServiceSpec tests', () => {
     })
 
     // eslint-disable-next-line jest/no-disabled-tests
-    test.skip('when artifactPathFilter is runtime input', async () => {
+    test('when artifactPathFilter is runtime input', async () => {
       const onUpdateHandler = jest.fn()
       const { getByText } = render(
         <TestStepWidget
