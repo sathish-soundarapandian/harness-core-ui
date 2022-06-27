@@ -137,10 +137,10 @@ const SelectGitProviderRef = (
       if (!gitProvider) {
         return
       }
-      if (event.origin !== getBackendServerUrl() && !isEnvironmentAllowedForOAuth()) {
-        setOAuthStatus(Status.FAILURE)
-        return
-      }
+      // if (event.origin !== getBackendServerUrl() && !isEnvironmentAllowedForOAuth()) {
+      //   setOAuthStatus(Status.FAILURE)
+      //   return
+      // }
       if (!event || !event.data) {
         setOAuthStatus(Status.FAILURE)
         return
