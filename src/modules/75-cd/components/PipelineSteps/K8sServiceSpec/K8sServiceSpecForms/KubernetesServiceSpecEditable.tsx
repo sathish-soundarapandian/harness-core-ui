@@ -11,6 +11,7 @@ import cx from 'classnames'
 import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/WorkflowVariables'
 import ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ArtifactsSelection'
 import ManifestSelection from '@pipeline/components/ManifestSelection/ManifestSelection'
+import StartupScriptSelection from '@pipeline/components/StartupScriptSelection/StartupScriptSelection'
 import { getSelectedDeploymentType, isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
 import { useStrings } from 'framework/strings'
 import type { ServiceDefinition } from 'services/cd-ng'
@@ -70,6 +71,12 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
               <HarnessDocTooltip tooltipId={getManifestsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
             </div>
 
+            <StartupScriptSelection
+              isPropagating={isPropagating}
+              deploymentType={selectedDeploymentType}
+              isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+              readonly={!!readonly}
+            />
             <ManifestSelection
               isPropagating={isPropagating}
               deploymentType={selectedDeploymentType}
