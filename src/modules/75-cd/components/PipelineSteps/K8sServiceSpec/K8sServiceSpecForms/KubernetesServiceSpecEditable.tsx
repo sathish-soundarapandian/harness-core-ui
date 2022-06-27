@@ -20,6 +20,7 @@ import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes
 import VariableListReadOnlyView from '@pipeline/components/WorkflowVariablesSelection/VariableListReadOnlyView'
 import { setupMode } from '../K8sServiceSpecHelper'
 import type { KubernetesServiceInputFormProps } from '../K8sServiceSpecInterface'
+import AzureWebAppConfigSelection from '../../AzureWebAppServiceConfigSelection/AzureWebAppServiceConfigSelection'
 import css from '../K8sServiceSpec.module.scss'
 
 const getManifestsHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
@@ -76,6 +77,10 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
               isReadonlyServiceMode={isReadonlyServiceMode as boolean}
               readonly={!!readonly}
             />
+          </Card>
+          <Card className={css.sectionCard} id={'App Services Configuration'}>
+            <div className={css.tabSubHeading}>{'App Services Configuration'}</div>
+            <AzureWebAppConfigSelection />
           </Card>
 
           <Card
