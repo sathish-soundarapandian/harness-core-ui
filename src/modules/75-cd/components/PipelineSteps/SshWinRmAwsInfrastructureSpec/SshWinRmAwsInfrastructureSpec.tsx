@@ -164,16 +164,16 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
     }
   }
 
-  const fetchAttributes = async () => {
-    setIsConnectionAttributesLoading(true)
+  const fetchTags = async () => {
+    setIsTagsLoading(true)
     try {
       const response = await tagsPromise({})
       if (response.status === 'SUCCESS') {
-        const attributeEntryOptions = Object.entries(response.data || {}).map(attributeEntry => ({
-          value: attributeEntry[0],
-          label: attributeEntry[1]
+        const tagOptions = Object.entries(response.data || {}).map(tagEntry => ({
+          value: tagEntry[0],
+          label: tagEntry[1]
         }))
-        setConnectionAttributes(attributeEntryOptions)
+        setTags(tagOptions)
       } else {
         /* istanbul ignore next */
         showError(get(response, 'message', response))
@@ -182,7 +182,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
       /* istanbul ignore next */
       showError(e.message || e.responseMessage[0])
     } finally {
-      setIsConnectionAttributesLoading(false)
+      setIsTagsLoading(false)
     }
   }
 
@@ -333,26 +333,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                   onChange={
                     /* istanbul ignore next */ value => {
                       if (value) {
-                        fetchAttributes()
-                      }
-                    }
-                  }
-                />
-                <FormInput.Select
-                  name="connectionAttribute"
-                  className={`connectionAttribute-select ${css.inputWidth}`}
-                  items={connectionAttributes}
-                  disabled={isConnectionAttributesLoading || !formik.values.loadBalancer || readonly}
-                  placeholder={
-                    isConnectionAttributesLoading
-                      ? getString('loading')
-                      : getString('cd.steps.awsInfraStep.placeholders.connectionAttribute')
-                  }
-                  label={getString('cd.steps.awsInfraStep.labels.connectionAttribute')}
-                  onChange={
-                    /* istanbul ignore next */ option => {
-                      if (option) {
-                        formik.setFieldValue('connectionAttribute', option.value)
+                        fetchTags()
                       }
                     }
                   }
@@ -380,9 +361,9 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                       name="autoscallinggroup"
                       className={`autoscallinggroup-select ${css.inputWidth}`}
                       items={[]}
-                      disabled={isConnectionAttributesLoading || !formik.values.loadBalancer || readonly}
+                      disabled={isAutoScallingGroupLoading || !formik.values.loadBalancer || readonly}
                       placeholder={
-                        isConnectionAttributesLoading
+                        isAutoScallingGroupLoading
                           ? getString('loading')
                           : getString('cd.steps.awsInfraStep.placeholders.autoScallingGroup')
                       }
@@ -430,24 +411,6 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                     </Layout.Horizontal>
                   </>
                 )}
-                <FormInput.Select
-                  name="hostConnectionType"
-                  className={`hostConnectionType-select ${css.inputWidth}`}
-                  items={[]}
-                  placeholder={
-                    isConnectionAttributesLoading
-                      ? getString('loading')
-                      : getString('cd.steps.awsInfraStep.placeholders.hostConnectionType')
-                  }
-                  label={getString('cd.steps.awsInfraStep.labels.hostConnectionType')}
-                  onChange={
-                    /* istanbul ignore next */ option => {
-                      if (option) {
-                        formik.setFieldValue('hostConnectionType', option.value)
-                      }
-                    }
-                  }
-                />
               </FormikForm>
             )
           }}
