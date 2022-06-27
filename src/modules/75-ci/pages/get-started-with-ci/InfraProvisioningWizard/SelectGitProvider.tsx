@@ -743,7 +743,7 @@ const SelectGitProviderRef = (
               .required(getString('fieldRequired', { field: getString('username') })),
             applicationPassword: Yup.string()
               .trim()
-              .required(getString('fieldRequired', { field: getString('ci.getStartedWithCI.appPassword') }))
+              .required(getString('fieldRequired', { field: getString('common.getStarted.appPassword') }))
           })
           .required()
         return selectedHosting === Hosting.SaaS ? baseSchema : urlSchema.concat(baseSchema)
