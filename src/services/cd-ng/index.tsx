@@ -10736,6 +10736,7 @@ export interface ServiceSpec {
   configFiles?: ConfigFileWrapper[]
   manifests?: ManifestConfigWrapper[]
   variables?: NGVariable[]
+  applicationSettings?: any
 }
 
 export interface ServiceUsageDTO {

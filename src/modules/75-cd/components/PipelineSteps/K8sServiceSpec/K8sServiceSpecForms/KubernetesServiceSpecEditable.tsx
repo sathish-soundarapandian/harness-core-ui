@@ -83,7 +83,7 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
             <AzureWebAppConfigSelection
               isPropagating={isPropagating}
               deploymentType={selectedDeploymentType}
-              // isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+              isReadonlyServiceMode={isReadonlyServiceMode as boolean}
               readonly={!!readonly}
             />
           </Card>
