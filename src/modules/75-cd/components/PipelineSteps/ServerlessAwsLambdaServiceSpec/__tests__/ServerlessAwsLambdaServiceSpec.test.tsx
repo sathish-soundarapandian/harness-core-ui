@@ -44,8 +44,10 @@ jest.mock('services/cd-ng', () => ({
       data: {
         data: [
           {
-            name: 'Build1',
-            value: 'build1'
+            artifactPath: 'hello-world.zip'
+          },
+          {
+            artifactPath: 'todolist.zip'
           }
         ],
         status: 'SUCCESS',
