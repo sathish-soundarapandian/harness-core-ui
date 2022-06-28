@@ -587,14 +587,17 @@ const transformStepsData = (
       } else {
         const stepData = step as StepElementConfig
         finalData.push({
-          id: getuniqueIdForStep(step),
+          id: getuniqueIdForStep({ step } as any),
           identifier: stepData?.identifier as string,
           name: stepData?.name as string,
           type: stepData?.type as string,
           nodeType: stepData?.type as string,
           icon: iconName,
+          status: get(stepData, 'status', ''),
           data: {
-            ...stepData,
+            step: {
+              ...get(stepData, 'data.step', {})
+            },
             type: stepData?.name as string,
             nodeType: stepData?.name as string,
             icon: iconName,
