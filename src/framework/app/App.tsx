@@ -147,34 +147,45 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
           global401HandlerUtils(history)
           return
         }
-        case 400: {
+        case 400:
+          {
+            response
+              .clone()
+              .json()
+              .then(res => {
+                const notWhiteListedMessage = res?.responseMessages?.find(
+                  (message: any) => message?.code === 'NOT_WHITELISTED_IP'
+                )
+                if (notWhiteListedMessage) {
+                  showError(notWhiteListedMessage.message)
+                  global401HandlerUtils(history)
+                }
+              })
+              .catch(() => {
+                window.bugsnagClient?.notify?.(
+                  new Error('Error handling 400 status code'),
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  function (event: any) {
+                    event.severity = 'error'
+                    event.setUser(username)
+                    event.addMetadata('400 Details', {
+                      url: response.url,
+                      status: response.status,
+                      accountId
+                    })
+                  }
+                )
+              })
+          }
+          break
+        case 429: {
           response
             .clone()
             .json()
             .then(res => {
-              const notWhiteListedMessage = res?.responseMessages?.find(
-                (message: any) => message?.code === 'NOT_WHITELISTED_IP'
-              )
-              if (notWhiteListedMessage) {
-                showError(notWhiteListedMessage.message)
-                global401HandlerUtils(history)
-              }
+              showError(res)
             })
-            .catch(() => {
-              window.bugsnagClient?.notify?.(
-                new Error('Error handling 400 status code'),
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                function (event: any) {
-                  event.severity = 'error'
-                  event.setUser(username)
-                  event.addMetadata('400 Details', {
-                    url: response.url,
-                    status: response.status,
-                    accountId
-                  })
-                }
-              )
-            })
+          return
         }
       }
     }
