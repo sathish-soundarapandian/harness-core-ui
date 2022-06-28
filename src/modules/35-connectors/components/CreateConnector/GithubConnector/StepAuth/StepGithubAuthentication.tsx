@@ -230,9 +230,11 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
       if (oAuthStatus === Status.IN_PROGRESS) {
         if (event.origin !== getBackendServerUrl() && !isEnvironmentAllowedForOAuth()) {
           markOAuthAsFailed()
+          return
         }
         if (!event || !event.data) {
           markOAuthAsFailed()
+          return
         }
         const { accessTokenRef, refreshTokenRef, status, errorMessage } = event.data
         // valid oauth event from server will always have some value
