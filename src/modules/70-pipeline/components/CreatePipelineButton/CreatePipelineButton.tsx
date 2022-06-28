@@ -52,6 +52,7 @@ export default function CreatePipelineButton({
           dataTooltipId: 'addPipeline'
         }}
         disabled={!canCreate}
+        dropdownDisabled={!canCreate}
       >
         <SplitButtonOption onClick={onImportPipelineClick} text={getString('common.importFromGit')} icon={'plus'} />
       </SplitButton>
