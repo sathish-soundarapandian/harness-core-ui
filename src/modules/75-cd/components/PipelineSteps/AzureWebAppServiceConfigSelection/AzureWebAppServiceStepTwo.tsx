@@ -70,7 +70,7 @@ function AzureWebAppServiceStepTwo({
     gitFetchType: 'Branch' | 'Commit'
     paths: any
   } => {
-    const specValues = get(initialValues, 'spec.store.spec', null)
+    const specValues = get(initialValues, 'store.spec', null)
 
     if (specValues) {
       return {
@@ -181,7 +181,7 @@ function AzureWebAppServiceStepTwo({
                 className={css.manifestForm}
               >
                 <div className={css.manifestStepWidth}>
-                  <Layout.Horizontal spacing="huge" margin={{ top: 'small', bottom: 'small' }}>
+                  <Layout.Vertical margin={{ top: 'small', bottom: 'small' }} className={css.halfWidth}>
                     <FormInput.Select
                       name="gitFetchType"
                       label={getString('pipeline.manifestType.gitFetchTypeLabel')}
@@ -189,7 +189,7 @@ function AzureWebAppServiceStepTwo({
                     />
                     {formik.values?.gitFetchType === GitFetchTypes.Branch && (
                       <div
-                        className={cx(css.halfWidth, {
+                        className={cx(css.fullWidth, {
                           [css.runtimeInput]:
                             getMultiTypeFromValue(formik.values?.branch) === MultiTypeInputType.RUNTIME
                         })}
@@ -218,7 +218,7 @@ function AzureWebAppServiceStepTwo({
 
                     {formik.values?.gitFetchType === GitFetchTypes.Commit && (
                       <div
-                        className={cx(css.halfWidth, {
+                        className={cx(css.fullWidth, {
                           [css.runtimeInput]:
                             getMultiTypeFromValue(formik.values?.commitId) === MultiTypeInputType.RUNTIME
                         })}
@@ -244,7 +244,7 @@ function AzureWebAppServiceStepTwo({
                         )}
                       </div>
                     )}
-                  </Layout.Horizontal>
+                  </Layout.Vertical>
                   <div className={css.halfWidth}>
                     <DragnDropPaths
                       formik={formik}
