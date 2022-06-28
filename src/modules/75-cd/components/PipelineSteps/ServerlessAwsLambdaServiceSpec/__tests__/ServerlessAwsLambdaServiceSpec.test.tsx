@@ -151,7 +151,7 @@ describe('ServerlessAwsLambdaServiceSpec tests', () => {
     // eslint-disable-next-line jest/no-disabled-tests
     test('when artifactPath is runtime input', async () => {
       const onUpdateHandler = jest.fn()
-      const { getByText } = render(
+      const { container } = render(
         <TestStepWidget
           initialValues={{}}
           template={getTemplateWithArtifactPath()}
@@ -162,14 +162,13 @@ describe('ServerlessAwsLambdaServiceSpec tests', () => {
         />
       )
 
-      userEvent.click(getByText('Submit'))
-      expect(onUpdateHandler).not.toBeCalled()
+      expect(container).toMatchSnapshot()
     })
 
     // eslint-disable-next-line jest/no-disabled-tests
     test('when artifactPathFilter is runtime input', async () => {
       const onUpdateHandler = jest.fn()
-      const { getByText } = render(
+      const { container } = render(
         <TestStepWidget
           initialValues={{}}
           template={getTemplateWithArtifactPathFilter()}
@@ -180,8 +179,7 @@ describe('ServerlessAwsLambdaServiceSpec tests', () => {
         />
       )
 
-      userEvent.click(getByText('Submit'))
-      expect(onUpdateHandler).not.toBeCalled()
+      expect(container).toMatchSnapshot()
     })
 
     test('should not call onUpdate if manifest values are not entered', async () => {
