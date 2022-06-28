@@ -14,7 +14,8 @@ import {
   Button,
   ButtonSize,
   ButtonVariation,
-  MultiTypeInputType
+  MultiTypeInputType,
+  Icon
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { FontVariation, Color } from '@harness/design-system'
@@ -57,7 +58,6 @@ import { ManifestActions } from '@common/constants/TrackingConstants'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import { getStatus, getConnectorNameFromValue } from '../PipelineStudio/StageBuilder/StageBuilderUtil'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
-import type { ConnectorRefLabelType } from '../ArtifactsSelection/ArtifactInterface'
 import ConnectorField from './StartupScriptConnectorField'
 import StartupScriptWizardStepTwo from './StartupScriptWizardStepTwo'
 import { ConnectorMap, AllowedTypes, ConnectorTypes, ConnectorIcons } from './StartupScriptInterface.types'
@@ -104,7 +104,7 @@ function StartupScriptListView({
   refetchConnectors,
   startupScript,
   isReadonly,
-  allowableTypes,
+  allowableTypes
 }: StartupScriptListViewProps): JSX.Element {
   const [connectorView, setConnectorView] = useState(false)
   const [connectorType, setConnectorType] = useState('')
@@ -126,7 +126,7 @@ function StartupScriptListView({
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
-  const removeManifestConfig = (): void => {
+  const removeStartupScript = (): void => {
     if (stage) {
       const newStage = produce(stage, draft => {
         set(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.startupScript', {})
@@ -138,11 +138,11 @@ function StartupScriptListView({
     }
   }
 
-  const addNewManifest = (): void => {
+  const addStartupScript = (): void => {
     showConnectorModal()
   }
 
-  const editManifest = (store: ConnectorTypes): void => {
+  const editStartupScript = (store: ConnectorTypes): void => {
     setConnectorType(store)
     setConnectorView(false)
     showConnectorModal()
@@ -178,7 +178,6 @@ function StartupScriptListView({
     }
   }
 
-  // todo
   const handleSubmit = (script: any): void => {
     startupScript = script
     updateStageData()
@@ -201,11 +200,11 @@ function StartupScriptListView({
 
   const lastStepProps = useCallback((): StartupScriptLastStepProps => {
     const startupScriptDetailsProps: StartupScriptLastStepProps = {
-      key: getString('pipeline.manifestType.manifestDetails'),
-      name: getString('pipeline.manifestType.manifestDetails'),
+      key: getString('pipeline.startupScript.fileDetails'),
+      name: getString('pipeline.startupScript.fileDetails'),
       expressions,
       allowableTypes,
-      stepName: getString('pipeline.manifestType.manifestDetails'),
+      stepName: getString('pipeline.startupScript.fileDetails'),
       initialValues: startupScript,
       handleSubmit: handleSubmit,
       isReadonly: isReadonly
@@ -213,13 +212,6 @@ function StartupScriptListView({
 
     return startupScriptDetailsProps
   }, [startupScript])
-
-  const getLabels = (): ConnectorRefLabelType => {
-    return {
-      firstStepName: getString('pipeline.manifestType.specifyManifestRepoType'),
-      secondStepName: `${getString('common.specify')} ${getString('store')}`
-    }
-  }
 
   const getBuildPayload = (type: ConnectorInfoDTO['type']) => {
     if (type === Connectors.GIT) {
@@ -347,15 +339,15 @@ function StartupScriptListView({
       <div className={css.rowItem}>
         <section className={css.manifestList}>
           <div className={css.columnId}>
-            {/* <Icon inline name={manifestTypeIcons[manifest?.type as ManifestTypes]} size={20} /> */}
-            <Text inline width={150} className={css.type} color={Color.BLACK} lineClamp={1}>
+            <Icon inline name={ConnectorIcons[startupScript?.store?.type as ConnectorTypes]} size={20} />
+            <Text inline width={150} className={css.type} lineClamp={1}>
               {startupScript?.store?.type}
             </Text>
           </div>
-          {/* <div>{getString(manifestTypeLabels[manifest?.type as ManifestTypes])}</div> */}
           {renderConnectorField(startupScript?.store?.spec?.connectorRef, connectorName, color)}
+          <div>{startupScript?.store?.spec?.gitFetchType}</div>
           {!!startupScript?.store?.spec.paths?.length && (
-            <span>
+            <div>
               <Text lineClamp={1} width={200}>
                 <span className={css.noWrap}>
                   {typeof startupScript?.store?.spec.paths === 'string'
@@ -363,16 +355,7 @@ function StartupScriptListView({
                     : startupScript?.store?.spec.paths.join(', ')}
                 </span>
               </Text>
-            </span>
-          )}
-          {!!startupScript?.paths?.length && (
-            <span>
-              <Text lineClamp={1} width={200}>
-                <span className={css.noWrap}>
-                  {typeof startupScript.paths === 'string' ? startupScript.paths : startupScript.paths.join(', ')}
-                </span>
-              </Text>
-            </span>
+            </div>
           )}
           {!isReadonly && (
             <span>
@@ -380,11 +363,11 @@ function StartupScriptListView({
                 <Button
                   icon="Edit"
                   iconProps={{ size: 18 }}
-                  onClick={() => editManifest(startupScript?.store?.type as ConnectorTypes)}
+                  onClick={() => editStartupScript(startupScript?.store?.type as ConnectorTypes)}
                   minimal
                 />
 
-                <Button iconProps={{ size: 18 }} icon="main-trash" onClick={() => removeManifestConfig()} minimal />
+                <Button iconProps={{ size: 18 }} icon="main-trash" onClick={() => removeStartupScript()} minimal />
               </Layout.Horizontal>
             </span>
           )}
@@ -406,7 +389,10 @@ function StartupScriptListView({
         <div className={css.createConnectorWizard}>
           <StartupScriptWizard
             connectorTypes={AllowedTypes}
-            labels={getLabels()}
+            iconProps={{
+              name: 'audit-trail',
+              color: Color.WHITE
+            }}
             newConnectorView={connectorView}
             expressions={expressions}
             allowableTypes={allowableTypes}
@@ -415,7 +401,6 @@ function StartupScriptListView({
             initialValues={getInitialValues()}
             newConnectorSteps={getNewConnectorSteps()}
             lastSteps={getLastSteps()}
-            iconsProps={ConnectorIcons}
             isReadonly={isReadonly}
           />
         </div>
@@ -438,12 +423,12 @@ function StartupScriptListView({
       <Layout.Vertical spacing="small" style={{ flexShrink: 'initial' }}>
         {!isEmpty(startupScript) && (
           <div className={cx(css.manifestList, css.listHeader)}>
-            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('common.ID')}</Text>
+            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('store')}</Text>
             <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
-              {getString('pipelineSteps.serviceTab.manifestList.manifestType')}
+              {`${getString('pipeline.manifestType.gitConnectorLabel')} ${getString('connector')}`}
             </Text>
             <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
-              {/* {getString('pipelineSteps.serviceTab.manifestList.connectorType')} */} Text
+              {getString('pipeline.manifestType.gitFetchTypeLabel')}
             </Text>
             <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('location')}</Text>
             <span></span>
@@ -457,12 +442,12 @@ function StartupScriptListView({
         {!isReadonly && isEmpty(startupScript) && (
           <Button
             className={css.addManifest}
-            id="add-manifest"
+            id="add-startup-script"
             size={ButtonSize.SMALL}
             variation={ButtonVariation.LINK}
-            data-test-id="addManifest"
-            onClick={addNewManifest}
-            text={getString('pipelineSteps.serviceTab.manifestList.addManifest')}
+            data-test-id="addStartupScript"
+            onClick={addStartupScript}
+            text={getString('common.plusAddName', { name: getString('pipeline.startupScript.name') })}
           />
         )}
       </Layout.Vertical>

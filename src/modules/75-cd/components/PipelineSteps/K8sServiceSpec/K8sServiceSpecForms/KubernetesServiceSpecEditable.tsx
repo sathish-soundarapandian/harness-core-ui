@@ -30,6 +30,13 @@ const getManifestsHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['
   return 'deploymentTypeManifests'
 }
 
+const getStartupScriptHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
+  if (isServerlessDeploymentType(selectedDeploymentType)) {
+    return 'serverlessDeploymentTypeStartupScript'
+  }
+  return 'deploymentTypeStartupScript'
+}
+
 const getArtifactsHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
   if (isServerlessDeploymentType(selectedDeploymentType)) {
     return 'serverlessDeploymentTypeArtifacts'
@@ -70,13 +77,6 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
               {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')}
               <HarnessDocTooltip tooltipId={getManifestsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
             </div>
-
-            <StartupScriptSelection
-              isPropagating={isPropagating}
-              deploymentType={selectedDeploymentType}
-              isReadonlyServiceMode={isReadonlyServiceMode as boolean}
-              readonly={!!readonly}
-            />
             <ManifestSelection
               isPropagating={isPropagating}
               deploymentType={selectedDeploymentType}
@@ -85,6 +85,24 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
             />
           </Card>
 
+          <Card className={css.sectionCard} id={getString('pipeline.startupScript.name')}>
+            <div
+              className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+              data-tooltip-id={getStartupScriptHeaderTooltipId(selectedDeploymentType)}
+            >
+              {getString('pipeline.startupScript.name')}
+              <HarnessDocTooltip
+                tooltipId={getStartupScriptHeaderTooltipId(selectedDeploymentType)}
+                useStandAlone={true}
+              />
+            </div>
+            <StartupScriptSelection
+              isPropagating={isPropagating}
+              deploymentType={selectedDeploymentType}
+              isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+              readonly={!!readonly}
+            />
+          </Card>
           <Card
             className={css.sectionCard}
             id={getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
