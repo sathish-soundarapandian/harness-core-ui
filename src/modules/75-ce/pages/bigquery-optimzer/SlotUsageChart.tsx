@@ -11,11 +11,12 @@ import {
   FlexExpander,
   Button,
   ButtonSize,
-  ButtonVariation
+  ButtonVariation,
+  useToaster
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import CEChart from '@ce/components/CEChart/CEChart'
-import { useGetSlotStats } from 'services/ce'
+import { useBuySlots, useGetSlotStats, useReleaseSlots } from 'services/ce'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import formatCost from '@ce/utils/formatCost'
 // import requestMarker from '../../components/RecommendationHistogram/images/requestMarker.svg'
@@ -59,8 +60,25 @@ const Configurations = ({
   optimisationType,
   commitmentDuration,
   setShouldFetch,
-  setIsEditing
+  setIsEditing,
+  selectedSlots
 }) => {
+  const { accountId } = useParams<AccountPathProps>()
+  const { showSuccess, showError } = useToaster()
+  const { data, refetch } = useBuySlots({
+    queryParams: {
+      accountIdentifier: accountId
+    },
+    lazy: true
+  })
+
+  const { refetch: releaseSlots } = useReleaseSlots({
+    queryParams: {
+      accountIdentifier: accountId
+    },
+    lazy: true
+  })
+
   const toggleEditing = () => {
     setIsEditing(val => !val)
   }
@@ -115,10 +133,19 @@ const Configurations = ({
       <FlexExpander />
       <Container>
         <Button
-          text="Buy Slots"
+          text={`Buy ${selectedSlots} Slots`}
           icon="small-tick"
           variation={ButtonVariation.PRIMARY}
           size={ButtonSize.SMALL}
+          onClick={() => {
+            refetch({
+              queryParams: {
+                accountIdentifier: accountId,
+                slotCount: selectedSlots
+              }
+            })
+            showSuccess(`Successfully Bought ${selectedSlots}`)
+          }}
           margin={{
             right: 'small'
           }}
@@ -128,6 +155,15 @@ const Configurations = ({
           size={ButtonSize.SMALL}
           margin={{
             right: 'small'
+          }}
+          onClick={() => {
+            releaseSlots({
+              queryParams: {
+                accountIdentifier: accountId,
+                slotCount: selectedSlots
+              }
+            })
+            showSuccess(`Successfully Released All Slots`)
           }}
           text="Release All Slots"
           intent="danger"
@@ -164,6 +200,7 @@ const InfoComponent = ({
         commitmentDuration={commitmentDuration}
         setShouldFetch={setShouldFetch}
         setIsEditing={setIsEditing}
+        selectedSlots={selectedSlots}
       />
       <Layout.Horizontal
         margin={{
