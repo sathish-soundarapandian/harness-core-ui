@@ -50,6 +50,7 @@ export default function InputDatePicker(props: InputDatePickerProps) {
   const renderPopover = () => {
     return (
       <DateRangePicker
+        onShortcutChange={() => dynamicPopoverHandler?.hide()}
         allowSingleDayRange={true}
         shortcuts={true}
         defaultValue={getValue()}
@@ -60,9 +61,12 @@ export default function InputDatePicker(props: InputDatePickerProps) {
             ...formikProps.values,
             timeRange: {
               startTime: selectedDates[0]?.getTime(),
-              endTime: selectedDates[1]?.getTime()
+              endTime: selectedDates[1]?.getTime() || selectedDates[0]?.getTime()
             }
           })
+          if (selectedDates[0] && selectedDates[1]) {
+            dynamicPopoverHandler?.hide()
+          }
         }}
       />
     )
@@ -81,13 +85,7 @@ export default function InputDatePicker(props: InputDatePickerProps) {
           <InputGroup placeholder={getText() || getString('common.selectTimeFrame')} />
         </FormGroup>
       </div>
-      <div
-        onBlur={() => {
-          dynamicPopoverHandler?.hide()
-        }}
-        ref={ref}
-        onClick={e => e.stopPropagation()}
-      >
+      <div ref={ref} onClick={e => e.stopPropagation()}>
         <DynamicPopover render={renderPopover} bind={setDynamicPopoverHandler} />
       </div>
     </>
