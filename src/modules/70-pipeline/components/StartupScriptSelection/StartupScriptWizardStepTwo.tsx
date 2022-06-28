@@ -22,7 +22,7 @@ import { FontVariation } from '@harness/design-system'
 import { Form } from 'formik'
 import * as Yup from 'yup'
 
-import { get, set } from 'lodash-es'
+import { get, isEmpty, set } from 'lodash-es'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import { useStrings } from 'framework/strings'
@@ -30,6 +30,9 @@ import type { ConnectorConfigDTO } from 'services/cd-ng'
 
 import css from './StartupScriptSelection.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import { ConnectorMap } from './StartupScriptInterface.types'
+import { GitRepoName } from '../ManifestSelection/Manifesthelper'
+import GitRepositoryName from '../ManifestSelection/ManifestWizardSteps/GitRepositoryName/GitRepositoryName'
 
 interface StartupScriptWizardStepTwoProps {
   stepName: string
@@ -63,28 +66,35 @@ function StartupScriptWizardStepTwo({
 }: StepProps<ConnectorConfigDTO> & StartupScriptWizardStepTwoProps): React.ReactElement {
   const { getString } = useStrings()
 
+  const gitConnectionType: string =
+    prevStepData?.store === ConnectorMap[prevStepData?.store.type] ? 'connectionType' : 'type'
+  const connectionType =
+    prevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
+    prevStepData?.urlType === GitRepoName.Repo
+      ? GitRepoName.Repo
+      : GitRepoName.Account
+
   const getInitialValues = useCallback((): {
     branch: string | undefined
     commitId: string | undefined
     gitFetchType: 'Branch' | 'Commit'
     paths: string | undefined
+    repoName?: string | undefined
   } => {
     const specValues = get(initialValues, 'store.spec', null)
 
     if (specValues) {
       return {
         ...specValues,
-        paths:
-          typeof specValues.paths === 'string'
-            ? specValues.paths
-            : specValues.paths[0]
+        paths: typeof specValues.paths === 'string' ? specValues.paths : specValues.paths[0]
       }
     }
     return {
       branch: undefined,
       commitId: undefined,
       gitFetchType: 'Branch',
-      paths: undefined
+      paths: undefined,
+      repoName: undefined
     }
   }, [])
 
@@ -95,6 +105,7 @@ function StartupScriptWizardStepTwo({
     paths: string | undefined
     store?: string
     connectorRef?: string
+    repoName?: string | undefined
   }): void => {
     const startupScript = {
       store: {
@@ -102,12 +113,13 @@ function StartupScriptWizardStepTwo({
         spec: {
           connectorRef: formData?.connectorRef,
           gitFetchType: formData?.gitFetchType,
-          paths:
-            typeof formData?.paths === 'string'
-              ? [formData?.paths]
-              : formData?.paths
+          paths: typeof formData?.paths === 'string' ? [formData?.paths] : formData?.paths
         }
       }
+    }
+
+    if (connectionType === GitRepoName.Account) {
+      set(startupScript, 'store.spec.repoName', formData?.repoName)
     }
 
     if (startupScript?.store) {
@@ -145,7 +157,16 @@ function StartupScriptWizardStepTwo({
               getString('common.validation.fieldIsRequired', {
                 name: getString('pipeline.startupScript.scriptFilePath')
               })
-            )
+            ),
+          repoName: Yup.string().test('repoName', getString('common.validation.repositoryName'), value => {
+            if (
+              connectionType === GitRepoName.Repo ||
+              getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+            ) {
+              return true
+            }
+            return !isEmpty(value) && value?.length > 0
+          })
         })}
         onSubmit={formData => {
           submitFormData({
@@ -168,15 +189,39 @@ function StartupScriptWizardStepTwo({
             commitId: string | undefined
             gitFetchType: 'Branch' | 'Commit'
             paths: any
+            repoName: string | undefined
           }
         }) => {
           return (
             <Form>
               <Layout.Vertical
                 flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
-                className={css.manifestForm}
+                className={cx(css.startupScriptForm, css.startupScriptWizard)}
               >
-                <div className={css.manifestStepWidth}>
+                <div className={css.startupScriptWizard}>
+                  {!!(connectionType === GitRepoName.Account) && (
+                    <div className={cx(stepCss.formGroup, stepCss.md)}>
+                      <FormInput.MultiTextInput
+                        multiTextInputProps={{ expressions, allowableTypes }}
+                        label={getString('common.repositoryName')}
+                        placeholder={getString('common.repositoryName')}
+                        name="repoName"
+                      />
+
+                      {getMultiTypeFromValue(formik.values?.repoName) === MultiTypeInputType.RUNTIME && (
+                        <ConfigureOptions
+                          value={formik.values?.repoName as string}
+                          type="String"
+                          variableName="repoName"
+                          showRequiredField={false}
+                          showDefaultField={false}
+                          showAdvanced={true}
+                          onChange={value => formik.setFieldValue('repoName', value)}
+                          isReadonly={isReadonly}
+                        />
+                      )}
+                    </div>
+                  )}
                   <div className={cx(stepCss.formGroup, stepCss.md)}>
                     <FormInput.Select
                       name="gitFetchType"

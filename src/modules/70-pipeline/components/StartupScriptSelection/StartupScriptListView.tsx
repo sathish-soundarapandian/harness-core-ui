@@ -63,8 +63,9 @@ import StartupScriptWizardStepTwo from './StartupScriptWizardStepTwo'
 import { ConnectorMap, AllowedTypes, ConnectorTypes, ConnectorIcons } from './StartupScriptInterface.types'
 import { StartupScriptWizard } from './StartupScriptWizard'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import StartupScriptWizardHarnessStepTwo from './StartupScriptWizardHarnessStepTwo'
 
-import css from '../ManifestSelection/ManifestSelection.module.scss'
+import css from './StartupScriptSelection.module.scss'
 
 interface StartupScriptListViewProps {
   pipeline: PipelineInfoConfig
@@ -231,104 +232,106 @@ function StartupScriptListView({
 
   const getLastSteps = useCallback((): Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> => {
     const arr: Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> = []
-    const manifestDetailStep = <StartupScriptWizardStepTwo {...lastStepProps()} />
+    let manifestDetailStep = <div></div>
+    if (connectorType !== 'Harness') {
+      manifestDetailStep = <StartupScriptWizardStepTwo {...lastStepProps()} />
+    } else {
+      manifestDetailStep = <StartupScriptWizardHarnessStepTwo {...lastStepProps()} />
+    }
 
     arr.push(manifestDetailStep)
     return arr
-  }, [startupScript, lastStepProps])
+  }, [startupScript, connectorType, lastStepProps])
 
-  const getNewConnectorSteps = useCallback((): JSX.Element => {
-    const connectorType = startupScript?.store && ConnectorMap[startupScript?.store?.type]
-    const buildPayload = getBuildPayload(connectorType)
-    return (
-      <StepWizard title={getString('connectors.createNewConnector')}>
-        <ConnectorDetailsStep
-          type={connectorType}
-          name={getString('overview')}
-          isEditMode={isEditMode}
-          gitDetails={{ repoIdentifier, branch, getDefaultFromOtherRepo: true }}
-        />
-        {connectorType !== Connectors.ARTIFACTORY ? (
-          <GitDetailsStep
-            type={connectorType}
-            name={getString('details')}
+  const getNewConnectorSteps = useCallback((): JSX.Element | void => {
+    const type = ConnectorMap[connectorType]
+    if (type) {
+      const buildPayload = getBuildPayload(type)
+      return (
+        <StepWizard title={getString('connectors.createNewConnector')}>
+          <ConnectorDetailsStep
+            type={type}
+            name={getString('overview')}
             isEditMode={isEditMode}
-            connectorInfo={undefined}
+            gitDetails={{ repoIdentifier, branch, getDefaultFromOtherRepo: true }}
           />
-        ) : null}
-        {connectorType === Connectors.GIT ? (
-          <StepGitAuthentication
-            name={getString('credentials')}
-            onConnectorCreated={() => {
-              // Handle on success
-            }}
+          {connectorType !== Connectors.ARTIFACTORY ? (
+            <GitDetailsStep type={type} name={getString('details')} isEditMode={isEditMode} connectorInfo={undefined} />
+          ) : null}
+          {connectorType === Connectors.GIT ? (
+            <StepGitAuthentication
+              name={getString('credentials')}
+              onConnectorCreated={() => {
+                // Handle on success
+              }}
+              isEditMode={isEditMode}
+              setIsEditMode={setIsEditMode}
+              connectorInfo={undefined}
+              accountId={accountId}
+              orgIdentifier={orgIdentifier}
+              projectIdentifier={projectIdentifier}
+            />
+          ) : null}
+          {connectorType === Connectors.GITHUB ? (
+            <StepGithubAuthentication
+              name={getString('credentials')}
+              onConnectorCreated={() => {
+                // Handle on success
+              }}
+              isEditMode={isEditMode}
+              setIsEditMode={setIsEditMode}
+              connectorInfo={undefined}
+              accountId={accountId}
+              orgIdentifier={orgIdentifier}
+              projectIdentifier={projectIdentifier}
+            />
+          ) : null}
+          {connectorType === Connectors.BITBUCKET ? (
+            <StepBitbucketAuthentication
+              name={getString('credentials')}
+              onConnectorCreated={() => {
+                // Handle on success
+              }}
+              isEditMode={isEditMode}
+              setIsEditMode={setIsEditMode}
+              connectorInfo={undefined}
+              accountId={accountId}
+              orgIdentifier={orgIdentifier}
+              projectIdentifier={projectIdentifier}
+            />
+          ) : null}
+          {connectorType === Connectors.GITLAB ? (
+            <StepGitlabAuthentication
+              name={getString('credentials')}
+              identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
+              onConnectorCreated={() => {
+                // Handle on success
+              }}
+              isEditMode={isEditMode}
+              setIsEditMode={setIsEditMode}
+              connectorInfo={undefined}
+              accountId={accountId}
+              orgIdentifier={orgIdentifier}
+              projectIdentifier={projectIdentifier}
+            />
+          ) : null}
+          <DelegateSelectorStep
+            name={getString('delegate.DelegateselectionLabel')}
             isEditMode={isEditMode}
             setIsEditMode={setIsEditMode}
+            buildPayload={buildPayload}
             connectorInfo={undefined}
-            accountId={accountId}
-            orgIdentifier={orgIdentifier}
-            projectIdentifier={projectIdentifier}
           />
-        ) : null}
-        {connectorType === Connectors.GITHUB ? (
-          <StepGithubAuthentication
-            name={getString('credentials')}
-            onConnectorCreated={() => {
-              // Handle on success
-            }}
-            isEditMode={isEditMode}
-            setIsEditMode={setIsEditMode}
+          <VerifyOutOfClusterDelegate
+            name={getString('connectors.stepThreeName')}
             connectorInfo={undefined}
-            accountId={accountId}
-            orgIdentifier={orgIdentifier}
-            projectIdentifier={projectIdentifier}
+            isStep={true}
+            isLastStep={false}
+            type={type}
           />
-        ) : null}
-        {connectorType === Connectors.BITBUCKET ? (
-          <StepBitbucketAuthentication
-            name={getString('credentials')}
-            onConnectorCreated={() => {
-              // Handle on success
-            }}
-            isEditMode={isEditMode}
-            setIsEditMode={setIsEditMode}
-            connectorInfo={undefined}
-            accountId={accountId}
-            orgIdentifier={orgIdentifier}
-            projectIdentifier={projectIdentifier}
-          />
-        ) : null}
-        {connectorType === Connectors.GITLAB ? (
-          <StepGitlabAuthentication
-            name={getString('credentials')}
-            identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
-            onConnectorCreated={() => {
-              // Handle on success
-            }}
-            isEditMode={isEditMode}
-            setIsEditMode={setIsEditMode}
-            connectorInfo={undefined}
-            accountId={accountId}
-            orgIdentifier={orgIdentifier}
-            projectIdentifier={projectIdentifier}
-          />
-        ) : null}
-        <DelegateSelectorStep
-          name={getString('delegate.DelegateselectionLabel')}
-          isEditMode={isEditMode}
-          setIsEditMode={setIsEditMode}
-          buildPayload={buildPayload}
-          connectorInfo={undefined}
-        />
-        <VerifyOutOfClusterDelegate
-          name={getString('connectors.stepThreeName')}
-          connectorInfo={undefined}
-          isStep={true}
-          isLastStep={false}
-          type={connectorType}
-        />
-      </StepWizard>
-    )
+        </StepWizard>
+      )
+    }
   }, [connectorView, connectorType, isEditMode])
 
   const renderStartupScriptList = (startupScript: any): any => {
@@ -337,7 +340,7 @@ function StartupScriptListView({
 
     return (
       <div className={css.rowItem}>
-        <section className={css.manifestList}>
+        <section className={css.startupScriptList}>
           <div className={css.columnId}>
             <Icon inline name={ConnectorIcons[startupScript?.store?.type as ConnectorTypes]} size={20} />
             <Text inline width={150} className={css.type} lineClamp={1}>
@@ -389,10 +392,6 @@ function StartupScriptListView({
         <div className={css.createConnectorWizard}>
           <StartupScriptWizard
             connectorTypes={AllowedTypes}
-            iconProps={{
-              name: 'audit-trail',
-              color: Color.WHITE
-            }}
             newConnectorView={connectorView}
             expressions={expressions}
             allowableTypes={allowableTypes}
@@ -422,7 +421,7 @@ function StartupScriptListView({
     <Layout.Vertical style={{ width: '100%' }}>
       <Layout.Vertical spacing="small" style={{ flexShrink: 'initial' }}>
         {!isEmpty(startupScript) && (
-          <div className={cx(css.manifestList, css.listHeader)}>
+          <div className={cx(css.startupScriptList, css.listHeader)}>
             <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('store')}</Text>
             <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
               {`${getString('pipeline.manifestType.gitConnectorLabel')} ${getString('connector')}`}
@@ -441,7 +440,7 @@ function StartupScriptListView({
       <Layout.Vertical spacing={'medium'} flex={{ alignItems: 'flex-start' }}>
         {!isReadonly && isEmpty(startupScript) && (
           <Button
-            className={css.addManifest}
+            className={css.addStartupScript}
             id="add-startup-script"
             size={ButtonSize.SMALL}
             variation={ButtonVariation.LINK}

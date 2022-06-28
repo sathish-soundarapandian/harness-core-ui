@@ -34,11 +34,10 @@ import type { ConnectorSelectedValue } from '@connectors/components/ConnectorRef
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import type { ConnectorTypes } from '@cd/components/PipelineSteps/Common/Terraform/Editview/TerraformConfigFormHelper'
-import { ConnectorIcons, ConnectorLabelMap, ConnectorMap } from './StartupScriptInterface.types'
+import { ConnectorIcons, ConnectorLabelMap, ConnectorMap, ConnectorTypes } from './StartupScriptInterface.types'
 import type { StartupScriptWizardInitData } from './StartupScriptListView'
 
-import css from '../ManifestSelection/ManifestWizardSteps/ManifestWizardSteps.module.scss'
+import css from './StartupScriptSelection.module.scss'
 
 interface StartupScriptPropType {
   stepName: string
@@ -71,9 +70,14 @@ function StartupScriptWizardStepOne({
   const [selectedStore, setSelectedStore] = useState(prevStepData?.store ?? initialValues.store)
   const [multitypeInputValue, setMultiTypeValue] = useState<MultiTypeInputType | undefined>(undefined)
 
-  const newConnectorLabel = `${getString('newLabel')} ${
-    getString(ConnectorLabelMap[selectedStore as ConnectorTypes])
-  } ${getString('connector')}`
+  const isHarness = () => selectedStore === 'Harness'
+
+  const newConnectorLabel =
+    selectedStore &&
+    !isHarness() &&
+    `${getString('newLabel')} ${getString(ConnectorLabelMap[selectedStore as ConnectorTypes])} ${getString(
+      'connector'
+    )}`
 
   const [canCreate] = usePermission({
     resource: {
@@ -87,13 +91,15 @@ function StartupScriptWizardStepOne({
   }
 
   function shouldGotoNextStep(connectorRefValue: ConnectorSelectedValue | string): boolean {
-    return (
-      !isLoadingConnectors &&
-      !!selectedStore &&
-      ((getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.FIXED &&
-        !isEmpty((connectorRefValue as ConnectorSelectedValue)?.connector)) ||
-        !isEmpty(connectorRefValue))
-    )
+    const canContinue =
+      (!!selectedStore && isHarness()) ||
+      (!isLoadingConnectors &&
+        !!selectedStore &&
+        ((getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.FIXED &&
+          !isEmpty((connectorRefValue as ConnectorSelectedValue)?.connector)) ||
+          !isEmpty(connectorRefValue)))
+
+    return canContinue
   }
   const handleOptionSelection = (formikData: any, storeSelected: ConnectorTypes): void => {
     if (
@@ -140,9 +146,13 @@ function StartupScriptWizardStepOne({
       <Formik
         initialValues={getInitialValues()}
         formName="startupScriptStore"
-        validationSchema={Yup.object().shape({
-          connectorRef: Yup.mixed().required(getString('pipelineSteps.build.create.connectorRequiredError'))
-        })}
+        validationSchema={
+          !isHarness()
+            ? Yup.object().shape({
+                connectorRef: Yup.mixed().required(getString('pipelineSteps.build.create.connectorRequiredError'))
+              })
+            : null
+        }
         onSubmit={formData => {
           submitFirstStep({ ...formData })
         }}
@@ -152,7 +162,7 @@ function StartupScriptWizardStepOne({
           <FormikForm>
             <Layout.Vertical
               flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
-              className={css.manifestForm}
+              className={css.startupScriptForm}
             >
               <Layout.Vertical>
                 <Layout.Horizontal spacing="large">
@@ -167,7 +177,7 @@ function StartupScriptWizardStepOne({
                   />
                 </Layout.Horizontal>
 
-                {!isEmpty(formik.values.store) ? (
+                {!isEmpty(formik.values.store) && formik.values.store !== 'Harness' ? (
                   <Layout.Horizontal
                     spacing={'medium'}
                     flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
@@ -219,7 +229,7 @@ function StartupScriptWizardStepOne({
                         disabled={isReadonly || !canCreate}
                         id="new-startup-script-connector"
                         text={newConnectorLabel}
-                        className={css.addNewManifest}
+                        className={css.addStartupScript}
                         icon="plus"
                         iconProps={{ size: 12 }}
                         onClick={() => {
