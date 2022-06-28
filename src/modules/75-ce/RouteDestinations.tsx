@@ -53,6 +53,7 @@ import AnomaliesOverviewPage from './pages/anomalies-overview/AnomaliesOverviewP
 import formatCost from './utils/formatCost'
 import BusinessMapping from './pages/business-mapping/BusinessMapping'
 import ECSRecommendationDetailsPage from './pages/ecs-recommendation-details/ECSRecommendationDetailsPage'
+import BigQueryOptimizer from './pages/bigquery-optimzer/BigQueryOptimizer'
 
 featureFactory.registerFeaturesByModule('ce', {
   features: [FeatureIdentifier.PERSPECTIVES],
@@ -532,6 +533,10 @@ const CERoutes: React.FC = () => {
             <ChildAppMounter ChildApp={CcmMicroFrontendPath} />
           </RouteWithLayout>
         ) : null}
+
+        <RouteWithLayout path={routes.toBigQueryOptimizer({ ...accountPathProps })} sidebarProps={CESideNavProps}>
+          <BigQueryOptimizer />
+        </RouteWithLayout>
 
         <Route path="*">
           <NotFoundPage />

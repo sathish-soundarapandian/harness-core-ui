@@ -67,6 +67,7 @@ export interface AnomalyFilterProperties {
     | 'FileStore'
     | 'CCMRecommendation'
     | 'Anomaly'
+    | 'Environment'
   gcpProducts?: string[]
   gcpProjects?: string[]
   gcpSKUDescriptions?: string[]
@@ -84,15 +85,6 @@ export interface AnomalyFilterProperties {
     [key: string]: string
   }
   timeFilters?: CCMTimeFilter[]
-}
-
-export interface AnomalyQueryDTO {
-  aggregations?: CCMAggregation[]
-  filter?: CCMFilter
-  groupBy?: CCMGroupBy[]
-  limit?: number
-  offset?: number
-  orderBy?: CCMSort[]
 }
 
 export interface AnomalySummary {
@@ -390,6 +382,33 @@ export type AzureUserAssignedMSIAuth = AzureAuthCredentialDTO & {
   clientId: string
 }
 
+export interface BQOrchestratorExpensiveQueryPoint {
+  cost?: number
+  query?: string
+  runtime?: number
+  userID?: string
+}
+
+export interface BQOrchestratorSlotUsageStats {
+  averageOnDemandSlots?: number
+  coveragePercentage?: number
+  potentialSavings?: number
+  recommendedSlots?: number
+}
+
+export interface BQOrchestratorSlotsDataPoint {
+  allocatedSlots?: number
+  gcpProjectId?: string
+  reservedSlots?: number
+  startTime?: number
+}
+
+export interface BQOrchestratorVisibilityDataPoint {
+  cost?: number
+  queries?: number
+  timestamp?: number
+}
+
 export interface BillingExportSpec {
   containerName: string
   directoryName: string
@@ -564,6 +583,7 @@ export interface CCMAggregation {
     | 'ANOMALY_TIME'
     | 'ACTUAL_COST'
     | 'EXPECTED_COST'
+    | 'ANOMALOUS_SPEND'
     | 'COST_IMPACT'
     | 'ALL'
   operationType?: 'SUM' | 'MAX' | 'MIN' | 'AVG' | 'COUNT'
@@ -573,12 +593,6 @@ export interface CCMConnectorDetails {
   connectorValidationResult?: ConnectorValidationResult
   createdAt?: number
   name?: string
-}
-
-export interface CCMFilter {
-  numericFilters?: CCMNumberFilter[]
-  stringFilters?: CCMStringFilter[]
-  timeFilters?: CCMTimeFilter[]
 }
 
 export interface CCMGroupBy {
@@ -639,6 +653,7 @@ export interface CCMGroupBy {
     | 'ANOMALY_TIME'
     | 'ACTUAL_COST'
     | 'EXPECTED_COST'
+    | 'ANOMALOUS_SPEND'
     | 'COST_IMPACT'
     | 'ALL'
 }
@@ -657,82 +672,6 @@ export interface CCMNotificationSetting {
   lastUpdatedBy?: EmbeddedUser
   perspectiveId?: string
   uuid?: string
-}
-
-export interface CCMNumberFilter {
-  field?:
-    | 'PERSPECTIVE_ID'
-    | 'WORKLOAD'
-    | 'WORKLOAD_TYPE'
-    | 'CLUSTER_ID'
-    | 'CLUSTER_NAME'
-    | 'CLUSTER_NAMESPACE'
-    | 'CLUSTER_NAMESPACE_ID'
-    | 'CLUSTER_WORKLOAD'
-    | 'CLUSTER_WORKLOAD_ID'
-    | 'CLUSTER_NODE'
-    | 'CLUSTER_STORAGE'
-    | 'CLUSTER_APPLICATION'
-    | 'CLUSTER_ENVIRONMENT'
-    | 'CLUSTER_SERVICE'
-    | 'CLUSTER_CLOUD_PROVIDER'
-    | 'CLUSTER_ECS_SERVICE'
-    | 'CLUSTER_ECS_SERVICE_ID'
-    | 'CLUSTER_ECS_TASK'
-    | 'CLUSTER_ECS_TASK_ID'
-    | 'CLUSTER_ECS_LAUNCH_TYPE'
-    | 'CLUSTER_ECS_LAUNCH_TYPE_ID'
-    | 'NAMESPACE'
-    | 'GCP_PRODUCT'
-    | 'GCP_PROJECT'
-    | 'GCP_SKU_ID'
-    | 'GCP_SKU_DESCRIPTION'
-    | 'AWS_ACCOUNT'
-    | 'AWS_SERVICE'
-    | 'AWS_INSTANCE_TYPE'
-    | 'AWS_USAGE_TYPE'
-    | 'AZURE_SUBSCRIPTION_GUID'
-    | 'AZURE_METER_NAME'
-    | 'AZURE_METER_CATEGORY'
-    | 'AZURE_METER_SUBCATEGORY'
-    | 'AZURE_RESOURCE_ID'
-    | 'AZURE_RESOURCE_GROUP_NAME'
-    | 'AZURE_RESOURCE_TYPE'
-    | 'AZURE_RESOURCE'
-    | 'AZURE_SERVICE_NAME'
-    | 'AZURE_SERVICE_TIER'
-    | 'AZURE_INSTANCE_ID'
-    | 'AZURE_SUBSCRIPTION_NAME'
-    | 'AZURE_PUBLISHER_NAME'
-    | 'AZURE_PUBLISHER_TYPE'
-    | 'AZURE_RESERVATION_ID'
-    | 'AZURE_RESERVATION_NAME'
-    | 'AZURE_FREQUENCY'
-    | 'COMMON_PRODUCT'
-    | 'COMMON_REGION'
-    | 'COMMON_NONE'
-    | 'CLOUD_PROVIDER'
-    | 'STATUS'
-    | 'REGION'
-    | 'ANOMALY_TIME'
-    | 'ACTUAL_COST'
-    | 'EXPECTED_COST'
-    | 'COST_IMPACT'
-    | 'ALL'
-  operator?:
-    | 'NOT_IN'
-    | 'IN'
-    | 'EQUALS'
-    | 'NOT_NULL'
-    | 'NULL'
-    | 'LIKE'
-    | 'GREATER_THAN'
-    | 'LESS_THAN'
-    | 'GREATER_THAN_EQUALS_TO'
-    | 'LESS_THAN_EQUALS_TO'
-    | 'AFTER'
-    | 'BEFORE'
-  value?: Number
 }
 
 export interface CCMPerspectiveNotificationChannelsDTO {
@@ -755,6 +694,7 @@ export interface CCMRecommendationFilterProperties {
     | 'FileStore'
     | 'CCMRecommendation'
     | 'Anomaly'
+    | 'Environment'
   k8sRecommendationFilterPropertiesDTO?: K8sRecommendationFilterPropertiesDTO
   limit?: number
   minCost?: number
@@ -824,6 +764,7 @@ export interface CCMSort {
     | 'ANOMALY_TIME'
     | 'ACTUAL_COST'
     | 'EXPECTED_COST'
+    | 'ANOMALOUS_SPEND'
     | 'COST_IMPACT'
     | 'ALL'
   order?: 'ASCENDING' | 'DESCENDING'
@@ -887,6 +828,7 @@ export interface CCMStringFilter {
     | 'ANOMALY_TIME'
     | 'ACTUAL_COST'
     | 'EXPECTED_COST'
+    | 'ANOMALOUS_SPEND'
     | 'COST_IMPACT'
     | 'ALL'
   operator?:
@@ -1138,6 +1080,7 @@ export interface ConnectorInfoDTO {
     | 'Pdc'
     | 'AzureRepo'
     | 'Jenkins'
+    | 'OciHelmRepo'
 }
 
 export interface ConnectorResponse {
@@ -1281,7 +1224,7 @@ export type CustomHealthConnectorDTO = ConnectorConfigDTO & {
 }
 
 export interface CustomHealthKeyAndValue {
-  encryptedValueRef?: SecretRefData
+  encryptedValueRef?: string
   key: string
   value?: string
   valueEncrypted?: boolean
@@ -1345,6 +1288,10 @@ export interface ECSRecommendationDTO {
   serviceName?: string
 }
 
+export type EmailChannel = NotificationChannel & {
+  recipients?: string[]
+}
+
 export type EmailNotificationChannel = CCMNotificationChannel & {
   emails?: string[]
 }
@@ -1360,6 +1307,7 @@ export interface EntityGitDetails {
   branch?: string
   commitId?: string
   filePath?: string
+  fileUrl?: string
   objectId?: string
   repoIdentifier?: string
   repoName?: string
@@ -1372,6 +1320,8 @@ export interface EntityInfo {
   awsUsageAccountId?: string
   awsUsageType?: string
   azureInstanceId?: string
+  azureMeterCategory?: string
+  azureResourceGroup?: string
   azureServiceName?: string
   azureSubscriptionGuid?: string
   clusterId?: string
@@ -1582,6 +1532,7 @@ export interface Error {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -1709,8 +1660,14 @@ export interface Error {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'SPOTINST_NULL_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1926,6 +1883,7 @@ export interface Failure {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -2053,8 +2011,14 @@ export interface Failure {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'SPOTINST_NULL_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2084,6 +2048,7 @@ export interface FilterProperties {
     | 'FileStore'
     | 'CCMRecommendation'
     | 'Anomaly'
+    | 'Environment'
   tags?: {
     [key: string]: string
   }
@@ -2166,7 +2131,7 @@ export type GitSSHAuthenticationDTO = GitAuthenticationDTO & {
 
 export interface GithubApiAccess {
   spec?: GithubApiAccessSpecDTO
-  type: 'GithubApp' | 'Token'
+  type: 'GithubApp' | 'Token' | 'OAuth'
 }
 
 export interface GithubApiAccessSpecDTO {
@@ -2200,11 +2165,15 @@ export interface GithubCredentialsDTO {
 
 export type GithubHttpCredentials = GithubCredentialsDTO & {
   spec: GithubHttpCredentialsSpecDTO
-  type: 'UsernamePassword' | 'UsernameToken'
+  type: 'UsernamePassword' | 'UsernameToken' | 'OAuth'
 }
 
 export interface GithubHttpCredentialsSpecDTO {
   [key: string]: any
+}
+
+export type GithubOauth = GithubHttpCredentialsSpecDTO & {
+  tokenRef: string
 }
 
 export type GithubSshCredentials = GithubCredentialsDTO & {
@@ -2420,19 +2389,6 @@ export interface K8sClusterSetupRequest {
   projectIdentifier?: string
 }
 
-export interface K8sRecommendationFilterDTO {
-  clusterNames?: string[]
-  ids?: string[]
-  limit?: number
-  minCost?: number
-  minSaving?: number
-  names?: string[]
-  namespaces?: string[]
-  offset?: number
-  perspectiveFilters?: QLCEViewFilterWrapper[]
-  resourceTypes?: ('WORKLOAD' | 'NODE_POOL' | 'ECS_SERVICE')[]
-}
-
 export interface K8sRecommendationFilterPropertiesDTO {
   clusterNames?: string[]
   ids?: string[]
@@ -2508,6 +2464,13 @@ export type LocalConnectorDTO = ConnectorConfigDTO & {
   default?: boolean
 }
 
+export type MSTeamChannel = NotificationChannel & {
+  expressionFunctorToken?: number
+  msTeamKeys?: string[]
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
 export type MicrosoftTeamsNotificationChannel = CCMNotificationChannel & {
   microsoftTeamsUrl?: string
 }
@@ -2574,8 +2537,43 @@ export interface NodeRecommendationDTO {
   totalResourceUsage?: TotalResourceUsage
 }
 
+export interface NotificationChannel {
+  accountId?: string
+  team?: 'OTHER' | 'CD' | 'CV' | 'CI' | 'FFM' | 'PIPELINE' | 'PL' | 'GTM' | 'UNRECOGNIZED'
+  templateData?: {
+    [key: string]: string
+  }
+  templateId?: string
+  userGroups?: UserGroup[]
+}
+
+export interface NotificationResult {
+  notificationId?: string
+}
+
 export interface Number {
   [key: string]: any
+}
+
+export interface OciHelmAuthCredentialsDTO {
+  [key: string]: any
+}
+
+export interface OciHelmAuthenticationDTO {
+  spec?: OciHelmAuthCredentialsDTO
+  type: 'UsernamePassword' | 'Anonymous'
+}
+
+export type OciHelmConnectorDTO = ConnectorConfigDTO & {
+  auth?: OciHelmAuthenticationDTO
+  delegateSelectors?: string[]
+  helmRepoUrl: string
+}
+
+export type OciHelmUsernamePasswordDTO = OciHelmAuthCredentialsDTO & {
+  passwordRef: string
+  username?: string
+  usernameRef?: string
 }
 
 export interface Page {
@@ -2596,6 +2594,13 @@ export interface PageFilterDTO {
   pageSize?: number
   totalItems?: number
   totalPages?: number
+}
+
+export type PagerDutyChannel = NotificationChannel & {
+  expressionFunctorToken?: number
+  integrationKeys?: string[]
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type PagerDutyConnectorDTO = ConnectorConfigDTO & {
@@ -2643,7 +2648,10 @@ export type PhysicalDataCenterConnectorDTO = ConnectorConfigDTO & {
 
 export type PrometheusConnectorDTO = ConnectorConfigDTO & {
   delegateSelectors?: string[]
+  headers?: CustomHealthKeyAndValue[]
+  passwordRef?: string
   url: string
+  username?: string
 }
 
 export interface QLCEView {
@@ -2752,12 +2760,17 @@ export interface RecommendClusterRequest {
   zone?: string
 }
 
+export interface RecommendationDetailsDTO {
+  [key: string]: any
+}
+
 export interface RecommendationItemDTO {
   clusterName?: string
   id: string
   monthlyCost?: number
   monthlySaving?: number
   namespace?: string
+  recommendationDetails?: RecommendationDetailsDTO
   resourceName?: string
   resourceType: 'WORKLOAD' | 'NODE_POOL' | 'ECS_SERVICE'
 }
@@ -2818,6 +2831,13 @@ export interface Response {
 export interface ResponseAwsAccountConnectionDetail {
   correlationId?: string
   data?: AwsAccountConnectionDetail
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseBQOrchestratorSlotUsageStats {
+  correlationId?: string
+  data?: BQOrchestratorSlotUsageStats
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -2937,6 +2957,27 @@ export interface ResponseListAnomalySummary {
 export interface ResponseListAnomalyWidgetData {
   correlationId?: string
   data?: AnomalyWidgetData[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseListBQOrchestratorExpensiveQueryPoint {
+  correlationId?: string
+  data?: BQOrchestratorExpensiveQueryPoint[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseListBQOrchestratorSlotsDataPoint {
+  correlationId?: string
+  data?: BQOrchestratorSlotsDataPoint[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseListBQOrchestratorVisibilityDataPoint {
+  correlationId?: string
+  data?: BQOrchestratorVisibilityDataPoint[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -3197,6 +3238,7 @@ export interface ResponseMessage {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -3324,8 +3366,14 @@ export interface ResponseMessage {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'SPOTINST_NULL_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -3345,6 +3393,13 @@ export interface ResponseMessage {
 export interface ResponseNodeRecommendationDTO {
   correlationId?: string
   data?: NodeRecommendationDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseNotificationResult {
+  correlationId?: string
+  data?: NotificationResult
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -3469,13 +3524,6 @@ export type ScmErrorMetadataDTO = ErrorMetadataDTO & {
   conflictCommitId?: string
 }
 
-export interface SecretRefData {
-  decryptedValue?: string[]
-  identifier?: string
-  null?: boolean
-  scope?: 'account' | 'org' | 'project' | 'unknown'
-}
-
 export interface ServiceInstanceUsageDTO {
   accountIdentifier?: string
   activeServiceInstances?: UsageDataDTO
@@ -3515,6 +3563,13 @@ export interface SharedCostSplit {
   percentageContribution?: number
 }
 
+export type SlackChannel = NotificationChannel & {
+  expressionFunctorToken?: number
+  orgIdentifier?: string
+  projectIdentifier?: string
+  webhookUrls?: string[]
+}
+
 export type SlackNotificationChannel = CCMNotificationChannel & {
   slackWebHookUrl?: string
 }
@@ -3528,10 +3583,13 @@ export type SplunkConnectorDTO = ConnectorConfigDTO & {
 }
 
 export interface StackTraceElement {
+  classLoaderName?: string
   className?: string
   fileName?: string
   lineNumber?: number
   methodName?: string
+  moduleName?: string
+  moduleVersion?: string
   nativeMethod?: boolean
 }
 
@@ -3616,6 +3674,10 @@ export interface UsageDataDTO {
   count?: number
   displayName?: string
   references?: ReferenceDTO[]
+}
+
+export interface UserGroup {
+  [key: string]: any
 }
 
 export interface ValidationError {
@@ -4041,6 +4103,267 @@ export const useGetAnomalyWidgetsData = (props: UseGetAnomalyWidgetsDataProps) =
     AnomalyFilterPropertiesRequestBody,
     void
   >('POST', `/anomaly/widgets`, { base: getConfig('ccm/api'), ...props })
+
+export interface BuySlotsQueryParams {
+  accountIdentifier: string
+  slotCount?: number
+}
+
+export type BuySlotsProps = Omit<GetProps<ResponseBoolean, unknown, BuySlotsQueryParams, void>, 'path'>
+
+export const BuySlots = (props: BuySlotsProps) => (
+  <Get<ResponseBoolean, unknown, BuySlotsQueryParams, void>
+    path={`/big-query/buy-slots`}
+    base={getConfig('ccm/api')}
+    {...props}
+  />
+)
+
+export type UseBuySlotsProps = Omit<UseGetProps<ResponseBoolean, unknown, BuySlotsQueryParams, void>, 'path'>
+
+export const useBuySlots = (props: UseBuySlotsProps) =>
+  useGet<ResponseBoolean, unknown, BuySlotsQueryParams, void>(`/big-query/buy-slots`, {
+    base: getConfig('ccm/api'),
+    ...props
+  })
+
+export interface GetExpensiveQueriesQueryParams {
+  accountIdentifier: string
+}
+
+export type GetExpensiveQueriesProps = Omit<
+  GetProps<ResponseListBQOrchestratorExpensiveQueryPoint, unknown, GetExpensiveQueriesQueryParams, void>,
+  'path'
+>
+
+export const GetExpensiveQueries = (props: GetExpensiveQueriesProps) => (
+  <Get<ResponseListBQOrchestratorExpensiveQueryPoint, unknown, GetExpensiveQueriesQueryParams, void>
+    path={`/big-query/expensive-queries`}
+    base={getConfig('ccm/api')}
+    {...props}
+  />
+)
+
+export type UseGetExpensiveQueriesProps = Omit<
+  UseGetProps<ResponseListBQOrchestratorExpensiveQueryPoint, unknown, GetExpensiveQueriesQueryParams, void>,
+  'path'
+>
+
+export const useGetExpensiveQueries = (props: UseGetExpensiveQueriesProps) =>
+  useGet<ResponseListBQOrchestratorExpensiveQueryPoint, unknown, GetExpensiveQueriesQueryParams, void>(
+    `/big-query/expensive-queries`,
+    { base: getConfig('ccm/api'), ...props }
+  )
+
+export interface GetFailedQueriesQueryParams {
+  accountIdentifier: string
+}
+
+export type GetFailedQueriesProps = Omit<GetProps<ResponseDouble, unknown, GetFailedQueriesQueryParams, void>, 'path'>
+
+export const GetFailedQueries = (props: GetFailedQueriesProps) => (
+  <Get<ResponseDouble, unknown, GetFailedQueriesQueryParams, void>
+    path={`/big-query/failed-queries`}
+    base={getConfig('ccm/api')}
+    {...props}
+  />
+)
+
+export type UseGetFailedQueriesProps = Omit<
+  UseGetProps<ResponseDouble, unknown, GetFailedQueriesQueryParams, void>,
+  'path'
+>
+
+export const useGetFailedQueries = (props: UseGetFailedQueriesProps) =>
+  useGet<ResponseDouble, unknown, GetFailedQueriesQueryParams, void>(`/big-query/failed-queries`, {
+    base: getConfig('ccm/api'),
+    ...props
+  })
+
+export interface ReleaseSlotsQueryParams {
+  accountIdentifier: string
+  slotCount?: number
+}
+
+export type ReleaseSlotsProps = Omit<GetProps<ResponseBoolean, unknown, ReleaseSlotsQueryParams, void>, 'path'>
+
+export const ReleaseSlots = (props: ReleaseSlotsProps) => (
+  <Get<ResponseBoolean, unknown, ReleaseSlotsQueryParams, void>
+    path={`/big-query/release-slots`}
+    base={getConfig('ccm/api')}
+    {...props}
+  />
+)
+
+export type UseReleaseSlotsProps = Omit<UseGetProps<ResponseBoolean, unknown, ReleaseSlotsQueryParams, void>, 'path'>
+
+export const useReleaseSlots = (props: UseReleaseSlotsProps) =>
+  useGet<ResponseBoolean, unknown, ReleaseSlotsQueryParams, void>(`/big-query/release-slots`, {
+    base: getConfig('ccm/api'),
+    ...props
+  })
+
+export interface GetScannedBytesQueryParams {
+  accountIdentifier: string
+}
+
+export type GetScannedBytesProps = Omit<GetProps<ResponseDouble, unknown, GetScannedBytesQueryParams, void>, 'path'>
+
+export const GetScannedBytes = (props: GetScannedBytesProps) => (
+  <Get<ResponseDouble, unknown, GetScannedBytesQueryParams, void>
+    path={`/big-query/scanned-bytes`}
+    base={getConfig('ccm/api')}
+    {...props}
+  />
+)
+
+export type UseGetScannedBytesProps = Omit<
+  UseGetProps<ResponseDouble, unknown, GetScannedBytesQueryParams, void>,
+  'path'
+>
+
+export const useGetScannedBytes = (props: UseGetScannedBytesProps) =>
+  useGet<ResponseDouble, unknown, GetScannedBytesQueryParams, void>(`/big-query/scanned-bytes`, {
+    base: getConfig('ccm/api'),
+    ...props
+  })
+
+export interface GetSlotStatsQueryParams {
+  accountIdentifier: string
+  optimizationType?: 'COST_OPTIMIZED' | 'PERFORMANCE_OPTIMIZED'
+  commitmentDuration?: 'MONTHLY' | 'YEARLY'
+  slotCount?: number
+}
+
+export type GetSlotStatsProps = Omit<
+  GetProps<ResponseBQOrchestratorSlotUsageStats, unknown, GetSlotStatsQueryParams, void>,
+  'path'
+>
+
+export const GetSlotStats = (props: GetSlotStatsProps) => (
+  <Get<ResponseBQOrchestratorSlotUsageStats, unknown, GetSlotStatsQueryParams, void>
+    path={`/big-query/slot-stats`}
+    base={getConfig('ccm/api')}
+    {...props}
+  />
+)
+
+export type UseGetSlotStatsProps = Omit<
+  UseGetProps<ResponseBQOrchestratorSlotUsageStats, unknown, GetSlotStatsQueryParams, void>,
+  'path'
+>
+
+export const useGetSlotStats = (props: UseGetSlotStatsProps) =>
+  useGet<ResponseBQOrchestratorSlotUsageStats, unknown, GetSlotStatsQueryParams, void>(`/big-query/slot-stats`, {
+    base: getConfig('ccm/api'),
+    ...props
+  })
+
+export interface GetSlotDataQueryParams {
+  accountIdentifier: string
+}
+
+export type GetSlotDataProps = Omit<
+  GetProps<ResponseListBQOrchestratorSlotsDataPoint, unknown, GetSlotDataQueryParams, void>,
+  'path'
+>
+
+export const GetSlotData = (props: GetSlotDataProps) => (
+  <Get<ResponseListBQOrchestratorSlotsDataPoint, unknown, GetSlotDataQueryParams, void>
+    path={`/big-query/slot-usage`}
+    base={getConfig('ccm/api')}
+    {...props}
+  />
+)
+
+export type UseGetSlotDataProps = Omit<
+  UseGetProps<ResponseListBQOrchestratorSlotsDataPoint, unknown, GetSlotDataQueryParams, void>,
+  'path'
+>
+
+export const useGetSlotData = (props: UseGetSlotDataProps) =>
+  useGet<ResponseListBQOrchestratorSlotsDataPoint, unknown, GetSlotDataQueryParams, void>(`/big-query/slot-usage`, {
+    base: getConfig('ccm/api'),
+    ...props
+  })
+
+export interface GetSuccessfulQueriesQueryParams {
+  accountIdentifier: string
+}
+
+export type GetSuccessfulQueriesProps = Omit<
+  GetProps<ResponseDouble, unknown, GetSuccessfulQueriesQueryParams, void>,
+  'path'
+>
+
+export const GetSuccessfulQueries = (props: GetSuccessfulQueriesProps) => (
+  <Get<ResponseDouble, unknown, GetSuccessfulQueriesQueryParams, void>
+    path={`/big-query/successful-queries`}
+    base={getConfig('ccm/api')}
+    {...props}
+  />
+)
+
+export type UseGetSuccessfulQueriesProps = Omit<
+  UseGetProps<ResponseDouble, unknown, GetSuccessfulQueriesQueryParams, void>,
+  'path'
+>
+
+export const useGetSuccessfulQueries = (props: UseGetSuccessfulQueriesProps) =>
+  useGet<ResponseDouble, unknown, GetSuccessfulQueriesQueryParams, void>(`/big-query/successful-queries`, {
+    base: getConfig('ccm/api'),
+    ...props
+  })
+
+export interface GetTimeSeriesQueryParams {
+  accountIdentifier: string
+}
+
+export type GetTimeSeriesProps = Omit<
+  GetProps<ResponseListBQOrchestratorVisibilityDataPoint, unknown, GetTimeSeriesQueryParams, void>,
+  'path'
+>
+
+export const GetTimeSeries = (props: GetTimeSeriesProps) => (
+  <Get<ResponseListBQOrchestratorVisibilityDataPoint, unknown, GetTimeSeriesQueryParams, void>
+    path={`/big-query/time-series-visibility`}
+    base={getConfig('ccm/api')}
+    {...props}
+  />
+)
+
+export type UseGetTimeSeriesProps = Omit<
+  UseGetProps<ResponseListBQOrchestratorVisibilityDataPoint, unknown, GetTimeSeriesQueryParams, void>,
+  'path'
+>
+
+export const useGetTimeSeries = (props: UseGetTimeSeriesProps) =>
+  useGet<ResponseListBQOrchestratorVisibilityDataPoint, unknown, GetTimeSeriesQueryParams, void>(
+    `/big-query/time-series-visibility`,
+    { base: getConfig('ccm/api'), ...props }
+  )
+
+export interface GetTotalCostQueryParams {
+  accountIdentifier: string
+}
+
+export type GetTotalCostProps = Omit<GetProps<ResponseDouble, unknown, GetTotalCostQueryParams, void>, 'path'>
+
+export const GetTotalCost = (props: GetTotalCostProps) => (
+  <Get<ResponseDouble, unknown, GetTotalCostQueryParams, void>
+    path={`/big-query/total-cost`}
+    base={getConfig('ccm/api')}
+    {...props}
+  />
+)
+
+export type UseGetTotalCostProps = Omit<UseGetProps<ResponseDouble, unknown, GetTotalCostQueryParams, void>, 'path'>
+
+export const useGetTotalCost = (props: UseGetTotalCostProps) =>
+  useGet<ResponseDouble, unknown, GetTotalCostQueryParams, void>(`/big-query/total-cost`, {
+    base: getConfig('ccm/api'),
+    ...props
+  })
 
 export interface ListBudgetsForAccountQueryParams {
   accountIdentifier: string
@@ -4860,6 +5183,7 @@ export interface GetFilterListQueryParams {
     | 'FileStore'
     | 'CCMRecommendation'
     | 'Anomaly'
+    | 'Environment'
 }
 
 export type GetFilterListProps = Omit<
@@ -4980,6 +5304,7 @@ export interface DeleteFilterQueryParams {
     | 'FileStore'
     | 'CCMRecommendation'
     | 'Anomaly'
+    | 'Environment'
 }
 
 export type DeleteFilterProps = Omit<
@@ -5030,6 +5355,7 @@ export interface GetFilterQueryParams {
     | 'FileStore'
     | 'CCMRecommendation'
     | 'Anomaly'
+    | 'Environment'
 }
 
 export interface GetFilterPathParams {
@@ -5199,6 +5525,42 @@ export const useTimescaleSqlQueriesStats = (props: UseTimescaleSqlQueriesStatsPr
     base: getConfig('ccm/api'),
     ...props
   })
+
+export interface SendNotificationQueryParams {
+  accountIdentifier: string
+}
+
+export type SendNotificationProps = Omit<
+  MutateProps<ResponseNotificationResult, unknown, SendNotificationQueryParams, NotificationChannel, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Send Notification
+ */
+export const SendNotification = (props: SendNotificationProps) => (
+  <Mutate<ResponseNotificationResult, unknown, SendNotificationQueryParams, NotificationChannel, void>
+    verb="POST"
+    path={`/notification`}
+    base={getConfig('ccm/api')}
+    {...props}
+  />
+)
+
+export type UseSendNotificationProps = Omit<
+  UseMutateProps<ResponseNotificationResult, unknown, SendNotificationQueryParams, NotificationChannel, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Send Notification
+ */
+export const useSendNotification = (props: UseSendNotificationProps) =>
+  useMutate<ResponseNotificationResult, unknown, SendNotificationQueryParams, NotificationChannel, void>(
+    'POST',
+    `/notification`,
+    { base: getConfig('ccm/api'), ...props }
+  )
 
 export interface DeleteNotificationSettingsQueryParams {
   accountIdentifier: string

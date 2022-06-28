@@ -1558,6 +1558,8 @@ const routes = {
     ({ recommendation, recommendationName }: { recommendation: string; recommendationName: string }) =>
       `/ce/recommendations/ecs/${recommendation}/name/${recommendationName}/details`
   ),
+
+  toBigQueryOptimizer: withAccountId(() => '/ce/big-query-optimizer'),
   /********************************************************************************************************************/
   toSTO: withAccountId(() => `/sto`),
   toSTOHome: withAccountId(() => `/sto/home`),

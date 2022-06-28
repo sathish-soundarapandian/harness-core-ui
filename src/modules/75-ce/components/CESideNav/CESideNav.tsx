@@ -169,6 +169,7 @@ const SideNavItems = () => {
           label={getString('ce.co.breadCrumb.rules')}
           to={routes.toCECORules({ accountId, params: '' })}
         />
+        <SidebarLink label={'BigQuery Optimizer'} to={routes.toBigQueryOptimizer({ accountId })} />
         <NavExpandable title={getString('common.setup')} route={routes.toCECOAccessPoints({ accountId })}>
           <Layout.Vertical spacing="small">
             <SidebarLink
