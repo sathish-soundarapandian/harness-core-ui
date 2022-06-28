@@ -70,8 +70,8 @@ function AzureWebAppServiceConfigWizardStepOne({
   const [selectedStore, setSelectedStore] = useState(prevStepData?.store ?? initialValues.store)
   const [multitypeInputValue, setMultiTypeValue] = useState<MultiTypeInputType | undefined>(undefined)
 
-  function isValidConnectorStore(): boolean {
-    return !!selectedStore
+  function isValidConnectorStore(): string {
+    return selectedStore
   }
 
   const newConnectorLabel = `${getString('newLabel')} ${isValidConnectorStore()} ${getString('connector')}`
@@ -134,7 +134,11 @@ function AzureWebAppServiceConfigWizardStepOne({
 
   return (
     <Layout.Vertical height={'inherit'} spacing="medium" className={css.optionsViewContainer}>
-      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
+      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'xxxlarge' }}>
+        {'Application Settings File Source'}
+      </Text>
+
+      <Text font={{ variation: FontVariation.H6 }} margin={{ bottom: 'medium' }}>
         {stepName}
       </Text>
 
