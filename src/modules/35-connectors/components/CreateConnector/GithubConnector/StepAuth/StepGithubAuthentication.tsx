@@ -293,9 +293,7 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
           window.open(oAuthURL, '_blank')
         }
       } catch (e) {
-        setOAuthStatus(Status.FAILURE)
-        clear()
-        showError(getString('connectors.oAuth.failed'))
+        markOAuthAsFailed()
       }
     }, [isExistingOAuthConnectionHealthy, accountId])
 
