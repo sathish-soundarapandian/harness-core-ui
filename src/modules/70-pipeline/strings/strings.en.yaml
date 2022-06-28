@@ -1205,6 +1205,8 @@ appServiceConfig:
     subtitle: 'Specify {{$.pipeline.appServiceConfig.connectionStrings.name}} Script File Type'
 startupScript:
   name: Startup Script
+  file: '{{$.pipeline.startupScript.name}} File'
   fileDetails: '{{$.pipeline.startupScript.name}} File Details'
   fileSource: '{{$.pipeline.startupScript.name}} File Source'
   scriptFilePath: 'Script File Path'
+harness: 'Harness'
