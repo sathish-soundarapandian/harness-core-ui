@@ -227,7 +227,6 @@ export const getFullRepoName = (repository: UserRepoResponse): string => {
 
 export const DELEGATE_INSTALLATION_REFETCH_DELAY = 10000
 export const MAX_TIMEOUT_DELEGATE_INSTALLATION = 1000 * 60 * 10 // ten minutes
-export const MAX_TIMEOUT_OAUTH = 1000 * 60 * 5 // five minutes
 
 export const BitbucketPRTriggerActions: BitbucketPRSpec['actions'] = ['Create', 'Update']
 

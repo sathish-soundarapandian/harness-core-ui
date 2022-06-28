@@ -52,7 +52,8 @@ import {
   getBackendServerUrl,
   isEnvironmentAllowedForOAuth,
   OAUTH_REDIRECT_URL_PREFIX,
-  OAUTH_PLACEHOLDER_VALUE
+  OAUTH_PLACEHOLDER_VALUE,
+  MAX_TIMEOUT_OAUTH
 } from '@connectors/components/CreateConnector/CreateConnectorUtils'
 import {
   AllSaaSGitProviders,
@@ -65,8 +66,7 @@ import {
   GitProviderPermissions,
   ACCOUNT_SCOPE_PREFIX,
   DEFAULT_HARNESS_KMS,
-  AccessTokenPermissionsDocLinks,
-  MAX_TIMEOUT_OAUTH
+  AccessTokenPermissionsDocLinks
 } from './Constants'
 import { getOAuthConnectorPayload } from '../../../utils/HostedBuildsUtils'
 
