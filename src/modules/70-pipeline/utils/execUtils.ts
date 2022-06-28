@@ -283,7 +283,7 @@ const processSingleItem = ({
               steps: processStepGroupSteps({ nodeAdjacencyListMap, id, nodeMap, rootNodes })
             }
           }
-        : item)
+        : { step: item })
     }
   }
   items.push(finalItem)
