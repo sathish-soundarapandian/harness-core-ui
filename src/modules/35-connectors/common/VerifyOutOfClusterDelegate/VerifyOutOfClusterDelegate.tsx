@@ -45,6 +45,7 @@ import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { connectorsTrackEventMap } from '@connectors/utils/connectorEvents'
 import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
+import { useNotification } from '@common/hooks/Notifications/useNotification'
 import Suggestions from '../ErrorSuggestions/ErrorSuggestionsCe'
 import css from './VerifyOutOfClusterDelegate.module.scss'
 
@@ -195,6 +196,7 @@ const VerifyOutOfClusterDelegate: React.FC<StepProps<VerifyOutOfClusterStepProps
     const showEditAndPermission = showEditAndViewPermission(props.type)
 
     const { trackEvent } = useTelemetry()
+    const { showPrimary } = useNotification()
 
     useEffect(() => {
       const eventName = connectorsTrackEventMap[props.type]
@@ -485,6 +487,9 @@ const VerifyOutOfClusterDelegate: React.FC<StepProps<VerifyOutOfClusterStepProps
                   props.onClose?.()
                   if (stepDetails.status === 'DONE') {
                     props.onTestConnectionSuccess?.()
+                    showPrimary(
+                      `${connectorInfo?.name} connector is created. We will notify you once the data is ready!`
+                    )
                   }
                 }}
                 text={getString('finish')}

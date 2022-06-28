@@ -22,6 +22,8 @@ import {
 } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo, pick } from 'lodash-es'
+import { useModalHook } from '@harness/use-modal'
+import { Drawer, Position } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import { PageSpinner, useToaster } from '@common/components'
@@ -60,8 +62,22 @@ import PerspectiveFoldersSideNav from '@ce/components/PerspectiveFolders/Perspec
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import EmptyPage from '@ce/common/EmptyPage/EmptyPage'
 import { folderViewType } from '@ce/constants'
+import NotificationList from '@ce/components/NotificationsList/NotificationList'
 import bgImage from './images/perspectiveBg.png'
 import css from './PerspectiveListPage.module.scss'
+
+const drawerProps = {
+  autoFocus: true,
+  canEscapeKeyClose: true,
+  canOutsideClickClose: true,
+  enforceFocus: true,
+  isOpen: true,
+  hasBackdrop: true,
+  position: Position.RIGHT,
+  usePortal: true,
+  size: '20%',
+  isCloseButtonShown: true
+}
 
 const perspectiveSortFunction: (a: any, b: any) => number = (a, b) => {
   const isElementADefault = a?.viewType === ViewType.Default
@@ -593,6 +609,20 @@ const PerspectiveListPage: React.FC = () => {
     pespectiveList.sort(perspectiveSortFunction)
   }, [pespectiveList])
 
+  const [showModal, hideDrawer] = useModalHook(() => {
+    return (
+      <Drawer
+        onClose={() => {
+          hideDrawer()
+        }}
+        {...drawerProps}
+        title={<Text>Notification List</Text>}
+      >
+        <NotificationList hideDrawer={hideDrawer} />
+      </Drawer>
+    )
+  }, [])
+
   const countInfo: Record<string, number> = useMemo(() => {
     return getPerspectiveCountInfo(pespectiveList)
   }, [pespectiveList])
@@ -625,6 +655,7 @@ const PerspectiveListPage: React.FC = () => {
             {getString('ce.perspectives.sideNavText')}
           </Text>
         }
+        content={<Icon name="main-notifications" color={Color.PRIMARY_7} onClick={showModal} />}
         breadcrumbs={<NGBreadcrumbs />}
       />
       <Layout.Horizontal className={css.bodyWrapper}>

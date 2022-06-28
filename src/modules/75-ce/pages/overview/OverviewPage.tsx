@@ -7,8 +7,11 @@
 
 import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
-import { Container, Page } from '@wings-software/uicore'
+import { Container, Icon, Page, Text } from '@wings-software/uicore'
+import { Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
+import { useModalHook } from '@harness/use-modal'
+import { Drawer, Position } from '@blueprintjs/core'
 import {
   CcmMetaData,
   StatsInfo,
@@ -42,6 +45,7 @@ import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useStrings } from 'framework/strings'
+import NotificationList from '@ce/components/NotificationsList/NotificationList'
 import bgImage from './images/CD/overviewBg.png'
 import css from './Overview.module.scss'
 
@@ -85,6 +89,19 @@ const NoDataOverviewPage: React.FC<NoDataOverviewPageProps> = (props: NoDataOver
   )
 }
 
+const drawerProps = {
+  autoFocus: true,
+  canEscapeKeyClose: true,
+  canOutsideClickClose: true,
+  enforceFocus: true,
+  isOpen: true,
+  hasBackdrop: true,
+  position: Position.RIGHT,
+  usePortal: true,
+  size: '20%',
+  isCloseButtonShown: true
+}
+
 const OverviewPage: React.FC = () => {
   const { getString } = useStrings()
   const sustainabilityEnabled = useFeatureFlag(FeatureFlag.CCM_SUSTAINABILITY)
@@ -94,6 +111,20 @@ const OverviewPage: React.FC = () => {
   })
 
   useDocumentTitle([getString('cloudCostsText'), getString('overview')], true)
+
+  const [showModal, hideDrawer] = useModalHook(() => {
+    return (
+      <Drawer
+        onClose={() => {
+          hideDrawer()
+        }}
+        {...drawerProps}
+        title={<Text>Notification List</Text>}
+      >
+        <NotificationList hideDrawer={hideDrawer} />
+      </Drawer>
+    )
+  }, [])
 
   const [summaryResult] = useFetchPerspectiveDetailsSummaryQuery({
     variables: {
@@ -134,7 +165,17 @@ const OverviewPage: React.FC = () => {
     <Container>
       <Page.Header
         title={<TitleWithToolTipId title={getString('overview')} toolTipId="ccmOverviewTitle" />}
-        content={<TimeRangePicker timeRange={timeRange} setTimeRange={setTimeRange} />}
+        content={
+          <div>
+            <TimeRangePicker timeRange={timeRange} setTimeRange={setTimeRange} />
+            <Icon
+              name="main-notifications"
+              color={Color.PRIMARY_7}
+              onClick={showModal}
+              style={{ marginLeft: '12px' }}
+            />
+          </div>
+        }
       />
       <Page.Body>
         <Container padding={{ top: 'medium', right: 'xlarge', bottom: 'medium', left: 'xlarge' }}>
