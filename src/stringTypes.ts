@@ -3056,6 +3056,7 @@ export interface StringsMap {
   'pipeline.gitPullRequest': string
   'pipeline.gitPullRequestNumber': string
   'pipeline.gitRepo': string
+  'pipeline.harness': string
   'pipeline.imagePathLabel': string
   'pipeline.imageVersionDeprecated': string
   'pipeline.importSuccessMessage': string
@@ -3431,6 +3432,7 @@ export interface StringsMap {
   'pipeline.stagetoRetryFrom': string
   'pipeline.startTime': string
   'pipeline.startedOn': string
+  'pipeline.startupScript.file': string
   'pipeline.startupScript.fileDetails': string
   'pipeline.startupScript.fileSource': string
   'pipeline.startupScript.name': string
