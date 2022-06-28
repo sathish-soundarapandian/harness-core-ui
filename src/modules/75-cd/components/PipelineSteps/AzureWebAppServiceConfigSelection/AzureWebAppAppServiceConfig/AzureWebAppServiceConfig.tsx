@@ -211,11 +211,11 @@ function AzureWebAppListView({
 
   const lastStepProps = useCallback((): ApplicationSettingsLastStepProps => {
     const applicationSettingsDetailsProps: ApplicationSettingsLastStepProps = {
-      key: getString('pipeline.manifestType.manifestDetails'),
-      name: getString('pipeline.manifestType.manifestDetails'),
+      key: 'Application Settings Script File Details',
+      name: 'Application Settings Script File Details',
       expressions,
       allowableTypes,
-      stepName: getString('pipeline.manifestType.manifestDetails'),
+      stepName: 'Application Settings File Details',
       initialValues: applicationSettings,
       handleSubmit: handleSubmit,
       isReadonly: isReadonly
@@ -226,7 +226,8 @@ function AzureWebAppListView({
 
   const getLabels = (): ConnectorRefLabelType => {
     return {
-      firstStepName: getString('pipeline.manifestType.specifyManifestRepoType'),
+      // firstStepName: getString('pipeline.manifestType.specifyManifestRepoType'),
+      firstStepName: 'Specify Application Settings Script File type',
       secondStepName: `${getString('common.specify')} ${getString('store')}`
     }
   }
