@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
+import { render, fireEvent, waitFor } from '@testing-library/react'
 import { TestWrapper, CurrentLocation } from '@common/utils/testUtils'
 import { getPipelineStagesMap } from '@pipeline/utils/executionUtils'
 import ExecutionContext from '@pipeline/context/ExecutionContext'
@@ -48,8 +48,8 @@ fetchMock.mockResolvedValue({
 })
 
 describe('<ExecutionLogView /> tests', () => {
-  test('snapshot test', () => {
-    const { container } = render(
+  test('snapshot test', async () => {
+    const { container, findByText } = render(
       <TestWrapper>
         <ExecutionContext.Provider value={contextValue}>
           <ExecutionLogView />
@@ -57,6 +57,9 @@ describe('<ExecutionLogView /> tests', () => {
         </ExecutionContext.Provider>
       </TestWrapper>
     )
+
+    await waitFor(() => findByText('RolloutSecond'))
+
     expect(container).toMatchSnapshot()
   })
 

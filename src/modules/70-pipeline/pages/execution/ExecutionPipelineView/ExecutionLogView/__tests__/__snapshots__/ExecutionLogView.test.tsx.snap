@@ -521,7 +521,7 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
     <div
       data-testid="location"
     >
-      /?stage=google_1
+      /
     </div>
   </div>
 </div>

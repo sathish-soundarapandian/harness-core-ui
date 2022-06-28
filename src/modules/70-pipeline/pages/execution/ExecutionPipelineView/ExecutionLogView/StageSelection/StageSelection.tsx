@@ -39,6 +39,10 @@ export function StageSelection(): React.ReactElement {
 
   const accordionRef = React.useRef<AccordionHandle | null>(null)
   const containerRef = React.useRef<HTMLDivElement | null>(null)
+  const prevSelectedStageIdRef = React.useRef(selectedStageId)
+  const prevSelectedStageExecutionId = React.useRef(selectedStageExecutionId)
+  const hasUserClicked = React.useRef(false)
+
   const { updateQueryParams } = useUpdateQueryParams<ExecutionPageQueryParams>()
 
   React.useEffect(() => {
@@ -71,23 +75,38 @@ export function StageSelection(): React.ReactElement {
     }
   }, [selectedStageId, selectedStageExecutionId])
 
+  React.useEffect(() => {
+    if (!loading) {
+      // only update reference, after API is complete
+      prevSelectedStageIdRef.current = selectedStageId
+      prevSelectedStageExecutionId.current = selectedStageExecutionId
+    }
+  }, [selectedStageId, selectedStageExecutionId, loading])
+
   const tree = React.useMemo(
     () => processExecutionData(pipelineExecutionDetail?.executionGraph),
     [pipelineExecutionDetail?.executionGraph]
   )
 
   function handleStepSelect(stepId: string, retryStep?: string): void {
-    updateQueryParams({ step: stepId, stage: selectedStageId, retryStep })
+    updateQueryParams({ step: stepId, stage: selectedStageId, stageExecId: selectedStageExecutionId, retryStep })
   }
 
+  /**
+   * This function is called even during auto stage selection,
+   * we should call this only when user clicks it.
+   */
   function handleAccordionChange(stageId: string | string[]): void {
-    const [stageNodeId, stageNodeExecId] = Array.isArray(stageId) ? stageId : (stageId || '').split('|')
+    if (hasUserClicked.current) {
+      const [stageNodeId, stageNodeExecId] = Array.isArray(stageId) ? stageId : (stageId || '').split('|')
 
-    if (typeof stageId === 'string' && stageId && stageNodeId) {
-      updateQueryParams({
-        stage: stageNodeId,
-        stageExecId: stageNodeExecId
-      })
+      if (typeof stageId === 'string' && stageId && stageNodeId) {
+        updateQueryParams({
+          stage: stageNodeId,
+          stageExecId: stageNodeExecId
+        })
+      }
+      hasUserClicked.current = false
     }
   }
 
@@ -95,7 +114,7 @@ export function StageSelection(): React.ReactElement {
   const stages = [...pipelineStagesMap.values()]
 
   return (
-    <div ref={containerRef} className={css.mainContainer}>
+    <div ref={containerRef} className={css.mainContainer} onClick={() => (hasUserClicked.current = true)}>
       <div className={css.statusHeader}>
         <div className={css.heatmap}>
           <StatusHeatMap
@@ -119,6 +138,12 @@ export function StageSelection(): React.ReactElement {
       >
         {stageEntries.map(([identifier, stage]) => {
           const newIdentifier = stage?.strategyMetadata ? [stage.nodeUuid, stage.nodeExecutionId].join('|') : identifier
+          const shouldShowTree =
+            newIdentifier.includes(selectedStageExecutionId || selectedStageId) &&
+            (!loading ||
+              prevSelectedStageIdRef.current === stage.nodeUuid ||
+              prevSelectedStageExecutionId.current === stage.nodeExecutionId)
+
           return (
             <Accordion.Panel
               key={newIdentifier}
@@ -131,7 +156,7 @@ export function StageSelection(): React.ReactElement {
                 </div>
               }
               details={
-                newIdentifier.includes(selectedStageExecutionId || selectedStageId) && !loading ? (
+                shouldShowTree ? (
                   <StepsTree
                     allNodeMap={allNodeMap}
                     nodes={tree}
