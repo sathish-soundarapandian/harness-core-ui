@@ -289,7 +289,12 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
       }
     }, [isExistingOAuthConnectionHealthy, accountId])
 
-    window.addEventListener('message', handleOAuthServerEvent)
+    useEffect(() => {
+      window.addEventListener('message', handleOAuthServerEvent)
+      return () => {
+        window.removeEventListener('message', handleOAuthServerEvent)
+      }
+    }, [])
 
     useEffect(() => {
       if (isGithubConnectorOAuthBased) {
