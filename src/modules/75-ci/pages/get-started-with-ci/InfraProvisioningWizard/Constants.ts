@@ -227,9 +227,16 @@ export const getFullRepoName = (repository: UserRepoResponse): string => {
 
 export const DELEGATE_INSTALLATION_REFETCH_DELAY = 10000
 export const MAX_TIMEOUT_DELEGATE_INSTALLATION = 1000 * 60 * 10 // ten minutes
+export const MAX_TIMEOUT_OAUTH = 1000 * 60 * 5 // five minutes
 
 export const BitbucketPRTriggerActions: BitbucketPRSpec['actions'] = ['Create', 'Update']
 
 export const GitHubPRTriggerActions: GithubPRSpec['actions'] = ['Reopen', 'Synchronize', 'Open']
 
 export const GitlabPRTriggerActions: GitlabPRSpec['actions'] = ['Reopen', 'Sync', 'Open']
+
+export const AccessTokenPermissionsDocLinks: Map<ConnectorInfoDTO['type'], string> = new Map([
+  [Connectors.GITHUB, 'https://ngdocs.harness.io/article/jd77qvieuw#step_3_credentials'],
+  [Connectors.GITLAB, 'https://ngdocs.harness.io/article/5abnoghjgo#password_personal_access_token'],
+  [Connectors.BITBUCKET, 'https://ngdocs.harness.io/article/iz5tucdwyu#personal_access_token']
+])
