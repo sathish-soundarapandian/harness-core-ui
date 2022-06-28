@@ -5,41 +5,42 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useState } from 'react'
-import { Formik, Layout, Button, StepProps, Text, ButtonVariation } from '@wings-software/uicore'
+import React, { useEffect, useState, useRef } from 'react'
+import {
+  Formik,
+  Layout,
+  Button,
+  StepProps,
+  Text,
+  ButtonVariation,
+  MultiTypeInputType,
+  SelectOption,
+  getMultiTypeFromValue,
+  FormInput
+} from '@wings-software/uicore'
 import { Form } from 'formik'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { defaultTo } from 'lodash-es'
+import { cloneDeep, isEqual } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import { PopoverInteractionKind } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 
-import {
-  ConnectorConfigDTO,
-  DockerBuildDetailsDTO,
-  useGetBuildDetailsForDocker,
-  useGetJobDetailsForJenkins
-} from 'services/cd-ng'
-import {
-  checkIfQueryParamsisNotEmpty,
-  getArtifactFormData,
-  getConnectorIdValue,
-  getFinalArtifactObj,
-  shouldFetchTags
-} from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { ConnectorConfigDTO, JobDetails, useGetJobDetailsForJenkins } from 'services/cd-ng'
+import { getArtifactFormData } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type {
   ArtifactType,
-  ImagePathProps,
-  ImagePathTypes
+  JenkinsArtifactProps,
+  JenkinsArtifactType
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
-import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
-import ArtifactImagePathTagView from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
-import SideCarArtifactIdentifier from '../SideCarArtifactIdentifier'
-import css from '../../ArtifactConnector.module.scss'
 import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/helper'
 import type { SubmenuSelectOption } from '@pipeline/components/PipelineSteps/Steps/JenkinsStep/types'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
+import SideCarArtifactIdentifier from '../SideCarArtifactIdentifier'
+import css from '../../ArtifactConnector.module.scss'
 
 export function JenkinsArtifact({
   context,
@@ -52,7 +53,7 @@ export function JenkinsArtifact({
   artifactIdentifiers,
   isReadonly = false,
   selectedArtifact
-}: StepProps<ConnectorConfigDTO> & ImagePathProps): React.ReactElement {
+}: StepProps<ConnectorConfigDTO> & JenkinsArtifactProps): React.ReactElement {
   console.log('props', {
     context,
     handleSubmit,
@@ -66,8 +67,7 @@ export function JenkinsArtifact({
     selectedArtifact
   })
   const { getString } = useStrings()
-  const [lastImagePath, setLastImagePath] = useState('')
-  const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
+  const lastOpenedJob = useRef<any>(null)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [jobDetails, setJobDetails] = useState<SubmenuSelectOption[]>([])
@@ -101,10 +101,6 @@ export function JenkinsArtifact({
     )
   })
 
-  const getConnectorRefQueryData = (): string => {
-    return defaultTo(prevStepData?.connectorId?.value, prevStepData?.identifier)
-  }
-
   const { refetch: refetchJobs, data: jobsResponse } = useGetJobDetailsForJenkins({
     lazy: true,
     queryParams: {
@@ -112,6 +108,60 @@ export function JenkinsArtifact({
       connectorRef: ''
     }
   })
+
+  const getJobItems = (jobs: JobDetails[]): SubmenuSelectOption[] => {
+    return jobs?.map(job => {
+      return {
+        label: job.jobName || '',
+        value: job.url || '',
+        submenuItems: [],
+        hasSubItems: job.folder
+      }
+    })
+  }
+
+  useEffect(() => {
+    // if (typeof initialValues?.jobName === 'string' && jobsResponse?.data?.jobDetails?.length) {
+    //   const targetJob = jobsResponse?.data?.jobDetails?.find(job => job.url === initialValues?.jobName)
+    //   if (targetJob) {
+    //     const jobObj = {
+    //       label: targetJob?.jobName || '',
+    //       value: targetJob?.url || '',
+    //       submenuItems: [],
+    //       hasSubItems: targetJob?.folder
+    //     }
+    //     formik.setValues({
+    //       ...formik.values,
+    //       spec: {
+    //         ...formik.values.spec,
+    //         jobName: jobObj as any
+    //       }
+    //     })
+    //   }
+    // }
+    if (lastOpenedJob.current) {
+      setJobDetails((prevState: SubmenuSelectOption[]) => {
+        const clonedJobDetails = cloneDeep(prevState)
+        const parentJob = clonedJobDetails.find(obj => obj.value === lastOpenedJob.current)
+        if (parentJob) {
+          parentJob.submenuItems = [...getJobItems(jobsResponse?.data?.jobDetails || [])]
+        }
+        return clonedJobDetails
+      })
+    } else {
+      const jobs = jobsResponse?.data?.jobDetails?.map(job => {
+        return {
+          label: job.jobName || '',
+          value: job.url || '',
+          submenuItems: [],
+          hasSubItems: job.folder
+        }
+      })
+      if (!isEqual(jobs, jobDetails)) {
+        setJobDetails(jobs || [])
+      }
+    }
+  }, [jobsResponse])
 
   const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.label)
 
@@ -124,31 +174,17 @@ export function JenkinsArtifact({
     })
   }, [prevStepData])
 
-  const canFetchTags = useCallback(
-    (imagePath: string): boolean => {
-      return !!(lastImagePath !== imagePath && shouldFetchTags(prevStepData, [imagePath]))
-    },
-    [lastImagePath, prevStepData]
-  )
-  const fetchTags = useCallback(
-    (imagePath = ''): void => {
-      if (canFetchTags(imagePath)) {
-        setLastImagePath(imagePath)
-      }
-    },
-    [canFetchTags]
-  )
-  const isTagDisabled = useCallback((formikValue): boolean => {
-    return !checkIfQueryParamsisNotEmpty([formikValue.imagePath])
-  }, [])
-
-  const getInitialValues = (): ImagePathTypes => {
-    return getArtifactFormData(initialValues, selectedArtifact as ArtifactType, context === ModalViewFor.SIDECAR)
+  const getInitialValues = (): JenkinsArtifactType => {
+    return getArtifactFormData(
+      initialValues,
+      selectedArtifact as ArtifactType,
+      context === ModalViewFor.SIDECAR
+    ) as JenkinsArtifactType
   }
-  const submitFormData = (formData: ImagePathTypes & { connectorId?: string }): void => {
-    const artifactObj = getFinalArtifactObj(formData, context === ModalViewFor.SIDECAR)
-    handleSubmit(artifactObj)
-  }
+  //   const submitFormData = (formData: ImagePathTypes & { connectorId?: string }): void => {
+  //     const artifactObj = getFinalArtifactObj(formData, context === ModalViewFor.SIDECAR)
+  //     handleSubmit(artifactObj)
+  //   }
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
@@ -160,19 +196,21 @@ export function JenkinsArtifact({
         formName="imagePath"
         validationSchema={context === ModalViewFor.SIDECAR ? sidecarSchema : primarySchema}
         onSubmit={formData => {
-          submitFormData({
-            ...prevStepData,
-            ...formData,
-            tag: defaultTo(formData?.tag?.value, formData?.tag),
-            connectorId: getConnectorIdValue(prevStepData)
-          })
+          //   submitFormData({
+          //     ...prevStepData,
+          //     ...formData,
+          //     tag: defaultTo(formData?.tag?.value, formData?.tag),
+          //     connectorId: getConnectorIdValue(prevStepData)
+          //   })
         }}
       >
-        {formik => (
-          <Form>
-            <div className={css.connectorForm}>
-              {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
-              <ArtifactImagePathTagView
+        {formik => {
+          console.log('formik', formik)
+          return (
+            <Form>
+              <div className={css.connectorForm}>
+                {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
+                {/* <ArtifactImagePathTagView
                 selectedArtifact={selectedArtifact as ArtifactType}
                 formik={formik}
                 expressions={expressions}
@@ -185,24 +223,88 @@ export function JenkinsArtifact({
                 tagList={tagList}
                 setTagList={setTagList}
                 tagDisabled={isTagDisabled(formik?.values)}
+              /> */}
+              </div>
+              <FormInput.SelectWithSubmenuTypeInput
+                label={'Job Name'}
+                name={'jobName'}
+                placeholder={formik.values.spec.jobName || 'Select a job'}
+                selectItems={jobDetails}
+                selectWithSubmenuTypeInputProps={{
+                  selectWithSubmenuProps: {
+                    items: jobDetails,
+                    interactionKind: PopoverInteractionKind.CLICK,
+                    allowCreatingNewItems: true,
+                    onChange: (primaryValue, secondaryValue, type) => {
+                      const newJobName = secondaryValue ? secondaryValue : primaryValue
+                      if (!primaryValue) {
+                        return
+                      }
+                      formik.setValues({
+                        ...formik.values,
+                        spec: {
+                          ...formik.values.spec,
+                          jobName: type === MultiTypeInputType.RUNTIME ? primaryValue : (newJobName as any)
+                        }
+                      })
+                      if (type !== MultiTypeInputType.FIXED) {
+                        formik.setValues({
+                          ...formik.values,
+                          jobName: type === MultiTypeInputType.RUNTIME ? primaryValue : (newJobName as any)
+                        })
+                      }
+
+                      // resetForm(formik, 'jobName', '')
+                    },
+                    onOpening: (item: SelectOption) => {
+                      lastOpenedJob.current = item.value
+                      // TODO: To scroll the jobDetails component to its original height
+                      // const indexOfParent = jobDetails.findIndex(obj => obj.value === item.value)
+                      // const parentNode = document.getElementsByClassName('Select--menuItem')?.[indexOfParent]
+                      // if (parentNode) {
+                      //   parentJobY.current = parentNode.getBoundingClientRect()?.y
+                      // }
+                      refetchJobs({
+                        queryParams: {
+                          ...commonParams,
+                          connectorRef: connectorRefValue?.toString(),
+                          parentJobName: item.label
+                        }
+                      })
+                    }
+                  }
+                }}
               />
-            </div>
-            <Layout.Horizontal spacing="medium">
-              <Button
-                variation={ButtonVariation.SECONDARY}
-                text={getString('back')}
-                icon="chevron-left"
-                onClick={() => previousStep?.(prevStepData)}
-              />
-              <Button
-                variation={ButtonVariation.PRIMARY}
-                type="submit"
-                text={getString('submit')}
-                rightIcon="chevron-right"
-              />
-            </Layout.Horizontal>
-          </Form>
-        )}
+              {getMultiTypeFromValue(formik.values.spec.connectorRef) === MultiTypeInputType.RUNTIME && (
+                <ConfigureOptions
+                  style={{ marginTop: 14 }}
+                  value={formik.values.spec.connectorRef as string}
+                  type="String"
+                  variableName="jobName"
+                  showRequiredField={false}
+                  showDefaultField={false}
+                  showAdvanced={true}
+                  onChange={value => formik.setFieldValue('jobName', value)}
+                  isReadonly={isReadonly}
+                />
+              )}
+              <Layout.Horizontal spacing="medium">
+                <Button
+                  variation={ButtonVariation.SECONDARY}
+                  text={getString('back')}
+                  icon="chevron-left"
+                  onClick={() => previousStep?.(prevStepData)}
+                />
+                <Button
+                  variation={ButtonVariation.PRIMARY}
+                  type="submit"
+                  text={getString('submit')}
+                  rightIcon="chevron-right"
+                />
+              </Layout.Horizontal>
+            </Form>
+          )
+        }}
       </Formik>
     </Layout.Vertical>
   )
