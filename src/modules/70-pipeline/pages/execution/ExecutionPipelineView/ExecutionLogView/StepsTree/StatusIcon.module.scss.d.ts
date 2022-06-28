@@ -8,11 +8,21 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly aborted: string
+  readonly approvalwaiting: string
+  readonly asyncwaiting: string
+  readonly discontinuing: string
+  readonly errored: string
   readonly expired: string
   readonly failed: string
+  readonly ignorefailed: string
+  readonly inputwaiting: string
+  readonly interventionwaiting: string
+  readonly resourcewaiting: string
   readonly running: string
   readonly statusIcon: string
   readonly success: string
   readonly suspended: string
+  readonly taskwaiting: string
+  readonly timedwaiting: string
 }
 export default styles

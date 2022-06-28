@@ -2,18 +2,31 @@
   color: var(--icon-color, var(--grey-450));
   --intent-color: var(--icon-color);
 
-  &.success {
+  &.success,
+  &.ignorefailed {
     --icon-color: var(--green-500);
   }
 
   &.failed,
+  &.errored,
   &.expired,
   &.aborted,
-  &.suspended {
+  &.suspended,
+  &.discontinuing {
     --icon-color: var(--red-500);
   }
 
-  &.running {
+  &.resourcewaiting,
+  &.interventionwaiting,
+  &.approvalwaiting,
+  &.inputwaiting {
+    --icon-color: var(--grey-450);
+  }
+
+  &.running,
+  &.taskwaiting,
+  &.asyncwaiting,
+  &.timedwaiting {
     --icon-color: var(--primary-7);
   }
 }
