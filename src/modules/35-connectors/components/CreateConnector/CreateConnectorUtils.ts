@@ -61,7 +61,7 @@ export const isEnvironmentAllowedForOAuth = (): boolean => {
   )
 }
 
-export const GATEWAY_URL = `${location.protocol}//${location.host}/gateway/ci-4567`
+export const GATEWAY_URL = `${location.protocol}//${location.host}/ci-4567/gateway`
 
 export const OAUTH_REDIRECT_URL_PREFIX = `${GATEWAY_URL}/api/secrets/oauth2Redirect`
 
