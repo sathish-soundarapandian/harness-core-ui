@@ -291,6 +291,7 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
 
     useEffect(() => {
       window.addEventListener('message', handleOAuthServerEvent)
+
       return () => {
         window.removeEventListener('message', handleOAuthServerEvent)
       }
