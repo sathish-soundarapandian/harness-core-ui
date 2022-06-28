@@ -6,15 +6,14 @@
  */
 
 import React from 'react'
-import { StepWizard, StepProps, MultiTypeInputType } from '@wings-software/uicore'
-import type { IconProps } from '@harness/icons'
+import { StepWizard, StepProps, MultiTypeInputType, Color } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import type { ConnectorTypes } from './StartupScriptInterface.types'
 import StartupScriptWizardStepOne from './StartupScriptWizardStepOne'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 
-import css from '../ManifestSelection/ManifestWizard/ManifestWizard.module.scss'
+import css from './StartupScriptSelection.module.scss'
 
 interface StepChangeData<SharedObject> {
   prevStep?: number
@@ -27,7 +26,7 @@ interface StartupScriptWizardInitData {
   store: ConnectorTypes | string
 }
 
-interface ManifestWizardStepsProps<T> {
+interface StartupScriptWizardStepsProps<T> {
   handleConnectorViewChange: (isConnectorView: boolean) => void
   initialValues: StartupScriptWizardInitData
   newConnectorView: boolean
@@ -35,7 +34,6 @@ interface ManifestWizardStepsProps<T> {
   allowableTypes: MultiTypeInputType[]
   newConnectorSteps?: any
   lastSteps: Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> | null
-  iconsProps: IconProps
   isReadonly: boolean
   handleStoreChange: (store?: T) => void
   connectorTypes: any
@@ -52,7 +50,7 @@ export function StartupScriptWizard<T>({
   newConnectorSteps,
   lastSteps,
   isReadonly
-}: ManifestWizardStepsProps<T>): React.ReactElement {
+}: StartupScriptWizardStepsProps<T>): React.ReactElement {
   const { getString } = useStrings()
   const onStepChange = (arg: StepChangeData<any>): void => {
     if (arg?.prevStep && arg?.nextStep && arg.prevStep > arg.nextStep && arg.nextStep <= 2) {
@@ -68,9 +66,14 @@ export function StartupScriptWizard<T>({
 
   return (
     <StepWizard
-      className={css.manifestWizard}
-      subtitle={'Subtitle'}
+      className={css.startupScriptWizard}
       onStepChange={onStepChange}
+      icon={'audit-trail'}
+      iconProps={{
+        color: Color.WHITE,
+        size: 37
+      }}
+      title={getString('pipeline.startupScript.file')}
     >
       <StartupScriptWizardStepOne
         name={getString('pipeline.startupScript.fileSource')}
