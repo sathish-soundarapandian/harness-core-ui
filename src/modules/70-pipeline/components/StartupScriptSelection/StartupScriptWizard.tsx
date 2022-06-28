@@ -10,7 +10,6 @@ import { StepWizard, StepProps, MultiTypeInputType } from '@wings-software/uicor
 import type { IconProps } from '@harness/icons'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
-import type { ConnectorRefLabelType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import type { ConnectorTypes } from './StartupScriptInterface.types'
 import StartupScriptWizardStepOne from './StartupScriptWizardStepOne'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
@@ -31,7 +30,6 @@ interface StartupScriptWizardInitData {
 interface ManifestWizardStepsProps<T> {
   handleConnectorViewChange: (isConnectorView: boolean) => void
   initialValues: StartupScriptWizardInitData
-  labels: ConnectorRefLabelType
   newConnectorView: boolean
   expressions: string[]
   allowableTypes: MultiTypeInputType[]
@@ -43,19 +41,18 @@ interface ManifestWizardStepsProps<T> {
   connectorTypes: any
 }
 
-export function StartupScriptWizard<T, U>({
+export function StartupScriptWizard<T>({
   handleConnectorViewChange,
   handleStoreChange,
   initialValues,
   expressions,
   allowableTypes,
   connectorTypes,
-  labels,
   newConnectorView,
   newConnectorSteps,
   lastSteps,
   isReadonly
-}: ManifestWizardStepsProps<T, U>): React.ReactElement {
+}: ManifestWizardStepsProps<T>): React.ReactElement {
   const { getString } = useStrings()
   const onStepChange = (arg: StepChangeData<any>): void => {
     if (arg?.prevStep && arg?.nextStep && arg.prevStep > arg.nextStep && arg.nextStep <= 2) {
@@ -76,8 +73,8 @@ export function StartupScriptWizard<T, U>({
       onStepChange={onStepChange}
     >
       <StartupScriptWizardStepOne
-        name={getString('pipeline.manifestType.manifestSource')}
-        stepName={labels.secondStepName}
+        name={getString('pipeline.startupScript.fileSource')}
+        stepName={getString('pipeline.startupScript.fileSource')}
         expressions={expressions}
         allowableTypes={allowableTypes}
         isReadonly={isReadonly}

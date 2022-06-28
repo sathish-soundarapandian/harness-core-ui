@@ -34,12 +34,13 @@ import type { ConnectorSelectedValue } from '@connectors/components/ConnectorRef
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import css from '../ManifestSelection/ManifestWizardSteps/ManifestWizardSteps.module.scss'
 import type { ConnectorTypes } from '@cd/components/PipelineSteps/Common/Terraform/Editview/TerraformConfigFormHelper'
-import { ConnectorIcons, ConnectorMap } from './StartupScriptInterface.types'
+import { ConnectorIcons, ConnectorLabelMap, ConnectorMap } from './StartupScriptInterface.types'
 import type { StartupScriptWizardInitData } from './StartupScriptListView'
 
-interface ManifestStorePropType {
+import css from '../ManifestSelection/ManifestWizardSteps/ManifestWizardSteps.module.scss'
+
+interface StartupScriptPropType {
   stepName: string
   expressions: string[]
   allowableTypes: MultiTypeInputType[]
@@ -62,7 +63,7 @@ function StartupScriptWizardStepOne({
   allowableTypes,
   prevStepData,
   nextStep
-}: StepProps<ConnectorConfigDTO> & ManifestStorePropType): React.ReactElement {
+}: StepProps<ConnectorConfigDTO> & StartupScriptPropType): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
@@ -70,12 +71,8 @@ function StartupScriptWizardStepOne({
   const [selectedStore, setSelectedStore] = useState(prevStepData?.store ?? initialValues.store)
   const [multitypeInputValue, setMultiTypeValue] = useState<MultiTypeInputType | undefined>(undefined)
 
-  function isValidConnectorStore(): boolean {
-    return !!selectedStore 
-  }
-
   const newConnectorLabel = `${getString('newLabel')} ${
-    isValidConnectorStore()
+    getString(ConnectorLabelMap[selectedStore as ConnectorTypes])
   } ${getString('connector')}`
 
   const [canCreate] = usePermission({
@@ -124,14 +121,13 @@ function StartupScriptWizardStepOne({
     return { ...initValues, store: selectedStore }
   }, [selectedStore])
 
-  const supportedManifestStores = useMemo(
+  const connectorTypesOptions = useMemo(
     () =>
-      connectorTypes
-        .map(store => ({
-          label: store,
-          icon: ConnectorIcons[store],
-          value: store
-        })),
+      connectorTypes.map(store => ({
+        label: store,
+        icon: ConnectorIcons[store],
+        value: store
+      })),
     [connectorTypes]
   )
 
@@ -143,11 +139,9 @@ function StartupScriptWizardStepOne({
 
       <Formik
         initialValues={getInitialValues()}
-        formName="manifestStore"
+        formName="startupScriptStore"
         validationSchema={Yup.object().shape({
-          connectorRef: Yup.mixed().required(getString(
-            'pipelineSteps.build.create.connectorRequiredError'
-          ))
+          connectorRef: Yup.mixed().required(getString('pipelineSteps.build.create.connectorRequiredError'))
         })}
         onSubmit={formData => {
           submitFirstStep({ ...formData })
@@ -165,7 +159,7 @@ function StartupScriptWizardStepOne({
                   <ThumbnailSelect
                     className={css.thumbnailSelect}
                     name={'store'}
-                    items={supportedManifestStores}
+                    items={connectorTypesOptions}
                     isReadonly={isReadonly}
                     onChange={storeSelected => {
                       handleOptionSelection(formik?.values, storeSelected as ConnectorTypes)
@@ -223,7 +217,7 @@ function StartupScriptWizardStepOne({
                         variation={ButtonVariation.LINK}
                         size={ButtonSize.SMALL}
                         disabled={isReadonly || !canCreate}
-                        id="new-manifest-connector"
+                        id="new-startup-script-connector"
                         text={newConnectorLabel}
                         className={css.addNewManifest}
                         icon="plus"

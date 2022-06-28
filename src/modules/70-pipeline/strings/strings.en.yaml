@@ -1153,3 +1153,8 @@ OverviewEmptyStates:
 importSuccessMessage: '{{resourceType}} has been imported successfully'
 MatrixNode:
   maxConcurrency: 'Max Concurrency:'
+startupScript: 
+  name: Startup Script
+  fileDetails: '{{$.pipeline.startupScript.name}} File Details'
+  fileSource: '{{$.pipeline.startupScript.name}} File Source'
+  scriptFilePath: 'Script File Path'
