@@ -150,7 +150,10 @@
 }
 
 .halfWidth {
-  width: 45%;
+  width: 45% !important;
+  .fullWidth {
+    width: 100%;
+  }
 }
 .addFileButton {
   margin-left: 0;

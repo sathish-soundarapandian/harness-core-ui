@@ -24,6 +24,7 @@ declare const styles: {
   readonly crossIcon: string
   readonly drag: string
   readonly formGroup: string
+  readonly fullWidth: string
   readonly halfWidth: string
   readonly listHeader: string
   readonly manifestForm: string
