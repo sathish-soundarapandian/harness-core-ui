@@ -7,10 +7,9 @@
 
 import type React from 'react'
 import type { IconName } from '@harness/uicore'
-import type { SettingCategory, SettingType } from '@defaultSettings/interfaces/SettingType'
+import type { SettingCategory, SettingType } from '@default-settings/interfaces/SettingType'
 import type { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { StringsMap } from 'framework/strings/StringsContext'
-
 export interface RbacSettingModalProps {
   searchTerm: string
   selectedData: string[]
@@ -57,8 +56,10 @@ class DefaultSettingsFactory {
   registerSettingTypeHandler(settingType: SettingType, handler: SettingHandler): void {
     this.map.set(settingType, handler)
   }
-
-  getSettingCategoryList(settings: SettingCategory[]): Map<SettingCategory | SettingType, SettingType[] | undefined> {
+  getSettingCategoryList2(): Map<SettingCategory, SettingCategoryHandler> {
+    return this.settingCategoryMap
+  }
+  getSettingCategoryList(settings: SettingType[]): Map<SettingCategory | SettingType, SettingType[] | undefined> {
     const categoryMap: Map<SettingCategory | SettingType, SettingType[] | undefined> = new Map()
 
     settings.map(settingType => {

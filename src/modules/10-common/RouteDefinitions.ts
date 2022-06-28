@@ -68,6 +68,7 @@ const routes = {
       })
     }
   ),
+  toDefaultSettings: withAccountId(() => '/resources/default-settings'),
   toUser: withAccountId(() => '/user'),
   toSubscriptions: withAccountId(({ moduleCard, tab }: SubscriptionQueryParams) => {
     const url = '/settings/subscriptions'

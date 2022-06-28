@@ -33,7 +33,7 @@ rules:
         - '@notifications/*'
         - '@audit-trail/*'
         - '@rbac/*'
-        - '@defaultSettings/*'
+        - '@default-settings/*'
         - '@governance/*'
         - '@sto/*'
         - '@delegates/*'

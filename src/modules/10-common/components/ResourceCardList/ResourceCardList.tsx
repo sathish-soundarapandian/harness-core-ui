@@ -98,7 +98,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
     {
       label: <String stringID="common.defaultSettings" />,
       icon: 'nav-settings',
-      onClick: toggleShowGitOpsEntities,
+      route: routes.toDefaultSettings({ accountId, orgIdentifier }),
       selectable: true
     } as ResourceOption
   ]

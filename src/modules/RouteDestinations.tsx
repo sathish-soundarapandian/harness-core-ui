@@ -37,6 +37,7 @@ import { String } from 'framework/strings'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import defaultSettingsRoutes from '@default-settings/RouteDestinations'
 
 export const AccountSideNavProps: SidebarContext = {
   navComponent: AccountSideNav,
@@ -83,6 +84,7 @@ export default function RouteDestinations(): React.ReactElement {
       {variableRoutes.props.children}
       {auditTrailRoutes.props.children}
       {rbacRoutes.props.children}
+      {defaultSettingsRoutes.props.children}
       {delegatesRoutes.props.children}
       {projectsOrgsRoutes.props.children}
       {DASHBOARDRoutes.props.children}
