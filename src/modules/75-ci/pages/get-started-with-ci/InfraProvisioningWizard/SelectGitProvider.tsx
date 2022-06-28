@@ -174,6 +174,10 @@ const SelectGitProviderRef = (
 
   useEffect(() => {
     window.addEventListener('message', handleOAuthServerEvent)
+
+    return () => {
+      window.removeEventListener('message', handleOAuthServerEvent)
+    }
   }, [])
 
   useEffect(() => {
