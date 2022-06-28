@@ -174,7 +174,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
             </Text>
           </div>
         )}
-        {props.conditionalExecutionEnabled && (
+        {props.data?.conditionalExecutionEnabled && (
           <div className={css.conditional}>
             <Text
               tooltip={getString('pipeline.conditionalExecution.title')}

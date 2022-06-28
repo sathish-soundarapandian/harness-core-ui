@@ -8,7 +8,7 @@
 import { defaultTo, get, throttle } from 'lodash-es'
 import type { IconName } from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
-import type { ExecutionWrapperConfig, StageElementWrapperConfig } from 'services/cd-ng'
+import type { ExecutionWrapperConfig, StageElementWrapperConfig, StepElementConfig } from 'services/cd-ng'
 import {
   isCustomGeneratedString,
   StepTypeToPipelineIconMap
@@ -494,7 +494,10 @@ const transformStepsData = (
             ? step.step?.when?.stageStatus !== 'Success' || !!step.step?.when?.condition?.trim()
             : false,
           isTemplateNode: Boolean(templateRef)
-        }
+        },
+        children: (step?.step as any)?.children
+          ? transformStepsData((step?.step as any)?.children, graphType, templateTypes, errorMap, updatedStagetPath, 1)
+          : []
       })
     } else if (step?.parallel?.length) {
       const updatedStagetPath = `${parentPath}.${index}.parallel`
@@ -559,27 +562,52 @@ const transformStepsData = (
       const hasErrors =
         errorMap && [...errorMap.keys()].some(key => updatedStagetPath && key.startsWith(updatedStagetPath))
       const isExecutionView = get(step, 'stepGroup.status', false)
-      finalData.push({
-        id: getuniqueIdForStep(step),
-        identifier: step.stepGroup?.identifier as string,
-        name: step.stepGroup?.name as string,
-        type: 'StepGroup',
-        nodeType: 'StepGroup',
-        icon: iconName,
-        data: {
-          ...step,
+      if (step?.stepGroup) {
+        finalData.push({
+          id: getuniqueIdForStep(step),
+          identifier: step.stepGroup?.identifier as string,
+          name: step.stepGroup?.name as string,
           type: 'StepGroup',
           nodeType: 'StepGroup',
           icon: iconName,
-          conditionalExecutionEnabled: isExecutionView
-            ? getConditionalExecutionFlag(step.stepGroup?.when)
-            : step.stepGroup?.when
-            ? step.stepGroup?.when?.stageStatus !== 'Success' || !!step.stepGroup?.when?.condition?.trim()
-            : false,
-          graphType,
-          isInComplete: isCustomGeneratedString(step.stepGroup?.identifier as string) || hasErrors
-        }
-      })
+          data: {
+            ...step,
+            type: 'StepGroup',
+            nodeType: 'StepGroup',
+            icon: iconName,
+            conditionalExecutionEnabled: isExecutionView
+              ? getConditionalExecutionFlag(step.stepGroup?.when)
+              : step.stepGroup?.when
+              ? step.stepGroup?.when?.stageStatus !== 'Success' || !!step.stepGroup?.when?.condition?.trim()
+              : false,
+            graphType,
+            isInComplete: isCustomGeneratedString(step.stepGroup?.identifier as string) || hasErrors
+          }
+        })
+      } else {
+        const stepData = step as StepElementConfig
+        finalData.push({
+          id: getuniqueIdForStep(step),
+          identifier: stepData?.identifier as string,
+          name: stepData?.name as string,
+          type: stepData?.type as string,
+          nodeType: stepData?.type as string,
+          icon: iconName,
+          data: {
+            ...stepData,
+            type: stepData?.name as string,
+            nodeType: stepData?.name as string,
+            icon: iconName,
+            conditionalExecutionEnabled: isExecutionView
+              ? getConditionalExecutionFlag(stepData?.when)
+              : stepData?.when
+              ? stepData?.when?.stageStatus !== 'Success' || !!stepData?.when?.condition?.trim()
+              : false,
+            graphType,
+            isInComplete: isCustomGeneratedString(stepData?.identifier as string) || hasErrors
+          }
+        })
+      }
     }
   })
   return finalData

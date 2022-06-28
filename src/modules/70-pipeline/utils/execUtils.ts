@@ -365,7 +365,7 @@ const processSingleItem = ({
               status: nodeData?.status as ExecutionStatus
             }
           }
-        : item),
+        : { step: item }),
       nodeType: nodeStrategyType,
       maxParallelism: nodeData?.stepParameters?.maxConcurrency
     }
