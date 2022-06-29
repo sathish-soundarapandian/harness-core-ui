@@ -7,19 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly accordionDetails: string
-  readonly accordionPanel: string
-  readonly clusterInputWrapper: string
-  readonly connectorRef: string
   readonly formRow: string
-  readonly hostSelect: string
-  readonly hostSpecificContainer: string
-  readonly hostsTextArea: string
   readonly inputWidth: string
-  readonly lastRow: string
-  readonly marginTop: string
-  readonly previewHostsLabel: string
-  readonly simultaneousDeployment: string
-  readonly specifyHostsRadioGroup: string
+  readonly radioGroup: string
 }
 export default styles

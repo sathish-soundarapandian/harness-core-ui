@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IconName, Layout, Formik, FormikForm, FormInput, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import { Radio, RadioGroup } from '@blueprintjs/core'
 import { parse } from 'yaml'
@@ -94,25 +94,44 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
   const [loadBalancers, setLoadBalancers] = useState<SelectOption[]>([])
   const [isLoadBalancersLoading, setIsLoadBalancersLoading] = useState(false)
 
-  const [connectionAttributes, setConnectionAttributes] = useState<SelectOption[]>([])
-  const [isConnectionAttributesLoading, setIsConnectionAttributesLoading] = useState(false)
-
   const [autoScallingGroups, setAutoScallingGroups] = useState<SelectOption[]>([])
   const [isAutoScallingGroupLoading, setIsAutoScallingGroupLoading] = useState(false)
 
-  const [vcps, setVcps] = useState<SelectOption[]>([])
-  const [isVcpsLoading, setIsVcpsLoading] = useState(false)
+  const [vpcs, setVpcs] = useState<SelectOption[]>([])
+  const [isVpcsLoading, setIsVpcsLoading] = useState(false)
 
+  const [tags, setTags] = useState<SelectOption[]>([])
   const [isTagsLoading, setIsTagsLoading] = useState(false)
-  const [tags, setTags] = useState([])
 
-  const [isAutoScalingGroupSelected, setIsAutoScalingGroupSelected] = useState(AutoScallingGroup.TRUE)
+  const [isAutoScalingGroupSelected, setIsAutoScalingGroupSelected] = useState(true)
 
   const formikRef = React.useRef<FormikProps<SshWinRmAwsInfrastructureUI> | null>(null)
 
-  false && showError('test')
+  useEffect(() => {
+    const { connectorRef, region, loadBalancer, autoScalingGroupName, awsInstanceFilter, useAutoScalingGroup } =
+      initialValues
+    if (connectorRef) {
+      fetchRegions()
+      if (region) {
+        fetchLoadBalancers(region)
+        fetchAutoScallingGroups(region)
+        fetchVpcs(region)
+        fetchTags(region)
+        formikRef.current?.setFieldValue('region', region)
+      }
+      if (loadBalancer) {
+        formikRef.current?.setFieldValue('loadBalancer', loadBalancer)
+      }
+      if (useAutoScalingGroup) {
+        formikRef.current?.setFieldValue('autoScalingGroupName', autoScalingGroupName)
+      } else if (awsInstanceFilter) {
+        formikRef.current?.setFieldValue('vpcs', awsInstanceFilter.vpcs)
+        formikRef.current?.setFieldValue('tags', awsInstanceFilter.tags)
+      }
+    }
+  }, [])
 
-  const fetchRegions = async (connectorRef: string) => {
+  const fetchRegions = async () => {
     setIsRegionsLoading(true)
     try {
       const response = await regionsForAwsPromise({})
@@ -128,7 +147,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
       }
     } catch (e) {
       /* istanbul ignore next */
-      showError(e.message || e.responseMessage[0])
+      showError(get(e, 'message', '') || get(e, 'responseMessage[0]', ''))
     } finally {
       setIsRegionsLoading(false)
     }
@@ -143,44 +162,54 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
           orgIdentifier,
           projectIdentifier,
           region,
-          awsConnectorRef: get(formikRef, 'current.values.connectorRef.connector.identifier', '')
+          awsConnectorRef: get(formikRef, 'current.values.connectorRef.value', '')
         }
       })
       if (response.status === 'SUCCESS') {
-        const loadBalancerOptions = Object.entries(response.data || {}).map(balancerEntry => ({
-          value: balancerEntry[0],
-          label: balancerEntry[1]
+        const loadBalancerOptions = Object.values(response.data || {}).map(value => ({
+          value,
+          label: value
         }))
         setLoadBalancers(loadBalancerOptions)
+        formikRef.current?.setFieldValue('loadBalancer', undefined)
       } else {
         /* istanbul ignore next */
         showError(get(response, 'message', response))
       }
     } catch (e) {
       /* istanbul ignore next */
-      showError(e.message || e.responseMessage[0])
+      showError(get(e, 'message', '') || get(e, 'responseMessage[0]', ''))
     } finally {
       setIsLoadBalancersLoading(false)
     }
   }
 
-  const fetchTags = async () => {
+  const fetchTags = async (region: string) => {
     setIsTagsLoading(true)
     try {
-      const response = await tagsPromise({})
+      const response = await tagsPromise({
+        queryParams: {
+          accountIdentifier: accountId,
+          projectIdentifier,
+          orgIdentifier,
+          awsConnectorRef: get(formikRef, 'current.values.connectorRef.value', ''),
+          region
+        }
+      })
       if (response.status === 'SUCCESS') {
         const tagOptions = Object.entries(response.data || {}).map(tagEntry => ({
           value: tagEntry[0],
           label: tagEntry[1]
         }))
         setTags(tagOptions)
+        formikRef.current?.setFieldValue('tags', undefined)
       } else {
         /* istanbul ignore next */
         showError(get(response, 'message', response))
       }
     } catch (e) {
       /* istanbul ignore next */
-      showError(e.message || e.responseMessage[0])
+      showError(get(e, 'message', '') || get(e, 'responseMessage[0]', ''))
     } finally {
       setIsTagsLoading(false)
     }
@@ -195,7 +224,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
           orgIdentifier,
           projectIdentifier,
           region,
-          awsConnectorRef: get(formikRef, 'current.values.connectorRef.connector.identifier', '')
+          awsConnectorRef: get(formikRef, 'current.values.connectorRef.value', '')
         }
       })
       if (response.status === 'SUCCESS') {
@@ -204,20 +233,21 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
           label: autoScallingGroupEntry[1]
         }))
         setAutoScallingGroups(autoScallingGroupEntryOptions)
+        formikRef.current?.setFieldValue('autoscallinggroup', undefined)
       } else {
         /* istanbul ignore next */
         showError(get(response, 'message', response))
       }
     } catch (e) {
       /* istanbul ignore next */
-      showError(e.message || e.responseMessage[0])
+      showError(get(e, 'message', '') || get(e, 'responseMessage[0]', ''))
     } finally {
       setIsAutoScallingGroupLoading(false)
     }
   }
 
-  const fetchVcps = async (region: string) => {
-    setIsVcpsLoading(true)
+  const fetchVpcs = async (region: string) => {
+    setIsVpcsLoading(true)
     try {
       const response = await vpcsPromise({
         queryParams: {
@@ -225,24 +255,24 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
           orgIdentifier,
           projectIdentifier,
           region,
-          awsConnectorRef: get(formikRef, 'current.values.connectorRef.connector.identifier', '')
+          awsConnectorRef: get(formikRef, 'current.values.connectorRef.value', '')
         }
       })
       if (response.status === 'SUCCESS') {
-        const vcpsOptions = get(response, 'data', []).map(vcpEntry => ({
-          value: get(vcpEntry, 'id', ''),
-          label: get(vcpEntry, 'name', '')
+        const vpcsOptions = get(response, 'data', []).map(vpcEntry => ({
+          value: get(vpcEntry, 'id', ''),
+          label: get(vpcEntry, 'name', '')
         }))
-        setVcps(vcpsOptions)
+        setVpcs(vpcsOptions)
       } else {
         /* istanbul ignore next */
         showError(get(response, 'message', response))
       }
     } catch (e) {
       /* istanbul ignore next */
-      showError(e.message || e.responseMessage[0])
+      showError(get(e, 'message', '') || get(e, 'responseMessage[0]', ''))
     } finally {
-      setIsVcpsLoading(false)
+      setIsVpcsLoading(false)
     }
   }
 
@@ -254,10 +284,24 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
           initialValues={{ ...initialValues }}
           validationSchema={getValidationSchema(getString) as Partial<SshWinRmAwsInfrastructureUI>}
           validate={value => {
+            const credentialsRef = `${
+              value.sshKey?.projectIdentifier ? '' : value.sshKey?.orgIdentifier ? 'org.' : 'account.'
+            }${value.identifier}`
             const data: Partial<SshWinRmAwsInfrastructure> = {
-              allowSimultaneousDeployments: value.allowSimultaneousDeployments,
-              delegateSelectors: value.delegateSelectors,
-              sshKey: value.sshKey
+              connectorRef: get(value, 'connectorRef.value', ''),
+              credentialsRef,
+              hostNameConvention: value.hostNameConvention,
+              steps: [],
+              loadBalancer: value.loadBalancer,
+              region: value.region
+            }
+            if (isAutoScalingGroupSelected) {
+              data.autoScalingGroupName = value.autoScalingGroupName
+              data.useAutoScalingGroup = true
+            } else {
+              data.vpcs = value.vpcs
+              data.tags = value.tags
+              data.useAutoScalingGroup = false
             }
             delayedOnUpdate(data)
           }}
@@ -279,7 +323,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                       type={['Aws']}
                       selected={formik.values.connectorRef}
                       label={getString('connector')}
-                      width={366}
+                      width={490}
                       placeholder={getString('connectors.selectConnector')}
                       accountIdentifier={accountId}
                       projectIdentifier={projectIdentifier}
@@ -295,7 +339,8 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                             live: value?.status?.status === 'SUCCESS',
                             connector: value
                           })
-                          fetchRegions(connectorValue)
+                          formikRef.current?.setFieldValue('region', undefined)
+                          fetchRegions()
                         }
                       }
                     />
@@ -312,9 +357,14 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                     /* istanbul ignore next */ optionItem => {
                       if (optionItem) {
                         formik.setFieldValue('region', optionItem.value)
+                        formik.setFieldValue('loadBalancer', '')
+                        formik.setFieldValue('autoScalingGroupName', '')
+                        formik.setFieldValue('vpcs', [])
+                        formik.setFieldValue('tags', {})
                         fetchLoadBalancers(optionItem.value as string)
-                        fetchVcps(optionItem.value as string)
+                        fetchVpcs(optionItem.value as string)
                         fetchAutoScallingGroups(optionItem.value as string)
+                        fetchTags(optionItem.value as string)
                       }
                     }
                   }
@@ -329,20 +379,34 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                       ? getString('loading')
                       : getString('cd.steps.awsInfraStep.placeholders.loadBalancer')
                   }
-                  label={getString('ce.co.accessPoint.loadbalancer')}
+                  label={getString('cd.steps.awsInfraStep.labels.loadBalancer')}
                   onChange={
-                    /* istanbul ignore next */ value => {
-                      if (value) {
-                        fetchTags()
+                    /* istanbul ignore next */ option => {
+                      if (option) {
+                        formik.setFieldValue('loadBalancer', option.value)
+                      }
+                    }
+                  }
+                />
+                <FormInput.Text
+                  name="hostNameConvention"
+                  className={`hostNameConvention-text ${css.inputWidth}`}
+                  placeholder={getString('cd.steps.awsInfraStep.placeholders.hostName')}
+                  label={getString('cd.steps.awsInfraStep.labels.hostName')}
+                  onChange={
+                    /* istanbul ignore next */ e => {
+                      if (get(e, 'target.value', false)) {
+                        formik.setFieldValue('hostNameConvention', get(e, 'target.value', ''))
                       }
                     }
                   }
                 />
                 <Layout.Horizontal>
                   <RadioGroup
-                    selectedValue={isAutoScalingGroupSelected}
+                    selectedValue={isAutoScalingGroupSelected ? AutoScallingGroup.TRUE : AutoScallingGroup.FALSE}
+                    className={css.radioGroup}
                     onChange={(e: any) => {
-                      setIsAutoScalingGroupSelected(e.target.value)
+                      setIsAutoScalingGroupSelected(e.target.value === AutoScallingGroup.TRUE)
                     }}
                   >
                     <Radio
@@ -355,13 +419,13 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                     />
                   </RadioGroup>
                 </Layout.Horizontal>
-                {AutoScallingGroup.TRUE === isAutoScalingGroupSelected ? (
+                {isAutoScalingGroupSelected ? (
                   <Layout.Horizontal>
                     <FormInput.Select
-                      name="autoscallinggroup"
+                      name="autoScalingGroupName"
                       className={`autoscallinggroup-select ${css.inputWidth}`}
-                      items={[]}
-                      disabled={isAutoScallingGroupLoading || !formik.values.loadBalancer || readonly}
+                      items={autoScallingGroups}
+                      disabled={isAutoScallingGroupLoading || !formik.values.region || readonly}
                       placeholder={
                         isAutoScallingGroupLoading
                           ? getString('loading')
@@ -371,7 +435,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                       onChange={
                         /* istanbul ignore next */ option => {
                           if (option) {
-                            formik.setFieldValue('autoscallinggroup', option.value)
+                            formik.setFieldValue('autoScalingGroupName', option.value)
                           }
                         }
                       }
@@ -381,20 +445,18 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                   <>
                     <Layout.Horizontal>
                       <FormInput.Select
-                        name="vcp"
-                        className={`vcp-select ${css.inputWidth}`}
-                        items={[]}
-                        disabled={isConnectionAttributesLoading || !formik.values.loadBalancer || readonly}
+                        name="vpcs"
+                        className={`vpcs-select ${css.inputWidth}`}
+                        items={vpcs}
+                        disabled={isVpcsLoading || !formik.values.region || readonly}
                         placeholder={
-                          isConnectionAttributesLoading
-                            ? getString('loading')
-                            : getString('cd.steps.awsInfraStep.placeholders.vcp')
+                          isVpcsLoading ? getString('loading') : getString('cd.steps.awsInfraStep.placeholders.vpcs')
                         }
-                        label={getString('cd.steps.awsInfraStep.labels.vcp')}
+                        label={getString('cd.steps.awsInfraStep.labels.vpcs')}
                         onChange={
                           /* istanbul ignore next */ option => {
                             if (option) {
-                              formik.setFieldValue('vcp', option.value)
+                              formik.setFieldValue('vpcs', option.value)
                             }
                           }
                         }
@@ -405,7 +467,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                         name="tags"
                         label={getString('tagLabel')}
                         items={tags}
-                        disabled={isTagsLoading || !formik.values.subscriptionId || readonly}
+                        disabled={isTagsLoading || !formik.values.region || readonly}
                         className={css.inputWidth}
                       />
                     </Layout.Horizontal>
@@ -420,20 +482,22 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
   )
 }
 
-interface SshWinRmAwsInfrastructureSpecStep extends SshWinRmAwsInfrastructure {
-  name?: string
-  identifier?: string
-}
-
 export const ConnectorRefRegex = /^.+stage\.spec\.infrastructure\.infrastructureDefinition\.spec\.connectorRef$/
 export const SshKeyRegex = /^.+stage\.spec\.infrastructure\.infrastructureDefinition\.spec\.sshKeyRef$/
-export class SshWinRmAwsInfrastructureSpec extends PipelineStep<SshWinRmAwsInfrastructureSpecStep> {
+export class SshWinRmAwsInfrastructureSpec extends PipelineStep<SshWinRmAwsInfrastructure> {
   /* istanbul ignore next */
   protected type = StepType.SshWinRmAws
   /* istanbul ignore next */
   protected defaultValues: Partial<SshWinRmAwsInfrastructure> = {
+    autoScalingGroupName: '',
+    awsInstanceFilter: { tags: {}, vpcs: [] },
     connectorRef: '',
-    credentialsRef: ''
+    credentialsRef: '',
+    delegateSelectors: [],
+    hostNameConvention: '',
+    loadBalancer: '',
+    region: '',
+    useAutoScalingGroup: false
   }
 
   /* istanbul ignore next */

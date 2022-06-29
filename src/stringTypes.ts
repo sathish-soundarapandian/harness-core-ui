@@ -3909,15 +3909,16 @@ export interface StringsMap {
   'cd.stepName': string
   'cd.steps.awsInfraStep.labels.autoScallingGroup': string
   'cd.steps.awsInfraStep.labels.connectionAttribute': string
-  'cd.steps.awsInfraStep.labels.hostConnectionType': string
+  'cd.steps.awsInfraStep.labels.hostName': string
+  'cd.steps.awsInfraStep.labels.loadBalancer': string
   'cd.steps.awsInfraStep.labels.useAutoScallingGroup': string
   'cd.steps.awsInfraStep.labels.useAwsInstanceFilter': string
-  'cd.steps.awsInfraStep.labels.vcp': string
+  'cd.steps.awsInfraStep.labels.vpcs': string
   'cd.steps.awsInfraStep.placeholders.autoScallingGroup': string
   'cd.steps.awsInfraStep.placeholders.connectionAttribute': string
-  'cd.steps.awsInfraStep.placeholders.hostConnectionType': string
+  'cd.steps.awsInfraStep.placeholders.hostName': string
   'cd.steps.awsInfraStep.placeholders.loadBalancer': string
-  'cd.steps.awsInfraStep.placeholders.vcp': string
+  'cd.steps.awsInfraStep.placeholders.vpcs': string
   'cd.steps.azureInfraStep.azure': string
   'cd.steps.azureInfraStep.clusterError': string
   'cd.steps.azureInfraStep.resourceGroupError': string

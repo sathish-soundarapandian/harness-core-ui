@@ -9,9 +9,7 @@
   width: 50%;
   margin-bottom: var(--spacing-large);
 }
-.marginTop {
-  margin-top: 22px !important;
-}
+
 .formRow {
   :global {
     .bp3-form-group {
@@ -25,58 +23,10 @@
   }
 }
 
-.lastRow {
-  :global(.bp3-form-group) {
-    margin-bottom: 0px !important;
-  }
-}
-
-.connectorRef {
-  padding-bottom: 0px !important;
-}
-
-.accordionPanel {
-  padding-top: var(--spacing-small) !important;
-}
-
-.accordionDetails {
-  padding-bottom: 0px !important;
-}
-
-.simultaneousDeployment {
-  display: inline-flex !important;
-}
-
-.clusterInputWrapper {
-  :global {
-    .bp3-form-group.bp3-disabled .bp3-label {
-      color: var(--grey-500) !important;
-    }
-  }
-}
-
-.hostsTextArea {
-  textarea {
-    min-height: var(--spacing-14) !important;
-  }
-}
-
-.specifyHostsRadioGroup {
+.radioGroup {
   display: flex;
   label {
     margin: auto var(--spacing) auto 0;
   }
-}
-
-.previewHostsLabel {
-  margin-bottom: 0 !important;
-  margin-right: var(--spacing);
-}
-
-.hostSelect {
-  width: 200px !important;
-}
-
-.hostSpecificContainer {
-  align-items: center;
+  margin-bottom: var(--spacing);
 }

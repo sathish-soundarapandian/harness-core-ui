@@ -45,16 +45,17 @@ steps:
     placeholders:
       loadBalancer: Select Load Balancer
       connectionAttribute: Select Connection Attribute
-      hostConnectionType: Select Host Connection Type
+      hostName: Type Host Name Convention
       autoScallingGroup: Select Auto Scalling Group
-      vcp: Select VCP
+      vpcs: Select VPCs
     labels:
       connectionAttribute: Connection Attribute
       useAutoScallingGroup: Use Auto Scalling Group
       autoScallingGroup: Auto Scalling Group
       useAwsInstanceFilter: Use AWS Instance Filter
-      hostConnectionType: Host Connection Type
-      vcp: VCP
+      hostName: Host Name Convention
+      vpcs: VPCs
+      loadBalancer: Load  Balancer
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'
