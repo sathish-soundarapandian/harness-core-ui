@@ -4053,6 +4053,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.googleK8s': string
   'cd.getStartedWithCD.inManifest': string
   'cd.getStartedWithCD.inManifestContent': string
+  'cd.getStartedWithCD.infraName': string
   'cd.getStartedWithCD.manifestFile': string
   'cd.getStartedWithCD.provideManifest': string
   'cd.getStartedWithCD.reposubheading': string
