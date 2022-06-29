@@ -64,6 +64,10 @@
   width: 100%;
 }
 
+.borderRadius {
+  border-radius: 4px;
+}
+
 .rowItem {
   padding: var(--spacing-medium) 0;
   border-bottom: solid 1px var(--grey-100);
@@ -199,4 +203,8 @@
 .text {
   width: 12px;
   margin-top: var(--spacing-small) !important;
+}
+
+.thumbnailSelect {
+  cursor: pointer;
 }
