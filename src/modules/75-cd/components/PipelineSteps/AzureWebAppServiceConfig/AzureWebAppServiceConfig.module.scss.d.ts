@@ -11,6 +11,7 @@ declare const styles: {
   readonly addNew: string
   readonly addNewManifest: string
   readonly addmarginTop: string
+  readonly borderRadius: string
   readonly bp3PopoverTarget: string
   readonly checkbox: string
   readonly columnId: string
@@ -41,6 +42,7 @@ declare const styles: {
   readonly saveBtn: string
   readonly subtitle: string
   readonly text: string
+  readonly thumbnailSelect: string
   readonly tooltip: string
   readonly tooltipCls: string
   readonly tooltipContent: string

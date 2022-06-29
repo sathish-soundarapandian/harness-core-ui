@@ -38,7 +38,7 @@ import type { ConnectorTypes } from '@cd/components/PipelineSteps/Common/Terrafo
 import type { AzureWebAppServiceConfigWizardInitData } from './AzureWebAppServiceConfigWizard'
 import { ConnectorIcons, ConnectorMap } from '../AzureWebAppServiceListView'
 
-import css from '@pipeline/components/ManifestSelection/ManifestWizardSteps/ManifestWizardSteps.module.scss'
+import css from '../../AzureWebAppServiceConfig.module.scss'
 
 interface ManifestStorePropType {
   stepName: string
