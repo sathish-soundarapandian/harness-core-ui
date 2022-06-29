@@ -60,10 +60,10 @@ import {
   buildGitPayload
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { getConnectorNameFromValue, getStatus } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
-import ConnectorField from '../AzureWebAppServiceConnectorField'
-import { AzureWebAppServiceConfigWizard } from '../AzureWebAppServiceConfigWizard'
-import AzureWebAppServiceStepTwo from '../AzureWebAppServiceStepTwo'
-import css from './AzureWebAppServiceConfig.module.scss'
+import { AzureWebAppServiceConfigWizard } from '@cd/components/PipelineSteps/AzureWebAppServiceConfig/AzureWebAppServiceConfigListView/AzureWebAppServiceWizard/AzureWebAppServiceConfigWizard'
+import AzureWebAppServiceStepTwo from '@cd/components/PipelineSteps/AzureWebAppServiceConfig/AzureWebAppServiceConfigListView/AzureWebAppServiceWizard/AzureWebAppServiceStepTwo'
+import ConnectorField from './AzureWebAppServiceConnectorField'
+import css from '../AzureWebAppServiceConfig.module.scss'
 
 export enum ModalViewOption {
   APPLICATIONSETTING = 0,

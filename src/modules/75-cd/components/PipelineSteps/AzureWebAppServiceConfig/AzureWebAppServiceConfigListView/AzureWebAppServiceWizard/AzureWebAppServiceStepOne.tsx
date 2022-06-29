@@ -36,7 +36,8 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { ConnectorTypes } from '@cd/components/PipelineSteps/Common/Terraform/Editview/TerraformConfigFormHelper'
 import type { AzureWebAppServiceConfigWizardInitData } from './AzureWebAppServiceConfigWizard'
-import { ConnectorIcons, ConnectorMap } from './AzureWebAppAppServiceConfig/AzureWebAppServiceConfig'
+import { ConnectorIcons, ConnectorMap } from '../AzureWebAppServiceListView'
+
 import css from '@pipeline/components/ManifestSelection/ManifestWizardSteps/ManifestWizardSteps.module.scss'
 
 interface ManifestStorePropType {
