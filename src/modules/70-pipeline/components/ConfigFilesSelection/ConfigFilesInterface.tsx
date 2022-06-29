@@ -42,3 +42,15 @@ export interface ConfigFileHarnessDataType {
   files: any[]
   secretFiles: any[]
 }
+
+export interface ConfigFileFileStoreNode {
+  path: string
+  scope: string
+}
+
+export interface ConfigInitStepData {
+  identifier: string
+  store: ConfigFileType
+  files: ConfigFileFileStoreNode[] | string[]
+  fileType: string
+}

@@ -16,8 +16,9 @@ import {
   MultiTypeInputType,
   MultiTextInputProps
 } from '@harness/uicore'
+import { FormGroup, Intent } from '@blueprintjs/core'
 import { FieldArray, connect, FormikContextType } from 'formik'
-import { get } from 'lodash-es'
+import { get, isPlainObject } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 
 import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -75,12 +76,22 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
   } = props
 
   const getDefaultResetValue = () => {
-    return [{ id: uuid('', nameSpace()), key: '', value: '' }]
+    return [{}]
   }
 
   const value = get(formik?.values, name, getDefaultResetValue()) as MultiTypeMapValue
 
   const { getString } = useStrings()
+
+  const errorCheck = (index: number): boolean =>
+    (formik?.submitCount &&
+      formik?.submitCount > 0 &&
+      get(formik?.errors, `${name}[${index}].path`) &&
+      isPlainObject(get(formik?.errors, `${name}[${index}]`))) as boolean
+
+  React.useEffect(() => {
+    console.log('err', get(formik?.errors, `${name}[0]`))
+  }, [formik?.errors])
 
   return (
     <div className={cx(css.group, css.withoutSpacing, appearance === 'minimal' ? css.minimalCard : '')} {...restProps}>
@@ -90,6 +101,9 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
         style={{ flexGrow: 1, marginBottom: 0 }}
         {...multiTypeFieldSelectorProps}
         disableTypeSelection={multiTypeFieldSelectorProps.disableTypeSelection || disabled}
+        onTypeChange={e => {
+          console.log('e', e)
+        }}
       >
         <FieldArray
           name={name}
@@ -98,42 +112,47 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
               <>
                 {Array.isArray(value) &&
                   value.map((field: any, index: number) => {
-                    const { id, ...restValue } = field
+                    const { ...restValue } = field
                     return (
-                      <div className={cx(css.group, css.withoutAligning)} key={Math.random()}>
-                        <Text margin={{ right: 'small' }}>{index}.</Text>
-                        <div className={css.multiSelectField}>
-                          <div className={cx(css.group, css.withoutAligning, css.withoutSpacing)}>
-                            {fileType === FILE_TYPE_VALUES.ENCRYPTED ? (
-                              <FileSelectField
-                                index={index}
-                                name={`${name}[${index}]`}
-                                formik={formik}
-                                id={id}
-                                onChange={(newValue, i) => {
-                                  replace(i, {
-                                    ...restValue,
-                                    value: newValue
-                                  })
-                                }}
-                                field={field}
-                              />
-                            ) : (
-                              <div className={css.fieldWrapper}>
-                                <FileStoreSelectField name={`${name}[${index}]`} />
-                              </div>
-                            )}
+                      <div className={cx(css.group, css.withoutAligning)} key={index}>
+                        <FormGroup
+                          helperText={errorCheck(index) ? get(formik?.errors, `${name}[${index}].path`) : null}
+                          intent={errorCheck(index) ? Intent.DANGER : Intent.NONE}
+                          style={{ width: '100%' }}
+                        >
+                          <Text margin={{ right: 'small' }}>{index}.</Text>
+                          <div className={css.multiSelectField}>
+                            <div className={cx(css.group, css.withoutAligning, css.withoutSpacing)}>
+                              {fileType === FILE_TYPE_VALUES.ENCRYPTED ? (
+                                <FileSelectField
+                                  index={index}
+                                  name={`${name}[${index}]`}
+                                  formik={formik}
+                                  onChange={(newValue, i) => {
+                                    replace(i, {
+                                      ...restValue,
+                                      value: newValue
+                                    })
+                                  }}
+                                  field={field}
+                                />
+                              ) : (
+                                <div className={css.fieldWrapper}>
+                                  <FileStoreSelectField name={`${name}[${index}]`} />
+                                </div>
+                              )}
 
-                            <Button
-                              icon="main-trash"
-                              iconProps={{ size: 20 }}
-                              minimal
-                              data-testid={`remove-${name}-[${index}]`}
-                              onClick={() => remove(index)}
-                              disabled={disabled}
-                            />
+                              <Button
+                                icon="main-trash"
+                                iconProps={{ size: 20 }}
+                                minimal
+                                data-testid={`remove-${name}-[${index}]`}
+                                onClick={() => remove(index)}
+                                disabled={disabled}
+                              />
+                            </div>
                           </div>
-                        </div>
+                        </FormGroup>
                       </div>
                     )
                   })}
@@ -145,7 +164,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                     text={getString('plusAdd')}
                     data-testid={`add-${name}`}
                     onClick={() => {
-                      push({ id: uuid('', nameSpace()), key: '', value: '' })
+                      push({})
                     }}
                     disabled={disabled}
                     style={{ padding: 0 }}

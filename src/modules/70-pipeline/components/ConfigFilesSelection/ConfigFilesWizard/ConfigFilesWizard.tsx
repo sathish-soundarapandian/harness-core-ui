@@ -9,7 +9,7 @@ import React from 'react'
 import { StepWizard } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { getIconAndTitleByDeploymentType } from '../ConfigFilesHelper'
-import ConfigFilesConnector from './ConfigFilesSteps/ConfigFilesConnector'
+import ConfigFilesStore from './ConfigFilesSteps/ConfigFilesStore'
 
 import css from './ConfigFilesWizard.module.scss'
 
@@ -22,7 +22,7 @@ interface StepChangeData<SharedObject> {
 export function ConfigFilesWizard({
   handleConnectorViewChange,
   handleStoreChange,
-  //   initialValues,
+  initialValues,
   types,
   expressions,
   allowableTypes,
@@ -35,7 +35,8 @@ export function ConfigFilesWizard({
   //   changeConfigFileType,
   //   iconsProps,
   //   isReadonly,
-  deploymentType
+  deploymentType,
+  isNewFile
 }: any): React.ReactElement {
   const { getString } = useStrings()
   const onStepChange = (arg: StepChangeData<any>): void => {
@@ -55,7 +56,7 @@ export function ConfigFilesWizard({
       title={`${ConfigWizard.label} ${getString('pipeline.configFiles.title')}`}
       //   initialStep={isServerlessManifestType(selectedManifest) ? 2 : undefined}
     >
-      <ConfigFilesConnector
+      <ConfigFilesStore
         configFilesStoreTypes={types}
         name={getString('pipeline.configFiles.source')}
         stepName={getString('pipeline.configFiles.source')}
@@ -63,11 +64,12 @@ export function ConfigFilesWizard({
         // stepName={'Config File Details'}
         // selectedConfigFile={selectedConfigFile}
         allowableTypes={allowableTypes}
-        initialValues={selectedConfigFile}
+        initialValues={initialValues}
         handleStoreChange={handleStoreChange}
         expressions={expressions}
         handleConnectorViewChange={handleConnectorViewChange}
         isReadonly={false}
+        isNewFile={isNewFile}
       />
 
       {newConnectorView ? newConnectorSteps : null}

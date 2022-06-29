@@ -21,13 +21,14 @@ import { Color } from '@harness/design-system'
 import { get, isPlainObject, defaultTo } from 'lodash-es'
 import { FormGroup, Intent } from '@blueprintjs/core'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { v4 as nameSpace, v5 as uuid } from 'uuid'
 
 import { useStrings } from 'framework/strings'
 import useFileStoreModal from '@filestore/components/FileStoreComponent/FileStoreComponent'
 import { FileStoreNodeTypes } from '@filestore/interfaces/FileStore'
 import folderImage from '@filestore/images/closed-folder.svg'
 
-import css from './FileStoreSelectField.module.scss'
+import css from './FileSelectField.module.scss'
 
 export interface FileStoreSelectProps {
   name: string
@@ -36,18 +37,23 @@ export interface FileStoreSelectProps {
   placeholder?: string
   readonly?: boolean
   formik: FormikContextType<any>
+  id: string | number
+  index: number
 }
 
-interface FormikFileStoreInput extends FileStoreSelectProps {
-  formik: FormikContextType<any>
-}
+// interface FormikFileStoreInput extends FileStoreSelectProps {
+//   formik: FormikContextType<any>
+// }
 
-const FileStoreInput: React.FC<FormikFileStoreInput> = (props: FileStoreSelectProps) => {
+function FileStoreMultiSelect(props: FileStoreSelectProps): React.ReactElement {
   const { getString } = useStrings()
-  const { formik, label, name, tooltipProps, placeholder, readonly = false } = props
+  const { formik, label, name, tooltipProps, placeholder, readonly = false, index } = props
   const fileStoreValue = get(formik.values, name)
+  console.log('fileStorevalue', fileStoreValue)
   const modalFileStore = useFileStoreModal({
-    applySelected: value => formik.setFieldValue(name, value)
+    applySelected: value => {
+      formik.setFieldValue(name, { ...value, id: Math.random() })
+    }
   })
   const placeholder_ = defaultTo(placeholder, getString('select'))
 
@@ -118,4 +124,4 @@ const FileStoreInput: React.FC<FormikFileStoreInput> = (props: FileStoreSelectPr
   )
 }
 
-export default connect<Omit<FormikFileStoreInput, 'formik'>>(FileStoreInput)
+export default FileStoreMultiSelect

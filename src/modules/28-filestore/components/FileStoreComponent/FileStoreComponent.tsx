@@ -37,6 +37,7 @@ interface UseFileStoreModalProps {
 }
 
 const useFileStoreModal = ({ applySelected }: UseFileStoreModalProps): UseFileStoreModalReturn => {
+  console.log('use file store')
   const [activeTab, setActiveTab] = useState<string>(Scope.ACCOUNT)
   const { getString } = useStrings()
 
@@ -176,9 +177,13 @@ const useFileStoreModal = ({ applySelected }: UseFileStoreModalProps): UseFileSt
     )
   }, [activeTab, selectedFile])
 
+  const handleShowModal = React.useCallback(() => {
+    showModal()
+  }, [])
+
   return {
     openFileStoreModal: () => {
-      showModal()
+      handleShowModal()
     },
     closeFileStoreModal: hideModal
   }

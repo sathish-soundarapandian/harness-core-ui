@@ -26,41 +26,81 @@ interface FormikFileSelectInput extends SelectEncryptedProps {
   formik: FormikContextType<any>
 }
 
+interface EncryptedData {
+  scope: string
+  identifier: string
+}
+
 function FileSelectField(props: SelectEncryptedProps) {
   const { getString } = useStrings()
-  const { formik, name, placeholder, readonly = false, field } = props
-  const fileSelectedValue = field.value
-  // const modalFileStore = useFileStoreModal({
-  //   applySelected: value => formik.setFieldValue(name, value)
-  // })
+  const { formik, name, placeholder, readonly = false } = props
+  const fileSelectedValue = get(formik.values, name) || ''
+
+  React.useEffect(() => {
+    console.log('props', props)
+    console.log('value', get(formik.values, name))
+  }, [props])
+
   const { openCreateOrSelectSecretModal } = useCreateOrSelectSecretModal(
     {
       type: 'SecretFile',
-      onSuccess: value => formik.setFieldValue(name, value)
+      onSuccess: value => {
+        const { projectIdentifier, orgIdentifier, identifier } = value
+        let result = `${Scope.ACCOUNT}.${identifier}`
+        if (orgIdentifier) {
+          result = `${Scope.ORG}.${identifier}`
+        }
+        if (projectIdentifier) {
+          result = `${Scope.PROJECT}.${identifier}`
+        }
+        formik.setFieldValue(name, result)
+      }
     },
     []
   )
 
   const placeholder_ = defaultTo(placeholder, getString('select'))
 
-  const getScope = (scopeType: string): string => {
-    switch (scopeType) {
-      case Scope.ACCOUNT:
-        return getString('account')
-      case Scope.ORG:
-        return getString('orgLabel')
-      case Scope.PROJECT:
-        return getString('projectLabel')
-      default:
-        return getString('account')
+  const data = React.useMemo(() => {
+    const getData = (encryptedValue: string): EncryptedData => {
+      const [scopeValue, encryptedIdentifier] =
+        typeof encryptedValue === 'string' ? get(formik.values, name).split('.') : ['', '']
+      const commonProps = {
+        identifier: encryptedIdentifier
+      }
+      switch (scopeValue) {
+        case Scope.ACCOUNT:
+          return {
+            ...commonProps,
+            scope: getString('account')
+          }
+        case Scope.ORG:
+          return {
+            ...commonProps,
+            scope: getString('orgLabel')
+          }
+        case Scope.PROJECT:
+          return {
+            ...commonProps,
+            scope: getString('projectLabel')
+          }
+        default:
+          return {
+            scope: '',
+            identifier: ''
+          }
+      }
     }
-  }
+    return getData(fileSelectedValue)
+  }, [formik.values])
 
   const errorCheck = (): boolean =>
     ((get(formik?.touched, name) || (formik?.submitCount && formik?.submitCount > 0)) &&
       get(formik?.errors, name) &&
       !isPlainObject(get(formik?.errors, name))) as boolean
 
+  // const { scope, identifier } = getData(get(formik.values, name))
+  // console.log('identifier', identifier)
   return (
     <FormGroup
       helperText={errorCheck() ? get(formik?.errors, name) : null}
@@ -77,10 +117,10 @@ function FileSelectField(props: SelectEncryptedProps) {
             }
           }}
         >
-          {fileSelectedValue?.name ? (
+          {data.identifier ? (
             <Container flex>
               <Text lineClamp={1} color={Color.GREY_900} padding={{ left: 'xsmall' }}>
-                {fileSelectedValue?.name}
+                {data.identifier}
               </Text>
             </Container>
           ) : (
@@ -89,7 +129,7 @@ function FileSelectField(props: SelectEncryptedProps) {
             </Text>
           )}
           <Container padding={{ right: 'small' }}>
-            {fileSelectedValue?.scope ? <Tag>{getScope(fileSelectedValue?.scope).toUpperCase()}</Tag> : null}
+            {data.scope ? <Tag>{data.scope.toUpperCase()}</Tag> : null}
             <Icon name="chevron-down" margin={{ right: 'small', left: 'small' }} />
           </Container>
         </Container>

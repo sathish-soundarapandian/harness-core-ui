@@ -24,6 +24,7 @@ import { Dialog, Classes } from '@blueprintjs/core'
 import { FontVariation, Color } from '@harness/design-system'
 
 import cx from 'classnames'
+import get from 'lodash/get'
 import set from 'lodash-es/set'
 import produce from 'immer'
 import { useModalHook } from '@harness/use-modal'
@@ -56,12 +57,13 @@ import {
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 
 import { ConfigFilesWizard } from '../ConfigFilesWizard/ConfigFilesWizard'
-import type { ConfigFilesListViewProps, ConfigFileType } from '../ConfigFilesInterface'
+import type { ConfigFilesListViewProps, ConfigFileType, ConfigInitStepData } from '../ConfigFilesInterface'
 import {
   allowedConfigFilesTypes,
   ConfigFileTypeTitle,
   ConfigFileIconByType,
-  ConfigFilesToConnectorMap
+  ConfigFilesToConnectorMap,
+  FILE_TYPE_VALUES
 } from '../ConfigFilesHelper'
 import { HarnessConfigStep } from '../ConfigFilesWizard/ConfigFilesSteps/HarnessConfigStep'
 import css from '../ConfigFilesSelection.module.scss'
@@ -107,8 +109,9 @@ ConfigFilesListViewProps): JSX.Element {
   const { getString } = useStrings()
   const [newConnectorView, setNewConnectorView] = useState(false)
   const [isEditMode, setIsEditMode] = useState(false)
-  const [configStore, setConfigStore] = useState('')
+  const [configStore, setConfigStore] = useState<ConfigFileType>('' as ConfigFileType)
   const [configFileIndex, setEditIndex] = useState(0)
+  const [isNewFile, setIsNewFile] = useState(true)
 
   const { expressions } = useVariablesExpression()
 
@@ -125,6 +128,41 @@ ConfigFilesListViewProps): JSX.Element {
     connectorInfo: undefined
   }
 
+  const getInitialValues = (): ConfigInitStepData => {
+    const initValues = get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec', null)
+    let files
+    let fileType
+    if (get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.secretFiles', []).length > 0) {
+      files = get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.secretFiles', [])
+      fileType = FILE_TYPE_VALUES.ENCRYPTED
+    } else {
+      files = get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.files', [])
+      fileType = FILE_TYPE_VALUES.FILE_STORE
+    }
+
+    if (initValues && !isNewFile) {
+      const values = {
+        ...initValues,
+        store: listOfConfigFiles[configFileIndex]?.configFile.spec?.store?.type,
+        identifier: get(listOfConfigFiles[configFileIndex], 'configFile.identifier', ''),
+        files: files || [],
+        secretFiles: get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.secretFiles', []),
+        fileType
+      }
+      return values
+    }
+    return {
+      store: configStore,
+      files: [],
+      identifier: '',
+      fileType: FILE_TYPE_VALUES.FILE_STORE
+    }
+  }
+
+  React.useEffect(() => {
+    console.log('stage', stage)
+  }, [stage])
+
   const updateStageData = (): void => {
     const path = isPropagating
       ? 'stage.spec.serviceConfig.stageOverrides.configFiles'
@@ -140,7 +178,6 @@ ConfigFilesListViewProps): JSX.Element {
   }
 
   const handleSubmit = (configFileObj: ConfigFileWrapper): void => {
-    // const isNewConfigFile = configFileIndex === listOfConfigFiles.length
     if (isPropagating) {
       if (listOfConfigFiles?.length > 0) {
         listOfConfigFiles.splice(configFileIndex, 1, configFileObj)
@@ -148,7 +185,7 @@ ConfigFilesListViewProps): JSX.Element {
         listOfConfigFiles.push(configFileObj)
       }
     } else {
-      if (listOfConfigFiles?.length > 0) {
+      if (listOfConfigFiles?.length > 0 && isEditMode) {
         listOfConfigFiles.splice(configFileIndex, 1, configFileObj)
       } else {
         listOfConfigFiles.push(configFileObj)
@@ -159,7 +196,7 @@ ConfigFilesListViewProps): JSX.Element {
     hideConnectorModal()
     // setConnectorView(false)
     // setSelectedManifest(null)
-    setConfigStore('')
+    setConfigStore('' as ConfigFileType)
     // refetchConnectors()
   }
   const commonLastStepProps = {
@@ -175,6 +212,7 @@ ConfigFilesListViewProps): JSX.Element {
           <HarnessConfigStep
             stepName={getString('pipeline.configFiles.title')}
             name={getString('pipeline.configFiles.title')}
+            initialValues={getInitialValues()}
             {...commonLastStepProps}
           />
         )
@@ -184,6 +222,7 @@ ConfigFilesListViewProps): JSX.Element {
           <HarnessConfigStep
             stepName={getString('pipeline.configFiles.title')}
             name={getString('pipeline.configFiles.title')}
+            initialValues={getInitialValues()}
             {...commonLastStepProps}
           />
         )
@@ -295,6 +334,7 @@ ConfigFilesListViewProps): JSX.Element {
   }
 
   const editConfigFile = (configFileType: ConfigFileType, index: number): void => {
+    setIsNewFile(false)
     setConfigStore(configFileType)
     setSelectedConfig(configFileType)
     setNewConnectorView(false)
@@ -318,9 +358,10 @@ ConfigFilesListViewProps): JSX.Element {
 
   const [showConnectorModal, hideConnectorModal] = useModalHook(() => {
     const onClose = (): void => {
+      setIsNewFile(false)
       setNewConnectorView(false)
       hideConnectorModal()
-      setConfigStore('')
+      setConfigStore('' as ConfigFileType)
       setIsEditMode(false)
       setSelectedConfig('' as ConfigFileType)
     }
@@ -338,7 +379,7 @@ ConfigFilesListViewProps): JSX.Element {
             allowableTypes={allowableTypes}
             handleConnectorViewChange={() => handleConnectorViewChange(true)}
             handleStoreChange={handleChangeStore}
-            // initialValues={getInitialValues()}
+            initialValues={getInitialValues()}
             newConnectorSteps={getNewConnectorSteps()}
             lastSteps={getLastSteps()}
             deploymentType={deploymentType}
@@ -346,6 +387,7 @@ ConfigFilesListViewProps): JSX.Element {
             selectedConfig={selectedConfig}
             changeConfigFileType={setSelectedConfig}
             isReadonly={isReadonly}
+            isNewFile={isNewFile}
           />
         </div>
         <Button minimal icon="cross" onClick={onClose} className={css.crossIcon} />
@@ -354,15 +396,17 @@ ConfigFilesListViewProps): JSX.Element {
   }, [
     selectedConfig,
     newConnectorView,
-    // manifestIndex,
-    // manifestStore,
+    configFileIndex,
+    configStore,
     expressions.length,
     expressions,
     allowableTypes,
-    isEditMode
+    isEditMode,
+    isNewFile
   ])
 
   const addNewConfigFile = (): void => {
+    setIsNewFile(true)
     showConnectorModal()
   }
 
@@ -385,7 +429,7 @@ ConfigFilesListViewProps): JSX.Element {
             {listOfConfigFiles &&
               listOfConfigFiles.map((data: ConfigFileWrapper, index: number) => {
                 const configFile = data['configFile']
-                const filesType = configFile?.spec?.store?.spec?.files.length ? 'Plain text' : 'Encrypted'
+                const filesType = configFile?.spec?.store?.spec?.files?.length ? 'Plain text' : 'Encrypted'
 
                 return (
                   <div className={css.rowItem} key={`${configFile?.identifier}-${index}`}>

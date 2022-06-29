@@ -53,6 +53,7 @@ interface ConfigFileStorePropType {
   initialValues: any
   handleConnectorViewChange: () => void
   handleStoreChange: (store: ConfigFileType) => void
+  isNewFile: boolean
 }
 
 function ConfigFileStore({
@@ -62,16 +63,18 @@ function ConfigFileStore({
   isReadonly,
   configFilesStoreTypes,
   initialValues,
+  previousStep,
   expressions,
   allowableTypes,
   prevStepData,
-  nextStep
+  nextStep,
+  isNewFile
 }: StepProps<ConnectorConfigDTO> & ConfigFileStorePropType): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
 
-  const [selectedStore, setSelectedStore] = useState('')
+  const [selectedStore, setSelectedStore] = useState(prevStepData?.store ?? initialValues.store)
   const [multitypeInputValue, setMultiTypeValue] = useState<MultiTypeInputType | undefined>(undefined)
 
   function isValidConnectorStore(): boolean {
@@ -120,13 +123,6 @@ function ConfigFileStore({
   const getInitialValues = useCallback((): any => {
     const initValues = { ...initialValues }
 
-    if (prevStepData?.connectorRef) {
-      initValues.connectorRef = prevStepData?.connectorRef
-      handleStoreChange(selectedStore as ConfigFileType)
-    }
-    if (selectedStore !== initValues.store) {
-      initValues.connectorRef = ''
-    }
     return { ...initValues, store: selectedStore }
   }, [selectedStore])
 
@@ -150,14 +146,7 @@ function ConfigFileStore({
         initialValues={getInitialValues()}
         formName="configFilesStore"
         validationSchema={Yup.object().shape({
-          connectorRef: Yup.mixed().when('store', {
-            is: !ConfigFilesMap.Harness,
-            then: Yup.mixed().required(
-              `${ConfigFilesToConnectorMap[selectedStore]} ${getString(
-                'pipelineSteps.build.create.connectorRequiredError'
-              )}`
-            )
-          })
+          store: Yup.string().required(getString('connectors.chooseMethodForConnection'))
         })}
         onSubmit={formData => {
           submitFirstStep({ ...formData })
