@@ -380,7 +380,7 @@ function FormContent({
           allowedTypes={allowableTypes}
           optionalLabel={getString('common.optionalLabel')}
           defaultValueToReset={[]}
-          disableTypeSelection={true}
+          disableTypeSelection={readonly}
         >
           <FieldArray
             name="spec.jobParameter"
@@ -442,8 +442,7 @@ function FormContent({
             }}
           />
         </MultiTypeFieldSelector>
-        {/* Uncomment the below code when making jobParameter runtime */}
-        {/* {getMultiTypeFromValue(formik.values?.spec?.jobParameter as any) === MultiTypeInputType.RUNTIME && (
+        {getMultiTypeFromValue(formik.values?.spec?.jobParameter as any) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions
             value={formik.values?.spec?.jobParameter as any}
             type="String"
@@ -463,7 +462,7 @@ function FormContent({
             }}
             isReadonly={readonly}
           />
-        )} */}
+        )}
       </div>
 
       <div className={stepCss.noLookDivider} />
