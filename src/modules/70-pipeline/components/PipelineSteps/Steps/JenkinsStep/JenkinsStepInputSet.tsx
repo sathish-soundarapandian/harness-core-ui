@@ -233,21 +233,7 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
                       type === MultiTypeInputType.FIXED && primaryValue && secondaryValue
                         ? secondaryValue
                         : primaryValue || ''
-                    const clonedFormik = cloneDeep(formik.values)
-                    set(clonedFormik, `${prefix}spec.jobName`, newJobName.label)
-                    formik.setValues({
-                      ...clonedFormik
-                    })
-                    // To be uncommented when we support runtime jobParameters
-                    // if (type === MultiTypeInputType.FIXED) {
-                    //   refetchJobParameters({
-                    //     pathParams: { jobName: encodeURIComponent(newJobName.label) },
-                    //     queryParams: {
-                    //       ...commonParams,
-                    //       connectorRef: connectorRef.toString()
-                    //     }
-                    //   })
-                    // }
+                    formik.setFieldValue(`${prefix}spec.jobName`, newJobName.label)
                   },
                   onOpening: (item: SelectOption) => {
                     lastOpenedJob.current = item.value
