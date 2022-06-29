@@ -20,7 +20,7 @@ import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes
 import VariableListReadOnlyView from '@pipeline/components/WorkflowVariablesSelection/VariableListReadOnlyView'
 import { setupMode } from '../K8sServiceSpecHelper'
 import type { KubernetesServiceInputFormProps } from '../K8sServiceSpecInterface'
-import AzureWebAppConfigSelection from '../../AzureWebAppServiceConfigSelection/AzureWebAppServiceConfigSelection'
+import AzureWebAppConfigSelection from '../../AzureWebAppServiceConfig/AzureWebAppServiceConfigSelection'
 import css from '../K8sServiceSpec.module.scss'
 
 const getManifestsHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {

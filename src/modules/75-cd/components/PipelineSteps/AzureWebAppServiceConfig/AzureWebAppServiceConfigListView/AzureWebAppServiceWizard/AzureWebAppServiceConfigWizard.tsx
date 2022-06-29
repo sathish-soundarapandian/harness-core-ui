@@ -15,8 +15,8 @@ import type { ConnectorRefLabelType } from '@pipeline/components/ArtifactsSelect
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import AzureWebAppServiceStepOne from './AzureWebAppServiceStepOne'
 
-import type { ConnectorTypes } from './AzureWebAppAppServiceConfig/AzureWebAppServiceConfig'
-import css from '@cd/components/PipelineSteps/AzureWebAppServiceConfigSelection/AzureWebAppAppServiceConfig/AzureWebAppServiceConfig.module.scss'
+import type { ConnectorTypes } from '../AzureWebAppServiceListView'
+import css from '../../AzureWebAppServiceConfig.module.scss'
 
 interface StepChangeData<SharedObject> {
   prevStep?: number
