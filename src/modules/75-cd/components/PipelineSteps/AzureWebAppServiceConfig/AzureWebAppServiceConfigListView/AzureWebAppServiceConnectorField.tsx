@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Container, Text, Icon, Color, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
-import css from '@pipeline/components/ManifestSelection/ManifestSelection.module.scss'
+import css from '../AzureWebAppServiceConfig.module.scss'
 
 interface ConnectorFieldPropType {
   connectorRef: string
