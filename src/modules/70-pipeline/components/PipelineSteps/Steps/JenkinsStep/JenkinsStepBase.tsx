@@ -29,7 +29,7 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import { StepFormikFowardRef, StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 
-import { JobDetails, useGetJobDetailsForJenkins } from 'services/cd-ng'
+import { JobDetails, useGetJobDetailsForJenkins, useGetJobParametersForJenkins } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useQueryParams } from '@common/hooks'
 import type {
@@ -47,7 +47,7 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import type { JenkinsStepProps } from './JenkinsStep'
 import { getGenuineValue } from '../JiraApproval/helper'
 import type { JenkinsFormContentInterface, JenkinsStepData, jobParameterInterface, SubmenuSelectOption } from './types'
-import { resetForm, scriptInputType, variableSchema, useGetJobParametersForJenkins } from './helper'
+import { resetForm, scriptInputType, variableSchema } from './helper'
 import OptionalConfiguration from './OptionalConfiguration'
 import { getNameAndIdentifierSchema } from '../StepsValidateUtils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -79,8 +79,8 @@ function FormContent({
 
   const {
     refetch: refetchJobs,
-    data: jobsResponse,
-    loading: fetchingJobs
+    data: jobsResponse
+    // loading: fetchingJobs
   } = useGetJobDetailsForJenkins({
     lazy: true,
     queryParams: {
@@ -89,31 +89,31 @@ function FormContent({
     }
   })
 
-  const { refetch: refetchJobParameters } = useGetJobParametersForJenkins({
+  const { refetch: refetchJobParameters, data: jobParameterResponse } = useGetJobParametersForJenkins({
     lazy: true,
     jobName: ''
   })
 
-  // useEffect(() => {
-  //   if (jobParameterResponse?.data) {
-  //     const parameterData: jobParameterInterface[] =
-  //       jobParameterResponse?.data?.map(item => {
-  //         return {
-  //           name: item.name,
-  //           value: item.defaultValue,
-  //           type: 'String',
-  //           id: uuid()
-  //         } as jobParameterInterface
-  //       }) || []
-  //     formik.setValues({
-  //       ...formik.values,
-  //       spec: {
-  //         ...formik.values.spec,
-  //         jobParameter: parameterData
-  //       }
-  //     })
-  //   }
-  // }, [jobParameterResponse])
+  useEffect(() => {
+    if (jobParameterResponse?.data) {
+      const parameterData: jobParameterInterface[] =
+        jobParameterResponse?.data?.map(item => {
+          return {
+            name: item.name,
+            value: item.defaultValue,
+            type: 'String',
+            id: uuid()
+          } as jobParameterInterface
+        }) || []
+      formik.setValues({
+        ...formik.values,
+        spec: {
+          ...formik.values.spec,
+          jobParameter: parameterData
+        }
+      })
+    }
+  }, [jobParameterResponse])
 
   useEffect(() => {
     if (typeof formik.values.spec.jobName === 'string' && jobDetails?.length) {
@@ -279,7 +279,7 @@ function FormContent({
         />
         {getMultiTypeFromValue(formik.values.spec.connectorRef) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions
-            style={{ marginTop: 14 }}
+            style={{ marginTop: 6 }}
             value={formik.values.spec.connectorRef as string}
             type="String"
             variableName="spec.connectorRef"
@@ -300,7 +300,7 @@ function FormContent({
           selectWithSubmenuTypeInputProps={{
             expressions,
             selectWithSubmenuProps: {
-              loading: fetchingJobs,
+              // loading: fetchingJobs,
               items: jobDetails,
               interactionKind: PopoverInteractionKind.CLICK,
               allowCreatingNewItems: true,
@@ -357,7 +357,7 @@ function FormContent({
         />
         {getMultiTypeFromValue(formik.values.spec.jobName) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions
-            style={{ marginTop: 14 }}
+            style={{ marginTop: -4 }}
             value={formik.values.spec.jobName as string}
             type="String"
             variableName="spec.jobName"
