@@ -8,7 +8,6 @@
 import type { SelectOption } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
-import { noop } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import type { JenkinsStepData } from './types'
 
