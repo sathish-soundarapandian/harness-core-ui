@@ -115,26 +115,6 @@ export interface ACRArtifactProps {
   allowableTypes: MultiTypeInputType[]
 }
 
-export interface JenkinsArtifactProps {
-  key: string
-  name: string
-  expressions: string[]
-  context: number
-  initialValues: JenkinsArtifactType
-  handleSubmit: (data: ArtifactConfig) => void
-  artifactIdentifiers: string[]
-  isReadonly?: boolean
-  selectedArtifact: ArtifactType | null
-  allowableTypes: MultiTypeInputType[]
-}
-
-export interface JenkinsArtifactType {
-  identifier: string
-  artifactPath?: string
-  jobName?: string
-  spec?: any
-}
-
 export interface ConnectorRefLabelType {
   firstStepName: string
   secondStepName: string

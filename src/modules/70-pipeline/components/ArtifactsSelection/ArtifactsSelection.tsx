@@ -88,7 +88,6 @@ import Artifactory from './ArtifactRepository/ArtifactLastSteps/Artifactory/Arti
 import { CustomArtifact } from './ArtifactRepository/ArtifactLastSteps/CustomArtifact/CustomArtifact'
 import { showConnectorStep } from './ArtifactUtils'
 import { ACRArtifact } from './ArtifactRepository/ArtifactLastSteps/ACRArtifact/ACRArtifact'
-import { JenkinsArtifact } from './ArtifactRepository/ArtifactLastSteps/JenkinsArtifact/JenkinsArtifact'
 import css from './ArtifactsSelection.module.scss'
 
 export default function ArtifactsSelection({
@@ -625,8 +624,8 @@ export default function ArtifactsSelection({
         return <CustomArtifact {...artifactLastStepProps()} />
       case ENABLED_ARTIFACT_TYPES.Acr:
         return <ACRArtifact {...artifactLastStepProps()} />
-      case ENABLED_ARTIFACT_TYPES.Jenkins:
-        return <JenkinsArtifact {...artifactLastStepProps()} />
+      // case ENABLED_ARTIFACT_TYPES.Jenkins:
+      //   return <JenkinsArtifact {...artifactLastStepProps()} />
       case ENABLED_ARTIFACT_TYPES.DockerRegistry:
       default:
         return <DockerRegistryArtifact {...artifactLastStepProps()} />

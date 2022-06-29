@@ -77,6 +77,7 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
     }
   })
 
+  // To be uncommented when we support runtime jobParameters
   // const { refetch: refetchJobParameters, data: jobParameterResponse } = useGetJobParametersForJenkins({
   //   lazy: true,
   //   jobName: ''
@@ -223,6 +224,7 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
                 expressions,
                 allowableTypes,
                 selectWithSubmenuProps: {
+                  loading: fetchingJobs,
                   items: jobDetails,
                   interactionKind: PopoverInteractionKind.CLICK,
                   allowCreatingNewItems: true,
@@ -233,10 +235,10 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
                         : primaryValue || ''
                     const clonedFormik = cloneDeep(formik.values)
                     set(clonedFormik, `${prefix}spec.jobName`, newJobName.label)
-                    // set(clonedFormik, `${prefix}spec.jobParameter`, null)
                     formik.setValues({
                       ...clonedFormik
                     })
+                    // To be uncommented when we support runtime jobParameters
                     // if (type === MultiTypeInputType.FIXED) {
                     //   refetchJobParameters({
                     //     pathParams: { jobName: encodeURIComponent(newJobName.label) },

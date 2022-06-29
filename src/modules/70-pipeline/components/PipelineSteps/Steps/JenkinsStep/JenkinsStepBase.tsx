@@ -208,7 +208,6 @@ function FormContent({
     })
   }
 
-  const loading = fetchingJobs
   return (
     <React.Fragment>
       {stepViewType !== StepViewType.Template && (
@@ -309,7 +308,7 @@ function FormContent({
           selectWithSubmenuTypeInputProps={{
             expressions,
             selectWithSubmenuProps: {
-              // loading,
+              loading: fetchingJobs,
               items: jobDetails,
               interactionKind: PopoverInteractionKind.CLICK,
               allowCreatingNewItems: true,

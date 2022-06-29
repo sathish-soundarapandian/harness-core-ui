@@ -14,7 +14,6 @@ import {
   ArtifactTagHelperText,
   ArtifactType,
   ImagePathTypes,
-  JenkinsArtifactType,
   RepositoryPortOrServer,
   TagTypes
 } from './ArtifactInterface'
@@ -212,7 +211,7 @@ const getTagValues = (specValues: any, isServerlessDeploymentTypeSelected = fals
 }
 
 export const getArtifactFormData = (
-  initialValues: ImagePathTypes | JenkinsArtifactType,
+  initialValues: ImagePathTypes,
   selectedArtifact: ArtifactType,
   isSideCar: boolean,
   isServerlessDeploymentTypeSelected = false
