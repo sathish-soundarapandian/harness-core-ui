@@ -309,7 +309,7 @@ function FormContent({
           selectWithSubmenuTypeInputProps={{
             expressions,
             selectWithSubmenuProps: {
-              loading,
+              // loading,
               items: jobDetails,
               interactionKind: PopoverInteractionKind.CLICK,
               allowCreatingNewItems: true,
