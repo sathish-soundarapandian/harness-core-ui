@@ -30,7 +30,7 @@ import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import DragnDropPaths from '@pipeline/components/ManifestSelection/DragnDropPaths'
 
-import css from './AzureWebAppAppServiceConfig/AzureWebAppServiceConfig.module.scss'
+import css from '../../AzureWebAppServiceConfig.module.scss'
 
 interface AzureWebAppServiceStepTwoProps {
   stepName: string

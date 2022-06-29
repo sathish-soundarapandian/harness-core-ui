@@ -21,7 +21,7 @@ import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useDeepCompareEffect } from '@common/hooks'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
-import AzureWebAppListView from './AzureWebAppAppServiceConfig/AzureWebAppServiceConfig'
+import AzureWebAppListView from './AzureWebAppServiceConfigListView/AzureWebAppServiceListView'
 
 export interface AzureWebAppSelectionProps {
   isPropagating?: boolean
