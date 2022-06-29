@@ -15,7 +15,8 @@ import {
   MultiTypeInputType,
   StepWizard,
   Text,
-  StepProps
+  StepProps,
+  Icon
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { Color, FontVariation } from '@harness/design-system'
@@ -157,7 +158,7 @@ function AzureWebAppListView({
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { expressions } = useVariablesExpression()
 
-  const removeManifestConfig = (): void => {
+  const removeApplicationConfig = (): void => {
     if (stage) {
       const newStage = produce(stage, draft => {
         set(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.applicationSettings', {})
@@ -168,7 +169,7 @@ function AzureWebAppListView({
       }
     }
   }
-  const editManifest = (store: ConnectorTypes): void => {
+  const editApplicationConfig = (store: ConnectorTypes): void => {
     setConnectorType(store)
     setConnectorView(false)
     showConnectorModal()
@@ -385,15 +386,14 @@ function AzureWebAppListView({
       <div className={css.rowItem}>
         <section className={css.manifestList}>
           <div className={css.columnId}>
-            {/* <Icon inline name={manifestTypeIcons[manifest?.type as ManifestTypes]} size={20} /> */}
+            <Icon inline name={ConnectorIcons[applicationSetting?.store?.type as ConnectorTypes]} size={20} />
             <Text inline width={150} className={css.type} color={Color.BLACK} lineClamp={1}>
               {applicationSetting?.store?.type}
             </Text>
           </div>
-          {/* <div>{getString(manifestTypeLabels[manifest?.type as ManifestTypes])}</div> */}
           {renderConnectorField(applicationSetting?.store?.spec?.connectorRef, connectorName, color)}
           {!!applicationSetting?.store?.spec.paths?.length && (
-            <span>
+            <div>
               <Text lineClamp={1} width={200}>
                 <span className={css.noWrap}>
                   {typeof applicationSetting?.store?.spec.paths === 'string'
@@ -401,18 +401,7 @@ function AzureWebAppListView({
                     : applicationSetting?.store?.spec.paths.join(', ')}
                 </span>
               </Text>
-            </span>
-          )}
-          {!!applicationSetting?.paths?.length && (
-            <span>
-              <Text lineClamp={1} width={200}>
-                <span className={css.noWrap}>
-                  {typeof applicationSetting.paths === 'string'
-                    ? applicationSetting.paths
-                    : applicationSetting.paths.join(', ')}
-                </span>
-              </Text>
-            </span>
+            </div>
           )}
           {!isReadonly && (
             <span>
@@ -420,11 +409,11 @@ function AzureWebAppListView({
                 <Button
                   icon="Edit"
                   iconProps={{ size: 18 }}
-                  onClick={() => editManifest(applicationSetting?.store?.type as ConnectorTypes)}
+                  onClick={() => editApplicationConfig(applicationSetting?.store?.type as ConnectorTypes)}
                   minimal
                 />
 
-                <Button iconProps={{ size: 18 }} icon="main-trash" onClick={() => removeManifestConfig()} minimal />
+                <Button iconProps={{ size: 18 }} icon="main-trash" onClick={() => removeApplicationConfig()} minimal />
               </Layout.Horizontal>
             </span>
           )}
@@ -483,14 +472,9 @@ function AzureWebAppListView({
       <Layout.Vertical spacing="small" style={{ flexShrink: 'initial' }}>
         {!isEmpty(applicationSettings) && (
           <div className={css.manifestList}>
-            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('common.ID')}</Text>
-            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
-              {getString('pipelineSteps.serviceTab.manifestList.manifestType')}
-            </Text>
-            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
-              {/* {getString('pipelineSteps.serviceTab.manifestList.connectorType')} */} Text
-            </Text>
-            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('location')}</Text>
+            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{'TYPE'}</Text>
+            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{'STORE'}</Text>
+            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('location').toLocaleUpperCase()}</Text>
             <span></span>
           </div>
         )}
