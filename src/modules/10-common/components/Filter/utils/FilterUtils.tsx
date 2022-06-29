@@ -62,7 +62,7 @@ export const getFilterSummary = (
 }
 
 export const removeNullAndEmpty = (object: Record<string, any>) => omitBy(omitBy(object, isUndefined), isEmpty)
-export const isObjectEmpty = (arg: Record<string, any>): boolean => isEmpty(omitBy(arg, isEmpty))
+export const isObjectEmpty = (arg: Record<string, any> | undefined): boolean => isEmpty(omitBy(arg, isEmpty))
 export const UNSAVED_FILTER = 'Unsaved Filter'
 export const MAX_FILTER_NAME_LENGTH = 25
 

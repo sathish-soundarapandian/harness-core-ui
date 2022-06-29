@@ -8143,7 +8143,15 @@ export interface StringsMap {
   /**
    * @deprecated migrate this string to module level file
    */
+  lastExecutedBy: string
+  /**
+   * @deprecated migrate this string to module level file
+   */
   lastExecutionTs: string
+  /**
+   * @deprecated migrate this string to module level file
+   */
+  lastModified: string
   /**
    * @deprecated migrate this string to module level file
    */
@@ -9384,6 +9392,10 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   recentActivity: string
+  /**
+   * @deprecated migrate this string to module level file
+   */
+  recentTenExecutions: string
   /**
    * @deprecated migrate this string to module level file
    */

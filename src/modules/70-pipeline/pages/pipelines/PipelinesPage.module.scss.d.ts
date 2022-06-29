@@ -11,7 +11,6 @@ declare const styles: {
   readonly actionButton: string
   readonly activityChart: string
   readonly cardTags: string
-  readonly center: string
   readonly clearFilterText: string
   readonly clickable: string
   readonly confirmText: string
@@ -30,7 +29,6 @@ declare const styles: {
   readonly pagination: string
   readonly pipelineCard: string
   readonly pipelineGitDetails: string
-  readonly pipelineIcons: string
   readonly pipelineInfo: string
   readonly pipelineName: string
   readonly pipelineNameSections: string
@@ -42,7 +40,6 @@ declare const styles: {
   readonly separator: string
   readonly serviceLabel: string
   readonly serviceName: string
-  readonly spaceBetween: string
   readonly table: string
   readonly tagRow: string
   readonly topHeaderFields: string

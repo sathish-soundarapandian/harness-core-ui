@@ -233,18 +233,6 @@ button.runPipelineListBtn {
   white-space: nowrap;
 }
 
-.pipelineIcons {
-  display: flex;
-  flex-direction: column;
-  min-width: var(--spacing-6);
-  &.center {
-    justify-content: center;
-  }
-  &.spaceBetween {
-    justify-content: space-between;
-  }
-}
-
 .pipelineInfo {
   display: flex;
 }

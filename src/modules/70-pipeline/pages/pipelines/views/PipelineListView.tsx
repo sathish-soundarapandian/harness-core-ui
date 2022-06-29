@@ -5,44 +5,42 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import type { CellProps, Column, Renderer } from 'react-table'
-import cx from 'classnames'
+import { Classes, Menu, Position } from '@blueprintjs/core'
+import { Color, FontVariation } from '@harness/design-system'
 import {
   Button,
+  ButtonSize,
+  ButtonVariation,
+  Container,
   Layout,
   Popover,
-  Text,
   SparkChart,
-  Icon,
-  ButtonVariation,
-  TagsPopover,
   TableV2,
-  Container,
-  ButtonSize,
+  TagsPopover,
+  Text,
   useToggleOpen
 } from '@harness/uicore'
-import { Classes, Menu, Position } from '@blueprintjs/core'
-import { FontVariation, Color } from '@harness/design-system'
+import React from 'react'
 import { useParams } from 'react-router-dom'
-import { formatDatetoLocale } from '@common/utils/dateUtils'
+import type { CellProps, Column, Renderer } from 'react-table'
 import { GitDetailsColumn } from '@common/components/Table/GitDetailsColumn/GitDetailsColumn'
-import useDeleteConfirmationDialog from '@pipeline/pages/utils/DeleteConfirmDialog'
-import type { PagePMSPipelineSummaryResponse, PMSPipelineSummaryResponse } from 'services/pipeline-ng'
-import { useStrings } from 'framework/strings'
-import { usePermission } from '@rbac/hooks/usePermission'
-import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
-import RbacButton from '@rbac/components/Button/Button'
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import { formatCount } from '@common/utils/utils'
 import type { StoreType } from '@common/constants/GitSyncTypes'
+import { formatDatetoLocale } from '@common/utils/dateUtils'
+import { formatCount } from '@common/utils/utils'
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
 import { Badge } from '@pipeline/pages/utils/Badge/Badge'
+import useDeleteConfirmationDialog from '@pipeline/pages/utils/DeleteConfirmDialog'
 import { getFeaturePropsForRunPipelineButton } from '@pipeline/utils/runPipelineUtils'
+import RbacButton from '@rbac/components/Button/Button'
+import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
+import { usePermission } from '@rbac/hooks/usePermission'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { useStrings } from 'framework/strings'
+import type { PagePMSPipelineSummaryResponse, PMSPipelineSummaryResponse } from 'services/pipeline-ng'
+import { getStatusColor } from '../PipelineListUtils'
 import { ClonePipelineForm } from './ClonePipelineForm/ClonePipelineForm'
-import { getIconsForPipeline, getStatusColor } from '../PipelineListUtils'
 import css from '../PipelinesPage.module.scss'
 
 interface PipelineListViewProps {
@@ -69,7 +67,7 @@ type CustomColumn<T extends Record<string, any>> = Column<T> & {
 }
 
 // eslint-disable-next-line react/function-component-definition
-const RenderColumnMenu: Renderer<CellProps<PipelineDTO>> = ({ row, column }) => {
+const RenderMenuColumn: Renderer<CellProps<PipelineDTO>> = ({ row, column }) => {
   const data = row.original
   const [menuOpen, setMenuOpen] = React.useState(false)
   const { getString } = useStrings()
@@ -201,58 +199,44 @@ const RenderColumnMenu: Renderer<CellProps<PipelineDTO>> = ({ row, column }) => 
 }
 
 // eslint-disable-next-line react/function-component-definition
-const RenderColumnPipeline: Renderer<CellProps<PipelineDTO>> = ({ row }) => {
+const RenderPipelineNameColumn: Renderer<CellProps<PipelineDTO>> = ({ row }) => {
   const data = row.original
   const { getString } = useStrings()
   return (
-    <Layout.Horizontal spacing="large">
-      <span
-        className={cx(
-          css.pipelineIcons,
-          getIconsForPipeline(data) && getIconsForPipeline(data).length > 1 ? css.spaceBetween : css.center
-        )}
-      >
-        {getIconsForPipeline(data).map(iconObj => (
-          <Icon key={iconObj.icon} name={iconObj.icon} size={iconObj.size} padding={{ left: 'xsmall' }} />
-        ))}
-      </span>
-      <div className={css.pipelineInfo}>
-        <Layout.Horizontal flex={{ alignItems: 'center' }}>
-          <Layout.Vertical spacing="xsmall" data-testid={data.identifier}>
-            <Layout.Horizontal spacing="medium">
-              <Text
-                font={{ variation: FontVariation.BODY2 }}
-                color={Color.GREY_800}
-                tooltipProps={{ position: Position.BOTTOM }}
-                tooltip={
-                  <Layout.Vertical spacing="medium" padding="medium" style={{ maxWidth: 400 }}>
-                    <Text>{getString('nameLabel', { name: data.name })}</Text>
-                    <Text>{getString('idLabel', { id: data.identifier })}</Text>
-                    <Text>{getString('descriptionLabel', { description: data.description })}</Text>
-                  </Layout.Vertical>
-                }
-              >
-                {data.name}
-              </Text>
-              {data.tags && Object.keys(data.tags || {}).length ? <TagsPopover tags={data.tags} /> : null}
-            </Layout.Horizontal>
-            <Text tooltipProps={{ position: Position.BOTTOM }} color={Color.GREY_600} font="small">
-              {getString('idLabel', { id: data.identifier })}
-            </Text>
-          </Layout.Vertical>
-          {data?.entityValidityDetails?.valid === false && (
-            <Container padding={{ left: 'large' }}>
-              <Badge
-                text={'common.invalid'}
-                iconName="error-outline"
-                showTooltip={true}
-                entityName={data.name}
-                entityType={'Pipeline'}
-              />
-            </Container>
-          )}
+    <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+      <Layout.Vertical spacing="xsmall" data-testid={data.identifier}>
+        <Layout.Horizontal spacing="medium">
+          <Text
+            font={{ variation: FontVariation.BODY2 }}
+            color={Color.GREY_800}
+            tooltipProps={{ position: Position.BOTTOM }}
+            tooltip={
+              <Layout.Vertical spacing="medium" padding="medium" style={{ maxWidth: 400 }}>
+                <Text>{getString('nameLabel', { name: data.name })}</Text>
+                <Text>{getString('idLabel', { id: data.identifier })}</Text>
+                <Text>{getString('descriptionLabel', { description: data.description })}</Text>
+              </Layout.Vertical>
+            }
+          >
+            {data.name}
+          </Text>
+          {data.tags && Object.keys(data.tags || {}).length ? <TagsPopover tags={data.tags} /> : null}
         </Layout.Horizontal>
-      </div>
+        <Text tooltipProps={{ position: Position.BOTTOM }} color={Color.GREY_400} font="small">
+          {getString('idLabel', { id: data.identifier })}
+        </Text>
+      </Layout.Vertical>
+      {data?.entityValidityDetails?.valid === false && (
+        <Container padding={{ left: 'large' }}>
+          <Badge
+            text={'common.invalid'}
+            iconName="error-outline"
+            showTooltip={true}
+            entityName={data.name}
+            entityType={'Pipeline'}
+          />
+        </Container>
+      )}
     </Layout.Horizontal>
   )
 }
@@ -389,7 +373,7 @@ export function PipelineListView({
         Header: getString('common.pipeline').toUpperCase(),
         accessor: 'name',
         width: isGitSyncEnabled ? '30%' : '35%',
-        Cell: RenderColumnPipeline
+        Cell: RenderPipelineNameColumn
       },
       {
         Header: getString('activity').toUpperCase(),
@@ -426,7 +410,7 @@ export function PipelineListView({
         Header: '',
         accessor: 'version',
         width: '5%',
-        Cell: RenderColumnMenu,
+        Cell: RenderMenuColumn,
         disableSortBy: true,
         refetchPipeline,
         goToPipelineStudio,
