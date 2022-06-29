@@ -18,13 +18,14 @@ import {
   TableV2,
   TagsPopover,
   Text,
-  useToggleOpen
+  useToggleOpen,
+  Icon
 } from '@harness/uicore'
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { GitDetailsColumn } from '@common/components/Table/GitDetailsColumn/GitDetailsColumn'
-import type { StoreType } from '@common/constants/GitSyncTypes'
+import { StoreType } from '@common/constants/GitSyncTypes'
 import { formatDatetoLocale } from '@common/utils/dateUtils'
 import { formatCount } from '@common/utils/utils'
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
@@ -78,7 +79,7 @@ const RenderMenuColumn: Renderer<CellProps<PipelineDTO>> = ({ row, column }) => 
   }>()
 
   const { confirmDelete } = useDeleteConfirmationDialog(data, 'pipeline', (column as any).onDeletePipeline)
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled, isGitSimplificationEnabled } = useAppStore()
   const [canDelete, canRun] = usePermission(
     {
       resourceScope: {
@@ -171,6 +172,7 @@ const RenderMenuColumn: Renderer<CellProps<PipelineDTO>> = ({ row, column }) => 
           <Menu.Item
             icon="duplicate"
             text={getString('projectCard.clone')}
+            disabled={isGitSyncEnabled || isGitSimplificationEnabled}
             onClick={(e: React.MouseEvent) => {
               e.stopPropagation()
               openClonePipelineModal()
@@ -202,8 +204,9 @@ const RenderMenuColumn: Renderer<CellProps<PipelineDTO>> = ({ row, column }) => 
 const RenderPipelineNameColumn: Renderer<CellProps<PipelineDTO>> = ({ row }) => {
   const data = row.original
   const { getString } = useStrings()
+
   return (
-    <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+    <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'space-between' }}>
       <Layout.Vertical spacing="xsmall" data-testid={data.identifier}>
         <Layout.Horizontal spacing="medium">
           <Text
@@ -227,7 +230,7 @@ const RenderPipelineNameColumn: Renderer<CellProps<PipelineDTO>> = ({ row }) => 
         </Text>
       </Layout.Vertical>
       {data?.entityValidityDetails?.valid === false && (
-        <Container padding={{ left: 'large' }}>
+        <Container margin={{ left: 'large' }}>
           <Badge
             text={'common.invalid'}
             iconName="error-outline"
@@ -237,6 +240,34 @@ const RenderPipelineNameColumn: Renderer<CellProps<PipelineDTO>> = ({ row }) => 
           />
         </Container>
       )}
+      {data?.entityValidityDetails?.valid === false && (
+        <Container margin={{ left: 'large' }}>
+          <Badge
+            text={'common.invalid'}
+            iconName="error-outline"
+            showTooltip={true}
+            entityName={data.name}
+            entityType={'Pipeline'}
+          />
+        </Container>
+      )}
+    </Layout.Horizontal>
+  )
+}
+
+// eslint-disable-next-line react/function-component-definition
+const RenderStoreTypeColumn: Renderer<CellProps<PipelineDTO>> = () => {
+  const { getString } = useStrings()
+  const type = StoreType.INLINE
+  const storeType = type === StoreType.INLINE ? getString('inline') : getString('repository')
+  const storeTypeIcon = StoreType.INLINE ? 'repository' : 'remote-setup'
+
+  return (
+    <Layout.Horizontal spacing="xsmall">
+      <Icon name={storeTypeIcon} size={16} color={Color.GREY_600} />
+      <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800}>
+        {storeType}
+      </Text>
     </Layout.Horizontal>
   )
 }
@@ -374,6 +405,11 @@ export function PipelineListView({
         accessor: 'name',
         width: isGitSyncEnabled ? '30%' : '35%',
         Cell: RenderPipelineNameColumn
+      },
+      {
+        Header: '',
+        accessor: 'storeType',
+        Cell: RenderStoreTypeColumn
       },
       {
         Header: getString('activity').toUpperCase(),
