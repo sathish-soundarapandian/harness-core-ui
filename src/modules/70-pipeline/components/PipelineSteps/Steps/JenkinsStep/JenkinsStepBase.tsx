@@ -79,8 +79,9 @@ function FormContent({
 
   const {
     refetch: refetchJobs,
-    data: jobsResponse
-    // loading: fetchingJobs
+    data: jobsResponse,
+    loading: fetchingJobs,
+    error: fetchingJobsError
   } = useGetJobDetailsForJenkins({
     lazy: true,
     queryParams: {
@@ -157,7 +158,7 @@ function FormContent({
     if (lastOpenedJob.current) {
       setJobDetails((prevState: SubmenuSelectOption[]) => {
         const clonedJobDetails = cloneDeep(prevState)
-        const parentJob = clonedJobDetails.find(obj => obj.value === lastOpenedJob.current)
+        const parentJob = clonedJobDetails.find(obj => obj.label === lastOpenedJob.current)
         if (parentJob) {
           parentJob.submenuItems = [...getJobItems(jobsResponse?.data?.jobDetails || [])]
         }
@@ -207,6 +208,7 @@ function FormContent({
     })
   }
 
+  const loading = fetchingJobs
   return (
     <React.Fragment>
       {stepViewType !== StepViewType.Template && (
@@ -297,10 +299,17 @@ function FormContent({
           label={'Job Name'}
           name={'spec.jobName'}
           selectItems={jobDetails}
+          placeholder={
+            fetchingJobs
+              ? 'Fetching jobs...'
+              : fetchingJobsError?.message
+              ? fetchingJobsError?.message
+              : getString('select')
+          }
           selectWithSubmenuTypeInputProps={{
             expressions,
             selectWithSubmenuProps: {
-              // loading: fetchingJobs,
+              loading,
               items: jobDetails,
               interactionKind: PopoverInteractionKind.CLICK,
               allowCreatingNewItems: true,
@@ -313,19 +322,10 @@ function FormContent({
                   ...formik.values,
                   spec: {
                     ...formik.values.spec,
-                    jobName: newJobName as any
+                    jobName: newJobName as any,
+                    jobParameter: []
                   }
                 })
-                if (type !== MultiTypeInputType.FIXED) {
-                  formik.setValues({
-                    ...formik.values,
-                    spec: {
-                      ...formik.values.spec,
-                      jobName: newJobName as any,
-                      jobParameter: []
-                    }
-                  })
-                }
                 if (type === MultiTypeInputType.FIXED) {
                   refetchJobParameters({
                     pathParams: { jobName: encodeURIComponent(newJobName.label) },
@@ -337,20 +337,23 @@ function FormContent({
                 }
               },
               onOpening: (item: SelectOption) => {
-                lastOpenedJob.current = item.value
+                lastOpenedJob.current = item.label
                 // TODO: To scroll the jobDetails component to its original height
                 // const indexOfParent = jobDetails.findIndex(obj => obj.value === item.value)
                 // const parentNode = document.getElementsByClassName('Select--menuItem')?.[indexOfParent]
                 // if (parentNode) {
                 //   parentJobY.current = parentNode.getBoundingClientRect()?.y
                 // }
-                refetchJobs({
-                  queryParams: {
-                    ...commonParams,
-                    connectorRef: connectorRefFixedValue?.toString(),
-                    parentJobName: item.label
-                  }
-                })
+                const parentJob = jobDetails?.find(job => job.label === item.label)
+                if (!parentJob?.submenuItems?.length) {
+                  refetchJobs({
+                    queryParams: {
+                      ...commonParams,
+                      connectorRef: connectorRefFixedValue?.toString(),
+                      parentJobName: item.label
+                    }
+                  })
+                }
               }
             }
           }}
@@ -378,7 +381,7 @@ function FormContent({
           allowedTypes={allowableTypes}
           optionalLabel={getString('common.optionalLabel')}
           defaultValueToReset={[]}
-          disableTypeSelection={readonly}
+          disableTypeSelection={true}
         >
           <FieldArray
             name="spec.jobParameter"
@@ -440,7 +443,8 @@ function FormContent({
             }}
           />
         </MultiTypeFieldSelector>
-        {getMultiTypeFromValue(formik.values?.spec?.jobParameter as any) === MultiTypeInputType.RUNTIME && (
+        {/* Uncomment the below code when making jobParameter runtime */}
+        {/* {getMultiTypeFromValue(formik.values?.spec?.jobParameter as any) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions
             value={formik.values?.spec?.jobParameter as any}
             type="String"
@@ -460,7 +464,7 @@ function FormContent({
             }}
             isReadonly={readonly}
           />
-        )}
+        )} */}
       </div>
 
       <div className={stepCss.noLookDivider} />

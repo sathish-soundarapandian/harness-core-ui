@@ -44,9 +44,9 @@ import css from '../../ArtifactConnector.module.scss'
 
 export function JenkinsArtifact({
   context,
-  handleSubmit,
-  expressions,
-  allowableTypes,
+  // handleSubmit,
+  // expressions,
+  // allowableTypes,
   prevStepData,
   initialValues,
   previousStep,
@@ -54,18 +54,6 @@ export function JenkinsArtifact({
   isReadonly = false,
   selectedArtifact
 }: StepProps<ConnectorConfigDTO> & JenkinsArtifactProps): React.ReactElement {
-  console.log('props', {
-    context,
-    handleSubmit,
-    expressions,
-    allowableTypes,
-    prevStepData,
-    initialValues,
-    previousStep,
-    artifactIdentifiers,
-    isReadonly,
-    selectedArtifact
-  })
   const { getString } = useStrings()
   const lastOpenedJob = useRef<any>(null)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -195,17 +183,16 @@ export function JenkinsArtifact({
         initialValues={getInitialValues()}
         formName="imagePath"
         validationSchema={context === ModalViewFor.SIDECAR ? sidecarSchema : primarySchema}
-        onSubmit={formData => {
-          //   submitFormData({
-          //     ...prevStepData,
-          //     ...formData,
-          //     tag: defaultTo(formData?.tag?.value, formData?.tag),
-          //     connectorId: getConnectorIdValue(prevStepData)
-          //   })
-        }}
+        // onSubmit={formData => {
+        //   //   submitFormData({
+        //   //     ...prevStepData,
+        //   //     ...formData,
+        //   //     tag: defaultTo(formData?.tag?.value, formData?.tag),
+        //   //     connectorId: getConnectorIdValue(prevStepData)
+        //   //   })
+        // }}
       >
         {formik => {
-          console.log('formik', formik)
           return (
             <Form>
               <div className={css.connectorForm}>
