@@ -20,15 +20,14 @@ import {
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import { Form } from 'formik'
-import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import * as Yup from 'yup'
 
-import { get, set } from 'lodash-es'
+import { get, isUndefined, set } from 'lodash-es'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
-import DragnDropPaths from '@pipeline/components/ManifestSelection/DragnDropPaths'
+import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 import css from '../../AzureWebAppServiceConfig.module.scss'
 
@@ -68,7 +67,7 @@ function AzureWebAppServiceStepTwo({
     branch: string | undefined
     commitId: string | undefined
     gitFetchType: 'Branch' | 'Commit'
-    paths: any
+    paths: string | undefined
   } => {
     const specValues = get(initialValues, 'store.spec', null)
 
@@ -76,16 +75,14 @@ function AzureWebAppServiceStepTwo({
       return {
         ...specValues,
         paths:
-          typeof specValues.paths === 'string'
-            ? specValues.paths
-            : specValues.paths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) }))
+          typeof specValues.paths === 'string' || isUndefined(specValues.paths) ? specValues.paths : specValues.paths[0]
       }
     }
     return {
       branch: undefined,
       commitId: undefined,
       gitFetchType: 'Branch',
-      paths: [{ path: '', uuid: uuid('', nameSpace()) }]
+      paths: undefined
     }
   }, [])
 
@@ -93,7 +90,7 @@ function AzureWebAppServiceStepTwo({
     branch: string | undefined
     commitId: string | undefined
     gitFetchType: 'Branch' | 'Commit'
-    paths: any
+    paths: string | undefined
     store?: string
     connectorRef?: string
   }): void => {
@@ -103,10 +100,7 @@ function AzureWebAppServiceStepTwo({
         spec: {
           connectorRef: formData?.connectorRef,
           gitFetchType: formData?.gitFetchType,
-          paths:
-            typeof formData?.paths === 'string'
-              ? formData?.paths
-              : formData?.paths?.map((path: { path: string }) => path.path)
+          paths: typeof formData?.paths === 'string' ? [formData?.paths] : formData?.paths
         }
       }
     }
@@ -130,7 +124,7 @@ function AzureWebAppServiceStepTwo({
 
       <Formik
         initialValues={getInitialValues()}
-        formName="manifestDetails"
+        formName="applicationConfigDetails"
         validationSchema={Yup.object().shape({
           branch: Yup.string().when('gitFetchType', {
             is: 'Branch',
@@ -140,16 +134,13 @@ function AzureWebAppServiceStepTwo({
             is: 'Commit',
             then: Yup.string().trim().required(getString('validation.commitId'))
           }),
-          paths: Yup.lazy((value): Yup.Schema<unknown> => {
-            if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
-              return Yup.array().of(
-                Yup.object().shape({
-                  path: Yup.string().min(1).required(getString('pipeline.manifestType.pathRequired'))
-                })
-              )
-            }
-            return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
-          })
+          paths: Yup.string()
+            .trim()
+            .required(
+              getString('common.validation.fieldIsRequired', {
+                name: 'Application Config File Path'
+              })
+            )
         })}
         onSubmit={formData => {
           submitFormData({
@@ -171,7 +162,7 @@ function AzureWebAppServiceStepTwo({
             branch: string | undefined
             commitId: string | undefined
             gitFetchType: 'Branch' | 'Commit'
-            paths: any
+            paths: string | undefined
           }
         }) => {
           return (
@@ -181,79 +172,85 @@ function AzureWebAppServiceStepTwo({
                 className={css.manifestForm}
               >
                 <div className={css.manifestStepWidth}>
-                  <Layout.Vertical margin={{ top: 'small', bottom: 'small' }} className={css.halfWidth}>
+                  <div className={cx(stepCss.formGroup, stepCss.md)}>
                     <FormInput.Select
                       name="gitFetchType"
                       label={getString('pipeline.manifestType.gitFetchTypeLabel')}
                       items={gitFetchTypeList}
                     />
-                    {formik.values?.gitFetchType === GitFetchTypes.Branch && (
-                      <div
-                        className={cx(css.fullWidth, {
-                          [css.runtimeInput]:
-                            getMultiTypeFromValue(formik.values?.branch) === MultiTypeInputType.RUNTIME
-                        })}
-                      >
-                        <FormInput.MultiTextInput
-                          multiTextInputProps={{ expressions, allowableTypes }}
-                          label={getString('pipelineSteps.deploy.inputSet.branch')}
-                          placeholder={getString('pipeline.manifestType.branchPlaceholder')}
-                          name="branch"
+                  </div>
+                  {formik.values?.gitFetchType === GitFetchTypes.Branch && (
+                    <div className={cx(stepCss.formGroup, stepCss.md)}>
+                      <FormInput.MultiTextInput
+                        multiTextInputProps={{ expressions, allowableTypes }}
+                        label={getString('pipelineSteps.deploy.inputSet.branch')}
+                        placeholder={getString('pipeline.manifestType.branchPlaceholder')}
+                        name="branch"
+                      />
+
+                      {getMultiTypeFromValue(formik.values?.branch) === MultiTypeInputType.RUNTIME && (
+                        <ConfigureOptions
+                          value={formik.values?.branch as string}
+                          type="String"
+                          variableName="branch"
+                          showRequiredField={false}
+                          showDefaultField={false}
+                          showAdvanced={true}
+                          onChange={value => formik.setFieldValue('branch', value)}
+                          isReadonly={isReadonly}
                         />
+                      )}
+                    </div>
+                  )}
 
-                        {getMultiTypeFromValue(formik.values?.branch) === MultiTypeInputType.RUNTIME && (
-                          <ConfigureOptions
-                            value={formik.values?.branch as string}
-                            type="String"
-                            variableName="branch"
-                            showRequiredField={false}
-                            showDefaultField={false}
-                            showAdvanced={true}
-                            onChange={value => formik.setFieldValue('branch', value)}
-                            isReadonly={isReadonly}
-                          />
-                        )}
-                      </div>
-                    )}
+                  {formik.values?.gitFetchType === GitFetchTypes.Commit && (
+                    <div className={cx(stepCss.formGroup, stepCss.md)}>
+                      <FormInput.MultiTextInput
+                        multiTextInputProps={{ expressions, allowableTypes }}
+                        label={getString('pipeline.manifestType.commitId')}
+                        placeholder={getString('pipeline.manifestType.commitPlaceholder')}
+                        name="commitId"
+                      />
 
-                    {formik.values?.gitFetchType === GitFetchTypes.Commit && (
-                      <div
-                        className={cx(css.fullWidth, {
-                          [css.runtimeInput]:
-                            getMultiTypeFromValue(formik.values?.commitId) === MultiTypeInputType.RUNTIME
-                        })}
-                      >
-                        <FormInput.MultiTextInput
-                          multiTextInputProps={{ expressions, allowableTypes }}
-                          label={getString('pipeline.manifestType.commitId')}
-                          placeholder={getString('pipeline.manifestType.commitPlaceholder')}
-                          name="commitId"
+                      {getMultiTypeFromValue(formik.values?.commitId) === MultiTypeInputType.RUNTIME && (
+                        <ConfigureOptions
+                          value={formik.values?.commitId as string}
+                          type="String"
+                          variableName="commitId"
+                          showRequiredField={false}
+                          showDefaultField={false}
+                          showAdvanced={true}
+                          onChange={value => formik.setFieldValue('commitId', value)}
+                          isReadonly={isReadonly}
                         />
-
-                        {getMultiTypeFromValue(formik.values?.commitId) === MultiTypeInputType.RUNTIME && (
-                          <ConfigureOptions
-                            value={formik.values?.commitId as string}
-                            type="String"
-                            variableName="commitId"
-                            showRequiredField={false}
-                            showDefaultField={false}
-                            showAdvanced={true}
-                            onChange={value => formik.setFieldValue('commitId', value)}
-                            isReadonly={isReadonly}
-                          />
-                        )}
-                      </div>
-                    )}
-                  </Layout.Vertical>
-                  <div className={css.halfWidth}>
-                    <DragnDropPaths
-                      formik={formik}
-                      expressions={expressions}
-                      allowableTypes={allowableTypes}
-                      fieldPath="paths"
-                      pathLabel={getString('fileFolderPathText')}
-                      placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                      )}
+                    </div>
+                  )}
+                  <div className={cx(stepCss.formGroup, stepCss.md)}>
+                    <FormInput.MultiTextInput
+                      label={getString('common.git.folderPath')}
+                      placeholder={getString('pipeline.manifestType.pathPlaceholder')}
+                      name={'paths'}
+                      multiTextInputProps={{ expressions, allowableTypes }}
                     />
+                    {
+                      /* istanbul ignore next */
+                      getMultiTypeFromValue(formik.values?.paths as string) === MultiTypeInputType.RUNTIME && (
+                        <ConfigureOptions
+                          style={{ alignSelf: 'center', marginTop: 1 }}
+                          value={formik.values?.paths as string}
+                          type="String"
+                          variableName={'paths'}
+                          showRequiredField={false}
+                          showDefaultField={false}
+                          showAdvanced={true}
+                          onChange={value => {
+                            formik.setFieldValue('paths', value)
+                          }}
+                          isReadonly={isReadonly}
+                        />
+                      )
+                    }
                   </div>
                 </div>
 

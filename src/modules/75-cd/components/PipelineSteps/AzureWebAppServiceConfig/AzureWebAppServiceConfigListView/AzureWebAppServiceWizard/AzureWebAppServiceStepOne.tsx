@@ -40,7 +40,7 @@ import { ConnectorIcons, ConnectorMap } from '../AzureWebAppServiceListView'
 
 import css from '../../AzureWebAppServiceConfig.module.scss'
 
-interface ManifestStorePropType {
+interface ApplicationStorePropType {
   stepName: string
   expressions: string[]
   allowableTypes: MultiTypeInputType[]
@@ -63,7 +63,7 @@ function AzureWebAppServiceConfigWizardStepOne({
   allowableTypes,
   prevStepData,
   nextStep
-}: StepProps<ConnectorConfigDTO> & ManifestStorePropType): React.ReactElement {
+}: StepProps<ConnectorConfigDTO> & ApplicationStorePropType): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
@@ -123,7 +123,7 @@ function AzureWebAppServiceConfigWizardStepOne({
     return { ...initValues, store: selectedStore }
   }, [selectedStore])
 
-  const supportedManifestStores = useMemo(
+  const connectorTypesOptions = useMemo(
     () =>
       connectorTypes.map(store => ({
         label: store,
@@ -145,7 +145,7 @@ function AzureWebAppServiceConfigWizardStepOne({
 
       <Formik
         initialValues={getInitialValues()}
-        formName="manifestStore"
+        formName="applicationStore"
         validationSchema={Yup.object().shape({
           connectorRef: Yup.mixed().required(getString('pipelineSteps.build.create.connectorRequiredError'))
         })}
@@ -165,7 +165,7 @@ function AzureWebAppServiceConfigWizardStepOne({
                   <ThumbnailSelect
                     className={css.thumbnailSelect}
                     name={'store'}
-                    items={supportedManifestStores}
+                    items={connectorTypesOptions}
                     isReadonly={isReadonly}
                     onChange={storeSelected => {
                       handleOptionSelection(formik?.values, storeSelected as ConnectorTypes)
@@ -223,7 +223,7 @@ function AzureWebAppServiceConfigWizardStepOne({
                         variation={ButtonVariation.LINK}
                         size={ButtonSize.SMALL}
                         disabled={isReadonly || !canCreate}
-                        id="new-manifest-connector"
+                        id="new-application-connector"
                         text={newConnectorLabel}
                         className={css.addNewManifest}
                         icon="plus"
