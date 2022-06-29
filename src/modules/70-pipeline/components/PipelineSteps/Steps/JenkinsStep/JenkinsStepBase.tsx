@@ -77,7 +77,11 @@ function FormContent({
     branch
   }
 
-  const { refetch: refetchJobs, data: jobsResponse } = useGetJobDetailsForJenkins({
+  const {
+    refetch: refetchJobs,
+    data: jobsResponse,
+    loading: fetchingJobs
+  } = useGetJobDetailsForJenkins({
     lazy: true,
     queryParams: {
       ...commonParams,
@@ -112,24 +116,44 @@ function FormContent({
   // }, [jobParameterResponse])
 
   useEffect(() => {
-    if (typeof formik.values.spec.jobName === 'string' && jobsResponse?.data?.jobDetails?.length) {
-      const targetJob = jobsResponse?.data?.jobDetails?.find(job => job.url === formik.values?.spec?.jobName)
+    if (typeof formik.values.spec.jobName === 'string' && jobDetails?.length) {
+      const targetJob = jobDetails?.find(job => job.label === formik.values?.spec?.jobName)
       if (targetJob) {
-        const jobObj = {
-          label: targetJob?.jobName || '',
-          value: targetJob?.url || '',
-          submenuItems: [],
-          hasSubItems: targetJob?.folder
-        }
         formik.setValues({
           ...formik.values,
           spec: {
             ...formik.values.spec,
-            jobName: jobObj as any
+            jobName: targetJob as any
           }
         })
+      } else {
+        if (formik.values.spec.jobName?.split('/').length > 1) {
+          const parentJobName = formik.values.spec.jobName?.split('/')[0]
+          const parentJob = jobDetails?.find(job => job.label === parentJobName)
+          if (parentJob?.submenuItems?.length) {
+            const targetChildJob = parentJob.submenuItems?.find(job => job.label === formik.values?.spec?.jobName)
+            formik.setValues({
+              ...formik.values,
+              spec: {
+                ...formik.values.spec,
+                jobName: targetChildJob as any
+              }
+            })
+          } else {
+            refetchJobs({
+              queryParams: {
+                ...commonParams,
+                connectorRef: connectorRefFixedValue?.toString(),
+                parentJobName
+              }
+            })
+          }
+        }
       }
     }
+  }, [jobDetails])
+
+  useEffect(() => {
     if (lastOpenedJob.current) {
       setJobDetails((prevState: SubmenuSelectOption[]) => {
         const clonedJobDetails = cloneDeep(prevState)
@@ -272,27 +296,24 @@ function FormContent({
         <FormInput.SelectWithSubmenuTypeInput
           label={'Job Name'}
           name={'spec.jobName'}
-          placeholder={formik.values.spec.jobName || 'Select a job'}
           selectItems={jobDetails}
           selectWithSubmenuTypeInputProps={{
+            expressions,
             selectWithSubmenuProps: {
+              loading: fetchingJobs,
               items: jobDetails,
-              value:
-                formik.values.spec.connectorRef === MultiTypeInputType.RUNTIME
-                  ? (MultiTypeInputType.RUNTIME as any)
-                  : jobDetails.find(job => job.label === formik.values.spec.jobName),
               interactionKind: PopoverInteractionKind.CLICK,
               allowCreatingNewItems: true,
               onChange: (primaryValue, secondaryValue, type) => {
-                const newJobName = secondaryValue ? secondaryValue : primaryValue
-                if (!primaryValue) {
-                  return
-                }
+                const newJobName =
+                  type === MultiTypeInputType.FIXED && primaryValue && secondaryValue
+                    ? secondaryValue
+                    : primaryValue || ''
                 formik.setValues({
                   ...formik.values,
                   spec: {
                     ...formik.values.spec,
-                    jobName: type === MultiTypeInputType.RUNTIME ? primaryValue : (newJobName as any)
+                    jobName: newJobName as any
                   }
                 })
                 if (type !== MultiTypeInputType.FIXED) {
@@ -300,12 +321,12 @@ function FormContent({
                     ...formik.values,
                     spec: {
                       ...formik.values.spec,
-                      jobName: type === MultiTypeInputType.RUNTIME ? primaryValue : (newJobName as any),
+                      jobName: newJobName as any,
                       jobParameter: []
                     }
                   })
                 }
-                if (type !== MultiTypeInputType.RUNTIME) {
+                if (type === MultiTypeInputType.FIXED) {
                   refetchJobParameters({
                     pathParams: { jobName: encodeURIComponent(newJobName.label) },
                     queryParams: {
@@ -314,7 +335,6 @@ function FormContent({
                     }
                   })
                 }
-                resetForm(formik, 'jobName', '')
               },
               onOpening: (item: SelectOption) => {
                 lastOpenedJob.current = item.value
@@ -335,10 +355,10 @@ function FormContent({
             }
           }}
         />
-        {getMultiTypeFromValue(formik.values.spec.connectorRef) === MultiTypeInputType.RUNTIME && (
+        {getMultiTypeFromValue(formik.values.spec.jobName) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions
             style={{ marginTop: 14 }}
-            value={formik.values.spec.connectorRef as string}
+            value={formik.values.spec.jobName as string}
             type="String"
             variableName="spec.jobName"
             showRequiredField={false}
@@ -464,8 +484,16 @@ export function JenkinsStepBase(
   const validationSchema = Yup.object().shape({
     timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
     spec: Yup.object().shape({
-      connectorRef: Yup.string().required(getString('common.validation.connectorRef')),
-      jobName: Yup.string().required(getString('pipeline.jenkinsStep.validations.jobName')),
+      connectorRef: Yup.lazy(value =>
+        typeof value === 'object'
+          ? Yup.object().required(getString('common.validation.connectorRef')) // typeError is necessary here, otherwise we get a bad-looking yup error
+          : Yup.string().required(getString('common.validation.connectorRef'))
+      ),
+      jobName: Yup.lazy(value =>
+        typeof value === 'object'
+          ? Yup.object().required('abc') // typeError is necessary here, otherwise we get a bad-looking yup error
+          : Yup.string().required(getString('pipeline.jenkinsStep.validations.jobName'))
+      ),
       jobParameter: variableSchema(getString)
     }),
     ...getNameAndIdentifierSchema(getString, stepViewType)

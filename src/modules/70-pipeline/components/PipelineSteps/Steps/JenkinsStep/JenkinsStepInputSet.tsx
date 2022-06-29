@@ -18,10 +18,10 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { JobDetails, useGetJobDetailsForJenkins } from 'services/cd-ng'
+import { JobDetails, useGetJobDetailsForJenkins, useGetJobParametersForJenkins } from 'services/cd-ng'
 import { MultiTypeFieldSelector } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import type { SubmenuSelectOption } from './types'
-import { resetForm, useGetJobParametersForJenkins } from './helper'
+import { resetForm } from './helper'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import stepCss from './JenkinsStep.module.scss'
 
@@ -96,18 +96,6 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
   // }, [jobParameterResponse])
 
   useEffect(() => {
-    if (typeof get(formik, `values.${prefix}spec.jobName`) === 'string' && jobsResponse?.data?.jobDetails?.length) {
-      const targetjob = jobsResponse?.data?.jobDetails?.find(job => job.url === formik.values?.spec?.jobName)
-      if (targetjob) {
-        const jobObj = {
-          label: targetjob?.jobName || '',
-          value: targetjob?.url || '',
-          submenuItems: [],
-          hasSubItems: targetjob?.folder
-        }
-        set(formik, `values.${prefix}spec.jobName`, jobObj)
-      }
-    }
     if (lastOpenedJob.current) {
       setJobDetails((prevState: SubmenuSelectOption[]) => {
         const parentJob = prevState.find(obj => obj.value === lastOpenedJob.current)
@@ -130,6 +118,23 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
   }, [jobsResponse])
 
   useEffect(() => {
+    const jobName = get(formik, `values.${prefix}spec.jobName`)
+    if (jobName?.split('/').length > 1) {
+      const parentJobName = jobName?.split('/')[0]
+      const parentJob = jobDetails?.find(job => job.label === parentJobName)
+      if (!parentJob?.submenuItems?.length) {
+        refetchJobs({
+          queryParams: {
+            ...commonParams,
+            connectorRef: connectorRef?.toString(),
+            parentJobName
+          }
+        })
+      }
+    }
+  }, [jobDetails])
+
+  useEffect(() => {
     refetchJobs({
       queryParams: {
         ...commonParams,
@@ -137,6 +142,19 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
       }
     })
   }, [connectorRef])
+
+  const getJobDetailsValue = (): SubmenuSelectOption | undefined => {
+    const jobName = get(formik, `values.${prefix}spec.jobName`)
+    if (jobName?.split('/').length > 1) {
+      const parentJobName = jobName?.split('/')[0]
+      const parentJob = jobDetails?.find(job => job.label === parentJobName)
+      if (parentJob?.submenuItems?.length) {
+        const targetChildJob = parentJob.submenuItems?.find(job => job.label === jobName)
+        return targetChildJob as SubmenuSelectOption
+      }
+    }
+    return jobDetails.find(job => job.label === get(formik, `values.${prefix}spec.jobName`)) as SubmenuSelectOption
+  }
 
   return (
     <>
@@ -187,28 +205,37 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
             <FormInput.SelectWithSubmenuTypeInput
               label={'Job Name'}
               name={`${prefix}spec.jobName`}
-              value={jobDetails.find(job => job.label === get(formik, `values.${prefix}spec.jobName`))}
+              value={getJobDetailsValue()}
               selectItems={jobDetails}
               selectWithSubmenuTypeInputProps={{
+                expressions,
+                allowableTypes,
                 selectWithSubmenuProps: {
                   items: jobDetails,
                   interactionKind: PopoverInteractionKind.CLICK,
                   allowCreatingNewItems: true,
-                  onChange: (primaryValue, secondaryValue) => {
-                    const newJobName = secondaryValue ? secondaryValue : primaryValue
+                  onChange: (primaryValue, secondaryValue, type) => {
+                    const newJobName =
+                      type === MultiTypeInputType.FIXED && primaryValue && secondaryValue
+                        ? secondaryValue
+                        : primaryValue || ''
                     const clonedFormik = cloneDeep(formik.values)
                     set(clonedFormik, `${prefix}spec.jobName`, newJobName.label)
+                    if (type !== MultiTypeInputType.FIXED) {
+                      set(clonedFormik, `${prefix}spec.jobParameter`, [])
+                    }
                     formik.setValues({
                       ...clonedFormik
                     })
-                    refetchJobParameters({
-                      pathParams: { jobName: encodeURIComponent(newJobName.label) },
-                      queryParams: {
-                        ...commonParams,
-                        connectorRef: connectorRef.toString()
-                      }
-                    })
-                    resetForm(formik, 'jobName', prefix)
+                    if (type === MultiTypeInputType.FIXED) {
+                      refetchJobParameters({
+                        pathParams: { jobName: encodeURIComponent(newJobName.label) },
+                        queryParams: {
+                          ...commonParams,
+                          connectorRef: connectorRef.toString()
+                        }
+                      })
+                    }
                   },
                   onOpening: (item: SelectOption) => {
                     lastOpenedJob.current = item.value
