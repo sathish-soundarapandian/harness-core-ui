@@ -25,7 +25,9 @@ import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 
+import SecretInput from '@secrets/components/SecretInput/SecretInput'
 import FileStoreInput from '@filestore/components/FileStoreSelectField/FileStoreSelectField'
+
 import css from './StartupScriptSelection.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -40,12 +42,12 @@ interface StartupScriptWizardStepTwoProps {
 }
 
 enum fileTypes {
-  PLainText = 'PlainText',
+  PlainText = 'PlainText',
   Encrypted = 'Encrypted'
 }
 
 const fileTypesOptions = [
-  { label: 'Plain text', value: fileTypes.PLainText },
+  { label: 'Plain text', value: fileTypes.PlainText },
   { label: 'Encrypted', value: fileTypes.Encrypted }
 ]
 
@@ -54,42 +56,35 @@ function StartupScriptWizardStepTwo({
   initialValues,
   handleSubmit,
   prevStepData,
-  previousStep,
+  previousStep
 }: StepProps<ConnectorConfigDTO> & StartupScriptWizardStepTwoProps): React.ReactElement {
   const { getString } = useStrings()
 
   const getInitialValues = useCallback((): {
-    fileType: 'Plain text' | 'Encrypted'
-    filePath: string | undefined
-    fileReference: any
+    fileType: fileTypes
+    file: any
   } => {
     const specValues = get(initialValues, 'store.spec', null)
 
     if (specValues) {
       return {
-        ...specValues
+        ...specValues,
+        file: specValues.files !== undefined ? specValues.files[0] : undefined
       }
     }
     return {
-      fileType: 'Plain text',
-      filePath: '',
-      fileReference: undefined
+      fileType: fileTypes.PlainText,
+      file: undefined
     }
   }, [])
 
-  const submitFormData = (formData: {
-    fileType: 'Plain text' | 'Encrypted'
-    filePath: string | undefined
-    fileReference: any
-    store?: string
-  }): void => {
+  const submitFormData = (formData: { fileType: fileTypes; file: any; store?: string }): void => {
     const startupScript = {
       store: {
         type: formData?.store,
         spec: {
-          fileReference: formData?.fileReference,
           fileType: formData?.fileType,
-          filePath: formData?.filePath
+          files: [formData?.file]
         }
       }
     }
@@ -115,40 +110,58 @@ function StartupScriptWizardStepTwo({
           })
         }}
       >
-        <Form>
-          <Layout.Vertical
-            flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
-            className={cx(css.startupScriptForm, css.startupScriptWizard)}
-          >
-            <div className={css.startupScriptWizard}>
-              <div className={cx(stepCss.formGroup, stepCss.md)}>
-                <FormInput.Select
-                  name="gitFetchType"
-                  label={getString('pipeline.manifestType.gitFetchTypeLabel')}
-                  items={fileTypesOptions}
-                />
-              </div>
-              <div className={cx(stepCss.formGroup, stepCss.md)}>
-                <FileStoreInput name="filePath" label={getString('fileFolderPathText')} />
-              </div>
-            </div>
+        {(formik: {
+          setFieldValue: (a: string, b: string) => void
+          values: {
+            fileType: fileTypes
+            file: any
+          }
+        }) => {
+          return (
+            <Form>
+              <Layout.Vertical
+                flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
+                className={cx(css.startupScriptForm, css.startupScriptWizard)}
+              >
+                <div className={css.startupScriptWizard}>
+                  <div className={cx(stepCss.formGroup, stepCss.md)}>
+                    <FormInput.Select
+                      name="fileType"
+                      label={getString('pipeline.manifestType.gitFetchTypeLabel')}
+                      items={fileTypesOptions}
+                    />
+                  </div>
+                  <div className={cx(stepCss.formGroup, stepCss.md)}>
+                    {formik.values.fileType === fileTypes.PlainText ? (
+                      <FileStoreInput name={'name'} />
+                    ) : (
+                      <SecretInput
+                        name={'secretFile'}
+                        label={getString('connectors.azure.auth.certificate')}
+                        type={'SecretFile'}
+                      />
+                    )}
+                  </div>
+                </div>
 
-            <Layout.Horizontal spacing="medium" className={css.saveBtn}>
-              <Button
-                variation={ButtonVariation.SECONDARY}
-                text={getString('back')}
-                icon="chevron-left"
-                onClick={() => previousStep?.(prevStepData)}
-              />
-              <Button
-                variation={ButtonVariation.PRIMARY}
-                type="submit"
-                text={getString('submit')}
-                rightIcon="chevron-right"
-              />
-            </Layout.Horizontal>
-          </Layout.Vertical>
-        </Form>
+                <Layout.Horizontal spacing="medium" className={css.saveBtn}>
+                  <Button
+                    variation={ButtonVariation.SECONDARY}
+                    text={getString('back')}
+                    icon="chevron-left"
+                    onClick={() => previousStep?.(prevStepData)}
+                  />
+                  <Button
+                    variation={ButtonVariation.PRIMARY}
+                    type="submit"
+                    text={getString('submit')}
+                    rightIcon="chevron-right"
+                  />
+                </Layout.Horizontal>
+              </Layout.Vertical>
+            </Form>
+          )
+        }}
       </Formik>
     </Layout.Vertical>
   )

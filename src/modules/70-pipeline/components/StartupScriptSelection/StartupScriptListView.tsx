@@ -18,7 +18,7 @@ import {
   Icon
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { FontVariation, Color } from '@harness/design-system'
+import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
@@ -31,13 +31,7 @@ import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonS
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
 import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
-import type {
-  ConnectorConfigDTO,
-  ConnectorInfoDTO,
-  PageConnectorResponse,
-  PipelineInfoConfig,
-  StageElementConfig
-} from 'services/cd-ng'
+import type { ConnectorConfigDTO, ConnectorInfoDTO, PageConnectorResponse, StageElementConfig } from 'services/cd-ng'
 import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
 import StepBitbucketAuthentication from '@connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
 import StepGitlabAuthentication from '@connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
@@ -68,7 +62,7 @@ import StartupScriptWizardHarnessStepTwo from './StartupScriptWizardHarnessStepT
 import css from './StartupScriptSelection.module.scss'
 
 interface StartupScriptListViewProps {
-  pipeline: PipelineInfoConfig
+  pipeline: any
   updateStage: (stage: StageElementConfig) => Promise<void>
   stage: StageElementWrapper | undefined
   isPropagating?: boolean

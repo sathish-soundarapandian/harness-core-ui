@@ -27,18 +27,17 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
+import { ConnectorMap } from './StartupScriptInterface.types'
+import { GitRepoName } from '../ManifestSelection/Manifesthelper'
 
 import css from './StartupScriptSelection.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-import { ConnectorMap } from './StartupScriptInterface.types'
-import { GitRepoName } from '../ManifestSelection/Manifesthelper'
-import GitRepositoryName from '../ManifestSelection/ManifestWizardSteps/GitRepositoryName/GitRepositoryName'
 
 interface StartupScriptWizardStepTwoProps {
   stepName: string
   expressions: string[]
   allowableTypes: MultiTypeInputType[]
-  // chage to StartupScriptConfig if it is present in services
+  // change to StartupScriptConfig or similar if it is present in services
   initialValues: any
   handleSubmit: (data: any) => void
   isReadonly?: boolean
@@ -86,7 +85,10 @@ function StartupScriptWizardStepTwo({
     if (specValues) {
       return {
         ...specValues,
-        paths: typeof specValues.paths === 'string' ? specValues.paths : specValues.paths[0]
+        paths:
+          typeof specValues.paths === 'string' || specValues.paths === undefined
+            ? specValues.paths
+            : specValues.paths[0]
       }
     }
     return {
