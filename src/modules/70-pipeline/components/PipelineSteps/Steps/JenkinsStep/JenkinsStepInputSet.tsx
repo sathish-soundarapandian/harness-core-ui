@@ -214,10 +214,12 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
               value={getJobDetailsValue()}
               selectItems={jobDetails}
               placeholder={
-                fetchingJobs
-                  ? 'Fetching jobs...'
-                  : fetchingJobsError?.message
-                  ? fetchingJobsError?.message
+                connectorRef && getMultiTypeFromValue(connectorRef) !== MultiTypeInputType.RUNTIME
+                  ? fetchingJobs
+                    ? 'Fetching jobs...'
+                    : fetchingJobsError?.message
+                    ? fetchingJobsError?.message
+                    : getString('select')
                   : getString('select')
               }
               selectWithSubmenuTypeInputProps={{

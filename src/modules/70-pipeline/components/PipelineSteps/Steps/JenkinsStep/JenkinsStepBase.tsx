@@ -299,10 +299,12 @@ function FormContent({
           name={'spec.jobName'}
           selectItems={jobDetails}
           placeholder={
-            fetchingJobs
-              ? 'Fetching jobs...'
-              : fetchingJobsError?.message
-              ? fetchingJobsError?.message
+            connectorRefFixedValue
+              ? fetchingJobs
+                ? 'Fetching jobs...'
+                : fetchingJobsError?.message
+                ? fetchingJobsError?.message
+                : getString('select')
               : getString('select')
           }
           selectWithSubmenuTypeInputProps={{
