@@ -177,7 +177,7 @@ function StartupScriptWizardStepOne({
                   />
                 </Layout.Horizontal>
 
-                {!isEmpty(formik.values.store) && formik.values.store !== 'Harness' ? (
+                {!isEmpty(formik.values.store) && !isHarness() ? (
                   <Layout.Horizontal
                     spacing={'medium'}
                     flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}

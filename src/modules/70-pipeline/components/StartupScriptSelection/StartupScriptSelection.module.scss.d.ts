@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly addStartupScript: string
+  readonly borderRadius: string
   readonly columnId: string
   readonly configureOptions: string
   readonly connectorContainer: string
@@ -23,6 +24,7 @@ declare const styles: {
   readonly saveBtn: string
   readonly startupScriptForm: string
   readonly startupScriptList: string
+  readonly startupScriptListButton: string
   readonly startupScriptLocation: string
   readonly startupScriptWizard: string
   readonly thumbnailSelect: string
