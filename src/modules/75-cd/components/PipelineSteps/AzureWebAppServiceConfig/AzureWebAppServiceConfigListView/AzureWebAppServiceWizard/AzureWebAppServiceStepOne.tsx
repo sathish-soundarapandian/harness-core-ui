@@ -34,9 +34,8 @@ import type { ConnectorSelectedValue } from '@connectors/components/ConnectorRef
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import type { ConnectorTypes } from '@cd/components/PipelineSteps/Common/Terraform/Editview/TerraformConfigFormHelper'
 import type { AzureWebAppServiceConfigWizardInitData } from './AzureWebAppServiceConfigWizard'
-import { ConnectorIcons, ConnectorMap } from '../AzureWebAppServiceListView'
+import { ConnectorIcons, ConnectorMap, ConnectorTypes, ConnectorLabelMap } from '../../AzureWebAppServiceConfig.types'
 
 import css from '../../AzureWebAppServiceConfig.module.scss'
 
@@ -75,8 +74,11 @@ function AzureWebAppServiceConfigWizardStepOne({
     return selectedStore
   }
 
-  const newConnectorLabel = `${getString('newLabel')} ${isValidConnectorStore()} ${getString('connector')}`
-
+  const newConnectorLabel =
+    isValidConnectorStore() &&
+    `${getString('newLabel')} ${getString(ConnectorLabelMap[selectedStore as ConnectorTypes])} ${getString(
+      'connector'
+    )}`
   const [canCreate] = usePermission({
     resource: {
       resourceType: ResourceType.CONNECTOR
@@ -158,7 +160,7 @@ function AzureWebAppServiceConfigWizardStepOne({
           <FormikForm>
             <Layout.Vertical
               flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
-              className={css.manifestForm}
+              className={css.serviceConfigForm}
             >
               <Layout.Vertical>
                 <Layout.Horizontal spacing="large">
@@ -225,7 +227,7 @@ function AzureWebAppServiceConfigWizardStepOne({
                         disabled={isReadonly || !canCreate}
                         id="new-application-connector"
                         text={newConnectorLabel}
-                        className={css.addNewManifest}
+                        className={css.addServiceConfig}
                         icon="plus"
                         iconProps={{ size: 12 }}
                         onClick={() => {
