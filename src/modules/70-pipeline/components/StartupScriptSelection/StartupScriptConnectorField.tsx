@@ -7,18 +7,14 @@
 
 import React from 'react'
 import { Container, Text, Icon, Color, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
-import css from '../ManifestSelection/ManifestSelection.module.scss'
+import css from './StartupScriptSelection.module.scss'
 
 interface ConnectorFieldPropType {
   connectorRef: string
   connectorColor: string
   connectorName: string | undefined
 }
-function ConnectorField({
-  connectorRef,
-  connectorName,
-  connectorColor
-}: ConnectorFieldPropType): React.ReactElement {
+function ConnectorField({ connectorRef, connectorName, connectorColor }: ConnectorFieldPropType): React.ReactElement {
   return (
     <div className={css.connectorNameField}>
       {!!connectorRef && (
