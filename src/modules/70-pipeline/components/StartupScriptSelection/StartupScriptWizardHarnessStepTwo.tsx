@@ -133,7 +133,7 @@ function StartupScriptWizardStepTwo({
                   </div>
                   <div className={cx(stepCss.formGroup, stepCss.md)}>
                     {formik.values.fileType === fileTypes.PlainText ? (
-                      <FileStoreInput name={'name'} />
+                      <FileStoreInput name={'file'} />
                     ) : (
                       <SecretInput
                         name={'secretFile'}

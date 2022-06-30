@@ -48,7 +48,7 @@
     .connectorName {
       display: inline-flex;
       color: var(--grey-500);
-      max-width: 236px;
+      max-width: 300px;
       text-overflow: ellipsis;
     }
   }
@@ -56,7 +56,7 @@
 
 .startupScriptList {
   display: grid;
-  grid-template-columns: 180px 230px 230px minmax(10px, 1fr) 80px;
+  grid-template-columns: 300px 300px auto;
   column-gap: var(--spacing-medium);
   align-items: center;
 
@@ -71,6 +71,10 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  .startupScriptListButton {
+    justify-content: flex-end;
   }
 }
 
@@ -119,4 +123,8 @@
 .saveBtn {
   position: relative;
   bottom: 0;
+}
+
+.borderRadius {
+  border-radius: 4px;
 }
