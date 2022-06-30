@@ -27,14 +27,9 @@ import { isEmpty, set } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
-import type {
-  ConnectorConfigDTO,
-  ConnectorInfoDTO,
-  PageConnectorResponse,
-  PipelineInfoConfig,
-  ServiceDefinition,
-  StageElementConfig
-} from 'services/cd-ng'
+import type { ConnectorConfigDTO, ConnectorInfoDTO, PageConnectorResponse, ServiceDefinition } from 'services/cd-ng'
+import type { PipelineInfoConfig, StageElementConfig } from 'services/pipeline-ng'
+
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
@@ -64,6 +59,7 @@ import { getConnectorNameFromValue, getStatus } from '@pipeline/components/Pipel
 import { AzureWebAppServiceConfigWizard } from '@cd/components/PipelineSteps/AzureWebAppServiceConfig/AzureWebAppServiceConfigListView/AzureWebAppServiceWizard/AzureWebAppServiceConfigWizard'
 import AzureWebAppServiceStepTwo from '@cd/components/PipelineSteps/AzureWebAppServiceConfig/AzureWebAppServiceConfigListView/AzureWebAppServiceWizard/AzureWebAppServiceStepTwo'
 import ConnectorField from './AzureWebAppServiceConnectorField'
+import { ConnectorIcons, ConnectorMap } from './AzureWebAppServiceWizard/AzureWebAppServiceStepOne'
 import css from '../AzureWebAppServiceConfig.module.scss'
 
 export enum ModalViewOption {
@@ -71,24 +67,8 @@ export enum ModalViewOption {
   CONNECTIONSTRING = 1
 }
 
-export const ConnectorMap: Record<string, ConnectorInfoDTO['type']> = {
-  Git: Connectors.GIT,
-  Github: Connectors.GITHUB,
-  GitLab: Connectors.GITLAB,
-  Bitbucket: Connectors.BITBUCKET,
-  Artifactory: Connectors.ARTIFACTORY
-}
-
 export const AllowedTypes = ['Git', 'Github', 'GitLab', 'Bitbucket', 'Artifactory']
 export type ConnectorTypes = 'Git' | 'Github' | 'GitLab' | 'Bitbucket' | 'Artifactory'
-
-export const ConnectorIcons: any = {
-  Git: 'service-github',
-  Github: 'github',
-  GitLab: 'service-gotlab',
-  Bitbucket: 'bitbucket',
-  Artifactory: 'service-artifactory'
-}
 interface ApplicationSettingsLastStepProps {
   key: string
   name: string

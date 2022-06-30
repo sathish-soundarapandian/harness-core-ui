@@ -25,20 +25,36 @@ import { FontVariation } from '@harness/design-system'
 import { isEmpty } from 'lodash-es'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useStrings } from 'framework/strings'
-import type { ConnectorConfigDTO } from 'services/cd-ng'
+import type { ConnectorConfigDTO, ConnectorInfoDTO } from 'services/cd-ng'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { usePermission } from '@rbac/hooks/usePermission'
+import { Connectors } from '@connectors/constants'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { ConnectorTypes } from '@cd/components/PipelineSteps/Common/Terraform/Editview/TerraformConfigFormHelper'
 import type { AzureWebAppServiceConfigWizardInitData } from './AzureWebAppServiceConfigWizard'
-import { ConnectorIcons, ConnectorMap } from '../AzureWebAppServiceListView'
 
 import css from '../../AzureWebAppServiceConfig.module.scss'
+
+export const ConnectorMap: Record<string, ConnectorInfoDTO['type']> = {
+  Git: Connectors.GIT,
+  Github: Connectors.GITHUB,
+  GitLab: Connectors.GITLAB,
+  Bitbucket: Connectors.BITBUCKET,
+  Artifactory: Connectors.ARTIFACTORY
+}
+
+export const ConnectorIcons: any = {
+  Git: 'service-github',
+  Github: 'github',
+  GitLab: 'service-gotlab',
+  Bitbucket: 'bitbucket',
+  Artifactory: 'service-artifactory'
+}
 
 interface ApplicationStorePropType {
   stepName: string
