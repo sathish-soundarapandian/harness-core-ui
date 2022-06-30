@@ -27,7 +27,8 @@ import {
   loadBalancersPromise,
   tagsPromise,
   autoScalingGroupsPromise,
-  vpcsPromise
+  vpcsPromise,
+  AwsVPC
 } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { useToaster } from '@common/exports'
@@ -66,7 +67,7 @@ interface SshWinRmAwsInfrastructureSpecEditableProps {
 }
 
 interface SshWinRmAwsInfrastructureUI extends SshWinRmAwsInfrastructure {
-  sshKey: SecretReferenceInterface | void
+  sshKey: SecretReferenceInterface
 }
 
 const AutoScallingGroup = {
@@ -259,7 +260,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
         }
       })
       if (response.status === 'SUCCESS') {
-        const vpcsOptions = get(response, 'data', []).map(vpcEntry => ({
+        const vpcsOptions = get(response, 'data', []).map((vpcEntry: AwsVPC) => ({
           value: get(vpcEntry, 'id', ''),
           label: get(vpcEntry, 'name', '')
         }))
@@ -279,13 +280,17 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
   return (
     <Layout.Vertical spacing="medium">
       <>
-        <Formik<Partial<SshWinRmAwsInfrastructureUI>>
+        <Formik<SshWinRmAwsInfrastructureUI>
           formName="sshWinRmAWSInfra"
-          initialValues={{ ...initialValues }}
+          initialValues={{ ...initialValues } as SshWinRmAwsInfrastructureUI}
           validationSchema={getValidationSchema(getString) as Partial<SshWinRmAwsInfrastructureUI>}
           validate={value => {
             const credentialsRef = `${
-              value.sshKey?.projectIdentifier ? '' : value.sshKey?.orgIdentifier ? 'org.' : 'account.'
+              get(value, 'sshKey.projectIdentifier', '')
+                ? ''
+                : get(value, 'sshKey.orgIdentifier', '')
+                ? 'org.'
+                : 'account.'
             }${value.identifier}`
             const data: Partial<SshWinRmAwsInfrastructure> = {
               connectorRef: get(value, 'connectorRef.value', ''),
@@ -482,13 +487,18 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
   )
 }
 
+interface SshWinRmAwsInfrastructureStep extends SshWinRmAwsInfrastructure {
+  name?: string
+  identifier?: string
+}
+
 export const ConnectorRefRegex = /^.+stage\.spec\.infrastructure\.infrastructureDefinition\.spec\.connectorRef$/
 export const SshKeyRegex = /^.+stage\.spec\.infrastructure\.infrastructureDefinition\.spec\.sshKeyRef$/
-export class SshWinRmAwsInfrastructureSpec extends PipelineStep<SshWinRmAwsInfrastructure> {
+export class SshWinRmAwsInfrastructureSpec extends PipelineStep<SshWinRmAwsInfrastructureStep> {
   /* istanbul ignore next */
   protected type = StepType.SshWinRmAws
   /* istanbul ignore next */
-  protected defaultValues: Partial<SshWinRmAwsInfrastructure> = {
+  protected defaultValues: SshWinRmAwsInfrastructure = {
     autoScalingGroupName: '',
     awsInstanceFilter: { tags: {}, vpcs: [] },
     connectorRef: '',
