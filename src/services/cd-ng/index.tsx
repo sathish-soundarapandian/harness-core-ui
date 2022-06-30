@@ -1226,11 +1226,8 @@ export type AzureWebAppInfrastructure = Infrastructure & {
   deploymentSlot: string
   resourceGroup: string
   subscriptionId: string
-<<<<<<< HEAD
-=======
   targetSlot?: string
   webApp: string
->>>>>>> develop
 }
 
 export interface AzureWebAppNamesDTO {
@@ -1241,30 +1238,10 @@ export type AzureWebAppRollbackStepInfo = StepSpecType & {
   delegateSelectors?: string[]
 }
 
-<<<<<<< HEAD
-export type AzureWebAppSlotDeploymentStepInfo = StepSpecType & {
-  delegateSelectors?: string[]
-}
-
-export type AzureWebAppSwapSlotStepInfo = StepSpecType & {
-  delegateSelectors?: string[]
-  targetSlot?: string
-}
-
-export type AzureWebAppTrafficShiftStepInfo = StepSpecType & {
-  delegateSelectors?: string[]
-  traffic?: string
-}
-
-export interface BarrierInfoConfig {
-  identifier: string
-  name: string
-=======
 export type AzureWebAppServiceSpec = ServiceSpec & {
   applicationSettings?: StoreConfigWrapper
   connectionStrings?: StoreConfigWrapper
   startupScript?: StoreConfigWrapper
->>>>>>> develop
 }
 
 export type AzureWebAppSlotDeploymentStepInfo = StepSpecType & {
@@ -1587,13 +1564,10 @@ export interface ClusterBatchRequest {
   searchTerm?: string
 }
 
-<<<<<<< HEAD
-=======
 export interface ClusterBatchResponse {
   linked?: number
 }
 
->>>>>>> develop
 export interface ClusterInternal {
   name?: string
 }
@@ -1613,39 +1587,6 @@ export interface ClusterResponse {
   projectIdentifier?: string
 }
 
-<<<<<<< HEAD
-export interface CodeBase {
-  build: Build
-  connectorRef: string
-  depth?: number
-  prCloneStrategy?: 'MergeCommit' | 'SourceBranch'
-  projectName?: string
-  repoName?: string
-  resources?: ContainerResource
-  sslVerify?: boolean
-}
-
-export type CommandStepInfo = StepSpecType & {
-  commandUnits?: CommandUnitWrapper[]
-  delegateSelectors?: string[]
-  environmentVariables?: NGVariable[]
-  metadata?: string
-  onDelegate: boolean
-}
-
-export interface CommandUnitBaseSpec {
-  type?: string
-}
-
-export interface CommandUnitWrapper {
-  commandUnit?: StepCommandUnit
-}
-
-export interface Condition {
-  key: string
-  operator: 'equals' | 'not equals' | 'in' | 'not in'
-  value?: string
-=======
 export type CommandStepInfo = StepSpecType & {
   commandUnits?: CommandUnitWrapper[]
   delegateSelectors?: string[]
@@ -1661,7 +1602,6 @@ export interface CommandUnitBaseSpec {
 
 export interface CommandUnitWrapper {
   commandUnit?: StepCommandUnit
->>>>>>> develop
 }
 
 export interface ConfigFile {
@@ -2649,11 +2589,7 @@ export interface EntityDetail {
   name?: string
   type?:
     | 'CreatePR'
-<<<<<<< HEAD
-    | 'MergePR'
-=======
     | 'GITOPS_MERGE_PR'
->>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -2736,18 +2672,11 @@ export interface EntityDetail {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
-<<<<<<< HEAD
-    | 'AzureSlotDeployment'
-    | 'AzureTrafficShift'
-    | 'AzureSwapSlot'
-    | 'AzureWebAppRollback'
-=======
     | 'AZURE_SLOT_DEPLOYMENT_STEP'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
->>>>>>> develop
 }
 
 export interface EntityGitDetails {
@@ -3752,10 +3681,7 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'AZURE_TRAFFIC_SHIFT'
     | 'AZURE_SWAP_SLOT'
     | 'AZURE_WEBAPP_ROLLBACK'
-<<<<<<< HEAD
-=======
     | 'JENKINS_BUILD'
->>>>>>> develop
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -3820,10 +3746,7 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'AZURE_TRAFFIC_SHIFT'
     | 'AZURE_SWAP_SLOT'
     | 'AZURE_WEBAPP_ROLLBACK'
-<<<<<<< HEAD
-=======
     | 'JENKINS_BUILD'
->>>>>>> develop
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -3890,10 +3813,7 @@ export interface FeatureRestrictionDetailsDTO {
     | 'AZURE_TRAFFIC_SHIFT'
     | 'AZURE_SWAP_SLOT'
     | 'AZURE_WEBAPP_ROLLBACK'
-<<<<<<< HEAD
-=======
     | 'JENKINS_BUILD'
->>>>>>> develop
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -3968,10 +3888,7 @@ export interface FeatureRestrictionMetadataDTO {
     | 'AZURE_TRAFFIC_SHIFT'
     | 'AZURE_SWAP_SLOT'
     | 'AZURE_WEBAPP_ROLLBACK'
-<<<<<<< HEAD
-=======
     | 'JENKINS_BUILD'
->>>>>>> develop
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -4245,11 +4162,7 @@ export interface GitEnabledDTO {
 export interface GitEntityBranchFilterSummaryProperties {
   entityTypes?: (
     | 'CreatePR'
-<<<<<<< HEAD
-    | 'MergePR'
-=======
     | 'GITOPS_MERGE_PR'
->>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -4332,18 +4245,11 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
-<<<<<<< HEAD
-    | 'AzureSlotDeployment'
-    | 'AzureTrafficShift'
-    | 'AzureSwapSlot'
-    | 'AzureWebAppRollback'
-=======
     | 'AZURE_SLOT_DEPLOYMENT_STEP'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
->>>>>>> develop
   )[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
   searchTerm?: string
@@ -4352,11 +4258,7 @@ export interface GitEntityBranchFilterSummaryProperties {
 export interface GitEntityFilterProperties {
   entityTypes?: (
     | 'CreatePR'
-<<<<<<< HEAD
-    | 'MergePR'
-=======
     | 'GITOPS_MERGE_PR'
->>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -4439,18 +4341,11 @@ export interface GitEntityFilterProperties {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
-<<<<<<< HEAD
-    | 'AzureSlotDeployment'
-    | 'AzureTrafficShift'
-    | 'AzureSwapSlot'
-    | 'AzureWebAppRollback'
-=======
     | 'AZURE_SLOT_DEPLOYMENT_STEP'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
->>>>>>> develop
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
@@ -4492,11 +4387,7 @@ export interface GitFullSyncEntityInfoDTO {
   branch?: string
   entityType?:
     | 'CreatePR'
-<<<<<<< HEAD
-    | 'MergePR'
-=======
     | 'GITOPS_MERGE_PR'
->>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -4579,18 +4470,11 @@ export interface GitFullSyncEntityInfoDTO {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
-<<<<<<< HEAD
-    | 'AzureSlotDeployment'
-    | 'AzureTrafficShift'
-    | 'AzureSwapSlot'
-    | 'AzureWebAppRollback'
-=======
     | 'AZURE_SLOT_DEPLOYMENT_STEP'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
->>>>>>> develop
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -4607,11 +4491,7 @@ export interface GitFullSyncEntityInfoDTO {
 export interface GitFullSyncEntityInfoFilterKeys {
   entityTypes?: (
     | 'CreatePR'
-<<<<<<< HEAD
-    | 'MergePR'
-=======
     | 'GITOPS_MERGE_PR'
->>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -4694,18 +4574,11 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
-<<<<<<< HEAD
-    | 'AzureSlotDeployment'
-    | 'AzureTrafficShift'
-    | 'AzureSwapSlot'
-    | 'AzureWebAppRollback'
-=======
     | 'AZURE_SLOT_DEPLOYMENT_STEP'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
->>>>>>> develop
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -4800,11 +4673,7 @@ export interface GitSyncEntityDTO {
   entityReference?: EntityReference
   entityType?:
     | 'CreatePR'
-<<<<<<< HEAD
-    | 'MergePR'
-=======
     | 'GITOPS_MERGE_PR'
->>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -4887,18 +4756,11 @@ export interface GitSyncEntityDTO {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
-<<<<<<< HEAD
-    | 'AzureSlotDeployment'
-    | 'AzureTrafficShift'
-    | 'AzureSwapSlot'
-    | 'AzureWebAppRollback'
-=======
     | 'AZURE_SLOT_DEPLOYMENT_STEP'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
->>>>>>> develop
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -4909,11 +4771,7 @@ export interface GitSyncEntityListDTO {
   count?: number
   entityType?:
     | 'CreatePR'
-<<<<<<< HEAD
-    | 'MergePR'
-=======
     | 'GITOPS_MERGE_PR'
->>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -4996,18 +4854,11 @@ export interface GitSyncEntityListDTO {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
-<<<<<<< HEAD
-    | 'AzureSlotDeployment'
-    | 'AzureTrafficShift'
-    | 'AzureSwapSlot'
-    | 'AzureWebAppRollback'
-=======
     | 'AZURE_SLOT_DEPLOYMENT_STEP'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
->>>>>>> develop
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -5035,11 +4886,7 @@ export interface GitSyncErrorDTO {
   createdAt?: number
   entityType?:
     | 'CreatePR'
-<<<<<<< HEAD
-    | 'MergePR'
-=======
     | 'GITOPS_MERGE_PR'
->>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -5122,18 +4969,11 @@ export interface GitSyncErrorDTO {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
-<<<<<<< HEAD
-    | 'AzureSlotDeployment'
-    | 'AzureTrafficShift'
-    | 'AzureSwapSlot'
-    | 'AzureWebAppRollback'
-=======
     | 'AZURE_SLOT_DEPLOYMENT_STEP'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
->>>>>>> develop
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -5330,16 +5170,6 @@ export interface GovernanceMetadata {
   [key: string]: any
 }
 
-<<<<<<< HEAD
-export type HarnessApprovalStepInfo = StepSpecType & {
-  approvalMessage?: string
-  approverInputs?: ApproverInputInfo[]
-  approvers: Approvers
-  includePipelineExecutionHistory: boolean
-}
-
-=======
->>>>>>> develop
 export interface HarnessForConfig {
   iteration?: number
   maxConcurrency?: number
@@ -6407,11 +6237,7 @@ export type MarkAsSuccessFailureActionConfig = FailureStrategyActionConfig & {
 }
 
 export type MatrixConfig = MatrixConfigInterface & {
-<<<<<<< HEAD
-  exclude?: ExcludeConfig[]
-=======
   exclude?: ParameterFieldListExcludeConfig
->>>>>>> develop
   maxConcurrency?: number
 }
 
@@ -7591,11 +7417,7 @@ export interface ReferencedByDTO {
   name?: string
   type?:
     | 'CreatePR'
-<<<<<<< HEAD
-    | 'MergePR'
-=======
     | 'GITOPS_MERGE_PR'
->>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -7678,18 +7500,11 @@ export interface ReferencedByDTO {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
-<<<<<<< HEAD
-    | 'AzureSlotDeployment'
-    | 'AzureTrafficShift'
-    | 'AzureSwapSlot'
-    | 'AzureWebAppRollback'
-=======
     | 'AZURE_SLOT_DEPLOYMENT_STEP'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
->>>>>>> develop
 }
 
 export type ReleaseRepoManifest = ManifestAttributes & {
@@ -8411,8 +8226,6 @@ export interface ResponseListAwsVPC {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-<<<<<<< HEAD
-=======
 export interface ResponseListBucketResponse {
   correlationId?: string
   data?: BucketResponse[]
@@ -8420,7 +8233,6 @@ export interface ResponseListBucketResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
->>>>>>> develop
 export interface ResponseListBuildDetails {
   correlationId?: string
   data?: BuildDetails[]
@@ -8439,11 +8251,7 @@ export interface ResponseListEntityType {
   correlationId?: string
   data?: (
     | 'CreatePR'
-<<<<<<< HEAD
-    | 'MergePR'
-=======
     | 'GITOPS_MERGE_PR'
->>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -8526,18 +8334,11 @@ export interface ResponseListEntityType {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
-<<<<<<< HEAD
-    | 'AzureSlotDeployment'
-    | 'AzureTrafficShift'
-    | 'AzureSwapSlot'
-    | 'AzureWebAppRollback'
-=======
     | 'AZURE_SLOT_DEPLOYMENT_STEP'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
->>>>>>> develop
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -8621,8 +8422,6 @@ export interface ResponseListHostValidationDTO {
 }
 
 export interface ResponseListJiraProjectBasicNG {
-<<<<<<< HEAD
-=======
   correlationId?: string
   data?: JiraProjectBasicNG[]
   metaData?: { [key: string]: any }
@@ -8630,7 +8429,6 @@ export interface ResponseListJiraProjectBasicNG {
 }
 
 export interface ResponseListJiraStatusNG {
->>>>>>> develop
   correlationId?: string
   data?: JiraStatusNG[]
   metaData?: { [key: string]: any }
@@ -10943,20 +10741,6 @@ export interface ShellScriptSourceWrapper {
   type: string
 }
 
-<<<<<<< HEAD
-export type ShellScriptStepInfo = StepSpecType & {
-  delegateSelectors?: string[]
-  environmentVariables?: NGVariable[]
-  executionTarget?: ExecutionTarget
-  metadata?: string
-  onDelegate: boolean
-  outputVariables?: NGVariable[]
-  shell: 'Bash'
-  source: ShellScriptSourceWrapper
-}
-
-=======
->>>>>>> develop
 export interface SidecarArtifact {
   identifier: string
   spec: ArtifactConfig
@@ -11171,10 +10955,7 @@ export interface StepData {
     | 'ServerlessAwsLambdaDeploy'
     | 'ServerlessAwsLambdaRollback'
     | 'Command'
-<<<<<<< HEAD
-=======
     | 'JenkinsBuild'
->>>>>>> develop
 }
 
 export interface StepElementConfig {
@@ -11307,11 +11088,6 @@ export type TGTKeyTabFilePathSpecDTO = TGTGenerationSpecDTO & {
 
 export type TGTPasswordSpecDTO = TGTGenerationSpecDTO & {
   password?: string
-}
-
-export interface TailFilePattern {
-  tailFile?: ParameterFieldString
-  tailPattern?: ParameterFieldString
 }
 
 export interface TailFilePattern {
@@ -12048,9 +11824,9 @@ export type ScimUserRequestBody = ScimUser
 
 export type ScopingRuleDetailsNgArrayRequestBody = ScopingRuleDetailsNg[]
 
-export type SecretRequestWrapperRequestBody = SecretRequestWrapper
+export type SecretRequestWrapperRequestBody = void
 
-export type SecretRequestWrapper2RequestBody = void
+export type SecretRequestWrapper2RequestBody = SecretRequestWrapper
 
 export type ServiceAccountDTORequestBody = ServiceAccountDTO
 
@@ -12080,7 +11856,7 @@ export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody = string
 
-export type SubscribeBodyRequestBody = string[]
+export type ProcessPollingResultNgBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -12562,11 +12338,7 @@ export interface ListActivitiesQueryParams {
   status?: 'SUCCESS' | 'FAILED'
   referredEntityType:
     | 'CreatePR'
-<<<<<<< HEAD
-    | 'MergePR'
-=======
     | 'GITOPS_MERGE_PR'
->>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -12649,15 +12421,6 @@ export interface ListActivitiesQueryParams {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
-<<<<<<< HEAD
-    | 'AzureSlotDeployment'
-    | 'AzureTrafficShift'
-    | 'AzureSwapSlot'
-    | 'AzureWebAppRollback'
-  referredByEntityType?:
-    | 'CreatePR'
-    | 'MergePR'
-=======
     | 'AZURE_SLOT_DEPLOYMENT_STEP'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
@@ -12666,7 +12429,6 @@ export interface ListActivitiesQueryParams {
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
->>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -12749,18 +12511,11 @@ export interface ListActivitiesQueryParams {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
-<<<<<<< HEAD
-    | 'AzureSlotDeployment'
-    | 'AzureTrafficShift'
-    | 'AzureSwapSlot'
-    | 'AzureWebAppRollback'
-=======
     | 'AZURE_SLOT_DEPLOYMENT_STEP'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
->>>>>>> develop
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -12867,11 +12622,7 @@ export interface GetActivitiesSummaryQueryParams {
   timeGroupType: 'HOUR' | 'DAY' | 'WEEK'
   referredEntityType:
     | 'CreatePR'
-<<<<<<< HEAD
-    | 'MergePR'
-=======
     | 'GITOPS_MERGE_PR'
->>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -12954,15 +12705,6 @@ export interface GetActivitiesSummaryQueryParams {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
-<<<<<<< HEAD
-    | 'AzureSlotDeployment'
-    | 'AzureTrafficShift'
-    | 'AzureSwapSlot'
-    | 'AzureWebAppRollback'
-  referredByEntityType?:
-    | 'CreatePR'
-    | 'MergePR'
-=======
     | 'AZURE_SLOT_DEPLOYMENT_STEP'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
@@ -12971,7 +12713,6 @@ export interface GetActivitiesSummaryQueryParams {
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
->>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -13054,18 +12795,11 @@ export interface GetActivitiesSummaryQueryParams {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
-<<<<<<< HEAD
-    | 'AzureSlotDeployment'
-    | 'AzureTrafficShift'
-    | 'AzureSwapSlot'
-    | 'AzureWebAppRollback'
-=======
     | 'AZURE_SLOT_DEPLOYMENT_STEP'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
->>>>>>> develop
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -22645,10 +22379,7 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'AZURE_TRAFFIC_SHIFT'
     | 'AZURE_SWAP_SLOT'
     | 'AZURE_WEBAPP_ROLLBACK'
-<<<<<<< HEAD
-=======
     | 'JENKINS_BUILD'
->>>>>>> develop
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -22783,10 +22514,7 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'AZURE_TRAFFIC_SHIFT'
       | 'AZURE_SWAP_SLOT'
       | 'AZURE_WEBAPP_ROLLBACK'
-<<<<<<< HEAD
-=======
       | 'JENKINS_BUILD'
->>>>>>> develop
       | 'SECURITY'
       | 'DEVELOPERS'
       | 'MONTHLY_ACTIVE_USERS'
@@ -22810,11 +22538,7 @@ export interface ListReferredByEntitiesQueryParams {
   identifier?: string
   referredEntityType?:
     | 'CreatePR'
-<<<<<<< HEAD
-    | 'MergePR'
-=======
     | 'GITOPS_MERGE_PR'
->>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -22897,18 +22621,11 @@ export interface ListReferredByEntitiesQueryParams {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
-<<<<<<< HEAD
-    | 'AzureSlotDeployment'
-    | 'AzureTrafficShift'
-    | 'AzureSwapSlot'
-    | 'AzureWebAppRollback'
-=======
     | 'AZURE_SLOT_DEPLOYMENT_STEP'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
->>>>>>> develop
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -25860,11 +25577,7 @@ export interface GetReferencedByQueryParams {
   projectIdentifier?: string
   entityType?:
     | 'CreatePR'
-<<<<<<< HEAD
-    | 'MergePR'
-=======
     | 'GITOPS_MERGE_PR'
->>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -25947,18 +25660,11 @@ export interface GetReferencedByQueryParams {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
-<<<<<<< HEAD
-    | 'AzureSlotDeployment'
-    | 'AzureTrafficShift'
-    | 'AzureSwapSlot'
-    | 'AzureWebAppRollback'
-=======
     | 'AZURE_SLOT_DEPLOYMENT_STEP'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
->>>>>>> develop
   searchTerm?: string
 }
 
@@ -27224,11 +26930,7 @@ export interface ListGitSyncEntitiesByTypeQueryParams {
 export interface ListGitSyncEntitiesByTypePathParams {
   entityType:
     | 'CreatePR'
-<<<<<<< HEAD
-    | 'MergePR'
-=======
     | 'GITOPS_MERGE_PR'
->>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -27311,18 +27013,11 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
-<<<<<<< HEAD
-    | 'AzureSlotDeployment'
-    | 'AzureTrafficShift'
-    | 'AzureSwapSlot'
-    | 'AzureWebAppRollback'
-=======
     | 'AZURE_SLOT_DEPLOYMENT_STEP'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
->>>>>>> develop
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -27393,11 +27088,7 @@ export const listGitSyncEntitiesByTypePromise = (
   > & {
     entityType:
       | 'CreatePR'
-<<<<<<< HEAD
-      | 'MergePR'
-=======
       | 'GITOPS_MERGE_PR'
->>>>>>> develop
       | 'Projects'
       | 'Pipelines'
       | 'PipelineSteps'
@@ -27480,18 +27171,11 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'Infrastructure'
       | 'Command'
       | 'StrategyNode'
-<<<<<<< HEAD
-      | 'AzureSlotDeployment'
-      | 'AzureTrafficShift'
-      | 'AzureSwapSlot'
-      | 'AzureWebAppRollback'
-=======
       | 'AZURE_SLOT_DEPLOYMENT_STEP'
       | 'AzureTrafficShift'
       | 'AzureSwapSlot'
       | 'AzureWebAppRollback'
       | 'JenkinsBuild'
->>>>>>> develop
   },
   signal?: RequestInit['signal']
 ) =>
@@ -32051,11 +31735,7 @@ export interface GetStepYamlSchemaQueryParams {
   scope?: 'account' | 'org' | 'project' | 'unknown'
   entityType?:
     | 'CreatePR'
-<<<<<<< HEAD
-    | 'MergePR'
-=======
     | 'GITOPS_MERGE_PR'
->>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -32138,18 +31818,11 @@ export interface GetStepYamlSchemaQueryParams {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
-<<<<<<< HEAD
-    | 'AzureSlotDeployment'
-    | 'AzureTrafficShift'
-    | 'AzureSwapSlot'
-    | 'AzureWebAppRollback'
-=======
     | 'AZURE_SLOT_DEPLOYMENT_STEP'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
->>>>>>> develop
   yamlGroup?: string
 }
 
@@ -32280,11 +31953,7 @@ export interface GetEntityYamlSchemaQueryParams {
   orgIdentifier?: string
   entityType?:
     | 'CreatePR'
-<<<<<<< HEAD
-    | 'MergePR'
-=======
     | 'GITOPS_MERGE_PR'
->>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -32367,18 +32036,11 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
-<<<<<<< HEAD
-    | 'AzureSlotDeployment'
-    | 'AzureTrafficShift'
-    | 'AzureSwapSlot'
-    | 'AzureWebAppRollback'
-=======
     | 'AZURE_SLOT_DEPLOYMENT_STEP'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
->>>>>>> develop
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -32825,7 +32487,7 @@ export type ProcessPollingResultNgProps = Omit<
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >,
   'path' | 'verb'
@@ -32837,7 +32499,7 @@ export const ProcessPollingResultNg = ({ perpetualTaskId, ...props }: ProcessPol
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >
     verb="POST"
@@ -32852,7 +32514,7 @@ export type UseProcessPollingResultNgProps = Omit<
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >,
   'path' | 'verb'
@@ -32864,7 +32526,7 @@ export const useProcessPollingResultNg = ({ perpetualTaskId, ...props }: UseProc
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >(
     'POST',
@@ -32880,7 +32542,7 @@ export const processPollingResultNgPromise = (
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   > & { perpetualTaskId: string },
   signal?: RequestInit['signal']
@@ -32889,17 +32551,17 @@ export const processPollingResultNgPromise = (
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >('POST', getConfig('ng/api'), `/polling/delegate-response/${perpetualTaskId}`, props, signal)
 
 export type SubscribeProps = Omit<
-  MutateProps<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  MutateProps<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const Subscribe = (props: SubscribeProps) => (
-  <Mutate<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>
+  <Mutate<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>
     verb="POST"
     path={`/polling/subscribe`}
     base={getConfig('ng/api')}
@@ -32908,22 +32570,28 @@ export const Subscribe = (props: SubscribeProps) => (
 )
 
 export type UseSubscribeProps = Omit<
-  UseMutateProps<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  UseMutateProps<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const useSubscribe = (props: UseSubscribeProps) =>
-  useMutate<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>(
+  useMutate<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
     'POST',
     `/polling/subscribe`,
     { base: getConfig('ng/api'), ...props }
   )
 
 export const subscribePromise = (
-  props: MutateUsingFetchProps<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  props: MutateUsingFetchProps<
+    ResponsePollingResponseDTO,
+    Failure | Error,
+    void,
+    ProcessPollingResultNgBodyRequestBody,
+    void
+  >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>(
+  mutateUsingFetch<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
     'POST',
     getConfig('ng/api'),
     `/polling/subscribe`,
@@ -32932,12 +32600,12 @@ export const subscribePromise = (
   )
 
 export type UnsubscribeProps = Omit<
-  MutateProps<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  MutateProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const Unsubscribe = (props: UnsubscribeProps) => (
-  <Mutate<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>
+  <Mutate<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>
     verb="POST"
     path={`/polling/unsubscribe`}
     base={getConfig('ng/api')}
@@ -32946,21 +32614,22 @@ export const Unsubscribe = (props: UnsubscribeProps) => (
 )
 
 export type UseUnsubscribeProps = Omit<
-  UseMutateProps<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  UseMutateProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const useUnsubscribe = (props: UseUnsubscribeProps) =>
-  useMutate<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>('POST', `/polling/unsubscribe`, {
-    base: getConfig('ng/api'),
-    ...props
-  })
+  useMutate<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
+    'POST',
+    `/polling/unsubscribe`,
+    { base: getConfig('ng/api'), ...props }
+  )
 
 export const unsubscribePromise = (
-  props: MutateUsingFetchProps<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>,
+  props: MutateUsingFetchProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>(
+  mutateUsingFetch<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
     'POST',
     getConfig('ng/api'),
     `/polling/unsubscribe`,
@@ -36542,11 +36211,7 @@ export interface GetRuntimeInputsServiceEntityPathParams {
 
 export type GetRuntimeInputsServiceEntityProps = Omit<
   GetProps<
-<<<<<<< HEAD
-    ResponseString,
-=======
     ResponseNGEntityTemplateResponseDTO,
->>>>>>> develop
     Failure | Error,
     GetRuntimeInputsServiceEntityQueryParams,
     GetRuntimeInputsServiceEntityPathParams
@@ -36560,11 +36225,7 @@ export type GetRuntimeInputsServiceEntityProps = Omit<
  */
 export const GetRuntimeInputsServiceEntity = ({ serviceIdentifier, ...props }: GetRuntimeInputsServiceEntityProps) => (
   <Get<
-<<<<<<< HEAD
-    ResponseString,
-=======
     ResponseNGEntityTemplateResponseDTO,
->>>>>>> develop
     Failure | Error,
     GetRuntimeInputsServiceEntityQueryParams,
     GetRuntimeInputsServiceEntityPathParams
@@ -36577,11 +36238,7 @@ export const GetRuntimeInputsServiceEntity = ({ serviceIdentifier, ...props }: G
 
 export type UseGetRuntimeInputsServiceEntityProps = Omit<
   UseGetProps<
-<<<<<<< HEAD
-    ResponseString,
-=======
     ResponseNGEntityTemplateResponseDTO,
->>>>>>> develop
     Failure | Error,
     GetRuntimeInputsServiceEntityQueryParams,
     GetRuntimeInputsServiceEntityPathParams
@@ -36598,11 +36255,7 @@ export const useGetRuntimeInputsServiceEntity = ({
   ...props
 }: UseGetRuntimeInputsServiceEntityProps) =>
   useGet<
-<<<<<<< HEAD
-    ResponseString,
-=======
     ResponseNGEntityTemplateResponseDTO,
->>>>>>> develop
     Failure | Error,
     GetRuntimeInputsServiceEntityQueryParams,
     GetRuntimeInputsServiceEntityPathParams
@@ -36620,11 +36273,7 @@ export const getRuntimeInputsServiceEntityPromise = (
     serviceIdentifier,
     ...props
   }: GetUsingFetchProps<
-<<<<<<< HEAD
-    ResponseString,
-=======
     ResponseNGEntityTemplateResponseDTO,
->>>>>>> develop
     Failure | Error,
     GetRuntimeInputsServiceEntityQueryParams,
     GetRuntimeInputsServiceEntityPathParams
@@ -36632,11 +36281,7 @@ export const getRuntimeInputsServiceEntityPromise = (
   signal?: RequestInit['signal']
 ) =>
   getUsingFetch<
-<<<<<<< HEAD
-    ResponseString,
-=======
     ResponseNGEntityTemplateResponseDTO,
->>>>>>> develop
     Failure | Error,
     GetRuntimeInputsServiceEntityQueryParams,
     GetRuntimeInputsServiceEntityPathParams
@@ -42243,7 +41888,7 @@ export type PostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -42253,7 +41898,7 @@ export type PostSecretProps = Omit<
  * Create a secret
  */
 export const PostSecret = (props: PostSecretProps) => (
-  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapperRequestBody, void>
+  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapper2RequestBody, void>
     verb="POST"
     path={`/v2/secrets`}
     base={getConfig('ng/api')}
@@ -42266,7 +41911,7 @@ export type UsePostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -42280,7 +41925,7 @@ export const usePostSecret = (props: UsePostSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', `/v2/secrets`, { base: getConfig('ng/api'), ...props })
 
@@ -42292,7 +41937,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -42301,7 +41946,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets`, props, signal)
 
@@ -42694,7 +42339,7 @@ export type PostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -42708,7 +42353,7 @@ export const PostSecretViaYaml = (props: PostSecretViaYamlProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >
     verb="POST"
@@ -42723,7 +42368,7 @@ export type UsePostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -42737,7 +42382,7 @@ export const usePostSecretViaYaml = (props: UsePostSecretViaYamlProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', `/v2/secrets/yaml`, { base: getConfig('ng/api'), ...props })
 
@@ -42749,7 +42394,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -42758,7 +42403,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets/yaml`, props, signal)
 
@@ -42893,7 +42538,7 @@ export type PutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -42908,7 +42553,7 @@ export const PutSecret = ({ identifier, ...props }: PutSecretProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >
     verb="PUT"
@@ -42923,7 +42568,7 @@ export type UsePutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -42938,7 +42583,7 @@ export const usePutSecret = ({ identifier, ...props }: UsePutSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', (paramsInPath: PutSecretPathParams) => `/v2/secrets/${paramsInPath.identifier}`, {
     base: getConfig('ng/api'),
@@ -42957,7 +42602,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -42966,7 +42611,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}`, props, signal)
 
@@ -42985,7 +42630,7 @@ export type PutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -43000,7 +42645,7 @@ export const PutSecretViaYaml = ({ identifier, ...props }: PutSecretViaYamlProps
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >
     verb="PUT"
@@ -43015,7 +42660,7 @@ export type UsePutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -43030,7 +42675,7 @@ export const usePutSecretViaYaml = ({ identifier, ...props }: UsePutSecretViaYam
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', (paramsInPath: PutSecretViaYamlPathParams) => `/v2/secrets/${paramsInPath.identifier}/yaml`, {
     base: getConfig('ng/api'),
@@ -43049,7 +42694,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -43058,7 +42703,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}/yaml`, props, signal)
 
@@ -43573,11 +43218,7 @@ export const webhookEndpointPromise = (
 export interface GetYamlSchemaQueryParams {
   entityType:
     | 'CreatePR'
-<<<<<<< HEAD
-    | 'MergePR'
-=======
     | 'GITOPS_MERGE_PR'
->>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -43660,18 +43301,11 @@ export interface GetYamlSchemaQueryParams {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
-<<<<<<< HEAD
-    | 'AzureSlotDeployment'
-    | 'AzureTrafficShift'
-    | 'AzureSwapSlot'
-    | 'AzureWebAppRollback'
-=======
     | 'AZURE_SLOT_DEPLOYMENT_STEP'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
->>>>>>> develop
   subtype?:
     | 'K8sCluster'
     | 'Git'
