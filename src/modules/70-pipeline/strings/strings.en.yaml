@@ -1181,3 +1181,16 @@ lastExecution: 'Last Execution'
 lastModified: 'Last Modified'
 executionId: Execution Id
 lastExecutedBy: Last Executed By
+appServiceConfig:
+  applicationSettings:
+    name: Application Settings
+    file: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File'
+    fileDetails: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File Details'
+    fileSource: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File Source'
+    scriptFilePath: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File Path'
+  connectionStrings:
+    name: Connection Strings
+    file: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File'
+    fileDetails: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Details'
+    fileSource: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Source'
+    scriptFilePath: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Path'
