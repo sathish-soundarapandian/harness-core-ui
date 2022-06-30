@@ -29,6 +29,7 @@
 .rowItem {
   padding: var(--spacing-medium) 0;
   border-bottom: solid 1px var(--grey-100);
+
   span.type {
     color: var(--grey-900) !important;
     font-weight: 900;
@@ -36,10 +37,12 @@
     grid-template-columns: 1fr 10px;
   }
   font-size: 14px !important;
+
   > p {
     cursor: pointer;
     color: var(--primary-7) !important;
   }
+
   .columnId {
     display: grid;
     grid-template-columns: 20px 1fr;
@@ -48,6 +51,7 @@
     margin-top: 2px;
     padding-left: var(--spacing-xsmall);
   }
+
   .connectorNameField {
     display: flex;
     align-items: center;
