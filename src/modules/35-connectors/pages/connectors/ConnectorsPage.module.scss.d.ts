@@ -14,8 +14,6 @@ declare const styles: {
   readonly gitFilter: string
   readonly header: string
   readonly limitWarningTooltipCtn: string
-  readonly listBody: string
-  readonly listPage: string
   readonly loading: string
   readonly ngFilter: string
   readonly selectConnector: string

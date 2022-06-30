@@ -42,11 +42,11 @@ export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.Re
       <SideNav title={title} subtitle={subtitle} icon={icon}>
         <NavComponent />
       </SideNav>
-      <div className={css.rhs}>
+      <main>
         {module && <TrialLicenseBanner />}
         {module && <FeatureBanner />}
-        <div className={css.children}>{props.children}</div>
-      </div>
+        {props.children}
+      </main>
     </div>
   )
 }

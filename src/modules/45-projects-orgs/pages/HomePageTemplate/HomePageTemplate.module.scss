@@ -10,11 +10,11 @@
 }
 
 .container {
-  min-height: var(--page-min-height);
   padding-left: 80px !important;
   padding-top: 80px !important;
   background-size: contain !important;
   background-position: right bottom !important;
+
   .subTitle {
     max-width: 550px;
   }
