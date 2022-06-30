@@ -9,9 +9,23 @@ import type { Schema } from 'yup'
 import type { IconName } from '@wings-software/uicore'
 import { Connectors } from '@connectors/constants'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { StringKeys } from 'framework/strings'
 import { NameSchema } from '@common/utils/Validation'
 import type { HelmVersionOptions, ManifestStores, ManifestTypes, PrimaryManifestType } from './ManifestInterface'
+
+export type ReleaseRepoPipeline = PipelineInfoConfig & { gitOpsEnabled: boolean }
+
+export const showAddManifestBtn = (
+  isReadonly: boolean,
+  allowOnlyOne: boolean,
+  listOfManifests: Array<any>
+): boolean => {
+  if (allowOnlyOne && listOfManifests.length === 1) {
+    return false
+  }
+  return !isReadonly
+}
 
 export const ManifestDataType: Record<ManifestTypes, ManifestTypes> = {
   K8sManifest: 'K8sManifest',

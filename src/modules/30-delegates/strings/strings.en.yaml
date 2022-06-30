@@ -32,6 +32,12 @@ harnessDocs: 'Check Harness Documentation'
 successVerification:
   checkingForHeartbeat: Checking for heartbeat
 delegateNotInstalled:
+  verifyStatus1: 'docker container ls -a'
+  verifyStatus2: 'docker container ps -a'
+  containerRunning: 'Is your container running?'
+  verifyLogs1: 'docker logs [container_id]'
+  verifyLogs2: 'docker logs [container_id] -f'
+  removeDocker: 'docker rm [container_id]'
   title: 'Delegate not installed'
   verifyField2: 'kubectl logs -f <harnessDelegateName> -n <namespace>'
   verifyField3: 'kubectl describe pod_name -n <namespace>'
@@ -42,6 +48,9 @@ delegateNotInstalled:
   permissionError: 'Permission Error'
   crashloopError: 'Crashloop BackOff'
   pullError: 'ErrorImage Pull'
+  logsError: 'Do you see any error in the logs? If the error message in the logs is unclear'
+  heartbeatFailed: 'Heartbeat failed [Check if the token used in the delegate is valid]'
+  checkError: 'Do you see any error in the logs? If so what is the error?'
   harnessErrorValidation: 'Do you see an error "Failed to connect to Harness SaaS? or Manager?"'
   contactHarness: 'Contact Harness Support'
   checkCanClusterConnectToRegistry: 'Can your Cluster connect to Container Registry:[Docker Hub]? Connect to a VM in the cluster and check if it can reach the Docker Registry'
@@ -60,6 +69,7 @@ delegateNotInstalled:
   goodToGo: 'Good to Go'
   tabs:
     commonProblems:
+      removeOlderDelegate: 'Removing older delegate containers'
       title: 'Common Problems'
       hereIsWhatYouCanDo: 'Here is what you can do'
       troubleshoot: 'Troubleshoot'

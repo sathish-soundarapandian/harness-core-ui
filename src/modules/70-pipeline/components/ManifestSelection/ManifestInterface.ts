@@ -7,15 +7,9 @@
 
 import type { MultiTypeInputType, SelectOption } from '@wings-software/uicore'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
-import type {
-  ManifestConfig,
-  ManifestConfigWrapper,
-  PageConnectorResponse,
-  PipelineInfoConfig,
-  StageElementConfig,
-  ServiceDefinition
-} from 'services/cd-ng'
+import type { ManifestConfig, ManifestConfigWrapper, PageConnectorResponse, ServiceDefinition } from 'services/cd-ng'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
+import type { PipelineInfoConfig, StageElementConfig } from 'services/pipeline-ng'
 
 export type ManifestTypes =
   | 'K8sManifest'

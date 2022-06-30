@@ -9,9 +9,6 @@
 declare const styles: {
   readonly logContent: string
   readonly logsContainer: string
-  readonly stageSelectionMenu: string
-  readonly stageSelector: string
   readonly stageTree: string
-  readonly stepsContainer: string
 }
 export default styles

@@ -21,6 +21,7 @@ declare const styles: {
   readonly clusterName: string
   readonly contentContainer: string
   readonly crossIcon: string
+  readonly dialogStyles: string
   readonly footerStyle: string
   readonly gitOpsSelectedClusters: string
   readonly gitopsClusterCard: string
@@ -28,6 +29,7 @@ declare const styles: {
   readonly hasError: string
   readonly listContainer: string
   readonly listFooter: string
+  readonly modalClusterList: string
   readonly newAgentButton: string
   readonly notHealthy: string
   readonly paginationBlock: string

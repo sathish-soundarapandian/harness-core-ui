@@ -15,19 +15,24 @@ import MultiTypeListInputSet from '../MultiTypeListInputSet'
 
 interface TestProps {
   initialValues?: any
+  multiTypeListInputSetProps?: { persistEmptyStringDefault?: boolean }
 }
 
-const TestComponent = ({ initialValues }: TestProps): React.ReactElement => (
+const TestComponent = ({ initialValues, multiTypeListInputSetProps = {} }: TestProps): React.ReactElement => (
   <TestWrapper>
     <Formik initialValues={initialValues} onSubmit={Promise.resolve}>
-      <Form>
-        <MultiTypeListInputSet
-          name="test"
-          multiTypeFieldSelectorProps={{
-            label: 'Test'
-          }}
-        />
-      </Form>
+      {formik => (
+        <Form>
+          <MultiTypeListInputSet
+            name="test"
+            multiTypeFieldSelectorProps={{
+              label: 'Test'
+            }}
+            formik={formik}
+            {...multiTypeListInputSetProps}
+          />
+        </Form>
+      )}
     </Formik>
   </TestWrapper>
 )
@@ -66,5 +71,29 @@ describe('<MultiTypeListInputSet /> tests', () => {
   test('Should render properly', () => {
     const { container } = render(<TestComponent initialValues={{}} />)
     expect(container).toMatchSnapshot()
+  })
+
+  test('Should render correct value onChange', async () => {
+    const { container } = render(<TestComponent initialValues={{ test: '' }} />)
+    const input = document.querySelector('[name="test[0].value"]')
+    if (input) {
+      fireEvent.change(input, { target: { value: 'testVal' } })
+    }
+    expect(container).toMatchSnapshot()
+  })
+
+  test('Should reset existing value to empty string', async () => {
+    render(
+      <TestComponent
+        initialValues={{ test: ['abc'] }}
+        multiTypeListInputSetProps={{ persistEmptyStringDefault: true }}
+      />
+    )
+    const input = document.querySelector('[name="test[0].value"]')
+    expect(input?.getAttribute('value')).toBe('abc')
+    if (input) {
+      fireEvent.change(input, { target: { value: '' } })
+    }
+    expect(input?.getAttribute('value')).toBe('')
   })
 })

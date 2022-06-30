@@ -23,6 +23,7 @@ import {
   FormMultiTypeConnectorField,
   MultiTypeConnectorFieldProps
 } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import {
@@ -54,6 +55,7 @@ export interface CIStepOptionalConfigProps {
   isInputSetView?: boolean
   allowableTypes?: MultiTypeInputType[]
   template?: Record<string, any>
+  stepType?: StepType // See RunAndRunTestStepInputCommonFields
 }
 
 export const getOptionalSubLabel = (

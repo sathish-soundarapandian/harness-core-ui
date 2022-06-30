@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { noop } from 'lodash-es'
-import { fireEvent, render, act, getByText, waitFor } from '@testing-library/react'
+import { fireEvent, render, act, getByText, waitFor, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import routes from '@common/RouteDefinitions'
@@ -48,11 +48,13 @@ jest.mock('services/pipeline-ng', () => ({
 
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMock))
 const getListGitSync = jest.fn(() => Promise.resolve(gitSyncListResponse))
+const createPullRequest = jest.fn(() => Promise.resolve())
+const createPullRequestV2 = jest.fn(() => Promise.resolve())
 
 jest.mock('services/cd-ng', () => ({
   useGetConnector: jest.fn(() => ConnectorResponse),
-  useCreatePR: jest.fn(() => noop),
-  useCreatePRV2: jest.fn(() => noop),
+  useCreatePR: jest.fn().mockImplementation(() => ({ mutate: createPullRequest })),
+  useCreatePRV2: jest.fn().mockImplementation(() => ({ mutate: createPullRequestV2 })),
   useGetFileContent: jest.fn(() => noop),
   useGetListOfBranchesWithStatus: jest.fn().mockImplementation(() => {
     return { data: branchStatusMock, refetch: getListOfBranchesWithStatus, loading: false }
@@ -317,6 +319,8 @@ describe('PipelineCanvas tests', () => {
           }
         }
         expect(pipelineNg.putPipelinePromise).toHaveBeenCalledWith(putPipelinePromiseArgNewBranch)
+        expect(createPullRequest).toBeCalledTimes(1)
+        expect(screen.queryByText('common.gitSync.creatingPR')).toBeInTheDocument()
       })
 
       test('should display non schema error in git save progress modal', async () => {

@@ -8,7 +8,7 @@
 import { clone } from 'lodash-es'
 import type { IDrawerProps } from '@blueprintjs/core'
 import type { GetDataError } from 'restful-react'
-import type { YamlSnippetMetaData, PipelineInfoConfig } from 'services/cd-ng'
+import type { YamlSnippetMetaData } from 'services/cd-ng'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import type * as Diagram from '@pipeline/components/Diagram'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
@@ -17,7 +17,8 @@ import type {
   EntityValidityDetails,
   ErrorNodeSummary,
   Failure,
-  YamlSchemaErrorWrapperDTO
+  YamlSchemaErrorWrapperDTO,
+  PipelineInfoConfig
 } from 'services/pipeline-ng'
 import type { DependencyElement } from 'services/ci'
 import type { TemplateType } from '@common/interfaces/RouteInterfaces'

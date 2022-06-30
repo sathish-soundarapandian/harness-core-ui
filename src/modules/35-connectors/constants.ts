@@ -53,6 +53,7 @@ export interface CreateConnectorModalProps {
   setIsEditMode: (val: boolean) => void
   connectorInfo: ConnectorInfoDTO | void
   gitDetails?: IGitContextFormProps
+  status?: ConnectorConnectivityDetails
   connectivityMode?: ConnectivityModeType
   setConnectivityMode?: (val: ConnectivityModeType) => void
   accountId: string

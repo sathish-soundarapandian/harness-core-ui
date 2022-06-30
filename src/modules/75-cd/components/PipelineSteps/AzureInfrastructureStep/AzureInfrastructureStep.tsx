@@ -59,6 +59,7 @@ import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
+import { Scope } from '@common/interfaces/SecretsInterface'
 import { getNameSpaceSchema, getReleaseNameSchema } from '../PipelineStepsUtil'
 import {
   AzureInfrastructureSpecEditableProps,
@@ -307,17 +308,23 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
             setRefValue
             onChange={
               /* istanbul ignore next */ (selected, _typeValue, type) => {
-                const item = selected as unknown as { record?: ConnectorReferenceDTO }
-                if (type === MultiTypeInputType.FIXED && item.record?.identifier) {
-                  setConnector(item.record?.identifier)
-                  refetchSubscriptions({
-                    queryParams: {
-                      accountIdentifier: accountId,
-                      projectIdentifier,
-                      orgIdentifier,
-                      connectorRef: item.record?.identifier
-                    }
-                  })
+                const item = selected as unknown as { record?: ConnectorReferenceDTO; scope: Scope }
+                if (type === MultiTypeInputType.FIXED) {
+                  const connectorRef =
+                    item.scope === Scope.ORG || item.scope === Scope.ACCOUNT
+                      ? `${item.scope}.${item?.record?.identifier}`
+                      : item.record?.identifier
+                  setConnector(connectorRef)
+                  if (connectorRef) {
+                    refetchSubscriptions({
+                      queryParams: {
+                        accountIdentifier: accountId,
+                        projectIdentifier,
+                        orgIdentifier,
+                        connectorRef
+                      }
+                    })
+                  }
                 } else {
                   setSubscriptions([])
                   setResourceGroups([])
@@ -779,14 +786,18 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
                   onChange={
                     /* istanbul ignore next */ (value: any, _valueType, type) => {
                       /* istanbul ignore next */
-                      if (type === MultiTypeInputType.FIXED && value?.record) {
-                        const { record } = value as unknown as { record: ConnectorReferenceDTO }
+                      if (type === MultiTypeInputType.FIXED && value.record) {
+                        const { record, scope } = value as unknown as { record: ConnectorReferenceDTO; scope: Scope }
+                        const connectorRef =
+                          scope === Scope.ORG || scope === Scope.ACCOUNT
+                            ? `${scope}.${record.identifier}`
+                            : record.identifier
                         refetchSubscriptions({
                           queryParams: {
                             accountIdentifier: accountId,
                             projectIdentifier,
                             orgIdentifier,
-                            connectorRef: record.identifier
+                            connectorRef
                           }
                         })
 

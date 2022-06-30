@@ -227,6 +227,8 @@ const PendingUserListView: React.FC<PendingUserListViewProps> = ({ searchTerm, s
     shouldReload && refetch()
   }, [shouldReload])
 
+  const { getRBACErrorMessage } = useRBACError()
+
   const columns: Column<Invite>[] = useMemo(
     () => [
       {
@@ -274,7 +276,7 @@ const PendingUserListView: React.FC<PendingUserListViewProps> = ({ searchTerm, s
   return (
     <Page.Body
       loading={loading}
-      error={(error as any)?.data?.message || error?.message}
+      error={error ? getRBACErrorMessage(error) : ''}
       retryOnError={() => refetch()}
       noData={
         !searchTerm

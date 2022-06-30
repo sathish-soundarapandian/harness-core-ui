@@ -16,10 +16,10 @@ import css from './HomePage.module.scss'
 import moduleTagCss from '@dashboards/common/ModuleTags.module.scss'
 
 export interface FilterTagsSideBarProps {
-  setFilteredTags: (cb: (prevState: string[]) => string[]) => void
+  onTagClicked: (tag: string) => void
 }
 
-const FilterTagsSideBar: React.FC<FilterTagsSideBarProps> = ({ setFilteredTags }) => {
+const FilterTagsSideBar: React.FC<FilterTagsSideBarProps> = ({ onTagClicked }) => {
   const { getString } = useStrings()
   const { accountId } = useParams<{ accountId: string; folderId: string }>()
 
@@ -43,12 +43,7 @@ const FilterTagsSideBar: React.FC<FilterTagsSideBarProps> = ({ setFilteredTags }
                   className={cx(moduleTagCss.customTag, moduleTagCss.customTagButton)}
                   key={tag + index}
                   onClick={() => {
-                    setFilteredTags(prevState => {
-                      if (!prevState.includes(tag)) {
-                        return [...prevState, tag]
-                      }
-                      return prevState
-                    })
+                    onTagClicked(tag)
                   }}
                 />
               )

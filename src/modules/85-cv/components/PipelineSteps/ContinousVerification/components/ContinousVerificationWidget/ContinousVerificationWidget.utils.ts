@@ -8,8 +8,9 @@
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { FormikErrors } from 'formik'
 import type { StringKeys } from 'framework/strings'
-import type { ContinousVerificationData } from '../../types'
-import { MONITORED_SERVICE_EXPRESSION } from './components/ContinousVerificationWidgetSections/components/MonitoredService/MonitoredService.constants'
+import type { ContinousVerificationData, VerifyStepMonitoredService } from '../../types'
+import { isAnExpression } from './components/ContinousVerificationWidgetSections/components/MonitoredService/MonitoredService.utils'
+import { MONITORED_SERVICE_TYPE } from './components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/SelectMonitoredServiceType.constants'
 
 export function healthSourcesValidation(
   monitoredServiceRef: string | undefined,
@@ -20,7 +21,7 @@ export function healthSourcesValidation(
 ): any {
   if (
     monitoredServiceRef !== RUNTIME_INPUT_VALUE &&
-    monitoredServiceRef !== MONITORED_SERVICE_EXPRESSION &&
+    !isAnExpression(monitoredServiceRef as string) &&
     monitoredServiceRef &&
     !healthSources?.length
   ) {
@@ -46,4 +47,34 @@ export function monitoredServiceRefValidation(
     errors['spec'] = spec
   }
   return spec
+}
+
+export function configuredMonitoredServiceRefValidation(
+  monitoredServiceRef: string | undefined,
+  spec: any,
+  errors: FormikErrors<ContinousVerificationData>
+): any {
+  if (!monitoredServiceRef) {
+    spec = {
+      monitoredService: {
+        spec: {
+          monitoredServiceRef: 'Monitored service is required'
+        }
+      }
+    }
+    errors['spec'] = spec
+  }
+  return spec
+}
+
+export function getMonitoredServiceRefFromType(
+  monitoredService: VerifyStepMonitoredService,
+  type: string,
+  formData: ContinousVerificationData
+): string {
+  let monitoredServiceRef = monitoredService?.spec?.monitoredServiceRef as string
+  if (type === MONITORED_SERVICE_TYPE.DEFAULT) {
+    monitoredServiceRef = formData?.spec?.monitoredServiceRef as string
+  }
+  return monitoredServiceRef
 }

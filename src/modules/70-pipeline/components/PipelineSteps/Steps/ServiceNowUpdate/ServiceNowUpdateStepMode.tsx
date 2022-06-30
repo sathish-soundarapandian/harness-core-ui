@@ -53,7 +53,8 @@ import {
   FieldType,
   ServiceNowCreateFieldType,
   ServiceNowFieldNGWithValue,
-  ServiceNowStaticFields
+  ServiceNowStaticFields,
+  TICKET_TYPE_CHANGE_TASK
 } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/types'
 import {
   convertTemplateFieldsForDisplay,
@@ -147,6 +148,13 @@ function FormContent({
   }, [serviceNowTicketTypesResponse?.data])
   useEffect(() => {
     if (
+      ticketValueType === MultiTypeInputType.FIXED &&
+      ticketTypeKeyFixedValue?.toString() === TICKET_TYPE_CHANGE_TASK
+    ) {
+      formik.setFieldValue('spec.fieldType', FieldType.ConfigureFields)
+      formik.setFieldValue('spec.useServiceNowTemplate', false)
+      setIsTemplateSectionAvailable(false)
+    } else if (
       connectorRefFixedValue &&
       connectorValueType === MultiTypeInputType.FIXED &&
       ticketTypeKeyFixedValue &&
@@ -240,7 +248,7 @@ function FormContent({
         enforceFocus={false}
         isOpen
         onClose={hideDynamicFieldsModal}
-        title={getString('pipeline.jiraCreateStep.addFields')}
+        title={getString('pipeline.serviceNowCreateStep.addFields')}
       >
         <ServiceNowDynamicFieldsSelector
           connectorRef={connectorRefFixedValue || ''}
@@ -630,7 +638,10 @@ function FormContent({
                     />
                   )}
                 </div>
-                <ServiceNowTemplateFieldsRenderer templateFields={formik.values.spec.templateFields} />
+                <ServiceNowTemplateFieldsRenderer
+                  templateFields={formik.values.spec.templateFields}
+                  templateName={formik.values.spec.templateName}
+                />
               </>
             )}
           </div>

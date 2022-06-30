@@ -25,7 +25,14 @@ describe('Unit tests for MetricChart', () => {
       >)
     render(
       <TestWrapper>
-        <MetricChart connectorIdentifier="123123" tier="1231" metricPath="werwer" appName="sdddf" baseFolder="adsf" />
+        <MetricChart
+          connectorIdentifier="123123"
+          tier="1231"
+          metricPath="werwer"
+          appName="sdddf"
+          baseFolder="adsf"
+          completeMetricPath={''}
+        />
       </TestWrapper>
     )
 

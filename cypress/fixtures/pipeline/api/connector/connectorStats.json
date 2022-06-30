@@ -1,0 +1,13 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "typeStats": [
+      { "type": "Local", "count": 1 },
+      { "type": "Jenkins", "count": 2 },
+      { "type": "Gcp", "count": 1 }
+    ],
+    "statusStats": [{ "status": "SUCCESS", "count": 4 }]
+  },
+  "metaData": null,
+  "correlationId": "464f4005-43f6-493a-92d1-1f823ecd211c"
+}

@@ -13,14 +13,33 @@ import type { AllNGVariables, Pipeline } from '@pipeline/utils/types'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import type { FeaturesProps } from 'framework/featureStore/featureStoreUtil'
 import type { UseStringsReturn } from 'framework/strings'
-import type { PipelineInfoConfig, StageElementWrapperConfig } from 'services/cd-ng'
-import type { InputSetErrorResponse } from 'services/pipeline-ng'
+import type { InputSetErrorResponse, PipelineInfoConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
+import {
+  INPUT_EXPRESSION_REGEX_STRING,
+  isExecionInput
+} from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 
 export interface MergeStageProps {
   stage: StageElementWrapperConfig
   inputSetPortion: Pipeline
   allValues: Pipeline
   shouldUseDefaultValues: boolean
+}
+
+/**
+ * Loops over the pipeline and clears all the runtime inputs i.e. <+input>
+ * expect for execution time inputs i.e. <+input>.executionInput()
+ */
+export function clearRuntimeInput<T = PipelineInfoConfig>(template: T, shouldAlsoClearRuntimeInputs?: boolean): T {
+  const INPUT_EXPRESSION_REGEX = new RegExp(`"${INPUT_EXPRESSION_REGEX_STRING}"`, 'g')
+  return JSON.parse(
+    JSON.stringify(template || {}).replace(
+      new RegExp(`"${INPUT_EXPRESSION_REGEX.source.slice(1).slice(0, -1)}"`, 'g'),
+      value => {
+        return isExecionInput(value) && !shouldAlsoClearRuntimeInputs ? value : '""'
+      }
+    )
+  )
 }
 
 function mergeStage(props: MergeStageProps): StageElementWrapperConfig {

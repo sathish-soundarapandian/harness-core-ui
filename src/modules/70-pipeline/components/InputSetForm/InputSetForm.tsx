@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { defaultTo, omit, pick } from 'lodash-es'
+import { defaultTo, merge, noop, omit, pick } from 'lodash-es'
 import {
   Layout,
   NestedAccordionProvider,
@@ -23,7 +23,7 @@ import { FontVariation, Color, Intent } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import { parse } from 'yaml'
 import type { FormikProps } from 'formik'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import {
   useGetTemplateFromPipeline,
@@ -64,7 +64,7 @@ import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { InputSetDTO, InputSetType } from '@pipeline/utils/types'
 import { clearNullUndefined, isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
-import { clearRuntimeInput } from '../PipelineStudio/StepUtil'
+import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import GitPopover from '../GitPopover/GitPopover'
 import FormikInputSetForm from './FormikInputSetForm'
 import { useSaveInputSet } from './useSaveInputSet'
@@ -87,6 +87,14 @@ const getDefaultInputSet = (
 
 export interface InputSetFormProps {
   executionView?: boolean
+
+  // Props to support embedding InputSetForm (create new) in a modal
+  // @see src/modules/70-pipeline/components/InputSetForm/NewInputSetModal.tsx
+  inputSetInitialValue?: InputSetDTO
+  isNewInModal?: boolean
+  className?: string
+  onCancel?: () => void
+  onCreateSuccess?: (response: ResponseInputSetResponse) => void
 }
 
 const getInputSet = (
@@ -95,8 +103,7 @@ const getInputSet = (
   inputSetResponse: ResponseInputSetResponse | null,
   template: ResponseInputSetTemplateWithReplacedExpressionsResponse | null,
   mergeTemplate?: string,
-  isGitSyncEnabled = false,
-  isRemotePipeline = false
+  isGitSyncEnabled = false
 ): InputSetDTO | InputSetType => {
   if (inputSetResponse?.data) {
     const inputSetObj = inputSetResponse?.data
@@ -112,7 +119,7 @@ const getInputSet = (
       ? defaultTo(parse(defaultTo(mergeTemplate, ''))?.pipeline, {})
       : parsedInputSetObj?.inputSet?.pipeline
 
-    if ((isGitSyncEnabled || isRemotePipeline) && parsedInputSetObj && parsedInputSetObj.inputSet) {
+    if (isGitSyncEnabled && parsedInputSetObj && parsedInputSetObj.inputSet) {
       return {
         name: parsedInputSetObj.inputSet.name,
         tags: parsedInputSetObj.inputSet.tags,
@@ -123,8 +130,7 @@ const getInputSet = (
         pipeline: clearRuntimeInput(parsedPipelineWithValues),
         gitDetails: defaultTo(inputSetObj.gitDetails, {}),
         entityValidityDetails: defaultTo(inputSetObj.entityValidityDetails, {}),
-        outdated: inputSetObj.outdated,
-        storeType: inputSetObj.storeType
+        outdated: inputSetObj.outdated
       }
     }
     return {
@@ -137,8 +143,7 @@ const getInputSet = (
       pipeline: clearRuntimeInput(parsedPipelineWithValues),
       gitDetails: defaultTo(inputSetObj.gitDetails, {}),
       entityValidityDetails: defaultTo(inputSetObj.entityValidityDetails, {}),
-      outdated: inputSetObj.outdated,
-      storeType: inputSetObj.storeType
+      outdated: inputSetObj.outdated
     }
   }
   return getDefaultInputSet(
@@ -149,7 +154,7 @@ const getInputSet = (
 }
 
 export function InputSetForm(props: InputSetFormProps): React.ReactElement {
-  const { executionView } = props
+  const { executionView, inputSetInitialValue, isNewInModal, className, onCancel, onCreateSuccess = noop } = props
   const { getString } = useStrings()
   const history = useHistory()
   const [isEdit, setIsEdit] = React.useState(false)
@@ -276,7 +281,14 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
     }
   })
 
-  const { handleSubmit } = useSaveInputSet({ createInputSet, updateInputSet, inputSetResponse, isEdit, setFormErrors })
+  const { handleSubmit } = useSaveInputSet({
+    createInputSet,
+    updateInputSet,
+    inputSetResponse,
+    isEdit,
+    setFormErrors,
+    onCreateSuccess
+  })
 
   const inputSet: InputSetDTO | InputSetType = React.useMemo(() => {
     if (inputSetUpdateResponse) {
@@ -286,8 +298,7 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
         inputSetUpdateResponse,
         template,
         mergeTemplate,
-        isGitSyncEnabled,
-        isGitSimplificationEnabled && inputSetResponse?.data?.storeType === StoreType.REMOTE
+        isGitSyncEnabled
       )
     }
     return getInputSet(orgIdentifier, projectIdentifier, inputSetResponse, template, mergeTemplate, isGitSyncEnabled)
@@ -448,7 +459,7 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
   }, [inputSet.entityValidityDetails?.valid])
 
   React.useEffect(() => {
-    if (inputSetIdentifier !== '-1') {
+    if (inputSetIdentifier !== '-1' && !isNewInModal) {
       setIsEdit(true)
       refetch({ pathParams: { inputSetIdentifier: inputSetIdentifier } })
       refetchTemplate()
@@ -481,10 +492,27 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
     }
   }, [loadingInputSet])
 
-  useDocumentTitle([
-    defaultTo(parse(defaultTo(pipeline?.data?.yamlPipeline, ''))?.pipeline?.name, getString('pipelines')),
-    isEdit ? defaultTo(inputSetResponse?.data?.name, '') : getString('inputSets.newInputSetLabel')
-  ])
+  useDocumentTitle(
+    isNewInModal
+      ? document.title
+      : [
+          defaultTo(parse(defaultTo(pipeline?.data?.yamlPipeline, ''))?.pipeline?.name, getString('pipelines')),
+          isEdit ? defaultTo(inputSetResponse?.data?.name, '') : getString('inputSets.newInputSetLabel')
+        ]
+  )
+
+  const getFilePath = React.useCallback(
+    (inputSetYamlVisual: InputSetDTO) => {
+      if (inputSet.gitDetails?.filePath) {
+        return inputSet.gitDetails?.filePath
+      }
+      if (filePath) {
+        return filePath
+      }
+      return inputSetYamlVisual.identifier ? `.harness/${inputSetYamlVisual.identifier}.yaml` : ''
+    },
+    [inputSet, filePath]
+  )
 
   const handleModeSwitch = React.useCallback(
     (view: SelectedView) => {
@@ -504,8 +532,9 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
             connectorRef: defaultTo(connectorRef, ''),
             repoName: defaultTo(repoName, ''),
             storeType: defaultTo(storeType, StoreType.INLINE),
-            filePath: defaultTo(inputSet.gitDetails?.filePath, filePath)
+            filePath: getFilePath(inputSetYamlVisual)
           })
+          setFilePath(getFilePath(inputSetYamlVisual))
         }
       } else {
         setFilePath(formikRef.current?.values.filePath)
@@ -518,7 +547,7 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
   const child = React.useCallback(
     () => (
       <FormikInputSetForm
-        inputSet={inputSet}
+        inputSet={isNewInModal && inputSetInitialValue ? merge(inputSet, inputSetInitialValue) : inputSet}
         template={template}
         pipeline={pipeline}
         resolvedTemplatesPipelineYaml={pipeline?.data?.resolvedTemplatesPipelineYaml}
@@ -533,6 +562,9 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
         isEdit={isEdit}
         isGitSyncEnabled={isGitSyncEnabled}
         isGitSimplificationEnabled={isGitSimplificationEnabled}
+        className={className}
+        onCancel={onCancel}
+        filePath={filePath}
       />
     ),
     [
@@ -550,7 +582,8 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
       executionView,
       isEdit,
       isGitSyncEnabled,
-      sanitiseInputSetLoading
+      sanitiseInputSetLoading,
+      filePath
     ]
   )
 

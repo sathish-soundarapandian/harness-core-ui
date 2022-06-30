@@ -6,15 +6,16 @@
  */
 
 import React from 'react'
+import type { Color } from '@harness/design-system'
 import type { StringKeys } from 'framework/strings'
 import { FilterCard } from './FilterCard'
 import css from './TableFilters.module.scss'
-
 export interface FilterProps {
   label: StringKeys
   total: number
   queryProps?: Record<string, any>
   tooltipId?: string
+  filterTotalColor?: Color
 }
 export interface TableFiltersProps {
   filters: Array<FilterProps>

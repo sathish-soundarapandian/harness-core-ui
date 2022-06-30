@@ -1,0 +1,123 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.repositoryCard {
+  padding: 0 !important;
+  display: block !important;
+  width: 100%;
+  box-shadow: var(--card-shadow);
+  border: var(--spacing-1) !important;
+  overflow: hidden;
+  &:hover {
+    box-shadow: var(--card-hover-shadow) !important;
+  }
+
+  & + & {
+    margin-top: var(--spacing-large);
+  }
+  .content {
+    position: relative;
+    padding: var(--spacing-5) var(--spacing-6) var(--spacing-4);
+
+    .title {
+      display: flex;
+      align-items: center;
+      margin-bottom: var(--spacing-2);
+      color: var(--grey-700) !important;
+      font-weight: bold;
+    }
+
+    .mainContent {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .cardStats {
+        display: grid;
+        grid-template-columns: auto auto;
+        grid-column-gap: var(--spacing-large);
+        grid-row-gap: var(--spacing-xsmall);
+        margin-top: var(--spacing-small) !important;
+        .statHeader {
+          color: var(--grey-500);
+          font-size: var(--font-size-small) !important;
+          font-weight: 500 !important;
+          padding-bottom: var(--spacing-2);
+        }
+        .statContent {
+          font-size: 25px;
+          line-height: 25px;
+          font-weight: bold;
+          color: var(--grey-700);
+        }
+        .statWrap {
+          display: flex;
+          align-items: flex-end;
+          padding-bottom: var(--spacing-2);
+
+          svg {
+            margin-bottom: -2px;
+            margin-left: var(--spacing-xsmall);
+          }
+          .rateDiffValue {
+            font-size: 10px;
+            font-weight: 600;
+            line-height: 12px;
+            letter-spacing: 0.5px;
+          }
+        }
+      }
+      .chartWrapper {
+        flex: 1;
+        min-width: 0;
+        max-width: 150px;
+      }
+    }
+  }
+
+  .times {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    & .duration {
+      white-space: nowrap;
+    }
+    & .timeAgo {
+      flex: 1 1 auto;
+      justify-content: flex-end;
+
+      & time {
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .cardFooter {
+    display: flex;
+    align-items: center;
+    background: var(--grey-50);
+    height: var(--spacing-9);
+    padding: 0 var(--spacing-6) 0 var(--spacing-8);
+    border-top: 1px solid var(--grey-100);
+    column-gap: var(--spacing-3);
+    justify-content: space-between;
+    .avatarWrapper {
+      display: flex;
+      align-items: center;
+      flex: 4;
+    }
+  }
+}
+
+.userLabel {
+  padding-top: 5px;
+  flex: 1;
+}
+
+.message {
+  flex: 2;
+  word-break: break-word !important;
+}

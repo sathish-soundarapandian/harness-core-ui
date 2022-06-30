@@ -37,9 +37,9 @@ import {
   getConnectorPromise,
   getTestConnectionResultPromise,
   getTestGitRepoConnectionResultPromise,
-  PipelineInfoConfig,
   useGetConnector
 } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { ConnectorReferenceFieldProps } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'

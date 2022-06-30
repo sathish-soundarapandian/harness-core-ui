@@ -18,8 +18,10 @@ import { useStrings } from 'framework/strings'
 import type { EnvironmentPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 
-import { InfrastructureList } from './InfrastructureList/InfrastructureList'
-import { InfrastructureModal } from './InfrastructureModal'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+
+import InfrastructureList from './InfrastructureList/InfrastructureList'
+import InfrastructureModal from './InfrastructureModal'
 
 import css from './InfrastructureDefinition.module.scss'
 
@@ -28,6 +30,7 @@ export default function InfrastructureDefinition() {
     ProjectPathProps & EnvironmentPathProps
   >()
   const { getString } = useStrings()
+  const { getRBACErrorMessage } = useRBACError()
   const [infrastructureToEdit, setInfrastructureToEdit] = useState<string | undefined>()
 
   const { data, loading, error, refetch } = useGetInfrastructureList({
@@ -53,7 +56,10 @@ export default function InfrastructureDefinition() {
         canEscapeKeyClose
         canOutsideClickClose
         enforceFocus={false}
-        onClose={hideModal}
+        onClose={() => {
+          setInfrastructureToEdit('')
+          hideModal()
+        }}
         title={getString('cd.infrastructure.createNew')}
         className={cx('padded-dialog', css.dialogStyles)}
       >
@@ -73,7 +79,7 @@ export default function InfrastructureDefinition() {
       {loading ? (
         <ContainerSpinner />
       ) : error ? (
-        <Page.Error>{error}</Page.Error>
+        <Page.Error>{getRBACErrorMessage(error)}</Page.Error>
       ) : (
         <>
           <Button

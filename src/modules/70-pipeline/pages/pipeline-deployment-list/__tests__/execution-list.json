@@ -42,6 +42,88 @@
         "runningStagesCount": 0,
         "failedStagesCount": 1,
         "totalStagesCount": 0
+      },
+      {
+        "pipelineIdentifier": "http_pipeline",
+        "planExecutionId": "IcZLrBrkR8a32AM_wxiE9B",
+        "name": "http_pipeline",
+        "status": "Success",
+        "executionTriggerInfo": {
+          "triggerType": "MANUAL",
+          "triggeredBy": {
+            "uuid": "lv0euRhKRCyiXWzS7pOg6g",
+            "identifier": "Admin",
+            "extraInfo": {
+              "email": "admin@harness.io"
+            }
+          }
+        },
+        "executionErrorInfo": {},
+        "moduleInfo": {},
+        "modules": ["cd"],
+        "layoutNodeMap": {
+          "ShCyXOK7S-O0dZMGyOZ5vw": {
+            "nodeType": "Deployment",
+            "nodeGroup": "STAGE",
+            "nodeIdentifier": "stage_1",
+            "nodeUuid": "ShCyXOK7S-O0dZMGyOZ5vw",
+            "status": "Success",
+            "module": "cd",
+            "moduleInfo": { "cd": {} },
+            "edgeLayoutList": { "currentNodeChildren": [], "nextIds": [] }
+          }
+        },
+        "startingNodeId": "ShCyXOK7S-O0dZMGyOZ5vw",
+        "startTs": 1610527993932,
+        "endTs": 1610528014933,
+        "createdAt": 1610527993951,
+        "runSequence": 5,
+        "tags": [{ "key": "tesg", "value": "asd" }],
+        "successfulStagesCount": 0,
+        "runningStagesCount": 0,
+        "failedStagesCount": 0,
+        "totalStagesCount": 0
+      },
+      {
+        "pipelineIdentifier": "http_pipeline",
+        "planExecutionId": "IcZLrBrkR8a32AM_wxiE9C",
+        "name": "http_pipeline",
+        "status": "Failed",
+        "executionTriggerInfo": {
+          "triggerType": "MANUAL",
+          "triggeredBy": {
+            "uuid": "lv0euRhKRCyiXWzS7pOg6g",
+            "identifier": "Admin",
+            "extraInfo": {
+              "email": "admin@harness.io"
+            }
+          }
+        },
+        "executionErrorInfo": {},
+        "moduleInfo": {},
+        "modules": ["cd"],
+        "layoutNodeMap": {
+          "ShCyXOK7S-O0dZMGyOZ5vw": {
+            "nodeType": "Deployment",
+            "nodeGroup": "STAGE",
+            "nodeIdentifier": "stage_1",
+            "nodeUuid": "ShCyXOK7S-O0dZMGyOZ5vw",
+            "status": "Failed",
+            "module": "cd",
+            "moduleInfo": { "cd": {} },
+            "edgeLayoutList": { "currentNodeChildren": [], "nextIds": [] }
+          }
+        },
+        "startingNodeId": "ShCyXOK7S-O0dZMGyOZ5vw",
+        "startTs": 1610527993932,
+        "endTs": 1610528014933,
+        "createdAt": 1610527993951,
+        "runSequence": 4,
+        "tags": [{ "key": "tesg", "value": "asd" }],
+        "successfulStagesCount": 0,
+        "runningStagesCount": 0,
+        "failedStagesCount": 1,
+        "totalStagesCount": 0
       }
     ],
     "pageable": {
@@ -53,11 +135,11 @@
       "unpaged": false
     },
     "last": true,
-    "totalElements": 1,
+    "totalElements": 3,
     "totalPages": 1,
     "sort": { "unsorted": false, "sorted": true, "empty": false },
     "first": true,
-    "numberOfElements": 1,
+    "numberOfElements": 3,
     "size": 20,
     "number": 0,
     "empty": false

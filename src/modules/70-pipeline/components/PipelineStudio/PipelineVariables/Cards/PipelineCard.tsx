@@ -10,7 +10,7 @@ import { Card, MultiTypeInputType, NestedAccordionPanel, Text } from '@wings-sof
 import cx from 'classnames'
 import { FontVariation, Color } from '@harness/design-system'
 import { isEmpty, lowerCase } from 'lodash-es'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'

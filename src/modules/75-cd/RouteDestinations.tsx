@@ -16,7 +16,8 @@ import {
   projectPathProps,
   servicePathProps,
   environmentGroupPathProps,
-  environmentPathProps
+  environmentPathProps,
+  pipelineModuleParams
 } from '@common/utils/routeUtils'
 import type { ProjectPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
@@ -42,6 +43,7 @@ import { TemplateRouteDestinations } from '@templates-library/RouteDestinations'
 import { TriggersRouteDestinations } from '@triggers/RouteDestinations'
 import { VariableRouteDestinations } from '@variables/RouteDestinations'
 import { SecretRouteDestinations } from '@secrets/RouteDestinations'
+import FileStorePage from '@filestore/pages/filestore/FileStorePage'
 import CDPipelineDeploymentList from '@cd/pages/pipeline-deployment-list/CDPipelineDeploymentList'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -82,12 +84,12 @@ import { getBannerText } from './utils/renderMessageUtils'
 import ServiceStudio from './components/Services/ServiceStudio/ServiceStudio'
 
 RbacFactory.registerResourceCategory(ResourceCategory.GITOPS, {
-  icon: 'gitops-agent',
+  icon: 'gitops-blue-circle',
   label: 'cd.gitOps'
 })
 
 RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_AGENT, {
-  icon: 'gitops-agent',
+  icon: 'gitops-agents-blue-circle',
   label: 'common.agents',
   category: ResourceCategory.GITOPS,
   permissionLabels: {
@@ -98,7 +100,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_AGENT, {
 })
 
 RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_APP, {
-  icon: 'gitops-agent',
+  icon: 'gitops-applications-blue-circle',
   label: 'applications',
   category: ResourceCategory.GITOPS,
   permissionLabels: {
@@ -111,7 +113,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_APP, {
 })
 
 RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_CERT, {
-  icon: 'gitops-agent',
+  icon: 'gitops-repository-certificates-blue-circle',
   label: 'common.repositoryCertificates',
   category: ResourceCategory.GITOPS,
   permissionLabels: {
@@ -122,7 +124,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_CERT, {
 })
 
 RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_CLUSTER, {
-  icon: 'gitops-agent',
+  icon: 'gitops-clusters-blue-circle',
   label: 'common.clusters',
   category: ResourceCategory.GITOPS,
   permissionLabels: {
@@ -133,7 +135,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_CLUSTER, {
 })
 
 RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_GPGKEY, {
-  icon: 'gitops-agent',
+  icon: 'gitops-gnupg-key-blue-circle',
   label: 'common.gnupgKeys',
   category: ResourceCategory.GITOPS,
   permissionLabels: {
@@ -144,7 +146,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_GPGKEY, {
 })
 
 RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_REPOSITORY, {
-  icon: 'gitops-agent',
+  icon: 'gitops-repository-blue-circle',
   label: 'repositories',
   category: ResourceCategory.GITOPS,
   permissionLabels: {
@@ -339,6 +341,15 @@ export default (
       })}
     >
       <EnvironmentGroupDetails />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CDSideNavProps}
+      path={routes.toFileStore({ ...accountPathProps, ...projectPathProps, ...pipelineModuleParams })}
+      pageName={PAGE_NAME.FileStorePage}
+    >
+      <FileStorePage />
     </RouteWithLayout>
 
     {

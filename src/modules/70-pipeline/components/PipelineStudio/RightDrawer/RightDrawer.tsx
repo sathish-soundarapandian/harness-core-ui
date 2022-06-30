@@ -168,6 +168,14 @@ const processNodeImpl = (
       set(node, 'spec.commandOptions', (item as StepElementConfig)?.spec?.commandOptions)
     }
 
+    if (item.tab === TabTypes.Advanced) {
+      if (isEmpty(item.strategy)) {
+        delete (node as any).strategy
+      } else {
+        set(node, 'strategy', item.strategy)
+      }
+    }
+
     // Delete values if they were already added and now removed
     if (node.timeout && !(item as StepElementConfig).timeout && item.tab !== TabTypes.Advanced) delete node.timeout
     if (node.description && !(item as StepElementConfig).description && item.tab !== TabTypes.Advanced)

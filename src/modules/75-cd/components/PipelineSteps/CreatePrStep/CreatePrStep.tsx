@@ -6,18 +6,16 @@
  */
 
 import React from 'react'
-import { Formik, getMultiTypeFromValue, IconName, MultiTypeInputType } from '@wings-software/uicore'
+import { Formik, IconName, MultiTypeInputType } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
-import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
+import type { FormikErrors, FormikProps } from 'formik'
 
 import { defaultTo, get } from 'lodash-es'
 
 import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import type { StepElementConfig } from 'services/cd-ng'
-
-import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 
 import { useStrings } from 'framework/strings'
 
@@ -31,6 +29,7 @@ import CreatePRScript from './CreatePrScript'
 
 import CreatePRInputStep from './CreatePRInputStep'
 import { CreatePRVariableStepProps, CreatePRVariableView } from './CreatePRVariableStep'
+import { validateStepForm } from '../DeployInfrastructureStep/utils'
 
 export interface CreatePRStepData extends StepElementConfig {
   spec?: {
@@ -58,14 +57,6 @@ interface CreatePrProps {
     path?: string
     readonly?: boolean
   }
-}
-
-export interface K8sBGSwapServicesVariablesStepProps {
-  initialValues: CreatePRStepData
-  stageIdentifier: string
-  onUpdate?(data: CreatePRStepData): void
-  metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-  variablesData: CreatePRStepData
 }
 
 function CreatePRWidget(props: CreatePrProps, formikRef: StepFormikFowardRef<CreatePRStepData>): React.ReactElement {
@@ -179,35 +170,7 @@ export class CreatePr extends PipelineStep<CreatePRStepData> {
     getString,
     viewType
   }: ValidateInputSetProps<CreatePRStepData>): FormikErrors<CreatePRStepData> {
-    const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const errors = {} as any
-    // istanbul ignore next
-    // istanbul ignore else
-    if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {
-      // istanbul ignore next
-      let timeoutSchema = getDurationValidationSchema({ minimum: '10s' })
-      // istanbul ignore next
-      if (isRequired) {
-        // istanbul ignore next
-        timeoutSchema = timeoutSchema.required(getString?.('validation.timeout10SecMinimum'))
-      }
-      const timeout = Yup.object().shape({
-        timeout: timeoutSchema
-      })
-
-      try {
-        timeout.validateSync(data)
-      } catch (e) {
-        /* istanbul ignore else */
-        if (e instanceof Yup.ValidationError) {
-          const err = yupToFormErrors(e)
-
-          Object.assign(errors, err)
-        }
-      }
-    }
-    return errors
+    return validateStepForm({ data, template, getString, viewType })
   }
 
   protected defaultValues: CreatePRStepData = {

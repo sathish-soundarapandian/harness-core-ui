@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect } from 'react'
-import { get, isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 
@@ -33,7 +33,7 @@ const ArtifactInputField = (props: KubernetesArtifactsProps): React.ReactElement
   const isPrimaryArtifactsRuntime = runtimeMode && !!get(props.template, 'artifacts.primary', false)
   const isSidecarRuntime = runtimeMode && !!get(props.template, 'artifacts.sidecars', false)
 
-  const artifactDefaultValue = props.artifacts?.sidecars?.find(
+  const artifactDefaultValue = defaultTo(props.artifacts, props.template.artifacts)?.sidecars?.find(
     artifactData => artifactData.sidecar?.identifier === (props.artifact as SidecarArtifact).identifier
   )?.sidecar
 

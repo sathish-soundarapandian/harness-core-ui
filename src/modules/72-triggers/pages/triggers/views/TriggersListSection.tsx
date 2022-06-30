@@ -528,7 +528,9 @@ const RenderPipelineReferenceBranch: Renderer<CellProps<NGTriggerDetailsResponse
     data = parse(row.original?.yaml || '')
     return (
       <Container flex>
-        <Text lineClamp={1}>{get(data, 'trigger.pipelineBranchName')}</Text>
+        <Text icon="git-new-branch" iconProps={{ size: 14 }} lineClamp={1}>
+          {get(data, 'trigger.pipelineBranchName')}
+        </Text>
       </Container>
     )
   } catch (e) {

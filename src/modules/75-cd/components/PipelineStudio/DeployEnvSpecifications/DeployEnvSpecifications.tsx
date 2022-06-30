@@ -10,12 +10,10 @@ import { debounce, get, isEmpty, set } from 'lodash-es'
 import produce from 'immer'
 import cx from 'classnames'
 
-import { Card, Container, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import { Card, Container, Text } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import type { StageElementConfig } from 'services/cd-ng'
-
-import { Scope } from '@common/interfaces/SecretsInterface'
 
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -27,6 +25,7 @@ import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { StageType } from '@pipeline/utils/stageHelpers'
+import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 
 import DeployServiceErrors from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceErrors'
 
@@ -48,7 +47,6 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
       selectionState: { selectedStageId }
     },
     isReadonly,
-    scope,
     allowableTypes,
     getStageFromPipeline,
     updateStage
@@ -103,54 +101,30 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
     <div className={stageCss.deployStage} key="1">
       <DeployServiceErrors domRef={scrollRef as MutableRefObject<HTMLElement | undefined>} />
       <div className={cx(stageCss.contentSection, stageCss.paddedSection)} ref={scrollRef}>
-        <div className={stageCss.tabHeading} id="environment">
+        <Text className={stageCss.tabHeading} id="environment" margin={{ bottom: 'small' }}>
           {getString('environment')}
-        </div>
+        </Text>
         <Card>
           <StepWidget
             type={StepType.DeployInfrastructure}
-            readonly={isReadonly || scope !== Scope.PROJECT}
+            readonly={isReadonly}
             initialValues={{
-              environmentRef:
-                scope === Scope.PROJECT ? get(stage, 'stage.spec.environment.environmentRef', '') : RUNTIME_INPUT_VALUE,
-              infrastructureRef:
-                scope === Scope.PROJECT
-                  ? get(stage, 'stage.spec.environment.infrastructureDefinitions', [])?.[0]
-                  : RUNTIME_INPUT_VALUE
+              gitOpsEnabled: get(stage, 'stage.spec.gitOpsEnabled', false),
+              ...(get(stage, 'stage.spec.environment', false) && { environment: get(stage, 'stage.spec.environment') }),
+              ...(get(stage, 'stage.spec.environmentGroup', false) && {
+                environmentGroup: get(stage, 'stage.spec.environmentGroup')
+              })
             }}
             allowableTypes={allowableTypes}
             onUpdate={val => updateEnvStep(val)}
             factory={factory}
             stepViewType={StepViewType.Edit}
+            customStepProps={{
+              getString: getString,
+              serviceRef: (stage?.stage?.spec as DeployStageConfig)?.service?.serviceRef
+            }}
           />
         </Card>
-        {/* <SelectWithSubmenu
-          addClearBtn
-          onChange={itemSelect}
-          label={'Select the environment or group that you want to deploy to'}
-          value={selectedItem}
-          items={[
-            {
-              label: getString('environment'),
-              value: getString('environment'),
-              submenuItems: envData?.data?.content?.map(item => ({
-                label: item.environment?.name,
-                value: `${getString('environment')}|${item.environment?.identifier}`
-              })) as SelectOption[]
-            },
-            {
-              label: getString('common.environmentGroup.label'),
-              value: getString('common.environmentGroup.label'),
-              submenuItems: envGroupData?.data?.content?.map(item => ({
-                label: item.envGroup?.name,
-                value: `${getString('common.environmentGroup.label')}|${item.envGroup?.identifier}`,
-                environments: item.envGroup?.envResponse
-              })) as SelectOption[]
-            }
-          ]}
-          itemSelect={itemSelect}
-          loading={envLoading || envGroupLoading}
-        /> */}
         <Container margin={{ top: 'xxlarge' }}>{props.children}</Container>
       </div>
     </div>

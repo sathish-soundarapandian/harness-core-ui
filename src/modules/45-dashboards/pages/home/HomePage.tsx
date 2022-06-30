@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
 import cx from 'classnames'
 
 import {
@@ -25,6 +25,7 @@ import { Select } from '@blueprintjs/select'
 
 import { Menu } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
+import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 
 import { Page } from '@common/exports'
 import RbacButton from '@rbac/components/Button/Button'
@@ -35,7 +36,7 @@ import ModuleTagsFilter from '@dashboards/components/ModuleTagsFilter/ModuleTags
 import { ErrorResponse, useDeleteDashboard, useGetFolderDetail, useSearch } from 'services/custom-dashboards'
 import routes from '@common/RouteDefinitions'
 
-import { DashboardLayoutViews } from '@dashboards/types/DashboardTypes'
+import { DashboardLayoutViews, MappedDashboardTagOptions } from '@dashboards/types/DashboardTypes'
 import { useStrings } from 'framework/strings'
 import Dashboards from './Dashboards'
 import { useDashboardsContext } from '../DashboardsContext'
@@ -52,15 +53,6 @@ interface Permission {
     resourceIdentifier?: string
   }
   permission: PermissionIdentifier
-}
-
-const DEFAULT_FILTER: { [key: string]: boolean } = {
-  HARNESS: false,
-  CE: false,
-  CD: false,
-  CI: false,
-  CF: false,
-  CG_CD: false
 }
 
 const CustomSelect = Select.ofType<SelectOption>()
@@ -90,13 +82,6 @@ const HomePage: React.FC = () => {
   const { getString } = useStrings()
   const { accountId, folderId } = useParams<{ accountId: string; folderId: string }>()
 
-  const { includeBreadcrumbs } = useDashboardsContext()
-
-  const [filteredTags, setFilteredTags] = React.useState<string[]>([])
-  const [selectedFilter, setCheckboxFilter] = React.useState(DEFAULT_FILTER)
-  const [searchTerm, setSearchTerm] = useState<string | undefined>()
-  const [page, setPage] = useState(0)
-  const [layoutView, setLayoutView] = useState(DashboardLayoutViews.GRID)
   const defaultSortBy: SelectOption = {
     label: 'Select Option',
     value: ''
@@ -104,28 +89,40 @@ const HomePage: React.FC = () => {
 
   const sortingOptions: SelectOption[] = [
     {
-      label: 'Name',
+      label: getString('name'),
       value: 'title'
     },
     {
-      label: 'Recently Viewed',
+      label: getString('dashboards.dashboardSortingOptions.recentlyViewed'),
       value: 'last_viewed_at desc'
     },
     {
-      label: 'Recently Created',
+      label: getString('dashboards.dashboardSortingOptions.recentlyCreated'),
       value: 'created_at desc'
     },
     {
-      label: 'Most Viewed',
+      label: getString('dashboards.dashboardSortingOptions.mostViewed'),
       value: 'view_count desc'
-    },
-    {
-      label: 'Most Liked',
-      value: 'favorite_count desc'
     }
   ]
 
-  const [sortby, setSortingFilter] = useState<SelectOption>(defaultSortBy)
+  const DEFAULT_FILTER: MappedDashboardTagOptions = {
+    HARNESS: false,
+    CE: false,
+    CD: false,
+    CI: false,
+    CF: false,
+    CG_CD: false
+  }
+
+  const [customTags, setCustomTags] = useQueryParamsState<string[]>('customTags', [])
+  const [page, setPage] = useQueryParamsState('page', 0)
+  const [searchTerm, setSearchTerm] = useQueryParamsState<string | undefined>('search', undefined)
+  const [sortBy, setSortingFilter] = useQueryParamsState<SelectOption>('sortBy', defaultSortBy)
+  const [selectedTags, setCheckboxFilter] = useQueryParamsState('tags', DEFAULT_FILTER)
+  const [layoutView, setLayoutView] = useQueryParamsState('view', DashboardLayoutViews.GRID)
+
+  const { includeBreadcrumbs } = useDashboardsContext()
 
   const serialize = (obj: { [key: string]: boolean }): string => {
     return new URLSearchParams(Object.entries(obj).map(([k, v]) => [k, v.toString()])).toString()
@@ -157,11 +154,18 @@ const HomePage: React.FC = () => {
       searchTerm,
       page: page + 1,
       pageSize: PAGE_SIZE,
-      tags: serialize(selectedFilter),
-      sortBy: sortby?.value.toString(),
-      customTag: filteredTags.join('%')
+      tags: serialize(selectedTags),
+      sortBy: sortBy.value.toString(),
+      customTag: customTags.join('%')
     }
   })
+
+  const onCustomTagSelected = (tag: string): void => {
+    if (!customTags.includes(tag)) {
+      setCustomTags([...customTags, tag])
+      setPage(0)
+    }
+  }
 
   const dashboardList = React.useMemo(() => data?.resource || [], [data])
 
@@ -178,14 +182,11 @@ const HomePage: React.FC = () => {
     }
   }, [accountId, folderId])
 
-  React.useEffect(() => {
-    if (searchTerm || selectedFilter || sortby?.value || filteredTags?.length > 0) setPage(0)
-  }, [searchTerm, selectedFilter, sortby?.value, filteredTags])
-
   const setPredefinedFilter = (filterType: string, isChecked: boolean): void => {
     const updatedValue: any = {}
     updatedValue[filterType] = isChecked
-    setCheckboxFilter({ ...selectedFilter, ...updatedValue })
+    setCheckboxFilter({ ...selectedTags, ...updatedValue })
+    setPage(0)
   }
 
   const [showModal, hideModal] = useModalHook(
@@ -240,7 +241,7 @@ const HomePage: React.FC = () => {
             permission={permissionObj}
           />
           <Container className={cx(moduleTagCss.predefinedTags, css.mainNavTag)}>
-            <ModuleTagsFilter selectedFilter={selectedFilter} setPredefinedFilter={setPredefinedFilter} />
+            <ModuleTagsFilter selectedFilter={selectedTags} setPredefinedFilter={setPredefinedFilter} />
           </Container>
           <Layout.Horizontal>
             <CustomSelect
@@ -265,7 +266,7 @@ const HomePage: React.FC = () => {
                 className={css.customSelect}
                 text={
                   <Text color={Color.BLACK}>
-                    {getString('dashboards.sortBy')} {sortby?.label}
+                    {getString('dashboards.sortBy')} {sortBy.label}
                   </Text>
                 }
               />
@@ -294,14 +295,16 @@ const HomePage: React.FC = () => {
         </Layout.Horizontal>
       </Layout.Horizontal>
 
-      <FilterTagsSideBar setFilteredTags={setFilteredTags} />
+      <FilterTagsSideBar onTagClicked={onCustomTagSelected} />
 
       <Layout.Vertical className={css.homeContent}>
         <Layout.Horizontal padding={{ top: 'large', right: 'xxxlarge', bottom: 'large', left: 'xxxlarge' }}>
           <ExpandingSearchInput
             placeholder={getString('dashboards.homePage.searchPlaceholder')}
+            defaultValue={searchTerm}
             onChange={(text: string) => {
               setSearchTerm(text)
+              setPage(0)
             }}
             className={css.search}
           />
@@ -311,7 +314,7 @@ const HomePage: React.FC = () => {
           flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}
         >
           <Container>
-            {filteredTags.map((tag: string, index: number) => {
+            {customTags.map((tag: string, index: number) => {
               return (
                 <Container className={cx(moduleTagCss.customTag, css.filteredTags)} key={tag + index}>
                   {tag}
@@ -321,16 +324,24 @@ const HomePage: React.FC = () => {
                     icon="cross"
                     className={css.clearTagButton}
                     onClick={() => {
-                      const filterTags = filteredTags.filter(v => v !== tag)
-                      setFilteredTags(filterTags)
+                      const filterTags = customTags.filter(v => v !== tag)
+                      setCustomTags(filterTags)
+                      setPage(0)
                     }}
                   />
                 </Container>
               )
             })}
           </Container>
-          {filteredTags?.length > 0 && (
-            <Button minimal intent="primary" onClick={() => setFilteredTags([])}>
+          {customTags?.length > 0 && (
+            <Button
+              minimal
+              intent="primary"
+              onClick={() => {
+                setCustomTags([])
+                setPage(0)
+              }}
+            >
               {getString('filters.clearAll')}
             </Button>
           )}

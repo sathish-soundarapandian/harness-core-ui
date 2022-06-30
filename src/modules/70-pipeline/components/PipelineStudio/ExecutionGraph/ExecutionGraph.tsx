@@ -45,7 +45,6 @@ import { IconNode } from '@pipeline/components/PipelineDiagram/Nodes/IconNode/Ic
 import CreateNodeStep from '@pipeline/components/PipelineDiagram/Nodes/CreateNode/CreateNodeStep'
 import EndNodeStep from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndNodeStep'
 import StartNodeStep from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNodeStep'
-import { StageType } from '@pipeline/utils/stageHelpers'
 import { CIDependencyNode } from '@pipeline/components/PipelineDiagram/Nodes/StepGroupNode/CIDependencyNode'
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
 import { ExecutionStepModel, GridStyleInterface } from './ExecutionStepModel'
@@ -71,7 +70,8 @@ import {
   applyExistingStates,
   ExecutionWrapper,
   STATIC_SERVICE_GROUP_NAME,
-  getDependencyFromNodeV1
+  getDependencyFromNodeV1,
+  isServiceDependenciesSupported
 } from './ExecutionGraphUtil'
 import { EmptyStageName } from '../PipelineConstants'
 import {
@@ -551,6 +551,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
   const mouseLeaveNodeListener = (event: any): void => {
     const eventTemp = event as DefaultNodeEvent
     eventTemp.stopPropagation?.()
+    dynamicPopoverHandler?.hide()
   }
 
   const nodeListeners: NodeModelListener = {
@@ -800,30 +801,31 @@ function ExecutionGraphRef<T extends StageElementConfig>(
         return
       }
       // event.stopPropagation()
-      if (event.node?.identifier && event?.node?.data) {
-        if (event?.node?.data?.stepGroup && event?.destination?.parentIdentifier) {
-          showError(getString('stepGroupInAnotherStepGroup'), undefined, 'pipeline.setgroup.error')
-        } else {
-          const stepDetails = omit(event.node.data, [
-            'conditionalExecutionEnabled',
-            'graphType',
-            'isInComplete',
-            'isTemplateNode'
-          ])
-          const isRemove = removeStepOrGroup(state, event, undefined, newPipelineStudioEnabled)
-          if (isRemove) {
-            addStepOrGroup(
-              { ...event, node: { ...event?.destination } },
-              state.stepsData,
-              stepDetails,
-              false,
-              state.isRollback,
-              newPipelineStudioEnabled
-            )
-            updateStageWithNewData(state)
-          }
-        }
+      // if (event.node?.identifier && event?.node?.data) {
+      //   if (event?.node?.data?.stepGroup && event?.destination?.parentIdentifier) {
+      //     showError(getString('stepGroupInAnotherStepGroup'), undefined, 'pipeline.setgroup.error')
+      //   } else {
+      const stepDetails = omit(event.node.data, [
+        'conditionalExecutionEnabled',
+        'graphType',
+        'isInComplete',
+        'isTemplateNode'
+      ])
+      const isRemove = removeStepOrGroup(state, event, undefined, newPipelineStudioEnabled)
+      if (isRemove) {
+        addStepOrGroup(
+          { ...event, node: { ...event?.destination } },
+          state.stepsData,
+          stepDetails,
+          false,
+          state.isRollback,
+          newPipelineStudioEnabled
+        )
+        updateStageWithNewData(state)
       }
+      // }
+      // }
+      // }
     }
   }
 
@@ -1019,8 +1021,11 @@ function ExecutionGraphRef<T extends StageElementConfig>(
   diagram.registerListeners(listerners)
 
   const stepsData = React.useMemo(() => {
-    const serviceDependencies: DependencyElement[] | undefined =
-      stage?.stage?.type === StageType.BUILD ? get(stage, 'stage.spec.serviceDependencies') : undefined
+    const serviceDependencies: DependencyElement[] | undefined = isServiceDependenciesSupported(
+      stage?.stage?.type || ''
+    )
+      ? get(stage, 'stage.spec.serviceDependencies')
+      : undefined
 
     const stagePath = getStagePathFromPipeline(stage?.stage?.identifier || '', 'pipeline.stages')
 

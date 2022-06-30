@@ -70,6 +70,7 @@ const FlagEnabledRulesCard = (props: FlagEnabledRulesCardProps): ReactElement =>
           featureFlagVariations={featureFlagVariations}
           inputName="onVariation"
           titleStringId="cf.featureFlags.rules.whenFlagEnabled"
+          disabled={disabled}
         />
       </Container>
       <Layout.Vertical spacing="medium" id="rules-container">

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Color, FontVariation, Icon, Text } from '@harness/uicore'
+import { Color, FontVariation, Icon, Layout, Text } from '@harness/uicore'
 import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
 import React from 'react'
@@ -43,28 +43,21 @@ const ClusterCard = (props: ClusterCardProps): React.ReactElement => {
       data-cy="cluster-card"
     >
       <Icon name="gitops-clusters" />
-      <div className={css.clusterDetails}>
-        <Text
-          data-id="cluster-id-label"
-          width={200}
-          lineClamp={1}
-          font={{ variation: FontVariation.BODY }}
-          color={Color.BLACK}
-          className={css.clusterName}
-        >
-          {defaultTo(cluster.name, '')}
+      <Layout.Vertical flex={{ justifyContent: 'flex-start' }} spacing="small" margin={{ bottom: 'small' }}>
+        <Text data-id="cluster-id-label" lineClamp={1} color={Color.BLACK} className={css.clusterName}>
+          {defaultTo(cluster.identifier, '')}
         </Text>
         <Text
           data-id="cluster-id-text"
-          width={200}
           lineClamp={1}
           font={{ variation: FontVariation.FORM_LABEL }}
           color={Color.GREY_400}
           className={css.clusterId}
+          margin={{ left: 'medium' }}
         >
           ID: {cluster.identifier}
         </Text>
-      </div>
+      </Layout.Vertical>
     </div>
   )
 }

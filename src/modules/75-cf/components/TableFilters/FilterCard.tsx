@@ -7,22 +7,41 @@
 
 import React from 'react'
 import { Card, FontVariation, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { FilterProps } from './TableFilters'
 export interface FilterCardProps {
   filter: FilterProps
   selected: boolean
+  filterTotalColor?: Color
   updateTableFilter: (filter: FilterProps | Record<string, any>) => void
 }
 
 export const FilterCard: React.FC<FilterCardProps> = ({ filter, selected, updateTableFilter }) => {
   const { getString } = useStrings()
   return (
-    <Card interactive elevation={1} onClick={() => updateTableFilter(!selected ? filter : {})} selected={selected}>
-      <Text font={{ variation: FontVariation.SMALL }} lineClamp={1} tooltipProps={{ dataTooltipId: filter.tooltipId }}>
+    <Card
+      interactive
+      elevation={1}
+      onClick={() => updateTableFilter(!selected ? filter : {})}
+      selected={selected}
+      data-testid="filter-card"
+    >
+      <Text
+        font={{ variation: FontVariation.SMALL }}
+        lineClamp={1}
+        tooltipProps={{ dataTooltipId: filter.tooltipId }}
+        data-testid="filter-label"
+      >
         {getString(filter.label)}
       </Text>
-      <Text font={{ variation: FontVariation.H2, weight: 'light' }}>{filter.total}</Text>
+      <Text
+        font={{ variation: FontVariation.H2, weight: 'light' }}
+        color={filter.filterTotalColor || Color.GREY_700}
+        data-testid="filter-total"
+      >
+        {filter.total}
+      </Text>
     </Card>
   )
 }

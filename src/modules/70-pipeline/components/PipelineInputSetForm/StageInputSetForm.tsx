@@ -63,12 +63,15 @@ import type { K8sDirectInfraYaml } from 'services/ci'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { Connectors } from '@connectors/constants'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import factory from '../PipelineSteps/PipelineStepFactory'
 import { StepType } from '../PipelineSteps/PipelineStepInterface'
 import { CollapseForm } from './CollapseForm'
 import { getStepFromStage } from '../PipelineStudio/StepUtil'
 import { StepWidget } from '../AbstractSteps/StepWidget'
-import { ConditionalExecutionForm } from './StageAdvancedInputSetForm'
+import { ConditionalExecutionForm, StrategyForm } from './StageAdvancedInputSetForm'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StepViewType } from '../AbstractSteps/Step'
 import { OsTypes } from '../../utils/constants'
@@ -182,6 +185,11 @@ function StepFormInternal({
             allowableTypes={allowableTypes}
           />
         </Container>
+      )}
+      {(template?.step as any)?.strategy && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <StrategyForm path={`${path}.strategy`} readonly={readonly} />
+        </div>
       )}
     </div>
   )
@@ -450,6 +458,7 @@ export function StageInputSetFormInternal({
     deploymentStageTemplateInfraKeys.includes(field)
   )
   const namePath = isEmpty(path) ? '' : `${path}.`
+  const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
 
   const renderMultiTypeInputWithAllowedValues = React.useCallback(
     ({
@@ -727,13 +736,13 @@ export function StageInputSetFormInternal({
     if (scope !== Scope.PROJECT) {
       if (
         deploymentStageTemplate?.serviceConfig?.serviceRef &&
-        deploymentStageInputSet?.serviceConfig?.serviceRef !== RUNTIME_INPUT_VALUE
+        isEmpty(deploymentStageInputSet?.serviceConfig?.serviceRef)
       ) {
         formik?.setValues(set(formik?.values, `${path}.serviceConfig.serviceRef`, RUNTIME_INPUT_VALUE))
       }
       if (
         deploymentStageTemplate?.infrastructure?.environmentRef &&
-        deploymentStageInputSet?.infrastructure?.environmentRef !== RUNTIME_INPUT_VALUE
+        isEmpty(deploymentStageInputSet?.infrastructure?.environmentRef)
       ) {
         formik?.setValues(set(formik?.values, `${path}.infrastructure.environmentRef`, RUNTIME_INPUT_VALUE))
       }
@@ -746,7 +755,7 @@ export function StageInputSetFormInternal({
         <div id={`Stage.${stageIdentifier}.Service`} className={cx(css.accordionSummary)}>
           <div className={css.inputheader}>{getString('service')}</div>
           <div className={css.nestedAccordions}>
-            {deploymentStageTemplate?.serviceConfig?.serviceRef && (
+            {!isSvcEnvEntityEnabled && deploymentStageTemplate?.serviceConfig?.serviceRef && (
               /* istanbul ignore next */ <StepWidget<ServiceConfig>
                 factory={factory}
                 initialValues={deploymentStageInputSet?.serviceConfig || {}}
@@ -754,8 +763,12 @@ export function StageInputSetFormInternal({
                 type={StepType.DeployService}
                 stepViewType={viewType}
                 path={`${path}.serviceConfig`}
-                allowableTypes={allowableTypes}
-                readonly={readonly || scope !== Scope.PROJECT}
+                allowableTypes={
+                  scope === Scope.PROJECT
+                    ? allowableTypes
+                    : allowableTypes.filter(item => item !== MultiTypeInputType.FIXED)
+                }
+                readonly={readonly}
                 customStepProps={{ stageIdentifier }}
               />
             )}
@@ -804,6 +817,105 @@ export function StageInputSetFormInternal({
                 }}
               />
             )}
+          </div>
+        </div>
+      )}
+      {isSvcEnvEntityEnabled && (deploymentStageTemplate as unknown as DeployStageConfig).service && (
+        <div id={`Stage.${stageIdentifier}.Service`} className={cx(css.accordionSummary)}>
+          <div className={css.inputheader}>{getString('service')}</div>
+          <div className={css.nestedAccordions}>
+            {(deploymentStageTemplate as unknown as DeployStageConfig).service?.serviceRef && (
+              /* istanbul ignore next */ <StepWidget<ServiceConfig>
+                factory={factory}
+                initialValues={(deploymentStageInputSet as unknown as DeployStageConfig).service || {}}
+                template={(deploymentStageTemplate as unknown as DeployStageConfig).service || {}}
+                type={StepType.DeployService}
+                stepViewType={viewType}
+                path={`${path}.service`}
+                allowableTypes={
+                  scope === Scope.PROJECT
+                    ? allowableTypes
+                    : allowableTypes.filter(item => item !== MultiTypeInputType.FIXED)
+                }
+                readonly={readonly}
+                customStepProps={{ stageIdentifier, isNewServiceEntity: true }}
+              />
+            )}
+            {!isNil((deploymentStage as any)?.deploymentType) && (
+              /* istanbul ignore next */ <StepWidget<ServiceSpec>
+                factory={factory}
+                initialValues={deploymentStageInputSet?.service?.serviceInputs?.serviceDefinition?.spec || {}}
+                allowableTypes={allowableTypes}
+                template={
+                  (deploymentStageTemplate as unknown as DeployStageConfig)?.service?.serviceInputs?.serviceDefinition
+                    ?.spec || {}
+                }
+                type={getStepTypeByDeploymentType(defaultTo((deploymentStage as any)?.deploymentType, ''))}
+                stepViewType={viewType}
+                path={`${path}.service.serviceInputs.serviceDefinition.spec`}
+                readonly={readonly}
+                customStepProps={{
+                  stageIdentifier,
+                  serviceIdentifier: defaultTo(
+                    deploymentStageInputSet?.service?.serviceRef,
+                    (deploymentStage as unknown as DeployStageConfig)?.service?.serviceRef
+                  ),
+                  allValues: (deploymentStage as unknown as DeployStageConfig)?.service?.serviceInputs
+                    ?.serviceDefinition?.spec
+                }}
+                onUpdate={(data: any) => {
+                  /* istanbul ignore next */
+                  if (deploymentStageInputSet?.service?.serviceInputs?.serviceDefinition?.spec) {
+                    deploymentStageInputSet.service.serviceInputs.serviceDefinition.spec = data
+                    formik?.setValues(set(formik?.values, path, deploymentStageInputSet))
+                  }
+                }}
+              />
+            )}
+          </div>
+        </div>
+      )}
+
+      {isSvcEnvEntityEnabled && (deploymentStageTemplate as DeployStageConfig).environment?.environmentInputs && (
+        <div id={`Stage.${stageIdentifier}.Environment`} className={cx(css.accordionSummary)}>
+          <div className={css.inputheader}>{getString('environmentVariables')}</div>
+          <div className={css.nestedAccordions}>
+            <StepWidget
+              factory={factory}
+              initialValues={deploymentStageTemplate}
+              allowableTypes={allowableTypes}
+              template={deploymentStageTemplate}
+              type={StepType.DeployInfrastructure}
+              stepViewType={viewType}
+              path={`${path}.environment.environmentInputs`}
+              readonly={readonly}
+              customStepProps={{
+                getString,
+                allValues: (deploymentStage as DeployStageConfig)?.environment
+              }}
+            />
+          </div>
+        </div>
+      )}
+
+      {isSvcEnvEntityEnabled && (deploymentStageTemplate as DeployStageConfig).environment?.serviceOverrideInputs && (
+        <div id={`Stage.${stageIdentifier}.Environment`} className={cx(css.accordionSummary)}>
+          <div className={css.inputheader}>{getString('common.serviceOverrides')}</div>
+          <div className={css.nestedAccordions}>
+            <StepWidget
+              factory={factory}
+              initialValues={deploymentStageTemplate}
+              allowableTypes={allowableTypes}
+              template={deploymentStageTemplate}
+              type={StepType.DeployInfrastructure}
+              stepViewType={viewType}
+              path={`${path}.environment.serviceOverrideInputs`}
+              readonly={readonly}
+              customStepProps={{
+                getString,
+                allValues: (deploymentStage as DeployStageConfig)?.environment
+              }}
+            />
           </div>
         </div>
       )}
@@ -865,6 +977,48 @@ export function StageInputSetFormInternal({
                     })}
                   </Container>
                 )}
+                {(deploymentStageTemplate.infrastructure as any).spec?.os ? (
+                  shouldRenderRunTimeInputViewWithAllowedValues(
+                    'spec.spec.os',
+                    deploymentStageTemplate.infrastructure
+                  ) ? (
+                    renderMultiTypeInputWithAllowedValues({
+                      name: `${namePath}infrastructure.spec.os`,
+                      tooltipId: 'os',
+                      labelKey: osLabel,
+                      placeholderKey: osLabel,
+                      fieldPath: 'spec.os',
+                      allowedTypes: [MultiTypeInputType.FIXED]
+                    })
+                  ) : (
+                    <Container className={stepCss.bottomMargin3}>
+                      <MultiTypeSelectField
+                        label={
+                          <Text
+                            tooltipProps={{ dataTooltipId: 'os' }}
+                            font={{ variation: FontVariation.FORM_LABEL }}
+                            margin={{ bottom: 'xsmall' }}
+                          >
+                            {getString(osLabel)}
+                          </Text>
+                        }
+                        name={`${namePath}infrastructure.spec.os`}
+                        style={{ width: 300, paddingBottom: 'var(--spacing-small)' }}
+                        multiTypeInputProps={{
+                          selectItems: [
+                            { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
+                            { label: getString('pipeline.infraSpecifications.osTypes.windows'), value: OsTypes.Windows }
+                          ],
+                          multiTypeInputProps: {
+                            allowableTypes: [MultiTypeInputType.FIXED]
+                          },
+                          disabled: readonly
+                        }}
+                        useValue
+                      />
+                    </Container>
+                  )
+                ) : null}
                 {(deploymentStageTemplate.infrastructure as any).spec?.harnessImageConnectorRef ? (
                   shouldRenderRunTimeInputViewWithAllowedValues(
                     'spec.harnessImageConnectorRef',
@@ -1109,9 +1263,13 @@ export function StageInputSetFormInternal({
                 template={deploymentStageTemplate?.infrastructure || {}}
                 type={StepType.DeployEnvironment}
                 stepViewType={viewType}
-                allowableTypes={allowableTypes}
+                allowableTypes={
+                  scope === Scope.PROJECT
+                    ? allowableTypes
+                    : allowableTypes.filter(item => item !== MultiTypeInputType.FIXED)
+                }
                 path={`${path}.infrastructure`}
-                readonly={readonly || scope !== Scope.PROJECT}
+                readonly={readonly}
               />
             )}
             {deploymentStageTemplate.infrastructure.infrastructureDefinition && (

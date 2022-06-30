@@ -158,11 +158,16 @@ export const CDDashboardPage: React.FC = () => {
 
   useDocumentTitle([getString('deploymentsText'), getString('overview')])
 
+  const startTime = defaultTo(timeRange?.range[0]?.getTime(), 0)
+  const endTime = defaultTo(timeRange?.range[1]?.getTime(), 0)
+
   const { data, loading, error, refetch } = useGetDeployments({
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,
-      orgIdentifier
+      orgIdentifier,
+      startTime: startTime,
+      endTime: endTime
     }
   })
 
@@ -191,8 +196,8 @@ export const CDDashboardPage: React.FC = () => {
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
-      startTime: timeRange?.range[0]?.getTime() || 0,
-      endTime: timeRange?.range[1]?.getTime() || 0
+      startTime: startTime,
+      endTime: endTime
     }
   })
 
@@ -205,7 +210,11 @@ export const CDDashboardPage: React.FC = () => {
   const pipelineExecutionSummary = pipelineExecution?.data || {}
 
   if (loadingWorkloads || pipelineLoading) {
-    return <PageSpinner />
+    return (
+      <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
+        <PageSpinner />
+      </div>
+    )
   }
 
   return (

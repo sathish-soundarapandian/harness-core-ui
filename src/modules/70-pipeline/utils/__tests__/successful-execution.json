@@ -1,0 +1,122 @@
+{
+  "pipelineExecutionSummary": {
+    "name": "Jest",
+    "status": "Success",
+    "layoutNodeMap": {
+      "GYxP4P3fRNeE12oYEzFb4g": {
+        "nodeType": "CI",
+        "nodeGroup": "STAGE",
+        "nodeIdentifier": "Jest",
+        "name": "Jest",
+        "nodeUuid": "GYxP4P3fRNeE12oYEzFb4g",
+        "status": "Success",
+        "module": "ci",
+        "moduleInfo": { "ci": { "__recast": "io.harness.ci.plan.creator.execution.CIStageModuleInfo" } },
+        "startTs": 1655965008009,
+        "endTs": 1655965493332,
+        "edgeLayoutList": { "currentNodeChildren": [], "nextIds": [] },
+        "nodeRunInfo": {
+          "whenCondition": "\u003c+OnPipelineSuccess\u003e",
+          "evaluatedCondition": true,
+          "expressions": [
+            {
+              "expression": "OnPipelineSuccess",
+              "expressionValue": "true",
+              "count": 1
+            }
+          ]
+        },
+        "failureInfo": {
+          "message": ""
+        },
+        "failureInfoDTO": { "message": "", "failureTypeList": [], "responseMessages": [] },
+        "nodeExecutionId": "eBB2DwA3QNWYeiaqhe7CMA"
+      }
+    }
+  },
+  "executionGraph": {
+    "rootNodeId": "eBB2DwA3QNWYeiaqhe7CMA",
+    "nodeMap": {
+      "eBB2DwA3QNWYeiaqhe7CMA": {
+        "uuid": "eBB2DwA3QNWYeiaqhe7CMA",
+        "setupId": "GYxP4P3fRNeE12oYEzFb4g",
+        "stepType": "IntegrationStageStepPMS",
+        "status": "Success"
+      },
+      "_SzKbdJiRkuWzXk6jk8SOA": {
+        "uuid": "_SzKbdJiRkuWzXk6jk8SOA",
+        "setupId": "0N07ZsYVRiKYz5fk950BFA",
+        "name": "Execution",
+        "identifier": "execution",
+        "stepType": "NG_EXECUTION",
+        "status": "Success"
+      },
+      "Jt0IeteUS7i6aJ4-4jY-UQ": {
+        "uuid": "Jt0IeteUS7i6aJ4-4jY-UQ",
+        "setupId": "VvSelLpGQSmUtVCTWlvOpQ",
+        "name": "Jest",
+        "identifier": "Jest",
+        "status": "Success"
+      },
+      "AYlgsGzqQDSbaCn4h_dv0w": {
+        "uuid": "AYlgsGzqQDSbaCn4h_dv0w",
+        "setupId": "zYoo6PmlQ_iotNogcxDVYg",
+        "name": "liteEngineTask",
+        "identifier": "liteEngineTask",
+        "stepType": "liteEngineTask",
+        "status": "Success"
+      },
+      "5Omd3rK9TaGpwwDuitWt_Q": {
+        "uuid": "5Omd3rK9TaGpwwDuitWt_Q",
+        "setupId": "jAf5BpIKTsiEV7GwU2m8Zg",
+        "name": "Install Node Modules",
+        "identifier": "Install_Node_Modules",
+        "stepType": "Run",
+        "status": "Success"
+      },
+      "VV8IHrBHRcKI97wNg_Z-Hw": {
+        "uuid": "VV8IHrBHRcKI97wNg_Z-Hw",
+        "setupId": "t-S9PjFgRYyORaybNY-YNw",
+        "name": "Restore Cache",
+        "identifier": "Restore_Cache",
+        "stepType": "RestoreCacheGCS",
+        "status": "Success"
+      },
+      "fmAYaCFURqidx7sSmXFx5w": {
+        "uuid": "fmAYaCFURqidx7sSmXFx5w",
+        "setupId": "DsfqTclcSAGNBCsbF3vK9g",
+        "name": "Save Cache",
+        "identifier": "Save_Cache",
+        "stepType": "SaveCacheGCS",
+        "status": "Success"
+      },
+      "GJQifKtTRCCeeEgeNqcHIA": {
+        "uuid": "GJQifKtTRCCeeEgeNqcHIA",
+        "setupId": "BVnWEmPaRkmiMlTyFpuoCg",
+        "name": "Git clone",
+        "identifier": "harness-git-clone",
+        "stepType": "Plugin",
+        "status": "Success"
+      },
+      "h8_ENysrR0iW5QPS56vnDQ": {
+        "uuid": "h8_ENysrR0iW5QPS56vnDQ",
+        "setupId": "bymn4-MOQdmMNykCpSq8Pw",
+        "name": "Get Commit ID",
+        "identifier": "Get_Commit_ID",
+        "stepType": "Run",
+        "status": "Success"
+      }
+    },
+    "nodeAdjacencyListMap": {
+      "eBB2DwA3QNWYeiaqhe7CMA": { "children": ["_SzKbdJiRkuWzXk6jk8SOA"], "nextIds": [] },
+      "_SzKbdJiRkuWzXk6jk8SOA": { "children": ["AYlgsGzqQDSbaCn4h_dv0w"], "nextIds": [] },
+      "Jt0IeteUS7i6aJ4-4jY-UQ": { "children": [], "nextIds": [] },
+      "AYlgsGzqQDSbaCn4h_dv0w": { "children": [], "nextIds": ["GJQifKtTRCCeeEgeNqcHIA"] },
+      "5Omd3rK9TaGpwwDuitWt_Q": { "children": [], "nextIds": ["fmAYaCFURqidx7sSmXFx5w"] },
+      "VV8IHrBHRcKI97wNg_Z-Hw": { "children": [], "nextIds": ["5Omd3rK9TaGpwwDuitWt_Q"] },
+      "fmAYaCFURqidx7sSmXFx5w": { "children": [], "nextIds": ["Jt0IeteUS7i6aJ4-4jY-UQ"] },
+      "GJQifKtTRCCeeEgeNqcHIA": { "children": [], "nextIds": ["h8_ENysrR0iW5QPS56vnDQ"] },
+      "h8_ENysrR0iW5QPS56vnDQ": { "children": [], "nextIds": ["VV8IHrBHRcKI97wNg_Z-Hw"] }
+    }
+  }
+}

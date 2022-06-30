@@ -45,6 +45,10 @@ import { CFRollbackStack } from './CloudFormation/RollbackStack/RollbackStack'
 import { CFDeleteStack } from './CloudFormation/DeleteStack/DeleteStack'
 import { CFCreateStack } from './CloudFormation/CreateStack/CreateStack'
 import { CreatePr } from './CreatePrStep/CreatePrStep'
+import { MergePR } from './MergePrStep/MergePrStep'
+import { AzureWebAppRollback } from './AzureWebAppRollback/AzureWebAppRollback'
+import { AzureSlotDeployment } from './AzureSlotDeployment/AzureSlotDeployment'
+import { AzureTrafficShift } from './AzureTrafficShift/AzureTrafficShift'
 
 factory.registerStep(new HttpStep())
 factory.registerStep(new K8RolloutDeployStep())
@@ -84,3 +88,7 @@ factory.registerStep(new CFRollbackStack())
 factory.registerStep(new CFDeleteStack())
 factory.registerStep(new CFCreateStack())
 factory.registerStep(new CreatePr())
+factory.registerStep(new MergePR())
+factory.registerStep(new AzureWebAppRollback())
+factory.registerStep(new AzureSlotDeployment())
+factory.registerStep(new AzureTrafficShift())

@@ -19,24 +19,24 @@ import {
   Container,
   PageError
 } from '@wings-software/uicore'
-import { defaultTo, get, isEmpty, set, startCase } from 'lodash-es'
+import { defaultTo, isEmpty, set, startCase } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import produce from 'immer'
 import {
   DeploymentStageConfig,
   GetExecutionStrategyYamlQueryParams,
-  StageElementConfig,
-  StageElementWrapperConfig,
   useGetExecutionStrategyList,
   useGetExecutionStrategyYaml
 } from 'services/cd-ng'
+import type { StageElementConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
 import { PageSpinner } from '@common/components'
-import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
-import { getSelectedDeploymentType, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { getServiceDefinitionType, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerTypes } from '../PipelineContext/PipelineActions'
 import Default from './resources/BlankCanvas.png'
@@ -48,6 +48,7 @@ import CanaryVideo from './resources/Canary-deployment.mp4'
 import Rolling from './resources/Rolling-Update-deployment.png'
 import BlueGreen from './resources/Blue-Green-deployment.png'
 import Canary from './resources/Canary-deployment.png'
+import { isNewServiceEnvEntity } from '../CommonUtils/DeployStageSetupShellUtils'
 import css from './ExecutionStrategy.module.scss'
 
 export interface ExecutionStrategyProps {
@@ -101,20 +102,17 @@ function ExecutionStrategyRef(
     getStageFromPipeline
   } = usePipelineContext()
   const { getString } = useStrings()
+  const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+
   const [strategiesByDeploymentType, setStrategies] = useState([])
   const [isSubmitDisabled, disableSubmit] = useState(false)
   const [isVerifyEnabled, setIsVerifyEnabled] = useState(false)
   const [showPlayButton, setShowPlayButton] = useState<boolean>(false)
   const logger = loggerFor(ModuleName.CD)
-  const serviceDefinitionType = useCallback((): GetExecutionStrategyYamlQueryParams['serviceDefinitionType'] => {
-    const isPropagating = get(selectedStage, 'stage.spec.serviceConfig.useFromStage', null)
-    return getSelectedDeploymentType(
-      selectedStage as StageElementWrapper<DeploymentStageElementConfig>,
-      getStageFromPipeline,
-      isPropagating
-    )
-  }, [getStageFromPipeline, selectedStage])
 
+  const serviceDefinitionType = useCallback((): GetExecutionStrategyYamlQueryParams['serviceDefinitionType'] => {
+    return getServiceDefinitionType(selectedStage, getStageFromPipeline, isNewServiceEnvEntity, isSvcEnvEntityEnabled)
+  }, [getStageFromPipeline, isSvcEnvEntityEnabled, selectedStage])
   const [selectedStrategy, setSelectedStrategy] = useState<StrategyType>(
     serviceDefinitionType() === ServiceDeploymentType.ServerlessAwsLambda ? 'Basic' : 'Rolling'
   )

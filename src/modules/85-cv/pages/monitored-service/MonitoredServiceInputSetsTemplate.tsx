@@ -72,10 +72,18 @@ export const getLabelByName = (name: string, getString: UseStringsReturn['getStr
       return getString('cv.healthSource.connectors.AppDynamics.metricPathType.text')
     case 'serviceInstanceMetricPath':
       return getString('cv.healthSource.connectors.AppDynamics.serviceInstance')
+    case 'serviceInstanceFieldName':
+      return getString('cv.monitoringSources.serviceInstanceIdentifier')
     case 'connectorRef':
       return getString('connectors.selectConnector')
+    case 'query':
+      return getString('cv.query')
+    case 'category':
+      return `Category for ${getString('cv.monitoringSources.riskCategoryLabel')}`
+    case 'metricType':
+      return `Metric type for ${getString('cv.monitoringSources.riskCategoryLabel')}`
     default:
-      return ''
+      return name
   }
 }
 
@@ -89,8 +97,8 @@ interface TemplateDataInterface {
 
 export default function MonitoredServiceInputSetsTemplate({ templateData }: { templateData?: TemplateDataInterface }) {
   const { templateRef } = useQueryParams<{ templateRef?: string }>()
-  const isTemplateDrawer = Boolean(templateData)
-  const templateRefData: TemplateDataInterface = isTemplateDrawer ? templateData : JSON.parse(templateRef || '{}')
+  const isReadOnlyInputSet = Boolean(templateData)
+  const templateRefData: TemplateDataInterface = isReadOnlyInputSet ? templateData : JSON.parse(templateRef || '{}')
   const { getString } = useStrings()
   const history = useHistory()
   const { showSuccess, showError } = useToaster()
@@ -137,7 +145,7 @@ export default function MonitoredServiceInputSetsTemplate({ templateData }: { te
   // Set InputSet Yaml as state variable
   React.useEffect(() => {
     if (templateInputYaml && templateInputYaml?.data && !isInputSetCreated && !loadingTemplateYaml) {
-      const inputSet = isTemplateDrawer
+      const inputSet = isReadOnlyInputSet
         ? parse(templateInputYaml?.data)
         : (parse(templateInputYaml?.data?.replace(/"<\+input>"/g, '""')) as any)
       setMonitoredServiceInputSet(inputSet)
@@ -215,7 +223,7 @@ export default function MonitoredServiceInputSetsTemplate({ templateData }: { te
 
   return (
     <>
-      {!isTemplateDrawer && <Page.Header size="large" title={'Template Inputs'} />}
+      {!isReadOnlyInputSet && <Page.Header size="large" title={'Template Inputs'} />}
 
       <Formik
         formName="MonitoredServiceForm"
@@ -235,11 +243,13 @@ export default function MonitoredServiceInputSetsTemplate({ templateData }: { te
                     name={'serviceRef'}
                     label={getString('cv.healthSource.serviceLabel')}
                     selectItems={serviceOptions}
+                    disabled={isReadOnlyInputSet}
                   />
                   <FormInput.MultiTypeInput
                     name={'environmentRef'}
                     label={getString('cv.healthSource.environmentLabel')}
                     selectItems={environmentOptions}
+                    disabled={isReadOnlyInputSet}
                   />
                 </Card>
                 {Boolean(tableData?.length) && (
@@ -294,9 +304,9 @@ export default function MonitoredServiceInputSetsTemplate({ templateData }: { te
                       <Text font={'normal'} color={Color.BLACK} style={{ paddingBottom: spacingMedium }}>
                         {getString('cv.healthSource.nameLabel')}: {healthSource?.name}
                       </Text>
-                      {runtimeInputs.length ? (
+                      {runtimeInputs.length || metricDefinitions.length ? (
                         runtimeInputs.map(input => {
-                          if (input.name === 'connectorRef' && !isTemplateDrawer) {
+                          if (input.name === 'connectorRef' && !isReadOnlyInputSet) {
                             return (
                               <FormConnectorReferenceField
                                 width={400}
@@ -375,7 +385,7 @@ export default function MonitoredServiceInputSetsTemplate({ templateData }: { te
                     })}
                   </Card>
                 )}
-                {!isTemplateDrawer && (
+                {!isReadOnlyInputSet && (
                   <Card className={css.serviceAndEnv}>
                     <Button
                       disabled={showLoading}

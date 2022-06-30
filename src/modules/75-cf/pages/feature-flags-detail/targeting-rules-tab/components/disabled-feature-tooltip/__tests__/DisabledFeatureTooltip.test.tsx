@@ -27,7 +27,9 @@ describe('DisabledFeatureTooltip', () => {
     jest.spyOn(useFeatureEnabledMock, 'default').mockReturnValue({
       enabledByPlanEnforcement: true,
       enabledByPermission: false,
-      featureEnabled: false
+      featureEnabled: false,
+      canToggle: true,
+      canEdit: false
     })
 
     renderComponent()
@@ -41,7 +43,9 @@ describe('DisabledFeatureTooltip', () => {
     jest.spyOn(useFeatureEnabledMock, 'default').mockReturnValue({
       enabledByPlanEnforcement: false,
       enabledByPermission: true,
-      featureEnabled: false
+      featureEnabled: false,
+      canEdit: true,
+      canToggle: true
     })
 
     renderComponent()

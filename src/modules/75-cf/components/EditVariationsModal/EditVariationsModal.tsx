@@ -9,6 +9,7 @@ import React, { useState } from 'react'
 import { Dialog, Divider, Intent } from '@blueprintjs/core'
 import * as yup from 'yup'
 import { clone, isEqual } from 'lodash-es'
+import { FieldArray } from 'formik'
 import {
   Button,
   ButtonProps,
@@ -18,14 +19,13 @@ import {
   Formik,
   FormikForm as Form,
   FormInput,
-  Heading,
   Icon,
   Layout,
   SelectOption,
   Text
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { Color, FontVariation } from '@harness/design-system'
+import { Color } from '@harness/design-system'
 import { getErrorMessage, useValidateVariationValues } from '@cf/utils/CFUtils'
 import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/exports'
@@ -176,7 +176,13 @@ export const EditVariationsModal: React.FC<EditVariationsModalProps> = ({
     }
 
     return (
-      <Dialog isOpen onClose={hideModal} enforceFocus={false} title="" style={{ width: 800, minHeight: 'fit-content' }}>
+      <Dialog
+        isOpen
+        onClose={hideModal}
+        enforceFocus={false}
+        title={getString('cf.editVariation.title')}
+        style={{ width: 800, minHeight: 'fit-content' }}
+      >
         <Formik
           initialValues={initialValues}
           formName="editVariations"
@@ -203,75 +209,78 @@ export const EditVariationsModal: React.FC<EditVariationsModalProps> = ({
               <FormikEffect onChange={onFormikEffect} formik={formikProps} />
               <Container padding="xlarge">
                 <Container style={{ overflow: 'auto' }} padding="xsmall">
-                  <Heading level={3} font={{ variation: FontVariation.H3 }} margin={{ bottom: 'xlarge' }}>
-                    {getString('cf.editVariation.title')}
-                  </Heading>
-                  {formikProps.values?.variations?.map((_: Variation, index: number) => (
-                    <Layout.Horizontal
-                      key={`flagElem-${index}`}
-                      style={{
-                        boxShadow: '0px 0px 1px rgb(40 41 61 / 4%), 0px 2px 4px rgb(96 97 112 / 16%)',
-                        borderRadius: '4px',
-                        padding: 'var(--spacing-small) var(--spacing-small) 0 var(--spacing-medium)',
-                        marginBottom: 'var(--spacing-medium)'
-                      }}
-                    >
-                      <Container style={{ width: 220 }}>
-                        <FormInput.InputWithIdentifier
-                          inputName={`variations.${index}.name`}
-                          idName={`variations.${index}.identifier`}
-                          inputLabel={getString('name')}
-                          isIdentifierEditable={
-                            formikProps.values?.variations[index].identifier !== feature.variations[index]?.identifier
-                          }
-                          inputGroupProps={{ inputGroup: { autoFocus: true } }}
-                        />
-                      </Container>
-                      <Container width={20} />
-                      <FormInput.Text
-                        name={`variations.${index}.value`}
-                        label={getString('valueLabel')}
-                        style={{ width: 220 }}
-                        disabled={isBooleanFlag}
-                      />
-                      <Container width={20} />
-                      <FormInput.Text
-                        name={`variations.${index}.description`}
-                        label={getString('description')}
-                        style={{ width: 220 }}
-                      />
-                      <Container width={5} />
-                      <Container flex={{ align: 'center-center' }} height={70}>
-                        <Button
-                          minimal
-                          icon="trash"
-                          style={{ visibility: formikProps.values?.variations.length === 2 ? 'hidden' : 'visible' }}
-                          onClick={() => {
-                            const _variations = clone(formikProps.values?.variations)
-                            _variations.splice(index, 1)
-                            formikProps.setFieldValue('variations', _variations)
-                          }}
-                        />
-                      </Container>
-                    </Layout.Horizontal>
-                  ))}
-                  {!isBooleanFlag && (
-                    <Container style={{ marginTop: '-10px' }}>
-                      <Button
-                        minimal
-                        intent="primary"
-                        icon="small-plus"
-                        text={getString('cf.shared.variation')}
-                        style={{ paddingLeft: 0 }}
-                        onClick={() => {
-                          formikProps.setFieldValue('variations', [
-                            ...(formikProps.values?.variations || []),
-                            { identifier: '', name: '', value: '', description: '' }
-                          ])
-                        }}
-                      />
-                    </Container>
-                  )}
+                  <FieldArray
+                    name="variations"
+                    render={({ remove, push }) => (
+                      <>
+                        {formikProps.values?.variations?.map((_: Variation, index: number) => (
+                          <Layout.Horizontal
+                            key={`flagElem-${index}`}
+                            margin={{ bottom: 'medium' }}
+                            padding={{ top: 'small', right: 'small', left: 'medium' }}
+                            style={{
+                              boxShadow: '0px 0px 1px rgb(40 41 61 / 4%), 0px 2px 4px rgb(96 97 112 / 16%)',
+                              borderRadius: '4px'
+                            }}
+                          >
+                            <Container style={{ width: 220 }}>
+                              <FormInput.InputWithIdentifier
+                                inputName={`variations.${index}.name`}
+                                idName={`variations.${index}.identifier`}
+                                inputLabel={getString('name')}
+                                isIdentifierEditable={
+                                  formikProps.values?.variations[index].identifier !==
+                                  feature.variations[index]?.identifier
+                                }
+                                inputGroupProps={{ inputGroup: { autoFocus: true } }}
+                              />
+                            </Container>
+                            <Container width={20} />
+                            <FormInput.Text
+                              name={`variations.${index}.value`}
+                              label={getString('valueLabel')}
+                              style={{ width: 220 }}
+                              disabled={isBooleanFlag}
+                            />
+                            <Container width={20} />
+                            <FormInput.Text
+                              name={`variations.${index}.description`}
+                              label={getString('description')}
+                              style={{ width: 220 }}
+                            />
+                            {!isBooleanFlag && (
+                              <>
+                                <Container width={5} />
+                                <Container flex={{ align: 'center-center' }} height={70}>
+                                  <Button
+                                    minimal
+                                    variation={ButtonVariation.ICON}
+                                    aria-label={getString('cf.editVariation.remove')}
+                                    icon="trash"
+                                    onClick={() => remove(index)}
+                                  />
+                                </Container>
+                              </>
+                            )}
+                          </Layout.Horizontal>
+                        ))}
+
+                        {!isBooleanFlag && (
+                          <Container style={{ marginTop: '-10px' }}>
+                            <Button
+                              minimal
+                              variation={ButtonVariation.LINK}
+                              intent="primary"
+                              icon="small-plus"
+                              text={getString('cf.shared.variation')}
+                              style={{ paddingLeft: 0 }}
+                              onClick={() => push({ identifier: '', name: '', value: '', description: '' })}
+                            />
+                          </Container>
+                        )}
+                      </>
+                    )}
+                  />
                   <Container margin={{ top: 'xlarge', bottom: 'large' }}>
                     <Text
                       color={Color.BLACK}

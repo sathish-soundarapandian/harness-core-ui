@@ -1,0 +1,6 @@
+{
+  "status": "SUCCESS",
+  "data": "spec:\n  execution:\n    steps:\n    - step:\n        name: \"ServiceNow Create\"\n        identifier: dd6ca19c-f757-5801-b7ad-82b3ca4833e5\n        type: ServiceNowCreate\n        timeout: 5m\n        spec:\n          fields: []\n    - step:\n        name: \"ServiceNow Approval\"\n        identifier: b0aa1f25-128d-5553-ad35-5741ee6a3a5e\n        type: ServiceNowApproval\n        timeout: 1d\n        spec:\n          approvalCriteria:\n            type: KeyValues\n            spec:\n              matchAnyCondition: false\n              conditions: []\n          rejectionCriteria:\n            type: KeyValues\n            spec:\n              matchAnyCondition: false\n              conditions: []\n    - step:\n        name: \"ServiceNow Update\"\n        identifier: 2359052e-388c-5502-89c8-094b13d0167a\n        type: ServiceNowUpdate\n        timeout: 5m\n        spec:\n          fields: []\n",
+  "metaData": null,
+  "correlationId": "a797d501-d7b7-4967-8c9c-8b82fdbedf40"
+}

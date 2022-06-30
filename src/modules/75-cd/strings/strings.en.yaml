@@ -59,7 +59,6 @@ steps:
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'
-scriptRequired: Script is a required field
 workloadRequired: Workload is a required field
 stepName: Step Name
 serviceCreated: '{{ $.common.serviceCreated }}'
@@ -118,8 +117,15 @@ pipelineSteps:
     selectInfrastructure: '- Select Infrastructure -'
     plusNewEnvironment: '+ {{$.newEnvironment}}'
     newEnvironment: '{{$.newEnvironment}}'
-    environmentIsRequired: '{{ $.common.validation.environmentIsRequired }}'
     deployToAll: Deploy in parallel on all infrastructure
+    environmentOrEnvGroupAsRuntime: Which of Environment or Environment Group should be marked as runtime?
+    allClustersSelected: All Clusters in Environment
+    allEnvironmentsInEnvGroupSelected: All Environments
+    environmentIsRequired: '{{ $.common.validation.environmentIsRequired }}'
+    infrastructureIsRequired: 'Infrastructure is required'
+    environmentOrEnvGroupIsRequired: 'Environment or Environment Group is required'
+    environmentInEnvGroupIsRequired: 'Environment in Environment Group is required'
+    clusterIsRequired: 'Clusters are required'
   serviceTab:
     stageOverrides: Stage Overrides
     overrideChanges: Override artifacts, manifests, service variables for this stage
@@ -162,6 +168,7 @@ serviceDashboard:
   instanceCountHistory: Instance Count History
   instanceDetails: Instance Details
   pod: pod
+  function: function
   deployedAt: Deployed At
   deployedBy: Deployed By
   artifact: artifact
@@ -175,6 +182,9 @@ serviceDashboard:
   helmChartName: Helm Chart Name
   helmRopoUrl: Repo URL
   manageServiceLabel: Manage Services
+  unitDay: '/Day'
+  lastPipelineExecution: Last Pipeline Execution
+  noLastDeployment: No last deployment exist
 noEnvironment:
   title: No Environments Available
   message: Create an environment and let’s start configuring the deployment
@@ -269,7 +279,6 @@ environment:
   filters:
     environmentNamePlaceholder: Enter Environment Name
 serviceOverrides:
-  label: Service Overrides
   helperText: Override existing variables or define new variables based on the selected service
   deleted: Successfully deleted Service Override
   deletedOneVariable: Successfully deleted variable from service override
@@ -277,7 +286,9 @@ infrastructure:
   infrastructureDefinitions: Infrastructure Definitions
   noInfrastructureInEnvironment: You have no infrastructures in this environment
   createNew: Create New Infrastructure
+  edit: Edit Infrastructure
   created: Successfully created Infrastructure {{ identifier }}
+  updated: Successfully updated Infrastructure {{ identifier }}
   delete: Delete Infrastructure
   deleteConfirmation: Are you sure you want to delete this Infrastructure?
   deleted: Successfully deleted Infrastructure {{ identifier }}
@@ -329,8 +340,9 @@ clustersSelected: 'Clusters Selected'
 selectClusterLabel: 'Select Cluster(s)'
 noLinkedClusters: 'No Linked Clusters Available'
 selectedLabel: 'Selected'
-successfullyLinkedClusters: 'SuccessFully Linked Clusters'
+successfullyLinkedClusters: 'Successfully Linked Clusters'
 unLink: 'UnLink'
 unLinkedCluster: 'Unlinked Successfully'
 overrideYaml: Override Yaml Values
 manifestId: Manifest Id
+azureWebAppRollbackDescription: Rollback to the last successfully deployed app.

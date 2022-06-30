@@ -14,7 +14,7 @@ exports[`Jira Update tests Basic snapshot - deploymentform mode: jira-update-dep
       >
         <span
           class="Tooltip--acenter bp3-label"
-          data-tooltip-id="stepTestUtilForm_spec.conectorRef"
+          data-tooltip-id="stepTestUtilForm_spec.connectorRef"
         >
           pipeline.jiraApprovalStep.connectorRef
         </span>
@@ -35,7 +35,7 @@ exports[`Jira Update tests Basic snapshot - deploymentform mode: jira-update-dep
             >
               <button
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
-                data-testid="cr-field-spec.conectorRef"
+                data-testid="cr-field-spec.connectorRef"
                 style="width: 385px;"
                 type="button"
               >
@@ -367,42 +367,6 @@ exports[`Jira Update tests Basic snapshot - input variable view: jira-update-inp
       <span
         class="nameSection"
       >
-        name
-      </span>
-      <p
-        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
-        style="--text-line-clamp: 1;"
-      >
-        <span
-          class=""
-        />
-      </p>
-    </div>
-    <div
-      class="variableListRow variable-list-row"
-    >
-      <span
-        class="nameSection"
-      >
-        timeout
-      </span>
-      <p
-        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
-        style="--text-line-clamp: 1;"
-      >
-        <span
-          class=""
-        >
-          1d
-        </span>
-      </p>
-    </div>
-    <div
-      class="variableListRow variable-list-row"
-    >
-      <span
-        class="nameSection"
-      >
         connectorRef
       </span>
       <p
@@ -476,7 +440,7 @@ exports[`Jira Update tests Basic snapshot - inputset mode: input set with errors
       >
         <span
           class="Tooltip--acenter bp3-label"
-          data-tooltip-id="stepTestUtilForm_spec.conectorRef"
+          data-tooltip-id="stepTestUtilForm_spec.connectorRef"
         >
           pipeline.jiraApprovalStep.connectorRef
         </span>
@@ -485,7 +449,7 @@ exports[`Jira Update tests Basic snapshot - inputset mode: input set with errors
         style="display: flex; align-items: center;"
       >
         <div
-          class="bp3-form-group"
+          class="bp3-form-group bp3-intent-danger"
           style="margin-bottom: 0px;"
         >
           <div
@@ -497,7 +461,7 @@ exports[`Jira Update tests Basic snapshot - inputset mode: input set with errors
             >
               <button
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
-                data-testid="cr-field-spec.conectorRef"
+                data-testid="cr-field-spec.connectorRef"
                 style="width: 385px;"
                 type="button"
               >
@@ -558,6 +522,37 @@ exports[`Jira Update tests Basic snapshot - inputset mode: input set with errors
                   </button>
                 </span>
               </span>
+            </div>
+            <div
+              class="bp3-form-helper-text"
+            >
+              <div
+                class="FormError--errorDiv"
+                data-name="spec.connectorRef"
+              >
+                <span
+                  class="bp3-icon StyledProps--main FormError--errorTextIcon StyledProps--intent-danger"
+                  data-icon="circle-cross"
+                >
+                  <svg
+                    height="12"
+                    viewBox="0 0 13 13"
+                    width="12"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M.167 6.501a6.333 6.333 0 1012.666 0 6.333 6.333 0 00-12.666 0zm4.071-3.003l2.26 2.263 2.264-2.263c.495-.495 1.236.248.741.743L7.24 6.504l2.254 2.258c.495.495-.247 1.238-.742.743L6.497 7.246 4.238 9.505c-.495.495-1.236-.249-.741-.744l2.258-2.258-2.259-2.262c-.494-.495.248-1.238.742-.743z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="FormError--error"
+                >
+                  pipeline.jiraApprovalStep.validations.connectorRef
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -1310,7 +1305,7 @@ exports[`Jira Update tests deploymentform readonly mode: jira-update-deploymentf
       >
         <span
           class="Tooltip--acenter bp3-label"
-          data-tooltip-id="stepTestUtilForm_spec.conectorRef"
+          data-tooltip-id="stepTestUtilForm_spec.connectorRef"
         >
           pipeline.jiraApprovalStep.connectorRef
         </span>
@@ -1331,7 +1326,7 @@ exports[`Jira Update tests deploymentform readonly mode: jira-update-deploymentf
             >
               <button
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
-                data-testid="cr-field-spec.conectorRef"
+                data-testid="cr-field-spec.connectorRef"
                 style="width: 385px;"
                 type="button"
               >

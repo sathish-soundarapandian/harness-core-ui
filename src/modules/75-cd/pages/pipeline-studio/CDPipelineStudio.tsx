@@ -23,7 +23,7 @@ import { PipelineProvider } from '@pipeline/components/PipelineStudio/PipelineCo
 import { PipelineStudio } from '@pipeline/components/PipelineStudio/PipelineStudio'
 import { getCDTrialDialog } from '@cd/modals/CDTrial/useCDTrialModal'
 import { TrialType } from '@pipeline/components/TrialModalTemplate/trialModalUtils'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { FeatureFlag } from '@common/featureFlags'

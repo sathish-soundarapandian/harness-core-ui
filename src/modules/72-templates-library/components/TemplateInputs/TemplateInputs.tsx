@@ -36,7 +36,7 @@ import type {
   StepElementConfig,
   StageElementWrapperConfig,
   PipelineInfoConfig
-} from 'services/cd-ng'
+} from 'services/pipeline-ng'
 import type { NGTemplateInfoConfigWithGitDetails } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'

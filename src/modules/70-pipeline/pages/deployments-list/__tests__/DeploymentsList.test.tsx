@@ -38,6 +38,7 @@ jest.mock('services/pipeline-ng', () => ({
   }),
   useHandleInterrupt: jest.fn(() => ({})),
   useHandleStageInterrupt: jest.fn(() => ({})),
+  useGetExecutionData: jest.fn().mockReturnValue({}),
   useGetFilterList: jest.fn().mockImplementation(() => {
     return { mutate: jest.fn(() => Promise.resolve(filters)), loading: false }
   }),

@@ -27,7 +27,7 @@ import { useHistory, useParams, matchPath } from 'react-router-dom'
 import { parse } from 'yaml'
 import { defaultTo, isEmpty, isEqual, merge, omit } from 'lodash-es'
 import produce from 'immer'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { AppStoreContext, useAppStore } from 'framework/AppStore/AppStoreContext'
 import { NavigationCheck } from '@common/components/NavigationCheck/NavigationCheck'
@@ -89,7 +89,6 @@ interface PipelineWithGitContextFormProps extends PipelineInfoConfig {
   branch?: string
   connectorRef?: string
   filePath?: string
-  remoteType?: string
   storeType?: string
 }
 
@@ -333,7 +332,6 @@ export function PipelineCanvas({
                 branch: branch || gitDetails.branch || '',
                 connectorRef: connectorRef || '',
                 storeType: storeType || '',
-                remoteType: 'create',
                 filePath: gitDetails.filePath
               })}
               closeModal={onCloseCreate}
@@ -441,7 +439,6 @@ export function PipelineCanvas({
       delete (pipeline as PipelineWithGitContextFormProps).branch
       delete (pipeline as PipelineWithGitContextFormProps).connectorRef
       delete (pipeline as PipelineWithGitContextFormProps).filePath
-      delete (pipeline as PipelineWithGitContextFormProps).remoteType
       delete (pipeline as PipelineWithGitContextFormProps).storeType
       updatePipeline(pipeline)
       if (currStoreMetadata?.storeType) {
@@ -453,11 +450,23 @@ export function PipelineCanvas({
           updatedGitDetails = { ...gitDetails, ...updatedGitDetails }
         }
         updateGitDetails(updatedGitDetails).then(() => {
-          if (updatedGitDetails && !currStoreMetadata?.storeType) {
-            updateQueryParams(
-              { repoIdentifier: updatedGitDetails.repoIdentifier, branch: updatedGitDetails.branch },
-              { skipNulls: true }
-            )
+          if (updatedGitDetails) {
+            if (isGitSyncEnabled) {
+              updateQueryParams(
+                { repoIdentifier: updatedGitDetails.repoIdentifier, branch: updatedGitDetails.branch },
+                { skipNulls: true }
+              )
+            } else if (isGitSimplificationEnabled && currStoreMetadata?.storeType === StoreType.REMOTE) {
+              updateQueryParams(
+                {
+                  connectorRef: currStoreMetadata.connectorRef,
+                  repoName: updatedGitDetails?.repoName,
+                  branch: updatedGitDetails.branch,
+                  storeType: currStoreMetadata.storeType as StoreType
+                },
+                { skipNulls: true }
+              )
+            }
           }
         })
       }
@@ -579,7 +588,7 @@ export function PipelineCanvas({
       gitDetails.repoName &&
       gitDetails.branch &&
       updatePipelineStoreMetadata({ connectorRef, storeType }, gitDetails)
-  }, [isPipelineRemote, gitDetails])
+  }, [isPipelineRemote, gitDetails, connectorRef, storeType])
 
   const [openRunPipelineModal, closeRunPipelineModal] = useModalHook(
     () =>

@@ -38,8 +38,8 @@ export function useCcmMetaDataQuery(options?: Omit<Urql.UseQueryArgs<CcmMetaData
   return Urql.useQuery<CcmMetaDataQuery>({ query: CcmMetaDataDocument, ...options })
 }
 export const FetchAllPerspectivesDocument = gql`
-  query FetchAllPerspectives($folderId: String) {
-    perspectives(folderId: $folderId) {
+  query FetchAllPerspectives($folderId: String, $sortCriteria: QLCEViewSortCriteriaInput = null) {
+    perspectives(folderId: $folderId, sortCriteria: $sortCriteria) {
       sampleViews {
         id
         name
@@ -1211,6 +1211,7 @@ export type CcmMetaDataQuery = {
 
 export type FetchAllPerspectivesQueryVariables = Exact<{
   folderId: InputMaybe<Scalars['String']>
+  sortCriteria?: InputMaybe<QlceViewSortCriteriaInput>
 }>
 
 export type FetchAllPerspectivesQuery = {
@@ -2848,6 +2849,7 @@ export type QlceViewSortCriteriaInput = {
 export enum QlceViewSortType {
   ClusterCost = 'CLUSTER_COST',
   Cost = 'COST',
+  Name = 'NAME',
   Time = 'TIME'
 }
 
@@ -3041,6 +3043,7 @@ export type QueryPerspectiveTrendStatsArgs = {
 /** Query root */
 export type QueryPerspectivesArgs = {
   folderId: InputMaybe<Scalars['String']>
+  sortCriteria: InputMaybe<QlceViewSortCriteriaInput>
 }
 
 /** Query root */
@@ -3255,7 +3258,6 @@ export enum ViewTimeRangeType {
 export enum ViewType {
   Customer = 'CUSTOMER',
   Default = 'DEFAULT',
-  DefaultAzure = 'DEFAULT_AZURE',
   Sample = 'SAMPLE'
 }
 

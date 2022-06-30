@@ -5,13 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import React from 'react'
 import * as uuid from 'uuid'
 import { TestWrapper } from '@common/utils/testUtils'
 
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import * as cfServicesMock from 'services/cf'
 import type { TargetingRulesTabProps } from '../TargetingRulesTab'
 import TargetingRulesTab from '../TargetingRulesTab'
@@ -23,16 +24,23 @@ import expectedFormValues from './data/expectedFormValues'
 
 jest.mock('uuid')
 
-const renderComponent = (props: Partial<TargetingRulesTabProps> = {}): void => {
+const renderComponent = (
+  props: Partial<TargetingRulesTabProps> = {},
+  permissions: Map<string, boolean> = new Map()
+): RenderResult =>
   render(
     <TestWrapper
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      defaultPermissionValues={{
+        permissions,
+        checkPermission: ({ permission }) =>
+          permissions.has(permission as string) ? (permissions.get(permission as string) as boolean) : true
+      }}
     >
       <TargetingRulesTab featureFlagData={mockFeature} refetchFlag={jest.fn()} refetchFlagLoading={false} {...props} />
     </TestWrapper>
   )
-}
 
 describe('TargetingRulesTab', () => {
   afterEach(() => {
@@ -75,6 +83,8 @@ describe('TargetingRulesTab', () => {
         featureFlagData: {
           ...mockFeature,
           envProperties: {
+            pipelineConfigured: false,
+            pipelineDetails: undefined,
             defaultServe: { variation: 'false' },
             environment: 'qatest',
             modifiedAt: 1635333973373,
@@ -209,6 +219,8 @@ describe('TargetingRulesTab', () => {
         featureFlagData: {
           ...mockFeature,
           envProperties: {
+            pipelineConfigured: false,
+            pipelineDetails: undefined,
             defaultServe: { variation: 'false' },
             environment: 'qatest',
             modifiedAt: 1635333973373,
@@ -233,6 +245,8 @@ describe('TargetingRulesTab', () => {
             environment: 'qatest',
             modifiedAt: 1635333973373,
             offVariation: 'false',
+            pipelineConfigured: false,
+            pipelineDetails: undefined,
             rules: [
               {
                 clauses: [
@@ -321,6 +335,8 @@ describe('TargetingRulesTab', () => {
         featureFlagData: {
           ...mockFeature,
           envProperties: {
+            pipelineConfigured: false,
+            pipelineDetails: undefined,
             defaultServe: { variation: 'false' },
             environment: 'qatest',
             modifiedAt: 1635333973373,
@@ -362,6 +378,8 @@ describe('TargetingRulesTab', () => {
         featureFlagData: {
           ...mockFeature,
           envProperties: {
+            pipelineConfigured: false,
+            pipelineDetails: undefined,
             defaultServe: { variation: 'false' },
             environment: 'qatest',
             modifiedAt: 1635333973373,
@@ -408,6 +426,8 @@ describe('TargetingRulesTab', () => {
         featureFlagData: {
           ...mockFeature,
           envProperties: {
+            pipelineConfigured: false,
+            pipelineDetails: undefined,
             defaultServe: { variation: 'false' },
             environment: 'qatest',
             modifiedAt: 1635333973373,
@@ -530,6 +550,44 @@ describe('TargetingRulesTab', () => {
 
       userEvent.click(cancelButton)
       expect(flagToggle).toBeChecked()
+    })
+  })
+
+  describe('rbac', () => {
+    const getPermissionMap = (canEdit: boolean, canToggle: boolean): Map<string, boolean> => {
+      const permissionMap = new Map()
+      permissionMap.set(PermissionIdentifier.EDIT_FF_FEATUREFLAG, canEdit)
+      permissionMap.set(PermissionIdentifier.TOGGLE_FF_FEATUREFLAG, canToggle)
+
+      return permissionMap
+    }
+
+    test('it should disable the toggle when TOGGLE_FF_FEATUREFLAG is false', async () => {
+      renderComponent({}, getPermissionMap(true, false))
+
+      expect(screen.getByTestId('flag-status-switch')).toBeDisabled()
+    })
+
+    test('it should enable the toggle when TOGGLE_FF_FEATUREFLAG is true', async () => {
+      renderComponent({}, getPermissionMap(true, true))
+
+      expect(screen.getByTestId('flag-status-switch')).toBeEnabled()
+    })
+
+    test('it should disable non-toggle inputs when EDIT_FF_FEATUREFLAG is false', async () => {
+      renderComponent({}, getPermissionMap(false, true))
+
+      document
+        .querySelectorAll('input:not([data-testid="flag-status-switch"])')
+        .forEach(input => expect(input).toBeDisabled())
+    })
+
+    test('it should enable non-toggle inputs when EDIT_FF_FEATUREFLAG is true', async () => {
+      renderComponent({}, getPermissionMap(true, true))
+
+      document
+        .querySelectorAll('input:not([data-testid="flag-status-switch"])')
+        .forEach(input => expect(input).toBeEnabled())
     })
   })
 })

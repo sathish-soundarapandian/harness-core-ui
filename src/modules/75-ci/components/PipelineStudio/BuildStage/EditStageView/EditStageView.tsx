@@ -23,7 +23,7 @@ import { useParams } from 'react-router-dom'
 import type { FormikErrors } from 'formik'
 import { produce } from 'immer'
 import { parse } from 'yaml'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { ConnectorInfoDTO, useGetConnector } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
@@ -198,7 +198,7 @@ export const EditStageView: React.FC<EditStageView> = ({
       // TODO: Add Codebase verification
       let pipelineData: PipelineInfoConfig | undefined = undefined
       if (values.cloneCodebase && values.connectorRef) {
-        pipelineData = produce(pipeline, draft => {
+        pipelineData = produce<PipelineInfoConfig>(pipeline, draft => {
           set(draft, 'properties.ci.codebase', {
             connectorRef: typeof values.connectorRef === 'string' ? values.connectorRef : values.connectorRef?.value,
             ...(values.repoName && { repoName: values.repoName }),

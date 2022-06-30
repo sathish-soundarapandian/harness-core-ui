@@ -1,0 +1,9 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "executionId": "executionId",
+    "executionYaml": "pipeline:\n  identifier: \"testuday\"\n  name: \"test-uday\"\n  projectIdentifier: \"cd_workshop\"\n  orgIdentifier: \"default\"\n  storeType: \"\"\n  tags: {}\n  stages:\n  - stage:\n      identifier: \"dev\"\n      type: \"Approval\"\n      name: \"dev\"\n      description: \"\"\n      spec:\n        execution:\n          steps:\n          - step:\n              identifier: \"echo_uda\"\n              type: \"ShellScript\"\n              name: \"echo uda\"\n              spec:\n                shell: \"Bash\"\n                onDelegate: true\n                source:\n                  type: \"Inline\"\n                  spec:\n                    script: \"echo uday\"\n                environmentVariables: []\n                outputVariables: []\n                executionTarget: {}\n              timeout: \"10m\"\n      tags: {}\n"
+  },
+  "metaData": null,
+  "correlationId": "fa548b8c-c892-495a-8406-8a6f90c26a2d"
+}

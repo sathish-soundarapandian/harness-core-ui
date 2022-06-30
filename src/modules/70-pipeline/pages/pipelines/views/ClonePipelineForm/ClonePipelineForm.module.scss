@@ -7,6 +7,8 @@
 
 :global(.bp3-portal .bp3-dialog) {
   &.cloneForm {
+    width: 800px;
+
     &,
     & :global(.bp3-dialog-header) {
       background-color: var(--form-bg) !important;
@@ -15,11 +17,21 @@
 }
 
 .form {
-  width: 350px;
   padding-bottom: var(--spacing-medium);
 }
 
-.error {
-  align-self: start;
-  max-height: 300px;
+.container {
+  width: 350px;
+}
+
+.inlineRemoteSelect {
+  width: 700px;
+  display: flex;
+  column-gap: var(--spacing-4);
+  margin-bottom: var(--spacing-4);
+}
+
+.choosePipelineSetupHeader {
+  margin-top: var(--spacing-medium) !important;
+  margin-bottom: var(--spacing-medium) !important;
 }

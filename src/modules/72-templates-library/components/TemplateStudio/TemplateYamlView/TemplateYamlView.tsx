@@ -19,7 +19,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { YamlBuilderMemo } from '@pipeline/components/PipelineStudio/PipelineYamlView/PipelineYamlView'
+import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import css from './TemplateYamlView.module.scss'
 
 export const POLL_INTERVAL = 1 /* sec */ * 1000 /* ms */

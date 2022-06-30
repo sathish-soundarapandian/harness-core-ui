@@ -15,8 +15,8 @@ import InputDatePicker from '../InputDatePicker'
 const mockFormikData = {
   pipelineName: 'pipeline3',
   timeRange: {
-    startTime: 1209600000,
-    endTime: 3888000000
+    startTime: 24431400000,
+    endTime: 24431400000
   }
 }
 

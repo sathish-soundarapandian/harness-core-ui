@@ -138,8 +138,8 @@ describe('Unit tests for ErrorTrackingAnalysisContainer', () => {
   })
 
   test('it should not pass field clusterTypes to BE for event type All', () => {
-    let useGetAllLogsClusterDataQueryParams: cvServices.GetAllLogsClusterDataQueryParams | undefined
-    let useGetAllLogsDataQueryParams: cvServices.GetAllLogsDataQueryParams | undefined
+    let useGetAllLogsClusterDataQueryParams: cvServices.GetAllErrorTrackingClusterDataQueryParams | undefined
+    let useGetAllLogsDataQueryParams: cvServices.GetAllErrorTrackingDataQueryParams | undefined
 
     jest
       .spyOn(cvServices, 'useGetAllErrorTrackingData')
@@ -154,7 +154,7 @@ describe('Unit tests for ErrorTrackingAnalysisContainer', () => {
 
     jest
       .spyOn(cvServices, 'useGetAllErrorTrackingClusterData')
-      .mockImplementation((props: cvServices.UseGetAllLogsClusterDataProps): any => {
+      .mockImplementation((props: cvServices.UseGetAllErrorTrackingClusterDataProps): any => {
         useGetAllLogsClusterDataQueryParams = props.queryParams
         return { data: mockedClustersData, error: null, loading: false, refetch: fetchClusterData }
       })

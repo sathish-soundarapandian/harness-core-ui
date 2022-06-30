@@ -58,7 +58,7 @@ const RenderColumnMenu: Renderer<CellProps<ClusterResponse>> = ({ row, column })
   })
 
   const { openDialog } = useConfirmationDialog({
-    contentText: 'Are you sure you want to unlink the cluster',
+    contentText: 'Are you sure you want to unlink the cluster?',
     titleText: 'Unlink cluster',
     confirmButtonText: getString('cd.unLink'),
     cancelButtonText: getString('cancel'),

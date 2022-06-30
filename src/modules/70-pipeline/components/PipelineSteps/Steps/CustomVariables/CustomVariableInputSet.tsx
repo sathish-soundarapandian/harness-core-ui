@@ -40,6 +40,7 @@ export interface CustomVariableInputSetProps extends CustomVariableInputSetExtra
   stepViewType?: StepViewType
   inputSetData?: InputSetData<CustomVariablesData>
   allowableTypes: MultiTypeInputType[]
+  className?: string
 }
 
 export interface ConectedCustomVariableInputSetProps extends CustomVariableInputSetProps {
@@ -56,7 +57,8 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
     domId,
     inputSetData,
     formik,
-    allowableTypes
+    allowableTypes,
+    className
   } = props
   const basePath = path?.length ? `${path}.variables` : 'variables'
   const { expressions } = useVariablesExpression()
@@ -64,7 +66,7 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
   const formikVariables = get(formik?.values, basePath, [])
 
   return (
-    <div className={cx(css.customVariablesInputSets, 'customVariables')} id={domId}>
+    <div className={cx(css.customVariablesInputSets, 'customVariables', className)} id={domId}>
       {stepViewType === StepViewType.StageVariable && initialValues.variables.length > 0 && (
         <section className={css.subHeader}>
           <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('name')}</Text>

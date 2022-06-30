@@ -17,8 +17,10 @@ declare const styles: {
   readonly editor: string
   readonly errorHeader: string
   readonly footer: string
+  readonly formInModal: string
   readonly gitContextForm: string
   readonly gitRemoteDetailsForm: string
+  readonly inModal: string
   readonly inputSetForm: string
   readonly inputSetcard: string
   readonly inputsetGrid: string
@@ -26,5 +28,6 @@ declare const styles: {
   readonly optionBtns: string
   readonly pageHeaderStyles: string
   readonly treeSidebar: string
+  readonly withError: string
 }
 export default styles

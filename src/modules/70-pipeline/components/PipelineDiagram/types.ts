@@ -42,6 +42,7 @@ export interface PipelineGraphState {
   children?: PipelineGraphState[]
   parentStepGroupId?: string
   readonly?: boolean
+  stageNodeId?: string
 }
 export interface NodeIds {
   startNode: string
@@ -88,7 +89,10 @@ export enum NodeType {
   GroupNode = 'group-node',
   IconNode = 'icon-node',
   EndNode = 'end-node',
-  StepGroupNode = 'StepGroup'
+  StepGroupNode = 'StepGroup',
+  MatrixNode = 'MATRIX',
+  ForNode = 'FOR',
+  PARALLELISM = 'PARALLELISM'
 }
 
 export interface NodeProps<T> {
@@ -168,4 +172,5 @@ export interface BaseReactComponentProps {
   width?: number
   height?: number
   data?: any
+  showMarkers?: boolean
 }

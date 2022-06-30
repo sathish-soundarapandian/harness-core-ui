@@ -15,8 +15,10 @@ import css from './DelegateInstallationError.module.scss'
 
 interface DelegateInstallationErrorProps {
   showDelegateInstalledMessage?: boolean
+  delegateType?: string
 }
 const DelegateInstallationError: React.FC<DelegateInstallationErrorProps> = ({
+  delegateType,
   showDelegateInstalledMessage = true
 }) => {
   const { getString } = useStrings()
@@ -38,12 +40,12 @@ const DelegateInstallationError: React.FC<DelegateInstallationErrorProps> = ({
           <Tab
             id="tabId1"
             title={<Text>{getString('delegates.delegateNotInstalled.tabs.commonProblems.title')}</Text>}
-            panel={<CommonProblems />}
+            panel={<CommonProblems delegateType={delegateType} />}
           />
           <Tab
             id="tabId2"
             title={<Text>{getString('delegates.delegateNotInstalled.tabs.troubleshooting')}</Text>}
-            panel={<TroubleShooting />}
+            panel={<TroubleShooting delegateType={delegateType} />}
           />
         </Tabs>
       </Layout.Horizontal>

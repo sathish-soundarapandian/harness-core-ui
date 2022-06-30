@@ -73,7 +73,7 @@ const getTooltip = (currPoint: TooltipFormatterContextObject): string => {
     point && point?.time
       ? new Date(point?.time).toLocaleDateString('en-US', { day: 'numeric', month: 'long' })
       : currPoint.x
-  let failureRate: string | number = 'Infinity'
+  let failureRate: string | number = 'N/A'
   if (point?.countWithSuccessFailureDetails?.failureCount && point.countWithSuccessFailureDetails?.count) {
     failureRate =
       ((point.countWithSuccessFailureDetails.failureCount / point.countWithSuccessFailureDetails.count) * 100).toFixed(
@@ -86,9 +86,9 @@ const getTooltip = (currPoint: TooltipFormatterContextObject): string => {
   return renderTooltipContent({
     time,
     failureRate,
-    count: point?.countWithSuccessFailureDetails?.count,
-    successCount: point?.countWithSuccessFailureDetails?.successCount,
-    failureCount: point?.countWithSuccessFailureDetails?.failureCount
+    count: defaultTo(point?.countWithSuccessFailureDetails?.count, 0),
+    successCount: defaultTo(point?.countWithSuccessFailureDetails?.successCount, 0),
+    failureCount: defaultTo(point?.countWithSuccessFailureDetails?.failureCount, 0)
   })
 }
 

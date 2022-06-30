@@ -1,0 +1,108 @@
+{
+  "state": {
+    "pipeline": {
+      "name": "Pipeline 1",
+      "identifier": "Pipeline_1",
+      "gitOpsEnabled": true,
+      "description": "",
+      "tags": {},
+      "stages": [
+        {
+          "stage": {
+            "name": "Deploy Service",
+            "identifier": "Deploy_Service",
+            "description": "",
+            "type": "Deployment",
+            "spec": {
+              "serviceConfig": {
+                "service": {
+                  "identifier": "Deploy_Stage",
+                  "name": "Deploy Stage",
+                  "description": ""
+                },
+                "serviceDefinition": {
+                  "type": "Kubernetes",
+                  "spec": {
+                    "artifacts": {
+                      "sidecars": [],
+                      "primary": null
+                    },
+                    "manifests": [
+                      {
+                        "manifest": {
+                          "identifier": "MID ",
+                          "type": "ReleaseRepo",
+                          "spec": {
+                            "store": {
+                              "type": "Git",
+                              "spec": {
+                                "connectorRef": "<+input>",
+                                "gitFetchType": "Branch",
+                                "branch": "branch",
+                                "commitId": null,
+                                "paths": ["test"]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ],
+                    "artifactOverrideSets": [],
+                    "manifestOverrideSets": []
+                  }
+                },
+                "tags": {}
+              },
+              "infrastructure": {
+                "environment": {
+                  "name": "Infra Stage Env",
+                  "identifier": "Infra_Stage_Env",
+                  "description": "",
+                  "type": "PreProduction"
+                },
+                "infrastructureDefinition": {
+                  "type": "KubernetesDirect",
+                  "spec": {
+                    "connectorRef": "account.cidelegate",
+                    "namespace": "ns1",
+                    "releaseName": "release1"
+                  }
+                }
+              },
+              "execution": {
+                "steps": [
+                  {
+                    "step": {
+                      "name": "Rollout Deployment",
+                      "identifier": "rolloutDeployment",
+                      "type": "K8sRollingDeploy",
+                      "spec": {
+                        "timeout": "10m",
+                        "skipDryRun": false
+                      }
+                    }
+                  }
+                ],
+                "rollbackSteps": [
+                  {
+                    "step": {
+                      "name": "Rollback Rollout Deployment",
+                      "identifier": "rollbackRolloutDeployment",
+                      "type": "K8sRollingRollback",
+                      "spec": {
+                        "timeout": "10m"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "selectionState": {
+      "selectedStageId": "Deploy"
+    }
+  }
+}

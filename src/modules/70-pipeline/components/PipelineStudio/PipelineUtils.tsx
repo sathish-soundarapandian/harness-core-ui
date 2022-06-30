@@ -12,7 +12,7 @@ import { Color } from '@harness/design-system'
 import get from 'lodash-es/get'
 import type { UseStringsReturn } from 'framework/strings'
 
-import type { PipelineInfoConfig, StageElementConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig, StageElementConfig } from 'services/pipeline-ng'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 

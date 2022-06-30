@@ -6,14 +6,19 @@
  */
 
 import React from 'react'
-import { StepProps, Container, Layout, Text, Button } from '@wings-software/uicore'
+import { Container, Layout, Text, Button } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
-import { TroubleShootingTypes } from '@delegates/constants'
+import { DelegateTypes, TroubleShootingTypes } from '@delegates/constants'
 import css from './DelegateInstallationError.module.scss'
 
-const TroubleShooting: React.FC<StepProps<null>> = () => {
+interface TroubleShootingProps {
+  delegateType?: string
+}
+
+const TroubleShooting: React.FC<TroubleShootingProps> = props => {
+  const { delegateType } = props
   const { getString } = useStrings()
   const docsLink = (
     <div style={{ padding: 'var(--spacing-medium) 0px' }}>
@@ -38,7 +43,11 @@ const TroubleShooting: React.FC<StepProps<null>> = () => {
       <a href="mailto:support@harness.io">{getString('delegates.delegateNotInstalled.contactHarness')}</a>
     </div>
   )
-  const [activeEvent, setActiveEvent] = React.useState(TroubleShootingTypes.VERIFY_PODS_COMEUP)
+  const [activeEvent, setActiveEvent] = React.useState(
+    delegateType === DelegateTypes.DOCKER
+      ? TroubleShootingTypes.VERIFY_CONTAINER_STATUS
+      : TroubleShootingTypes.VERIFY_PODS_COMEUP
+  )
   const iconProps = { size: 10, color: Color.ORANGE_400 }
 
   return (
@@ -56,6 +65,9 @@ const TroubleShooting: React.FC<StepProps<null>> = () => {
           text={getString('back')}
           onClick={() => {
             switch (activeEvent) {
+              case TroubleShootingTypes.VERIFY_CONTAINER_STATUS:
+                setActiveEvent(TroubleShootingTypes.VERIFY_CONTAINER_STATUS)
+                return
               case TroubleShootingTypes.VERIFY_HARNESS_SASS:
                 setActiveEvent(TroubleShootingTypes.VERIFY_PODS_COMEUP)
                 return
@@ -83,6 +95,12 @@ const TroubleShooting: React.FC<StepProps<null>> = () => {
               case TroubleShootingTypes.CAN_CLUSTER_CONNECT_TO_REGISTRY:
                 setActiveEvent(TroubleShootingTypes.VERIFY_EVENTS)
                 return
+              case TroubleShootingTypes.CONTAINER_RUNNING:
+                setActiveEvent(TroubleShootingTypes.VERIFY_CONTAINER_STATUS)
+                return
+              case TroubleShootingTypes.CONTAINER_NOT_RUNNING:
+                setActiveEvent(TroubleShootingTypes.VERIFY_CONTAINER_STATUS)
+                return
               default:
                 setActiveEvent(TroubleShootingTypes.VERIFY_PODS_COMEUP)
                 return
@@ -106,10 +124,15 @@ const TroubleShooting: React.FC<StepProps<null>> = () => {
           minimal
           text={getString('restart')}
           onClick={() => {
-            setActiveEvent(TroubleShootingTypes.VERIFY_PODS_COMEUP)
+            setActiveEvent(
+              delegateType === DelegateTypes.DOCKER
+                ? TroubleShootingTypes.VERIFY_CONTAINER_STATUS
+                : TroubleShootingTypes.VERIFY_PODS_COMEUP
+            )
           }}
         />
       </Layout.Horizontal>
+      {/* Below is troubleshoot related to delegate type and it should be rendered conditionally */}
       <Layout.Vertical width={511} style={{ padding: 'var(--spacing-medium) 0px' }}>
         <Layout.Horizontal flex>
           <Text color={Color.BLACK_100}>{getString('delegates.delegateNotInstalled.statusOfCluster')}</Text>
@@ -131,10 +154,41 @@ const TroubleShooting: React.FC<StepProps<null>> = () => {
           flex
           className={css.podCmndField}
         >
-          <Text>{getString('delegates.delegateNotInstalled.podCommand')}</Text>
-          <CopyToClipboard content={getString('delegates.delegateNotInstalled.podCommand')} />
+          <Text>
+            {delegateType === DelegateTypes.DOCKER
+              ? getString('delegates.delegateNotInstalled.verifyStatus2')
+              : getString('delegates.delegateNotInstalled.podCommand')}
+          </Text>
+          <CopyToClipboard
+            content={
+              delegateType === DelegateTypes.DOCKER
+                ? getString('delegates.delegateNotInstalled.verifyStatus2')
+                : getString('delegates.delegateNotInstalled.podCommand')
+            }
+          />
         </Container>
       </Layout.Vertical>
+      {activeEvent === TroubleShootingTypes.VERIFY_CONTAINER_STATUS && (
+        <Container className={css.podCmndVerification} style={{ padding: 'var(--spacing-medium) 0px' }}>
+          <Text color={Color.BLACK_100}>{getString('delegates.delegateNotInstalled.containerRunning')}</Text>
+          <Container style={{ marginTop: 'var(--spacing-medium)' }}>
+            <Button
+              onClick={() => {
+                setActiveEvent(TroubleShootingTypes.CONTAINER_RUNNING)
+              }}
+              text={getString('yes')}
+            />
+            <Button
+              intent="none"
+              onClick={() => {
+                setActiveEvent(TroubleShootingTypes.CONTAINER_NOT_RUNNING)
+              }}
+              className={css.noBtn}
+              text={getString('no')}
+            />
+          </Container>
+        </Container>
+      )}
       {activeEvent === TroubleShootingTypes.VERIFY_PODS_COMEUP && (
         <Container className={css.podCmndVerification} style={{ padding: 'var(--spacing-medium) 0px' }}>
           <Text color={Color.BLACK_100}>{getString('delegates.delegateNotInstalled.podComeUp')}</Text>
@@ -250,6 +304,40 @@ const TroubleShooting: React.FC<StepProps<null>> = () => {
             />
           </Container>
         </>
+      )}
+      {activeEvent === TroubleShootingTypes.CONTAINER_RUNNING && (
+        <Layout.Vertical width={511} style={{ padding: 'var(--spacing-medium) 0px' }}>
+          <Layout.Horizontal flex>
+            <Text color={Color.BLACK_100}>
+              {getString('delegates.delegateNotInstalled.tabs.commonProblems.checkTheDelegateLogs')}
+            </Text>
+            <a
+              href="https://ngdocs.harness.io/"
+              target="_blank"
+              rel="noreferrer"
+              style={{ textAlign: 'end', fontSize: '13px' }}
+            >
+              {getString('delegates.delegateNotInstalled.tabs.commonProblems.troubleshoot')}
+            </a>
+          </Layout.Horizontal>
+          <Container
+            intent="primary"
+            padding="small"
+            font={{
+              align: 'center'
+            }}
+            flex
+            className={css.podCmndField}
+          >
+            <Text>{getString('delegates.delegateNotInstalled.verifyLogs1')}</Text>
+            <CopyToClipboard content={getString('delegates.delegateNotInstalled.verifyLogs1')} />
+          </Container>
+          <Layout.Vertical width={511} style={{ padding: 'var(--spacing-medium) 0px' }}>
+            <CommonText>{getString('delegates.delegateNotInstalled.logsError')}</CommonText>
+            {harnessSupportEmail}
+            {docsLink}
+          </Layout.Vertical>
+        </Layout.Vertical>
       )}
       {/* right side flow */}
       {activeEvent === TroubleShootingTypes.VERIFY_EVENTS && (
@@ -368,6 +456,52 @@ const TroubleShooting: React.FC<StepProps<null>> = () => {
         <Layout.Vertical width={511} style={{ padding: 'var(--spacing-medium) 0px' }}>
           {harnessSupportEmail}
           {docsLink}
+        </Layout.Vertical>
+      )}
+      {activeEvent === TroubleShootingTypes.CONTAINER_NOT_RUNNING && (
+        <Layout.Vertical width={511} style={{ padding: 'var(--spacing-medium) 0px' }}>
+          <Layout.Horizontal flex>
+            <Text color={Color.BLACK_100}>
+              {getString('delegates.delegateNotInstalled.tabs.commonProblems.checkTheDelegateLogs')}
+            </Text>
+            <a
+              href="https://ngdocs.harness.io/"
+              target="_blank"
+              rel="noreferrer"
+              style={{ textAlign: 'end', fontSize: '13px' }}
+            >
+              {getString('delegates.delegateNotInstalled.tabs.commonProblems.troubleshoot')}
+            </a>
+          </Layout.Horizontal>
+          <Container
+            intent="primary"
+            padding="small"
+            font={{
+              align: 'center'
+            }}
+            flex
+            className={css.podCmndField}
+          >
+            <Text>{getString('delegates.delegateNotInstalled.verifyLogs1')}</Text>
+            <CopyToClipboard content={getString('delegates.delegateNotInstalled.verifyLogs1')} />
+          </Container>
+          <Layout.Vertical width={511} style={{ padding: 'var(--spacing-medium) 0px' }}>
+            <CommonText>{getString('delegates.delegateNotInstalled.checkError')}</CommonText>
+            <Container
+              intent="primary"
+              padding="small"
+              font={{
+                align: 'center'
+              }}
+              flex
+              className={css.podCmndField}
+            >
+              <Text style={{ marginRight: '24px' }}>{getString('delegates.delegateNotInstalled.heartbeatFailed')}</Text>
+            </Container>
+            <CommonText>{getString('delegates.delegateNotInstalled.logsError')}</CommonText>
+            {harnessSupportEmail}
+            {docsLink}
+          </Layout.Vertical>
         </Layout.Vertical>
       )}
     </Layout.Vertical>

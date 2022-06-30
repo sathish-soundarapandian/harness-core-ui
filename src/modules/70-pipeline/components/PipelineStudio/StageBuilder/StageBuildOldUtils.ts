@@ -8,7 +8,7 @@
 import type { MutableRefObject } from 'react'
 import { defaultTo, isEmpty, noop } from 'lodash-es'
 import type { NodeModelListener, LinkModelListener, DiagramEngine } from '@projectstorm/react-diagrams-core'
-import type { StageElementWrapperConfig, PipelineInfoConfig } from 'services/cd-ng'
+import type { StageElementWrapperConfig, PipelineInfoConfig } from 'services/pipeline-ng'
 import type * as Diagram from '@pipeline/components/Diagram'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import {

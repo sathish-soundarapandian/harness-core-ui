@@ -13,7 +13,7 @@ import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteI
 import { useGlobalEventListener, useQueryParams } from '@common/hooks'
 import { TemplatePipelineProvider } from '@templates-library/components/TemplatePipelineContext/TemplatePipelineContext'
 import { sanitize } from '@common/utils/JSONUtils'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { DrawerTypes as PipelineDrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { DrawerTypes as TemplateDrawerTypes } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateActions'

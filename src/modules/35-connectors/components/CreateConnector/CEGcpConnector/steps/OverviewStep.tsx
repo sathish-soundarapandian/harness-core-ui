@@ -20,7 +20,7 @@ import {
   Icon
 } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
-import { pick, omit, isEmpty } from 'lodash-es'
+import { pick, omit, isEmpty, get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import {
   ConnectorInfoDTO,
@@ -28,7 +28,8 @@ import {
   ConnectorFilterProperties,
   useGetConnectorListV2,
   GetConnectorListV2QueryParams,
-  Failure
+  Failure,
+  GcpBillingExportSpec
 } from 'services/cd-ng'
 import { Description, Tags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { CE_GCP_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
@@ -46,11 +47,16 @@ interface OverviewDetails {
   tags: Record<string, any>
 }
 
+export interface ExistingCURDetails extends GcpBillingExportSpec {
+  projectId: string
+}
+
 export interface CEGcpConnectorDTO extends ConnectorInfoDTO {
   spec: GcpCloudCostConnector
   includeBilling?: boolean
   isEditMode?: boolean
   serviceAccount?: string
+  existingCurReports?: ExistingCURDetails[]
 }
 
 interface OverviewProps extends StepProps<CEGcpConnectorDTO> {
@@ -115,14 +121,43 @@ const OverviewStep: React.FC<OverviewProps> = props => {
       ...omit(formData, ['projectId']),
       type: 'GcpCloudCost',
       spec: newSpec,
-      isEditMode: isEditMode
+      isEditMode: isEditMode,
+      existingCurReports: []
+    }
+
+    let includesBilling
+    if (connectorInfo?.spec?.featuresEnabled) {
+      includesBilling = connectorInfo?.spec?.featuresEnabled.includes('BILLING')
+    }
+
+    const curReportExistFilterParams: ConnectorFilterProperties = {
+      ...filterParams,
+      ccmConnectorFilter: {
+        featuresEnabled: ['BILLING']
+      }
     }
 
     try {
       const response = await fetchConnectors(filterParams)
       if (response.status == 'SUCCESS') {
         if (response?.data?.pageItemCount == 0 || isEditMode) {
-          if (nextStep) nextStep(payload)
+          const curResponse = await fetchConnectors(curReportExistFilterParams)
+          if (curResponse.status == 'SUCCESS') {
+            if (curResponse?.data?.pageItemCount == 0 || includesBilling) {
+              nextStep?.(payload)
+            } else {
+              const existingCurReports: ExistingCURDetails[] =
+                curResponse.data?.content?.map(ele => ({
+                  projectId: get(ele, 'connector.spec.projectId'),
+                  datasetId: get(ele, 'connector.spec.billingExportSpec.datasetId'),
+                  tableId: get(ele, 'connector.spec.billingExportSpec.tableId')
+                })) || []
+              payload.existingCurReports = existingCurReports
+              nextStep?.(payload)
+            }
+          } else {
+            throw response as Failure
+          }
         } else {
           setIsLoading(false)
           setIsUniqueConnector(false)
@@ -202,25 +237,25 @@ const OverviewStep: React.FC<OverviewProps> = props => {
                       <div style={{ color: 'red' }}>
                         <Icon name="circle-cross" color="red700" style={{ paddingRight: 5 }}></Icon>
                         <span style={{ fontSize: 'var(--font-size-normal)' }}>
-                          {getString('connectors.ceAws.overview.alreadyExist')}
+                          {getString('connectors.ceGcp.overview.alreadyExist')}
                         </span>
                       </div>
                       <div>
                         <Icon name="info" style={{ paddingRight: 5 }}></Icon>
-                        {getString('connectors.ceAws.overview.alreadyExistInfo', {
+                        {getString('connectors.ceGcp.overview.alreadyExistInfo', {
                           projectId,
                           existingConnectorName,
                           featureText
                         })}
                       </div>
-                      <div>
+                      {/* <div>
                         <Icon name="lightbulb" style={{ paddingRight: 5 }}></Icon>
                         {getString('connectors.ceAws.overview.trySuggestion')}
                         <div>
                           {getString('connectors.ceAws.overview.editConnector')} <a>{existingConnectorName}</a>{' '}
                           {getString('connectors.ceAws.overview.ifReq')}
                         </div>
-                      </div>
+                      </div> */}
                     </Layout.Vertical>
                   </div>
                 )}

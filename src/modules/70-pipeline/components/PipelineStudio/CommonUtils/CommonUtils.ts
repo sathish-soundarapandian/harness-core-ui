@@ -7,7 +7,7 @@
 
 import { defaultTo } from 'lodash-es'
 import type { MultiSelectOption, SelectOption } from '@wings-software/uicore'
-import type { PipelineInfoConfig, StageElementWrapperConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import { EmptyStageName } from '../PipelineConstants'
 
 export interface StageSelectOption extends SelectOption {

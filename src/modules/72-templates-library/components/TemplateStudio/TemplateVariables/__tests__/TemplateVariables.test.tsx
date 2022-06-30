@@ -32,7 +32,7 @@ import * as StepCard from '@pipeline/components/PipelineStudio/PipelineVariables
 import * as StageCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/StageCard'
 import * as MonitoredServiceCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/MonitoredServiceCard'
 import type { PipelineCardPanelProps } from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { DrawerTypes } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateActions'
 
 jest.spyOn(cdng, 'useListGitSync').mockImplementation((): any => {

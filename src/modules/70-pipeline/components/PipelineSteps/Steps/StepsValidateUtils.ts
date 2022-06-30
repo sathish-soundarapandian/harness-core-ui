@@ -124,10 +124,13 @@ function generateSchemaForList(
       if (value === RUNTIME_INPUT_VALUE) {
         return yup.string()
       }
-      let schema = yup.array().test('valuesShouldBeUnique', getString('validation.uniqueValues'), list => {
-        if (!list) return true
-        return uniq(list).length === list.length
-      })
+      let schema = yup
+        .array()
+        .nullable() // allows me to save list with empty '' in list
+        .test('valuesShouldBeUnique', getString('validation.uniqueValues'), list => {
+          if (!list) return true
+          return uniq(list).length === list.length
+        })
 
       if (isRequired && label) {
         schema = schema

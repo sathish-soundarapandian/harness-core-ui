@@ -6,7 +6,7 @@
  */
 
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { getStepType } from '@pipeline/utils/templateUtils'
 
 export const ActivitySourceSetupRoutePaths = {

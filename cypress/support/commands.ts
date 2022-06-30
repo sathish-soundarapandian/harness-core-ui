@@ -176,6 +176,7 @@ Cypress.Commands.add('visitVerifyStepInPipeline', () => {
 
 // Change Intelligence commands
 Cypress.Commands.add('visitChangeIntelligence', () => {
+  cy.visitPageAssertion('[class^=SideNav-module_main]')
   cy.contains('span', 'Service Reliability').click()
   cy.contains('p', 'Select a Project').click()
   cy.contains('p', 'Project 1').click()

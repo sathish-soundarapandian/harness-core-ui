@@ -8,7 +8,7 @@
 import React from 'react'
 import { fireEvent, render, act, getByTestId, getByText, getAllByTestId, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import type { StageElementWrapperConfig } from 'services/cd-ng'
+import type { StageElementWrapperConfig } from 'services/pipeline-ng'
 import * as cdngServices from 'services/cd-ng'
 import { ExecutionStrategy } from '../ExecutionStrategy'
 import {

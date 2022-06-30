@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { ProjectResponse } from 'services/cd-ng'
 import type { ResponseResourceGroupV2Response } from 'services/resourcegroups'
 
 export const resourceTypes = {
@@ -195,57 +196,49 @@ export const orgMockData = {
   loading: false
 }
 
-export const projectMockData = [
+export const projectMockData: ProjectResponse[] = [
   {
     project: {
-      accountIdentifier: 'testAcc',
       orgIdentifier: 'default',
       identifier: 'TestCiproject',
       name: 'TestCiproject',
       color: '#0063F7',
       modules: ['CI', 'CD'],
-      description: '',
-      tags: {},
-      lastModifiedAt: 1607348985778
+      description: 'Test description',
+      tags: { tag1: 'value' }
     }
   },
   {
     project: {
-      accountIdentifier: 'testAcc',
       orgIdentifier: 'default',
       identifier: 'test11',
       name: 'test11',
       color: '#0063F7',
       modules: ['CD'],
       description: '',
-      tags: {},
-      lastModifiedAt: 1607075878518
+      tags: {}
     }
   },
   {
     project: {
-      accountIdentifier: 'testAcc',
       orgIdentifier: 'default',
       identifier: 'Project_1',
       name: 'Project 1',
       color: '#0063F7',
       modules: [],
       description: '',
-      tags: {},
-      lastModifiedAt: 1607064454225
+      tags: {}
     }
   },
   {
     project: {
-      accountIdentifier: 'testAcc',
       orgIdentifier: 'testOrg',
       identifier: 'fdfder32432',
       name: 'fdfder32432',
       color: '#0063F7',
       modules: ['CD', 'CF', 'CE', 'CI', 'CV'],
       description: '',
-      tags: {},
-      lastModifiedAt: 1607060784209
+      tags: {}
     }
   }
 ]

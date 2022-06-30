@@ -523,7 +523,7 @@ type Query {
     isClusterQuery: Boolean
   ): PerspectiveTrendStats
   "Fetch perspectives for account"
-  perspectives(folderId: String): PerspectiveData
+  perspectives(folderId: String, sortCriteria: QLCEViewSortCriteriaInput): PerspectiveData
   "recommendation details/drillDown"
   recommendationDetails(
     "defaults to Now()"
@@ -563,11 +563,6 @@ type RecommendClusterRequest {
 type RecommendNodePoolClusterRequest {
   recommendClusterRequest: RecommendClusterRequest
   totalResourceUsage: TotalResourceUsage
-}
-
-type ViewPreferences {
-  includeOthers: Boolean
-  includeUnallocatedCost: Boolean
 }
 
 type RecommendationItemDTO {
@@ -668,6 +663,11 @@ type TotalResourceUsage {
   summemory: Float!
 }
 
+type ViewPreferences {
+  includeOthers: Boolean
+  includeUnallocatedCost: Boolean
+}
+
 type VirtualMachine {
   allocatableCpusPerVm: Float
   allocatableMemPerVm: Float
@@ -763,6 +763,7 @@ enum QLCEViewFilterOperator {
 enum QLCEViewSortType {
   CLUSTER_COST
   COST
+  NAME
   TIME
 }
 
@@ -825,7 +826,6 @@ enum ViewTimeRangeType {
 enum ViewType {
   CUSTOMER
   DEFAULT
-  DEFAULT_AZURE
   SAMPLE
 }
 

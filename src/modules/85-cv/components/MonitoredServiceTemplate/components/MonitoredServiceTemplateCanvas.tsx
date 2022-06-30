@@ -29,7 +29,7 @@ const MonitoredServiceTemplateCanvas = (_props: unknown, formikRef: TemplateForm
           serviceRef: formikValue?.serviceRef,
           environmentRef: formikValue?.environmentRef,
           type: formikValue?.type,
-          sources: formikValue?.sources,
+          sources: formikValue?.sources || {},
           name: '<+monitoredService.serviceRef> <+monitoredService.environmentRef>',
           identifier: '<+monitoredService.serviceRef>_<+monitoredService.environmentRef>',
           variables: state?.template?.spec?.variables

@@ -1748,18 +1748,18 @@
   resolved "https://npm.pkg.github.com/download/@harness/design-system/1.0.0/4961fc151ffa0dd1f3d86b37572f9a5cd575d592c646cd5e68d508e1045c9d96#e463410da2c7ad9bff84eaa43fbe4ba9ba347da1"
   integrity sha512-sMsLP5Rxg08t87dJamTgpzEfRAef06C14bZO92SGqiXYtXsK01evjnXaOAiUS4gO36gMGi5cYJAqkJ0XBkERIg==
 
-"@harness/help-panel@1.6.0":
-  version "1.6.0"
-  resolved "https://npm.pkg.github.com/download/@harness/help-panel/1.6.0/793ed130f5f73ad066c7fd3f5f47b550f6d6480cbc5a61b8012ccb36bd4f8b8a#2b9f4d0c3f26a41077729093089032e0be84bfd8"
-  integrity sha512-NqVIxr+Ry6dqLWWhOWQK6BCltlHxf6Vr5kd27//EaXX1UUAIwIdfUzrskTnpcYyaaPOiyOYbRCsA369SKYsM1Q==
+"@harness/help-panel@1.8.0":
+  version "1.8.0"
+  resolved "https://npm.pkg.github.com/download/@harness/help-panel/1.8.0/c54df68f7aa0a819c42b31a5d0d3ac2cf3ac98f10230d47040800dfa0bb1f28b#49d4558caeb2fb1e5941dd425f5775c3a97e0e5a"
+  integrity sha512-9BbIDxD49imw6UKd3yx7784R95RoUQdHiNM4uVVOL0BUVs4i2l/Q6px1MiI4Z4M43Ot7T79Yg2GhDOoHvTcy2A==
   dependencies:
     "@contentful/rich-text-react-renderer" "^15.12.0"
     contentful "^9.1.20"
 
-"@harness/icons@1.20.0":
-  version "1.20.0"
-  resolved "https://npm.pkg.github.com/download/@harness/icons/1.20.0/13b35bac7a73d9c119b9e8fe748b3b8b16c91e037cffc577070aa1e4f308b803#9986ffd06bec0520dfad0ff0225213d52ee05821"
-  integrity sha512-LuGPVDZAGDnwsc4CIJqePcmEiAy8aK9wObTT4bKdG0dyGccKHSKQH1dKKaSlnVWAMUfit+4unPhJNZ/hR2tA2g==
+"@harness/icons@^1.27.0":
+  version "1.27.0"
+  resolved "https://npm.pkg.github.com/download/@harness/icons/1.27.0/9f26b875790292b0afee2d2c3b35d41803f2d78f2076abf62eaf22d7f38d490e#5271a25c12d9aab99de00caeeb8a83cf027123f5"
+  integrity sha512-yMUZCtukzFrnrTMiIvKuqsqxbdNQo95ZgT24dJ2ZDmleBanSdtFwdNdalt5BXm6abCADp3jFEb7uuZ7GBzfD8w==
 
 "@harness/jarvis@0.16.0":
   version "0.16.0"
@@ -1792,19 +1792,19 @@
     vscode-uri "^2.1.1"
 
 "@harness/ng-tooltip@^1.31.2":
-  version "1.31.11"
-  resolved "https://npm.pkg.github.com/download/@harness/ng-tooltip/1.31.11/76639580157bb1acfac6a44b2ea025dcd356eb34390fbe53a1ae712c4c63cb68#6f9cd0f5813bab835a8d94d05076e3aad1797e15"
-  integrity sha512-cPV+6qju6AbIYF7Aksc9p1tCDwUG3O3Ocg2LbH359+idBBEEyfWE8z6t2JN3NtprZQxsBczgPkarOXwOBvYidg==
+  version "1.31.12"
+  resolved "https://npm.pkg.github.com/download/@harness/ng-tooltip/1.31.12/b0f2ec347e2ed2100966b2e0f5b2d757a81e1ee578483dc699a067c50b33b9ef#54014ef6b6a2db97d180f9a7c891d2953b84c03d"
+  integrity sha512-KQM39i/mBldOoStNb7KGmu2rjh5A5oJ1vyub/EpP74cSjjW4wdYvIoHkaA+PSPCD0F+Kc6GawCBfJNRxKCv8Mg==
 
 "@harness/telemetry@^1.0.42":
   version "1.0.42"
   resolved "https://npm.pkg.github.com/download/@harness/telemetry/1.0.42/60bc34c133bb40f0e0aa08f80620a1b23f3f089070e8550767e9d3fce8ca6e25#4d3f71026a03c898992d902f13a6c6d9cb0edac6"
   integrity sha512-pwjPYnQ8du1UswlX7A/apewGVDmbmaKKWTQSXtSHhKf9ekZ8WCwVvFcrM8ZIq/QbTn7Z8BXFYtMJdSG25oNtOg==
 
-"@harness/uicore@3.26.0":
-  version "3.26.0"
-  resolved "https://npm.pkg.github.com/download/@harness/uicore/3.26.0/89c4a9e6e5a7f3626bda588806d7fab5bf96287632a9e8a47899bcbe1e4e304e#0c9c97660d8726cec8652d49e0321ed131a8217e"
-  integrity sha512-j92ACikw7oCwlTMk5OV8z57GlQ+X7mfIrYyBPx1fXx0CbUqxNNNzpcbeeRqTESleMk02eDhqH3UracqYAV0yCQ==
+"@harness/uicore@3.46.0":
+  version "3.46.0"
+  resolved "https://npm.pkg.github.com/download/@harness/uicore/3.46.0/40b439e92e2f1dcceb5a55e6ca7bbefd4a305f104edfe4006c3e7aea72b6e9a9#5b1d74b7e791f27a821f00140bacc842a0d014eb"
+  integrity sha512-vpE5VDmz+XhTO7dJwgTXhkP3p1IO4GlU4aIdfoUDE5Q+nf5AQSy3oczowWJS3T4phzLvNHHFYGkL9VxPScWxUg==
 
 "@harness/use-modal@1.1.0":
   version "1.1.0"
@@ -7068,9 +7068,9 @@ downshift@^6.0.15:
     react-is "^17.0.2"
 
 dset@^3.1.0:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/dset/-/dset-3.1.1.tgz#07de5af7a8d03eab337ad1a8ba77fe17bba61a8c"
-  integrity sha512-hYf+jZNNqJBD2GiMYb+5mqOIX4R4RRHXU3qWMWYN+rqcR2/YpRL2bUHr8C8fU+5DNvqYjJ8YvMGSLuVPWU1cNg==
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/dset/-/dset-3.1.2.tgz#89c436ca6450398396dc6538ea00abc0c54cd45a"
+  integrity sha512-g/M9sqy3oHe477Ar4voQxWtaPIFw1jTdKZuomOjhCcBx9nHUNn0pu6NopuFFrTh/TRZIKEj+76vLWFu9BNKk+Q==
 
 duplexer3@^0.1.4:
   version "0.1.4"
@@ -10794,9 +10794,9 @@ jest@^26.2.0:
     jest-cli "^26.6.0"
 
 jpeg-js@^0.4.1:
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/jpeg-js/-/jpeg-js-0.4.3.tgz#6158e09f1983ad773813704be80680550eff977b"
-  integrity sha512-ru1HWKek8octvUHFHvE5ZzQ1yAsJmIvRdGWvSoKV52XKyuyYA437QWDttXT8eZXDSbuMpHlLzPDZUPd6idIz+Q==
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/jpeg-js/-/jpeg-js-0.4.4.tgz#a9f1c6f1f9f0fa80cdb3484ed9635054d28936aa"
+  integrity sha512-WZzeDOEtTOBK4Mdsar0IqEU5sMr3vSV2RqkAIzUEV2BHnUfKGyswWFPFwK5EeDo93K3FohSHbLAjj0s1Wzd+dg==
 
 js-library-detector@^6.4.0:
   version "6.4.0"
@@ -15166,9 +15166,9 @@ shebang-regex@^3.0.0:
   integrity sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==
 
 shell-quote@^1.6.1:
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/shell-quote/-/shell-quote-1.7.2.tgz#67a7d02c76c9da24f99d20808fcaded0e0e04be2"
-  integrity "sha1-Z6fQLHbJ2iT5nSCAj8re0ODgS+I= sha512-mRz/m/JVscCrkMyPqHc/bczi3OQHkLTqXHEFu0zDhK/qfv3UcOA4SVmRCLmos4bhjr9ekVQubj/R7waKapmiQg=="
+  version "1.7.3"
+  resolved "https://registry.yarnpkg.com/shell-quote/-/shell-quote-1.7.3.tgz#aa40edac170445b9a431e17bb62c0b881b9c4123"
+  integrity sha512-Vpfqwm4EnqGdlsBFNmHhxhElJYrdfcxPThu+ryKS5J8L/fhAwLazFZtq+S+TWZ9ANj2piSQLGj6NQg+lKPmxrw==
 
 shellwords@^0.1.1:
   version "0.1.1"

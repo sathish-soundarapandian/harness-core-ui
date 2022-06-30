@@ -55,6 +55,8 @@ co:
   noDataForDryRunMsg: 'There are no AutoStopping Rules in Dry Run mode.'
   noDataForActiveRulesMsg: 'There are no AutoStopping Rules.'
   deleteRuleSuccessMessage: 'Rule {{name}} deleted successfully'
+  createAsRule: 'Create AutoStopping Rule'
+  editAsRule: 'Edit AutoStopping Rule'
   landingPageText:
     '<b>AutoStopping Rules</b> dynamically make sure that your <i>non-production workloads</i> are <b>running (and costing you)
     only when you’re using them</b>, and never when they are idle. Additionally, run your workloads on fully
@@ -360,7 +362,6 @@ co:
       subnet: 'Select Subnet'
       machineType: 'Select Machine type'
     validation:
-      connector: 'Connector is a required field'
       name: 'Access point Name is a required field'
       vpc: 'VPC is a required field'
       subnets: 'Atleast 2 subnets are mandatory'
@@ -777,6 +778,7 @@ perspectives:
     recipientLabel: Send report to
     searchTimezonePlaceholder: Search Timezone
     reportDeletedTxt: 'Report {{ name }} deleted'
+    perspectiveReport: Perspective Report
   recommendations:
     viewText: '{{ $.common.viewText }}'
     recommendationCountTxt: '{{ count }} recommendation(s) saving upto'
@@ -800,6 +802,7 @@ perspectives:
     sendAlerts: Send alerts at
     actualSpend: Actual spend
     forecastedCost: Forecasted cost
+    perspectiveBudgets: Perspective Budget
     defineTarget:
       title: Define Target
       text: Budgets are created on Perspectives. If you do not have a Perspective of the resources you would like to budget, create a new Perspective and then proceed to set a budget.
@@ -833,14 +836,14 @@ perspectives:
       percent: '% of Budget'
       createAlert: '+ add new alert'
   folders:
-    heading: '{{ $.dashboards.homePage.folders }}'
-    customFolders: My Folders
+    customFolders: '{{ $.dashboards.homePage.folders }}'
     newFolder: New folder
     createNewFolderHeading: Create new Folder for Perspectives
     folderNamePlaceholder: Enter folder name
     selectPerspectiveLabel: Include perspectives
     folderCreated: Perspective Folder created successfully!!
     folderDeleted: Folder deleted successfully!!
+    folderUpdated: Folder updated successfully!!
     moveFolderTitle: Move to folder
     currentFolderLabel: Current Folder
     moveExistingFolder: Move to an existing folder
@@ -852,7 +855,7 @@ perspectives:
     folderSelectionRequired: Please select any folder to move.
     deletedConfirmationTitle: Delete Folder
     deletedConfirmationDesc: Deleting the folder will not delete the perspectives, all perspectives in the current folder will be moved to the default folder.
-  emptyStateTitle: You have not created any perspectives yet
+  emptyStateTitle: You have not created any perspectives yet in this folder
   emptyStateDesc: Create a new one or explore our Out of the box perspectives
 overview:
   title: '{{ $.overview }}'
@@ -1096,3 +1099,4 @@ businessMapping:
     createdBy: Created By
     lastEdit: Last Edit
     unallocated: Unallocated
+  costCategory: Cost Category

@@ -80,7 +80,7 @@ const RenderColumnMenu: Renderer<CellProps<PipelineDTO>> = ({ row, column }) => 
   }>()
 
   const { confirmDelete } = useDeleteConfirmationDialog(data, 'pipeline', (column as any).onDeletePipeline)
-  const { isGitSyncEnabled, isGitSimplificationEnabled } = useAppStore()
+  const { isGitSyncEnabled } = useAppStore()
   const [canDelete, canRun] = usePermission(
     {
       resourceScope: {
@@ -173,7 +173,6 @@ const RenderColumnMenu: Renderer<CellProps<PipelineDTO>> = ({ row, column }) => 
           <Menu.Item
             icon="duplicate"
             text={getString('projectCard.clone')}
-            disabled={isGitSyncEnabled || isGitSimplificationEnabled}
             onClick={(e: React.MouseEvent) => {
               e.stopPropagation()
               openClonePipelineModal()

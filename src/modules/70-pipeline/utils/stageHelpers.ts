@@ -8,12 +8,17 @@
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import { v4 as uuid } from 'uuid'
 import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@wings-software/uicore'
-import type { GraphLayoutNode, PipelineExecutionSummary } from 'services/pipeline-ng'
-import type { StringKeys } from 'framework/strings'
 import type {
-  Infrastructure,
+  GraphLayoutNode,
+  PipelineExecutionSummary,
   PipelineInfoConfig,
   StageElementConfig,
+  StageElementWrapperConfig
+} from 'services/pipeline-ng'
+import type { StringKeys } from 'framework/strings'
+import type {
+  GetExecutionStrategyYamlQueryParams,
+  Infrastructure,
   ServerlessAwsLambdaInfrastructure,
   ServiceDefinition
 } from 'services/cd-ng'
@@ -35,7 +40,10 @@ export enum StageType {
   APPROVAL = 'Approval',
   CUSTOM = 'Custom',
   Template = 'Template',
-  SECURITY = 'SecurityTests'
+  SECURITY = 'SecurityTests',
+  MATRIX = 'MATRIX',
+  FOR = 'FOR',
+  PARALLELISM = 'PARALLELISM'
 }
 
 export enum ServiceDeploymentType {
@@ -53,7 +61,8 @@ export enum ServiceDeploymentType {
   ServerlessAzureFunctions = 'ServerlessAzureFunctions',
   ServerlessGoogleFunctions = 'ServerlessGoogleFunctions',
   AmazonSAM = 'AwsSAM',
-  AzureFunctions = 'AzureFunctions'
+  AzureFunctions = 'AzureFunctions',
+  AzureWebApp = 'AzureWebApp'
 }
 
 export type ServerlessGCPInfrastructure = Infrastructure & {
@@ -249,6 +258,32 @@ export const getSelectedDeploymentType = (
   return get(stage, 'stage.spec.serviceConfig.serviceDefinition.type', null)
 }
 
+export const getDeploymentTypeWithSvcEnvFF = (
+  stage: StageElementWrapper<DeploymentStageElementConfig> | undefined
+): ServiceDefinition['type'] => {
+  return get(stage, 'stage.spec.deploymentType', null)
+}
+
+export const getServiceDefinitionType = (
+  selectedStage: StageElementWrapperConfig | undefined,
+  getStageFromPipeline: <T extends StageElementConfig = StageElementConfig>(
+    stageId: string,
+    pipeline?: PipelineInfoConfig
+  ) => PipelineStageWrapper<T>,
+  isNewServiceEnvEntity: (isSvcEnvEntityEnabled: boolean, stage: DeploymentStageElementConfig) => boolean,
+  isSvcEnvEntityEnabled: boolean
+): GetExecutionStrategyYamlQueryParams['serviceDefinitionType'] => {
+  const isPropagating = get(selectedStage, 'stage.spec.serviceConfig.useFromStage', null)
+  if (isNewServiceEnvEntity(isSvcEnvEntityEnabled, selectedStage?.stage as DeploymentStageElementConfig)) {
+    return getDeploymentTypeWithSvcEnvFF(selectedStage as StageElementWrapper<DeploymentStageElementConfig>)
+  }
+  return getSelectedDeploymentType(
+    selectedStage as StageElementWrapper<DeploymentStageElementConfig>,
+    getStageFromPipeline,
+    isPropagating
+  )
+}
+
 export const getStageDeploymentType = (
   pipeline: PipelineInfoConfig,
   stage: StageElementWrapper<DeploymentStageElementConfig>,
@@ -367,6 +402,12 @@ export const deleteStageData = (stage?: DeploymentStageElementConfig): void => {
       stage.spec.execution.steps.splice(0)
     }
     delete stage?.spec?.execution?.rollbackSteps
+  }
+}
+export const deleteServiceData = (stage?: DeploymentStageElementConfig): void => {
+  if (stage) {
+    delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.artifacts
+    delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.manifests
   }
 }
 //This is to delete stage data in case of new service/ env entity

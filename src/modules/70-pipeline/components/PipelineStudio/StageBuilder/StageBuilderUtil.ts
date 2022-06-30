@@ -12,12 +12,8 @@ import { v4 as uuid } from 'uuid'
 import type { NodeModelListener, LinkModelListener, DiagramEngine } from '@projectstorm/react-diagrams-core'
 import produce from 'immer'
 import { parse } from 'yaml'
-import type {
-  StageElementWrapperConfig,
-  PageConnectorResponse,
-  PipelineInfoConfig,
-  DeploymentStageConfig
-} from 'services/cd-ng'
+import type { PageConnectorResponse, DeploymentStageConfig } from 'services/cd-ng'
+import type { StageElementWrapperConfig, PipelineInfoConfig } from 'services/pipeline-ng'
 import type * as Diagram from '@pipeline/components/Diagram'
 import {
   getIdentifierFromValue,
@@ -571,7 +567,8 @@ export const getNodeEventListerner = (
   confirmMoveStage: () => void,
   getTemplate: PipelineContextInterface['getTemplate'],
   stageMap: Map<string, StageState>,
-  newPipelineStudioEnabled?: boolean
+  newPipelineStudioEnabled?: boolean,
+  sectionId?: string | null
 ): NodeModelListener => {
   const {
     state: {
@@ -640,7 +637,7 @@ export const getNodeEventListerner = (
               )
               setSelectionRef.current({ stageId: undefined, sectionId: undefined })
             } else {
-              setSelectionRef.current({ stageId: data?.stage?.identifier, sectionId: undefined })
+              setSelectionRef.current({ stageId: data?.stage?.identifier, sectionId })
             }
           } /* istanbul ignore else */ else if (!isSplitViewOpen) {
             if (stageMap.has(data?.stage?.identifier || '')) {

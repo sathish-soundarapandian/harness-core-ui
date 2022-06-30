@@ -192,8 +192,11 @@ const ConfigureMSTeamsNotifications: React.FC<ConfigureMSTeamsNotificationsProps
         <Formik<MSTeamsNotificationConfiguration>
           onSubmit={handleSubmit}
           formName="configureMSTeamsNotifications"
-          validationSchema={Yup.object({
-            msTeamKeys: Yup.array().of(Yup.string().required(getString('notifications.errors.msTeamUrlRequired')))
+          validationSchema={Yup.object().shape({
+            msTeamKeys: Yup.array().when('userGroups', {
+              is: val => isEmpty(val),
+              then: Yup.array().of(Yup.string().required(getString('notifications.errors.msTeamUrlRequired')))
+            })
           })}
           initialValues={{
             msTeamKeys: [],

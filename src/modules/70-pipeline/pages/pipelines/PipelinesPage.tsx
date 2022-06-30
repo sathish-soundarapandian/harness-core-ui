@@ -16,7 +16,6 @@ import {
   Text,
   GridListToggle,
   Views,
-  ButtonVariation,
   DropDown,
   shouldShowError,
   PageSpinner,
@@ -72,9 +71,6 @@ import {
   removeNullAndEmpty,
   flattenObject
 } from '@common/components/Filter/utils/FilterUtils'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import RbacButton from '@rbac/components/Button/Button'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
 import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { NavigatedToPage } from '@common/constants/TrackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
@@ -82,8 +78,11 @@ import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { deploymentTypeLabel } from '@pipeline/utils/DeploymentTypeUtils'
+import useImportResource from '@pipeline/components/ImportResource/useImportResource'
+import CreatePipelineButton from '@pipeline/components/CreatePipelineButton/CreatePipelineButton'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import type { StoreType } from '@common/constants/GitSyncTypes'
+import { ResourceType } from '@common/interfaces/GitSyncInterface'
 import { PipelineGridView } from './views/PipelineGridView'
 import { PipelineListView } from './views/PipelineListView'
 import PipelineFilterForm from '../pipeline-deployment-list/PipelineFilterForm/PipelineFilterForm'
@@ -196,7 +195,7 @@ function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
 
   function handleQueryChange(query: string): void {
     if (query) {
-      updateQueryParams({ searchTerm: query })
+      updateQueryParams({ searchTerm: query, page: defaultPageNumber.toString() })
     } else {
       updateQueryParams({ searchTerm: [] as any }) // removes the param
     }
@@ -290,7 +289,6 @@ function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
   const defaultQueryParamsForPiplines = {
     accountIdentifier: accountId,
     projectIdentifier,
-    module,
     orgIdentifier,
     searchTerm,
     page,
@@ -317,6 +315,16 @@ function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
     }
   })
 
+  const onImportSuccess = (): void => {
+    fetchPipelines(defaultQueryParamsForPiplines)
+  }
+
+  const { showImportResourceModal } = useImportResource({
+    resourceType: ResourceType.PIPELINES,
+    modalTitle: getString('common.importEntityFromGit', { resourceType: getString('common.pipeline') }),
+    onSuccess: onImportSuccess
+  })
+
   const fetchPipelines = useCallback(
     async (params?: GetPipelineListQueryParams, formData?: PipelineFilterProperties): Promise<void> => {
       try {
@@ -328,6 +336,7 @@ function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
           },
           isObjectEmpty(formData || {}) ? appliedFilter?.filterProperties : formData
         ) as PipelineFilterProperties
+        setIsLoading(true)
         const { status, data } = await reloadPipelines(filter, { queryParams: params })
         if (status === 'SUCCESS') {
           setPipelineList(data)
@@ -728,21 +737,11 @@ function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
       {(isReseting || !!pipelineList?.content?.length || appliedFilter || isGitSyncEnabled || searchTerm) && (
         <Page.SubHeader>
           <Layout.Horizontal>
-            <RbacButton
-              variation={ButtonVariation.PRIMARY}
-              data-testid="add-pipeline"
-              icon="plus"
-              text={getString('pipeline.newPipelineText')}
-              onClick={() => goToPipeline()}
-              tooltipProps={{
-                dataTooltipId: 'addPipeline'
-              }}
-              permission={{
-                permission: PermissionIdentifier.EDIT_PIPELINE,
-                resource: {
-                  resourceType: ResourceType.PIPELINE
-                }
-              }}
+            <CreatePipelineButton
+              label={getString('pipeline.newPipelineText')}
+              iconName={'plus'}
+              onCreatePipelineClick={() => goToPipeline()}
+              onImportPipelineClick={showImportResourceModal}
             />
             {isGitSyncEnabled && (
               <GitSyncStoreProvider>
@@ -853,21 +852,10 @@ function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
                 <Text className={css.aboutPipeline} margin={{ top: 'xsmall', bottom: 'xlarge' }}>
                   {getString('pipeline-list.aboutPipeline')}
                 </Text>
-                <RbacButton
-                  variation={ButtonVariation.PRIMARY}
-                  onClick={() => goToPipeline()}
-                  text={getString('common.createPipeline')}
-                  permission={{
-                    permission: PermissionIdentifier.EDIT_PIPELINE,
-                    resource: {
-                      resourceType: ResourceType.PIPELINE
-                    },
-                    resourceScope: {
-                      accountIdentifier: accountId,
-                      orgIdentifier,
-                      projectIdentifier
-                    }
-                  }}
+                <CreatePipelineButton
+                  label={getString('common.createPipeline')}
+                  onCreatePipelineClick={() => goToPipeline()}
+                  onImportPipelineClick={showImportResourceModal}
                 />
               </Layout.Vertical>
             )}

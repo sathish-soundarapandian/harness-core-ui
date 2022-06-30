@@ -14,5 +14,6 @@ declare const styles: {
   readonly tickerValueStyles: string
   readonly tooltipCard: string
   readonly tooltipTimestamp: string
+  readonly unitText: string
 }
 export default styles

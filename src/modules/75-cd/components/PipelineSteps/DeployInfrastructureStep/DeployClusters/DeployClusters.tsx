@@ -7,14 +7,14 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { defaultTo, get, isNil } from 'lodash-es'
-import type { FormikProps } from 'formik'
+import { defaultTo, get, isEmpty, isEqual, isNil, uniqBy } from 'lodash-es'
+import { connect, FormikProps } from 'formik'
 
 import {
   FormInput,
   getMultiTypeFromValue,
-  MultiSelectOption,
   MultiTypeInputType,
+  RUNTIME_INPUT_VALUE,
   SelectOption,
   useToaster
 } from '@harness/uicore'
@@ -26,32 +26,25 @@ import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
-import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 
-import type { PipelineInfrastructureV2 } from '../utils'
+import css from './DeployClusters.module.scss'
 
 interface DeployClusterProps {
-  formikRef: React.MutableRefObject<FormikProps<unknown> | null>
+  formik?: FormikProps<DeployStageConfig>
   readonly?: boolean
-  initialValues?: PipelineInfrastructureV2
   environmentIdentifier: string
   allowableTypes: MultiTypeInputType[]
 }
 
-export default function DeployClusters({
-  formikRef,
-  readonly,
-  environmentIdentifier,
-  allowableTypes
-}: DeployClusterProps) {
+function DeployClusters({ formik, readonly, environmentIdentifier, allowableTypes }: DeployClusterProps) {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const { expressions } = useVariablesExpression()
 
   const [clustersRefType, setClustersRefType] = useState<MultiTypeInputType>(
-    getMultiTypeFromValue((formikRef.current as any)?.values?.clusterRef)
+    getMultiTypeFromValue(formik?.values?.clusterRef)
   )
 
   const {
@@ -78,13 +71,28 @@ export default function DeployClusters({
 
   useEffect(() => {
     if (!isNil(clusters)) {
-      setClustersSelectOptions(
-        clusters.map(cluster => {
+      setClustersSelectOptions([
+        { label: getString('cd.pipelineSteps.environmentTab.allClustersSelected'), value: getString('all') },
+        ...clusters.map(cluster => {
           return { label: defaultTo(cluster.clusterRef, ''), value: defaultTo(cluster.clusterRef, '') }
         })
-      )
+      ])
     }
   }, [clusters])
+
+  useEffect(() => {
+    if (!isEmpty(clustersSelectOptions) && !isNil(clustersSelectOptions) && formik?.values?.clusterRef) {
+      if (getMultiTypeFromValue(formik?.values?.clusterRef) === MultiTypeInputType.FIXED) {
+        const allClusterOptions = [...clustersSelectOptions]
+        allClusterOptions.push(...(formik?.values?.clusterRef as SelectOption[]))
+        const filteredClusterOptions = uniqBy(allClusterOptions, 'value')
+
+        if (!isEqual(clustersSelectOptions, filteredClusterOptions)) {
+          setClustersSelectOptions(filteredClusterOptions)
+        }
+      }
+    }
+  }, [clustersSelectOptions])
 
   useEffect(() => {
     if (!isNil(clustersError)) {
@@ -97,6 +105,7 @@ export default function DeployClusters({
       label={getString('cd.pipelineSteps.environmentTab.specifyGitOpsClusters')}
       tooltipProps={{ dataTooltipId: 'specifyGitOpsClusters' }}
       name="clusterRef"
+      className={css.clusterMultiSelect}
       disabled={readonly || (clustersRefType === MultiTypeInputType.FIXED && clustersLoading)}
       placeholder={
         clustersLoading ? getString('loading') : getString('cd.pipelineSteps.environmentTab.specifyGitOpsClusters')
@@ -104,19 +113,29 @@ export default function DeployClusters({
       multiSelectTypeInputProps={{
         onTypeChange: setClustersRefType,
         width: 280,
-        onChange: items => {
-          formikRef.current?.setFieldValue(
-            'gitOpsClusters',
-            (items as MultiSelectOption[])?.map(item => item.value)
-          )
-        },
         multiSelectProps: {
           items: defaultTo(clustersSelectOptions, [])
         },
-        expressions,
-        allowableTypes
+        allowableTypes,
+        onChange: items => {
+          if (items !== RUNTIME_INPUT_VALUE && (items as SelectOption[]).length !== 1) {
+            const selectAllItemIndex = (items as SelectOption[]).findIndex(item => item.value === getString('all'))
+
+            if (selectAllItemIndex === 0) {
+              formik?.setFieldValue('clusterRef', (items as SelectOption[]).slice(1))
+            } else if (selectAllItemIndex === (items as SelectOption[]).length - 1) {
+              formik?.setFieldValue('clusterRef', (items as SelectOption[]).slice(-1))
+            } else {
+              formik?.setFieldValue('clusterRef', items)
+            }
+          } else {
+            formik?.setFieldValue('clusterRef', items)
+          }
+        }
       }}
       selectItems={defaultTo(clustersSelectOptions, [])}
     />
   )
 }
+
+export default connect(DeployClusters)

@@ -6,7 +6,7 @@
  */
 
 import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { WebhookTriggerConfigPanelPropsInterface } from '../views/WebhookTriggerConfigPanel'
 
 export const originalPipeline = {

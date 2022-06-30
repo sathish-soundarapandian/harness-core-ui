@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { defaultTo } from 'lodash-es'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import type { PipelineContextInterface } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { AddStageView } from './views/AddStageView'

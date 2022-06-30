@@ -10,9 +10,9 @@ import { waitFor } from '@testing-library/react'
 import { parse } from 'yaml'
 import { useGetTemplateFromPipeline, useGetMergeInputSetFromPipelineTemplateWithListInput } from 'services/pipeline-ng'
 
+import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { useInputSets } from '../useInputSets'
 import type { UseInputSetsProps } from '../useInputSets'
-import { clearRuntimeInput } from '../../PipelineStudio/StepUtil'
 jest.mock('services/pipeline-ng', () => ({
   useGetTemplateFromPipeline: jest.fn(() => ({})),
   useGetMergeInputSetFromPipelineTemplateWithListInput: jest.fn(() => ({}))
@@ -86,6 +86,17 @@ const mergedPipelineYaml = `pipeline:
                     identifier: "Step_1"
                     type: "ShellScript"
                     timeout: ""
+  variables:
+    - name: "test2"
+      type: "String"
+      value: "test2"
+    - name: "test1"
+      type: "String"
+      value: "test1"
+`
+
+const rerunPipelineWithOldData = `pipeline:
+  identifier: "RPF_Bugs"
   variables:
     - name: "test2"
       type: "String"
@@ -235,7 +246,148 @@ describe('<useInputSets /> tests', () => {
     await waitFor(() =>
       expect(result.current.inputSetYamlResponse?.data?.inputSetTemplateYaml).toEqual(runtimeInputsYaml)
     )
-    expect(result.current.inputSet).toEqual(parse(mergedPipelineYaml))
+    expect(result.current.inputSet).toMatchInlineSnapshot(`
+      Object {
+        "pipeline": Object {
+          "identifier": "RPF_Bugs",
+          "stages": Array [
+            Object {
+              "stage": Object {
+                "identifier": "Stage_1",
+                "spec": Object {
+                  "serviceConfig": Object {
+                    "serviceDefinition": Object {
+                      "spec": Object {
+                        "variables": Array [
+                          Object {
+                            "name": "var1",
+                            "type": "String",
+                            "value": "123",
+                          },
+                        ],
+                      },
+                      "type": "Kubernetes",
+                    },
+                  },
+                },
+                "type": "Deployment",
+              },
+            },
+            Object {
+              "stage": Object {
+                "execution": Object {
+                  "steps": Array [
+                    Object {
+                      "step": Object {
+                        "identifier": "Step_1",
+                        "timeout": "",
+                        "type": "ShellScript",
+                      },
+                    },
+                  ],
+                },
+                "identifier": "Stage_3",
+                "spec": null,
+                "type": "Deployment",
+              },
+            },
+          ],
+          "variables": Array [
+            Object {
+              "name": "test1",
+              "type": "String",
+              "value": "test1",
+            },
+            Object {
+              "name": "test2",
+              "type": "String",
+              "value": "test2",
+            },
+          ],
+        },
+      }
+    `)
+    expect(result.current.inputSetTemplate).toEqual(parsed)
+  })
+
+  test('works with rerun with updated pipeline', async () => {
+    ;(useGetTemplateFromPipeline as jest.Mock).mockImplementation(() => ({
+      mutate: jest.fn().mockResolvedValue({
+        data: {
+          inputSetTemplateYaml: runtimeInputsYaml
+        }
+      })
+    }))
+    const { result } = renderHook(useInputSets, {
+      initialProps: { ...getInitialProps(), rerunInputSetYaml: rerunPipelineWithOldData }
+    })
+    const parsed = parse(runtimeInputsYaml)
+
+    await waitFor(() =>
+      expect(result.current.inputSetYamlResponse?.data?.inputSetTemplateYaml).toEqual(runtimeInputsYaml)
+    )
+    expect(result.current.inputSet).toMatchInlineSnapshot(`
+      Object {
+        "pipeline": Object {
+          "identifier": "RPF_Bugs",
+          "stages": Array [
+            Object {
+              "stage": Object {
+                "identifier": "Stage_1",
+                "spec": Object {
+                  "serviceConfig": Object {
+                    "serviceDefinition": Object {
+                      "spec": Object {
+                        "variables": Array [
+                          Object {
+                            "name": "var1",
+                            "type": "String",
+                            "value": "",
+                          },
+                        ],
+                      },
+                      "type": "Kubernetes",
+                    },
+                  },
+                },
+                "type": "Deployment",
+              },
+            },
+            Object {
+              "stage": Object {
+                "identifier": "Stage_3",
+                "spec": Object {
+                  "execution": Object {
+                    "steps": Array [
+                      Object {
+                        "step": Object {
+                          "identifier": "Step_1",
+                          "timeout": "",
+                          "type": "ShellScript",
+                        },
+                      },
+                    ],
+                  },
+                },
+                "type": "Deployment",
+              },
+            },
+          ],
+          "variables": Array [
+            Object {
+              "name": "test1",
+              "type": "String",
+              "value": "test1",
+            },
+            Object {
+              "name": "test2",
+              "type": "String",
+              "value": "test2",
+            },
+          ],
+        },
+      }
+    `)
     expect(result.current.inputSetTemplate).toEqual(parsed)
   })
 

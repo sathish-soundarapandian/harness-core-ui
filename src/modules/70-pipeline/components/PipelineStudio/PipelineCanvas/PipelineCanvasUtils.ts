@@ -7,14 +7,8 @@
 
 import type { IconName } from '@wings-software/uicore'
 import type { AddDrawerMapInterface } from '@common/components/AddDrawer/AddDrawer'
-// import { useGet } from 'restful-react'
-// import { get } from 'lodash-es'
-// import { getConfig } from 'services/config'
-// import { Failure, GetStepsQueryParams, ResponseStepCategory, UseGetStepsProps } from 'services/cd-ng'
-// import { Failure, GetStepsQueryParams, ResponseStepCategory, useGetSteps, UseGetStepsProps } from 'services/cd-ng'
-import type { StageElementWrapperConfig, StepCategory } from 'services/cd-ng'
+import type { StageElementWrapperConfig, StepCategory } from 'services/pipeline-ng'
 import { deployStageSteps } from './mock'
-// import { buildStageSteps, deployStageSteps } from './mock'
 
 type iconMapOptions = {
   [key: string]: IconName

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, render, RenderResult, screen, waitFor } from '@testing-library/react'
+import { getByTestId, render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockImport from 'framework/utils/mockImport'
@@ -63,75 +63,81 @@ describe('FlagTableFilters', () => {
 
     const { featureCounts } = mockFeatureFlags
 
-    await waitFor(() => {
-      const filterCards = document.getElementsByClassName('Card--card')
-      expect(filterCards).toHaveLength(6)
-      expect(filterCards[0].getElementsByTagName('p')[0].textContent).toBe('cf.flagFilters.allFlags')
-      expect(filterCards[0].getElementsByTagName('p')[1].textContent).toBe(featureCounts.totalFeatures.toString())
-      expect(filterCards[0].closest('.Card--card')).toHaveClass('Card--selected')
-      expect(filterCards[1].getElementsByTagName('p')[0].textContent).toBe('cf.flagFilters.enabled')
-      expect(filterCards[1].getElementsByTagName('p')[1].textContent).toBe(featureCounts.totalEnabled.toString())
-      expect(filterCards[2].getElementsByTagName('p')[0].textContent).toBe('cf.flagFilters.permanent')
-      expect(filterCards[2].getElementsByTagName('p')[1].textContent).toBe(featureCounts.totalPermanent.toString())
-      expect(filterCards[3].getElementsByTagName('p')[0].textContent).toBe('cf.flagFilters.last24')
-      expect(filterCards[3].getElementsByTagName('p')[1].textContent).toBe(
-        featureCounts.totalRecentlyAccessed.toString()
-      )
-      expect(filterCards[4].getElementsByTagName('p')[0].textContent).toBe('cf.flagFilters.active')
-      expect(filterCards[4].getElementsByTagName('p')[1].textContent).toBe(featureCounts.totalActive.toString())
-      expect(filterCards[5].getElementsByTagName('p')[0].textContent).toBe('cf.flagFilters.potentiallyStale')
-      expect(filterCards[5].getElementsByTagName('p')[1].textContent).toBe(
-        featureCounts.totalPotentiallyStale.toString()
-      )
-    })
+    const filterCards = screen.getAllByTestId('filter-card')
+    expect(filterCards).toHaveLength(6)
+
+    // All Flags
+    expect(getByTestId(filterCards[0], 'filter-label')).toHaveTextContent('cf.flagFilters.allFlags')
+    expect(getByTestId(filterCards[0], 'filter-total')).toHaveTextContent(`${featureCounts.totalFeatures}`)
+    expect(filterCards[0]).toHaveClass('Card--selected')
+
+    // Enabled Flags
+    expect(getByTestId(filterCards[1], 'filter-label')).toHaveTextContent('cf.flagFilters.enabled')
+    expect(getByTestId(filterCards[1], 'filter-total')).toHaveTextContent(`${featureCounts.totalEnabled}`)
+
+    // Permanent Flags
+    expect(getByTestId(filterCards[2], 'filter-label')).toHaveTextContent('cf.flagFilters.permanent')
+    expect(getByTestId(filterCards[2], 'filter-total')).toHaveTextContent(`${featureCounts.totalPermanent}`)
+
+    // Recently Accessed Flags
+    expect(getByTestId(filterCards[3], 'filter-label')).toHaveTextContent('cf.flagFilters.recentlyAccessed')
+    expect(getByTestId(filterCards[3], 'filter-total')).toHaveTextContent(`${featureCounts.totalRecentlyAccessed}`)
+
+    // Active Flags
+    expect(getByTestId(filterCards[4], 'filter-label')).toHaveTextContent('cf.flagFilters.active')
+    expect(getByTestId(filterCards[4], 'filter-total')).toHaveTextContent(`${featureCounts.totalActive}`)
+
+    // Potentially Stale Flags
+    expect(getByTestId(filterCards[5], 'filter-label')).toHaveTextContent('cf.flagFilters.potentiallyStale')
+    expect(getByTestId(filterCards[5], 'filter-total')).toHaveTextContent(`${featureCounts.totalPotentiallyStale}`)
   })
 
   test('It should apply selected style to the filter card that matches currentFilter', async () => {
     renderComponent({ currentFilter: permanentFlagsFilter })
 
-    await waitFor(() => {
-      expect(screen.getByText('cf.flagFilters.allFlags')).toBeInTheDocument()
-      expect(screen.getByText('cf.flagFilters.enabled')).toBeInTheDocument()
-      expect(screen.getByText('cf.flagFilters.permanent')).toBeInTheDocument()
-      expect(screen.getByText('cf.flagFilters.permanent').closest('.Card--card')).toHaveClass('Card--selected')
-      expect(screen.getByText('cf.flagFilters.last24')).toBeInTheDocument()
-      expect(screen.getByText('cf.flagFilters.active')).toBeInTheDocument()
-      expect(screen.getByText('cf.flagFilters.potentiallyStale')).toBeInTheDocument()
-    })
+    expect(screen.getByText('cf.flagFilters.allFlags')).toBeVisible()
+    expect(screen.getByText('cf.flagFilters.enabled')).toBeVisible()
+    expect(screen.getByText('cf.flagFilters.permanent')).toBeVisible()
+    expect(screen.getByText('cf.flagFilters.permanent').closest('div[data-testid="filter-card"]')).toHaveClass(
+      'Card--selected'
+    )
+    expect(screen.getByText('cf.flagFilters.recentlyAccessed')).toBeVisible()
+    expect(screen.getByText('cf.flagFilters.active')).toBeVisible()
+    expect(screen.getByText('cf.flagFilters.potentiallyStale')).toBeVisible()
   })
 
   test('It should call update filter method on click of a filter card', async () => {
     renderComponent()
 
-    await waitFor(() => {
-      expect(screen.getByText('cf.flagFilters.allFlags')).toBeInTheDocument()
-      expect(screen.getByText('cf.flagFilters.enabled')).toBeInTheDocument()
-      expect(screen.getByText('cf.flagFilters.permanent')).toBeInTheDocument()
-      expect(screen.getByText('cf.flagFilters.last24')).toBeInTheDocument()
-      expect(screen.getByText('cf.flagFilters.active')).toBeInTheDocument()
-      expect(screen.getByText('cf.flagFilters.potentiallyStale')).toBeInTheDocument()
-    })
+    expect(screen.getByText('cf.flagFilters.allFlags')).toBeVisible()
+    expect(screen.getByText('cf.flagFilters.enabled')).toBeVisible()
+    expect(screen.getByText('cf.flagFilters.permanent')).toBeVisible()
+    expect(screen.getByText('cf.flagFilters.recentlyAccessed')).toBeVisible()
+    expect(screen.getByText('cf.flagFilters.active')).toBeVisible()
+    expect(screen.getByText('cf.flagFilters.potentiallyStale')).toBeVisible()
 
-    await act(async () => {
-      userEvent.click(screen.getByText('cf.flagFilters.permanent'))
+    userEvent.click(screen.getByText('cf.flagFilters.permanent'))
+
+    await waitFor(() => {
+      expect(updateTableFilter).toBeCalledWith(permanentFlagsFilter)
     })
-    await waitFor(() => expect(updateTableFilter).toBeCalledWith(permanentFlagsFilter))
   })
 
   test('It should display totals as 0 when there are no feature flags', async () => {
     renderComponent({ features: null })
 
-    await waitFor(() => {
-      const filterCards = document.getElementsByClassName('Card--card')
-      expect(filterCards).toHaveLength(6)
-      expect(filterCards[0].getElementsByTagName('p')[0].textContent).toBe('cf.flagFilters.allFlags')
-      expect(filterCards[0].getElementsByTagName('p')[1].textContent).toBe('0')
-      expect(filterCards[0].closest('.Card--card')).toHaveClass('Card--selected')
-      expect(filterCards[1].getElementsByTagName('p')[1].textContent).toBe('0')
-      expect(filterCards[2].getElementsByTagName('p')[1].textContent).toBe('0')
-      expect(filterCards[3].getElementsByTagName('p')[1].textContent).toBe('0')
-      expect(filterCards[4].getElementsByTagName('p')[1].textContent).toBe('0')
-      expect(filterCards[5].getElementsByTagName('p')[1].textContent).toBe('0')
-    })
+    const filterCards = screen.getAllByTestId('filter-card')
+    expect(filterCards).toHaveLength(6)
+    // first card selected (all/default)
+    expect(getByTestId(filterCards[0], 'filter-label')).toHaveTextContent('cf.flagFilters.allFlags')
+    expect(getByTestId(filterCards[0], 'filter-total')).toHaveTextContent('0')
+    expect(filterCards[0]).toHaveClass('Card--selected')
+
+    // rest of cards
+    expect(getByTestId(filterCards[1], 'filter-total')).toHaveTextContent('0')
+    expect(getByTestId(filterCards[2], 'filter-total')).toHaveTextContent('0')
+    expect(getByTestId(filterCards[3], 'filter-total')).toHaveTextContent('0')
+    expect(getByTestId(filterCards[4], 'filter-total')).toHaveTextContent('0')
+    expect(getByTestId(filterCards[5], 'filter-total')).toHaveTextContent('0')
   })
 })

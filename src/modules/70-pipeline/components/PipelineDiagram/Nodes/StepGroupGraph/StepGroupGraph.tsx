@@ -11,6 +11,8 @@ import { defaultTo, get } from 'lodash-es'
 import { DiagramType, Event } from '@pipeline/components/Diagram'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { isNodeTypeMatrixOrFor } from '@pipeline/utils/executionUtils'
+import { useDeepCompareEffect } from '@common/hooks'
 import { SVGComponent } from '../../PipelineGraph/PipelineGraph'
 import { PipelineGraphRecursive } from '../../PipelineGraph/PipelineGraphNode'
 import {
@@ -21,7 +23,10 @@ import {
 import type { GetNodeMethod, NodeDetails, NodeIds, PipelineGraphState, SVGPathRecord } from '../../types'
 import { NodeType } from '../../types'
 import GraphConfigStore from '../../PipelineGraph/GraphConfigStore'
+import { getCalculatedStepNodeStyles } from '../MatrixStepNode/MatrixStepNode'
+import { Dimension, Dimensions, useNodeDimensionContext } from '../NodeDimensionStore'
 import css from './StepGroupGraph.module.scss'
+
 interface StepGroupGraphProps {
   id?: string
   data?: any[]
@@ -42,9 +47,7 @@ interface StepGroupGraphProps {
   hideAdd?: boolean
 }
 
-interface LayoutStyles {
-  height: string
-  width: string
+interface LayoutStyles extends Dimension {
   marginLeft?: string
 }
 
@@ -58,35 +61,61 @@ const getNestedStepGroupHeight = (steps?: any[]): number => {
   return maxParalellNodesCount
 }
 
-const getCalculatedStyles = (data: PipelineGraphState[]): LayoutStyles => {
+const getCalculatedStyles = (data: PipelineGraphState[], childrenDimensions: Dimensions): LayoutStyles => {
   let width = 0
+  let height = 0
   let maxChildLength = 0
   let hasStepGroupNode = false
+  let finalHeight = 0
   data.forEach(node => {
-    if (node.type === 'STEP_GROUP') {
-      hasStepGroupNode = true
+    const childSteps = get(node, 'data.step.data.stepGroup.steps') || get(node, 'data.stepGroup.steps')
+    const childrenNodesId = defaultTo(node?.children, []).map(o => o.id)
+    const childNodesId = [node.id, ...childrenNodesId]
+
+    if (childrenDimensions[node.id]) {
+      let nodeHeight = 0
+      let nodeWidth = 0
+      childNodesId.forEach(childNode => {
+        const dimension = childrenDimensions[childNode]
+        nodeHeight += dimension?.height || 0
+        nodeWidth = Math.max(nodeWidth, dimension?.width || 0)
+        nodeHeight += 100 //nodeGap
+      })
+
+      height = Math.max(height, nodeHeight) + 40 //(each node)
+      width = width + nodeWidth + 100 // gap
+    } else {
+      if (node.type === 'STEP_GROUP') {
+        hasStepGroupNode = true
+      }
+      const maxParallelism = defaultTo(node?.data?.maxParallelism, node?.data?.step?.data?.maxParallelism) || 1
+
+      if (isNodeTypeMatrixOrFor(node.type)) {
+        const dimensions = getCalculatedStepNodeStyles(childSteps, maxParallelism, false)
+        width += dimensions.width
+        height += dimensions.height
+        // height += 50 // 30 for matrixWrapper type + padding
+      } else if (childSteps) {
+        const count = getNestedStepGroupHeight(childSteps)
+        maxChildLength = Math.max(maxChildLength, count)
+        width += childSteps.length * 170
+      }
+      if (node.children?.length && data.length > 1) {
+        width += 40
+      }
+      width += 150
+      maxChildLength = Math.max(maxChildLength, node?.children?.length || 0)
+      finalHeight = (maxChildLength + 1) * 100
     }
-    const childSteps = get(node, 'data.step.data.stepGroup.steps')
-    if (childSteps) {
-      const count = getNestedStepGroupHeight(childSteps)
-      maxChildLength = Math.max(maxChildLength, count)
-      width += childSteps.length * 170
-    }
-    if (node.children?.length && data.length > 1) {
-      width += 40
-    }
-    width += 150
-    maxChildLength = Math.max(maxChildLength, node?.children?.length || 0)
   })
-  let finalHeight = (maxChildLength + 1) * 100
   finalHeight = hasStepGroupNode ? finalHeight + 50 : finalHeight
-  return { height: `${finalHeight}px`, width: `${width - 80}px` } // 80 is link gap that we dont need for last stepgroup node
+  return { height: finalHeight + height, width: width - 80 } // 80 is link gap that we dont need for last stepgroup node
 }
 
 function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
   const [svgPath, setSvgPath] = useState<SVGPathRecord[]>([])
   const [treeRectangle, setTreeRectangle] = useState<DOMRect | void>()
-  const [layoutStyles, setLayoutStyles] = useState<LayoutStyles>({ height: '100px', width: '70px' })
+  const [layoutStyles, setLayoutStyles] = useState<LayoutStyles>({ height: 100, width: 70 })
   const [state, setState] = useState<PipelineGraphState[]>([])
   const graphRef = useRef<HTMLDivElement>(null)
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
@@ -96,6 +125,8 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
     const rectBoundary = treeContainer?.getBoundingClientRect()
     setTreeRectangle(rectBoundary)
   }
+
+  const { updateDimensions, childrenDimensions } = useNodeDimensionContext()
   const { errorMap } = useValidationErrors()
   const {
     state: { templateTypes },
@@ -120,14 +151,21 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
   useLayoutEffect(() => {
     if (state?.length) {
       setSVGLinks()
-      setLayoutStyles(getCalculatedStyles(state))
+      setLayoutStyles(getCalculatedStyles(state, childrenDimensions))
     }
   }, [state, props?.isNodeCollapsed])
 
+  useDeepCompareEffect(() => {
+    if (state?.length) {
+      updateGraphLinks()
+      setLayoutStyles(getCalculatedStyles(state, childrenDimensions))
+    }
+  }, [childrenDimensions])
+
   useLayoutEffect(() => {
     if (state?.length) {
-      setSVGLinks()
       props?.updateGraphLinks?.()
+      updateDimensions?.({ [props?.id as string]: layoutStyles })
     }
   }, [layoutStyles])
 

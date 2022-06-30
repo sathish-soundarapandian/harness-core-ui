@@ -19,7 +19,8 @@ import { PipelineContextType } from '@pipeline/components/PipelineStudio/Pipelin
 import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { sanitize } from '@common/utils/JSONUtils'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
-import type { NGServiceConfig, PipelineInfoConfig } from 'services/cd-ng'
+import type { NGServiceConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useServiceContext } from '@cd/context/ServiceContext'
 import { useTemplateSelector } from '@templates-library/hooks/useTemplateSelector'
 import {
@@ -27,7 +28,8 @@ import {
   DefaultNewStageName,
   DefaultNewStageId,
   setNameIDDescription,
-  newServiceState
+  newServiceState,
+  ServicePipelineConfig
 } from '../../utils/ServiceUtils'
 import ServiceStudioDetails from '../ServiceStudioDetails'
 
@@ -38,7 +40,7 @@ interface ServiceConfigurationWrapperProps {
 function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
-  const { serviceResponse, isServiceCreateModalView } = useServiceContext()
+  const { serviceResponse, isServiceCreateModalView, selectedDeploymentType, gitOpsEnabled } = useServiceContext()
   const { getTemplate } = useTemplateSelector()
 
   const [isEdit] = usePermission({
@@ -58,23 +60,27 @@ function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): R
   )
   const getServiceData = React.useCallback((): NGServiceConfig => {
     if (isServiceCreateModalView) {
-      return newServiceState
+      return produce(newServiceState, draft => {
+        set(draft, 'service.serviceDefinition.type', selectedDeploymentType)
+        set(draft, 'service.gitOpsEnabled', gitOpsEnabled)
+      })
     } else {
       if (!isEmpty(serviceYaml?.service?.serviceDefinition)) {
         return serviceYaml
       }
       return merge(serviceYaml, initialServiceState)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const [currentService, setCurrentService] = React.useState(getServiceData())
-
   const currentPipeline = React.useMemo(() => {
     const defaultPipeline = {
       name: serviceYaml?.service?.name,
       identifier: defaultTo(serviceYaml?.service?.identifier, DefaultNewPipelineId),
       description: serviceYaml?.service?.description,
-      tags: serviceYaml?.service?.tags
+      tags: serviceYaml?.service?.tags,
+      gitOpsEnabled: defaultTo(serviceYaml?.service?.gitOpsEnabled, false)
     }
     return produce({ ...defaultPipeline }, draft => {
       if (!isEmpty(serviceYaml?.service?.serviceDefinition)) {
@@ -99,6 +105,7 @@ function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): R
       if (!isEmpty(currentService?.service?.serviceDefinition)) {
         set(draft, 'stages[0].stage.name', DefaultNewStageName)
         set(draft, 'stages[0].stage.identifier', DefaultNewStageId)
+        set(draft, 'gitOpsEnabled', currentService.service?.gitOpsEnabled)
         set(
           draft,
           'stages[0].stage.spec.serviceConfig.serviceDefinition',
@@ -109,7 +116,7 @@ function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): R
     })
   }, [])
 
-  const onUpdatePipeline = async (pipelineConfig: PipelineInfoConfig): Promise<void> => {
+  const onUpdatePipeline = async (pipelineConfig: ServicePipelineConfig): Promise<void> => {
     const stage = get(pipelineConfig, 'stages[0].stage.spec.serviceConfig.serviceDefinition')
     sanitize(stage, { removeEmptyArray: false, removeEmptyObject: false, removeEmptyString: false })
 

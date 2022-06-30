@@ -38,6 +38,7 @@ import { useStrings } from 'framework/strings'
 import RoleBindingsList from '@rbac/components/RoleBindingsList/RoleBindingsList'
 import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRoleAssignmentModal'
 import { getUserName, PrincipalType } from '@rbac/utils/utils'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useMutateAsGet } from '@common/hooks'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
@@ -416,10 +417,12 @@ const ActiveUserListView: React.FC<ActiveUserListViewProps> = ({
     [openRoleAssignmentModal, refetch]
   )
 
+  const { getRBACErrorMessage } = useRBACError()
+
   return (
     <Page.Body
       loading={loading}
-      error={(error as any)?.data?.message || error?.message}
+      error={error ? getRBACErrorMessage(error) : ''}
       retryOnError={() => refetch()}
       noData={
         !searchTerm

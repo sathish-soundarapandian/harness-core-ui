@@ -6,6 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
+import { defaultTo } from 'lodash-es'
 import { FieldArray, Select, TextInput } from '@wings-software/uicore'
 import { Formik } from 'formik'
 import type { Field } from '@wings-software/uicore/dist/components/FieldArray/FieldArray'
@@ -121,8 +122,10 @@ const COHealthCheckTable: React.FC<COHealthCheckTableProps> = props => {
       label: 'STATUS (from-to)',
       renderer: (value, _rowIndex, handleChange) => (
         <StatusRangeInput
-          status_code_from={value?.split('-').map(Number)?.[0] || 200}
-          status_code_to={value?.split('-').map(Number)?.[1] || 299}
+          status_code_from={
+            value?.split('-').map(Number)?.[0] || defaultTo(healthCheckPattern[0]?.status_code_from, 200)
+          }
+          status_code_to={value?.split('-').map(Number)?.[1] || defaultTo(healthCheckPattern[0]?.status_code_to, 299)}
           onChange={
             val => handleChange(val)
             // value => {

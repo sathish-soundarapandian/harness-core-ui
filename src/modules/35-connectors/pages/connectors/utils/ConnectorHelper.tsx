@@ -20,10 +20,11 @@ export const AuthTypes = {
   BEARER_TOKEN: 'Bearer Token(HTTP Header)'
 }
 
-export const GitAuthTypes = {
-  USER_PASSWORD: 'UsernamePassword',
-  USER_TOKEN: 'UsernameToken',
-  KERBEROS: 'Kerberos'
+export enum GitAuthTypes {
+  USER_PASSWORD = 'UsernamePassword',
+  USER_TOKEN = 'UsernameToken',
+  KERBEROS = 'Kerberos',
+  OAUTH = 'OAuth'
 }
 
 export const GitAPIAuthTypes = {
@@ -141,7 +142,7 @@ export const getConnectorTitleIdByType = (type: string): StringKeys => {
     case Connectors.AZURE_KEY_VAULT:
       return 'connectors.title.azureKeyVault'
     case Connectors.ERROR_TRACKING:
-      return 'connectors.title.errorTracking'
+      return 'common.purpose.errorTracking.title'
     case Connectors.AZURE:
       return 'connectors.title.azure'
     default:

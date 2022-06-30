@@ -12,7 +12,9 @@ import { TestWrapper } from '@common/utils/testUtils'
 import PerspectiveBuilderMultiValueSelector from '../PerspectiveBuilderMultiValueSelector'
 
 describe('Test Cases For PerspectiveBuilderMultiValueSelector', () => {
-  test('Should Be Able To Select All', async () => {
+  test('Should Be Able To Select All / Create New Tag', async () => {
+    const createNewTag = jest.fn()
+
     const { container, getByText } = render(
       <TestWrapper>
         <PerspectiveBuilderMultiValueSelector
@@ -22,7 +24,8 @@ describe('Test Cases For PerspectiveBuilderMultiValueSelector', () => {
           valueList={['value1', 'value2', 'value3']}
           fetchMore={jest.fn()}
           searchText={'val'}
-          createNewTag={jest.fn()}
+          createNewTag={createNewTag}
+          initialItemCount={3}
         />
       </TestWrapper>
     )
@@ -39,6 +42,11 @@ describe('Test Cases For PerspectiveBuilderMultiValueSelector', () => {
       fireEvent.mouseLeave(container.querySelector('input[value="value2"]')!)
       fireEvent.click(container.querySelector('input[value="value2"]')!)
     })
+
+    act(() => {
+      fireEvent.click(getByText('create'))
+    })
+    expect(createNewTag).toBeCalledWith(['val'])
 
     expect(container).toMatchSnapshot()
   })

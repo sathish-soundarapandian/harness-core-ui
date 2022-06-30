@@ -263,22 +263,16 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
     currGitDetails: EntityGitDetails,
     latestTemplate: NGTemplateInfoConfig,
     isEdit: boolean | undefined = false
-  ): EntityGitDetails => {
-    if (isEdit) {
-      return {
-        filePath: `${latestTemplate.identifier}_${latestTemplate.versionLabel
-          .toString()
-          .replace(/[^a-zA-Z0-9-_]/g, '')}.yaml`,
-        ...currGitDetails
-      }
-    }
-    return {
-      ...currGitDetails,
-      filePath: `${latestTemplate.identifier}_${latestTemplate.versionLabel
-        .toString()
-        .replace(/[^a-zA-Z0-9-_]/g, '')}.yaml`
-    }
-  }
+  ): EntityGitDetails => ({
+    ...currGitDetails,
+    ...(!isEdit && {
+      filePath: `${defaultTo(latestTemplate.identifier, '')}_${defaultTo(latestTemplate.versionLabel, '').replace(
+        /[^a-zA-Z0-9-_]/g,
+        ''
+      )}.yaml`
+    })
+  })
+
   const saveAndPublish = React.useCallback(
     async (updatedTemplate: NGTemplateInfoConfig, extraInfo: PromiseExtraArgs): Promise<UseSaveSuccessResponse> => {
       const { isEdit, comment } = extraInfo

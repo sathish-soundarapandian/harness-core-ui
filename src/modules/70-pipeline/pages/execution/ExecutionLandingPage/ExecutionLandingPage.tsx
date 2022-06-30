@@ -25,7 +25,8 @@ import {
   getPipelineStagesMap,
   getActiveStageForPipeline,
   getActiveStep,
-  addServiceDependenciesFromLiteTaskEngine
+  addServiceDependenciesFromLiteTaskEngine,
+  isNodeTypeMatrixOrFor
 } from '@pipeline/utils/executionUtils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useQueryParams, useDeepCompareEffect } from '@common/hooks'
@@ -53,16 +54,20 @@ const setStageIds = ({
   queryParams,
   setAutoSelectedStageId,
   setAutoSelectedStepId,
+  setAutoStageNodeExecutionId,
   setSelectedStepId,
   setSelectedStageId,
+  setSelectedStageExecutionId,
   data,
   error
 }: {
   queryParams: ExecutionPageQueryParams
   setAutoSelectedStageId: Dispatch<SetStateAction<string>>
   setAutoSelectedStepId: Dispatch<SetStateAction<string>>
+  setAutoStageNodeExecutionId: Dispatch<SetStateAction<string>>
   setSelectedStepId: Dispatch<SetStateAction<string>>
   setSelectedStageId: Dispatch<SetStateAction<string>>
+  setSelectedStageExecutionId: Dispatch<SetStateAction<string>>
   data?: ResponsePipelineExecutionDetail | null
   error?: GetDataError<Failure | Error> | null
 }): void => {
@@ -89,20 +94,29 @@ const setStageIds = ({
     data.data?.pipelineExecutionSummary?.status as ExecutionStatus
   )
 
-  const runningStep = getActiveStep(
-    data.data.executionGraph || {},
-    undefined,
-    data.data.pipelineExecutionSummary?.layoutNodeMap
-  )
+  const runningStep = getActiveStep(data.data.executionGraph, data.data.pipelineExecutionSummary)
 
   if (runningStage) {
-    setAutoSelectedStageId(runningStage)
-    setSelectedStageId(runningStage)
+    if (isNodeTypeMatrixOrFor(data.data?.pipelineExecutionSummary?.layoutNodeMap?.[runningStage]?.nodeType)) {
+      const nodeExecid =
+        data.data?.pipelineExecutionSummary?.layoutNodeMap?.[runningStage]?.edgeLayoutList?.currentNodeChildren?.[0] ||
+        runningStage // UNIQUE ID--> stageNodeExecutionID
+      const nodeId = data.data?.pipelineExecutionSummary?.layoutNodeMap?.[nodeExecid]?.nodeUuid // COMMMON--> stageNodeID
+      setAutoSelectedStageId(nodeId!)
+      setSelectedStageId(nodeId!)
+      setAutoStageNodeExecutionId(nodeExecid!)
+      setSelectedStageExecutionId(nodeExecid!)
+    } else {
+      setAutoSelectedStageId(runningStage)
+      setSelectedStageId(runningStage)
+      setAutoStageNodeExecutionId('')
+      setSelectedStageExecutionId('')
+    }
   }
 
   if (runningStep) {
-    setAutoSelectedStepId(runningStep)
-    setSelectedStepId(runningStep)
+    setAutoSelectedStepId(runningStep.node)
+    setSelectedStepId(runningStep.node)
   }
 }
 
@@ -119,10 +133,12 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
   /* These are used when auto updating selected stage/step when a pipeline is running */
   const [autoSelectedStageId, setAutoSelectedStageId] = React.useState<string>('')
   const [autoSelectedStepId, setAutoSelectedStepId] = React.useState<string>('')
+  const [autoStageNodeExecutionId, setAutoStageNodeExecutionId] = React.useState<string>('')
   const [isPipelineInvalid, setIsPipelineInvalid] = React.useState(false)
 
   /* These are updated only when new data is fetched successfully */
   const [selectedStageId, setSelectedStageId] = React.useState<string>('')
+  const [selectedStageExecutionId, setSelectedStageExecutionId] = React.useState<string>('')
   const [selectedStepId, setSelectedStepId] = React.useState<string>('')
   const { preference: savedExecutionView, setPreference: setSavedExecutionView } = usePreferenceStore<
     string | undefined
@@ -148,7 +164,11 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
       accountIdentifier: accountId,
       stageNodeId: isEmpty(queryParams.stage || autoSelectedStageId)
         ? undefined
-        : queryParams.stage || autoSelectedStageId
+        : queryParams.stage || autoSelectedStageId,
+      ...(selectedStageId !== selectedStageExecutionId &&
+        !isEmpty(selectedStageExecutionId) && {
+          stageNodeExecutionId: selectedStageExecutionId
+        })
     },
     debounce: 500
   })
@@ -230,8 +250,10 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
       queryParams,
       setAutoSelectedStageId,
       setAutoSelectedStepId,
+      setAutoStageNodeExecutionId,
       setSelectedStepId,
       setSelectedStageId,
+      setSelectedStageExecutionId,
       data,
       error
     })
@@ -248,8 +270,10 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
     if (loading) {
       setSelectedStageId((queryParams.stage as string) || autoSelectedStageId)
     }
+    setSelectedStageExecutionId((queryParams?.stageExecId as string) || autoStageNodeExecutionId)
     setSelectedStepId((queryParams.step as string) || autoSelectedStepId)
-  }, [loading, queryParams, autoSelectedStageId, autoSelectedStepId])
+    queryParams?.stage && !queryParams?.stageExecId && setAutoStageNodeExecutionId(queryParams?.stageExecId || '')
+  }, [loading, queryParams, autoSelectedStageId, autoSelectedStepId, autoStageNodeExecutionId])
 
   return (
     <ExecutionContext.Provider
@@ -260,6 +284,7 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
         isPipelineInvalid,
         selectedStageId,
         selectedStepId,
+        selectedStageExecutionId,
         loading,
         isDataLoadedForSelectedStage,
         queryParams,
@@ -271,6 +296,7 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
         setSelectedStageId,
         setSelectedStepId,
         setIsPipelineInvalid,
+        setSelectedStageExecutionId,
         addNewNodeToMap(id, node) {
           setAllNodeMap(nodeMap => ({ ...nodeMap, [id]: node }))
         }

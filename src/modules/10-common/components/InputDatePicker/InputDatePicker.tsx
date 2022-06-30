@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useRef } from 'react'
 import { DateRange, DateRangePicker } from '@blueprintjs/datetime'
 import { FormGroup, InputGroup } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
@@ -14,6 +14,8 @@ import { DynamicPopover } from '..'
 interface InputDatePickerProps {
   formikProps: any
 }
+
+export const FORM_CLICK_EVENT = 'FORM_CLICK_EVENT'
 
 export default function InputDatePicker(props: InputDatePickerProps) {
   const { getString } = useStrings()
@@ -29,49 +31,44 @@ export default function InputDatePicker(props: InputDatePickerProps) {
   const [dynamicPopoverHandler, setDynamicPopoverHandler] = React.useState<
     DynamicPopoverHandlerBinding<{ data: null }> | undefined
   >()
-  const [chartTimeRange, setChartTimeRange] = useState<{ startTime: number; endTime: number }>()
   const getValue = (): DateRange | undefined => {
-    return [new Date(chartTimeRange?.startTime || 0), new Date(chartTimeRange?.endTime || 0)]
+    return [
+      new Date(formikProps?.values?.timeRange?.startTime || 0),
+      new Date(formikProps?.values?.timeRange?.endTime || 0)
+    ]
   }
 
-  const hideDynamicPopover = () => {
-    dynamicPopoverHandler?.hide()
-  }
+  const canvasClickListener = React.useCallback((): void => dynamicPopoverHandler?.hide(), [dynamicPopoverHandler])
 
-  useEffect(() => {
-    const filterForm = document.getElementsByClassName('FormikForm--main')[0]
-    if (filterForm) {
-      filterForm.addEventListener('click', hideDynamicPopover)
-    }
+  React.useEffect(() => {
+    document.addEventListener('FORM_CLICK_EVENT', canvasClickListener)
     return () => {
-      filterForm.removeEventListener('click', hideDynamicPopover)
+      document.removeEventListener('FORM_CLICK_EVENT', canvasClickListener)
     }
-  }, [])
+  }, [dynamicPopoverHandler])
 
   const renderPopover = () => {
     return (
-      <div onBlur={() => dynamicPopoverHandler?.hide()}>
-        <DateRangePicker
-          allowSingleDayRange={true}
-          shortcuts={true}
-          defaultValue={getValue()}
-          minDate={new Date(0)}
-          maxDate={new Date()}
-          onChange={selectedDates => {
-            formikProps?.setValues({
-              ...formikProps.values,
-              timeRange: {
-                startTime: selectedDates[0]?.getTime(),
-                endTime: selectedDates[1]?.getTime()
-              }
-            })
-            setChartTimeRange?.({
-              startTime: selectedDates[0]?.getTime() || 0,
-              endTime: selectedDates[1]?.getTime() || 0
-            })
-          }}
-        />
-      </div>
+      <DateRangePicker
+        onShortcutChange={() => dynamicPopoverHandler?.hide()}
+        allowSingleDayRange={true}
+        shortcuts={true}
+        defaultValue={getValue()}
+        minDate={new Date(0)}
+        maxDate={new Date()}
+        onChange={selectedDates => {
+          formikProps?.setValues({
+            ...formikProps.values,
+            timeRange: {
+              startTime: selectedDates[0]?.getTime(),
+              endTime: selectedDates[1]?.getTime() || selectedDates[0]?.getTime()
+            }
+          })
+          if (selectedDates[0] && selectedDates[1]) {
+            dynamicPopoverHandler?.hide()
+          }
+        }}
+      />
     )
   }
   return (
@@ -79,8 +76,8 @@ export default function InputDatePicker(props: InputDatePickerProps) {
       <div
         data-nodeid="inputDatePicker"
         data-testid="inputDatePicker"
-        ref={ref}
-        onClick={() => {
+        onClick={e => {
+          e.stopPropagation()
           dynamicPopoverHandler?.show(`[data-nodeid="inputDatePicker"]`, { data: null })
         }}
       >
@@ -88,7 +85,9 @@ export default function InputDatePicker(props: InputDatePickerProps) {
           <InputGroup placeholder={getText() || getString('common.selectTimeFrame')} />
         </FormGroup>
       </div>
-      <DynamicPopover render={renderPopover} bind={setDynamicPopoverHandler} />
+      <div ref={ref} onClick={e => e.stopPropagation()}>
+        <DynamicPopover render={renderPopover} bind={setDynamicPopoverHandler} />
+      </div>
     </>
   )
 }

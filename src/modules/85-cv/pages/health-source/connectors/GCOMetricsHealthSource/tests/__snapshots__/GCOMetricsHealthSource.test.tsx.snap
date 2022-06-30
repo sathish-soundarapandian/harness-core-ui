@@ -543,6 +543,7 @@ exports[`Test GCOMetricsHealthSource Should show please Enter Query when ther is
                               class="bp3-input bp3-fill"
                               maxlength="1024"
                               name="query"
+                              placeholder=""
                             >
                               {
   "dataSets": [

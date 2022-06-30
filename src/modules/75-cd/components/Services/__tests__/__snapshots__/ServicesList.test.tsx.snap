@@ -62,7 +62,7 @@ exports[`ServicesList render 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 15%;"
+          style="width: 20%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -122,7 +122,7 @@ exports[`ServicesList render 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 10%;"
+          style="width: 13%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -134,12 +134,12 @@ exports[`ServicesList render 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 22%;"
+          style="width: 14%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
           >
-            CD.SERVICEDASHBOARD.LASTDEPLOYMENT
+            CD.SERVICEDASHBOARD.LASTPIPELINEEXECUTION
           </p>
         </div>
         <div
@@ -177,7 +177,7 @@ exports[`ServicesList render 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 15%;"
+            style="width: 20%;"
           >
             <div
               class="Layout--vertical StyledProps--main"
@@ -335,7 +335,7 @@ exports[`ServicesList render 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 10%;"
+            style="width: 13%;"
           >
             <div
               class="Layout--vertical StyledProps--main tickerContainer StyledProps--padding-small"
@@ -389,7 +389,7 @@ exports[`ServicesList render 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 22%;"
+            style="width: 14%;"
           />
           <div
             class="TableV2--cell"
@@ -446,7 +446,7 @@ exports[`ServicesList render 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 15%;"
+            style="width: 20%;"
           >
             <div
               class="Layout--vertical StyledProps--main"
@@ -661,7 +661,7 @@ exports[`ServicesList render 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 10%;"
+            style="width: 13%;"
           >
             <div
               class="Layout--vertical StyledProps--main tickerContainer StyledProps--padding-small"
@@ -715,7 +715,7 @@ exports[`ServicesList render 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 22%;"
+            style="width: 14%;"
           >
             <div
               class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
@@ -725,14 +725,10 @@ exports[`ServicesList render 1`] = `
                 style="width: 100%;"
               >
                 <p
-                  class="StyledProps--font StyledProps--main lastDeploymentText StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey700 StyledProps--margin-right-xsmall"
+                  class="StyledProps--font StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
+                  data-testid="60c99de2a6187a57e841993b"
                 >
                   Test
-                </p>
-                <p
-                  class="StyledProps--font StyledProps--main lastDeploymentText StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
-                >
-                  (cd.serviceDashboard.executionId)
                 </p>
               </div>
               dummy date
@@ -747,8 +743,7 @@ exports[`ServicesList render 1`] = `
               class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-end"
             >
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main statusText StyledProps--background-green600 StyledProps--color StyledProps--color-white StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall"
-                style="--text-line-clamp: 1;"
+                class="StyledProps--font StyledProps--main statusText StyledProps--background-green600 StyledProps--color StyledProps--color-white StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall"
               >
                 SUCCESS
               </p>

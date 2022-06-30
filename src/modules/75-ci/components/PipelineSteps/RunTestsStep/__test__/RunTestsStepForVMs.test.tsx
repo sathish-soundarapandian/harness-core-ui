@@ -38,7 +38,7 @@ describe('RunTests Step', () => {
       expect(container).toMatchSnapshot()
 
       act(() => {
-        fireEvent.click(getByText('common.optionalConfig'))
+        fireEvent.click(getByText('pipeline.additionalConfiguration'))
       })
 
       const dropdownSelects = container.querySelectorAll('[icon="chevron-down"]')

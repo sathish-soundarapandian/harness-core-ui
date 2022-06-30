@@ -8,7 +8,7 @@
 import React from 'react'
 import { Text, Popover, Container, Layout, Card, Icon } from '@wings-software/uicore'
 import { Classes, IPopoverProps, PopoverInteractionKind, Position } from '@blueprintjs/core'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { isEmpty, isNil } from 'lodash-es'
 import cx from 'classnames'
 import { iconMap } from '@pipeline/components/PipelineStudio/StepPalette/iconMap'
@@ -31,9 +31,15 @@ interface StepTooltipContentInterface {
   stepData: StepData
   stepsFactory: AbstractStepFactory
   description?: keyof StringsMap
+  additionalInfo?: keyof StringsMap
 }
 
-function TooltipContent({ description, stepsFactory, stepData }: StepTooltipContentInterface) {
+function TooltipContent({
+  description,
+  stepsFactory,
+  stepData,
+  additionalInfo
+}: StepTooltipContentInterface): React.ReactElement | null {
   // Component renders the tooltip over steps in the palette.
   // If the step is disabled, show the enforcement tooltip
   const { getString } = useStrings()
@@ -47,6 +53,11 @@ function TooltipContent({ description, stepsFactory, stepData }: StepTooltipCont
         <Text font={{ size: 'small' }} color={Color.GREY_50}>
           {getString(description)}
         </Text>
+        {additionalInfo && (
+          <Text margin={{ top: 'small' }} font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREY_50}>
+            {getString(additionalInfo)}
+          </Text>
+        )}
         {stepsFactory.getStepIsHarnessSpecific(stepData.type || '') && (
           <Layout.Horizontal margin={{ top: 'small' }} flex={{ justifyContent: 'flex-start' }} spacing={'small'}>
             <Icon size={12} name="harness-logo-white-bg-blue" />
@@ -66,6 +77,7 @@ export function StepPopover(props: StepPopoverProps): React.ReactElement {
   if (stepData && !isEmpty(stepData)) {
     const step = stepsFactory.getStep(stepData.type)
     const description = stepsFactory.getStepDescription(stepData.type || '')
+    const additionalInfo = stepsFactory.getStepAdditionalInfo(stepData.type || '')
     return (
       <Popover
         interactionKind={PopoverInteractionKind.HOVER}
@@ -91,7 +103,12 @@ export function StepPopover(props: StepPopoverProps): React.ReactElement {
             style={{ color: step?.getIconColor?.() }}
           />
         </Card>
-        <TooltipContent description={description} stepData={stepData} stepsFactory={stepsFactory} />
+        <TooltipContent
+          description={description}
+          stepData={stepData}
+          stepsFactory={stepsFactory}
+          additionalInfo={additionalInfo}
+        />
       </Popover>
     )
   } else {

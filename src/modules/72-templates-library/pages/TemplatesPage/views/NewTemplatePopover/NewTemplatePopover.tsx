@@ -26,15 +26,12 @@ import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { useFeature } from '@common/hooks/useFeatures'
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 
 function NewTemplatePopoverWrapper(): React.ReactElement {
   const { getString } = useStrings()
   const history = useHistory()
   const { projectIdentifier, orgIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
-  const pipelineTemplatesFeatureFlagEnabled = useFeatureFlag(FeatureFlag.NG_PIPELINE_TEMPLATE)
-  const allowedTemplateTypes = getAllowedTemplateTypes(getString, module, pipelineTemplatesFeatureFlagEnabled)
+  const allowedTemplateTypes = getAllowedTemplateTypes(getString, module)
   const [menuOpen, setMenuOpen] = React.useState(false)
   const { enabled: templatesEnabled } = useFeature({
     featureRequest: {

@@ -23,7 +23,7 @@ import {
   DEFAULT_PROJECT_ID,
   DEFAULT_PROJECT_NAME,
   Status
-} from '@common/utils/CIConstants'
+} from '@common/utils/Constants'
 import { Editions } from '@common/constants/SubscriptionTypes'
 
 export interface StartFreeLicenseAndSetupProjectCallback {

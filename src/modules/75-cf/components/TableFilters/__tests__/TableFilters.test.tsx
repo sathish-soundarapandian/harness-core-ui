@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import { getByTestId, render, RenderResult, screen } from '@testing-library/react'
 import type { StringKeys } from 'framework/strings'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockImport from 'framework/utils/mockImport'
@@ -64,57 +64,49 @@ describe('TableFilters', () => {
   test('TableFilters should render correctly the filters for feature flags', async () => {
     renderComponent({})
 
-    // check each filter label & total
-    await waitFor(() => {
-      const filter1 = screen.getByText(filters[0].label)
-      const filter2 = screen.getByText(filters[1].label)
-      const filter3 = screen.getByText(filters[2].label)
+    // Three cards should be rendered
+    const filterCards = screen.getAllByTestId('filter-card')
+    expect(filterCards).toHaveLength(3)
 
-      // Three cards should be rendered
-      expect(document.getElementsByClassName('Card--card')).toHaveLength(3)
+    // Filter One, selected by default
+    expect(filterCards[0]).toBeVisible()
+    expect(getByTestId(filterCards[0], 'filter-label')).toHaveTextContent(filters[0].label)
+    expect(getByTestId(filterCards[0], 'filter-total')).toHaveTextContent(`${filters[0].total}`)
+    expect(filterCards[0]).toHaveClass('Card--selected')
 
-      expect(filter1).toBeInTheDocument()
-      expect(filter1.nextSibling?.textContent).toBe(filters[0].total.toString())
-      // default selected
-      expect(filter1.closest('.Card--card')).toHaveClass('Card--selected')
+    // Filter Two, not selected
+    expect(filterCards[1]).toBeVisible()
+    expect(getByTestId(filterCards[1], 'filter-label')).toHaveTextContent(filters[1].label)
+    expect(getByTestId(filterCards[1], 'filter-total')).toHaveTextContent(`${filters[1].total}`)
+    expect(filterCards[1]).not.toHaveClass('Card--selected')
 
-      // Filter Two, not selected
-      expect(filter2).toBeInTheDocument()
-      expect(filter2.nextSibling?.textContent).toBe(filters[1].total.toString())
-      expect(filter2.closest('.Card--card')).not.toHaveClass('Card--selected')
-
-      // Filter Three, not selected
-      expect(filter3).toBeInTheDocument()
-      expect(filter3.nextSibling?.textContent).toBe(filters[2].total.toString())
-      expect(filter3.closest('.Card--card')).not.toHaveClass('Card--selected')
-    })
+    // Filter Three, not selected
+    expect(filterCards[2]).toBeVisible()
+    expect(getByTestId(filterCards[2], 'filter-label')).toHaveTextContent(filters[2].label)
+    expect(getByTestId(filterCards[2], 'filter-total')).toHaveTextContent(`${filters[2].total}`)
+    expect(filterCards[2]).not.toHaveClass('Card--selected')
   })
 
   test('The selected card should match the current filter', async () => {
     renderComponent({ currentFilter: filters[1] })
 
-    const filter1 = screen.getByText(filters[0].label)
-    const filter2 = screen.getByText(filters[1].label)
-    const filter3 = screen.getByText(filters[2].label)
-    // check each filter label & total
-    await waitFor(() => {
-      expect(document.getElementsByClassName('Card--card')).toHaveLength(3)
-      // default NOT selected
-      expect(filter1.closest('.Card--card')).not.toHaveClass('Card--selected')
+    // Three cards should be rendered
+    const filterCards = screen.getAllByTestId('filter-card')
+    expect(filterCards).toHaveLength(3)
 
-      // Filter Two selected
-      expect(filter2.closest('.Card--card')).toHaveClass('Card--selected')
+    // default NOT selected
+    expect(filterCards[0]).not.toHaveClass('Card--selected')
 
-      // Filter Three not selected
-      expect(filter3.closest('.Card--card')).not.toHaveClass('Card--selected')
-    })
+    // Filter Two selected
+    expect(filterCards[1]).toHaveClass('Card--selected')
+
+    // Filter Three not selected
+    expect(filterCards[2]).not.toHaveClass('Card--selected')
   })
 
   test('It renders no cards if filters array empty', async () => {
-    renderComponent({ filters: [], currentFilter: filters[1] })
+    renderComponent({ filters: [], currentFilter: {} })
 
-    await waitFor(() => {
-      expect(document.getElementsByClassName('Card--card')).toHaveLength(0)
-    })
+    expect(screen.queryByTestId('filter-card')).not.toBeInTheDocument()
   })
 })

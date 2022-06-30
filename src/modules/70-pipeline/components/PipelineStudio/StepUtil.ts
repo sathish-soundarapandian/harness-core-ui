@@ -10,26 +10,21 @@ import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { isEmpty, has, set, reduce, isObject, memoize, isBoolean, get } from 'lodash-es'
 import * as Yup from 'yup'
 import type { K8sDirectInfraYaml } from 'services/ci'
-import type {
-  StageElementConfig,
-  ExecutionWrapperConfig,
-  PipelineInfoConfig,
-  DeploymentStageConfig,
-  Infrastructure,
-  StageElementWrapperConfig,
-  StepElementConfig
-} from 'services/cd-ng'
+import type { DeploymentStageConfig, Infrastructure } from 'services/cd-ng'
 
 import type { UseStringsReturn } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import type { TemplateStepNode } from 'services/pipeline-ng'
+import type {
+  TemplateStepNode,
+  StageElementWrapperConfig,
+  StepElementConfig,
+  PipelineInfoConfig,
+  ExecutionWrapperConfig,
+  StageElementConfig
+} from 'services/pipeline-ng'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { getPrCloneStrategyOptions } from '@pipeline/utils/constants'
 import { CodebaseTypes, isCloneCodebaseEnabledAtLeastOneStage } from '@pipeline/utils/CIUtils'
-import {
-  INPUT_EXPRESSION_REGEX_STRING,
-  isExecionInput
-} from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 import factory from '../PipelineSteps/PipelineStepFactory'
 import { StepType } from '../PipelineSteps/PipelineStepInterface'
 // eslint-disable-next-line no-restricted-imports
@@ -39,22 +34,6 @@ import '@ci/components/PipelineSteps'
 // eslint-disable-next-line no-restricted-imports
 import '@sto-steps/components/PipelineSteps'
 import { StepViewType } from '../AbstractSteps/Step'
-
-/**
- * Loops over the pipeline and clears all the runtime inputs i.e. <+input>
- * expect for execution time inputs i.e. <+input>.executionInput()
- */
-export function clearRuntimeInput<T = PipelineInfoConfig>(template: T, shouldAlsoClearRuntimeInputs?: boolean): T {
-  const INPUT_EXPRESSION_REGEX = new RegExp(`"${INPUT_EXPRESSION_REGEX_STRING}"`, 'g')
-  return JSON.parse(
-    JSON.stringify(template || {}).replace(
-      new RegExp(`"${INPUT_EXPRESSION_REGEX.source.slice(1).slice(0, -1)}"`, 'g'),
-      value => {
-        return isExecionInput(value) && !shouldAlsoClearRuntimeInputs ? value : '""'
-      }
-    )
-  )
-}
 
 export function getStepFromStage(stepId: string, steps?: ExecutionWrapperConfig[]): ExecutionWrapperConfig | undefined {
   let responseStep: ExecutionWrapperConfig | undefined = undefined

@@ -8,7 +8,7 @@
 import type { SelectOption } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import type { UseStringsReturn } from 'framework/strings'
-import type { ShellScriptStepInfo, StepElementConfig } from 'services/cd-ng'
+import type { ShellScriptStepInfo, StepElementConfig } from 'services/pipeline-ng'
 
 export const scriptInputType: SelectOption[] = [
   { label: 'String', value: 'String' },

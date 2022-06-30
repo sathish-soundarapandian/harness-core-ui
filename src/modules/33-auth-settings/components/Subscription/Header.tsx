@@ -52,15 +52,15 @@ function getTiltleByModule(module: Module): { icon?: string; description?: strin
   return { icon, description }
 }
 
-function getProgressMap(step: number): Map<number, StepStatus> {
-  const progressMap = new Map<number, StepStatus>([
-    [1, 'TODO'],
-    [2, 'TODO'],
-    [3, 'TODO']
+function getProgressMap(step: number): Map<number, { StepStatus: StepStatus }> {
+  const progressMap = new Map<number, { StepStatus: StepStatus }>([
+    [1, { StepStatus: 'TODO' }],
+    [2, { StepStatus: 'TODO' }],
+    [3, { StepStatus: 'TODO' }]
   ])
 
   while (step > 0) {
-    progressMap.set(step, 'SUCCESS')
+    progressMap.set(step, { StepStatus: 'SUCCESS' })
     step--
   }
 

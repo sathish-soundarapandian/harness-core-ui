@@ -9,8 +9,13 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 
 import { debounce, defaultTo, get, isEmpty, isPlainObject } from 'lodash-es'
-import type { PipelineConfig, PipelineInfoConfig } from 'services/cd-ng'
-import type { VariableMergeServiceResponse, Failure, ServiceExpressionProperties } from 'services/pipeline-ng'
+import type {
+  VariableMergeServiceResponse,
+  Failure,
+  ServiceExpressionProperties,
+  PipelineConfig,
+  PipelineInfoConfig
+} from 'services/pipeline-ng'
 import { useMutateAsGet, useQueryParams, useDeepCompareEffect } from '@common/hooks'
 import type { UseMutateAsGetReturn } from '@common/hooks/useMutateAsGet'
 import { useCreateVariablesV2 } from 'services/pipeline-ng'

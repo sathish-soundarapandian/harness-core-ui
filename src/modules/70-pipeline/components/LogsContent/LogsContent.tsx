@@ -199,8 +199,13 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
 
   const currentStepId = resolveCurrentStep(selectedStepId, queryParams)
   const currentStep = allNodeMap[currentStepId]
-  const errorObjects = extractInfo(defaultTo(currentStep?.failureInfo?.responseMessages, []))
-  const hasError = Array.isArray(errorObjects) && errorObjects.length > 0
+  let errorObjects = extractInfo(defaultTo(currentStep?.failureInfo?.responseMessages, []))
+  let hasError = Array.isArray(errorObjects) && errorObjects.length > 0
+
+  if (!hasError && currentStep?.failureInfo?.message) {
+    errorObjects = [{ error: { message: currentStep.failureInfo.message } }]
+    hasError = true
+  }
 
   return (
     <div ref={rootRef} className={cx(css.main, { [css.hasErrorMessage]: hasError })} data-mode={mode}>

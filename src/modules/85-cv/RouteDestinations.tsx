@@ -44,6 +44,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import type { ResourceDTO } from 'services/audit'
 import type { ResourceScope } from 'services/cd-ng'
 import AuditTrailFactory from '@audit-trail/factories/AuditTrailFactory'
+import { ErrorTracking } from '@et/ErrorTrackingApp'
 import ChildAppMounter from '../../microfrontends/ChildAppMounter'
 import CVTrialHomePage from './pages/home/CVTrialHomePage'
 import { editParams, isVerifyStepPresent } from './utils/routeUtils'
@@ -52,7 +53,6 @@ import CVSLODetailsPage from './pages/slos/CVSLODetailsPage/CVSLODetailsPage'
 import CVCreateSLO from './pages/slos/components/CVCreateSLO/CVCreateSLO'
 import { MonitoredServiceProvider } from './pages/monitored-service/MonitoredServiceContext'
 import MonitoredServiceInputSetsTemplate from './pages/monitored-service/MonitoredServiceInputSetsTemplate'
-import { ErrorTracking } from './ErrorTrackingApp'
 
 PubSubPipelineActions.subscribe(
   PipelineActions.RunPipeline,
@@ -119,7 +119,7 @@ AuditTrailFactory.registerResourceHandler(ResourceType.MONITORED_SERVICE, {
   }
 })
 
-/*AuditTrailFactory.registerResourceHandler(ResourceType.SLO, {
+AuditTrailFactory.registerResourceHandler(ResourceType.SERVICE_LEVEL_OBJECTIVE, {
   moduleIcon: {
     name: 'cv-main'
   },
@@ -138,7 +138,7 @@ AuditTrailFactory.registerResourceHandler(ResourceType.MONITORED_SERVICE, {
     }
     return undefined
   }
-})*/
+})
 
 const CVSideNavProps: SidebarContext = {
   navComponent: SideNav,

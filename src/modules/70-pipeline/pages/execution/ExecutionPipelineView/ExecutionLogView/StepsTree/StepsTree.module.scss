@@ -15,44 +15,9 @@ $height: 40px;
   list-style: none;
 
   .item {
-    padding: 0;
+    padding: 0 0 0 var(--spacing-4);
+    overflow-x: hidden;
     display: block;
-    position: relative;
-
-    &::before {
-      content: '';
-      display: block;
-      position: absolute;
-      height: 100%;
-      width: 100%;
-      top: 0;
-      right: 100%;
-      background-color: transparent;
-    }
-
-    &::after {
-      content: '';
-      display: block;
-      position: absolute;
-      width: $height;
-      height: $height;
-      border-radius: 50%;
-      top: 0;
-      left: 100%;
-      transform: translateX(-50%);
-      background-color: transparent;
-    }
-
-    &.active,
-    &.active::before,
-    &.active::after {
-      background-color: var(--primary-7);
-      color: var(--white);
-    }
-
-    & > .root > .item {
-      padding-left: $icon-row + $column-gap;
-    }
 
     &[data-type='item'] > .step {
       cursor: pointer;
@@ -71,6 +36,21 @@ $height: 40px;
     align-items: center;
     height: $height;
     column-gap: $column-gap;
+    position: relative;
+    padding-right: var(--spacing-5);
+
+    &::before {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: $height;
+      width: 14px;
+      border-radius: 8px 0 0 8px;
+      transform: translateX(-100%);
+      z-index: -1;
+    }
 
     .name-wrapper {
       display: flex;
@@ -116,23 +96,6 @@ $height: 40px;
 
   .item {
     .step {
-      --icon-color: var(--grey-450);
-
-      &[data-status='success'] {
-        --icon-color: var(--green-500);
-      }
-
-      &[data-status='failed'],
-      &[data-status='expired'],
-      &[data-status='aborted'],
-      &[data-status='suspended'] {
-        --icon-color: var(--red-500);
-      }
-
-      &[data-status='running'] {
-        --icon-color: var(--primary-7);
-      }
-
       &[data-status='notstarted'],
       &[data-status='queued'] {
         cursor: not-allowed;
@@ -143,10 +106,11 @@ $height: 40px;
   .item.active {
     .step {
       --icon-color: var(--white);
-    }
+      background: var(--primary-2);
 
-    .duration {
-      color: var(--white) !important;
+      &::before {
+        background: var(--primary-2);
+      }
     }
   }
 }

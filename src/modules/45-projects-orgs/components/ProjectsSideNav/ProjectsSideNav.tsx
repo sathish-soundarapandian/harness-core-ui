@@ -16,6 +16,7 @@ import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMenu'
 
 export default function ProjectsSideNav(): React.ReactElement {
   const params = useParams<PipelinePathProps>()
@@ -40,6 +41,7 @@ export default function ProjectsSideNav(): React.ReactElement {
         }}
       />
       <SidebarLink label={getString('overview')} to={routes.toProjectDetails(params)} />
+      <ProjectSetupMenu />
     </Layout.Vertical>
   )
 }

@@ -216,7 +216,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
 
   return (
     <>
-      {
+      {!monitoredService?.identifier && (
         <>
           <Page.Header
             breadcrumbs={<NGBreadcrumbs />}
@@ -229,7 +229,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
           />
           <Page.Header title={getAddSLOButton()} />
         </>
-      }
+      )}
 
       <Page.Body
         loading={getIsSLODashboardAPIsLoading(

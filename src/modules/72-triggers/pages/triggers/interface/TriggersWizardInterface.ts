@@ -5,8 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { ConnectorInfoDTO, PipelineInfoConfig } from 'services/cd-ng'
-import type { GetActionsListQueryParams, NGTriggerConfigV2, NGTriggerSourceV2 } from 'services/pipeline-ng'
+import type { ConnectorInfoDTO } from 'services/cd-ng'
+import type {
+  GetActionsListQueryParams,
+  NGTriggerConfigV2,
+  NGTriggerSourceV2,
+  PipelineInfoConfig
+} from 'services/pipeline-ng'
 import type { AddConditionInterface } from '../views/AddConditionsSection'
 
 export interface ConnectorRefInterface {

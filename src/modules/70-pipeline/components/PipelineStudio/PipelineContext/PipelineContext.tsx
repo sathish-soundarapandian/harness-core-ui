@@ -12,13 +12,15 @@ import { parse } from 'yaml'
 import { IconName, MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
 import merge from 'lodash-es/merge'
 import type { GetDataError } from 'restful-react'
-import type { PipelineInfoConfig, StageElementConfig, StageElementWrapperConfig } from 'services/cd-ng'
 import type { PermissionCheck } from 'services/rbac'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
 import SessionToken from 'framework/utils/SessionToken'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import {
+  PipelineInfoConfig,
+  StageElementConfig,
+  StageElementWrapperConfig,
   createPipelinePromise,
   CreatePipelineQueryParams,
   createPipelineV2Promise,

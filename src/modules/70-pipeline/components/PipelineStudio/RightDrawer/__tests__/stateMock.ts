@@ -197,6 +197,9 @@ const pipelineContextMock: PipelineContextInterface = {
     getStepDescription: (type: string) => {
       return 'Awesome description for step ' + type
     },
+    getStepAdditionalInfo: (type: string) => {
+      return 'Awesome additional info for step ' + type
+    },
     getStepIsHarnessSpecific: (type: string) => {
       if (type) {
         return true

@@ -43,6 +43,7 @@ interface SaveToGitFormV2Props {
   orgIdentifier: string
   projectIdentifier: string
   isEditing: boolean
+  disableCreatingNewBranch: boolean
   resource: GitResourceInterface
 }
 
@@ -76,7 +77,7 @@ export interface SaveToGitFormV2Interface {
 }
 
 const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = props => {
-  const { isEditing = false, resource } = props
+  const { isEditing = false, resource, disableCreatingNewBranch } = props
   const { getString } = useStrings()
   const [isNewBranch, setIsNewBranch] = React.useState(false)
   const formikRef = useRef<FormikContextType<SaveToGitFormV2Interface>>()
@@ -225,8 +226,9 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
                       <Radio
                         data-test="newBranchRadioBtn"
                         large
-                        onChange={() => handleBranchTypeChange(true, formik)}
+                        onChange={() => !disableCreatingNewBranch && handleBranchTypeChange(true, formik)}
                         checked={isNewBranch}
+                        disabled={disableCreatingNewBranch}
                       >
                         <Icon name="git-new-branch" color={Color.GREY_700}></Icon>
                         <Text inline margin={{ left: 'small' }}>

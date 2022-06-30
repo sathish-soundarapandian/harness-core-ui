@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test Cases For PerspectiveBuilderMultiValueSelector Should Be Able To Select All 1`] = `
+exports[`Test Cases For PerspectiveBuilderMultiValueSelector Should Be Able To Select All / Create New Tag 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main valueContainer createPerspectiveMvs"

@@ -98,11 +98,9 @@ describe('Dashboards', () => {
 
     const noDashboardsText: StringKeys = 'dashboards.homePage.noDashboardsAvailable'
 
-    const headerFavoriteCount: StringKeys = 'dashboards.dashboardList.headerFavoriteCount'
     const headerViewCount: StringKeys = 'dashboards.dashboardList.headerViewCount'
 
     expect(screen.queryByText(noDashboardsText)).toBeNull()
-    expect(screen.getByText(headerFavoriteCount)).toBeInTheDocument()
     expect(screen.getByText(headerViewCount)).toBeInTheDocument()
   })
 

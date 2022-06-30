@@ -254,6 +254,21 @@ const routes = {
       })
     }
   ),
+
+  toFileStore: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
+      const path = `resources/file-store`
+      return getScopeBasedRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path
+      })
+    }
+  ),
+
   toVariables: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
       const path = `resources/variables`
@@ -995,6 +1010,17 @@ const routes = {
     }: PipelineType<ExecutionPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/security`
   ),
+  toExecutionErrorTrackingView: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      pipelineIdentifier,
+      executionIdentifier,
+      module,
+      source
+    }: PipelineType<ExecutionPathProps>) =>
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/et`
+  ),
   /********************************************************************************************************************/
   toTemplates: withAccountId(
     ({
@@ -1477,7 +1503,7 @@ const routes = {
   ),
   toCEPerspectives: withAccountId(() => `/ce/perspectives`),
   toCEBudgets: withAccountId(() => '/ce/budgets'),
-  toCEBudgetDetails: withAccountId(
+  toCEBudgetDetailsOld: withAccountId(
     ({
       budgetId,
       budgetName
@@ -1485,6 +1511,15 @@ const routes = {
       budgetId: string
       budgetName: string
     }) => `/ce/budget/${budgetId}/${budgetName}`
+  ),
+  toCEBudgetDetails: withAccountId(
+    ({
+      budgetId,
+      budgetName
+    }: AccountPathProps & {
+      budgetId: string
+      budgetName: string
+    }) => `/ce/budgets/${budgetId}/${budgetName}`
   ),
   toCEPerspectiveWorkloadDetails: withAccountId(
     ({

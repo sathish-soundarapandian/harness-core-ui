@@ -51,6 +51,7 @@ import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStud
 import { hasStageData, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import SelectDeploymentType from '../../DeployServiceSpecifications/SelectDeploymentType'
 import type { EditStageFormikType, EditStageViewProps } from '../EditStageViewInterface'
 import css from './EditStageView.module.scss'
@@ -175,7 +176,7 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
   }
   const { openDialog: openStageDataDeleteWarningDialog } = useConfirmationDialog({
     cancelButtonText: getString('cancel'),
-    contentText: getString('pipeline.stageDataDeleteWarningContent'),
+    contentText: getString('pipeline.stageDataDeleteWarningText'),
     titleText: getString('pipeline.stageDataDeleteWarningTitle'),
     confirmButtonText: getString('confirm'),
     intent: Intent.WARNING,
@@ -236,7 +237,8 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
               tags: data?.stage?.tags || {},
               serviceType: newStageData[0].value,
               deploymentType: selectedDeploymentType,
-              gitOpsEnabled: data?.stage?.spec?.gitOpsEnabled
+              //DeployStageConfig type is temporarily added until pipeline DTO for new entity gets merged
+              gitOpsEnabled: (data?.stage?.spec as unknown as DeployStageConfig)?.gitOpsEnabled
             }}
             formName="cdEditStage"
             onSubmit={handleSubmit}
@@ -320,13 +322,16 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                           selectedDeploymentType={selectedDeploymentType}
                           isReadonly={isReadonly}
                           handleDeploymentTypeChange={handleDeploymentTypeChange}
+                          shouldShowGitops={false}
                         />
                       </div>
-                      <FormInput.CheckBox
-                        name="gitOpsEnabled"
-                        label={getString('common.gitOps')}
-                        className={css.gitOpsCheck}
-                      />
+                      {selectedDeploymentType === ServiceDeploymentType['Kubernetes'] && (
+                        <FormInput.CheckBox
+                          name="gitOpsEnabled"
+                          label={getString('common.gitOps')}
+                          className={css.gitOpsCheck}
+                        />
+                      )}
                     </>
                   )}
 

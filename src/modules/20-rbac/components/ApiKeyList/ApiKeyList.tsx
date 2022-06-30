@@ -15,6 +15,7 @@ import type { ProjectPathProps, ServiceAccountPathProps } from '@common/interfac
 import { useStrings } from 'framework/strings'
 import { useApiKeyModal } from '@rbac/modals/ApiKeyModal/useApiKeyModal'
 import { useTokenModal } from '@rbac/modals/TokenModal/useTokenModal'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { PageSpinner } from '@common/components'
 import ApiKeyCard from '@rbac/components/ApiKeyList/views/ApiKeyCard'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -63,6 +64,8 @@ const ApiKeyList: React.FC<ApiKeyListProps> = ({ apiKeyType = 'SERVICE_ACCOUNT',
     apiKeyType
   })
 
+  const { getRBACErrorMessage } = useRBACError()
+
   return (
     <Container padding={{ bottom: 'xlarge' }}>
       <Text color={Color.BLACK} font={{ size: 'medium', weight: 'semi-bold' }}>
@@ -70,7 +73,7 @@ const ApiKeyList: React.FC<ApiKeyListProps> = ({ apiKeyType = 'SERVICE_ACCOUNT',
       </Text>
       <Container padding={{ top: 'medium', bottom: 'medium' }}>
         {loading && <PageSpinner />}
-        {error && <PageError message={(error.data as Error)?.message || error.message} onClick={() => refetch()} />}
+        {error && <PageError message={getRBACErrorMessage(error)} onClick={() => refetch()} />}
         {isEmpty(data?.data?.content) ? (
           <Card className={css.fullWidth}>
             <Text color={Color.GREY_500} padding={{ top: 'xsmall' }}>

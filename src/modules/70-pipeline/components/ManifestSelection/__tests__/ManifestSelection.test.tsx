@@ -17,6 +17,7 @@ import {
 import ManifestSelection from '../ManifestSelection'
 import ManifestListView from '../ManifestListView/ManifestListView'
 import pipelineContextMock from './pipeline_mock.json'
+import gitOpsEnabledPipeline from './gitops_pipeline.json'
 import connectorsData from './connectors_mock.json'
 
 const fetchConnectors = (): Promise<unknown> => Promise.resolve(connectorsData)
@@ -33,6 +34,15 @@ const getContextValue = (): PipelineContextInterface => {
     ...pipelineContextMock,
     getStageFromPipeline: jest.fn(() => {
       return { stage: pipelineContextMock.state.pipeline.stages[0], parent: undefined }
+    })
+  } as any
+}
+
+const getGitOpsContextValue = (): PipelineContextInterface => {
+  return {
+    ...gitOpsEnabledPipeline,
+    getStageFromPipeline: jest.fn(() => {
+      return { stage: gitOpsEnabledPipeline.state.pipeline.stages[0], parent: undefined }
     })
   } as any
 }
@@ -371,5 +381,17 @@ describe('ManifestSelection tests', () => {
       findByText(portal as HTMLElement, 'pipeline.manifestType.manifestRepoType')
     )
     expect(manifestLabel).toBeDefined()
+  })
+
+  test('when gitopsenabled is true', () => {
+    const { container } = render(
+      <TestWrapper>
+        <PipelineContext.Provider value={getGitOpsContextValue()}>
+          <ManifestSelection isReadonlyServiceMode={false} readonly={false} deploymentType="Kubernetes" />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    expect(container).toMatchSnapshot()
   })
 })

@@ -10,6 +10,7 @@ declare const styles: {
   readonly actions: string
   readonly card: string
   readonly cardLink: string
+  readonly compareSelection: string
   readonly content: string
   readonly duration: string
   readonly executionId: string

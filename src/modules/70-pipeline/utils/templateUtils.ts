@@ -8,7 +8,13 @@
 import { defaultTo, get, isEmpty, isEqual, set, unset } from 'lodash-es'
 import produce from 'immer'
 import { parse } from 'yaml'
-import type { PipelineInfoConfig, StageElementConfig, StepElementConfig, TemplateLinkConfig } from 'services/cd-ng'
+import type {
+  PipelineInfoConfig,
+  StageElementConfig,
+  StepElementConfig,
+  TemplateLinkConfig,
+  TemplateStepNode
+} from 'services/pipeline-ng'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import {
   getIdentifierFromValue,
@@ -17,7 +23,6 @@ import {
 } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import type { TemplateStepNode } from 'services/pipeline-ng'
 import type { StageType } from '@pipeline/utils/stageHelpers'
 import type { StepOrStepGroupOrTemplateStepData } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { generateRandomString } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'

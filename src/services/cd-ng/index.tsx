@@ -65,6 +65,7 @@ export interface AccessControlCheckError {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -212,6 +213,7 @@ export interface AccessControlCheckError {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -346,6 +348,7 @@ export interface AccessControlCheckError {
     | 'AWS_LOAD_BALANCER_ERROR'
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
     | 'SPOTINST_NULL_ERROR'
   correlationId?: string
   detailedMessage?: string
@@ -357,6 +360,7 @@ export interface AccessControlCheckError {
 }
 
 export interface Account {
+  accountActivelyUsed?: boolean
   accountEvents?: AccountEvent[]
   accountName: string
   accountPreferences?: AccountPreferences
@@ -533,6 +537,11 @@ export type AcrArtifactConfig = ArtifactConfig & {
   tagRegex?: string
 }
 
+export type AcrArtifactSummary = ArtifactSummary & {
+  imagePath?: string
+  tag?: string
+}
+
 export interface AcrBuildDetailsDTO {
   buildUrl?: string
   labels?: {
@@ -600,41 +609,6 @@ export type AddOperation = PatchOperation & {
   value?: JsonNode
 }
 
-export type AddRuleYaml = PatchInstruction & {
-  identifier: string
-  spec: AddRuleYamlSpec
-  type: 'AddRule'
-}
-
-export interface AddRuleYamlSpec {
-  clauses?: Clause[]
-  distribution?: DistributionYamlSpec
-  priority?: number
-  serve?: Serve
-}
-
-export type AddSegmentToVariationTargetMapYaml = PatchInstruction & {
-  identifier: string
-  spec: AddSegmentToVariationTargetMapYamlSpec
-  type: 'AddSegmentToVariationTargetMap'
-}
-
-export interface AddSegmentToVariationTargetMapYamlSpec {
-  segments: string[]
-  variation: string
-}
-
-export type AddTargetsToVariationTargetMapYaml = PatchInstruction & {
-  identifier: string
-  spec: AddTargetsToVariationTargetMapYamlSpec
-  type: 'AddTargetsToVariationTargetMap'
-}
-
-export interface AddTargetsToVariationTargetMapYamlSpec {
-  targets: string[]
-  variation: string
-}
-
 export interface AddUsers {
   emails: string[]
   roleBindings?: RoleBinding[]
@@ -650,6 +624,13 @@ export interface AddUsersResponse {
       | 'USER_ALREADY_INVITED'
       | 'FAIL'
   }
+}
+
+export type AmazonS3ArtifactConfig = ArtifactConfig & {
+  artifactPath: string
+  bucketName: string
+  connectorRef: string
+  filePathRegex?: string
 }
 
 export interface ApiKeyAggregateDTO {
@@ -756,21 +737,6 @@ export interface AppPermission {
     | 'MANAGE_RESTRICTED_ACCESS'
 }
 
-export type ApprovalStageConfig = StageInfoConfig & {
-  execution: ExecutionElementConfig
-}
-
-export interface ApproverInputInfo {
-  defaultValue?: string
-  name?: string
-}
-
-export interface Approvers {
-  disallowPipelineExecutor: boolean
-  minimumCount: number
-  userGroups?: string[]
-}
-
 export interface ArtifactConfig {
   [key: string]: any
 }
@@ -804,6 +770,11 @@ export interface ArtifactoryArtifactBuildDetailsDTO {
   artifactPath?: string
 }
 
+export type ArtifactoryArtifactSummary = ArtifactSummary & {
+  artifactPath?: string
+  tag?: string
+}
+
 export interface ArtifactoryAuthCredentials {
   [key: string]: any
 }
@@ -821,6 +792,11 @@ export type ArtifactoryConnector = ConnectorConfigDTO & {
   artifactoryServerUrl: string
   auth?: ArtifactoryAuthentication
   delegateSelectors?: string[]
+}
+
+export type ArtifactoryGenericArtifactSummary = ArtifactSummary & {
+  artifactDirectory?: string
+  artifactPath?: string
 }
 
 export type ArtifactoryRegistryArtifactConfig = ArtifactConfig & {
@@ -1246,11 +1222,15 @@ export type AzureUserAssignedMSIAuth = AzureAuthCredentialDTO & {
 }
 
 export type AzureWebAppInfrastructure = Infrastructure & {
-  appService: string
   connectorRef: string
   deploymentSlot: string
   resourceGroup: string
   subscriptionId: string
+<<<<<<< HEAD
+=======
+  targetSlot?: string
+  webApp: string
+>>>>>>> develop
 }
 
 export interface AzureWebAppNamesDTO {
@@ -1261,6 +1241,7 @@ export type AzureWebAppRollbackStepInfo = StepSpecType & {
   delegateSelectors?: string[]
 }
 
+<<<<<<< HEAD
 export type AzureWebAppSlotDeploymentStepInfo = StepSpecType & {
   delegateSelectors?: string[]
 }
@@ -1278,10 +1259,25 @@ export type AzureWebAppTrafficShiftStepInfo = StepSpecType & {
 export interface BarrierInfoConfig {
   identifier: string
   name: string
+=======
+export type AzureWebAppServiceSpec = ServiceSpec & {
+  applicationSettings?: StoreConfigWrapper
+  connectionStrings?: StoreConfigWrapper
+  startupScript?: StoreConfigWrapper
+>>>>>>> develop
 }
 
-export type BarrierStepInfo = StepSpecType & {
-  barrierRef: string
+export type AzureWebAppSlotDeploymentStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+}
+
+export type AzureWebAppSwapSlotStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+}
+
+export type AzureWebAppTrafficShiftStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  traffic?: string
 }
 
 export interface BaseSSHSpecDTO {
@@ -1366,13 +1362,8 @@ export type BitbucketUsernameTokenApiAccess = BitbucketApiAccessSpecDTO & {
   usernameRef?: string
 }
 
-export type BranchBuildSpec = BuildSpec & {
-  branch: string
-}
-
-export interface Build {
-  spec: BuildSpec
-  type: 'branch' | 'tag' | 'PR'
+export interface BucketResponse {
+  bucketName?: string
 }
 
 export interface BuildDetails {
@@ -1401,10 +1392,6 @@ export interface BuildDetails {
 export interface BuildIdAndInstanceCount {
   buildId?: string
   count?: number
-}
-
-export interface BuildSpec {
-  [key: string]: any
 }
 
 export type CDLicenseSummaryDTO = LicensesWithSummaryDTO & {
@@ -1478,10 +1465,6 @@ export type CIModuleLicenseDTO = ModuleLicenseDTO & {
   numberOfCommitters?: number
 }
 
-export interface CIProperties {
-  codebase?: CodeBase
-}
-
 export type CVLicenseSummaryDTO = LicensesWithSummaryDTO & {}
 
 export type CVModuleLicenseDTO = ModuleLicenseDTO & {}
@@ -1515,20 +1498,6 @@ export interface CcmConnectorFilter {
 export interface CeLicenseInfo {
   expiryTime?: number
   licenseType?: 'FULL_TRIAL' | 'LIMITED_TRIAL' | 'PAID'
-}
-
-export interface Clause {
-  attribute: string
-  id: string
-  negate: boolean
-  op: string
-  values: string[]
-}
-
-export interface ClauseYamlSpec {
-  attribute?: string
-  op: string
-  values: string[]
 }
 
 export interface CloudformationCreateStackStepConfiguration {
@@ -1618,6 +1587,13 @@ export interface ClusterBatchRequest {
   searchTerm?: string
 }
 
+<<<<<<< HEAD
+=======
+export interface ClusterBatchResponse {
+  linked?: number
+}
+
+>>>>>>> develop
 export interface ClusterInternal {
   name?: string
 }
@@ -1637,6 +1613,7 @@ export interface ClusterResponse {
   projectIdentifier?: string
 }
 
+<<<<<<< HEAD
 export interface CodeBase {
   build: Build
   connectorRef: string
@@ -1668,6 +1645,23 @@ export interface Condition {
   key: string
   operator: 'equals' | 'not equals' | 'in' | 'not in'
   value?: string
+=======
+export type CommandStepInfo = StepSpecType & {
+  commandUnits?: CommandUnitWrapper[]
+  delegateSelectors?: string[]
+  environmentVariables?: NGVariable[]
+  metadata?: string
+  onDelegate: boolean
+  outputVariables?: NGVariable[]
+}
+
+export interface CommandUnitBaseSpec {
+  type?: string
+}
+
+export interface CommandUnitWrapper {
+  commandUnit?: StepCommandUnit
+>>>>>>> develop
 }
 
 export interface ConfigFile {
@@ -1974,10 +1968,6 @@ export interface ConnectorValidationResult {
   testedAt?: number
 }
 
-export interface ContainerResource {
-  limits: Limits
-}
-
 export interface ContextElement {
   elementType?:
     | 'SERVICE'
@@ -2073,15 +2063,6 @@ export interface CreatePRStepUpdateConfigScriptWrapper {
   type: string
 }
 
-export interface CriteriaSpec {
-  [key: string]: any
-}
-
-export interface CriteriaSpecWrapper {
-  spec: CriteriaSpec
-  type: 'Jexl' | 'KeyValues'
-}
-
 export interface CrossAccountAccess {
   crossAccountRoleArn: string
   externalId?: string
@@ -2089,6 +2070,10 @@ export interface CrossAccountAccess {
 
 export type CustomArtifactConfig = ArtifactConfig & {
   version: ParameterFieldString
+}
+
+export type CustomArtifactSummary = ArtifactSummary & {
+  version?: string
 }
 
 export type CustomHealthConnectorDTO = ConnectorConfigDTO & {
@@ -2108,17 +2093,9 @@ export interface CustomHealthKeyAndValue {
   valueEncrypted?: boolean
 }
 
-export type CustomPolicyStepSpec = PolicySpec & {
-  payload: string
-}
-
 export type CustomRestrictionDTO = RestrictionDTO & { [key: string]: any }
 
 export type CustomRestrictionMetadataDTO = RestrictionMetadataDTO & {}
-
-export type CustomStageConfig = StageInfoConfig & {
-  execution: ExecutionElementConfig
-}
 
 export interface CustomerDTO {
   billingEmail?: string
@@ -2180,7 +2157,7 @@ export interface DelegateDownloadRequest {
   customClusterNamespace?: string
   description?: string
   name: string
-  size?: 'EXTRA_SMALL' | 'LAPTOP' | 'SMALL' | 'MEDIUM' | 'LARGE'
+  size?: 'LAPTOP' | 'SMALL' | 'MEDIUM' | 'LARGE'
   tags?: string[]
   tokenName?: string
 }
@@ -2196,7 +2173,7 @@ export type DelegateFilterProperties = FilterProperties & {
   delegateType?: string
   description?: string
   hostName?: string
-  status?: 'ENABLED' | 'WAITING_FOR_APPROVAL' | 'DISABLED' | 'DELETED'
+  status?: 'CONNECTED' | 'DISCONNECTED' | 'ENABLED' | 'WAITING_FOR_APPROVAL' | 'DISABLED' | 'DELETED'
 }
 
 export interface DelegateGroup {
@@ -2335,12 +2312,27 @@ export interface DelegateResponseData {
   [key: string]: any
 }
 
+export interface DelegateSetupDetails {
+  delegateConfigurationId?: string
+  delegateType: string
+  description?: string
+  hostName?: string
+  identifier?: string
+  k8sConfigDetails?: K8sConfigDetails
+  name: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  size?: 'LAPTOP' | 'SMALL' | 'MEDIUM' | 'LARGE'
+  tags?: string[]
+  tokenName?: string
+}
+
 export interface DelegateSizeDetails {
   cpu?: number
   label?: string
   ram?: number
   replicas?: number
-  size?: 'EXTRA_SMALL' | 'LAPTOP' | 'SMALL' | 'MEDIUM' | 'LARGE'
+  size?: 'LAPTOP' | 'SMALL' | 'MEDIUM' | 'LARGE'
 }
 
 export interface DelegateTokenDetails {
@@ -2425,15 +2417,9 @@ export interface DeploymentsInfo {
   deployments?: ExecutionStatusInfo[]
 }
 
-export interface Distribution {
-  bucketBy: string
-  variations: WeightedVariation[]
-}
-
-export interface DistributionYamlSpec {
-  bucketBy: string
-  clauses?: ClauseYamlSpec[]
-  variations?: VariationYamlSpec[]
+export type DockerArtifactSummary = ArtifactSummary & {
+  imagePath?: string
+  tag?: string
 }
 
 export interface DockerAuthCredentialsDTO {
@@ -2564,6 +2550,11 @@ export type EcrArtifactConfig = ArtifactConfig & {
   tagRegex?: string
 }
 
+export type EcrArtifactSummary = ArtifactSummary & {
+  imagePath?: string
+  tag?: string
+}
+
 export interface EcrBuildDetailsDTO {
   buildUrl?: string
   imagePath?: string
@@ -2658,7 +2649,11 @@ export interface EntityDetail {
   name?: string
   type?:
     | 'CreatePR'
+<<<<<<< HEAD
     | 'MergePR'
+=======
+    | 'GITOPS_MERGE_PR'
+>>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -2667,7 +2662,9 @@ export interface EntityDetail {
     | 'JiraUpdate'
     | 'JiraApproval'
     | 'HarnessApproval'
+    | 'CustomApproval'
     | 'Barrier'
+    | 'Queue'
     | 'FlagConfiguration'
     | 'ShellScript'
     | 'K8sCanaryDeploy'
@@ -2715,7 +2712,7 @@ export interface EntityDetail {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'Policy'
+    | 'POLICY_STEP'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -2739,10 +2736,18 @@ export interface EntityDetail {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
+<<<<<<< HEAD
     | 'AzureSlotDeployment'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+=======
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
+>>>>>>> develop
 }
 
 export interface EntityGitDetails {
@@ -2988,6 +2993,7 @@ export interface Error {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -3135,6 +3141,7 @@ export interface Error {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -3269,6 +3276,7 @@ export interface Error {
     | 'AWS_LOAD_BALANCER_ERROR'
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
     | 'SPOTINST_NULL_ERROR'
   correlationId?: string
   detailedMessage?: string
@@ -3338,12 +3346,6 @@ export interface ExecutionStatusInfo {
   triggerType?: string
 }
 
-export interface ExecutionTarget {
-  connectorRef?: string
-  host?: string
-  workingDirectory?: string
-}
-
 export interface ExecutionWrapperConfig {
   parallel?: ParallelStepElementConfig
   step?: StepElementConfig
@@ -3394,6 +3396,7 @@ export interface Failure {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -3541,6 +3544,7 @@ export interface Failure {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -3675,6 +3679,7 @@ export interface Failure {
     | 'AWS_LOAD_BALANCER_ERROR'
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
     | 'SPOTINST_NULL_ERROR'
   correlationId?: string
   errors?: ValidationError[]
@@ -3689,8 +3694,6 @@ export interface FailureStrategyActionConfig {
 export interface FailureStrategyConfig {
   onFailure: OnFailureConfig
 }
-
-export type FeatureFlagStageConfig = StageInfoConfig & {}
 
 export interface FeatureRestrictionDetailListRequestDTO {
   names: (
@@ -3707,6 +3710,7 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'MULTIPLE_ORGANIZATIONS'
     | 'MULTIPLE_PROJECTS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
+    | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
     | 'SECRET_MANAGERS'
     | 'DEPLOYMENTS'
@@ -3725,6 +3729,7 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'ACTIVE_COMMITTERS'
     | 'TEST_INTELLIGENCE'
     | 'TEMPLATE_SERVICE'
+    | 'SRM_SERVICES'
     | 'K8S_BG_SWAP_SERVICES'
     | 'K8S_BLUE_GREEN_DEPLOY'
     | 'K8S_APPLY'
@@ -3747,9 +3752,14 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'AZURE_TRAFFIC_SHIFT'
     | 'AZURE_SWAP_SLOT'
     | 'AZURE_WEBAPP_ROLLBACK'
+<<<<<<< HEAD
+=======
+    | 'JENKINS_BUILD'
+>>>>>>> develop
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
+    | 'JENKINS_ARTIFACT'
   )[]
 }
 
@@ -3768,6 +3778,7 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'MULTIPLE_ORGANIZATIONS'
     | 'MULTIPLE_PROJECTS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
+    | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
     | 'SECRET_MANAGERS'
     | 'DEPLOYMENTS'
@@ -3786,6 +3797,7 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'ACTIVE_COMMITTERS'
     | 'TEST_INTELLIGENCE'
     | 'TEMPLATE_SERVICE'
+    | 'SRM_SERVICES'
     | 'K8S_BG_SWAP_SERVICES'
     | 'K8S_BLUE_GREEN_DEPLOY'
     | 'K8S_APPLY'
@@ -3808,9 +3820,14 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'AZURE_TRAFFIC_SHIFT'
     | 'AZURE_SWAP_SLOT'
     | 'AZURE_WEBAPP_ROLLBACK'
+<<<<<<< HEAD
+=======
+    | 'JENKINS_BUILD'
+>>>>>>> develop
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
+    | 'JENKINS_ARTIFACT'
 }
 
 export interface FeatureRestrictionDetailsDTO {
@@ -3831,6 +3848,7 @@ export interface FeatureRestrictionDetailsDTO {
     | 'MULTIPLE_ORGANIZATIONS'
     | 'MULTIPLE_PROJECTS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
+    | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
     | 'SECRET_MANAGERS'
     | 'DEPLOYMENTS'
@@ -3849,6 +3867,7 @@ export interface FeatureRestrictionDetailsDTO {
     | 'ACTIVE_COMMITTERS'
     | 'TEST_INTELLIGENCE'
     | 'TEMPLATE_SERVICE'
+    | 'SRM_SERVICES'
     | 'K8S_BG_SWAP_SERVICES'
     | 'K8S_BLUE_GREEN_DEPLOY'
     | 'K8S_APPLY'
@@ -3871,9 +3890,14 @@ export interface FeatureRestrictionDetailsDTO {
     | 'AZURE_TRAFFIC_SHIFT'
     | 'AZURE_SWAP_SLOT'
     | 'AZURE_WEBAPP_ROLLBACK'
+<<<<<<< HEAD
+=======
+    | 'JENKINS_BUILD'
+>>>>>>> develop
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
+    | 'JENKINS_ARTIFACT'
   restriction?: RestrictionDTO
   restrictionType?:
     | 'AVAILABILITY'
@@ -3902,6 +3926,7 @@ export interface FeatureRestrictionMetadataDTO {
     | 'MULTIPLE_ORGANIZATIONS'
     | 'MULTIPLE_PROJECTS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
+    | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
     | 'SECRET_MANAGERS'
     | 'DEPLOYMENTS'
@@ -3920,6 +3945,7 @@ export interface FeatureRestrictionMetadataDTO {
     | 'ACTIVE_COMMITTERS'
     | 'TEST_INTELLIGENCE'
     | 'TEMPLATE_SERVICE'
+    | 'SRM_SERVICES'
     | 'K8S_BG_SWAP_SERVICES'
     | 'K8S_BLUE_GREEN_DEPLOY'
     | 'K8S_APPLY'
@@ -3942,9 +3968,14 @@ export interface FeatureRestrictionMetadataDTO {
     | 'AZURE_TRAFFIC_SHIFT'
     | 'AZURE_SWAP_SLOT'
     | 'AZURE_WEBAPP_ROLLBACK'
+<<<<<<< HEAD
+=======
+    | 'JENKINS_BUILD'
+>>>>>>> develop
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
+    | 'JENKINS_ARTIFACT'
   restrictionMetadata?: {
     [key: string]: RestrictionMetadataDTO
   }
@@ -4054,16 +4085,6 @@ export interface FilterProperties {
   }
 }
 
-export type FlagConfigurationStepInfo = StepSpecType & {
-  environment: string
-  feature: string
-  instructions: PatchInstruction[]
-}
-
-export interface FlowControlConfig {
-  barriers?: BarrierInfoConfig[]
-}
-
 export interface FolderNodeDTO {
   children?: FileStoreNodeDTO[]
   identifier: string
@@ -4134,6 +4155,11 @@ export type GcrArtifactConfig = ArtifactConfig & {
   registryHostname: string
   tag?: string
   tagRegex?: string
+}
+
+export type GcrArtifactSummary = ArtifactSummary & {
+  imagePath?: string
+  tag?: string
 }
 
 export interface GcrBuildDetailsDTO {
@@ -4219,7 +4245,11 @@ export interface GitEnabledDTO {
 export interface GitEntityBranchFilterSummaryProperties {
   entityTypes?: (
     | 'CreatePR'
+<<<<<<< HEAD
     | 'MergePR'
+=======
+    | 'GITOPS_MERGE_PR'
+>>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -4228,7 +4258,9 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'JiraUpdate'
     | 'JiraApproval'
     | 'HarnessApproval'
+    | 'CustomApproval'
     | 'Barrier'
+    | 'Queue'
     | 'FlagConfiguration'
     | 'ShellScript'
     | 'K8sCanaryDeploy'
@@ -4276,7 +4308,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'Policy'
+    | 'POLICY_STEP'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -4300,10 +4332,18 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
+<<<<<<< HEAD
     | 'AzureSlotDeployment'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+=======
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
+>>>>>>> develop
   )[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
   searchTerm?: string
@@ -4312,7 +4352,11 @@ export interface GitEntityBranchFilterSummaryProperties {
 export interface GitEntityFilterProperties {
   entityTypes?: (
     | 'CreatePR'
+<<<<<<< HEAD
     | 'MergePR'
+=======
+    | 'GITOPS_MERGE_PR'
+>>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -4321,7 +4365,9 @@ export interface GitEntityFilterProperties {
     | 'JiraUpdate'
     | 'JiraApproval'
     | 'HarnessApproval'
+    | 'CustomApproval'
     | 'Barrier'
+    | 'Queue'
     | 'FlagConfiguration'
     | 'ShellScript'
     | 'K8sCanaryDeploy'
@@ -4369,7 +4415,7 @@ export interface GitEntityFilterProperties {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'Policy'
+    | 'POLICY_STEP'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -4393,10 +4439,18 @@ export interface GitEntityFilterProperties {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
+<<<<<<< HEAD
     | 'AzureSlotDeployment'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+=======
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
+>>>>>>> develop
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
@@ -4438,7 +4492,11 @@ export interface GitFullSyncEntityInfoDTO {
   branch?: string
   entityType?:
     | 'CreatePR'
+<<<<<<< HEAD
     | 'MergePR'
+=======
+    | 'GITOPS_MERGE_PR'
+>>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -4447,7 +4505,9 @@ export interface GitFullSyncEntityInfoDTO {
     | 'JiraUpdate'
     | 'JiraApproval'
     | 'HarnessApproval'
+    | 'CustomApproval'
     | 'Barrier'
+    | 'Queue'
     | 'FlagConfiguration'
     | 'ShellScript'
     | 'K8sCanaryDeploy'
@@ -4495,7 +4555,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'Policy'
+    | 'POLICY_STEP'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -4519,10 +4579,18 @@ export interface GitFullSyncEntityInfoDTO {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
+<<<<<<< HEAD
     | 'AzureSlotDeployment'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+=======
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
+>>>>>>> develop
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -4539,7 +4607,11 @@ export interface GitFullSyncEntityInfoDTO {
 export interface GitFullSyncEntityInfoFilterKeys {
   entityTypes?: (
     | 'CreatePR'
+<<<<<<< HEAD
     | 'MergePR'
+=======
+    | 'GITOPS_MERGE_PR'
+>>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -4548,7 +4620,9 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'JiraUpdate'
     | 'JiraApproval'
     | 'HarnessApproval'
+    | 'CustomApproval'
     | 'Barrier'
+    | 'Queue'
     | 'FlagConfiguration'
     | 'ShellScript'
     | 'K8sCanaryDeploy'
@@ -4596,7 +4670,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'Policy'
+    | 'POLICY_STEP'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -4620,10 +4694,18 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
+<<<<<<< HEAD
     | 'AzureSlotDeployment'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+=======
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
+>>>>>>> develop
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -4718,7 +4800,11 @@ export interface GitSyncEntityDTO {
   entityReference?: EntityReference
   entityType?:
     | 'CreatePR'
+<<<<<<< HEAD
     | 'MergePR'
+=======
+    | 'GITOPS_MERGE_PR'
+>>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -4727,7 +4813,9 @@ export interface GitSyncEntityDTO {
     | 'JiraUpdate'
     | 'JiraApproval'
     | 'HarnessApproval'
+    | 'CustomApproval'
     | 'Barrier'
+    | 'Queue'
     | 'FlagConfiguration'
     | 'ShellScript'
     | 'K8sCanaryDeploy'
@@ -4775,7 +4863,7 @@ export interface GitSyncEntityDTO {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'Policy'
+    | 'POLICY_STEP'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -4799,10 +4887,18 @@ export interface GitSyncEntityDTO {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
+<<<<<<< HEAD
     | 'AzureSlotDeployment'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+=======
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
+>>>>>>> develop
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -4813,7 +4909,11 @@ export interface GitSyncEntityListDTO {
   count?: number
   entityType?:
     | 'CreatePR'
+<<<<<<< HEAD
     | 'MergePR'
+=======
+    | 'GITOPS_MERGE_PR'
+>>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -4822,7 +4922,9 @@ export interface GitSyncEntityListDTO {
     | 'JiraUpdate'
     | 'JiraApproval'
     | 'HarnessApproval'
+    | 'CustomApproval'
     | 'Barrier'
+    | 'Queue'
     | 'FlagConfiguration'
     | 'ShellScript'
     | 'K8sCanaryDeploy'
@@ -4870,7 +4972,7 @@ export interface GitSyncEntityListDTO {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'Policy'
+    | 'POLICY_STEP'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -4894,10 +4996,18 @@ export interface GitSyncEntityListDTO {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
+<<<<<<< HEAD
     | 'AzureSlotDeployment'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+=======
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
+>>>>>>> develop
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -4925,7 +5035,11 @@ export interface GitSyncErrorDTO {
   createdAt?: number
   entityType?:
     | 'CreatePR'
+<<<<<<< HEAD
     | 'MergePR'
+=======
+    | 'GITOPS_MERGE_PR'
+>>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -4934,7 +5048,9 @@ export interface GitSyncErrorDTO {
     | 'JiraUpdate'
     | 'JiraApproval'
     | 'HarnessApproval'
+    | 'CustomApproval'
     | 'Barrier'
+    | 'Queue'
     | 'FlagConfiguration'
     | 'ShellScript'
     | 'K8sCanaryDeploy'
@@ -4982,7 +5098,7 @@ export interface GitSyncErrorDTO {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'Policy'
+    | 'POLICY_STEP'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -5006,10 +5122,18 @@ export interface GitSyncErrorDTO {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
+<<<<<<< HEAD
     | 'AzureSlotDeployment'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+=======
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
+>>>>>>> develop
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -5206,6 +5330,7 @@ export interface GovernanceMetadata {
   [key: string]: any
 }
 
+<<<<<<< HEAD
 export type HarnessApprovalStepInfo = StepSpecType & {
   approvalMessage?: string
   approverInputs?: ApproverInputInfo[]
@@ -5213,6 +5338,8 @@ export type HarnessApprovalStepInfo = StepSpecType & {
   includePipelineExecutionHistory: boolean
 }
 
+=======
+>>>>>>> develop
 export interface HarnessForConfig {
   iteration?: number
   maxConcurrency?: number
@@ -5228,12 +5355,12 @@ export interface HarnessServiceInfoNG {
 
 export type HarnessStore = StoreConfig & {
   files?: HarnessStoreFile[]
+  secretFiles?: string[]
 }
 
 export interface HarnessStoreFile {
-  isEncrypted: boolean
   path: string
-  ref: string
+  scope: 'account' | 'org' | 'project' | 'unknown'
 }
 
 export interface HealthDeploymentDashboard {
@@ -5241,6 +5368,7 @@ export interface HealthDeploymentDashboard {
 }
 
 export interface HealthDeploymentInfo {
+  active?: DeploymentInfo
   failure?: DeploymentInfo
   success?: DeploymentInfo
   total?: TotalDeploymentInfo
@@ -5307,11 +5435,6 @@ export interface HostValidationDTO {
 export interface HostValidationParams {
   hosts?: string[]
   tags?: string[]
-}
-
-export interface HttpHeaderConfig {
-  key?: string
-  value?: string
 }
 
 export interface HttpHelmAuthCredentialsDTO {
@@ -5387,16 +5510,6 @@ export type HttpStateExecutionData = DelegateResponseData & {
   useProxy?: boolean
   waitInterval?: number
   warningMessage?: string
-}
-
-export type HttpStepInfo = StepSpecType & {
-  assertion?: string
-  delegateSelectors?: string[]
-  headers?: HttpHeaderConfig[]
-  method: string
-  outputVariables?: NGVariable[]
-  requestBody?: string
-  url: string
 }
 
 export type HttpStoreConfig = StoreConfig & {
@@ -5610,6 +5723,7 @@ export interface InstanceDetailsDTO {
 
 export interface InstanceInfoDTO {
   podName?: string
+  type?: string
 }
 
 export interface InstanceSelectionBase {
@@ -5678,6 +5792,16 @@ export type JenkinsBearerTokenDTO = JenkinsAuthCredentialsDTO & {
   tokenRef: string
 }
 
+export type JenkinsBuildStepInfo = StepSpecType & {
+  captureEnvironmentVariable?: boolean
+  connectorRef: string
+  delegateSelectors?: string[]
+  jobName: string
+  jobParameter?: JenkinsParameterField[]
+  metadata?: string
+  unstableStatusAsSuccess?: boolean
+}
+
 export type JenkinsConnectorDTO = ConnectorConfigDTO & {
   auth?: JenkinsAuthenticationDTO
   delegateSelectors?: string[]
@@ -5688,22 +5812,15 @@ export interface JenkinsJobDetailsDTO {
   jobDetails?: JobDetails[]
 }
 
+export interface JenkinsParameterField {
+  name?: string
+  value: string
+}
+
 export type JenkinsUserNamePasswordDTO = JenkinsAuthCredentialsDTO & {
   passwordRef: string
   username?: string
   usernameRef?: string
-}
-
-export type JexlCriteriaSpec = CriteriaSpec & {
-  expression: string
-}
-
-export type JiraApprovalStepInfo = StepSpecType & {
-  approvalCriteria: CriteriaSpecWrapper
-  connectorRef: string
-  delegateSelectors?: string[]
-  issueKey: string
-  rejectionCriteria?: CriteriaSpecWrapper
 }
 
 export type JiraConnector = ConnectorConfigDTO & {
@@ -5712,19 +5829,6 @@ export type JiraConnector = ConnectorConfigDTO & {
   passwordRef: string
   username?: string
   usernameRef?: string
-}
-
-export type JiraCreateStepInfo = StepSpecType & {
-  connectorRef: string
-  delegateSelectors?: string[]
-  fields?: JiraField[]
-  issueType: string
-  projectKey: string
-}
-
-export interface JiraField {
-  name?: string
-  value: string
 }
 
 export interface JiraFieldAllowedValueNG {
@@ -5799,14 +5903,6 @@ export interface JiraStatusNG {
   statusCategory?: JiraStatusCategoryNG
 }
 
-export type JiraUpdateStepInfo = StepSpecType & {
-  connectorRef: string
-  delegateSelectors?: string[]
-  fields?: JiraField[]
-  issueKey: string
-  transitionTo?: TransitionTo
-}
-
 export interface JobDetails {
   folder?: boolean
   jobName?: string
@@ -5846,6 +5942,7 @@ export type K8sAzureInfrastructure = Infrastructure & {
   releaseName: string
   resourceGroup: string
   subscriptionId: string
+  useClusterAdminCredentials?: boolean
 }
 
 export type K8sBGSwapServicesStepInfo = StepSpecType & {
@@ -5955,11 +6052,6 @@ export interface KeyValuePair {
   value?: string
 }
 
-export type KeyValuesCriteriaSpec = CriteriaSpec & {
-  conditions: Condition[]
-  matchAnyCondition?: boolean
-}
-
 export interface KubernetesAuthCredentialDTO {
   [key: string]: any
 }
@@ -6032,10 +6124,14 @@ export type KustomizePatchesManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
-export type LDAPSettings = NGAuthSettings & {
+export interface LDAPSettings {
   connectionSettings: LdapConnectionSettings
+  cronExpression?: string
+  displayName: string
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
+  nextIterations?: number[]
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -6144,6 +6240,16 @@ export interface LdapConnectionSettings {
   useRecursiveGroupMembershipSearch?: boolean
 }
 
+export interface LdapGroupResponse {
+  description?: string
+  dn?: string
+  message?: string
+  name?: string
+  selectable?: boolean
+  totalMembers?: number
+  users?: LdapUserResponse[]
+}
+
 export interface LdapGroupSettings {
   baseDN?: string
   descriptionAttr?: string
@@ -6160,6 +6266,18 @@ export type LdapSettings = SSOSettings & {
   groupSettingsList?: LdapGroupSettings[]
   userSettings?: LdapUserSettings
   userSettingsList?: LdapUserSettings[]
+}
+
+export interface LdapTestResponse {
+  message?: string
+  status?: 'SUCCESS' | 'FAILURE'
+}
+
+export interface LdapUserResponse {
+  dn?: string
+  email?: string
+  name?: string
+  userId?: string
 }
 
 export interface LdapUserSettings {
@@ -6214,11 +6332,6 @@ export interface LicensesWithSummaryDTO {
   licenseType?: 'TRIAL' | 'PAID'
   maxExpiryTime?: number
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
-}
-
-export interface Limits {
-  cpu?: string
-  memory?: string
 }
 
 export type LocalConnectorDTO = ConnectorConfigDTO & {
@@ -6294,7 +6407,11 @@ export type MarkAsSuccessFailureActionConfig = FailureStrategyActionConfig & {
 }
 
 export type MatrixConfig = MatrixConfigInterface & {
+<<<<<<< HEAD
   exclude?: ExcludeConfig[]
+=======
+  exclude?: ParameterFieldListExcludeConfig
+>>>>>>> develop
   maxConcurrency?: number
 }
 
@@ -6344,6 +6461,10 @@ export interface NGAuthSettings {
   settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
+export interface NGEntityTemplateResponseDTO {
+  inputSetTemplateYaml?: string
+}
+
 export interface NGEnvironmentConfig {
   environment?: NGEnvironmentInfoConfig
 }
@@ -6361,11 +6482,8 @@ export interface NGEnvironmentInfoConfig {
   variables?: NGVariable[]
 }
 
-export interface NGProperties {
-  ci?: CIProperties
-}
-
 export interface NGServiceConfig {
+  metadata?: string
   service?: NGServiceV2InfoConfig
 }
 
@@ -6383,6 +6501,7 @@ export interface NGServiceV2InfoConfig {
   description?: string
   gitOpsEnabled?: boolean
   identifier: string
+  metadata?: string
   name: string
   serviceDefinition?: ServiceDefinition
   tags?: {
@@ -6448,6 +6567,11 @@ export interface NextActionDetailDTO {
   useStripeSdk?: {
     [key: string]: { [key: string]: any }
   }
+}
+
+export type NexusArtifactSummary = ArtifactSummary & {
+  artifactPath?: string
+  tag?: string
 }
 
 export interface NexusAuthCredentials {
@@ -6542,18 +6666,6 @@ export interface NodeList {
   length?: number
 }
 
-export interface NotificationChannelWrapper {
-  spec?: PmsNotificationChannel
-  type?: string
-}
-
-export interface NotificationRules {
-  enabled?: boolean
-  name?: string
-  notificationMethod?: NotificationChannelWrapper
-  pipelineEvents?: PipelineEvent[]
-}
-
 export interface NotificationSettingConfig {
   type: 'EMAIL' | 'SLACK' | 'PAGERDUTY' | 'MSTEAMS'
 }
@@ -6591,6 +6703,16 @@ export interface OAuthSignupDTO {
   name?: string
   signupAction?: 'REGULAR' | 'TRIAL' | 'SUBSCRIBE'
   utmInfo?: UtmInfo
+}
+
+export interface OauthAccessTokenDTO {
+  accessToken?: string
+  refreshToken?: string
+}
+
+export interface OauthAccessTokenResponseDTO {
+  accessTokenRef?: string
+  refreshTokenRef?: string
 }
 
 export type OauthSettings = SSOSettings & {
@@ -6721,10 +6843,6 @@ export interface OrganizationResponse {
   harnessManaged?: boolean
   lastModifiedAt?: number
   organization: Organization
-}
-
-export type PRBuildSpec = BuildSpec & {
-  number: string
 }
 
 export interface Page {
@@ -7155,8 +7273,6 @@ export type PagerDutyConnectorDTO = ConnectorConfigDTO & {
   delegateSelectors?: string[]
 }
 
-export type ParallelStageElementConfig = StageElementWrapperConfig[]
-
 export type ParallelStepElementConfig = ExecutionWrapperConfig[]
 
 export interface ParameterField {
@@ -7181,6 +7297,18 @@ export interface ParameterFieldBoolean {
   responseField?: string
   typeString?: boolean
   value?: boolean
+}
+
+export interface ParameterFieldListExcludeConfig {
+  defaultValue?: ExcludeConfig[]
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: ExcludeConfig[]
 }
 
 export interface ParameterFieldMapStringString {
@@ -7240,20 +7368,6 @@ export interface PasswordStrengthPolicy {
   minNumberOfUppercaseCharacters?: number
 }
 
-export interface PatchInstruction {
-  type?:
-    | 'SetFeatureFlagState'
-    | 'SetOnVariation'
-    | 'SetOffVariation'
-    | 'SetDefaultVariations'
-    | 'AddRule'
-    | 'UpdateRule'
-    | 'AddTargetsToVariationTargetMap'
-    | 'RemoveTargetsToVariationTargetMap'
-    | 'AddSegmentToVariationTargetMap'
-    | 'RemoveSegmentsToVariationTargetMap'
-}
-
 export interface PatchOperation {
   path?: string
 }
@@ -7308,25 +7422,6 @@ export type PhysicalDataCenterConnectorDTO = ConnectorConfigDTO & {
   hosts?: HostDTO[]
 }
 
-export interface PipelineConfig {
-  pipeline?: PipelineInfoConfig
-}
-
-export interface PipelineEvent {
-  forStages?: string[]
-  type?:
-    | 'AllEvents'
-    | 'PipelineStart'
-    | 'PipelineSuccess'
-    | 'PipelineFailed'
-    | 'PipelineEnd'
-    | 'PipelinePaused'
-    | 'StageSuccess'
-    | 'StageFailed'
-    | 'StageStart'
-    | 'StepFailed'
-}
-
 export interface PipelineExecutionDashboardInfo {
   accountIdentifier?: string
   identifier?: string
@@ -7347,26 +7442,6 @@ export type PipelineFilterProperties = FilterProperties & {
   pipelineTags?: NGTag[]
 }
 
-export interface PipelineInfoConfig {
-  allowStageExecutions?: boolean
-  delegateSelectors?: string[]
-  description?: string
-  flowControl?: FlowControlConfig
-  identifier: string
-  name: string
-  notificationRules?: NotificationRules[]
-  orgIdentifier?: string
-  projectIdentifier?: string
-  properties?: NGProperties
-  stages?: StageElementWrapperConfig[]
-  tags?: {
-    [key: string]: string
-  }
-  template?: TemplateLinkConfig
-  timeout?: string
-  variables?: NGVariable[]
-}
-
 export interface PipelineInfrastructure {
   allowSimultaneousDeployments?: boolean
   environment?: EnvironmentYaml
@@ -7381,41 +7456,6 @@ export interface PipelinesExecutionDashboardInfo {
   pendingApprovalExecutions?: PipelineExecutionDashboardInfo[]
   pendingManualInterventionExecutions?: PipelineExecutionDashboardInfo[]
   runningExecutions?: PipelineExecutionDashboardInfo[]
-}
-
-export type PmsEmailChannel = PmsNotificationChannel & {
-  recipients?: string[]
-  userGroups?: string[]
-}
-
-export type PmsMSTeamChannel = PmsNotificationChannel & {
-  msTeamKeys?: string[]
-  userGroups?: string[]
-}
-
-export interface PmsNotificationChannel {
-  [key: string]: any
-}
-
-export type PmsPagerDutyChannel = PmsNotificationChannel & {
-  integrationKey?: string
-  userGroups?: string[]
-}
-
-export type PmsSlackChannel = PmsNotificationChannel & {
-  userGroups?: string[]
-  webhookUrl?: string
-}
-
-export interface PolicySpec {
-  type?: string
-}
-
-export type PolicyStepInfo = StepSpecType & {
-  metadata?: string
-  policySets: string[]
-  policySpec?: PolicySpec
-  type?: string
 }
 
 export interface PollingResponseDTO {
@@ -7451,6 +7491,7 @@ export interface PrimaryArtifact {
     | 'CustomArtifact'
     | 'Acr'
     | 'Jenkins'
+    | 'AmazonS3'
 }
 
 export interface Principal {
@@ -7550,7 +7591,11 @@ export interface ReferencedByDTO {
   name?: string
   type?:
     | 'CreatePR'
+<<<<<<< HEAD
     | 'MergePR'
+=======
+    | 'GITOPS_MERGE_PR'
+>>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -7559,7 +7604,9 @@ export interface ReferencedByDTO {
     | 'JiraUpdate'
     | 'JiraApproval'
     | 'HarnessApproval'
+    | 'CustomApproval'
     | 'Barrier'
+    | 'Queue'
     | 'FlagConfiguration'
     | 'ShellScript'
     | 'K8sCanaryDeploy'
@@ -7607,7 +7654,7 @@ export interface ReferencedByDTO {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'Policy'
+    | 'POLICY_STEP'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -7631,10 +7678,18 @@ export interface ReferencedByDTO {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
+<<<<<<< HEAD
     | 'AzureSlotDeployment'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+=======
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
+>>>>>>> develop
 }
 
 export type ReleaseRepoManifest = ManifestAttributes & {
@@ -7658,38 +7713,8 @@ export type RemoveOperation = PatchOperation & {
   value?: JsonNode
 }
 
-export type RemoveSegmentToVariationTargetMapYaml = PatchInstruction & {
-  identifier: string
-  spec: RemoveSegmentToVariationTargetMapYamlSpec
-  type: 'RemoveSegmentToVariationTargetMap'
-}
-
-export interface RemoveSegmentToVariationTargetMapYamlSpec {
-  segments: string[]
-  variation: string
-}
-
-export type RemoveTargetsToVariationTargetMapYaml = PatchInstruction & {
-  identifier: string
-  spec: RemoveTargetsToVariationTargetMapYamlSpec
-  type: 'RemoveTargetsToVariationTargetMap'
-}
-
-export interface RemoveTargetsToVariationTargetMapYamlSpec {
-  targets: string[]
-  variation: string
-}
-
 export type ReplaceOperation = PatchOperation & {
   value?: JsonNode
-}
-
-export type ResourceConstraintStepInfo = StepSpecType & {
-  acquireMode: 'ENSURE' | 'ACCUMULATE'
-  holdingScope: 'PLAN' | 'PIPELINE' | 'STAGE' | 'STEP_GROUP'
-  name: string
-  permits: number
-  resourceUnit: string
 }
 
 export interface ResourceDTO {
@@ -7727,6 +7752,13 @@ export interface ResourceDTO {
     | 'MONITORED_SERVICE'
     | 'CHAOS_AGENT'
     | 'CHAOS_WORKFLOW'
+    | 'CHAOS_GITOPS'
+    | 'SERVICE_LEVEL_OBJECTIVE'
+    | 'PERSPECTIVE'
+    | 'PERSPECTIVE_BUDGET'
+    | 'PERSPECTIVE_REPORT'
+    | 'COST_CATEGORY'
+    | 'SMTP'
 }
 
 export interface ResourceGroup {
@@ -7840,6 +7872,13 @@ export interface ResponseApiKeyDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseArtifactSummary {
+  correlationId?: string
+  data?: ArtifactSummary
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseArtifactoryBuildDetailsDTO {
   correlationId?: string
   data?: ArtifactoryBuildDetailsDTO
@@ -7920,6 +7959,13 @@ export interface ResponseCDPipelineModuleInfo {
 export interface ResponseCDStageModuleInfo {
   correlationId?: string
   data?: CDStageModuleInfo
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseClusterBatchResponse {
+  correlationId?: string
+  data?: ClusterBatchResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -8365,6 +8411,16 @@ export interface ResponseListAwsVPC {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+<<<<<<< HEAD
+=======
+export interface ResponseListBucketResponse {
+  correlationId?: string
+  data?: BucketResponse[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+>>>>>>> develop
 export interface ResponseListBuildDetails {
   correlationId?: string
   data?: BuildDetails[]
@@ -8383,7 +8439,11 @@ export interface ResponseListEntityType {
   correlationId?: string
   data?: (
     | 'CreatePR'
+<<<<<<< HEAD
     | 'MergePR'
+=======
+    | 'GITOPS_MERGE_PR'
+>>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -8392,7 +8452,9 @@ export interface ResponseListEntityType {
     | 'JiraUpdate'
     | 'JiraApproval'
     | 'HarnessApproval'
+    | 'CustomApproval'
     | 'Barrier'
+    | 'Queue'
     | 'FlagConfiguration'
     | 'ShellScript'
     | 'K8sCanaryDeploy'
@@ -8440,7 +8502,7 @@ export interface ResponseListEntityType {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'Policy'
+    | 'POLICY_STEP'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -8464,10 +8526,18 @@ export interface ResponseListEntityType {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
+<<<<<<< HEAD
     | 'AzureSlotDeployment'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+=======
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
+>>>>>>> develop
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -8509,7 +8579,7 @@ export interface ResponseListExecutionStatus {
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
-    | 'Waiting'
+    | 'WAITING'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -8551,6 +8621,8 @@ export interface ResponseListHostValidationDTO {
 }
 
 export interface ResponseListJiraProjectBasicNG {
+<<<<<<< HEAD
+=======
   correlationId?: string
   data?: JiraProjectBasicNG[]
   metaData?: { [key: string]: any }
@@ -8558,8 +8630,16 @@ export interface ResponseListJiraProjectBasicNG {
 }
 
 export interface ResponseListJiraStatusNG {
+>>>>>>> develop
   correlationId?: string
   data?: JiraStatusNG[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseListJobParameter {
+  correlationId?: string
+  data?: JobParameter[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -8608,7 +8688,7 @@ export interface ResponseListServiceAccountDTO {
 
 export interface ResponseListServiceDefinitionType {
   correlationId?: string
-  data?: ('Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda')[]
+  data?: ('Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps')[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -8697,7 +8777,7 @@ export interface ResponseMapModuleTypeLong {
 export interface ResponseMapServiceDefinitionTypeListExecutionStrategyType {
   correlationId?: string
   data?: {
-    [key: string]: ('Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default')[]
+    [key: string]: ('Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default' | 'GitOps')[]
   }
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -8756,6 +8836,7 @@ export interface ResponseMessage {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -8903,6 +8984,7 @@ export interface ResponseMessage {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -9037,6 +9119,7 @@ export interface ResponseMessage {
     | 'AWS_LOAD_BALANCER_ERROR'
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
     | 'SPOTINST_NULL_ERROR'
   exception?: Throwable
   failureTypes?: (
@@ -9057,6 +9140,13 @@ export interface ResponseMessage {
 export interface ResponseModuleLicenseDTO {
   correlationId?: string
   data?: ModuleLicenseDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseNGEntityTemplateResponseDTO {
+  correlationId?: string
+  data?: NGEntityTemplateResponseDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -9404,13 +9494,6 @@ export interface ResponsePaymentMethodCollectionDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ResponsePipelineConfig {
-  correlationId?: string
-  data?: PipelineConfig
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
 export interface ResponsePipelinesExecutionDashboardInfo {
   correlationId?: string
   data?: PipelinesExecutionDashboardInfo
@@ -9644,9 +9727,23 @@ export interface ResponseSourceCodeManagerDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseStageElementConfig {
+  correlationId?: string
+  data?: StageElementConfig
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseStepCategory {
   correlationId?: string
   data?: StepCategory
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseStepElementConfig {
+  correlationId?: string
+  data?: StepElementConfig
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -9787,6 +9884,14 @@ export interface RestResponseBoolean {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseCollectionLdapGroupResponse {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: LdapGroupResponse[]
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseDelegateGroup {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -9835,6 +9940,22 @@ export interface RestResponseDelegateTokenDetails {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseLDAPSettings {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: LDAPSettings
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseLdapTestResponse {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: LdapTestResponse
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseListDelegateTokenDetails {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -9856,6 +9977,14 @@ export interface RestResponseLoginTypeResponse {
     [key: string]: { [key: string]: any }
   }
   resource?: LoginTypeResponse
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseOauthAccessTokenResponseDTO {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: OauthAccessTokenResponseDTO
   responseMessages?: ResponseMessage[]
 }
 
@@ -10444,6 +10573,7 @@ export interface SecretResourceFilterDTO {
 export interface SecretResponseWrapper {
   createdAt?: number
   draft?: boolean
+  governanceMetadata?: GovernanceMetadata
   secret: SecretDTOV2
   updatedAt?: number
 }
@@ -10465,11 +10595,6 @@ export interface SecretValidationMetaData {
 export interface SecretValidationResultDTO {
   message?: string
   success?: boolean
-}
-
-export interface Serve {
-  distribution?: Distribution
-  variation?: string
 }
 
 export type ServerlessAwsLambdaDeployStepInfo = StepSpecType & {
@@ -10568,7 +10693,7 @@ export interface ServiceDashboardInfo {
 
 export interface ServiceDefinition {
   spec: ServiceSpec
-  type: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda'
+  type: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps'
 }
 
 export interface ServiceDeployment {
@@ -10647,35 +10772,12 @@ export interface ServiceInstanceUsageDTO {
   timestamp?: number
 }
 
-export type ServiceNowApprovalStepInfo = StepSpecType & {
-  approvalCriteria: CriteriaSpecWrapper
-  connectorRef: string
-  delegateSelectors?: string[]
-  rejectionCriteria?: CriteriaSpecWrapper
-  ticketNumber: string
-  ticketType: string
-}
-
 export type ServiceNowConnector = ConnectorConfigDTO & {
   delegateSelectors?: string[]
   passwordRef: string
   serviceNowUrl: string
   username?: string
   usernameRef?: string
-}
-
-export type ServiceNowCreateStepInfo = StepSpecType & {
-  connectorRef: string
-  delegateSelectors?: string[]
-  fields?: ServiceNowField[]
-  templateName?: string
-  ticketType: string
-  useServiceNowTemplate: boolean
-}
-
-export interface ServiceNowField {
-  name?: string
-  value: string
 }
 
 export interface ServiceNowFieldAllowedValueNG {
@@ -10718,16 +10820,6 @@ export interface ServiceNowTicketTypeDTO {
   name: string
 }
 
-export type ServiceNowUpdateStepInfo = StepSpecType & {
-  connectorRef: string
-  delegateSelectors?: string[]
-  fields?: ServiceNowField[]
-  templateName?: string
-  ticketNumber: string
-  ticketType: string
-  useServiceNowTemplate: boolean
-}
-
 export interface ServiceOverrideRequestDTO {
   environmentRef?: string
   orgIdentifier?: string
@@ -10755,6 +10847,7 @@ export interface ServicePipelineInfo {
   lastExecutedAt?: number
   name?: string
   pipelineExecutionId?: string
+  planExecutionId?: string
   status?: string
 }
 
@@ -10833,47 +10926,6 @@ export interface ServicesDashboardInfo {
   serviceDashboardInfoList?: ServiceDashboardInfo[]
 }
 
-export type SetDefaultVariationsYaml = PatchInstruction & {
-  identifier: string
-  spec: SetDefaultVariationsYamlSpec
-  type: 'SetDefaultVariations'
-}
-
-export interface SetDefaultVariationsYamlSpec {
-  off: string
-  on: string
-}
-
-export type SetFeatureFlagStateYaml = PatchInstruction & {
-  identifier: string
-  spec: SetFeatureFlagStateYamlSpec
-  type: 'SetFeatureFlagState'
-}
-
-export interface SetFeatureFlagStateYamlSpec {
-  state: string
-}
-
-export type SetOffVariationYaml = PatchInstruction & {
-  identifier: string
-  spec: SetOffVariationYamlSpec
-  type: 'SetOffVariation'
-}
-
-export interface SetOffVariationYamlSpec {
-  variation: string
-}
-
-export type SetOnVariationYaml = PatchInstruction & {
-  identifier: string
-  spec: SetOnVariationYamlSpec
-  type: 'SetOnVariation'
-}
-
-export interface SetOnVariationYamlSpec {
-  variation: string
-}
-
 export interface SetupUsageDetail {
   [key: string]: any
 }
@@ -10891,6 +10943,7 @@ export interface ShellScriptSourceWrapper {
   type: string
 }
 
+<<<<<<< HEAD
 export type ShellScriptStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   environmentVariables?: NGVariable[]
@@ -10902,6 +10955,8 @@ export type ShellScriptStepInfo = StepSpecType & {
   source: ShellScriptSourceWrapper
 }
 
+=======
+>>>>>>> develop
 export interface SidecarArtifact {
   identifier: string
   spec: ArtifactConfig
@@ -10914,6 +10969,7 @@ export interface SidecarArtifact {
     | 'CustomArtifact'
     | 'Acr'
     | 'Jenkins'
+    | 'AmazonS3'
 }
 
 export interface SidecarArtifactWrapper {
@@ -11035,11 +11091,6 @@ export interface StageElementConfig {
   when?: StageWhenCondition
 }
 
-export interface StageElementWrapperConfig {
-  parallel?: ParallelStageElementConfig
-  stage?: StageElementConfig
-}
-
 export interface StageInfoConfig {
   execution?: ExecutionElementConfig
 }
@@ -11120,6 +11171,10 @@ export interface StepData {
     | 'ServerlessAwsLambdaDeploy'
     | 'ServerlessAwsLambdaRollback'
     | 'Command'
+<<<<<<< HEAD
+=======
+    | 'JenkinsBuild'
+>>>>>>> develop
 }
 
 export interface StepElementConfig {
@@ -11128,6 +11183,7 @@ export interface StepElementConfig {
   identifier: string
   name: string
   spec?: StepSpecType
+  strategy?: StrategyConfig
   timeout?: string
   type: string
   when?: StepWhenCondition
@@ -11203,6 +11259,16 @@ export type StringVariableConfigDTO = VariableConfigDTO & {
   regex?: string
 }
 
+export interface StripeBillingDTO {
+  city?: string
+  country?: string
+  creditCardId?: string
+  line1?: string
+  line2?: string
+  state?: string
+  zipCode?: string
+}
+
 export interface SubscriptionDTO {
   customerId?: string
   items?: ItemParams[]
@@ -11243,8 +11309,9 @@ export type TGTPasswordSpecDTO = TGTGenerationSpecDTO & {
   password?: string
 }
 
-export type TagBuildSpec = BuildSpec & {
-  tag: string
+export interface TailFilePattern {
+  tailFile?: ParameterFieldString
+  tailPattern?: ParameterFieldString
 }
 
 export interface TailFilePattern {
@@ -11471,11 +11538,7 @@ export interface TotalDeploymentInfo {
   countList?: DeploymentDateAndCount[]
   nonProduction?: number
   production?: number
-}
-
-export interface TransitionTo {
-  status: string
-  transitionName?: string
+  rate?: number
 }
 
 export interface TrialSignupOptions {
@@ -11503,19 +11566,6 @@ export interface TwoFactorAuthSettingsInfo {
 export interface TypeInfo {
   typeName?: string
   typeNamespace?: string
-}
-
-export type UpdateRuleYaml = PatchInstruction & {
-  identifier: string
-  spec: UpdateRuleYamlSpec
-  type: 'UpdateRule'
-}
-
-export interface UpdateRuleYamlSpec {
-  bucketBy: string
-  ruleID: string
-  serve?: Serve
-  variations?: VariationYamlSpec[]
 }
 
 export interface UsageDataDTO {
@@ -11752,11 +11802,6 @@ export interface VariableResponseDTO {
   variable: VariableDTO
 }
 
-export interface VariationYamlSpec {
-  variation: string
-  weight: number
-}
-
 export type VaultAgentCredentialDTO = VaultCredentialDTO & {
   sinkPath?: string
 }
@@ -11838,11 +11883,6 @@ export interface Void {
   [key: string]: any
 }
 
-export interface WeightedVariation {
-  variation: string
-  weight: number
-}
-
 export interface WinRmAuthDTO {
   spec: BaseWinRmSpecDTO
   type: 'NTLM' | 'Kerberos'
@@ -11906,6 +11946,7 @@ export interface YamlSchemaErrorDTO {
   fqn?: string
   hintMessage?: string
   message?: string
+  messageWithFQN?: string
   stageInfo?: NodeErrorInfo
   stepInfo?: NodeErrorInfo
 }
@@ -11986,6 +12027,8 @@ export type GitSyncConfigRequestBody = GitSyncConfig
 export type GitSyncSettingsDTORequestBody = GitSyncSettingsDTO
 
 export type InfrastructureRequestDTORequestBody = InfrastructureRequestDTO
+
+export type LDAPSettingsRequestBody = LDAPSettings
 
 export type LandingDashboardRequestCDRequestBody = LandingDashboardRequestCD
 
@@ -12519,7 +12562,11 @@ export interface ListActivitiesQueryParams {
   status?: 'SUCCESS' | 'FAILED'
   referredEntityType:
     | 'CreatePR'
+<<<<<<< HEAD
     | 'MergePR'
+=======
+    | 'GITOPS_MERGE_PR'
+>>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -12528,7 +12575,9 @@ export interface ListActivitiesQueryParams {
     | 'JiraUpdate'
     | 'JiraApproval'
     | 'HarnessApproval'
+    | 'CustomApproval'
     | 'Barrier'
+    | 'Queue'
     | 'FlagConfiguration'
     | 'ShellScript'
     | 'K8sCanaryDeploy'
@@ -12576,7 +12625,7 @@ export interface ListActivitiesQueryParams {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'Policy'
+    | 'POLICY_STEP'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -12600,6 +12649,7 @@ export interface ListActivitiesQueryParams {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
+<<<<<<< HEAD
     | 'AzureSlotDeployment'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
@@ -12607,6 +12657,16 @@ export interface ListActivitiesQueryParams {
   referredByEntityType?:
     | 'CreatePR'
     | 'MergePR'
+=======
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
+  referredByEntityType?:
+    | 'CreatePR'
+    | 'GITOPS_MERGE_PR'
+>>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -12615,7 +12675,9 @@ export interface ListActivitiesQueryParams {
     | 'JiraUpdate'
     | 'JiraApproval'
     | 'HarnessApproval'
+    | 'CustomApproval'
     | 'Barrier'
+    | 'Queue'
     | 'FlagConfiguration'
     | 'ShellScript'
     | 'K8sCanaryDeploy'
@@ -12663,7 +12725,7 @@ export interface ListActivitiesQueryParams {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'Policy'
+    | 'POLICY_STEP'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -12687,10 +12749,18 @@ export interface ListActivitiesQueryParams {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
+<<<<<<< HEAD
     | 'AzureSlotDeployment'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+=======
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
+>>>>>>> develop
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -12797,7 +12867,11 @@ export interface GetActivitiesSummaryQueryParams {
   timeGroupType: 'HOUR' | 'DAY' | 'WEEK'
   referredEntityType:
     | 'CreatePR'
+<<<<<<< HEAD
     | 'MergePR'
+=======
+    | 'GITOPS_MERGE_PR'
+>>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -12806,7 +12880,9 @@ export interface GetActivitiesSummaryQueryParams {
     | 'JiraUpdate'
     | 'JiraApproval'
     | 'HarnessApproval'
+    | 'CustomApproval'
     | 'Barrier'
+    | 'Queue'
     | 'FlagConfiguration'
     | 'ShellScript'
     | 'K8sCanaryDeploy'
@@ -12854,7 +12930,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'Policy'
+    | 'POLICY_STEP'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -12878,6 +12954,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
+<<<<<<< HEAD
     | 'AzureSlotDeployment'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
@@ -12885,6 +12962,16 @@ export interface GetActivitiesSummaryQueryParams {
   referredByEntityType?:
     | 'CreatePR'
     | 'MergePR'
+=======
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
+  referredByEntityType?:
+    | 'CreatePR'
+    | 'GITOPS_MERGE_PR'
+>>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -12893,7 +12980,9 @@ export interface GetActivitiesSummaryQueryParams {
     | 'JiraUpdate'
     | 'JiraApproval'
     | 'HarnessApproval'
+    | 'CustomApproval'
     | 'Barrier'
+    | 'Queue'
     | 'FlagConfiguration'
     | 'ShellScript'
     | 'K8sCanaryDeploy'
@@ -12941,7 +13030,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'Policy'
+    | 'POLICY_STEP'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -12965,10 +13054,18 @@ export interface GetActivitiesSummaryQueryParams {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
+<<<<<<< HEAD
     | 'AzureSlotDeployment'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+=======
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
+>>>>>>> develop
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -14028,6 +14125,7 @@ export interface GetBuildDetailsForAcrArtifactWithYamlQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  serviceId?: string
 }
 
 export type GetBuildDetailsForAcrArtifactWithYamlProps = Omit<
@@ -14256,6 +14354,7 @@ export interface GetBuildDetailsForArtifactoryArtifactWithYamlQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  serviceId?: string
 }
 
 export type GetBuildDetailsForArtifactoryArtifactWithYamlProps = Omit<
@@ -14602,6 +14701,7 @@ export interface GetBuildDetailsForDockerWithYamlQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  serviceId?: string
 }
 
 export type GetBuildDetailsForDockerWithYamlProps = Omit<
@@ -15066,9 +15166,9 @@ export const getBuildDetailsForEcrPromise = (
   )
 
 export interface GetBuildDetailsForEcrWithYamlQueryParams {
-  imagePath: string
-  region: string
-  connectorRef: string
+  imagePath?: string
+  region?: string
+  connectorRef?: string
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
@@ -15077,6 +15177,7 @@ export interface GetBuildDetailsForEcrWithYamlQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  serviceId?: string
 }
 
 export type GetBuildDetailsForEcrWithYamlProps = Omit<
@@ -15510,9 +15611,9 @@ export const getBuildDetailsForGcrPromise = (
   )
 
 export interface GetBuildDetailsForGcrWithYamlQueryParams {
-  imagePath: string
-  registryHostname: string
-  connectorRef: string
+  imagePath?: string
+  registryHostname?: string
+  connectorRef?: string
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
@@ -15521,6 +15622,7 @@ export interface GetBuildDetailsForGcrWithYamlQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  serviceId?: string
 }
 
 export type GetBuildDetailsForGcrWithYamlProps = Omit<
@@ -15914,6 +16016,95 @@ export const getBuildsForJenkinsPromise = (
     GetBuildsForJenkinsPathParams
   >(getConfig('ng/api'), `/artifacts/jenkins/job/${jobName}/builds`, props, signal)
 
+export interface GetJobParametersForJenkinsQueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+}
+
+export interface GetJobParametersForJenkinsPathParams {
+  jobName: string
+}
+
+export type GetJobParametersForJenkinsProps = Omit<
+  GetProps<
+    ResponseListJobParameter,
+    Failure | Error,
+    GetJobParametersForJenkinsQueryParams,
+    GetJobParametersForJenkinsPathParams
+  >,
+  'path'
+> &
+  GetJobParametersForJenkinsPathParams
+
+/**
+ * Gets Jenkins Job paramter
+ */
+export const GetJobParametersForJenkins = ({ jobName, ...props }: GetJobParametersForJenkinsProps) => (
+  <Get<
+    ResponseListJobParameter,
+    Failure | Error,
+    GetJobParametersForJenkinsQueryParams,
+    GetJobParametersForJenkinsPathParams
+  >
+    path={`/artifacts/jenkins/job/${jobName}/details`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetJobParametersForJenkinsProps = Omit<
+  UseGetProps<
+    ResponseListJobParameter,
+    Failure | Error,
+    GetJobParametersForJenkinsQueryParams,
+    GetJobParametersForJenkinsPathParams
+  >,
+  'path'
+> &
+  GetJobParametersForJenkinsPathParams
+
+/**
+ * Gets Jenkins Job paramter
+ */
+export const useGetJobParametersForJenkins = ({ jobName, ...props }: UseGetJobParametersForJenkinsProps) =>
+  useGet<
+    ResponseListJobParameter,
+    Failure | Error,
+    GetJobParametersForJenkinsQueryParams,
+    GetJobParametersForJenkinsPathParams
+  >((paramsInPath: GetJobParametersForJenkinsPathParams) => `/artifacts/jenkins/job/${paramsInPath.jobName}/details`, {
+    base: getConfig('ng/api'),
+    pathParams: { jobName },
+    ...props
+  })
+
+/**
+ * Gets Jenkins Job paramter
+ */
+export const getJobParametersForJenkinsPromise = (
+  {
+    jobName,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseListJobParameter,
+    Failure | Error,
+    GetJobParametersForJenkinsQueryParams,
+    GetJobParametersForJenkinsPathParams
+  > & { jobName: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseListJobParameter,
+    Failure | Error,
+    GetJobParametersForJenkinsQueryParams,
+    GetJobParametersForJenkinsPathParams
+  >(getConfig('ng/api'), `/artifacts/jenkins/job/${jobName}/details`, props, signal)
+
 export interface GetArtifactPathForJenkinsQueryParams {
   connectorRef?: string
   accountIdentifier: string
@@ -16132,6 +16323,7 @@ export interface GetBuildDetailsForNexusArtifactWithYamlQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  serviceId?: string
 }
 
 export type GetBuildDetailsForNexusArtifactWithYamlProps = Omit<
@@ -16443,6 +16635,219 @@ export const deleteSamlMetaDataPromise = (
     'DELETE',
     getConfig('ng/api'),
     `/authentication-settings/delete-saml-metadata`,
+    props,
+    signal
+  )
+
+export interface DeleteLdapSettingsQueryParams {
+  accountIdentifier?: string
+}
+
+export type DeleteLdapSettingsProps = Omit<
+  MutateProps<RestResponseBoolean, unknown, DeleteLdapSettingsQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Delete Ldap settings
+ */
+export const DeleteLdapSettings = (props: DeleteLdapSettingsProps) => (
+  <Mutate<RestResponseBoolean, unknown, DeleteLdapSettingsQueryParams, void, void>
+    verb="DELETE"
+    path={`/authentication-settings/ldap/settings`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseDeleteLdapSettingsProps = Omit<
+  UseMutateProps<RestResponseBoolean, unknown, DeleteLdapSettingsQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Delete Ldap settings
+ */
+export const useDeleteLdapSettings = (props: UseDeleteLdapSettingsProps) =>
+  useMutate<RestResponseBoolean, unknown, DeleteLdapSettingsQueryParams, void, void>(
+    'DELETE',
+    `/authentication-settings/ldap/settings`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Delete Ldap settings
+ */
+export const deleteLdapSettingsPromise = (
+  props: MutateUsingFetchProps<RestResponseBoolean, unknown, DeleteLdapSettingsQueryParams, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseBoolean, unknown, DeleteLdapSettingsQueryParams, void, void>(
+    'DELETE',
+    getConfig('ng/api'),
+    `/authentication-settings/ldap/settings`,
+    props,
+    signal
+  )
+
+export interface GetLdapSettingsQueryParams {
+  accountIdentifier?: string
+}
+
+export type GetLdapSettingsProps = Omit<
+  GetProps<RestResponseLDAPSettings, unknown, GetLdapSettingsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Ldap settings
+ */
+export const GetLdapSettings = (props: GetLdapSettingsProps) => (
+  <Get<RestResponseLDAPSettings, unknown, GetLdapSettingsQueryParams, void>
+    path={`/authentication-settings/ldap/settings`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetLdapSettingsProps = Omit<
+  UseGetProps<RestResponseLDAPSettings, unknown, GetLdapSettingsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Ldap settings
+ */
+export const useGetLdapSettings = (props: UseGetLdapSettingsProps) =>
+  useGet<RestResponseLDAPSettings, unknown, GetLdapSettingsQueryParams, void>(
+    `/authentication-settings/ldap/settings`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get Ldap settings
+ */
+export const getLdapSettingsPromise = (
+  props: GetUsingFetchProps<RestResponseLDAPSettings, unknown, GetLdapSettingsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponseLDAPSettings, unknown, GetLdapSettingsQueryParams, void>(
+    getConfig('ng/api'),
+    `/authentication-settings/ldap/settings`,
+    props,
+    signal
+  )
+
+export interface CreateLdapSettingsQueryParams {
+  accountIdentifier?: string
+}
+
+export type CreateLdapSettingsProps = Omit<
+  MutateProps<RestResponseLDAPSettings, unknown, CreateLdapSettingsQueryParams, LDAPSettingsRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Create Ldap settings - with user queries, group queries
+ */
+export const CreateLdapSettings = (props: CreateLdapSettingsProps) => (
+  <Mutate<RestResponseLDAPSettings, unknown, CreateLdapSettingsQueryParams, LDAPSettingsRequestBody, void>
+    verb="POST"
+    path={`/authentication-settings/ldap/settings`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseCreateLdapSettingsProps = Omit<
+  UseMutateProps<RestResponseLDAPSettings, unknown, CreateLdapSettingsQueryParams, LDAPSettingsRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Create Ldap settings - with user queries, group queries
+ */
+export const useCreateLdapSettings = (props: UseCreateLdapSettingsProps) =>
+  useMutate<RestResponseLDAPSettings, unknown, CreateLdapSettingsQueryParams, LDAPSettingsRequestBody, void>(
+    'POST',
+    `/authentication-settings/ldap/settings`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Create Ldap settings - with user queries, group queries
+ */
+export const createLdapSettingsPromise = (
+  props: MutateUsingFetchProps<
+    RestResponseLDAPSettings,
+    unknown,
+    CreateLdapSettingsQueryParams,
+    LDAPSettingsRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseLDAPSettings, unknown, CreateLdapSettingsQueryParams, LDAPSettingsRequestBody, void>(
+    'POST',
+    getConfig('ng/api'),
+    `/authentication-settings/ldap/settings`,
+    props,
+    signal
+  )
+
+export interface UpdateLdapSettingsQueryParams {
+  accountIdentifier?: string
+}
+
+export type UpdateLdapSettingsProps = Omit<
+  MutateProps<RestResponseLDAPSettings, unknown, UpdateLdapSettingsQueryParams, LDAPSettingsRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Update Ldap settings - user queries, group queries
+ */
+export const UpdateLdapSettings = (props: UpdateLdapSettingsProps) => (
+  <Mutate<RestResponseLDAPSettings, unknown, UpdateLdapSettingsQueryParams, LDAPSettingsRequestBody, void>
+    verb="PUT"
+    path={`/authentication-settings/ldap/settings`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateLdapSettingsProps = Omit<
+  UseMutateProps<RestResponseLDAPSettings, unknown, UpdateLdapSettingsQueryParams, LDAPSettingsRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Update Ldap settings - user queries, group queries
+ */
+export const useUpdateLdapSettings = (props: UseUpdateLdapSettingsProps) =>
+  useMutate<RestResponseLDAPSettings, unknown, UpdateLdapSettingsQueryParams, LDAPSettingsRequestBody, void>(
+    'PUT',
+    `/authentication-settings/ldap/settings`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Update Ldap settings - user queries, group queries
+ */
+export const updateLdapSettingsPromise = (
+  props: MutateUsingFetchProps<
+    RestResponseLDAPSettings,
+    unknown,
+    UpdateLdapSettingsQueryParams,
+    LDAPSettingsRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseLDAPSettings, unknown, UpdateLdapSettingsQueryParams, LDAPSettingsRequestBody, void>(
+    'PUT',
+    getConfig('ng/api'),
+    `/authentication-settings/ldap/settings`,
     props,
     signal
   )
@@ -17999,6 +18404,8 @@ export interface GetGCSBucketListQueryParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  fqnPath?: string
+  serviceId?: string
 }
 
 export type GetGCSBucketListProps = Omit<
@@ -18046,11 +18453,13 @@ export const getGCSBucketListPromise = (
   )
 
 export interface GetBucketListForS3QueryParams {
-  region: string
-  connectorRef: string
+  region?: string
+  connectorRef?: string
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  fqnPath?: string
+  serviceId?: string
 }
 
 export type GetBucketListForS3Props = Omit<
@@ -18093,6 +18502,58 @@ export const getBucketListForS3Promise = (
   getUsingFetch<ResponseMapStringString, Failure | Error, GetBucketListForS3QueryParams, void>(
     getConfig('ng/api'),
     `/buckets/s3/getBuckets`,
+    props,
+    signal
+  )
+
+export interface GetV2BucketListForS3QueryParams {
+  region?: string
+  connectorRef: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type GetV2BucketListForS3Props = Omit<
+  GetProps<ResponseListBucketResponse, Failure | Error, GetV2BucketListForS3QueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets s3 buckets
+ */
+export const GetV2BucketListForS3 = (props: GetV2BucketListForS3Props) => (
+  <Get<ResponseListBucketResponse, Failure | Error, GetV2BucketListForS3QueryParams, void>
+    path={`/buckets/s3/getBucketsV2`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetV2BucketListForS3Props = Omit<
+  UseGetProps<ResponseListBucketResponse, Failure | Error, GetV2BucketListForS3QueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets s3 buckets
+ */
+export const useGetV2BucketListForS3 = (props: UseGetV2BucketListForS3Props) =>
+  useGet<ResponseListBucketResponse, Failure | Error, GetV2BucketListForS3QueryParams, void>(
+    `/buckets/s3/getBucketsV2`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets s3 buckets
+ */
+export const getV2BucketListForS3Promise = (
+  props: GetUsingFetchProps<ResponseListBucketResponse, Failure | Error, GetV2BucketListForS3QueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListBucketResponse, Failure | Error, GetV2BucketListForS3QueryParams, void>(
+    getConfig('ng/api'),
+    `/buckets/s3/getBucketsV2`,
     props,
     signal
   )
@@ -19356,6 +19817,8 @@ export interface GetDeploymentsQueryParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  startTime: number
+  endTime: number
   top?: number
 }
 
@@ -21449,6 +21912,59 @@ export const updateSelectorsNgPromise = (
     UpdateSelectorsNgPathParams
   >('PUT', getConfig('ng/api'), `/delegate-profiles/ng/${delegateProfileId}/selectors`, props, signal)
 
+export interface GenerateNgHelmValuesYamlQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type GenerateNgHelmValuesYamlProps = Omit<
+  MutateProps<void, void, GenerateNgHelmValuesYamlQueryParams, DelegateSetupDetails, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Generate helm values yaml file
+ */
+export const GenerateNgHelmValuesYaml = (props: GenerateNgHelmValuesYamlProps) => (
+  <Mutate<void, void, GenerateNgHelmValuesYamlQueryParams, DelegateSetupDetails, void>
+    verb="POST"
+    path={`/delegate-setup/generate-helm-values`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGenerateNgHelmValuesYamlProps = Omit<
+  UseMutateProps<void, void, GenerateNgHelmValuesYamlQueryParams, DelegateSetupDetails, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Generate helm values yaml file
+ */
+export const useGenerateNgHelmValuesYaml = (props: UseGenerateNgHelmValuesYamlProps) =>
+  useMutate<void, void, GenerateNgHelmValuesYamlQueryParams, DelegateSetupDetails, void>(
+    'POST',
+    `/delegate-setup/generate-helm-values`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Generate helm values yaml file
+ */
+export const generateNgHelmValuesYamlPromise = (
+  props: MutateUsingFetchProps<void, void, GenerateNgHelmValuesYamlQueryParams, DelegateSetupDetails, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<void, void, GenerateNgHelmValuesYamlQueryParams, DelegateSetupDetails, void>(
+    'POST',
+    getConfig('ng/api'),
+    `/delegate-setup/generate-helm-values`,
+    props,
+    signal
+  )
+
 export interface GetDelegateTokensQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -22087,6 +22603,7 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'MULTIPLE_ORGANIZATIONS'
     | 'MULTIPLE_PROJECTS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
+    | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
     | 'SECRET_MANAGERS'
     | 'DEPLOYMENTS'
@@ -22105,6 +22622,7 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'ACTIVE_COMMITTERS'
     | 'TEST_INTELLIGENCE'
     | 'TEMPLATE_SERVICE'
+    | 'SRM_SERVICES'
     | 'K8S_BG_SWAP_SERVICES'
     | 'K8S_BLUE_GREEN_DEPLOY'
     | 'K8S_APPLY'
@@ -22127,9 +22645,14 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'AZURE_TRAFFIC_SHIFT'
     | 'AZURE_SWAP_SLOT'
     | 'AZURE_WEBAPP_ROLLBACK'
+<<<<<<< HEAD
+=======
+    | 'JENKINS_BUILD'
+>>>>>>> develop
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
+    | 'JENKINS_ARTIFACT'
 }
 
 export type FetchFeatureRestrictionMetadataProps = Omit<
@@ -22218,6 +22741,7 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'MULTIPLE_ORGANIZATIONS'
       | 'MULTIPLE_PROJECTS'
       | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
+      | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
       | 'INTEGRATED_APPROVALS_WITH_JIRA'
       | 'SECRET_MANAGERS'
       | 'DEPLOYMENTS'
@@ -22236,6 +22760,7 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'ACTIVE_COMMITTERS'
       | 'TEST_INTELLIGENCE'
       | 'TEMPLATE_SERVICE'
+      | 'SRM_SERVICES'
       | 'K8S_BG_SWAP_SERVICES'
       | 'K8S_BLUE_GREEN_DEPLOY'
       | 'K8S_APPLY'
@@ -22258,9 +22783,14 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'AZURE_TRAFFIC_SHIFT'
       | 'AZURE_SWAP_SLOT'
       | 'AZURE_WEBAPP_ROLLBACK'
+<<<<<<< HEAD
+=======
+      | 'JENKINS_BUILD'
+>>>>>>> develop
       | 'SECURITY'
       | 'DEVELOPERS'
       | 'MONTHLY_ACTIVE_USERS'
+      | 'JENKINS_ARTIFACT'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -22280,7 +22810,11 @@ export interface ListReferredByEntitiesQueryParams {
   identifier?: string
   referredEntityType?:
     | 'CreatePR'
+<<<<<<< HEAD
     | 'MergePR'
+=======
+    | 'GITOPS_MERGE_PR'
+>>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -22289,7 +22823,9 @@ export interface ListReferredByEntitiesQueryParams {
     | 'JiraUpdate'
     | 'JiraApproval'
     | 'HarnessApproval'
+    | 'CustomApproval'
     | 'Barrier'
+    | 'Queue'
     | 'FlagConfiguration'
     | 'ShellScript'
     | 'K8sCanaryDeploy'
@@ -22337,7 +22873,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'Policy'
+    | 'POLICY_STEP'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -22361,10 +22897,18 @@ export interface ListReferredByEntitiesQueryParams {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
+<<<<<<< HEAD
     | 'AzureSlotDeployment'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+=======
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
+>>>>>>> develop
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -22411,6 +22955,148 @@ export const listReferredByEntitiesPromise = (
   getUsingFetch<ResponsePageEntitySetupUsageDTO, unknown, ListReferredByEntitiesQueryParams, void>(
     getConfig('ng/api'),
     `/entitySetupUsage`,
+    props,
+    signal
+  )
+
+export interface ListAllEntityUsageByFqnQueryParams {
+  pageIndex?: number
+  pageSize?: number
+  accountIdentifier?: string
+  referredEntityFQN?: string
+  referredEntityType?:
+    | 'CreatePR'
+    | 'GITOPS_MERGE_PR'
+    | 'Projects'
+    | 'Pipelines'
+    | 'PipelineSteps'
+    | 'Http'
+    | 'JiraCreate'
+    | 'JiraUpdate'
+    | 'JiraApproval'
+    | 'HarnessApproval'
+    | 'CustomApproval'
+    | 'Barrier'
+    | 'Queue'
+    | 'FlagConfiguration'
+    | 'ShellScript'
+    | 'K8sCanaryDeploy'
+    | 'K8sApply'
+    | 'K8sBlueGreenDeploy'
+    | 'K8sRollingDeploy'
+    | 'K8sRollingRollback'
+    | 'K8sScale'
+    | 'K8sDelete'
+    | 'K8sBGSwapServices'
+    | 'K8sCanaryDelete'
+    | 'TerraformApply'
+    | 'TerraformPlan'
+    | 'TerraformDestroy'
+    | 'TerraformRollback'
+    | 'HelmDeploy'
+    | 'HelmRollback'
+    | 'Connectors'
+    | 'Secrets'
+    | 'Files'
+    | 'Service'
+    | 'Environment'
+    | 'EnvironmentGroup'
+    | 'InputSets'
+    | 'CvConfig'
+    | 'Verify'
+    | 'Delegates'
+    | 'DelegateConfigurations'
+    | 'CvVerificationJob'
+    | 'IntegrationStage'
+    | 'IntegrationSteps'
+    | 'SecurityStage'
+    | 'SecuritySteps'
+    | 'CvKubernetesActivitySource'
+    | 'DeploymentSteps'
+    | 'DeploymentStage'
+    | 'ApprovalStage'
+    | 'FeatureFlagStage'
+    | 'Template'
+    | 'Triggers'
+    | 'MonitoredService'
+    | 'GitRepositories'
+    | 'FeatureFlags'
+    | 'ServiceNowApproval'
+    | 'ServiceNowCreate'
+    | 'ServiceNowUpdate'
+    | 'GovernancePolicies'
+    | 'POLICY_STEP'
+    | 'Run'
+    | 'RunTests'
+    | 'Plugin'
+    | 'RestoreCacheGCS'
+    | 'RestoreCacheS3'
+    | 'SaveCacheGCS'
+    | 'SaveCacheS3'
+    | 'Security'
+    | 'ArtifactoryUpload'
+    | 'GCSUpload'
+    | 'S3Upload'
+    | 'BuildAndPushGCR'
+    | 'BuildAndPushECR'
+    | 'BuildAndPushDockerRegistry'
+    | 'CreateStack'
+    | 'DeleteStack'
+    | 'ServerlessAwsLambdaDeploy'
+    | 'ServerlessAwsLambdaRollback'
+    | 'CustomStage'
+    | 'RollbackStack'
+    | 'Infrastructure'
+    | 'Command'
+    | 'StrategyNode'
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
+  searchTerm?: string
+}
+
+export type ListAllEntityUsageByFqnProps = Omit<
+  GetProps<ResponsePageEntitySetupUsageDTO, unknown, ListAllEntityUsageByFqnQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Entities referring this resource if fqn is given
+ */
+export const ListAllEntityUsageByFqn = (props: ListAllEntityUsageByFqnProps) => (
+  <Get<ResponsePageEntitySetupUsageDTO, unknown, ListAllEntityUsageByFqnQueryParams, void>
+    path={`/entitySetupUsage/v2`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseListAllEntityUsageByFqnProps = Omit<
+  UseGetProps<ResponsePageEntitySetupUsageDTO, unknown, ListAllEntityUsageByFqnQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Entities referring this resource if fqn is given
+ */
+export const useListAllEntityUsageByFqn = (props: UseListAllEntityUsageByFqnProps) =>
+  useGet<ResponsePageEntitySetupUsageDTO, unknown, ListAllEntityUsageByFqnQueryParams, void>(`/entitySetupUsage/v2`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Get Entities referring this resource if fqn is given
+ */
+export const listAllEntityUsageByFqnPromise = (
+  props: GetUsingFetchProps<ResponsePageEntitySetupUsageDTO, unknown, ListAllEntityUsageByFqnQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePageEntitySetupUsageDTO, unknown, ListAllEntityUsageByFqnQueryParams, void>(
+    getConfig('ng/api'),
+    `/entitySetupUsage/v2`,
     props,
     signal
   )
@@ -23696,7 +24382,7 @@ export interface GetEnvironmentInputsQueryParams {
 }
 
 export type GetEnvironmentInputsProps = Omit<
-  GetProps<ResponseString, Failure | Error, GetEnvironmentInputsQueryParams, void>,
+  GetProps<ResponseNGEntityTemplateResponseDTO, Failure | Error, GetEnvironmentInputsQueryParams, void>,
   'path'
 >
 
@@ -23704,7 +24390,7 @@ export type GetEnvironmentInputsProps = Omit<
  * This api returns Environment inputs YAML
  */
 export const GetEnvironmentInputs = (props: GetEnvironmentInputsProps) => (
-  <Get<ResponseString, Failure | Error, GetEnvironmentInputsQueryParams, void>
+  <Get<ResponseNGEntityTemplateResponseDTO, Failure | Error, GetEnvironmentInputsQueryParams, void>
     path={`/environmentsV2/runtimeInputs`}
     base={getConfig('ng/api')}
     {...props}
@@ -23712,7 +24398,7 @@ export const GetEnvironmentInputs = (props: GetEnvironmentInputsProps) => (
 )
 
 export type UseGetEnvironmentInputsProps = Omit<
-  UseGetProps<ResponseString, Failure | Error, GetEnvironmentInputsQueryParams, void>,
+  UseGetProps<ResponseNGEntityTemplateResponseDTO, Failure | Error, GetEnvironmentInputsQueryParams, void>,
   'path'
 >
 
@@ -23720,19 +24406,24 @@ export type UseGetEnvironmentInputsProps = Omit<
  * This api returns Environment inputs YAML
  */
 export const useGetEnvironmentInputs = (props: UseGetEnvironmentInputsProps) =>
-  useGet<ResponseString, Failure | Error, GetEnvironmentInputsQueryParams, void>(`/environmentsV2/runtimeInputs`, {
-    base: getConfig('ng/api'),
-    ...props
-  })
+  useGet<ResponseNGEntityTemplateResponseDTO, Failure | Error, GetEnvironmentInputsQueryParams, void>(
+    `/environmentsV2/runtimeInputs`,
+    { base: getConfig('ng/api'), ...props }
+  )
 
 /**
  * This api returns Environment inputs YAML
  */
 export const getEnvironmentInputsPromise = (
-  props: GetUsingFetchProps<ResponseString, Failure | Error, GetEnvironmentInputsQueryParams, void>,
+  props: GetUsingFetchProps<
+    ResponseNGEntityTemplateResponseDTO,
+    Failure | Error,
+    GetEnvironmentInputsQueryParams,
+    void
+  >,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseString, Failure | Error, GetEnvironmentInputsQueryParams, void>(
+  getUsingFetch<ResponseNGEntityTemplateResponseDTO, Failure | Error, GetEnvironmentInputsQueryParams, void>(
     getConfig('ng/api'),
     `/environmentsV2/runtimeInputs`,
     props,
@@ -23940,7 +24631,7 @@ export interface GetServiceOverrideInputsQueryParams {
 }
 
 export type GetServiceOverrideInputsProps = Omit<
-  GetProps<ResponseString, Failure | Error, GetServiceOverrideInputsQueryParams, void>,
+  GetProps<ResponseNGEntityTemplateResponseDTO, Failure | Error, GetServiceOverrideInputsQueryParams, void>,
   'path'
 >
 
@@ -23948,7 +24639,7 @@ export type GetServiceOverrideInputsProps = Omit<
  * This api returns Service Override inputs YAML
  */
 export const GetServiceOverrideInputs = (props: GetServiceOverrideInputsProps) => (
-  <Get<ResponseString, Failure | Error, GetServiceOverrideInputsQueryParams, void>
+  <Get<ResponseNGEntityTemplateResponseDTO, Failure | Error, GetServiceOverrideInputsQueryParams, void>
     path={`/environmentsV2/serviceOverrides/runtimeInputs`}
     base={getConfig('ng/api')}
     {...props}
@@ -23956,7 +24647,7 @@ export const GetServiceOverrideInputs = (props: GetServiceOverrideInputsProps) =
 )
 
 export type UseGetServiceOverrideInputsProps = Omit<
-  UseGetProps<ResponseString, Failure | Error, GetServiceOverrideInputsQueryParams, void>,
+  UseGetProps<ResponseNGEntityTemplateResponseDTO, Failure | Error, GetServiceOverrideInputsQueryParams, void>,
   'path'
 >
 
@@ -23964,7 +24655,7 @@ export type UseGetServiceOverrideInputsProps = Omit<
  * This api returns Service Override inputs YAML
  */
 export const useGetServiceOverrideInputs = (props: UseGetServiceOverrideInputsProps) =>
-  useGet<ResponseString, Failure | Error, GetServiceOverrideInputsQueryParams, void>(
+  useGet<ResponseNGEntityTemplateResponseDTO, Failure | Error, GetServiceOverrideInputsQueryParams, void>(
     `/environmentsV2/serviceOverrides/runtimeInputs`,
     { base: getConfig('ng/api'), ...props }
   )
@@ -23973,10 +24664,15 @@ export const useGetServiceOverrideInputs = (props: UseGetServiceOverrideInputsPr
  * This api returns Service Override inputs YAML
  */
 export const getServiceOverrideInputsPromise = (
-  props: GetUsingFetchProps<ResponseString, Failure | Error, GetServiceOverrideInputsQueryParams, void>,
+  props: GetUsingFetchProps<
+    ResponseNGEntityTemplateResponseDTO,
+    Failure | Error,
+    GetServiceOverrideInputsQueryParams,
+    void
+  >,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseString, Failure | Error, GetServiceOverrideInputsQueryParams, void>(
+  getUsingFetch<ResponseNGEntityTemplateResponseDTO, Failure | Error, GetServiceOverrideInputsQueryParams, void>(
     getConfig('ng/api'),
     `/environmentsV2/serviceOverrides/runtimeInputs`,
     props,
@@ -24178,46 +24874,90 @@ export const getEnvironmentV2Promise = (
     signal
   )
 
-export type DummyApiForSwaggerSchemaCheckProps = Omit<
-  GetProps<ResponsePipelineConfig, Failure | Error, void, void>,
+export type DummyApiForSwaggerStageSchemaCheckProps = Omit<
+  GetProps<ResponseStageElementConfig, Failure | Error, void, void>,
   'path'
 >
 
 /**
- * dummy api for checking pms schema
+ * dummy api for checking deployment stage
  */
-export const DummyApiForSwaggerSchemaCheck = (props: DummyApiForSwaggerSchemaCheckProps) => (
-  <Get<ResponsePipelineConfig, Failure | Error, void, void>
-    path={`/executions/dummyApiForSwaggerSchemaCheck`}
+export const DummyApiForSwaggerStageSchemaCheck = (props: DummyApiForSwaggerStageSchemaCheckProps) => (
+  <Get<ResponseStageElementConfig, Failure | Error, void, void>
+    path={`/executions/dummyApiForSwaggerStageSchemaCheck`}
     base={getConfig('ng/api')}
     {...props}
   />
 )
 
-export type UseDummyApiForSwaggerSchemaCheckProps = Omit<
-  UseGetProps<ResponsePipelineConfig, Failure | Error, void, void>,
+export type UseDummyApiForSwaggerStageSchemaCheckProps = Omit<
+  UseGetProps<ResponseStageElementConfig, Failure | Error, void, void>,
   'path'
 >
 
 /**
- * dummy api for checking pms schema
+ * dummy api for checking deployment stage
  */
-export const useDummyApiForSwaggerSchemaCheck = (props: UseDummyApiForSwaggerSchemaCheckProps) =>
-  useGet<ResponsePipelineConfig, Failure | Error, void, void>(`/executions/dummyApiForSwaggerSchemaCheck`, {
+export const useDummyApiForSwaggerStageSchemaCheck = (props: UseDummyApiForSwaggerStageSchemaCheckProps) =>
+  useGet<ResponseStageElementConfig, Failure | Error, void, void>(`/executions/dummyApiForSwaggerStageSchemaCheck`, {
     base: getConfig('ng/api'),
     ...props
   })
 
 /**
- * dummy api for checking pms schema
+ * dummy api for checking deployment stage
  */
-export const dummyApiForSwaggerSchemaCheckPromise = (
-  props: GetUsingFetchProps<ResponsePipelineConfig, Failure | Error, void, void>,
+export const dummyApiForSwaggerStageSchemaCheckPromise = (
+  props: GetUsingFetchProps<ResponseStageElementConfig, Failure | Error, void, void>,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponsePipelineConfig, Failure | Error, void, void>(
+  getUsingFetch<ResponseStageElementConfig, Failure | Error, void, void>(
     getConfig('ng/api'),
-    `/executions/dummyApiForSwaggerSchemaCheck`,
+    `/executions/dummyApiForSwaggerStageSchemaCheck`,
+    props,
+    signal
+  )
+
+export type DummyApiForSwaggerStepSchemaCheckProps = Omit<
+  GetProps<ResponseStepElementConfig, Failure | Error, void, void>,
+  'path'
+>
+
+/**
+ * dummy api for checking deployment stage
+ */
+export const DummyApiForSwaggerStepSchemaCheck = (props: DummyApiForSwaggerStepSchemaCheckProps) => (
+  <Get<ResponseStepElementConfig, Failure | Error, void, void>
+    path={`/executions/dummyApiForSwaggerStepSchemaCheck`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseDummyApiForSwaggerStepSchemaCheckProps = Omit<
+  UseGetProps<ResponseStepElementConfig, Failure | Error, void, void>,
+  'path'
+>
+
+/**
+ * dummy api for checking deployment stage
+ */
+export const useDummyApiForSwaggerStepSchemaCheck = (props: UseDummyApiForSwaggerStepSchemaCheckProps) =>
+  useGet<ResponseStepElementConfig, Failure | Error, void, void>(`/executions/dummyApiForSwaggerStepSchemaCheck`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * dummy api for checking deployment stage
+ */
+export const dummyApiForSwaggerStepSchemaCheckPromise = (
+  props: GetUsingFetchProps<ResponseStepElementConfig, Failure | Error, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseStepElementConfig, Failure | Error, void, void>(
+    getConfig('ng/api'),
+    `/executions/dummyApiForSwaggerStepSchemaCheck`,
     props,
     signal
   )
@@ -24987,6 +25727,67 @@ export const deleteFilePromise = (
     signal
   )
 
+export interface GetFileQueryParams {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface GetFilePathParams {
+  identifier: string
+}
+
+export type GetFileProps = Omit<
+  GetProps<ResponseFileDTO, Failure | Error, GetFileQueryParams, GetFilePathParams>,
+  'path'
+> &
+  GetFilePathParams
+
+/**
+ * Get file
+ */
+export const GetFile = ({ identifier, ...props }: GetFileProps) => (
+  <Get<ResponseFileDTO, Failure | Error, GetFileQueryParams, GetFilePathParams>
+    path={`/file-store/${identifier}`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetFileProps = Omit<
+  UseGetProps<ResponseFileDTO, Failure | Error, GetFileQueryParams, GetFilePathParams>,
+  'path'
+> &
+  GetFilePathParams
+
+/**
+ * Get file
+ */
+export const useGetFile = ({ identifier, ...props }: UseGetFileProps) =>
+  useGet<ResponseFileDTO, Failure | Error, GetFileQueryParams, GetFilePathParams>(
+    (paramsInPath: GetFilePathParams) => `/file-store/${paramsInPath.identifier}`,
+    { base: getConfig('ng/api'), pathParams: { identifier }, ...props }
+  )
+
+/**
+ * Get file
+ */
+export const getFilePromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<ResponseFileDTO, Failure | Error, GetFileQueryParams, GetFilePathParams> & {
+    identifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseFileDTO, Failure | Error, GetFileQueryParams, GetFilePathParams>(
+    getConfig('ng/api'),
+    `/file-store/${identifier}`,
+    props,
+    signal
+  )
+
 export interface UpdateQueryParams {
   accountIdentifier?: string
   orgIdentifier?: string
@@ -25059,7 +25860,11 @@ export interface GetReferencedByQueryParams {
   projectIdentifier?: string
   entityType?:
     | 'CreatePR'
+<<<<<<< HEAD
     | 'MergePR'
+=======
+    | 'GITOPS_MERGE_PR'
+>>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -25068,7 +25873,9 @@ export interface GetReferencedByQueryParams {
     | 'JiraUpdate'
     | 'JiraApproval'
     | 'HarnessApproval'
+    | 'CustomApproval'
     | 'Barrier'
+    | 'Queue'
     | 'FlagConfiguration'
     | 'ShellScript'
     | 'K8sCanaryDeploy'
@@ -25116,7 +25923,7 @@ export interface GetReferencedByQueryParams {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'Policy'
+    | 'POLICY_STEP'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -25140,10 +25947,18 @@ export interface GetReferencedByQueryParams {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
+<<<<<<< HEAD
     | 'AzureSlotDeployment'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+=======
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
+>>>>>>> develop
   searchTerm?: string
 }
 
@@ -25560,6 +26375,59 @@ export const getClusterNamesForGcpPromise = (
   getUsingFetch<ResponseGcpResponseDTO, Failure | Error, GetClusterNamesForGcpQueryParams, void>(
     getConfig('ng/api'),
     `/gcp/clusters`,
+    props,
+    signal
+  )
+
+export interface GetClusterNamesForGcpInfraQueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  envId?: string
+  infraDefinitionId?: string
+}
+
+export type GetClusterNamesForGcpInfraProps = Omit<
+  GetProps<ResponseGcpResponseDTO, Failure | Error, GetClusterNamesForGcpInfraQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets gcp cluster names for a gcp infrastructure definition
+ */
+export const GetClusterNamesForGcpInfra = (props: GetClusterNamesForGcpInfraProps) => (
+  <Get<ResponseGcpResponseDTO, Failure | Error, GetClusterNamesForGcpInfraQueryParams, void>
+    path={`/gcp/clustersV2`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetClusterNamesForGcpInfraProps = Omit<
+  UseGetProps<ResponseGcpResponseDTO, Failure | Error, GetClusterNamesForGcpInfraQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets gcp cluster names for a gcp infrastructure definition
+ */
+export const useGetClusterNamesForGcpInfra = (props: UseGetClusterNamesForGcpInfraProps) =>
+  useGet<ResponseGcpResponseDTO, Failure | Error, GetClusterNamesForGcpInfraQueryParams, void>(`/gcp/clustersV2`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Gets gcp cluster names for a gcp infrastructure definition
+ */
+export const getClusterNamesForGcpInfraPromise = (
+  props: GetUsingFetchProps<ResponseGcpResponseDTO, Failure | Error, GetClusterNamesForGcpInfraQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseGcpResponseDTO, Failure | Error, GetClusterNamesForGcpInfraQueryParams, void>(
+    getConfig('ng/api'),
+    `/gcp/clustersV2`,
     props,
     signal
   )
@@ -26356,7 +27224,11 @@ export interface ListGitSyncEntitiesByTypeQueryParams {
 export interface ListGitSyncEntitiesByTypePathParams {
   entityType:
     | 'CreatePR'
+<<<<<<< HEAD
     | 'MergePR'
+=======
+    | 'GITOPS_MERGE_PR'
+>>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -26365,7 +27237,9 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'JiraUpdate'
     | 'JiraApproval'
     | 'HarnessApproval'
+    | 'CustomApproval'
     | 'Barrier'
+    | 'Queue'
     | 'FlagConfiguration'
     | 'ShellScript'
     | 'K8sCanaryDeploy'
@@ -26413,7 +27287,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'Policy'
+    | 'POLICY_STEP'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -26437,10 +27311,18 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
+<<<<<<< HEAD
     | 'AzureSlotDeployment'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+=======
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
+>>>>>>> develop
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -26511,7 +27393,11 @@ export const listGitSyncEntitiesByTypePromise = (
   > & {
     entityType:
       | 'CreatePR'
+<<<<<<< HEAD
       | 'MergePR'
+=======
+      | 'GITOPS_MERGE_PR'
+>>>>>>> develop
       | 'Projects'
       | 'Pipelines'
       | 'PipelineSteps'
@@ -26520,7 +27406,9 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'JiraUpdate'
       | 'JiraApproval'
       | 'HarnessApproval'
+      | 'CustomApproval'
       | 'Barrier'
+      | 'Queue'
       | 'FlagConfiguration'
       | 'ShellScript'
       | 'K8sCanaryDeploy'
@@ -26568,7 +27456,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'ServiceNowCreate'
       | 'ServiceNowUpdate'
       | 'GovernancePolicies'
-      | 'Policy'
+      | 'POLICY_STEP'
       | 'Run'
       | 'RunTests'
       | 'Plugin'
@@ -26592,10 +27480,18 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'Infrastructure'
       | 'Command'
       | 'StrategyNode'
+<<<<<<< HEAD
       | 'AzureSlotDeployment'
       | 'AzureTrafficShift'
       | 'AzureSwapSlot'
       | 'AzureWebAppRollback'
+=======
+      | 'AZURE_SLOT_DEPLOYMENT_STEP'
+      | 'AzureTrafficShift'
+      | 'AzureSwapSlot'
+      | 'AzureWebAppRollback'
+      | 'JenkinsBuild'
+>>>>>>> develop
   },
   signal?: RequestInit['signal']
 ) =>
@@ -27394,7 +28290,7 @@ export interface LinkClustersQueryParams {
 }
 
 export type LinkClustersProps = Omit<
-  MutateProps<ResponsePageClusterResponse, Failure | Error, LinkClustersQueryParams, ClusterBatchRequest, void>,
+  MutateProps<ResponseClusterBatchResponse, Failure | Error, LinkClustersQueryParams, ClusterBatchRequest, void>,
   'path' | 'verb'
 >
 
@@ -27402,7 +28298,7 @@ export type LinkClustersProps = Omit<
  * Link gitops clusters to an environment
  */
 export const LinkClusters = (props: LinkClustersProps) => (
-  <Mutate<ResponsePageClusterResponse, Failure | Error, LinkClustersQueryParams, ClusterBatchRequest, void>
+  <Mutate<ResponseClusterBatchResponse, Failure | Error, LinkClustersQueryParams, ClusterBatchRequest, void>
     verb="POST"
     path={`/gitops/clusters/batch`}
     base={getConfig('ng/api')}
@@ -27411,7 +28307,7 @@ export const LinkClusters = (props: LinkClustersProps) => (
 )
 
 export type UseLinkClustersProps = Omit<
-  UseMutateProps<ResponsePageClusterResponse, Failure | Error, LinkClustersQueryParams, ClusterBatchRequest, void>,
+  UseMutateProps<ResponseClusterBatchResponse, Failure | Error, LinkClustersQueryParams, ClusterBatchRequest, void>,
   'path' | 'verb'
 >
 
@@ -27419,7 +28315,7 @@ export type UseLinkClustersProps = Omit<
  * Link gitops clusters to an environment
  */
 export const useLinkClusters = (props: UseLinkClustersProps) =>
-  useMutate<ResponsePageClusterResponse, Failure | Error, LinkClustersQueryParams, ClusterBatchRequest, void>(
+  useMutate<ResponseClusterBatchResponse, Failure | Error, LinkClustersQueryParams, ClusterBatchRequest, void>(
     'POST',
     `/gitops/clusters/batch`,
     { base: getConfig('ng/api'), ...props }
@@ -27430,7 +28326,7 @@ export const useLinkClusters = (props: UseLinkClustersProps) =>
  */
 export const linkClustersPromise = (
   props: MutateUsingFetchProps<
-    ResponsePageClusterResponse,
+    ResponseClusterBatchResponse,
     Failure | Error,
     LinkClustersQueryParams,
     ClusterBatchRequest,
@@ -27438,7 +28334,7 @@ export const linkClustersPromise = (
   >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponsePageClusterResponse, Failure | Error, LinkClustersQueryParams, ClusterBatchRequest, void>(
+  mutateUsingFetch<ResponseClusterBatchResponse, Failure | Error, LinkClustersQueryParams, ClusterBatchRequest, void>(
     'POST',
     getConfig('ng/api'),
     `/gitops/clusters/batch`,
@@ -28512,7 +29408,7 @@ export interface GetInfrastructureInputsQueryParams {
 }
 
 export type GetInfrastructureInputsProps = Omit<
-  GetProps<ResponseString, Failure | Error, GetInfrastructureInputsQueryParams, void>,
+  GetProps<ResponseNGEntityTemplateResponseDTO, Failure | Error, GetInfrastructureInputsQueryParams, void>,
   'path'
 >
 
@@ -28520,7 +29416,7 @@ export type GetInfrastructureInputsProps = Omit<
  * This api returns Infrastructure Definition inputs YAML
  */
 export const GetInfrastructureInputs = (props: GetInfrastructureInputsProps) => (
-  <Get<ResponseString, Failure | Error, GetInfrastructureInputsQueryParams, void>
+  <Get<ResponseNGEntityTemplateResponseDTO, Failure | Error, GetInfrastructureInputsQueryParams, void>
     path={`/infrastructures/runtimeInputs`}
     base={getConfig('ng/api')}
     {...props}
@@ -28528,7 +29424,7 @@ export const GetInfrastructureInputs = (props: GetInfrastructureInputsProps) => 
 )
 
 export type UseGetInfrastructureInputsProps = Omit<
-  UseGetProps<ResponseString, Failure | Error, GetInfrastructureInputsQueryParams, void>,
+  UseGetProps<ResponseNGEntityTemplateResponseDTO, Failure | Error, GetInfrastructureInputsQueryParams, void>,
   'path'
 >
 
@@ -28536,19 +29432,24 @@ export type UseGetInfrastructureInputsProps = Omit<
  * This api returns Infrastructure Definition inputs YAML
  */
 export const useGetInfrastructureInputs = (props: UseGetInfrastructureInputsProps) =>
-  useGet<ResponseString, Failure | Error, GetInfrastructureInputsQueryParams, void>(`/infrastructures/runtimeInputs`, {
-    base: getConfig('ng/api'),
-    ...props
-  })
+  useGet<ResponseNGEntityTemplateResponseDTO, Failure | Error, GetInfrastructureInputsQueryParams, void>(
+    `/infrastructures/runtimeInputs`,
+    { base: getConfig('ng/api'), ...props }
+  )
 
 /**
  * This api returns Infrastructure Definition inputs YAML
  */
 export const getInfrastructureInputsPromise = (
-  props: GetUsingFetchProps<ResponseString, Failure | Error, GetInfrastructureInputsQueryParams, void>,
+  props: GetUsingFetchProps<
+    ResponseNGEntityTemplateResponseDTO,
+    Failure | Error,
+    GetInfrastructureInputsQueryParams,
+    void
+  >,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseString, Failure | Error, GetInfrastructureInputsQueryParams, void>(
+  getUsingFetch<ResponseNGEntityTemplateResponseDTO, Failure | Error, GetInfrastructureInputsQueryParams, void>(
     getConfig('ng/api'),
     `/infrastructures/runtimeInputs`,
     props,
@@ -30523,6 +31424,243 @@ export const getModuleLicenseByIdPromise = (
     GetModuleLicenseByIdPathParams
   >(getConfig('ng/api'), `/licenses/${identifier}`, props, signal)
 
+export interface ValidateLdapConnectionSettingsQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type ValidateLdapConnectionSettingsProps = Omit<
+  MutateProps<
+    RestResponseLdapTestResponse,
+    Failure | Error,
+    ValidateLdapConnectionSettingsQueryParams,
+    LdapSettings,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Validates Ldap Connection Setting
+ */
+export const ValidateLdapConnectionSettings = (props: ValidateLdapConnectionSettingsProps) => (
+  <Mutate<RestResponseLdapTestResponse, Failure | Error, ValidateLdapConnectionSettingsQueryParams, LdapSettings, void>
+    verb="POST"
+    path={`/ng/ldap/test/connection`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseValidateLdapConnectionSettingsProps = Omit<
+  UseMutateProps<
+    RestResponseLdapTestResponse,
+    Failure | Error,
+    ValidateLdapConnectionSettingsQueryParams,
+    LdapSettings,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Validates Ldap Connection Setting
+ */
+export const useValidateLdapConnectionSettings = (props: UseValidateLdapConnectionSettingsProps) =>
+  useMutate<
+    RestResponseLdapTestResponse,
+    Failure | Error,
+    ValidateLdapConnectionSettingsQueryParams,
+    LdapSettings,
+    void
+  >('POST', `/ng/ldap/test/connection`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Validates Ldap Connection Setting
+ */
+export const validateLdapConnectionSettingsPromise = (
+  props: MutateUsingFetchProps<
+    RestResponseLdapTestResponse,
+    Failure | Error,
+    ValidateLdapConnectionSettingsQueryParams,
+    LdapSettings,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseLdapTestResponse,
+    Failure | Error,
+    ValidateLdapConnectionSettingsQueryParams,
+    LdapSettings,
+    void
+  >('POST', getConfig('ng/api'), `/ng/ldap/test/connection`, props, signal)
+
+export interface SearchLdapGroupsQueryParams {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  name?: string
+}
+
+export interface SearchLdapGroupsPathParams {
+  ldapId: string
+}
+
+export type SearchLdapGroupsProps = Omit<
+  GetProps<
+    RestResponseCollectionLdapGroupResponse,
+    Failure | Error,
+    SearchLdapGroupsQueryParams,
+    SearchLdapGroupsPathParams
+  >,
+  'path'
+> &
+  SearchLdapGroupsPathParams
+
+/**
+ * Search Ldap groups with matching name
+ */
+export const SearchLdapGroups = ({ ldapId, ...props }: SearchLdapGroupsProps) => (
+  <Get<
+    RestResponseCollectionLdapGroupResponse,
+    Failure | Error,
+    SearchLdapGroupsQueryParams,
+    SearchLdapGroupsPathParams
+  >
+    path={`/ng/ldap/${ldapId}/search/group`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseSearchLdapGroupsProps = Omit<
+  UseGetProps<
+    RestResponseCollectionLdapGroupResponse,
+    Failure | Error,
+    SearchLdapGroupsQueryParams,
+    SearchLdapGroupsPathParams
+  >,
+  'path'
+> &
+  SearchLdapGroupsPathParams
+
+/**
+ * Search Ldap groups with matching name
+ */
+export const useSearchLdapGroups = ({ ldapId, ...props }: UseSearchLdapGroupsProps) =>
+  useGet<
+    RestResponseCollectionLdapGroupResponse,
+    Failure | Error,
+    SearchLdapGroupsQueryParams,
+    SearchLdapGroupsPathParams
+  >((paramsInPath: SearchLdapGroupsPathParams) => `/ng/ldap/${paramsInPath.ldapId}/search/group`, {
+    base: getConfig('ng/api'),
+    pathParams: { ldapId },
+    ...props
+  })
+
+/**
+ * Search Ldap groups with matching name
+ */
+export const searchLdapGroupsPromise = (
+  {
+    ldapId,
+    ...props
+  }: GetUsingFetchProps<
+    RestResponseCollectionLdapGroupResponse,
+    Failure | Error,
+    SearchLdapGroupsQueryParams,
+    SearchLdapGroupsPathParams
+  > & { ldapId: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    RestResponseCollectionLdapGroupResponse,
+    Failure | Error,
+    SearchLdapGroupsQueryParams,
+    SearchLdapGroupsPathParams
+  >(getConfig('ng/api'), `/ng/ldap/${ldapId}/search/group`, props, signal)
+
+export interface ConfigureOauthQueryParams {
+  accountIdentifier?: string
+  provider?: string
+}
+
+export type ConfigureOauthProps = Omit<
+  MutateProps<
+    RestResponseOauthAccessTokenResponseDTO,
+    Failure | Error,
+    ConfigureOauthQueryParams,
+    OauthAccessTokenDTO,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Setup secret for oauth tokens
+ */
+export const ConfigureOauth = (props: ConfigureOauthProps) => (
+  <Mutate<
+    RestResponseOauthAccessTokenResponseDTO,
+    Failure | Error,
+    ConfigureOauthQueryParams,
+    OauthAccessTokenDTO,
+    void
+  >
+    verb="POST"
+    path={`/oauth/create-access-token-secret`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseConfigureOauthProps = Omit<
+  UseMutateProps<
+    RestResponseOauthAccessTokenResponseDTO,
+    Failure | Error,
+    ConfigureOauthQueryParams,
+    OauthAccessTokenDTO,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Setup secret for oauth tokens
+ */
+export const useConfigureOauth = (props: UseConfigureOauthProps) =>
+  useMutate<
+    RestResponseOauthAccessTokenResponseDTO,
+    Failure | Error,
+    ConfigureOauthQueryParams,
+    OauthAccessTokenDTO,
+    void
+  >('POST', `/oauth/create-access-token-secret`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Setup secret for oauth tokens
+ */
+export const configureOauthPromise = (
+  props: MutateUsingFetchProps<
+    RestResponseOauthAccessTokenResponseDTO,
+    Failure | Error,
+    ConfigureOauthQueryParams,
+    OauthAccessTokenDTO,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseOauthAccessTokenResponseDTO,
+    Failure | Error,
+    ConfigureOauthQueryParams,
+    OauthAccessTokenDTO,
+    void
+  >('POST', getConfig('ng/api'), `/oauth/create-access-token-secret`, props, signal)
+
 export interface GetOrganizationListQueryParams {
   accountIdentifier: string
   identifiers?: string[]
@@ -30913,7 +32051,11 @@ export interface GetStepYamlSchemaQueryParams {
   scope?: 'account' | 'org' | 'project' | 'unknown'
   entityType?:
     | 'CreatePR'
+<<<<<<< HEAD
     | 'MergePR'
+=======
+    | 'GITOPS_MERGE_PR'
+>>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -30922,7 +32064,9 @@ export interface GetStepYamlSchemaQueryParams {
     | 'JiraUpdate'
     | 'JiraApproval'
     | 'HarnessApproval'
+    | 'CustomApproval'
     | 'Barrier'
+    | 'Queue'
     | 'FlagConfiguration'
     | 'ShellScript'
     | 'K8sCanaryDeploy'
@@ -30970,7 +32114,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'Policy'
+    | 'POLICY_STEP'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -30994,10 +32138,18 @@ export interface GetStepYamlSchemaQueryParams {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
+<<<<<<< HEAD
     | 'AzureSlotDeployment'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+=======
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
+>>>>>>> develop
   yamlGroup?: string
 }
 
@@ -31128,7 +32280,11 @@ export interface GetEntityYamlSchemaQueryParams {
   orgIdentifier?: string
   entityType?:
     | 'CreatePR'
+<<<<<<< HEAD
     | 'MergePR'
+=======
+    | 'GITOPS_MERGE_PR'
+>>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -31137,7 +32293,9 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'JiraUpdate'
     | 'JiraApproval'
     | 'HarnessApproval'
+    | 'CustomApproval'
     | 'Barrier'
+    | 'Queue'
     | 'FlagConfiguration'
     | 'ShellScript'
     | 'K8sCanaryDeploy'
@@ -31185,7 +32343,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'Policy'
+    | 'POLICY_STEP'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -31209,10 +32367,18 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
+<<<<<<< HEAD
     | 'AzureSlotDeployment'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+=======
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
+>>>>>>> develop
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -31460,7 +32626,7 @@ export const getServiceDefinitionTypesPromise = (
   )
 
 export interface GetStepsQueryParams {
-  serviceDefinitionType: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda'
+  serviceDefinitionType: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps'
 }
 
 export type GetStepsProps = Omit<GetProps<ResponseStepCategory, Failure | Error, GetStepsQueryParams, void>, 'path'>
@@ -31597,8 +32763,8 @@ export const getProvisionerExecutionStrategyYamlPromise = (
   )
 
 export interface GetExecutionStrategyYamlQueryParams {
-  serviceDefinitionType: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda'
-  strategyType: 'Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default'
+  serviceDefinitionType: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps'
+  strategyType: 'Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default' | 'GitOps'
   includeVerify?: boolean
 }
 
@@ -34977,7 +36143,7 @@ export interface GetServiceListQueryParams {
   searchTerm?: string
   serviceIdentifiers?: string[]
   sort?: string[]
-  type?: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda'
+  type?: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps'
 }
 
 export type GetServiceListProps = Omit<
@@ -35227,6 +36393,47 @@ export const createServicesV2Promise = (
     void
   >('POST', getConfig('ng/api'), `/servicesV2/batch`, props, signal)
 
+export type DummyArtifactSummaryApiProps = Omit<GetProps<ResponseArtifactSummary, Failure | Error, void, void>, 'path'>
+
+/**
+ * This is dummy api to expose ArtifactSummary
+ */
+export const DummyArtifactSummaryApi = (props: DummyArtifactSummaryApiProps) => (
+  <Get<ResponseArtifactSummary, Failure | Error, void, void>
+    path={`/servicesV2/dummy-artifactSummary-api`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseDummyArtifactSummaryApiProps = Omit<
+  UseGetProps<ResponseArtifactSummary, Failure | Error, void, void>,
+  'path'
+>
+
+/**
+ * This is dummy api to expose ArtifactSummary
+ */
+export const useDummyArtifactSummaryApi = (props: UseDummyArtifactSummaryApiProps) =>
+  useGet<ResponseArtifactSummary, Failure | Error, void, void>(`/servicesV2/dummy-artifactSummary-api`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * This is dummy api to expose ArtifactSummary
+ */
+export const dummyArtifactSummaryApiPromise = (
+  props: GetUsingFetchProps<ResponseArtifactSummary, Failure | Error, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseArtifactSummary, Failure | Error, void, void>(
+    getConfig('ng/api'),
+    `/servicesV2/dummy-artifactSummary-api`,
+    props,
+    signal
+  )
+
 export type DummyNGServiceConfigApiProps = Omit<GetProps<ResponseNGServiceConfig, Failure | Error, void, void>, 'path'>
 
 /**
@@ -35335,7 +36542,11 @@ export interface GetRuntimeInputsServiceEntityPathParams {
 
 export type GetRuntimeInputsServiceEntityProps = Omit<
   GetProps<
+<<<<<<< HEAD
     ResponseString,
+=======
+    ResponseNGEntityTemplateResponseDTO,
+>>>>>>> develop
     Failure | Error,
     GetRuntimeInputsServiceEntityQueryParams,
     GetRuntimeInputsServiceEntityPathParams
@@ -35349,7 +36560,11 @@ export type GetRuntimeInputsServiceEntityProps = Omit<
  */
 export const GetRuntimeInputsServiceEntity = ({ serviceIdentifier, ...props }: GetRuntimeInputsServiceEntityProps) => (
   <Get<
+<<<<<<< HEAD
     ResponseString,
+=======
+    ResponseNGEntityTemplateResponseDTO,
+>>>>>>> develop
     Failure | Error,
     GetRuntimeInputsServiceEntityQueryParams,
     GetRuntimeInputsServiceEntityPathParams
@@ -35362,7 +36577,11 @@ export const GetRuntimeInputsServiceEntity = ({ serviceIdentifier, ...props }: G
 
 export type UseGetRuntimeInputsServiceEntityProps = Omit<
   UseGetProps<
+<<<<<<< HEAD
     ResponseString,
+=======
+    ResponseNGEntityTemplateResponseDTO,
+>>>>>>> develop
     Failure | Error,
     GetRuntimeInputsServiceEntityQueryParams,
     GetRuntimeInputsServiceEntityPathParams
@@ -35379,7 +36598,11 @@ export const useGetRuntimeInputsServiceEntity = ({
   ...props
 }: UseGetRuntimeInputsServiceEntityProps) =>
   useGet<
+<<<<<<< HEAD
     ResponseString,
+=======
+    ResponseNGEntityTemplateResponseDTO,
+>>>>>>> develop
     Failure | Error,
     GetRuntimeInputsServiceEntityQueryParams,
     GetRuntimeInputsServiceEntityPathParams
@@ -35397,7 +36620,11 @@ export const getRuntimeInputsServiceEntityPromise = (
     serviceIdentifier,
     ...props
   }: GetUsingFetchProps<
+<<<<<<< HEAD
     ResponseString,
+=======
+    ResponseNGEntityTemplateResponseDTO,
+>>>>>>> develop
     Failure | Error,
     GetRuntimeInputsServiceEntityQueryParams,
     GetRuntimeInputsServiceEntityPathParams
@@ -35405,7 +36632,11 @@ export const getRuntimeInputsServiceEntityPromise = (
   signal?: RequestInit['signal']
 ) =>
   getUsingFetch<
+<<<<<<< HEAD
     ResponseString,
+=======
+    ResponseNGEntityTemplateResponseDTO,
+>>>>>>> develop
     Failure | Error,
     GetRuntimeInputsServiceEntityQueryParams,
     GetRuntimeInputsServiceEntityPathParams
@@ -36515,6 +37746,63 @@ export const createFfSubscriptionPromise = (
     signal
   )
 
+export interface UpdateBillingQueryParams {
+  accountIdentifier: string
+}
+
+export type UpdateBillingProps = Omit<
+  MutateProps<ResponseCustomerDetailDTO, Failure | Error, UpdateBillingQueryParams, StripeBillingDTO, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Updates the customer's billing information
+ */
+export const UpdateBilling = (props: UpdateBillingProps) => (
+  <Mutate<ResponseCustomerDetailDTO, Failure | Error, UpdateBillingQueryParams, StripeBillingDTO, void>
+    verb="PUT"
+    path={`/subscriptions/billing`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateBillingProps = Omit<
+  UseMutateProps<ResponseCustomerDetailDTO, Failure | Error, UpdateBillingQueryParams, StripeBillingDTO, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Updates the customer's billing information
+ */
+export const useUpdateBilling = (props: UseUpdateBillingProps) =>
+  useMutate<ResponseCustomerDetailDTO, Failure | Error, UpdateBillingQueryParams, StripeBillingDTO, void>(
+    'PUT',
+    `/subscriptions/billing`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Updates the customer's billing information
+ */
+export const updateBillingPromise = (
+  props: MutateUsingFetchProps<
+    ResponseCustomerDetailDTO,
+    Failure | Error,
+    UpdateBillingQueryParams,
+    StripeBillingDTO,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseCustomerDetailDTO, Failure | Error, UpdateBillingQueryParams, StripeBillingDTO, void>(
+    'PUT',
+    getConfig('ng/api'),
+    `/subscriptions/billing`,
+    props,
+    signal
+  )
+
 export interface CreateCustomerQueryParams {
   accountIdentifier: string
 }
@@ -36839,6 +38127,48 @@ export const retrieveUpcomingInvoicePromise = (
     SubscriptionDTORequestBody,
     void
   >('POST', getConfig('ng/api'), `/subscriptions/invoices/preview`, props, signal)
+
+export interface PayInvoiceQueryParams {
+  invoiceId: string
+}
+
+export type PayInvoiceProps = Omit<
+  MutateProps<RestResponseVoid, Failure | Error, PayInvoiceQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+export const PayInvoice = (props: PayInvoiceProps) => (
+  <Mutate<RestResponseVoid, Failure | Error, PayInvoiceQueryParams, void, void>
+    verb="POST"
+    path={`/subscriptions/pay_invoice`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UsePayInvoiceProps = Omit<
+  UseMutateProps<RestResponseVoid, Failure | Error, PayInvoiceQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+export const usePayInvoice = (props: UsePayInvoiceProps) =>
+  useMutate<RestResponseVoid, Failure | Error, PayInvoiceQueryParams, void, void>(
+    'POST',
+    `/subscriptions/pay_invoice`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+export const payInvoicePromise = (
+  props: MutateUsingFetchProps<RestResponseVoid, Failure | Error, PayInvoiceQueryParams, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseVoid, Failure | Error, PayInvoiceQueryParams, void, void>(
+    'POST',
+    getConfig('ng/api'),
+    `/subscriptions/pay_invoice`,
+    props,
+    signal
+  )
 
 export interface ListPaymentMethodsQueryParams {
   accountIdentifier: string
@@ -42243,7 +43573,11 @@ export const webhookEndpointPromise = (
 export interface GetYamlSchemaQueryParams {
   entityType:
     | 'CreatePR'
+<<<<<<< HEAD
     | 'MergePR'
+=======
+    | 'GITOPS_MERGE_PR'
+>>>>>>> develop
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -42252,7 +43586,9 @@ export interface GetYamlSchemaQueryParams {
     | 'JiraUpdate'
     | 'JiraApproval'
     | 'HarnessApproval'
+    | 'CustomApproval'
     | 'Barrier'
+    | 'Queue'
     | 'FlagConfiguration'
     | 'ShellScript'
     | 'K8sCanaryDeploy'
@@ -42300,7 +43636,7 @@ export interface GetYamlSchemaQueryParams {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'Policy'
+    | 'POLICY_STEP'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -42324,10 +43660,18 @@ export interface GetYamlSchemaQueryParams {
     | 'Infrastructure'
     | 'Command'
     | 'StrategyNode'
+<<<<<<< HEAD
     | 'AzureSlotDeployment'
     | 'AzureTrafficShift'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
+=======
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
+>>>>>>> develop
   subtype?:
     | 'K8sCluster'
     | 'Git'

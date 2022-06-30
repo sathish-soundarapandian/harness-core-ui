@@ -1,0 +1,55 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "connector": {
+      "name": "testConnector",
+      "identifier": "testConnector",
+      "description": "",
+      "orgIdentifier": "default",
+      "projectIdentifier": "defaultproject",
+      "tags": {},
+      "type": "Jenkins",
+      "spec": {
+        "jenkinsUrl": "https://jenkins.dev.harness.io",
+        "auth": {
+          "type": "UsernamePassword",
+          "spec": { "username": "harnessadmin", "usernameRef": null, "passwordRef": "jenkinsSecret" }
+        },
+        "delegateSelectors": ["temp-delegate-pr"]
+      }
+    },
+    "createdAt": 1656067990280,
+    "lastModifiedAt": 1656067990275,
+    "status": null,
+    "activityDetails": { "lastActivityTime": 1656067990275 },
+    "harnessManaged": false,
+    "gitDetails": {
+      "objectId": null,
+      "branch": null,
+      "repoIdentifier": null,
+      "rootFolder": null,
+      "filePath": null,
+      "repoName": null,
+      "commitId": null,
+      "fileUrl": null
+    },
+    "entityValidityDetails": { "valid": true, "invalidYaml": null },
+    "governanceMetadata": {
+      "id": "",
+      "deny": false,
+      "details": [],
+      "message": "FF: [OPA_CONNECTOR_GOVERNANCE] is disabled for account: [kmpySmUISimoRrJL6NL73w]",
+      "timestamp": "0",
+      "status": "",
+      "accountId": "",
+      "orgId": "",
+      "projectId": "",
+      "entity": "",
+      "type": "",
+      "action": "",
+      "created": "0"
+    }
+  },
+  "metaData": null,
+  "correlationId": "70c81939-950b-478e-badd-7c8dd7c12edc"
+}

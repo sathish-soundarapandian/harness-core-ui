@@ -6,6 +6,8 @@ discard: '{{ $.common.discard }}'
 serviceDependencyText: Service Dependency
 serviceDependenciesText: Service Dependencies
 stepLabel: '{{name}} (Id: {{identifier}})'
+numOfStage: 1 stage
+numOfStages: '{{n}} stages'
 enableVerificationOptions: Enable verification options
 openInPipelineStudio: Open in Pipeline Studio
 closeStepConfig: Step Config
@@ -28,6 +30,7 @@ templateInputs: Template Inputs
 onlyPositiveInteger: Only positive integer values
 depth: Depth
 advancedOptions: Advanced Options
+additionalConfiguration: Additional Configuration
 pipelineTimeoutSettings: Pipeline Timeout Settings
 pipelineTimeoutHelpText: Enter a timeout for the entire Pipeline. You can change this setting at any time.
 stageExecutionSettings: Stage Execution Settings
@@ -49,8 +52,10 @@ startedOn: Started On
 nodes: nodes
 nodesLabel: Nodes
 poweredByHarness: powered by Harness
+linuxOnly: Supported on Linux only
 outOf: Out Of
 clickToExpandErrorDetails: Click to expand error details
+totalCount: 'Total: {{ count }}'
 approvalStage:
   settingUpStage: Getting stage data
 filters:
@@ -112,6 +117,15 @@ queueStep:
   scopeRequired: Scope is required
   scopePlaceholder: Select Scope
   scope: Scope (to release constraint)
+  queuedExecutions: Queued Executions
+  queuedByResourceKey: 'Queued by Resource Key:'
+jenkinsStep:
+  validations:
+    jobName: Jobname is a required field
+  jobNamePlaceholder: Select Job Name
+  jobParameter: Job Parameters
+  unstableStatusAsSuccess: Treat unstable Jenkins status as success
+  captureEnvironmentVariable: Capture environment variables from Jenkins build
 jiraApprovalStep:
   connectToJira: Connect to Jira
   connectorRef: Jira Connector
@@ -136,8 +150,6 @@ jiraApprovalStep:
     wasRejected: 'Rejection Criteria was met for Jira Ticket:'
     wasExpired: 'Jira approval expired for Ticket:'
     jiraTicket: 'JIRA Ticket Pending Approval:'
-    allConditionsMsg: 'If all of the following conditions are met:'
-    anyConditionsMsg: 'If any of the following conditions is met:'
     conditions:
       equals: '{{ key }} equals'
       not_equals: '{{ key }} does not equals'
@@ -239,6 +251,28 @@ serviceNowUpdateStep:
   fieldType:
     applyFromTemplate: Apply from template
     updateFields: Update Fields
+commonApprovalStep:
+  execution:
+    allConditionsMsg: 'If all of the following conditions are met:'
+    anyConditionsMsg: 'If any of the following conditions is met:'
+customApprovalStep:
+  scriptTimeout: Script Timeout
+  retryInterval: Retry interval
+  execution:
+    wasApproved: 'Approval Criteria was met for Custom Shell Script Approval'
+    wasRejected: 'Rejection Criteria was met for Custom Shell Script Approval'
+    wasExpired: 'Custom Shell Script Approval expired'
+    customApprovalTicket: 'Custom Shell Script Approval Pending Approval'
+    conditions:
+      equals: '{{ key }} equals'
+      not_equals: '{{ key }} does not equals'
+      in: '{{ key }} is in'
+      not_in: '{{ key }} is not in'
+  validation:
+    outputVariable: Output Variable(s) is required
+    retryIntervalIsRequired: Retry interval is required
+    scriptTimeoutIsRequired: Script timeout is required
+    atLeastOneOutputVariableIsRequired: At least one output field must be set
 manifestType:
   attachPath: + Attach {{manifestPath}}
   manifestTyperequired: Manifest Type is required
@@ -370,6 +404,21 @@ failureStrategies:
     gitBranchRequired: Git Branch is required
     gitTagRequired: Git Tag is required
     gitPRRequired: Git Pull Request is required
+loopingStrategy:
+  title: Looping Strategy
+  subTitle: 'Select 1 of the {{maxCount}} looping execution strategy below.'
+  warningText: All the configuration will be lost
+  learnMore: Learn more about Looping strategies
+  deleteModal:
+    title: Are you sure, you want to remove the looping strategy?
+    content: '{{$.pipeline.loopingStrategy.warningText}}'
+  toggleTypeModal:
+    title: Are you sure, you want to switch the looping strategy?
+    content: '{{$.pipeline.loopingStrategy.warningText}}'
+  helperText:
+    matrix: Matrix gives the ability to execute the same set of tasks multiple times for a bunch of different configurations.
+    for: Placeholder for helper text of for loop.
+    parallelism: Placeholder for helper text of parallelism
 selectOrCreatePipeline:
   pipelineNameRequired: Please select a pipeline
   setupHeader: Create or Select a Pipeline
@@ -392,6 +441,8 @@ execution:
   retryStepCount: 'Retry #{{ num }}'
   currentExecution: Current Execution
   timePrefix: 'Execution Time: '
+  compareAction: Compare
+  compareExecutionsTitle: Select executions to compare the compiled YAML
   ignoreFailedWarningText: A failed step was ignored because the step’s Failure Strategy is Ignore Failure. The step’s failure did not impact the Pipeline’s success.
   iotab:
     noInputText: No input found for current step
@@ -414,6 +465,8 @@ execution:
     pauseStage: Pause Stage
     abortStage: Abort Stage
     downloadLogs: Download logs
+    viewCompiledYaml: View Compiled YAML
+    compareYaml: Compare YAML
   layouts:
     bottom: Align to bottom
     right: Align to right
@@ -493,6 +546,9 @@ duration: Duration
 and: '{{ $.common.andCaps }}'
 gitDetails: git details
 runtimeInputs: Runtime Inputs
+releaseRepo: Release Repo
+addReleaseRepo: + Add Release Repo Manifest
+releaseRepoStore: Release Repo Store
 runtimeInputsSubmittedMsg: Inputs have been submitted successfully
 pipelineInputPanel:
   noRuntimeInputs: 'No Runtime Inputs'
@@ -635,6 +691,7 @@ inputSets:
   noRuntimeInputsWhileExecution: No runtime inputs were present in the pipeline during this execution
   inputSetPlaceholder: Enter Input Sets
   selectPlaceholder: Select Input Set(s)
+  createNewInputSet: Create New Input Set
   aboutInputSets: A Harness Input Set is a group of Pipeline settings and values. You create Input Sets and use them when you run a Pipeline. Input Sets let you use one Pipeline for many scenarios.
   overlayISHelperText: Selected inputs will be applied in the order listed. Drag to reorder the input sets.
   invalidInputSet1: Your Input Set form contains invalid fields because they are no longer a pipeline runtime input. Would you like us to remove all invalid fields in your form?
@@ -690,6 +747,7 @@ artifactsSelection:
   artifactDirectory: Artifact Directory
   artifactDirectoryPlaceholder: Enter Artifact Directory
   versionPlaceholder: Enter Version
+  amazonS3Title: Amazon S3
   existingDocker:
     sidecarId: Sidecar Identifier
     sidecarIdPlaceholder: Enter Artifact Identifier
@@ -813,6 +871,7 @@ myPipelineRunsText: My Pipeline Runs
 noBuckets: No buckets found with given region
 gitRepo: Git Repo
 buildRepo: Build Repo
+failureTypetext: Select Failure Type
 stepDescription:
   HTTP: Run HTTP requests containing URLs, methods, headers, assertions, and variables.
   SHELLSCRIPT: Execute scripts in the shell session. The scripts can be executed on the pod/instance running a Harness Delegate or on a remote host in the infrastructure.
@@ -829,17 +888,18 @@ stepDescription:
   K8sRollingDeploy: Use a rolling update to schedule new pods on nodes with available resources. This step uses the number of replicas you specified in the Deployment manifest.
   Plugin: Use Docker containers to perform predefined tasks like deploy code, publish artifacts, send notifications, and more.
   Run: Execute one or more commands on a container image in a CI stage.
-  GCR: Build an image and push it to Google Container Registry (GCR).
-  ECR: Build an image and push it to AWS Elastic Container Registry (ECR).
+  GCR: Build a Docker image and push it to Google Container Registry (GCR).
+  ECR: Build a Docker image and push it to AWS Elastic Container Registry (ECR).
   SaveCacheGCS: Preserve files and directories between builds using Google Cloud Storage (GCS).
   RestoreCacheGCS: Restore saved files and directories between builds using Google Cloud Storage (GCS).
   SaveCacheS3: Preserve files and directories between builds using AWS S3.
   RestoreCacheS3: Restore saved files and directories between builds using AWS S3.
   DockerHub: Build a Docker image from a Dockerfile and push it to a Docker registry.
+  Jenkins: Jenkins Description.
   GCS: Upload artifacts to Google Cloud Storage (GCS).
   S3: Upload artifacts to AWS S3.
   JFrogArtifactory: Upload artifacts to JFrog Artifactory.
-  RunTests: Execute unit, integration, and other tests on a CI container image.
+  RunTests: Execute unit tests for Java and .NET with Harness Test Intelligence. For all other tests, use the "Run" step
   HarnessApproval: Add manual approvals as steps and stages.
   JiraApproval: Use Jira issues to approve steps and stages.
   Verify: Verify a deployment using your monitoring tools.
@@ -858,6 +918,10 @@ stepDescription:
   ServerlessLambdaDeploy: Create the Lambda functions defined in this Stage.
   ServerlessLambdaRollback: Deploy the previous successful version as a new version.
   createPR: Create PR
+  mergePR: Merge PR
+  AzureSlotDeployment: Select the Web App and source and target deployment slots for the deployment.
+  CustomApproval: Custom Approval
+  AzureTrafficShift: Shift network traffic to the new Web App version in the deployment slot.
 executionStrategy:
   executionStrategies: Execution Strategies
   useStrategy: Use Strategy
@@ -1029,10 +1093,12 @@ serviceDeploymentTypes:
   serverlessGoogleFunctions: Serverless Google Functions
   awsSAM: AWS SAM
   azureFunctions: Azure Functions
+  azureWebApps: Azure Web Apps
 noArtifactPaths: No artifact paths found with given Artifact Directory
 stageDataDeleteWarningTitle: Discard Stage Data
+serviceDataDeleteWarningTitle: Discard Service Data
 stageDataDeleteWarningText: Changing deployment type will delete existing stage data like artifacts, manifests, infrastructure details, steps etc. Do you still want to proceed?
-stageDataDeleteWarningContent: Changing deployment type will delete existing stage data like service, environments, steps etc. Do you still want to proceed?
+serviceDataDeleteWarningText: Changing deployment type will delete existing service data like artifacts, manifests etc. Do you still want to proceed?
 errorFramework:
   pipelineErrorsTitle: 'Pipeline cannot be saved because {{fields}} further configuration.'
   fixErrors: Fix Errors
@@ -1085,3 +1151,7 @@ OverviewEmptyStates:
   createPipelineInfo: A Harness Pipeline is a series of stages that performs operations like building and deploying software.
   runPipelineHeaderMsg: You haven’t tried running your pipelines yet.
   runPipelineInfo: Click the button below to select a pipeline and get your deployments started.
+importSuccessMessage: '{{resourceType}} has been imported successfully'
+MatrixNode:
+  maxConcurrency: 'Max Concurrency:'
+traffic: Traffic

@@ -41,8 +41,6 @@ import { getScopeFromDTO } from '@common/components/EntityReference/EntityRefere
 import { getAllowedTemplateTypes, TemplateType } from '@templates-library/utils/templatesUtils'
 import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import css from './TemplatesPage.module.scss'
 
 export default function TemplatesPage(): React.ReactElement {
@@ -62,10 +60,7 @@ export default function TemplatesPage(): React.ReactElement {
   const { projectIdentifier, orgIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { isGitSyncEnabled } = useAppStore()
   const scope = getScopeFromDTO({ projectIdentifier, orgIdentifier, accountIdentifier: accountId })
-  const pipelineTemplatesFeatureFlagEnabled = useFeatureFlag(FeatureFlag.NG_PIPELINE_TEMPLATE)
-  const allowedTemplateTypes = getAllowedTemplateTypes(getString, module, pipelineTemplatesFeatureFlagEnabled).filter(
-    item => !item.disabled
-  )
+  const allowedTemplateTypes = getAllowedTemplateTypes(getString, module).filter(item => !item.disabled)
 
   useDocumentTitle([getString('common.templates')])
 

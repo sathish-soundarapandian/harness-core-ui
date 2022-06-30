@@ -323,7 +323,8 @@ const RenderColumnMenu: Renderer<CellProps<ConnectorResponse>> = ({ row, column 
     if (!isEntityInvalid) {
       ;(column as any).openConnectorModal(true, row?.original?.connector?.type as ConnectorInfoDTO['type'], {
         connectorInfo: row.original.connector,
-        gitDetails: row.original?.gitDetails
+        gitDetails: row.original?.gitDetails,
+        status: row.original?.status
       })
     } else {
       const url = routes.toConnectorDetails({ ...params, connectorId: data.connector?.identifier })

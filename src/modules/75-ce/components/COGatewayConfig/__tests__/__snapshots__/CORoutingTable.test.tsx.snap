@@ -137,8 +137,9 @@ exports[`Routing Table Tests fill in details for a route: updated route 1`] = `
                   >
                     <input
                       class="bp3-input"
+                      min="0"
                       style="margin-bottom: 0px;"
-                      type="text"
+                      type="number"
                       value="81"
                     />
                   </div>
@@ -287,8 +288,9 @@ exports[`Routing Table Tests fill in details for a route: updated route 1`] = `
                   >
                     <input
                       class="bp3-input"
+                      min="0"
                       style="margin-bottom: 0px;"
-                      type="text"
+                      type="number"
                       value="8081"
                     />
                   </div>
@@ -522,8 +524,9 @@ exports[`Routing Table Tests render additional columns for redirection rule 1`] 
                   >
                     <input
                       class="bp3-input"
+                      min="0"
                       style="margin-bottom: 0px;"
-                      type="text"
+                      type="number"
                       value="80"
                     />
                   </div>
@@ -672,8 +675,9 @@ exports[`Routing Table Tests render additional columns for redirection rule 1`] 
                   >
                     <input
                       class="bp3-input"
+                      min="0"
                       style="margin-bottom: 0px;"
-                      type="text"
+                      type="number"
                       value="8080"
                     />
                   </div>
@@ -906,8 +910,9 @@ exports[`Routing Table Tests render table with default columns 1`] = `
                   >
                     <input
                       class="bp3-input"
+                      min="0"
                       style="margin-bottom: 0px;"
-                      type="text"
+                      type="number"
                       value="80"
                     />
                   </div>
@@ -1012,8 +1017,9 @@ exports[`Routing Table Tests render table with default columns 1`] = `
                   >
                     <input
                       class="bp3-input"
+                      min="0"
                       style="margin-bottom: 0px;"
-                      type="text"
+                      type="number"
                       value="8080"
                     />
                   </div>

@@ -137,7 +137,7 @@ describe('<TemplatesPage /> tests', () => {
     await waitFor(() => popover)
 
     const menuItems = popover.querySelectorAll('[class*="menuItem"]')
-    expect(menuItems?.length).toBe(2)
+    expect(menuItems?.length).toBeGreaterThan(2)
 
     act(() => {
       fireEvent.click(menuItems[1])

@@ -10,6 +10,15 @@
   padding: 10px;
 }
 
+.dialogStyles {
+  padding-top: 36px !important;
+  width: 800px !important;
+}
+
+.modalClusterList {
+  overflow: scroll;
+}
+
 .crossIcon {
   position: absolute;
   right: var(--spacing-large);
@@ -64,9 +73,10 @@
 }
 
 .footerStyle {
-  margin-top: 15px !important;
+  margin-top: 30px !important;
   width: 28% !important;
   justify-content: space-between !important;
+  display: flex;
 }
 
 .selected {
@@ -137,8 +147,8 @@
       background-color: var(--primary-1);
       border-radius: 3px;
     }
-    width: 296px;
-    height: 47px;
+    width: 100%;
+    height: 60px;
     border-radius: 3px;
     border-bottom: solid 1px var(--grey-100);
     display: flex;

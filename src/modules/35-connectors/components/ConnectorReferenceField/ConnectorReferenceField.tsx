@@ -10,7 +10,6 @@ import { FormGroup, IFormGroupProps, Intent, PopoverInteractionKind } from '@blu
 import {
   Layout,
   Icon,
-  Button,
   Text,
   Tag,
   getMultiTypeFromValue,
@@ -56,7 +55,6 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import { String, useStrings, UseStringsReturn } from 'framework/strings'
 import { ReferenceSelect, ReferenceSelectProps } from '@common/components/ReferenceSelect/ReferenceSelect'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
-import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { ResourceScope } from '@rbac/interfaces/ResourceScope'
@@ -134,7 +132,7 @@ export function getEditRenderer(
   openConnectorModal: UseCreateConnectorModalReturn['openConnectorModal'],
   type: ConnectorInfoDTO['type'],
   getString: UseStringsReturn['getString'],
-  canUpdate = true
+  resourceScope: ResourceScope
 ): JSX.Element {
   const detailSchema = getConnectorSelectorSchema(selected, getString)
   return (
@@ -157,21 +155,25 @@ export function getEditRenderer(
               <String stringID="idLabel" vars={{ id: selected?.connector?.identifier }} />
             </Text>
           </Layout.Vertical>
-          {canUpdate ? (
-            <Button
-              variation={ButtonVariation.SECONDARY}
-              text={<String stringID="edit" />}
-              onClick={e => {
-                e.stopPropagation()
-                openConnectorModal(true, type, {
-                  connectorInfo: selected?.connector,
-                  gitDetails: selected?.connector?.gitDetails
-                })
-              }}
-            />
-          ) : (
-            <></>
-          )}
+          <RbacButton
+            variation={ButtonVariation.SECONDARY}
+            text={<String stringID="edit" />}
+            onClick={e => {
+              e.stopPropagation()
+              openConnectorModal(true, type, {
+                connectorInfo: selected?.connector,
+                gitDetails: selected?.connector?.gitDetails
+              })
+            }}
+            permission={{
+              permission: PermissionIdentifier.UPDATE_CONNECTOR,
+              resource: {
+                resourceType: ResourceType.CONNECTOR,
+                resourceIdentifier: selected?.connector?.identifier
+              },
+              resourceScope
+            }}
+          />
         </Layout.Horizontal>
         <Layout.Vertical margin={{ top: 'medium', bottom: 'medium' }}>
           {detailSchema.map((item, key) => {
@@ -772,24 +774,13 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     }
   }
 
-  const [canUpdateSelectedConnector] = usePermission(
-    {
-      resource: {
-        resourceType: ResourceType.CONNECTOR,
-        resourceIdentifier: (selectedValue as ConnectorSelectedValue)?.connector?.identifier || ''
-      },
-      permissions: [PermissionIdentifier.UPDATE_CONNECTOR]
-    },
-    []
-  )
-
   if (typeof type === 'string' && typeof selectedValue === 'object' && selectedValue) {
     optionalReferenceSelectProps.editRenderer = getEditRenderer(
       selectedValue as ConnectorSelectedValue,
       openConnectorModal,
       (selectedValue as ConnectorSelectedValue)?.connector?.type || type,
       getString,
-      canUpdateSelectedConnector
+      { accountIdentifier, projectIdentifier, orgIdentifier }
     )
   } else if (Array.isArray(type) && typeof selectedValue === 'object' && selectedValue) {
     optionalReferenceSelectProps.editRenderer = getEditRenderer(
@@ -797,7 +788,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
       openConnectorModal,
       (selectedValue as ConnectorSelectedValue)?.connector?.type || type[0],
       getString,
-      canUpdateSelectedConnector
+      { accountIdentifier, projectIdentifier, orgIdentifier }
     )
   }
 

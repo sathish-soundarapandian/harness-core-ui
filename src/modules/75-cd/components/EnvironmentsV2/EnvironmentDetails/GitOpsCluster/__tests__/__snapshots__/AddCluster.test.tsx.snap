@@ -48,44 +48,48 @@ exports[`AddCluster tests initial render 1`] = `
     </button>
   </div>
   <div
-    class="addClusterDialog"
+    class="StyledProps--font StyledProps--main"
   >
+    <div
+      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-small"
+    >
+      <div
+        class="bp3-input-group ui-search-box ExpandingSearchInput--main   ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+        data-name=""
+        style="width: 100%; max-width: 100%;"
+      >
+        <span
+          class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+          data-icon="thinner-search"
+        >
+          <svg
+            fill="none"
+            height="14"
+            viewBox="0 0 16 16"
+            width="14"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+        <input
+          class="bp3-input  ExpandingSearchInput--filter"
+          dir="auto"
+          placeholder="Search Clusters"
+          style="padding-right: 38px;"
+          type="search"
+          value=""
+        />
+      </div>
+    </div>
     <div
       class="Layout--vertical StyledProps--main"
     >
-      <div
-        class="TextInput--main"
-      >
-        <div
-          class="bp3-input-group"
-        >
-          <span
-            class="bp3-icon bp3-icon-search StyledProps--main"
-            icon="search"
-          >
-            <svg
-              data-icon="search"
-              height="12"
-              viewBox="0 0 16 16"
-              width="12"
-            >
-              <desc>
-                search
-              </desc>
-              <path
-                d="M15.55 13.43l-2.67-2.68a6.94 6.94 0 001.11-3.76c0-3.87-3.13-7-7-7s-7 3.13-7 7 3.13 7 7 7c1.39 0 2.68-.42 3.76-1.11l2.68 2.67a1.498 1.498 0 102.12-2.12zm-8.56-1.44c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-          <input
-            class="bp3-input"
-            data-test-id="search"
-            placeholder="Search"
-            type="text"
-          />
-        </div>
-      </div>
       <div
         class="Layout--horizontal StyledProps--main contentContainer"
         style="height: 339px;"
@@ -96,7 +100,9 @@ exports[`AddCluster tests initial render 1`] = `
           <div
             class="listContainer"
           >
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -121,19 +127,19 @@ exports[`AddCluster tests initial render 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
-                    
+                    test-cluster-a
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-a
@@ -141,7 +147,9 @@ exports[`AddCluster tests initial render 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -166,19 +174,19 @@ exports[`AddCluster tests initial render 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
-                    
+                    test-cluster-b
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-b
@@ -186,7 +194,9 @@ exports[`AddCluster tests initial render 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -211,19 +221,19 @@ exports[`AddCluster tests initial render 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
-                    
+                    test-cluster-3
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-3
@@ -231,7 +241,9 @@ exports[`AddCluster tests initial render 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -256,19 +268,19 @@ exports[`AddCluster tests initial render 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-c
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-c
@@ -276,7 +288,9 @@ exports[`AddCluster tests initial render 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -301,19 +315,19 @@ exports[`AddCluster tests initial render 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-d
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-d
@@ -321,7 +335,9 @@ exports[`AddCluster tests initial render 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -346,19 +362,19 @@ exports[`AddCluster tests initial render 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-e
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-e
@@ -366,7 +382,9 @@ exports[`AddCluster tests initial render 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -391,19 +409,19 @@ exports[`AddCluster tests initial render 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-f
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-f
@@ -411,7 +429,9 @@ exports[`AddCluster tests initial render 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -436,19 +456,19 @@ exports[`AddCluster tests initial render 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-g
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-g
@@ -456,7 +476,9 @@ exports[`AddCluster tests initial render 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -481,19 +503,19 @@ exports[`AddCluster tests initial render 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-h
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-h
@@ -501,7 +523,9 @@ exports[`AddCluster tests initial render 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -526,19 +550,19 @@ exports[`AddCluster tests initial render 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-1
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-1
@@ -546,7 +570,9 @@ exports[`AddCluster tests initial render 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -571,19 +597,19 @@ exports[`AddCluster tests initial render 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-2
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-2
@@ -591,7 +617,9 @@ exports[`AddCluster tests initial render 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -616,19 +644,19 @@ exports[`AddCluster tests initial render 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-3
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-3
@@ -636,7 +664,9 @@ exports[`AddCluster tests initial render 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -661,19 +691,19 @@ exports[`AddCluster tests initial render 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-4
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-4
@@ -706,42 +736,16 @@ exports[`AddCluster tests initial render 1`] = `
           </div>
         </div>
         <div
-          class="subChild"
+          class="Layout--vertical StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--flex-alignItems-flex-start StyledProps--padding-left-huge StyledProps--padding-right-huge"
         >
-          <div
-            class="gitOpsSelectedClusters"
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--padding-bottom-medium StyledProps--margin-bottom-medium StyledProps--border StyledProps--border-bottom"
           >
-            <span
-              class="bp3-icon StyledProps--main"
-              data-icon="gitops-clusters"
-            >
-              <svg
-                fill="none"
-                height="16"
-                viewBox="0 0 52 50"
-                width="16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  clip-rule="evenodd"
-                  d="M27.71 1.357a4 4 0 00-3.402 0L7.27 9.364a4 4 0 00-2.194 2.71L.887 29.985a4 4 0 00.798 3.442L13.447 47.82a4 4 0 003.097 1.47h18.93a4 4 0 003.097-1.47l11.762-14.393a4 4 0 00.797-3.442l-4.19-17.913a4 4 0 00-2.193-2.709L27.71 1.357zM8.972 12.984l17.037-8.006 17.037 8.006 4.19 17.913L35.474 45.29h-18.93L4.782 30.897l4.19-17.913zm9.056-.85a3.931 3.931 0 00-3.93 3.93v5.139a3.93 3.93 0 003.93 3.93h5.138a3.931 3.931 0 003.931-3.93v-5.138a3.931 3.931 0 00-3.93-3.931h-5.139zm0 3.93h5.138v5.139h-5.138v-5.138zm-3.93 15.8a3.93 3.93 0 013.93-3.931h5.138a3.931 3.931 0 013.931 3.93v5.139a3.931 3.931 0 01-3.93 3.931h-5.139a3.931 3.931 0 01-3.93-3.931v-5.138zm9.068 0h-5.138v5.138h5.138v-5.138zm9.702-11.894a3.931 3.931 0 00-3.931 3.93v5.139a3.93 3.93 0 003.931 3.93h5.138a3.93 3.93 0 003.931-3.93V23.9a3.93 3.93 0 00-3.93-3.93h-5.139zm0 3.93h5.138v5.139h-5.138V23.9z"
-                  fill="#4F5162"
-                  fill-rule="evenodd"
-                />
-              </svg>
-            </span>
-            <p
-              class="StyledProps--font StyledProps--main selectedClusters StyledProps--color StyledProps--color-grey800"
-            >
-              cd.clustersSelected
-              (
-              0
-              )
-            </p>
-          </div>
-          <div
-            class="separator"
-          />
+            cd.clustersSelected
+            (
+            0
+            )
+          </p>
           <div
             class="Layout--vertical StyledProps--main"
           >
@@ -751,7 +755,7 @@ exports[`AddCluster tests initial render 1`] = `
       </div>
     </div>
     <div
-      class="Layout--horizontal StyledProps--main footerStyle"
+      class="StyledProps--font StyledProps--main footerStyle"
     >
       <button
         class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
@@ -828,44 +832,48 @@ exports[`AddCluster tests select a cluster 1`] = `
     </button>
   </div>
   <div
-    class="addClusterDialog"
+    class="StyledProps--font StyledProps--main"
   >
+    <div
+      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-small"
+    >
+      <div
+        class="bp3-input-group ui-search-box ExpandingSearchInput--main   ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+        data-name=""
+        style="width: 100%; max-width: 100%;"
+      >
+        <span
+          class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+          data-icon="thinner-search"
+        >
+          <svg
+            fill="none"
+            height="14"
+            viewBox="0 0 16 16"
+            width="14"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+        <input
+          class="bp3-input  ExpandingSearchInput--filter"
+          dir="auto"
+          placeholder="Search Clusters"
+          style="padding-right: 38px;"
+          type="search"
+          value=""
+        />
+      </div>
+    </div>
     <div
       class="Layout--vertical StyledProps--main"
     >
-      <div
-        class="TextInput--main"
-      >
-        <div
-          class="bp3-input-group"
-        >
-          <span
-            class="bp3-icon bp3-icon-search StyledProps--main"
-            icon="search"
-          >
-            <svg
-              data-icon="search"
-              height="12"
-              viewBox="0 0 16 16"
-              width="12"
-            >
-              <desc>
-                search
-              </desc>
-              <path
-                d="M15.55 13.43l-2.67-2.68a6.94 6.94 0 001.11-3.76c0-3.87-3.13-7-7-7s-7 3.13-7 7 3.13 7 7 7c1.39 0 2.68-.42 3.76-1.11l2.68 2.67a1.498 1.498 0 102.12-2.12zm-8.56-1.44c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-          <input
-            class="bp3-input"
-            data-test-id="search"
-            placeholder="Search"
-            type="text"
-          />
-        </div>
-      </div>
       <div
         class="Layout--horizontal StyledProps--main contentContainer"
         style="height: 339px;"
@@ -876,7 +884,9 @@ exports[`AddCluster tests select a cluster 1`] = `
           <div
             class="listContainer"
           >
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard selected"
                 data-cy="cluster-card"
@@ -901,19 +911,19 @@ exports[`AddCluster tests select a cluster 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
-                    
+                    test-cluster-a
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-a
@@ -921,7 +931,9 @@ exports[`AddCluster tests select a cluster 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -946,19 +958,19 @@ exports[`AddCluster tests select a cluster 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
-                    
+                    test-cluster-b
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-b
@@ -966,7 +978,9 @@ exports[`AddCluster tests select a cluster 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -991,19 +1005,19 @@ exports[`AddCluster tests select a cluster 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
-                    
+                    test-cluster-3
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-3
@@ -1011,7 +1025,9 @@ exports[`AddCluster tests select a cluster 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -1036,19 +1052,19 @@ exports[`AddCluster tests select a cluster 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-c
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-c
@@ -1056,7 +1072,9 @@ exports[`AddCluster tests select a cluster 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -1081,19 +1099,19 @@ exports[`AddCluster tests select a cluster 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-d
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-d
@@ -1101,7 +1119,9 @@ exports[`AddCluster tests select a cluster 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -1126,19 +1146,19 @@ exports[`AddCluster tests select a cluster 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-e
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-e
@@ -1146,7 +1166,9 @@ exports[`AddCluster tests select a cluster 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -1171,19 +1193,19 @@ exports[`AddCluster tests select a cluster 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-f
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-f
@@ -1191,7 +1213,9 @@ exports[`AddCluster tests select a cluster 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -1216,19 +1240,19 @@ exports[`AddCluster tests select a cluster 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-g
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-g
@@ -1236,7 +1260,9 @@ exports[`AddCluster tests select a cluster 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -1261,19 +1287,19 @@ exports[`AddCluster tests select a cluster 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-h
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-h
@@ -1281,7 +1307,9 @@ exports[`AddCluster tests select a cluster 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -1306,19 +1334,19 @@ exports[`AddCluster tests select a cluster 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-1
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-1
@@ -1326,7 +1354,9 @@ exports[`AddCluster tests select a cluster 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -1351,19 +1381,19 @@ exports[`AddCluster tests select a cluster 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-2
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-2
@@ -1371,7 +1401,9 @@ exports[`AddCluster tests select a cluster 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -1396,19 +1428,19 @@ exports[`AddCluster tests select a cluster 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-3
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-3
@@ -1416,7 +1448,9 @@ exports[`AddCluster tests select a cluster 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -1441,19 +1475,19 @@ exports[`AddCluster tests select a cluster 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-4
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-4
@@ -1488,42 +1522,16 @@ exports[`AddCluster tests select a cluster 1`] = `
           </div>
         </div>
         <div
-          class="subChild"
+          class="Layout--vertical StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--flex-alignItems-flex-start StyledProps--padding-left-huge StyledProps--padding-right-huge"
         >
-          <div
-            class="gitOpsSelectedClusters"
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--padding-bottom-medium StyledProps--margin-bottom-medium StyledProps--border StyledProps--border-bottom"
           >
-            <span
-              class="bp3-icon StyledProps--main"
-              data-icon="gitops-clusters"
-            >
-              <svg
-                fill="none"
-                height="16"
-                viewBox="0 0 52 50"
-                width="16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  clip-rule="evenodd"
-                  d="M27.71 1.357a4 4 0 00-3.402 0L7.27 9.364a4 4 0 00-2.194 2.71L.887 29.985a4 4 0 00.798 3.442L13.447 47.82a4 4 0 003.097 1.47h18.93a4 4 0 003.097-1.47l11.762-14.393a4 4 0 00.797-3.442l-4.19-17.913a4 4 0 00-2.193-2.709L27.71 1.357zM8.972 12.984l17.037-8.006 17.037 8.006 4.19 17.913L35.474 45.29h-18.93L4.782 30.897l4.19-17.913zm9.056-.85a3.931 3.931 0 00-3.93 3.93v5.139a3.93 3.93 0 003.93 3.93h5.138a3.931 3.931 0 003.931-3.93v-5.138a3.931 3.931 0 00-3.93-3.931h-5.139zm0 3.93h5.138v5.139h-5.138v-5.138zm-3.93 15.8a3.93 3.93 0 013.93-3.931h5.138a3.931 3.931 0 013.931 3.93v5.139a3.931 3.931 0 01-3.93 3.931h-5.139a3.931 3.931 0 01-3.93-3.931v-5.138zm9.068 0h-5.138v5.138h5.138v-5.138zm9.702-11.894a3.931 3.931 0 00-3.931 3.93v5.139a3.93 3.93 0 003.931 3.93h5.138a3.93 3.93 0 003.931-3.93V23.9a3.93 3.93 0 00-3.93-3.93h-5.139zm0 3.93h5.138v5.139h-5.138V23.9z"
-                  fill="#4F5162"
-                  fill-rule="evenodd"
-                />
-              </svg>
-            </span>
-            <p
-              class="StyledProps--font StyledProps--main selectedClusters StyledProps--color StyledProps--color-grey800"
-            >
-              cd.clustersSelected
-              (
-              1
-              )
-            </p>
-          </div>
-          <div
-            class="separator"
-          />
+            cd.clustersSelected
+            (
+            1
+            )
+          </p>
           <div
             class="Layout--vertical StyledProps--main"
           >
@@ -1543,7 +1551,7 @@ exports[`AddCluster tests select a cluster 1`] = `
       </div>
     </div>
     <div
-      class="Layout--horizontal StyledProps--main footerStyle"
+      class="StyledProps--font StyledProps--main footerStyle"
     >
       <button
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
@@ -1618,44 +1626,48 @@ exports[`AddCluster tests when no clusters 1`] = `
     </button>
   </div>
   <div
-    class="addClusterDialog"
+    class="StyledProps--font StyledProps--main"
   >
+    <div
+      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-small"
+    >
+      <div
+        class="bp3-input-group ui-search-box ExpandingSearchInput--main   ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+        data-name=""
+        style="width: 100%; max-width: 100%;"
+      >
+        <span
+          class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+          data-icon="thinner-search"
+        >
+          <svg
+            fill="none"
+            height="14"
+            viewBox="0 0 16 16"
+            width="14"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+        <input
+          class="bp3-input  ExpandingSearchInput--filter"
+          dir="auto"
+          placeholder="Search Clusters"
+          style="padding-right: 38px;"
+          type="search"
+          value=""
+        />
+      </div>
+    </div>
     <div
       class="Layout--vertical StyledProps--main"
     >
-      <div
-        class="TextInput--main"
-      >
-        <div
-          class="bp3-input-group"
-        >
-          <span
-            class="bp3-icon bp3-icon-search StyledProps--main"
-            icon="search"
-          >
-            <svg
-              data-icon="search"
-              height="12"
-              viewBox="0 0 16 16"
-              width="12"
-            >
-              <desc>
-                search
-              </desc>
-              <path
-                d="M15.55 13.43l-2.67-2.68a6.94 6.94 0 001.11-3.76c0-3.87-3.13-7-7-7s-7 3.13-7 7 3.13 7 7 7c1.39 0 2.68-.42 3.76-1.11l2.68 2.67a1.498 1.498 0 102.12-2.12zm-8.56-1.44c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-          <input
-            class="bp3-input"
-            data-test-id="search"
-            placeholder="Search"
-            type="text"
-          />
-        </div>
-      </div>
       <div
         class="Layout--horizontal StyledProps--main contentContainer"
         style="height: 339px;"
@@ -1666,7 +1678,9 @@ exports[`AddCluster tests when no clusters 1`] = `
           <div
             class="listContainer"
           >
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -1691,19 +1705,19 @@ exports[`AddCluster tests when no clusters 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
-                    
+                    test-cluster-a
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-a
@@ -1711,7 +1725,9 @@ exports[`AddCluster tests when no clusters 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -1736,19 +1752,19 @@ exports[`AddCluster tests when no clusters 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
-                    
+                    test-cluster-b
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-b
@@ -1756,7 +1772,9 @@ exports[`AddCluster tests when no clusters 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -1781,19 +1799,19 @@ exports[`AddCluster tests when no clusters 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
-                    
+                    test-cluster-3
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-3
@@ -1801,7 +1819,9 @@ exports[`AddCluster tests when no clusters 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -1826,19 +1846,19 @@ exports[`AddCluster tests when no clusters 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-c
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-c
@@ -1846,7 +1866,9 @@ exports[`AddCluster tests when no clusters 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -1871,19 +1893,19 @@ exports[`AddCluster tests when no clusters 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-d
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-d
@@ -1891,7 +1913,9 @@ exports[`AddCluster tests when no clusters 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -1916,19 +1940,19 @@ exports[`AddCluster tests when no clusters 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-e
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-e
@@ -1936,7 +1960,9 @@ exports[`AddCluster tests when no clusters 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -1961,19 +1987,19 @@ exports[`AddCluster tests when no clusters 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-f
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-f
@@ -1981,7 +2007,9 @@ exports[`AddCluster tests when no clusters 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -2006,19 +2034,19 @@ exports[`AddCluster tests when no clusters 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-g
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-g
@@ -2026,7 +2054,9 @@ exports[`AddCluster tests when no clusters 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -2051,19 +2081,19 @@ exports[`AddCluster tests when no clusters 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-h
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-h
@@ -2071,7 +2101,9 @@ exports[`AddCluster tests when no clusters 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -2096,19 +2128,19 @@ exports[`AddCluster tests when no clusters 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-1
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-1
@@ -2116,7 +2148,9 @@ exports[`AddCluster tests when no clusters 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -2141,19 +2175,19 @@ exports[`AddCluster tests when no clusters 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-2
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-2
@@ -2161,7 +2195,9 @@ exports[`AddCluster tests when no clusters 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -2186,19 +2222,19 @@ exports[`AddCluster tests when no clusters 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-3
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-3
@@ -2206,7 +2242,9 @@ exports[`AddCluster tests when no clusters 1`] = `
                 </div>
               </div>
             </div>
-            <div>
+            <div
+              class="Layout--vertical StyledProps--main"
+            >
               <div
                 class="gitopsClusterCard"
                 data-cy="cluster-card"
@@ -2231,19 +2269,19 @@ exports[`AddCluster tests when no clusters 1`] = `
                   </svg>
                 </span>
                 <div
-                  class="clusterDetails"
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-small"
                 >
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--font-variation-body StyledProps--color StyledProps--color-black"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterName StyledProps--color StyledProps--color-black"
                     data-id="cluster-id-label"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     test-cluster-4
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main clusterId StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey400 StyledProps--margin-left-medium"
                     data-id="cluster-id-text"
-                    style="--text-line-clamp: 1; width: 200px;"
+                    style="--text-line-clamp: 1;"
                   >
                     ID: 
                     test-cluster-4
@@ -2276,42 +2314,16 @@ exports[`AddCluster tests when no clusters 1`] = `
           </div>
         </div>
         <div
-          class="subChild"
+          class="Layout--vertical StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--flex-alignItems-flex-start StyledProps--padding-left-huge StyledProps--padding-right-huge"
         >
-          <div
-            class="gitOpsSelectedClusters"
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--padding-bottom-medium StyledProps--margin-bottom-medium StyledProps--border StyledProps--border-bottom"
           >
-            <span
-              class="bp3-icon StyledProps--main"
-              data-icon="gitops-clusters"
-            >
-              <svg
-                fill="none"
-                height="16"
-                viewBox="0 0 52 50"
-                width="16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  clip-rule="evenodd"
-                  d="M27.71 1.357a4 4 0 00-3.402 0L7.27 9.364a4 4 0 00-2.194 2.71L.887 29.985a4 4 0 00.798 3.442L13.447 47.82a4 4 0 003.097 1.47h18.93a4 4 0 003.097-1.47l11.762-14.393a4 4 0 00.797-3.442l-4.19-17.913a4 4 0 00-2.193-2.709L27.71 1.357zM8.972 12.984l17.037-8.006 17.037 8.006 4.19 17.913L35.474 45.29h-18.93L4.782 30.897l4.19-17.913zm9.056-.85a3.931 3.931 0 00-3.93 3.93v5.139a3.93 3.93 0 003.93 3.93h5.138a3.931 3.931 0 003.931-3.93v-5.138a3.931 3.931 0 00-3.93-3.931h-5.139zm0 3.93h5.138v5.139h-5.138v-5.138zm-3.93 15.8a3.93 3.93 0 013.93-3.931h5.138a3.931 3.931 0 013.931 3.93v5.139a3.931 3.931 0 01-3.93 3.931h-5.139a3.931 3.931 0 01-3.93-3.931v-5.138zm9.068 0h-5.138v5.138h5.138v-5.138zm9.702-11.894a3.931 3.931 0 00-3.931 3.93v5.139a3.93 3.93 0 003.931 3.93h5.138a3.93 3.93 0 003.931-3.93V23.9a3.93 3.93 0 00-3.93-3.93h-5.139zm0 3.93h5.138v5.139h-5.138V23.9z"
-                  fill="#4F5162"
-                  fill-rule="evenodd"
-                />
-              </svg>
-            </span>
-            <p
-              class="StyledProps--font StyledProps--main selectedClusters StyledProps--color StyledProps--color-grey800"
-            >
-              cd.clustersSelected
-              (
-              0
-              )
-            </p>
-          </div>
-          <div
-            class="separator"
-          />
+            cd.clustersSelected
+            (
+            0
+            )
+          </p>
           <div
             class="Layout--vertical StyledProps--main"
           >
@@ -2321,7 +2333,7 @@ exports[`AddCluster tests when no clusters 1`] = `
       </div>
     </div>
     <div
-      class="Layout--horizontal StyledProps--main footerStyle"
+      class="StyledProps--font StyledProps--main footerStyle"
     >
       <button
         class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"

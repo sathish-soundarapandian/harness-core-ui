@@ -71,6 +71,21 @@ const CORoutingTable: React.FC<CORoutingTableProps> = props => {
     />
   )
 
+  const NumericInput: Field['renderer'] = (value, _rowIndex, handleChange) => {
+    return (
+      <TextInput
+        value={value}
+        style={{ border: 'none', marginBottom: 0 }}
+        type="number"
+        min={0}
+        onChange={e => {
+          const val = (e.currentTarget as HTMLInputElement).value
+          handleChange(val)
+        }}
+      />
+    )
+  }
+
   const getProtocolSelect: Field['renderer'] = (value, _rowIndex, handleChange) => (
     <Select
       className={css.selectCell}
@@ -89,7 +104,7 @@ const CORoutingTable: React.FC<CORoutingTableProps> = props => {
     {
       name: 'port',
       label: 'PORT',
-      renderer: getTextInput
+      renderer: NumericInput
     },
     {
       name: 'action',
@@ -118,7 +133,7 @@ const CORoutingTable: React.FC<CORoutingTableProps> = props => {
     {
       name: 'target_port',
       label: 'TARGET PORT',
-      renderer: getTextInput
+      renderer: NumericInput
     },
     {
       name: 'redirect_url',
@@ -167,12 +182,8 @@ const CORoutingTable: React.FC<CORoutingTableProps> = props => {
       config['routing_rules'] = !_isEmpty(routingRules)
         ? [{ path_match: Array.isArray(routingRules) ? routingRules[0].path_match : routingRules }]
         : []
-      if (!_isEmpty(config.port)) {
-        config.port = Number(config.port)
-      }
-      if (!_isEmpty(config.target_port)) {
-        config.target_port = Number(config.target_port)
-      }
+      config.port = Number(config.port)
+      config.target_port = Number(config.target_port)
     })
     props.setRoutingRecords(portConfig)
   }, 500)

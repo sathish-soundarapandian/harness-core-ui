@@ -11,7 +11,7 @@ import { Expander } from '@blueprintjs/core'
 import type { FormikProps } from 'formik'
 import { parse } from 'yaml'
 import cx from 'classnames'
-import { defaultTo, isEqual } from 'lodash-es'
+import { defaultTo, isEqual, isNull } from 'lodash-es'
 import * as Yup from 'yup'
 
 import {
@@ -116,6 +116,7 @@ export default function EnvironmentDetails() {
       // istanbul ignore else
       if (response.status === 'SUCCESS') {
         showSuccess(getString('common.environmentUpdated'))
+        setIsModified(false)
         refetch()
       } else {
         throw response
@@ -143,8 +144,8 @@ export default function EnvironmentDetails() {
     const { name: newName, description: newDescription, tags: newTags, type: newType, variables: newVariables } = values
 
     if (
-      name === newName &&
-      description === newDescription &&
+      name == newName &&
+      (isNull(description) || description === newDescription) &&
       isEqual(tags, newTags) &&
       type === newType &&
       isEqual(variables, newVariables)
@@ -236,7 +237,7 @@ export default function EnvironmentDetails() {
                         id: EnvironmentDetailsTab.SERVICE_OVERRIDES,
                         title: (
                           <Text font={{ size: 'normal' }} color={Color.BLACK}>
-                            {getString('cd.serviceOverrides.label')}
+                            {getString('common.serviceOverrides')}
                           </Text>
                         ),
                         panel: <ServiceOverrides />
@@ -286,13 +287,15 @@ export default function EnvironmentDetails() {
                                   yamlHandler?.getLatestYaml(),
                                   /* istanbul ignore next */ ''
                                 )
-                                onUpdate(parse(latestYaml)?.environment)
+                                yamlHandler?.getYAMLValidationErrorMap()?.size
+                                  ? showError(getString('common.validation.invalidYamlText'))
+                                  : onUpdate(parse(latestYaml)?.environment)
                               } else {
                                 formikProps.submitForm()
                               }
                             }
                           }
-                          disabled={selectedView === SelectedView.VISUAL && !isModified}
+                          disabled={!isModified}
                         />
                         <Button
                           variation={ButtonVariation.TERTIARY}
@@ -308,9 +311,10 @@ export default function EnvironmentDetails() {
                                 projectIdentifier: defaultTo(projectIdentifier, ''),
                                 type: defaultTo(type, 'Production')
                               })
+                              setIsModified(false)
                             }
                           }
-                          disabled={selectedView === SelectedView.VISUAL && !isModified}
+                          disabled={!isModified}
                         />
                       </Layout.Horizontal>
                     )}

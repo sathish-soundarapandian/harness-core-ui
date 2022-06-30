@@ -95,39 +95,72 @@ exports[`useSubscriptionModal BillingInfo 1`] = `
           class="Layout--horizontal StyledProps--main StyledProps--flex"
         >
           <div
-            class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotSuccess MultiStepProgressIndicator--spacing"
-          />
-        </div>
-        <div
-          class="Layout--horizontal StyledProps--main StyledProps--flex"
-        >
+            class="Layout--vertical StyledProps--main StyledProps--flex"
+          >
+            <div
+              class="MultiStepProgressIndicator--dotNameSuccess"
+            >
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength StyledProps--color StyledProps--color-primary7"
+                style="--text-line-clamp: 1;"
+              />
+            </div>
+            <div
+              class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotSuccess MultiStepProgressIndicator--spacing"
+            />
+          </div>
           <div
             class="MultiStepProgressIndicator--statusBar"
           >
-            <div
-              class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--fullBar"
-            />
             <div
               class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--barSuccess MultiStepProgressIndicator--fullBar"
             />
           </div>
-          <div
-            class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotSuccess MultiStepProgressIndicator--spacing"
-          />
         </div>
         <div
           class="Layout--horizontal StyledProps--main StyledProps--flex"
         >
           <div
-            class="MultiStepProgressIndicator--statusBar"
+            class="Layout--vertical StyledProps--main StyledProps--flex"
           >
             <div
-              class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--fullBar"
+              class="MultiStepProgressIndicator--dotNameSuccess"
+            >
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength StyledProps--color StyledProps--color-primary7"
+                style="--text-line-clamp: 1;"
+              />
+            </div>
+            <div
+              class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotSuccess MultiStepProgressIndicator--spacing"
             />
           </div>
           <div
-            class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotOutLine MultiStepProgressIndicator--spacing"
-          />
+            class="MultiStepProgressIndicator--statusBar"
+          >
+            <div
+              class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--barSuccess MultiStepProgressIndicator--fullBar"
+            />
+          </div>
+        </div>
+        <div
+          class="Layout--horizontal StyledProps--main StyledProps--flex"
+        >
+          <div
+            class="Layout--vertical StyledProps--main StyledProps--flex"
+          >
+            <div
+              class="MultiStepProgressIndicator--dotNameFailed"
+            >
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength"
+                style="--text-line-clamp: 1;"
+              />
+            </div>
+            <div
+              class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotOutLine MultiStepProgressIndicator--spacing"
+            />
+          </div>
         </div>
       </div>
       <p
@@ -315,42 +348,72 @@ exports[`useSubscriptionModal FinalReview 1`] = `
           class="Layout--horizontal StyledProps--main StyledProps--flex"
         >
           <div
-            class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotSuccess MultiStepProgressIndicator--spacing"
-          />
+            class="Layout--vertical StyledProps--main StyledProps--flex"
+          >
+            <div
+              class="MultiStepProgressIndicator--dotNameSuccess"
+            >
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength StyledProps--color StyledProps--color-primary7"
+                style="--text-line-clamp: 1;"
+              />
+            </div>
+            <div
+              class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotSuccess MultiStepProgressIndicator--spacing"
+            />
+          </div>
+          <div
+            class="MultiStepProgressIndicator--statusBar"
+          >
+            <div
+              class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--barSuccess MultiStepProgressIndicator--fullBar"
+            />
+          </div>
         </div>
         <div
           class="Layout--horizontal StyledProps--main StyledProps--flex"
         >
           <div
-            class="MultiStepProgressIndicator--statusBar"
+            class="Layout--vertical StyledProps--main StyledProps--flex"
           >
             <div
-              class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--fullBar"
+              class="MultiStepProgressIndicator--dotNameSuccess"
+            >
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength StyledProps--color StyledProps--color-primary7"
+                style="--text-line-clamp: 1;"
+              />
+            </div>
+            <div
+              class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotSuccess MultiStepProgressIndicator--spacing"
             />
+          </div>
+          <div
+            class="MultiStepProgressIndicator--statusBar"
+          >
             <div
               class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--barSuccess MultiStepProgressIndicator--fullBar"
             />
           </div>
-          <div
-            class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotSuccess MultiStepProgressIndicator--spacing"
-          />
         </div>
         <div
           class="Layout--horizontal StyledProps--main StyledProps--flex"
         >
           <div
-            class="MultiStepProgressIndicator--statusBar"
+            class="Layout--vertical StyledProps--main StyledProps--flex"
           >
             <div
-              class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--fullBar"
-            />
+              class="MultiStepProgressIndicator--dotNameSuccess"
+            >
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength StyledProps--color StyledProps--color-primary7"
+                style="--text-line-clamp: 1;"
+              />
+            </div>
             <div
-              class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--barSuccess MultiStepProgressIndicator--fullBar"
+              class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotSuccess MultiStepProgressIndicator--spacing"
             />
           </div>
-          <div
-            class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotSuccess MultiStepProgressIndicator--spacing"
-          />
         </div>
       </div>
       <p
@@ -729,12 +792,46 @@ exports[`useSubscriptionModal render 1`] = `
           class="Layout--horizontal StyledProps--main StyledProps--flex"
         >
           <div
-            class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotSuccess MultiStepProgressIndicator--spacing"
-          />
+            class="Layout--vertical StyledProps--main StyledProps--flex"
+          >
+            <div
+              class="MultiStepProgressIndicator--dotNameSuccess"
+            >
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength StyledProps--color StyledProps--color-primary7"
+                style="--text-line-clamp: 1;"
+              />
+            </div>
+            <div
+              class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotSuccess MultiStepProgressIndicator--spacing"
+            />
+          </div>
+          <div
+            class="MultiStepProgressIndicator--statusBar"
+          >
+            <div
+              class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--barSuccess MultiStepProgressIndicator--fullBar"
+            />
+          </div>
         </div>
         <div
           class="Layout--horizontal StyledProps--main StyledProps--flex"
         >
+          <div
+            class="Layout--vertical StyledProps--main StyledProps--flex"
+          >
+            <div
+              class="MultiStepProgressIndicator--dotNameFailed"
+            >
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength"
+                style="--text-line-clamp: 1;"
+              />
+            </div>
+            <div
+              class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotOutLine MultiStepProgressIndicator--spacing"
+            />
+          </div>
           <div
             class="MultiStepProgressIndicator--statusBar"
           >
@@ -742,23 +839,25 @@ exports[`useSubscriptionModal render 1`] = `
               class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--fullBar"
             />
           </div>
-          <div
-            class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotOutLine MultiStepProgressIndicator--spacing"
-          />
         </div>
         <div
           class="Layout--horizontal StyledProps--main StyledProps--flex"
         >
           <div
-            class="MultiStepProgressIndicator--statusBar"
+            class="Layout--vertical StyledProps--main StyledProps--flex"
           >
             <div
-              class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--fullBar"
+              class="MultiStepProgressIndicator--dotNameFailed"
+            >
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength"
+                style="--text-line-clamp: 1;"
+              />
+            </div>
+            <div
+              class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotOutLine MultiStepProgressIndicator--spacing"
             />
           </div>
-          <div
-            class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotOutLine MultiStepProgressIndicator--spacing"
-          />
         </div>
       </div>
       <p

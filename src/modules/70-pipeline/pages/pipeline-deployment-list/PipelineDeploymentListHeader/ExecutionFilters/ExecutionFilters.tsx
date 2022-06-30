@@ -45,11 +45,13 @@ import {
   removeNullAndEmpty,
   flattenObject
 } from '@common/components/Filter/utils/FilterUtils'
+import { dispatchCustomEvent } from '@pipeline/components/PipelineDiagram/PipelineGraph/PipelineGraphUtils'
+import { FORM_CLICK_EVENT } from '@common/components/InputDatePicker/InputDatePicker'
 import { deploymentTypeLabel } from '@pipeline/utils/DeploymentTypeUtils'
 import { useFiltersContext } from '../../FiltersContext/FiltersContext'
 import PipelineFilterForm from '../../PipelineFilterForm/PipelineFilterForm'
 import type { StringQueryParams } from '../../types'
-
+import css from './ExecutionFilters.module.scss'
 export interface ExecutionFilterQueryParams {
   filter?: string
 }
@@ -248,7 +250,7 @@ export function ExecutionFilters(): React.ReactElement {
   }
 
   return (
-    <React.Fragment>
+    <div className={css.executionFilter} onClick={() => dispatchCustomEvent(FORM_CLICK_EVENT, {})}>
       <FilterSelector<FilterDTO>
         appliedFilter={appliedFilter}
         filters={filters}
@@ -317,6 +319,6 @@ export function ExecutionFilters(): React.ReactElement {
           })
         })}
       />
-    </React.Fragment>
+    </div>
   )
 }

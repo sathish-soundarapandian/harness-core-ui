@@ -136,3 +136,4 @@ export enum ServiceNowStaticFields {
   short_description = 'short_description',
   description = 'description'
 }
+export const TICKET_TYPE_CHANGE_TASK = 'CHANGE_TASK'

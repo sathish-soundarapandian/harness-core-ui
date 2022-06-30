@@ -14,7 +14,7 @@ import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import type { InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useGetPipeline } from 'services/pipeline-ng'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -24,7 +24,6 @@ import type { ContinousVerificationProps } from './types'
 import {
   baseLineOptions,
   durationOptions,
-  monitoredServiceRefPath,
   trafficSplitPercentageOptions,
   VerificationSensitivityOptions
 } from '../../constants'
@@ -92,15 +91,14 @@ export function ContinousVerificationInputSetStep(
       return (
         <ConfiguredRunTimeMonitoredService
           prefix={prefix}
-          monitoredServiceRefPath={monitoredServiceRefPath}
           expressions={expressions}
           allowableTypes={allowableTypes}
           monitoredService={monitoredService}
         />
       )
     } else if (
-      serviceIdentifierFromStage === RUNTIME_INPUT_VALUE ||
-      envIdentifierDataFromStage === RUNTIME_INPUT_VALUE
+      (serviceIdentifierFromStage === RUNTIME_INPUT_VALUE || envIdentifierDataFromStage === RUNTIME_INPUT_VALUE) &&
+      monitoredService?.type === MONITORED_SERVICE_TYPE.DEFAULT
     ) {
       return (
         <RunTimeMonitoredService

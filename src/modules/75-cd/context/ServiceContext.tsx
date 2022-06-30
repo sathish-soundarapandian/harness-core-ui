@@ -8,6 +8,7 @@
 import React from 'react'
 import { noop } from 'lodash-es'
 import type { ServiceResponseDTO, ServiceYaml } from 'services/cd-ng'
+import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 
 export interface ServiceContextValues {
   serviceResponse: ServiceResponseDTO
@@ -17,16 +18,20 @@ export interface ServiceContextValues {
   isServiceEntityPage: boolean
   isServiceCreateModalView: boolean
   serviceCacheKey: string
+  selectedDeploymentType: ServiceDeploymentType
+  gitOpsEnabled: boolean
 }
 
 export const ServiceContext = React.createContext<ServiceContextValues>({
   serviceResponse: {},
-  onCloseModal: () => noop,
-  onServiceCreate: () => noop,
+  onCloseModal: noop,
+  onServiceCreate: noop,
   isServiceEntityModalView: false,
   isServiceEntityPage: false,
   isServiceCreateModalView: false,
-  serviceCacheKey: ''
+  serviceCacheKey: '',
+  selectedDeploymentType: '' as ServiceDeploymentType,
+  gitOpsEnabled: false
 })
 
 export interface ServiceContextProviderProps extends ServiceContextValues {

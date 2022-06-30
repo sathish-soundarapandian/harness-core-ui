@@ -13,7 +13,7 @@ import { createMemoryHistory } from 'history'
 import { Router, Route, Switch, useLocation, useHistory } from 'react-router-dom'
 import { ModalProvider } from '@harness/use-modal'
 import qs from 'qs'
-
+import { noop } from 'lodash-es'
 import { enableMapSet } from 'immer'
 import { AppStoreContext, AppStoreContextProps } from 'framework/AppStore/AppStoreContext'
 import { LicenseStoreContext, LicenseStoreContextProps } from 'framework/LicenseStore/LicenseStoreContext'
@@ -149,9 +149,9 @@ export const TestWrapper: React.FC<TestWrapperProps> = props => {
       <StringsContext.Provider value={{ data: stringsData as any, getString }}>
         <PreferenceStoreContext.Provider
           value={{
-            set: jest.fn(),
-            get: jest.fn(),
-            clear: jest.fn()
+            set: noop,
+            get: noop,
+            clear: noop
           }}
         >
           <AppStoreContext.Provider

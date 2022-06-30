@@ -97,3 +97,17 @@
 .fullWidth {
   width: 100%;
 }
+
+.yamlBuilder {
+  position: relative;
+  padding: var(--spacing-large);
+
+  .buttonWrapper {
+    position: absolute;
+    top: var(--spacing-xxlarge);
+    right: var(--spacing-xxxlarge);
+    display: flex;
+    column-gap: var(--spacing-large);
+    align-items: center;
+  }
+}

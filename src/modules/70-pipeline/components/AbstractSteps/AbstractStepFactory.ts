@@ -82,6 +82,10 @@ export abstract class AbstractStepFactory {
     return this.stepBank.get(type)?.getDescription()
   }
 
+  getStepAdditionalInfo(type: string): keyof StringsMap | undefined {
+    return this.stepBank.get(type)?.getAdditionalInfo()
+  }
+
   getStepName(type: string): string | undefined {
     return this.stepBank.get(type)?.getStepName()
   }

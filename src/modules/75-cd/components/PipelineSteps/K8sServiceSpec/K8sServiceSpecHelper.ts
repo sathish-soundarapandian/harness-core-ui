@@ -7,8 +7,9 @@
 
 import { get } from 'lodash-es'
 import { getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
-import type { PipelineInfoConfig, ServiceSpec } from 'services/cd-ng'
+import type { ServiceSpec } from 'services/cd-ng'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 
 export const getNonRuntimeFields = (spec: { [key: string]: any } = {}, template: { [key: string]: any }): string => {
   const fields: { [key: string]: any } = {}

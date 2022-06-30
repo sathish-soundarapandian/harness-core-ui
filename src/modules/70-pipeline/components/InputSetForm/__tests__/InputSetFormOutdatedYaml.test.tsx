@@ -60,30 +60,30 @@ const GetInputSetEdit = {
   }
 }
 
-jest.mock(
-  '@common/components/YAMLBuilder/YamlBuilder',
-  () =>
-    ({ children, bind }: { children: JSX.Element; bind: YamlBuilderProps['bind'] }) => {
-      const handler = React.useMemo(
-        () =>
-          ({
-            getLatestYaml: () => GetInputSetEdit.data?.data?.inputSetYaml || '',
-            getYAMLValidationErrorMap: () => new Map()
-          } as YamlBuilderHandlerBinding),
-        []
-      )
+function YamlMock({ children, bind }: { children: JSX.Element; bind: YamlBuilderProps['bind'] }): React.ReactElement {
+  const handler = React.useMemo(
+    () =>
+      ({
+        getLatestYaml: () => GetInputSetEdit.data?.data?.inputSetYaml || '',
+        getYAMLValidationErrorMap: () => new Map()
+      } as YamlBuilderHandlerBinding),
+    []
+  )
 
-      React.useEffect(() => {
-        bind?.(handler)
-      }, [bind, handler])
-      return (
-        <div>
-          <span>Yaml View</span>
-          {children}
-        </div>
-      )
-    }
-)
+  React.useEffect(() => {
+    bind?.(handler)
+  }, [bind, handler])
+  return (
+    <div>
+      <span>Yaml View</span>
+      {children}
+    </div>
+  )
+}
+
+YamlMock.YamlBuilderMemo = YamlMock
+
+jest.mock('@common/components/YAMLBuilder/YamlBuilder', () => YamlMock)
 
 jest.useFakeTimers()
 

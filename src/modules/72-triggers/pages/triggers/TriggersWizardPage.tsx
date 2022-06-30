@@ -27,16 +27,11 @@ import { Page, useToaster } from '@common/exports'
 import Wizard from '@common/components/Wizard/Wizard'
 import { connectorUrlType } from '@connectors/constants'
 import routes from '@common/RouteDefinitions'
-import { mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
+import { clearRuntimeInput, mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
 import type { Pipeline } from '@pipeline/utils/types'
+import { useGetConnector, GetConnectorQueryParams, getConnectorListV2Promise, Failure } from 'services/cd-ng'
 import {
   PipelineInfoConfig,
-  useGetConnector,
-  GetConnectorQueryParams,
-  getConnectorListV2Promise,
-  Failure
-} from 'services/cd-ng'
-import {
   useGetPipeline,
   useGetTemplateFromPipeline,
   useCreateTrigger,
@@ -59,7 +54,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { clearRuntimeInput, validatePipeline } from '@pipeline/components/PipelineStudio/StepUtil'
+import { validatePipeline } from '@pipeline/components/PipelineStudio/StepUtil'
 import { ErrorsStrip } from '@pipeline/components/ErrorsStrip/ErrorsStrip'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import {
@@ -76,6 +71,7 @@ import type {
 import { memoizedParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useConfirmAction, useMutateAsGet, useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import type { FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
+import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import {
   scheduleTabsId,
@@ -108,10 +104,12 @@ import {
   getOrderedPipelineVariableValues,
   clearUndefinedArtifactId,
   getModifiedTemplateValues,
-  DEFAULT_TRIGGER_BRANCH,
-  SAVING_INVALID_TRIGGER_IN_GIT,
-  UPDATING_INVALID_TRIGGER_IN_GIT,
-  getErrorMessage
+  getErrorMessage,
+  TriggerGitEvent,
+  ciCodebaseBuild,
+  ciCodebaseBuildIssueComment,
+  ciCodebaseBuildPullRequest,
+  isHarnessExpression
 } from './utils/TriggersWizardPageUtils'
 import {
   ArtifactTriggerConfigPanel,
@@ -251,11 +249,12 @@ const getArtifactManifestTriggerYaml = ({
     tags,
     pipeline: pipelineRuntimeInput,
     triggerType: formikValueTriggerType,
+    event,
     selectedArtifact,
     stageId,
     manifestType: onEditManifestType,
     artifactType,
-    pipelineBranchName = getDefaultPipelineReferenceBranch(formikValueTriggerType),
+    pipelineBranchName = getDefaultPipelineReferenceBranch(formikValueTriggerType, event),
     inputSetRefs
   } = val
 
@@ -460,9 +459,28 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       orgIdentifier,
       projectIdentifier,
       targetIdentifier: pipelineIdentifier,
-      ignoreError: gitAwareForTriggerEnabled ? ignoreError : undefined
+      ...(gitAwareForTriggerEnabled
+        ? {
+            ignoreError,
+            branch,
+            connectorRef: pipelineConnectorRef,
+            repoName: pipelineRepoName,
+            storeType
+          }
+        : undefined)
     }),
-    [accountId, orgIdentifier, projectIdentifier, pipelineIdentifier, ignoreError, gitAwareForTriggerEnabled]
+    [
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      pipelineIdentifier,
+      ignoreError,
+      gitAwareForTriggerEnabled,
+      branch,
+      pipelineConnectorRef,
+      pipelineRepoName,
+      storeType
+    ]
   )
   const retryFn = useRef<() => void>(noop)
   const [retrySavingConfirmationMessage, setRetrySavingConfirmation] = useState('')
@@ -523,6 +541,9 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
 
       if (gitAwareForTriggerEnabled) {
         delete res.inputYaml
+        if (values.inputSetSelected?.length) {
+          res.inputSetRefs = values.inputSetSelected.map((inputSet: InputSetValue) => inputSet.value)
+        }
       }
 
       return { trigger: res }
@@ -530,6 +551,9 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       const res = getScheduleTriggerYaml({ values })
       if (gitAwareForTriggerEnabled) {
         delete res.inputYaml
+        if (values.inputSetSelected?.length) {
+          res.inputSetRefs = values.inputSetSelected.map((inputSet: InputSetValue) => inputSet.value)
+        }
       }
       return { trigger: res }
     } else if (values.triggerType === TriggerTypes.MANIFEST || values.triggerType === TriggerTypes.ARTIFACT) {
@@ -545,6 +569,9 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       })
       if (gitAwareForTriggerEnabled) {
         delete res.inputYaml
+        if (values.inputSetSelected?.length) {
+          res.inputSetRefs = values.inputSetSelected.map((inputSet: InputSetValue) => inputSet.value)
+        }
       }
       return { trigger: res }
     }
@@ -740,9 +767,9 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       jexlCondition,
       secureToken,
       autoAbortPreviousExecutions = false,
-      pipelineBranchName = getDefaultPipelineReferenceBranch(formikValueTriggerType),
-      inputSetRefs
+      pipelineBranchName = getDefaultPipelineReferenceBranch(formikValueTriggerType, event)
     } = val
+    const inputSetRefs = get(val, 'inputSetSelected', []).map((_inputSet: InputSetValue) => _inputSet.value)
 
     const stringifyPipelineRuntimeInput = yamlStringify({
       pipeline: clearNullUndefined(pipelineRuntimeInput)
@@ -931,7 +958,6 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
             description,
             tags,
             inputYaml,
-            pipelineBranchName = getDefaultPipelineReferenceBranch(TriggerTypes.WEBHOOK),
             inputSetRefs = [],
             source: {
               spec: {
@@ -950,7 +976,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
                   }
                 }
               }
-            }
+            },
+            pipelineBranchName = getDefaultPipelineReferenceBranch(TriggerTypes.WEBHOOK, event)
           }
         } = triggerResponseJson
 
@@ -1358,8 +1385,6 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     })
   }
 
-  // const [pipelineBranchNameError, setPipelineBranchNameError] = useState('')
-  // const [inputSetRefsError, setInputSetRefsError] = useState('')
   const [formErrors, setFormErrors] = useState<FormikErrors<FlatValidFormikValuesInterface>>({})
   const formikRef = useRef<FormikProps<any>>()
 
@@ -1442,6 +1467,14 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
   const submitTrigger = async (triggerYaml: NGTriggerConfigV2 | TriggerConfigDTO): Promise<void> => {
     if (gitAwareForTriggerEnabled) {
       delete triggerYaml.inputYaml
+
+      // Set pipelineBranchName to proper expression when it's left empty
+      if (!(triggerYaml.pipelineBranchName || '').trim()) {
+        triggerYaml.pipelineBranchName = getDefaultPipelineReferenceBranch(
+          triggerYaml?.source?.type,
+          triggerYaml?.source?.spec?.spec?.type
+        )
+      }
     }
 
     if (!isCreatingNewTrigger) {
@@ -1479,14 +1512,10 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
           )
         }
       } catch (err) {
-        if (
-          err?.data?.status === ResponseStatus.ERROR &&
-          err?.data?.message === UPDATING_INVALID_TRIGGER_IN_GIT &&
-          gitAwareForTriggerEnabled
-        ) {
+        if (err?.data?.status === ResponseStatus.ERROR && gitAwareForTriggerEnabled) {
           retryTriggerSubmit({ message: getErrorMessage(err?.data) || getString('triggers.retryTriggerSave') })
         } else {
-          setErrorToasterMessage(err?.data?.message)
+          setErrorToasterMessage(getErrorMessage(err))
         }
       } finally {
         setIgnoreError(false)
@@ -1527,11 +1556,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
           )
         }
       } catch (err) {
-        if (
-          err?.data?.status === ResponseStatus.ERROR &&
-          err?.data?.message === SAVING_INVALID_TRIGGER_IN_GIT &&
-          gitAwareForTriggerEnabled
-        ) {
+        if (err?.data?.status === ResponseStatus.ERROR && gitAwareForTriggerEnabled) {
           retryTriggerSubmit({ message: getErrorMessage(err?.data) || getString('triggers.retryTriggerSave') })
         } else {
           setErrorToasterMessage(err?.data?.message)
@@ -1716,12 +1741,28 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     lazy: true
   })
 
-  const onFormikEffect: FormikEffectProps['onChange'] = ({ formik, nextValues }) => {
+  const onFormikEffect: FormikEffectProps['onChange'] = ({ formik, prevValues, nextValues }) => {
     formikRef.current = formik
 
-    // Clear Errors Trip when Input Set Refs is changed
-    if (formErrors && Object.keys(formErrors).length && nextValues.inputSetRefs?.length) {
+    // Clear Errors Trip when Input Set Refs is changed (from users)
+    if (
+      formErrors &&
+      Object.keys(formErrors).length &&
+      nextValues.inputSetRefs?.length &&
+      prevValues.inputSetRefs?.length !== nextValues.inputSetRefs?.length
+    ) {
       setFormErrors({})
+    }
+
+    // Set pipelineBranchName to proper default expression when event is changed
+    if (prevValues.event !== nextValues.event) {
+      const { triggerType, event, pipelineBranchName } = nextValues
+      if (!(pipelineBranchName || '').trim() || isHarnessExpression(pipelineBranchName)) {
+        const defaultBranchName = getDefaultPipelineReferenceBranch(triggerType, event)
+        if (pipelineBranchName !== defaultBranchName) {
+          formik.setFieldValue('pipelineBranchName', defaultBranchName)
+        }
+      }
     }
   }
 
@@ -1951,13 +1992,13 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       if (formikProps?.values?.triggerType !== TriggerTypes.WEBHOOK) {
         const pipelineBranchName = (formikProps?.values?.pipelineBranchName || '').trim()
 
-        if (pipelineBranchName.startsWith('<+') && pipelineBranchName.endsWith('>')) {
+        if (isHarnessExpression(pipelineBranchName)) {
           _pipelineBranchNameError = getString('triggers.branchNameCantBeExpression')
         }
       }
 
       // inputSetRefs is required if Input Set is required to run pipeline
-      if (template?.data?.inputSetTemplateYaml && !formikProps?.values?.inputSetRefs?.length) {
+      if (template?.data?.inputSetTemplateYaml && !formikProps?.values?.inputSetSelected?.length) {
         _inputSetRefsError = getString('triggers.inputSetIsRequired')
       }
     }
@@ -1987,13 +2028,12 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       ...runPipelineFormErrors
     }
 
-    if (gitXErrors) {
+    if (gitXErrors && Object.keys(gitXErrors).length) {
       setErrors(gitXErrors)
       setFormErrors(gitXErrors)
       return gitXErrors
     } else if (!isEmpty(runPipelineFormErrors)) {
       setErrors(runPipelineFormErrors)
-      // To do: have errors outlines display
       return runPipelineFormErrors
     }
     return errors
@@ -2195,8 +2235,19 @@ function flattenKeys(object: any = {}, initialPathPrefix = 'pipeline'): Record<s
     .reduce((acc, path) => ({ ...acc, ...path }), {})
 }
 
-function getDefaultPipelineReferenceBranch(triggerType = ''): string {
-  return triggerType === TriggerTypes.WEBHOOK ? DEFAULT_TRIGGER_BRANCH : ''
+function getDefaultPipelineReferenceBranch(triggerType = '', event = ''): string {
+  if (triggerType === TriggerTypes.WEBHOOK) {
+    switch (event) {
+      case TriggerGitEvent.ISSUE_COMMENT:
+        return ciCodebaseBuildIssueComment.spec.tag
+      case TriggerGitEvent.PULL_REQUEST:
+        return ciCodebaseBuildPullRequest.spec.number
+      default:
+        return ciCodebaseBuild.spec.branch
+    }
+  }
+
+  return ''
 }
 
 export default TriggersWizardPage

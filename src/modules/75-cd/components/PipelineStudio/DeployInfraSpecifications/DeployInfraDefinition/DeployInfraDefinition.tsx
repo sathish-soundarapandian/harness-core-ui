@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import YAML from 'yaml'
-import { Accordion, Card, Container, RUNTIME_INPUT_VALUE, Text } from '@wings-software/uicore'
+import { Accordion, Card, Container, MultiTypeInputType, RUNTIME_INPUT_VALUE, Text } from '@wings-software/uicore'
 import { debounce, defaultTo, get, isEmpty, isNil, omit, set } from 'lodash-es'
 import produce from 'immer'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -18,11 +18,12 @@ import {
   K8SDirectInfrastructure,
   K8sGcpInfrastructure,
   PdcInfrastructure,
+  PipelineInfrastructure,
   StageElementConfig
 } from 'services/cd-ng'
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
-import { PipelineInfrastructureV2, StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type {
   InfraProvisioningData,
   ProvisionersOptions
@@ -70,7 +71,8 @@ export const deploymentTypeInfraTypeMap = {
   ServerlessAzureFunctions: InfraDeploymentType.ServerlessAzureFunctions,
   ServerlessGoogleFunctions: InfraDeploymentType.ServerlessGoogleFunctions,
   AmazonSAM: InfraDeploymentType.AmazonSAM,
-  AzureFunctions: InfraDeploymentType.AzureFunctions
+  AzureFunctions: InfraDeploymentType.AzureFunctions,
+  AzureWebApps: InfraDeploymentType.AzureWebApps
 }
 
 type InfraTypes =
@@ -120,7 +122,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
           set(draft, 'stage.spec', {
             ...stage.stage?.spec,
             infrastructure: {
-              environmentRef: getScopeBasedDefaultEnvironmentRef(),
+              environmentRef: scope === Scope.PROJECT ? '' : RUNTIME_INPUT_VALUE,
               infrastructureDefinition: {},
               allowSimultaneousDeployments: false
             }
@@ -131,7 +133,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
     } else if (
       scope !== Scope.PROJECT &&
       stage?.stage?.spec?.infrastructure &&
-      stage?.stage?.spec?.infrastructure?.environmentRef !== RUNTIME_INPUT_VALUE
+      isEmpty(stage?.stage?.spec?.infrastructure?.environmentRef)
     ) {
       const stageData = produce(stage, draft => {
         if (draft) {
@@ -166,10 +168,6 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
     debounceUpdateStage(stageData?.stage)
     setProvisionerEnabled(false)
   }
-
-  const getScopeBasedDefaultEnvironmentRef = React.useCallback(() => {
-    return scope === Scope.PROJECT ? '' : RUNTIME_INPUT_VALUE
-  }, [scope])
 
   const selectedDeploymentType = React.useMemo(() => {
     return getSelectedDeploymentType(
@@ -493,9 +491,9 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
   }
 
   const updateEnvStep = React.useCallback(
-    (value: PipelineInfrastructureV2) => {
+    (value: PipelineInfrastructure) => {
       const stageData = produce(stage, draft => {
-        const infraObj: PipelineInfrastructureV2 = get(draft, 'stage.spec.infrastructure', {})
+        const infraObj: PipelineInfrastructure = get(draft, 'stage.spec.infrastructure', {})
         if (value.environment?.identifier) {
           infraObj.environment = value.environment
           delete infraObj.environmentRef
@@ -519,15 +517,19 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
           <Card className={stageCss.sectionCard}>
             <StepWidget
               type={StepType.DeployEnvironment}
-              readonly={isReadonly || scope !== Scope.PROJECT}
+              readonly={isReadonly}
               initialValues={{
                 environment: get(stage, 'stage.spec.infrastructure.environment', {}),
                 environmentRef:
                   scope === Scope.PROJECT
                     ? get(stage, 'stage.spec.infrastructure.environmentRef', '')
-                    : RUNTIME_INPUT_VALUE
+                    : get(stage, 'stage.spec.infrastructure.environmentRef', '') || RUNTIME_INPUT_VALUE
               }}
-              allowableTypes={allowableTypes}
+              allowableTypes={
+                scope === Scope.PROJECT
+                  ? allowableTypes
+                  : allowableTypes.filter(item => item !== MultiTypeInputType.FIXED)
+              }
               onUpdate={val => updateEnvStep(val)}
               factory={factory}
               stepViewType={StepViewType.Edit}

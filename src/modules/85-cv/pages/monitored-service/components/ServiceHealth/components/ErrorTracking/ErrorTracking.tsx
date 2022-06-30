@@ -11,7 +11,7 @@ import { useParams } from 'react-router-dom'
 import noServiceAvailableImage from '@cv/assets/noServiceAvailable.png'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { ErrorTracking as EventList, EventListProps } from '@cv/ErrorTrackingApp'
+import { ErrorTracking as EventList, EventListProps } from '@et/ErrorTrackingApp'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import routes from '@common/RouteDefinitions'
 import type { MetricsAndLogsProps } from '../MetricsAndLogs/MetricsAndLogs.types'
@@ -39,7 +39,13 @@ const ErrorTracking: React.FC<MetricsAndLogsProps> = props => {
           environmentId={props.environmentIdentifier}
           fromDateTime={Math.floor(startTime / 1000)}
           toDateTime={Math.floor(endTime / 1000)}
-          routeDefinitions={routes}
+          toBaseRouteDefinition={() =>
+            routes.toErrorTracking({
+              accountId,
+              orgIdentifier,
+              projectIdentifier
+            })
+          }
         />
       ) : (
         <Card className={css.noServiceImageCard} data-testid="error-tracking-analysis-image-view">

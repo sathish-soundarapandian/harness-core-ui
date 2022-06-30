@@ -47,6 +47,8 @@ export interface InputSetSelectorProps {
   selectedRepo?: string
   selectedBranch?: string
   isOverlayInputSet?: boolean
+  showNewInputSet?: boolean
+  onNewInputSetClick?: () => void
 }
 
 export function InputSetSelector({
@@ -56,7 +58,9 @@ export function InputSetSelector({
   selectedValueClass,
   selectedRepo,
   selectedBranch,
-  isOverlayInputSet
+  isOverlayInputSet,
+  showNewInputSet,
+  onNewInputSetClick
 }: InputSetSelectorProps): React.ReactElement {
   const [searchParam, setSearchParam] = React.useState('')
   const [selectedInputSets, setSelectedInputSets] = React.useState<InputSetValue[]>(value || [])
@@ -193,6 +197,8 @@ export function InputSetSelector({
         setSelectedInputSets={setSelectedInputSets}
         setOpenInputSetsList={setOpenInputSetsList}
         selectedValueClass={selectedValueClass}
+        showNewInputSet={showNewInputSet}
+        onNewInputSetClick={onNewInputSetClick}
       />
       {openInputSetsList ? (
         <Layout.Vertical spacing="small" className={css.popoverContainer}>

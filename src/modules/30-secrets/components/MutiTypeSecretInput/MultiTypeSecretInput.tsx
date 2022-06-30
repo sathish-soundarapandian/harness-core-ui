@@ -64,6 +64,7 @@ export interface MultiTypeSecretInputProps extends IFormGroupProps {
   secretsListMockData?: ResponsePageSecretResponseWrapper
   isMultiType?: boolean
   small?: boolean
+  defaultValue?: string
 }
 
 export interface ConnectedMultiTypeSecretInputProps extends MultiTypeSecretInputProps {
@@ -83,6 +84,7 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
     secretsListMockData,
     isMultiType = true,
     useExecutionTimeInput,
+    defaultValue,
     ...restProps
   } = props
 
@@ -111,7 +113,7 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
     },
     [name, onSuccess]
   )
-  const value = get(formik.values, name)
+  const value = get(formik.values, name, defaultValue)
   const hasError = errorCheck(name, formik)
 
   const {

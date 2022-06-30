@@ -31,7 +31,8 @@ const TAB_ID_MAP = {
   COMMITS: 'commits_view',
   TESTS: 'tests_view',
   POLICY_EVALUATIONS: 'policy_evaluations',
-  STO_SECURITY: 'sto_security'
+  STO_SECURITY: 'sto_security',
+  ERROR_TRACKING: 'error_tracking'
 }
 
 interface ExecutionTabsProps {
@@ -53,6 +54,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
   const opaBasedGovernanceEnabled = useFeatureFlag(FeatureFlag.OPA_PIPELINE_GOVERNANCE)
   const stoCDPipelineSecurityEnabled = useFeatureFlag(FeatureFlag.STO_CD_PIPELINE_SECURITY)
   const stoCIPipelineSecurityEnabled = useFeatureFlag(FeatureFlag.STO_CI_PIPELINE_SECURITY)
+  const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.ERROR_TRACKING_ENABLED)
   const canUsePolicyEngine = useAnyEnterpriseLicense()
 
   const routeParams = { ...accountPathProps, ...executionPathProps, ...pipelineModuleParams }
@@ -122,6 +124,12 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     })
     if (isSecurityView) {
       return setSelectedTabId(TAB_ID_MAP.STO_SECURITY)
+    }
+    const isErrorTrackingView = !!matchPath(location.pathname, {
+      path: routes.toExecutionErrorTrackingView(routeParams)
+    })
+    if (isErrorTrackingView) {
+      return setSelectedTabId(TAB_ID_MAP.ERROR_TRACKING)
     }
     // Defaults to Pipelines Tab
     return setSelectedTabId(TAB_ID_MAP.PIPELINE)
@@ -233,6 +241,22 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
         >
           <Icon name="sto-grey" size={16} />
           <span>{getString('common.purpose.sto.continuous')}</span>
+        </NavLink>
+      )
+    })
+  }
+
+  if (isCI && isErrorTrackingEnabled) {
+    tabList.push({
+      id: TAB_ID_MAP.ERROR_TRACKING,
+      title: (
+        <NavLink
+          to={routes.toExecutionErrorTrackingView(params) + '/events' + location.search}
+          className={css.tabLink}
+          activeClassName={css.activeLink}
+        >
+          <Icon name="error-tracking" size={16} />
+          <span>{getString('common.purpose.errorTracking.title')}</span>
         </NavLink>
       )
     })

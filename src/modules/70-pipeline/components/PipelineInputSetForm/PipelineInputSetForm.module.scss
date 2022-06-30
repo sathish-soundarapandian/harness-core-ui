@@ -108,3 +108,10 @@
     width: 50%;
   }
 }
+
+.strategyContainer {
+  display: inline-block;
+  border: 1px solid var(--grey-200);
+  border-radius: var(--spacing-2);
+  padding: var(--spacing-5);
+}

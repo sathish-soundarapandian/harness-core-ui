@@ -29,7 +29,8 @@ export const ArtifactIconByType: Record<ArtifactType, IconName> = {
   ArtifactoryRegistry: 'service-artifactory',
   CustomArtifact: 'custom-artifact',
   Acr: 'service-azure',
-  Jenkins: 'service-jenkins'
+  Jenkins: 'service-jenkins',
+  AmazonS3: 'service-service-s3'
 }
 
 export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
@@ -40,7 +41,8 @@ export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
   ArtifactoryRegistry: 'connectors.artifactory.artifactoryLabel',
   CustomArtifact: 'common.repo_provider.customLabel',
   Acr: 'pipeline.ACR.name',
-  Jenkins: 'connectors.jenkins.jenkins'
+  Jenkins: 'connectors.jenkins.jenkins',
+  AmazonS3: 'pipeline.artifactsSelection.amazonS3Title'
 }
 
 export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
@@ -50,7 +52,8 @@ export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
   Nexus3Registry: 'Nexus3Registry',
   ArtifactoryRegistry: 'ArtifactoryRegistry',
   CustomArtifact: 'CustomArtifact',
-  Acr: 'Acr'
+  Acr: 'Acr',
+  Jenkins: 'Jenkins'
 }
 
 export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = {
@@ -59,7 +62,8 @@ export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = 
   Ecr: Connectors.AWS,
   Nexus3Registry: Connectors.NEXUS,
   ArtifactoryRegistry: Connectors.ARTIFACTORY,
-  Acr: Connectors.AZURE
+  Acr: Connectors.AZURE,
+  Jenkins: Connectors.JENKINS
 }
 
 export const ArtifactConnectorLabelMap: Record<string, string> = {
@@ -80,9 +84,10 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     // ENABLED_ARTIFACT_TYPES.Jenkins
   ],
   NativeHelm: [ENABLED_ARTIFACT_TYPES.DockerRegistry, ENABLED_ARTIFACT_TYPES.Gcr, ENABLED_ARTIFACT_TYPES.Ecr],
-  ServerlessAwsLambda: [ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry],
+  ServerlessAwsLambda: [ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry, ENABLED_ARTIFACT_TYPES.Ecr],
   Ssh: [],
-  WinRm: []
+  WinRm: [],
+  AzureWebApps: []
 }
 
 export const tagOptions: IOptionProps[] = [

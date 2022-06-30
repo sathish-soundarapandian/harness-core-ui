@@ -17,7 +17,6 @@ import routes from '@common/RouteDefinitions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import useCreateSmtpModal from '@common/components/Smtp/useCreateSmtpModal'
 import { useGetSmtpConfig } from 'services/cd-ng'
-import { isPR, isLocalHost } from '@common/utils/utils'
 import css from './ResourceCardList.module.scss'
 
 export interface ResourceOption {
@@ -38,17 +37,17 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   const { accountId, orgIdentifier } = useParams<OrgPathProps>()
   const history = useHistory()
   const { getString } = useStrings()
-  const { NG_TEMPLATES, NG_VARIABLES } = useFeatureFlags()
+  const { NG_TEMPLATES, NG_VARIABLES, GITOPS_BYO_ARGO, NG_FILE_STORE } = useFeatureFlags()
+
   const { isOpen: showGitOpsEntities, toggle: toggleShowGitOpsEntities } = useToggleOpen()
   const { loading, data, refetch } = useGetSmtpConfig({ queryParams: { accountId } })
   const refetchSmtpData = (): void => {
     refetch()
   }
   const { openCreateSmtpModal } = useCreateSmtpModal({ onCloseModal: refetchSmtpData })
-  // showGitOpsCard defaults to false for now while the feature is being developed
   const showGitOpsCard = useMemo(
-    () => history?.location?.pathname.includes('resources') && (isPR() || isLocalHost()),
-    [history?.location?.pathname]
+    () => history?.location?.pathname.includes('resources') && GITOPS_BYO_ARGO,
+    [history?.location?.pathname, GITOPS_BYO_ARGO]
   )
   const smtpResource: ResourceOption[] = [
     {
@@ -113,6 +112,16 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       colorClass: css.secrets,
       route: routes.toSecrets({ accountId, orgIdentifier })
     },
+    ...(NG_FILE_STORE
+      ? [
+          {
+            label: <String stringID="resourcePage.fileStore" />,
+            colorClass: css.filestore,
+            icon: 'filestore',
+            route: routes.toFileStore({ accountId, orgIdentifier })
+          } as ResourceOption
+        ]
+      : []),
     ...(!orgIdentifier ? smtpResource : []),
     ...(NG_TEMPLATES
       ? [

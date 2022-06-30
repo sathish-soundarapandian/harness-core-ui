@@ -15,7 +15,8 @@ import { CreatePipelineForm } from '@pipeline/components/CreatePipelineForm/Crea
 import { SelectOrCreatePipelineForm } from '@pipeline/components/SelectOrCreatePipelineForm/SelectOrCreatePipelineForm'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 
-import type { Project, PipelineInfoConfig } from 'services/cd-ng'
+import type { Project } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import type { StringsMap } from 'stringTypes'

@@ -43,7 +43,6 @@ export const ExecutionStatusEnum: Readonly<Record<ExecutionStatus, ExecutionStat
   InterventionWaiting: 'InterventionWaiting',
   ApprovalWaiting: 'ApprovalWaiting',
   Pausing: 'Pausing',
-  Waiting: 'Waiting',
   InputWaiting: 'InputWaiting'
 }
 

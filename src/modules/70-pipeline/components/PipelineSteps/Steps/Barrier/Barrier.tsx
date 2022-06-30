@@ -26,9 +26,12 @@ import {
   StepViewType,
   ValidateInputSetProps
 } from '@pipeline/components/AbstractSteps/Step'
-import type { PipelineInfoConfig, StepElementConfig } from 'services/cd-ng'
-
-import { useGetPipeline, VariableMergeServiceResponse } from 'services/pipeline-ng'
+import {
+  PipelineInfoConfig,
+  useGetPipeline,
+  VariableMergeServiceResponse,
+  StepElementConfig
+} from 'services/pipeline-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useStrings } from 'framework/strings'

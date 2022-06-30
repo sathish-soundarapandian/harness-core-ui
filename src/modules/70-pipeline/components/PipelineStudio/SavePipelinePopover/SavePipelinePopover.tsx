@@ -42,9 +42,8 @@ import type {
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { useSaveAsTemplate } from '@pipeline/components/PipelineStudio/SaveTemplateButton/useSaveAsTemplate'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig, GovernanceMetadata } from 'services/pipeline-ng'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
-import type { GovernanceMetadata } from 'services/pipeline-ng'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { AccessControlCheckError } from 'services/rbac'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -78,11 +77,7 @@ export function SavePipelinePopover({ toPipelineStudio }: SavePipelinePopoverPro
   const { showSuccess, showError, clear } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
-  const {
-    OPA_PIPELINE_GOVERNANCE,
-    NG_TEMPLATES: templatesFeatureFlagEnabled,
-    NG_PIPELINE_TEMPLATE: pipelineTemplatesFeatureFlagEnabled
-  } = useFeatureFlags()
+  const { OPA_PIPELINE_GOVERNANCE, NG_TEMPLATES: templatesFeatureFlagEnabled } = useFeatureFlags()
   const history = useHistory()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } =
     useParams<PipelineType<PipelinePathProps>>()
@@ -121,12 +116,7 @@ export function SavePipelinePopover({ toPipelineStudio }: SavePipelinePopoverPro
     permissions: [PermissionIdentifier.EDIT_TEMPLATE]
   })
 
-  const isTemplatesEnabled =
-    templatesFeatureEnabled &&
-    templatesFeatureFlagEnabled &&
-    pipelineTemplatesFeatureFlagEnabled &&
-    canEdit &&
-    !pipeline?.template
+  const isTemplatesEnabled = templatesFeatureEnabled && templatesFeatureFlagEnabled && canEdit && !pipeline?.template
 
   const isSaveEnabled = !isReadonly && isUpdated
 
@@ -186,10 +176,10 @@ export function SavePipelinePopover({ toPipelineStudio }: SavePipelinePopoverPro
         projectIdentifier,
         orgIdentifier,
         ...(currStoreMetadata?.storeType ? { storeType: currStoreMetadata?.storeType } : {}),
-        ...(currStoreMetadata?.storeType === 'REMOTE' ? { connectorRef: currStoreMetadata?.connectorRef } : {}),
+        ...(currStoreMetadata?.storeType === StoreType.REMOTE ? { connectorRef: currStoreMetadata?.connectorRef } : {}),
         ...(updatedGitDetails ?? {}),
         ...(lastObject ?? {}),
-        ...(updatedGitDetails && currStoreMetadata?.storeType !== 'REMOTE' && updatedGitDetails?.isNewBranch
+        ...(updatedGitDetails && currStoreMetadata?.storeType !== StoreType.REMOTE && updatedGitDetails?.isNewBranch
           ? { baseBranch: branch }
           : {})
       },
@@ -208,7 +198,14 @@ export function SavePipelinePopover({ toPipelineStudio }: SavePipelinePopoverPro
       }
       // Handling cache and page navigation only when Governance is disabled, or Governance Evaluation is successful
       // Otherwise, keep current pipeline editing states, and show Governance evaluation error
-      if (governanceData?.status !== 'error' && governanceData?.status !== 'warning') {
+      if (
+        governanceData?.status !== 'error' &&
+        governanceData?.status !== 'warning' &&
+        !isGitSyncEnabled &&
+        storeMetadata?.storeType !== StoreType.REMOTE
+      ) {
+        // do not do this for git path, it will hide progress overlay
+        // While saving pipeline in git, publishPipeline is done as next callback
         await publishPipeline(newPipelineId, updatedGitDetails)
       }
       if (isEdit) {
@@ -235,7 +232,7 @@ export function SavePipelinePopover({ toPipelineStudio }: SavePipelinePopoverPro
         )
       }
     }
-    return { status: response?.status }
+    return { status: response?.status, nextCallback: () => publishPipeline(newPipelineId, updatedGitDetails) }
   }
 
   const saveAngPublishWithGitInfo = async (
@@ -266,7 +263,8 @@ export function SavePipelinePopover({ toPipelineStudio }: SavePipelinePopoverPro
     )
 
     return {
-      status: response?.status
+      status: response?.status,
+      nextCallback: response?.nextCallback || noop
     }
   }
 

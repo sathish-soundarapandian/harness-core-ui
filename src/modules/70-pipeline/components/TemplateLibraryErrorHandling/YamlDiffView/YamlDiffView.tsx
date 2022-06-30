@@ -125,7 +125,7 @@ export function YamlDiffView({ errorNodeSummary, resolvedTemplateInfos = [], onU
   }, [errorNodeSummary])
 
   return (
-    <Container className={css.mainContainer} height={700} background={Color.WHITE} border={{ radius: 4 }}>
+    <Container className={css.mainContainer} height={'100%'} background={Color.WHITE} border={{ radius: 4 }}>
       {loading && <PageSpinner />}
       {!loading && error && (
         <PageError message={(error.data as Error)?.message || error.message} onClick={() => refetch()} />
@@ -134,7 +134,7 @@ export function YamlDiffView({ errorNodeSummary, resolvedTemplateInfos = [], onU
         <Layout.Vertical height={'100%'}>
           <Container height={56}>
             <Layout.Horizontal height={'100%'}>
-              <Container width={332} border={{ right: true }}>
+              <Container className={css.leftHeader} border={{ right: true }}>
                 <Layout.Horizontal
                   height={'100%'}
                   flex={{ justifyContent: 'space-between', alignItems: 'center' }}

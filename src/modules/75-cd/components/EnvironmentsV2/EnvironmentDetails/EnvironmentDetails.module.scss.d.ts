@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly accordion: string
+  readonly buttonWrapper: string
   readonly clusterDataTable: string
   readonly configCard: string
   readonly dialogStyles: string
@@ -18,5 +19,6 @@ declare const styles: {
   readonly sectionCard: string
   readonly tagsPopover: string
   readonly thumbnailSelect: string
+  readonly yamlBuilder: string
 }
 export default styles

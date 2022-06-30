@@ -7,7 +7,17 @@
 
 import React, { useState, useEffect } from 'react'
 import cx from 'classnames'
-import { Text, FontVariation, Icon, Layout, Button, ButtonVariation, IconName, Container } from '@harness/uicore'
+import {
+  Text,
+  FontVariation,
+  Icon,
+  Layout,
+  Button,
+  ButtonVariation,
+  IconName,
+  Container,
+  ButtonSize
+} from '@harness/uicore'
 import type { IconProps } from '@harness/icons'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
@@ -16,6 +26,7 @@ import { ProvisioningStatus } from './InfraProvisioningWizard/Constants'
 import { InfraProvisioningCarousel } from './InfraProvisioningCarousel/InfraProvisioningCarousel'
 import { useProvisionDelegateForHostedBuilds } from '../../hooks/useProvisionDelegateForHostedBuilds'
 
+import buildImgURL from './build.svg'
 import css from './GetStartedWithCI.module.scss'
 
 export default function GetStartedWithCI(): React.ReactElement {
@@ -130,32 +141,27 @@ export default function GetStartedWithCI(): React.ReactElement {
         />
       ) : null}
       <Layout.Vertical flex>
-        <Layout.Vertical flex margin={{ bottom: 'huge' }}>
-          <Icon name="ci-main" size={50} className={css.ciIcon} />
-          <Text font={{ variation: FontVariation.H1_SEMI }}>{getString('ci.getStartedWithCI.firstPipeline')}</Text>
-        </Layout.Vertical>
-        <Layout.Horizontal flex={{ alignItems: 'flex-start' }} className={css.buildYourOwnPipeline}>
-          <Layout.Horizontal>
-            <Icon name="ci-build-pipeline" size={40} />
-            <Layout.Vertical padding={{ left: 'medium', right: 'medium' }}>
-              <Text font={{ variation: FontVariation.H4 }}>
-                {getString('ci.getStartedWithCI.buildyourOwnPipeline')}
+        <Container className={css.topPage}>
+          <Container className={css.buildYourOwnPipeline}>
+            <Container>
+              <Layout.Horizontal flex className={css.ciLogo}>
+                <Icon name="ci-main" size={42} />
+                <Layout.Vertical flex padding={{ left: 'xsmall' }}>
+                  <Text font={{ variation: FontVariation.BODY2 }} className={css.label}>
+                    {getString('common.purpose.ci.continuousLabel')}
+                  </Text>
+                  <Text font={{ variation: FontVariation.BODY2 }} className={css.label}>
+                    {getString('common.purpose.ci.integration')}
+                  </Text>
+                </Layout.Vertical>
+              </Layout.Horizontal>
+            </Container>
+            <Layout.Vertical>
+              <Text font={{ variation: FontVariation.H2 }}>{getString('ci.getStartedWithCI.firstPipeline')}</Text>
+              <Text font={{ variation: FontVariation.SMALL }} padding={{ top: 'small' }}>
+                {getString('common.purpose.ci.descriptionOnly')}
               </Text>
-              <Text font={{ variation: FontVariation.SMALL }} padding={{ top: 'xsmall' }}>
-                {getString('ci.getStartedWithCI.quicklyCreate')}
-              </Text>
-              <Container padding={{ top: 'small', bottom: 'small' }}>
-                <Container className={cx(css.separator, css.horizontal)} />
-              </Container>
-              <Layout.Horizontal padding={{ top: 'medium' }}>
-                {renderBuildPipelineStep({
-                  iconProps: {
-                    name: 'ci-infra',
-                    size: 15,
-                    className: cx(css.icon, css.iconPadding)
-                  },
-                  label: 'ci.getStartedWithCI.configInfra'
-                })}
+              <Layout.Horizontal padding={{ top: 'xxlarge', bottom: 'huge' }}>
                 {renderBuildPipelineStep({
                   iconProps: { name: 'scm', size: 18, className: cx(css.icon, css.paddingXSmall) },
                   label: 'ci.getStartedWithCI.connectRepo'
@@ -178,15 +184,41 @@ export default function GetStartedWithCI(): React.ReactElement {
                   isLastStep: true
                 })}
               </Layout.Horizontal>
+              <Container className={css.buttonRow}>
+                <Button
+                  variation={ButtonVariation.PRIMARY}
+                  size={ButtonSize.LARGE}
+                  text={getString('getStarted')}
+                  onClick={() => initiateProvisioning()}
+                />
+              </Container>
             </Layout.Vertical>
-          </Layout.Horizontal>
-          <Button
-            variation={ButtonVariation.PRIMARY}
-            text={getString('common.createPipeline')}
-            onClick={() => initiateProvisioning()}
-          />
-        </Layout.Horizontal>
-        <Layout.Horizontal flex padding={{ top: 'huge' }}>
+            <img
+              className={css.buildImg}
+              title={getString('ci.getStartedWithCI.buildPipeline')}
+              src={buildImgURL}
+              width={413}
+              height={260}
+            />
+          </Container>
+          <Container className={css.learnMore}>
+            <Button
+              variation={ButtonVariation.SECONDARY}
+              round
+              rightIcon="double-chevron-down"
+              iconProps={{ size: 12 }}
+              text={getString('ci.getStartedWithCI.learnMoreAboutCI')}
+              onClick={() => {
+                // Note: Without setTimeout, scrollIntoView does not work!
+                setTimeout(
+                  () => document.getElementById('getStartedPage2Top')?.scrollIntoView({ behavior: 'smooth' }),
+                  0
+                )
+              }}
+            />
+          </Container>
+        </Container>
+        <Layout.Horizontal flex padding={{ top: 'huge' }} id="getStartedPage2Top">
           <Icon name="ci-main" size={42} />
           <Layout.Vertical flex padding={{ left: 'xsmall' }}>
             <Text font={{ variation: FontVariation.H5 }} className={css.label}>

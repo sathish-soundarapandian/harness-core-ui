@@ -59,7 +59,9 @@ import { HarnessApprovalView } from '@pipeline/components/execution/StepDetails/
 import { JiraApprovalView } from '@pipeline/components/execution/StepDetails/views/JiraApprovalView/JiraApprovalView'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { ServiceNowApprovalView } from '@pipeline/components/execution/StepDetails/views/ServiceNowApprovalView/ServiceNowApprovalView'
+import { CustomApprovalView } from '@pipeline/components/execution/StepDetails/views/CustomApprovalView/CustomApprovalView'
 import { PolicyEvaluationView } from '@pipeline/components/execution/StepDetails/views/PolicyEvaluationView/PolicyEvaluationView'
+import { QueueStepView } from '@pipeline/components/execution/StepDetails/views/QueueStepView/QueueStepView'
 import type { ResourceDTO } from 'services/audit'
 import AuditTrailFactory, { ResourceScope } from '@audit-trail/factories/AuditTrailFactory'
 import routes from '@common/RouteDefinitions'
@@ -67,6 +69,7 @@ import { ServiceNowCreateUpdateView } from '@pipeline/components/execution/StepD
 import { ModuleName } from 'framework/types/ModuleName'
 import PipelineResourceRenderer from './components/RbacResourceModals/PipelineResourceRenderer/PipelineResourceRenderer'
 import { JiraCreateUpdateView } from './components/execution/StepDetails/views/JiraCreateUpdateView/JiraCreateUpdateView'
+import ExecutionErrorTrackingView from './pages/execution/ExecutionErrorTrackingView/ExecutionErrorTrackingView'
 /**
  * Register RBAC resources
  */
@@ -145,6 +148,10 @@ ExecFactory.registerStepDetails(StepType.ServiceNowApproval, {
   component: ServiceNowApprovalView
 })
 
+ExecFactory.registerStepDetails(StepType.CustomApproval, {
+  component: CustomApprovalView
+})
+
 ExecFactory.registerStepDetails(StepType.ServiceNowCreate, {
   component: ServiceNowCreateUpdateView
 })
@@ -154,6 +161,10 @@ ExecFactory.registerStepDetails(StepType.ServiceNowUpdate, {
 
 ExecFactory.registerStepDetails(StepType.Policy, {
   component: PolicyEvaluationView
+})
+
+ExecFactory.registerStepDetails(StepType.Queue, {
+  component: QueueStepView
 })
 
 /**
@@ -366,6 +377,21 @@ export function PipelineRouteDestinations({
       >
         <ExecutionLandingPage>
           <ExecutionSecurityView />
+        </ExecutionLandingPage>
+      </RouteWithLayout>
+      <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={sidebarProps}
+        layout={MinimalLayout}
+        path={routes.toExecutionErrorTrackingView({
+          ...accountPathProps,
+          ...executionPathProps,
+          ...moduleParams
+        })}
+        pageName={PAGE_NAME.ErrorTrackingListPage}
+      >
+        <ExecutionLandingPage>
+          <ExecutionErrorTrackingView />
         </ExecutionLandingPage>
       </RouteWithLayout>
       <RouteWithLayout

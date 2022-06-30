@@ -39,6 +39,7 @@ src/modules/18-audit-trail @harness/ui-platform
 src/modules/20-rbac @harness/ui-platform
 src/modules/20-rbac/components/TrialHomePageTemplate @harness/ui-plg
 src/modules/27-sto @harness/ui-sto
+src/modules/28-et @harness/error-tracking
 src/modules/33-auth-settings @harness/ui-platform
 src/modules/33-auth-settings/pages/subscriptions @harness/ui-plg
 src/modules/33-auth-settings/pages/AccountOverview @harness/ui-plg

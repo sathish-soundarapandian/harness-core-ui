@@ -64,7 +64,8 @@ import {
   manifestTypeLabels,
   allowedManifestTypes,
   ManifestTypetoStoreMap,
-  ManifestToPathKeyMap
+  ManifestToPathKeyMap,
+  showAddManifestBtn
 } from '../Manifesthelper'
 import type { ConnectorRefLabelType } from '../../ArtifactsSelection/ArtifactInterface'
 import type {
@@ -91,13 +92,6 @@ import ConnectorField from './ConnectorField'
 import HelmWithOCI from '../ManifestWizardSteps/HelmWithOCI/HelmWithOCI'
 import { getConnectorPath } from '../ManifestWizardSteps/ManifestUtils'
 import css from '../ManifestSelection.module.scss'
-
-const showAddManifestBtn = (isReadonly: boolean, allowOnlyOne: boolean, listOfManifests: Array<any>): boolean => {
-  if (allowOnlyOne && listOfManifests.length === 1) {
-    return false
-  }
-  return !isReadonly
-}
 
 function ManifestListView({
   updateStage,
@@ -241,7 +235,7 @@ function ManifestListView({
 
   const attachPathYaml = useCallback(
     (manifestPathData: any, manifestId: string, manifestType: PrimaryManifestType): void => {
-      const manifestData = listOfManifests.find(manifestObj => manifestObj.manifest.identifier === manifestId)
+      const manifestData = listOfManifests?.find(manifestObj => manifestObj.manifest.identifier === manifestId)
       set(manifestData, `manifest.spec.${ManifestToPathKeyMap[manifestType]}`, manifestPathData)
       updateStageData()
     },
@@ -250,8 +244,8 @@ function ManifestListView({
 
   const removeValuesYaml = useCallback(
     (valuesYamlIndex: number, manifestId: string, manifestType: PrimaryManifestType): void => {
-      const manifestData = listOfManifests.find(manifestObj => manifestObj.manifest.identifier === manifestId)
-      manifestData.manifest.spec[ManifestToPathKeyMap[manifestType]].splice(valuesYamlIndex, 1)
+      const manifestData = listOfManifests?.find(manifestObj => manifestObj.manifest.identifier === manifestId)
+      manifestData?.manifest.spec[ManifestToPathKeyMap[manifestType]].splice(valuesYamlIndex, 1)
       updateStageData()
     },
     []

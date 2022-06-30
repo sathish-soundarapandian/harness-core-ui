@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import Step3Verify from '../Step3Verify/Step3Verify'
@@ -26,6 +26,20 @@ jest.mock('services/portal', () => ({
 }))
 
 describe('Create Docker Step3Verify', () => {
+  test('render data and create delegate group', async () => {
+    const { container, getByRole } = render(
+      <TestWrapper>
+        <Step3Verify onClose={() => jest.fn()} />
+      </TestWrapper>
+    )
+
+    const doneBtn = getByRole('button', { name: 'done' })
+    act(() => {
+      userEvent.click(doneBtn!)
+    })
+
+    expect(container).toMatchSnapshot()
+  })
   test('render data and go back', () => {
     const { container } = render(
       <TestWrapper>

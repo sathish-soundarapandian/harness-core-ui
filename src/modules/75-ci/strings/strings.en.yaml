@@ -55,8 +55,10 @@ runTestsStep:
   fivePointZero: '5.0'
   sixPointZero: '6.0'
   namespaces: Namespaces
+  testReportPaths: Test Report Paths
   validation:
     namespacesRequiredWhenCsharp: 'Namespaces is required in case Language is C#'
+runTestsErrorTrackingSetupText: Do you want to enable Error Tracking?
 runTestsMavenSetupTitle: Maven setup
 runTestsMavenSetupText1: Does your pom.xml contain <argLine>? Or do you attach Jacoco or any agent while running unit tests?
 runTestsMavenSetupText2: Update pom.xml by adding the following plugin with <harnessArgLine>
@@ -129,11 +131,11 @@ hostPort: Host Port
 containerPort: Container Port
 baseConnectorImage: Base Image Connector
 getStartedWithCI:
+  learnMoreAboutCI: Learn more about Harness CI
   firstPipeline: 'Let’s get you started with your first Pipeline!'
   buildyourOwnPipeline: Build your own Pipeline
-  quicklyCreate: Quickly create a Pipeline using your own codebase and our intuitive visual editor.
   configInfra: Configure Infrastructure
-  connectRepo: Connect your Code Repository
+  connectRepo: Connect to Git Repository
   selectRepo: Select Repository
   buildPipeline: Build Pipeline
   hostedByHarness: Hosted by Harness
@@ -171,7 +173,6 @@ getStartedWithCI:
   onPremLabel: On-prem
   codeRepo: Which code repository do you use?
   authMethod: Select your Authentication method
-  oAuthLabel: OAuth
   accessTokenLabel: Access Token
   codeRepoLabel: Code repository
   authMethodLabel: Authentication method

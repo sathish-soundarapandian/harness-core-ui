@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { ResponseSetupStatus, useGetDelegateInstallStatus, useProvisionResourcesForCI } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { Status } from '@common/utils/CIConstants'
+import { Status } from '@common/utils/Constants'
 import {
   DELEGATE_INSTALLATION_REFETCH_DELAY,
   MAX_TIMEOUT_DELEGATE_INSTALLATION,

@@ -6,7 +6,7 @@
  */
 
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { getSelectStageOptionsFromPipeline } from '../CommonUtils'
 
 function generateStage(idx: number, type: string): StageElementWrapper {

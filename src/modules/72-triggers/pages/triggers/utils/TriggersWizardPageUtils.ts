@@ -7,10 +7,10 @@
 
 import { isNull, isUndefined, omitBy, isEmpty, get, set, flatten, cloneDeep } from 'lodash-es'
 import { string, array, object, ObjectSchema } from 'yup'
-import type { PipelineInfoConfig, ConnectorResponse, ManifestConfigWrapper, NGVariable } from 'services/cd-ng'
+import type { ConnectorResponse, ManifestConfigWrapper } from 'services/cd-ng'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import type { NGTriggerSourceV2 } from 'services/pipeline-ng'
+import type { NGTriggerSourceV2, PipelineInfoConfig, NGVariable } from 'services/pipeline-ng'
 import { connectorUrlType } from '@connectors/constants'
 import type { PanelInterface } from '@common/components/Wizard/Wizard'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
@@ -645,6 +645,13 @@ export const ciCodebaseBuildPullRequest = {
   type: 'PR',
   spec: {
     number: '<+trigger.prNumber>'
+  }
+}
+
+export const ciCodebaseBuildIssueComment = {
+  type: 'tag',
+  spec: {
+    tag: '<+trigger.tag>'
   }
 }
 
@@ -1935,17 +1942,29 @@ export function getTriggerInputSetsBranchQueryParameter({
   branch?: string
 }): string {
   return gitAwareForTriggerEnabled
-    ? pipelineBranchName === DEFAULT_TRIGGER_BRANCH
+    ? [
+        ciCodebaseBuildIssueComment.spec.tag,
+        ciCodebaseBuildPullRequest.spec.number,
+        ciCodebaseBuild.spec.branch
+      ].includes(pipelineBranchName)
       ? branch
       : pipelineBranchName
     : branch
 }
 
-export const UPDATING_INVALID_TRIGGER_IN_GIT =
-  'Invalid request: Failed while updating Trigger: Please check the requested file path / branch / Github repo name if they exist or not.'
-
-export const SAVING_INVALID_TRIGGER_IN_GIT =
-  'Invalid request: Failed while Saving Trigger: Please check the requested file path / branch / Github repo name if they exist or not.'
-
 export const getErrorMessage = (error: any): string =>
   get(error, 'data.error', get(error, 'data.message', error?.message))
+
+export enum TriggerGitEvent {
+  PULL_REQUEST = 'PullRequest',
+  ISSUE_COMMENT = 'IssueComment',
+  PUSH = 'Push'
+}
+
+export const TriggerGitEventTypes: Readonly<string[]> = [
+  TriggerGitEvent.PULL_REQUEST,
+  TriggerGitEvent.ISSUE_COMMENT,
+  TriggerGitEvent.PUSH
+]
+
+export const isHarnessExpression = (str = ''): boolean => str.startsWith('<+') && str.endsWith('>')

@@ -6,238 +6,427 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
     class="StyledProps--font StyledProps--main logsContainer"
   >
     <div
-      class="stepsContainer"
+      class="mainContainer"
     >
       <div
-        class="bp3-popover-wrapper select stageSelector"
+        class="statusHeader"
       >
         <div
-          class="bp3-popover-target"
+          class="heatmap"
         >
           <div
-            class=""
+            class="statusHeatMap"
           >
-            <button
-              class="bp3-button Button--button StyledProps--font StyledProps--main btn Button--with-current-color Button--iconOnly Button--withRightIcon"
-              type="button"
+            <div
+              class="statusHeatMapCell"
+              data-id="google_1"
+              data-status="running"
             >
-              <span
-                class="bp3-button-text"
-              >
+               
+            </div>
+            <div
+              class="statusHeatMapCell"
+              data-id="google_2"
+              data-status="running"
+            >
+               
+            </div>
+            <div
+              class="statusHeatMapCell"
+              data-id="qa stage"
+              data-status="notstarted"
+            >
+               
+            </div>
+            <div
+              class="statusHeatMapCell"
+              data-id="Random"
+              data-status="notstarted"
+            >
+               
+            </div>
+          </div>
+        </div>
+        <span>
+          pipeline.numOfStages
+        </span>
+      </div>
+      <div
+        class="Accordion--accordion mainAccordion"
+      >
+        <div
+          class="Accordion--panel accordionPanel"
+          data-disabled="false"
+          data-open="true"
+          data-testid="google_1-panel"
+        >
+          <div
+            class="Accordion--summary accordionSummary"
+            data-testid="google_1-summary"
+          >
+            <div
+              class=""
+            >
+              <div>
                 <span
-                  class="bp3-icon StyledProps--main icon"
-                  data-icon="pipeline-deploy"
+                  class="bp3-icon StyledProps--main statusIcon running icon"
+                  data-icon="spinner"
                 >
                   <svg
+                    fill="none"
                     height="16"
-                    viewBox="0 0 16 16"
+                    viewBox="0 0 36 36"
                     width="16"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      clip-rule="evenodd"
-                      d="M14.8 1.148a.638.638 0 01.192.577l-2.396 13.707a.614.614 0 01-.43.49.584.584 0 01-.611-.193l-3.813-4.578-1.856 2.382a.584.584 0 01-.666.194.622.622 0 01-.398-.587V8.852l-4.46-2.32a.628.628 0 01-.329-.61.618.618 0 01.423-.543l13.772-4.362a.581.581 0 01.573.131zM6.02 8.783v2.6l4.996-6.413-4.997 3.813zm5.193-5.508L2.24 6.116 5.36 7.74l5.852-4.465zm2.182.62l-4.892 6.278a.59.59 0 01.065.067l3.074 3.69 1.753-10.035z"
-                      fill="current-color"
-                      fill-rule="evenodd"
+                      d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
+                      stroke="currentColor"
+                      stroke-dasharray="75,100"
+                      stroke-linecap="round"
+                      stroke-width="2.8"
+                      style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
                     />
                   </svg>
                 </span>
                 <span>
                   Google1
                 </span>
-              </span>
-              <span
-                class="bp3-icon bp3-icon-chevron-down StyledProps--main icon"
-                icon="chevron-down"
+              </div>
+            </div>
+            <div
+              class="Accordion--chevron"
+            />
+          </div>
+          <div
+            class="bp3-collapse Accordion--collapse"
+            style="height: 0px;"
+          >
+            <div
+              aria-hidden="false"
+              class="bp3-collapse-body"
+              style="transform: translateY(0);"
+            >
+              <div
+                class="Accordion--details accordionDetails"
+                data-testid="google_1-details"
               >
-                <svg
-                  data-icon="chevron-down"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  width="16"
+                <ul
+                  class="root"
                 >
-                  <desc>
-                    chevron-down
-                  </desc>
-                  <path
-                    d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                    fill-rule="evenodd"
-                  />
-                </svg>
-              </span>
-            </button>
+                  <li
+                    class="item"
+                    data-type="item"
+                  >
+                    <div
+                      class="step"
+                      data-status="success"
+                    >
+                      <span
+                        class="bp3-icon bp3-icon-tick-circle StyledProps--main statusIcon success icon"
+                        icon="tick-circle"
+                      >
+                        <svg
+                          data-icon="tick-circle"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          width="16"
+                        >
+                          <desc>
+                            tick-circle
+                          </desc>
+                          <path
+                            d="M8 16c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm4-11c-.28 0-.53.11-.71.29L7 9.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29s.53-.11.71-.29l5-5A1.003 1.003 0 0012 5z"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main name"
+                        style="--text-line-clamp: 1;"
+                      >
+                        Service
+                      </p>
+                      <span
+                        class="StyledProps--font StyledProps--main duration StyledProps--inline"
+                      >
+                         
+                        
+                      </span>
+                    </div>
+                  </li>
+                  <li
+                    class="item"
+                    data-type="item"
+                  >
+                    <div
+                      class="step"
+                      data-status="success"
+                    >
+                      <span
+                        class="bp3-icon bp3-icon-tick-circle StyledProps--main statusIcon success icon"
+                        icon="tick-circle"
+                      >
+                        <svg
+                          data-icon="tick-circle"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          width="16"
+                        >
+                          <desc>
+                            tick-circle
+                          </desc>
+                          <path
+                            d="M8 16c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm4-11c-.28 0-.53.11-.71.29L7 9.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29s.53-.11.71-.29l5-5A1.003 1.003 0 0012 5z"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main name"
+                        style="--text-line-clamp: 1;"
+                      >
+                        Infrastructure
+                      </p>
+                      <span
+                        class="StyledProps--font StyledProps--main duration StyledProps--inline"
+                      >
+                         
+                        
+                      </span>
+                    </div>
+                  </li>
+                  <li
+                    class="item"
+                    data-type="item"
+                  >
+                    <div
+                      class="step"
+                      data-status="running"
+                    >
+                      <span
+                        class="bp3-icon StyledProps--main statusIcon running icon"
+                        data-icon="spinner"
+                      >
+                        <svg
+                          fill="none"
+                          height="16"
+                          viewBox="0 0 36 36"
+                          width="16"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
+                            stroke="currentColor"
+                            stroke-dasharray="75,100"
+                            stroke-linecap="round"
+                            stroke-width="2.8"
+                            style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
+                          />
+                        </svg>
+                      </span>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main name"
+                        style="--text-line-clamp: 1;"
+                      >
+                        Rollout Deployment
+                      </p>
+                      <span
+                        class="StyledProps--font StyledProps--main duration StyledProps--inline"
+                      >
+                         
+                        
+                      </span>
+                    </div>
+                  </li>
+                  <li
+                    class="item"
+                    data-type="item"
+                  >
+                    <div
+                      class="step"
+                      data-status="notstarted"
+                    >
+                      <span
+                        class="bp3-icon StyledProps--main statusIcon notstarted icon"
+                        data-icon="pending"
+                      >
+                        <svg
+                          height="16"
+                          viewBox="0 0 9 9"
+                          width="16"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M8.206 2.709a.404.404 0 01-.215.057.443.443 0 01-.343-.186c-.13-.215-.287-.402-.445-.588a.39.39 0 01.015-.559.39.39 0 01.558.014c.201.215.387.459.545.717a.38.38 0 01-.115.545zM5.987 7.868A3.705 3.705 0 007.45 6.72a.392.392 0 01.56-.071.392.392 0 01.07.559 4.62 4.62 0 01-1.776 1.404c-.058.029-.1.029-.158.029a.402.402 0 01-.373-.244.411.411 0 01.215-.53zM8.078 5.403c.13-.473.143-.974.086-1.447a.39.39 0 01.344-.445.39.39 0 01.444.344 4.317 4.317 0 01-.1 1.763.396.396 0 01-.387.301c-.029 0-.072 0-.1-.014a.42.42 0 01-.287-.502zM5.748.858A.387.387 0 116.491.64a.387.387 0 01-.743.217zM4.525 0a.4.4 0 110 .803A3.706 3.706 0 00.827 4.5c0 .387.057.774.186 1.16a.391.391 0 01-.258.502c-.043.015-.086.015-.129.015-.172 0-.33-.1-.372-.273A4.305 4.305 0 01.024 4.5c0-2.48 2.021-4.5 4.5-4.5zM1.802 6.994a3.724 3.724 0 002.723 1.204.4.4 0 110 .802 4.494 4.494 0 01-3.311-1.462.39.39 0 01.029-.559c.157-.157.4-.143.559.015z"
+                          />
+                        </svg>
+                      </span>
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main name"
+                        style="--text-line-clamp: 1;"
+                      >
+                        RolloutSecond
+                      </p>
+                      <span
+                        class="StyledProps--font StyledProps--main duration StyledProps--inline"
+                      >
+                         
+                        
+                      </span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div
-        class="stageTree"
-      >
-        <ul
-          class="root"
+        <div
+          class="Accordion--panel accordionPanel"
+          data-disabled="false"
+          data-open="false"
+          data-testid="google_2-panel"
         >
-          <li
-            class="item"
-            data-type="item"
+          <div
+            class="Accordion--summary accordionSummary"
+            data-testid="google_2-summary"
           >
             <div
-              class="step"
-              data-status="success"
+              class=""
             >
-              <span
-                class="bp3-icon bp3-icon-tick-circle StyledProps--main icon"
-                icon="tick-circle"
-              >
-                <svg
-                  data-icon="tick-circle"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  width="16"
+              <div>
+                <span
+                  class="bp3-icon StyledProps--main statusIcon running icon"
+                  data-icon="spinner"
                 >
-                  <desc>
-                    tick-circle
-                  </desc>
-                  <path
-                    d="M8 16c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm4-11c-.28 0-.53.11-.71.29L7 9.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29s.53-.11.71-.29l5-5A1.003 1.003 0 0012 5z"
-                    fill-rule="evenodd"
-                  />
-                </svg>
-              </span>
-              <p
-                class="StyledProps--font Text--lineclamp StyledProps--main name"
-                style="--text-line-clamp: 1;"
-              >
-                Service
-              </p>
-              <span
-                class="StyledProps--font StyledProps--main duration StyledProps--inline"
-              >
-                 
-                
-              </span>
+                  <svg
+                    fill="none"
+                    height="16"
+                    viewBox="0 0 36 36"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
+                      stroke="currentColor"
+                      stroke-dasharray="75,100"
+                      stroke-linecap="round"
+                      stroke-width="2.8"
+                      style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
+                    />
+                  </svg>
+                </span>
+                <span>
+                  Google2
+                </span>
+              </div>
             </div>
-          </li>
-          <li
-            class="item"
-            data-type="item"
+            <div
+              class="Accordion--chevron"
+            />
+          </div>
+          <div
+            class="bp3-collapse Accordion--collapse"
           >
             <div
-              class="step"
-              data-status="success"
-            >
-              <span
-                class="bp3-icon bp3-icon-tick-circle StyledProps--main icon"
-                icon="tick-circle"
-              >
-                <svg
-                  data-icon="tick-circle"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  width="16"
-                >
-                  <desc>
-                    tick-circle
-                  </desc>
-                  <path
-                    d="M8 16c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm4-11c-.28 0-.53.11-.71.29L7 9.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29s.53-.11.71-.29l5-5A1.003 1.003 0 0012 5z"
-                    fill-rule="evenodd"
-                  />
-                </svg>
-              </span>
-              <p
-                class="StyledProps--font Text--lineclamp StyledProps--main name"
-                style="--text-line-clamp: 1;"
-              >
-                Infrastructure
-              </p>
-              <span
-                class="StyledProps--font StyledProps--main duration StyledProps--inline"
-              >
-                 
-                
-              </span>
-            </div>
-          </li>
-          <li
-            class="item"
-            data-type="item"
+              aria-hidden="false"
+              class="bp3-collapse-body"
+              style="transform: translateY(-undefinedpx);"
+            />
+          </div>
+        </div>
+        <div
+          class="Accordion--panel accordionPanel"
+          data-disabled="true"
+          data-open="false"
+          data-testid="qastage-panel"
+        >
+          <div
+            class="Accordion--summary accordionSummary"
+            data-testid="qastage-summary"
           >
             <div
-              class="step"
-              data-status="running"
+              class=""
             >
-              <span
-                class="bp3-icon StyledProps--main icon"
-                data-icon="spinner"
-              >
-                <svg
-                  fill="none"
-                  height="16"
-                  viewBox="0 0 36 36"
-                  width="16"
-                  xmlns="http://www.w3.org/2000/svg"
+              <div>
+                <span
+                  class="bp3-icon StyledProps--main statusIcon notstarted icon"
+                  data-icon="pending"
                 >
-                  <path
-                    d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
-                    stroke="currentColor"
-                    stroke-dasharray="75,100"
-                    stroke-linecap="round"
-                    stroke-width="2.8"
-                    style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
-                  />
-                </svg>
-              </span>
-              <p
-                class="StyledProps--font Text--lineclamp StyledProps--main name"
-                style="--text-line-clamp: 1;"
-              >
-                Rollout Deployment
-              </p>
-              <span
-                class="StyledProps--font StyledProps--main duration StyledProps--inline"
-              >
-                 
-                
-              </span>
+                  <svg
+                    height="16"
+                    viewBox="0 0 9 9"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M8.206 2.709a.404.404 0 01-.215.057.443.443 0 01-.343-.186c-.13-.215-.287-.402-.445-.588a.39.39 0 01.015-.559.39.39 0 01.558.014c.201.215.387.459.545.717a.38.38 0 01-.115.545zM5.987 7.868A3.705 3.705 0 007.45 6.72a.392.392 0 01.56-.071.392.392 0 01.07.559 4.62 4.62 0 01-1.776 1.404c-.058.029-.1.029-.158.029a.402.402 0 01-.373-.244.411.411 0 01.215-.53zM8.078 5.403c.13-.473.143-.974.086-1.447a.39.39 0 01.344-.445.39.39 0 01.444.344 4.317 4.317 0 01-.1 1.763.396.396 0 01-.387.301c-.029 0-.072 0-.1-.014a.42.42 0 01-.287-.502zM5.748.858A.387.387 0 116.491.64a.387.387 0 01-.743.217zM4.525 0a.4.4 0 110 .803A3.706 3.706 0 00.827 4.5c0 .387.057.774.186 1.16a.391.391 0 01-.258.502c-.043.015-.086.015-.129.015-.172 0-.33-.1-.372-.273A4.305 4.305 0 01.024 4.5c0-2.48 2.021-4.5 4.5-4.5zM1.802 6.994a3.724 3.724 0 002.723 1.204.4.4 0 110 .802 4.494 4.494 0 01-3.311-1.462.39.39 0 01.029-.559c.157-.157.4-.143.559.015z"
+                    />
+                  </svg>
+                </span>
+                <span />
+              </div>
             </div>
-          </li>
-          <li
-            class="item"
-            data-type="item"
+            <div
+              class="Accordion--chevron"
+            />
+          </div>
+          <div
+            class="bp3-collapse Accordion--collapse"
           >
             <div
-              class="step"
-              data-status="notstarted"
+              aria-hidden="false"
+              class="bp3-collapse-body"
+              style="transform: translateY(-undefinedpx);"
+            />
+          </div>
+        </div>
+        <div
+          class="Accordion--panel accordionPanel"
+          data-disabled="true"
+          data-open="false"
+          data-testid="6iyMwdTxSWqf4rdF5eqVMw-panel"
+        >
+          <div
+            class="Accordion--summary accordionSummary"
+            data-testid="6iyMwdTxSWqf4rdF5eqVMw-summary"
+          >
+            <div
+              class=""
             >
-              <span
-                class="bp3-icon StyledProps--main icon"
-                data-icon="pending"
-              >
-                <svg
-                  height="16"
-                  viewBox="0 0 9 9"
-                  width="16"
-                  xmlns="http://www.w3.org/2000/svg"
+              <div>
+                <span
+                  class="bp3-icon StyledProps--main statusIcon notstarted icon"
+                  data-icon="pending"
                 >
-                  <path
-                    d="M8.206 2.709a.404.404 0 01-.215.057.443.443 0 01-.343-.186c-.13-.215-.287-.402-.445-.588a.39.39 0 01.015-.559.39.39 0 01.558.014c.201.215.387.459.545.717a.38.38 0 01-.115.545zM5.987 7.868A3.705 3.705 0 007.45 6.72a.392.392 0 01.56-.071.392.392 0 01.07.559 4.62 4.62 0 01-1.776 1.404c-.058.029-.1.029-.158.029a.402.402 0 01-.373-.244.411.411 0 01.215-.53zM8.078 5.403c.13-.473.143-.974.086-1.447a.39.39 0 01.344-.445.39.39 0 01.444.344 4.317 4.317 0 01-.1 1.763.396.396 0 01-.387.301c-.029 0-.072 0-.1-.014a.42.42 0 01-.287-.502zM5.748.858A.387.387 0 116.491.64a.387.387 0 01-.743.217zM4.525 0a.4.4 0 110 .803A3.706 3.706 0 00.827 4.5c0 .387.057.774.186 1.16a.391.391 0 01-.258.502c-.043.015-.086.015-.129.015-.172 0-.33-.1-.372-.273A4.305 4.305 0 01.024 4.5c0-2.48 2.021-4.5 4.5-4.5zM1.802 6.994a3.724 3.724 0 002.723 1.204.4.4 0 110 .802 4.494 4.494 0 01-3.311-1.462.39.39 0 01.029-.559c.157-.157.4-.143.559.015z"
-                  />
-                </svg>
-              </span>
-              <p
-                class="StyledProps--font Text--lineclamp StyledProps--main name"
-                style="--text-line-clamp: 1;"
-              >
-                RolloutSecond
-              </p>
-              <span
-                class="StyledProps--font StyledProps--main duration StyledProps--inline"
-              >
-                 
-                
-              </span>
+                  <svg
+                    height="16"
+                    viewBox="0 0 9 9"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M8.206 2.709a.404.404 0 01-.215.057.443.443 0 01-.343-.186c-.13-.215-.287-.402-.445-.588a.39.39 0 01.015-.559.39.39 0 01.558.014c.201.215.387.459.545.717a.38.38 0 01-.115.545zM5.987 7.868A3.705 3.705 0 007.45 6.72a.392.392 0 01.56-.071.392.392 0 01.07.559 4.62 4.62 0 01-1.776 1.404c-.058.029-.1.029-.158.029a.402.402 0 01-.373-.244.411.411 0 01.215-.53zM8.078 5.403c.13-.473.143-.974.086-1.447a.39.39 0 01.344-.445.39.39 0 01.444.344 4.317 4.317 0 01-.1 1.763.396.396 0 01-.387.301c-.029 0-.072 0-.1-.014a.42.42 0 01-.287-.502zM5.748.858A.387.387 0 116.491.64a.387.387 0 01-.743.217zM4.525 0a.4.4 0 110 .803A3.706 3.706 0 00.827 4.5c0 .387.057.774.186 1.16a.391.391 0 01-.258.502c-.043.015-.086.015-.129.015-.172 0-.33-.1-.372-.273A4.305 4.305 0 01.024 4.5c0-2.48 2.021-4.5 4.5-4.5zM1.802 6.994a3.724 3.724 0 002.723 1.204.4.4 0 110 .802 4.494 4.494 0 01-3.311-1.462.39.39 0 01.029-.559c.157-.157.4-.143.559.015z"
+                    />
+                  </svg>
+                </span>
+                <span />
+              </div>
             </div>
-          </li>
-        </ul>
+            <div
+              class="Accordion--chevron"
+            />
+          </div>
+          <div
+            class="bp3-collapse Accordion--collapse"
+          >
+            <div
+              aria-hidden="false"
+              class="bp3-collapse-body"
+              style="transform: translateY(-undefinedpx);"
+            />
+          </div>
+        </div>
       </div>
     </div>
     <div

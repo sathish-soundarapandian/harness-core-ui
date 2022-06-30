@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
+import { Editions } from '@common/constants/SubscriptionTypes'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useModuleInfo } from './useModuleInfo'
 
@@ -13,7 +13,7 @@ export function useAnyEnterpriseLicense(): boolean {
   const { licenseInformation } = useLicenseStore()
 
   const anyEntitlement = Object.values(licenseInformation).find(
-    license => license?.edition === Editions.ENTERPRISE && license?.licenseType === ModuleLicenseType.PAID
+    license => license?.edition === Editions.ENTERPRISE && license?.status === 'ACTIVE'
   )
   return !!anyEntitlement
 }
@@ -24,10 +24,10 @@ export function useCurrentEnterpriseLicense(): boolean {
 
   const moduleEntitlement = module
     ? licenseInformation?.[module?.toUpperCase()]
-    : { edition: 'FREE', licenseType: 'TRIAL' } // default so we don't display HPE if theres an error getting license/module info
+    : { edition: 'FREE', status: 'EXPIRED' } // default so we don't display HPE if theres an error getting license/module info
 
   const currentModuleEntitlement =
-    moduleEntitlement?.edition === Editions.ENTERPRISE && moduleEntitlement.licenseType === ModuleLicenseType.PAID
+    moduleEntitlement?.edition === Editions.ENTERPRISE && moduleEntitlement.status === 'ACTIVE'
 
   return currentModuleEntitlement
 }

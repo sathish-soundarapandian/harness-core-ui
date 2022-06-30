@@ -35,6 +35,23 @@ import { Category, ConnectorActions, ConnectorTypes } from '@common/constants/Tr
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from './HelmRepoConnector.module.scss'
 
+const toolTipIds = {
+  Oci: {
+    HeaderDetail: 'OciHelmRepoAuthenticationDetails',
+    RepoUrl: 'OciHelmRepoUrl',
+    Auth: 'OciHelmRepoAuthentication',
+    Username: 'OciHelmRepoAuthForm_username',
+    Password: 'OciHelmRepoAuthForm_password'
+  },
+  Http: {
+    HeaderDetail: 'helmRepoAuthenticationDetails',
+    RepoUrl: 'helmRepoAuthForm_helmRepoUrl',
+    Auth: 'helmConnectorAuthentication',
+    Username: 'helmRepoAuthForm_username',
+    Password: 'helmRepoAuthForm_password'
+  }
+}
+
 interface StepHelmRepoAuthenticationProps extends ConnectorInfoDTO {
   name: string
   isEditMode?: boolean
@@ -113,7 +130,12 @@ const StepHelmAuthentication: React.FC<StepProps<StepHelmRepoAuthenticationProps
     <PageSpinner />
   ) : (
     <Layout.Vertical spacing="small" className={css.stepDetails}>
-      <Text font={{ variation: FontVariation.H3 }} tooltipProps={{ dataTooltipId: 'helmRepoAuthenticationDetails' }}>
+      <Text
+        font={{ variation: FontVariation.H3 }}
+        tooltipProps={{
+          dataTooltipId: isOCIHelm ? toolTipIds.Oci.HeaderDetail : toolTipIds.Http.HeaderDetail
+        }}
+      >
         {getString('details')}
       </Text>
       <Formik
@@ -165,13 +187,18 @@ const StepHelmAuthentication: React.FC<StepProps<StepHelmRepoAuthenticationProps
                 name="helmRepoUrl"
                 placeholder={getString('UrlLabel')}
                 label={getString('connectors.helmRepo.helmRepoUrl')}
+                tooltipProps={{
+                  dataTooltipId: isOCIHelm ? toolTipIds.Oci.RepoUrl : toolTipIds.Http.RepoUrl
+                }}
               />
 
               <Container className={css.authHeaderRow}>
                 <Text
                   font={{ variation: FontVariation.H6 }}
                   inline
-                  tooltipProps={{ dataTooltipId: 'helmConnectorAuthentication' }}
+                  tooltipProps={{
+                    dataTooltipId: isOCIHelm ? toolTipIds.Oci.Auth : toolTipIds.Http.Auth
+                  }}
                 >
                   {getString('authentication')}
                 </Text>
@@ -192,8 +219,17 @@ const StepHelmAuthentication: React.FC<StepProps<StepHelmRepoAuthenticationProps
                     name="username"
                     stringId="username"
                     type={formikProps.values.username ? formikProps.values.username?.type : ValueType.TEXT}
+                    tooltipProps={{
+                      dataTooltipId: isOCIHelm ? toolTipIds.Oci.Username : toolTipIds.Http.Username
+                    }}
                   />
-                  <SecretInput name={'password'} label={getString('password')} />
+                  <SecretInput
+                    name={'password'}
+                    label={getString('password')}
+                    tooltipProps={{
+                      dataTooltipId: isOCIHelm ? toolTipIds.Oci.Password : toolTipIds.Http.Password
+                    }}
+                  />
                 </>
               ) : null}
             </Layout.Vertical>

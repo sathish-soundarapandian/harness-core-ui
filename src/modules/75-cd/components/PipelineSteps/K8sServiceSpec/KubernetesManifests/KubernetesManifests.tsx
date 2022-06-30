@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect } from 'react'
-import { get, isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Text } from '@harness/uicore'
@@ -34,7 +34,7 @@ const ManifestInputField = (props: ManifestInputFieldProps): React.ReactElement 
   const isManifestsRuntime = runtimeMode && !!get(props.template, 'manifests', false)
 
   const manifestSource = manifestSourceBaseFactory.getManifestSource(props.manifest.type)
-  const manifestDefaultValue = props.manifests?.find(
+  const manifestDefaultValue = defaultTo(props.manifests, props.template.manifests)?.find(
     manifestData => manifestData?.manifest?.identifier === props.manifest?.identifier
   )?.manifest as ManifestConfig
 
@@ -87,7 +87,7 @@ export function KubernetesManifests(props: KubernetesManifestsProps): React.Reac
         </div>
       )}
       {props.template.manifests?.map((manifestObj, index) => {
-        if (!manifestObj?.manifest || !props.manifests?.length) {
+        if (!manifestObj?.manifest || !props.template.manifests?.length) {
           return null
         }
         const manifestPath = `manifests[${index}].manifest`

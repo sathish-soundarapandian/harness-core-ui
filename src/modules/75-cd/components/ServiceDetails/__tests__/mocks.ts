@@ -6,6 +6,7 @@
  */
 
 import type { UseGetMockDataWithMutateAndRefetch } from '@common/utils/testUtils'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { NativeHelmInstanceInfoDTO, ResponseInstancesByBuildIdList } from 'services/cd-ng'
 
 export const mockserviceInstanceDetails: UseGetMockDataWithMutateAndRefetch<ResponseInstancesByBuildIdList> = {
@@ -71,6 +72,24 @@ export const mockserviceInstanceDetails: UseGetMockDataWithMutateAndRefetch<Resp
               deployedById: '4QWHXCwYQN2dU8fVWqv3sg',
               deployedByName: 'automationpipelinesng@mailinator.com',
               pipelineExecutionName: 'v2Install'
+            },
+            {
+              podName: 'release-893b57260532de1e28c01603f3ec71620b7eadfb-serverless',
+              artifactName: 'serverless.zip',
+              connectorRef: 'account.K8sPlaygroundTest',
+              infrastructureDetails: {
+                namespace: 'default',
+                releaseName: 'release-893b57260532de1e28c01603f3ec71620b7eadfb'
+              },
+              instanceInfoDTO: {
+                podName: 'release-893b57260532de1e28c01603f3ec71620b7eadfb-serverless',
+                type: ServiceDeploymentType.ServerlessAwsLambda
+              },
+              terraformInstance: null as unknown as undefined,
+              deployedAt: 1643027218996,
+              deployedById: 'AUTO_SCALED',
+              deployedByName: 'AUTO_SCALED',
+              pipelineExecutionName: 'AUTO_SCALED'
             }
           ]
         }

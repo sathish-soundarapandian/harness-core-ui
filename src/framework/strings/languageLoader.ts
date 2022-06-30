@@ -16,6 +16,8 @@ import auditTrail from '@audit-trail/strings/strings.en.yaml'
 import rbac from '@rbac/strings/strings.en.yaml'
 import governance from '@governance/strings/strings.en.yaml'
 import sto from '@sto/strings/strings.en.yaml'
+import et from '@et/strings/strings.en.yaml'
+import filestore from '@filestore/strings/strings.en.yaml'
 import delegates from '@delegates/strings/strings.en.yaml'
 import secrets from '@secrets/strings/strings.en.yaml'
 import variables from '@variables/strings/strings.en.yaml'
@@ -45,6 +47,8 @@ export default function languageLoader() {
     rbac,
     governance,
     sto,
+    et,
+    filestore,
     delegates,
     secrets,
     variables,

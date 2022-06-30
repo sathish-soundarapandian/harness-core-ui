@@ -22,6 +22,7 @@ export interface QueryContentProps {
   isAutoFetch?: boolean
   mandatoryFields?: any[]
   staleRecordsWarning?: string
+  textAreaPlaceholder?: string
 }
 
 export interface QueryViewerProps {

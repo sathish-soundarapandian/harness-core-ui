@@ -78,7 +78,15 @@ export class DeployServiceStep extends Step<DeployServiceData> {
     })
   }
   renderStep(props: StepProps<DeployServiceData>): JSX.Element {
-    const { initialValues, onUpdate, stepViewType, inputSetData, readonly = false, allowableTypes } = props
+    const {
+      initialValues,
+      onUpdate,
+      stepViewType,
+      inputSetData,
+      readonly = false,
+      allowableTypes,
+      customStepProps
+    } = props
     if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
       return (
         <DeployServiceInputStepFormik
@@ -88,6 +96,7 @@ export class DeployServiceStep extends Step<DeployServiceData> {
           stepViewType={stepViewType}
           inputSetData={inputSetData}
           allowableTypes={allowableTypes}
+          customStepProps={customStepProps as { stageIdentifier: string; isNewServiceEntity: boolean }}
         />
       )
     }

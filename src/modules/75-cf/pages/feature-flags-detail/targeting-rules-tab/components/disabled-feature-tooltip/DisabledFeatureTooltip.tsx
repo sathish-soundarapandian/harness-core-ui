@@ -14,25 +14,46 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import useFeatureEnabled from '../../hooks/useFeatureEnabled'
 
+export interface DisabledFeatureTooltipContentProps {
+  permission?: PermissionIdentifier.TOGGLE_FF_FEATUREFLAG | PermissionIdentifier.EDIT_FF_FEATUREFLAG
+}
 /* 
   Use this if you're passing the tooltip as a prop on an existing component to render 
   an RBAC/Plan Enforced tooltip
 */
-export const DisabledFeatureTooltipContent: FC = () => {
-  const { enabledByPermission } = useFeatureEnabled()
+export const DisabledFeatureTooltipContent: FC<DisabledFeatureTooltipContentProps> = ({
+  permission = PermissionIdentifier.EDIT_FF_FEATUREFLAG
+}) => {
+  const { canEdit, canToggle } = useFeatureEnabled()
 
-  if (!enabledByPermission) {
-    return <RBACTooltip permission={PermissionIdentifier.EDIT_FF_FEATUREFLAG} resourceType={ResourceType.ENVIRONMENT} />
+  if (
+    (permission === PermissionIdentifier.TOGGLE_FF_FEATUREFLAG && !canToggle) ||
+    (permission === PermissionIdentifier.EDIT_FF_FEATUREFLAG && !canEdit)
+  ) {
+    return <RBACTooltip permission={permission} resourceType={ResourceType.ENVIRONMENT} />
   }
 
   // if not a permission related, must be plan enforced related
   return <FeatureWarningTooltip featureName={FeatureIdentifier.MAUS} />
 }
 
-export const DisabledFeatureTooltip: FC<{ fullWidth?: boolean }> = ({ children, fullWidth = false }) => {
-  const { featureEnabled } = useFeatureEnabled()
+export interface DisabledFeatureTooltipProps {
+  fullWidth?: boolean
+  permission?: PermissionIdentifier.TOGGLE_FF_FEATUREFLAG | PermissionIdentifier.EDIT_FF_FEATUREFLAG
+}
 
-  if (featureEnabled) {
+export const DisabledFeatureTooltip: FC<DisabledFeatureTooltipProps> = ({
+  children,
+  fullWidth = false,
+  permission = PermissionIdentifier.EDIT_FF_FEATUREFLAG
+}) => {
+  const { canEdit, canToggle, enabledByPlanEnforcement } = useFeatureEnabled()
+
+  if (
+    enabledByPlanEnforcement &&
+    ((permission === PermissionIdentifier.TOGGLE_FF_FEATUREFLAG && canToggle) ||
+      (permission === PermissionIdentifier.EDIT_FF_FEATUREFLAG && canEdit))
+  ) {
     return <>{children}</>
   }
 
@@ -41,7 +62,7 @@ export const DisabledFeatureTooltip: FC<{ fullWidth?: boolean }> = ({ children, 
       data-testid="disabled-feature-tooltip"
       width="100%"
       inline
-      tooltip={<DisabledFeatureTooltipContent />}
+      tooltip={<DisabledFeatureTooltipContent permission={permission} />}
       tooltipProps={{
         targetProps: {
           style: { width: fullWidth ? '100%' : 'max-content' }

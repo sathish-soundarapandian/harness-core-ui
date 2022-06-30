@@ -28,6 +28,7 @@ import {
 } from 'services/cv'
 import type { NGTemplateInfoConfig } from 'services/template-ng'
 import { PageSpinner, useToaster, NavigationCheck } from '@common/components'
+import { DefaultNewTemplateId } from 'framework/Templates/templates'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
@@ -60,8 +61,8 @@ export default function Configurations(
   const history = useHistory()
   const { isTemplate } = useMonitoredServiceContext()
   const { expressions } = useVariablesExpression()
-  const { orgIdentifier, projectIdentifier, accountId, identifier } = useParams<
-    ProjectPathProps & { identifier: string }
+  const { orgIdentifier, projectIdentifier, accountId, identifier, templateIdentifier } = useParams<
+    ProjectPathProps & { identifier: string; templateIdentifier?: string }
   >()
   const { view, redirectToSLO, sloIdentifier, monitoredServiceIdentifier } = useQueryParams<{
     view?: Views.GRID
@@ -182,7 +183,7 @@ export default function Configurations(
       getInitFormData(
         dataMonitoredServiceById?.data?.monitoredService,
         defaultMonitoredService,
-        !!identifier,
+        isTemplate ? templateIdentifier !== DefaultNewTemplateId : !!identifier,
         isTemplate,
         templateValue
       ),

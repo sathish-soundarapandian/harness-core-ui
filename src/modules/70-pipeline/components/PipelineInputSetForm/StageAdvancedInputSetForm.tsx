@@ -15,14 +15,18 @@ import {
   getMultiTypeFromValue
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import { isEmpty, get } from 'lodash-es'
+import { isEmpty, get, set } from 'lodash-es'
+import produce from 'immer'
 import { connect, FormikContextType } from 'formik'
 import cx from 'classnames'
-import type { StageElementConfig } from 'services/cd-ng'
+import type { StageElementConfig } from 'services/pipeline-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { MultiTypeExecutionCondition } from '@common/components/MultiTypeExecutionCondition/MultiTypeExecutionCondition'
 import DelegateSelectorPanel from '@pipeline/components/PipelineSteps/AdvancedSteps/DelegateSelectorPanel/DelegateSelectorPanel'
 import { useStrings } from 'framework/strings'
+import { getDefaultMonacoConfig } from '@common/components/MonacoTextField/MonacoTextField'
+import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
+import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import css from './PipelineInputSetForm.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -81,6 +85,46 @@ function ConditionalExecutionFormInternal(props: ConditionalExecutionFormProps):
 
 export const ConditionalExecutionForm = connect(ConditionalExecutionFormInternal)
 
+export interface StrategyFormInternalProps {
+  readonly?: boolean
+  path: string
+}
+
+export function StrategyFormInternal(
+  props: StrategyFormInternalProps & { formik: FormikContextType<any> }
+): React.ReactElement {
+  const { readonly, path, formik } = props
+
+  const value = yamlStringify(get(formik.values, path, ''))
+
+  function handleChange(newValue: string): void {
+    try {
+      const parsed = yamlParse(newValue)
+      formik.setValues(
+        produce(formik.values, (draft: any) => {
+          set(draft, path, parsed)
+        })
+      )
+    } catch (e) {
+      // empty block
+    }
+  }
+
+  return (
+    <div className={css.strategyContainer}>
+      <MonacoEditor
+        height={300}
+        options={getDefaultMonacoConfig(!!readonly)}
+        language="yaml"
+        defaultValue={value}
+        onChange={handleChange}
+      />
+    </div>
+  )
+}
+
+export const StrategyForm = connect<StrategyFormInternalProps>(StrategyFormInternal)
+
 export function StageAdvancedInputSetForm({
   deploymentStageTemplate,
   path,
@@ -111,6 +155,11 @@ export function StageAdvancedInputSetForm({
               path={`${path}.when.condition`}
               allowableTypes={allowableTypes}
             />
+          </div>
+        )}
+        {!isEmpty(deploymentStageTemplate?.strategy) && (
+          <div className={cx(css.nestedAccordions, stepCss.formGroup, stepCss.md)}>
+            <StrategyForm readonly={readonly} path={`${path}.strategy`} />
           </div>
         )}
       </div>

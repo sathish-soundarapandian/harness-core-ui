@@ -17,15 +17,15 @@ import {
   useGetMergeInputSetFromPipelineTemplateWithListInput,
   ResponseInputSetTemplateWithReplacedExpressionsResponse
 } from 'services/pipeline-ng'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import {
+  clearRuntimeInput,
   getStageIdentifierFromStageData,
   mergeTemplateWithInputSetData,
   StageSelectionData
 } from '@pipeline/utils/runPipelineUtils'
 
 import type { InputSetValue } from '../InputSetSelector/utils'
-import { clearRuntimeInput } from '../PipelineStudio/StepUtil'
 
 const memoizedParse = memoize(parse)
 
@@ -100,6 +100,9 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
     }
   })
 
+  // Reason for sending repoIdentifier and pipelineRepoID both as same values
+  // input sets are only saved in same repo and same branch that of pipeline's or default branch of other repos
+  // getDefaultFromOtherRepo: true takes care of fetching input sets from other repo, default branches
   const {
     data: inputSetData,
     loading: loadingInputSetsData,
@@ -114,9 +117,12 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      branch,
+      pipelineIdentifier,
+      pipelineRepoID: repoIdentifier,
+      pipelineBranch: branch,
       repoIdentifier,
-      pipelineIdentifier
+      branch,
+      getDefaultFromOtherRepo: true
     }
   })
 
@@ -125,16 +131,22 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
 
   const inputSet = useMemo((): Pipeline => {
     const shouldUseDefaultValues = isUndefined(executionIdentifier)
+    const parsedRunPipelineYaml = clearRuntimeInput(
+      memoizedParse(inputSetYamlResponse?.data?.inputSetTemplateYaml || 'pipeline: {}').pipeline
+    )
 
     if (rerunInputSetYaml) {
-      return memoizedParse(rerunInputSetYaml)
+      const parsedRerunPipelineYaml = memoizedParse(rerunInputSetYaml)
+
+      return mergeTemplateWithInputSetData({
+        templatePipeline: { pipeline: parsedRunPipelineYaml },
+        inputSetPortion: parsedRerunPipelineYaml,
+        allValues: { pipeline: defaultTo(resolvedPipeline, {} as PipelineInfoConfig) },
+        shouldUseDefaultValues
+      })
     }
 
     if (hasRuntimeInputs) {
-      const parsedRunPipelineYaml = clearRuntimeInput(
-        memoizedParse(defaultTo(inputSetYamlResponse?.data?.inputSetTemplateYaml, '')).pipeline
-      )
-
       if (shouldFetchInputSets && inputSetData?.data?.pipelineYaml) {
         setIsInputSetApplied(true)
         const parsedInputSets = clearRuntimeInput(memoizedParse(inputSetData.data.pipelineYaml).pipeline)

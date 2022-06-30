@@ -161,10 +161,42 @@ export const GetInputSetEdit: UseGetReturnData<ResponseInputSetResponse> = {
         branch: 'feature',
         filePath: 'asd.yaml',
         objectId: '4471ec3aa40c26377353974c29a6670d998db06g',
-        commitId: '4471ec3aa40c26377353974c29a6670d998db0commitid',
         repoIdentifier: 'gitSyncRepo',
         rootFolder: '/rootFolderTest/.harness/'
-      }
+      },
+      connectorRef: 'ValidGithubRepo',
+      storeType: 'REMOTE'
+    },
+    correlationId: 'fdb1358f-c3b8-459b-aa89-4e570b7ac6d0'
+  }
+}
+
+export const GetInputSetEditGitSimplification: UseGetReturnData<ResponseInputSetResponse> = {
+  loading: false,
+  refetch: jest.fn(),
+  error: null,
+  data: {
+    status: 'SUCCESS',
+    data: {
+      accountId: 'kmpySmUISimoRrJL6NL73w',
+      orgIdentifier: 'Harness11',
+      projectIdentifier: 'Uhat_Project',
+      pipelineIdentifier: 'testqqq',
+      identifier: 'asd',
+      inputSetYaml:
+        'inputSet:\n  name: asd\n  identifier: asd\n  description: asd\n  pipeline:\n    identifier: testqqq\n    stages:\n      - stage:\n          identifier: asd\n          type: Deployment\n          spec:\n            infrastructure:\n              infrastructureDefinition:\n                type: KubernetesDirect\n                spec:\n                  connectorRef: org.tesa1\n                  namespace: asd\n                  releaseName: asd\n',
+      name: 'asd',
+      description: 'asd',
+      errorResponse: false,
+      gitDetails: {
+        branch: 'feature',
+        filePath: 'asd.yaml',
+        objectId: '4471ec3aa40c26377353974c29a6670d998db06g',
+        commitId: '4471ec3aa40c26377353974c29a6670d998db0commitid',
+        repoName: 'gitSyncRepo'
+      },
+      connectorRef: 'ValidGithubRepo',
+      storeType: 'REMOTE'
     },
     correlationId: 'fdb1358f-c3b8-459b-aa89-4e570b7ac6d0'
   }
@@ -194,7 +226,41 @@ export const GetOverlayInputSetEdit: UseGetReturnData<ResponseOverlayInputSetRes
         objectId: '4471ec3aa40c26377353974c29a6670d998db06g',
         repoIdentifier: 'gitSyncRepo',
         rootFolder: '/rootFolderTest/.harness/'
-      }
+      },
+      connectorRef: 'ValidGithubRepo',
+      storeType: 'REMOTE'
+    },
+    correlationId: '4cccf1ad-e86d-4629-9c85-95a23225f2e4'
+  }
+}
+
+export const GetOverlayInputSetEditGitSimplification: UseGetReturnData<ResponseOverlayInputSetResponse> = {
+  loading: false,
+  refetch: jest.fn(),
+  error: null,
+  data: {
+    status: 'SUCCESS',
+    data: {
+      accountId: 'kmpySmUISimoRrJL6NL73w',
+      orgIdentifier: 'Harness11',
+      projectIdentifier: 'Uhat_Project',
+      pipelineIdentifier: 'testqqq',
+      identifier: 'OverLayInput',
+      name: 'OverLayInput',
+      description: 'OverLayInput',
+      inputSetReferences: ['asd', 'test'],
+      overlayInputSetYaml:
+        'overlayInputSet:\n  name: OverLayInput\n  identifier: OverLayInput\n  description: OverLayInput\n  inputSetReferences:\n    - asd\n    - test\n',
+      errorResponse: false,
+      gitDetails: {
+        branch: 'feature',
+        filePath: 'asd.yaml',
+        objectId: '4471ec3aa40c26377353974c29a6670d998db06g',
+        commitId: '4471ec3aa40c26377353974c29a6670d998db0commitid',
+        repoName: 'gitSyncRepo'
+      },
+      connectorRef: 'ValidGithubRepo',
+      storeType: 'REMOTE'
     },
     correlationId: '4cccf1ad-e86d-4629-9c85-95a23225f2e4'
   }
@@ -266,7 +332,6 @@ export const updateInputSetCallSecondArg = {
     filePath: 'asd.yaml',
     isNewBranch: false,
     lastObjectId: '4471ec3aa40c26377353974c29a6670d998db06g',
-    lastCommitId: '4471ec3aa40c26377353974c29a6670d998db0commitid',
     orgIdentifier: 'testOrg',
     pipelineBranch: 'feature',
     pipelineIdentifier: 'pipeline',
@@ -290,7 +355,6 @@ export const updateInputSetCallSecondArgNewBranch = {
     filePath: 'asd.yaml',
     isNewBranch: true,
     lastObjectId: '4471ec3aa40c26377353974c29a6670d998db06g',
-    lastCommitId: '4471ec3aa40c26377353974c29a6670d998db0commitid',
     orgIdentifier: 'testOrg',
     pipelineBranch: 'feature',
     pipelineIdentifier: 'pipeline',
@@ -384,4 +448,87 @@ export const sourceCodeManage = {
     }
   ],
   correlationId: '86eb32ff-8d35-478c-a5b8-bb3e373ad03f'
+}
+
+export const gitSimpplificationMockData = {
+  createInputSetCallFirstArg: `inputSet:
+  name: asd
+  identifier: asd
+  description: asd
+  orgIdentifier: testOrg
+  projectIdentifier: test
+  pipeline:
+    identifier: testqqq
+    stages:
+      - stage:
+          identifier: asd
+          type: Deployment
+          spec:
+            infrastructure:
+              infrastructureDefinition:
+                type: KubernetesDirect
+                spec:
+                  connectorRef: org.tesa1
+                  namespace: asd
+                  releaseName: asd
+`,
+  createInputSetCallSecondArg: {
+    queryParams: {
+      accountIdentifier: 'testAcc',
+      orgIdentifier: 'testOrg',
+      projectIdentifier: 'test',
+      pipelineIdentifier: 'pipeline',
+      connectorRef: 'connectorRef',
+      repoName: 'identifier',
+      branch: 'feature',
+      filePath: '.harness/asd.yaml',
+      storeType: 'REMOTE',
+      commitMsg: 'common.gitSync.createResource',
+      createPr: false,
+      isNewBranch: false
+    }
+  },
+  updateInputSetCallSecondArg: {
+    pathParams: {
+      inputSetIdentifier: 'asd'
+    },
+    queryParams: {
+      accountIdentifier: 'testAcc',
+      orgIdentifier: 'testOrg',
+      projectIdentifier: 'test',
+      pipelineIdentifier: 'pipeline',
+      connectorRef: 'connectorRef',
+      repoName: 'identifier',
+      branch: 'feature',
+      filePath: 'asd.yaml',
+      storeType: 'REMOTE',
+      commitMsg: 'common.gitSync.updateResource',
+      createPr: false,
+      isNewBranch: false,
+      lastObjectId: '4471ec3aa40c26377353974c29a6670d998db06g',
+      lastCommitId: '4471ec3aa40c26377353974c29a6670d998db0commitid'
+    }
+  },
+  updateInputSetCallSecondArgNewBranch: {
+    pathParams: {
+      inputSetIdentifier: 'asd'
+    },
+    queryParams: {
+      accountIdentifier: 'testAcc',
+      orgIdentifier: 'testOrg',
+      projectIdentifier: 'test',
+      pipelineIdentifier: 'pipeline',
+      connectorRef: 'connectorRef',
+      repoName: 'identifier',
+      branch: 'feature1',
+      filePath: 'asd.yaml',
+      storeType: 'REMOTE',
+      commitMsg: 'common.gitSync.updateResource',
+      createPr: false,
+      isNewBranch: true,
+      lastObjectId: '4471ec3aa40c26377353974c29a6670d998db06g',
+      lastCommitId: '4471ec3aa40c26377353974c29a6670d998db0commitid',
+      baseBranch: 'feature'
+    }
+  }
 }

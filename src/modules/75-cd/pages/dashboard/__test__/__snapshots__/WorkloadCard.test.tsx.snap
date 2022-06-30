@@ -1,0 +1,159 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WorkloadCard initial render 1`] = `
+<div>
+  <div
+    class="bp3-card bp3-elevation-0 Card--card repositoryCard hoverService"
+  >
+    <div
+      class="content"
+    >
+      <p
+        class="StyledProps--font Text--lineclamp StyledProps--main title"
+        style="--text-line-clamp: 1;"
+      >
+        serviceN
+      </p>
+      <div
+        class="StyledProps--font StyledProps--main mainContent"
+      >
+        <div
+          class="StyledProps--font StyledProps--main"
+        >
+          <div
+            class="StyledProps--font StyledProps--main cardStats"
+          >
+            <p
+              class="StyledProps--font StyledProps--main statHeader"
+            >
+              Deployments
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main statHeader"
+            >
+              pipeline.dashboards.successRate
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main statContent"
+            >
+              3
+            </p>
+            <div
+              class="StyledProps--font StyledProps--main statWrap"
+            >
+              <p
+                class="StyledProps--font StyledProps--main statContent"
+              >
+                10
+                %
+              </p>
+              <span
+                class="bp3-icon bp3-icon-caret-up StyledProps--main"
+                icon="caret-up"
+              >
+                <svg
+                  data-icon="caret-up"
+                  height="14"
+                  viewBox="0 0 16 16"
+                  width="14"
+                >
+                  <desc>
+                    caret-up
+                  </desc>
+                  <path
+                    d="M11.87 9.17s.01 0 0 0l-3.5-4C8.28 5.07 8.15 5 8 5s-.28.07-.37.17l-3.5 4a.495.495 0 00.37.83h7a.495.495 0 00.37-.83z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              <p
+                class="StyledProps--font StyledProps--main rateDiffValue"
+              >
+                20
+                %
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main chartWrapper StyledProps--margin-left-medium"
+          style="height: 40px;"
+        >
+          <div />
+        </div>
+      </div>
+    </div>
+    <div
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main cardFooter"
+    >
+      <div
+        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main avatarWrapper"
+      />
+      <div
+        class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main times StyledProps--flex StyledProps--flex-justifyContent-end"
+      >
+        <span
+          class="bp3-popover-wrapper bp3-dark"
+        >
+          <span
+            class="bp3-popover-target"
+          >
+            <p
+              class="StyledProps--font StyledProps--main timeAgo StyledProps--inline StyledProps--font-variation-tiny"
+              style="display: flex; align-items: center;"
+              tabindex="0"
+            >
+              <span
+                class="bp3-icon bp3-icon-calendar StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-grey900"
+                icon="calendar"
+              >
+                <svg
+                  data-icon="calendar"
+                  height="10"
+                  viewBox="0 0 16 16"
+                  width="10"
+                >
+                  <desc>
+                    calendar
+                  </desc>
+                  <path
+                    d="M11 3c.6 0 1-.5 1-1V1c0-.6-.4-1-1-1s-1 .4-1 1v1c0 .5.4 1 1 1zm3-2h-1v1c0 1.1-.9 2-2 2s-2-.9-2-2V1H6v1c0 1.1-.9 2-2 2s-2-.9-2-2V1H1c-.6 0-1 .5-1 1v12c0 .6.4 1 1 1h13c.6 0 1-.4 1-1V2c0-.6-.5-1-1-1zM5 13H2v-3h3v3zm0-4H2V6h3v3zm4 4H6v-3h3v3zm0-4H6V6h3v3zm4 4h-3v-3h3v3zm0-4h-3V6h3v3zM4 3c.6 0 1-.5 1-1V1c0-.6-.4-1-1-1S3 .4 3 1v1c0 .5.4 1 1 1z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              dummy date
+            </p>
+          </span>
+        </span>
+        <span
+          class="StyledProps--font StyledProps--main duration StyledProps--inline StyledProps--font-variation-tiny"
+          style="display: inline-flex; align-items: center;"
+        >
+          <span
+            class="bp3-icon bp3-icon-time StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-grey900"
+            icon="time"
+          >
+            <svg
+              data-icon="time"
+              height="10"
+              viewBox="0 0 16 16"
+              width="10"
+            >
+              <desc>
+                time
+              </desc>
+              <path
+                d="M8 0C3.58 0 0 3.58 0 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm1-6.41V4c0-.55-.45-1-1-1s-1 .45-1 1v4c0 .28.11.53.29.71l2 2a1.003 1.003 0 001.42-1.42L9 7.59z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+           
+          3d 1h 53m 49s
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;

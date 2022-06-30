@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { cloneDeep, defaultTo, isEmpty, isEqual, merge, noop, set } from 'lodash-es'
-import { MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
+import { MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 import produce from 'immer'
 import {
   PipelineContext,
@@ -32,19 +32,22 @@ import {
   getStageFromPipeline as _getStageFromPipeline,
   getStagePathFromPipeline as _getStagePathFromPipeline
 } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
-import {
-  getServiceV2Promise,
-  GetServiceV2QueryParams,
-  PipelineInfoConfig,
-  ServiceResponseDTO,
-  StageElementConfig,
-  StageElementWrapperConfig
-} from 'services/cd-ng'
+import { getServiceV2Promise, GetServiceV2QueryParams, NGServiceConfig, ServiceResponseDTO } from 'services/cd-ng'
 import type { PipelineSelectionState } from '@pipeline/components/PipelineStudio/PipelineQueryParamState/usePipelineQueryParam'
-import type { GetPipelineQueryParams } from 'services/pipeline-ng'
+import type {
+  GetPipelineQueryParams,
+  StageElementConfig,
+  PipelineInfoConfig,
+  StageElementWrapperConfig
+} from 'services/pipeline-ng'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
-import { initialServiceState, DefaultNewStageName, DefaultNewStageId } from '../Services/utils/ServiceUtils'
+import {
+  initialServiceState,
+  DefaultNewStageName,
+  DefaultNewStageId,
+  ServicePipelineConfig
+} from '../Services/utils/ServiceUtils'
 
 interface FetchServiceBoundProps {
   dispatch: React.Dispatch<ActionReturnType>
@@ -61,7 +64,7 @@ interface FetchServiceUnboundProps {
 export interface ServicePipelineProviderProps {
   queryParams: GetPipelineQueryParams
   initialValue: PipelineInfoConfig
-  onUpdatePipeline: (pipeline: PipelineInfoConfig) => void
+  onUpdatePipeline: (pipeline: ServicePipelineConfig) => void
   contextType: PipelineContextType
   isReadOnly: boolean
   serviceIdentifier: string
@@ -133,7 +136,10 @@ export function ServicePipelineProvider({
     }
     const isUpdated = !isEqual(state.originalPipeline, pipeline)
     await dispatch(PipelineContextActions.success({ error: '', pipeline: pipeline as PipelineInfoConfig, isUpdated }))
-    onUpdatePipeline?.(pipeline as PipelineInfoConfig)
+
+    if (view === SelectedView.VISUAL) {
+      onUpdatePipeline?.(pipeline as ServicePipelineConfig)
+    }
   }
 
   const updateStage = React.useCallback(
@@ -171,14 +177,15 @@ export function ServicePipelineProvider({
         identifier,
         signal
       )
-      const serviceYaml = yamlParse(defaultTo(serviceDetails.yaml, ''))
+      const serviceYaml = yamlParse<NGServiceConfig>(defaultTo(serviceDetails.yaml, ''))
       const serviceData = merge(serviceYaml, initialServiceState)
 
       const defaultPipeline = {
         identifier: defaultTo(serviceDetails.identifier, DefaultNewPipelineId),
         name: serviceDetails.name as string,
-        description: serviceDetails.description,
-        tags: serviceDetails.tags
+        description: serviceData.service.description,
+        tags: serviceData.service.tags,
+        gitOpsEnabled: defaultTo(serviceData.service.gitOpsEnabled, false)
       }
       const refetchedPipeline = produce({ ...defaultPipeline }, draft => {
         if (!isEmpty(serviceData.service.serviceDefinition)) {
@@ -203,7 +210,7 @@ export function ServicePipelineProvider({
         })
       )
       dispatch(PipelineContextActions.initialized())
-      onUpdatePipeline?.(refetchedPipeline as PipelineInfoConfig)
+      onUpdatePipeline?.(refetchedPipeline as ServicePipelineConfig)
     }
   }
 

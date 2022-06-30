@@ -61,7 +61,7 @@ describe('Changing Project Page', () => {
     cy.contains('h2', 'SLO-1').should('be.visible')
   })
 
-  it('should not lose the selected project while switching between account and project scopes', () => {
+  it.skip('should not lose the selected project while switching between account and project scopes', () => {
     cy.contains('p', 'You have no monitored services')
 
     cy.contains('span', 'Account Settings').click()
