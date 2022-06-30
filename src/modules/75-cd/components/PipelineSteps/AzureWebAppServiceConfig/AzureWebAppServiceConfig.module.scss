@@ -5,72 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.addNew {
+.serviceConfigWizard {
+  width: 100%;
+}
+
+.addServiceConfig {
   padding: 0px !important;
-}
-.modal {
-  [class*='bp3-dialog-header'] button {
-    z-index: 2;
-  }
-}
-
-.createConnectorWizard {
-  flex-grow: 1;
-  display: flex;
-}
-
-.crossIcon {
-  position: absolute;
-  right: var(--spacing-large);
-  top: var(--spacing-large);
-}
-.remoteIcon {
-  color: var(--grey-1000) !important;
-}
-
-.configWizard {
-  width: 100%;
-
-  [class*='stepDetails'] {
-    background-color: var(--white) !important;
-  }
-  [class*='navBarList'] {
-    grid-template-rows: repeat(auto-fill, var(--spacing-xxxlarge)) !important;
-  }
-
-  div[class*='nestedStep']:nth-of-type(2) {
-    margin-top: var(--spacing-medium) !important;
-  }
-}
-
-.createWizard {
-  flex-grow: 1;
-  display: flex;
-}
-
-.manifestWizard {
-  width: 100%;
-}
-
-.subtitle {
-  margin-top: var(--spacing-large);
-  margin-left: var(--spacing-large);
-}
-
-.formGroup {
-  display: grid;
-  grid-template-columns: 1fr 30px;
-  align-items: center;
-  width: 100%;
-}
-
-.borderRadius {
-  border-radius: 4px;
 }
 
 .rowItem {
   padding: var(--spacing-medium) 0;
   border-bottom: solid 1px var(--grey-100);
+
   span.type {
     color: var(--grey-900) !important;
     font-weight: 900;
@@ -78,10 +24,12 @@
     grid-template-columns: 1fr 10px;
   }
   font-size: 14px !important;
+
   > p {
     cursor: pointer;
     color: var(--primary-7) !important;
   }
+
   .columnId {
     display: grid;
     grid-template-columns: 20px 1fr;
@@ -90,6 +38,7 @@
     margin-top: 2px;
     padding-left: var(--spacing-xsmall);
   }
+
   .connectorNameField {
     display: flex;
     align-items: center;
@@ -103,21 +52,19 @@
   }
 }
 
-.noWrap {
-  white-space: nowrap;
-}
-
-.manifestList {
+.serviceConfigList {
   display: grid;
-  grid-template-columns: 180px 230px minmax(10px, 1fr) 80px;
+  grid-template-columns: 180px 230px 230px minmax(10px, 1fr) 80px;
   column-gap: var(--spacing-medium);
   align-items: center;
+
   &.list-header {
     border-bottom: solid 1px var(--grey-100);
     padding-bottom: var(--spacing-medium);
     text-transform: uppercase;
   }
-  .manifestLocation {
+
+  .serviceConfigLocation {
     max-width: 200px;
     white-space: nowrap;
     overflow: hidden;
@@ -125,86 +72,49 @@
   }
 }
 
+.noWrap {
+  white-space: nowrap;
+}
+
+.createConnectorWizard {
+  flex-grow: 1;
+  display: flex;
+}
+
+.crossIcon {
+  position: absolute;
+  right: var(--spacing-large);
+  top: var(--spacing-large);
+}
+
+.modal {
+  [class*='bp3-dialog-header'] button {
+    z-index: 2;
+  }
+}
+
 .optionsViewContainer {
   margin: var(--spacing-small) 0 0 var(--spacing-small) !important;
-  .manifestForm {
-    min-height: 490px;
+
+  .serviceConfigForm {
+    min-height: 470px;
 
     .connectorContainer {
-      display: inline-grid;
-      grid-template-columns: 1fr 1fr;
-      .bp3-popover-target > button {
-        width: 28px !important;
+      .addServiceConfig {
+        margin-top: 25px;
       }
-      div.configureOptions {
-        height: fit-content;
-        line-height: 72px;
+      .configureOptions {
+        margin-top: 21px;
       }
     }
-    .addNewManifest {
-      position: relative;
-      top: 26px;
-      padding-right: 0 !important;
-      justify-content: flex-start;
-    }
-    .manifestStepWidth {
-      width: 100%;
-    }
   }
 }
 
-.halfWidth {
-  width: 45% !important;
-  .fullWidth {
-    width: 100%;
-  }
-}
-.addFileButton {
-  margin-left: 0;
-}
-.addmarginTop {
-  display: flex;
-  align-self: center;
-}
-.checkbox {
-  margin-right: var(--spacing-medium);
-  margin-bottom: 0 !important;
-  width: 100%;
-}
-.tooltip {
-  > * {
-    width: 60%;
-    margin-top: 8px !important;
-  }
-}
-
-.tooltipContent {
-  width: 300px;
-}
-.runtimeInput {
-  align-items: center;
-  display: grid;
-  grid-template-columns: 4fr 1fr;
-}
-
-.tooltipCls {
-  position: relative;
-  bottom: 5px;
+.thumbnailSelect {
+  cursor: pointer;
 }
 
 .saveBtn {
   position: relative;
   bottom: 0;
-}
-.drag {
-  cursor: move;
-  margin-top: var(--spacing-small) !important;
-}
-.text {
-  width: 12px;
-  margin-top: var(--spacing-small) !important;
-}
-
-.thumbnailSelect {
-  cursor: pointer;
 }
