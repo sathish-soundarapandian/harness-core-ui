@@ -44,6 +44,9 @@ import formatCost from '@ce/utils/formatCost'
 
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { PAGE_NAMES, USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
+import { usePermission } from '@rbac/hooks/usePermission'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import Table from './Table'
 import PerspectiveBuilderPreview from '../PerspectiveBuilderPreview/PerspectiveBuilderPreview'
 import useCreateReportModal from './PerspectiveCreateReport'
@@ -65,6 +68,8 @@ interface TableActionsProps {
   onClickEdit: () => void
   onClickDelete: () => void
   className?: string
+  canEdit?: boolean
+  canDelete?: boolean
 }
 
 interface ReportsAndBudgetsProps {
@@ -283,6 +288,15 @@ export const Budgets = ({ perspectiveName }: { perspectiveName: string }): JSX.E
     }
   })
   const { showSuccess, showError } = useToaster()
+  const [canEdit, canDelete] = usePermission(
+    {
+      resource: {
+        resourceType: ResourceType.CCM_BUDGETS
+      },
+      permissions: [PermissionIdentifier.EDIT_CCM_BUDGET, PermissionIdentifier.DELETE_CCM_BUDGET]
+    },
+    []
+  )
 
   const handleDeleteBudget: (budget: Budget) => void = async budget => {
     try {
@@ -378,6 +392,8 @@ export const Budgets = ({ perspectiveName }: { perspectiveName: string }): JSX.E
                 })
               }
               onClickDelete={() => handleDeleteBudget(budget)}
+              canEdit={canEdit}
+              canDelete={canDelete}
             />
           </Container>
         </Layout.Horizontal>
@@ -411,6 +427,7 @@ export const Budgets = ({ perspectiveName }: { perspectiveName: string }): JSX.E
         <FlexExpander />
         {budgets.length ? (
           <Link
+            disabled={!canEdit}
             size={ButtonSize.SMALL}
             padding="none"
             margin="none"
@@ -697,7 +714,7 @@ const RenderEmailAddresses = ({ emailAddresses = [] }: { emailAddresses: string[
 }
 
 const RenderEditDeleteActions = (props: TableActionsProps): JSX.Element => {
-  const { onClickEdit, onClickDelete, className } = props
+  const { onClickEdit, onClickDelete, className, canEdit = true, canDelete = true } = props
   return (
     <Layout.Horizontal
       spacing="medium"
@@ -707,21 +724,25 @@ const RenderEditDeleteActions = (props: TableActionsProps): JSX.Element => {
       }}
       className={className}
     >
-      <Icon
-        size={14}
-        name={'Edit'}
-        color={Color.PRIMARY_7}
-        onClick={onClickEdit}
+      <Button
+        minimal
+        icon="Edit"
+        disabled={!canEdit}
+        intent="primary"
+        iconProps={{ size: 14 }}
         className={css.icon}
         data-testid="editIcon"
+        onClick={onClickEdit}
       />
-      <Icon
-        size={14}
-        name={'trash'}
-        color={Color.PRIMARY_7}
-        onClick={onClickDelete}
+      <Button
+        minimal
+        icon="trash"
+        disabled={!canDelete}
+        intent="primary"
+        iconProps={{ size: 14 }}
         className={css.icon}
         data-testid="deleteIcon"
+        onClick={onClickDelete}
       />
     </Layout.Horizontal>
   )
