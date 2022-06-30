@@ -22,7 +22,7 @@ import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
-import { isEmpty, set } from 'lodash-es'
+import { get, isEmpty, set } from 'lodash-es'
 
 import produce from 'immer'
 import { useStrings } from 'framework/strings'
@@ -46,17 +46,15 @@ import DelegateSelectorStep from '@connectors/components/CreateConnector/commonS
 
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import { useTelemetry } from '@common/hooks/useTelemetry'
-import { ManifestActions } from '@common/constants/TrackingConstants'
 
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
+import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { getStatus, getConnectorNameFromValue } from '../PipelineStudio/StageBuilder/StageBuilderUtil'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import ConnectorField from './StartupScriptConnectorField'
 import StartupScriptWizardStepTwo from './StartupScriptWizardStepTwo'
 import { ConnectorMap, AllowedTypes, ConnectorTypes, ConnectorIcons } from './StartupScriptInterface.types'
 import { StartupScriptWizard } from './StartupScriptWizard'
-import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import StartupScriptWizardHarnessStepTwo from './StartupScriptWizardHarnessStepTwo'
 
 import css from './StartupScriptSelection.module.scss'
@@ -104,7 +102,7 @@ function StartupScriptListView({
   const [connectorView, setConnectorView] = useState(false)
   const [connectorType, setConnectorType] = useState('')
   const [isEditMode, setIsEditMode] = useState(false)
-  const { trackEvent } = useTelemetry()
+  // const { trackEvent } = useTelemetry()
 
   const DIALOG_PROPS: IDialogProps = {
     isOpen: true,
@@ -166,7 +164,6 @@ function StartupScriptListView({
     if (stage) {
       updateStage(
         produce(stage, draft => {
-          console.log(startupScript)
           set(draft, path, startupScript)
         }).stage as StageElementConfig
       )
@@ -177,7 +174,7 @@ function StartupScriptListView({
     startupScript = script
     updateStageData()
     // todo: add tracking events
-    trackEvent(true ? ManifestActions.SaveManifestOnPipelinePage : ManifestActions.UpdateManifestOnPipelinePage, {})
+    // trackEvent(true ? ManifestActions.SaveManifestOnPipelinePage : ManifestActions.UpdateManifestOnPipelinePage, {})
 
     hideConnectorModal()
     setConnectorView(false)
@@ -189,6 +186,7 @@ function StartupScriptListView({
     setConnectorView(isConnectorView)
     setIsEditMode(false)
   }
+
   const handleStoreChange = (type?: ConnectorTypes): void => {
     setConnectorType(type || '')
   }
@@ -200,13 +198,13 @@ function StartupScriptListView({
       expressions,
       allowableTypes,
       stepName: getString('pipeline.startupScript.fileDetails'),
-      initialValues: startupScript,
+      initialValues: getLastStepInitialData(),
       handleSubmit: handleSubmit,
       isReadonly: isReadonly
     }
 
     return startupScriptDetailsProps
-  }, [startupScript])
+  }, [connectorType])
 
   const getBuildPayload = (type: ConnectorInfoDTO['type']) => {
     if (type === Connectors.GIT) {
@@ -222,6 +220,14 @@ function StartupScriptListView({
       return buildGitlabPayload
     }
     return () => ({})
+  }
+
+  const getLastStepInitialData = (): any => {
+    const initValues = startupScript
+    if (initValues?.store?.type && initValues?.store?.type !== connectorType) {
+      return {}
+    }
+    return initValues
   }
 
   const getLastSteps = useCallback((): Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> => {
@@ -328,39 +334,39 @@ function StartupScriptListView({
     }
   }, [connectorView, connectorType, isEditMode])
 
-  const renderStartupScriptList = (startupScript: any): any => {
-    const { color } = getStatus(startupScript?.store?.spec?.connectorRef, connectors, accountId)
-    const connectorName = getConnectorNameFromValue(startupScript?.store?.spec?.connectorRef, connectors)
-
+  const renderStartupScriptList = (script: any): any => {
+    const { color } = getStatus(script?.store?.spec?.connectorRef, connectors, accountId)
+    const connectorName = getConnectorNameFromValue(script?.store?.spec?.connectorRef, connectors)
+    const path = script?.store?.type === 'Harness' ? 'files[0].path' : 'paths'
     return (
       <div className={css.rowItem}>
         <section className={css.startupScriptList}>
           <div className={css.columnId}>
-            <Icon inline name={ConnectorIcons[startupScript?.store?.type as ConnectorTypes]} size={20} />
-            <Text inline width={150} className={css.type} lineClamp={1}>
-              {startupScript?.store?.type}
-            </Text>
+            <Icon inline name={ConnectorIcons[script?.store?.type as ConnectorTypes]} size={20} />
+            {script?.store?.type === 'Harness' ? (
+              <Text width={300}>{script?.store?.spec?.files && script?.store?.spec?.files[0]?.identifier}</Text>
+            ) : (
+              renderConnectorField(script?.store?.spec?.connectorRef, connectorName, color)
+            )}
           </div>
-          {renderConnectorField(startupScript?.store?.spec?.connectorRef, connectorName, color)}
-          <div>{startupScript?.store?.spec?.gitFetchType}</div>
-          {!!startupScript?.store?.spec.paths?.length && (
-            <div>
-              <Text lineClamp={1} width={200}>
+          {!!script?.store?.spec.paths?.length && (
+            <div className={css.columnId}>
+              <Text lineClamp={1} width={300}>
                 <span className={css.noWrap}>
-                  {typeof startupScript?.store?.spec.paths === 'string'
-                    ? startupScript?.store?.spec.paths
-                    : startupScript?.store?.spec.paths.join(', ')}
+                  {typeof get(script?.store?.spec, path) === 'string'
+                    ? get(script?.store?.spec, path)
+                    : get(script?.store?.spec, path).join(', ')}
                 </span>
               </Text>
             </div>
           )}
           {!isReadonly && (
             <span>
-              <Layout.Horizontal>
+              <Layout.Horizontal className={css.startupScriptListButton}>
                 <Button
                   icon="Edit"
                   iconProps={{ size: 18 }}
-                  onClick={() => editStartupScript(startupScript?.store?.type as ConnectorTypes)}
+                  onClick={() => editStartupScript(script?.store?.type as ConnectorTypes)}
                   minimal
                 />
 
@@ -416,14 +422,12 @@ function StartupScriptListView({
       <Layout.Vertical spacing="small" style={{ flexShrink: 'initial' }}>
         {!isEmpty(startupScript) && (
           <div className={cx(css.startupScriptList, css.listHeader)}>
-            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('store')}</Text>
-            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
-              {`${getString('pipeline.manifestType.gitConnectorLabel')} ${getString('connector')}`}
+            <Text font={{ variation: FontVariation.TABLE_HEADERS }} width={200}>
+              {getString('store')}
             </Text>
-            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
-              {getString('pipeline.manifestType.gitFetchTypeLabel')}
+            <Text font={{ variation: FontVariation.TABLE_HEADERS }} width={200}>
+              {getString('location')}
             </Text>
-            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('location')}</Text>
             <span></span>
           </div>
         )}
