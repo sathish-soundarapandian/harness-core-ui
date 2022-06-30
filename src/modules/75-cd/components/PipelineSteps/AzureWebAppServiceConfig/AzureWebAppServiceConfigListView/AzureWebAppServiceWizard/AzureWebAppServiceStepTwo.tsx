@@ -22,13 +22,15 @@ import { FontVariation } from '@harness/design-system'
 import { Form } from 'formik'
 import * as Yup from 'yup'
 
-import { get, isUndefined, set } from 'lodash-es'
+import { get, isEmpty, isUndefined, set } from 'lodash-es'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
-import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import { GitRepoName } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import { ConnectorMap } from '../../AzureWebAppServiceConfig.types'
 
+import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../../AzureWebAppServiceConfig.module.scss'
 
 interface AzureWebAppServiceStepTwoProps {
@@ -63,11 +65,20 @@ function AzureWebAppServiceStepTwo({
 }: StepProps<ConnectorConfigDTO> & AzureWebAppServiceStepTwoProps): React.ReactElement {
   const { getString } = useStrings()
 
+  const gitConnectionType: string =
+    prevStepData?.store === ConnectorMap[prevStepData?.store.type] ? 'connectionType' : 'type'
+  const connectionType =
+    prevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
+    prevStepData?.urlType === GitRepoName.Repo
+      ? GitRepoName.Repo
+      : GitRepoName.Account
+
   const getInitialValues = useCallback((): {
     branch: string | undefined
     commitId: string | undefined
     gitFetchType: 'Branch' | 'Commit'
     paths: string | undefined
+    repoName?: string | undefined
   } => {
     const specValues = get(initialValues, 'store.spec', null)
 
@@ -82,7 +93,8 @@ function AzureWebAppServiceStepTwo({
       branch: undefined,
       commitId: undefined,
       gitFetchType: 'Branch',
-      paths: undefined
+      paths: undefined,
+      repoName: undefined
     }
   }, [])
 
@@ -93,6 +105,7 @@ function AzureWebAppServiceStepTwo({
     paths: string | undefined
     store?: string
     connectorRef?: string
+    repoName?: string | undefined
   }): void => {
     const applicationSettings = {
       store: {
@@ -103,6 +116,10 @@ function AzureWebAppServiceStepTwo({
           paths: typeof formData?.paths === 'string' ? [formData?.paths] : formData?.paths
         }
       }
+    }
+
+    if (connectionType === GitRepoName.Account) {
+      set(applicationSettings, 'store.spec.repoName', formData?.repoName)
     }
 
     if (applicationSettings?.store) {
@@ -140,7 +157,16 @@ function AzureWebAppServiceStepTwo({
               getString('common.validation.fieldIsRequired', {
                 name: 'Application Config File Path'
               })
-            )
+            ),
+          repoName: Yup.string().test('repoName', getString('common.validation.repositoryName'), value => {
+            if (
+              connectionType === GitRepoName.Repo ||
+              getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+            ) {
+              return true
+            }
+            return !isEmpty(value) && value?.length > 0
+          })
         })}
         onSubmit={formData => {
           submitFormData({
@@ -163,15 +189,38 @@ function AzureWebAppServiceStepTwo({
             commitId: string | undefined
             gitFetchType: 'Branch' | 'Commit'
             paths: string | undefined
+            repoName: string | undefined
           }
         }) => {
           return (
             <Form>
               <Layout.Vertical
                 flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
-                className={css.manifestForm}
+                className={cx(css.serviceConfigForm, css.serviceConfigWizard)}
               >
-                <div className={css.manifestStepWidth}>
+                <div className={css.serviceConfigWizard}>
+                  {!!(connectionType === GitRepoName.Account) && (
+                    <div className={cx(stepCss.formGroup, stepCss.md)}>
+                      <FormInput.MultiTextInput
+                        multiTextInputProps={{ expressions, allowableTypes }}
+                        label={getString('common.repositoryName')}
+                        placeholder={getString('common.repositoryName')}
+                        name="repoName"
+                      />
+                      {getMultiTypeFromValue(formik.values?.repoName) === MultiTypeInputType.RUNTIME && (
+                        <ConfigureOptions
+                          value={formik.values?.repoName as string}
+                          type="String"
+                          variableName="repoName"
+                          showRequiredField={false}
+                          showDefaultField={false}
+                          showAdvanced={true}
+                          onChange={value => formik.setFieldValue('repoName', value)}
+                          isReadonly={isReadonly}
+                        />
+                      )}
+                    </div>
+                  )}
                   <div className={cx(stepCss.formGroup, stepCss.md)}>
                     <FormInput.Select
                       name="gitFetchType"
