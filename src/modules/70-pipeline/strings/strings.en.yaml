@@ -1156,16 +1156,16 @@ importSuccessMessage: '{{resourceType}} has been imported successfully'
 MatrixNode:
   maxConcurrency: 'Max Concurrency:'
 traffic: Traffic
-appServiceConfig: 
-  applicationSettings: 
+appServiceConfig:
+  applicationSettings:
     name: Application Settings
     file: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File'
     fileDetails: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File Details'
     fileSource: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File Source'
-    scriptFilePath: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File Path'
-  connectionStrings: 
+    filePath: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File Path'
+  connectionStrings:
     name: Connection Strings
     file: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File'
     fileDetails: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Details'
     fileSource: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Source'
-    scriptFilePath: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Path'
+    filePath: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Path'

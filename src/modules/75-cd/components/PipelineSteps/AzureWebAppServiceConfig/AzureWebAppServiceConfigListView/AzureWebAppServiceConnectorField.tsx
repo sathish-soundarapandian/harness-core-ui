@@ -7,13 +7,10 @@
 
 import React from 'react'
 import { Container, Text, Icon, Color, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
+import type { ConnectorFieldPropType } from '../AzureWebAppServiceConfig.types'
+
 import css from '../AzureWebAppServiceConfig.module.scss'
 
-interface ConnectorFieldPropType {
-  connectorRef: string
-  connectorColor: string
-  connectorName: string | undefined
-}
 function ConnectorField({ connectorRef, connectorName, connectorColor }: ConnectorFieldPropType): React.ReactElement {
   return (
     <div className={css.connectorNameField}>
