@@ -35,10 +35,6 @@ jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('services/cd-ng', () => ({
   useGetConnector: jest.fn(() => ConnectorResponse),
   getConnectorListV2Promise: jest.fn(() => Promise.resolve(ConnectorsResponse.data)),
-  useValidateSshHosts: jest.fn(() => jest.fn(() => ({ mutate: jest.fn() }))),
-  useFilterHostsByConnector: jest.fn(() => ({
-    mutate: jest.fn(() => Promise.resolve({ data: { content: [{ hostname: '1.2.3.4' }] } }))
-  })),
   getSecretV2Promise: jest.fn().mockImplementation(() => Promise.resolve(mockSecret)),
   listSecretsV2Promise: jest.fn().mockImplementation(() => Promise.resolve(mockListSecrets))
 }))
@@ -103,7 +99,7 @@ describe('Test SshWinRmAwsInfrastructureSpec behavior', () => {
         initialValues={getEmptyInitialValues()}
         template={getRuntimeInputsValues()}
         allValues={getEmptyInitialValues()}
-        type={StepType.PDC}
+        type={StepType.SshWinRmAws}
         stepViewType={StepViewType.InputSet}
         onUpdate={onUpdateHandler}
       />
@@ -114,33 +110,10 @@ describe('Test SshWinRmAwsInfrastructureSpec behavior', () => {
   })
 })
 
-describe('test api rejections', () => {
-  beforeEach(() => {
-    factory.registerStep(new SshWinRmAwsInfrastructureSpec())
-  })
-  test('getSecretV2Promise rejection', async () => {
-    jest
-      .spyOn(CDNG, 'getSecretV2Promise')
-      .mockImplementationOnce(() => Promise.reject({ data: { message: 'error...' } }))
-    const { getByText } = render(
-      <TestStepWidget
-        initialValues={getInitialValues()}
-        template={getRuntimeInputsValues()}
-        allValues={getInitialValues()}
-        type={StepType.SshWinRmAws}
-        stepViewType={StepViewType.InputSet}
-        onUpdate={jest.fn()}
-      />
-    )
-    expect(CDNG.getSecretV2Promise).toBeCalled()
-    await submitForm(getByText)
-  })
-})
-
 describe('invocation map test', () => {
   test('invocation map, empty yaml', () => {
     const yaml = ''
-    const invocationMap = factory.getStep(StepType.PDC)?.getInvocationMap?.()
+    const invocationMap = factory.getStep(StepType.SshWinRmAws)?.getInvocationMap?.()
     invocationMap?.get(ConnectorRefRegex)?.(infraDefPath, yaml, accountIdParams)
     expect(CDNG.getConnectorListV2Promise).not.toBeCalled()
     invocationMap?.get(SshKeyRegex)?.(infraDefPath, yaml, accountIdParams)
@@ -149,7 +122,7 @@ describe('invocation map test', () => {
 
   test('invocation map, wrong yaml', () => {
     const yaml = {} as string
-    const invocationMap = factory.getStep(StepType.PDC)?.getInvocationMap?.()
+    const invocationMap = factory.getStep(StepType.SshWinRmAws)?.getInvocationMap?.()
     invocationMap?.get(ConnectorRefRegex)?.(infraDefPath, yaml, accountIdParams)
     expect(CDNG.getConnectorListV2Promise).not.toBeCalled()
     invocationMap?.get(SshKeyRegex)?.(infraDefPath, yaml, accountIdParams)
@@ -164,7 +137,7 @@ describe('invocation map test', () => {
 
     const yaml = getYaml()
 
-    const invocationMap = factory.getStep(StepType.PDC)?.getInvocationMap?.()
+    const invocationMap = factory.getStep(StepType.SshWinRmAws)?.getInvocationMap?.()
     invocationMap?.get(ConnectorRefRegex)?.(infraDefPath, yaml, accountIdParams)
     expect(CDNG.getConnectorListV2Promise).toBeCalled()
     invocationMap?.get(SshKeyRegex)?.(infraDefPath, yaml, accountIdParams)
