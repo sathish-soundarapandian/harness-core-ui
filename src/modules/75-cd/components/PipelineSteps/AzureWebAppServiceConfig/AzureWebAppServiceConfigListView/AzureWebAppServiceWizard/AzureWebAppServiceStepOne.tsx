@@ -48,6 +48,7 @@ interface ApplicationStorePropType {
   initialValues: AzureWebAppServiceConfigWizardInitData
   handleConnectorViewChange: () => void
   handleStoreChange: (store: ConnectorTypes) => void
+  title: string
 }
 
 function AzureWebAppServiceConfigWizardStepOne({
@@ -61,7 +62,8 @@ function AzureWebAppServiceConfigWizardStepOne({
   expressions,
   allowableTypes,
   prevStepData,
-  nextStep
+  nextStep,
+  title
 }: StepProps<ConnectorConfigDTO> & ApplicationStorePropType): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -138,7 +140,7 @@ function AzureWebAppServiceConfigWizardStepOne({
   return (
     <Layout.Vertical height={'inherit'} spacing="medium" className={css.optionsViewContainer}>
       <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'xxxlarge' }}>
-        {'Application Settings File Source'}
+        {title}
       </Text>
 
       <Text font={{ variation: FontVariation.H6 }} margin={{ bottom: 'medium' }}>
