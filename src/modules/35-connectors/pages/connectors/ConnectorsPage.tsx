@@ -743,7 +743,7 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
           />
         }
       />
-      <Layout.Vertical className={css.listPage}>
+      <Layout.Vertical>
         {connectors?.content?.length || isGitSyncEnabled || searchTerm || loading || appliedFilter ? (
           <Layout.Horizontal flex className={css.header}>
             <Layout.Horizontal spacing="small">
@@ -821,7 +821,7 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
           </Layout.Horizontal>
         ) : null}
 
-        <Page.Body className={css.listBody}>
+        <Page.Body>
           {loading ? (
             <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
               <PageSpinner />

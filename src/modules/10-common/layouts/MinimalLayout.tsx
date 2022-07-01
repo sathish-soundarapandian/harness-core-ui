@@ -18,11 +18,11 @@ export function MinimalLayout(props: React.PropsWithChildren<unknown>): React.Re
   return (
     <div className={css.main} data-layout="minimal">
       <MainNav />
-      <div className={css.rhs}>
+      <main>
         {module && <TrialLicenseBanner />}
         {module && <FeatureBanner />}
-        <div className={css.children}>{props.children}</div>
-      </div>
+        {props.children}
+      </main>
     </div>
   )
 }

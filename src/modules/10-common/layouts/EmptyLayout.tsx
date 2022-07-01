@@ -17,7 +17,7 @@ export function EmptyLayout(props: React.PropsWithChildren<unknown>): React.Reac
     <div className={css.main} data-layout="empty">
       {module && <TrialLicenseBanner />}
       {module && <FeatureBanner />}
-      <div className={css.children}>{props.children}</div>
+      {props.children}
     </div>
   )
 }
