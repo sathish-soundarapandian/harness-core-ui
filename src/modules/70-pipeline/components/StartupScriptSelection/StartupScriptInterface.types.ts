@@ -6,19 +6,29 @@
  */
 
 import type { IconName } from '@harness/icons'
+import type { MultiTypeInputType, StepProps } from '@harness/uicore'
 import { Connectors } from '@connectors/constants'
 import type { StringKeys } from 'framework/strings'
-import type { ConnectorInfoDTO, ServiceDefinition } from 'services/cd-ng'
+import type {
+  AzureWebAppServiceSpec,
+  ConnectorConfigDTO,
+  ConnectorInfoDTO,
+  PageConnectorResponse,
+  ServiceDefinition,
+  StageElementConfig,
+  StoreConfigWrapper
+} from 'services/cd-ng'
+import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 
-export const AllowedTypes = ['Git', 'Github', 'GitLab', 'Bitbucket', 'Harness']
+export const AllowedTypes: Array<ConnectorTypes> = ['Git', 'Github', 'GitLab', 'Bitbucket']
 export type ConnectorTypes = 'Git' | 'Github' | 'GitLab' | 'Bitbucket'
 
 export const ConnectorIcons: Record<string, IconName> = {
   Git: 'service-github',
   Github: 'github',
   GitLab: 'service-gotlab',
-  Bitbucket: 'bitbucket',
-  Harness: 'harness'
+  Bitbucket: 'bitbucket'
 }
 
 export const ConnectorMap: Record<string, ConnectorInfoDTO['type']> = {
@@ -48,4 +58,87 @@ export interface StartupScriptDataType {
   gitFetchType: 'Branch' | 'Commit'
   paths: string | string[] | undefined
   repoName?: string | undefined
+}
+
+export interface StepChangeData<SharedObject> {
+  prevStep?: number
+  nextStep?: number
+  prevStepData: SharedObject
+}
+
+export interface StartupScriptWizardInitData {
+  connectorRef: string | undefined | ConnectorSelectedValue
+  store: ConnectorTypes | string
+}
+
+export interface StartupScriptWizardStepsProps<T> {
+  handleConnectorViewChange: (isConnectorView: boolean) => void
+  initialValues: StartupScriptWizardInitData
+  newConnectorView: boolean
+  expressions: string[]
+  allowableTypes: MultiTypeInputType[]
+  newConnectorSteps?: any
+  lastSteps: Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> | null
+  isReadonly: boolean
+  handleStoreChange: (store?: T) => void
+  connectorTypes: Array<ConnectorTypes>
+}
+
+export interface StartupScriptWizardStepTwoProps {
+  stepName: string
+  expressions: string[]
+  allowableTypes: MultiTypeInputType[]
+  initialValues: StoreConfigWrapper
+  handleSubmit: (data: StoreConfigWrapper) => void
+  isReadonly?: boolean
+}
+
+export enum GitFetchTypes {
+  Branch = 'Branch',
+  Commit = 'Commit'
+}
+
+export const gitFetchTypeList = [
+  { label: 'Latest from Branch', value: GitFetchTypes.Branch },
+  { label: 'Specific Commit Id / Git Tag', value: GitFetchTypes.Commit }
+]
+
+export interface AzureWebAppsServiceDefinition {
+  spec: AzureWebAppServiceSpec
+  type: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps'
+}
+
+export interface StartupScriptListViewProps {
+  pipeline: any
+  updateStage: (stage: StageElementConfig) => Promise<void>
+  stage: StageElementWrapper | undefined
+  isPropagating?: boolean
+  connectors: PageConnectorResponse | undefined
+  refetchConnectors: () => void
+  isReadonly: boolean
+  allowableTypes: MultiTypeInputType[]
+  startupScript: StoreConfigWrapper
+}
+
+export interface StartupScriptLastStepProps {
+  key: string
+  name: string
+  expressions: string[]
+  allowableTypes: MultiTypeInputType[]
+  stepName: string
+  initialValues: StoreConfigWrapper
+  handleSubmit: (data: StoreConfigWrapper) => void
+  isReadonly?: boolean
+  startupScript?: StoreConfigWrapper
+}
+
+export interface StartupScriptPropType {
+  stepName: string
+  expressions: string[]
+  allowableTypes: MultiTypeInputType[]
+  isReadonly: boolean
+  connectorTypes: Array<ConnectorTypes>
+  initialValues: StartupScriptWizardInitData
+  handleConnectorViewChange: () => void
+  handleStoreChange: (store: ConnectorTypes) => void
 }
