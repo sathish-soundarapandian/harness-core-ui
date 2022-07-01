@@ -133,6 +133,7 @@ function StageErrorCard({
   if (errors.length === 0) {
     return null
   }
+  const sectionId = getSectionId(errors[0].messageWithFQN)
   return (
     <PipelineErrorCard
       errors={errors.map(err => err?.message).filter(e => e) as string[]}
@@ -140,7 +141,7 @@ function StageErrorCard({
       onClick={() => {
         gotoViewWithDetails({
           stageId: errors[0].stageInfo?.identifier,
-          sectionId: getSectionId(errors[0].messageWithFQN)
+          sectionId
         })
       }}
       buttonText={getString('pipeline.errorFramework.fixStage')}
