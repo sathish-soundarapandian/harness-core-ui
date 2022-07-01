@@ -6,38 +6,12 @@
  */
 
 import React from 'react'
-import { StepWizard, StepProps, MultiTypeInputType, Color } from '@harness/uicore'
+import { StepWizard, Color } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import type { ConnectorConfigDTO } from 'services/cd-ng'
-import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
-import type { ConnectorTypes } from './StartupScriptInterface.types'
+import type { ConnectorTypes, StartupScriptWizardStepsProps, StepChangeData } from './StartupScriptInterface.types'
 import StartupScriptWizardStepOne from './StartupScriptWizardStepOne'
 
 import css from './StartupScriptSelection.module.scss'
-
-interface StepChangeData<SharedObject> {
-  prevStep?: number
-  nextStep?: number
-  prevStepData: SharedObject
-}
-
-interface StartupScriptWizardInitData {
-  connectorRef: string | undefined | ConnectorSelectedValue
-  store: ConnectorTypes | string
-}
-
-interface StartupScriptWizardStepsProps<T> {
-  handleConnectorViewChange: (isConnectorView: boolean) => void
-  initialValues: StartupScriptWizardInitData
-  newConnectorView: boolean
-  expressions: string[]
-  allowableTypes: MultiTypeInputType[]
-  newConnectorSteps?: any
-  lastSteps: Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> | null
-  isReadonly: boolean
-  handleStoreChange: (store?: T) => void
-  connectorTypes: any
-}
 
 export function StartupScriptWizard<T>({
   handleConnectorViewChange,
