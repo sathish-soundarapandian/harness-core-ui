@@ -10,7 +10,7 @@ import { Layout, shouldShowError, useToaster } from '@harness/uicore'
 
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty } from 'lodash-es'
-import { useGetConnectorListV2, PageConnectorResponse, ServiceDefinition } from 'services/cd-ng'
+import { useGetConnectorListV2, PageConnectorResponse, AzureWebAppServiceSpec } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
@@ -23,6 +23,11 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useCache } from '@common/hooks/useCache'
 import StartupScriptListView from './StartupScriptListView'
 import type { StartupScriptSelectionProps } from './StartupScriptInterface.types'
+
+export interface AzureWebAppsServiceDefinition {
+  spec: AzureWebAppServiceSpec
+  type: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps'
+}
 
 export default function StartupScriptSelection({
   isPropagating,
@@ -46,7 +51,7 @@ export default function StartupScriptSelection({
   const { getRBACErrorMessage } = useRBACError()
   const getServiceCacheId = `${pipeline.identifier}-${selectedStageId}-service`
   const { getCache } = useCache([getServiceCacheId])
-  const serviceInfo = getCache<ServiceDefinition>(getServiceCacheId)
+  const serviceInfo = getCache<AzureWebAppsServiceDefinition>(getServiceCacheId)
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<
     PipelineType<{
@@ -89,7 +94,7 @@ export default function StartupScriptSelection({
     return !isEmpty(startupScript)
       ? [
           {
-            scope: getScopeFromValue(startupScript?.spec?.store?.spec?.k8sConnectorRef),
+            scope: getScopeFromValue(startupScript?.spec?.store?.spec?.connectorRef),
             identifier: getIdentifierFromValue(startupScript?.spec?.store?.spec?.connectorRef)
           }
         ]
@@ -127,10 +132,7 @@ export default function StartupScriptSelection({
   }
   return (
     <Layout.Vertical>
-      <StartupScriptListView
-        {...startupScriptListViewCommonProps}
-        pipeline={pipeline}
-      />
+      <StartupScriptListView {...startupScriptListViewCommonProps} pipeline={pipeline} />
     </Layout.Vertical>
   )
 }
