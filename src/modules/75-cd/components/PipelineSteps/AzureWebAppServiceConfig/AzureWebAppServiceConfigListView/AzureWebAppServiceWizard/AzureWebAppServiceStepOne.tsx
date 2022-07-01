@@ -23,33 +23,27 @@ import {
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { isEmpty } from 'lodash-es'
+import type { Item } from '@harness/uicore/dist/components/ThumbnailSelect/ThumbnailSelect'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import type { AzureWebAppServiceConfigWizardInitData } from './AzureWebAppServiceConfigWizard'
-import { ConnectorIcons, ConnectorMap, ConnectorTypes, ConnectorLabelMap } from '../../AzureWebAppServiceConfig.types'
+import {
+  ConnectorIcons,
+  ConnectorMap,
+  ConnectorTypes,
+  ConnectorLabelMap,
+  AzureWebAppServiceConfigWizardInitData,
+  AzureWebAppServicesStepOneProps
+} from '../../AzureWebAppServiceConfig.types'
 
 import css from '../../AzureWebAppServiceConfig.module.scss'
-
-interface ApplicationStorePropType {
-  stepName: string
-  expressions: string[]
-  allowableTypes: MultiTypeInputType[]
-  isReadonly: boolean
-  connectorTypes: Array<ConnectorTypes>
-  initialValues: AzureWebAppServiceConfigWizardInitData
-  handleConnectorViewChange: () => void
-  handleStoreChange: (store: ConnectorTypes) => void
-  title: string
-}
 
 function AzureWebAppServiceConfigWizardStepOne({
   handleConnectorViewChange,
@@ -64,7 +58,7 @@ function AzureWebAppServiceConfigWizardStepOne({
   prevStepData,
   nextStep,
   title
-}: StepProps<ConnectorConfigDTO> & ApplicationStorePropType): React.ReactElement {
+}: StepProps<ConnectorConfigDTO> & AzureWebAppServicesStepOneProps): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
@@ -128,7 +122,7 @@ function AzureWebAppServiceConfigWizardStepOne({
   }, [selectedStore])
 
   const connectorTypesOptions = useMemo(
-    () =>
+    (): Item[] =>
       connectorTypes.map(store => ({
         label: store,
         icon: ConnectorIcons[store],
@@ -144,7 +138,7 @@ function AzureWebAppServiceConfigWizardStepOne({
       </Text>
 
       <Text font={{ variation: FontVariation.H6 }} margin={{ bottom: 'medium' }}>
-        {stepName}
+        {`${getString('common.specify')} ${stepName}`}
       </Text>
 
       <Formik
