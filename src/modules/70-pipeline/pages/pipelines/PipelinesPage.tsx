@@ -178,7 +178,6 @@ function PipelinesPage(): React.ReactElement {
         queryParams: {
           accountIdentifier: accountId,
           projectIdentifier,
-          module,
           orgIdentifier,
           searchTerm,
           page,

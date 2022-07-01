@@ -24,6 +24,7 @@ $header-height: 80px;
   border-left: 1px solid var(--grey-400);
   height: 25px;
 }
+
 .table {
   margin: var(--spacing-large);
 }
@@ -235,4 +236,27 @@ button.runPipelineListBtn {
 
 .pipelineInfo {
   display: flex;
+}
+
+.storeTypeColumn {
+  display: flex;
+  justify-content: center;
+  background-color: var(--grey-100);
+  padding: var(--spacing-small);
+  border-radius: var(--spacing-3);
+}
+
+.storeTypeColumnContainer {
+  display: flex;
+}
+
+.avatar {
+  width: var(--spacing-xxlarge);
+  height: var(--spacing-xxlarge);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--primary-2);
+  color: var(--primary-8);
 }

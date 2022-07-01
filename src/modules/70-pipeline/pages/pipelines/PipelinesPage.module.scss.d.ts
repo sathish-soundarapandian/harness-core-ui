@@ -10,6 +10,7 @@ declare const styles: {
   readonly aboutPipeline: string
   readonly actionButton: string
   readonly activityChart: string
+  readonly avatar: string
   readonly cardTags: string
   readonly clearFilterText: string
   readonly clickable: string
@@ -40,6 +41,8 @@ declare const styles: {
   readonly separator: string
   readonly serviceLabel: string
   readonly serviceName: string
+  readonly storeTypeColumn: string
+  readonly storeTypeColumnContainer: string
   readonly table: string
   readonly tagRow: string
   readonly topHeaderFields: string

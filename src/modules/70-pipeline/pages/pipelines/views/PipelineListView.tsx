@@ -5,34 +5,30 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Classes, Menu, Position } from '@blueprintjs/core'
+import { Classes, Menu, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import {
   Button,
-  ButtonSize,
-  ButtonVariation,
   Container,
+  Icon,
   Layout,
   Popover,
   SparkChart,
   TableV2,
   TagsPopover,
   Text,
-  useToggleOpen,
-  Icon
+  useToggleOpen
 } from '@harness/uicore'
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import type { CellProps, Column, Renderer } from 'react-table'
-import { GitDetailsColumn } from '@common/components/Table/GitDetailsColumn/GitDetailsColumn'
 import { StoreType } from '@common/constants/GitSyncTypes'
-import { formatDatetoLocale } from '@common/utils/dateUtils'
+import { formatDatetoLocale, getReadableDateTime } from '@common/utils/dateUtils'
 import { formatCount } from '@common/utils/utils'
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
 import { Badge } from '@pipeline/pages/utils/Badge/Badge'
 import useDeleteConfirmationDialog from '@pipeline/pages/utils/DeleteConfirmDialog'
 import { getFeaturePropsForRunPipelineButton } from '@pipeline/utils/runPipelineUtils'
-import RbacButton from '@rbac/components/Button/Button'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -43,6 +39,10 @@ import type { PagePMSPipelineSummaryResponse, PMSPipelineSummaryResponse } from 
 import { getStatusColor } from '../PipelineListUtils'
 import { ClonePipelineForm } from './ClonePipelineForm/ClonePipelineForm'
 import css from '../PipelinesPage.module.scss'
+import { TimeAgo } from '@common/exports'
+import ReactTimeago from 'react-timeago'
+import { StatusHeatMap } from '@pipeline/components/StatusHeatMap/StatusHeatMap'
+import defaultTo from 'lodash-es/defaultTo'
 
 interface PipelineListViewProps {
   data?: PagePMSPipelineSummaryResponse
@@ -68,7 +68,7 @@ type CustomColumn<T extends Record<string, any>> = Column<T> & {
 }
 
 // eslint-disable-next-line react/function-component-definition
-const RenderMenuColumn: Renderer<CellProps<PipelineDTO>> = ({ row, column }) => {
+const RenderColumnMenu: Renderer<CellProps<PipelineDTO>> = ({ row, column }) => {
   const data = row.original
   const [menuOpen, setMenuOpen] = React.useState(false)
   const { getString } = useStrings()
@@ -149,22 +149,21 @@ const RenderMenuColumn: Renderer<CellProps<PipelineDTO>> = ({ row, column }) => 
             }}
             featuresProps={getFeaturePropsForRunPipelineButton({ modules: data.modules, getString })}
           />
-
+          <Menu.Item
+            icon="cog"
+            text={getString('viewPipeline')}
+            onClick={(e: React.MouseEvent) => {
+              e.stopPropagation()
+              ;(column as any).goToPipelineStudio(data)
+              setMenuOpen(false)
+            }}
+          />
           <Menu.Item
             icon="list-detail-view"
             text={getString('viewExecutions')}
             onClick={(e: React.MouseEvent) => {
               e.stopPropagation()
               ;(column as any).goToPipelineDetail(data)
-              setMenuOpen(false)
-            }}
-          />
-          <Menu.Item
-            icon="cog"
-            text={getString('launchStudio')}
-            onClick={(e: React.MouseEvent) => {
-              e.stopPropagation()
-              ;(column as any).goToPipelineStudio(data)
               setMenuOpen(false)
             }}
           />
@@ -201,28 +200,30 @@ const RenderMenuColumn: Renderer<CellProps<PipelineDTO>> = ({ row, column }) => 
 }
 
 // eslint-disable-next-line react/function-component-definition
-const RenderPipelineNameColumn: Renderer<CellProps<PipelineDTO>> = ({ row }) => {
+const RenderColumnPipeline: Renderer<CellProps<PipelineDTO>> = ({ row }) => {
   const data = row.original
   const { getString } = useStrings()
-
   return (
     <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'space-between' }}>
       <Layout.Vertical spacing="xsmall" data-testid={data.identifier}>
         <Layout.Horizontal spacing="medium">
-          <Text
-            font={{ variation: FontVariation.BODY2 }}
-            color={Color.GREY_800}
-            tooltipProps={{ position: Position.BOTTOM }}
-            tooltip={
-              <Layout.Vertical spacing="medium" padding="medium" style={{ maxWidth: 400 }}>
-                <Text>{getString('nameLabel', { name: data.name })}</Text>
-                <Text>{getString('idLabel', { id: data.identifier })}</Text>
-                <Text>{getString('descriptionLabel', { description: data.description })}</Text>
-              </Layout.Vertical>
-            }
-          >
-            {data.name}
-          </Text>
+          <Link target="_blank" to="/">
+            <Text
+              font={{ variation: FontVariation.BODY2 }}
+              color={Color.GREY_800}
+              tooltipProps={{ isDark: true }}
+              tooltip={
+                <Layout.Vertical spacing="medium" padding="medium" style={{ maxWidth: 400 }}>
+                  <Text color={Color.WHITE}>{getString('nameLabel', { name: data.name })}</Text>
+                  <Text color={Color.WHITE}>{getString('idLabel', { id: data.identifier })}</Text>
+                  <Text color={Color.WHITE}>{getString('descriptionLabel', { description: data.description })}</Text>
+                </Layout.Vertical>
+              }
+            >
+              {data.name}
+            </Text>
+          </Link>
+
           {data.tags && Object.keys(data.tags || {}).length ? <TagsPopover tags={data.tags} /> : null}
         </Layout.Horizontal>
         <Text tooltipProps={{ position: Position.BOTTOM }} color={Color.GREY_400} font="small">
@@ -240,35 +241,44 @@ const RenderPipelineNameColumn: Renderer<CellProps<PipelineDTO>> = ({ row }) => 
           />
         </Container>
       )}
-      {data?.entityValidityDetails?.valid === false && (
-        <Container margin={{ left: 'large' }}>
-          <Badge
-            text={'common.invalid'}
-            iconName="error-outline"
-            showTooltip={true}
-            entityName={data.name}
-            entityType={'Pipeline'}
-          />
-        </Container>
-      )}
     </Layout.Horizontal>
   )
 }
 
 // eslint-disable-next-line react/function-component-definition
-const RenderStoreTypeColumn: Renderer<CellProps<PipelineDTO>> = () => {
+const RenderStoreTypeColumn: Renderer<CellProps<PipelineDTO>> = ({ row }) => {
+  const { gitDetails } = row.original
   const { getString } = useStrings()
   const type = StoreType.INLINE
   const storeType = type === StoreType.INLINE ? getString('inline') : getString('repository')
   const storeTypeIcon = StoreType.INLINE ? 'repository' : 'remote-setup'
 
   return (
-    <Layout.Horizontal spacing="xsmall">
-      <Icon name={storeTypeIcon} size={16} color={Color.GREY_600} />
-      <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800}>
-        {storeType}
-      </Text>
-    </Layout.Horizontal>
+    <div className={css.storeTypeColumnContainer}>
+      <div className={css.storeTypeColumn}>
+        <Icon name={storeTypeIcon} size={16} color={Color.GREY_800} />
+        <Text
+          margin={{ left: 'xsmall' }}
+          font={{ variation: FontVariation.SMALL }}
+          color={Color.GREY_800}
+          tooltipProps={{ isDark: true }}
+          tooltip={
+            <Layout.Vertical spacing="medium" padding="medium" style={{ maxWidth: 400 }}>
+              <Layout.Horizontal spacing="medium">
+                <Icon name="github" size={16} color={Color.WHITE} />
+                <Text color={Color.WHITE}>{gitDetails?.repoName || gitDetails?.repoIdentifier}</Text>
+              </Layout.Horizontal>
+              <Layout.Horizontal spacing="medium">
+                <Icon name="file" size={16} color={Color.WHITE} />
+                <Text color={Color.WHITE}>{gitDetails?.filePath}</Text>
+              </Layout.Horizontal>
+            </Layout.Vertical>
+          }
+        >
+          {storeType}
+        </Text>
+      </div>
+    </div>
   )
 }
 
@@ -321,70 +331,67 @@ const RenderActivity: Renderer<CellProps<PipelineDTO>> = ({ row, column }) => {
 }
 
 // eslint-disable-next-line react/function-component-definition
-const RenderLastRun: Renderer<CellProps<PipelineDTO>> = ({ row }) => {
-  const data = row.original
-  const { getString } = useStrings()
+const RenderRecentExecutions: Renderer<CellProps<PipelineDTO>> = () => {
+  const statuses = [
+    'skipped',
+    'queued',
+    'errored',
+    'suspended',
+    'success',
+    'ignorefailed',
+    'running',
+    'resourcewaiting',
+    'inputwaiting',
+    'paused'
+  ]
+  const executions = Array(10)
+    .fill({})
+    .map((_, index) => ({
+      executionId: index.toString(),
+      status: index < 6 ? 'success' : statuses[Math.floor(Math.random() * statuses.length)]
+    }))
   return (
-    <Layout.Horizontal spacing="large" style={{ alignItems: 'center' }}>
-      <Layout.Horizontal spacing="medium">
-        <Text
-          rightIcon={data.executionSummaryInfo?.lastExecutionTs ? 'full-circle' : undefined}
-          rightIconProps={{ color: getStatusColor(data), size: 8, padding: { left: 'medium' } }}
-        >
-          {data.executionSummaryInfo?.lastExecutionTs
-            ? formatDatetoLocale(data.executionSummaryInfo?.lastExecutionTs)
-            : getString('pipelineSteps.pullNeverLabel')}
+    <StatusHeatMap
+      data={executions}
+      getId={i => defaultTo(i.executionId, '')}
+      getStatus={i => defaultTo(i.status, '')}
+      getPopoverProps={i => ({
+        position: Position.BOTTOM,
+        interactionKind: PopoverInteractionKind.HOVER,
+        content: (
+          <Layout.Vertical padding="medium" spacing="small">
+            <Text color={Color.WHITE}>Execution Id: {i.executionId}</Text>
+            <Text color={Color.WHITE}>Status: {i.status}</Text>
+          </Layout.Vertical>
+        ),
+
+        className: Classes.DARK
+      })}
+    />
+  )
+}
+
+// eslint-disable-next-line react/function-component-definition
+const RenderLastExecution: Renderer<CellProps<PipelineDTO>> = ({ row }) => {
+  const data = row.original
+  const lastExecutionTs = data.executionSummaryInfo?.lastExecutionTs
+  return (
+    <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }}>
+      <div className={css.avatar}>O</div>
+      <Layout.Vertical spacing="small">
+        <Text color={Color.GREY_600}>OliviaLee@gmail.com</Text>
+        <Text font={{ size: 'small' }} color={Color.GREY_400}>
+          {lastExecutionTs ? <ReactTimeago date={lastExecutionTs} /> : 'This pipeline never ran'}
         </Text>
-      </Layout.Horizontal>
+      </Layout.Vertical>
     </Layout.Horizontal>
   )
 }
 
 // eslint-disable-next-line react/function-component-definition
-const RenderRunPipeline: Renderer<CellProps<PipelineDTO>> = ({ row }): JSX.Element => {
-  const rowdata = row.original
-
-  const { getString } = useStrings()
-  const { isGitSyncEnabled } = useAppStore()
-
-  const runPipeline = (): void => {
-    openRunPipelineModal()
-  }
-
-  const { openRunPipelineModal } = useRunPipelineModal({
-    pipelineIdentifier: (rowdata.identifier || '') as string,
-    repoIdentifier: isGitSyncEnabled ? rowdata.gitDetails?.repoIdentifier : rowdata.gitDetails?.repoName,
-    branch: rowdata.gitDetails?.branch,
-    connectorRef: rowdata.connectorRef,
-    storeType: rowdata.storeType as StoreType
-  })
-
-  return (
-    <RbacButton
-      withoutCurrentColor
-      icon="command-start"
-      variation={ButtonVariation.SECONDARY}
-      size={ButtonSize.SMALL}
-      intent="success"
-      iconProps={{ size: 9, color: Color.SUCCESS }}
-      className={css.runPipelineListBtn}
-      text={getString('runPipelineText')}
-      permission={{
-        resource: {
-          resourceType: ResourceType.PIPELINE,
-          resourceIdentifier: rowdata.identifier as string
-        },
-        permission: PermissionIdentifier.EXECUTE_PIPELINE
-      }}
-      featuresProps={getFeaturePropsForRunPipelineButton({ modules: row.original.modules, getString })}
-      onClick={e => {
-        e.stopPropagation()
-        runPipeline()
-      }}
-      disabled={rowdata?.entityValidityDetails?.valid === false}
-      tooltip={rowdata?.entityValidityDetails?.valid === false ? getString('pipeline.cannotRunInvalidPipeline') : ''}
-    />
-  )
+const RenderLastModified: Renderer<CellProps<PipelineDTO>> = ({ row }) => {
+  const data = row.original
+  return <Text color={Color.GREY_600}>{getReadableDateTime(data.lastUpdatedAt)}</Text>
 }
 
 export function PipelineListView({
@@ -401,52 +408,43 @@ export function PipelineListView({
   const columns: CustomColumn<PipelineDTO>[] = React.useMemo(
     () => [
       {
-        Header: getString('common.pipeline').toUpperCase(),
+        Header: getString('pipelineName').toUpperCase(),
         accessor: 'name',
-        width: isGitSyncEnabled ? '30%' : '35%',
-        Cell: RenderPipelineNameColumn
+        width: '20%',
+        Cell: RenderColumnPipeline
       },
       {
         Header: '',
         accessor: 'storeType',
+        width: '10%',
+        disableSortBy: true,
         Cell: RenderStoreTypeColumn
       },
       {
-        Header: getString('activity').toUpperCase(),
+        Header: getString('recentTenExecutions').toUpperCase(),
         accessor: 'executionSummaryInfo',
-        width: isGitSyncEnabled ? '20%' : '25%',
-        Cell: RenderActivity,
+        width: '30%',
+        Cell: RenderRecentExecutions,
         disableSortBy: true,
         goToPipelineDetail
       },
       {
-        Header: getString('common.gitSync.repoDetails').toUpperCase(),
-        accessor: 'gitDetails',
-        width: '20%',
-        Cell: GitDetailsColumn,
-        disableSortBy: true
-      },
-      {
-        Header: getString('lastExecutionTs').toUpperCase(),
+        Header: getString('lastExecution').toUpperCase(),
         accessor: 'description',
-        width: isGitSyncEnabled ? '20%' : '25%',
-        Cell: RenderLastRun,
-        disableSortBy: true
+        width: '20%',
+        Cell: RenderLastExecution
       },
       {
-        Header: getString('runPipelineText').toUpperCase(),
-        accessor: 'tags',
-        width: isGitSyncEnabled ? '5%' : '10%',
-        Cell: RenderRunPipeline,
-        disableSortBy: true,
-        refetchPipeline,
-        goToPipelineStudio
+        Header: getString('lastModified').toUpperCase(),
+        accessor: 'lastUpdatedAt',
+        width: '15%',
+        Cell: RenderLastModified
       },
       {
         Header: '',
         accessor: 'version',
         width: '5%',
-        Cell: RenderMenuColumn,
+        Cell: RenderColumnMenu,
         disableSortBy: true,
         refetchPipeline,
         goToPipelineStudio,
@@ -457,10 +455,6 @@ export function PipelineListView({
     ],
     [refetchPipeline, goToPipelineStudio, isGitSyncEnabled]
   )
-
-  if (!isGitSyncEnabled) {
-    columns.splice(2, 1)
-  }
 
   return (
     <TableV2<PipelineDTO>

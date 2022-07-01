@@ -352,7 +352,7 @@ plusAdd: '+ Add'
 idLabel: 'Id: {{id}}'
 nameLabel: 'Name: {{name}}'
 descriptionLabel: 'Description: {{description}}'
-launchStudio: Launch Studio
+viewPipeline: View Pipeline
 viewExecutions: View Executions
 entryPointLabel: 'Entry Point'
 argsLabel: 'Arguments'
@@ -1080,6 +1080,8 @@ lowercase: 'lowercase'
 specialChar: 'special character'
 adminResources: 'Admin:Resources'
 personalAccessToken: 'Personal Access Token'
+
+pipelineName: 'Pipeline Name'
 recentTenExecutions: 'Recent 10 Executions'
-lastExecutedBy: 'Last Executed By'
+lastExecution: 'Last Execution'
 lastModified: 'Last Modified'

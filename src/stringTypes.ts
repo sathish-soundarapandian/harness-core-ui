@@ -8143,7 +8143,7 @@ export interface StringsMap {
   /**
    * @deprecated migrate this string to module level file
    */
-  lastExecutedBy: string
+  lastExecution: string
   /**
    * @deprecated migrate this string to module level file
    */
@@ -8180,10 +8180,6 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   lastUpdatedSort: string
-  /**
-   * @deprecated migrate this string to module level file
-   */
-  launchStudio: string
   /**
    * @deprecated migrate this string to module level file
    */
@@ -8588,6 +8584,10 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   pipelineBreadcrumb: string
+  /**
+   * @deprecated migrate this string to module level file
+   */
+  pipelineName: string
   /**
    * @deprecated migrate this string to module level file
    */
@@ -10452,6 +10452,10 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   viewJSON: string
+  /**
+   * @deprecated migrate this string to module level file
+   */
+  viewPipeline: string
   /**
    * @deprecated migrate this string to module level file
    */
