@@ -28,6 +28,11 @@ import {
   ModalViewOption
 } from './AzureWebAppServiceConfig.types'
 
+export interface AzureWebAppsServiceDefinition {
+  spec: AzureWebAppServiceSpec
+  type: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps'
+}
+
 export default function AzureWebAppConfigSelection({
   isPropagating,
   deploymentType,
@@ -79,7 +84,7 @@ export default function AzureWebAppConfigSelection({
     /* istanbul ignore else */
     /* istanbul ignore next */
     if (isReadonlyServiceMode && !isEmpty(serviceInfo)) {
-      return defaultTo(serviceInfo?.spec.applicationSettings, {})
+      return defaultTo(serviceInfo?.spec?.applicationSettings, {})
     }
     if (isPropagating) {
       return get(stage, 'stage.spec.serviceConfig.stageOverrides.applicationSettings', {})
