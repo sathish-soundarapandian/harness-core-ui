@@ -84,7 +84,7 @@ export default function AzureWebAppConfigSelection({
     /* istanbul ignore else */
     /* istanbul ignore next */
     if (isReadonlyServiceMode && !isEmpty(serviceInfo)) {
-      return defaultTo(serviceInfo?.spec?.applicationSettings, {})
+      return defaultTo(serviceInfo?.spec.applicationSettings, {})
     }
     if (isPropagating) {
       return get(stage, 'stage.spec.serviceConfig.stageOverrides.applicationSettings', {})
