@@ -15,25 +15,18 @@ import { useCache } from '@common/hooks/useCache'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 
-import { AzureWebAppServiceSpec, PageConnectorResponse, ServiceDefinition, useGetConnectorListV2 } from 'services/cd-ng'
+import { PageConnectorResponse, useGetConnectorListV2 } from 'services/cd-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useDeepCompareEffect } from '@common/hooks'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import AzureWebAppListView from './AzureWebAppServiceConfigListView/AzureWebAppServiceListView'
-
-export interface AzureWebAppSelectionProps {
-  isPropagating?: boolean
-  deploymentType: ServiceDefinition['type']
-  isReadonlyServiceMode: boolean
-  readonly: boolean
-}
-
-export interface AzureWebAppsServiceDefinition {
-  spec: AzureWebAppServiceSpec
-  type: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps'
-}
+import {
+  AzureWebAppSelectionProps,
+  AzureWebAppsServiceDefinition,
+  ModalViewOption
+} from './AzureWebAppServiceConfig.types'
 
 export default function AzureWebAppConfigSelection({
   isPropagating,
@@ -51,6 +44,8 @@ export default function AzureWebAppConfigSelection({
     allowableTypes
   } = usePipelineContext()
 
+  //for selecting which modal to open
+  const [selectedOption, setSelectedOption] = React.useState<ModalViewOption | undefined>(undefined)
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const [fetchedConnectorResponse, setFetchedConnectorResponse] = React.useState<PageConnectorResponse | undefined>()
   const { showError } = useToaster()
@@ -83,7 +78,7 @@ export default function AzureWebAppConfigSelection({
     /* istanbul ignore next */
     /* istanbul ignore else */
     if (isReadonlyServiceMode && !isEmpty(serviceInfo)) {
-      return defaultTo(serviceInfo?.spec?.applicationSettings, {})
+      return defaultTo(serviceInfo?.spec.applicationSettings, {})
     }
     if (isPropagating) {
       return get(stage, 'stage.spec.serviceConfig.stageOverrides.applicationSettings', {})
@@ -107,17 +102,30 @@ export default function AzureWebAppConfigSelection({
 
   useDeepCompareEffect(() => {
     refetchConnectorList()
-  }, [stage, applicationSettings])
+  }, [stage, applicationSettings, connectionStrings, selectedOption])
 
   const getConnectorList = (): Array<{ scope: Scope; identifier: string }> => {
-    return !isEmpty(applicationSettings)
-      ? [
-          {
-            scope: getScopeFromValue(applicationSettings?.store?.spec?.connectorRef),
-            identifier: getIdentifierFromValue(applicationSettings?.store?.spec?.connectorRef)
-          }
-        ]
-      : []
+    switch (selectedOption) {
+      case ModalViewOption.APPLICATIONSETTING:
+        return !isEmpty(applicationSettings)
+          ? [
+              {
+                scope: getScopeFromValue(applicationSettings?.spec?.store?.spec?.connectorRef),
+                identifier: getIdentifierFromValue(applicationSettings?.spec?.store?.spec?.connectorRef)
+              }
+            ]
+          : []
+      case ModalViewOption.CONNECTIONSTRING:
+        return !isEmpty(connectionStrings)
+          ? [
+              {
+                scope: getScopeFromValue(connectionStrings?.spec?.store?.spec?.connectorRef),
+                identifier: getIdentifierFromValue(connectionStrings?.spec?.store?.spec?.connectorRef)
+              }
+            ]
+          : []
+    }
+    return []
   }
 
   const refetchConnectorList = async (): Promise<void> => {
@@ -147,6 +155,8 @@ export default function AzureWebAppConfigSelection({
     isReadonly: readonly,
     deploymentType,
     allowableTypes,
+    selectedOption,
+    setSelectedOption,
     applicationSettings,
     connectionStrings
   }
