@@ -31,7 +31,13 @@ import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonS
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
 import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
-import type { ConnectorConfigDTO, ConnectorInfoDTO, PageConnectorResponse, StageElementConfig } from 'services/cd-ng'
+import type {
+  ConnectorConfigDTO,
+  ConnectorInfoDTO,
+  PageConnectorResponse,
+  StageElementConfig,
+  StoreConfigWrapper
+} from 'services/cd-ng'
 import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
 import StepBitbucketAuthentication from '@connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
 import StepGitlabAuthentication from '@connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
@@ -55,7 +61,6 @@ import ConnectorField from './StartupScriptConnectorField'
 import StartupScriptWizardStepTwo from './StartupScriptWizardStepTwo'
 import { ConnectorMap, AllowedTypes, ConnectorTypes, ConnectorIcons } from './StartupScriptInterface.types'
 import { StartupScriptWizard } from './StartupScriptWizard'
-import StartupScriptWizardHarnessStepTwo from './StartupScriptWizardHarnessStepTwo'
 
 import css from './StartupScriptSelection.module.scss'
 
@@ -84,9 +89,9 @@ interface StartupScriptLastStepProps {
   stepName: string
   // todo: change type from any
   initialValues: any
-  handleSubmit: (data: any) => void
+  handleSubmit: (data: StoreConfigWrapper) => void
   isReadonly?: boolean
-  startupScript?: any
+  startupScript?: StoreConfigWrapper
 }
 
 function StartupScriptListView({
@@ -145,8 +150,8 @@ function StartupScriptListView({
     if (startupScript) {
       const values = {
         ...startupScript,
-        store: startupScript?.store?.type,
-        connectorRef: startupScript?.store?.spec?.connectorRef
+        store: startupScript?.spec?.store?.type,
+        connectorRef: startupScript?.spec?.store?.spec?.connectorRef
       }
       return values
     }
@@ -224,7 +229,7 @@ function StartupScriptListView({
 
   const getLastStepInitialData = (): any => {
     const initValues = startupScript
-    if (initValues?.store?.type && initValues?.store?.type !== connectorType) {
+    if (get(initValues, 'spec.store.type') && get(initValues, 'spec.store.type') !== connectorType) {
       return {}
     }
     return initValues
@@ -232,12 +237,7 @@ function StartupScriptListView({
 
   const getLastSteps = useCallback((): Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> => {
     const arr: Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> = []
-    let manifestDetailStep = <div></div>
-    if (connectorType !== 'Harness') {
-      manifestDetailStep = <StartupScriptWizardStepTwo {...lastStepProps()} />
-    } else {
-      manifestDetailStep = <StartupScriptWizardHarnessStepTwo {...lastStepProps()} />
-    }
+    const manifestDetailStep = <StartupScriptWizardStepTwo {...lastStepProps()} />
 
     arr.push(manifestDetailStep)
     return arr
@@ -335,27 +335,22 @@ function StartupScriptListView({
   }, [connectorView, connectorType, isEditMode])
 
   const renderStartupScriptList = (script: any): any => {
-    const { color } = getStatus(script?.store?.spec?.connectorRef, connectors, accountId)
-    const connectorName = getConnectorNameFromValue(script?.store?.spec?.connectorRef, connectors)
-    const path = script?.store?.type === 'Harness' ? 'files[0].path' : 'paths'
+    const { color } = getStatus(script?.spec?.store?.spec?.connectorRef, connectors, accountId)
+    const connectorName = getConnectorNameFromValue(script?.spec?.store?.spec?.connectorRef, connectors)
     return (
       <div className={css.rowItem}>
         <section className={css.startupScriptList}>
           <div className={css.columnId}>
-            <Icon inline name={ConnectorIcons[script?.store?.type as ConnectorTypes]} size={20} />
-            {script?.store?.type === 'Harness' ? (
-              <Text width={300}>{script?.store?.spec?.files && script?.store?.spec?.files[0]?.identifier}</Text>
-            ) : (
-              renderConnectorField(script?.store?.spec?.connectorRef, connectorName, color)
-            )}
+            <Icon inline name={ConnectorIcons[script?.spec?.store?.type as ConnectorTypes]} size={20} />
+            {renderConnectorField(script?.spec?.store?.spec?.connectorRef, connectorName, color)}
           </div>
-          {!!script?.store?.spec.paths?.length && (
+          {!!script?.spec?.store?.spec.paths?.length && (
             <div className={css.columnId}>
               <Text lineClamp={1} width={300}>
                 <span className={css.noWrap}>
-                  {typeof get(script?.store?.spec, path) === 'string'
-                    ? get(script?.store?.spec, path)
-                    : get(script?.store?.spec, path).join(', ')}
+                  {typeof get(script?.spec?.store?.spec, 'paths') === 'string'
+                    ? get(script?.spec?.store?.spec, 'paths')
+                    : get(script?.spec?.store?.spec, 'paths').join(', ')}
                 </span>
               </Text>
             </div>
@@ -366,7 +361,7 @@ function StartupScriptListView({
                 <Button
                   icon="Edit"
                   iconProps={{ size: 18 }}
-                  onClick={() => editStartupScript(script?.store?.type as ConnectorTypes)}
+                  onClick={() => editStartupScript(script?.spec?.store?.type as ConnectorTypes)}
                   minimal
                 />
 

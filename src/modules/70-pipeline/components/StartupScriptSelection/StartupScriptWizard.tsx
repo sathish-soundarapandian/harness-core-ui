@@ -9,9 +9,9 @@ import React from 'react'
 import { StepWizard, StepProps, MultiTypeInputType, Color } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
+import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { ConnectorTypes } from './StartupScriptInterface.types'
 import StartupScriptWizardStepOne from './StartupScriptWizardStepOne'
-import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 
 import css from './StartupScriptSelection.module.scss'
 

@@ -23,6 +23,7 @@ import {
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { isEmpty } from 'lodash-es'
+import type { Item } from '@harness/uicore/dist/components/ThumbnailSelect/ThumbnailSelect'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
@@ -70,11 +71,8 @@ function StartupScriptWizardStepOne({
   const [selectedStore, setSelectedStore] = useState(prevStepData?.store ?? initialValues.store)
   const [multitypeInputValue, setMultiTypeValue] = useState<MultiTypeInputType | undefined>(undefined)
 
-  const isHarness = () => selectedStore === 'Harness'
-
   const newConnectorLabel =
     selectedStore &&
-    !isHarness() &&
     `${getString('newLabel')} ${getString(ConnectorLabelMap[selectedStore as ConnectorTypes])} ${getString(
       'connector'
     )}`
@@ -91,17 +89,15 @@ function StartupScriptWizardStepOne({
   }
 
   function shouldGotoNextStep(connectorRefValue: ConnectorSelectedValue | string): boolean {
-    const canContinue =
-      (!!selectedStore && isHarness()) ||
-      (!isLoadingConnectors &&
-        !!selectedStore &&
-        ((getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.FIXED &&
-          !isEmpty((connectorRefValue as ConnectorSelectedValue)?.connector)) ||
-          !isEmpty(connectorRefValue)))
-
-    return canContinue
+    return (
+      !isLoadingConnectors &&
+      !!selectedStore &&
+      ((getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.FIXED &&
+        !isEmpty((connectorRefValue as ConnectorSelectedValue)?.connector)) ||
+        !isEmpty(connectorRefValue))
+    )
   }
-  const handleOptionSelection = (formikData: any, storeSelected: ConnectorTypes): void => {
+  const handleOptionSelection = (formikData: StartupScriptWizardInitData, storeSelected: ConnectorTypes): void => {
     if (
       getMultiTypeFromValue(formikData.connectorRef) !== MultiTypeInputType.FIXED &&
       formikData.store !== storeSelected
@@ -128,7 +124,7 @@ function StartupScriptWizardStepOne({
   }, [selectedStore])
 
   const connectorTypesOptions = useMemo(
-    () =>
+    (): Item[] =>
       connectorTypes.map(store => ({
         label: store,
         icon: ConnectorIcons[store],
@@ -146,13 +142,9 @@ function StartupScriptWizardStepOne({
       <Formik
         initialValues={getInitialValues()}
         formName="startupScriptStore"
-        validationSchema={
-          !isHarness()
-            ? Yup.object().shape({
-                connectorRef: Yup.mixed().required(getString('pipelineSteps.build.create.connectorRequiredError'))
-              })
-            : null
-        }
+        validationSchema={Yup.object().shape({
+          connectorRef: Yup.mixed().required(getString('pipelineSteps.build.create.connectorRequiredError'))
+        })}
         onSubmit={formData => {
           submitFirstStep({ ...formData })
         }}
@@ -177,7 +169,7 @@ function StartupScriptWizardStepOne({
                   />
                 </Layout.Horizontal>
 
-                {!isEmpty(formik.values.store) && !isHarness() ? (
+                {!isEmpty(formik.values.store) ? (
                   <Layout.Horizontal
                     spacing={'medium'}
                     flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
