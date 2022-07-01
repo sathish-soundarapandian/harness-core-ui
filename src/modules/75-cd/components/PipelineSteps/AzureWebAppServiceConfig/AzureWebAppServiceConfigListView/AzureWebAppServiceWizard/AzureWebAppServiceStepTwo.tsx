@@ -28,30 +28,17 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { GitRepoName } from '@pipeline/components/ManifestSelection/Manifesthelper'
-import { ConnectorMap } from '../../AzureWebAppServiceConfig.types'
+import { Connectors } from '@connectors/constants'
+import {
+  AppServiceConfigDataType,
+  AzureWebAppServiceStepTwoProps,
+  ConnectorTypes,
+  gitFetchTypeList,
+  GitFetchTypes
+} from '../../AzureWebAppServiceConfig.types'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../../AzureWebAppServiceConfig.module.scss'
-
-interface AzureWebAppServiceStepTwoProps {
-  stepName: string
-  expressions: string[]
-  allowableTypes: MultiTypeInputType[]
-  // change to ApplicationService Config if it is present in services
-  initialValues: any
-  handleSubmit: (data: any) => void
-  isReadonly?: boolean
-}
-
-const gitFetchTypeList = [
-  { label: 'Latest from Branch', value: 'Branch' },
-  { label: 'Specific Commit Id / Git Tag', value: 'Commit' }
-]
-
-enum GitFetchTypes {
-  Branch = 'Branch',
-  Commit = 'Commit'
-}
 
 function AzureWebAppServiceStepTwo({
   stepName,
@@ -61,26 +48,20 @@ function AzureWebAppServiceStepTwo({
   handleSubmit,
   prevStepData,
   previousStep,
-  isReadonly = false
+  isReadonly = false,
+  pathPlaceholder
 }: StepProps<ConnectorConfigDTO> & AzureWebAppServiceStepTwoProps): React.ReactElement {
   const { getString } = useStrings()
 
-  const gitConnectionType: string =
-    prevStepData?.store === ConnectorMap[prevStepData?.store.type] ? 'connectionType' : 'type'
+  const gitConnectionType: string = prevStepData?.store === Connectors.GIT ? 'connectionType' : 'type'
   const connectionType =
     prevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
     prevStepData?.urlType === GitRepoName.Repo
       ? GitRepoName.Repo
       : GitRepoName.Account
 
-  const getInitialValues = useCallback((): {
-    branch: string | undefined
-    commitId: string | undefined
-    gitFetchType: 'Branch' | 'Commit'
-    paths: string | undefined
-    repoName?: string | undefined
-  } => {
-    const specValues = get(initialValues, 'store.spec', null)
+  const getInitialValues = useCallback((): AppServiceConfigDataType => {
+    const specValues = get(initialValues, 'spec.store.spec', null)
 
     if (specValues) {
       return {
@@ -98,35 +79,30 @@ function AzureWebAppServiceStepTwo({
     }
   }, [])
 
-  const submitFormData = (formData: {
-    branch: string | undefined
-    commitId: string | undefined
-    gitFetchType: 'Branch' | 'Commit'
-    paths: string | undefined
-    store?: string
-    connectorRef?: string
-    repoName?: string | undefined
-  }): void => {
+  const submitFormData = (formData: AppServiceConfigDataType & { store?: string; connectorRef?: string }): void => {
     const applicationSettings = {
-      store: {
-        type: formData?.store,
-        spec: {
-          connectorRef: formData?.connectorRef,
-          gitFetchType: formData?.gitFetchType,
-          paths: typeof formData?.paths === 'string' ? [formData?.paths] : formData?.paths
+      type: formData?.store as ConnectorTypes,
+      spec: {
+        store: {
+          type: formData?.store,
+          spec: {
+            connectorRef: formData?.connectorRef,
+            gitFetchType: formData?.gitFetchType,
+            paths: typeof formData?.paths === 'string' ? [formData?.paths] : formData?.paths
+          }
         }
       }
     }
 
     if (connectionType === GitRepoName.Account) {
-      set(applicationSettings, 'store.spec.repoName', formData?.repoName)
+      set(applicationSettings, 'spec.store.spec.repoName', formData?.repoName)
     }
 
-    if (applicationSettings?.store) {
+    if (applicationSettings?.spec?.store) {
       if (formData?.gitFetchType === 'Branch') {
-        set(applicationSettings, 'store.spec.branch', formData?.branch)
+        set(applicationSettings, 'spec.store.spec.branch', formData?.branch)
       } else if (formData?.gitFetchType === 'Commit') {
-        set(applicationSettings, 'store.spec.commitId', formData?.commitId)
+        set(applicationSettings, 'spec.store.spec.commitId', formData?.commitId)
       }
     }
 
@@ -155,7 +131,7 @@ function AzureWebAppServiceStepTwo({
             .trim()
             .required(
               getString('common.validation.fieldIsRequired', {
-                name: 'Application Config File Path'
+                name: pathPlaceholder
               })
             ),
           repoName: Yup.string().test('repoName', getString('common.validation.repositoryName'), value => {
@@ -182,16 +158,7 @@ function AzureWebAppServiceStepTwo({
           })
         }}
       >
-        {(formik: {
-          setFieldValue: (a: string, b: string) => void
-          values: {
-            branch: string | undefined
-            commitId: string | undefined
-            gitFetchType: 'Branch' | 'Commit'
-            paths: string | undefined
-            repoName: string | undefined
-          }
-        }) => {
+        {(formik: { setFieldValue: (a: string, b: string) => void; values: AppServiceConfigDataType }) => {
           return (
             <Form>
               <Layout.Vertical
@@ -277,8 +244,8 @@ function AzureWebAppServiceStepTwo({
                   )}
                   <div className={cx(stepCss.formGroup, stepCss.md)}>
                     <FormInput.MultiTextInput
-                      label={getString('common.git.folderPath')}
-                      placeholder={getString('pipeline.manifestType.pathPlaceholder')}
+                      label={pathPlaceholder}
+                      placeholder={pathPlaceholder}
                       name={'paths'}
                       multiTextInputProps={{ expressions, allowableTypes }}
                     />

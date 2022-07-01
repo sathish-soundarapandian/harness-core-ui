@@ -5,19 +5,30 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { IconName } from '@harness/icons'
+import type { MultiTypeInputType, StepProps } from '@harness/uicore'
 import { Connectors } from '@connectors/constants'
 import type { StringKeys } from 'framework/strings'
-import type { ConnectorInfoDTO, ServiceDefinition } from 'services/cd-ng'
+import type {
+  AzureWebAppServiceSpec,
+  ConnectorConfigDTO,
+  ConnectorInfoDTO,
+  PageConnectorResponse,
+  ServiceDefinition,
+  StageElementConfig,
+  StoreConfigWrapper
+} from 'services/cd-ng'
+import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 
-export const AllowedTypes = ['Git', 'Github', 'GitLab', 'Bitbucket', 'Harness']
+export const AllowedTypes = ['Git', 'Github', 'GitLab', 'Bitbucket']
 export type ConnectorTypes = 'Git' | 'Github' | 'GitLab' | 'Bitbucket'
 
-export const ConnectorIcons: any = {
+export const ConnectorIcons: Record<string, IconName> = {
   Git: 'service-github',
   Github: 'github',
   GitLab: 'service-gotlab',
-  Bitbucket: 'bitbucket',
-  Harness: 'harness'
+  Bitbucket: 'bitbucket'
 }
 
 export const ConnectorMap: Record<string, ConnectorInfoDTO['type']> = {
@@ -50,4 +61,121 @@ export interface WizardStepNames {
   wizardName: string
   firstStepName: string
   secondStepName: string
+  pathPlaceholder: string
+}
+
+export interface AppServiceConfigDataType {
+  branch: string | undefined
+  commitId: string | undefined
+  gitFetchType: 'Branch' | 'Commit'
+  paths: string | string[] | undefined
+  repoName?: string | undefined
+}
+
+export interface LastStepProps {
+  key: string
+  name: string
+  expressions: string[]
+  allowableTypes: MultiTypeInputType[]
+  stepName: string
+  initialValues: StoreConfigWrapper
+  handleSubmit: (data: StoreConfigWrapper) => void
+  isReadonly?: boolean
+  pathPlaceholder?: string
+}
+
+export interface AzureWebAppsServiceDefinition {
+  spec: AzureWebAppServiceSpec
+  type: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps'
+}
+
+export interface AzureWebAppWizardInitData {
+  connectorRef: string | undefined | ConnectorSelectedValue
+  store: ConnectorTypes | string
+}
+
+export interface AzureWebAppListViewProps {
+  pipeline: any
+  updateStage: (stage: StageElementConfig) => Promise<void>
+  stage: StageElementWrapper | undefined
+  isPropagating?: boolean
+  isReadonly: boolean
+  connectors: PageConnectorResponse | undefined
+  refetchConnectors: () => void
+  deploymentType?: ServiceDefinition['type']
+  allowableTypes: MultiTypeInputType[]
+  applicationSettings?: StoreConfigWrapper
+  connectionStrings?: StoreConfigWrapper
+  selectedOption: ModalViewOption | undefined
+  setSelectedOption: (option: ModalViewOption | undefined) => void
+}
+
+export interface StepChangeData<SharedObject> {
+  prevStep?: number
+  nextStep?: number
+  prevStepData: SharedObject
+}
+
+export interface AzureWebAppServiceConfigWizardInitData {
+  connectorRef: string | undefined | ConnectorSelectedValue
+  store: ConnectorTypes | string
+}
+
+export interface AzureWebAppServiceConfigWizardStepsProps<T> {
+  handleConnectorViewChange: (isConnectorView: boolean) => void
+  initialValues: AzureWebAppServiceConfigWizardInitData
+  newConnectorView: boolean
+  expressions: string[]
+  allowableTypes: MultiTypeInputType[]
+  newConnectorSteps?: any
+  lastSteps: Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> | null
+  isReadonly: boolean
+  handleStoreChange: (store?: T) => void
+  connectorTypes: any
+  labels: WizardStepNames
+}
+
+export interface AzureWebAppServicesStepOneProps {
+  stepName: string
+  expressions: string[]
+  allowableTypes: MultiTypeInputType[]
+  isReadonly: boolean
+  connectorTypes: Array<ConnectorTypes>
+  initialValues: AzureWebAppServiceConfigWizardInitData
+  handleConnectorViewChange: () => void
+  handleStoreChange: (store: ConnectorTypes) => void
+  title: string
+}
+
+export interface AzureWebAppServiceStepTwoProps {
+  stepName: string
+  expressions: string[]
+  allowableTypes: MultiTypeInputType[]
+  initialValues: StoreConfigWrapper
+  handleSubmit: (data: StoreConfigWrapper) => void
+  isReadonly?: boolean
+  pathPlaceholder?: string
+}
+
+export const gitFetchTypeList = [
+  { label: 'Latest from Branch', value: 'Branch' },
+  { label: 'Specific Commit Id / Git Tag', value: 'Commit' }
+]
+
+export enum GitFetchTypes {
+  Branch = 'Branch',
+  Commit = 'Commit'
+}
+
+export interface ConnectorFieldPropType {
+  connectorRef: string
+  connectorColor: string
+  connectorName: string | undefined
+}
+
+export interface AzureWebAppSelectionProps {
+  isPropagating?: boolean
+  deploymentType: ServiceDefinition['type']
+  isReadonlyServiceMode: boolean
+  readonly: boolean
 }
