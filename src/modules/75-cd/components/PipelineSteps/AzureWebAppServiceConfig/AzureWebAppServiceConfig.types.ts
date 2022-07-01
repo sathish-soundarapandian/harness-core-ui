@@ -40,3 +40,14 @@ export interface StartupScriptSelectionProps {
   isReadonlyServiceMode: boolean
   readonly: boolean
 }
+
+export enum ModalViewOption {
+  APPLICATIONSETTING = 0,
+  CONNECTIONSTRING = 1
+}
+
+export interface WizardStepNames {
+  wizardName: string
+  firstStepName: string
+  secondStepName: string
+}

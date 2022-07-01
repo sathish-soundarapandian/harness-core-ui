@@ -21,7 +21,7 @@ function ConnectorField({ connectorRef, connectorName, connectorColor }: Connect
         <>
           <Text
             tooltip={
-              <Container padding="medium">
+              <Container className={css.borderRadius} padding="medium">
                 <div>
                   <Text font="small" color={Color.GREY_100}>
                     {connectorName}
