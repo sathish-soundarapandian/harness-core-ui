@@ -471,17 +471,11 @@ exports[`RouteWithLayout basic 1`] = `
         </div>
       </div>
     </div>
-    <div
-      class="rhs"
-    >
-      <div
-        class="children"
-      >
-        <div>
-          matched-route
-        </div>
+    <main>
+      <div>
+        matched-route
       </div>
-    </div>
+    </main>
   </div>
 </div>
 `;
@@ -492,12 +486,8 @@ exports[`RouteWithLayout empty 1`] = `
     class="main"
     data-layout="empty"
   >
-    <div
-      class="children"
-    >
-      <div>
-        matched-route
-      </div>
+    <div>
+      matched-route
     </div>
   </div>
 </div>
@@ -943,17 +933,11 @@ exports[`RouteWithLayout minimal 1`] = `
         </li>
       </ul>
     </nav>
-    <div
-      class="rhs"
-    >
-      <div
-        class="children"
-      >
-        <div>
-          matched-route
-        </div>
+    <main>
+      <div>
+        matched-route
       </div>
-    </div>
+    </main>
   </div>
 </div>
 `;
@@ -1429,17 +1413,11 @@ exports[`RouteWithLayout that the license store will render the child if the lic
         </div>
       </div>
     </div>
-    <div
-      class="rhs"
-    >
-      <div
-        class="children"
-      >
-        <div>
-          matched-route
-        </div>
+    <main>
+      <div>
+        matched-route
       </div>
-    </div>
+    </main>
   </div>
 </div>
 `;
@@ -1930,17 +1908,11 @@ exports[`RouteWithLayout that the license store will route to the subscriptions 
         </div>
       </div>
     </div>
-    <div
-      class="rhs"
-    >
-      <div
-        class="children"
-      >
-        <div>
-          matched-route
-        </div>
+    <main>
+      <div>
+        matched-route
       </div>
-    </div>
+    </main>
   </div>
 </div>
 `;

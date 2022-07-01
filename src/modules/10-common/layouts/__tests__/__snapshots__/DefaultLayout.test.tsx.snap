@@ -135,9 +135,7 @@ exports[`<DefaultLayout /> tests feature banner tests Level up banner 1`] = `
         </div>
       </div>
     </div>
-    <div
-      class="rhs"
-    >
+    <main>
       <div
         class="featuresBanner levelUp"
       >
@@ -215,10 +213,7 @@ exports[`<DefaultLayout /> tests feature banner tests Level up banner 1`] = `
           </span>
         </button>
       </div>
-      <div
-        class="children"
-      />
-    </div>
+    </main>
   </div>
 </div>
 `;
@@ -358,9 +353,7 @@ exports[`<DefaultLayout /> tests feature banner tests Overuse banner 1`] = `
         </div>
       </div>
     </div>
-    <div
-      class="rhs"
-    >
+    <main>
       <div
         class="featuresBanner overUse"
       >
@@ -439,10 +432,7 @@ exports[`<DefaultLayout /> tests feature banner tests Overuse banner 1`] = `
           </span>
         </button>
       </div>
-      <div
-        class="children"
-      />
-    </div>
+    </main>
   </div>
 </div>
 `;
@@ -582,9 +572,7 @@ exports[`<DefaultLayout /> tests feature banner tests features banner is rendere
         </div>
       </div>
     </div>
-    <div
-      class="rhs"
-    >
+    <main>
       <div
         class="featuresBanner info"
       >
@@ -654,10 +642,7 @@ exports[`<DefaultLayout /> tests feature banner tests features banner is rendere
           </span>
         </button>
       </div>
-      <div
-        class="children"
-      />
-    </div>
+    </main>
   </div>
 </div>
 `;
