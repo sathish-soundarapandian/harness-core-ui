@@ -24,33 +24,21 @@ import * as Yup from 'yup'
 
 import { get, isEmpty, set } from 'lodash-es'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { Connectors } from '@connectors/constants'
 
 import { useStrings } from 'framework/strings'
-import type { ConnectorConfigDTO, StoreConfigWrapper } from 'services/cd-ng'
-import { ConnectorMap, ConnectorTypes, StartupScriptDataType } from './StartupScriptInterface.types'
+import type { ConnectorConfigDTO } from 'services/cd-ng'
+import {
+  ConnectorTypes,
+  gitFetchTypeList,
+  GitFetchTypes,
+  StartupScriptDataType,
+  StartupScriptWizardStepTwoProps
+} from './StartupScriptInterface.types'
 import { GitRepoName } from '../ManifestSelection/Manifesthelper'
 
 import css from './StartupScriptSelection.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-
-interface StartupScriptWizardStepTwoProps {
-  stepName: string
-  expressions: string[]
-  allowableTypes: MultiTypeInputType[]
-  initialValues: StoreConfigWrapper
-  handleSubmit: (data: StoreConfigWrapper) => void
-  isReadonly?: boolean
-}
-
-enum GitFetchTypes {
-  Branch = 'Branch',
-  Commit = 'Commit'
-}
-
-const gitFetchTypeList = [
-  { label: 'Latest from Branch', value: GitFetchTypes.Branch },
-  { label: 'Specific Commit Id / Git Tag', value: GitFetchTypes.Commit }
-]
 
 function StartupScriptWizardStepTwo({
   stepName,
@@ -64,8 +52,7 @@ function StartupScriptWizardStepTwo({
 }: StepProps<ConnectorConfigDTO> & StartupScriptWizardStepTwoProps): React.ReactElement {
   const { getString } = useStrings()
 
-  const gitConnectionType: string =
-    prevStepData?.store === ConnectorMap[prevStepData?.store] ? 'connectionType' : 'type'
+  const gitConnectionType: string = prevStepData?.store === Connectors.GIT ? 'connectionType' : 'type'
   const connectionType =
     prevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
     prevStepData?.urlType === GitRepoName.Repo

@@ -35,21 +35,16 @@ import type { ConnectorSelectedValue } from '@connectors/components/ConnectorRef
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ConnectorIcons, ConnectorLabelMap, ConnectorMap, ConnectorTypes } from './StartupScriptInterface.types'
-import type { StartupScriptWizardInitData } from './StartupScriptListView'
+import {
+  ConnectorIcons,
+  ConnectorLabelMap,
+  ConnectorMap,
+  ConnectorTypes,
+  StartupScriptPropType,
+  StartupScriptWizardInitData
+} from './StartupScriptInterface.types'
 
 import css from './StartupScriptSelection.module.scss'
-
-interface StartupScriptPropType {
-  stepName: string
-  expressions: string[]
-  allowableTypes: MultiTypeInputType[]
-  isReadonly: boolean
-  connectorTypes: Array<ConnectorTypes>
-  initialValues: StartupScriptWizardInitData
-  handleConnectorViewChange: () => void
-  handleStoreChange: (store: ConnectorTypes) => void
-}
 
 function StartupScriptWizardStepOne({
   handleConnectorViewChange,
@@ -136,7 +131,7 @@ function StartupScriptWizardStepOne({
   return (
     <Layout.Vertical height={'inherit'} spacing="medium" className={css.optionsViewContainer}>
       <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
-        {stepName}
+        {`${getString('common.specify')} ${stepName}`}
       </Text>
 
       <Formik

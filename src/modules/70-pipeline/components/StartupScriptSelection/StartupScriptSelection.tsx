@@ -10,7 +10,7 @@ import { Layout, shouldShowError, useToaster } from '@harness/uicore'
 
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty } from 'lodash-es'
-import { useGetConnectorListV2, PageConnectorResponse, AzureWebAppServiceSpec } from 'services/cd-ng'
+import { useGetConnectorListV2, PageConnectorResponse } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
@@ -22,12 +22,7 @@ import { useDeepCompareEffect } from '@common/hooks'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useCache } from '@common/hooks/useCache'
 import StartupScriptListView from './StartupScriptListView'
-import type { StartupScriptSelectionProps } from './StartupScriptInterface.types'
-
-export interface AzureWebAppsServiceDefinition {
-  spec: AzureWebAppServiceSpec
-  type: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps'
-}
+import type { AzureWebAppsServiceDefinition, StartupScriptSelectionProps } from './StartupScriptInterface.types'
 
 export default function StartupScriptSelection({
   isPropagating,
