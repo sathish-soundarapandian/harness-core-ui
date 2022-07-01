@@ -26,8 +26,8 @@ import { get, isEmpty, set } from 'lodash-es'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import { useStrings } from 'framework/strings'
-import type { ConnectorConfigDTO } from 'services/cd-ng'
-import { ConnectorMap } from './StartupScriptInterface.types'
+import type { ConnectorConfigDTO, StoreConfigWrapper } from 'services/cd-ng'
+import { ConnectorMap, ConnectorTypes, StartupScriptDataType } from './StartupScriptInterface.types'
 import { GitRepoName } from '../ManifestSelection/Manifesthelper'
 
 import css from './StartupScriptSelection.module.scss'
@@ -37,21 +37,20 @@ interface StartupScriptWizardStepTwoProps {
   stepName: string
   expressions: string[]
   allowableTypes: MultiTypeInputType[]
-  // change to StartupScriptConfig or similar if it is present in services
-  initialValues: any
-  handleSubmit: (data: any) => void
+  initialValues: StoreConfigWrapper
+  handleSubmit: (data: StoreConfigWrapper) => void
   isReadonly?: boolean
 }
-
-const gitFetchTypeList = [
-  { label: 'Latest from Branch', value: 'Branch' },
-  { label: 'Specific Commit Id / Git Tag', value: 'Commit' }
-]
 
 enum GitFetchTypes {
   Branch = 'Branch',
   Commit = 'Commit'
 }
+
+const gitFetchTypeList = [
+  { label: 'Latest from Branch', value: GitFetchTypes.Branch },
+  { label: 'Specific Commit Id / Git Tag', value: GitFetchTypes.Commit }
+]
 
 function StartupScriptWizardStepTwo({
   stepName,
@@ -66,21 +65,15 @@ function StartupScriptWizardStepTwo({
   const { getString } = useStrings()
 
   const gitConnectionType: string =
-    prevStepData?.store === ConnectorMap[prevStepData?.store.type] ? 'connectionType' : 'type'
+    prevStepData?.store === ConnectorMap[prevStepData?.store] ? 'connectionType' : 'type'
   const connectionType =
     prevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
     prevStepData?.urlType === GitRepoName.Repo
       ? GitRepoName.Repo
       : GitRepoName.Account
 
-  const getInitialValues = useCallback((): {
-    branch: string | undefined
-    commitId: string | undefined
-    gitFetchType: 'Branch' | 'Commit'
-    paths: string | undefined
-    repoName?: string | undefined
-  } => {
-    const specValues = get(initialValues, 'store.spec', null)
+  const getInitialValues = useCallback((): StartupScriptDataType => {
+    const specValues = get(initialValues, 'spec.store.spec', null)
 
     if (specValues) {
       return {
@@ -100,35 +93,30 @@ function StartupScriptWizardStepTwo({
     }
   }, [])
 
-  const submitFormData = (formData: {
-    branch: string | undefined
-    commitId: string | undefined
-    gitFetchType: 'Branch' | 'Commit'
-    paths: string | undefined
-    store?: string
-    connectorRef?: string
-    repoName?: string | undefined
-  }): void => {
+  const submitFormData = (formData: StartupScriptDataType & { store?: string; connectorRef?: string }): void => {
     const startupScript = {
-      store: {
-        type: formData?.store,
-        spec: {
-          connectorRef: formData?.connectorRef,
-          gitFetchType: formData?.gitFetchType,
-          paths: typeof formData?.paths === 'string' ? [formData?.paths] : formData?.paths
+      type: formData?.store as ConnectorTypes,
+      spec: {
+        store: {
+          type: formData?.store,
+          spec: {
+            connectorRef: formData?.connectorRef,
+            gitFetchType: formData?.gitFetchType,
+            paths: typeof formData?.paths === 'string' ? [formData?.paths] : formData?.paths
+          }
         }
       }
     }
 
     if (connectionType === GitRepoName.Account) {
-      set(startupScript, 'store.spec.repoName', formData?.repoName)
+      set(startupScript, 'spec.store.spec.repoName', formData?.repoName)
     }
 
-    if (startupScript?.store) {
+    if (startupScript?.spec?.store) {
       if (formData?.gitFetchType === 'Branch') {
-        set(startupScript, 'store.spec.branch', formData?.branch)
+        set(startupScript, 'spec.store.spec.branch', formData?.branch)
       } else if (formData?.gitFetchType === 'Commit') {
-        set(startupScript, 'store.spec.commitId', formData?.commitId)
+        set(startupScript, 'spec.store.spec.commitId', formData?.commitId)
       }
     }
 
@@ -184,16 +172,7 @@ function StartupScriptWizardStepTwo({
           })
         }}
       >
-        {(formik: {
-          setFieldValue: (a: string, b: string) => void
-          values: {
-            branch: string | undefined
-            commitId: string | undefined
-            gitFetchType: 'Branch' | 'Commit'
-            paths: any
-            repoName: string | undefined
-          }
-        }) => {
+        {(formik: { setFieldValue: (a: string, b: string) => void; values: StartupScriptDataType }) => {
           return (
             <Form>
               <Layout.Vertical
