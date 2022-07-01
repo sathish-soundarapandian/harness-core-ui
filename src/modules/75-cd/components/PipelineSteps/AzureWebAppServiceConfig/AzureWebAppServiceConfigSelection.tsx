@@ -15,7 +15,7 @@ import { useCache } from '@common/hooks/useCache'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 
-import { PageConnectorResponse, ServiceDefinition, useGetConnectorListV2 } from 'services/cd-ng'
+import { AzureWebAppServiceSpec, PageConnectorResponse, ServiceDefinition, useGetConnectorListV2 } from 'services/cd-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useDeepCompareEffect } from '@common/hooks'
@@ -28,6 +28,11 @@ export interface AzureWebAppSelectionProps {
   deploymentType: ServiceDefinition['type']
   isReadonlyServiceMode: boolean
   readonly: boolean
+}
+
+export interface AzureWebAppsServiceDefinition {
+  spec: AzureWebAppServiceSpec
+  type: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps'
 }
 
 export default function AzureWebAppConfigSelection({
@@ -52,7 +57,7 @@ export default function AzureWebAppConfigSelection({
   const { getRBACErrorMessage } = useRBACError()
   const getServiceCacheId = `${pipeline.identifier}-${selectedStageId}-service`
   const { getCache } = useCache([getServiceCacheId])
-  const serviceInfo = getCache<ServiceDefinition>(getServiceCacheId)
+  const serviceInfo = getCache<AzureWebAppsServiceDefinition>(getServiceCacheId)
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<
     PipelineType<{
@@ -78,13 +83,26 @@ export default function AzureWebAppConfigSelection({
     /* istanbul ignore next */
     /* istanbul ignore else */
     if (isReadonlyServiceMode && !isEmpty(serviceInfo)) {
-      return defaultTo(serviceInfo?.spec.applicationSettings, {})
+      return defaultTo(serviceInfo?.spec?.applicationSettings, {})
     }
     if (isPropagating) {
       return get(stage, 'stage.spec.serviceConfig.stageOverrides.applicationSettings', {})
     }
 
     return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.applicationSettings', {})
+  }, [isReadonlyServiceMode, serviceInfo, isPropagating, stage])
+
+  const connectionStrings = useMemo(() => {
+    /* istanbul ignore next */
+    /* istanbul ignore else */
+    if (isReadonlyServiceMode && !isEmpty(serviceInfo)) {
+      return defaultTo(serviceInfo?.spec?.connectionStrings, {})
+    }
+    if (isPropagating) {
+      return get(stage, 'stage.spec.serviceConfig.stageOverrides.connectionStrings', {})
+    }
+
+    return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.connectionStrings', {})
   }, [isReadonlyServiceMode, serviceInfo, isPropagating, stage])
 
   useDeepCompareEffect(() => {
@@ -95,8 +113,8 @@ export default function AzureWebAppConfigSelection({
     return !isEmpty(applicationSettings)
       ? [
           {
-            scope: getScopeFromValue(applicationSettings?.spec?.store?.spec?.k8sConnectorRef),
-            identifier: getIdentifierFromValue(applicationSettings?.spec?.store?.spec?.connectorRef)
+            scope: getScopeFromValue(applicationSettings?.store?.spec?.connectorRef),
+            identifier: getIdentifierFromValue(applicationSettings?.store?.spec?.connectorRef)
           }
         ]
       : []
@@ -129,7 +147,8 @@ export default function AzureWebAppConfigSelection({
     isReadonly: readonly,
     deploymentType,
     allowableTypes,
-    applicationSettings
+    applicationSettings,
+    connectionStrings
   }
   return (
     <Layout.Vertical>

@@ -54,7 +54,7 @@
 
 .serviceConfigList {
   display: grid;
-  grid-template-columns: 180px 230px 230px minmax(10px, 1fr) 80px;
+  grid-template-columns: 300px 300px auto;
   column-gap: var(--spacing-medium);
   align-items: center;
 
@@ -70,6 +70,10 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+}
+
+.serviceConfigListButton {
+  justify-content: flex-end;
 }
 
 .noWrap {
@@ -117,4 +121,8 @@
 .saveBtn {
   position: relative;
   bottom: 0;
+}
+
+.borderRadius {
+  border-radius: 4px;
 }

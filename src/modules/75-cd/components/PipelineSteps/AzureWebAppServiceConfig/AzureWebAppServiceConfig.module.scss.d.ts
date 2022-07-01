@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly addServiceConfig: string
+  readonly borderRadius: string
   readonly columnId: string
   readonly configureOptions: string
   readonly connectorContainer: string
@@ -23,6 +24,7 @@ declare const styles: {
   readonly saveBtn: string
   readonly serviceConfigForm: string
   readonly serviceConfigList: string
+  readonly serviceConfigListButton: string
   readonly serviceConfigLocation: string
   readonly serviceConfigWizard: string
   readonly thumbnailSelect: string

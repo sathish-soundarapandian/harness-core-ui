@@ -9,11 +9,10 @@ import React from 'react'
 import { StepWizard, StepProps, MultiTypeInputType } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import type { IconProps } from '@harness/icons'
-import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import AzureWebAppServiceStepOne from './AzureWebAppServiceStepOne'
-import type { ConnectorTypes } from '../../AzureWebAppServiceConfig.types'
+import type { ConnectorTypes, WizardStepNames } from '../../AzureWebAppServiceConfig.types'
 
 import css from '../../AzureWebAppServiceConfig.module.scss'
 
@@ -40,6 +39,7 @@ interface ServiceConfigWizardStepsProps<T> {
   isReadonly: boolean
   handleStoreChange: (store?: T) => void
   connectorTypes: any
+  labels: WizardStepNames
 }
 
 export function AzureWebAppServiceConfigWizard<T>({
@@ -52,9 +52,9 @@ export function AzureWebAppServiceConfigWizard<T>({
   newConnectorView,
   newConnectorSteps,
   lastSteps,
-  isReadonly
+  isReadonly,
+  labels
 }: ServiceConfigWizardStepsProps<T>): React.ReactElement {
-  const { getString } = useStrings()
   const onStepChange = (arg: StepChangeData<any>): void => {
     if (arg?.prevStep && arg?.nextStep && arg.prevStep > arg.nextStep && arg.nextStep <= 2) {
       handleConnectorViewChange(false)
@@ -76,11 +76,12 @@ export function AzureWebAppServiceConfigWizard<T>({
         color: Color.WHITE,
         size: 37
       }}
-      title={getString('pipeline.appServiceConfig.applicationSettings.file')}
+      title={labels?.wizardName}
     >
       <AzureWebAppServiceStepOne
-        name={getString('pipeline.appServiceConfig.applicationSettings.fileSource')}
-        stepName={getString('pipeline.appServiceConfig.applicationSettings.fileSource')}
+        name={labels?.firstStepName}
+        title={labels?.firstStepName}
+        stepName={labels?.firstStepName}
         expressions={expressions}
         allowableTypes={allowableTypes}
         isReadonly={isReadonly}
