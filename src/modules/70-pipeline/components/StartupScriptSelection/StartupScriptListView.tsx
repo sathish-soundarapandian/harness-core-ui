@@ -6,17 +6,7 @@
  */
 
 import React, { useCallback, useState } from 'react'
-import {
-  Layout,
-  Text,
-  StepWizard,
-  StepProps,
-  Button,
-  ButtonSize,
-  ButtonVariation,
-  MultiTypeInputType,
-  Icon
-} from '@harness/uicore'
+import { Layout, Text, StepWizard, StepProps, Button, ButtonSize, ButtonVariation, Icon } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
@@ -31,13 +21,7 @@ import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonS
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
 import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
-import type {
-  ConnectorConfigDTO,
-  ConnectorInfoDTO,
-  PageConnectorResponse,
-  StageElementConfig,
-  StoreConfigWrapper
-} from 'services/cd-ng'
+import type { ConnectorConfigDTO, ConnectorInfoDTO, StageElementConfig, StoreConfigWrapper } from 'services/cd-ng'
 import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
 import StepBitbucketAuthentication from '@connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
 import StepGitlabAuthentication from '@connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
@@ -53,46 +37,22 @@ import DelegateSelectorStep from '@connectors/components/CreateConnector/commonS
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 
-import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
-import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { getStatus, getConnectorNameFromValue } from '../PipelineStudio/StageBuilder/StageBuilderUtil'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import ConnectorField from './StartupScriptConnectorField'
 import StartupScriptWizardStepTwo from './StartupScriptWizardStepTwo'
-import { ConnectorMap, AllowedTypes, ConnectorTypes, ConnectorIcons } from './StartupScriptInterface.types'
+import {
+  ConnectorMap,
+  AllowedTypes,
+  ConnectorTypes,
+  ConnectorIcons,
+  StartupScriptListViewProps,
+  StartupScriptWizardInitData,
+  StartupScriptLastStepProps
+} from './StartupScriptInterface.types'
 import { StartupScriptWizard } from './StartupScriptWizard'
 
 import css from './StartupScriptSelection.module.scss'
-
-interface StartupScriptListViewProps {
-  pipeline: any
-  updateStage: (stage: StageElementConfig) => Promise<void>
-  stage: StageElementWrapper | undefined
-  isPropagating?: boolean
-  connectors: PageConnectorResponse | undefined
-  refetchConnectors: () => void
-  isReadonly: boolean
-  allowableTypes: MultiTypeInputType[]
-  startupScript: any
-}
-
-export interface StartupScriptWizardInitData {
-  connectorRef: string | undefined | ConnectorSelectedValue
-  store: ConnectorTypes | string
-}
-
-interface StartupScriptLastStepProps {
-  key: string
-  name: string
-  expressions: string[]
-  allowableTypes: MultiTypeInputType[]
-  stepName: string
-  // todo: change type from any
-  initialValues: any
-  handleSubmit: (data: StoreConfigWrapper) => void
-  isReadonly?: boolean
-  startupScript?: StoreConfigWrapper
-}
 
 function StartupScriptListView({
   updateStage,
@@ -175,7 +135,7 @@ function StartupScriptListView({
     }
   }
 
-  const handleSubmit = (script: any): void => {
+  const handleSubmit = (script: StoreConfigWrapper): void => {
     startupScript = script
     updateStageData()
     // todo: add tracking events
@@ -197,7 +157,7 @@ function StartupScriptListView({
   }
 
   const lastStepProps = useCallback((): StartupScriptLastStepProps => {
-    const startupScriptDetailsProps: StartupScriptLastStepProps = {
+    return {
       key: getString('pipeline.startupScript.fileDetails'),
       name: getString('pipeline.startupScript.fileDetails'),
       expressions,
@@ -207,8 +167,6 @@ function StartupScriptListView({
       handleSubmit: handleSubmit,
       isReadonly: isReadonly
     }
-
-    return startupScriptDetailsProps
   }, [connectorType])
 
   const getBuildPayload = (type: ConnectorInfoDTO['type']) => {
@@ -227,10 +185,10 @@ function StartupScriptListView({
     return () => ({})
   }
 
-  const getLastStepInitialData = (): any => {
+  const getLastStepInitialData = (): StoreConfigWrapper => {
     const initValues = startupScript
     if (get(initValues, 'spec.store.type') && get(initValues, 'spec.store.type') !== connectorType) {
-      return {}
+      return null as unknown as StoreConfigWrapper
     }
     return initValues
   }
@@ -334,7 +292,7 @@ function StartupScriptListView({
     }
   }, [connectorView, connectorType, isEditMode])
 
-  const renderStartupScriptList = (script: any): any => {
+  const renderStartupScriptList = (script: StoreConfigWrapper): React.ReactElement => {
     const { color } = getStatus(script?.spec?.store?.spec?.connectorRef, connectors, accountId)
     const connectorName = getConnectorNameFromValue(script?.spec?.store?.spec?.connectorRef, connectors)
     return (
