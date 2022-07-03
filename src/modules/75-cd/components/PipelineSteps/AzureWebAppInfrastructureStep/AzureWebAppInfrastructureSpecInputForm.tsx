@@ -17,7 +17,7 @@ import {
 
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { get, defaultTo, isEqual, set } from 'lodash-es'
+import { get, defaultTo, isEqual } from 'lodash-es'
 import {
   AzureSubscriptionDTO,
   useGetAzureResourceGroupsBySubscription,
@@ -77,12 +77,12 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
 
   const { getString } = useStrings()
 
-  React.useEffect(() => {
-    setSubscriptions([])
-    setResourceGroups([])
-    setWebApps([])
-    setDeploymentSlots([])
-  }, [])
+  const queryParams = {
+    connectorRef: connector as string,
+    accountIdentifier: accountId,
+    orgIdentifier,
+    projectIdentifier
+  }
 
   const {
     data: subscriptionsData,
@@ -90,14 +90,8 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
     refetch: refetchSubscriptions,
     error: subscriptionsError
   } = useGetAzureSubscriptions({
-    queryParams: {
-      connectorRef: connector as string,
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier
-    },
+    queryParams,
     lazy: true
-    // debounce: 300
   })
 
   useEffect(() => {
@@ -121,15 +115,9 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
     loading: loadingResourceGroups,
     error: resourceGroupsError
   } = useGetAzureResourceGroupsBySubscription({
-    queryParams: {
-      connectorRef: connector as string,
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier
-    },
+    queryParams,
     subscriptionId: subscriptionId as string,
     lazy: true
-    // debounce: 300
   })
 
   useEffect(() => {
@@ -145,16 +133,10 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
     loading: loadingWebApps,
     error: webAppsError
   } = useGetAzureWebAppNames({
-    queryParams: {
-      connectorRef: connector as string,
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier
-    },
+    queryParams,
     subscriptionId: subscriptionId as string,
     resourceGroup: defaultTo(initialValues.resourceGroup, allValues?.resourceGroup) as string,
     lazy: true
-    // debounce: 300
   })
 
   useEffect(() => {
@@ -169,17 +151,11 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
     loading: loadingDeploymentSlots,
     error: deploymentSlotsError
   } = useGetAzureWebAppDeploymentSlots({
-    queryParams: {
-      connectorRef: connector as string,
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier
-    },
+    queryParams,
     subscriptionId: subscriptionId as string,
     resourceGroup: resourceGroupValue as string,
     webAppName: defaultTo(initialValues.webApp, allValues?.webApp) as string,
     lazy: true
-    // debounce: 300
   })
 
   useEffect(() => {
@@ -194,12 +170,7 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
   useEffect(() => {
     if (connector && getMultiTypeFromValue(connector) === MultiTypeInputType.FIXED) {
       refetchSubscriptions({
-        queryParams: {
-          accountIdentifier: accountId,
-          projectIdentifier,
-          orgIdentifier,
-          connectorRef: connector
-        }
+        queryParams
       })
     }
     if (
@@ -209,12 +180,7 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
       getMultiTypeFromValue(subscriptionId) === MultiTypeInputType.FIXED
     ) {
       refetchResourceGroups({
-        queryParams: {
-          connectorRef: connector,
-          accountIdentifier: accountId,
-          orgIdentifier,
-          projectIdentifier
-        },
+        queryParams,
         pathParams: {
           subscriptionId: subscriptionId
         }
@@ -237,12 +203,7 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
       getMultiTypeFromValue(resourceGroupValue) === MultiTypeInputType.FIXED
     ) {
       refetchWebApps({
-        queryParams: {
-          accountIdentifier: accountId,
-          projectIdentifier,
-          orgIdentifier,
-          connectorRef: connector
-        },
+        queryParams,
         pathParams: {
           subscriptionId: subscriptionId as string,
           resourceGroup: resourceGroupValue as string
@@ -254,7 +215,6 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
         getMultiTypeFromValue(template?.webApp) === MultiTypeInputType.RUNTIME &&
         getMultiTypeFromValue(initialValues?.webApp) !== MultiTypeInputType.RUNTIME
       ) {
-        // set(initialValues, 'webApp', '')
         onUpdate?.(initialValues)
       }
     }
@@ -267,12 +227,7 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
       getMultiTypeFromValue(resourceGroupValue) === MultiTypeInputType.FIXED
     ) {
       refetchWebApps({
-        queryParams: {
-          accountIdentifier: accountId,
-          projectIdentifier,
-          orgIdentifier,
-          connectorRef: connector
-        },
+        queryParams,
         pathParams: {
           subscriptionId: subscriptionId as string,
           resourceGroup: resourceGroupValue as string
@@ -284,7 +239,6 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
         getMultiTypeFromValue(template?.webApp) === MultiTypeInputType.RUNTIME &&
         getMultiTypeFromValue(initialValues?.webApp) !== MultiTypeInputType.RUNTIME
       ) {
-        // set(initialValues, 'webApp', '')
         onUpdate?.(initialValues)
       }
     }
@@ -323,11 +277,11 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
                   }
                 } else if (type === MultiTypeInputType.EXPRESSION) {
                   setConnector(selected?.toString())
-                  setSubscriptions([])
-                  setResourceGroups([])
-                  setWebApps([])
-                  setDeploymentSlots([])
                 }
+                setSubscriptions([])
+                setResourceGroups([])
+                setWebApps([])
+                setDeploymentSlots([])
               }
             }
             gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
@@ -355,16 +309,13 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
                 if (value && type === MultiTypeInputType.FIXED) {
                   if (!isEqual(getValue(value), subscriptionId)) {
                     setSubscriptionId(getValue(value))
-                    setResourceGroups([])
-                    setWebApps([])
-                    setDeploymentSlots([])
                   }
                 } else if (type === MultiTypeInputType.EXPRESSION) {
                   setSubscriptionId(value?.toString())
-                  setResourceGroups([])
-                  setWebApps([])
-                  setDeploymentSlots([])
                 }
+                setResourceGroups([])
+                setWebApps([])
+                setDeploymentSlots([])
               },
               onFocus: () => {
                 if (connector) {
@@ -376,16 +327,7 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
                       connectorRef: connector
                     }
                   })
-                } else {
-                  setSubscriptions([])
-                  setResourceGroups([])
-                  setWebApps([])
-                  setDeploymentSlots([])
                 }
-                set(initialValues, 'resourceGroup', '')
-                set(initialValues, 'webApp', '')
-                set(initialValues, 'deploymentSlot', '')
-                set(initialValues, 'targetSlot', '')
               },
               selectProps: {
                 items: subscriptions,
@@ -394,7 +336,7 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
                 noResults: (
                   <Text padding={'small'}>
                     {loadingSubscriptions
-                      ? 'Loading...'
+                      ? getString('loading')
                       : defaultTo(
                           get(subscriptionsError, errorMessage, subscriptionsError?.message),
                           getString('pipeline.ACR.subscriptionError')
@@ -435,13 +377,11 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
               onChange: /* istanbul ignore next */ (value, _typeValue, type) => {
                 if (value && type === MultiTypeInputType.FIXED) {
                   setResourceGroupValue(getValue(value))
-                  setWebApps([])
-                  setDeploymentSlots([])
                 } else if (type === MultiTypeInputType.EXPRESSION) {
                   setResourceGroupValue(value?.toString())
-                  setWebApps([])
-                  setDeploymentSlots([])
                 }
+                setWebApps([])
+                setDeploymentSlots([])
               },
               onFocus: () => {
                 if (connector && subscriptionId) {
@@ -456,10 +396,6 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
                       subscriptionId: subscriptionId
                     }
                   })
-                } else {
-                  setResourceGroups([])
-                  setWebApps([])
-                  setDeploymentSlots([])
                 }
               },
 
@@ -470,7 +406,7 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
                 noResults: (
                   <Text padding={'small'}>
                     {loadingResourceGroups
-                      ? 'Loading...'
+                      ? getString('loading')
                       : defaultTo(
                           get(resourceGroupsError, errorMessage, resourceGroupsError?.message),
                           getString('cd.steps.azureInfraStep.resourceGroupError')
@@ -501,7 +437,11 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
                 resourceGroupValue !== '<+input>'
               ) || readonly
             }
-            placeholder={loadingWebApps ? /* istanbul ignore next */ getString('loading') : 'WebApp Names'}
+            placeholder={
+              loadingWebApps
+                ? /* istanbul ignore next */ getString('loading')
+                : getString('cd.steps.azureWebAppInfra.webAppPlaceholder')
+            }
             useValue
             selectItems={webApps}
             label="Web App"
@@ -509,11 +449,10 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
               onChange: /* istanbul ignore next */ (value, _typeValue, type) => {
                 if (value && type === MultiTypeInputType.FIXED) {
                   setWebAppValue(getValue(value))
-                  setDeploymentSlots([])
                 } else if (type === MultiTypeInputType.EXPRESSION) {
                   setWebAppValue(value?.toString())
-                  setDeploymentSlots([])
                 }
+                setDeploymentSlots([])
               },
 
               onFocus: () => {
@@ -530,9 +469,6 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
                       resourceGroup: resourceGroupValue
                     }
                   })
-                } else {
-                  setWebApps([])
-                  setDeploymentSlots([])
                 }
               },
               selectProps: {
@@ -542,10 +478,10 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
                 noResults: (
                   <Text padding={'small'}>
                     {loadingWebApps
-                      ? 'Loading...'
+                      ? getString('loading')
                       : defaultTo(
                           get(webAppsError, errorMessage, webAppsError?.message),
-                          'No WebApp Name found with given Resource Group'
+                          getString('cd.steps.azureWebAppInfra.webAppNameError')
                         )}
                   </Text>
                 )
@@ -575,7 +511,11 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
                 webAppValue !== '<+input>'
               ) || readonly
             }
-            placeholder={loadingDeploymentSlots ? /* istanbul ignore next */ getString('loading') : 'Deployment Slots'}
+            placeholder={
+              loadingDeploymentSlots
+                ? /* istanbul ignore next */ getString('loading')
+                : getString('cd.steps.azureWebAppInfra.deploymentSlotPlaceHolder')
+            }
             useValue
             selectItems={deploymentSlots}
             label="Web App Deployment Slot "
@@ -595,8 +535,6 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
                       webAppName: webAppValue
                     }
                   })
-                } else {
-                  setWebApps([])
                 }
               },
               selectProps: {
@@ -606,10 +544,10 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
                 noResults: (
                   <Text padding={'small'}>
                     {loadingDeploymentSlots
-                      ? 'Loading...'
+                      ? getString('loading')
                       : defaultTo(
                           get(deploymentSlotsError, errorMessage, deploymentSlotsError?.message),
-                          'No Deployment Slot found with given WebApp Name'
+                          getString('cd.steps.azureWebAppInfra.deploymentSlotError')
                         )}
                   </Text>
                 )
@@ -639,7 +577,11 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
                 webAppValue !== '<+input>'
               ) || readonly
             }
-            placeholder={loadingDeploymentSlots ? /* istanbul ignore next */ getString('loading') : 'Target Slots'}
+            placeholder={
+              loadingDeploymentSlots
+                ? /* istanbul ignore next */ getString('loading')
+                : getString('cd.steps.azureWebAppInfra.targetSlotPlaceHolder')
+            }
             useValue
             selectItems={deploymentSlots}
             label="Web App Target Slot "
@@ -670,10 +612,10 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
                 noResults: (
                   <Text padding={'small'}>
                     {loadingDeploymentSlots
-                      ? 'Loading...'
+                      ? getString('loading')
                       : defaultTo(
                           get(deploymentSlotsError, errorMessage, deploymentSlotsError?.message),
-                          'No Target Slot found with given WebApp Name'
+                          getString('cd.steps.azureWebAppInfra.targetSlotError')
                         )}
                   </Text>
                 )

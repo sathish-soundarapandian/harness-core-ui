@@ -93,7 +93,8 @@ export class AzureWebAppInfrastructureSpec extends PipelineStep<AzureWebAppInfra
     webApp: '',
     resourceGroup: '',
     deploymentSlot: '',
-    targetSlot: ''
+    targetSlot: '',
+    releaseName: ''
   }
 
   protected stepIcon: IconName = 'microsoft-azure'

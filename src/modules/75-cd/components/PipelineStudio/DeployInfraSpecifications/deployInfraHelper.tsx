@@ -125,6 +125,7 @@ export const getInfrastructureDefaultValue = (
       const webApp = infrastructure?.spec?.webApp
       const deploymentSlot = infrastructure?.spec?.deploymentSlot
       const targetSlot = infrastructure?.spec?.targetSlot
+      const releaseName = infrastructure?.spec?.releaseName ?? DEFAULT_RELEASE_NAME
 
       return {
         connectorRef,
@@ -133,6 +134,7 @@ export const getInfrastructureDefaultValue = (
         webApp,
         deploymentSlot,
         targetSlot,
+        releaseName,
         allowSimultaneousDeployments
       }
     }

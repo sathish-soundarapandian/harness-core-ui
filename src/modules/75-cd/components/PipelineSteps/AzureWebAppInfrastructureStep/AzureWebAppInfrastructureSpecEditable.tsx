@@ -15,11 +15,12 @@ import {
   FormikForm,
   Icon,
   getMultiTypeFromValue,
-  MultiTypeInputType
+  MultiTypeInputType,
+  Accordion
 } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
-import { debounce, noop, get, defaultTo } from 'lodash-es'
+import { debounce, noop, get, defaultTo, isEmpty } from 'lodash-es'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import {
@@ -90,7 +91,6 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
   } = useGetAzureSubscriptions({
     queryParams,
     lazy: true
-    // debounce: 300
   })
   React.useEffect(() => {
     const subscriptionValues = [] as SelectOption[]
@@ -116,7 +116,6 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
     queryParams,
     subscriptionId: initialValues?.subscriptionId,
     lazy: true
-    // debounce: 300
   })
 
   React.useEffect(() => {
@@ -136,7 +135,6 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
     subscriptionId: initialValues?.subscriptionId,
     resourceGroup: initialValues?.resourceGroup,
     lazy: true
-    // debounce: 300
   })
 
   React.useEffect(() => {
@@ -155,8 +153,7 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
     subscriptionId: initialValues?.subscriptionId,
     resourceGroup: initialValues?.resourceGroup,
     webAppName: initialValues?.webApp,
-    lazy: true,
-    debounce: 300
+    lazy: true
   })
 
   useEffect(() => {
@@ -193,9 +190,6 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
     /* istanbul ignore else */
     if (initialValues) {
       currentValues.subscriptionId = getSubscription(initialValues)
-      //   if (getMultiTypeFromValue(initialValues?.subscriptionId) === MultiTypeInputType.FIXED) {
-      //     currentValues.subscriptionId = { label: initialValues.subscriptionId, value: initialValues.subscriptionId }
-      //   }
 
       if (getMultiTypeFromValue(initialValues?.webApp) === MultiTypeInputType.FIXED) {
         currentValues.webApp = { label: initialValues.webApp, value: initialValues.webApp }
@@ -335,16 +329,6 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
     }
     return true
   }
-
-  // const getSubscriptionErrorMessage = ():string => {
-  //   if(loadingSubscriptions) return "Loading..."
-  //   if(getMultiTypeFromValue(formikRef.current?.values?.connectorRef) === MultiTypeInputType.RUNTIME){
-  //     return "Couldn't retrieve the subscriptionIds"
-  //   }
-  //   else{
-  //     return get(subscriptionsError, errorMessage, null) || getString('pipeline.ACR.subscriptionError')}
-  //   }
-  // }
 
   return (
     <Layout.Vertical spacing="medium">
@@ -502,7 +486,7 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                       noResults: (
                         <Text padding={'small'}>
                           {loadingSubscriptions
-                            ? 'Loading...'
+                            ? getString('loading')
                             : get(subscriptionsError, errorMessage, null) ||
                               getString('pipeline.ACR.subscriptionError')}
                         </Text>
@@ -548,9 +532,7 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                     onChange: /* istanbul ignore next */ type => {
                       if (type !== MultiTypeInputType.FIXED) {
                         formik.setFieldValue('webApp', '')
-
                         formik.setFieldValue('deploymentSlot', '')
-
                         formik.setFieldValue('targetSlot', '')
                       }
                     },
@@ -590,7 +572,7 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                       noResults: (
                         <Text padding={'small'}>
                           {loadingResourceGroups
-                            ? 'Loading...'
+                            ? getString('loading')
                             : get(resourceGroupsError, errorMessage, null) ||
                               getString('cd.steps.azureInfraStep.resourceGroupError')}
                         </Text>
@@ -632,7 +614,9 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                     ) || readonly
                   }
                   placeholder={
-                    loadingWebApps ? /* istanbul ignore next */ getString('loading') : 'Select or Enter WebApp Name'
+                    loadingWebApps
+                      ? /* istanbul ignore next */ getString('loading')
+                      : getString('cd.steps.azureWebAppInfra.webAppPlaceholder')
                   }
                   multiTypeInputProps={{
                     onChange: /* istanbul ignore next */ type => {
@@ -675,8 +659,9 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                       noResults: (
                         <Text padding={'small'}>
                           {loadingWebApps
-                            ? 'Loading...'
-                            : get(webAppsError, errorMessage, null) || 'No WebApp Name found with given Resource Group'}
+                            ? getString('loading')
+                            : get(webAppsError, errorMessage, null) ||
+                              getString('cd.steps.azureWebAppInfra.webAppNameError')}
                         </Text>
                       )
                     },
@@ -718,7 +703,7 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                   placeholder={
                     loadingDeploymentSlots
                       ? /* istanbul ignore next */ getString('loading')
-                      : 'Select or Add Deployment Slot'
+                      : getString('cd.steps.azureWebAppInfra.deploymentSlotPlaceHolder')
                   }
                   multiTypeInputProps={{
                     onChange: /* istanbul ignore next */ type => {
@@ -751,9 +736,9 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                       noResults: (
                         <Text padding={'small'}>
                           {loadingDeploymentSlots
-                            ? 'Loading....'
+                            ? getString('loading')
                             : get(deploymentSlotsError, errorMessage, null) ||
-                              'No Deployment Slot found with given WebApp Name'}
+                              getString('cd.steps.azureWebAppInfra.deploymentSlotError')}
                         </Text>
                       )
                     },
@@ -796,7 +781,7 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                   placeholder={
                     loadingDeploymentSlots
                       ? /* istanbul ignore next */ getString('loading')
-                      : 'Select or Add Target Slot'
+                      : getString('cd.steps.azureWebAppInfra.targetSlotPlaceHolder')
                   }
                   multiTypeInputProps={{
                     expressions,
@@ -808,9 +793,9 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                       noResults: (
                         <Text padding={'small'}>
                           {loadingDeploymentSlots
-                            ? 'Loading....'
+                            ? getString('loading')
                             : get(deploymentSlotsError, errorMessage, null) ||
-                              'No Target Deployment Slot found with given WebApp Name'}
+                              getString('cd.steps.azureWebAppInfra.targetSlotError')}
                         </Text>
                       )
                     },
@@ -835,8 +820,49 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                     className={css.marginTop}
                   />
                 )}
-                {/* <StringWithTooltip stringId={text} tooltipId={tooltipId} onClick={e => e.stopPropagation()} /> */}
               </Layout.Horizontal>
+              <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
+                <div> {getString('cd.steps.azureWebAppInfra.targetSlotInfoText')}</div>
+              </Layout.Horizontal>
+              <Accordion
+                panelClassName={css.accordionPanel}
+                detailsClassName={css.accordionDetails}
+                activeId={!isEmpty(formik.errors.releaseName) ? /* istanbul ignore next */ 'advanced' : ''}
+              >
+                <Accordion.Panel
+                  id="advanced"
+                  addDomId={true}
+                  summary={getString('common.advanced')}
+                  details={
+                    <Layout.Horizontal className={css.formRow} spacing="medium">
+                      <FormInput.MultiTextInput
+                        name="releaseName"
+                        className={css.inputWidth}
+                        label={getString('common.releaseName')}
+                        placeholder={getString('cd.steps.common.releaseNamePlaceholder')}
+                        multiTextInputProps={{ expressions, textProps: { disabled: readonly }, allowableTypes }}
+                        disabled={readonly}
+                      />
+                      {getMultiTypeFromValue(formik.values.releaseName) === MultiTypeInputType.RUNTIME && !readonly && (
+                        <ConfigureOptions
+                          value={formik.values.releaseName as string}
+                          type="String"
+                          variableName="releaseName"
+                          showRequiredField={false}
+                          showDefaultField={false}
+                          showAdvanced={true}
+                          onChange={value => {
+                            /* istanbul ignore next */
+                            formik.setFieldValue('releaseName', value)
+                          }}
+                          isReadonly={readonly}
+                          className={css.marginTop}
+                        />
+                      )}
+                    </Layout.Horizontal>
+                  }
+                />
+              </Accordion>
               <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }} className={css.lastRow}>
                 <FormInput.CheckBox
                   className={css.simultaneousDeployment}

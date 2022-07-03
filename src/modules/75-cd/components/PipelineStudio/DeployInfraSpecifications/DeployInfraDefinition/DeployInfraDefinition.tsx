@@ -390,6 +390,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   webApp: value.webApp,
                   deploymentSlot: value.deploymentSlot,
                   targetSlot: value.targetSlot,
+                  releaseName: value.releaseName,
                   allowSimultaneousDeployments: value.allowSimultaneousDeployments
                 },
                 InfraDeploymentType.AzureWebApp
