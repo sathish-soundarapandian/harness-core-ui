@@ -15,7 +15,7 @@ import {
   getProvisionerExecutionStrategyYamlPromise,
   Infrastructure,
   K8sAzureInfrastructure,
-  K8sAzureWebAppInfrastructure,
+  AzureWebAppInfrastructure,
   K8SDirectInfrastructure,
   K8sGcpInfrastructure,
   PdcInfrastructure,
@@ -83,15 +83,14 @@ type InfraTypes =
   | ServerlessInfraTypes
   | K8sAzureInfrastructure
   | PdcInfrastructure
-  | K8sAzureWebAppInfrastructure
+  | AzureWebAppInfrastructure
 
 export default function DeployInfraDefinition(props: React.PropsWithChildren<unknown>): JSX.Element {
   const [initialInfrastructureDefinitionValues, setInitialInfrastructureDefinitionValues] =
     React.useState<Infrastructure>({})
 
   const { getString } = useStrings()
-  // const { NG_AZURE } = useFeatureFlags()
-  const NG_AZURE = true
+  const { NG_AZURE } = useFeatureFlags()
 
   const {
     state: {
@@ -372,14 +371,14 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
           />
         )
       }
-      case InfraDeploymentType.KubernetesAzureWebApp: {
+      case InfraDeploymentType.AzureWebApp: {
         return (
           <StepWidget<AzureWebAppInfrastructureSpec>
             factory={factory}
             key={stage?.stage?.identifier}
             readonly={isReadonly}
             initialValues={initialInfrastructureDefinitionValues as AzureWebAppInfrastructureSpec}
-            type={StepType.KubernetesAzureWebApp}
+            type={StepType.AzureWebApp}
             stepViewType={StepViewType.Edit}
             allowableTypes={allowableTypes}
             onUpdate={value =>
@@ -389,9 +388,11 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   subscriptionId: value.subscriptionId,
                   resourceGroup: value.resourceGroup,
                   webApp: value.webApp,
+                  deploymentSlot: value.deploymentSlot,
+                  targetSlot: value.targetSlot,
                   allowSimultaneousDeployments: value.allowSimultaneousDeployments
                 },
-                InfraDeploymentType.KubernetesAzureWebApp
+                InfraDeploymentType.AzureWebApp
               )
             }
           />

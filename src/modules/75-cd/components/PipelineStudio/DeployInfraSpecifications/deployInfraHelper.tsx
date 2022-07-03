@@ -118,17 +118,21 @@ export const getInfrastructureDefaultValue = (
         allowSimultaneousDeployments
       }
     }
-    case InfraDeploymentType.KubernetesAzureWebApp: {
+    case InfraDeploymentType.AzureWebApp: {
       const connectorRef = infrastructure?.spec?.connectorRef
       const subscriptionId = infrastructure?.spec?.subscriptionId
       const resourceGroup = infrastructure?.spec?.resourceGroup
       const webApp = infrastructure?.spec?.webApp
+      const deploymentSlot = infrastructure?.spec?.deploymentSlot
+      const targetSlot = infrastructure?.spec?.targetSlot
 
       return {
         connectorRef,
         subscriptionId,
         resourceGroup,
         webApp,
+        deploymentSlot,
+        targetSlot,
         allowSimultaneousDeployments
       }
     }
@@ -178,11 +182,10 @@ export interface InfrastructureGroup {
 
 export const getInfraGroups = (
   deploymentType: ServiceDefinition['type'],
-  getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
-  // featureFlags: Record<string, boolean>
+  getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
+  featureFlags: Record<string, boolean>
 ): InfrastructureGroup[] => {
-  // const { NG_AZURE } = featureFlags
-  const NG_AZURE = true
+  const { NG_AZURE } = featureFlags
   return isServerlessDeploymentType(deploymentType)
     ? [
         {
@@ -254,7 +257,7 @@ export const getInfraGroups = (
                 {
                   label: 'Azure Web App',
                   icon: 'microsoft-azure',
-                  value: InfraDeploymentType.KubernetesAzureWebApp
+                  value: InfraDeploymentType.AzureWebApp
                 }
               ]
             : [

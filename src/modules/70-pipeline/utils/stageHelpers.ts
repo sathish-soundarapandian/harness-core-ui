@@ -234,6 +234,7 @@ export const isSSHWinRMDeploymentType = (deploymentType: string): boolean => {
 export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessAwsLambda]: 'Amazon Web Services Details',
   [ServiceDeploymentType.ServerlessAzureFunctions]: 'Azure Details',
+  [ServiceDeploymentType.AzureWebApp]: 'Azure Web App Details',
   [ServiceDeploymentType.ServerlessGoogleFunctions]: 'GCP Details',
   [ServiceDeploymentType.Pdc]: 'Infrastructure definition',
   [ServiceDeploymentType.winrm]: 'WinRM'

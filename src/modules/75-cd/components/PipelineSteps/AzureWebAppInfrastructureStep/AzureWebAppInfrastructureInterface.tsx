@@ -9,22 +9,23 @@ import type { MultiTypeInputType, SelectOption } from '@harness/uicore'
 import * as Yup from 'yup'
 import { isEmpty } from 'lodash-es'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { K8sAzureWebAppInfrastructure } from 'services/cd-ng' // add new type here
+import type { AzureWebAppInfrastructure } from 'services/cd-ng' // add new type here
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { UseStringsReturn } from 'framework/strings'
 import { getConnectorSchema } from '../PipelineStepsUtil' // define new schema validations
 
 export const subscriptionLabel = 'cd.steps.azureInfraStep.subscription'
 export const resourceGroupLabel = 'common.resourceGroupLabel'
-export const clusterLabel = 'common.cluster'
 
-export type KubernetesAzureWebAppInterface = Omit<K8sAzureWebAppInfrastructure, 'useClusterAdminCredentials'>
-export type AzureWebAppInfrastructureTemplate = { [key in keyof KubernetesAzureWebAppInterface]: string }
+export type AzureWebAppInterface = Omit<AzureWebAppInfrastructure, 'useClusterAdminCredentials'>
+export type AzureWebAppInfrastructureTemplate = { [key in keyof AzureWebAppInterface]: string }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getValue = (item: { label?: string; value?: string } | string | any): string => {
   return typeof item === 'string' ? (item as string) : item?.value
 }
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AzureFieldTypes = { label?: string; value?: string } | string | any
 export function getValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
   return Yup.object().shape({
     connectorRef: getConnectorSchema(getString),
@@ -97,13 +98,13 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): Y
   })
 }
 export interface AzureWebAppInfrastructureSpecEditableProps {
-  initialValues: K8sAzureWebAppInfrastructure
-  allValues?: K8sAzureWebAppInfrastructure
-  onUpdate?: (data: K8sAzureWebAppInfrastructure) => void
+  initialValues: AzureWebAppInfrastructure
+  allValues?: AzureWebAppInfrastructure
+  onUpdate?: (data: AzureWebAppInfrastructure) => void
   stepViewType?: StepViewType
   readonly?: boolean
   template?: AzureWebAppInfrastructureTemplate
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-  variablesData: K8sAzureWebAppInfrastructure
+  variablesData: AzureWebAppInfrastructure
   allowableTypes: MultiTypeInputType[]
 }
