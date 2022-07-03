@@ -33,7 +33,6 @@ export function StartupScriptWizard<T>({
     }
   }
 
-  /* istanbul ignore next */
   const handleStoreChangeRef = (arg: ConnectorTypes): void => {
     handleStoreChange?.(arg as unknown as T)
   }

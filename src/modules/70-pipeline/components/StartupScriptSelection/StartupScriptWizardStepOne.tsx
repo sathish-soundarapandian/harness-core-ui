@@ -53,7 +53,7 @@ function StartupScriptWizardStepOne({
   isReadonly,
   connectorTypes,
   initialValues,
-  previousStep,
+  // previousStep,
   expressions,
   allowableTypes,
   prevStepData,
@@ -92,7 +92,10 @@ function StartupScriptWizardStepOne({
         !isEmpty(connectorRefValue))
     )
   }
-  const handleOptionSelection = (formikData: StartupScriptWizardInitData, storeSelected: ConnectorTypes): void => {
+  const handleOptionSelection = /* istanbul ignore next */ (
+    formikData: StartupScriptWizardInitData,
+    storeSelected: ConnectorTypes
+  ): void => {
     if (
       getMultiTypeFromValue(formikData.connectorRef) !== MultiTypeInputType.FIXED &&
       formikData.store !== storeSelected
@@ -109,7 +112,7 @@ function StartupScriptWizardStepOne({
     const initValues = { ...initialValues }
 
     if (prevStepData?.connectorRef) {
-      initValues.connectorRef = prevStepData?.connectorRef
+      initValues.connectorRef = prevStepData.connectorRef
       handleStoreChange(selectedStore)
     }
     if (selectedStore !== initValues.store) {
@@ -204,9 +207,11 @@ function StartupScriptWizardStepOne({
                         showRequiredField={false}
                         showDefaultField={false}
                         showAdvanced={true}
-                        onChange={value => {
-                          formik.setFieldValue('connectorRef', value)
-                        }}
+                        onChange={
+                          /* istanbul ignore next */ value => {
+                            formik.setFieldValue('connectorRef', value)
+                          }
+                        }
                         isReadonly={isReadonly}
                       />
                     ) : (
@@ -230,12 +235,12 @@ function StartupScriptWizardStepOne({
               </Layout.Vertical>
 
               <Layout.Horizontal spacing="medium" className={css.saveBtn}>
-                <Button
+                {/* <Button
                   text={getString('back')}
                   icon="chevron-left"
                   variation={ButtonVariation.SECONDARY}
                   onClick={() => previousStep?.(prevStepData)}
-                />
+                /> */}
                 <Button
                   variation={ButtonVariation.PRIMARY}
                   type="submit"

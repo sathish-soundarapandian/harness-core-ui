@@ -69,8 +69,8 @@ export default function StartupScriptSelection({
   })
 
   const startupScript = useMemo(() => {
-    /* istanbul ignore next */
     /* istanbul ignore else */
+    /* istanbul ignore next */
     if (isReadonlyServiceMode && !isEmpty(serviceInfo)) {
       return defaultTo(serviceInfo?.spec.startupScript, {})
     }
