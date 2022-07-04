@@ -13,6 +13,7 @@ import { InfrastructureTemplate } from '@templates-library/components/Templates/
 import { ServiceTemplate } from '@templates-library/components/Templates/ServiceTemplate/ServiceTemplate'
 import { StepGroupTemplate } from '@templates-library/components/Templates/StepGroupTemplate/StepGroupTemplate'
 import { ScriptTemplate } from '@templates-library/components/Templates/ScriptTemplate/ScriptTemplate'
+import { ScriptTemplate } from '@cd/components/ScriptTemplate/ScriptTemplate'
 import templateFactory from './TemplatesFactory'
 
 // common

@@ -5,7 +5,7 @@ import { TemplateType } from '@templates-library/utils/templatesUtils'
 import type { NGTemplateInfoConfig } from 'services/template-ng'
 
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
-import { ScriptTemplateCanvasWithRef } from '@templates-library/components/TemplateStudio/ScriptTemplateCanvas/ScriptTemplateCanvas'
+import { ScriptTemplateCanvasWithRef } from '@cd/components/ScriptTemplateCanvas/ScriptTemplateCanvas'
 
 export class ScriptTemplate extends Template<NGTemplateInfoConfig> {
   protected type = TemplateType.Script

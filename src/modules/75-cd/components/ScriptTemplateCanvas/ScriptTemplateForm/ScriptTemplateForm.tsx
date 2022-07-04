@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
+import type { TabId } from '@blueprintjs/core'
 import { Container, MultiTypeInputType, Tab, Tabs } from '@wings-software/uicore'
 
 import type { NGTemplateInfoConfig } from 'services/template-ng'
@@ -17,7 +18,6 @@ import { useStrings } from 'framework/strings'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
 import { BaseScriptWithRef } from './BaseScript'
-import type { TabId } from '@blueprintjs/core'
 import { OptionalConfigurationWithRef } from './OptionalConfigurations'
 import css from './ScriptTemplateForm.module.scss'
 

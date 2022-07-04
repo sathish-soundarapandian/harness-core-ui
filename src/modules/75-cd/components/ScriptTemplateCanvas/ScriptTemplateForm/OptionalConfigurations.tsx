@@ -9,8 +9,6 @@ import React from 'react'
 import { Formik, MultiTypeInputType } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
-
-import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 
@@ -42,16 +40,15 @@ export function OptionalConfigurations(
       outputVariables: variableSchema(getString)
     })
   })
-
   const values: any = {
     ...initialValues,
     spec: {
-      ...initialValues.spec,
-
       executionTarget: {
-        ...initialValues.spec.executionTarget,
-        connectorRef: undefined
-      }
+        connectorRef: undefined,
+        ...initialValues.spec.executionTarget
+      },
+      ...initialValues.spec,
+      onDelegate: initialValues.spec.onDelegate ? 'delegate' : 'targethost'
     }
   }
 
