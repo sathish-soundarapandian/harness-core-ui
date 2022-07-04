@@ -57,3 +57,11 @@
     }
   }
 }
+
+.infoText {
+  display: flex;
+  align-items: flex-end;
+  text-align: center;
+  color: var(--grey-400) !important;
+  padding-bottom: 8px !important;
+}

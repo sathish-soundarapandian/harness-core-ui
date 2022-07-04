@@ -18,6 +18,7 @@ import {
   MultiTypeInputType,
   Accordion
 } from '@wings-software/uicore'
+import { FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import { debounce, noop, get, defaultTo, isEmpty } from 'lodash-es'
@@ -822,7 +823,9 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                 )}
               </Layout.Horizontal>
               <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
-                <div> {getString('cd.steps.azureWebAppInfra.targetSlotInfoText')}</div>
+                <Text font={{ variation: FontVariation.FORM_LABEL }} className={css.infoText}>
+                  {getString('cd.steps.azureWebAppInfra.targetSlotInfoText')}
+                </Text>
               </Layout.Horizontal>
               <Accordion
                 panelClassName={css.accordionPanel}
