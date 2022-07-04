@@ -48,8 +48,26 @@ const getRuntimeInputsValues = () => ({
 })
 
 const getInitialValues = () => ({
+  connectorRef: 'connectorId1',
   credentialsRef: 'credentialsRef',
+  region: 'region1',
+  loadBalancer: 'loadbalancer1',
   sshKey: 'sshkey1',
+  awsInstanceFilter: {
+    vpcs: [],
+    tags: {}
+  },
+  allowSimultaneousDeployments: true
+})
+
+const getInitialAutoScallingValues = () => ({
+  connectorRef: 'connectorId1',
+  credentialsRef: 'credentialsRef',
+  region: 'region1',
+  loadBalancer: 'loadbalancer1',
+  sshKey: 'sshkey1',
+  useAutoScallingGroup: true,
+  autoScalingGroupName: 'groupName1',
   allowSimultaneousDeployments: true
 })
 
@@ -90,6 +108,23 @@ describe('Test SshWinRmAwsInfrastructureSpec behavior', () => {
     await checkForFormInit(container)
     await submitForm(getByText)
     expect(onUpdateHandler).toHaveBeenCalledWith(getInitialValues())
+  })
+
+  test('should call onUpdate if valid values entered / autoscalling true - inputset', async () => {
+    const onUpdateHandler = jest.fn()
+    const { getByText, container } = render(
+      <TestStepWidget
+        initialValues={getInitialAutoScallingValues()}
+        template={getRuntimeInputsValues()}
+        allValues={getInitialAutoScallingValues()}
+        type={StepType.SshWinRmAws}
+        stepViewType={StepViewType.InputSet}
+        onUpdate={onUpdateHandler}
+      />
+    )
+    await checkForFormInit(container)
+    await submitForm(getByText)
+    expect(onUpdateHandler).toHaveBeenCalledWith(getInitialAutoScallingValues())
   })
 
   test('should not call onUpdate if invalid values entered - inputset', async () => {
