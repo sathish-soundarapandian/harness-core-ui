@@ -16,6 +16,13 @@ import { SshWinRmAwsInfrastructureSpec, ConnectorRefRegex, SshKeyRegex } from '.
 import { ConnectorsResponse } from './mock/ConnectorsResponse.mock'
 import { ConnectorResponse } from './mock/ConnectorResponse.mock'
 import { mockListSecrets, mockSecret } from './mock/Secrets.mock'
+import {
+  loadBalancersResponse,
+  regionsResponse,
+  tagsResponse,
+  autoScalingGroupsResponse,
+  vpcsResponse
+} from './mock/Aws.mock'
 
 const getYaml = (): string => `pipeline:
     stages:
@@ -36,7 +43,12 @@ jest.mock('services/cd-ng', () => ({
   useGetConnector: jest.fn(() => ConnectorResponse),
   getConnectorListV2Promise: jest.fn(() => Promise.resolve(ConnectorsResponse.data)),
   getSecretV2Promise: jest.fn().mockImplementation(() => Promise.resolve(mockSecret)),
-  listSecretsV2Promise: jest.fn().mockImplementation(() => Promise.resolve(mockListSecrets))
+  listSecretsV2Promise: jest.fn().mockImplementation(() => Promise.resolve(mockListSecrets)),
+  loadBalancersPromise: jest.fn(() => Promise.resolve(loadBalancersResponse)),
+  regionsForAwsPromise: jest.fn(() => Promise.resolve(regionsResponse)),
+  tagsPromise: jest.fn(() => Promise.resolve(tagsResponse)),
+  autoScalingGroupsPromise: jest.fn(() => Promise.resolve(autoScalingGroupsResponse)),
+  vpcsPromise: jest.fn(() => Promise.resolve(vpcsResponse))
 }))
 
 jest.mock('services/portal', () => ({
@@ -66,7 +78,7 @@ const getInitialAutoScallingValues = () => ({
   region: 'region1',
   loadBalancer: 'loadbalancer1',
   sshKey: 'sshkey1',
-  useAutoScallingGroup: true,
+  useAutoScalingGroup: true,
   autoScalingGroupName: 'groupName1',
   allowSimultaneousDeployments: true
 })

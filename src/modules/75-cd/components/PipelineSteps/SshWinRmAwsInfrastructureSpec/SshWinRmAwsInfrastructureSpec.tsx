@@ -70,7 +70,7 @@ interface SshWinRmAwsInfrastructureUI extends SshWinRmAwsInfrastructure {
   sshKey: SecretReferenceInterface
 }
 
-const AutoScallingGroup = {
+const AutoScalingGroup = {
   TRUE: 'true',
   FALSE: 'false'
 }
@@ -95,8 +95,8 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
   const [loadBalancers, setLoadBalancers] = useState<SelectOption[]>([])
   const [isLoadBalancersLoading, setIsLoadBalancersLoading] = useState(false)
 
-  const [autoScallingGroups, setAutoScallingGroups] = useState<SelectOption[]>([])
-  const [isAutoScallingGroupLoading, setIsAutoScallingGroupLoading] = useState(false)
+  const [autoScalingGroups, setAutoScalingGroups] = useState<SelectOption[]>([])
+  const [isAutoScalingGroupLoading, setIsAutoScalingGroupLoading] = useState(false)
 
   const [vpcs, setVpcs] = useState<SelectOption[]>([])
   const [isVpcsLoading, setIsVpcsLoading] = useState(false)
@@ -115,7 +115,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
       fetchRegions()
       if (region) {
         fetchLoadBalancers(region)
-        fetchAutoScallingGroups(region)
+        fetchAutoScalingGroups(region)
         fetchVpcs(region)
         fetchTags(region)
         formikRef.current?.setFieldValue('region', region)
@@ -216,8 +216,8 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
     }
   }
 
-  const fetchAutoScallingGroups = async (region: string) => {
-    setIsAutoScallingGroupLoading(true)
+  const fetchAutoScalingGroups = async (region: string) => {
+    setIsAutoScalingGroupLoading(true)
     try {
       const response = await autoScalingGroupsPromise({
         queryParams: {
@@ -229,12 +229,12 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
         }
       })
       if (response.status === 'SUCCESS') {
-        const autoScallingGroupEntryOptions = Object.entries(response.data || {}).map(autoScallingGroupEntry => ({
-          value: autoScallingGroupEntry[0],
-          label: autoScallingGroupEntry[1]
+        const autoScalingGroupEntryOptions = Object.entries(response.data || {}).map(autoScalingGroupEntry => ({
+          value: autoScalingGroupEntry[0],
+          label: autoScalingGroupEntry[1]
         }))
-        setAutoScallingGroups(autoScallingGroupEntryOptions)
-        formikRef.current?.setFieldValue('autoscallinggroup', undefined)
+        setAutoScalingGroups(autoScalingGroupEntryOptions)
+        formikRef.current?.setFieldValue('autoScalingGroupName', undefined)
       } else {
         /* istanbul ignore next */
         showError(get(response, 'message', response))
@@ -243,7 +243,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
       /* istanbul ignore next */
       showError(get(e, 'message', '') || get(e, 'responseMessage[0]', ''))
     } finally {
-      setIsAutoScallingGroupLoading(false)
+      setIsAutoScalingGroupLoading(false)
     }
   }
 
@@ -368,7 +368,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                         formik.setFieldValue('tags', {})
                         fetchLoadBalancers(optionItem.value as string)
                         fetchVpcs(optionItem.value as string)
-                        fetchAutoScallingGroups(optionItem.value as string)
+                        fetchAutoScalingGroups(optionItem.value as string)
                         fetchTags(optionItem.value as string)
                       }
                     }
@@ -408,18 +408,18 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                 />
                 <Layout.Horizontal>
                   <RadioGroup
-                    selectedValue={isAutoScalingGroupSelected ? AutoScallingGroup.TRUE : AutoScallingGroup.FALSE}
+                    selectedValue={isAutoScalingGroupSelected ? AutoScalingGroup.TRUE : AutoScalingGroup.FALSE}
                     className={css.radioGroup}
                     onChange={(e: any) => {
-                      setIsAutoScalingGroupSelected(e.target.value === AutoScallingGroup.TRUE)
+                      setIsAutoScalingGroupSelected(e.target.value === AutoScalingGroup.TRUE)
                     }}
                   >
                     <Radio
-                      value={AutoScallingGroup.TRUE}
+                      value={AutoScalingGroup.TRUE}
                       label={getString('cd.steps.awsInfraStep.labels.useAutoScallingGroup')}
                     />
                     <Radio
-                      value={AutoScallingGroup.FALSE}
+                      value={AutoScalingGroup.FALSE}
                       label={getString('cd.steps.awsInfraStep.labels.useAwsInstanceFilter')}
                     />
                   </RadioGroup>
@@ -428,11 +428,11 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                   <Layout.Horizontal>
                     <FormInput.Select
                       name="autoScalingGroupName"
-                      className={`autoscallinggroup-select ${css.inputWidth}`}
-                      items={autoScallingGroups}
-                      disabled={isAutoScallingGroupLoading || !formik.values.region || readonly}
+                      className={`autoscalinggroup-select ${css.inputWidth}`}
+                      items={autoScalingGroups}
+                      disabled={isAutoScalingGroupLoading || !formik.values.region || readonly}
                       placeholder={
-                        isAutoScallingGroupLoading
+                        isAutoScalingGroupLoading
                           ? getString('loading')
                           : getString('cd.steps.awsInfraStep.placeholders.autoScallingGroup')
                       }
