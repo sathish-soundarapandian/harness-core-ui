@@ -8,7 +8,7 @@
 import React from 'react'
 import { StepWizard, Color } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import type { ConnectorTypes, StartupScriptWizardStepsProps, StepChangeData } from './StartupScriptInterface.types'
+import type { ConnectorTypes, StartupScriptWizardStepsProps } from './StartupScriptInterface.types'
 import StartupScriptWizardStepOne from './StartupScriptWizardStepOne'
 
 import css from './StartupScriptSelection.module.scss'
@@ -26,12 +26,6 @@ export function StartupScriptWizard<T>({
   isReadonly
 }: StartupScriptWizardStepsProps<T>): React.ReactElement {
   const { getString } = useStrings()
-  const onStepChange = (arg: StepChangeData<any>): void => {
-    if (arg?.prevStep && arg?.nextStep && arg.prevStep > arg.nextStep && arg.nextStep <= 2) {
-      handleConnectorViewChange(false)
-      handleStoreChange()
-    }
-  }
 
   /* istanbul ignore next */
   const handleStoreChangeRef = (arg: ConnectorTypes): void => {
@@ -41,7 +35,6 @@ export function StartupScriptWizard<T>({
   return (
     <StepWizard
       className={css.startupScriptWizard}
-      onStepChange={onStepChange}
       icon={'audit-trail'}
       iconProps={{
         color: Color.WHITE,
@@ -62,7 +55,7 @@ export function StartupScriptWizard<T>({
       />
       {newConnectorView ? newConnectorSteps : null}
 
-      {lastSteps?.length ? lastSteps?.map(step => step) : null}
+      {lastSteps ? lastSteps : null}
     </StepWizard>
   )
 }
