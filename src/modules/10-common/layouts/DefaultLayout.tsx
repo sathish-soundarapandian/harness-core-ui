@@ -38,15 +38,17 @@ export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.Re
 
   return (
     <div className={css.main} data-layout="default">
-      <MainNav />
-      <SideNav title={title} subtitle={subtitle} icon={icon}>
-        <NavComponent />
-      </SideNav>
-      <main>
+      <div className={css.nav}>
+        <MainNav />
+        <SideNav title={title} subtitle={subtitle} icon={icon}>
+          <NavComponent />
+        </SideNav>
+      </div>
+      <div className={css.rhs}>
         {module && <TrialLicenseBanner />}
         {module && <FeatureBanner />}
         {props.children}
-      </main>
+      </div>
     </div>
   )
 }

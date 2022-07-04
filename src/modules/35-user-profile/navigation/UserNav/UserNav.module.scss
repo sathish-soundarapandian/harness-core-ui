@@ -6,24 +6,18 @@
  */
 
 .signout {
-  position: absolute;
-  padding-left: var(--spacing-large);
   border-top: 1px solid rgba(194, 164, 164, 0.2);
-  width: 100%;
-  left: 0;
-  bottom: 0;
   height: 60px;
   cursor: pointer;
   display: flex;
   align-items: center;
-}
 
-.text {
-  span[class*='bp3-icon'] {
-    color: inherit !important;
-  }
   &:hover {
     color: var(--white) !important;
     opacity: 1;
+  }
+
+  span[class*='bp3-icon'] {
+    color: inherit !important;
   }
 }

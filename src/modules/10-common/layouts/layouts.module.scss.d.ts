@@ -16,8 +16,10 @@ declare const styles: {
   readonly levelUp: string
   readonly link: string
   readonly main: string
+  readonly nav: string
   readonly notExpired: string
   readonly overUse: string
+  readonly rhs: string
   readonly trialLicenseBanner: string
   readonly whiteColor: string
 }

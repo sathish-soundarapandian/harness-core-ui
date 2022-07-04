@@ -53,8 +53,19 @@
 
 .main {
   display: grid;
-  grid-template-columns: 88px 184px 1fr;
+  grid-template-columns: auto 1fr;
   min-height: 100vh;
+  position: sticky;
+  top: 0;
+
+  .nav {
+    display: grid;
+    grid-template-columns: 88px 184px;
+  }
+
+  .rhs {
+    overflow: hidden;
+  }
 
   &[data-layout='minimal'] {
     grid-template-columns: 88px 1fr;
@@ -69,7 +80,7 @@
    coming from UICore, with height coming from NGUI */
 :global {
   .PageBody--pageBody {
-    min-height: unset !important;
+    min-height: calc(100vh - var(--page-header-height)) !important;
     overflow: unset !important;
   }
 }

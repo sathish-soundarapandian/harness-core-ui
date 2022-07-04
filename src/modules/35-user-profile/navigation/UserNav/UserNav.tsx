@@ -50,24 +50,23 @@ export default function UserNav(): React.ReactElement {
   }
 
   return (
-    <div>
+    <>
       <Layout.Vertical margin={{ top: 'xxxlarge' }}>
         <SidebarLink exact label={getString('profile')} to={routes.toUserProfile({ accountId })} />
         {/* Enable when Ready */}
         {/* <SidebarLink label={getString('preferences')} to={routes.toUserPreferences({ accountId })} /> */}
       </Layout.Vertical>
-      <div className={css.signout}>
-        <Text
-          font={{ weight: 'semi-bold' }}
-          icon="log-out"
-          iconProps={{ size: 16, padding: { right: 'small' } }}
-          onClick={signOut}
-          className={css.text}
-          data-testid="signout-link"
-        >
-          {getString('signOut')}
-        </Text>
-      </div>
-    </div>
+      <Text
+        font={{ weight: 'semi-bold' }}
+        padding={{ left: 'large' }}
+        icon="log-out"
+        iconProps={{ size: 16, padding: { right: 'small' } }}
+        onClick={signOut}
+        className={css.signout}
+        data-testid="signout-link"
+      >
+        {getString('signOut')}
+      </Text>
+    </>
   )
 }

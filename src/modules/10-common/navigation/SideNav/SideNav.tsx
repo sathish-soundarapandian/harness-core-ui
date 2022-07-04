@@ -21,24 +21,26 @@ export interface SideNavProps {
 export default function SideNav(props: React.PropsWithChildren<SideNavProps>): ReactElement {
   return (
     <div className={css.main}>
-      <div>{props.children}</div>
-      <Container className={css.bottomContainer}>
-        {props.icon ? (
-          <div className={css.iconContainer}>
-            <Icon className={css.icon} name={props.icon} size={350} />
+      {props.children}
+      {props.icon || props.title || props.subtitle ? (
+        <Container className={css.bottomContainer}>
+          {props.icon ? (
+            <div className={css.iconContainer}>
+              <Icon className={css.icon} name={props.icon} size={350} />
+            </div>
+          ) : null}
+          <div className={css.titleContainer}>
+            <Layout.Vertical>
+              {props.subtitle ? <Text className={css.subTitle}>{props.subtitle}</Text> : null}
+              {props.title ? (
+                <Text color={Color.WHITE} className={css.title}>
+                  {props.title}
+                </Text>
+              ) : null}
+            </Layout.Vertical>
           </div>
-        ) : null}
-        <div className={css.titleContainer}>
-          <Layout.Vertical>
-            {props.subtitle ? <Text className={css.subTitle}>{props.subtitle}</Text> : null}
-            {props.title ? (
-              <Text color={Color.WHITE} className={css.title}>
-                {props.title}
-              </Text>
-            ) : null}
-          </Layout.Vertical>
-        </div>
-      </Container>
+        </Container>
+      ) : null}
     </div>
   )
 }
