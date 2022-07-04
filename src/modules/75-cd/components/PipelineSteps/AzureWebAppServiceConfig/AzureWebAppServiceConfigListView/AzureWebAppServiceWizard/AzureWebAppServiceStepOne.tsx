@@ -52,7 +52,6 @@ function AzureWebAppServiceConfigWizardStepOne({
   isReadonly,
   connectorTypes,
   initialValues,
-  previousStep,
   expressions,
   allowableTypes,
   prevStepData,
@@ -237,12 +236,6 @@ function AzureWebAppServiceConfigWizardStepOne({
               </Layout.Vertical>
 
               <Layout.Horizontal spacing="medium" className={css.saveBtn}>
-                <Button
-                  text={getString('back')}
-                  icon="chevron-left"
-                  variation={ButtonVariation.SECONDARY}
-                  onClick={() => previousStep?.(prevStepData)}
-                />
                 <Button
                   variation={ButtonVariation.PRIMARY}
                   type="submit"
