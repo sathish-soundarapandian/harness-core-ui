@@ -31,6 +31,7 @@ import type {
 import type { GcpInfrastructureSpec } from '@cd/components/PipelineSteps/GcpInfrastructureSpec/GcpInfrastructureSpec'
 import type { PDCInfrastructureSpec } from '@cd/components/PipelineSteps/PDCInfrastructureSpec/PDCInfrastructureSpec'
 import type { SshWinRmAwsInfrastructureSpec } from '@cd/components/PipelineSteps/SshWinRmAwsInfrastructureSpec/SshWinRmAwsInfrastructureSpec'
+import type { SshWinRmAzureInfrastructureSpec } from '@cd/components/PipelineSteps/SshWinRmAzureInfrastructureSpec/SshWinRmAzureInfrastructureSpec'
 import { useStrings } from 'framework/strings'
 import {
   PipelineContextType,
@@ -480,6 +481,33 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
             allowableTypes={allowableTypes}
             onUpdate={value => {
               onUpdateInfrastructureDefinition(value, InfraDeploymentType.SshWinRmAws)
+            }}
+          />
+        )
+      }
+      case InfraDeploymentType.SshWinRmAzure: {
+        return (
+          <StepWidget<SshWinRmAzureInfrastructureSpec>
+            factory={factory}
+            key={stage?.stage?.identifier}
+            readonly={isReadonly}
+            initialValues={initialInfrastructureDefinitionValues as SshWinRmAzureInfrastructureSpec}
+            type={StepType.SshWinRmAzure}
+            stepViewType={StepViewType.Edit}
+            allowableTypes={allowableTypes}
+            onUpdate={value => {
+              onUpdateInfrastructureDefinition(
+                {
+                  credentialsRef: value.credentialsRef,
+                  connectorRef: value.connectorRef,
+                  subscriptionId: value.subscriptionId,
+                  resourceGroup: value.resourceGroup,
+                  cluster: value.cluster,
+                  tags: value.tags,
+                  usePublicDns: value.usePublicDns
+                },
+                InfraDeploymentType.SshWinRmAzure
+              )
             }}
           />
         )

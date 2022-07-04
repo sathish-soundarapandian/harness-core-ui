@@ -1693,12 +1693,17 @@ export interface StringsMap {
   'connectors.cdng.runTimeMonitoredService.toFetchMonitoredService': string
   'connectors.cdng.selectTheJobNameFirst': string
   'connectors.cdng.trafficsplit': string
+  'connectors.cdng.validations.applicationNameValidation': string
+  'connectors.cdng.validations.completeMetricPathValidation': string
   'connectors.cdng.validations.deploymentTagRequired': string
   'connectors.cdng.validations.durationRequired': string
   'connectors.cdng.validations.healthSourceRequired': string
   'connectors.cdng.validations.jobNameRequired': string
   'connectors.cdng.validations.monitoringServiceRequired': string
   'connectors.cdng.validations.sensitivityRequired': string
+  'connectors.cdng.validations.serviceInstanceFieldNameValidation': string
+  'connectors.cdng.validations.serviceInstanceMetricPathValidation': string
+  'connectors.cdng.validations.tierNameValidation': string
   'connectors.cdng.validations.timeoutValidation': string
   'connectors.cdng.validations.verificationTypeRequired': string
   'connectors.cdng.verificationSensitivityLabel.high': string
@@ -3939,6 +3944,9 @@ export interface StringsMap {
   'cd.infrastructure.edit': string
   'cd.infrastructure.infrastructureDefinitions': string
   'cd.infrastructure.noInfrastructureInEnvironment': string
+  'cd.infrastructure.sshWinRmAzure.cloudProvider': string
+  'cd.infrastructure.sshWinRmAzure.hostConnectionAttributes': string
+  'cd.infrastructure.sshWinRmAzure.usePublicDns': string
   'cd.infrastructure.updated': string
   'cd.installAdapterHelperText': string
   'cd.launchArgo': string
@@ -4574,6 +4582,13 @@ export interface StringsMap {
   'ce.co.noOfInstances': string
   'ce.co.noOfTasks': string
   'ce.co.reducedEmissions': string
+  'ce.co.resourcesManagedDescription.asg': string
+  'ce.co.resourcesManagedDescription.azureVm': string
+  'ce.co.resourcesManagedDescription.ec2': string
+  'ce.co.resourcesManagedDescription.ecs': string
+  'ce.co.resourcesManagedDescription.gcpVm': string
+  'ce.co.resourcesManagedDescription.k8s': string
+  'ce.co.resourcesManagedDescription.rds': string
   'ce.co.ruleDetailsHeader.computeType': string
   'ce.co.ruleDetailsHeader.customDomain': string
   'ce.co.ruleDetailsHeader.hostName': string
@@ -4584,6 +4599,17 @@ export interface StringsMap {
   'ce.co.ruleDrawer.logs': string
   'ce.co.ruleDrawer.spendVsSavings': string
   'ce.co.ruleDrawer.usageTime': string
+  'ce.co.ruleState.coolingDown': string
+  'ce.co.ruleState.running': string
+  'ce.co.ruleState.stopped': string
+  'ce.co.ruleState.warmingUp': string
+  'ce.co.ruleTypes.asg': string
+  'ce.co.ruleTypes.ec2': string
+  'ce.co.ruleTypes.ecs': string
+  'ce.co.ruleTypes.gcpVm': string
+  'ce.co.ruleTypes.ig': string
+  'ce.co.ruleTypes.k8s': string
+  'ce.co.ruleTypes.rds': string
   'ce.co.rules': string
   'ce.co.rulesTableHeaders.fulfilment': string
   'ce.co.rulesTableHeaders.idleTime': string
@@ -4608,9 +4634,12 @@ export interface StringsMap {
   'ce.co.totalEmissions': string
   'ce.common.and': string
   'ce.common.budget': string
+  'ce.common.collapse': string
   'ce.common.containerService': string
   'ce.common.database': string
+  'ce.common.disabled': string
   'ce.common.emissionUnitHTML': string
+  'ce.common.expand': string
   'ce.common.newBudget': string
   'ce.common.or': string
   'ce.common.refresh': string
@@ -4761,6 +4790,8 @@ export interface StringsMap {
   'ce.perspectives.budgets.configureAlerts.basedOn': string
   'ce.perspectives.budgets.configureAlerts.budgetAmount': string
   'ce.perspectives.budgets.configureAlerts.createAlert': string
+  'ce.perspectives.budgets.configureAlerts.emailPlaceholder': string
+  'ce.perspectives.budgets.configureAlerts.enterPercent': string
   'ce.perspectives.budgets.configureAlerts.exceeds': string
   'ce.perspectives.budgets.configureAlerts.forecasted': string
   'ce.perspectives.budgets.configureAlerts.percent': string
@@ -6050,6 +6081,7 @@ export interface StringsMap {
   'cv.monitoredServices.editMonitoredServices': string
   'cv.monitoredServices.editService': string
   'cv.monitoredServices.environmentValidation': string
+  'cv.monitoredServices.executedBy': string
   'cv.monitoredServices.failedToFetchHealthScore': string
   'cv.monitoredServices.failedToFetchSummaryData': string
   'cv.monitoredServices.filterlabel': string
@@ -6412,6 +6444,7 @@ export interface StringsMap {
   'cv.selectTimeRange': string
   'cv.selectWorkload': string
   'cv.selectedTimeInterval': string
+  'cv.sensitivityValidation': string
   'cv.serviceDashboardPage.fifteenMinutes': string
   'cv.serviceDashboardPage.fiveMinutes': string
   'cv.serviceDashboardPage.fourHours': string
@@ -6547,11 +6580,14 @@ export interface StringsMap {
   'stoSteps.Info': string
   'stoSteps.Unassigned': string
   'stoSteps.continuous': string
+  'stoSteps.exceptions': string
   'stoSteps.failedToGetIssueCounts': string
+  'stoSteps.issues': string
   'stoSteps.noScansRunPipelineText': string
   'stoSteps.noScansText': string
   'stoSteps.noSecurityIssues': string
   'stoSteps.noSecurityTests': string
+  'stoSteps.scans': string
   'stoSteps.securityStage.description': string
   'stoSteps.stepDescription.ZeroNorth': string
   'stoSteps.targets.testTargets': string

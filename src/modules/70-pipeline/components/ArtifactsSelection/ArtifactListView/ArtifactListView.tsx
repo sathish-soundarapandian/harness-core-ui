@@ -22,7 +22,7 @@ import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { getConnectorNameFromValue, getStatus } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
-import type { PrimaryArtifact, SidecarArtifactWrapper } from 'services/cd-ng'
+import type { PrimaryArtifact, SidecarArtifact, SidecarArtifactWrapper } from 'services/cd-ng'
 import {
   ArtifactIconByType,
   ArtifactTitleIdByType,
@@ -33,12 +33,12 @@ import type { ArtifactListViewProps, ArtifactType } from '../ArtifactInterface'
 import { showConnectorStep } from '../ArtifactUtils'
 import css from '../ArtifactsSelection.module.scss'
 
-const getPrimaryArtifactLocation = (primaryArtifact: PrimaryArtifact): string => {
+const getArtifactLocation = (artifact: PrimaryArtifact | SidecarArtifact): string => {
   return (
-    primaryArtifact.spec.imagePath ??
-    primaryArtifact.spec.artifactPath ??
-    primaryArtifact.spec.artifactPathFilter ??
-    primaryArtifact.spec.repository
+    artifact.spec.imagePath ??
+    artifact.spec.artifactPath ??
+    artifact.spec.artifactPathFilter ??
+    artifact.spec.repository
   )
 }
 
@@ -77,8 +77,7 @@ function ArtifactListView({
   editArtifact,
   removePrimary,
   removeSidecar,
-  addNewArtifact,
-  allowSidecar = true
+  addNewArtifact
 }: ArtifactListViewProps): React.ReactElement {
   const { getString } = useStrings()
   const { color: primaryConnectorColor } = getStatus(
@@ -148,7 +147,7 @@ function ArtifactListView({
                 </div>
                 <div>
                   <Text width={340} lineClamp={1} color={Color.GREY_500}>
-                    <span className={css.noWrap}>{getPrimaryArtifactLocation(primaryArtifact)}</span>
+                    <span className={css.noWrap}>{getArtifactLocation(primaryArtifact)}</span>
                   </Text>
                 </div>
                 {!isReadonly && (
@@ -224,9 +223,7 @@ function ArtifactListView({
                     </div>
                     <div className={css.locationField}>
                       <Text width={340} lineClamp={1} style={{ color: Color.GREY_500 }}>
-                        <span className={css.noWrap}>
-                          {sidecar?.spec.imagePath ?? sidecar?.spec.artifactPath ?? sidecar?.spec.repository}
-                        </span>
+                        <span className={css.noWrap}>{getArtifactLocation(sidecar as SidecarArtifact)}</span>
                       </Text>
                     </div>
                     {!isReadonly && (
@@ -268,7 +265,7 @@ function ArtifactListView({
             text={getString('pipelineSteps.serviceTab.artifactList.addPrimary')}
           />
         )}
-        {!isReadonly && allowSidecar && (
+        {!isReadonly && (
           <Button
             className={css.addArtifact}
             id="add-artifact"

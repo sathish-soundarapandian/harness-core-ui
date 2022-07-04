@@ -132,6 +132,19 @@ export const getInfrastructureDefaultValue = (
         attributeFilters
       }
     }
+    case InfraDeploymentType.SshWinRmAzure: {
+      const { credentialsRef, connectorRef, subscriptionId, resourceGroup, cluster, tags, usePublicDns } =
+        infrastructure?.spec || {}
+      return {
+        credentialsRef,
+        connectorRef,
+        subscriptionId,
+        resourceGroup,
+        cluster,
+        tags,
+        usePublicDns
+      }
+    }
     default: {
       return {}
     }
@@ -194,6 +207,11 @@ export const getInfraGroups = (
               label: getString('common.aws'),
               icon: 'service-aws',
               value: InfraDeploymentType.SshWinRmAws
+            },
+            {
+              label: getString('common.azure'),
+              icon: 'service-azure',
+              value: InfraDeploymentType.SshWinRmAzure
             }
           ]
         }
