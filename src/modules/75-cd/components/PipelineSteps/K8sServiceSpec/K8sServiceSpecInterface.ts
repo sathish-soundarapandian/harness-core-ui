@@ -10,15 +10,18 @@ import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/Abs
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type {
   ArtifactListConfig,
+  AzureWebAppServiceSpec,
   ManifestConfig,
   ManifestConfigWrapper,
   PrimaryArtifact,
   ServiceDefinition,
   ServiceSpec,
-  SidecarArtifact
+  SidecarArtifact,
+  StoreConfigWrapper
 } from 'services/cd-ng'
 import type { ArtifactSourceBaseFactory } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import type { ManifestSourceBaseFactory } from '@cd/factory/ManifestSourceFactory/ManifestSourceBaseFactory'
+import type { StartupScriptBaseFactory } from '@cd/factory/StartupScriptFactory/StartupScriptFactory'
 export interface K8SDirectServiceStep extends ServiceSpec {
   stageIndex?: number
   setupModeType?: string
@@ -85,4 +88,20 @@ export interface KubernetesManifestsProps {
   allowableTypes: MultiTypeInputType[]
   manifest?: ManifestConfig
   manifestPath?: string
+}
+
+export interface StartupScriptsProps {
+  template: AzureWebAppServiceSpec
+  path?: string
+  stepViewType?: StepViewType
+  startupScriptBaseFactory: StartupScriptBaseFactory
+  initialValues: K8SDirectServiceStep
+  readonly: boolean
+  stageIdentifier: string
+  serviceIdentifier?: string
+  formik?: any
+  fromTrigger?: boolean
+  allowableTypes: MultiTypeInputType[]
+  startupScript?: StoreConfigWrapper
+  startupScriptPath?: string
 }
