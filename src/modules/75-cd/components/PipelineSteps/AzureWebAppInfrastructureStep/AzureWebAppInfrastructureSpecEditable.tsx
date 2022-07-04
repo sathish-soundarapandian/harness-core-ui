@@ -51,7 +51,6 @@ import {
   AzureFieldTypes
 } from './AzureWebAppInfrastructureInterface'
 import css from './AzureWebAppInfrastructureSpec.module.scss'
-// import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
 
 const errorMessage = 'data.message'
 
@@ -71,7 +70,6 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
   const [webApps, setWebApps] = React.useState<SelectOption[]>([])
   const [resourceGroups, setResourceGroups] = React.useState<SelectOption[]>([])
   const [deploymentSlots, setDeploymentSlots] = React.useState<SelectOption[]>([])
-  //   const [initialQueryData, setInitialQueryData] = React.useState<AzureWebAppInfrastructure>()
   const delayedOnUpdate = React.useRef(debounce(onUpdate || noop, 300)).current
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
@@ -441,11 +439,8 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                     onChange: /* istanbul ignore next */ type => {
                       if (type !== MultiTypeInputType.FIXED) {
                         formik.setFieldValue('resourceGroup', '')
-
                         formik.setFieldValue('webApp', '')
-
                         formik.setFieldValue('deploymentSlot', '')
-
                         formik.setFieldValue('targetSlot', '')
                       }
                     },
@@ -623,7 +618,6 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                     onChange: /* istanbul ignore next */ type => {
                       if (type !== MultiTypeInputType.FIXED) {
                         formik.setFieldValue('deploymentSlot', '')
-
                         formik.setFieldValue('targetSlot', '')
                       }
                     },
