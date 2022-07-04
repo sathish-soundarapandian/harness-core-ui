@@ -104,7 +104,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
   const [tags, setTags] = useState<SelectOption[]>([])
   const [isTagsLoading, setIsTagsLoading] = useState(false)
 
-  const [isAutoScalingGroupSelected, setIsAutoScalingGroupSelected] = useState(true)
+  const [isAutoScalingGroupSelected, setIsAutoScalingGroupSelected] = useState(!!initialValues.useAutoScalingGroup)
 
   const formikRef = React.useRef<FormikProps<SshWinRmAwsInfrastructureUI> | null>(null)
 
