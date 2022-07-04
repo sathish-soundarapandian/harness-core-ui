@@ -128,7 +128,7 @@ export interface AzureWebAppServiceConfigWizardStepsProps<T> {
   expressions: string[]
   allowableTypes: MultiTypeInputType[]
   newConnectorSteps?: any
-  lastSteps: Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> | null
+  lastSteps: React.ReactElement<StepProps<ConnectorConfigDTO>> | null
   isReadonly: boolean
   handleStoreChange: (store?: T) => void
   connectorTypes: any
