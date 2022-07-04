@@ -17,7 +17,7 @@ import {
 
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { get, defaultTo, isEqual } from 'lodash-es'
+import { get, defaultTo, isEqual, set } from 'lodash-es'
 import {
   AzureSubscriptionDTO,
   useGetAzureResourceGroupsBySubscription,
@@ -76,6 +76,37 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
   const { expressions } = useVariablesExpression()
 
   const { getString } = useStrings()
+
+  const resetForm = (parent: string): void => {
+    switch (parent) {
+      case 'connectorRef':
+        set(initialValues, 'subscriptionId', '')
+        set(initialValues, 'resourceGroup', '')
+        set(initialValues, 'webApp', '')
+        set(initialValues, 'deploymentSlot', '')
+        set(initialValues, 'targetSlot', '')
+        onUpdate?.(initialValues)
+        break
+      case 'subscriptionId':
+        set(initialValues, 'resourceGroup', '')
+        set(initialValues, 'webApp', '')
+        set(initialValues, 'deploymentSlot', '')
+        set(initialValues, 'targetSlot', '')
+        onUpdate?.(initialValues)
+        break
+      case 'resourceGroup':
+        set(initialValues, 'webApp', '')
+        set(initialValues, 'deploymentSlot', '')
+        set(initialValues, 'targetSlot', '')
+        onUpdate?.(initialValues)
+        break
+      case 'webApp':
+        set(initialValues, 'deploymentSlot', '')
+        set(initialValues, 'targetSlot', '')
+        onUpdate?.(initialValues)
+        break
+    }
+  }
 
   const queryParams = {
     connectorRef: connector as string,
@@ -186,13 +217,6 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
         }
       })
       /* istanbul ignore else */
-      if (
-        getMultiTypeFromValue(template?.resourceGroup) === MultiTypeInputType.RUNTIME &&
-        getMultiTypeFromValue(initialValues?.resourceGroup) !== MultiTypeInputType.RUNTIME
-      ) {
-        // set(initialValues, 'resourceGroup', '')
-        onUpdate?.(initialValues)
-      }
     }
     if (
       connector &&
@@ -211,12 +235,6 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
       })
 
       /* istanbul ignore else */
-      if (
-        getMultiTypeFromValue(template?.webApp) === MultiTypeInputType.RUNTIME &&
-        getMultiTypeFromValue(initialValues?.webApp) !== MultiTypeInputType.RUNTIME
-      ) {
-        onUpdate?.(initialValues)
-      }
     }
     if (
       connector &&
@@ -235,15 +253,22 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
       })
 
       /* istanbul ignore else */
-      if (
-        getMultiTypeFromValue(template?.webApp) === MultiTypeInputType.RUNTIME &&
-        getMultiTypeFromValue(initialValues?.webApp) !== MultiTypeInputType.RUNTIME
-      ) {
-        onUpdate?.(initialValues)
-      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    resetForm('connectorRef')
+  }, [connector])
+  useEffect(() => {
+    resetForm('subscriptionId')
+  }, [subscriptionId])
+  useEffect(() => {
+    resetForm('resourceGroup')
+  }, [resourceGroupValue])
+  useEffect(() => {
+    resetForm('webApp')
+  }, [webAppValue])
 
   return (
     <Layout.Vertical spacing="small">
