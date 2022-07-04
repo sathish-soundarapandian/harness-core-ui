@@ -9,11 +9,7 @@ import React from 'react'
 import { StepWizard } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import AzureWebAppServiceStepOne from './AzureWebAppServiceStepOne'
-import type {
-  ConnectorTypes,
-  AzureWebAppServiceConfigWizardStepsProps,
-  StepChangeData
-} from '../../AzureWebAppServiceConfig.types'
+import type { ConnectorTypes, AzureWebAppServiceConfigWizardStepsProps } from '../../AzureWebAppServiceConfig.types'
 
 import css from '../../AzureWebAppServiceConfig.module.scss'
 
@@ -30,13 +26,6 @@ export function AzureWebAppServiceConfigWizard<T>({
   isReadonly,
   labels
 }: AzureWebAppServiceConfigWizardStepsProps<T>): React.ReactElement {
-  const onStepChange = (arg: StepChangeData<any>): void => {
-    if (arg?.prevStep && arg?.nextStep && arg.prevStep > arg.nextStep && arg.nextStep <= 2) {
-      handleConnectorViewChange(false)
-      handleStoreChange()
-    }
-  }
-
   /* istanbul ignore next */
   const handleStoreChangeRef = (arg: ConnectorTypes): void => {
     handleStoreChange?.(arg as unknown as T)
@@ -45,7 +34,6 @@ export function AzureWebAppServiceConfigWizard<T>({
   return (
     <StepWizard
       className={css.serviceConfigWizard}
-      onStepChange={onStepChange}
       icon={'audit-trail'}
       iconProps={{
         color: Color.WHITE,
@@ -55,6 +43,7 @@ export function AzureWebAppServiceConfigWizard<T>({
     >
       <AzureWebAppServiceStepOne
         name={labels?.firstStepName}
+        key={labels?.firstStepName}
         title={labels?.firstStepName}
         stepName={labels?.firstStepName}
         expressions={expressions}
@@ -67,7 +56,7 @@ export function AzureWebAppServiceConfigWizard<T>({
       />
       {newConnectorView ? newConnectorSteps : null}
 
-      {lastSteps?.length ? lastSteps?.map(step => step) : null}
+      {lastSteps ? lastSteps : null}
     </StepWizard>
   )
 }

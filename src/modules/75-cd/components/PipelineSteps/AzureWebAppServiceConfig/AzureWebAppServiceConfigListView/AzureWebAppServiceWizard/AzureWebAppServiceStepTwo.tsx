@@ -88,7 +88,8 @@ function AzureWebAppServiceStepTwo({
           spec: {
             connectorRef: formData?.connectorRef,
             gitFetchType: formData?.gitFetchType,
-            paths: typeof formData?.paths === 'string' ? [formData?.paths] : formData?.paths
+            paths:
+              getMultiTypeFromValue(formData.paths) === MultiTypeInputType.RUNTIME ? formData?.paths : [formData?.paths]
           }
         }
       }

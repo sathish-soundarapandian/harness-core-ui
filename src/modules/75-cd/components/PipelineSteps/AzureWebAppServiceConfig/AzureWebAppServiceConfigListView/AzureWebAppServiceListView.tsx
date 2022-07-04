@@ -205,7 +205,7 @@ function AzureWebAppListView({
         break
     }
     return null as unknown as StoreConfigWrapper
-  }, [selectedOption, applicationSettings, connectionStrings])
+  }, [selectedOption, applicationSettings, connectionStrings, connectorType])
 
   const lastStepProps = React.useCallback((): LastStepProps => {
     return {
@@ -237,12 +237,8 @@ function AzureWebAppListView({
     return () => ({})
   }
 
-  const getLastSteps = React.useCallback((): Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> => {
-    const arr: Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> = []
-    const manifestDetailStep = <AzureWebAppServiceStepTwo {...lastStepProps()} />
-
-    arr.push(manifestDetailStep)
-    return arr
+  const getLastSteps = React.useCallback((): React.ReactElement<StepProps<ConnectorConfigDTO>> => {
+    return <AzureWebAppServiceStepTwo {...lastStepProps()} />
   }, [connectorType, selectedOption, lastStepProps])
 
   const getNewConnectorSteps = React.useCallback((): JSX.Element | void => {
@@ -380,6 +376,9 @@ function AzureWebAppListView({
       <div className={css.rowItem}>
         <section className={css.serviceConfigList}>
           <div className={css.columnId}>
+            <Text width={200}>{getString('pipeline.appServiceConfig.applicationSettings.name')}</Text>
+          </div>
+          <div className={css.columnId}>
             <Icon inline name={ConnectorIcons[applicationSetting?.spec?.store?.type as ConnectorTypes]} size={20} />
             {renderConnectorField(applicationSetting?.spec?.store?.spec?.connectorRef, connectorName, color)}
           </div>
@@ -430,6 +429,9 @@ function AzureWebAppListView({
     return (
       <div className={css.rowItem}>
         <section className={css.serviceConfigList}>
+          <div className={css.columnId}>
+            <Text width={200}>{getString('pipeline.appServiceConfig.connectionStrings.name')}</Text>
+          </div>
           <div className={css.columnId}>
             <Icon inline name={ConnectorIcons[connectionString?.spec?.store?.type as ConnectorTypes]} size={20} />
             {renderConnectorField(connectionString?.spec?.store?.spec?.connectorRef, connectorName, color)}
@@ -524,6 +526,7 @@ function AzureWebAppListView({
       <Layout.Vertical spacing="small" style={{ flexShrink: 'initial' }}>
         {(!isEmpty(applicationSettings) || !isEmpty(connectionStrings)) && (
           <div className={css.serviceConfigList}>
+            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('typeLabel').toLocaleUpperCase()}</Text>
             <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('store').toLocaleUpperCase()}</Text>
             <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('location').toLocaleUpperCase()}</Text>
             <span></span>
