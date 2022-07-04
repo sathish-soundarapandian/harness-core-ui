@@ -27,7 +27,7 @@ export const autoScalingGroupsResponse = {
   ]
 }
 
-export const vcpsResponse = {
+export const vpcsResponse = {
   status: 'SUCCESS',
   data: [
     { id: 'id1', name: 'vcps1' },

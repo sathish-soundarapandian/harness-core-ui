@@ -118,14 +118,18 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
         fetchAutoScalingGroups(region)
         fetchVpcs(region)
         fetchTags(region)
+        /* istanbul ignore next */
         formikRef.current?.setFieldValue('region', region)
       }
       if (loadBalancer) {
+        /* istanbul ignore next */
         formikRef.current?.setFieldValue('loadBalancer', loadBalancer)
       }
       if (useAutoScalingGroup) {
+        /* istanbul ignore next */
         formikRef.current?.setFieldValue('autoScalingGroupName', autoScalingGroupName)
       } else if (awsInstanceFilter) {
+        /* istanbul ignore next */
         formikRef.current?.setFieldValue('vpcs', awsInstanceFilter.vpcs)
         formikRef.current?.setFieldValue('tags', awsInstanceFilter.tags)
       }
@@ -172,6 +176,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
           label: value
         }))
         setLoadBalancers(loadBalancerOptions)
+        /* istanbul ignore next */
         formikRef.current?.setFieldValue('loadBalancer', undefined)
       } else {
         /* istanbul ignore next */
@@ -234,6 +239,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
           label: autoScalingGroupEntry[1]
         }))
         setAutoScalingGroups(autoScalingGroupEntryOptions)
+        /* istanbul ignore next */
         formikRef.current?.setFieldValue('autoScalingGroupName', undefined)
       } else {
         /* istanbul ignore next */
@@ -341,9 +347,10 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                             label: value.name || '',
                             value: connectorValue,
                             scope: scope,
-                            live: value?.status?.status === 'SUCCESS',
+                            live: get(value, 'status.status', '') === 'SUCCESS',
                             connector: value
                           })
+                          /* istanbul ignore next */
                           formikRef.current?.setFieldValue('region', undefined)
                           fetchRegions()
                         }
@@ -621,6 +628,7 @@ export class SshWinRmAwsInfrastructureSpec extends PipelineStep<SshWinRmAwsInfra
     /* istanbul ignore else */
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     if (isEmpty(data.credentialsRef) && isRequired) {
+      /* istanbul ignore next */
       errors.credentialsRef = getString?.('fieldRequired', { field: getString('connector') })
     }
     return errors
