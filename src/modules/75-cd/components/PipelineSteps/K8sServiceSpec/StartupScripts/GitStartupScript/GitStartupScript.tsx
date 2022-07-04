@@ -18,6 +18,6 @@ export class GitStartupScript extends StartupScriptBase<StartupScriptRenderProps
       return null
     }
 
-    return <GitStartupScriptContent {...props} pathFieldlabel="fileFolderPathText" />
+    return <GitStartupScriptContent {...props} />
   }
 }

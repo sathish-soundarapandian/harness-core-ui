@@ -16,7 +16,7 @@ import { ManifestToConnectorMap } from '@pipeline/components/ManifestSelection/M
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import type { StartupScriptRenderProps } from '@cd/factory/StartupScriptFactory/StartupScriptBase'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
-import { isFieldfromTriggerTabDisabled, shouldDisplayRepositoryName } from '../../ManifestSource/ManifestSourceUtils'
+import { shouldDisplayRepositoryName } from '../../ManifestSource/ManifestSourceUtils'
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
 const GitStartupScriptRuntimeFields = ({
@@ -25,33 +25,24 @@ const GitStartupScriptRuntimeFields = ({
   path,
   startupScriptPath,
   startupScript,
-  fromTrigger,
   allowableTypes,
   accountId,
   projectIdentifier,
   orgIdentifier,
   readonly,
   repoIdentifier,
-  branch,
-  formik,
-  stageIdentifier
+  branch
 }: StartupScriptRenderProps): React.ReactElement => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const [showRepoName, setShowRepoName] = useState(true)
-  const isFieldDisabled = (fieldName: string): boolean => {
-    // /* instanbul ignore else */
-    if (readonly) {
-      return true
-    }
-    return isFieldfromTriggerTabDisabled(fieldName, formik, stageIdentifier, '', fromTrigger)
-  }
+
   return (
     <>
       {isFieldRuntime(`${startupScriptPath}.spec.store.spec.connectorRef`, template) && (
         <div data-name="connectorRefContainer" className={css.verticalSpacingInput}>
           <FormMultiTypeConnectorField
-            disabled={isFieldDisabled(`${startupScriptPath}.spec.store.spec.connectorRef`)}
+            disabled={readonly}
             name={`${path}.${startupScriptPath}.spec.store.spec.connectorRef`}
             selected={get(initialValues, `${startupScriptPath}.spec.store.spec.connectorRef`, '')}
             label={getString('connector')}
@@ -88,7 +79,7 @@ const GitStartupScriptRuntimeFields = ({
       {isFieldRuntime(`${startupScriptPath}.spec.store.spec.repoName`, template) && showRepoName && (
         <div className={css.verticalSpacingInput}>
           <FormInput.MultiTextInput
-            disabled={isFieldDisabled(`${startupScriptPath}.spec.store.spec.repoName`)}
+            disabled={readonly}
             name={`${path}.${startupScriptPath}.spec.store.spec.repoName`}
             multiTextInputProps={{
               expressions,
@@ -102,7 +93,7 @@ const GitStartupScriptRuntimeFields = ({
       {isFieldRuntime(`${startupScriptPath}.spec.store.spec.branch`, template) && (
         <div className={css.verticalSpacingInput}>
           <FormInput.MultiTextInput
-            disabled={isFieldDisabled(`${startupScriptPath}.spec.store.spec.branch`)}
+            disabled={readonly}
             name={`${path}.${startupScriptPath}.spec.store.spec.branch`}
             multiTextInputProps={{
               expressions,
@@ -115,13 +106,26 @@ const GitStartupScriptRuntimeFields = ({
       {isFieldRuntime(`${startupScriptPath}.spec.store.spec.commitId`, template) && (
         <div className={css.verticalSpacingInput}>
           <FormInput.MultiTextInput
-            disabled={isFieldDisabled(`${startupScriptPath}.spec.store.spec.commitId`)}
+            disabled={readonly}
             name={`${path}.${startupScriptPath}.spec.store.spec.commitId`}
             multiTextInputProps={{
               expressions,
               allowableTypes
             }}
             label={getString('pipelineSteps.commitIdValue')}
+          />
+        </div>
+      )}
+      {isFieldRuntime(`${startupScriptPath}.spec.store.spec.paths`, template) && (
+        <div className={css.verticalSpacingInput}>
+          <FormInput.MultiTextInput
+            disabled={readonly}
+            name={`${path}.${startupScriptPath}.spec.store.spec.paths[0]`}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
+            }}
+            label={getString('pipeline.startupScript.scriptFilePath')}
           />
         </div>
       )}

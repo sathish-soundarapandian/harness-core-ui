@@ -193,12 +193,8 @@ function StartupScriptListView({
     return initValues
   }
 
-  const getLastSteps = useCallback((): Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> => {
-    const arr: Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> = []
-    const manifestDetailStep = <StartupScriptWizardStepTwo {...lastStepProps()} />
-
-    arr.push(manifestDetailStep)
-    return arr
+  const getLastSteps = useCallback((): React.ReactElement<StepProps<ConnectorConfigDTO>> => {
+    return <StartupScriptWizardStepTwo {...lastStepProps()} />
   }, [startupScript, connectorType, lastStepProps])
 
   const getNewConnectorSteps = useCallback((): JSX.Element | void => {
