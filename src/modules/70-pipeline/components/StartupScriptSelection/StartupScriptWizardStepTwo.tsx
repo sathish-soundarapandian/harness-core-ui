@@ -22,7 +22,7 @@ import { FontVariation } from '@harness/design-system'
 import { Form } from 'formik'
 import * as Yup from 'yup'
 
-import { get, isEmpty, set } from 'lodash-es'
+import { get, isEmpty, isUndefined, set } from 'lodash-es'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { Connectors } from '@connectors/constants'
 
@@ -66,9 +66,7 @@ function StartupScriptWizardStepTwo({
       return {
         ...specValues,
         paths:
-          typeof specValues.paths === 'string' || specValues.paths === undefined
-            ? specValues.paths
-            : specValues.paths[0]
+          typeof specValues.paths === 'string' || isUndefined(specValues.paths) ? specValues.paths : specValues.paths[0]
       }
     }
     return {
@@ -89,7 +87,8 @@ function StartupScriptWizardStepTwo({
           spec: {
             connectorRef: formData?.connectorRef,
             gitFetchType: formData?.gitFetchType,
-            paths: typeof formData?.paths === 'string' ? [formData?.paths] : formData?.paths
+            paths:
+              getMultiTypeFromValue(formData.paths) === MultiTypeInputType.RUNTIME ? formData?.paths : [formData?.paths]
           }
         }
       }
@@ -246,8 +245,8 @@ function StartupScriptWizardStepTwo({
                   )}
                   <div className={cx(stepCss.formGroup, stepCss.md)}>
                     <FormInput.MultiTextInput
-                      label={getString('common.git.folderPath')}
-                      placeholder={getString('pipeline.manifestType.pathPlaceholder')}
+                      label={getString('pipeline.startupScript.scriptFilePath')}
+                      placeholder={getString('pipeline.startupScript.scriptFilePath')}
                       name={'paths'}
                       multiTextInputProps={{ expressions, allowableTypes }}
                     />
