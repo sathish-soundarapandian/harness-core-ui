@@ -413,9 +413,11 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                   <RadioGroup
                     selectedValue={isAutoScalingGroupSelected ? AutoScalingGroup.TRUE : AutoScalingGroup.FALSE}
                     className={css.radioGroup}
-                    onChange={(e: any) => {
-                      setIsAutoScalingGroupSelected(e.target.value === AutoScalingGroup.TRUE)
-                    }}
+                    onChange={
+                      /* istanbul ignore next */ (e: any) => {
+                        setIsAutoScalingGroupSelected(e.target.value === AutoScalingGroup.TRUE)
+                      }
+                    }
                   >
                     <Radio
                       value={AutoScalingGroup.TRUE}
