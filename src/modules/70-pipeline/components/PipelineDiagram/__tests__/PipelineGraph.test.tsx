@@ -24,7 +24,7 @@ window.IntersectionObserver = jest.fn().mockImplementation(intersectionObserverM
 describe('Stage diagram test', () => {
   // eslint-disable-next-line jest/no-disabled-tests
   test.skip('Should render diagramnodes', () => {
-    const diagram = new DiagramFactory('graph')
+    const diagram = new DiagramFactory()
     const PipelineStudio = diagram.render()
     const { container } = render(
       <TestWrapper>

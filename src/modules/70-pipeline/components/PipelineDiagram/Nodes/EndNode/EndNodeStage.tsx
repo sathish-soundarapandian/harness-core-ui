@@ -17,7 +17,7 @@ const SELECTED_COLOUR = 'var(--diagram-stop-node)'
 
 function EndNodeStage(props: any): React.ReactElement {
   return (
-    <div id={props?.id} className={cx({ [props.className]: props.className }, css.stageNode)}>
+    <div id={props?.id} className={cx({ [props?.className]: props?.className }, css.stageNode)}>
       <div
         id={NodeType.EndNode.toString()}
         className={cx(css.nodeStart)}

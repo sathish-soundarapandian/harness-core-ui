@@ -32,7 +32,14 @@ import type {
 import type { DependencyElement } from 'services/ci'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
-import { DiagramFactory, DiagramNodes, NodeType, NodeProps } from '@pipeline/components/PipelineDiagram/DiagramFactory'
+import {
+  DiagramFactory,
+  DiagramNodes,
+  NodeType,
+  NodeProps,
+  CombinedNodeProps,
+  PipelineStageNodeMetaDataType
+} from '@pipeline/components/PipelineDiagram/DiagramFactory'
 import { DiamondNodeWidget } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondNode'
 import { getPipelineGraphData } from '@pipeline/components/PipelineDiagram/PipelineGraph/PipelineGraphUtils'
 import PipelineStepNode from '@pipeline/components/PipelineDiagram/Nodes/DefaultNode/PipelineStepNode/PipelineStepNode'
@@ -86,21 +93,33 @@ import {
 } from '../../Diagram'
 import { CanvasButtons } from '../../CanvasButtons/CanvasButtons'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
+import type { EventStepDataType } from '../StageBuilder/StageBuilderUtil'
 import css from './ExecutionGraph.module.scss'
 
-const diagram = new DiagramFactory('graph')
+const diagram = new DiagramFactory<ExecutionWrapperConfig, PipelineStageNodeMetaDataType, EventStepDataType>()
 
-diagram.registerNode('ShellScript', PipelineStepNode as React.FC<NodeProps>, true)
-diagram.registerNode(NodeType.CreateNode, CreateNodeStep as unknown as React.FC<NodeProps>)
+diagram.registerNode(
+  'ShellScript',
+  PipelineStepNode as React.FC<
+    CombinedNodeProps<ExecutionWrapperConfig, PipelineStageNodeMetaDataType, EventStepDataType>
+  >,
+  true
+)
+diagram.registerNode(
+  NodeType.CreateNode,
+  CreateNodeStep as unknown as React.FC<
+    CombinedNodeProps<ExecutionWrapperConfig, PipelineStageNodeMetaDataType, EventStepDataType>
+  >
+)
 diagram.registerNode(NodeType.EndNode, EndNodeStep)
 diagram.registerNode(NodeType.StartNode, StartNodeStep)
-diagram.registerNode('StepGroup', DiagramNodes[NodeType.StepGroupNode])
-diagram.registerNode('Approval', DiamondNodeWidget)
-diagram.registerNode('JiraApproval', DiamondNodeWidget)
-diagram.registerNode('HarnessApproval', DiamondNodeWidget)
-diagram.registerNode('default-diamond', DiamondNodeWidget)
-diagram.registerNode('Barrier', IconNode)
-diagram.registerNode(STATIC_SERVICE_GROUP_NAME, CIDependencyNode)
+// diagram.registerNode('StepGroup', DiagramNodes[NodeType.StepGroupNode])
+// diagram.registerNode('Approval', DiamondNodeWidget)
+// diagram.registerNode('JiraApproval', DiamondNodeWidget)
+// diagram.registerNode('HarnessApproval', DiamondNodeWidget)
+// diagram.registerNode('default-diamond', DiamondNodeWidget)
+// diagram.registerNode('Barrier', IconNode)
+// diagram.registerNode(STATIC_SERVICE_GROUP_NAME, CIDependencyNode)
 
 export const CDPipelineStudioNew = diagram.render()
 

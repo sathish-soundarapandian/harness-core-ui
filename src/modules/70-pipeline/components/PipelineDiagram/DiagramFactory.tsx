@@ -25,20 +25,23 @@ import { NodeType } from './types'
 import { StepGroupNode } from './Nodes/StepGroupNode/StepGroupNode'
 import { CANVAS_CLICK_EVENT } from './PipelineGraph/PipelineGraphUtils'
 import DefaultNode from './Nodes/DefaultNode/DefaultNode'
+import { DiagramTypes } from '../PipelineStudio/StageBuilder/StageBuilderUtil'
 
 export class DiagramFactory<T, U, V> {
   /**
    * Couples the factory with the nodes it generates
    */
-  type = ''
+  type = DiagramTypes.GRAPH
   canCreate = false
   canDelete = false
   nodeBank: NodeBank<T, U, V>
   groupNode: React.FC<CombinedNodeProps<T, U, V>> = GroupNode as unknown as React.FC<CombinedNodeProps<T, U, V>>
   listeners: { [id: string]: BaseListener }
-  constructor(diagramType?: string) {
+  constructor(diagramType?: DiagramTypes) {
     this.nodeBank = new Map<string, NodeDetails<T, U, V>>()
-    this.type = diagramType || 'graph'
+    if (diagramType) {
+      this.type = diagramType
+    }
     this.registerNode(NodeType.Default, DefaultNode as unknown as React.FC<CombinedNodeProps<T, U, V>>, true)
     this.registerNode(NodeType.StepGroupNode, StepGroupNode as unknown as React.FC<CombinedNodeProps<T, U, V>>)
     this.listeners = {}

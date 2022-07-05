@@ -60,7 +60,7 @@ import { MatrixNode } from '@pipeline/components/PipelineDiagram/Nodes/MatrixNod
 import CDInfo from './components/CD/CDInfo/CDInfo'
 import css from './ExecutionGraph.module.scss'
 
-const diagram = new DiagramFactory('graph')
+const diagram = new DiagramFactory()
 diagram.registerNode(['Deployment', 'CI'], PipelineStageNode as unknown as React.FC<NodeProps>, true)
 diagram.registerNode(DiagramNodeType.CreateNode, CreateNodeStage as unknown as React.FC<NodeProps>)
 diagram.registerNode(DiagramNodeType.EndNode, EndNodeStage)

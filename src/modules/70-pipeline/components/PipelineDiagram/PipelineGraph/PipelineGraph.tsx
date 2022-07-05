@@ -34,7 +34,6 @@ import type {
 } from '../types'
 import GraphConfigStore from './GraphConfigStore'
 import css from './PipelineGraph.module.scss'
-import { noop } from 'lodash-es'
 
 interface ControlPosition {
   x: number

@@ -13,7 +13,12 @@ import type { NodeModelListener, LinkModelListener, DiagramEngine } from '@proje
 import produce from 'immer'
 import { parse } from '@common/utils/YamlHelperMethods'
 import type { PageConnectorResponse, DeploymentStageConfig } from 'services/cd-ng'
-import type { StageElementWrapperConfig, PipelineInfoConfig, StageElementConfig } from 'services/pipeline-ng'
+import type {
+  StageElementWrapperConfig,
+  PipelineInfoConfig,
+  StageElementConfig,
+  StepElementConfig
+} from 'services/pipeline-ng'
 import type * as Diagram from '@pipeline/components/Diagram'
 import {
   getIdentifierFromValue,
@@ -26,10 +31,10 @@ import type { TemplateSummaryResponse } from 'services/template-ng'
 import type { DynamicPopoverHandlerBinding } from '@common/components/DynamicPopover/DynamicPopover'
 import { DiagramType, Event } from '@pipeline/components/Diagram'
 import { PipelineOrStageStatus } from '@pipeline/components/PipelineSteps/AdvancedSteps/ConditionalExecutionPanel/ConditionalExecutionPanelUtils'
+import type { BaseEvent } from '@pipeline/components/PipelineDiagram/types'
 import { EmptyStageName } from '../PipelineConstants'
 import type { PipelineContextInterface, StagesMap } from '../PipelineContext/PipelineContext'
 import { getStageFromPipeline } from '../PipelineContext/helpers'
-import type { BaseEvent } from '@pipeline/components/PipelineDiagram/types'
 
 export interface StageState {
   isConfigured: boolean
@@ -41,6 +46,10 @@ export enum MoveDirection {
   BEHIND
 }
 
+export enum DiagramTypes {
+  GRAPH = 'graph',
+  TREE = 'tree'
+}
 export type AddStage = (
   newStage: StageElementWrapperConfig,
   isParallel?: boolean,
@@ -448,8 +457,10 @@ interface EventMetaDataProps {
   isRightAddIcon?: boolean
 }
 
-export type EventDataType = EventProps<StageElementConfig, EventMetaDataProps>
+export type EventStageDataType = EventProps<StageElementConfig, EventMetaDataProps>
+export type EventStepDataType = EventProps<StepElementConfig, EventMetaDataProps>
 
+export type EventDataType = EventStageDataType | EventStepDataType
 export type EventWithBaseType = BaseEvent<EventDataType>
 export interface ListenerReturnType {
   [key: string]: (E: EventWithBaseType) => void
@@ -506,21 +517,21 @@ export const getLinkEventListeners = (
     },
     [Event.DropLinkEvent]: (event: EventWithBaseType) => {
       const nodeData = event?.data?.nodeData?.data
-      const destinatinoData = event?.data?.destinationNode?.data
+      const destinationData = event?.data?.destinationNode?.data
       // if user is  dropping same node ahead or behind  itself and is a serial node dont do anything
       if (
-        nodeData?.identifier === destinatinoData?.identifier &&
+        nodeData?.identifier === destinationData?.identifier &&
         !event?.data?.destinationNode?.metaData?.hasChildren
       ) {
         return
       }
       if (nodeData?.identifier) {
         const dropNode = getStageFromPipelineContext(nodeData.identifier).stage
-        const destination = getStageFromPipelineContext(destinatinoData?.identifier as string).stage
+        const destination = getStageFromPipelineContext(destinationData?.identifier as string).stage
         const parentStageName = (dropNode?.stage as DeploymentStageElementConfig)?.spec?.serviceConfig?.useFromStage
           ?.stage
         const dependentStages = getDependantStages(pipeline, dropNode)
-        const { stageIndex: destinationIndex } = getStageIndexByIdentifier(pipeline, destinatinoData?.identifier)
+        const { stageIndex: destinationIndex } = getStageIndexByIdentifier(pipeline, destinationData?.identifier)
         if (parentStageName?.length) {
           const { stageIndex: propagatingParentIndex = -1 } = getStageIndexByIdentifier(pipeline, parentStageName)
 
@@ -534,10 +545,10 @@ export const getLinkEventListeners = (
           }
         } else if (dependentStages?.length) {
           let indexToDropAt = -1
-          const { stage } = getStageFromPipelineContext(destinatinoData?.identifier as string)
+          const { stage } = getStageFromPipelineContext(destinationData?.identifier as string)
           if (!stage) {
             //  node on sourceport is parallel so split nodeId to get original node identifier
-            const nodeId = destinatinoData?.identifier?.split(EmptyNodeSeparator)[1]
+            const nodeId = destinationData?.identifier?.split(EmptyNodeSeparator)[1]
 
             const { stageIndex: nextStageIndex } = getStageIndexByIdentifier(pipeline, nodeId)
             indexToDropAt = nextStageIndex + 1 // adding 1 as we checked source port that is prev to index where we will move this node
@@ -734,11 +745,11 @@ export const getNodeEventListerner = (
     },
     [Event.DropNodeEvent]: (event: EventWithBaseType) => {
       const nodeData = event?.data?.nodeData
-      const destinatinoData = event?.data?.destinationNode
+      const destinationData = event?.data?.destinationNode
 
       if (nodeData?.data?.identifier) {
         const dropNode = getStageFromPipelineContext(nodeData?.data?.identifier).stage
-        const current = getStageFromPipelineContext(destinatinoData?.data?.identifier as string)
+        const current = getStageFromPipelineContext(destinationData?.data?.identifier as string)
         const dependentStages = getDependantStages(pipeline, dropNode)
         const parentStageId = (dropNode?.stage as DeploymentStageElementConfig)?.spec?.serviceConfig?.useFromStage
           ?.stage
@@ -850,7 +861,7 @@ export interface MoveStageDetailsType {
 interface MoveStageParams {
   moveStageDetails: MoveStageDetailsType
   pipelineContext: PipelineContextInterface
-  updateStageOnAddLink: (event: any, dropNode: StageElementWrapper | undefined, current: any) => void
+  // updateStageOnAddLink: (event: any, dropNode: StageElementWrapper | undefined, current: any) => void
   updateStageOnAddLinkNew: (event: any, dropNode: StageElementWrapper | undefined, current: any) => void
   resetPipelineStages: (stages: StageElementWrapperConfig[]) => void
   stageMap: Map<string, StageState>
@@ -861,7 +872,6 @@ interface MoveStageParams {
 export const moveStage = ({
   moveStageDetails,
   pipelineContext,
-  updateStageOnAddLink,
   updateStageOnAddLinkNew,
   resetPipelineStages,
   addStage,
@@ -874,28 +884,25 @@ export const moveStage = ({
     dependentStages = [],
     currentStage = false,
     isLastAddLink = false
-  }: { event?: any; dependentStages?: string[]; currentStage?: any; isLastAddLink?: boolean } = moveStageDetails
+  }: {
+    event?: EventWithBaseType
+    dependentStages?: string[]
+    currentStage?: any
+    isLastAddLink?: boolean
+  } = moveStageDetails
 
   const {
     getStageFromPipeline: getStageFromPipelineData,
     state: { pipeline }
   } = pipelineContext
-  const nodeIdentifier = event?.node?.identifier
-  const dropNode = getStageFromPipelineData(nodeIdentifier).stage
+  const nodeIdentifier = event?.data?.nodeData?.data?.identifier as string
+  const destinationIdentifier = event?.data?.destinationNode?.data?.identifier as string
+  const nodeToBeDropped = getStageFromPipelineData(nodeIdentifier).stage // node which is being dragged
+  const destinationNode = getStageFromPipelineData(destinationIdentifier).stage // destination node where dragged node is dropped
 
   if (currentStage?.parent?.parallel || isLastAddLink) {
-    if (newPipelineStudioEnabled) {
-      if (dropNode && event.node.identifier !== event?.destination?.identifier) {
-        updateStageOnAddLinkNew(event, dropNode, currentStage)
-
-        const updatedStages = resetServiceSelectionForStages(
-          dependentStages.length ? dependentStages : [nodeIdentifier],
-          pipeline
-        )
-        resetPipelineStages(updatedStages)
-      }
-    } else if (dropNode && event.node.identifier !== event?.entity.getIdentifier()) {
-      updateStageOnAddLink(event, dropNode, currentStage)
+    if (nodeToBeDropped && nodeIdentifier !== destinationIdentifier) {
+      updateStageOnAddLinkNew(event, nodeToBeDropped, currentStage)
 
       const updatedStages = resetServiceSelectionForStages(
         dependentStages.length ? dependentStages : [nodeIdentifier],
@@ -903,12 +910,13 @@ export const moveStage = ({
       )
       resetPipelineStages(updatedStages)
     }
+    // removed old code
   } else {
     const isRemove = removeNodeFromPipeline(getStageFromPipelineData(nodeIdentifier), pipeline, stageMap, false)
-    if (isRemove && dropNode) {
+    if (isRemove && nodeToBeDropped) {
       newPipelineStudioEnabled
-        ? addStageNew(dropNode, !!currentStage, !currentStage, undefined, undefined, undefined, event.destination)
-        : addStage(dropNode, !!currentStage, event as any)
+        ? addStageNew(nodeToBeDropped, !!currentStage, !currentStage, undefined, undefined, undefined, destinationNode)
+        : addStage(nodeToBeDropped, !!currentStage, event as any)
       const updatedStages = resetServiceSelectionForStages(
         dependentStages.length ? dependentStages : [nodeIdentifier],
         pipeline

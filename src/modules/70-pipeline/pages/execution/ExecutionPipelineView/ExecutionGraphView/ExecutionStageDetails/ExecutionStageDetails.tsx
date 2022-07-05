@@ -45,7 +45,7 @@ import VerifyStepTooltip from './components/VerifyStepTooltip/VerifyStepTooltip'
 import type { FailureInfo } from './components/VerifyStepTooltip/VerifyStepTooltip.types'
 import css from './ExecutionStageDetails.module.scss'
 
-const diagram = new DiagramFactory('graph')
+const diagram = new DiagramFactory()
 
 diagram.registerNode('Deployment', PipelineStepNode as unknown as React.FC<NodeProps>, true)
 diagram.registerNode(NodeType.CreateNode, CreateNodeStep as unknown as React.FC<NodeProps>)

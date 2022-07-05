@@ -16,12 +16,12 @@ import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/Execu
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import { useStrings } from 'framework/strings'
 import type { StageElementConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
-import type { EventDataType } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
+import type { EventStageDataType } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import SVGMarker from '../../SVGMarker'
 import AddLinkNode from '../AddLinkNode/AddLinkNode'
 import { NodeProps, NodeType, PipelineStageNodeMetaDataType } from '../../../types'
-import { getPositionOfAddIcon } from '../../utils'
 import defaultCss from '../DefaultNode.module.scss'
+import { getPositionOfAddIcon } from '../../utils'
 
 const CODE_ICON: IconName = 'command-echo'
 const TEMPLATE_ICON: IconName = 'template-library'
@@ -31,7 +31,7 @@ export interface NodeDataType {
 }
 
 function PipelineStageNode(
-  props: NodeProps<StageElementWrapperConfig, PipelineStageNodeMetaDataType, EventDataType>
+  props: NodeProps<StageElementWrapperConfig, PipelineStageNodeMetaDataType, EventStageDataType>
 ): JSX.Element {
   const { getString } = useStrings()
   const allowAdd = defaultTo(props?.permissions?.allowAdd, false)
@@ -345,6 +345,7 @@ function PipelineStageNode(
       )}
       {allowAdd && CreateNode && !props?.permissions?.readonly && showAddNode && (
         <CreateNode
+          {...props}
           onMouseOver={() => setAddVisibility(true)}
           onMouseLeave={() => setAddVisibility(false)}
           onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -372,15 +373,16 @@ function PipelineStageNode(
       )}
 
       {!isParallelNode(props) && !props?.permissions?.readonly && (
-        <AddLinkNode
+        <AddLinkNode<StageElementConfig, PipelineStageNodeMetaDataType, EventStageDataType>
           {...props}
+          data={props?.data?.data?.stage as StageElementConfig}
           id={props?.data?.id}
           parentIdentifier={props?.metaData?.parentIdentifier}
           isParallelNode={isParallelNode(props)}
           readonly={props?.permissions?.readonly}
           fireEvent={props.fireEvent}
-          identifier={stageData?.identifier}
           className={cx(defaultCss.addNodeIcon, defaultCss.left, defaultCss.stageAddIcon)}
+          style={{ left: getPositionOfAddIcon(props) }}
         />
       )}
     </div>
