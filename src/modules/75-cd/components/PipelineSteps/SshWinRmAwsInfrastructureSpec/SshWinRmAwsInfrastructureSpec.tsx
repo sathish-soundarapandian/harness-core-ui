@@ -122,10 +122,12 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
         /* istanbul ignore next */
         formikRef.current?.setFieldValue('region', region)
       }
+      /* istanbul ignore next */
       if (loadBalancer) {
         /* istanbul ignore next */
         formikRef.current?.setFieldValue('loadBalancer', loadBalancer)
       }
+      /* istanbul ignore next */
       if (useAutoScalingGroup) {
         /* istanbul ignore next */
         formikRef.current?.setFieldValue('autoScalingGroupName', autoScalingGroupName)
@@ -143,7 +145,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
     try {
       const response = await regionsForAwsPromise({})
       if (response.status === 'SUCCESS') {
-        const regionOptions = Object.entries(response.data || {}).map(regEntry => ({
+        const regionOptions = Object.entries(get(response, 'data', {})).map(regEntry => ({
           value: regEntry[0],
           label: regEntry[1]
         }))
@@ -173,7 +175,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
         }
       })
       if (response.status === 'SUCCESS') {
-        const loadBalancerOptions = Object.values(response.data || {}).map(value => ({
+        const loadBalancerOptions = Object.values(get(response, 'data', {})).map(value => ({
           value,
           label: value
         }))
@@ -205,11 +207,12 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
         }
       })
       if (response.status === 'SUCCESS') {
-        const tagOptions = Object.entries(response.data || {}).map(tagEntry => ({
+        const tagOptions = Object.entries(get(response, 'data', {})).map(tagEntry => ({
           value: tagEntry[0],
           label: tagEntry[1]
         }))
         setTags(tagOptions)
+        /* istanbul ignore next */
         formikRef.current?.setFieldValue('tags', undefined)
       } else {
         /* istanbul ignore next */
@@ -236,7 +239,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
         }
       })
       if (response.status === 'SUCCESS') {
-        const autoScalingGroupEntryOptions = Object.entries(response.data || {}).map(autoScalingGroupEntry => ({
+        const autoScalingGroupEntryOptions = Object.entries(get(response, 'data', {})).map(autoScalingGroupEntry => ({
           value: autoScalingGroupEntry[0],
           label: autoScalingGroupEntry[1]
         }))
