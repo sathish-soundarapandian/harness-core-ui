@@ -85,6 +85,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
     orgIdentifier: string
     accountId: string
   }>()
+  /* istanbul ignore next */
   const delayedOnUpdate = React.useRef(debounce(onUpdate || noop, 300)).current
   const { getString } = useStrings()
   const { showError } = useToaster()
@@ -555,6 +556,7 @@ export class SshWinRmAwsInfrastructureSpec extends PipelineStep<SshWinRmAwsInfra
     if (pipelineObj) {
       const connectorRef = get(pipelineObj, path.replace('.spec.connectorRef', ''))
       if (connectorRef) {
+        /* istanbul ignore next */
         return getConnectorListV2Promise({
           queryParams: {
             accountIdentifier: accountId,
@@ -595,6 +597,7 @@ export class SshWinRmAwsInfrastructureSpec extends PipelineStep<SshWinRmAwsInfra
     if (pipelineObj) {
       const obj = get(pipelineObj, path.replace('.spec.sshKey', ''))
       if (obj.type === InfraDeploymentType.SshWinRmAws) {
+        /* istanbul ignore next */
         return listSecretsV2Promise({
           queryParams: {
             accountIdentifier: accountId,
