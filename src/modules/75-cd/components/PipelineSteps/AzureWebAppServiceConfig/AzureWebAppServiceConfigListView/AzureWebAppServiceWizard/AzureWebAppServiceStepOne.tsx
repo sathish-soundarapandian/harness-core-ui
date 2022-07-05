@@ -94,7 +94,7 @@ function AzureWebAppServiceConfigWizardStepOne({
         !isEmpty(connectorRefValue))
     )
   }
-  const handleOptionSelection = (formikData: any, storeSelected: ConnectorTypes): void => {
+  const handleOptionSelection = /* istanbul ignore next */ (formikData: any, storeSelected: ConnectorTypes): void => {
     if (
       getMultiTypeFromValue(formikData.connectorRef) !== MultiTypeInputType.FIXED &&
       formikData.store !== storeSelected
@@ -111,7 +111,7 @@ function AzureWebAppServiceConfigWizardStepOne({
     const initValues = { ...initialValues }
 
     if (prevStepData?.connectorRef) {
-      initValues.connectorRef = prevStepData?.connectorRef
+      initValues.connectorRef = prevStepData.connectorRef
       handleStoreChange(selectedStore)
     }
     if (selectedStore !== initValues.store) {
@@ -210,9 +210,11 @@ function AzureWebAppServiceConfigWizardStepOne({
                         showRequiredField={false}
                         showDefaultField={false}
                         showAdvanced={true}
-                        onChange={value => {
-                          formik.setFieldValue('connectorRef', value)
-                        }}
+                        onChange={
+                          /* istanbul ignore next */ value => {
+                            formik.setFieldValue('connectorRef', value)
+                          }
+                        }
                         isReadonly={isReadonly}
                       />
                     ) : (
