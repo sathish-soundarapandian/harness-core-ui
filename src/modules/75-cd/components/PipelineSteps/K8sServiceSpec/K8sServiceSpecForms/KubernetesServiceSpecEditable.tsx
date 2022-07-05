@@ -89,6 +89,7 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
               {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')}
               <HarnessDocTooltip tooltipId={getManifestsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
             </div>
+
             <ManifestSelection
               isPropagating={isPropagating}
               deploymentType={selectedDeploymentType}
