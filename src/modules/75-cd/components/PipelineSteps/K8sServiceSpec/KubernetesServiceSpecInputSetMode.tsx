@@ -11,7 +11,7 @@ import { Layout, MultiTypeInputType } from '@wings-software/uicore'
 import cx from 'classnames'
 
 import { useStrings } from 'framework/strings'
-import type { ServiceSpec, StoreConfigWrapper } from 'services/cd-ng'
+import type { AzureWebAppServiceSpec, ServiceSpec } from 'services/cd-ng'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
@@ -29,18 +29,11 @@ import { AzureWebAppConfig } from './AzureWebAppConfig/AzureWebAppConfig'
 import css from './K8sServiceSpec.module.scss'
 
 export interface KubernetesInputSetProps {
-  initialValues: K8SDirectServiceStep & {
-    applicationSettings?: StoreConfigWrapper
-    connectionStrings?: StoreConfigWrapper
-  }
-  onUpdate?:
-    | ((
-        data: ServiceSpec & { applicationSettings?: StoreConfigWrapper; connectionStrings?: StoreConfigWrapper }
-      ) => void)
-    | undefined
+  initialValues: K8SDirectServiceStep & AzureWebAppServiceSpec
+  onUpdate?: ((data: ServiceSpec & AzureWebAppServiceSpec) => void) | undefined
   stepViewType?: StepViewType
-  template?: ServiceSpec & { applicationSettings?: StoreConfigWrapper; connectionStrings?: StoreConfigWrapper }
-  allValues?: ServiceSpec & { applicationSettings?: StoreConfigWrapper; connectionStrings?: StoreConfigWrapper }
+  template?: ServiceSpec & AzureWebAppServiceSpec
+  allValues?: ServiceSpec & AzureWebAppServiceSpec
   readonly?: boolean
   factory?: AbstractStepFactory
   path?: string
@@ -97,6 +90,23 @@ const KubernetesServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetPr
           initialValues={initialValues}
           readonly={readonly}
           allowableTypes={allowableTypes}
+        />
+      )}
+
+      {!!template?.startupScript && (
+        <AzureWebAppConfig
+          template={template}
+          azureWebAppConfig={allValues?.startupScript}
+          azureWebAppConfigBaseFactory={azureWebAppConfigBaseFactory}
+          stepViewType={stepViewType}
+          stageIdentifier={stageIdentifier}
+          serviceIdentifier={serviceIdentifier}
+          formik={formik}
+          path={path}
+          initialValues={initialValues}
+          readonly={readonly}
+          allowableTypes={allowableTypes}
+          type={AzureWebAppConfigType.startupScript}
         />
       )}
 

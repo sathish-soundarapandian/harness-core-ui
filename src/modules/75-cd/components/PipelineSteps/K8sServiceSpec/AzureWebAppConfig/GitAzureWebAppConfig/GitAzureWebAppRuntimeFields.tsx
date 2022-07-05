@@ -14,7 +14,6 @@ import type { GitConfigDTO, Scope } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ManifestToConnectorMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import type { AzureWebAppConfigRenderProps } from '@cd/factory/AzureWebAppConfigFactory/AzureWebAppConfigtBase'
-import { AzureWebAppConfigType } from '../../K8sServiceSpecInterface'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { shouldDisplayRepositoryName } from '../../ManifestSource/ManifestSourceUtils'
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
@@ -31,15 +30,12 @@ const GitAzureWebAppConfigRuntimeFields = ({
   orgIdentifier,
   readonly,
   repoIdentifier,
-  branch
+  branch,
+  pathLabel
 }: AzureWebAppConfigRenderProps): React.ReactElement => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const [showRepoName, setShowRepoName] = useState(true)
-  const pathLabel =
-    azureWebAppConfigPath === AzureWebAppConfigType.applicationSettings
-      ? 'pipeline.appServiceConfig.applicationSettings.filePath'
-      : 'pipeline.appServiceConfig.connectionStrings.filePath'
 
   return (
     <>
@@ -129,7 +125,7 @@ const GitAzureWebAppConfigRuntimeFields = ({
               expressions,
               allowableTypes
             }}
-            label={getString(pathLabel)}
+            label={pathLabel}
           />
         </div>
       )}
