@@ -62,6 +62,9 @@ export interface WizardStepNames {
   firstStepName: string
   secondStepName: string
   pathPlaceholder: string
+  firstStepSubtitle: string
+  firstStepTitle: string
+  secondStepTitle: string
 }
 
 export interface AppServiceConfigDataType {
@@ -82,6 +85,7 @@ export interface LastStepProps {
   handleSubmit: (data: StoreConfigWrapper) => void
   isReadonly?: boolean
   pathPlaceholder?: string
+  title?: string
 }
 
 export interface AzureWebAppsServiceDefinition {
@@ -100,8 +104,10 @@ export interface AzureWebAppListViewProps {
   stage: StageElementWrapper | undefined
   isPropagating?: boolean
   isReadonly: boolean
-  connectors: PageConnectorResponse | undefined
-  refetchConnectors: () => void
+  stringsConnectors: PageConnectorResponse | undefined
+  settingsConnectors: PageConnectorResponse | undefined
+  refetchStringsConnectors: () => void
+  refetchSettingsConnectors: () => void
   deploymentType?: ServiceDefinition['type']
   allowableTypes: MultiTypeInputType[]
   applicationSettings?: StoreConfigWrapper
@@ -155,6 +161,7 @@ export interface AzureWebAppServiceStepTwoProps {
   handleSubmit: (data: StoreConfigWrapper) => void
   isReadonly?: boolean
   pathPlaceholder?: string
+  title?: string
 }
 
 export const gitFetchTypeList = [
