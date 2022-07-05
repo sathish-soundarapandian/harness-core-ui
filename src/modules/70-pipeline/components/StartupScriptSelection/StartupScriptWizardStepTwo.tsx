@@ -88,7 +88,9 @@ function StartupScriptWizardStepTwo({
             connectorRef: formData?.connectorRef,
             gitFetchType: formData?.gitFetchType,
             paths:
-              getMultiTypeFromValue(formData.paths) === MultiTypeInputType.RUNTIME ? formData?.paths : [formData?.paths]
+              /* istanbul ignore next */ getMultiTypeFromValue(formData.paths) === MultiTypeInputType.RUNTIME
+                ? formData?.paths
+                : [formData?.paths]
           }
         }
       }
@@ -149,7 +151,7 @@ function StartupScriptWizardStepTwo({
               ? getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
                 ? prevStepData?.connectorRef
                 : prevStepData?.connectorRef?.value
-              : prevStepData?.identifier
+              : /* istanbul ignore next */ prevStepData?.identifier
               ? prevStepData?.identifier
               : ''
           })
@@ -180,7 +182,7 @@ function StartupScriptWizardStepTwo({
                           showRequiredField={false}
                           showDefaultField={false}
                           showAdvanced={true}
-                          onChange={value => formik.setFieldValue('repoName', value)}
+                          onChange={/* istanbul ignore next */ value => formik.setFieldValue('repoName', value)}
                           isReadonly={isReadonly}
                         />
                       )}
@@ -210,7 +212,7 @@ function StartupScriptWizardStepTwo({
                           showRequiredField={false}
                           showDefaultField={false}
                           showAdvanced={true}
-                          onChange={value => formik.setFieldValue('branch', value)}
+                          onChange={/* istanbul ignore next */ value => formik.setFieldValue('branch', value)}
                           isReadonly={isReadonly}
                         />
                       )}
@@ -234,7 +236,7 @@ function StartupScriptWizardStepTwo({
                           showRequiredField={false}
                           showDefaultField={false}
                           showAdvanced={true}
-                          onChange={value => formik.setFieldValue('commitId', value)}
+                          onChange={/* istanbul ignore next */ value => formik.setFieldValue('commitId', value)}
                           isReadonly={isReadonly}
                         />
                       )}
@@ -247,24 +249,23 @@ function StartupScriptWizardStepTwo({
                       name={'paths'}
                       multiTextInputProps={{ expressions, allowableTypes }}
                     />
-                    {
-                      /* istanbul ignore next */
-                      getMultiTypeFromValue(formik.values?.paths as string) === MultiTypeInputType.RUNTIME && (
-                        <ConfigureOptions
-                          style={{ alignSelf: 'center', marginTop: 1 }}
-                          value={formik.values?.paths as string}
-                          type="String"
-                          variableName={'paths'}
-                          showRequiredField={false}
-                          showDefaultField={false}
-                          showAdvanced={true}
-                          onChange={value => {
+                    {getMultiTypeFromValue(formik.values?.paths as string) === MultiTypeInputType.RUNTIME && (
+                      <ConfigureOptions
+                        style={{ alignSelf: 'center', marginTop: 1 }}
+                        value={formik.values?.paths as string}
+                        type="String"
+                        variableName={'paths'}
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        showAdvanced={true}
+                        onChange={
+                          /* istanbul ignore next */ value => {
                             formik.setFieldValue('paths', value)
-                          }}
-                          isReadonly={isReadonly}
-                        />
-                      )
-                    }
+                          }
+                        }
+                        isReadonly={isReadonly}
+                      />
+                    )}
                   </div>
                 </div>
 
