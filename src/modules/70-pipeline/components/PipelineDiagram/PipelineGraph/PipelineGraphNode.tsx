@@ -16,8 +16,10 @@ import type {
   NodeIds,
   PipelineGraphState,
   GetNodeMethod,
-  BaseReactComponentProps,
-  FireEventMethod
+  CombinedNodeProps,
+  FireEventMethod,
+  BaseMetaDataType,
+  TerminalNodeProps
 } from '../types'
 import { NodeType } from '../types'
 import { useNodeResizeObserver } from '../hooks/useResizeObserver'
@@ -26,13 +28,13 @@ import { isFirstNodeAGroupNode, isNodeParallel, shouldAttachRef, shouldRenderGro
 import css from './PipelineGraph.module.scss'
 
 let IS_RENDER_OPTIMIZATION_ENABLED = true
-export interface PipelineGraphRecursiveProps {
-  nodes?: PipelineGraphState[]
-  getNode: GetNodeMethod
-  getDefaultNode: GetNodeMethod
-  updateGraphLinks?: () => void
-  fireEvent?: FireEventMethod
-  selectedNode: string
+export interface PipelineGraphRecursiveProps<T, U, V> {
+  nodes?: PipelineGraphState<T, U, V>[]
+  getNode: GetNodeMethod<T, U, V>
+  getDefaultNode: GetNodeMethod<T, U, V>
+  updateGraphLinks: () => void
+  fireEvent: FireEventMethod<V>
+  selectedNodeId: string
   uniqueNodeIds?: NodeIds
   startEndNodeNeeded?: boolean
   parentIdentifier?: string
@@ -44,14 +46,14 @@ export interface PipelineGraphRecursiveProps {
   createNodeTitle?: string
   showEndNode?: boolean
 }
-export function PipelineGraphRecursive({
+
+export function PipelineGraphRecursive<T, U, V>({
   nodes,
   getNode,
-  selectedNode,
+  selectedNodeId,
   fireEvent,
   uniqueNodeIds,
   startEndNodeNeeded = true,
-  parentIdentifier,
   updateGraphLinks,
   collapsibleProps,
   getDefaultNode,
@@ -61,33 +63,40 @@ export function PipelineGraphRecursive({
   parentSelector,
   createNodeTitle,
   showEndNode
-}: PipelineGraphRecursiveProps): React.ReactElement {
-  const StartNode: React.FC<BaseReactComponentProps> | undefined = getNode(NodeType.StartNode)?.component
-  const CreateNode: React.FC<BaseReactComponentProps> | undefined = getNode(NodeType.CreateNode)?.component
-  const EndNode: React.FC<BaseReactComponentProps> | undefined = getNode(NodeType.EndNode)?.component
+}: PipelineGraphRecursiveProps<T, U, V>): React.ReactElement {
+  const StartNode: React.FC<CombinedNodeProps<T, U, V>> | undefined = getNode(NodeType.StartNode)?.component
+  const CreateNode: React.FC<CombinedNodeProps<T, U, V>> | React.FC<TerminalNodeProps<V>> | undefined = getNode(
+    NodeType.CreateNode
+  )?.component
+  const EndNode: React.FC<CombinedNodeProps<T, U, V>> | undefined = getNode(NodeType.EndNode)?.component
   const PipelineNodeComponent = optimizeRender ? PipelineGraphNodeObserved : PipelineGraphNodeBasic
+  const commonProps = {
+    getNode,
+    fireEvent,
+    getDefaultNode,
+    updateGraphLinks
+  }
   return (
     <div id="tree-container" className={classNames(css.graphTree, css.common)}>
       {StartNode && startEndNodeNeeded && (
-        <StartNode id={uniqueNodeIds?.startNode as string} className={classNames(css.graphNode)} />
+        <StartNode
+          {...commonProps}
+          data={{ id: uniqueNodeIds?.startNode as string } as any}
+          metaData={{ className: classNames(css.graphNode) }}
+        />
       )}
       {nodes?.map((node, index) => {
         return (
           <PipelineNodeComponent
-            getDefaultNode={getDefaultNode}
-            parentIdentifier={parentIdentifier}
-            fireEvent={fireEvent}
-            selectedNode={selectedNode}
+            {...commonProps}
+            selectedNodeId={selectedNodeId}
             data={node}
             index={index}
             key={index}
-            getNode={getNode}
-            isNextNodeParallel={isNodeParallel(nodes?.[index + 1])}
-            isPrevNodeParallel={isNodeParallel(nodes?.[index - 1])}
-            prevNodeIdentifier={nodes?.[index - 1]?.identifier}
+            isNextNodeParallel={isNodeParallel(nodes?.[index + 1])} // not needed can be calculated from prevNode
+            isPrevNodeParallel={isNodeParallel(nodes?.[index - 1])} // not needed can be calculated from prevNode
             nextNode={nodes?.[index + 1]}
             prevNode={nodes?.[index - 1]}
-            updateGraphLinks={updateGraphLinks}
             collapsibleProps={collapsibleProps}
             readonly={readonly}
             isDragging={isDragging}
@@ -97,11 +106,11 @@ export function PipelineGraphRecursive({
       })}
       {CreateNode && startEndNodeNeeded && !readonly && (
         <CreateNode
+          {...commonProps}
           id={uniqueNodeIds?.createNode as string}
           identifier={uniqueNodeIds?.createNode}
           name={createNodeTitle || 'Add'}
           fireEvent={fireEvent}
-          getNode={getNode}
         />
       )}
       {EndNode && showEndNode && startEndNodeNeeded && (
@@ -111,201 +120,180 @@ export function PipelineGraphRecursive({
   )
 }
 
-interface PipelineGraphNodeWithoutCollapseProps {
+interface PipelineGraphNodeWithoutCollapseProps<T, U, V> {
   className?: string
-  data: PipelineGraphState
-  fireEvent?: (event: any) => void
-  getNode?: GetNodeMethod
-  selectedNode: string
-  setSelectedNode?: (nodeId: string) => void
+  data: PipelineGraphState<T, U, V>
+  fireEvent: FireEventMethod<V>
+  getNode: GetNodeMethod<T, U, V>
+  selectedNodeId: string
   isParallelNode?: boolean
   isNextNodeParallel?: boolean
   isPrevNodeParallel?: boolean
   isLastChild?: boolean
-  prevNodeIdentifier?: string
   parentIdentifier?: string
-  nextNode?: PipelineGraphState
-  prevNode?: PipelineGraphState
-  updateGraphLinks?: () => void
-  getDefaultNode(): NodeDetails | null
+  nextNode?: PipelineGraphState<T, U, V>
+  prevNode?: PipelineGraphState<T, U, V>
+  updateGraphLinks: () => void
+  getDefaultNode(): NodeDetails<T, U, V> | null
   collapseOnIntersect?: boolean
   intersectingIndex?: number
   readonly?: boolean
   parentSelector?: string
+  ref?: ForwardedRef<HTMLDivElement>
+}
+
+function PipelineGraphNodeWithoutCollapseWithRef<T, U, V>(
+  {
+    fireEvent,
+    getNode,
+    data,
+    className,
+    isLastChild,
+    selectedNodeId,
+    isParallelNode,
+    isNextNodeParallel,
+    isPrevNodeParallel,
+    parentIdentifier,
+    prevNode,
+    nextNode,
+    updateGraphLinks,
+    collapseOnIntersect,
+    getDefaultNode,
+    intersectingIndex = -1,
+    readonly
+  }: PipelineGraphNodeWithoutCollapseProps<T, U, V>,
+  ref: ForwardedRef<HTMLDivElement>
+): React.ReactElement | null {
+  const defaultNode = getDefaultNode()?.component
+  const NodeComponent: React.FC<CombinedNodeProps<T, U, V>> = defaultTo(
+    getNode?.(data?.type)?.component,
+    defaultNode
+  ) as React.FC<CombinedNodeProps<T, U, V>>
+
+  const readOnlyValue = readonly || data.readonly
+
+  const refValue = React.useMemo((): React.ForwardedRef<HTMLDivElement> | null => {
+    return intersectingIndex === 0 && data.children && collapseOnIntersect ? ref : null
+  }, [intersectingIndex, data.children, collapseOnIntersect, ref])
+  const commonProps = {
+    getNode,
+    fireEvent,
+    getDefaultNode,
+    updateGraphLinks
+  }
+  const nodeMetaData: BaseMetaDataType<T, U, V> = {
+    nextNode,
+    prevNode,
+    parentIdentifier,
+    isParallelNode,
+    className: classNames(css.graphNode, className)
+  }
+  return (
+    <div
+      className={classNames(
+        'pipeline-graph-node',
+        { [css.nodeRightPadding]: isNextNodeParallel, [css.nodeLeftPadding]: isPrevNodeParallel },
+        css.node
+      )}
+    >
+      <>
+        <div id={`ref_${data?.identifier}`} ref={refValue} key={data?.identifier} data-index={0}>
+          {isFirstNodeAGroupNode(intersectingIndex, collapseOnIntersect, data?.children?.length) ? (
+            <GroupNode
+              {...commonProps}
+              metaData={nodeMetaData}
+              key={data?.identifier}
+              permissions={{ allowAdd: true, readonly: readOnlyValue }}
+              // intersectingIndex={intersectingIndex}
+
+              selectedNodeId={selectedNodeId}
+              data={data as any}
+            />
+          ) : (
+            <NodeComponent
+              {...commonProps}
+              metaData={{ ...nodeMetaData, isFirstParallelNode: true }}
+              key={data?.identifier}
+              permissions={{
+                allowAdd: (!data?.children?.length && !isParallelNode) || (isParallelNode && isLastChild),
+                readonly: readOnlyValue
+              }}
+              selectedNodeId={selectedNodeId}
+              data={data}
+            />
+          )}
+        </div>
+        {/* render child nodes */}
+        {data?.children?.map((currentNodeData, index) => {
+          const ChildNodeComponent: React.FC<CombinedNodeProps<T, U, V>> = defaultTo(
+            getNode?.(currentNodeData?.type)?.component,
+            defaultNode
+          ) as React.FC<CombinedNodeProps<T, U, V>>
+          const lastChildIndex = defaultTo(data.children?.length, 0) - 1
+          const indexRelativeToParent = index + 1 // counting parent as 0 and children from 1
+          const isCurrentChildLast = index === lastChildIndex
+          const attachRef = shouldAttachRef(intersectingIndex, isCurrentChildLast, indexRelativeToParent)
+          return !collapseOnIntersect ? (
+            <ChildNodeComponent
+              {...commonProps}
+              metaData={{ ...nodeMetaData, isFirstParallelNode: true, isParallelNode: true }}
+              key={currentNodeData?.identifier}
+              permissions={{
+                allowAdd: indexRelativeToParent === data?.children?.length,
+                readonly: readOnlyValue
+              }}
+              selectedNodeId={selectedNodeId}
+              data={currentNodeData}
+            />
+          ) : (
+            <div
+              ref={attachRef ? ref : null}
+              data-index={indexRelativeToParent}
+              id={`ref_${currentNodeData?.identifier}`}
+              key={currentNodeData?.identifier}
+            >
+              {shouldRenderGroupNode(attachRef, isCurrentChildLast) ? (
+                <GroupNode
+                  {...commonProps}
+                  data={data}
+                  metaData={{ ...nodeMetaData, isParallelNode: true }}
+                  key={currentNodeData?.identifier}
+                  permissions={{
+                    allowAdd: true,
+                    readonly: readOnlyValue
+                  }}
+                  // intersectingIndex={intersectingIndex}
+                  selectedNodeId={selectedNodeId}
+                />
+              ) : showChildNode(indexRelativeToParent, intersectingIndex) ? (
+                <ChildNodeComponent
+                  {...commonProps}
+                  data={currentNodeData}
+                  metaData={{ ...nodeMetaData, isParallelNode: true }}
+                  key={currentNodeData?.identifier}
+                  permissions={{
+                    allowAdd: index + 1 === data?.children?.length,
+                    readonly: readOnlyValue
+                  }}
+                  selectedNodeId={selectedNodeId}
+                />
+              ) : null}
+            </div>
+          )
+        })}
+      </>
+    </div>
+  )
 }
 
 const PipelineGraphNodeWithoutCollapse = React.forwardRef(
-  (
-    {
-      fireEvent,
-      getNode,
-      data,
-      className,
-      isLastChild,
-      selectedNode,
-      isParallelNode,
-      prevNodeIdentifier,
-      isNextNodeParallel,
-      isPrevNodeParallel,
-      parentIdentifier,
-      prevNode,
-      nextNode,
-      updateGraphLinks,
-      collapseOnIntersect,
-      getDefaultNode,
-      intersectingIndex = -1,
-      readonly
-    }: PipelineGraphNodeWithoutCollapseProps,
-    ref: ForwardedRef<HTMLDivElement>
-  ): React.ReactElement | null => {
-    const defaultNode = getDefaultNode()?.component
-    const NodeComponent: React.FC<BaseReactComponentProps> = defaultTo(
-      getNode?.(data?.type)?.component,
-      defaultNode
-    ) as React.FC<BaseReactComponentProps>
+  PipelineGraphNodeWithoutCollapseWithRef
+) as typeof PipelineGraphNodeWithoutCollapseWithRef
 
-    const readOnlyValue = readonly || data.readonly
+// PipelineGraphNodeWithoutCollapse.displayName = 'PipelineGraphNodeWithoutCollapse'
 
-    const refValue = React.useMemo((): React.ForwardedRef<HTMLDivElement> | null => {
-      return intersectingIndex === 0 && data.children && collapseOnIntersect ? ref : null
-    }, [intersectingIndex, data.children, collapseOnIntersect, ref])
-
-    return (
-      <div
-        className={classNames(
-          'pipeline-graph-node',
-          { [css.nodeRightPadding]: isNextNodeParallel, [css.nodeLeftPadding]: isPrevNodeParallel },
-          css.node
-        )}
-      >
-        <>
-          <div id={`ref_${data?.identifier}`} ref={refValue} key={data?.identifier} data-index={0}>
-            {isFirstNodeAGroupNode(intersectingIndex, collapseOnIntersect, data?.children?.length) ? (
-              <GroupNode
-                key={data?.identifier}
-                fireEvent={fireEvent}
-                getNode={getNode}
-                className={classNames(css.graphNode, className)}
-                isSelected={selectedNode === data?.identifier}
-                isParallelNode={true}
-                allowAdd={true}
-                prevNodeIdentifier={prevNodeIdentifier}
-                intersectingIndex={intersectingIndex}
-                readonly={readOnlyValue}
-                updateGraphLinks={updateGraphLinks}
-                selectedNodeId={selectedNode}
-                {...data}
-                id={data?.id}
-              />
-            ) : (
-              <NodeComponent
-                parentIdentifier={parentIdentifier}
-                key={data?.identifier}
-                getNode={getNode}
-                fireEvent={fireEvent}
-                getDefaultNode={getDefaultNode}
-                className={classNames(css.graphNode, className)}
-                isSelected={selectedNode === data?.identifier}
-                isParallelNode={isParallelNode}
-                allowAdd={(!data?.children?.length && !isParallelNode) || (isParallelNode && isLastChild)}
-                isFirstParallelNode={true}
-                prevNodeIdentifier={prevNodeIdentifier}
-                prevNode={prevNode}
-                nextNode={nextNode}
-                updateGraphLinks={updateGraphLinks}
-                readonly={readOnlyValue}
-                selectedNodeId={selectedNode}
-                {...data}
-              />
-            )}
-          </div>
-          {/* render child nodes */}
-          {data?.children?.map((currentNodeData, index) => {
-            const ChildNodeComponent: React.FC<BaseReactComponentProps> = defaultTo(
-              getNode?.(currentNodeData?.type)?.component,
-              defaultNode
-            ) as React.FC<BaseReactComponentProps>
-            const lastChildIndex = defaultTo(data.children?.length, 0) - 1
-            const indexRelativeToParent = index + 1 // counting parent as 0 and children from 1
-            const isCurrentChildLast = index === lastChildIndex
-            const attachRef = shouldAttachRef(intersectingIndex, isCurrentChildLast, indexRelativeToParent)
-            return !collapseOnIntersect ? (
-              <ChildNodeComponent
-                parentIdentifier={parentIdentifier}
-                {...currentNodeData}
-                getNode={getNode}
-                fireEvent={fireEvent}
-                getDefaultNode={getDefaultNode}
-                className={classNames(css.graphNode, className)}
-                isSelected={selectedNode === currentNodeData?.identifier}
-                isParallelNode={true}
-                key={currentNodeData?.identifier}
-                allowAdd={indexRelativeToParent === data?.children?.length}
-                isFirstParallelNode={true}
-                prevNodeIdentifier={prevNodeIdentifier}
-                prevNode={prevNode}
-                nextNode={nextNode}
-                readonly={readOnlyValue}
-                updateGraphLinks={updateGraphLinks}
-                selectedNodeId={selectedNode}
-              />
-            ) : (
-              <div
-                ref={attachRef ? ref : null}
-                data-index={indexRelativeToParent}
-                id={`ref_${currentNodeData?.identifier}`}
-                key={currentNodeData?.identifier}
-              >
-                {shouldRenderGroupNode(attachRef, isCurrentChildLast) ? (
-                  <GroupNode
-                    {...data}
-                    id={currentNodeData.id}
-                    fireEvent={fireEvent}
-                    getNode={getNode}
-                    className={classNames(css.graphNode, className)}
-                    isSelected={selectedNode === currentNodeData?.identifier}
-                    isParallelNode={true}
-                    key={currentNodeData?.identifier}
-                    allowAdd={true}
-                    prevNodeIdentifier={prevNodeIdentifier}
-                    identifier={currentNodeData.identifier}
-                    intersectingIndex={intersectingIndex}
-                    readonly={readOnlyValue}
-                    selectedNodeId={selectedNode}
-                    updateGraphLinks={updateGraphLinks}
-                  />
-                ) : showChildNode(indexRelativeToParent, intersectingIndex) ? (
-                  <ChildNodeComponent
-                    parentIdentifier={parentIdentifier}
-                    {...currentNodeData}
-                    getNode={getNode}
-                    fireEvent={fireEvent}
-                    getDefaultNode={getDefaultNode}
-                    className={classNames(css.graphNode, className)}
-                    isSelected={selectedNode === currentNodeData?.identifier}
-                    isParallelNode={true}
-                    key={currentNodeData?.identifier}
-                    allowAdd={index + 1 === data?.children?.length}
-                    prevNodeIdentifier={prevNodeIdentifier}
-                    prevNode={prevNode}
-                    nextNode={nextNode}
-                    readonly={readOnlyValue}
-                    updateGraphLinks={updateGraphLinks}
-                    selectedNodeId={selectedNode}
-                  />
-                ) : null}
-              </div>
-            )
-          })}
-        </>
-      </div>
-    )
-  }
-)
-PipelineGraphNodeWithoutCollapse.displayName = 'PipelineGraphNodeWithoutCollapse'
-
-function PipelineGraphNodeWithCollapse(
-  props: PipelineGraphNodeWithoutCollapseProps & {
+function PipelineGraphNodeWithCollapse<T, U, V>(
+  props: PipelineGraphNodeWithoutCollapseProps<T, U, V> & {
     collapsibleProps?: NodeCollapsibleProps
     parentSelector?: string
   }
@@ -334,30 +322,48 @@ function PipelineGraphNodeWithCollapse(
   useLayoutEffect(() => {
     props.updateGraphLinks?.()
   }, [intersectingIndex])
-
+  const commonProps = {
+    getNode: props?.getNode,
+    fireEvent: props?.fireEvent,
+    getDefaultNode: props?.getDefaultNode,
+    updateGraphLinks: props?.updateGraphLinks
+  }
   return (
     <PipelineGraphNodeWithoutCollapse
-      {...props}
+      {...commonProps}
+      data={props?.data}
+      selectedNodeId={props?.selectedNodeId}
       ref={ref}
       intersectingIndex={intersectingIndex}
       collapseOnIntersect={true}
     />
   )
 }
-interface PipelineGraphNodeBasicProps extends PipelineGraphNodeWithoutCollapseProps {
+interface PipelineGraphNodeBasicProps<T, U, V> extends PipelineGraphNodeWithoutCollapseProps<T, U, V> {
   collapsibleProps?: NodeCollapsibleProps
 }
-function PipelineGraphNodeBasic(props: PipelineGraphNodeBasicProps): React.ReactElement {
+function PipelineGraphNodeBasic<T, U, V>(props: PipelineGraphNodeBasicProps<T, U, V>): React.ReactElement {
+  const commonProps = {
+    getNode: props?.getNode,
+    fireEvent: props?.fireEvent,
+    getDefaultNode: props?.getDefaultNode,
+    updateGraphLinks: props?.updateGraphLinks
+  }
   return props?.collapsibleProps ? (
     <PipelineGraphNodeWithCollapse {...props} />
   ) : (
-    <PipelineGraphNodeWithoutCollapse {...props} />
+    <PipelineGraphNodeWithoutCollapse
+      data={props?.data}
+      selectedNodeId={props?.selectedNodeId}
+      collapseOnIntersect={true}
+      {...commonProps}
+    />
   )
 }
-const PipelineGraphNode = React.memo(PipelineGraphNodeBasic)
+const PipelineGraphNode = React.memo(PipelineGraphNodeBasic) as typeof PipelineGraphNodeBasic
 
-function PipelineGraphNodeObserved(
-  props: PipelineGraphNodeBasicProps & { index: number; isDragging?: boolean }
+function PipelineGraphNodeObserved<T, U, V>(
+  props: PipelineGraphNodeBasicProps<T, U, V> & { index: number; isDragging?: boolean }
 ): React.ReactElement {
   const [ref, setRef] = useState<HTMLDivElement | null>(null)
   const [visible, setVisible] = useState(true)

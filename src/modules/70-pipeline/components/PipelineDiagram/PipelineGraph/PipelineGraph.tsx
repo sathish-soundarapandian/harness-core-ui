@@ -23,9 +23,18 @@ import {
 } from './PipelineGraphUtils'
 import GraphActions from '../GraphActions/GraphActions'
 import { PipelineGraphRecursive } from './PipelineGraphNode'
-import type { NodeCollapsibleProps, NodeIds, PipelineGraphState, SVGPathRecord, GetNodeMethod, KVPair } from '../types'
+import type {
+  NodeCollapsibleProps,
+  NodeIds,
+  PipelineGraphState,
+  SVGPathRecord,
+  GetNodeMethod,
+  KVPair,
+  FireEventMethod
+} from '../types'
 import GraphConfigStore from './GraphConfigStore'
 import css from './PipelineGraph.module.scss'
+import { noop } from 'lodash-es'
 
 interface ControlPosition {
   x: number
@@ -33,11 +42,11 @@ interface ControlPosition {
 }
 
 const DEFAULT_POSITION: ControlPosition = { x: 30, y: 80 }
-export interface PipelineGraphProps {
-  data: PipelineGraphState[]
-  fireEvent: (event: any) => void
-  getNode: GetNodeMethod
-  getDefaultNode: GetNodeMethod
+export interface PipelineGraphProps<T, U, V> {
+  data: PipelineGraphState<T, U, V>[]
+  fireEvent: FireEventMethod<V>
+  getNode: GetNodeMethod<T, U, V>
+  getDefaultNode: GetNodeMethod<T, U, V>
   selectedNodeId?: string
   collapsibleProps?: NodeCollapsibleProps
   readonly?: boolean
@@ -51,7 +60,7 @@ export interface PipelineGraphProps {
   graphLinkClassname?: string
 }
 
-function PipelineGraph({
+function PipelineGraph<T, U, V>({
   data,
   getNode,
   fireEvent,
@@ -66,12 +75,12 @@ function PipelineGraph({
   showEndNode = true,
   graphActionsLayout = 'vertical',
   graphLinkClassname
-}: PipelineGraphProps): React.ReactElement {
+}: PipelineGraphProps<T, U, V>): React.ReactElement {
   const [svgPath, setSvgPath] = useState<SVGPathRecord[]>([])
 
   const [shouldDelayRender, setDelayRender] = useState<boolean>(false)
   const [treeRectangle, setTreeRectangle] = useState<DOMRect | void>()
-  const [state, setState] = useState<PipelineGraphState[]>(data)
+  const [state, setState] = useState<PipelineGraphState<T, U, V>[]>(data)
   const [graphScale, setGraphScale] = useState(INITIAL_ZOOM_LEVEL)
   const [position, setPosition] = useState<ControlPosition>(DEFAULT_POSITION)
   const [isDragging, setDragging] = useState(false)
@@ -196,8 +205,8 @@ function PipelineGraph({
         >
           <div
             id="overlay"
-            onClick={() => {
-              fireEvent?.({ type: Event.CanvasClick })
+            onClick={event => {
+              fireEvent?.({ type: Event.CanvasClick, target: event?.target })
               dispatchCustomEvent(CANVAS_CLICK_EVENT, {})
             }}
             className={css.overlay}
@@ -210,7 +219,7 @@ function PipelineGraph({
                 fireEvent={fireEvent}
                 getNode={getNode}
                 nodes={state}
-                selectedNode={selectedNodeId}
+                selectedNodeId={selectedNodeId}
                 uniqueNodeIds={uniqueNodeIds}
                 updateGraphLinks={redrawSVGLinks}
                 collapsibleProps={collapsibleProps}

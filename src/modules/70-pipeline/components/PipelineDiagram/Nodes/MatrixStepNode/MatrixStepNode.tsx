@@ -14,7 +14,7 @@ import { Event, DiagramDrag, DiagramType } from '@pipeline/components/Diagram'
 import { STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
 import { useStrings } from 'framework/strings'
 import { useDeepCompareEffect } from '@common/hooks'
-import { BaseReactComponentProps, NodeType, PipelineGraphState } from '../../types'
+import { NodeProps, NodeType, PipelineGraphState } from '../../types'
 import { getPositionOfAddIcon } from '../utils'
 import { Dimensions, useNodeDimensionContext } from '../NodeDimensionStore'
 import { NodeStatusIndicator } from '../NodeStatusIndicator'
@@ -262,10 +262,10 @@ export function MatrixStepNode(props: any): JSX.Element {
                   <div style={{ display: 'flex', flexWrap: 'wrap', columnGap: '80px', rowGap: '20px' }}>
                     {stepGroupData?.map(({ step: node }: any, index: number) => {
                       const defaultNode = props?.getDefaultNode()?.component
-                      const NodeComponent: React.FC<BaseReactComponentProps> = defaultTo(
+                      const NodeComponent: React.FC<NodeProps> = defaultTo(
                         props.getNode?.(node?.type)?.component,
                         defaultNode
-                      ) as React.FC<BaseReactComponentProps>
+                      ) as React.FC<NodeProps>
                       const matrixNodeName = defaultTo(node?.matrixNodeName, node?.data?.matrixNodeName)
                       return (
                         <React.Fragment key={node.data?.identifier}>
@@ -289,7 +289,6 @@ export function MatrixStepNode(props: any): JSX.Element {
                                 (node.isParallelNode && node.isLastChild)
                               }
                               isFirstParallelNode={true}
-                              prevNodeIdentifier={node.prevNodeIdentifier}
                               prevNode={node.prevNode}
                               nextNode={node.nextNode}
                               updateGraphLinks={node.updateGraphLinks}
@@ -369,7 +368,6 @@ export function MatrixStepNode(props: any): JSX.Element {
                         data: {
                           entityType: DiagramType.Link,
                           node: props,
-                          prevNodeIdentifier: props?.prevNodeIdentifier,
                           parentIdentifier: props?.parentIdentifier,
                           identifier: props?.identifier
                         }

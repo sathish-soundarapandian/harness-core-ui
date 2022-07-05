@@ -16,12 +16,18 @@ import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/Exec
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
-import { NodeType, BaseReactComponentProps } from '../../types'
+import { NodeType, NodeProps } from '../../types'
 import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
 import { getPositionOfAddIcon } from '../utils'
 import css from '../DefaultNode/DefaultNode.module.scss'
 import groupnodecss from './GroupNode.module.scss'
-export interface GroupNodeProps extends BaseReactComponentProps {
+interface T {
+  name: string
+}
+interface U {
+  name: string
+}
+export interface GroupNodeProps extends NodeProps<T, U, V> {
   intersectingIndex: number
   children?: any
   customNodeStyle?: CSSProperties | undefined
@@ -36,13 +42,13 @@ interface Node {
   status: string
   isTemplateNode: boolean
 }
-function GroupNode(props: GroupNodeProps): React.ReactElement {
+function GroupNode(props: NodeProps<any, any>): React.ReactElement {
   const [selected, setSelected] = React.useState<boolean>(false)
   const [hasFailedNode, setFailedNode] = React.useState<boolean>(false)
   const [hasRunningNode, setRunningNode] = React.useState<boolean>(false)
   const allowAdd = defaultTo(props.allowAdd, false)
   const [showAdd, setVisibilityOfAdd] = React.useState(false)
-  const CreateNode: React.FC<BaseReactComponentProps> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
+  const CreateNode: React.FC<NodeProps> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
   const [dynamicPopoverHandler, setDynamicPopoverHandler] = React.useState<
     DynamicPopoverHandlerBinding<{ nodesInfo: Node[]; isExecutionView: boolean }> | undefined
   >()
@@ -359,7 +365,6 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
           fireEvent={props.fireEvent}
           style={{ left: getPositionOfAddIcon(props) }}
           identifier={props.identifier}
-          prevNodeIdentifier={props.prevNodeIdentifier as string}
           className={cx(css.addNodeIcon, css.left, css.stageAddIcon)}
         />
       )}

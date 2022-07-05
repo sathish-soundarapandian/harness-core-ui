@@ -37,7 +37,6 @@ interface StepGroupGraphProps {
   fireEvent: (event: any) => void
   startEndNodeNeeded?: boolean
   updateSVGLinks?: (svgPath: string[]) => void
-  prevNodeIdentifier?: string
   identifier?: string
   isNodeCollapsed: boolean
   updateGraphLinks: () => void

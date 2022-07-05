@@ -23,7 +23,15 @@ import type {
 } from 'services/pipeline-ng'
 import { getConditionalExecutionFlag } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
-import { NodeType, PipelineGraphState, SVGPathRecord, PipelineGraphType, KVPair } from '../types'
+import {
+  NodeType,
+  PipelineGraphState,
+  SVGPathRecord,
+  PipelineGraphType,
+  KVPair,
+  PipelineStageNodeMetaDataType
+} from '../types'
+import type { EventWithBaseType } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 
 const INITIAL_ZOOM_LEVEL = 1
 const ZOOM_INC_DEC_LEVEL = 0.1
@@ -341,13 +349,18 @@ const getPipelineGraphData = ({
   errorMap,
   parentPath,
   graphDataType
-}: GetPipelineGraphDataParams): PipelineGraphState[] => {
-  let graphState: PipelineGraphState[] = []
+}: GetPipelineGraphDataParams): PipelineGraphState<
+  StageElementWrapperConfig,
+  PipelineStageNodeMetaDataType,
+  EventWithBaseType
+>[] => {
+  let graphState: PipelineGraphState<StageElementWrapperConfig, PipelineStageNodeMetaDataType, EventWithBaseType>[] = []
   const pipGraphDataType = graphDataType ? graphDataType : getPipelineGraphDataType(data)
 
   if (pipGraphDataType === PipelineGraphType.STAGE_GRAPH) {
     graphState = transformStageData(data, pipGraphDataType, templateTypes, errorMap, parentPath)
   } else {
+    // copmbined type later for stepData
     graphState = transformStepsData(data, pipGraphDataType, templateTypes, errorMap, parentPath)
 
     if (Array.isArray(serviceDependencies)) {
@@ -367,9 +380,10 @@ const transformStageData = (
   errorMap?: Map<string, string[]>,
   parentPath?: string,
   offsetIndex = 0
-): PipelineGraphState[] => {
-  const finalData: PipelineGraphState[] = []
-  stages.forEach((stage: any, index: number) => {
+): PipelineGraphState<StageElementWrapperConfig, PipelineStageNodeMetaDataType, EventWithBaseType>[] => {
+  const finalData: PipelineGraphState<StageElementWrapperConfig, PipelineStageNodeMetaDataType, EventWithBaseType>[] =
+    []
+  stages.forEach((stage: StageElementWrapperConfig, index: number) => {
     if (stage?.stage) {
       const updatedStagetPath = `${parentPath}.${index + offsetIndex}`
       const hasErrors =
@@ -382,27 +396,30 @@ const transformStageData = (
       finalData.push({
         id: uuid() as string,
         identifier: stage.stage.identifier as string,
-        name: stage.stage.name as string,
         type: type,
-        nodeType: nodeType as string,
+        name: stage.stage.name as string,
         icon: iconName,
-        data: {
-          graphType,
-          ...stage,
-          isInComplete: isCustomGeneratedString(stage.stage.identifier) || hasErrors,
-          loopingStrategyEnabled: !!stage.stage?.strategy,
+        data: stage,
+        metaData: {
           conditionalExecutionEnabled: stage.stage.when
             ? stage.stage.when?.pipelineStatus !== 'Success' || !!stage.stage.when?.condition?.trim()
             : false,
-          isTemplateNode: Boolean(templateRef)
+          isInComplete: isCustomGeneratedString(stage.stage.identifier) || Boolean(hasErrors),
+          isTemplateNode: Boolean(templateRef),
+          loopingStrategyEnabled: !!stage.stage?.strategy,
+          nodeMeta: {
+            graphType,
+            nodeType
+          }
         }
       })
     } else if (stage?.parallel?.length) {
       const updatedStagetPath = `${parentPath}.${index}.parallel`
       const currentStagetPath = `${updatedStagetPath}.0`
 
-      const hasErrors =
+      const hasErrors = Boolean(
         errorMap && [...errorMap.keys()].some(key => updatedStagetPath && key.startsWith(currentStagetPath))
+      )
 
       const [first, ...rest] = stage.parallel
       const templateRef = first.stage?.template?.templateRef
@@ -415,46 +432,50 @@ const transformStageData = (
         nodeType: nodeType as string,
         type,
         icon: iconName,
-        data: {
-          graphType,
-          ...stage,
+        data: first,
+        metaData: {
           isInComplete: isCustomGeneratedString(first?.stage?.identifier as string) || hasErrors,
           loopingStrategyEnabled: !!first.stage?.strategy,
           conditionalExecutionEnabled: first?.stage?.when
             ? first?.stage?.when?.pipelineStatus !== 'Success' || !!first?.stage.when?.condition?.trim()
             : false,
-          isTemplateNode: Boolean(templateRef)
+          isTemplateNode: Boolean(templateRef),
+          nodeMeta: {
+            graphType,
+            nodeType
+          }
         },
         children: transformStageData(rest, graphType, templateTypes, errorMap, updatedStagetPath, 1)
       })
-    } else {
-      const updatedStagetPath = `${parentPath}.${index + offsetIndex}`
-      const hasErrors =
-        errorMap && [...errorMap.keys()].some(key => updatedStagetPath && key.startsWith(updatedStagetPath))
-      const templateRef = stage.stage?.template?.templateRef
-
-      const type = (templateRef ? get(templateTypes, templateRef) : stage?.type) as string
-      const { nodeType, iconName } = getNodeInfo(defaultTo(type, ''), graphType)
-      finalData.push({
-        id: stage.id, //uuid() as string
-        identifier: stage.identifier as string,
-        name: stage.name as string,
-        type: type,
-        nodeType: nodeType as string,
-        icon: iconName,
-        ...stage.data,
-        data: {
-          graphType,
-          ...stage,
-          isInComplete: isCustomGeneratedString(stage.identifier) || hasErrors,
-          loopingStrategyEnabled: !!stage?.strategy,
-          conditionalExecutionEnabled: stage.when
-            ? stage.when?.pipelineStatus !== 'Success' || !!stage.when?.condition?.trim()
-            : false,
-          isTemplateNode: Boolean(templateRef)
-        }
-      })
     }
+    // else {
+    //   const updatedStagetPath = `${parentPath}.${index + offsetIndex}`
+    //   const hasErrors =
+    //     errorMap && [...errorMap.keys()].some(key => updatedStagetPath && key.startsWith(updatedStagetPath))
+    //   const templateRef = stage.stage?.template?.templateRef
+
+    //   const type = (templateRef ? get(templateTypes, templateRef) : stage?.type) as string
+    //   const { nodeType, iconName } = getNodeInfo(defaultTo(type, ''), graphType)
+    //   finalData.push({
+    //     id: stage.id, //uuid() as string
+    //     identifier: stage.identifier as string,
+    //     name: stage.name as string,
+    //     type: type,
+    //     nodeType: nodeType as string,
+    //     icon: iconName,
+    //     ...stage.data,
+    //     data: {
+    //       graphType,
+    //       ...stage,
+    //       isInComplete: isCustomGeneratedString(stage.identifier) || hasErrors,
+    //       loopingStrategyEnabled: !!stage?.strategy,
+    //       conditionalExecutionEnabled: stage.when
+    //         ? stage.when?.pipelineStatus !== 'Success' || !!stage.when?.condition?.trim()
+    //         : false,
+    //       isTemplateNode: Boolean(templateRef)
+    //     }
+    //   })
+    // }
   })
   return finalData
 }

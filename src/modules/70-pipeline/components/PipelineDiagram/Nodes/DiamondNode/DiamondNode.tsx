@@ -15,14 +15,19 @@ import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
 import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
-import { PipelineGraphType, NodeType, BaseReactComponentProps } from '../../types'
+import { PipelineGraphType, NodeType, NodeProps } from '../../types'
 import SVGMarker from '../SVGMarker'
 import { getPositionOfAddIcon } from '../utils'
 import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
 import cssDefault from '../DefaultNode/DefaultNode.module.scss'
 import css from './DiamondNode.module.scss'
-
-interface PipelineStepNodeProps extends BaseReactComponentProps {
+interface T {
+  name: string
+}
+interface U {
+  name: string
+}
+interface PipelineStepNodeProps extends NodeProps<T, U, V> {
   status: string
 }
 
@@ -251,7 +256,6 @@ export function DiamondNodeWidget(props: any): JSX.Element {
           data={props}
           fireEvent={props?.fireEvent}
           identifier={props?.identifier}
-          prevNodeIdentifier={props.prevNodeIdentifier as string}
           style={{ left: getPositionOfAddIcon(props) }}
           className={cx(
             cssDefault.addNodeIcon,
@@ -279,7 +283,6 @@ export function DiamondNodeWidget(props: any): JSX.Element {
             data={props}
             fireEvent={props?.fireEvent}
             identifier={props?.identifier}
-            prevNodeIdentifier={props.prevNodeIdentifier as string}
             style={{ right: getPositionOfAddIcon(props, true) }}
             isRightAddIcon={true}
             className={cx(

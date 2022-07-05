@@ -11,10 +11,15 @@ import { defaultTo } from 'lodash-es'
 import { Icon, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
-import type { BaseReactComponentProps } from '../../types'
+import type { NodeProps } from '../../types'
 import css from '../DefaultNode/DefaultNode.module.scss'
-
-interface GroupNodeProps extends BaseReactComponentProps {
+interface T {
+  name: string
+}
+interface U {
+  name: string
+}
+interface GroupNodeProps extends NodeProps<T, U, V> {
   allowAdd: boolean
   children: []
   intersectingIndex: number
@@ -80,7 +85,6 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
             nodesInfo
           }
         })
-        props?.setSelectedNode?.(props?.identifier as string)
       }}
       onDragOver={event => {
         if (event.dataTransfer.types.indexOf(DiagramDrag.AllowDropOnNode) !== -1) {

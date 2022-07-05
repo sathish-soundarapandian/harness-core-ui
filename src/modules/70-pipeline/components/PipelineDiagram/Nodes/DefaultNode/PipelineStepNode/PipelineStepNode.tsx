@@ -17,7 +17,7 @@ import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/Execu
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
 import { useStrings } from 'framework/strings'
 import SVGMarker from '../../SVGMarker'
-import { BaseReactComponentProps, NodeType } from '../../../types'
+import { NodeProps, NodeType } from '../../../types'
 import AddLinkNode from '../AddLinkNode/AddLinkNode'
 import { getPositionOfAddIcon } from '../../utils'
 import defaultCss from '../DefaultNode.module.scss'
@@ -25,7 +25,14 @@ import defaultCss from '../DefaultNode.module.scss'
 const CODE_ICON: IconName = 'command-echo'
 
 const TEMPLATE_ICON: IconName = 'template-library'
-interface PipelineStepNodeProps extends BaseReactComponentProps {
+interface T {
+  name: string
+}
+interface U {
+  name: string
+}
+
+interface PipelineStepNodeProps extends NodeProps<T, U, V> {
   status: string
 }
 
@@ -323,7 +330,6 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
           data={props}
           fireEvent={props.fireEvent}
           identifier={props.identifier}
-          prevNodeIdentifier={props.prevNodeIdentifier as string}
           style={{ left: getPositionOfAddIcon(props) }}
           className={cx(
             defaultCss.addNodeIcon,
@@ -344,7 +350,6 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
           fireEvent={props.fireEvent}
           isRightAddIcon={true}
           identifier={props.identifier}
-          prevNodeIdentifier={props.prevNodeIdentifier as string}
           className={cx(defaultCss.addNodeIcon, defaultCss.stepAddIcon)}
         />
       )}

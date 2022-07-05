@@ -32,7 +32,13 @@ import { getPipelineGraphData } from '@pipeline/components/PipelineDiagram/Pipel
 import PipelineStageNode from '@pipeline/components/PipelineDiagram/Nodes/DefaultNode/PipelineStageNode/PipelineStageNode'
 import { DiamondNodeWidget } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondNode'
 import { IconNode } from '@pipeline/components/PipelineDiagram/Nodes/IconNode/IconNode'
-import { DiagramFactory, NodeType, BaseReactComponentProps } from '@pipeline/components/PipelineDiagram/DiagramFactory'
+import {
+  DiagramFactory,
+  NodeType,
+  NodeProps,
+  PipelineStageNodeMetaDataType,
+  CombinedNodeProps
+} from '@pipeline/components/PipelineDiagram/DiagramFactory'
 import CreateNodeStage from '@pipeline/components/PipelineDiagram/Nodes/CreateNode/CreateNodeStage'
 import EndNodeStage from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndNodeStage'
 import StartNodeStage from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNodeStage'
@@ -65,7 +71,9 @@ import {
   MoveDirection,
   MoveStageDetailsType,
   moveStage,
-  getFlattenedStages
+  getFlattenedStages,
+  EventDataType,
+  ListenerReturnType
 } from './StageBuilderUtil'
 import { useStageBuilderCanvasState } from './useStageBuilderCanvasState'
 import { StageList } from './views/StageList'
@@ -75,14 +83,25 @@ import { getNodeListenersOld, getLinkListernersOld } from './StageBuildOldUtils'
 import type { PipelineSelectionState } from '../PipelineQueryParamState/usePipelineQueryParam'
 import css from './StageBuilder.module.scss'
 
-const diagram = new DiagramFactory('graph')
+const diagram = new DiagramFactory<StageElementWrapperConfig, PipelineStageNodeMetaDataType, EventDataType>('graph')
 
-diagram.registerNode('Deployment', PipelineStageNode as unknown as React.FC<BaseReactComponentProps>, true)
-diagram.registerNode('CI', PipelineStageNode as unknown as React.FC<BaseReactComponentProps>)
-diagram.registerNode('SecurityTests', PipelineStageNode as unknown as React.FC<BaseReactComponentProps>)
-diagram.registerNode('Approval', DiamondNodeWidget)
-diagram.registerNode('Barrier', IconNode)
-diagram.registerNode(NodeType.CreateNode, CreateNodeStage as unknown as React.FC<BaseReactComponentProps>)
+diagram.registerNode(
+  'Deployment',
+  PipelineStageNode as React.FC<
+    CombinedNodeProps<StageElementWrapperConfig, PipelineStageNodeMetaDataType, EventDataType>
+  >,
+  true
+)
+// diagram.registerNode('CI', PipelineStageNode)
+// // diagram.registerNode('SecurityTests', PipelineStageNode as unknown as React.FC<NodeProps>)
+// // diagram.registerNode('Approval', DiamondNodeWidget)
+// // diagram.registerNode('Barrier', IconNode)
+diagram.registerNode(
+  NodeType.CreateNode,
+  CreateNodeStage as React.FC<
+    CombinedNodeProps<StageElementWrapperConfig, PipelineStageNodeMetaDataType, EventDataType>
+  >
+)
 diagram.registerNode(NodeType.EndNode, EndNodeStage)
 diagram.registerNode(NodeType.StartNode, StartNodeStage)
 
@@ -549,7 +568,12 @@ function StageBuilder(): JSX.Element {
   const updateStageOnAddLinkNew = (event: any, dropNode: StageElementWrapper | undefined, current: any): void => {
     // Check Drop Node and Current node should not be same
     if (dropNode?.stage?.identifier !== current?.stage?.stage?.identifier) {
-      const isRemove = removeNodeFromPipeline(getStageFromPipeline(event.node.identifier), pipeline, stageMap, false)
+      const isRemove = removeNodeFromPipeline(
+        getStageFromPipeline(event.data?.nodeData?.data.identifier),
+        pipeline,
+        stageMap,
+        false
+      )
       if (isRemove && dropNode) {
         if (!current.parent && current.stage) {
           const index = pipeline.stages?.indexOf(current.stage) ?? -1
@@ -639,7 +663,7 @@ function StageBuilder(): JSX.Element {
     engine
   )
 
-  const nodeListenersNew: NodeModelListener = getNodeEventListerner(
+  const nodeListenersNew: ListenerReturnType = getNodeEventListerner(
     updateStageOnAddLinkNew,
     setSelectionRef,
     confirmDeleteStage,
@@ -678,7 +702,7 @@ function StageBuilder(): JSX.Element {
     stageMap
   )
 
-  const linkListenersNew: LinkModelListener = getLinkEventListeners(
+  const linkListenersNew: ListenerReturnType = getLinkEventListeners(
     dynamicPopoverHandler,
     pipelineContext,
     addStageNew,

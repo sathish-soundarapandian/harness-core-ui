@@ -45,7 +45,7 @@ import type { PipelineGraphState } from '@pipeline/components/PipelineDiagram/ty
 import {
   DiagramFactory,
   NodeType as DiagramNodeType,
-  BaseReactComponentProps
+  NodeProps
 } from '@pipeline/components/PipelineDiagram/DiagramFactory'
 import { DiamondNodeWidget } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondNode'
 import PipelineStageNode from '@pipeline/components/PipelineDiagram/Nodes/DefaultNode/PipelineStageNode/PipelineStageNode'
@@ -61,8 +61,8 @@ import CDInfo from './components/CD/CDInfo/CDInfo'
 import css from './ExecutionGraph.module.scss'
 
 const diagram = new DiagramFactory('graph')
-diagram.registerNode(['Deployment', 'CI'], PipelineStageNode as unknown as React.FC<BaseReactComponentProps>, true)
-diagram.registerNode(DiagramNodeType.CreateNode, CreateNodeStage as unknown as React.FC<BaseReactComponentProps>)
+diagram.registerNode(['Deployment', 'CI'], PipelineStageNode as unknown as React.FC<NodeProps>, true)
+diagram.registerNode(DiagramNodeType.CreateNode, CreateNodeStage as unknown as React.FC<NodeProps>)
 diagram.registerNode(DiagramNodeType.EndNode, EndNodeStage)
 diagram.registerNode(DiagramNodeType.StartNode, StartNodeStage)
 diagram.registerNode([DiagramNodeType.MatrixNode, DiagramNodeType.LoopNode, DiagramNodeType.PARALLELISM], MatrixNode)

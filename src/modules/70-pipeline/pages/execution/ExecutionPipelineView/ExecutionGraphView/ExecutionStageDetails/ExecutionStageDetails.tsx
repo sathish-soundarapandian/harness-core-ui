@@ -27,12 +27,7 @@ import type { ExecutionLayoutState } from '@pipeline/components/ExecutionLayout/
 import ConditionalExecutionTooltipWrapper from '@pipeline/components/ConditionalExecutionToolTip/ConditionalExecutionTooltipWrapper'
 import { getExecutionStageDiagramListeners, processExecutionDataV1 } from '@pipeline/utils/execUtils'
 
-import {
-  DiagramFactory,
-  DiagramNodes,
-  NodeType,
-  BaseReactComponentProps
-} from '@pipeline/components/PipelineDiagram/DiagramFactory'
+import { DiagramFactory, DiagramNodes, NodeType, NodeProps } from '@pipeline/components/PipelineDiagram/DiagramFactory'
 import { DiamondNodeWidget } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondNode'
 import PipelineStepNode from '@pipeline/components/PipelineDiagram/Nodes/DefaultNode/PipelineStepNode/PipelineStepNode'
 import { IconNode } from '@pipeline/components/PipelineDiagram/Nodes/IconNode/IconNode'
@@ -52,8 +47,8 @@ import css from './ExecutionStageDetails.module.scss'
 
 const diagram = new DiagramFactory('graph')
 
-diagram.registerNode('Deployment', PipelineStepNode as unknown as React.FC<BaseReactComponentProps>, true)
-diagram.registerNode(NodeType.CreateNode, CreateNodeStep as unknown as React.FC<BaseReactComponentProps>)
+diagram.registerNode('Deployment', PipelineStepNode as unknown as React.FC<NodeProps>, true)
+diagram.registerNode(NodeType.CreateNode, CreateNodeStep as unknown as React.FC<NodeProps>)
 diagram.registerNode(NodeType.EndNode, EndNodeStep)
 diagram.registerNode(NodeType.StartNode, StartNodeStep)
 diagram.registerNode('STEP_GROUP', DiagramNodes[NodeType.StepGroupNode])

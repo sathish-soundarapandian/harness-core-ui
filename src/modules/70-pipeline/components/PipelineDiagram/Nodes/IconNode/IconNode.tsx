@@ -11,20 +11,25 @@ import cx from 'classnames'
 import { Text, IconName, Icon, Button, ButtonVariation } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
-import { PipelineGraphType, NodeType, BaseReactComponentProps } from '../../types'
+import { PipelineGraphType, NodeType, NodeProps } from '../../types'
 import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
 import { getPositionOfAddIcon } from '../utils'
 import cssDefault from '../DefaultNode/DefaultNode.module.scss'
 import css from './IconNode.module.scss'
-
-interface IconNodeProps extends BaseReactComponentProps {
+interface T {
+  name: string
+}
+interface U {
+  name: string
+}
+interface IconNodeProps extends NodeProps<T, U, V> {
   isInComplete?: boolean
   graphType?: PipelineGraphType
 }
 export function IconNode(props: IconNodeProps): React.ReactElement {
   const allowAdd = props.allowAdd ?? false
   const [showAdd, setVisibilityOfAdd] = React.useState(false)
-  const CreateNode: React.FC<BaseReactComponentProps> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
+  const CreateNode: React.FC<NodeProps> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
 
   const setAddVisibility = (visibility: boolean): void => {
     if (!allowAdd) {
@@ -214,7 +219,6 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
           data={props}
           fireEvent={props?.fireEvent}
           identifier={props?.identifier}
-          prevNodeIdentifier={props.prevNodeIdentifier as string}
           className={cx(
             cssDefault.addNodeIcon,
             cssDefault.left,
@@ -239,7 +243,6 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
             data={props}
             fireEvent={props?.fireEvent}
             identifier={props?.identifier}
-            prevNodeIdentifier={props.prevNodeIdentifier as string}
             isRightAddIcon={true}
             className={cx(
               cssDefault.addNodeIcon,

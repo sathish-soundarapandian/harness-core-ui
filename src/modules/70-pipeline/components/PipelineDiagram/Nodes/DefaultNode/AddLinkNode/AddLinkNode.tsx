@@ -7,29 +7,28 @@
 
 import React from 'react'
 import { Color } from '@harness/design-system'
+import cx from 'classnames'
 import { Icon } from '@harness/uicore'
 import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
-import type { FireEventMethod } from '@pipeline/components/PipelineDiagram/types'
-interface AddLinkNodeProps<T> {
-  nextNode: any
-  style: any
+import type { NodeProps, PipelineStageNodeMetaDataType } from '@pipeline/components/PipelineDiagram/types'
+import type { StageElementWrapperConfig } from 'services/pipeline-ng'
+import type { EventDataType } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
+import { getPositionOfAddIcon } from '../../utils'
+interface AddLinkNodeProps extends NodeProps<StageElementWrapperConfig, PipelineStageNodeMetaDataType, EventDataType> {
   parentIdentifier?: string
   isParallelNode?: boolean
   readonly?: boolean
   identifier?: string
-  fireEvent?: FireEventMethod
-  prevNodeIdentifier: string
   showAddLink?: boolean
-  data: T
   className?: string
   id?: string
   isRightAddIcon?: boolean
   setShowAddLink?: (data: boolean) => void
 }
-export default function AddLinkNode<T>(props: AddLinkNodeProps<T>): React.ReactElement | null {
+export default function AddLinkNode(props: AddLinkNodeProps): React.ReactElement | null {
   return (
     <div
-      style={{ ...props.style }}
+      style={{ left: getPositionOfAddIcon(props) }}
       data-linkid={props?.identifier}
       onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         event.stopPropagation()
@@ -37,12 +36,15 @@ export default function AddLinkNode<T>(props: AddLinkNodeProps<T>): React.ReactE
           type: Event.AddLinkClicked,
           target: event.target,
           data: {
-            prevNodeIdentifier: props?.prevNodeIdentifier,
             parentIdentifier: props?.parentIdentifier,
-            isRightAddIcon: props?.isRightAddIcon,
-            entityType: DiagramType.Link,
-            identifier: props?.identifier,
-            node: { ...props, ...props?.data }
+            nodeType: DiagramType.Link,
+            nodeData: {
+              id: props?.data.id,
+              data: props?.data?.data?.stage,
+              metaData: {
+                isRightAddIcon: props?.isRightAddIcon
+              }
+            }
           }
         })
       }}
@@ -52,20 +54,33 @@ export default function AddLinkNode<T>(props: AddLinkNodeProps<T>): React.ReactE
         props?.setShowAddLink && props?.setShowAddLink(true)
       }}
       onDrop={event => {
+        const nodeData = JSON.parse(event.dataTransfer.getData(DiagramDrag.NodeDrag))
         event.stopPropagation()
         props?.fireEvent?.({
           type: Event.DropLinkEvent,
           target: event.target,
           data: {
-            entityType: DiagramType.Link,
-            isRightAddIcon: props?.isRightAddIcon,
-            node: JSON.parse(event.dataTransfer.getData(DiagramDrag.NodeDrag)),
-            destination: { ...props, ...props?.data }
+            parentIdentifier: props?.parentIdentifier,
+            nodeType: DiagramType.Link,
+            nodeData: {
+              id: nodeData?.data.id,
+              data: nodeData?.data?.data?.stage,
+              metaData: {
+                isRightAddIcon: nodeData?.isRightAddIcon
+              }
+            },
+            destinationNode: {
+              id: props?.data.id,
+              data: props?.data?.data?.stage,
+              metaData: {
+                isRightAddIcon: props?.isRightAddIcon
+              }
+            }
           }
         })
         props?.setShowAddLink && props?.setShowAddLink(false)
       }}
-      className={props.className}
+      className={cx(props.className, 'Plus-class')}
     >
       <Icon name="plus" color={Color.WHITE} />
     </div>

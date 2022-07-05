@@ -5,22 +5,34 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { CSSProperties } from 'react'
 import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
 import { Icon, Text, Button, ButtonVariation, IconName } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
 import SVGMarker from '../SVGMarker'
-import type { BaseReactComponentProps } from '../../types'
+import type { NodeProps, PipelineGraphState } from '../../types'
 import css from './DefaultNode.module.scss'
-interface DefaultNodeProps extends BaseReactComponentProps {
-  disableClick?: boolean
-  draggable: any
-  dragging?: boolean
+
+export interface NodeDataType {
+  identifier?: string
 }
-function DefaultNode(props: DefaultNodeProps): JSX.Element {
-  const allowAdd = defaultTo(props.allowAdd, false)
+interface NodeMetaDataType {
+  // status: string //data
+
+  showMarkers?: boolean
+  conditionalExecutionEnabled: boolean
+  graphType: string
+  isInComplete: boolean
+  isTemplateNode: boolean
+  loopingStrategyEnabled: boolean
+  tertiaryIcon?: IconName
+  iconStyle: CSSProperties
+}
+
+function DefaultNode(props: NodeProps<PipelineGraphState<any, NodeMetaDataType>, NodeMetaDataType>): JSX.Element {
+  const allowAdd = defaultTo(props?.permissions?.allowAdd, false)
   const nodeRef = React.useRef<HTMLDivElement>(null)
   const [showAdd, setVisibilityOfAdd] = React.useState(false)
   const setAddVisibility = (visibility: boolean): void => {
@@ -30,6 +42,7 @@ function DefaultNode(props: DefaultNodeProps): JSX.Element {
     setVisibilityOfAdd(visibility)
   }
 
+  const isSelected = props?.data?.id === props?.selectedNodeId
   React.useEffect(() => {
     const currentNode = nodeRef.current
     const onMouseOver = (_e: MouseEvent): void => {
@@ -50,18 +63,11 @@ function DefaultNode(props: DefaultNodeProps): JSX.Element {
     }
   }, [nodeRef, allowAdd])
 
-  const getCursorType = (): string => {
-    if (props.disableClick) {
-      return 'not-allowed'
-    } else if (props.draggable) {
-      return 'move'
-    } else {
-      return 'pointer'
-    }
-  }
   return (
     <div
-      className={`${cx(css.defaultNode, 'default-node', { [css.marginBottom]: props.isParallelNode })} draggable`}
+      className={`${cx(css.defaultNode, 'default-node', {
+        [css.marginBottom]: props?.metaData?.isParallelNode
+      })} draggable`}
       ref={nodeRef}
       onClick={event => {
         event.stopPropagation()
@@ -74,7 +80,6 @@ function DefaultNode(props: DefaultNodeProps): JSX.Element {
             ...props
           }
         })
-        props?.setSelectedNode?.(props?.identifier as string)
       }}
       onMouseDown={e => e.stopPropagation()}
       onDragOver={event => {
@@ -106,15 +111,13 @@ function DefaultNode(props: DefaultNodeProps): JSX.Element {
       }}
     >
       <div
-        id={props.id}
-        data-nodeid={props.id}
+        id={props?.data?.id}
+        data-nodeid={props?.data?.id}
         draggable={true}
-        className={cx(css.defaultCard, { [css.selected]: props?.isSelected })}
+        className={cx(css.defaultCard, { [css.selected]: isSelected })}
         style={{
-          width: defaultTo(props.width, 90),
-          height: defaultTo(props.height, 40),
-          cursor: getCursorType(),
-          opacity: props.dragging ? 0.4 : 1
+          width: 90,
+          height: 40
         }}
         onDragStart={event => {
           event.stopPropagation()
@@ -135,16 +138,16 @@ function DefaultNode(props: DefaultNodeProps): JSX.Element {
           <SVGMarker />
         </div>
         <div className="execution-running-animation" />
-        {props.icon ? (
+        {props?.data?.icon ? (
           <Icon
             size={28}
-            name={props.icon as IconName}
-            inverse={props?.isSelected}
-            style={{ pointerEvents: 'none', ...props?.iconStyle }}
+            name={props?.data?.icon as IconName}
+            inverse={isSelected}
+            style={{ pointerEvents: 'none', ...props?.data?.metaData?.iconStyle }}
           />
         ) : null}
         <Button
-          className={cx(css.closeNode, { [css.readonly]: props.readonly })}
+          className={cx(css.closeNode, { [css.readonly]: props?.permissions?.readonly })}
           minimal
           icon="cross"
           variation={ButtonVariation.PRIMARY}
@@ -155,7 +158,7 @@ function DefaultNode(props: DefaultNodeProps): JSX.Element {
               type: Event.RemoveNode,
               target: e.target,
               data: {
-                identifier: props?.identifier,
+                identifier: props?.data?.identifier,
                 node: props
               }
             })
@@ -166,17 +169,17 @@ function DefaultNode(props: DefaultNodeProps): JSX.Element {
           <SVGMarker />
         </div>
       </div>
-      {props.name ? (
+      {props?.data?.name ? (
         <Text
-          width={defaultTo(props.width, 90)}
+          width={125}
           font={{ size: 'normal', align: 'center' }}
           color={props.defaultSelected ? Color.GREY_900 : Color.GREY_600}
           className={css.nameText}
           padding={'small'}
           lineClamp={2}
-          data-node-name={props.name}
+          data-node-name={props?.data?.name}
         >
-          {props.name}
+          {props?.data?.name}
         </Text>
       ) : null}
       {allowAdd ? (
@@ -188,8 +191,8 @@ function DefaultNode(props: DefaultNodeProps): JSX.Element {
               target: event.target,
               data: {
                 entityType: DiagramType.Default,
-                identifier: props?.identifier,
-                parentIdentifier: props?.parentIdentifier,
+                identifier: props?.data?.identifier,
+                parentIdentifier: props?.metaData?.parentIdentifier,
                 node: props
               }
             })
@@ -197,8 +200,8 @@ function DefaultNode(props: DefaultNodeProps): JSX.Element {
           className={css.addNode}
           data-nodeid="add-parallel"
           style={{
-            width: defaultTo(props.width, 90),
-            height: defaultTo(props.height, 40),
+            width: 90,
+            height: 40,
             visibility: showAdd ? 'visible' : 'hidden'
           }}
         >

@@ -32,12 +32,7 @@ import type {
 import type { DependencyElement } from 'services/ci'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
-import {
-  DiagramFactory,
-  DiagramNodes,
-  NodeType,
-  BaseReactComponentProps
-} from '@pipeline/components/PipelineDiagram/DiagramFactory'
+import { DiagramFactory, DiagramNodes, NodeType, NodeProps } from '@pipeline/components/PipelineDiagram/DiagramFactory'
 import { DiamondNodeWidget } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondNode'
 import { getPipelineGraphData } from '@pipeline/components/PipelineDiagram/PipelineGraph/PipelineGraphUtils'
 import PipelineStepNode from '@pipeline/components/PipelineDiagram/Nodes/DefaultNode/PipelineStepNode/PipelineStepNode'
@@ -95,8 +90,8 @@ import css from './ExecutionGraph.module.scss'
 
 const diagram = new DiagramFactory('graph')
 
-diagram.registerNode('ShellScript', PipelineStepNode as React.FC<BaseReactComponentProps>, true)
-diagram.registerNode(NodeType.CreateNode, CreateNodeStep as unknown as React.FC<BaseReactComponentProps>)
+diagram.registerNode('ShellScript', PipelineStepNode as React.FC<NodeProps>, true)
+diagram.registerNode(NodeType.CreateNode, CreateNodeStep as unknown as React.FC<NodeProps>)
 diagram.registerNode(NodeType.EndNode, EndNodeStep)
 diagram.registerNode(NodeType.StartNode, StartNodeStep)
 diagram.registerNode('StepGroup', DiagramNodes[NodeType.StepGroupNode])

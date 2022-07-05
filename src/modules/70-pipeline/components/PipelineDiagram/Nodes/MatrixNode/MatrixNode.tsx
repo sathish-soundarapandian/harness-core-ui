@@ -20,7 +20,7 @@ import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
 import { isExecutionNotStarted } from '@pipeline/utils/statusHelpers'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { StageType } from '@pipeline/utils/stageHelpers'
-import { BaseReactComponentProps, NodeType, PipelineGraphState, PipelineGraphType } from '../../types'
+import { NodeProps, NodeType, PipelineGraphState, PipelineGraphType } from '../../types'
 import { getPositionOfAddIcon } from '../utils'
 import { getPipelineGraphData } from '../../PipelineGraph/PipelineGraphUtils'
 import { NodeStatusIndicator } from '../NodeStatusIndicator'
@@ -283,10 +283,10 @@ export function MatrixNode(props: any): JSX.Element {
                 >
                   <div style={{ display: 'flex', flexWrap: 'wrap', columnGap: '80px', rowGap: '20px' }}>
                     {state.map((node: any, index: number) => {
-                      const NodeComponent: React.FC<BaseReactComponentProps> = defaultTo(
+                      const NodeComponent: React.FC<NodeProps> = defaultTo(
                         props.getNode?.(node?.type)?.component,
                         defaultNode
-                      ) as React.FC<BaseReactComponentProps>
+                      ) as React.FC<NodeProps>
 
                       return (
                         <React.Fragment key={node.data?.identifier}>
@@ -306,7 +306,6 @@ export function MatrixNode(props: any): JSX.Element {
                                 (node.isParallelNode && node.isLastChild)
                               }
                               isFirstParallelNode={true}
-                              prevNodeIdentifier={node.prevNodeIdentifier}
                               prevNode={node.prevNode}
                               nextNode={node.nextNode}
                               updateGraphLinks={node.updateGraphLinks}
@@ -383,7 +382,6 @@ export function MatrixNode(props: any): JSX.Element {
                         data: {
                           entityType: DiagramType.Link,
                           node: props,
-                          prevNodeIdentifier: props?.prevNodeIdentifier,
                           parentIdentifier: props?.parentIdentifier,
                           identifier: props?.identifier
                         }

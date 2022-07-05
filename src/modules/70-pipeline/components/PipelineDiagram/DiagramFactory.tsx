@@ -9,34 +9,38 @@ import { v4 as uuid } from 'uuid'
 import PipelineGraph from './PipelineGraph/PipelineGraph'
 import GroupNode from './Nodes/GroupNode/GroupNode'
 import type {
-  BaseReactComponentProps,
   BaseListener,
   NodeCollapsibleProps,
   ListenerHandle,
   NodeBank,
   NodeDetails,
-  PipelineGraphState
+  PipelineGraphState,
+  NodeProps,
+  PipelineStageNodeMetaDataType,
+  TerminalNodeProps,
+  CombinedNodeProps,
+  BaseEvent
 } from './types'
 import { NodeType } from './types'
 import { StepGroupNode } from './Nodes/StepGroupNode/StepGroupNode'
 import { CANVAS_CLICK_EVENT } from './PipelineGraph/PipelineGraphUtils'
 import DefaultNode from './Nodes/DefaultNode/DefaultNode'
 
-export class DiagramFactory {
+export class DiagramFactory<T, U, V> {
   /**
    * Couples the factory with the nodes it generates
    */
   type = ''
   canCreate = false
   canDelete = false
-  nodeBank: NodeBank
-  groupNode: any = GroupNode
+  nodeBank: NodeBank<T, U, V>
+  groupNode: React.FC<CombinedNodeProps<T, U, V>> = GroupNode as unknown as React.FC<CombinedNodeProps<T, U, V>>
   listeners: { [id: string]: BaseListener }
   constructor(diagramType?: string) {
-    this.nodeBank = new Map<string, NodeDetails>()
+    this.nodeBank = new Map<string, NodeDetails<T, U, V>>()
     this.type = diagramType || 'graph'
-    this.registerNode(NodeType.Default, DefaultNode as React.FC<BaseReactComponentProps>)
-    this.registerNode(NodeType.StepGroupNode, StepGroupNode)
+    this.registerNode(NodeType.Default, DefaultNode as unknown as React.FC<CombinedNodeProps<T, U, V>>, true)
+    this.registerNode(NodeType.StepGroupNode, StepGroupNode as unknown as React.FC<CombinedNodeProps<T, U, V>>)
     this.listeners = {}
   }
 
@@ -44,7 +48,7 @@ export class DiagramFactory {
     return this.type
   }
 
-  registerNode(type: string | string[], Component: React.FC<BaseReactComponentProps>, isDefault = false): void {
+  registerNode(type: string | string[], Component: React.FC<CombinedNodeProps<T, U, V>>, isDefault = false): void {
     if (Array.isArray(type)) {
       type.forEach(nodeType => this.nodeBank.set(nodeType, { component: Component, isDefault }))
     } else {
@@ -76,7 +80,7 @@ export class DiagramFactory {
     return false
   }
 
-  getDefaultNode(): NodeDetails | null {
+  getDefaultNode(): NodeDetails<T, U, V> | null {
     let defaultNode = null
 
     for (const node of this.nodeBank.entries()) {
@@ -92,7 +96,7 @@ export class DiagramFactory {
   }
 
   getGroupNode(): React.FC {
-    return this.groupNode
+    return this.groupNode as any
   }
 
   getListenerHandle(listener: string): ListenerHandle | undefined {
@@ -111,7 +115,7 @@ export class DiagramFactory {
     return listenerHandle
   }
 
-  getNode(type?: string): NodeDetails | null {
+  getNode(type?: string): NodeDetails<T, U, V> | null {
     const node = this.nodeBank.get(type as string)
     if (node) {
       return node
@@ -127,12 +131,12 @@ export class DiagramFactory {
     }
   }
 
-  fireEvent(event: any): void {
+  fireEvent(event: BaseEvent<V>): void {
     this.getListenerHandle(event.type)?.listener?.(event)
   }
 
   render(): React.FC<{
-    data: PipelineGraphState[]
+    data: PipelineGraphState<T, U, V>[]
     collapsibleProps?: NodeCollapsibleProps
     selectedNodeId?: string
     readonly?: boolean
@@ -145,9 +149,9 @@ export class DiagramFactory {
     graphLinkClassname?: string
   }> {
     function PipelineStudioHOC(
-      this: DiagramFactory,
+      this: DiagramFactory<T, U, V>,
       props: {
-        data: PipelineGraphState[]
+        data: PipelineGraphState<T, U, V>[]
         collapsibleProps?: NodeCollapsibleProps
         selectedNodeId?: string
         readonly?: boolean
@@ -180,4 +184,13 @@ const DiagramNodes = {
   [NodeType.StepGroupNode]: StepGroupNode
 }
 
-export { DiagramNodes, NodeType, BaseReactComponentProps, CANVAS_CLICK_EVENT }
+export {
+  DiagramNodes,
+  NodeType,
+  NodeProps,
+  TerminalNodeProps,
+  CombinedNodeProps,
+  CANVAS_CLICK_EVENT,
+  BaseEvent,
+  PipelineStageNodeMetaDataType
+}

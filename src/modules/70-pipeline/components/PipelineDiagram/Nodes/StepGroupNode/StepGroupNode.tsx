@@ -14,15 +14,20 @@ import { Event, DiagramDrag, DiagramType } from '@pipeline/components/Diagram'
 import { STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
 import { useStrings } from 'framework/strings'
 import StepGroupGraph from '../StepGroupGraph/StepGroupGraph'
-import { NodeType } from '../../types'
+import { NodeProps, NodeType } from '../../types'
 import SVGMarker from '../SVGMarker'
 import { getPositionOfAddIcon } from '../utils'
 import { useNodeDimensionContext } from '../NodeDimensionStore'
 import MatrixNodeLabelWrapper from '../MatrixNodeLabelWrapper'
 import css from './StepGroupNode.module.scss'
 import defaultCss from '../DefaultNode/DefaultNode.module.scss'
-
-export function StepGroupNode(props: any): JSX.Element {
+interface T {
+  name: string
+}
+interface U {
+  name: string
+}
+export function StepGroupNode(props: NodeProps<T, U, V>): JSX.Element {
   const allowAdd = defaultTo(props.allowAdd, false)
   const { getString } = useStrings()
   const [showAdd, setVisibilityOfAdd] = React.useState(false)
@@ -231,7 +236,6 @@ export function StepGroupNode(props: any): JSX.Element {
                   data: {
                     entityType: DiagramType.Link,
                     node: props,
-                    prevNodeIdentifier: props?.prevNodeIdentifier,
                     parentIdentifier: props?.parentIdentifier,
                     identifier: props?.identifier
                   }

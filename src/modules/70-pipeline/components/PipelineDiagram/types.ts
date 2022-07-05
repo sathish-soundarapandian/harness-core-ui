@@ -29,21 +29,90 @@ export const enum PipelineGraphType {
   STAGE_GRAPH = 'STAGE_GRAPH',
   STEP_GRAPH = 'STEP_GRAPH'
 }
-export interface PipelineGraphState {
+
+export interface BaseEvent<T> {
+  type: string
+  target: EventTarget
+  data?: T
+}
+
+export interface PipelineGraphState<T, U, V> {
   id: string
   identifier: string
   type: string
   name: string
   icon: IconName
   status?: string
-  data: any
+  data: T
+  metaData: U
   nodeType?: string
   graphType?: PipelineGraphType
-  children?: PipelineGraphState[]
+  children?: PipelineGraphState<T, U, V>[]
   parentStepGroupId?: string
   readonly?: boolean
   stageNodeId?: string
 }
+
+export interface BaseMetaDataType<T, U, V> {
+  nextNode?: PipelineGraphState<T, U, V>
+  prevNode?: PipelineGraphState<T, U, V>
+  isParallelNode?: boolean
+  parentIdentifier?: string
+  className?: string
+  isFirstParallelNode?: boolean
+}
+export interface NodeProps<T, U, V> {
+  defaultSelected?: string //default selected id
+  selectedNodeId?: string
+  // icon?: string //data
+  metaData?: BaseMetaDataType<T, U, V>
+  data: PipelineGraphState<T, U, V>
+  permissions?: {
+    readonly?: boolean
+    allowAdd?: boolean //default selected id
+  }
+  graphConfig?: {
+    isDragging?: boolean
+    collapsibleProps?: NodeCollapsibleProps
+    parentSelector?: string
+  }
+  getNode: GetNodeMethod<T, U, V>
+  fireEvent: FireEventMethod<V>
+  getDefaultNode: GetNodeMethod<T, U, V>
+  updateGraphLinks: () => void
+  onClick?: any // remove later
+}
+
+export interface TerminalNodeProps<V> {
+  id: string
+  name?: string
+  identifier?: string
+  className?: string
+  fireEvent: FireEventMethod<V>
+  disabled?: boolean
+}
+
+export type CombinedNodeProps<T, U, V> = NodeProps<T, U, V> | TerminalNodeProps<V>
+
+// move to desired file later
+export interface NodeGraphMetaType {
+  nodeMeta: {
+    graphType: string
+    nodeType: string
+    showMarkers?: boolean
+  }
+}
+export interface PipelineStageNodeMetaDataType extends NodeGraphMetaType {
+  //metaData
+  conditionalExecutionEnabled: boolean
+  isInComplete: boolean
+  isTemplateNode: boolean
+  loopingStrategyEnabled: boolean
+  tertiaryIcon?: IconName
+  iconStyle?: CSSProperties
+  status?: string //data
+}
+
 export interface NodeIds {
   startNode: string
   createNode: string
@@ -61,9 +130,9 @@ export interface SVGPathRecord {
   }
 }
 
-export type NodeBank = Map<string, NodeDetails>
-export interface NodeDetails {
-  component: React.FC<BaseReactComponentProps>
+export type NodeBank<T, U, V> = Map<string, NodeDetails<T, U, V>>
+export interface NodeDetails<T, U, V> {
+  component: React.FC<CombinedNodeProps<T, U, V>>
   isDefault?: boolean
 }
 
@@ -95,13 +164,6 @@ export enum NodeType {
   PARALLELISM = 'PARALLELISM'
 }
 
-export interface NodeProps<T> {
-  width: number
-  height: number
-  onUpdate?: (data: T) => void
-  onChange?: (data: T) => void
-}
-
 export interface NodeInterface {
   identifier: string
   type: NodeType
@@ -114,22 +176,7 @@ export interface NodeInterface {
   unSelectedIconColour?: string
 }
 
-export type FireEventMethod = (arg0: {
-  type: string
-  target: EventTarget
-  data: {
-    allowAdd?: boolean
-    entityType?: string
-    identifier?: string
-    id?: string
-    parentIdentifier?: string
-    prevNodeIdentifier?: string
-    node?: any
-    destination?: any
-    nodesInfo?: NodeInfo[]
-    isRightAddIcon?: boolean
-  }
-}) => void
+export type FireEventMethod<T> = (arg0: BaseEvent<T>) => void
 
 export interface NodeInfo {
   name: string
@@ -138,39 +185,4 @@ export interface NodeInfo {
   type: string
 }
 
-export type GetNodeMethod = (type?: string | undefined) => NodeDetails | null
-export interface BaseReactComponentProps {
-  getNode?: GetNodeMethod
-  fireEvent?: FireEventMethod
-  setSelectedNode?(identifier: string): void
-  getDefaultNode?: GetNodeMethod
-  updateGraphLinks?(): void
-  onMouseOver?(event: MouseEvent): void
-  onMouseLeave?(): void
-  onDragOver?(): void
-  onDrop?(event: React.DragEvent): void
-  isFirstParallelNode?: boolean
-  className?: string
-  name?: string
-  identifier?: string
-  id: string
-  icon?: string
-  iconStyle?: CSSProperties
-  readonly?: boolean
-  onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
-  isSelected?: boolean
-  defaultSelected?: any
-  parentIdentifier?: string
-  isParallelNode?: boolean
-  prevNodeIdentifier?: string
-  nextNode?: PipelineGraphState
-  allowAdd?: boolean
-  prevNode?: PipelineGraphState
-  type?: string
-  selectedNodeId?: string
-  nodesInfo?: NodeInfo[]
-  width?: number
-  height?: number
-  data?: any
-  showMarkers?: boolean
-}
+export type GetNodeMethod<T, U, V> = (type?: string | undefined) => NodeDetails<T, U, V> | null
