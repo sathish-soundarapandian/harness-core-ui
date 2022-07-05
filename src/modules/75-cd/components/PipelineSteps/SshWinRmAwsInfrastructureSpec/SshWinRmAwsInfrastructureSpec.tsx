@@ -119,15 +119,20 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
         fetchAutoScalingGroups(region)
         fetchVpcs(region)
         fetchTags(region)
+        /* istanbul ignore next */
         formikRef.current?.setFieldValue('region', region)
       }
       if (loadBalancer) {
+        /* istanbul ignore next */
         formikRef.current?.setFieldValue('loadBalancer', loadBalancer)
       }
       if (useAutoScalingGroup) {
+        /* istanbul ignore next */
         formikRef.current?.setFieldValue('autoScalingGroupName', autoScalingGroupName)
       } else if (awsInstanceFilter) {
+        /* istanbul ignore next */
         formikRef.current?.setFieldValue('vpcs', awsInstanceFilter.vpcs)
+        /* istanbul ignore next */
         formikRef.current?.setFieldValue('tags', awsInstanceFilter.tags)
       }
     }
