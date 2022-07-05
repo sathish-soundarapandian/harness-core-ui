@@ -92,7 +92,8 @@ export interface KubernetesManifestsProps {
 
 export enum AzureWebAppConfigType {
   applicationSettings = 'applicationSettings',
-  connectionStrings = 'connectionStrings'
+  connectionStrings = 'connectionStrings',
+  startupScript = 'startupScript'
 }
 
 export interface AzureWebAppConfigProps {
@@ -110,4 +111,5 @@ export interface AzureWebAppConfigProps {
   azureWebAppConfig?: StoreConfigWrapper
   azureWebAppConfigPath?: string
   type?: AzureWebAppConfigType
+  pathLabel?: string
 }
