@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { StepWizard, Color } from '@harness/uicore'
+import { StepWizard } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { ConnectorTypes, StartupScriptWizardStepsProps } from './StartupScriptInterface.types'
 import StartupScriptWizardStepOne from './StartupScriptWizardStepOne'
@@ -35,9 +35,8 @@ export function StartupScriptWizard<T>({
   return (
     <StepWizard
       className={css.startupScriptWizard}
-      icon={'audit-trail'}
+      icon={'docs'}
       iconProps={{
-        color: Color.WHITE,
         size: 37
       }}
       title={getString('pipeline.startupScript.file')}
@@ -45,6 +44,7 @@ export function StartupScriptWizard<T>({
       <StartupScriptWizardStepOne
         name={getString('pipeline.startupScript.fileSource')}
         stepName={getString('pipeline.startupScript.fileSource')}
+        key={getString('pipeline.startupScript.fileSource')}
         expressions={expressions}
         allowableTypes={allowableTypes}
         isReadonly={isReadonly}

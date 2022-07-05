@@ -135,10 +135,7 @@ function StartupScriptWizardStepTwo({
               })
             ),
           repoName: Yup.string().test('repoName', getString('common.validation.repositoryName'), value => {
-            if (
-              connectionType === GitRepoName.Repo ||
-              getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
-            ) {
+            if (connectionType === GitRepoName.Repo) {
               return true
             }
             return !isEmpty(value) && value?.length > 0
