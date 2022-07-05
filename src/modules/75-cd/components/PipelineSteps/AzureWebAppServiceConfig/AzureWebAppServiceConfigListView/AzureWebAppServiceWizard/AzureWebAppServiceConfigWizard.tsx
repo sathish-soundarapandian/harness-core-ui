@@ -7,7 +7,6 @@
 
 import React from 'react'
 import { StepWizard } from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
 import AzureWebAppServiceStepOne from './AzureWebAppServiceStepOne'
 import type { ConnectorTypes, AzureWebAppServiceConfigWizardStepsProps } from '../../AzureWebAppServiceConfig.types'
 
@@ -31,21 +30,15 @@ export function AzureWebAppServiceConfigWizard<T>({
     handleStoreChange?.(arg as unknown as T)
   }
 
+  const firstStepName = labels?.firstStepName
+
   return (
-    <StepWizard
-      className={css.serviceConfigWizard}
-      icon={'audit-trail'}
-      iconProps={{
-        color: Color.WHITE,
-        size: 37
-      }}
-      title={labels?.wizardName}
-    >
+    <StepWizard className={css.serviceConfigWizard} icon={'docs'} iconProps={{ size: 37 }} title={labels?.wizardName}>
       <AzureWebAppServiceStepOne
-        name={labels?.firstStepName}
-        key={labels?.firstStepName}
-        title={labels?.firstStepName}
-        stepName={labels?.firstStepName}
+        name={firstStepName}
+        key={firstStepName}
+        title={firstStepName}
+        stepName={firstStepName}
         expressions={expressions}
         allowableTypes={allowableTypes}
         isReadonly={isReadonly}
