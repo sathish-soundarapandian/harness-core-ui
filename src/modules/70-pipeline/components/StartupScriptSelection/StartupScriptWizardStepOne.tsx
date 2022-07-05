@@ -106,12 +106,12 @@ function StartupScriptWizardStepOne({
 
   const getInitialValues = useCallback((): StartupScriptWizardInitData => {
     const initValues = { ...initialValues }
-
     if (prevStepData?.connectorRef) {
       initValues.connectorRef = prevStepData?.connectorRef
       handleStoreChange(selectedStore)
     }
-    if (selectedStore !== initValues.store) {
+
+    if (selectedStore !== initValues.store && selectedStore !== prevStepData?.store) {
       initValues.connectorRef = ''
     }
     return { ...initValues, store: selectedStore }
@@ -129,8 +129,12 @@ function StartupScriptWizardStepOne({
 
   return (
     <Layout.Vertical height={'inherit'} spacing="medium" className={css.optionsViewContainer}>
-      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
-        {`${getString('common.specify')} ${stepName}`}
+      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'xxxlarge' }}>
+        {stepName}
+      </Text>
+
+      <Text font={{ variation: FontVariation.H6 }} margin={{ bottom: 'medium' }}>
+        {getString('pipeline.startupScript.subtitle')}
       </Text>
 
       <Formik
@@ -220,7 +224,10 @@ function StartupScriptWizardStepOne({
                         iconProps={{ size: 12 }}
                         onClick={() => {
                           handleConnectorViewChange()
-                          nextStep?.({ ...prevStepData, store: selectedStore })
+                          nextStep?.({
+                            ...prevStepData,
+                            store: selectedStore
+                          })
                         }}
                       />
                     )}

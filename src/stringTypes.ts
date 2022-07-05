@@ -3088,7 +3088,6 @@ export interface StringsMap {
   'pipeline.gitPullRequest': string
   'pipeline.gitPullRequestNumber': string
   'pipeline.gitRepo': string
-  'pipeline.harness': string
   'pipeline.imagePathLabel': string
   'pipeline.imageVersionDeprecated': string
   'pipeline.importSuccessMessage': string
@@ -3481,6 +3480,7 @@ export interface StringsMap {
   'pipeline.startupScript.fileSource': string
   'pipeline.startupScript.name': string
   'pipeline.startupScript.scriptFilePath': string
+  'pipeline.startupScript.subtitle': string
   'pipeline.stepCommonFields.ifNotPresent': string
   'pipeline.stepCommonFields.runAsUser': string
   'pipeline.stepCommonFields.validation.invalidLimitCPU': string
