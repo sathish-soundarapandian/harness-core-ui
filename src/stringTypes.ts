@@ -2658,11 +2658,20 @@ export interface StringsMap {
   'pipeline.appServiceConfig.applicationSettings.filePath': string
   'pipeline.appServiceConfig.applicationSettings.fileSource': string
   'pipeline.appServiceConfig.applicationSettings.name': string
+  'pipeline.appServiceConfig.applicationSettings.scriptFile': string
+  'pipeline.appServiceConfig.applicationSettings.scriptFileDetails': string
+  'pipeline.appServiceConfig.applicationSettings.scriptFileSource': string
+  'pipeline.appServiceConfig.applicationSettings.subtitle': string
   'pipeline.appServiceConfig.connectionStrings.file': string
   'pipeline.appServiceConfig.connectionStrings.fileDetails': string
   'pipeline.appServiceConfig.connectionStrings.filePath': string
   'pipeline.appServiceConfig.connectionStrings.fileSource': string
   'pipeline.appServiceConfig.connectionStrings.name': string
+  'pipeline.appServiceConfig.connectionStrings.scriptFile': string
+  'pipeline.appServiceConfig.connectionStrings.scriptFileDetails': string
+  'pipeline.appServiceConfig.connectionStrings.scriptFileSource': string
+  'pipeline.appServiceConfig.connectionStrings.subtitle': string
+  'pipeline.appServiceConfig.title': string
   'pipeline.approvalCriteria.allConditions': string
   'pipeline.approvalCriteria.anyCondition': string
   'pipeline.approvalCriteria.approvalCriteria': string
