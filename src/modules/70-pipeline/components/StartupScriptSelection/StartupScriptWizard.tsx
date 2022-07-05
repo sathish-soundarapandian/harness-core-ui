@@ -27,7 +27,6 @@ export function StartupScriptWizard<T>({
 }: StartupScriptWizardStepsProps<T>): React.ReactElement {
   const { getString } = useStrings()
 
-  /* istanbul ignore next */
   const handleStoreChangeRef = (arg: ConnectorTypes): void => {
     handleStoreChange?.(arg as unknown as T)
   }

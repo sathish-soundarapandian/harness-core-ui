@@ -91,7 +91,10 @@ function StartupScriptWizardStepOne({
         !isEmpty(connectorRefValue))
     )
   }
-  const handleOptionSelection = (formikData: StartupScriptWizardInitData, storeSelected: ConnectorTypes): void => {
+  const handleOptionSelection = /* istanbul ignore next */ (
+    formikData: StartupScriptWizardInitData,
+    storeSelected: ConnectorTypes
+  ): void => {
     if (
       getMultiTypeFromValue(formikData.connectorRef) !== MultiTypeInputType.FIXED &&
       formikData.store !== storeSelected
@@ -107,7 +110,7 @@ function StartupScriptWizardStepOne({
   const getInitialValues = useCallback((): StartupScriptWizardInitData => {
     const initValues = { ...initialValues }
     if (prevStepData?.connectorRef) {
-      initValues.connectorRef = prevStepData?.connectorRef
+      initValues.connectorRef = prevStepData.connectorRef
       handleStoreChange(selectedStore)
     }
 
@@ -207,9 +210,11 @@ function StartupScriptWizardStepOne({
                         showRequiredField={false}
                         showDefaultField={false}
                         showAdvanced={true}
-                        onChange={value => {
-                          formik.setFieldValue('connectorRef', value)
-                        }}
+                        onChange={
+                          /* istanbul ignore next */ value => {
+                            formik.setFieldValue('connectorRef', value)
+                          }
+                        }
                         isReadonly={isReadonly}
                       />
                     ) : (
