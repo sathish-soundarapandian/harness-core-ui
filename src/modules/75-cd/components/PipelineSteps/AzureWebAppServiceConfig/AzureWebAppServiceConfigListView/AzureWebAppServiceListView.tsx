@@ -30,8 +30,7 @@ import StepBitbucketAuthentication from '@connectors/components/CreateConnector/
 import StepGitlabAuthentication from '@connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
-// import { useTelemetry } from '@common/hooks/useTelemetry'
-// import { ManifestActions } from '@common/constants/TrackingConstants'
+import { useTelemetry } from '@common/hooks/useTelemetry'
 import {
   buildBitbucketPayload,
   buildGithubPayload,
@@ -40,6 +39,7 @@ import {
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { getConnectorNameFromValue, getStatus } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { AzureWebAppServiceConfigWizard } from '@cd/components/PipelineSteps/AzureWebAppServiceConfig/AzureWebAppServiceConfigListView/AzureWebAppServiceWizard/AzureWebAppServiceConfigWizard'
+import { ServiceConfigActions } from '@common/constants/TrackingConstants'
 import AzureWebAppServiceStepTwo from './AzureWebAppServiceWizard/AzureWebAppServiceStepTwo'
 import {
   AllowedTypes,
@@ -85,7 +85,7 @@ function AzureWebAppListView({
   const [connectorView, setConnectorView] = useState(false)
   const [connectorType, setConnectorType] = useState('')
   const [isEditMode, setIsEditMode] = useState(false)
-  // const { trackEvent } = useTelemetry()
+  const { trackEvent } = useTelemetry()
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -134,7 +134,6 @@ function AzureWebAppListView({
     }
   }
 
-  // todo
   const handleSubmit = (item: StoreConfigWrapper): void => {
     let path = ''
     switch (selectedOption) {
@@ -142,15 +141,19 @@ function AzureWebAppListView({
         applicationSettings = { ...item }
         path = 'applicationSettings'
         updateStageData(applicationSettings, path)
+        trackEvent(ServiceConfigActions.SaveApplicationSettingOnPipelinePage, {
+          applicationSetting: applicationSettings?.type
+        })
         break
       case ModalViewOption.CONNECTIONSTRING:
         connectionStrings = { ...item }
         path = 'connectionStrings'
         updateStageData(connectionStrings, path)
+        trackEvent(ServiceConfigActions.SaveConnectionStringOnPipelinePage, {
+          connectionStrings: connectionStrings?.type
+        })
         break
     }
-    // todo: add tracking events
-    // trackEvent(true ? ManifestActions.SaveManifestOnPipelinePage : ManifestActions.UpdateManifestOnPipelinePage, {})
 
     hideConnectorModal()
     setConnectorView(false)
