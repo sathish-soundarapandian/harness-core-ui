@@ -14,7 +14,10 @@ import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
 const GitAzureWebAppConfigContent = (props: AzureWebAppConfigRenderProps): React.ReactElement => {
   return (
-    <Layout.Vertical data-name="azureWebAppConfig" className={cx(css.inputWidth, css.layoutVerticalSpacing)}>
+    <Layout.Vertical
+      data-name={`azureWebAppConfig-${props.type}`}
+      className={cx(css.inputWidth, css.layoutVerticalSpacing)}
+    >
       <GitAzureWebAppConfigRuntimeFields {...props} />
     </Layout.Vertical>
   )

@@ -31,9 +31,7 @@ const AzureWebAppConfigInputField = (props: AzureWebAppConfigProps): React.React
   const azureWebAppConfigSource = azureWebAppConfigBaseFactory.getAzureWebAppConfig(Connectors.GIT)
   const azureWebAppConfigDefaultValue = defaultTo(
     props.azureWebAppConfig,
-    props.type === AzureWebAppConfigType.applicationSettings
-      ? props.template.applicationSettings
-      : props.template.connectionStrings
+    get(props.template, props.type as string)
   ) as StoreConfigWrapper
 
   if (!azureWebAppConfigSource) {
@@ -59,22 +57,44 @@ const AzureWebAppConfigInputField = (props: AzureWebAppConfigProps): React.React
 export function AzureWebAppConfig(props: AzureWebAppConfigProps): React.ReactElement {
   const { getString } = useStrings()
 
-  const heading =
-    props.type === AzureWebAppConfigType.applicationSettings
-      ? getString('pipeline.appServiceConfig.applicationSettings.name')
-      : getString('pipeline.appServiceConfig.connectionStrings.name')
+  const getPathLabel = (type: AzureWebAppConfigType | undefined): string => {
+    switch (type) {
+      case AzureWebAppConfigType.applicationSettings:
+        return getString('pipeline.appServiceConfig.applicationSettings.filePath')
+      case AzureWebAppConfigType.connectionStrings:
+        return getString('pipeline.appServiceConfig.connectionStrings.filePath')
+      case AzureWebAppConfigType.startupScript:
+        return getString('pipeline.startupScript.scriptFilePath')
+      default:
+        return ''
+    }
+  }
+
+  const getHeading = (type: AzureWebAppConfigType | undefined): string => {
+    switch (type) {
+      case AzureWebAppConfigType.applicationSettings:
+        return getString('pipeline.appServiceConfig.applicationSettings.name')
+      case AzureWebAppConfigType.connectionStrings:
+        return getString('pipeline.appServiceConfig.connectionStrings.name')
+      case AzureWebAppConfigType.startupScript:
+        return getString('pipeline.startupScript.name')
+      default:
+        return ''
+    }
+  }
   return (
     <div
       className={cx(css.nopadLeft, css.accordionSummary)}
       id={`Stage.${props.stageIdentifier}.Service.AzureWebAppConfig`}
     >
-      {!props.fromTrigger && <div className={css.subheading}>{heading}</div>}
+      {!props.fromTrigger && <div className={css.subheading}>{getHeading(props.type)}</div>}
       <AzureWebAppConfigInputField
         {...props}
         azureWebAppConfig={props.azureWebAppConfig}
         azureWebAppConfigPath={props.type}
         key={props.type}
         type={props.type}
+        pathLabel={getPathLabel(props.type)}
       />
     </div>
   )
