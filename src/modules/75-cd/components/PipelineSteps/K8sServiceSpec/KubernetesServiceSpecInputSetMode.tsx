@@ -11,7 +11,7 @@ import { Layout, MultiTypeInputType } from '@wings-software/uicore'
 import cx from 'classnames'
 
 import { useStrings } from 'framework/strings'
-import type { ServiceSpec, StoreConfigWrapper } from 'services/cd-ng'
+import type { ServiceSpec } from 'services/cd-ng'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
@@ -21,19 +21,17 @@ import type { AllNGVariables } from '@pipeline/utils/types'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import manifestSourceBaseFactory from '@cd/factory/ManifestSourceFactory/ManifestSourceBaseFactory'
-import startupScriptBaseFactory from '@cd/factory/StartupScriptFactory/StartupScriptFactory'
 import type { K8SDirectServiceStep } from './K8sServiceSpecInterface'
 import { KubernetesArtifacts } from './KubernetesArtifacts/KubernetesArtifacts'
 import { KubernetesManifests } from './KubernetesManifests/KubernetesManifests'
-import { StartupScripts } from './StartupScripts/StartupScripts'
 import css from './K8sServiceSpec.module.scss'
 
 export interface KubernetesInputSetProps {
-  initialValues: K8SDirectServiceStep & { startupScript?: StoreConfigWrapper }
-  onUpdate?: ((data: ServiceSpec & { startupScript?: StoreConfigWrapper }) => void) | undefined
+  initialValues: K8SDirectServiceStep
+  onUpdate?: ((data: ServiceSpec) => void) | undefined
   stepViewType?: StepViewType
-  template?: ServiceSpec & { startupScript?: StoreConfigWrapper }
-  allValues?: ServiceSpec & { startupScript?: StoreConfigWrapper }
+  template?: ServiceSpec
+  allValues?: ServiceSpec
   readonly?: boolean
   factory?: AbstractStepFactory
   path?: string
@@ -82,22 +80,6 @@ const KubernetesServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetPr
           template={template}
           manifests={allValues?.manifests}
           manifestSourceBaseFactory={manifestSourceBaseFactory}
-          stepViewType={stepViewType}
-          stageIdentifier={stageIdentifier}
-          serviceIdentifier={serviceIdentifier}
-          formik={formik}
-          path={path}
-          initialValues={initialValues}
-          readonly={readonly}
-          allowableTypes={allowableTypes}
-        />
-      )}
-
-      {!!template?.startupScript && (
-        <StartupScripts
-          template={template}
-          startupScript={allValues?.startupScript}
-          startupScriptBaseFactory={startupScriptBaseFactory}
           stepViewType={stepViewType}
           stageIdentifier={stageIdentifier}
           serviceIdentifier={serviceIdentifier}

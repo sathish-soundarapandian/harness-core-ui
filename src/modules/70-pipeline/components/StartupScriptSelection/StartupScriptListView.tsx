@@ -37,6 +37,8 @@ import DelegateSelectorStep from '@connectors/components/CreateConnector/commonS
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 
+import { StartupScriptActions } from '@common/constants/TrackingConstants'
+import { useTelemetry } from '@common/hooks/useTelemetry'
 import { getStatus, getConnectorNameFromValue } from '../PipelineStudio/StageBuilder/StageBuilderUtil'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import ConnectorField from './StartupScriptConnectorField'
@@ -67,7 +69,7 @@ function StartupScriptListView({
   const [connectorView, setConnectorView] = useState(false)
   const [connectorType, setConnectorType] = useState('')
   const [isEditMode, setIsEditMode] = useState(false)
-  // const { trackEvent } = useTelemetry()
+  const { trackEvent } = useTelemetry()
 
   const DIALOG_PROPS: IDialogProps = {
     isOpen: true,
@@ -110,8 +112,8 @@ function StartupScriptListView({
     if (startupScript) {
       const values = {
         ...startupScript,
-        store: startupScript?.spec?.store?.type,
-        connectorRef: startupScript?.spec?.store?.spec?.connectorRef
+        store: get(startupScript, 'spec.store.type'),
+        connectorRef: get(startupScript, 'spec.store.spec.connectorRef')
       }
       return values
     }
@@ -138,8 +140,8 @@ function StartupScriptListView({
   const handleSubmit = (script: StoreConfigWrapper): void => {
     startupScript = script
     updateStageData()
-    // todo: add tracking events
-    // trackEvent(true ? ManifestActions.SaveManifestOnPipelinePage : ManifestActions.UpdateManifestOnPipelinePage, {})
+
+    trackEvent(StartupScriptActions.SaveStartupScriptOnPipelinePage, { startupScript: startupScript?.type })
 
     hideConnectorModal()
     setConnectorView(false)
@@ -288,45 +290,48 @@ function StartupScriptListView({
     }
   }, [connectorView, connectorType, isEditMode])
 
-  const renderStartupScriptList = (script: StoreConfigWrapper): React.ReactElement => {
-    const { color } = getStatus(script?.spec?.store?.spec?.connectorRef, connectors, accountId)
-    const connectorName = getConnectorNameFromValue(script?.spec?.store?.spec?.connectorRef, connectors)
-    return (
-      <div className={css.rowItem}>
-        <section className={css.startupScriptList}>
-          <div className={css.columnId}>
-            <Icon inline name={ConnectorIcons[script?.spec?.store?.type as ConnectorTypes]} size={20} />
-            {renderConnectorField(script?.spec?.store?.spec?.connectorRef, connectorName, color)}
-          </div>
-          {!!script?.spec?.store?.spec.paths?.length && (
+  const renderStartupScriptList = React.useCallback(
+    (script: StoreConfigWrapper): React.ReactElement => {
+      const { color } = getStatus(get(script, 'spec.store.spec.connectorRef'), connectors, accountId)
+      const connectorName = getConnectorNameFromValue(get(script, 'spec.store.spec.connectorRef'), connectors)
+      return (
+        <div className={css.rowItem}>
+          <section className={css.startupScriptList}>
             <div className={css.columnId}>
-              <Text lineClamp={1} width={300}>
-                <span className={css.noWrap}>
-                  {typeof get(script?.spec?.store?.spec, 'paths') === 'string'
-                    ? get(script?.spec?.store?.spec, 'paths')
-                    : get(script?.spec?.store?.spec, 'paths').join(', ')}
-                </span>
-              </Text>
+              <Icon inline name={ConnectorIcons[get(script, 'spec.store.type') as ConnectorTypes]} size={20} />
+              {renderConnectorField(get(script, 'spec.store.spec.connectorRef'), connectorName, color)}
             </div>
-          )}
-          {!isReadonly && (
-            <span>
-              <Layout.Horizontal className={css.startupScriptListButton}>
-                <Button
-                  icon="Edit"
-                  iconProps={{ size: 18 }}
-                  onClick={() => editStartupScript(script?.spec?.store?.type as ConnectorTypes)}
-                  minimal
-                />
+            {!!get(script, 'spec.store.spec.paths')?.length && (
+              <div className={css.columnId}>
+                <Text lineClamp={1} width={300}>
+                  <span className={css.noWrap}>
+                    {typeof get(script, 'spec.store.spec.paths') === 'string'
+                      ? get(script, 'spec.store.spec.paths')
+                      : get(script, 'spec.store.spec.paths').join(', ')}
+                  </span>
+                </Text>
+              </div>
+            )}
+            {!isReadonly && (
+              <span>
+                <Layout.Horizontal className={css.startupScriptListButton}>
+                  <Button
+                    icon="Edit"
+                    iconProps={{ size: 18 }}
+                    onClick={() => editStartupScript(script?.spec?.store?.type as ConnectorTypes)}
+                    minimal
+                  />
 
-                <Button iconProps={{ size: 18 }} icon="main-trash" onClick={() => removeStartupScript()} minimal />
-              </Layout.Horizontal>
-            </span>
-          )}
-        </section>
-      </div>
-    )
-  }
+                  <Button iconProps={{ size: 18 }} icon="main-trash" onClick={() => removeStartupScript()} minimal />
+                </Layout.Horizontal>
+              </span>
+            )}
+          </section>
+        </div>
+      )
+    },
+    [connectors]
+  )
 
   const [showConnectorModal, hideConnectorModal] = useModalHook(() => {
     const onClose = (): void => {
