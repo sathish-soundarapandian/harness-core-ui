@@ -179,8 +179,10 @@ function DeployEnvironment({
       path
     ) {
       const updatedTemplate = produce(get(template, path), (draft: EnvironmentYamlV2) => {
-        delete draft.environmentInputs
-        delete draft.serviceOverrideInputs
+        if (draft) {
+          delete draft.environmentInputs
+          delete draft.serviceOverrideInputs
+        }
       })
       const environmentValues = get(formik?.values, `${path}`)
       if (environmentValues) {
