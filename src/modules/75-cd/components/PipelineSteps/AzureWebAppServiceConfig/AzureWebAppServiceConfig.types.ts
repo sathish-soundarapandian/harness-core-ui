@@ -150,7 +150,8 @@ export interface AzureWebAppServicesStepOneProps {
   initialValues: AzureWebAppServiceConfigWizardInitData
   handleConnectorViewChange: () => void
   handleStoreChange: (store: ConnectorTypes) => void
-  title: string
+  title?: string
+  subtitle?: string
 }
 
 export interface AzureWebAppServiceStepTwoProps {

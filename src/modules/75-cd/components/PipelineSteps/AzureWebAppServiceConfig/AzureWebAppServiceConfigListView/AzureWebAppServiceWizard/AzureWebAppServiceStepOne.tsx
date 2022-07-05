@@ -56,7 +56,7 @@ function AzureWebAppServiceConfigWizardStepOne({
   prevStepData,
   nextStep,
   title,
-  subTitle
+  subtitle
 }: StepProps<ConnectorConfigDTO> & AzureWebAppServicesStepOneProps): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -137,7 +137,7 @@ function AzureWebAppServiceConfigWizardStepOne({
       </Text>
 
       <Text font={{ variation: FontVariation.H6 }} margin={{ bottom: 'medium' }}>
-        {subTitle}
+        {subtitle}
       </Text>
 
       <Formik

@@ -12,6 +12,10 @@
       fill: none;
     }
   }
+
+  p[class*='StepWizard--stepName'] {
+    word-break: break-word !important;
+  }
 }
 
 .addServiceConfig {
