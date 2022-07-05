@@ -12,7 +12,11 @@ import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/W
 import ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ArtifactsSelection'
 import ManifestSelection from '@pipeline/components/ManifestSelection/ManifestSelection'
 import StartupScriptSelection from '@pipeline/components/StartupScriptSelection/StartupScriptSelection'
-import { getSelectedDeploymentType, isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
+import {
+  getSelectedDeploymentType,
+  isServerlessDeploymentType,
+  ServiceDeploymentType
+} from '@pipeline/utils/stageHelpers'
 import { useStrings } from 'framework/strings'
 import type { ServiceDefinition } from 'services/cd-ng'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
@@ -77,6 +81,7 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
               {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')}
               <HarnessDocTooltip tooltipId={getManifestsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
             </div>
+
             <ManifestSelection
               isPropagating={isPropagating}
               deploymentType={selectedDeploymentType}
@@ -85,24 +90,27 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
             />
           </Card>
 
-          <Card className={css.sectionCard} id={getString('pipeline.startupScript.name')}>
-            <div
-              className={cx(css.tabSubHeading, 'ng-tooltip-native')}
-              data-tooltip-id={getStartupScriptHeaderTooltipId(selectedDeploymentType)}
-            >
-              {getString('pipeline.startupScript.name')}
-              <HarnessDocTooltip
-                tooltipId={getStartupScriptHeaderTooltipId(selectedDeploymentType)}
-                useStandAlone={true}
+          {selectedDeploymentType === ServiceDeploymentType.AzureWebApps && (
+            <Card className={css.sectionCard} id={getString('pipeline.startupScript.name')}>
+              <div
+                className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+                data-tooltip-id={getStartupScriptHeaderTooltipId(selectedDeploymentType)}
+              >
+                {getString('pipeline.startupScript.name')}
+                <HarnessDocTooltip
+                  tooltipId={getStartupScriptHeaderTooltipId(selectedDeploymentType)}
+                  useStandAlone={true}
+                />
+              </div>
+              <StartupScriptSelection
+                isPropagating={isPropagating}
+                deploymentType={selectedDeploymentType}
+                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                readonly={!!readonly}
               />
-            </div>
-            <StartupScriptSelection
-              isPropagating={isPropagating}
-              deploymentType={selectedDeploymentType}
-              isReadonlyServiceMode={isReadonlyServiceMode as boolean}
-              readonly={!!readonly}
-            />
-          </Card>
+            </Card>
+          )}
+
           <Card
             className={css.sectionCard}
             id={getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
