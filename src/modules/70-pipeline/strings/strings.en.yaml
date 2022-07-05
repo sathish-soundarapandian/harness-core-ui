@@ -1156,6 +1156,12 @@ importSuccessMessage: '{{resourceType}} has been imported successfully'
 MatrixNode:
   maxConcurrency: 'Max Concurrency:'
 traffic: Traffic
+startupScript:
+  name: Startup Script
+  subtitle: 'Specify Azure Web App Startup Script Type'
+  file: '{{$.pipeline.startupScript.name}} File'
+  fileDetails: '{{$.pipeline.startupScript.name}} File Details'
+  fileSource: '{{$.pipeline.startupScript.name}} File Source'
 appServiceConfig:
   title: Azure Web App Configuration
   applicationSettings:

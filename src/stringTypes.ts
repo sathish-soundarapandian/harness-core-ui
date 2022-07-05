@@ -3450,6 +3450,12 @@ export interface StringsMap {
   'pipeline.stagetoRetryFrom': string
   'pipeline.startTime': string
   'pipeline.startedOn': string
+  'pipeline.startupScript.file': string
+  'pipeline.startupScript.fileDetails': string
+  'pipeline.startupScript.fileSource': string
+  'pipeline.startupScript.name': string
+  'pipeline.startupScript.scriptFilePath': string
+  'pipeline.startupScript.subtitle': string
   'pipeline.startupScript.name': string
   'pipeline.startupScript.scriptFilePath': string
   'pipeline.stepCommonFields.ifNotPresent': string
