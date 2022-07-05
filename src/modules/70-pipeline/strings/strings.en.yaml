@@ -1182,18 +1182,27 @@ lastModified: 'Last Modified'
 executionId: Execution Id
 lastExecutedBy: Last Executed By
 appServiceConfig:
+  title: Azure Web App Configuration
   applicationSettings:
     name: Application Settings
     file: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File'
+    scriptFile: '{{$.pipeline.appServiceConfig.applicationSettings.name}} Script File'
+    scriptFileSource: '{{$.pipeline.appServiceConfig.applicationSettings.name}} Script File Source'
+    scriptFileDetails: '{{$.pipeline.appServiceConfig.applicationSettings.name}} Script File Details'
     fileDetails: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File Details'
     fileSource: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File Source'
     filePath: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File Path'
+    subtitle: 'Specify {{$.pipeline.appServiceConfig.applicationSettings.name}} Script File Type'
   connectionStrings:
     name: Connection Strings
     file: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File'
+    scriptFile: '{{$.pipeline.appServiceConfig.connectionStrings.name}} Script File'
+    scriptFileSource: '{{$.pipeline.appServiceConfig.connectionStrings.name}} Script File Source'
+    scriptFileDetails: '{{$.pipeline.appServiceConfig.connectionStrings.name}} Script File Details'
     fileDetails: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Details'
     fileSource: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Source'
     filePath: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Path'
+    subtitle: 'Specify {{$.pipeline.appServiceConfig.connectionStrings.name}} Script File Type'
 startupScript: 
   name: Startup Script
   scriptFilePath: 'Script File Path'

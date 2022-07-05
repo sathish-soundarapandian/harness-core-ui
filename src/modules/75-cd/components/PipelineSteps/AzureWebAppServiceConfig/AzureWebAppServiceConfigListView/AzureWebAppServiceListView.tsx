@@ -69,8 +69,10 @@ function AzureWebAppListView({
   updateStage,
   stage,
   isPropagating,
-  connectors,
-  refetchConnectors,
+  stringsConnectors,
+  settingsConnectors,
+  refetchStringsConnectors,
+  refetchSettingsConnectors,
   applicationSettings,
   connectionStrings,
   isReadonly,
@@ -137,12 +139,12 @@ function AzureWebAppListView({
     let path = ''
     switch (selectedOption) {
       case ModalViewOption.APPLICATIONSETTING:
-        applicationSettings = item
+        applicationSettings = { ...item }
         path = 'applicationSettings'
         updateStageData(applicationSettings, path)
         break
       case ModalViewOption.CONNECTIONSTRING:
-        connectionStrings = item
+        connectionStrings = { ...item }
         path = 'connectionStrings'
         updateStageData(connectionStrings, path)
         break
@@ -153,8 +155,12 @@ function AzureWebAppListView({
     hideConnectorModal()
     setConnectorView(false)
     setConnectorType('')
+    if (selectedOption === ModalViewOption.CONNECTIONSTRING) {
+      refetchStringsConnectors()
+    } else if (selectedOption === ModalViewOption.APPLICATIONSETTING) {
+      refetchSettingsConnectors()
+    }
     setSelectedOption(undefined)
-    refetchConnectors()
   }
 
   const handleConnectorViewChange = (isConnectorView: boolean): void => {
@@ -169,16 +175,22 @@ function AzureWebAppListView({
     switch (selectedOption) {
       case ModalViewOption.APPLICATIONSETTING:
         return {
-          wizardName: getString('pipeline.appServiceConfig.applicationSettings.file'),
-          firstStepName: getString('pipeline.appServiceConfig.applicationSettings.fileSource'),
-          secondStepName: getString('pipeline.appServiceConfig.applicationSettings.fileDetails'),
+          wizardName: getString('pipeline.appServiceConfig.applicationSettings.scriptFile'),
+          firstStepName: getString('pipeline.appServiceConfig.applicationSettings.scriptFileSource'),
+          secondStepName: getString('pipeline.appServiceConfig.applicationSettings.scriptFileDetails'),
+          firstStepTitle: getString('pipeline.appServiceConfig.applicationSettings.fileSource'),
+          firstStepSubtitle: getString('pipeline.appServiceConfig.applicationSettings.subtitle'),
+          secondStepTitle: getString('pipeline.appServiceConfig.applicationSettings.fileDetails'),
           pathPlaceholder: getString('pipeline.appServiceConfig.applicationSettings.filePath')
         }
       case ModalViewOption.CONNECTIONSTRING:
         return {
-          wizardName: getString('pipeline.appServiceConfig.connectionStrings.file'),
-          firstStepName: getString('pipeline.appServiceConfig.connectionStrings.fileSource'),
-          secondStepName: getString('pipeline.appServiceConfig.connectionStrings.fileDetails'),
+          wizardName: getString('pipeline.appServiceConfig.connectionStrings.scriptFile'),
+          firstStepName: getString('pipeline.appServiceConfig.connectionStrings.scriptFileSource'),
+          secondStepName: getString('pipeline.appServiceConfig.connectionStrings.scriptFileDetails'),
+          firstStepTitle: getString('pipeline.appServiceConfig.connectionStrings.fileSource'),
+          firstStepSubtitle: getString('pipeline.appServiceConfig.connectionStrings.subtitle'),
+          secondStepTitle: getString('pipeline.appServiceConfig.connectionStrings.fileDetails'),
           pathPlaceholder: getString('pipeline.appServiceConfig.connectionStrings.filePath')
         }
       default:
@@ -186,6 +198,9 @@ function AzureWebAppListView({
           wizardName: '',
           firstStepName: '',
           secondStepName: '',
+          secondStepTitle: '',
+          firstStepTitle: '',
+          firstStepSubtitle: '',
           pathPlaceholder: ''
         }
     }
@@ -215,6 +230,7 @@ function AzureWebAppListView({
       expressions,
       allowableTypes,
       stepName: labelSecondStepName,
+      title: getLabels()?.secondStepTitle,
       initialValues: getLastStepInitialData(),
       handleSubmit: handleSubmit,
       isReadonly: isReadonly,
@@ -370,60 +386,63 @@ function AzureWebAppListView({
     }
   }, [selectedOption])
 
-  const renderListView = (currentOption: StoreConfigWrapper | undefined, option: number): React.ReactElement => {
-    const selectedStore = currentOption?.spec?.store
-    const selectedConnectorRef = selectedStore?.spec?.connectorRef
-    const { color } = getStatus(selectedConnectorRef, connectors, accountId)
-    const connectorName = getConnectorNameFromValue(selectedConnectorRef, connectors)
-
-    return (
-      <div className={css.rowItem}>
-        <section className={css.serviceConfigList}>
-          <div className={css.columnId}>
-            <Text width={200}>
-              {option
-                ? getString('pipeline.appServiceConfig.connectionStrings.name')
-                : getString('pipeline.appServiceConfig.applicationSettings.name')}
-            </Text>
-          </div>
-          <div className={css.columnId}>
-            <Icon inline name={ConnectorIcons[selectedStore?.type as ConnectorTypes]} size={20} />
-            {renderConnectorField(selectedConnectorRef, connectorName, color)}
-          </div>
-          {!!selectedStore?.spec.paths?.length && (
-            <div>
-              <Text lineClamp={1} width={200}>
-                <span className={css.noWrap}>
-                  {typeof selectedStore?.spec.paths === 'string'
-                    ? selectedStore?.spec.paths
-                    : selectedStore?.spec.paths.join(', ')}
-                </span>
+  const renderListView = React.useCallback(
+    (currentOption: StoreConfigWrapper | undefined, option: ModalViewOption): React.ReactElement => {
+      const selectedStore = currentOption?.spec?.store
+      const selectedConnectorRef = selectedStore?.spec?.connectorRef
+      const connectorList = option === ModalViewOption.CONNECTIONSTRING ? stringsConnectors : settingsConnectors
+      const { color } = getStatus(selectedConnectorRef, connectorList, accountId)
+      const connectorName = getConnectorNameFromValue(selectedConnectorRef, connectorList)
+      return (
+        <div className={css.rowItem}>
+          <section className={css.serviceConfigList}>
+            <div className={css.columnId}>
+              <Text width={200}>
+                {option
+                  ? getString('pipeline.appServiceConfig.connectionStrings.name')
+                  : getString('pipeline.appServiceConfig.applicationSettings.name')}
               </Text>
             </div>
-          )}
-          {!isReadonly && (
-            <span>
-              <Layout.Horizontal className={css.serviceConfigListButton}>
-                <Button
-                  icon="Edit"
-                  iconProps={{ size: 18 }}
-                  onClick={() => editApplicationConfig(selectedStore?.type as ConnectorTypes, option)}
-                  minimal
-                />
+            <div className={css.columnId}>
+              <Icon inline name={ConnectorIcons[selectedStore?.type as ConnectorTypes]} size={20} />
+              {renderConnectorField(selectedConnectorRef, connectorName, color)}
+            </div>
+            {!!selectedStore?.spec.paths?.length && (
+              <div>
+                <Text lineClamp={1} width={200}>
+                  <span className={css.noWrap}>
+                    {typeof selectedStore?.spec.paths === 'string'
+                      ? selectedStore?.spec.paths
+                      : selectedStore?.spec.paths.join(', ')}
+                  </span>
+                </Text>
+              </div>
+            )}
+            {!isReadonly && (
+              <span>
+                <Layout.Horizontal className={css.serviceConfigListButton}>
+                  <Button
+                    icon="Edit"
+                    iconProps={{ size: 18 }}
+                    onClick={() => editApplicationConfig(selectedStore?.type as ConnectorTypes, option)}
+                    minimal
+                  />
 
-                <Button
-                  iconProps={{ size: 18 }}
-                  icon="main-trash"
-                  onClick={() => removeApplicationConfig(option)}
-                  minimal
-                />
-              </Layout.Horizontal>
-            </span>
-          )}
-        </section>
-      </div>
-    )
-  }
+                  <Button
+                    iconProps={{ size: 18 }}
+                    icon="main-trash"
+                    onClick={() => removeApplicationConfig(option)}
+                    minimal
+                  />
+                </Layout.Horizontal>
+              </span>
+            )}
+          </section>
+        </div>
+      )
+    },
+    [stringsConnectors, settingsConnectors]
+  )
 
   const [showConnectorModal, hideConnectorModal] = useModalHook(() => {
     const onClose = (): void => {

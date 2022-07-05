@@ -78,8 +78,8 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
               readonly={!!readonly}
             />
           </Card>
-          <Card className={css.sectionCard} id={'App Services Configuration'}>
-            <div className={css.tabSubHeading}>{'App Services Configuration'}</div>
+          <Card className={css.sectionCard} id={getString('pipeline.appServiceConfig.title')}>
+            <div className={css.tabSubHeading}>{getString('pipeline.appServiceConfig.title')}</div>
             <AzureWebAppConfigSelection
               isPropagating={isPropagating}
               deploymentType={selectedDeploymentType}

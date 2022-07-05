@@ -48,7 +48,6 @@ import css from '../../AzureWebAppServiceConfig.module.scss'
 function AzureWebAppServiceConfigWizardStepOne({
   handleConnectorViewChange,
   handleStoreChange,
-  stepName,
   isReadonly,
   connectorTypes,
   initialValues,
@@ -56,7 +55,8 @@ function AzureWebAppServiceConfigWizardStepOne({
   allowableTypes,
   prevStepData,
   nextStep,
-  title
+  title,
+  subTitle
 }: StepProps<ConnectorConfigDTO> & AzureWebAppServicesStepOneProps): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -114,7 +114,7 @@ function AzureWebAppServiceConfigWizardStepOne({
       initValues.connectorRef = prevStepData.connectorRef
       handleStoreChange(selectedStore)
     }
-    if (selectedStore !== initValues.store) {
+    if (selectedStore !== initValues.store && selectedStore !== prevStepData?.store) {
       initValues.connectorRef = ''
     }
     return { ...initValues, store: selectedStore }
@@ -137,7 +137,7 @@ function AzureWebAppServiceConfigWizardStepOne({
       </Text>
 
       <Text font={{ variation: FontVariation.H6 }} margin={{ bottom: 'medium' }}>
-        {`${getString('common.specify')} ${stepName}`}
+        {subTitle}
       </Text>
 
       <Formik
