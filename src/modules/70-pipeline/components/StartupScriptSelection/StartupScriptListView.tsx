@@ -123,6 +123,7 @@ function StartupScriptListView({
     }
   }
 
+  /* istanbul ignore next */
   const updateStageData = (): void => {
     const path = isPropagating
       ? 'stage.spec.serviceConfig.stageOverrides.startupScript'
@@ -137,6 +138,7 @@ function StartupScriptListView({
     }
   }
 
+  /* istanbul ignore next */
   const handleSubmit = (script: StoreConfigWrapper): void => {
     startupScript = script
     updateStageData()
@@ -149,11 +151,13 @@ function StartupScriptListView({
     refetchConnectors()
   }
 
+  /* istanbul ignore next */
   const handleConnectorViewChange = (isConnectorView: boolean): void => {
     setConnectorView(isConnectorView)
     setIsEditMode(false)
   }
 
+  /* istanbul ignore next */
   const handleStoreChange = (type?: ConnectorTypes): void => {
     setConnectorType(type || '')
   }
@@ -171,6 +175,7 @@ function StartupScriptListView({
     }
   }, [connectorType])
 
+  /* istanbul ignore next */
   const getBuildPayload = (type: ConnectorInfoDTO['type']) => {
     if (type === Connectors.GIT) {
       return buildGitPayload
@@ -189,6 +194,7 @@ function StartupScriptListView({
 
   const getLastStepInitialData = (): StoreConfigWrapper => {
     const initValues = startupScript
+    /* istanbul ignore next */
     if (get(initValues, 'spec.store.type') && get(initValues, 'spec.store.type') !== connectorType) {
       return null as unknown as StoreConfigWrapper
     }
@@ -203,6 +209,7 @@ function StartupScriptListView({
     const type = ConnectorMap[connectorType]
     if (type) {
       const buildPayload = getBuildPayload(type)
+      /* istanbul ignore next */
       return (
         <StepWizard title={getString('connectors.createNewConnector')}>
           <ConnectorDetailsStep
@@ -306,7 +313,7 @@ function StartupScriptListView({
                 <Text lineClamp={1} width={300}>
                   <span className={css.noWrap}>
                     {typeof get(script, 'spec.store.spec.paths') === 'string'
-                      ? get(script, 'spec.store.spec.paths')
+                      ? /* istanbul ignore next */ get(script, 'spec.store.spec.paths')
                       : get(script, 'spec.store.spec.paths').join(', ')}
                   </span>
                 </Text>
