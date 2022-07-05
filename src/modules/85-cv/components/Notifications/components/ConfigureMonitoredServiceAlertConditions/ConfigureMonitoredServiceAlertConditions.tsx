@@ -17,7 +17,7 @@ import {
   Text
 } from '@harness/uicore'
 import React, { useCallback, useMemo, useState } from 'react'
-import { Form } from 'formik'
+import { Form, FormikErrors } from 'formik'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import RbacButton from '@rbac/components/Button/Button'
@@ -37,6 +37,7 @@ import {
   SRMNotificationType
 } from '../../NotificationsContainer.types'
 import css from './ConfigureMonitoredServiceAlertConditions.module.scss'
+import { set } from 'lodash-es'
 
 export default function ConfigureMonitoredServiceAlertConditions({
   prevStepData,
@@ -99,9 +100,10 @@ export default function ConfigureMonitoredServiceAlertConditions({
     return (
       <Container padding={{ top: 'medium' }} className={css.notificationRulesContainer}>
         {conditions.length
-          ? conditions.map(notificationRule => {
+          ? conditions.map((notificationRule, index) => {
               return (
                 <NotificationRuleRow
+                  index={index}
                   key={notificationRule?.id}
                   showDeleteNotificationsIcon={showDeleteNotificationsIcon}
                   notificationRule={notificationRule}
@@ -146,7 +148,20 @@ export default function ConfigureMonitoredServiceAlertConditions({
         initialValues={{ ...prevStepData, conditions: [createNotificationRule()] }}
         formName="notificationsOverview"
         onSubmit={() => {
-          nextStep?.(dataTillCurrentStep)
+          const errors: FormikErrors<NotificationConditions> = {}
+          const emptyConditions = dataTillCurrentStep?.conditions?.filter(condition => condition?.condition === null)
+
+          if (Array.isArray(emptyConditions) && emptyConditions.length) {
+            emptyConditions.forEach((condition, index: number) => {
+              set(errors, `conditions.${index}.condition`, `Field is required`)
+            })
+          } else {
+            nextStep?.(dataTillCurrentStep)
+          }
+        }}
+        validate={data => {
+          // todo
+          // debugger
         }}
       >
         {() => {

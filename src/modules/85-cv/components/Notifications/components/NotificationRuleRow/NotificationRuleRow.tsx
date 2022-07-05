@@ -8,6 +8,7 @@
 import {
   Button,
   Container,
+  FormInput,
   Layout,
   MultiSelectDropDown,
   MultiSelectOption,
@@ -162,7 +163,8 @@ export default function NotificationRuleRow({
   notificationRule,
   showDeleteNotificationsIcon,
   handleDeleteNotificationRule,
-  handleChangeField
+  handleChangeField,
+  index
 }: NotificationRuleRowProps): JSX.Element {
   const { getString } = useStrings()
   const { changeType, id, condition, threshold } = notificationRule
@@ -172,8 +174,8 @@ export default function NotificationRuleRow({
       <Layout.Horizontal padding={{ top: 'large' }} key={id} spacing="medium">
         <Layout.Vertical spacing="xsmall" padding={{ right: 'small' }}>
           <Text>{getString('cv.notifications.condition')}</Text>
-          <Select
-            name={`${id}.condition`}
+          <FormInput.Select
+            name={`conditions.${index}.condition`}
             className={css.conditionField}
             value={condition}
             items={conditionOptions}
