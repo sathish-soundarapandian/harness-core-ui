@@ -1172,6 +1172,7 @@ lastModified: 'Last Modified'
 appServiceConfig:
   title: Azure Web App Configuration
 appServiceConfig:
+  title: Azure Web App Configuration
   applicationSettings:
     name: Application Settings
     file: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File'
