@@ -1,0 +1,166 @@
+import React, { CSSProperties, ReactChild } from 'react'
+import {
+  MultiTypeInputType,
+  getMultiTypeFromValue,
+  RUNTIME_INPUT_VALUE,
+  FormError,
+  FormikTooltipContext,
+  DataTooltipInterface,
+  HarnessDocTooltip,
+  FormInput,
+  EXECUTION_TIME_INPUT_VALUE,
+  Container,
+  Text
+} from '@harness/uicore'
+import { IFormGroupProps, Intent, FormGroup } from '@blueprintjs/core'
+import { FormikContextType, connect } from 'formik'
+import { get } from 'lodash-es'
+import { errorCheck } from '@common/utils/formikHelpers'
+import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/MultiTypeSelectorButton'
+
+import css from './MultiConfigSelectField.module.scss'
+
+export interface MultiTypeFieldSelectorProps extends Omit<IFormGroupProps, 'label' | 'placeholder'> {
+  children: Exclude<React.ReactNode, null | undefined>
+  name: string
+  label: string | ReactChild
+  defaultValueToReset?: unknown
+  style?: CSSProperties
+  disableTypeSelection?: boolean
+  skipRenderValueInExpressionLabel?: boolean
+  expressionRender?(): React.ReactNode
+  allowedTypes?: MultiTypeInputType[]
+  useExecutionTimeInput?: boolean
+  isOptional?: boolean
+  optionalLabel?: string
+  tooltipProps?: DataTooltipInterface
+  disableMultiSelectBtn?: boolean
+  onTypeChange?: (type: MultiTypeInputType) => void
+  hideError?: boolean
+  supportListOfExpressions?: boolean
+  index?: number
+  defaultType?: string
+  value?: string
+  localId?: string
+  changed?: boolean
+  values?: string | string[]
+  isInputField?: boolean
+}
+
+export interface ConnectedMultiTypeFieldSelectorProps extends MultiTypeFieldSelectorProps {
+  formik: FormikContextType<any>
+}
+
+export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelectorProps): React.ReactElement | null {
+  const {
+    formik,
+    label,
+    name,
+    children,
+    defaultValueToReset,
+    disableTypeSelection,
+    allowedTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
+    expressionRender,
+    skipRenderValueInExpressionLabel,
+    isOptional,
+    disableMultiSelectBtn,
+    hideError,
+    optionalLabel = '(optional)',
+    onTypeChange,
+    supportListOfExpressions,
+    useExecutionTimeInput,
+    defaultType,
+    changed,
+    localId,
+    isInputField = true,
+    values,
+    ...restProps
+  } = props
+  const error = get(formik?.errors, name)
+  const hasError = errorCheck(name, formik) && typeof error === 'string'
+  const showError = hasError && !hideError
+  const labelText = !isOptional ? label : `${label} ${optionalLabel}`
+  const {
+    intent = showError ? Intent.DANGER : Intent.NONE,
+    helperText = showError ? <FormError name={name} errorMessage={get(formik?.errors, name)} /> : null,
+    disabled,
+    ...rest
+  } = restProps
+
+  const tooltipContext = React.useContext(FormikTooltipContext)
+  const dataTooltipId =
+    props.tooltipProps?.dataTooltipId || (tooltipContext?.formName ? `${tooltipContext?.formName}_${name}` : '')
+
+  const value: string = get(formik?.values, name, '')
+
+  const [type, setType] = React.useState(getMultiTypeFromValue(value, allowedTypes, supportListOfExpressions))
+
+  React.useEffect(() => {
+    setType(getMultiTypeFromValue(value, allowedTypes, supportListOfExpressions))
+  }, [changed, setType])
+
+  function handleChange(newType: MultiTypeInputType): void {
+    setType(newType)
+    onTypeChange?.(newType)
+
+    if (newType === type) {
+      return
+    }
+
+    const runtimeValue = useExecutionTimeInput ? EXECUTION_TIME_INPUT_VALUE : RUNTIME_INPUT_VALUE
+    formik.setFieldValue(name, newType === MultiTypeInputType.RUNTIME ? runtimeValue : defaultValueToReset)
+  }
+
+  if (
+    type === MultiTypeInputType.RUNTIME &&
+    getMultiTypeFromValue(value, allowedTypes, supportListOfExpressions) !== MultiTypeInputType.RUNTIME
+  ) {
+    setType(getMultiTypeFromValue(value, allowedTypes, supportListOfExpressions))
+  }
+
+  return (
+    <FormGroup
+      {...rest}
+      //   className={type === MultiTypeInputType.RUNTIME ? css.formGroup : ''}
+      labelFor={name}
+      helperText={helperText}
+      intent={intent}
+      disabled={disabled}
+      label={
+        <div className={css.formLabel}>
+          <HarnessDocTooltip tooltipId={dataTooltipId} labelText={labelText} />
+          {/* {disableTypeSelection
+            ? null
+            : isInputField && (
+                <MultiTypeSelectorButton
+                  allowedTypes={allowedTypes}
+                  type={type}
+                  onChange={handleChange}
+                  disabled={disableMultiSelectBtn}
+                />
+              )} */}
+        </div>
+      }
+    >
+      <Container flex className={css.selectFieldContainer}>
+        {disableTypeSelection || type === MultiTypeInputType.FIXED ? (
+          children
+        ) : type === MultiTypeInputType.EXPRESSION && typeof expressionRender === 'function' ? (
+          expressionRender()
+        ) : type === MultiTypeInputType.RUNTIME && typeof value === 'string' ? (
+          <FormInput.Text className={css.runtimeDisabled} name={name} disabled label="" />
+        ) : null}
+        {disableTypeSelection ? null : (
+          <MultiTypeSelectorButton
+            allowedTypes={allowedTypes}
+            type={type}
+            onChange={handleChange}
+            disabled={disableMultiSelectBtn}
+          />
+        )}
+      </Container>
+    </FormGroup>
+  )
+}
+
+export default connect<MultiTypeFieldSelectorProps>(MultiTypeConfigFileSelect)

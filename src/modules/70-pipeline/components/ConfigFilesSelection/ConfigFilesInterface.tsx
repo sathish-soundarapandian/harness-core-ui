@@ -51,6 +51,6 @@ export interface ConfigFileFileStoreNode {
 export interface ConfigInitStepData {
   identifier: string
   store: ConfigFileType
-  files: ConfigFileFileStoreNode[] | string[]
+  files: ConfigFileFileStoreNode[] | string[] | string
   fileType: string
 }

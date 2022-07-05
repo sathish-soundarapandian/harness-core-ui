@@ -159,10 +159,6 @@ ConfigFilesListViewProps): JSX.Element {
     }
   }
 
-  React.useEffect(() => {
-    console.log('stage', stage)
-  }, [stage])
-
   const updateStageData = (): void => {
     const path = isPropagating
       ? 'stage.spec.serviceConfig.stageOverrides.configFiles'
@@ -200,7 +196,8 @@ ConfigFilesListViewProps): JSX.Element {
     // refetchConnectors()
   }
   const commonLastStepProps = {
-    handleSubmit
+    handleSubmit,
+    expressions
   }
   const getLastSteps = useCallback((): Array<React.ReactElement<StepProps<any>>> => {
     const arr: Array<React.ReactElement<StepProps<any>>> = []
@@ -210,6 +207,7 @@ ConfigFilesListViewProps): JSX.Element {
       case configDetailStep === ConfigFilesToConnectorMap.Harness:
         configDetailStep = (
           <HarnessConfigStep
+            {...commonProps}
             stepName={getString('pipeline.configFiles.title')}
             name={getString('pipeline.configFiles.title')}
             initialValues={getInitialValues()}
@@ -220,6 +218,7 @@ ConfigFilesListViewProps): JSX.Element {
       default:
         configDetailStep = (
           <HarnessConfigStep
+            {...commonProps}
             stepName={getString('pipeline.configFiles.title')}
             name={getString('pipeline.configFiles.title')}
             initialValues={getInitialValues()}
@@ -334,6 +333,7 @@ ConfigFilesListViewProps): JSX.Element {
   }
 
   const editConfigFile = (configFileType: ConfigFileType, index: number): void => {
+    setIsEditMode(true)
     setIsNewFile(false)
     setConfigStore(configFileType)
     setSelectedConfig(configFileType)
@@ -371,8 +371,6 @@ ConfigFilesListViewProps): JSX.Element {
         <div className={css.createConnectorWizard}>
           <ConfigFilesWizard
             types={allowedConfigFilesTypes[deploymentType]}
-            // types={allowedManifestTypes[deploymentType]}
-            // manifestStoreTypes={ManifestTypetoStoreMap[selectedManifest as ManifestTypes]}
             labels={getLabels()}
             newConnectorView={newConnectorView}
             expressions={expressions}

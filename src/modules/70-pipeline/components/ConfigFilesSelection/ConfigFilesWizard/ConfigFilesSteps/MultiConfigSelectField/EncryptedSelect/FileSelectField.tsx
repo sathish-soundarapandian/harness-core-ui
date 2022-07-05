@@ -1,6 +1,8 @@
 import React from 'react'
 import { connect, FormikContextType } from 'formik'
-import { Layout, Icon, Container, Text, Tag } from '@harness/uicore'
+import { Link } from 'react-router-dom'
+
+import { Layout, Icon, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { get, isPlainObject, defaultTo } from 'lodash-es'
 import { FormGroup, Intent } from '@blueprintjs/core'
@@ -20,6 +22,7 @@ interface SelectEncryptedProps {
   readonly?: boolean
   placeholder?: string
   field: any
+  allowSelection: boolean
 }
 
 interface FormikFileSelectInput extends SelectEncryptedProps {
@@ -33,13 +36,8 @@ interface EncryptedData {
 
 function FileSelectField(props: SelectEncryptedProps) {
   const { getString } = useStrings()
-  const { formik, name, placeholder, readonly = false } = props
-  const fileSelectedValue = get(formik.values, name) || ''
-
-  React.useEffect(() => {
-    console.log('props', props)
-    console.log('value', get(formik.values, name))
-  }, [props])
+  const { formik, name, placeholder, readonly = false, allowSelection = true } = props
+  const secretValue = get(formik.values, name) || ''
 
   const { openCreateOrSelectSecretModal } = useCreateOrSelectSecretModal(
     {
@@ -79,19 +77,14 @@ function FileSelectField(props: SelectEncryptedProps) {
             ...commonProps,
             scope: getString('orgLabel')
           }
-        case Scope.PROJECT:
-          return {
-            ...commonProps,
-            scope: getString('projectLabel')
-          }
         default:
           return {
             scope: '',
-            identifier: ''
+            identifier: get(formik.values, name)
           }
       }
     }
-    return getData(fileSelectedValue)
+    return getData(secretValue)
   }, [formik.values])
 
   const errorCheck = (): boolean =>
@@ -99,40 +92,40 @@ function FileSelectField(props: SelectEncryptedProps) {
       get(formik?.errors, name) &&
       !isPlainObject(get(formik?.errors, name))) as boolean
 
-  // const { scope, identifier } = getData(get(formik.values, name))
-  // console.log('identifier', identifier)
+  const getPlaceHolder = (): string => {
+    if (placeholder) {
+      return placeholder
+    }
+
+    return allowSelection ? getString('createOrSelectSecret') : getString('secrets.createSecret')
+  }
   return (
     <FormGroup
       helperText={errorCheck() ? get(formik?.errors, name) : null}
       intent={errorCheck() ? Intent.DANGER : Intent.NONE}
       style={{ width: '100%' }}
     >
-      <Layout.Vertical>
-        <Container
-          flex={{ alignItems: 'center', justifyContent: 'space-between' }}
-          className={css.container}
-          onClick={() => {
-            if (!readonly) {
-              openCreateOrSelectSecretModal()
-            }
+      <Layout.Vertical className={css.container}>
+        <Link
+          to="#"
+          className={css.containerLink}
+          data-testid={name}
+          onClick={e => {
+            e.preventDefault()
+            openCreateOrSelectSecretModal()
           }}
         >
-          {data.identifier ? (
-            <Container flex>
-              <Text lineClamp={1} color={Color.GREY_900} padding={{ left: 'xsmall' }}>
-                {data.identifier}
-              </Text>
-            </Container>
-          ) : (
-            <Text color={Color.GREY_500} padding={{ left: 'xsmall' }}>
-              - {placeholder_} -
-            </Text>
-          )}
-          <Container padding={{ right: 'small' }}>
-            {data.scope ? <Tag>{data.scope.toUpperCase()}</Tag> : null}
-            <Icon name="chevron-down" margin={{ right: 'small', left: 'small' }} />
-          </Container>
-        </Container>
+          <Icon size={24} height={12} name={'key-main'} />
+          <Text
+            color={Color.PRIMARY_7}
+            flex={{ alignItems: 'center', justifyContent: 'flex-start', inline: false }}
+            padding="small"
+            className={css.containerLinkText}
+          >
+            <div>{secretValue ? getString('secrets.secret.configureSecret') : getPlaceHolder()}</div>
+            {data.identifier ? <div>{data.identifier}</div> : null}
+          </Text>
+        </Link>
       </Layout.Vertical>
     </FormGroup>
   )

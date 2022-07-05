@@ -21,14 +21,13 @@ import { Color } from '@harness/design-system'
 import { get, isPlainObject, defaultTo } from 'lodash-es'
 import { FormGroup, Intent } from '@blueprintjs/core'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { v4 as nameSpace, v5 as uuid } from 'uuid'
 
 import { useStrings } from 'framework/strings'
 import useFileStoreModal from '@filestore/components/FileStoreComponent/FileStoreComponent'
 import { FileStoreNodeTypes } from '@filestore/interfaces/FileStore'
 import folderImage from '@filestore/images/closed-folder.svg'
 
-import css from './FileSelectField.module.scss'
+import css from './FileStoreSelectField.module.scss'
 
 export interface FileStoreSelectProps {
   name: string
@@ -37,38 +36,55 @@ export interface FileStoreSelectProps {
   placeholder?: string
   readonly?: boolean
   formik: FormikContextType<any>
-  id: string | number
-  index: number
 }
 
-// interface FormikFileStoreInput extends FileStoreSelectProps {
-//   formik: FormikContextType<any>
-// }
+interface FormikFileStoreInput extends FileStoreSelectProps {
+  formik: FormikContextType<any>
+}
 
-function FileStoreMultiSelect(props: FileStoreSelectProps): React.ReactElement {
+export interface FileStoreFieldData {
+  path: string
+  scope?: string
+}
+
+function FileStoreInput(props: FormikFileStoreInput): React.ReactElement {
   const { getString } = useStrings()
-  const { formik, label, name, tooltipProps, placeholder, readonly = false, index } = props
+  const { formik, label, name, tooltipProps, placeholder, readonly = false } = props
   const fileStoreValue = get(formik.values, name)
+  const prepareFileStoreValue = (scopeType: string, path: string): string => {
+    switch (scopeType) {
+      case Scope.ACCOUNT:
+      case Scope.ORG:
+        return `${scopeType}:${path}`
+      default:
+        return `${path}`
+    }
+  }
   const modalFileStore = useFileStoreModal({
     applySelected: value => {
-      formik.setFieldValue(name, { ...value, id: Math.random() })
+      const { scope, path } = value
+      formik.setFieldValue(name, prepareFileStoreValue(scope, path))
     }
   })
   const placeholder_ = defaultTo(placeholder, getString('select'))
 
-  const getScope = (scopeType: string): string => {
-    switch (scopeType) {
+  const getScope = (fsValue: string): FileStoreFieldData => {
+    const [scope, path] = (fsValue && fsValue.split(':')) || ['', '']
+    switch (scope) {
       case Scope.ACCOUNT:
-        return getString('account')
       case Scope.ORG:
-        return getString('orgLabel')
-      case Scope.PROJECT:
-        return getString('projectLabel')
+        return {
+          scope,
+          path
+        }
       default:
-        return getString('account')
+        return {
+          scope: Scope.PROJECT,
+          path: fsValue || ''
+        }
     }
   }
-
+  const { scope, path } = (fileStoreValue && getScope(fileStoreValue)) || {}
   const errorCheck = (): boolean =>
     ((get(formik?.touched, name) || (formik?.submitCount && formik?.submitCount > 0)) &&
       get(formik?.errors, name) &&
@@ -99,13 +115,10 @@ function FileStoreMultiSelect(props: FileStoreSelectProps): React.ReactElement {
             }
           }}
         >
-          {fileStoreValue?.name ? (
+          {fileStoreValue && path ? (
             <Container flex>
-              {fileStoreValue?.type && fileStoreValue.type === FileStoreNodeTypes.FOLDER && (
-                <img alt="folder" src={folderImage} style={{ marginRight: 8, marginLeft: 4 }} />
-              )}
               <Text lineClamp={1} color={Color.GREY_900} padding={{ left: 'xsmall' }}>
-                {fileStoreValue?.name}
+                {path}
               </Text>
             </Container>
           ) : (
@@ -114,7 +127,7 @@ function FileStoreMultiSelect(props: FileStoreSelectProps): React.ReactElement {
             </Text>
           )}
           <Container padding={{ right: 'small' }}>
-            {fileStoreValue?.scope ? <Tag>{getScope(fileStoreValue?.scope).toUpperCase()}</Tag> : null}
+            {fileStoreValue && scope ? <Tag>{scope.toUpperCase()}</Tag> : null}
             <Icon name="chevron-down" margin={{ right: 'small', left: 'small' }} />
           </Container>
         </Container>
@@ -123,4 +136,4 @@ function FileStoreMultiSelect(props: FileStoreSelectProps): React.ReactElement {
   )
 }
 
-export default FileStoreMultiSelect
+export default connect<Omit<FormikFileStoreInput, 'formik'>>(FileStoreInput)

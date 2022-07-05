@@ -6,8 +6,19 @@
  */
 
 import React, { useState } from 'react'
-import { Button, ButtonVariation, Text, Container, Formik, Layout, StepProps, FormInput } from '@harness/uicore'
-import { Form } from 'formik'
+import {
+  Button,
+  ButtonVariation,
+  Text,
+  Container,
+  Formik,
+  Layout,
+  StepProps,
+  FormInput,
+  getMultiTypeFromValue,
+  MultiTypeInputType
+} from '@harness/uicore'
+import { Form, yupToFormErrors } from 'formik'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 // import { defaultTo, merge } from 'lodash-es'
@@ -17,7 +28,7 @@ import type { ConfigFileWrapper, StoreConfigWrapper } from 'services/cd-ng'
 import { StringUtils } from '@common/exports'
 
 import { useStrings } from 'framework/strings'
-import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
+import { FILE_TYPE_VALUES, prepareConfigFilesValue } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { MultiConfigSelectField } from './MultiConfigSelectField/MultiConfigSelectField'
 
 // import { ConfigFileIconByType, ConfigFileTypeTitle } from '../../ConfigFilesHelper'
@@ -31,6 +42,8 @@ interface ConfigFilesPropType {
   //   configFileInitialValue?: any
   stepName: string
   handleSubmit: any
+  expressions: string[]
+  isEditMode: boolean
 }
 
 // interface ConfigFileData {
@@ -49,7 +62,9 @@ export function HarnessConfigStep({
   prevStepData,
   previousStep,
   //   nextStep,
-  handleSubmit
+  handleSubmit,
+  expressions,
+  isEditMode
 }: StepProps<any> & ConfigFilesPropType): React.ReactElement {
   //   const gotoNextStep = (): void => {
   //     nextStep?.()
@@ -59,24 +74,32 @@ export function HarnessConfigStep({
 
   const [initialValues, setInitialValues] = useState({
     identifier: '',
-    files: [],
+    files: [''],
     fileType: FILE_TYPE_VALUES.FILE_STORE,
     store: ''
   })
 
   React.useEffect(() => {
-    console.log('prevStepData', prevStepData)
+    if (!isEditMode) {
+      setInitialValues({
+        ...initialValues,
+
+        ...prevStepData,
+        secretFiles: undefined
+      })
+      return
+    }
     setInitialValues({
       ...initialValues,
       ...prevStepData,
       files: prevStepData?.files?.length > 0 ? prevStepData.files : prevStepData.secretFiles,
-      secretFiles: undefined,
-      fileType: prevStepData?.fileType ? prevStepData.fileType : FILE_TYPE_VALUES.FILE_STORE
+      secretFiles: undefined
+      //   fileType: prevStepData?.fileType ? prevStepData.fileType : FILE_TYPE_VALUES.FILE_STORE
     })
   }, [prevStepData])
 
   const submitFormData = (formData: ConfigFileHarnessDataType & { store?: string }): void => {
-    const { fileType } = formData
+    const { files, secretFiles } = prepareConfigFilesValue(formData)
     const configFileObj: ConfigFileWrapper = {
       configFile: {
         identifier: formData.identifier,
@@ -84,14 +107,8 @@ export function HarnessConfigStep({
           store: {
             type: formData?.store as StoreConfigWrapper['type'],
             spec: {
-              files:
-                fileType === FILE_TYPE_VALUES.FILE_STORE
-                  ? formData?.files?.map(({ path, scope }) => ({
-                      path,
-                      scope
-                    }))
-                  : undefined,
-              secretFiles: fileType === FILE_TYPE_VALUES.ENCRYPTED ? formData?.files.map(path => path) : undefined
+              files,
+              secretFiles
             }
           }
           // configOverridePath: formData.configOverridePath
@@ -107,93 +124,102 @@ export function HarnessConfigStep({
       <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
         {stepName}
       </Text>
-      <Formik
-        initialValues={initialValues}
-        formName="configFileDetails"
-        validationSchema={Yup.object().shape({
-          identifier: Yup.string().required(getString('pipeline.configFiles.error.identifier')),
-          fileType: Yup.string().required(getString('pipeline.configFiles.error.fileType')),
-          files: Yup.array()
-            .of(
-              Yup.object().shape({
-                path: Yup.string().required(getString('pipeline.configFiles.error.file'))
-              })
+      {initialValues.store && (
+        <Formik
+          initialValues={initialValues}
+          formName="configFileDetails"
+          validationSchema={Yup.object().shape({
+            identifier: Yup.string().required(getString('pipeline.configFiles.error.identifier')),
+            files: Yup.lazy(value =>
+              Array.isArray(value) ? Yup.array().of(Yup.string().required()) : Yup.string().required()
             )
-            .required(getString('pipeline.configFiles.error.files'))
-        })}
-        onSubmit={formData => {
-          submitFormData({
-            ...prevStepData,
-            ...formData
-          })
-        }}
-        enableReinitialize={true}
-      >
-        {formikProps => {
-          console.log('formikProps', formikProps)
-          return (
-            <Form>
-              <div className={css.headerContainer}>
-                <FormInput.Text
-                  name="identifier"
-                  label={getString('pipeline.configFiles.identifierLabel')}
-                  className={css.identifierField}
-                  onChange={e => {
-                    formikProps.setFieldValue('identifier', StringUtils.getIdentifierFromName(e.target.value))
-                  }}
-                />
-                <FormInput.RadioGroup
-                  name="fileType"
-                  className={css.selectFileType}
-                  radioGroup={{ inline: true }}
-                  label={getString('pipeline.configFiles.selectFileType')}
-                  onChange={() => {
-                    formikProps.setFieldValue('files', [{}])
-                  }}
-                  items={[
-                    {
-                      label: getString('resourcePage.fileStore'),
-                      value: FILE_TYPE_VALUES.FILE_STORE
-                      //   disabled: false
-                    },
-                    { label: getString('encrypted'), value: FILE_TYPE_VALUES.ENCRYPTED }
-                  ]}
-                />
-                <MultiConfigSelectField
-                  name="files"
-                  fileType={formikProps.values.fileType}
-                  formik={formikProps}
-                  multiTypeFieldSelectorProps={{
-                    disableTypeSelection: false,
-                    label: (
-                      <Text style={{ display: 'flex', alignItems: 'center', color: 'rgb(11, 11, 13)' }}>
-                        {formikProps.values.fileType === FILE_TYPE_VALUES.FILE_STORE
-                          ? getString('fileFolderPathText')
-                          : getString('pipeline.configFiles.encryptedFiles')}
-                      </Text>
-                    )
-                  }}
-                />
-              </div>
-              <Layout.Horizontal>
-                <Button
-                  text={getString('back')}
-                  icon="chevron-left"
-                  variation={ButtonVariation.SECONDARY}
-                  onClick={() => previousStep?.()}
-                />
-                <Button
-                  variation={ButtonVariation.PRIMARY}
-                  type="submit"
-                  // disabled={selectedConfigFile === null}
-                  text={getString('continue')}
-                  rightIcon="chevron-right"
-                />
-              </Layout.Horizontal>
-            </Form>
-          )
-        }}
-      </Formik>
+            // files: Yup.mixed()
+            //   .when('isArray', {
+            //     is: Array.isArray,
+            //     then: Yup.array().of(Yup.string().required()),
+            //     otherwise: Yup.string().required()
+            //   })
+            //   .required(getString('pipeline.configFiles.error.files'))
+            //   .when('files', data => Array.isArray(data))
+          })}
+          onSubmit={formData => {
+            submitFormData({
+              ...prevStepData,
+              ...formData
+            })
+          }}
+          enableReinitialize={true}
+        >
+          {formikProps => {
+            console.log('formikProps', formikProps)
+            return (
+              <Form>
+                <div className={css.headerContainer}>
+                  <FormInput.Text
+                    name="identifier"
+                    label={getString('pipeline.configFiles.identifierLabel')}
+                    className={css.identifierField}
+                    onChange={e => {
+                      formikProps.setFieldValue('identifier', StringUtils.getIdentifierFromName(e.target.value))
+                    }}
+                  />
+                  <FormInput.RadioGroup
+                    name="fileType"
+                    className={css.selectFileType}
+                    radioGroup={{ inline: true }}
+                    disabled={isEditMode}
+                    label={getString('pipeline.configFiles.selectFileType')}
+                    onChange={() => {
+                      formikProps.setFieldValue('files', [''])
+                    }}
+                    items={[
+                      {
+                        label: getString('resourcePage.fileStore'),
+                        value: FILE_TYPE_VALUES.FILE_STORE
+                        //   disabled: false
+                      },
+                      { label: getString('encrypted'), value: FILE_TYPE_VALUES.ENCRYPTED }
+                    ]}
+                  />
+                  <MultiConfigSelectField
+                    name="files"
+                    fileType={formikProps.values.fileType}
+                    formik={formikProps}
+                    expressions={expressions}
+                    values={formikProps.values.files}
+                    //   disabled={getMultiTypeFromValue(formikProps.values.files) === MultiTypeInputType.RUNTIME}
+                    multiTypeFieldSelectorProps={{
+                      disableTypeSelection: false,
+                      label: (
+                        <Text style={{ display: 'flex', alignItems: 'center', color: 'rgb(11, 11, 13)' }}>
+                          {formikProps.values.fileType === FILE_TYPE_VALUES.FILE_STORE
+                            ? getString('fileFolderPathText')
+                            : getString('pipeline.configFiles.encryptedFiles')}
+                        </Text>
+                      )
+                    }}
+                  />
+                </div>
+                <Layout.Horizontal>
+                  <Button
+                    text={getString('back')}
+                    icon="chevron-left"
+                    variation={ButtonVariation.SECONDARY}
+                    onClick={() => previousStep?.()}
+                  />
+                  <Button
+                    variation={ButtonVariation.PRIMARY}
+                    type="submit"
+                    disabled={formikProps.values.store === null}
+                    text={getString('continue')}
+                    rightIcon="chevron-right"
+                  />
+                </Layout.Horizontal>
+              </Form>
+            )
+          }}
+        </Formik>
+      )}
     </Container>
   )
 }

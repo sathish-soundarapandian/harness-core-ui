@@ -8,10 +8,13 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly fieldWrapper: string
+  readonly formLabel: string
   readonly group: string
   readonly minimalCard: string
   readonly multiSelectField: string
+  readonly runtimeDisabled: string
+  readonly selectFieldContainer: string
+  readonly text: string
   readonly withoutAligning: string
-  readonly withoutSpacing: string
 }
 export default styles

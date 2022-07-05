@@ -5,14 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { IconName } from '@harness/uicore'
+import { IconName, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { Connectors } from '@connectors/constants'
+import get from 'lodash/get'
 
 import type { StringKeys } from 'framework/strings'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 
-import type { ConfigFileType, ConfigFileStepTitle } from './ConfigFilesInterface'
+import type { ConfigFileType, ConfigFileStepTitle, ConfigFileHarnessDataType } from './ConfigFilesInterface'
 
 export const ConfigFilesMap: { [key: string]: ConfigFileType } = {
   Git: 'Git',
@@ -85,4 +86,83 @@ export const ConfigFilesToConnectorMap: Record<ConfigFileType | string, Connecto
 export enum FILE_TYPE_VALUES {
   ENCRYPTED = 'encrypted',
   FILE_STORE = 'fileStore'
+}
+
+export const prepareConfigFilesValue = (formData: ConfigFileHarnessDataType & { store?: string }) => {
+  const { fileType, files } = formData
+
+  const typeValue = getMultiTypeFromValue(
+    files,
+    [MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+    true
+  )
+  const isRunTime = typeValue === MultiTypeInputType.RUNTIME
+  const isFixed = typeValue === MultiTypeInputType.FIXED
+  const isExpression = typeValue === MultiTypeInputType.EXPRESSION
+  console.log('isRuntime', isRunTime)
+  const filesData: any = {
+    files: [],
+    secretFiles: []
+  }
+  console.log('FORMDATA', formData)
+  if (fileType === FILE_TYPE_VALUES.FILE_STORE && !isRunTime) {
+    console.log('fileType === FILE_TYPE_VALUES.FILE_STORE && !isRunTime', files)
+    filesData.files = formData?.files
+  }
+  if (fileType === FILE_TYPE_VALUES.FILE_STORE && isRunTime) {
+    console.log('fileType === FILE_TYPE_VALUES.FILE_STORE && isRunTime', files)
+
+    filesData.files = formData?.files
+  }
+
+  if (fileType === FILE_TYPE_VALUES.ENCRYPTED && !isRunTime) {
+    console.log('fileType === FILE_TYPE_VALUES.ENCRYPTED && !isRunTime', files)
+
+    filesData.secretFiles = formData?.files
+  }
+  if (fileType === FILE_TYPE_VALUES.ENCRYPTED && isRunTime) {
+    console.log('fileType === FILE_TYPE_VALUES.ENCRYPTED && isRunTime', files)
+
+    filesData.secretFiles = formData?.files
+  }
+
+  console.log('filesData', filesData)
+  return filesData
+}
+
+const prepareInitialValuesConfigFile = (
+  listOfConfigFiles: any,
+  configFileIndex: number,
+  configStore: string,
+  isNewFile: boolean
+) => {
+  const initValues = get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec', null)
+
+  let files
+  let fileType
+  if (Array.isArray(get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.secretFiles'))) {
+    files = get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.secretFiles', [])
+    fileType = FILE_TYPE_VALUES.ENCRYPTED
+  } else {
+    files = get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.files', [])
+    fileType = FILE_TYPE_VALUES.FILE_STORE
+  }
+
+  if (initValues && !isNewFile) {
+    const values = {
+      ...initValues,
+      store: listOfConfigFiles[configFileIndex]?.configFile.spec?.store?.type,
+      identifier: get(listOfConfigFiles[configFileIndex], 'configFile.identifier', ''),
+      files: files || [],
+      secretFiles: get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.secretFiles', []),
+      fileType
+    }
+    return values
+  }
+  return {
+    store: configStore,
+    files: [],
+    identifier: '',
+    fileType: FILE_TYPE_VALUES.FILE_STORE
+  }
 }
