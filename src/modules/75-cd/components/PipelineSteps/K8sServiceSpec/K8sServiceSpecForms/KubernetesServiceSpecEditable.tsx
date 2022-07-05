@@ -11,7 +11,11 @@ import cx from 'classnames'
 import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/WorkflowVariables'
 import ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ArtifactsSelection'
 import ManifestSelection from '@pipeline/components/ManifestSelection/ManifestSelection'
-import { getSelectedDeploymentType, isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
+import {
+  getSelectedDeploymentType,
+  isServerlessDeploymentType,
+  ServiceDeploymentType
+} from '@pipeline/utils/stageHelpers'
 import { useStrings } from 'framework/strings'
 import type { ServiceDefinition } from 'services/cd-ng'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
@@ -35,6 +39,13 @@ const getArtifactsHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['
     return 'serverlessDeploymentTypeArtifacts'
   }
   return 'deploymentTypeArtifacts'
+}
+
+const getAppConfigHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
+  if (isServerlessDeploymentType(selectedDeploymentType)) {
+    return 'serverlessDeploymentTypeApplicationConfig'
+  }
+  return 'deploymentTypeApplicationConfig'
 }
 
 const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
@@ -78,15 +89,27 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
               readonly={!!readonly}
             />
           </Card>
-          <Card className={css.sectionCard} id={getString('pipeline.appServiceConfig.title')}>
-            <div className={css.tabSubHeading}>{getString('pipeline.appServiceConfig.title')}</div>
-            <AzureWebAppConfigSelection
-              isPropagating={isPropagating}
-              deploymentType={selectedDeploymentType}
-              isReadonlyServiceMode={isReadonlyServiceMode as boolean}
-              readonly={!!readonly}
-            />
-          </Card>
+
+          {selectedDeploymentType === ServiceDeploymentType.AzureWebApps && (
+            <Card className={css.sectionCard} id={getString('pipeline.appServiceConfig.title')}>
+              <div
+                className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+                data-tooltip-id={getAppConfigHeaderTooltipId(selectedDeploymentType)}
+              >
+                {getString('pipeline.appServiceConfig.title')}
+                <HarnessDocTooltip
+                  tooltipId={getAppConfigHeaderTooltipId(selectedDeploymentType)}
+                  useStandAlone={true}
+                />
+              </div>
+              <AzureWebAppConfigSelection
+                isPropagating={isPropagating}
+                deploymentType={selectedDeploymentType}
+                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                readonly={!!readonly}
+              />
+            </Card>
+          )}
 
           <Card
             className={css.sectionCard}

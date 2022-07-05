@@ -38,7 +38,7 @@ export function AzureWebAppServiceConfigWizard<T>({
         name={firstStepName}
         key={firstStepName}
         title={labels.firstStepTitle}
-        subTitle={labels.firstStepSubtitle}
+        subtitle={labels.firstStepSubtitle}
         stepName={firstStepName}
         expressions={expressions}
         allowableTypes={allowableTypes}
