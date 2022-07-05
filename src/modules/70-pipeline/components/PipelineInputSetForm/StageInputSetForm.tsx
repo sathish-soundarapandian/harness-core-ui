@@ -59,13 +59,13 @@ import {
   getStepTypeByDeploymentType,
   infraDefinitionTypeMapping
 } from '@pipeline/utils/stageHelpers'
+import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import type { K8sDirectInfraYaml } from 'services/ci'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { Connectors } from '@connectors/constants'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import factory from '../PipelineSteps/PipelineStepFactory'
 import { StepType } from '../PipelineSteps/PipelineStepInterface'
 import { CollapseForm } from './CollapseForm'
@@ -881,6 +881,25 @@ export function StageInputSetFormInternal({
         </div>
       )}
 
+      {isSvcEnvEntityEnabled && (deploymentStageTemplate as DeployStageConfig).environmentGroup?.envGroupRef && (
+        <div id={`Stage.${stageIdentifier}.EnvironmentGroup`} className={cx(css.accordionSummary)}>
+          <StepWidget
+            factory={factory}
+            initialValues={deploymentStage}
+            allowableTypes={allowableTypes}
+            template={deploymentStageTemplate}
+            type={StepType.DeployInfrastructure}
+            stepViewType={viewType}
+            path={`${path}.environmentGroup`}
+            readonly={readonly}
+            customStepProps={{
+              getString,
+              allValues: (deploymentStage as DeployStageConfig)?.environment
+            }}
+          />
+        </div>
+      )}
+
       {isSvcEnvEntityEnabled && (deploymentStageTemplate as DeployStageConfig).environment && (
         <div id={`Stage.${stageIdentifier}.Environment`} className={cx(css.accordionSummary)}>
           <StepWidget
@@ -897,49 +916,50 @@ export function StageInputSetFormInternal({
               allValues: (deploymentStage as DeployStageConfig)?.environment
             }}
           />
-          {(deploymentStageTemplate as DeployStageConfig).environment?.infrastructureDefinitions && (
-            <>
-              <div className={css.inputheader}>{getString('infrastructureText')}</div>
-              {(deploymentStageTemplate as DeployStageConfig).environment?.infrastructureDefinitions
-                ?.map((infrastructureDefinition, index) => {
-                  return (
-                    <StepWidget<Infrastructure>
-                      key={infrastructureDefinition.identifier}
-                      factory={factory}
-                      template={infrastructureDefinition.inputs?.spec}
-                      initialValues={{
-                        ...infrastructureDefinition.inputs?.spec,
-                        environmentRef: (deploymentStage as DeployStageConfig).environment?.environmentRef,
-                        infrastructureRef: infrastructureDefinition.identifier
-                      }}
-                      allowableTypes={allowableTypes}
-                      allValues={{
-                        ...(deploymentStage as DeployStageConfig)?.environment?.infrastructureDefinitions?.[index]
-                          ?.inputs?.spec,
-                        environmentRef: (deploymentStage as DeployStageConfig).environment?.environmentRef,
-                        infrastructureRef: infrastructureDefinition.identifier
-                      }}
-                      type={
-                        ((infraDefinitionTypeMapping[
-                          (deploymentStage as DeployStageConfig)?.environment?.infrastructureDefinitions?.[index]
-                            ?.inputs?.type as unknown as string
-                        ] ||
-                          (deploymentStage as DeployStageConfig)?.environment?.infrastructureDefinitions?.[index]
-                            ?.inputs?.type) as StepType) || StepType.KubernetesDirect
-                      }
-                      path={`${path}.environment.infrastructureDefinitions.${index}.inputs.spec`}
-                      readonly={readonly}
-                      stepViewType={viewType}
-                      customStepProps={getCustomStepProps(
-                        ((deploymentStage as DeployStageConfig)?.deploymentType as StepType) || '',
-                        getString
-                      )}
-                    />
-                  )
-                })
-                .filter(data => data)}
-            </>
-          )}
+          {(deploymentStageTemplate as DeployStageConfig).environment?.infrastructureDefinitions &&
+            ((deploymentStageTemplate as DeployStageConfig).environment
+              ?.infrastructureDefinitions as unknown as string) !== RUNTIME_INPUT_VALUE && (
+              <>
+                {(deploymentStageTemplate as DeployStageConfig).environment?.infrastructureDefinitions
+                  ?.map((infrastructureDefinition, index) => {
+                    return (
+                      <StepWidget<Infrastructure>
+                        key={infrastructureDefinition.identifier}
+                        factory={factory}
+                        template={infrastructureDefinition.inputs?.spec}
+                        initialValues={{
+                          ...infrastructureDefinition.inputs?.spec,
+                          environmentRef: (deploymentStage as DeployStageConfig).environment?.environmentRef,
+                          infrastructureRef: infrastructureDefinition.identifier
+                        }}
+                        allowableTypes={allowableTypes}
+                        allValues={{
+                          ...(deploymentStage as DeployStageConfig)?.environment?.infrastructureDefinitions?.[index]
+                            ?.inputs?.spec,
+                          environmentRef: (deploymentStage as DeployStageConfig).environment?.environmentRef,
+                          infrastructureRef: infrastructureDefinition.identifier
+                        }}
+                        type={
+                          ((infraDefinitionTypeMapping[
+                            (deploymentStage as DeployStageConfig)?.environment?.infrastructureDefinitions?.[index]
+                              ?.inputs?.type as unknown as string
+                          ] ||
+                            (deploymentStage as DeployStageConfig)?.environment?.infrastructureDefinitions?.[index]
+                              ?.inputs?.type) as StepType) || StepType.KubernetesDirect
+                        }
+                        path={`${path}.environment.infrastructureDefinitions.${index}.inputs.spec`}
+                        readonly={readonly}
+                        stepViewType={viewType}
+                        customStepProps={getCustomStepProps(
+                          ((deploymentStage as DeployStageConfig)?.deploymentType as StepType) || '',
+                          getString
+                        )}
+                      />
+                    )
+                  })
+                  .filter(data => data)}
+              </>
+            )}
         </div>
       )}
 

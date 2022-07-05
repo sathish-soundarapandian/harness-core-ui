@@ -3979,10 +3979,12 @@ export interface StringsMap {
   'cd.pipelineSteps.environmentTab.newEnvironment': string
   'cd.pipelineSteps.environmentTab.plusNewEnvironment': string
   'cd.pipelineSteps.environmentTab.selectEnvironment': string
+  'cd.pipelineSteps.environmentTab.selectEnvironmentGroup': string
   'cd.pipelineSteps.environmentTab.selectInfrastructure': string
   'cd.pipelineSteps.environmentTab.specifyEnvironmentOrGroup': string
   'cd.pipelineSteps.environmentTab.specifyGitOpsClusters': string
   'cd.pipelineSteps.environmentTab.specifyYourEnvironment': string
+  'cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup': string
   'cd.pipelineSteps.environmentTab.specifyYourInfrastructure': string
   'cd.pipelineSteps.executionTab.stepsCount': string
   'cd.pipelineSteps.infraTab.clusterError': string

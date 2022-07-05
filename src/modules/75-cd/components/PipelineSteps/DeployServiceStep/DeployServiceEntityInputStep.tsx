@@ -130,15 +130,18 @@ function DeployServiceEntityInputStep({
 
   useEffect(() => {
     const serviceInputsData = serviceInputsResponse?.data?.inputSetTemplateYaml
-
     if (serviceInputsData) {
       const serviceInputSetResponse = yamlParse<ServiceInputsConfig>(defaultTo(serviceInputsData, ''))
       if (serviceInputSetResponse) {
-        formik?.setFieldValue(
-          `${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}serviceInputs`,
-          clearRuntimeInput(serviceInputSetResponse?.serviceInputs)
-        )
         updateTemplate(serviceInputSetResponse?.serviceInputs, `${inputSetData?.path}.serviceInputs`)
+
+        const serviceInputsFormikValue = get(formik?.values, `${inputSetData?.path}.serviceInputs`)
+        if (isEmpty(serviceInputsFormikValue)) {
+          formik?.setFieldValue(
+            `${inputSetData?.path}.serviceInputs`,
+            clearRuntimeInput(serviceInputSetResponse?.serviceInputs)
+          )
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
