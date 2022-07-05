@@ -75,8 +75,8 @@ export default function AzureWebAppConfigSelection({
   })
 
   const applicationSettings = useMemo(() => {
-    /* istanbul ignore next */
     /* istanbul ignore else */
+    /* istanbul ignore next */
     if (isReadonlyServiceMode && !isEmpty(serviceInfo)) {
       return defaultTo(serviceInfo?.spec.applicationSettings, {})
     }
@@ -88,8 +88,8 @@ export default function AzureWebAppConfigSelection({
   }, [isReadonlyServiceMode, serviceInfo, isPropagating, stage])
 
   const connectionStrings = useMemo(() => {
-    /* istanbul ignore next */
     /* istanbul ignore else */
+    /* istanbul ignore next */
     if (isReadonlyServiceMode && !isEmpty(serviceInfo)) {
       return defaultTo(serviceInfo?.spec?.connectionStrings, {})
     }
@@ -105,13 +105,15 @@ export default function AzureWebAppConfigSelection({
   }, [stage, applicationSettings, connectionStrings, selectedOption])
 
   const getConnectorList = (): Array<{ scope: Scope; identifier: string }> => {
+    const applicationConnectorRef = applicationSettings?.spec?.store?.spec?.connectorRef
+    const connectionStringsConnectorRef = connectionStrings?.spec?.store?.spec?.connectorRef
     switch (selectedOption) {
       case ModalViewOption.APPLICATIONSETTING:
         return !isEmpty(applicationSettings)
           ? [
               {
-                scope: getScopeFromValue(applicationSettings?.spec?.store?.spec?.connectorRef),
-                identifier: getIdentifierFromValue(applicationSettings?.spec?.store?.spec?.connectorRef)
+                scope: getScopeFromValue(applicationConnectorRef),
+                identifier: getIdentifierFromValue(applicationConnectorRef)
               }
             ]
           : []
@@ -119,8 +121,8 @@ export default function AzureWebAppConfigSelection({
         return !isEmpty(connectionStrings)
           ? [
               {
-                scope: getScopeFromValue(connectionStrings?.spec?.store?.spec?.connectorRef),
-                identifier: getIdentifierFromValue(connectionStrings?.spec?.store?.spec?.connectorRef)
+                scope: getScopeFromValue(connectionStringsConnectorRef),
+                identifier: getIdentifierFromValue(connectionStringsConnectorRef)
               }
             ]
           : []
