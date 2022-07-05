@@ -12,13 +12,13 @@ import { Layout, shouldShowError, useToaster } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, get } from 'lodash-es'
 import { useCache } from '@common/hooks/useCache'
+import { useDeepCompareEffect } from '@common/hooks'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 
 import { PageConnectorResponse, useGetConnectorListV2 } from 'services/cd-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
-import { useDeepCompareEffect } from '@common/hooks'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import AzureWebAppListView from './AzureWebAppServiceConfigListView/AzureWebAppServiceListView'
@@ -47,7 +47,8 @@ export default function AzureWebAppConfigSelection({
   //for selecting which modal to open
   const [selectedOption, setSelectedOption] = React.useState<ModalViewOption | undefined>(undefined)
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
-  const [fetchedConnectorResponse, setFetchedConnectorResponse] = React.useState<PageConnectorResponse | undefined>()
+  const [stringsConnectorsResponse, setStringsConnectorResponse] = React.useState<PageConnectorResponse | undefined>()
+  const [settingsConnectorsResponse, setSettingsConnectorResponse] = React.useState<PageConnectorResponse | undefined>()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const getServiceCacheId = `${pipeline.identifier}-${selectedStageId}-service`
@@ -101,13 +102,17 @@ export default function AzureWebAppConfigSelection({
   }, [isReadonlyServiceMode, serviceInfo, isPropagating, stage])
 
   useDeepCompareEffect(() => {
-    refetchConnectorList()
-  }, [stage, applicationSettings, connectionStrings, selectedOption])
+    refetchSettingsConnectors()
+  }, [stage, applicationSettings, selectedOption])
 
-  const getConnectorList = (): Array<{ scope: Scope; identifier: string }> => {
+  useDeepCompareEffect(() => {
+    refetchStringsConnectors()
+  }, [stage, connectionStrings, selectedOption])
+
+  const getConnectorList = (option: ModalViewOption): Array<{ scope: Scope; identifier: string }> => {
     const applicationConnectorRef = applicationSettings?.spec?.store?.spec?.connectorRef
     const connectionStringsConnectorRef = connectionStrings?.spec?.store?.spec?.connectorRef
-    switch (selectedOption) {
+    switch (option) {
       case ModalViewOption.APPLICATIONSETTING:
         return !isEmpty(applicationSettings)
           ? [
@@ -126,19 +131,30 @@ export default function AzureWebAppConfigSelection({
               }
             ]
           : []
+      default:
+        return []
     }
-    return []
   }
 
-  const refetchConnectorList = async (): Promise<void> => {
+  const refetchStringsConnectors = async (): Promise<void> => {
+    const list = await refetchConnectorList(ModalViewOption.CONNECTIONSTRING)
+    setStringsConnectorResponse(list)
+  }
+
+  const refetchSettingsConnectors = async (): Promise<void> => {
+    const list = await refetchConnectorList(ModalViewOption.APPLICATIONSETTING)
+    setSettingsConnectorResponse(list)
+  }
+
+  const refetchConnectorList = async (option: ModalViewOption): Promise<PageConnectorResponse | undefined> => {
     try {
-      const connectorList = getConnectorList()
+      const connectorList = getConnectorList(option)
       const connectorIdentifiers = connectorList.map((item: { scope: string; identifier: string }) => item.identifier)
       const response = await fetchConnectors({ filterType: 'Connector', connectorIdentifiers })
       /* istanbul ignore else */
       if (get(response, 'data', null)) {
         const { data: connectorResponse } = response
-        setFetchedConnectorResponse(connectorResponse)
+        return connectorResponse
       }
     } catch (e) {
       /* istanbul ignore else */
@@ -152,8 +168,10 @@ export default function AzureWebAppConfigSelection({
     isPropagating,
     stage,
     updateStage,
-    connectors: fetchedConnectorResponse,
-    refetchConnectors: refetchConnectorList,
+    stringsConnectors: stringsConnectorsResponse,
+    settingsConnectors: settingsConnectorsResponse,
+    refetchStringsConnectors: refetchStringsConnectors,
+    refetchSettingsConnectors: refetchSettingsConnectors,
     isReadonly: readonly,
     deploymentType,
     allowableTypes,

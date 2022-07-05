@@ -41,7 +41,6 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../../AzureWebAppServiceConfig.module.scss'
 
 function AzureWebAppServiceStepTwo({
-  stepName,
   expressions,
   allowableTypes,
   initialValues,
@@ -49,7 +48,8 @@ function AzureWebAppServiceStepTwo({
   prevStepData,
   previousStep,
   isReadonly = false,
-  pathPlaceholder
+  pathPlaceholder,
+  title
 }: StepProps<ConnectorConfigDTO> & AzureWebAppServiceStepTwoProps): React.ReactElement {
   const { getString } = useStrings()
 
@@ -113,7 +113,7 @@ function AzureWebAppServiceStepTwo({
   return (
     <Layout.Vertical height={'inherit'} spacing="medium" className={css.optionsViewContainer}>
       <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
-        {stepName}
+        {title}
       </Text>
 
       <Formik
