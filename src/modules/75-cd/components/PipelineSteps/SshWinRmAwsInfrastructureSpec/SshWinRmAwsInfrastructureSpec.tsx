@@ -287,6 +287,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
           initialValues={{ ...initialValues } as SshWinRmAwsInfrastructureUI}
           validationSchema={getValidationSchema(getString) as Partial<SshWinRmAwsInfrastructureUI>}
           validate={value => {
+            /* istanbul ignore next */
             const credentialsRef = `${
               get(value, 'sshKey.projectIdentifier', '')
                 ? ''
