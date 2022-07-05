@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback } from 'react'
+import React from 'react'
 import {
   Accordion,
   Layout,
@@ -90,7 +90,7 @@ function K8sValuesManifest({
         : prevStepData?.url
       : null
 
-  const getInitialValues = useCallback((): K8sValuesManifestDataType => {
+  const getInitialValues = (): K8sValuesManifestDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
 
     if (specValues) {
@@ -118,7 +118,7 @@ function K8sValuesManifest({
       skipResourceVersioning: false,
       repoName: getRepositoryName(prevStepData, initialValues)
     }
-  }, [])
+  }
 
   const submitFormData = (formData: K8sValuesManifestDataType & { store?: string; connectorRef?: string }): void => {
     const manifestObj: ManifestConfigWrapper = {
@@ -326,6 +326,7 @@ function K8sValuesManifest({
                       fieldPath="paths"
                       pathLabel={getString('fileFolderPathText')}
                       placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                      defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                     />
                     {selectedManifest === ManifestDataType.K8sManifest && (
                       <DragnDropPaths
@@ -335,6 +336,7 @@ function K8sValuesManifest({
                         fieldPath="valuesPaths"
                         pathLabel={getString('pipeline.manifestType.valuesYamlPath')}
                         placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                        defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                       />
                     )}
                   </div>

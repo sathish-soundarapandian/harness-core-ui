@@ -627,9 +627,9 @@ export interface AddUsersResponse {
 }
 
 export type AmazonS3ArtifactConfig = ArtifactConfig & {
-  artifactPath: string
   bucketName: string
   connectorRef: string
+  filePath?: string
   filePathRegex?: string
 }
 
@@ -1587,6 +1587,11 @@ export interface ClusterResponse {
   projectIdentifier?: string
 }
 
+export interface ClusterYaml {
+  identifier: string
+  metadata?: string
+}
+
 export type CommandStepInfo = StepSpecType & {
   commandUnits?: CommandUnitWrapper[]
   delegateSelectors?: string[]
@@ -2338,9 +2343,14 @@ export interface DeploymentInfo {
 }
 
 export type DeploymentStageConfig = StageInfoConfig & {
+  deploymentType?: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps'
+  environment?: EnvironmentYamlV2
+  environmentGroup?: EnvironmentGroupYaml
   execution: ExecutionElementConfig
-  infrastructure: PipelineInfrastructure
-  serviceConfig: ServiceConfig
+  gitOpsEnabled?: boolean
+  infrastructure?: PipelineInfrastructure
+  service?: ServiceYamlV2
+  serviceConfig?: ServiceConfig
 }
 
 export interface DeploymentStatsSummary {
@@ -2822,6 +2832,13 @@ export interface EnvironmentGroupResponseDTO {
   }
 }
 
+export interface EnvironmentGroupYaml {
+  deployToAll?: boolean
+  envGroupRef: string
+  environments?: EnvironmentYamlV2[]
+  metadata?: string
+}
+
 export interface EnvironmentInfoByServiceId {
   artifactImage?: string
   environmentId?: string
@@ -2877,6 +2894,15 @@ export interface EnvironmentYaml {
     [key: string]: string
   }
   type: 'PreProduction' | 'Production'
+}
+
+export interface EnvironmentYamlV2 {
+  deployToAll?: boolean
+  environmentInputs?: JsonNode
+  environmentRef: string
+  gitOpsClusters?: ClusterYaml[]
+  infrastructureDefinitions?: InfraStructureDefinitionYaml[]
+  serviceOverrideInputs?: JsonNode
 }
 
 export interface Error {
@@ -5383,6 +5409,12 @@ export interface InfraOverrides {
   infrastructureDefinition?: InfrastructureDef
 }
 
+export interface InfraStructureDefinitionYaml {
+  identifier: string
+  inputs?: JsonNode
+  metadata?: string
+}
+
 export interface InfraUseFromStage {
   overrides?: InfraOverrides
   stage: string
@@ -7392,11 +7424,6 @@ export type PrometheusConnectorDTO = ConnectorConfigDTO & {
   passwordRef?: string
   url: string
   username?: string
-}
-
-export type QueueStepInfo = StepSpecType & {
-  key: string
-  scope: 'Pipeline' | 'Stage'
 }
 
 export interface RateLimitProtection {
@@ -10734,6 +10761,11 @@ export interface ServiceYaml {
   tags?: {
     [key: string]: string
   }
+}
+
+export interface ServiceYamlV2 {
+  serviceInputs?: JsonNode
+  serviceRef: string
 }
 
 export interface ServicesCount {
@@ -34374,7 +34406,6 @@ export interface GetListOfBranchesByRefConnectorV2QueryParams {
   projectIdentifier?: string
   repoName?: string
   connectorRef?: string
-  page?: number
   size?: number
   searchTerm?: string
 }

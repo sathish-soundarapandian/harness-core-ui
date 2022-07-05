@@ -1190,6 +1190,8 @@ export interface StringsMap {
   'delegates.delegateCreation.dockerPrerequisites.sysReq': string
   'delegates.delegateCreation.dockerPrerequisites.title': string
   'delegates.delegateCreation.downloadScript': string
+  'delegates.delegateCreation.installerSelectionRequired': string
+  'delegates.delegateCreation.installerText': string
   'delegates.delegateDeleted': string
   'delegates.delegateIdentifier': string
   'delegates.delegateInstances': string
@@ -2713,7 +2715,7 @@ export interface StringsMap {
   'pipeline.artifactsSelection.artifactDetails': string
   'pipeline.artifactsSelection.artifactDirectory': string
   'pipeline.artifactsSelection.artifactDirectoryPlaceholder': string
-  'pipeline.artifactsSelection.artifactNamePlaceholder': string
+  'pipeline.artifactsSelection.artifactPathPlaceholder': string
   'pipeline.artifactsSelection.artifactType': string
   'pipeline.artifactsSelection.artifactTyperequired': string
   'pipeline.artifactsSelection.errors.noRepositories': string
@@ -2721,6 +2723,8 @@ export interface StringsMap {
   'pipeline.artifactsSelection.existingDocker.imageNamePlaceholder': string
   'pipeline.artifactsSelection.existingDocker.sidecarId': string
   'pipeline.artifactsSelection.existingDocker.sidecarIdPlaceholder': string
+  'pipeline.artifactsSelection.filePathRegexLabel': string
+  'pipeline.artifactsSelection.filePathRegexPlaceholder': string
   'pipeline.artifactsSelection.loadingArtifactPaths': string
   'pipeline.artifactsSelection.loadingTags': string
   'pipeline.artifactsSelection.repositoryPlaceholder': string
@@ -2728,10 +2732,9 @@ export interface StringsMap {
   'pipeline.artifactsSelection.repositoryPortPlaceholder': string
   'pipeline.artifactsSelection.validation.artifactDirectory': string
   'pipeline.artifactsSelection.validation.artifactPath': string
-  'pipeline.artifactsSelection.validation.artifactPathAndArtifactPathFilter': string
   'pipeline.artifactsSelection.validation.artifactPathFilter': string
+  'pipeline.artifactsSelection.validation.filePathRegex': string
   'pipeline.artifactsSelection.validation.imagePath': string
-  'pipeline.artifactsSelection.validation.manifestRequiredForStage': string
   'pipeline.artifactsSelection.validation.region': string
   'pipeline.artifactsSelection.validation.repositoryPort': string
   'pipeline.artifactsSelection.validation.repositoryUrl': string
@@ -3982,10 +3985,12 @@ export interface StringsMap {
   'cd.pipelineSteps.environmentTab.newEnvironment': string
   'cd.pipelineSteps.environmentTab.plusNewEnvironment': string
   'cd.pipelineSteps.environmentTab.selectEnvironment': string
+  'cd.pipelineSteps.environmentTab.selectEnvironmentGroup': string
   'cd.pipelineSteps.environmentTab.selectInfrastructure': string
   'cd.pipelineSteps.environmentTab.specifyEnvironmentOrGroup': string
   'cd.pipelineSteps.environmentTab.specifyGitOpsClusters': string
   'cd.pipelineSteps.environmentTab.specifyYourEnvironment': string
+  'cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup': string
   'cd.pipelineSteps.environmentTab.specifyYourInfrastructure': string
   'cd.pipelineSteps.executionTab.stepsCount': string
   'cd.pipelineSteps.infraTab.clusterError': string
@@ -4033,9 +4038,11 @@ export interface StringsMap {
   'cd.serviceDashboard.in': string
   'cd.serviceDashboard.instanceCountHistory': string
   'cd.serviceDashboard.instanceDetails': string
+  'cd.serviceDashboard.instancesDetails': string
   'cd.serviceDashboard.lastDeployment': string
   'cd.serviceDashboard.lastPipelineExecution': string
   'cd.serviceDashboard.manageServiceLabel': string
+  'cd.serviceDashboard.moreDetails': string
   'cd.serviceDashboard.noActiveServiceInstances': string
   'cd.serviceDashboard.noActiveServices': string
   'cd.serviceDashboard.noDeployments': string

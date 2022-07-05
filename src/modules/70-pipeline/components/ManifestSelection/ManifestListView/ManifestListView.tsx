@@ -65,7 +65,8 @@ import {
   allowedManifestTypes,
   ManifestTypetoStoreMap,
   ManifestToPathKeyMap,
-  showAddManifestBtn
+  showAddManifestBtn,
+  getManifestLocation
 } from '../Manifesthelper'
 import type { ConnectorRefLabelType } from '../../ArtifactsSelection/ArtifactInterface'
 import type {
@@ -91,6 +92,7 @@ import InheritFromManifest from '../ManifestWizardSteps/InheritFromManifest/Inhe
 import ConnectorField from './ConnectorField'
 import HelmWithOCI from '../ManifestWizardSteps/HelmWithOCI/HelmWithOCI'
 import { getConnectorPath } from '../ManifestWizardSteps/ManifestUtils'
+import HarnessFileStore from '../ManifestWizardSteps/HarnessFileStore/HarnessFileStore'
 import css from '../ManifestSelection.module.scss'
 
 function ManifestListView({
@@ -363,6 +365,9 @@ function ManifestListView({
         selectedManifest as ManifestTypes
       ) && manifestStore === ManifestStoreMap.InheritFromManifest:
         manifestDetailStep = <InheritFromManifest {...lastStepProps()} />
+        break
+      case manifestStore === ManifestStoreMap.Harness:
+        manifestDetailStep = <HarnessFileStore {...lastStepProps()} />
         break
       case [ManifestDataType.K8sManifest, ManifestDataType.Values].includes(selectedManifest as ManifestTypes) &&
         [ManifestStoreMap.Git, ManifestStoreMap.Github, ManifestStoreMap.GitLab, ManifestStoreMap.Bitbucket].includes(
@@ -701,44 +706,30 @@ function ManifestListView({
                         connectorName,
                         color
                       )}
-                      {!!manifest?.spec?.store?.spec.paths?.length && (
+
+                      {!!get(
+                        manifest?.spec,
+                        getManifestLocation(manifest?.type as ManifestTypes, manifest?.spec?.store?.type)
+                      )?.length && (
                         <span>
                           <Text lineClamp={1} width={200}>
                             <span className={css.noWrap}>
-                              {typeof manifest?.spec?.store?.spec.paths === 'string'
-                                ? manifest?.spec?.store?.spec.paths
-                                : manifest?.spec?.store?.spec.paths.join(', ')}
+                              {typeof get(
+                                manifest?.spec,
+                                getManifestLocation(manifest?.type as ManifestTypes, manifest?.spec?.store?.type)
+                              ) === 'string'
+                                ? get(
+                                    manifest?.spec,
+                                    getManifestLocation(manifest?.type as ManifestTypes, manifest?.spec?.store?.type)
+                                  )
+                                : get(
+                                    manifest?.spec,
+                                    getManifestLocation(manifest?.type as ManifestTypes, manifest?.spec?.store?.type)
+                                  ).join(', ')}
                             </span>
                           </Text>
                         </span>
                       )}
-                      {!!manifest?.spec?.paths?.length && (
-                        <span>
-                          <Text lineClamp={1} width={200}>
-                            <span className={css.noWrap}>
-                              {typeof manifest?.spec.paths === 'string'
-                                ? manifest?.spec.paths
-                                : manifest?.spec.paths.join(', ')}
-                            </span>
-                          </Text>
-                        </span>
-                      )}
-                      {!!manifest?.spec?.store?.spec.folderPath && (
-                        <span>
-                          <Text lineClamp={1} width={200}>
-                            <span className={css.noWrap}>{manifest.spec.store?.spec?.folderPath}</span>
-                          </Text>
-                        </span>
-                      )}
-
-                      {!!(manifest?.spec?.chartName && !manifest?.spec?.store?.spec.folderPath) && (
-                        <span>
-                          <Text lineClamp={1} width={200}>
-                            <span className={css.noWrap}>{manifest.spec.chartName}</span>
-                          </Text>
-                        </span>
-                      )}
-
                       {!isReadonly && (
                         <span>
                           <Layout.Horizontal>
@@ -773,6 +764,7 @@ function ManifestListView({
                         color
                       )}
                       manifestType={manifest?.type as PrimaryManifestType}
+                      manifestStore={manifest?.spec?.store?.type}
                       valuesPaths={manifest?.spec[ManifestToPathKeyMap[manifest?.type as PrimaryManifestType]]}
                       expressions={expressions}
                       allowableTypes={allowableTypes}

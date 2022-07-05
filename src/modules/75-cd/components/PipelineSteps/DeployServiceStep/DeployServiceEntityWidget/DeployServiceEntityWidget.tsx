@@ -249,7 +249,6 @@ function DeployServiceEntityWidget({
       }
     : {
         selectedDeploymentType: initialValues.deploymentType,
-        //DeployStageConfig type is temporarily added until pipeline DTO for new entity gets merged
         gitOpsEnabled: initialValues.gitOpsEnabled
       }
   const [showModal, hideModal] = useModalHook(

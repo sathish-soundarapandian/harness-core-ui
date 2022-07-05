@@ -51,7 +51,7 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
 import type { DeployServiceData } from '@cd/components/PipelineSteps/DeployServiceStep/DeployServiceInterface'
 import { useCache } from '@common/hooks/useCache'
-import type { DeployStageConfig, ServiceInputsConfig } from '@pipeline/utils/DeployStageInterface'
+import type { ServiceInputsConfig } from '@pipeline/utils/DeployStageInterface'
 import { setupMode } from './PropagateWidget/PropagateWidget'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 
@@ -124,7 +124,7 @@ export default function DeployServiceEntitySpecifications({
   useEffect(() => {
     //When service.serviceRef is present refetch serviceAPI to populate deployment type and service definition
     if (getServiceEntityServiceRef(stage?.stage)) {
-      const stageServiceRef = (stage?.stage?.spec as DeployStageConfig)?.service?.serviceRef
+      const stageServiceRef = stage?.stage?.spec?.service?.serviceRef
       if (!isEmpty(stageServiceRef)) {
         const params = {
           pathParams: {
@@ -143,8 +143,8 @@ export default function DeployServiceEntitySpecifications({
       } else {
         if (
           scope !== Scope.PROJECT &&
-          (stage?.stage?.spec as DeployStageConfig)?.service &&
-          isEmpty((stage?.stage?.spec as DeployStageConfig)?.service?.serviceRef)
+          stage?.stage?.spec?.service &&
+          isEmpty(stage?.stage?.spec?.service?.serviceRef)
         ) {
           const stageData = produce(stage, draft => {
             if (draft) {
@@ -273,8 +273,8 @@ export default function DeployServiceEntitySpecifications({
         scope === Scope.PROJECT
           ? getServiceEntityBasedServiceRef()
           : getServiceEntityBasedServiceRef() || RUNTIME_INPUT_VALUE,
-      deploymentType: (stage?.stage?.spec as DeployStageConfig).deploymentType as ServiceDeploymentType,
-      gitOpsEnabled: defaultTo((stage?.stage?.spec as DeployStageConfig).gitOpsEnabled, false)
+      deploymentType: stage?.stage?.spec?.deploymentType as ServiceDeploymentType,
+      gitOpsEnabled: defaultTo(stage?.stage?.spec?.gitOpsEnabled, false)
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

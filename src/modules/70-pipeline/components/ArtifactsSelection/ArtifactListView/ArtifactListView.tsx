@@ -34,6 +34,9 @@ import { showConnectorStep } from '../ArtifactUtils'
 import css from '../ArtifactsSelection.module.scss'
 
 const getArtifactLocation = (artifact: PrimaryArtifact | SidecarArtifact): string => {
+  if (artifact.type === 'AmazonS3') {
+    return artifact.spec.filePath ?? artifact.spec.filePathRegex
+  }
   return (
     artifact.spec.imagePath ??
     artifact.spec.artifactPath ??
