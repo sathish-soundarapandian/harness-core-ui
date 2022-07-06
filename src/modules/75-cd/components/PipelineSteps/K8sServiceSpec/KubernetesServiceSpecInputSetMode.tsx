@@ -11,7 +11,7 @@ import { Layout, MultiTypeInputType } from '@wings-software/uicore'
 import cx from 'classnames'
 
 import { useStrings } from 'framework/strings'
-import type { AzureWebAppServiceSpec, ServiceSpec } from 'services/cd-ng'
+import type { ServiceSpec } from 'services/cd-ng'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
@@ -21,19 +21,17 @@ import type { AllNGVariables } from '@pipeline/utils/types'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import manifestSourceBaseFactory from '@cd/factory/ManifestSourceFactory/ManifestSourceBaseFactory'
-import azureWebAppConfigBaseFactory from '@cd/factory/AzureWebAppConfigFactory/AzureWebAppConfigFactory'
-import { AzureWebAppConfigType, K8SDirectServiceStep } from './K8sServiceSpecInterface'
+import type { K8SDirectServiceStep } from './K8sServiceSpecInterface'
 import { KubernetesArtifacts } from './KubernetesArtifacts/KubernetesArtifacts'
 import { KubernetesManifests } from './KubernetesManifests/KubernetesManifests'
-import { AzureWebAppConfig } from './AzureWebAppConfig/AzureWebAppConfig'
 import css from './K8sServiceSpec.module.scss'
 
 export interface KubernetesInputSetProps {
-  initialValues: K8SDirectServiceStep & AzureWebAppServiceSpec
-  onUpdate?: ((data: ServiceSpec & AzureWebAppServiceSpec) => void) | undefined
+  initialValues: K8SDirectServiceStep
+  onUpdate?: ((data: ServiceSpec) => void) | undefined
   stepViewType?: StepViewType
-  template?: ServiceSpec & AzureWebAppServiceSpec
-  allValues?: ServiceSpec & AzureWebAppServiceSpec
+  template?: ServiceSpec
+  allValues?: ServiceSpec
   readonly?: boolean
   factory?: AbstractStepFactory
   path?: string
@@ -90,57 +88,6 @@ const KubernetesServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetPr
           initialValues={initialValues}
           readonly={readonly}
           allowableTypes={allowableTypes}
-        />
-      )}
-
-      {!!template?.startupScript && (
-        <AzureWebAppConfig
-          template={template}
-          azureWebAppConfig={allValues?.startupScript}
-          azureWebAppConfigBaseFactory={azureWebAppConfigBaseFactory}
-          stepViewType={stepViewType}
-          stageIdentifier={stageIdentifier}
-          serviceIdentifier={serviceIdentifier}
-          formik={formik}
-          path={path}
-          initialValues={initialValues}
-          readonly={readonly}
-          allowableTypes={allowableTypes}
-          type={AzureWebAppConfigType.startupScript}
-        />
-      )}
-
-      {!!template?.applicationSettings && (
-        <AzureWebAppConfig
-          template={template}
-          azureWebAppConfig={allValues?.applicationSettings}
-          azureWebAppConfigBaseFactory={azureWebAppConfigBaseFactory}
-          stepViewType={stepViewType}
-          stageIdentifier={stageIdentifier}
-          serviceIdentifier={serviceIdentifier}
-          formik={formik}
-          path={path}
-          initialValues={initialValues}
-          readonly={readonly}
-          allowableTypes={allowableTypes}
-          type={AzureWebAppConfigType.applicationSettings}
-        />
-      )}
-
-      {!!template?.connectionStrings && (
-        <AzureWebAppConfig
-          template={template}
-          azureWebAppConfig={allValues?.connectionStrings}
-          azureWebAppConfigBaseFactory={azureWebAppConfigBaseFactory}
-          stepViewType={stepViewType}
-          stageIdentifier={stageIdentifier}
-          serviceIdentifier={serviceIdentifier}
-          formik={formik}
-          path={path}
-          initialValues={initialValues}
-          readonly={readonly}
-          allowableTypes={allowableTypes}
-          type={AzureWebAppConfigType.connectionStrings}
         />
       )}
 
