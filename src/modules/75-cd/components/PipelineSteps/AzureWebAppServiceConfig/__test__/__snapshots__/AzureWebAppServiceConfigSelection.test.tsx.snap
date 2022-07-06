@@ -86,7 +86,7 @@ exports[`AzureWebAppConfigSelection initial render 1`] = `
         <span
           class="StepWizard--title StepWizard--header"
         >
-          pipeline.appServiceConfig.applicationSettings.file
+          pipeline.appServiceConfig.applicationSettings.scriptFile
         </span>
         <div
           class="StepWizard--navStep StepWizard--activeStep"
@@ -100,7 +100,7 @@ exports[`AzureWebAppConfigSelection initial render 1`] = `
             class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
             style="--text-line-clamp: 2; width: 200px;"
           >
-            pipeline.appServiceConfig.applicationSettings.fileSource
+            pipeline.appServiceConfig.applicationSettings.scriptFileSource
           </p>
           <p
             class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
@@ -121,7 +121,7 @@ exports[`AzureWebAppConfigSelection initial render 1`] = `
             class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
             style="--text-line-clamp: 2; width: 200px;"
           >
-            pipeline.appServiceConfig.applicationSettings.fileDetails
+            pipeline.appServiceConfig.applicationSettings.scriptFileDetails
           </p>
         </div>
       </div>
@@ -141,7 +141,7 @@ exports[`AzureWebAppConfigSelection initial render 1`] = `
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--margin-bottom-medium"
           >
-            common.specify pipeline.appServiceConfig.applicationSettings.fileSource
+            pipeline.appServiceConfig.applicationSettings.subtitle
           </p>
           <div
             class="OverlaySpinner--overlaySpinner"

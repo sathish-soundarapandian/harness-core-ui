@@ -61,7 +61,7 @@ describe('AzureWebAppServiceConfigWizard & stepOne', () => {
     expect(submit).toBeDefined()
 
     fireEvent.click(submit)
-    await waitFor(() => expect(getByText('pipeline.appServiceConfig.applicationSettings.file')).toBeUndefined)
+    await waitFor(() => expect(getByText('pipeline.appServiceConfig.applicationSettings.scriptFile')).toBeUndefined)
   })
 
   test('runtime stepOne', async () => {
@@ -106,7 +106,7 @@ describe('AzureWebAppServiceConfigWizard & stepOne', () => {
         <AzureWebAppServiceConfigWizard {...propWizard} lastSteps={null} />
       </TestWrapper>
     )
-    expect(getByText('pipeline.appServiceConfig.applicationSettings.file')).toBeTruthy()
+    expect(getByText('pipeline.appServiceConfig.applicationSettings.scriptFile')).toBeTruthy()
   })
 
   test('stepOne with prevStepData', async () => {
