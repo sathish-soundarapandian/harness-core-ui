@@ -54,7 +54,7 @@ export function ConfigFilesWizard({
       onStepChange={onStepChange}
       icon={ConfigWizard.icon}
       title={`${ConfigWizard.label} ${getString('pipeline.configFiles.title')}`}
-      //   initialStep={isServerlessManifestType(selectedManifest) ? 2 : undefined}
+      initialStep={1}
     >
       <ConfigFilesStore
         configFilesStoreTypes={types}
@@ -72,7 +72,7 @@ export function ConfigFilesWizard({
         isNewFile={isNewFile}
       />
 
-      {newConnectorView ? newConnectorSteps : null}
+      {/* {newConnectorView ? newConnectorSteps : null} */}
 
       {lastSteps?.length ? lastSteps?.map((step: any) => step) : null}
     </StepWizard>

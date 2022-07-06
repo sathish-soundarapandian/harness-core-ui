@@ -133,14 +133,6 @@ export function HarnessConfigStep({
             files: Yup.lazy(value =>
               Array.isArray(value) ? Yup.array().of(Yup.string().required()) : Yup.string().required()
             )
-            // files: Yup.mixed()
-            //   .when('isArray', {
-            //     is: Array.isArray,
-            //     then: Yup.array().of(Yup.string().required()),
-            //     otherwise: Yup.string().required()
-            //   })
-            //   .required(getString('pipeline.configFiles.error.files'))
-            //   .when('files', data => Array.isArray(data))
           })}
           onSubmit={formData => {
             submitFormData({
@@ -163,24 +155,26 @@ export function HarnessConfigStep({
                       formikProps.setFieldValue('identifier', StringUtils.getIdentifierFromName(e.target.value))
                     }}
                   />
-                  <FormInput.RadioGroup
-                    name="fileType"
-                    className={css.selectFileType}
-                    radioGroup={{ inline: true }}
-                    disabled={isEditMode}
-                    label={getString('pipeline.configFiles.selectFileType')}
-                    onChange={() => {
-                      formikProps.setFieldValue('files', [''])
-                    }}
-                    items={[
-                      {
-                        label: getString('resourcePage.fileStore'),
-                        value: FILE_TYPE_VALUES.FILE_STORE
-                        //   disabled: false
-                      },
-                      { label: getString('encrypted'), value: FILE_TYPE_VALUES.ENCRYPTED }
-                    ]}
-                  />
+                  {!isEditMode && (
+                    <FormInput.RadioGroup
+                      name="fileType"
+                      className={css.selectFileType}
+                      radioGroup={{ inline: true }}
+                      disabled={isEditMode}
+                      label={getString('pipeline.configFiles.selectFileType')}
+                      onChange={() => {
+                        formikProps.setFieldValue('files', [''])
+                      }}
+                      items={[
+                        {
+                          label: getString('resourcePage.fileStore'),
+                          value: FILE_TYPE_VALUES.FILE_STORE
+                          //   disabled: false
+                        },
+                        { label: getString('encrypted'), value: FILE_TYPE_VALUES.ENCRYPTED }
+                      ]}
+                    />
+                  )}
                   <MultiConfigSelectField
                     name="files"
                     fileType={formikProps.values.fileType}
@@ -205,7 +199,7 @@ export function HarnessConfigStep({
                     text={getString('back')}
                     icon="chevron-left"
                     variation={ButtonVariation.SECONDARY}
-                    onClick={() => previousStep?.()}
+                    onClick={() => previousStep?.({ ...prevStepData })}
                   />
                   <Button
                     variation={ButtonVariation.PRIMARY}

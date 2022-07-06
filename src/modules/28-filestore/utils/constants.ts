@@ -38,3 +38,8 @@ export enum FileStoreActionTypes {
   UPDATE_NODE = 'UPDATE_NODE',
   UPLOAD_NODE = 'UPLOAD_NODE'
 }
+
+export enum SELECT_FILES_TYPE {
+  FILE_STORE = 'fileStore',
+  ENCRYPTED = 'encrypted'
+}

@@ -2,15 +2,12 @@ import React, { CSSProperties, ReactChild } from 'react'
 import {
   MultiTypeInputType,
   getMultiTypeFromValue,
-  RUNTIME_INPUT_VALUE,
   FormError,
   FormikTooltipContext,
   DataTooltipInterface,
   HarnessDocTooltip,
   FormInput,
-  EXECUTION_TIME_INPUT_VALUE,
-  Container,
-  Text
+  Container
 } from '@harness/uicore'
 import { IFormGroupProps, Intent, FormGroup } from '@blueprintjs/core'
 import { FormikContextType, connect } from 'formik'
@@ -18,7 +15,7 @@ import { get } from 'lodash-es'
 import { errorCheck } from '@common/utils/formikHelpers'
 import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/MultiTypeSelectorButton'
 
-import css from './MultiConfigSelectField.module.scss'
+import css from './MultiTypeFileSelect.module.scss'
 
 export interface MultiTypeFieldSelectorProps extends Omit<IFormGroupProps, 'label' | 'placeholder'> {
   children: Exclude<React.ReactNode, null | undefined>
@@ -51,7 +48,7 @@ export interface ConnectedMultiTypeFieldSelectorProps extends MultiTypeFieldSele
   formik: FormikContextType<any>
 }
 
-export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelectorProps): React.ReactElement | null {
+export function MultiTypeFileSelect(props: ConnectedMultiTypeFieldSelectorProps): React.ReactElement | null {
   const {
     formik,
     label,
@@ -72,7 +69,6 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
     defaultType,
     changed,
     localId,
-    isInputField = true,
     values,
     ...restProps
   } = props
@@ -95,10 +91,6 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
 
   const [type, setType] = React.useState(getMultiTypeFromValue(value, allowedTypes, supportListOfExpressions))
 
-  React.useEffect(() => {
-    setType(getMultiTypeFromValue(value, allowedTypes, supportListOfExpressions))
-  }, [changed, setType])
-
   function handleChange(newType: MultiTypeInputType): void {
     setType(newType)
     onTypeChange?.(newType)
@@ -106,9 +98,6 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
     if (newType === type) {
       return
     }
-
-    const runtimeValue = useExecutionTimeInput ? EXECUTION_TIME_INPUT_VALUE : RUNTIME_INPUT_VALUE
-    formik.setFieldValue(name, newType === MultiTypeInputType.RUNTIME ? runtimeValue : defaultValueToReset)
   }
 
   if (
@@ -121,7 +110,6 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
   return (
     <FormGroup
       {...rest}
-      //   className={type === MultiTypeInputType.RUNTIME ? css.formGroup : ''}
       labelFor={name}
       helperText={helperText}
       intent={intent}
@@ -132,11 +120,11 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
         </Container>
       }
     >
-      <Container flex className={css.selectFieldContainer}>
+      <Container flex>
         {disableTypeSelection || type === MultiTypeInputType.FIXED ? (
           children
         ) : type === MultiTypeInputType.EXPRESSION && typeof expressionRender === 'function' ? (
-          expressionRender()
+          <div className={css.expressionWrapper}>{expressionRender()}</div>
         ) : type === MultiTypeInputType.RUNTIME && typeof value === 'string' ? (
           <FormInput.Text className={css.runtimeDisabled} name={name} disabled label="" />
         ) : null}
@@ -153,4 +141,4 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
   )
 }
 
-export default connect<MultiTypeFieldSelectorProps>(MultiTypeConfigFileSelect)
+export default connect<MultiTypeFieldSelectorProps>(MultiTypeFileSelect)

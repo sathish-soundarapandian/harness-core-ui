@@ -210,7 +210,6 @@ ConfigFilesListViewProps): JSX.Element {
             {...commonProps}
             stepName={getString('pipeline.configFiles.title')}
             name={getString('pipeline.configFiles.title')}
-            initialValues={getInitialValues()}
             {...commonLastStepProps}
           />
         )
@@ -221,7 +220,6 @@ ConfigFilesListViewProps): JSX.Element {
             {...commonProps}
             stepName={getString('pipeline.configFiles.title')}
             name={getString('pipeline.configFiles.title')}
-            initialValues={getInitialValues()}
             {...commonLastStepProps}
           />
         )
@@ -371,7 +369,7 @@ ConfigFilesListViewProps): JSX.Element {
         <div className={css.createConnectorWizard}>
           <ConfigFilesWizard
             types={allowedConfigFilesTypes[deploymentType]}
-            labels={getLabels()}
+            // labels={getLabels()}
             newConnectorView={newConnectorView}
             expressions={expressions}
             allowableTypes={allowableTypes}

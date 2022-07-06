@@ -15,10 +15,14 @@ import type {
   PrimaryArtifact,
   ServiceDefinition,
   ServiceSpec,
-  SidecarArtifact
+  SidecarArtifact,
+  ConfigFileWrapper,
+  ConfigFile
 } from 'services/cd-ng'
 import type { ArtifactSourceBaseFactory } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import type { ManifestSourceBaseFactory } from '@cd/factory/ManifestSourceFactory/ManifestSourceBaseFactory'
+import type { ConfigFileSourceBaseFactory } from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBaseFactory'
+
 export interface K8SDirectServiceStep extends ServiceSpec {
   stageIndex?: number
   setupModeType?: string
@@ -83,4 +87,20 @@ export interface KubernetesManifestsProps {
   allowableTypes: MultiTypeInputType[]
   manifest?: ManifestConfig
   manifestPath?: string
+}
+
+export interface KubernetesConfigFileProps {
+  template: ServiceSpec
+  path?: string
+  stepViewType?: StepViewType
+  configFileSourceBaseFactory: ConfigFileSourceBaseFactory
+  configFiles?: ConfigFileWrapper[]
+  initialValues: K8SDirectServiceStep
+  readonly: boolean
+  stageIdentifier: string
+  formik?: any
+  fromTrigger?: boolean
+  allowableTypes: MultiTypeInputType[]
+  configFile?: ConfigFile
+  configFilePath?: string
 }

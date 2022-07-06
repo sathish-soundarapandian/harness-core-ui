@@ -37,7 +37,6 @@ interface UseFileStoreModalProps {
 }
 
 const useFileStoreModal = ({ applySelected }: UseFileStoreModalProps): UseFileStoreModalReturn => {
-  console.log('use file store')
   const [activeTab, setActiveTab] = useState<string>(Scope.ACCOUNT)
   const { getString } = useStrings()
 

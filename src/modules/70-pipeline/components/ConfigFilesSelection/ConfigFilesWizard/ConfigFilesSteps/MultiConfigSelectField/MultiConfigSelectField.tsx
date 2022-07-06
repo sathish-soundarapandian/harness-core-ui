@@ -142,7 +142,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
             className={cx(css.group, css.withoutSpacing, appearance === 'minimal' ? css.minimalCard : '')}
             {...restProps}
           >
-            <MultiTypeConfigFileSelect
+            <MultiTypeFieldSelector
               name={name}
               isInputField={false}
               defaultValueToReset={getDefaultResetValue()}
@@ -262,14 +262,14 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                             push('')
                           }}
                           disabled={disabled || isRunTime}
-                          style={{ padding: 0 }}
+                          style={{ padding: 0, marginTop: 24 }}
                         />
                       )}
                     </>
                   )
                 }}
               />
-            </MultiTypeConfigFileSelect>
+            </MultiTypeFieldSelector>
             {provided.placeholder}
             {enableConfigureOptions &&
               typeof value === 'string' &&
@@ -291,138 +291,6 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
         )}
       </Droppable>
     </DragDropContext>
-
-    // <div className={cx(css.group, css.withoutSpacing, appearance === 'minimal' ? css.minimalCard : '')} {...restProps}>
-    //   <MultiTypeFieldSelector
-    //     name={name}
-    //     defaultValueToReset={getDefaultResetValue()}
-    //     style={{ flexGrow: 1, marginBottom: 0 }}
-    //     allowedTypes={[MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED]}
-    //     {...multiTypeFieldSelectorProps}
-    //     disableTypeSelection={multiTypeFieldSelectorProps.disableTypeSelection || disabled}
-    //     onTypeChange={e => {
-    //       if (e !== MultiTypeInputType.RUNTIME) {
-    //         formik?.setFieldValue(name, [''])
-    //       }
-    //     }}
-    //   >
-    //     <FieldArray
-    //       name={name}
-    //       render={({ push, remove, replace }) => {
-    //         return (
-    //           <>
-    //             {Array.isArray(value) &&
-    //               value.map((field: any, index: number) => {
-    //                 const { ...restValue } = field
-    //                 return (
-    //                   <div className={cx(css.group, css.withoutAligning)} key={index}>
-    //                     <FormGroup
-    //                       helperText={errorCheck(index) ? get(formik?.errors, `${name}[${index}].path`) : null}
-    //                       intent={errorCheck(index) ? Intent.DANGER : Intent.NONE}
-    //                       style={{ width: '100%' }}
-    //                     >
-    //                       <div className={css.multiSelectField}>
-    //                         <div className={cx(css.group, css.withoutAligning, css.withoutSpacing)}>
-    //                           {fileType === FILE_TYPE_VALUES.ENCRYPTED ? (
-    //                             <FileSelectField
-    //                               index={index}
-    //                               name={`${name}[${index}]`}
-    //                               formik={formik}
-    //                               onChange={(newValue, i) => {
-    //                                 replace(i, {
-    //                                   ...restValue,
-    //                                   value: newValue
-    //                                 })
-    //                               }}
-    //                               field={field}
-    //                             />
-    //                           ) : (
-    //                             <MultiTypeConfigFileSelect
-    //                               name={`${name}[${index}]`}
-    //                               label={''}
-    //                               defaultValueToReset={''}
-    //                               style={{ flexGrow: 1, marginBottom: 0 }}
-    //                               disableTypeSelection={false}
-    //                               index={index}
-    //                               displayIndex={true}
-    //                               supportListOfExpressions={true}
-    //                               allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
-    //                               expressionRender={() => {
-    //                                 console.log('xxx', get(formik?.values, `${name}[${index}]`))
-    //                                 return (
-    //                                   <ExpressionInput
-    //                                     name={`${name}[${index}]`}
-    //                                     value={get(formik?.values, `${name}[${index}]`)}
-    //                                     disabled={false}
-    //                                     inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
-    //                                     items={expressions}
-    //                                     onChange={val =>
-    //                                       /* istanbul ignore next */
-    //                                       formik?.setFieldValue(`${name}[${index}]`, val)
-    //                                     }
-    //                                   />
-    //                                 )
-    //                               }}
-    //                               onTypeChange={e => {
-    //                                 console.log('e', e)
-    //                               }}
-    //                             >
-    //                               <div className={css.fieldWrapper}>
-    //                                 <FileStoreSelectField name={`${name}[${index}]`} />
-    //                               </div>
-    //                             </MultiTypeConfigFileSelect>
-    //                           )}
-    //                           <Button
-    //                             icon="main-trash"
-    //                             iconProps={{ size: 20 }}
-    //                             minimal
-    //                             data-testid={`remove-${name}-[${index}]`}
-    //                             onClick={() => remove(index)}
-    //                             disabled={disabled}
-    //                           />
-    //                         </div>
-    //                       </div>
-    //                     </FormGroup>
-    //                   </div>
-    //                 )
-    //               })}
-
-    //             {restrictToSingleEntry && Array.isArray(value) && value?.length === 1 ? null : (
-    //               <Button
-    //                 intent="primary"
-    //                 minimal
-    //                 text={getString('plusAdd')}
-    //                 data-testid={`add-${name}`}
-    //                 onClick={() => {
-    //                   push('')
-    //                 }}
-    //                 disabled={disabled || isRunTime}
-    //                 style={{ padding: 0 }}
-    //               />
-    //             )}
-    //           </>
-    //         )
-    //       }}
-    //     />
-    //   </MultiTypeFieldSelector>
-
-    //   {enableConfigureOptions &&
-    //     typeof value === 'string' &&
-    //     getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME && (
-    //       <ConfigureOptions
-    //         style={{ marginTop: 11 }}
-    //         value={value}
-    //         type={getString('map')}
-    //         variableName={name}
-    //         showRequiredField={false}
-    //         showDefaultField={false}
-    //         showAdvanced={true}
-    //         onChange={val => formik?.setFieldValue(name, val)}
-    //         {...configureOptionsProps}
-    //         isReadonly={props.disabled}
-    //       />
-    //     )}
-    // </div>
   )
 }
 

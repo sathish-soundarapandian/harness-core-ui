@@ -10,21 +10,22 @@ import cx from 'classnames'
 import { Layout } from '@harness/uicore'
 import { StringKeys, useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import List from '@common/components/List/List'
-import type { ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
+import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
+import type { ConfigFileSourceRenderProps } from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBase'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 // import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
-interface K8sValuesYamlManifestRenderProps extends ManifestSourceRenderProps {
+interface K8sValuesYamlConfigFileRenderProps extends ConfigFileSourceRenderProps {
   pathFieldlabel: StringKeys
 }
-const K8sValuesYamlConfigFileContent = (props: K8sValuesYamlManifestRenderProps): React.ReactElement => {
+const K8sValuesYamlConfigFileContent = (props: K8sValuesYamlConfigFileRenderProps): React.ReactElement => {
   const {
     template,
     path,
-    manifestPath,
-    manifest
+    configFilePath,
+    configFiles,
+    configFile
     // fromTrigger,
     // allowableTypes,
     // readonly,
@@ -34,6 +35,18 @@ const K8sValuesYamlConfigFileContent = (props: K8sValuesYamlManifestRenderProps)
   } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const [filesType, setFilesType] = React.useState('files')
+  const [fieldType, setFieldType] = React.useState('fileStore')
+
+  React.useEffect(() => {
+    if (!Array.isArray(configFile?.spec.store.spec.files)) {
+      setFilesType('files')
+      setFieldType('fileStore')
+    } else {
+      setFilesType('secretFiles')
+      setFieldType('encrypted')
+    }
+  }, [configFile])
 
   //   const isFieldDisabled = (fieldName: string): boolean => {
   //     // /* instanbul ignore else */
@@ -51,20 +64,22 @@ const K8sValuesYamlConfigFileContent = (props: K8sValuesYamlManifestRenderProps)
 
   return (
     <Layout.Vertical
-      data-name="manifest"
-      key={manifest?.identifier}
+      data-name="config-files"
+      key={configFiles?.identifier}
       className={cx(css.inputWidth, css.layoutVerticalSpacing)}
     >
-      {isFieldRuntime(`${manifestPath}.spec.valuesPaths`, template) && (
+      {(isFieldRuntime(`${configFilePath}.spec.store.spec.files`, template) ||
+        isFieldRuntime(`${configFilePath}.spec.store.spec.secretFiles`, template)) && (
         <div className={css.verticalSpacingInput}>
-          <List
+          <FileStoreList
             labelClassName={css.listLabel}
             label={getString('pipeline.manifestType.valuesYamlPath')}
-            name={`${path}.${manifestPath}.spec.valuesPaths`}
+            name={`${path}.${configFilePath}.spec.store.spec.${filesType}`}
             placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
             // disabled={isFieldDisabled(`${manifestPath}.spec.valuesPaths`)}
             style={{ marginBottom: 'var(--spacing-small)' }}
             expressions={expressions}
+            type={fieldType}
             isNameOfArrayType
           />
         </div>

@@ -52,10 +52,6 @@ export default function ManifestSelection({
   const { getCache } = useCache([getServiceCacheId])
   const serviceInfo = getCache<ServiceDefinition>(getServiceCacheId)
 
-  React.useEffect(() => {
-    console.log('stage', stage)
-  }, [stage])
-
   const { accountId, orgIdentifier, projectIdentifier } = useParams<
     PipelineType<{
       orgIdentifier: string
