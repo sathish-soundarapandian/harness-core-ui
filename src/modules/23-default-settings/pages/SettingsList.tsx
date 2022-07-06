@@ -7,17 +7,25 @@ import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
 import { useStrings } from 'framework/strings'
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { Accordion, Card, Layout } from '@harness/uicore'
+import { Button, ButtonVariation, Layout } from '@harness/uicore'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import DefaultSettingsFactory from '@default-settings/factories/DefaultSettingsFactory'
-import { useGetSettingsList } from 'services/cd-ng'
+import type { SettingDTO } from 'services/cd-ng'
 import css from './SettingsList.module.scss'
+import type { SettingCategory } from '../interfaces/SettingType'
+import type { SettingCategoryHandler } from '../factories/DefaultSettingsFactory'
+import SettingsCategorySection from '../components/SettingsCategorySection'
 const SettingsList = () => {
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
-  const { response, data } = useGetSettingsList({ category: 'CD', queryParams: { accountIdentifier: accountId } })
-  response?.json().then(val => console.log(val, data?.data))
-  const defaultSettingsCategory = DefaultSettingsFactory.getSettingCategoryList2()
+
+  const defaultSettingsCategory: SettingCategory[] = DefaultSettingsFactory.getSettingCategoryNamesList()
+  const onSettingChange = (settingDTO: SettingDTO) => {
+    console.log({ settingDTO })
+  }
+  const saveSettings = () => {
+    console.log('setting saved')
+  }
   return (
     <>
       <Page.Header
@@ -30,6 +38,7 @@ const SettingsList = () => {
             }}
           />
         }
+        toolbar={<Button text={getString('save')} variation={ButtonVariation.PRIMARY} onClick={saveSettings} />}
         breadcrumbs={
           <NGBreadcrumbs
             links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })}
@@ -38,14 +47,8 @@ const SettingsList = () => {
       />
       <Page.Body>
         <Layout.Vertical>
-          {Array.from(defaultSettingsCategory.values()).map(val => {
-            return (
-              <Card>
-                <Accordion className={css.summary}>
-                  <Accordion.Panel details={val.label} id={val.label} summary={getString(val.label)} />
-                </Accordion>
-              </Card>
-            )
+          {defaultSettingsCategory.map(key => {
+            return <SettingsCategorySection settingCategory={key} onSettingChange={onSettingChange} />
           })}
         </Layout.Vertical>
       </Page.Body>

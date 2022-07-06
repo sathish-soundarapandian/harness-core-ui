@@ -1123,7 +1123,8 @@ export interface StringsMap {
   'rbac.usersPage.validation.role': string
   'rbac.youAreMissingTheFollowingPermission': string
   'rbac.youAreNotAuthorizedTo': string
-  'defaultSettings.defaultSettings1': string
+  'defaultSettings.allowOverrides': string
+  'defaultSettings.restoreToDefault': string
   'governance.permissions.governancePolicies': string
   'governance.permissions.governancePolicySets': string
   'delegates.GBRam': string

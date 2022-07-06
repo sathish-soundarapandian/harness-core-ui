@@ -1,0 +1,17 @@
+.summarySetting {
+  justify-content: space-between !important;
+}
+.settingTable {
+  display: grid;
+  grid-template-columns: 2fr 2fr 3fr;
+  align-items: center;
+  row-gap: 10px;
+}
+.settingOverrideRestore {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  align-items: center;
+}
+.settingRestore {
+  justify-self: flex-start;
+}

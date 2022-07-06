@@ -6,38 +6,35 @@
  */
 
 import type React from 'react'
-import type { IconName } from '@harness/uicore'
+import type { DropDown, IconName } from '@harness/uicore'
 import type { SettingCategory, SettingType } from '@default-settings/interfaces/SettingType'
 import type { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { StringsMap } from 'framework/strings/StringsContext'
-export interface RbacSettingModalProps {
-  searchTerm: string
-  selectedData: string[]
-  onSelectChange: (items: string[]) => void
-  // settingScope: SettingScope
+import type { FeatureFlag } from '@common/featureFlags'
+
+export enum SettingTypeDefaultHandler {
+  CHECK_BOX = 'CHECK_BOX',
+  DROP_DOWN = 'DROP_DOWN',
+  RADIO_BTN = 'RADIO_BTN',
+  TEXT_BOX = 'TEXT_BOX'
 }
-export interface RbacSettingRendererProps {
-  identifiers: string[]
-  // settingScope: SettingScope
-  onSettingSelectionChange: (settingType: SettingCategory, isAdd: boolean, identifiers?: string[] | undefined) => void
-  settingType: SettingType
+export interface SettingRendererProps {
+  identifier: any
+  onSettingSelectionChange: (val: string) => void
+  onRestore: () => void
+  settingValue: any
 }
 export interface SettingHandler {
-  icon: IconName
   label: keyof StringsMap
-  labelOverride?: keyof StringsMap | undefined
-  permissionLabels?: {
-    [key in PermissionIdentifier]?: string | React.ReactElement
-  }
-  addSettingModalBody?: (props: RbacSettingModalProps) => React.ReactElement
-  staticSettingRenderer?: (props: RbacSettingRendererProps) => React.ReactElement
-  category?: SettingCategory
+  settingRenderer?: (props: SettingRendererProps) => React.ReactElement
+  featureFlag?: FeatureFlag
 }
 
 export interface SettingCategoryHandler {
   icon: IconName
   label: keyof StringsMap
   settingTypes?: Set<SettingType>
+  featureFlag?: FeatureFlag
 }
 
 class DefaultSettingsFactory {
@@ -56,27 +53,11 @@ class DefaultSettingsFactory {
   registerSettingTypeHandler(settingType: SettingType, handler: SettingHandler): void {
     this.map.set(settingType, handler)
   }
-  getSettingCategoryList2(): Map<SettingCategory, SettingCategoryHandler> {
+  getSettingCategoryList(): Map<SettingCategory, SettingCategoryHandler> {
     return this.settingCategoryMap
   }
-  getSettingCategoryList(settings: SettingType[]): Map<SettingCategory | SettingType, SettingType[] | undefined> {
-    const categoryMap: Map<SettingCategory | SettingType, SettingType[] | undefined> = new Map()
-
-    settings.map(settingType => {
-      const handler = this.map.get(settingType)
-      if (handler) {
-        if (handler.category) {
-          const settingTypes = categoryMap.get(handler.category)
-          if (settingTypes) {
-            categoryMap.set(handler.category, [...settingTypes, settingType])
-          } else categoryMap.set(handler.category, [settingType])
-        } else {
-          categoryMap.set(settingType, undefined)
-        }
-      }
-    })
-
-    return categoryMap
+  getSettingCategoryNamesList(): SettingCategory[] {
+    return Array.from(this.settingCategoryMap.keys())
   }
 
   getSettingCategoryHandler(settingCategory: SettingCategory): SettingCategoryHandler | undefined {
@@ -87,13 +68,9 @@ class DefaultSettingsFactory {
     return this.map.get(settingType)
   }
 
-  getSettingTypeLabelKey(settingType: SettingType): keyof StringsMap | undefined {
-    return this.map.get(settingType)?.label
-  }
-
-  isRegisteredSettingType(settingType: SettingType): boolean {
-    return this.map.has(settingType)
-  }
+  // isRegisteredSettingType(settingType: SettingType): boolean {
+  //   return this.map.has(settingType)
+  // }
 }
 
 export default new DefaultSettingsFactory()
