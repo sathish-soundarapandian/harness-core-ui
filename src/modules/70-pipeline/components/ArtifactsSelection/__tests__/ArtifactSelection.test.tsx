@@ -358,11 +358,11 @@ describe('ArtifactsSelection tests', () => {
     expect(remove).toBeDefined()
   })
 
-  test('is artifacts type list containing all types for Kubernetes for activated NG_AZURE, NG_NEXUS_ARTIFACTORY and CUSTOM_ARTIFACT_NG', async () => {
+  test('is artifacts type list containing all types for Kubernetes for activated NG_AZURE and CUSTOM_ARTIFACT_NG', async () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+          featureFlags: { NG_AZURE: true, CUSTOM_ARTIFACT_NG: true }
         }}
       >
         <PipelineContext.Provider value={getContextValue()}>
@@ -386,11 +386,11 @@ describe('ArtifactsSelection tests', () => {
     expect(custom).toBeDefined()
   })
 
-  test('is artifacts type list containing all types for NativeHelm for activated NG_AZURE, NG_NEXUS_ARTIFACTORY and CUSTOM_ARTIFACT_NG', async () => {
+  test('is artifacts type list containing all types for NativeHelm for activated NG_AZURE and CUSTOM_ARTIFACT_NG', async () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+          featureFlags: { NG_AZURE: true, CUSTOM_ARTIFACT_NG: true }
         }}
       >
         <PipelineContext.Provider value={getContextValue()}>
@@ -414,11 +414,11 @@ describe('ArtifactsSelection tests', () => {
     expect(custom).toBeDefined()
   })
 
-  test('is artifacts type list containing all types for NativeHelm for activated NG_AZURE, NG_NEXUS_ARTIFACTORY and CUSTOM_ARTIFACT_NG', async () => {
+  test('is artifacts type list containing all types for NativeHelm for activated NG_AZURE and CUSTOM_ARTIFACT_NG', async () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+          featureFlags: { NG_AZURE: true, CUSTOM_ARTIFACT_NG: true }
         }}
       >
         <PipelineContext.Provider value={getContextValue()}>
@@ -440,7 +440,7 @@ describe('ArtifactsSelection tests', () => {
     expect(acr).toBeDefined()
   })
 
-  test('is artifacts type list containing all types for ServerlessAwsLambda for activated NG_AZURE, NG_NEXUS_ARTIFACTORY and CUSTOM_ARTIFACT_NG', async () => {
+  test('is artifacts type list containing all types for ServerlessAwsLambda for activated NG_AZURE and CUSTOM_ARTIFACT_NG', async () => {
     const context = {
       ...pipelineContextWithoutArtifactsMock,
       getStageFromPipeline: jest.fn(() => {
@@ -451,7 +451,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+          featureFlags: { NG_AZURE: true, CUSTOM_ARTIFACT_NG: true }
         }}
       >
         <PipelineContext.Provider value={context}>
@@ -480,7 +480,7 @@ describe('ArtifactsSelection tests', () => {
     expect(custom).toBeNull()
   })
 
-  test('clicking on Add Sidecar should show all types for ServerlessAwsLambda when NG_AZURE, NG_NEXUS_ARTIFACTORY and CUSTOM_ARTIFACT_NG are ON', async () => {
+  test('clicking on Add Sidecar should show all types for ServerlessAwsLambda when NG_AZURE and CUSTOM_ARTIFACT_NG are ON', async () => {
     const context = {
       ...pipelineContextWithoutArtifactsMock,
       getStageFromPipeline: jest.fn(() => {
@@ -491,7 +491,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+          featureFlags: { NG_AZURE: true, CUSTOM_ARTIFACT_NG: true }
         }}
       >
         <PipelineContext.Provider value={context}>
@@ -531,7 +531,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+          featureFlags: { NG_AZURE: true, CUSTOM_ARTIFACT_NG: true }
         }}
       >
         <PipelineContext.Provider value={context}>
