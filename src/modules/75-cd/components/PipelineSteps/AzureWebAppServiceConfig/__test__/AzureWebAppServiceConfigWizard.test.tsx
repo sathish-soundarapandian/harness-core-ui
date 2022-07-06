@@ -68,16 +68,11 @@ describe('AzureWebAppServiceConfigWizard & stepOne', () => {
     const initialValue = {
       type: 'Git',
       spec: {
-        store: {
-          type: 'Git',
-          spec: {
-            connectorRef: '<+input>',
-            gitFetchType: 'Branch',
-            paths: ['file'],
-            repoName: 'repo',
-            branch: 'branch'
-          }
-        }
+        connectorRef: '<+input>',
+        gitFetchType: 'Branch',
+        paths: ['file'],
+        repoName: 'repo',
+        branch: 'branch'
       },
       store: 'Git',
       connectorRef: '<+input>'
