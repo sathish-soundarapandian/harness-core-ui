@@ -2848,9 +2848,9 @@ export interface StringsMap {
   'pipeline.customApprovalStep.retryInterval': string
   'pipeline.customApprovalStep.scriptTimeout': string
   'pipeline.customApprovalStep.validation.atLeastOneOutputVariableIsRequired': string
+  'pipeline.customApprovalStep.validation.minimumRetryIntervalIs10Secs': string
+  'pipeline.customApprovalStep.validation.minimumScriptTimeoutIs10Secs': string
   'pipeline.customApprovalStep.validation.outputVariable': string
-  'pipeline.customApprovalStep.validation.retryIntervalIsRequired': string
-  'pipeline.customApprovalStep.validation.scriptTimeoutIsRequired': string
   'pipeline.dashboardDeploymentsWidget.failed24Hrs.plural': string
   'pipeline.dashboardDeploymentsWidget.failed24Hrs.singular': string
   'pipeline.dashboardDeploymentsWidget.pendingApproval.plural': string

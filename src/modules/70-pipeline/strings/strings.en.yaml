@@ -270,8 +270,8 @@ customApprovalStep:
       not_in: '{{ key }} is not in'
   validation:
     outputVariable: Output Variable(s) is required
-    retryIntervalIsRequired: Retry interval is required
-    scriptTimeoutIsRequired: Script timeout is required
+    minimumRetryIntervalIs10Secs: Minimum Retry interval is 10 seconds
+    minimumScriptTimeoutIs10Secs: Minimum Script timeout is 10 seconds
     atLeastOneOutputVariableIsRequired: At least one output field must be set
 manifestType:
   attachPath: + Attach {{manifestPath}}
