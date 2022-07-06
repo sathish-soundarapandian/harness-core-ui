@@ -13,7 +13,7 @@ import { FontVariation } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { Classes, Dialog, IDialogProps } from '@blueprintjs/core'
 import produce from 'immer'
-import { isEmpty, set } from 'lodash-es'
+import { get, isEmpty, set } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 
 import type { ConnectorConfigDTO, ConnectorInfoDTO, StageElementConfig, StoreConfigWrapper } from 'services/cd-ng'
@@ -23,7 +23,6 @@ import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonS
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
-import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
 import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
 import StepBitbucketAuthentication from '@connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
@@ -96,6 +95,7 @@ function AzureWebAppListView({
   const { expressions } = useVariablesExpression()
 
   const removeApplicationConfig = (type: ModalViewOption): void => {
+    /* istanbul ignore else */
     if (stage) {
       const newStage = produce(stage, draft => {
         switch (type) {
@@ -108,6 +108,7 @@ function AzureWebAppListView({
         }
       }).stage
 
+      /* istanbul ignore else */
       if (newStage) {
         updateStage(newStage)
       }
@@ -120,7 +121,7 @@ function AzureWebAppListView({
     showConnectorModal()
   }
 
-  const updateStageData = (item: StoreConfigWrapper, itemPath: string): void => {
+  const updateStageData = /* istanbul ignore next */ (item: StoreConfigWrapper, itemPath: string): void => {
     const path = isPropagating
       ? `stage.spec.serviceConfig.stageOverrides.${itemPath}`
       : `stage.spec.serviceConfig.serviceDefinition.spec.${itemPath}`
@@ -134,7 +135,7 @@ function AzureWebAppListView({
     }
   }
 
-  const handleSubmit = (item: StoreConfigWrapper): void => {
+  const handleSubmit = /* istanbul ignore next */ (item: StoreConfigWrapper): void => {
     let path = ''
     switch (selectedOption) {
       case ModalViewOption.APPLICATIONSETTING:
@@ -166,11 +167,11 @@ function AzureWebAppListView({
     setSelectedOption(undefined)
   }
 
-  const handleConnectorViewChange = (isConnectorView: boolean): void => {
+  const handleConnectorViewChange = /* istanbul ignore next */ (isConnectorView: boolean): void => {
     setConnectorView(isConnectorView)
     setIsEditMode(false)
   }
-  const handleStoreChange = (type?: ConnectorTypes): void => {
+  const handleStoreChange = /* istanbul ignore next */ (type?: ConnectorTypes): void => {
     setConnectorType(type || '')
   }
 
@@ -274,9 +275,6 @@ function AzureWebAppListView({
             isEditMode={isEditMode}
             gitDetails={{ repoIdentifier, branch, getDefaultFromOtherRepo: true }}
           />
-          {connectorType !== Connectors.ARTIFACTORY ? (
-            <GitDetailsStep type={type} name={getString('details')} isEditMode={isEditMode} connectorInfo={undefined} />
-          ) : null}
           {connectorType === Connectors.GIT ? (
             <StepGitAuthentication
               name={getString('credentials')}
@@ -356,6 +354,7 @@ function AzureWebAppListView({
   const getInitialValues = React.useCallback((): AzureWebAppWizardInitData => {
     switch (selectedOption) {
       case ModalViewOption.APPLICATIONSETTING:
+        /* istanbul ignore else */
         if (applicationSettings) {
           const values = {
             ...applicationSettings,
@@ -369,6 +368,8 @@ function AzureWebAppListView({
           connectorRef: undefined
         }
       case ModalViewOption.CONNECTIONSTRING:
+        /* istanbul ignore else */
+
         if (connectionStrings) {
           const values = {
             ...connectionStrings,
@@ -392,7 +393,7 @@ function AzureWebAppListView({
   const renderListView = React.useCallback(
     (currentOption: StoreConfigWrapper | undefined, option: ModalViewOption): React.ReactElement => {
       const selectedStore = currentOption?.type
-      const selectedConnectorRef = currentOption?.spec?.connectorRef
+      const selectedConnectorRef = get(currentOption, 'spec.connectorRef')
       const connectorList = option === ModalViewOption.CONNECTIONSTRING ? stringsConnectors : settingsConnectors
       const { color } = getStatus(selectedConnectorRef, connectorList, accountId)
       const connectorName = getConnectorNameFromValue(selectedConnectorRef, connectorList)
@@ -410,13 +411,13 @@ function AzureWebAppListView({
               <Icon inline name={ConnectorIcons[currentOption?.type as ConnectorTypes]} size={20} />
               {renderConnectorField(selectedConnectorRef, connectorName, color)}
             </div>
-            {!!currentOption?.spec?.paths?.length && (
+            {!!get(currentOption, 'spec.paths')?.length && (
               <div>
                 <Text lineClamp={1} width={200}>
                   <span className={css.noWrap}>
-                    {typeof currentOption?.spec.paths === 'string'
-                      ? currentOption?.spec.paths
-                      : currentOption?.spec.paths.join(', ')}
+                    {typeof get(currentOption, 'spec.paths') === 'string'
+                      ? get(currentOption, 'spec.paths')
+                      : get(currentOption, 'spec.paths').join(', ')}
                   </span>
                 </Text>
               </div>
