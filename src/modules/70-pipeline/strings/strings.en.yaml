@@ -1178,6 +1178,3 @@ appServiceConfig:
     fileSource: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Source'
     filePath: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Path'
     subtitle: 'Specify {{$.pipeline.appServiceConfig.connectionStrings.name}} Script File Type'
-startupScript: 
-  name: Startup Script
-  scriptFilePath: 'Script File Path'

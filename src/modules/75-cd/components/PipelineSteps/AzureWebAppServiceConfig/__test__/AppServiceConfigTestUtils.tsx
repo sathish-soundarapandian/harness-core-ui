@@ -25,9 +25,12 @@ export const props: AzureWebAppSelectionProps = {
 }
 export const getLabelProp = (): WizardStepNames => {
   return {
-    wizardName: 'pipeline.appServiceConfig.applicationSettings.file',
-    firstStepName: 'pipeline.appServiceConfig.applicationSettings.fileSource',
-    secondStepName: 'pipeline.appServiceConfig.applicationSettings.fileDetails',
+    wizardName: 'pipeline.appServiceConfig.applicationSettings.scriptFile',
+    firstStepName: 'pipeline.appServiceConfig.applicationSettings.scriptFileSource',
+    secondStepName: 'pipeline.appServiceConfig.applicationSettings.scriptFileDetails',
+    firstStepTitle: 'pipeline.appServiceConfig.applicationSettings.fileSource',
+    firstStepSubtitle: 'pipeline.appServiceConfig.applicationSettings.subtitle',
+    secondStepTitle: 'pipeline.appServiceConfig.applicationSettings.fileDetails',
     pathPlaceholder: 'pipeline.appServiceConfig.applicationSettings.filePath'
   }
 }
