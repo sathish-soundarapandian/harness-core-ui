@@ -112,8 +112,8 @@ function StartupScriptListView({
     if (startupScript) {
       const values = {
         ...startupScript,
-        store: get(startupScript, 'spec.store.type'),
-        connectorRef: get(startupScript, 'spec.store.spec.connectorRef')
+        store: get(startupScript, 'type'),
+        connectorRef: get(startupScript, 'spec.connectorRef')
       }
       return values
     }
@@ -195,7 +195,7 @@ function StartupScriptListView({
   const getLastStepInitialData = (): StoreConfigWrapper => {
     const initValues = startupScript
     /* istanbul ignore next */
-    if (get(initValues, 'spec.store.type') && get(initValues, 'spec.store.type') !== connectorType) {
+    if (get(initValues, 'type') && get(initValues, 'type') !== connectorType) {
       return null as unknown as StoreConfigWrapper
     }
     return initValues
@@ -299,22 +299,22 @@ function StartupScriptListView({
 
   const renderStartupScriptList = React.useCallback(
     (script: StoreConfigWrapper): React.ReactElement => {
-      const { color } = getStatus(get(script, 'spec.store.spec.connectorRef'), connectors, accountId)
-      const connectorName = getConnectorNameFromValue(get(script, 'spec.store.spec.connectorRef'), connectors)
+      const { color } = getStatus(get(script, 'spec.connectorRef'), connectors, accountId)
+      const connectorName = getConnectorNameFromValue(get(script, 'spec.connectorRef'), connectors)
       return (
         <div className={css.rowItem}>
           <section className={css.startupScriptList}>
             <div className={css.columnId}>
-              <Icon inline name={ConnectorIcons[get(script, 'spec.store.type') as ConnectorTypes]} size={20} />
-              {renderConnectorField(get(script, 'spec.store.spec.connectorRef'), connectorName, color)}
+              <Icon inline name={ConnectorIcons[get(script, 'type') as ConnectorTypes]} size={20} />
+              {renderConnectorField(get(script, 'spec.connectorRef'), connectorName, color)}
             </div>
-            {!!get(script, 'spec.store.spec.paths')?.length && (
+            {!!get(script, 'spec.paths')?.length && (
               <div className={css.columnId}>
                 <Text lineClamp={1} width={300}>
                   <span className={css.noWrap}>
-                    {typeof get(script, 'spec.store.spec.paths') === 'string'
-                      ? /* istanbul ignore next */ get(script, 'spec.store.spec.paths')
-                      : get(script, 'spec.store.spec.paths').join(', ')}
+                    {typeof get(script, 'spec.paths') === 'string'
+                      ? /* istanbul ignore next */ get(script, 'spec.paths')
+                      : get(script, 'spec.paths').join(', ')}
                   </span>
                 </Text>
               </div>
@@ -325,7 +325,7 @@ function StartupScriptListView({
                   <Button
                     icon="Edit"
                     iconProps={{ size: 18 }}
-                    onClick={() => editStartupScript(script?.spec?.store?.type as ConnectorTypes)}
+                    onClick={() => editStartupScript(script?.type as ConnectorTypes)}
                     minimal
                   />
 

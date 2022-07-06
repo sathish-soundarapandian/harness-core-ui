@@ -43,15 +43,10 @@ describe('StartupScriptWizardStepTwo', () => {
     const initialValues = {
       type: 'Bitbucket',
       spec: {
-        store: {
-          type: 'Bitbucket',
-          spec: {
-            connectorRef: 'account.BBsaasAmit',
-            gitFetchType: 'Commit',
-            paths: 'filePath',
-            commitId: 'commitId'
-          }
-        }
+        connectorRef: 'account.BBsaasAmit',
+        gitFetchType: 'Commit',
+        paths: 'filePath',
+        commitId: 'commitId'
       }
     } as any
     const { container } = render(
@@ -77,16 +72,11 @@ describe('StartupScriptWizardStepTwo', () => {
     const initialValues = {
       type: 'Bitbucket',
       spec: {
-        store: {
-          type: 'Bitbucket',
-          spec: {
-            connectorRef: '<+input>',
-            gitFetchType: 'Commit',
-            paths: ['<+input>'],
-            repoName: '<+input>',
-            commitId: '<+input>'
-          }
-        }
+        connectorRef: '<+input>',
+        gitFetchType: 'Commit',
+        paths: ['<+input>'],
+        repoName: '<+input>',
+        commitId: '<+input>'
       }
     } as any
 
@@ -113,16 +103,11 @@ describe('StartupScriptWizardStepTwo', () => {
     const initialValues = {
       type: 'Bitbucket',
       spec: {
-        store: {
-          type: 'Bitbucket',
-          spec: {
-            connectorRef: '<+input>',
-            gitFetchType: 'Branch',
-            paths: ['<+input>'],
-            repoName: '<+input>',
-            branch: '<+input>'
-          }
-        }
+        connectorRef: '<+input>',
+        gitFetchType: 'Branch',
+        paths: ['<+input>'],
+        repoName: '<+input>',
+        branch: '<+input>'
       }
     } as any
 

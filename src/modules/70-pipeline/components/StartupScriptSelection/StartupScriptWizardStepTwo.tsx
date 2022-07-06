@@ -60,11 +60,15 @@ function StartupScriptWizardStepTwo({
       : GitRepoName.Account
 
   const getInitialValues = useCallback((): StartupScriptDataType => {
-    const specValues = get(initialValues, 'spec.store.spec', null)
+    const specValues = get(initialValues, 'spec', null)
 
     if (specValues) {
       return {
         ...specValues,
+        branch: specValues.branch,
+        commitId: specValues.commitId,
+        repoName: specValues.repoName,
+        gitFetchType: specValues.gitFetchType,
         paths:
           typeof specValues.paths === 'string' || isUndefined(specValues.paths) ? specValues.paths : specValues.paths[0]
       }
@@ -82,29 +86,24 @@ function StartupScriptWizardStepTwo({
     const startupScript = {
       type: formData?.store as ConnectorTypes,
       spec: {
-        store: {
-          type: formData?.store,
-          spec: {
-            connectorRef: formData?.connectorRef,
-            gitFetchType: formData?.gitFetchType,
-            paths:
-              /* istanbul ignore next */ getMultiTypeFromValue(formData.paths) === MultiTypeInputType.RUNTIME
-                ? formData?.paths
-                : [formData?.paths]
-          }
-        }
+        connectorRef: formData?.connectorRef,
+        gitFetchType: formData?.gitFetchType,
+        paths:
+          /* istanbul ignore next */ getMultiTypeFromValue(formData.paths) === MultiTypeInputType.RUNTIME
+            ? formData?.paths
+            : [formData?.paths]
       }
     }
 
     if (connectionType === GitRepoName.Account) {
-      set(startupScript, 'spec.store.spec.repoName', formData?.repoName)
+      set(startupScript, 'spec.repoName', formData?.repoName)
     }
 
-    if (startupScript?.spec?.store) {
+    if (startupScript?.spec) {
       if (formData?.gitFetchType === 'Branch') {
-        set(startupScript, 'spec.store.spec.branch', formData?.branch)
+        set(startupScript, 'spec.branch', formData?.branch)
       } else if (formData?.gitFetchType === 'Commit') {
-        set(startupScript, 'spec.store.spec.commitId', formData?.commitId)
+        set(startupScript, 'spec.commitId', formData?.commitId)
       }
     }
 
