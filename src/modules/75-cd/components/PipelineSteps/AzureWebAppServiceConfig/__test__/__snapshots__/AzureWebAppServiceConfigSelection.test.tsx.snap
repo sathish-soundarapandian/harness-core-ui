@@ -539,7 +539,54 @@ exports[`AzureWebAppConfigSelection readonly mode 1`] = `
                   </span>
                   <div
                     class="connectorNameField"
-                  />
+                  >
+                    <span
+                      class="bp3-popover-wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target Text--targetClass"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main connectorName"
+                          style="--text-line-clamp: 1;"
+                          tabindex="0"
+                        >
+                          GIT2
+                        </p>
+                      </span>
+                    </span>
+                    <span
+                      class="bp3-icon bp3-icon-full-circle StyledProps--main StyledProps--color"
+                      icon="full-circle"
+                    >
+                      <svg
+                        data-icon="full-circle"
+                        height="8"
+                        viewBox="0 0 16 16"
+                        width="8"
+                      >
+                        <desc>
+                          full-circle
+                        </desc>
+                        <path
+                          d="M8 0a8 8 0 100 16A8 8 0 108 0z"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main"
+                    style="--text-line-clamp: 1; width: 200px;"
+                  >
+                    <span
+                      class="noWrap"
+                    >
+                      [filePath]
+                    </span>
+                  </p>
                 </div>
               </section>
             </div>
@@ -582,7 +629,54 @@ exports[`AzureWebAppConfigSelection readonly mode 1`] = `
                   </span>
                   <div
                     class="connectorNameField"
-                  />
+                  >
+                    <span
+                      class="bp3-popover-wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target Text--targetClass"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main connectorName"
+                          style="--text-line-clamp: 1;"
+                          tabindex="0"
+                        >
+                          GIT2
+                        </p>
+                      </span>
+                    </span>
+                    <span
+                      class="bp3-icon bp3-icon-full-circle StyledProps--main StyledProps--color"
+                      icon="full-circle"
+                    >
+                      <svg
+                        data-icon="full-circle"
+                        height="8"
+                        viewBox="0 0 16 16"
+                        width="8"
+                      >
+                        <desc>
+                          full-circle
+                        </desc>
+                        <path
+                          d="M8 0a8 8 0 100 16A8 8 0 108 0z"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main"
+                    style="--text-line-clamp: 1; width: 200px;"
+                  >
+                    <span
+                      class="noWrap"
+                    >
+                      [filePath]
+                    </span>
+                  </p>
                 </div>
               </section>
             </div>
