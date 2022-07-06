@@ -795,7 +795,7 @@ function ManifestListView({
         </Layout.Vertical>
       </Layout.Vertical>
       <Layout.Vertical spacing={'medium'} flex={{ alignItems: 'flex-start' }}>
-        {showAddManifestBtn(isReadonly, allowOnlyOne, listOfManifests) && (
+        {showAddManifestBtn(isReadonly, allowOnlyOne, listOfManifests, deploymentType) && (
           <Button
             className={css.addManifest}
             id="add-manifest"

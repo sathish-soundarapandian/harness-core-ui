@@ -35,6 +35,7 @@ export interface ArtifactListViewProps {
   refetchConnectors: () => void
   isReadonly: boolean
   allowSidecar?: boolean
+  isAdditionAllowed: boolean
 }
 export interface ArtifactsSelectionProps {
   isPropagating?: boolean

@@ -23,8 +23,6 @@ import type {
   ServiceDefinition
 } from 'services/cd-ng'
 import { connectorTypes } from '@pipeline/utils/constants'
-import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
-import type { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { getStageFromPipeline as getStageByPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
 import type { DependencyElement } from 'services/ci'
@@ -236,10 +234,6 @@ export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessAzureFunctions]: 'Azure Details',
   [ServiceDeploymentType.ServerlessGoogleFunctions]: 'GCP Details',
   [ServiceDeploymentType.Pdc]: 'Infrastructure definition'
-}
-
-export const isServerlessManifestType = (selectedManifest: ManifestTypes | null): boolean => {
-  return selectedManifest === ManifestDataType.ServerlessAwsLambda
 }
 
 export const getSelectedDeploymentType = (

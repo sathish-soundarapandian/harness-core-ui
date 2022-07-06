@@ -78,6 +78,7 @@ function ArtifactListView({
   removePrimary,
   removeSidecar,
   addNewArtifact,
+  isAdditionAllowed,
   allowSidecar = true
 }: ArtifactListViewProps): React.ReactElement {
   const { getString } = useStrings()
@@ -258,7 +259,7 @@ function ArtifactListView({
       </Layout.Vertical>
 
       <Layout.Vertical spacing={'medium'} flex={{ alignItems: 'flex-start' }}>
-        {!primaryArtifact && !isReadonly && (
+        {!primaryArtifact && isAdditionAllowed && (
           <Button
             className={css.addArtifact}
             id="add-artifact"
@@ -268,7 +269,7 @@ function ArtifactListView({
             text={getString('pipelineSteps.serviceTab.artifactList.addPrimary')}
           />
         )}
-        {!isReadonly && allowSidecar && (
+        {isAdditionAllowed && allowSidecar && (
           <Button
             className={css.addArtifact}
             id="add-artifact"

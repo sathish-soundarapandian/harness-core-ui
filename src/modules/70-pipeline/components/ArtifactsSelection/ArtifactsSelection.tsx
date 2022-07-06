@@ -80,7 +80,9 @@ import {
   ArtifactIconByType,
   ArtifactTitleIdByType,
   allowedArtifactTypes,
-  ModalViewFor
+  ModalViewFor,
+  isAdditionAllowed,
+  isAllowedArtifactDeploymentTypes
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import NexusArtifact from './ArtifactRepository/ArtifactLastSteps/NexusArtifact/NexusArtifact'
@@ -129,7 +131,7 @@ export default function ArtifactsSelection({
     if (
       NG_NEXUS_ARTIFACTORY &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.Nexus3Registry) &&
-      !isServerlessDeploymentType(deploymentType)
+      isAllowedArtifactDeploymentTypes(deploymentType)
     ) {
       allowedArtifactTypes[deploymentType].push(
         ENABLED_ARTIFACT_TYPES.Nexus3Registry,
@@ -140,7 +142,7 @@ export default function ArtifactsSelection({
     if (
       CUSTOM_ARTIFACT_NG &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.CustomArtifact) &&
-      !isServerlessDeploymentType(deploymentType)
+      isAllowedArtifactDeploymentTypes(deploymentType)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.CustomArtifact)
     }
@@ -148,7 +150,7 @@ export default function ArtifactsSelection({
     if (
       NG_AZURE &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.Acr) &&
-      !isServerlessDeploymentType(deploymentType)
+      isAllowedArtifactDeploymentTypes(deploymentType)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.Acr)
     }
@@ -676,6 +678,7 @@ export default function ArtifactsSelection({
       refetchConnectors={refetchConnectorList}
       isReadonly={readonly}
       allowSidecar={!isServerlessDeploymentType(deploymentType)}
+      isAdditionAllowed={isAdditionAllowed(deploymentType, readonly)}
     />
   )
 }

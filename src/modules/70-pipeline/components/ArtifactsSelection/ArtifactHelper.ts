@@ -13,12 +13,26 @@ import { Connectors } from '@connectors/constants'
 import type { ConnectorInfoDTO, ServiceDefinition } from 'services/cd-ng'
 import type { StringKeys } from 'framework/strings'
 import { useStrings } from 'framework/strings'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 
 import type { ArtifactType } from './ArtifactInterface'
 
 export enum ModalViewFor {
   PRIMARY = 1,
   SIDECAR = 2
+}
+
+export const isAllowedArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
+  return deploymentType === ServiceDeploymentType.Kubernetes || deploymentType === ServiceDeploymentType.NativeHelm
+}
+
+export const isAdditionAllowed = (deploymentType: ServiceDefinition['type'], isReadOnly: boolean): boolean => {
+  return (
+    !isReadOnly &&
+    (deploymentType === ServiceDeploymentType.Kubernetes ||
+      deploymentType === ServiceDeploymentType.NativeHelm ||
+      deploymentType === ServiceDeploymentType.ServerlessAwsLambda)
+  )
 }
 
 export const ArtifactIconByType: Record<ArtifactType, IconName> = {
