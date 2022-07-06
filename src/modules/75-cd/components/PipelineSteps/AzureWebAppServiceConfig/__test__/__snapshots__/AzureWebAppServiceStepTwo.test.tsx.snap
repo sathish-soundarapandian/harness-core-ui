@@ -8,9 +8,7 @@ exports[`AzureWebAppServiceStepTwo move to stepTwo 1`] = `
   >
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-medium"
-    >
-      pipeline.applicationSettings.fileDetails
-    </p>
+    />
     <div
       class="OverlaySpinner--overlaySpinner"
     >
@@ -298,9 +296,7 @@ exports[`AzureWebAppServiceStepTwo runtime inputs 1`] = `
   >
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-medium"
-    >
-      pipeline.applicationSettings.fileDetails
-    </p>
+    />
     <div
       class="OverlaySpinner--overlaySpinner"
     >
