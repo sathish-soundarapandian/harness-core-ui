@@ -45,44 +45,29 @@ const labels = getLabelProp()
 export const applicationSettings = {
   type: 'Github',
   spec: {
-    store: {
-      type: 'Github',
-      spec: {
-        connectorRef: 'Github2',
-        gitFetchType: 'Branch',
-        paths: ['filePath'],
-        branch: 'branch'
-      }
-    }
+    connectorRef: 'Github2',
+    gitFetchType: 'Branch',
+    paths: ['filePath'],
+    branch: 'branch'
   }
 }
 export const connectionStrings = {
   type: 'Github',
   spec: {
-    store: {
-      type: 'Github',
-      spec: {
-        connectorRef: 'Github2',
-        gitFetchType: 'Branch',
-        paths: ['filePath'],
-        branch: 'branch'
-      }
-    }
+    connectorRef: 'Github2',
+    gitFetchType: 'Branch',
+    paths: ['filePath'],
+    branch: 'branch'
   }
 }
 
 export const prevStepData = {
   type: 'Bitbucket',
   spec: {
-    store: {
-      type: 'Bitbucket',
-      spec: {
-        connectorRef: 'account.BBsaasAmit',
-        gitFetchType: 'Commit',
-        paths: 'filePath',
-        commitId: 'commitId'
-      }
-    }
+    connectorRef: 'account.BBsaasAmit',
+    gitFetchType: 'Commit',
+    paths: 'filePath',
+    commitId: 'commitId'
   },
   store: 'Bitbucket',
   connectorRef: {
@@ -151,8 +136,8 @@ export const propStepTwo = {
   stepName: 'pipeline.applicationSettings.fileDetails',
   initialValues: {
     ...applicationSettings,
-    store: applicationSettings?.spec?.store?.type,
-    connectorRef: applicationSettings?.spec?.store?.spec?.connectorRef
+    store: applicationSettings?.type,
+    connectorRef: applicationSettings?.spec?.connectorRef
   } as any,
   handleSubmit: jest.fn()
 }
@@ -167,7 +152,7 @@ export const propStepOne = {
   connectorTypes: ['Git', 'Github', 'GitLab', 'Bitbucket'] as Array<ConnectorTypes>,
   initialValues: {
     ...applicationSettings,
-    store: applicationSettings?.spec?.store?.type,
+    store: applicationSettings?.type,
     connectorRef: '<+input>'
   } as any,
   expressions: [],
@@ -185,8 +170,8 @@ export const propWizard = {
   handleStoreChange: jest.fn(),
   initialValues: {
     ...applicationSettings,
-    store: applicationSettings?.spec?.store?.type,
-    connectorRef: applicationSettings?.spec?.store?.spec?.connectorRef
+    store: applicationSettings?.type,
+    connectorRef: applicationSettings?.spec?.connectorRef
   },
   newConnectorSteps: jest.fn(),
   lastSteps: manifestDetailStep,
@@ -197,16 +182,11 @@ export const propWizard = {
 export const prevStepDataRuntime = {
   type: 'Bitbucket',
   spec: {
-    store: {
-      type: 'Bitbucket',
-      spec: {
-        connectorRef: '<+input>',
-        gitFetchType: 'Commit',
-        paths: ['<+input>'],
-        repoName: '<+input>',
-        commitId: '<+input>'
-      }
-    }
+    connectorRef: '<+input>',
+    gitFetchType: 'Commit',
+    paths: ['<+input>'],
+    repoName: '<+input>',
+    commitId: '<+input>'
   },
   store: 'Bitbucket',
   connectorRef: '<+input>'

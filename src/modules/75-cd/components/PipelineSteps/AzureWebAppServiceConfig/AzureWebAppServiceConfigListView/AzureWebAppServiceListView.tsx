@@ -212,12 +212,12 @@ function AzureWebAppListView({
   const getLastStepInitialData = React.useCallback((): StoreConfigWrapper => {
     switch (selectedOption) {
       case ModalViewOption.APPLICATIONSETTING:
-        if (applicationSettings?.spec?.store?.type && applicationSettings?.spec?.store?.type === connectorType) {
+        if (applicationSettings?.type && applicationSettings?.type === connectorType) {
           return { ...applicationSettings }
         }
         break
       case ModalViewOption.CONNECTIONSTRING:
-        if (connectionStrings?.spec?.store?.type && connectionStrings?.spec?.store?.type === connectorType) {
+        if (connectionStrings?.type && connectionStrings?.type === connectorType) {
           return { ...connectionStrings }
         }
         break
@@ -359,8 +359,8 @@ function AzureWebAppListView({
         if (applicationSettings) {
           const values = {
             ...applicationSettings,
-            store: applicationSettings?.spec?.store?.type,
-            connectorRef: applicationSettings?.spec?.store?.spec?.connectorRef
+            store: applicationSettings?.type,
+            connectorRef: applicationSettings?.spec?.connectorRef
           }
           return values
         }
@@ -372,8 +372,8 @@ function AzureWebAppListView({
         if (connectionStrings) {
           const values = {
             ...connectionStrings,
-            store: connectionStrings?.spec?.store?.type,
-            connectorRef: connectionStrings?.spec?.store?.spec?.connectorRef
+            store: connectionStrings?.type,
+            connectorRef: connectionStrings?.spec?.connectorRef
           }
           return values
         }
@@ -391,8 +391,8 @@ function AzureWebAppListView({
 
   const renderListView = React.useCallback(
     (currentOption: StoreConfigWrapper | undefined, option: ModalViewOption): React.ReactElement => {
-      const selectedStore = currentOption?.spec?.store
-      const selectedConnectorRef = selectedStore?.spec?.connectorRef
+      const selectedStore = currentOption?.type
+      const selectedConnectorRef = currentOption?.spec?.connectorRef
       const connectorList = option === ModalViewOption.CONNECTIONSTRING ? stringsConnectors : settingsConnectors
       const { color } = getStatus(selectedConnectorRef, connectorList, accountId)
       const connectorName = getConnectorNameFromValue(selectedConnectorRef, connectorList)
@@ -407,16 +407,16 @@ function AzureWebAppListView({
               </Text>
             </div>
             <div className={css.columnId}>
-              <Icon inline name={ConnectorIcons[selectedStore?.type as ConnectorTypes]} size={20} />
+              <Icon inline name={ConnectorIcons[currentOption?.type as ConnectorTypes]} size={20} />
               {renderConnectorField(selectedConnectorRef, connectorName, color)}
             </div>
-            {!!selectedStore?.spec.paths?.length && (
+            {!!currentOption?.spec?.paths?.length && (
               <div>
                 <Text lineClamp={1} width={200}>
                   <span className={css.noWrap}>
-                    {typeof selectedStore?.spec.paths === 'string'
-                      ? selectedStore?.spec.paths
-                      : selectedStore?.spec.paths.join(', ')}
+                    {typeof currentOption?.spec.paths === 'string'
+                      ? currentOption?.spec.paths
+                      : currentOption?.spec.paths.join(', ')}
                   </span>
                 </Text>
               </div>
@@ -427,10 +427,9 @@ function AzureWebAppListView({
                   <Button
                     icon="Edit"
                     iconProps={{ size: 18 }}
-                    onClick={() => editApplicationConfig(selectedStore?.type as ConnectorTypes, option)}
+                    onClick={() => editApplicationConfig(selectedStore as ConnectorTypes, option)}
                     minimal
                   />
-
                   <Button
                     iconProps={{ size: 18 }}
                     icon="main-trash"

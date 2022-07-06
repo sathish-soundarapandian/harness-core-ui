@@ -61,11 +61,15 @@ function AzureWebAppServiceStepTwo({
       : GitRepoName.Account
 
   const getInitialValues = useCallback((): AppServiceConfigDataType => {
-    const specValues = get(initialValues, 'spec.store.spec', null)
+    const specValues = get(initialValues, 'spec', null)
 
     if (specValues) {
       return {
         ...specValues,
+        branch: specValues.branch,
+        commitId: specValues.commitId,
+        repoName: specValues.repoName,
+        gitFetchType: specValues.gitFetchType,
         paths:
           typeof specValues.paths === 'string' || isUndefined(specValues.paths) ? specValues.paths : specValues.paths[0]
       }
@@ -83,27 +87,22 @@ function AzureWebAppServiceStepTwo({
     const applicationSettings = {
       type: formData?.store as ConnectorTypes,
       spec: {
-        store: {
-          type: formData?.store,
-          spec: {
-            connectorRef: formData?.connectorRef,
-            gitFetchType: formData?.gitFetchType,
-            paths:
-              getMultiTypeFromValue(formData.paths) === MultiTypeInputType.RUNTIME ? formData?.paths : [formData?.paths]
-          }
-        }
+        connectorRef: formData?.connectorRef,
+        gitFetchType: formData?.gitFetchType,
+        paths:
+          getMultiTypeFromValue(formData.paths) === MultiTypeInputType.RUNTIME ? formData?.paths : [formData?.paths]
       }
     }
 
     if (connectionType === GitRepoName.Account) {
-      set(applicationSettings, 'spec.store.spec.repoName', formData?.repoName)
+      set(applicationSettings, 'spec.repoName', formData?.repoName)
     }
 
-    if (applicationSettings?.spec?.store) {
+    if (applicationSettings?.spec) {
       if (formData?.gitFetchType === 'Branch') {
-        set(applicationSettings, 'spec.store.spec.branch', formData?.branch)
+        set(applicationSettings, 'spec.branch', formData?.branch)
       } else if (formData?.gitFetchType === 'Commit') {
-        set(applicationSettings, 'spec.store.spec.commitId', formData?.commitId)
+        set(applicationSettings, 'spec.commitId', formData?.commitId)
       }
     }
 
