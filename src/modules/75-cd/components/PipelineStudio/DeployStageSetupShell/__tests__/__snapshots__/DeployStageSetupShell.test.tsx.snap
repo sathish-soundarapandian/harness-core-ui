@@ -1266,61 +1266,6 @@ exports[`DeployStageSetupShell tests opens services tab by default 1`] = `
                   </div>
                   <div
                     class="bp3-card bp3-elevation-0 Card--card sectionCard"
-                    id="App Services Configuration"
-                  >
-                    <div
-                      class="tabSubHeading"
-                    >
-                      App Services Configuration
-                    </div>
-                    <div
-                      class="Layout--vertical StyledProps--main"
-                    >
-                      <div
-                        class="Layout--vertical StyledProps--main"
-                        style="width: 100%;"
-                      >
-                        <div
-                          class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
-                        >
-                          <div
-                            class="Layout--vertical StyledProps--main"
-                          >
-                            <section />
-                            <section />
-                          </div>
-                        </div>
-                        <div
-                          class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
-                        >
-                          <button
-                            class="bp3-button Button--button StyledProps--font StyledProps--main addServiceConfig Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
-                            id="add-applicationSetting"
-                            type="button"
-                          >
-                            <span
-                              class="bp3-button-text"
-                            >
-                              common.plusAddName
-                            </span>
-                          </button>
-                          <button
-                            class="bp3-button Button--button StyledProps--font StyledProps--main addServiceConfig Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
-                            id="add-connectionString"
-                            type="button"
-                          >
-                            <span
-                              class="bp3-button-text"
-                            >
-                              common.plusAddName
-                            </span>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="bp3-card bp3-elevation-0 Card--card sectionCard"
                     id="pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts"
                   >
                     <div
