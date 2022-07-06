@@ -8,7 +8,7 @@ import { connect, FormikContextType, FieldArray } from 'formik'
 import { useStrings } from 'framework/strings'
 import { SELECT_FILES_TYPE } from '@filestore/utils/constants'
 import MultiTypeFileSelect from '@filestore/components/MultiTypeFileSelect/MultiTypeFileSelect'
-import FileStoreSelect from '../MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
+import FileStoreSelect from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
 import EncryptedFileSelect from '@filestore/components/MultiTypeFileSelect/EncryptedSelect/EncryptedFileSelectField'
 import css from './FileStoreList.module.scss'
 
