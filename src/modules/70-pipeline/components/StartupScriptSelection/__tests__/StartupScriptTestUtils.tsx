@@ -21,15 +21,10 @@ export const props: StartupScriptSelectionProps = {
 export const startupScript = {
   type: 'Github',
   spec: {
-    store: {
-      type: 'Github',
-      spec: {
-        connectorRef: 'Github2',
-        gitFetchType: 'Branch',
-        paths: ['filePath'],
-        branch: 'branch'
-      }
-    }
+    connectorRef: 'Github2',
+    gitFetchType: 'Branch',
+    paths: ['filePath'],
+    branch: 'branch'
   }
 }
 
@@ -42,15 +37,10 @@ export const onUpdate = jest.fn()
 export const prevStepData = {
   type: 'Bitbucket',
   spec: {
-    store: {
-      type: 'Bitbucket',
-      spec: {
-        connectorRef: 'account.BBsaasAmit',
-        gitFetchType: 'Commit',
-        paths: 'filePath',
-        commitId: 'commitId'
-      }
-    }
+    connectorRef: 'account.BBsaasAmit',
+    gitFetchType: 'Commit',
+    paths: 'filePath',
+    commitId: 'commitId'
   },
   store: 'Bitbucket',
   connectorRef: {
@@ -116,8 +106,8 @@ export const propStepTwo = {
   stepName: 'pipeline.startupScript.fileDetails',
   initialValues: {
     ...startupScript,
-    store: startupScript?.spec?.store?.type,
-    connectorRef: startupScript?.spec?.store?.spec?.connectorRef
+    store: startupScript?.type,
+    connectorRef: startupScript?.spec?.connectorRef
   } as any,
   handleSubmit: jest.fn()
 }
@@ -132,7 +122,7 @@ export const propStepOne = {
   connectorTypes: ['Git', 'Github', 'GitLab', 'Bitbucket'] as Array<ConnectorTypes>,
   initialValues: {
     ...startupScript,
-    store: startupScript?.spec?.store?.type,
+    store: startupScript?.type,
     connectorRef: '<+input>'
   } as any,
   expressions: [],
@@ -150,8 +140,8 @@ export const propWizard = {
   handleStoreChange: jest.fn(),
   initialValues: {
     ...startupScript,
-    store: startupScript?.spec?.store?.type,
-    connectorRef: startupScript?.spec?.store?.spec?.connectorRef
+    store: startupScript?.type,
+    connectorRef: startupScript?.spec?.connectorRef
   },
   newConnectorSteps: jest.fn(),
   lastSteps: manifestDetailStep,
@@ -161,16 +151,11 @@ export const propWizard = {
 export const prevStepDataRuntime = {
   type: 'Bitbucket',
   spec: {
-    store: {
-      type: 'Bitbucket',
-      spec: {
-        connectorRef: '<+input>',
-        gitFetchType: 'Commit',
-        paths: ['<+input>'],
-        repoName: '<+input>',
-        commitId: '<+input>'
-      }
-    }
+    connectorRef: '<+input>',
+    gitFetchType: 'Commit',
+    paths: ['<+input>'],
+    repoName: '<+input>',
+    commitId: '<+input>'
   },
   store: 'Bitbucket',
   connectorRef: '<+input>'

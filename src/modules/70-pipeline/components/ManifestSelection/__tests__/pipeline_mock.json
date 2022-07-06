@@ -26,15 +26,10 @@
                     "startupScript": {
                       "type": "Git",
                       "spec": {
-                        "store": {
-                          "type": "Git",
-                          "spec": {
-                            "connectorRef": "GIT2",
-                            "gitFetchType": "Branch",
-                            "paths": ["filePath"],
-                            "branch": "branch"
-                          }
-                        }
+                        "connectorRef": "GIT2",
+                        "gitFetchType": "Branch",
+                        "paths": ["filePath"],
+                        "branch": "branch"
                       }
                     },
                     "manifests": [
