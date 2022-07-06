@@ -65,8 +65,8 @@ import {
   allowedManifestTypes,
   ManifestTypetoStoreMap,
   ManifestToPathKeyMap,
-  showAddManifestBtn,
-  getManifestLocation
+  getManifestLocation,
+  showAddManifestBtn
 } from '../Manifesthelper'
 import type { ConnectorRefLabelType } from '../../ArtifactsSelection/ArtifactInterface'
 import type {
@@ -777,7 +777,7 @@ function ManifestListView({
         </Layout.Vertical>
       </Layout.Vertical>
       <Layout.Vertical spacing={'medium'} flex={{ alignItems: 'flex-start' }}>
-        {showAddManifestBtn(isReadonly, allowOnlyOne, listOfManifests) && (
+        {showAddManifestBtn(isReadonly, allowOnlyOne, listOfManifests, deploymentType) && (
           <Button
             className={css.addManifest}
             id="add-manifest"

@@ -8,7 +8,9 @@ serviceDependenciesText: Service Dependencies
 stepLabel: '{{name}} (Id: {{identifier}})'
 numOfStage: 1 stage
 numOfStages: '{{n}} stages'
-enableVerificationOptions: Enable verification options
+enableVerificationTitle: Add Continuous Verification
+enableVerificationOptions: Enable Continuous Verification
+enableVerificationHelpText: Apply verification step to a deployment to detect regressions or anomalies, and to rollback failed deployments.
 openInPipelineStudio: Open in Pipeline Studio
 closeStepConfig: Step Config
 stepConfigHasChanges: Form has some unsaved changes, Do you want to apply the changes?
@@ -270,8 +272,8 @@ customApprovalStep:
       not_in: '{{ key }} is not in'
   validation:
     outputVariable: Output Variable(s) is required
-    retryIntervalIsRequired: Retry interval is required
-    scriptTimeoutIsRequired: Script timeout is required
+    minimumRetryIntervalIs10Secs: Minimum Retry interval is 10 seconds
+    minimumScriptTimeoutIs10Secs: Minimum Script timeout is 10 seconds
     atLeastOneOutputVariableIsRequired: At least one output field must be set
 manifestType:
   attachPath: + Attach {{manifestPath}}
@@ -1178,3 +1180,8 @@ appServiceConfig:
     fileSource: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Source'
     filePath: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Path'
     subtitle: 'Specify {{$.pipeline.appServiceConfig.connectionStrings.name}} Script File Type'
+viewPipeline: View Pipeline
+codeSource: 'Code Source'
+recentTenExecutions: 'Recent 10 Executions'
+lastExecution: 'Last Execution'
+lastModified: 'Last Modified'

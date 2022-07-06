@@ -8,10 +8,11 @@
 import type { Schema } from 'yup'
 import type { IconName } from '@wings-software/uicore'
 import { Connectors } from '@connectors/constants'
-import type { ConnectorInfoDTO } from 'services/cd-ng'
+import type { ConnectorInfoDTO, ServiceDefinition } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { StringKeys } from 'framework/strings'
 import { NameSchema } from '@common/utils/Validation'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type {
   HelmVersionOptions,
   ManifestStores,
@@ -22,15 +23,31 @@ import type {
 
 export type ReleaseRepoPipeline = PipelineInfoConfig & { gitOpsEnabled: boolean }
 
+export const isAllowedManifestDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
+  return (
+    deploymentType === ServiceDeploymentType.Kubernetes ||
+    deploymentType === ServiceDeploymentType.NativeHelm ||
+    deploymentType === ServiceDeploymentType.ServerlessAwsLambda
+  )
+}
+
 export const showAddManifestBtn = (
   isReadonly: boolean,
   allowOnlyOne: boolean,
-  listOfManifests: Array<any>
+  listOfManifests: Array<any>,
+  deploymentType?: ServiceDefinition['type']
 ): boolean => {
   if (allowOnlyOne && listOfManifests.length === 1) {
     return false
   }
+  if (deploymentType) {
+    return !isReadonly && isAllowedManifestDeploymentTypes(deploymentType)
+  }
   return !isReadonly
+}
+
+export const isServerlessManifestType = (selectedManifest: ManifestTypes | null): boolean => {
+  return selectedManifest === ManifestDataType.ServerlessAwsLambda
 }
 
 export const ManifestDataType: Record<ManifestTypes, ManifestTypes> = {
@@ -88,7 +105,10 @@ export const allowedManifestTypes: Record<string, Array<ManifestTypes>> = {
     ManifestDataType.KustomizePatches
   ],
   NativeHelm: [ManifestDataType.Values, ManifestDataType.HelmChart],
-  ServerlessAwsLambda: [ManifestDataType.ServerlessAwsLambda]
+  ServerlessAwsLambda: [ManifestDataType.ServerlessAwsLambda],
+  Ssh: [],
+  WinRm: [],
+  AzureWebApps: []
 }
 
 export const manifestStoreTypes: Array<ManifestStores> = [
