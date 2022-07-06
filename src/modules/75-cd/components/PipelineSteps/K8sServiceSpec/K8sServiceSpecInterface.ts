@@ -10,18 +10,15 @@ import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/Abs
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type {
   ArtifactListConfig,
-  AzureWebAppServiceSpec,
   ManifestConfig,
   ManifestConfigWrapper,
   PrimaryArtifact,
   ServiceDefinition,
   ServiceSpec,
-  SidecarArtifact,
-  StoreConfigWrapper
+  SidecarArtifact
 } from 'services/cd-ng'
 import type { ArtifactSourceBaseFactory } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import type { ManifestSourceBaseFactory } from '@cd/factory/ManifestSourceFactory/ManifestSourceBaseFactory'
-import type { AzureWebAppConfigBaseFactory } from '@cd/factory/AzureWebAppConfigFactory/AzureWebAppConfigFactory'
 export interface K8SDirectServiceStep extends ServiceSpec {
   stageIndex?: number
   setupModeType?: string
@@ -88,28 +85,4 @@ export interface KubernetesManifestsProps {
   allowableTypes: MultiTypeInputType[]
   manifest?: ManifestConfig
   manifestPath?: string
-}
-
-export enum AzureWebAppConfigType {
-  applicationSettings = 'applicationSettings',
-  connectionStrings = 'connectionStrings',
-  startupScript = 'startupScript'
-}
-
-export interface AzureWebAppConfigProps {
-  template: AzureWebAppServiceSpec
-  path?: string
-  stepViewType?: StepViewType
-  azureWebAppConfigBaseFactory: AzureWebAppConfigBaseFactory
-  initialValues: K8SDirectServiceStep
-  readonly: boolean
-  stageIdentifier: string
-  serviceIdentifier?: string
-  formik?: any
-  fromTrigger?: boolean
-  allowableTypes: MultiTypeInputType[]
-  azureWebAppConfig?: StoreConfigWrapper
-  azureWebAppConfigPath?: string
-  type?: AzureWebAppConfigType
-  pathLabel?: string
 }
