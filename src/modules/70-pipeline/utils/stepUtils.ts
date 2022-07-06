@@ -90,7 +90,7 @@ export function getStepPaletteModuleInfosFromStage(
       category = 'ServerlessAwsLambda'
       break
     case 'AzureWebApps':
-      category = 'AzureWebApps'
+      category = 'AzureWebApp'
       break
   }
   switch (stageType) {
