@@ -258,7 +258,7 @@ export const getInfraGroups = (
                 },
                 {
                   label: 'Azure Web App',
-                  icon: 'microsoft-azure',
+                  icon: 'azurewebapp',
                   value: InfraDeploymentType.AzureWebApp
                 }
               ]

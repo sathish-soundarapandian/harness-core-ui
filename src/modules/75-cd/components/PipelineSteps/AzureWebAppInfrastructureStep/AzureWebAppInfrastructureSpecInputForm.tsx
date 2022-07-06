@@ -73,6 +73,13 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
     defaultTo(initialValues.resourceGroup, allValues?.resourceGroup)
   )
   const [webAppValue, setWebAppValue] = useState<string | undefined>(defaultTo(initialValues.webApp, allValues?.webApp))
+
+  const [deploymentSlotValue, setDeploymentSlotValue] = useState<string | undefined>(
+    defaultTo(initialValues.deploymentSlot, allValues?.deploymentSlot)
+  )
+  const [targetSlotValue, setTargetSlotValue] = useState<string | undefined>(
+    defaultTo(initialValues.targetSlot, allValues?.targetSlot)
+  )
   const { expressions } = useVariablesExpression()
 
   const { getString } = useStrings()
@@ -242,13 +249,16 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
       subscriptionId &&
       getMultiTypeFromValue(subscriptionId) === MultiTypeInputType.FIXED &&
       resourceGroupValue &&
-      getMultiTypeFromValue(resourceGroupValue) === MultiTypeInputType.FIXED
+      getMultiTypeFromValue(resourceGroupValue) === MultiTypeInputType.FIXED &&
+      webAppValue &&
+      getMultiTypeFromValue(webAppValue) === MultiTypeInputType.FIXED
     ) {
-      refetchWebApps({
+      refetchDeploymentSlots({
         queryParams,
         pathParams: {
           subscriptionId: subscriptionId as string,
-          resourceGroup: resourceGroupValue as string
+          resourceGroup: resourceGroupValue as string,
+          webAppName: webAppValue as string
         }
       })
 
@@ -269,6 +279,28 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
   useEffect(() => {
     resetForm('webApp')
   }, [webAppValue])
+
+  useEffect(() => {
+    if (connector && !initialValues.connectorRef) {
+      set(initialValues, 'connectorRef', connector)
+    }
+    if (subscriptionId && !initialValues.subscriptionId) {
+      set(initialValues, 'subscriptionId', subscriptionId)
+    }
+    if (resourceGroupValue && !initialValues.resourceGroup) {
+      set(initialValues, 'resourceGroup', resourceGroupValue)
+    }
+    if (webAppValue && !initialValues.webApp) {
+      set(initialValues, 'webApp', webAppValue)
+    }
+    if (deploymentSlotValue && !initialValues.deploymentSlot) {
+      set(initialValues, 'deploymentSlot', deploymentSlotValue)
+    }
+    if (targetSlotValue && !initialValues.targetSlot) {
+      set(initialValues, 'targetSlot', targetSlotValue)
+    }
+    onUpdate?.(initialValues)
+  }, [])
 
   return (
     <Layout.Vertical spacing="small">
@@ -320,7 +352,7 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
             tooltipProps={{
               dataTooltipId: 'azureInfraSubscription'
             }}
-            disabled={!(connector?.length && connector !== '<+input>') || readonly}
+            disabled={!(initialValues.connectorRef?.length && initialValues.connectorRef !== '<+input>') || readonly}
             placeholder={
               loadingSubscriptions
                 ? /* istanbul ignore next */ getString('loading')
@@ -384,10 +416,10 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
             }}
             disabled={
               !(
-                connector?.length &&
-                connector !== '<+input>' &&
-                subscriptionId?.length &&
-                subscriptionId !== '<+input>'
+                initialValues.connectorRef?.length &&
+                initialValues.connectorRef !== '<+input>' &&
+                initialValues.subscriptionId?.length &&
+                initialValues.subscriptionId !== '<+input>'
               ) || readonly
             }
             placeholder={
@@ -454,12 +486,12 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
             }}
             disabled={
               !(
-                connector?.length &&
-                connector !== '<+input>' &&
-                subscriptionId?.length &&
-                subscriptionId !== '<+input>' &&
-                resourceGroupValue?.length &&
-                resourceGroupValue !== '<+input>'
+                initialValues.connectorRef?.length &&
+                initialValues.connectorRef !== '<+input>' &&
+                initialValues.subscriptionId?.length &&
+                initialValues.subscriptionId !== '<+input>' &&
+                initialValues.resourceGroup?.length &&
+                initialValues.resourceGroup !== '<+input>'
               ) || readonly
             }
             placeholder={
@@ -469,7 +501,7 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
             }
             useValue
             selectItems={webApps}
-            label="Web App"
+            label="Web App Name"
             multiTypeInputProps={{
               onChange: /* istanbul ignore next */ (value, _typeValue, type) => {
                 if (value && type === MultiTypeInputType.FIXED) {
@@ -526,14 +558,14 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
             }}
             disabled={
               !(
-                connector?.length &&
-                connector !== '<+input>' &&
-                subscriptionId?.length &&
-                subscriptionId !== '<+input>' &&
-                resourceGroupValue?.length &&
-                resourceGroupValue !== '<+input>' &&
-                webAppValue?.length &&
-                webAppValue !== '<+input>'
+                initialValues.connectorRef?.length &&
+                initialValues.connectorRef !== '<+input>' &&
+                initialValues.subscriptionId?.length &&
+                initialValues.subscriptionId !== '<+input>' &&
+                initialValues.resourceGroup?.length &&
+                initialValues.resourceGroup !== '<+input>' &&
+                initialValues.webApp?.length &&
+                initialValues.webApp !== '<+input>'
               ) || readonly
             }
             placeholder={
@@ -543,8 +575,15 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
             }
             useValue
             selectItems={deploymentSlots}
-            label="Web App Deployment Slot "
+            label="Deployment Slot "
             multiTypeInputProps={{
+              onChange: /* istanbul ignore next */ (value, _typeValue, type) => {
+                if (value && type === MultiTypeInputType.FIXED) {
+                  setDeploymentSlotValue(getValue(value))
+                } else if (type === MultiTypeInputType.EXPRESSION) {
+                  setDeploymentSlotValue(value?.toString())
+                }
+              },
               onFocus: () => {
                 if (connector && subscriptionId && resourceGroupValue && webAppValue) {
                   refetchDeploymentSlots({
@@ -592,14 +631,14 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
             }}
             disabled={
               !(
-                connector?.length &&
-                connector !== '<+input>' &&
-                subscriptionId?.length &&
-                subscriptionId !== '<+input>' &&
-                resourceGroupValue?.length &&
-                resourceGroupValue !== '<+input>' &&
-                webAppValue?.length &&
-                webAppValue !== '<+input>'
+                initialValues.connectorRef?.length &&
+                initialValues.connectorRef !== '<+input>' &&
+                initialValues.subscriptionId?.length &&
+                initialValues.subscriptionId !== '<+input>' &&
+                initialValues.resourceGroup?.length &&
+                initialValues.resourceGroup !== '<+input>' &&
+                initialValues.webApp?.length &&
+                initialValues.webApp !== '<+input>'
               ) || readonly
             }
             placeholder={
@@ -609,8 +648,15 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
             }
             useValue
             selectItems={deploymentSlots}
-            label="Web App Target Slot "
+            label="Target Slot "
             multiTypeInputProps={{
+              onChange: /* istanbul ignore next */ (value, _typeValue, type) => {
+                if (value && type === MultiTypeInputType.FIXED) {
+                  setTargetSlotValue(getValue(value))
+                } else if (type === MultiTypeInputType.EXPRESSION) {
+                  setTargetSlotValue(value?.toString())
+                }
+              },
               onFocus: () => {
                 if (connector && subscriptionId && resourceGroupValue && webAppValue) {
                   refetchDeploymentSlots({

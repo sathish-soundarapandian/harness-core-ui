@@ -97,7 +97,7 @@ export class AzureWebAppInfrastructureSpec extends PipelineStep<AzureWebAppInfra
     releaseName: ''
   }
 
-  protected stepIcon: IconName = 'microsoft-azure'
+  protected stepIcon: IconName = 'azurewebapp'
   protected stepName = 'Specify your Azure Web App Connector'
   protected stepPaletteVisible = false
   protected invocationMap: Map<
