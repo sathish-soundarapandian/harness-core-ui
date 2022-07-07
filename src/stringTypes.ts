@@ -4125,6 +4125,16 @@ export interface StringsMap {
   'cd.steps.commands.sourceTypeLabel': string
   'cd.steps.commands.validation.destinationPathRequired': string
   'cd.steps.commands.validation.sourceTypeRequired': string
+  'cd.steps.azureWebAppInfra.azureWebApp': string
+  'cd.steps.azureWebAppInfra.deploymentSlotError': string
+  'cd.steps.azureWebAppInfra.deploymentSlotPlaceHolder': string
+  'cd.steps.azureWebAppInfra.subscription': string
+  'cd.steps.azureWebAppInfra.subscriptionPlaceholder': string
+  'cd.steps.azureWebAppInfra.targetSlotError': string
+  'cd.steps.azureWebAppInfra.targetSlotInfoText': string
+  'cd.steps.azureWebAppInfra.targetSlotPlaceHolder': string
+  'cd.steps.azureWebAppInfra.webAppNameError': string
+  'cd.steps.azureWebAppInfra.webAppPlaceholder': string
   'cd.steps.common.clusterDetails': string
   'cd.steps.common.releaseNamePlaceholder': string
   'cd.steps.common.selectOrEnterClusterPlaceholder': string
