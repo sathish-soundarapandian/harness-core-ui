@@ -10,6 +10,7 @@ import type { FormikProps } from 'formik'
 import { isEmpty } from 'lodash-es'
 import type { JiraFieldNG } from 'services/cd-ng'
 import type { JiraProjectSelectOption } from '../JiraApproval/types'
+import type { JiraFieldsRendererProps } from './JiraFieldsRenderer'
 import type { JiraCreateData, JiraCreateFieldType, JiraFieldNGWithValue } from './types'
 
 export const resetForm = (formik: FormikProps<JiraCreateData>, parent: string) => {
@@ -26,6 +27,22 @@ export const resetForm = (formik: FormikProps<JiraCreateData>, parent: string) =
     formik.setFieldValue('spec.fields', [])
   }
 }
+export const getJiraRequiredFieldRendererPropsUser = (): JiraFieldsRendererProps => ({
+  selectedFields: [
+    {
+      name: 'f2',
+      value: '',
+      key: 'f2',
+      allowedValues: [],
+      schema: {
+        typeStr: '',
+        type: 'user'
+      },
+      required: true
+    }
+  ],
+  renderRequiredFields: true
+})
 
 export const processFieldsForSubmit = (values: JiraCreateData): JiraCreateFieldType[] => {
   const toReturn: JiraCreateFieldType[] = []

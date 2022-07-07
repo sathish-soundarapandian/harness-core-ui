@@ -28,6 +28,7 @@ import {
   getJiraOptionalFieldRendererProps
 } from './JiraCreateTestHelper'
 import { JiraFieldsRenderer } from '../JiraFieldsRenderer'
+import { getJiraRequiredFieldRendererPropsUser } from '../helper'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
@@ -100,6 +101,16 @@ describe('Jira Create tests', () => {
     )
 
     expect(container).toMatchSnapshot('jira-create-deploymentform')
+  })
+
+  test('Jira Required Fields Renderer Test', () => {
+    const props = getJiraRequiredFieldRendererPropsUser()
+    const { container } = render(
+      <TestWrapper>
+        <JiraFieldsRenderer {...props}></JiraFieldsRenderer>
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
   })
 
   test('Deploymentform readonly mode', async () => {
