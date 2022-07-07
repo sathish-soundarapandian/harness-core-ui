@@ -1182,7 +1182,7 @@ lastModified: 'Last Modified'
 executionId: Execution Id
 lastExecutedBy: Last Executed By
 appServiceConfig:
-  title: Azure Web App Configuration
+  title: App Services Configuration
   applicationSettings:
     name: Application Settings
     file: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File'
