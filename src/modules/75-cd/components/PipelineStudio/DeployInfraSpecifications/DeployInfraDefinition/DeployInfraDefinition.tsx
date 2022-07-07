@@ -15,6 +15,7 @@ import {
   getProvisionerExecutionStrategyYamlPromise,
   Infrastructure,
   K8sAzureInfrastructure,
+  AzureWebAppInfrastructure,
   K8SDirectInfrastructure,
   K8sGcpInfrastructure,
   PdcInfrastructure,
@@ -42,6 +43,7 @@ import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipelin
 import SelectInfrastructureType from '@cd/components/PipelineStudio/DeployInfraSpecifications/SelectInfrastructureType/SelectInfrastructureType'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { AzureInfrastructureSpec } from '@cd/components/PipelineSteps/AzureInfrastructureStep/AzureInfrastructureStep'
+import type { AzureWebAppInfrastructureSpec } from '@cd/components/PipelineSteps/AzureWebAppInfrastructureStep/AzureWebAppInfrastructureStep'
 import {
   detailsHeaderName,
   getCustomStepProps,
@@ -81,6 +83,7 @@ type InfraTypes =
   | ServerlessInfraTypes
   | K8sAzureInfrastructure
   | PdcInfrastructure
+  | AzureWebAppInfrastructure
 
 export default function DeployInfraDefinition(props: React.PropsWithChildren<unknown>): JSX.Element {
   const [initialInfrastructureDefinitionValues, setInitialInfrastructureDefinitionValues] =
@@ -363,6 +366,34 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   allowSimultaneousDeployments: value.allowSimultaneousDeployments
                 },
                 InfraDeploymentType.KubernetesAzure
+              )
+            }
+          />
+        )
+      }
+      case InfraDeploymentType.AzureWebApp: {
+        return (
+          <StepWidget<AzureWebAppInfrastructureSpec>
+            factory={factory}
+            key={stage?.stage?.identifier}
+            readonly={isReadonly}
+            initialValues={initialInfrastructureDefinitionValues as AzureWebAppInfrastructureSpec}
+            type={StepType.AzureWebApp}
+            stepViewType={StepViewType.Edit}
+            allowableTypes={allowableTypes}
+            onUpdate={value =>
+              onUpdateInfrastructureDefinition(
+                {
+                  connectorRef: value.connectorRef,
+                  subscriptionId: value.subscriptionId,
+                  resourceGroup: value.resourceGroup,
+                  webApp: value.webApp,
+                  deploymentSlot: value.deploymentSlot,
+                  targetSlot: value.targetSlot,
+                  releaseName: value.releaseName,
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                },
+                InfraDeploymentType.AzureWebApp
               )
             }
           />

@@ -72,6 +72,7 @@ export enum StepType {
   ZeroNorth = 'Security',
   KubernetesAzure = 'KubernetesAzure',
   SshWinRmAzure = 'SshWinRmAzure',
+  AzureWebApp = 'AzureWebApp',
   ServerlessAwsLambdaDeploy = 'ServerlessAwsLambdaDeploy',
   ServerlessAwsLambdaRollback = 'ServerlessAwsLambdaRollback',
   ServerlessAwsInfra = 'ServerlessAwsInfra',

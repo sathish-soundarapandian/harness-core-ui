@@ -55,6 +55,17 @@ steps:
     resourceGroupPlaceholder: 'Select or add Resource Group'
     resourceGroupError: 'No resource groups found with given Subscription'
     clusterError: 'No cluster found with given Resource Group'
+  azureWebAppInfra:
+    azureWebApp: 'Azure Web App'
+    subscription: '{{ $.common.subscriptionId }}'
+    subscriptionPlaceholder: '{{ $.common.subscriptionPlaceholder }}'
+    webAppPlaceholder: 'Select or add Web App Name'
+    deploymentSlotPlaceHolder: 'Select or add Deployment Slot'
+    targetSlotPlaceHolder: 'Select or add Target Slot'
+    targetSlotInfoText: 'Target Slot is required for Swap Slot Step'
+    webAppNameError: 'No web app names groups found with given Resource Group'
+    deploymentSlotError: 'No deployment slots groups found with given Web App Name'
+    targetSlotError: 'No target slots found with given Web App Name'
   serverless:
     regionPlaceholder: Specify a region
     stagePlaceholder: Specify a stage
