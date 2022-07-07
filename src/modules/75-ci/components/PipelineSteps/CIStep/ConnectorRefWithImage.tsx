@@ -31,6 +31,7 @@ interface ConnectorRefWithImageProps {
   path?: string
   isInputSetView?: boolean
   template?: Record<string, any>
+  connectorWidth?: number
 }
 
 export const ConnectorRefWithImage: React.FC<ConnectorRefWithImageProps> = props => {
@@ -42,7 +43,8 @@ export const ConnectorRefWithImage: React.FC<ConnectorRefWithImageProps> = props
     stepViewType,
     path,
     isInputSetView,
-    template
+    template,
+    connectorWidth
   } = props
 
   const { getString } = useStrings()
@@ -89,7 +91,7 @@ export const ConnectorRefWithImage: React.FC<ConnectorRefWithImageProps> = props
                 </Layout.Horizontal>
               }
               type={[Connectors.GCP, Connectors.AWS, Connectors.DOCKER]}
-              width={385}
+              width={connectorWidth || 385}
               name={`${prefix}spec.connectorRef`}
               placeholder={getString('select')}
               accountIdentifier={accountId}

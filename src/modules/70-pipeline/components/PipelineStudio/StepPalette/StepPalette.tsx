@@ -98,6 +98,21 @@ export function StepPalette({ onSelect, stepsFactory, stepPaletteModuleInfos }: 
         toShow.push(...(stepCat?.stepCategories || []))
       }
     })
+    // // HARDCODED TO REMOVE
+    // if (toShow.length) {
+    //   toShow[1]['stepsData'].splice(10, 0, {
+    //     name: 'Git Clone',
+    //     type: 'GitClone',
+    //     disabled: false,
+    //     featureRestrictionName: null
+    //   })
+    //   // toShow[1]['stepsData'].push({
+    //   //   name: 'Git Clone',
+    //   //   type: 'GitClone',
+    //   //   disabled: false,
+    //   //   featureRestrictionName: null
+    //   // })
+    // }
     if (toShow) {
       setStepsCategories(toShow)
       setOriginalCategories(toShow)

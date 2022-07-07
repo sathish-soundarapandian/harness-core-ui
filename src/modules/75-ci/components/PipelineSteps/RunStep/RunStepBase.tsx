@@ -126,7 +126,12 @@ export const RunStepBase = (
               }}
             />
             {buildInfrastructureType !== CIBuildInfrastructureType.VM ? (
-              <ConnectorRefWithImage showOptionalSublabel={false} readonly={readonly} stepViewType={stepViewType} />
+              <ConnectorRefWithImage
+                showOptionalSublabel={false}
+                readonly={readonly}
+                stepViewType={stepViewType}
+                connectorWidth={373}
+              />
             ) : null}
             <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
               <MultiTypeSelectField

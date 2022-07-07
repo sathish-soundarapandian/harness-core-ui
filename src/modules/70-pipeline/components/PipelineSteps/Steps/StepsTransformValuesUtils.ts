@@ -36,7 +36,10 @@ export enum Types {
   Shell,
   BuildEnvironment,
   FrameworkVersion,
-  JobParameter
+  JobParameter,
+  Branch,
+  Tag,
+  PRNumber
 }
 
 interface Field {
@@ -294,7 +297,10 @@ export function getFormValuesInCorrectFormat<T, U>(formValues: T, fields: Field[
       type === Types.Shell ||
       type === Types.ImagePullPolicy ||
       type === Types.BuildEnvironment ||
-      type === Types.FrameworkVersion
+      type === Types.FrameworkVersion ||
+      type === Types.Branch ||
+      type === Types.Tag ||
+      type === Types.PRNumber
     ) {
       const value = get(formValues, name) as MultiTypeSelectOption
 
@@ -325,6 +331,21 @@ export function getFormValuesInCorrectFormat<T, U>(formValues: T, fields: Field[
     if (type === Types.LimitCPU) {
       const _value = get(formValues, 'spec.limitCPU')
       set(values, 'spec.resources.limits.cpu', _value)
+    }
+
+    if (type === Types.Branch) {
+      const _value = get(formValues, 'spec.build.spec.branch')
+      set(values, 'spec.build.spec.branch', _value)
+    }
+
+    if (type === Types.Tag) {
+      const _value = get(formValues, 'spec.build.spec.tag')
+      set(values, 'spec.build.spec.tag', _value)
+    }
+
+    if (type === Types.PRNumber) {
+      const _value = get(formValues, 'spec.build.spec.number')
+      set(values, 'spec.build.spec.number', _value)
     }
 
     if (type === Types.Provisioner) {
