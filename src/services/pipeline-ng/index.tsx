@@ -12390,6 +12390,8 @@ export interface GetSchemaYamlQueryParams {
     | 'Run'
     | 'RunTests'
     | 'Plugin'
+    // HARDCODED TO REMOVE
+    | 'GitClone'
     | 'RestoreCacheGCS'
     | 'RestoreCacheS3'
     | 'SaveCacheGCS'
@@ -12582,6 +12584,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'Run'
     | 'RunTests'
     | 'Plugin'
+    | 'GitClone'
     | 'RestoreCacheGCS'
     | 'RestoreCacheS3'
     | 'SaveCacheGCS'

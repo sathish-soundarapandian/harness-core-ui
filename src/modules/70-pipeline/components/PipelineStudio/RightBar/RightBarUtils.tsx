@@ -6,9 +6,9 @@
  */
 import React, { SetStateAction, Dispatch } from 'react'
 import * as Yup from 'yup'
-
+import cx from 'classnames'
 import { TextInput, Text, MultiTypeInputType, Container, getMultiTypeFromValue } from '@wings-software/uicore'
-import { set } from 'lodash-es'
+import { set, get } from 'lodash-es'
 import { FontVariation } from '@harness/design-system'
 import type { UseStringsReturn } from 'framework/strings'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
@@ -33,6 +33,8 @@ export interface CodebaseRuntimeInputsInterface {
   repoName?: boolean
 }
 
+export const runtimeInputGearWidth = 58
+
 const getConnectorWidth = ({
   connectorWidth,
   connectorRef
@@ -41,7 +43,8 @@ const getConnectorWidth = ({
   connectorRef?: string
 }): number | undefined => {
   if (connectorWidth) {
-    return !isRuntimeInput(connectorRef) ? ConnectorRefWidth.EditStageView : ConnectorRefWidth.EditStageViewInputSet
+    // connectorRef will be undefined for use in Steps and never subtract runtimeInputGearWidth
+    return !isRuntimeInput(connectorRef) ? connectorWidth : connectorWidth - runtimeInputGearWidth
   }
   return (!isRuntimeInput(connectorRef) && ConnectorRefWidth.RightBarView) || undefined
 }
@@ -65,7 +68,9 @@ export const renderConnectorAndRepoName = ({
   isReadonly,
   setCodebaseRuntimeInputs,
   codebaseRuntimeInputs,
-  connectorWidth
+  connectorWidth,
+  classnames,
+  connectorAndRepoNamePath
 }: {
   values: { [key: string]: any }
   setFieldValue: (field: string, value: any) => void
@@ -86,88 +91,96 @@ export const renderConnectorAndRepoName = ({
   setCodebaseRuntimeInputs: Dispatch<SetStateAction<CodebaseRuntimeInputsInterface>>
   codebaseRuntimeInputs: CodebaseRuntimeInputsInterface
   connectorWidth?: number
-}): JSX.Element => (
-  <>
-    <Container className={css.bottomMargin3}>
-      <FormMultiTypeConnectorField
-        name="connectorRef"
-        type={[Connectors.GIT, Connectors.GITHUB, Connectors.GITLAB, Connectors.BITBUCKET, Connectors.AWS_CODECOMMIT]}
-        label={getString('connector')}
-        width={getConnectorWidth({ connectorWidth, connectorRef: values.connectorRef })}
-        error={errors?.connectorRef}
-        placeholder={loading ? getString('loading') : getString('connectors.selectConnector')}
-        accountIdentifier={accountId}
-        projectIdentifier={projectIdentifier}
-        orgIdentifier={orgIdentifier}
-        gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-        multiTypeProps={{
-          expressions,
-          disabled: isReadonly,
-          allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME] // BE does not support expressions
-        }}
-        onChange={(value, _valueType, connectorRefType) => {
-          // add coverage once connector select available in jest tests
-          /* istanbul ignore next */
-          handleCIConnectorRefOnChange({
-            value: value as ConnectorRefInterface,
-            connectorRefType,
-            setConnectionType,
-            setConnectorUrl,
-            setFieldValue
-          })
-          /* istanbul ignore next */
-          setCodebaseRuntimeInputs({
-            ...codebaseRuntimeInputs,
-            connectorRef: isRuntimeInput(value),
-            repoName: connectorRefType === MultiTypeInputType.RUNTIME
-          })
-        }}
-      />
-    </Container>
+  classnames?: string
+  connectorAndRepoNamePath?: string
+}): JSX.Element => {
+  const connectorFieldName = connectorAndRepoNamePath ? `${connectorAndRepoNamePath}.connectorRef` : 'connectorRef'
+  const connectorValue = get(values, connectorFieldName)
+  const repoNameFieldName = connectorAndRepoNamePath ? `${connectorAndRepoNamePath}.repoName` : 'repoName'
+  const repoNameValue = get(values, repoNameFieldName)
+  return (
+    <>
+      <Container className={cx(css.bottomMargin3, classnames)}>
+        <FormMultiTypeConnectorField
+          name={connectorFieldName}
+          type={[Connectors.GIT, Connectors.GITHUB, Connectors.GITLAB, Connectors.BITBUCKET, Connectors.AWS_CODECOMMIT]}
+          label={getString('connector')}
+          width={getConnectorWidth({ connectorWidth, connectorRef: values.connectorRef })}
+          error={errors?.connectorRef}
+          placeholder={loading ? getString('loading') : getString('connectors.selectConnector')}
+          accountIdentifier={accountId}
+          projectIdentifier={projectIdentifier}
+          orgIdentifier={orgIdentifier}
+          gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+          multiTypeProps={{
+            expressions,
+            disabled: isReadonly,
+            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME] // BE does not support expressions
+          }}
+          onChange={(value, _valueType, connectorRefType) => {
+            // add coverage once connector select available in jest tests
+            /* istanbul ignore next */
+            handleCIConnectorRefOnChange({
+              value: value as ConnectorRefInterface,
+              connectorRefType,
+              setConnectionType,
+              setConnectorUrl,
+              setFieldValue
+            })
+            /* istanbul ignore next */
+            setCodebaseRuntimeInputs({
+              ...codebaseRuntimeInputs,
+              connectorRef: isRuntimeInput(value),
+              repoName: connectorRefType === MultiTypeInputType.RUNTIME
+            })
+          }}
+        />
+      </Container>
 
-    {!isRuntimeInput(values.connectorRef) && connectionType === ConnectionType.Repo ? (
-      <>
-        <Text font={{ variation: FontVariation.FORM_LABEL }} margin={{ bottom: 'xsmall' }}>
-          {getString('common.repositoryName')}
-        </Text>
-        <TextInput name="repoName" value={connectorUrl} style={{ flexGrow: 1 }} disabled />
-      </>
-    ) : (
-      <>
-        <Container className={css.bottomMargin3}>
-          <MultiTypeTextField
-            key={`connector-runtimeinput-${codebaseRuntimeInputs.connectorRef}`} // handle reload RepoName from ConnectorRef as Runtime to Fixed
-            label={
-              <Text
-                font={{ variation: FontVariation.FORM_LABEL }}
-                margin={{ bottom: 'xsmall' }}
-                tooltipProps={{ dataTooltipId: 'rightBarForm_repoName' }}
-              >
-                {getString('common.repositoryName')}
+      {!isRuntimeInput(connectorValue) && connectionType === ConnectionType.Repo ? (
+        <>
+          <Text font={{ variation: FontVariation.FORM_LABEL }} margin={{ bottom: 'xsmall' }}>
+            {getString('common.repositoryName')}
+          </Text>
+          <TextInput name={repoNameFieldName} value={connectorUrl} style={{ flexGrow: 1 }} disabled />
+        </>
+      ) : (
+        <>
+          <Container className={cx(css.bottomMargin3, classnames)}>
+            <MultiTypeTextField
+              key={`connector-runtimeinput-${codebaseRuntimeInputs.connectorRef}`} // handle reload RepoName from ConnectorRef as Runtime to Fixed
+              label={
+                <Text
+                  font={{ variation: FontVariation.FORM_LABEL }}
+                  margin={{ bottom: 'xsmall' }}
+                  tooltipProps={{ dataTooltipId: 'rightBarForm_repoName' }}
+                >
+                  {getString('common.repositoryName')}
+                </Text>
+              }
+              name={repoNameFieldName}
+              multiTextInputProps={{
+                multiTextInputProps: {
+                  expressions,
+                  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+                },
+                disabled: isReadonly || (isRuntimeInput(connectorValue) && isRuntimeInput(repoNameValue)) // connector is a runtime input
+              }}
+            />
+          </Container>
+          {!isRuntimeInput(connectorValue) && !isRuntimeInput(repoNameValue) && connectorUrl?.length > 0 ? (
+            <div className={css.predefinedValue}>
+              <Text lineClamp={1} width={connectorWidth ? connectorWidth : '460px'}>
+                {(connectorUrl[connectorUrl.length - 1] === '/' ? connectorUrl : connectorUrl + '/') +
+                  (repoNameValue ? repoNameValue : '')}
               </Text>
-            }
-            name="repoName"
-            multiTextInputProps={{
-              multiTextInputProps: {
-                expressions,
-                allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
-              },
-              disabled: isReadonly || (isRuntimeInput(values.connectorRef) && isRuntimeInput(values.repoName)) // connector is a runtime input
-            }}
-          />
-        </Container>
-        {!isRuntimeInput(values.connectorRef) && !isRuntimeInput(values.repoName) && connectorUrl?.length > 0 ? (
-          <div className={css.predefinedValue}>
-            <Text lineClamp={1} width={connectorWidth ? connectorWidth : '460px'}>
-              {(connectorUrl[connectorUrl.length - 1] === '/' ? connectorUrl : connectorUrl + '/') +
-                (values.repoName ? values.repoName : '')}
-            </Text>
-          </div>
-        ) : null}
-      </>
-    )}
-  </>
-)
+            </div>
+          ) : null}
+        </>
+      )}
+    </>
+  )
+}
 
 export const validateCIForm = ({
   values,

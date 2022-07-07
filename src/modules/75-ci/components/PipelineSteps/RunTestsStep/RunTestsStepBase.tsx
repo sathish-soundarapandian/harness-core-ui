@@ -494,7 +494,12 @@ export const RunTestsStepBase = (
               }}
             />
             {buildInfrastructureType !== CIBuildInfrastructureType.VM ? (
-              <ConnectorRefWithImage showOptionalSublabel={false} readonly={readonly} stepViewType={stepViewType} />
+              <ConnectorRefWithImage
+                showOptionalSublabel={false}
+                readonly={readonly}
+                stepViewType={stepViewType}
+                connectorWidth={373}
+              />
             ) : null}
             <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
               {renderMultiTypeSelectField({
@@ -736,6 +741,7 @@ gradle.projectsEvaluated {
                         showOptionalSublabel={true}
                         readonly={readonly}
                         stepViewType={stepViewType}
+                        connectorWidth={373}
                       />
                     ) : null}
                     <Container className={cx(css.formGroup, css.sm, css.bottomMargin5)}>

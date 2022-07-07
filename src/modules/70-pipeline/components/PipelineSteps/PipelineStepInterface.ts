@@ -36,6 +36,8 @@ export enum StepType {
   ServerlessAzure = 'ServerlessAzure',
   Dependency = 'Service',
   Plugin = 'Plugin',
+  // HARDCODED TO REMOVE
+  GitClone = 'GitClone',
   Run = 'Run',
   GCR = 'BuildAndPushGCR',
   PDC = 'Pdc',
