@@ -44,7 +44,8 @@ function GetMappedFieldComponent({
       selectedField.schema.type === 'string' ||
       selectedField.schema.type === 'date' ||
       selectedField.schema.type === 'datetime' ||
-      selectedField.schema.type === 'number'
+      selectedField.schema.type === 'number' ||
+      selectedField.schema.type === 'user'
     ) {
       return true
     }

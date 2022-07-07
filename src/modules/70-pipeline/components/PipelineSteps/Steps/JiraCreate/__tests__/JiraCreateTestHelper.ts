@@ -400,3 +400,20 @@ export const getJiraRequiredFieldRendererProps = (): JiraFieldsRendererProps => 
   ],
   renderRequiredFields: true
 })
+
+export const getJiraRequiredFieldRendererPropsUser = (): JiraFieldsRendererProps => ({
+  selectedFields: [
+    {
+      name: 'f2',
+      value: '',
+      key: 'f2',
+      allowedValues: [],
+      schema: {
+        typeStr: '',
+        type: 'user'
+      },
+      required: true
+    }
+  ],
+  renderRequiredFields: true
+})

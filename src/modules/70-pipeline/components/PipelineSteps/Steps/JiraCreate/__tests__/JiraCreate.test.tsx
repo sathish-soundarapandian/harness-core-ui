@@ -20,6 +20,7 @@ import {
   getJiraCreateInputVariableModeProps,
   mockConnectorResponse,
   mockProjectMetadataResponse,
+  getJiraRequiredFieldRendererPropsUser,
   mockProjectsResponse,
   mockProjectsErrorResponse,
   getJiraCreateEditModePropsWithConnectorId,
@@ -299,6 +300,15 @@ describe('Jira Create tests', () => {
 
   test('Jira Required Fields Renderer Test', () => {
     const props = getJiraRequiredFieldRendererProps()
+    const { container } = render(
+      <TestWrapper>
+        <JiraFieldsRenderer {...props}></JiraFieldsRenderer>
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+  test('Jira Required Fields Renderer Test for User Type fields', () => {
+    const props = getJiraRequiredFieldRendererPropsUser()
     const { container } = render(
       <TestWrapper>
         <JiraFieldsRenderer {...props}></JiraFieldsRenderer>
