@@ -28,11 +28,6 @@ import {
   ModalViewOption
 } from './AzureWebAppServiceConfig.types'
 
-export interface AzureWebAppsServiceDefinition {
-  spec: AzureWebAppServiceSpec
-  type: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps'
-}
-
 export default function AzureWebAppConfigSelection({
   isPropagating,
   deploymentType,
