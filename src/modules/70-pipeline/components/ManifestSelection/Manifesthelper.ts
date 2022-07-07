@@ -154,7 +154,7 @@ export const helmVersions: Array<{ label: string; value: HelmVersionOptions }> =
   { label: 'Version 3', value: 'V3' }
 ]
 
-export const ManifestIconByType: Record<ManifestStores, IconName> = {
+export const ManifestIconByType: Record<Exclude<ManifestStores, 'AzureRepo'>, IconName> = {
   Git: 'service-github',
   Github: 'github',
   GitLab: 'service-gotlab',
@@ -167,7 +167,7 @@ export const ManifestIconByType: Record<ManifestStores, IconName> = {
   Inline: 'custom-artifact'
 }
 
-export const ManifestStoreTitle: Record<ManifestStores, StringKeys> = {
+export const ManifestStoreTitle: Record<Exclude<ManifestStores, 'AzureRepo'>, StringKeys> = {
   Git: 'pipeline.manifestType.gitConnectorLabel',
   Github: 'common.repo_provider.githubLabel',
   GitLab: 'common.repo_provider.gitlabLabel',
@@ -188,11 +188,12 @@ export const ManifestToConnectorMap: Record<ManifestStores | string, ConnectorIn
   Http: Connectors.HttpHelmRepo,
   OciHelmChart: Connectors.OciHelmRepo,
   S3: Connectors.AWS,
-  Gcs: Connectors.GCP
+  Gcs: Connectors.GCP,
+  AzureRepo: Connectors.AZURE_REPO
 }
 
 export const ManifestToConnectorLabelMap: Record<
-  Exclude<ManifestStores, 'Inline' | 'InheritFromManifest'>,
+  Exclude<ManifestStores, 'InheritFromManifest' | 'Harness' | 'Inline' | 'AzureRepo'>,
   StringKeys
 > = {
   Git: 'pipeline.manifestType.gitConnectorLabel',

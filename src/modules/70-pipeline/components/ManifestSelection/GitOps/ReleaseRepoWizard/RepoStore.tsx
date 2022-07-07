@@ -35,11 +35,18 @@ import type { ConnectorSelectedValue } from '@connectors/components/ConnectorRef
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ManifestStoreMap, ManifestIconByType, ManifestToConnectorMap, manifestStoreTypes } from '../../Manifesthelper'
+import { ManifestStoreMap, ManifestToConnectorMap, manifestStoreTypes } from '../../Manifesthelper'
 import type { ManifestStores, ManifestStepInitData } from '../../ManifestInterface'
 
 import css from '../../ManifestWizardSteps/ManifestWizardSteps.module.scss'
 
+const RepoStoreIcons: Record<string, IconName> = {
+  Git: 'service-github',
+  Github: 'github',
+  GitLab: 'service-gotlab',
+  Bitbucket: 'bitbucket',
+  AzureRepo: 'service-azure'
+}
 interface ReleaseRepoStorePropType {
   stepName: string
   expressions?: string[]
@@ -50,7 +57,6 @@ interface ReleaseRepoStorePropType {
   handleStoreChange: (store: ManifestStores) => void
   selectedManifest?: any
 }
-type ManifestStoreExcludingInheritFromManifest = Exclude<ManifestStores, 'InheritFromManifest'>
 
 function RepoStore({
   stepName,
@@ -94,17 +100,19 @@ function RepoStore({
     )
   }
   /* istanbul ignore next */
-  const handleOptionSelection = (storeSelected: ManifestStoreExcludingInheritFromManifest): void => {
+  const handleOptionSelection = (storeSelected: any): void => {
     /* istanbul ignore next */
     handleStoreChange(storeSelected)
     setSelectedStore(storeSelected)
   }
 
+  const repoStoreTypes = [...manifestStoreTypes, 'AzureRepo']
+
   const supportedManifestTypes = useMemo(
     () =>
-      manifestStoreTypes.map(manifest => ({
+      repoStoreTypes.map(manifest => ({
         label: manifest,
-        icon: ManifestIconByType[manifest] as IconName,
+        icon: RepoStoreIcons[manifest] as IconName,
         value: manifest
       })),
     []
@@ -147,7 +155,7 @@ function RepoStore({
                       /* istanbul ignore next */
                       storeSelected => {
                         /* istanbul ignore next */
-                        handleOptionSelection(storeSelected as ManifestStoreExcludingInheritFromManifest)
+                        handleOptionSelection(storeSelected)
                       }
                     }
                   />
