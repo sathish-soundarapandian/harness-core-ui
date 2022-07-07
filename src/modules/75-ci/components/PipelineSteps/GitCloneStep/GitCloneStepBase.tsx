@@ -159,10 +159,12 @@ const renderBuildType = ({
 
   const handleTypeChange = (newType: CodeBaseType): void => {
     const newValuesSpec = formik.values.spec
-    newValuesSpec.build.type = newType
-    delete newValuesSpec.build.spec.branch
-    delete newValuesSpec.build.spec.tag
-    delete newValuesSpec.build.spec.number
+    newValuesSpec.build = { type: newType }
+    if (newValuesSpec.build?.spec) {
+      delete newValuesSpec.build.spec.branch
+      delete newValuesSpec.build.spec.tag
+      delete newValuesSpec.build.spec.number
+    }
 
     formik?.setValues({ ...formik.values, spec: newValuesSpec })
     setCodeBaseType(newType)

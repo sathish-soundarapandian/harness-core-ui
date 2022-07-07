@@ -63,6 +63,10 @@ export const transformValuesFieldsConfig = [
   {
     name: 'timeout',
     type: TransformValuesTypes.Text
+  },
+  {
+    name: 'spec.build',
+    type: TransformValuesTypes.BuildType
   }
 ]
 

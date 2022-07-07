@@ -16,6 +16,7 @@ import type {
   MultiTypeListUIType,
   MultiTypeMapUIType
 } from './StepsTypes'
+import { isRuntimeInput } from '@pipeline/utils/CIUtils'
 
 export enum Types {
   Text,
@@ -37,9 +38,10 @@ export enum Types {
   BuildEnvironment,
   FrameworkVersion,
   JobParameter,
-  Branch,
-  Tag,
-  PRNumber
+  // Branch,
+  // Tag,
+  // PRNumber,
+  BuildType
 }
 
 interface Field {
@@ -298,9 +300,10 @@ export function getFormValuesInCorrectFormat<T, U>(formValues: T, fields: Field[
       type === Types.ImagePullPolicy ||
       type === Types.BuildEnvironment ||
       type === Types.FrameworkVersion ||
-      type === Types.Branch ||
-      type === Types.Tag ||
-      type === Types.PRNumber
+      type === Types.BuildType
+      // type === Types.Branch ||
+      // type === Types.Tag ||
+      // type === Types.PRNumber
     ) {
       const value = get(formValues, name) as MultiTypeSelectOption
 
@@ -333,21 +336,44 @@ export function getFormValuesInCorrectFormat<T, U>(formValues: T, fields: Field[
       set(values, 'spec.resources.limits.cpu', _value)
     }
 
-    if (type === Types.Branch) {
-      const _value = get(formValues, 'spec.build.spec.branch')
-      set(values, 'spec.build.spec.branch', _value)
-    }
+    // if (type === Types.Branch) {
+    //   const _value = get(formValues, 'spec.build.spec.branch')
+    //   set(values, 'spec.build.spec.branch', _value)
+    // }
 
-    if (type === Types.Tag) {
-      const _value = get(formValues, 'spec.build.spec.tag')
-      set(values, 'spec.build.spec.tag', _value)
-    }
+    // if (type === Types.Tag) {
+    //   const _value = get(formValues, 'spec.build.spec.tag')
+    //   set(values, 'spec.build.spec.tag', _value)
+    // }
 
-    if (type === Types.PRNumber) {
-      const _value = get(formValues, 'spec.build.spec.number')
-      set(values, 'spec.build.spec.number', _value)
-    }
+    // if (type === Types.PRNumber) {
+    //   const _value = get(formValues, 'spec.build.spec.number')
+    //   set(values, 'spec.build.spec.number', _value)
+    // }
 
+    if (type === Types.BuildType) {
+      const buildValue = get(formValues, 'spec.build')
+      if (isRuntimeInput(buildValue)) {
+        set(values, 'spec.build', buildValue)
+      } else {
+        const buildType = get(formValues, 'spec.build.type')
+        const branchValue = get(formValues, 'spec.build.spec.branch')
+        const tagValue = get(formValues, 'spec.build.spec.tag')
+        const numberValue = get(formValues, 'spec.build.spec.number')
+        if (buildType) {
+          set(values, 'spec.build.type', buildType)
+        }
+        if (branchValue) {
+          set(values, 'spec.build.spec.branch', branchValue)
+        } else if (tagValue) {
+          set(values, 'spec.build.spec.tag', tagValue)
+        } else if (numberValue) {
+          set(values, 'spec.build.spec.number', numberValue)
+        }
+
+        // set(values, 'spec.build.spec.branch', _value)
+      }
+    }
     if (type === Types.Provisioner) {
       const _value = get(formValues, 'provisioner.stage.spec.execution')
       set(values, 'provisioner', _value)
