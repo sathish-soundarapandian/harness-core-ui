@@ -1170,7 +1170,7 @@ recentTenExecutions: 'Recent 10 Executions'
 lastExecution: 'Last Execution'
 lastModified: 'Last Modified'
 appServiceConfig:
-  title: Azure Web App Configuration
+  title: App Services Configuration
   applicationSettings:
     name: Application Settings
     file: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File'

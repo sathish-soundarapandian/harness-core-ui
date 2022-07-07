@@ -78,45 +78,32 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
     <div className={css.serviceDefinition}>
       {!!selectedDeploymentType && (
         <>
-          <Card
-            className={css.sectionCard}
-            id={getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')}
-          >
-            <div
-              className={cx(css.tabSubHeading, 'ng-tooltip-native')}
-              data-tooltip-id={getManifestsHeaderTooltipId(selectedDeploymentType)}
+          {selectedDeploymentType !== ServiceDeploymentType.AzureWebApps && (
+            <Card
+              className={css.sectionCard}
+              id={getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')}
             >
-              {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')}
-              <HarnessDocTooltip tooltipId={getManifestsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
-            </div>
+              <div
+                className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+                data-tooltip-id={getManifestsHeaderTooltipId(selectedDeploymentType)}
+              >
+                {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')}
+                <HarnessDocTooltip
+                  tooltipId={getManifestsHeaderTooltipId(selectedDeploymentType)}
+                  useStandAlone={true}
+                />
+              </div>
 
-            <ManifestSelection
-              isPropagating={isPropagating}
-              deploymentType={selectedDeploymentType}
-              isReadonlyServiceMode={isReadonlyServiceMode as boolean}
-              readonly={!!readonly}
-            />
-          </Card>
+              <ManifestSelection
+                isPropagating={isPropagating}
+                deploymentType={selectedDeploymentType}
+                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                readonly={!!readonly}
+              />
+            </Card>
+          )}
           {selectedDeploymentType === ServiceDeploymentType.AzureWebApps && (
             <>
-              <Card className={css.sectionCard} id={getString('pipeline.appServiceConfig.title')}>
-                <div
-                  className={cx(css.tabSubHeading, 'ng-tooltip-native')}
-                  data-tooltip-id={getAppConfigHeaderTooltipId(selectedDeploymentType)}
-                >
-                  {getString('pipeline.appServiceConfig.title')}
-                  <HarnessDocTooltip
-                    tooltipId={getAppConfigHeaderTooltipId(selectedDeploymentType)}
-                    useStandAlone={true}
-                  />
-                </div>
-                <AzureWebAppConfigSelection
-                  isPropagating={isPropagating}
-                  deploymentType={selectedDeploymentType}
-                  isReadonlyServiceMode={isReadonlyServiceMode as boolean}
-                  readonly={!!readonly}
-                />
-              </Card>
               <Card className={css.sectionCard} id={getString('pipeline.startupScript.name')}>
                 <div
                   className={cx(css.tabSubHeading, 'ng-tooltip-native')}
@@ -129,6 +116,24 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
                   />
                 </div>
                 <StartupScriptSelection
+                  isPropagating={isPropagating}
+                  deploymentType={selectedDeploymentType}
+                  isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                  readonly={!!readonly}
+                />
+              </Card>
+              <Card className={css.sectionCard} id={getString('pipeline.appServiceConfig.title')}>
+                <div
+                  className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+                  data-tooltip-id={getAppConfigHeaderTooltipId(selectedDeploymentType)}
+                >
+                  {getString('pipeline.appServiceConfig.title')}
+                  <HarnessDocTooltip
+                    tooltipId={getAppConfigHeaderTooltipId(selectedDeploymentType)}
+                    useStandAlone={true}
+                  />
+                </div>
+                <AzureWebAppConfigSelection
                   isPropagating={isPropagating}
                   deploymentType={selectedDeploymentType}
                   isReadonlyServiceMode={isReadonlyServiceMode as boolean}
