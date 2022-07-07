@@ -27,7 +27,7 @@
   background: var(--white);
 
   :global {
-    div[class*='ActiveServiceInstances-module_instanceTable'] {
+    div[class*='ActiveServiceInstancesV2-module_instanceTable'] {
       margin-top: -46px;
     }
   }
@@ -47,7 +47,7 @@
     width: inherit;
   }
   :global {
-    div[class*='ActiveServiceInstances-module_instanceTable'] {
+    div[class*='ActiveServiceInstancesV2-module_instanceTable'] {
       margin-top: -27px;
     }
   }

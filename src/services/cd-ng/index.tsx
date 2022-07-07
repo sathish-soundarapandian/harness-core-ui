@@ -5670,6 +5670,30 @@ export interface InstanceDetailsDTO {
   terraformInstance?: string
 }
 
+export interface InstanceGroupedByArtifact {
+  artifactVersion?: string
+  instanceGroupedByEnvironmentList?: InstanceGroupedByEnvironment[]
+}
+
+export interface InstanceGroupedByArtifactList {
+  instanceGroupedByArtifactList?: InstanceGroupedByArtifact[]
+}
+
+export interface InstanceGroupedByEnvironment {
+  envId?: string
+  envName?: string
+  instanceGroupedByInfraList?: InstanceGroupedByInfrastructure[]
+}
+
+export interface InstanceGroupedByInfrastructure {
+  count?: number
+  infraIdentifier?: string
+  infraName?: string
+  lastDeployedAt?: string
+  lastPipelineExecutionId?: string
+  lastPipelineExecutionName?: string
+}
+
 export interface InstanceInfoDTO {
   podName?: string
   type?: string
@@ -8272,6 +8296,13 @@ export interface ResponseInfrastructureResponse {
 export interface ResponseInstanceCountDetailsByEnvTypeAndServiceId {
   correlationId?: string
   data?: InstanceCountDetailsByEnvTypeAndServiceId
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseInstanceGroupedByArtifactList {
+  correlationId?: string
+  data?: InstanceGroupedByArtifactList
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -19837,6 +19868,62 @@ export const getActiveServiceInstanceSummaryPromise = (
     GetActiveServiceInstanceSummaryQueryParams,
     void
   >(getConfig('ng/api'), `/dashboard/getActiveServiceInstanceSummary`, props, signal)
+
+export interface GetActiveServiceInstancesQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  serviceId: string
+}
+
+export type GetActiveServiceInstancesProps = Omit<
+  GetProps<ResponseInstanceGroupedByArtifactList, Failure | Error, GetActiveServiceInstancesQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get list of artifact version, last pipeline execution, environment, infrastructure with instance count
+ */
+export const GetActiveServiceInstances = (props: GetActiveServiceInstancesProps) => (
+  <Get<ResponseInstanceGroupedByArtifactList, Failure | Error, GetActiveServiceInstancesQueryParams, void>
+    path={`/dashboard/getActiveServiceInstances`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetActiveServiceInstancesProps = Omit<
+  UseGetProps<ResponseInstanceGroupedByArtifactList, Failure | Error, GetActiveServiceInstancesQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get list of artifact version, last pipeline execution, environment, infrastructure with instance count
+ */
+export const useGetActiveServiceInstances = (props: UseGetActiveServiceInstancesProps) =>
+  useGet<ResponseInstanceGroupedByArtifactList, Failure | Error, GetActiveServiceInstancesQueryParams, void>(
+    `/dashboard/getActiveServiceInstances`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get list of artifact version, last pipeline execution, environment, infrastructure with instance count
+ */
+export const getActiveServiceInstancesPromise = (
+  props: GetUsingFetchProps<
+    ResponseInstanceGroupedByArtifactList,
+    Failure | Error,
+    GetActiveServiceInstancesQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseInstanceGroupedByArtifactList, Failure | Error, GetActiveServiceInstancesQueryParams, void>(
+    getConfig('ng/api'),
+    `/dashboard/getActiveServiceInstances`,
+    props,
+    signal
+  )
 
 export interface GetDeploymentsQueryParams {
   accountIdentifier: string
