@@ -13,12 +13,26 @@ import { Connectors } from '@connectors/constants'
 import type { ConnectorInfoDTO, ServiceDefinition } from 'services/cd-ng'
 import type { StringKeys } from 'framework/strings'
 import { useStrings } from 'framework/strings'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 
 import type { ArtifactType } from './ArtifactInterface'
 
 export enum ModalViewFor {
   PRIMARY = 1,
   SIDECAR = 2
+}
+
+export const isAllowedArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
+  return deploymentType === ServiceDeploymentType.Kubernetes || deploymentType === ServiceDeploymentType.NativeHelm
+}
+
+export const isAdditionAllowed = (deploymentType: ServiceDefinition['type'], isReadOnly: boolean): boolean => {
+  return (
+    !isReadOnly &&
+    (deploymentType === ServiceDeploymentType.Kubernetes ||
+      deploymentType === ServiceDeploymentType.NativeHelm ||
+      deploymentType === ServiceDeploymentType.ServerlessAwsLambda)
+  )
 }
 
 export const ArtifactIconByType: Record<ArtifactType, IconName> = {
@@ -29,7 +43,8 @@ export const ArtifactIconByType: Record<ArtifactType, IconName> = {
   ArtifactoryRegistry: 'service-artifactory',
   CustomArtifact: 'custom-artifact',
   Acr: 'service-azure',
-  Jenkins: 'service-jenkins'
+  Jenkins: 'service-jenkins',
+  AmazonS3: 'service-service-s3'
 }
 
 export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
@@ -40,7 +55,8 @@ export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
   ArtifactoryRegistry: 'connectors.artifactory.artifactoryLabel',
   CustomArtifact: 'common.repo_provider.customLabel',
   Acr: 'pipeline.ACR.name',
-  Jenkins: 'connectors.jenkins.jenkins'
+  Jenkins: 'connectors.jenkins.jenkins',
+  AmazonS3: 'pipeline.artifactsSelection.amazonS3Title'
 }
 
 export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
@@ -50,7 +66,9 @@ export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
   Nexus3Registry: 'Nexus3Registry',
   ArtifactoryRegistry: 'ArtifactoryRegistry',
   CustomArtifact: 'CustomArtifact',
-  Acr: 'Acr'
+  Acr: 'Acr',
+  Jenkins: 'Jenkins',
+  AmazonS3: 'AmazonS3'
 }
 
 export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = {
@@ -59,7 +77,9 @@ export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = 
   Ecr: Connectors.AWS,
   Nexus3Registry: Connectors.NEXUS,
   ArtifactoryRegistry: Connectors.ARTIFACTORY,
-  Acr: Connectors.AZURE
+  Acr: Connectors.AZURE,
+  Jenkins: Connectors.JENKINS,
+  AmazonS3: Connectors.AWS
 }
 
 export const ArtifactConnectorLabelMap: Record<string, string> = {
@@ -69,20 +89,30 @@ export const ArtifactConnectorLabelMap: Record<string, string> = {
   Nexus3Registry: 'Nexus',
   ArtifactoryRegistry: 'Artifactory',
   Acr: 'Azure',
-  Jenkins: 'Jenkins'
+  Jenkins: 'Jenkins',
+  AmazonS3: 'AWS'
 }
 
 export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<ArtifactType>> = {
   Kubernetes: [
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
     ENABLED_ARTIFACT_TYPES.Gcr,
-    ENABLED_ARTIFACT_TYPES.Ecr
+    ENABLED_ARTIFACT_TYPES.Ecr,
+    ENABLED_ARTIFACT_TYPES.Nexus3Registry,
+    ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry
     // ENABLED_ARTIFACT_TYPES.Jenkins
   ],
-  NativeHelm: [ENABLED_ARTIFACT_TYPES.DockerRegistry, ENABLED_ARTIFACT_TYPES.Gcr, ENABLED_ARTIFACT_TYPES.Ecr],
-  ServerlessAwsLambda: [ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry],
+  NativeHelm: [
+    ENABLED_ARTIFACT_TYPES.DockerRegistry,
+    ENABLED_ARTIFACT_TYPES.Gcr,
+    ENABLED_ARTIFACT_TYPES.Ecr,
+    ENABLED_ARTIFACT_TYPES.Nexus3Registry,
+    ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry
+  ],
+  ServerlessAwsLambda: [ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry, ENABLED_ARTIFACT_TYPES.Ecr],
   Ssh: [ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry],
-  WinRm: [ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry]
+  WinRm: [ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry],
+  AzureWebApps: []
 }
 
 export const tagOptions: IOptionProps[] = [

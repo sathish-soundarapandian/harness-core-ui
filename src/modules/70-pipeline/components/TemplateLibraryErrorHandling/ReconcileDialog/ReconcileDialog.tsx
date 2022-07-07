@@ -39,6 +39,7 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import { useQueryParams } from '@common/hooks'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { getFirstLeafNode } from '@pipeline/components/TemplateLibraryErrorHandling/TemplateLibraryErrorHandlingUtils'
+import css from './ReconcileDialog.module.scss'
 
 export interface ReconcileDialogProps {
   templateInputsErrorNodeSummary: ErrorNodeSummary
@@ -198,9 +199,9 @@ export function ReconcileDialog({
   }
 
   return (
-    <Container>
+    <Container className={css.mainContainer} height={'100%'}>
       {loading && <PageSpinner />}
-      <Layout.Vertical>
+      <Layout.Vertical height={'100%'}>
         <Container
           border={{ bottom: true }}
           padding={{ top: 'large', right: 'xxxlarge', bottom: 'large', left: 'xxxlarge' }}
@@ -208,10 +209,11 @@ export function ReconcileDialog({
           <Text font={{ variation: FontVariation.H4 }}>{getString('pipeline.reconcileDialog.title')}</Text>
         </Container>
         <Container
+          className={css.contentContainer}
           background={Color.FORM_BG}
           padding={{ top: 'large', right: 'xxxlarge', bottom: 'xxxlarge', left: 'xxxlarge' }}
         >
-          <Layout.Horizontal spacing={'huge'}>
+          <Layout.Horizontal spacing={'huge'} height={'100%'}>
             <Container width={376}>
               <Layout.Vertical spacing={'xlarge'}>
                 <Container>

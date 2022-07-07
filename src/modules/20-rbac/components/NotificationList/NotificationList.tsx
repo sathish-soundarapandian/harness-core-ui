@@ -24,6 +24,7 @@ import {
 import { Form, FormikProps } from 'formik'
 import produce from 'immer'
 import { useParams } from 'react-router-dom'
+import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { NotificationSettingConfigDTO, usePutUserGroup, UserGroupDTO } from 'services/cd-ng'
 import { TestEmailNotifications } from '@notifications/modals/ConfigureNotificationsModal/views/ConfigureEmailNotifications/ConfigureEmailNotifications'
@@ -51,7 +52,7 @@ interface RowData extends NotificationSettingConfigDTO {
   recipient?: string
   slackWebhookUrl?: string
   pagerDutyKey?: string
-  msTeamKeys?: string
+  microsoftTeamsWebhookUrl?: string
 }
 export interface NotificationOption {
   label: string
@@ -120,7 +121,7 @@ const ChannelRow: React.FC<ChannelRow> = ({
         }
       case 'MSTEAMS':
         return {
-          name: 'msTeamKeys',
+          name: 'microsoftTeamsWebhookUrl',
           textPlaceholder: getString('notifications.labelMSTeam')
         }
       default:
@@ -222,7 +223,7 @@ const ChannelRow: React.FC<ChannelRow> = ({
             is: 'PAGERDUTY',
             then: Yup.string().trim().required(getString('notifications.validationPDKey'))
           }),
-          msTeamKeys: Yup.string().when(['type'], {
+          microsoftTeamsWebhookUrl: Yup.string().when(['type'], {
             is: 'MSTEAMS',
             then:
               selectedInputType === MultiTypeInputType.EXPRESSION
@@ -298,7 +299,10 @@ const ChannelRow: React.FC<ChannelRow> = ({
                     ) : null}
                     {formikProps.values.type == 'MSTEAMS' ? (
                       <TestMSTeamsNotifications
-                        data={formikProps.values as any}
+                        data={{
+                          userGroups: [],
+                          msTeamKeys: [defaultTo(formikProps.values.microsoftTeamsWebhookUrl, '')]
+                        }}
                         buttonProps={{
                           minimal: true,
                           disabled: selectedInputType === MultiTypeInputType.EXPRESSION
@@ -314,6 +318,7 @@ const ChannelRow: React.FC<ChannelRow> = ({
                         <>
                           <Button icon="edit" minimal onClick={() => setEdit(true)} className={css.button} />
                           <Button
+                            data-testid="trashBtn"
                             icon="trash"
                             minimal
                             onClick={() => handleDelete(formikProps.values)}
@@ -323,7 +328,13 @@ const ChannelRow: React.FC<ChannelRow> = ({
                       )
                     ) : null}
                     {isCreate && !inherited ? (
-                      <Button icon="trash" minimal onClick={() => onRowDelete?.()} className={css.button} />
+                      <Button
+                        data-testid="trashBtn"
+                        icon="trash"
+                        minimal
+                        onClick={() => onRowDelete?.()}
+                        className={css.button}
+                      />
                     ) : null}
                   </Layout.Horizontal>
                 </Container>

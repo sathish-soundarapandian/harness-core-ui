@@ -57,6 +57,7 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
   const { getString } = useStrings()
   const { template, onClose, onSuccess } = props
   const [checkboxOptions, setCheckboxOptions] = React.useState<CheckboxOptions[]>([])
+  const [isSelectAllEnabled, setSelectAllEnabled] = React.useState<boolean>(true)
   const [query, setQuery] = React.useState<string>('')
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { showSuccess, showError } = useToaster()
@@ -82,7 +83,6 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
     },
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
-
   React.useEffect(() => {
     if (templatesError) {
       onClose()
@@ -157,16 +157,22 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
 
   React.useEffect(() => {
     if (!isEmpty(checkboxOptions)) {
+      let isQueryResultNonEmpty = false
       setCheckboxOptions(
         checkboxOptions.map(option => {
+          const isOptionVisible = option.label.toUpperCase().includes(query.toUpperCase())
+          if (isOptionVisible && !isQueryResultNonEmpty) {
+            isQueryResultNonEmpty = true
+          }
           return {
             label: option.label,
             value: option.value,
             checked: option.checked,
-            visible: option.label.toUpperCase().includes(query.toUpperCase())
+            visible: isOptionVisible
           }
         })
       )
+      isQueryResultNonEmpty ? setSelectAllEnabled(true) : setSelectAllEnabled(false)
     }
   }, [query])
 
@@ -185,6 +191,10 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
         >
           {({ values, errors, setFieldValue }) => {
             const options = values.checkboxOptions
+            const isSelectAllChecked = (): boolean => {
+              if (!isSelectAllEnabled) return false
+              return !options.some(option => option.visible && !option.checked)
+            }
             return (
               <FormikForm>
                 <Container>
@@ -227,16 +237,18 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
                             <Container>
                               <Checkbox
                                 label={'Select All'}
-                                checked={!options.some(item => !item.checked)}
+                                disabled={!isSelectAllEnabled}
+                                checked={isSelectAllChecked()}
                                 onChange={e => {
                                   setFieldValue(
                                     'checkboxOptions',
                                     options.map(option => {
+                                      const isOptionVisible = option.label.toUpperCase().includes(query.toUpperCase())
                                       return {
                                         label: option.label,
                                         value: option.value,
-                                        checked: e.currentTarget.checked,
-                                        visible: option.label.startsWith(query)
+                                        checked: e.currentTarget.checked && isOptionVisible,
+                                        visible: isOptionVisible
                                       }
                                     })
                                   )

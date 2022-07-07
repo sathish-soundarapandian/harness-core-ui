@@ -30,6 +30,11 @@ import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { usePermission } from '@rbac/hooks/usePermission'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import useImportResource from '@pipeline/components/ImportResource/useImportResource'
+import { ResourceType as ImportResourceType } from '@common/interfaces/GitSyncInterface'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import { InputSetListView } from './InputSetListView'
 import css from './InputSetList.module.scss'
@@ -44,7 +49,10 @@ function InputSetList(): React.ReactElement {
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const { getString } = useStrings()
   const [inputSetToDelete, setInputSetToDelete] = useState<InputSetSummaryResponse>()
+  const { isGitSimplificationEnabled } = useAppStore()
+  const isImportFlowEnabled = useFeatureFlag(FeatureFlag.NG_GIT_EXPERIENCE_IMPORT_FLOW)
 
   const {
     data: inputSet,
@@ -69,6 +77,13 @@ function InputSetList(): React.ReactElement {
         : {})
     },
     debounce: 300
+  })
+
+  const { showImportResourceModal } = useImportResource({
+    resourceType: ImportResourceType.INPUT_SETS,
+    modalTitle: getString('common.importEntityFromGit', { resourceType: getString('inputSets.inputSetLabel') }),
+    onSuccess: refetch,
+    extraQueryParams: { pipelineIdentifier: pipelineIdentifier }
   })
 
   const { data: template } = useMutateAsGet(useGetTemplateFromPipeline, {
@@ -118,7 +133,6 @@ function InputSetList(): React.ReactElement {
     branch?: string
   }>()
   const history = useHistory()
-  const { getString } = useStrings()
 
   useDocumentTitle([pipeline?.data?.name || getString('pipelines'), getString('inputSetsText')])
 
@@ -235,6 +249,9 @@ function InputSetList(): React.ReactElement {
                     showOverlayInputSetForm()
                   }}
                 />
+                {isGitSimplificationEnabled && isImportFlowEnabled ? (
+                  <MenuItem text={getString('common.importFromGit')} onClick={showImportResourceModal} />
+                ) : null}
               </Menu>
             }
             position={Position.BOTTOM}

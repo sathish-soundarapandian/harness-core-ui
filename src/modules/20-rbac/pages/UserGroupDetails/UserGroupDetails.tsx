@@ -39,6 +39,7 @@ import MemberList from '@rbac/pages/UserGroupDetails/views/MemberList'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
 import NotificationList from '@rbac/components/NotificationList/NotificationList'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { isCommunityPlan } from '@common/utils/utils'
 import UserGroupRefScopeList from '@rbac/components/UserGroupRefScopeList/UserGroupRefScopeList'
 import css from './UserGroupDetails.module.scss'
@@ -72,6 +73,8 @@ const UserGroupDetails: React.FC = () => {
     onSuccess: refetch
   })
 
+  const { getRBACErrorMessage } = useRBACError()
+
   const userGroupAggregateResponse: UserGroupAggregateDTO | undefined = data?.data
   const userGroup = userGroupAggregateResponse?.userGroupDTO
   const { INHERITED_USER_GROUP } = useFeatureFlags()
@@ -81,7 +84,7 @@ const UserGroupDetails: React.FC = () => {
   const userGroupInherited = isUserGroupInherited(accountId, orgIdentifier, projectIdentifier, userGroup)
 
   if (loading) return <PageSpinner />
-  if (error) return <PageError message={(error.data as Error)?.message || error.message} onClick={() => refetch()} />
+  if (error) return <PageError message={getRBACErrorMessage(error)} onClick={() => refetch()} />
   if (!userGroup) return <></>
   const membersBtnTooltipText = getUserGroupActionTooltipText(
     accountId,
@@ -272,9 +275,7 @@ const UserGroupDetails: React.FC = () => {
                   ? getString('rbac.inheritedScope.orgScopeTitle')
                   : getString('rbac.inheritedScope.accountScopeTitle')}
               </Text>
-              <UserGroupRefScopeList
-                {...{ accountId, orgIdentifier, projectIdentifier, userGroupIdentifier, parentScope }}
-              />
+              <UserGroupRefScopeList {...{ userGroupIdentifier, parentScope }} />
             </Layout.Vertical>
           )}
         </Container>

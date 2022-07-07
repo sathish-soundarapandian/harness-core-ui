@@ -108,6 +108,9 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
         custom.push(deployment)
       })
 
+      const successCount = successData.reduce((sum, i) => sum + i, 0)
+      const failureCount = failureData.reduce((sum, i) => sum + i, 0)
+
       return {
         deployments: {
           value: numberFormatter(serviceDeploymentListInfo.totalDeployments),
@@ -123,15 +126,15 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
         },
         data: [
           {
-            name: getString('success'),
-            data: successData,
-            color: '#3dc7f6',
+            name: `${getString('failed')} (${failureCount})`,
+            data: failureData,
+            color: 'var(--red-400)',
             custom
           },
           {
-            name: getString('failed'),
-            data: failureData,
-            color: '#ee5f54',
+            name: `${getString('success')} (${successCount})`,
+            data: successData,
+            color: '#5FB34E',
             custom
           }
         ]

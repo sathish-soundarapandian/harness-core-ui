@@ -8,7 +8,6 @@
 import { defaultTo, get, throttle } from 'lodash-es'
 import type { IconName } from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
-import type { ExecutionWrapperConfig, StageElementWrapperConfig } from 'services/cd-ng'
 import {
   isCustomGeneratedString,
   StepTypeToPipelineIconMap
@@ -16,7 +15,12 @@ import {
 import { stageTypeToIconMap } from '@pipeline/utils/constants'
 import type { DependencyElement } from 'services/ci'
 import { getDefaultBuildDependencies } from '@pipeline/utils/stageHelpers'
-import type { TemplateStepNode } from 'services/pipeline-ng'
+import type {
+  TemplateStepNode,
+  ExecutionWrapperConfig,
+  StageElementWrapperConfig,
+  StepElementConfig
+} from 'services/pipeline-ng'
 import { getConditionalExecutionFlag } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import { NodeType, PipelineGraphState, SVGPathRecord, PipelineGraphType, KVPair } from '../types'
@@ -73,7 +77,7 @@ const getFinalSVGArrowPath = (id1 = '', id2 = '', options?: DrawSVGPathOptions):
     //  child node is at top
     const curveLeftToTop = `Q${horizontalMid},${node1VerticalMid} ${horizontalMid},${node1VerticalMid - 20}`
     const curveBottomToRight = `Q${horizontalMid},${node2VerticalMid} ${horizontalMid + 20},${node2VerticalMid}`
-    finalSVGPath = `M${startPoint} L${horizontalMid - 20},${node1VerticalMid} ${curveLeftToTop} 
+    finalSVGPath = `M${startPoint} L${horizontalMid - 20},${node1VerticalMid} ${curveLeftToTop}
     L${horizontalMid},${node2VerticalMid + 20} ${curveBottomToRight} L${endPoint}`
   } else if (node1Y === node2Y) {
     // both nodes are at same level vertically
@@ -101,10 +105,10 @@ const getFinalSVGArrowPath = (id1 = '', id2 = '', options?: DrawSVGPathOptions):
       const curveLBparallel = `Q${updatedStart + 20},${node1VerticalMid} ${updatedStart + 20},${node1VerticalMid + 20} `
       const curveTRparallel = `Q${updatedStart + 20},${node2VerticalMid} ${updatedStart + 40},${node2VerticalMid}`
 
-      const firstCurve = `M${parallelLinkStart} 
-      ${curveLBparallel} 
-      L${updatedStart + 20},${node2VerticalMid - 20} 
-      ${curveTRparallel} 
+      const firstCurve = `M${parallelLinkStart}
+      ${curveLBparallel}
+      L${updatedStart + 20},${node2VerticalMid - 20}
+      ${curveTRparallel}
       L${getScaledValue(node1.left, scalingFactor)},${node2VerticalMid}`
 
       let secondCurve = ''
@@ -147,7 +151,7 @@ const getFinalSVGArrowPath = (id1 = '', id2 = '', options?: DrawSVGPathOptions):
         [id2]: { pathData: secondCurve, dataProps: options?.dataProps }
       }
     } else {
-      finalSVGPath = `M${startPoint} L${horizontalMid - 20},${node1VerticalMid} ${curveLeftToBottom} 
+      finalSVGPath = `M${startPoint} L${horizontalMid - 20},${node1VerticalMid} ${curveLeftToBottom}
     L${horizontalMid},${node2VerticalMid - 20} ${curveTopToRight} L${endPoint}`
     }
   }
@@ -328,16 +332,19 @@ interface GetPipelineGraphDataParams {
   serviceDependencies?: DependencyElement[] | undefined
   errorMap?: Map<string, string[]>
   parentPath?: string
+  graphDataType?: PipelineGraphType
 }
 const getPipelineGraphData = ({
   data = [],
   templateTypes,
   serviceDependencies,
   errorMap,
-  parentPath
+  parentPath,
+  graphDataType
 }: GetPipelineGraphDataParams): PipelineGraphState[] => {
   let graphState: PipelineGraphState[] = []
-  const pipGraphDataType = getPipelineGraphDataType(data)
+  const pipGraphDataType = graphDataType ? graphDataType : getPipelineGraphDataType(data)
+
   if (pipGraphDataType === PipelineGraphType.STAGE_GRAPH) {
     graphState = transformStageData(data, pipGraphDataType, templateTypes, errorMap, parentPath)
   } else {
@@ -362,7 +369,7 @@ const transformStageData = (
   offsetIndex = 0
 ): PipelineGraphState[] => {
   const finalData: PipelineGraphState[] = []
-  stages.forEach((stage: StageElementWrapperConfig, index: number) => {
+  stages.forEach((stage: any, index: number) => {
     if (stage?.stage) {
       const updatedStagetPath = `${parentPath}.${index + offsetIndex}`
       const hasErrors =
@@ -383,6 +390,7 @@ const transformStageData = (
           graphType,
           ...stage,
           isInComplete: isCustomGeneratedString(stage.stage.identifier) || hasErrors,
+          loopingStrategyEnabled: !!stage.stage?.strategy,
           conditionalExecutionEnabled: stage.stage.when
             ? stage.stage.when?.pipelineStatus !== 'Success' || !!stage.stage.when?.condition?.trim()
             : false,
@@ -411,12 +419,40 @@ const transformStageData = (
           graphType,
           ...stage,
           isInComplete: isCustomGeneratedString(first?.stage?.identifier as string) || hasErrors,
+          loopingStrategyEnabled: !!first.stage?.strategy,
           conditionalExecutionEnabled: first?.stage?.when
             ? first?.stage?.when?.pipelineStatus !== 'Success' || !!first?.stage.when?.condition?.trim()
             : false,
           isTemplateNode: Boolean(templateRef)
         },
         children: transformStageData(rest, graphType, templateTypes, errorMap, updatedStagetPath, 1)
+      })
+    } else {
+      const updatedStagetPath = `${parentPath}.${index + offsetIndex}`
+      const hasErrors =
+        errorMap && [...errorMap.keys()].some(key => updatedStagetPath && key.startsWith(updatedStagetPath))
+      const templateRef = stage.stage?.template?.templateRef
+
+      const type = (templateRef ? get(templateTypes, templateRef) : stage?.type) as string
+      const { nodeType, iconName } = getNodeInfo(defaultTo(type, ''), graphType)
+      finalData.push({
+        id: stage.id, //uuid() as string
+        identifier: stage.identifier as string,
+        name: stage.name as string,
+        type: type,
+        nodeType: nodeType as string,
+        icon: iconName,
+        ...stage.data,
+        data: {
+          graphType,
+          ...stage,
+          isInComplete: isCustomGeneratedString(stage.identifier) || hasErrors,
+          loopingStrategyEnabled: !!stage?.strategy,
+          conditionalExecutionEnabled: stage.when
+            ? stage.when?.pipelineStatus !== 'Success' || !!stage.when?.condition?.trim()
+            : false,
+          isTemplateNode: Boolean(templateRef)
+        }
       })
     }
   })
@@ -465,7 +501,10 @@ const transformStepsData = (
             ? step.step?.when?.stageStatus !== 'Success' || !!step.step?.when?.condition?.trim()
             : false,
           isTemplateNode: Boolean(templateRef)
-        }
+        },
+        children: (step?.step as any)?.children
+          ? transformStepsData((step?.step as any)?.children, graphType, templateTypes, errorMap, updatedStagetPath, 1)
+          : []
       })
     } else if (step?.parallel?.length) {
       const updatedStagetPath = `${parentPath}.${index}.parallel`
@@ -530,24 +569,55 @@ const transformStepsData = (
       const hasErrors =
         errorMap && [...errorMap.keys()].some(key => updatedStagetPath && key.startsWith(updatedStagetPath))
       const isExecutionView = get(step, 'stepGroup.status', false)
-      finalData.push({
-        id: getuniqueIdForStep(step),
-        identifier: step.stepGroup?.identifier as string,
-        name: step.stepGroup?.name as string,
-        type: 'StepGroup',
-        nodeType: 'StepGroup',
-        icon: iconName,
-        data: {
-          ...step,
-          conditionalExecutionEnabled: isExecutionView
-            ? getConditionalExecutionFlag(step.stepGroup?.when)
-            : step.stepGroup?.when
-            ? step.stepGroup?.when?.stageStatus !== 'Success' || !!step.stepGroup?.when?.condition?.trim()
-            : false,
-          graphType,
-          isInComplete: isCustomGeneratedString(step.stepGroup?.identifier as string) || hasErrors
-        }
-      })
+      if (step?.stepGroup) {
+        finalData.push({
+          id: getuniqueIdForStep(step),
+          identifier: step.stepGroup?.identifier as string,
+          name: step.stepGroup?.name as string,
+          type: 'StepGroup',
+          nodeType: 'StepGroup',
+          icon: iconName,
+          data: {
+            ...step,
+            type: 'StepGroup',
+            nodeType: 'StepGroup',
+            icon: iconName,
+            conditionalExecutionEnabled: isExecutionView
+              ? getConditionalExecutionFlag(step.stepGroup?.when)
+              : step.stepGroup?.when
+              ? step.stepGroup?.when?.stageStatus !== 'Success' || !!step.stepGroup?.when?.condition?.trim()
+              : false,
+            graphType,
+            isInComplete: isCustomGeneratedString(step.stepGroup?.identifier as string) || hasErrors
+          }
+        })
+      } else {
+        const stepData = step as StepElementConfig
+        finalData.push({
+          id: getuniqueIdForStep({ step } as any),
+          identifier: stepData?.identifier as string,
+          name: stepData?.name as string,
+          type: stepData?.type as string,
+          nodeType: stepData?.type as string,
+          icon: iconName,
+          status: get(stepData, 'status', ''),
+          data: {
+            step: {
+              ...get(stepData, 'data.step', {})
+            },
+            type: stepData?.name as string,
+            nodeType: stepData?.name as string,
+            icon: iconName,
+            conditionalExecutionEnabled: isExecutionView
+              ? getConditionalExecutionFlag(stepData?.when)
+              : stepData?.when
+              ? stepData?.when?.stageStatus !== 'Success' || !!stepData?.when?.condition?.trim()
+              : false,
+            graphType,
+            isInComplete: isCustomGeneratedString(stepData?.identifier as string) || hasErrors
+          }
+        })
+      }
     }
   })
   return finalData

@@ -13,7 +13,7 @@ import { defaultTo, isUndefined, omit, omitBy, isNull, noop } from 'lodash-es'
 import type { MutateMethod } from 'restful-react'
 import { Button, ButtonVariation, Container, Formik, Layout, Popover } from '@wings-software/uicore'
 import { Classes } from '@blueprintjs/core'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import {
   CreateInputSetForPipelineQueryParams,
   EntityGitDetails,

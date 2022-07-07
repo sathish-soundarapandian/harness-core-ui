@@ -36,6 +36,7 @@ import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { stagesCollection } from '@pipeline/components/PipelineStudio/Stages/StagesCollection'
 import { PipelineGraphState, PipelineGraphType } from '@pipeline/components/PipelineDiagram/types'
+import { getConditionalExecutionFlag } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { isApprovalStep } from './stepUtils'
 import { StageType } from './stageHelpers'
 
@@ -75,15 +76,19 @@ export enum NodeType {
   APPROVAL_STAGE = 'APPROVAL_STAGE',
   NG_SECTION_WITH_ROLLBACK_INFO = 'NG_SECTION_WITH_ROLLBACK_INFO',
   NG_EXECUTION = 'NG_EXECUTION',
-  StepGroupNode = 'StepGroupNode'
+  StepGroupNode = 'StepGroupNode',
+  'GITOPS_CLUSTERS' = 'GITOPS CLUSTERS',
+  STRATEGY = 'STRATEGY'
 }
 
 export const NonSelectableNodes: NodeType[] = [
   NodeType.NG_SECTION,
   NodeType.FORK,
   NodeType.DEPLOYMENT_STAGE_STEP,
-  NodeType.APPROVAL_STAGE
+  NodeType.APPROVAL_STAGE,
+  NodeType.NG_EXECUTION
 ]
+
 export const TopLevelNodes: NodeType[] = [
   NodeType.NG_SECTION,
   NodeType.ROLLBACK_OPTIONAL_CHILD_CHAIN,
@@ -106,7 +111,9 @@ export const StepTypeIconsMap: { [key in NodeType]: IconName } = {
   NG_FORK: 'fork',
   DEPLOYMENT_STAGE_STEP: 'circle',
   APPROVAL_STAGE: 'approval-stage-icon',
-  StepGroupNode: 'step-group'
+  StepGroupNode: 'step-group',
+  'GITOPS CLUSTERS': 'gitops-clusters',
+  STRATEGY: 'step-group'
 }
 
 export const ExecutionStatusIconMap: Record<ExecutionStatus, IconName> = {
@@ -131,7 +138,6 @@ export const ExecutionStatusIconMap: Record<ExecutionStatus, IconName> = {
   InterventionWaiting: 'waiting',
   ApprovalWaiting: 'waiting',
   Pausing: 'pause',
-  Waiting: 'waiting',
   InputWaiting: 'waiting'
 }
 
@@ -154,6 +160,9 @@ export interface ExecutionQueryParams {
   type?: string
 }
 
+export interface LayoutNodeMapInterface {
+  [key: string]: GraphLayoutNode
+}
 export function getPipelineStagesMap(
   layoutNodeMap: PipelineExecutionSummary['layoutNodeMap'],
   startingNodeId?: string
@@ -161,10 +170,18 @@ export function getPipelineStagesMap(
   const map = new Map<string, GraphLayoutNode>()
 
   function recursiveSetInMap(node: GraphLayoutNode): void {
-    if (node.nodeType === NodeTypes.Parallel) {
+    if (node.nodeType === NodeTypes.Parallel || isNodeTypeMatrixOrFor(node.nodeType)) {
       node.edgeLayoutList?.currentNodeChildren?.forEach(item => {
         if (item && layoutNodeMap?.[item]) {
-          map.set(layoutNodeMap[item].nodeUuid || '', layoutNodeMap[item])
+          // register nodes in case of strategy
+          if (isNodeTypeMatrixOrFor(layoutNodeMap?.[item]?.nodeType)) {
+            recursiveSetInMap(layoutNodeMap[item])
+            return
+          }
+          const nodeId = isNodeTypeMatrixOrFor(node.nodeType)
+            ? defaultTo(layoutNodeMap[item]?.nodeExecutionId, layoutNodeMap[item].nodeUuid)
+            : layoutNodeMap[item].nodeUuid
+          map.set(nodeId || '', layoutNodeMap[item])
           return
         }
       })
@@ -190,7 +207,10 @@ export function getPipelineStagesMap(
 
 enum NodeTypes {
   Parallel = 'parallel',
-  Stage = 'stage'
+  Stage = 'stage',
+  Matrix = 'MATRIX',
+  For = 'FOR',
+  Parallelism = 'PARALLELISM'
 }
 export interface ProcessLayoutNodeMapResponse {
   stage?: GraphLayoutNode
@@ -306,12 +326,19 @@ export function getActiveStageForPipeline(
   return null
 }
 
+export interface StepStatus {
+  node: string
+  interrupted: boolean
+  success: boolean
+}
+
 export function getActiveStep(
-  graph: ExecutionGraph,
-  nodeId?: string,
-  layoutNodeMap?: Record<string, GraphLayoutNode>
-): string | null {
+  graph: ExecutionGraph = {},
+  pipelineExecutionSummary: PipelineExecutionSummary = {},
+  nodeId?: string
+): StepStatus | null {
   const { rootNodeId, nodeMap, nodeAdjacencyListMap } = graph
+  const { status: pipelineStatus, layoutNodeMap } = pipelineExecutionSummary
 
   if (!nodeMap || !nodeAdjacencyListMap) {
     return null
@@ -328,35 +355,48 @@ export function getActiveStep(
     return null
   }
 
+  let selectedStep: StepStatus | null = null
+
   if (Array.isArray(nodeAdjacencyList.children) && nodeAdjacencyList.children.length > 0) {
     const n = nodeAdjacencyList.children.length
 
     for (let i = 0; i < n; i++) {
       const childNodeId = nodeAdjacencyList.children[i]
-      const step = getActiveStep(graph, childNodeId, layoutNodeMap)
+      selectedStep = getActiveStep(graph, pipelineExecutionSummary, childNodeId)
 
-      if (typeof step === 'string') return step
+      if (selectedStep && selectedStep.interrupted) {
+        return selectedStep
+      }
     }
   }
 
   if (nodeAdjacencyList.nextIds && nodeAdjacencyList.nextIds[0]) {
-    const step = getActiveStep(graph, nodeAdjacencyList.nextIds[0], layoutNodeMap)
+    selectedStep = getActiveStep(graph, pipelineExecutionSummary, nodeAdjacencyList.nextIds[0])
 
-    if (typeof step === 'string') return step
+    if (selectedStep && selectedStep.interrupted) return selectedStep
+  }
+
+  // pipeline is success and we are in root node
+  if (isExecutionSuccess(pipelineStatus) && selectedStep?.success) {
+    return selectedStep
   }
 
   if (
     !NonSelectableNodes.includes(node.stepType as NodeType) &&
     currentNodeId !== rootNodeId &&
-    !has(layoutNodeMap, node.setupId || '') &&
-    (isExecutionRunning(node.status) ||
-      isExecutionWaiting(node.status) ||
-      isExecutionCompletedWithBadState(node.status))
+    !has(layoutNodeMap, node.setupId || '')
   ) {
-    return currentNodeId
+    return {
+      node: currentNodeId,
+      interrupted:
+        isExecutionRunning(node.status) ||
+        isExecutionWaiting(node.status) ||
+        isExecutionCompletedWithBadState(node.status),
+      success: isExecutionSuccess(node.status)
+    }
   }
 
-  return null
+  return selectedStep
 }
 
 export function getIconFromStageModule(stageModule: 'cd' | 'ci' | string | undefined, stageType?: string): IconName {
@@ -472,9 +512,13 @@ const processNodeData = (
 ): Array<ExecutionPipelineNode<ExecutionNode>> => {
   const items: Array<ExecutionPipelineNode<ExecutionNode>> = []
   children?.forEach(item => {
-    const nodeData = nodeMap?.[item]
+    const nodeData = nodeMap?.[item] as ExecutionNode
     const isRollback = nodeData?.name?.endsWith(StepGroupRollbackIdentifier) ?? false
-    if (nodeData?.stepType === NodeType.FORK) {
+    const nodeStrategyType =
+      nodeData?.stepType === NodeType.STRATEGY
+        ? ((nodeData?.stepParameters?.strategyType || 'MATRIX') as string)
+        : (nodeData?.stepType as string)
+    if (nodeStrategyType === NodeType.FORK) {
       items.push({
         parallel: processNodeData(
           nodeAdjacencyListMap?.[item].children || /* istanbul ignore next */ [],
@@ -484,8 +528,9 @@ const processNodeData = (
         )
       })
     } else if (
-      nodeData?.stepType === NodeType.STEP_GROUP ||
-      nodeData?.stepType === NodeType.NG_SECTION ||
+      nodeStrategyType === NodeType.STEP_GROUP ||
+      nodeStrategyType === NodeType.NG_SECTION ||
+      isNodeTypeMatrixOrFor(nodeStrategyType) ||
       (nodeData && isRollback)
     ) {
       items.push({
@@ -510,7 +555,7 @@ const processNodeData = (
         }
       })
     } else {
-      if (nodeData?.stepType === LITE_ENGINE_TASK) {
+      if (nodeStrategyType === LITE_ENGINE_TASK) {
         const parentNodeId =
           Object.entries(nodeAdjacencyListMap || {}).find(([_, val]) => {
             return (val?.children?.indexOf(nodeData.uuid!) ?? -1) >= 0
@@ -525,7 +570,7 @@ const processNodeData = (
             skipCondition: nodeData?.skipInfo?.evaluatedCondition ? nodeData?.skipInfo.skipCondition : undefined,
             when: nodeData?.nodeRunInfo,
             status: nodeData?.status as ExecutionStatus,
-            type: getExecutionPipelineNodeType(nodeData?.stepType),
+            type: getExecutionPipelineNodeType(nodeStrategyType),
             data: nodeData
           }
         })
@@ -533,9 +578,13 @@ const processNodeData = (
     }
     const nextIds = nodeAdjacencyListMap?.[item].nextIds || /* istanbul ignore next */ []
     nextIds.forEach(id => {
-      const nodeDataNext = nodeMap?.[id]
+      const nodeDataNext = nodeMap?.[id] as ExecutionNode
       const isRollbackNext = nodeDataNext?.name?.endsWith(StepGroupRollbackIdentifier) ?? false
-      if (nodeDataNext?.stepType === NodeType.FORK) {
+      const nodeNextStrategyType =
+        nodeDataNext?.stepType === NodeType.STRATEGY
+          ? ((nodeDataNext?.stepParameters?.strategyType || 'MATRIX') as string)
+          : (nodeDataNext?.stepType as string)
+      if (nodeNextStrategyType === NodeType.FORK) {
         items.push({
           parallel: processNodeData(
             nodeAdjacencyListMap?.[id].children || /* istanbul ignore next */ [],
@@ -544,7 +593,11 @@ const processNodeData = (
             rootNodes
           )
         })
-      } else if (nodeDataNext?.stepType === NodeType.STEP_GROUP || (isRollbackNext && nodeDataNext)) {
+      } else if (
+        nodeNextStrategyType === NodeType.STEP_GROUP ||
+        isNodeTypeMatrixOrFor(nodeNextStrategyType) ||
+        (isRollbackNext && nodeDataNext)
+      ) {
         items.push({
           group: {
             name: nodeDataNext.name || /* istanbul ignore next */ '',
@@ -575,7 +628,7 @@ const processNodeData = (
             skipCondition: nodeDataNext?.skipInfo?.evaluatedCondition ? nodeDataNext.skipInfo.skipCondition : undefined,
             when: nodeDataNext?.nodeRunInfo,
             status: nodeDataNext?.status as ExecutionStatus,
-            type: getExecutionPipelineNodeType(nodeDataNext?.stepType),
+            type: getExecutionPipelineNodeType(nodeNextStrategyType),
             data: nodeDataNext
           }
         })
@@ -785,6 +838,40 @@ export const addServiceDependenciesFromLiteTaskEngine = (
   }
 }
 
+export const getChildNodeDataForMatrix = (
+  parentNode: GraphLayoutNode,
+  layoutNodeMap: LayoutNodeMapInterface
+): PipelineGraphState[] => {
+  const childData: PipelineGraphState[] = []
+  if (isNodeTypeMatrixOrFor(parentNode?.nodeType)) {
+    parentNode?.edgeLayoutList?.currentNodeChildren?.forEach(item => {
+      const nodeDataItem = layoutNodeMap[item]
+      const matrixNodeName =
+        nodeDataItem?.strategyMetadata?.matrixmetadata?.matrixvalues &&
+        `(${Object.values(nodeDataItem?.strategyMetadata?.matrixmetadata?.matrixvalues)?.join(', ')}): `
+      childData.push({
+        id: nodeDataItem.nodeExecutionId as string, // matrix node nodeExecId(unique) + stageNodeId (nodeUUID) commo
+        stageNodeId: nodeDataItem?.nodeUuid as string,
+        identifier: nodeDataItem.nodeIdentifier as string,
+        type: nodeDataItem.nodeType as string,
+        name: nodeDataItem.name as string,
+        icon: 'cross',
+        data: {
+          ...(nodeDataItem as any),
+          graphType: PipelineGraphType.STAGE_GRAPH,
+          matrixNodeName
+        },
+        children: []
+      })
+    })
+  }
+
+  return childData
+}
+
+export const isNodeTypeMatrixOrFor = (nodeType?: string): boolean => {
+  return [NodeTypes.Matrix, NodeTypes.For, NodeTypes.Parallelism].includes(nodeType as NodeTypes)
+}
 export const processLayoutNodeMapV1 = (executionSummary?: PipelineExecutionSummary): PipelineGraphState[] => {
   const response: PipelineGraphState[] = []
   if (!executionSummary) {
@@ -807,16 +894,34 @@ export const processLayoutNodeMapV1 = (executionSummary?: PipelineExecutionSumma
           type: firstParallelNode?.nodeType as string,
           name: firstParallelNode?.name as string,
           icon: 'cross',
-          data: firstParallelNode as any,
+          data: {
+            ...(firstParallelNode as any),
+            ...(isNodeTypeMatrixOrFor(firstParallelNode?.nodeType) && {
+              children: getChildNodeDataForMatrix(firstParallelNode, layoutNodeMap),
+              graphType: PipelineGraphType.STAGE_GRAPH,
+              id: firstParallelNode?.nodeUuid,
+              maxParallelism: firstParallelNode?.moduleInfo?.maxConcurrency?.value
+            })
+          },
+
           children: restChildNodes.map(item => {
             const nodeDataItem = layoutNodeMap[item]
+            // eslint-disable-next-line @typescript-eslint/no-shadow
             return {
               id: nodeDataItem.nodeUuid as string,
               identifier: nodeDataItem.nodeIdentifier as string,
               type: nodeDataItem.nodeType as string,
               name: nodeDataItem.name as string,
               icon: 'cross',
-              data: nodeDataItem as any,
+              data: {
+                ...(nodeDataItem as any),
+                ...(isNodeTypeMatrixOrFor(nodeDataItem?.nodeType) && {
+                  children: getChildNodeDataForMatrix(nodeDataItem, layoutNodeMap),
+                  graphType: PipelineGraphType.STAGE_GRAPH,
+                  id: nodeDataItem?.nodeUuid,
+                  maxParallelism: nodeDataItem?.moduleInfo?.maxConcurrency?.value
+                })
+              },
               children: []
             }
           })
@@ -824,6 +929,52 @@ export const processLayoutNodeMapV1 = (executionSummary?: PipelineExecutionSumma
 
         response.push(parentNode)
         nodeDetails = layoutNodeMap[nodeDetails.edgeLayoutList?.nextIds?.[0] || '']
+      } else if (
+        isNodeTypeMatrixOrFor(nodeDetails?.nodeType) &&
+        currentNodeChildren &&
+        currentNodeChildren.length >= 1
+      ) {
+        const childData: PipelineGraphState[] = []
+        currentNodeChildren.forEach(item => {
+          const nodeDataItem = layoutNodeMap[item]
+          const matrixNodeName =
+            nodeDataItem?.strategyMetadata?.matrixmetadata?.matrixvalues &&
+            `(${Object.values(nodeDataItem?.strategyMetadata?.matrixmetadata?.matrixvalues)?.join(' ')}): `
+          childData.push({
+            id: nodeDataItem.nodeExecutionId as string,
+            stageNodeId: nodeDataItem?.nodeUuid as string,
+            identifier: nodeDataItem.nodeIdentifier as string,
+            type: nodeDataItem.nodeType as string,
+            name: nodeDataItem.name as string,
+            icon: 'cross',
+            data: {
+              ...(nodeDataItem as any),
+              graphType: PipelineGraphType.STAGE_GRAPH,
+              matrixNodeName
+            },
+            children: []
+          })
+        })
+        response.push({
+          id: nodeDetails?.nodeUuid as string,
+          identifier: nodeDetails?.nodeIdentifier as string,
+          type: nodeDetails?.nodeType as string,
+          name: nodeDetails?.name as string,
+          icon: 'cross',
+          data: {
+            ...(nodeDetails as any),
+            children: childData,
+            graphType: PipelineGraphType.STAGE_GRAPH,
+            id: nodeDetails?.nodeUuid,
+            maxParallelism: nodeDetails?.moduleInfo?.maxConcurrency?.value
+          }
+        })
+
+        if (nextIds && nextIds.length === 1) {
+          nodeDetails = layoutNodeMap[nextIds[0]]
+        } else {
+          nodeDetails = undefined
+        }
       } else if (
         nodeDetails?.nodeType === NodeTypes.Parallel &&
         currentNodeChildren &&
@@ -871,8 +1022,12 @@ export const processExecutionDataForGraph = (stages?: PipelineGraphState[]): Pip
         ...currentStage,
         icon: getIconFromStageModule(currentStageData?.module, currentStageData?.nodeType),
         status: currentStageData?.status as any,
+        type: [StageType.FOR, StageType.PARALLELISM].includes(currentStage?.type as StageType)
+          ? ExecutionPipelineNodeType.MATRIX
+          : currentStage?.type,
         data: {
           ...currentStage.data,
+          conditionalExecutionEnabled: getConditionalExecutionFlag(currentStage?.data?.nodeRunInfo),
           identifier: currentStageData?.nodeUuid || /* istanbul ignore next */ '',
           name: currentStageData?.name || currentStageData?.nodeIdentifier || /* istanbul ignore next */ '',
           status: currentStageData?.status as any,
@@ -881,6 +1036,8 @@ export const processExecutionDataForGraph = (stages?: PipelineGraphState[]): Pip
           type:
             currentStageData?.nodeType === StageType.APPROVAL
               ? ExecutionPipelineNodeType.DIAMOND
+              : isNodeTypeMatrixOrFor(currentStageData?.nodeType)
+              ? ExecutionPipelineNodeType.MATRIX
               : ExecutionPipelineNodeType.NORMAL,
           skipCondition: currentStageData?.skipInfo?.evaluatedCondition
             ? currentStageData.skipInfo.skipCondition
@@ -900,6 +1057,7 @@ export const processExecutionDataForGraph = (stages?: PipelineGraphState[]): Pip
             status: node?.status as never,
             data: {
               ...node,
+              conditionalExecutionEnabled: getConditionalExecutionFlag(node?.nodeRunInfo),
               identifier: node?.nodeUuid || /* istanbul ignore next */ '',
               name: node?.name || node?.nodeIdentifier || /* istanbul ignore next */ '',
               status: node?.status as never,
@@ -924,8 +1082,12 @@ export const processExecutionDataForGraph = (stages?: PipelineGraphState[]): Pip
         ...currentStage,
         icon: getIconFromStageModule(stage?.module, stage?.nodeType),
         status: stage?.status as any,
+        type: [StageType.FOR, StageType.PARALLELISM].includes(currentStage?.type as StageType)
+          ? ExecutionPipelineNodeType.MATRIX
+          : currentStage?.type,
         data: {
           ...stage,
+          conditionalExecutionEnabled: getConditionalExecutionFlag(stage?.nodeRunInfo),
           identifier: stage?.nodeUuid || /* istanbul ignore next */ '',
           name: stage?.name || stage?.nodeIdentifier || /* istanbul ignore next */ '',
           status: stage?.status as any,
@@ -934,6 +1096,8 @@ export const processExecutionDataForGraph = (stages?: PipelineGraphState[]): Pip
           type:
             stage?.nodeType === StageType.APPROVAL
               ? ExecutionPipelineNodeType.DIAMOND
+              : isNodeTypeMatrixOrFor(stage?.nodeType)
+              ? ExecutionPipelineNodeType.MATRIX
               : ExecutionPipelineNodeType.NORMAL,
           skipCondition: stage?.skipInfo?.evaluatedCondition ? stage.skipInfo.skipCondition : undefined,
           disableClick: isExecutionNotStarted(stage?.status) || isExecutionSkipped(stage?.status),

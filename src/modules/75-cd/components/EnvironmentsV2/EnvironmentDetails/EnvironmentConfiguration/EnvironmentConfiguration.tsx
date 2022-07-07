@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction, useCallback } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { Dispatch, SetStateAction, useCallback, useState } from 'react'
+import { useParams, useHistory, matchPath } from 'react-router-dom'
 import { parse } from 'yaml'
 import { defaultTo } from 'lodash-es'
 import type { FormikProps } from 'formik'
@@ -22,9 +22,14 @@ import {
   ThumbnailSelect,
   Card,
   Accordion,
-  MultiTypeInputType
+  MultiTypeInputType,
+  ButtonVariation,
+  Tag
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
+import routes from '@common/RouteDefinitions'
+import { projectPathProps, modulePathProps, environmentPathProps } from '@common/utils/routeUtils'
+import { NavigationCheck } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import { NGEnvironmentInfoConfig, ResponseEnvironmentResponse, useGetYamlSchema } from 'services/cd-ng'
 
@@ -37,6 +42,11 @@ import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interf
 import { CustomVariablesEditableStage } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariablesEditableStage'
 import type { AllNGVariables } from '@pipeline/utils/types'
 import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+
+import RbacButton from '@rbac/components/Button/Button'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { usePermission } from '@rbac/hooks/usePermission'
 
 import css from '../EnvironmentDetails.module.scss'
 
@@ -65,6 +75,26 @@ export interface EnvironmentConfigurationProps {
   context?: PipelineContextType
 }
 
+const shouldBlockNavigation = ({
+  isSubmitting,
+  isValid,
+  isYamlView,
+  yamlHandler,
+  dirty
+}: {
+  isSubmitting: boolean
+  isValid: boolean
+  isYamlView: boolean
+  yamlHandler?: YamlBuilderHandlerBinding
+  dirty: boolean
+}): boolean => {
+  const shouldBlockNav = !(isSubmitting && (isValid || isYamlView))
+  if ((isYamlView && yamlHandler) || dirty) {
+    return shouldBlockNav
+  }
+  return false
+}
+
 export default function EnvironmentConfiguration({
   selectedView,
   setSelectedView,
@@ -79,6 +109,7 @@ export default function EnvironmentConfiguration({
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & EnvironmentPathProps>()
+  const history = useHistory()
 
   const typeList: { label: string; value: string }[] = [
     {
@@ -101,6 +132,25 @@ export default function EnvironmentConfiguration({
     }
   })
 
+  const [canEdit] = usePermission({
+    resource: {
+      resourceType: ResourceType.ENVIRONMENT
+    },
+    permissions: [PermissionIdentifier.EDIT_ENVIRONMENT]
+  })
+
+  const [isYamlEditable, setIsYamlEditable] = useState(false)
+
+  const handleYamlChange = useCallback((): void => {
+    const yaml = defaultTo(yamlHandler?.getLatestYaml(), '{}')
+    const yamlVisual = parse(yaml).environment as NGEnvironmentInfoConfig
+    if (yamlVisual) {
+      formikProps?.setValues({
+        ...yamlVisual
+      })
+    }
+  }, [yamlHandler])
+
   const handleModeSwitch = useCallback(
     /* istanbul ignore next */ (view: SelectedView) => {
       if (view === SelectedView.VISUAL) {
@@ -121,8 +171,54 @@ export default function EnvironmentConfiguration({
     [yamlHandler?.getLatestYaml, data]
   )
 
+  const handleEditMode = (): void => {
+    setIsYamlEditable(true)
+  }
+
+  const isInvalidYaml = useCallback((): boolean => {
+    if (yamlHandler) {
+      const parsedYaml = parse(yamlHandler.getLatestYaml())
+      if (!parsedYaml || yamlHandler.getYAMLValidationErrorMap()?.size > 0) {
+        return true
+      }
+    }
+    return false
+  }, [yamlHandler])
+
+  const invalidYaml = isInvalidYaml()
+
   return (
     <Container padding={{ left: 'medium', right: 'medium' }}>
+      <NavigationCheck
+        when={isModified || invalidYaml}
+        shouldBlockNavigation={nextLocation => {
+          const matchDefault = matchPath(nextLocation.pathname, {
+            path: routes.toEnvironmentDetails({
+              ...projectPathProps,
+              ...modulePathProps,
+              ...environmentPathProps
+            }),
+            exact: true
+          })
+          return (
+            !matchDefault?.isExact &&
+            shouldBlockNavigation({
+              isSubmitting: formikProps.isSubmitting,
+              isValid: formikProps.isValid,
+              isYamlView: selectedView === SelectedView.YAML,
+              yamlHandler,
+              dirty: formikProps.dirty
+            })
+          )
+        }}
+        textProps={{
+          contentText: getString(invalidYaml ? 'navigationYamlError' : 'navigationCheckText'),
+          titleText: getString(invalidYaml ? 'navigationYamlErrorTitle' : 'navigationCheckTitle')
+        }}
+        navigate={newPath => {
+          history.push(newPath)
+        }}
+      />
       <Layout.Horizontal
         margin={{ bottom: 'medium' }}
         flex={{
@@ -201,17 +297,47 @@ export default function EnvironmentConfiguration({
           {/* #endregion */}
         </>
       ) : (
-        <YAMLBuilder
-          {...yamlBuilderReadOnlyModeProps}
-          existingJSON={{
-            environment: {
-              ...formikProps.values
-            }
-          }}
-          schema={environmentSchema?.data}
-          bind={setYamlHandler}
-          showSnippetSection={false}
-        />
+        <div className={css.yamlBuilder}>
+          <YAMLBuilder
+            {...yamlBuilderReadOnlyModeProps}
+            existingJSON={{
+              environment: {
+                name: defaultTo(formikProps.values.name, ''),
+                identifier: defaultTo(formikProps.values.identifier, ''),
+                description: formikProps.values.description,
+                tags: defaultTo(formikProps.values.tags, {}),
+                type: defaultTo(formikProps.values.type, 'Production'),
+                orgIdentifier: defaultTo(formikProps.values.orgIdentifier, ''),
+                projectIdentifier: defaultTo(formikProps.values.projectIdentifier, ''),
+                variables: defaultTo(formikProps.values.variables, [])
+              }
+            }}
+            key={isYamlEditable.toString()}
+            schema={environmentSchema?.data}
+            bind={setYamlHandler}
+            showSnippetSection={false}
+            isReadOnlyMode={!isYamlEditable}
+            onChange={handleYamlChange}
+            isEditModeSupported={canEdit}
+            onEnableEditMode={handleEditMode}
+          />
+          {!isYamlEditable ? (
+            <div className={css.buttonWrapper}>
+              <Tag>{getString('common.readOnly')}</Tag>
+              <RbacButton
+                permission={{
+                  resource: {
+                    resourceType: ResourceType.ENVIRONMENT
+                  },
+                  permission: PermissionIdentifier.EDIT_ENVIRONMENT
+                }}
+                variation={ButtonVariation.SECONDARY}
+                text={getString('common.editYaml')}
+                onClick={handleEditMode}
+              />
+            </div>
+          ) : null}
+        </div>
       )}
     </Container>
   )

@@ -25,7 +25,7 @@ import type { StringKeys } from 'framework/strings'
 import { HashiCorpVaultAccessTypes } from '@connectors/interfaces/ConnectorInterface'
 import TagsRenderer from '@common/components/TagsRenderer/TagsRenderer'
 import { accessTypeOptionsMap } from '@connectors/components/CreateConnector/HashiCorpVault/views/VaultConnectorFormFields'
-import { getLabelForAuthType } from '../../utils/ConnectorHelper'
+import { getLabelForAuthType, GitAuthTypes } from '../../utils/ConnectorHelper'
 import { AzureSecretKeyType, DelegateTypes } from '../../utils/ConnectorUtils'
 import css from './SavedConnectorDetails.module.scss'
 
@@ -241,10 +241,14 @@ const getGithubSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowI
       label: 'password',
       value: connector?.spec?.authentication?.spec?.spec?.passwordRef
     },
-    {
-      label: 'personalAccessToken',
-      value: connector?.spec?.authentication?.spec?.spec?.tokenRef || connector?.spec?.apiAccess?.spec?.tokenRef
-    },
+    ...(connector?.spec?.authentication?.spec?.type !== GitAuthTypes.OAUTH
+      ? [
+          {
+            label: 'personalAccessToken',
+            value: connector?.spec?.authentication?.spec?.spec?.tokenRef || connector?.spec?.apiAccess?.spec?.tokenRef
+          }
+        ]
+      : []),
     {
       label: 'SSH_KEY',
       value: connector?.spec?.authentication?.spec?.sshKeyRef

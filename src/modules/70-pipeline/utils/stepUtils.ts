@@ -9,8 +9,12 @@ import produce from 'immer'
 import { isEmpty, set, get } from 'lodash-es'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StageType } from '@pipeline/utils/stageHelpers'
-import type { StageElementConfig, StageElementWrapperConfig, StepElementConfig } from 'services/cd-ng'
-import type { StepPalleteModuleInfo } from 'services/pipeline-ng'
+import type {
+  StepPalleteModuleInfo,
+  StageElementConfig,
+  StageElementWrapperConfig,
+  StepElementConfig
+} from 'services/pipeline-ng'
 import {
   StepOrStepGroupOrTemplateStepData,
   TabTypes,
@@ -84,6 +88,9 @@ export function getStepPaletteModuleInfosFromStage(
       break
     case 'ServerlessAwsLambda':
       category = 'ServerlessAwsLambda'
+      break
+    case 'AzureWebApps':
+      category = 'AzureWebApp'
       break
   }
   switch (stageType) {
@@ -167,6 +174,11 @@ export function getStepDataFromValues(
         set(node, 'spec.delegateSelectors', item.delegateSelectors)
       } else if (node.spec?.delegateSelectors) {
         delete node.spec.delegateSelectors
+      }
+      if (!isEmpty(item.strategy)) {
+        node.strategy = item.strategy
+      } else if (node.strategy) {
+        delete node.strategy
       }
     }
     // default strategies can be present without having the need to click on Advanced Tab. For eg. in CV step.

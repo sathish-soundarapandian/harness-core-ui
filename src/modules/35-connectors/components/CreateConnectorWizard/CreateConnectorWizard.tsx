@@ -8,7 +8,7 @@
 import React from 'react'
 import { pick } from 'lodash-es'
 import { Connectors } from '@connectors/constants'
-import type { ConnectorRequestBody, ConnectorInfoDTO } from 'services/cd-ng'
+import type { ConnectorRequestBody, ConnectorInfoDTO, ConnectorConnectivityDetails } from 'services/cd-ng'
 import type { IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
 import type { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -65,6 +65,7 @@ interface CreateConnectorWizardProps {
   connectivityMode?: ConnectivityModeType
   setConnectivityMode?: (val: ConnectivityModeType) => void
   gitDetails?: IGitContextFormProps
+  status?: ConnectorConnectivityDetails
   onClose: () => void
   onSuccess: (data?: ConnectorRequestBody) => void | Promise<void>
 }
@@ -86,6 +87,7 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     'setIsEditMode',
     'connectorInfo',
     'gitDetails',
+    'status',
     'accountId',
     'orgIdentifier',
     'projectIdentifier',

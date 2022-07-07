@@ -8,7 +8,6 @@
 import React, { useContext, useEffect, useRef } from 'react'
 import { noop } from 'lodash-es'
 import type { FormikProps } from 'formik'
-import * as Yup from 'yup'
 
 import { Formik, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@harness/uicore'
 
@@ -17,16 +16,12 @@ import { useStrings } from 'framework/strings'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 
-import {
-  getGitOpsEnvironmentRefSchema,
-  getNonGitOpsEnvironmentRefSchema
-} from '@cd/components/PipelineSteps/PipelineStepsUtil'
-
-import type { DeployInfrastructureStepConfig } from './DeployInfrastructureStep'
+import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import type { DeployInfrastructureProps } from './utils'
 import DeployEnvironment from './DeployEnvironment/DeployEnvironment'
 import DeployInfrastructures from './DeployInfrastructures/DeployInfrastructures'
 import DeployEnvironmentOrEnvGroup from './DeployEnvironmentOrEnvGroup/DeployEnvironmentOrEnvGroup'
+import { getEnvironmentTabSchema } from '../PipelineStepsUtil'
 
 import css from './DeployInfrastructureStep.module.scss'
 
@@ -37,11 +32,12 @@ export function DeployInfrastructureWidget({
   initialValues,
   onUpdate,
   readonly,
-  allowableTypes
+  allowableTypes,
+  serviceRef
 }: DeployInfrastructureProps): JSX.Element {
   const { getString } = useStrings()
 
-  const formikRef = useRef<FormikProps<DeployInfrastructureStepConfig> | null>(null)
+  const formikRef = useRef<FormikProps<DeployStageConfig> | null>(null)
 
   const { subscribeForm, unSubscribeForm } = useContext(StageErrorContext)
   useEffect(() => {
@@ -50,20 +46,14 @@ export function DeployInfrastructureWidget({
   }, [])
 
   return (
-    <Formik<DeployInfrastructureStepConfig>
+    <Formik<DeployStageConfig>
       formName="deployInfrastructureStepForm"
       onSubmit={noop}
-      validate={(values: DeployInfrastructureStepConfig) => {
+      validate={(values: DeployStageConfig) => {
         onUpdate?.({ ...values })
       }}
       initialValues={initialValues}
-      validationSchema={Yup.object()
-        .required()
-        .when('gitOpsEnabled', {
-          is: false,
-          then: getNonGitOpsEnvironmentRefSchema(getString),
-          otherwise: getGitOpsEnvironmentRefSchema()
-        })}
+      validationSchema={getEnvironmentTabSchema(getString)}
     >
       {formik => {
         window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.ENVIRONMENT }))
@@ -76,7 +66,12 @@ export function DeployInfrastructureWidget({
           >
             {!initialValues.gitOpsEnabled ? (
               <>
-                <DeployEnvironment initialValues={initialValues} allowableTypes={allowableTypes} readonly={readonly} />
+                <DeployEnvironment
+                  initialValues={initialValues}
+                  readonly={readonly}
+                  allowableTypes={allowableTypes}
+                  serviceRef={serviceRef}
+                />
                 {formik.values.environment?.environmentRef &&
                   getMultiTypeFromValue(formik.values.environment?.environmentRef) === MultiTypeInputType.FIXED && (
                     <DeployInfrastructures

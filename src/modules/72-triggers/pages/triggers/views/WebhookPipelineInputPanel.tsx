@@ -21,23 +21,24 @@ import { Color } from '@harness/design-system'
 import { merge, cloneDeep, isEmpty, defaultTo, get, debounce } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { InputSetSelector, InputSetSelectorProps } from '@pipeline/components/InputSetSelector/InputSetSelector'
-import type { PipelineInfoConfig, StageElementWrapperConfig } from 'services/cd-ng'
 import {
+  PipelineInfoConfig,
+  StageElementWrapperConfig,
   useGetTemplateFromPipeline,
   getInputSetForPipelinePromise,
   useGetMergeInputSetFromPipelineTemplateWithListInput,
-  InputSetResponse
+  InputSetResponse,
+  ResponseInputSetResponse
 } from 'services/pipeline-ng'
 import { PipelineInputSetForm } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
 import { isCloneCodebaseEnabledAtLeastOneStage } from '@pipeline/utils/CIUtils'
 import { useStrings } from 'framework/strings'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
-import { clearRuntimeInput } from '@pipeline/components/PipelineStudio/StepUtil'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
-import { mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
+import { clearRuntimeInput, mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
 import { memoizedParse } from '@common/utils/YamlHelperMethods'
 import type { InputSetDTO, Pipeline } from '@pipeline/utils/types'
 import NewInputSetModal from '@pipeline/components/InputSetForm/NewInputSetModal'
@@ -512,6 +513,27 @@ function WebhookPipelineInputPanelForm({
         } as unknown as InputSetDTO)
       : undefined
   }, [formikProps, pipeline?.properties?.ci?.codebase])
+  const onNewInputSetSuccess = useCallback(
+    (response: ResponseInputSetResponse) => {
+      const inputSet = response.data as InputSetResponse
+      const _inputSetSelected = (selectedInputSets || []).concat({
+        label: inputSet.name as string,
+        value: inputSet.identifier as string,
+        type: 'INPUT_SET',
+        gitDetails: inputSet.gitDetails
+      })
+
+      setInputSetError('')
+      setSelectedInputSets(_inputSetSelected)
+
+      formikProps.setValues({
+        ...formikProps.values,
+        inputSetSelected: _inputSetSelected,
+        inputSetRefs: _inputSetSelected.map(_inputSet => _inputSet.value)
+      })
+    },
+    [formikProps, selectedInputSets]
+  )
 
   useEffect(() => {
     setInputSetError(formikProps?.errors?.inputSetRefs)
@@ -569,24 +591,7 @@ function WebhookPipelineInputPanelForm({
                     inputSetInitialValue={inputSetInitialValue}
                     isModalOpen={showNewInputSetModal}
                     closeModal={() => setShowNewInputSetModal(false)}
-                    onCreateSuccess={response => {
-                      const inputSet = response.data as InputSetResponse
-                      const _inputSetSelected = (selectedInputSets || []).concat({
-                        label: inputSet.name as string,
-                        value: inputSet.identifier as string,
-                        type: 'INPUT_SET',
-                        gitDetails: inputSet.gitDetails
-                      })
-
-                      setInputSetError('')
-                      setSelectedInputSets(_inputSetSelected)
-
-                      formikProps.setValues({
-                        ...formikProps.values,
-                        inputSetSelected: _inputSetSelected,
-                        inputSetRefs: (formikProps.values.inputSetRefs || []).concat(inputSet.identifier)
-                      })
-                    }}
+                    onCreateSuccess={onNewInputSetSuccess}
                   />
                 )}
               </div>

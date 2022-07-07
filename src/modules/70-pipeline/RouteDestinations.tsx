@@ -37,6 +37,7 @@ import FullPageLogView from '@pipeline/pages/full-page-log-view/FullPageLogView'
 import InputSetList from '@pipeline/pages/inputSet-list/InputSetList'
 import PipelineDetails from '@pipeline/pages/pipeline-details/PipelineDetails'
 import PipelinesPage from '@pipeline/pages/pipelines/PipelinesPage'
+import { PipelineListPage } from '@pipeline/pages/pipeline-list/PipelineListPage'
 import DeploymentsList from '@pipeline/pages/deployments-list/DeploymentsList'
 import type { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import '@pipeline/components/CommonPipelineStages/ApprovalStage'
@@ -59,7 +60,9 @@ import { HarnessApprovalView } from '@pipeline/components/execution/StepDetails/
 import { JiraApprovalView } from '@pipeline/components/execution/StepDetails/views/JiraApprovalView/JiraApprovalView'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { ServiceNowApprovalView } from '@pipeline/components/execution/StepDetails/views/ServiceNowApprovalView/ServiceNowApprovalView'
+import { CustomApprovalView } from '@pipeline/components/execution/StepDetails/views/CustomApprovalView/CustomApprovalView'
 import { PolicyEvaluationView } from '@pipeline/components/execution/StepDetails/views/PolicyEvaluationView/PolicyEvaluationView'
+import { QueueStepView } from '@pipeline/components/execution/StepDetails/views/QueueStepView/QueueStepView'
 import type { ResourceDTO } from 'services/audit'
 import AuditTrailFactory, { ResourceScope } from '@audit-trail/factories/AuditTrailFactory'
 import routes from '@common/RouteDefinitions'
@@ -146,6 +149,10 @@ ExecFactory.registerStepDetails(StepType.ServiceNowApproval, {
   component: ServiceNowApprovalView
 })
 
+ExecFactory.registerStepDetails(StepType.CustomApproval, {
+  component: CustomApprovalView
+})
+
 ExecFactory.registerStepDetails(StepType.ServiceNowCreate, {
   component: ServiceNowCreateUpdateView
 })
@@ -155,6 +162,10 @@ ExecFactory.registerStepDetails(StepType.ServiceNowUpdate, {
 
 ExecFactory.registerStepDetails(StepType.Policy, {
   component: PolicyEvaluationView
+})
+
+ExecFactory.registerStepDetails(StepType.Queue, {
+  component: QueueStepView
 })
 
 /**
@@ -279,6 +290,15 @@ export function PipelineRouteDestinations({
         pageName={PAGE_NAME.FullPageLogView}
       >
         <FullPageLogView />
+      </RouteWithLayout>
+      <RouteWithLayout
+        exact
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={sidebarProps}
+        path={routes.toPipelineList({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
+        pageName={PAGE_NAME.PipelineListPage}
+      >
+        <PipelineListPage />
       </RouteWithLayout>
       <RouteWithLayout
         exact

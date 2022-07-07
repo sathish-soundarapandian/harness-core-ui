@@ -97,7 +97,7 @@ const ResourceScopeForm: React.FC<ResourceScopeFormProps> = ({ scopes, onSubmit,
           />
         )}
       </Layout.Vertical>
-      <Layout.Horizontal spacing="small">
+      <Layout.Horizontal spacing="small" padding={{ top: 'small' }}>
         <Button
           variation={ButtonVariation.PRIMARY}
           text={getString('common.apply')}

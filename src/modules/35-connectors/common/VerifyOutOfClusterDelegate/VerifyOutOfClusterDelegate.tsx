@@ -86,6 +86,8 @@ const RenderUrlInfo: React.FC<StepProps<VerifyOutOfClusterStepProps> & RenderUrl
         return getString('connectors.testConnectionStep.url.k8s')
       case Connectors.DOCKER:
         return getString('connectors.testConnectionStep.url.docker')
+      case Connectors.JENKINS:
+        return getString('connectors.jenkins.jenkinsUrl')
       case Connectors.NEXUS:
         return getString('connectors.testConnectionStep.url.nexus')
       case Connectors.ARTIFACTORY:
@@ -121,6 +123,8 @@ const RenderUrlInfo: React.FC<StepProps<VerifyOutOfClusterStepProps> & RenderUrl
         return props.prevStepData?.helmRepoUrl
       case Connectors.DOCKER:
         return props.prevStepData?.dockerRegistryUrl
+      case Connectors.JENKINS:
+        return props.prevStepData?.jenkinsUrl
       case Connectors.NEXUS:
         return props.prevStepData?.nexusServerUrl
 

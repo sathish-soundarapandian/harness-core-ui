@@ -31,11 +31,14 @@ export default function STOExecutionCardSummary(
 
   switch (pipelineStatus) {
     case 'Running':
-    case 'Waiting':
     case 'AsyncWaiting':
     case 'TaskWaiting':
     case 'TimedWaiting':
     case 'NotStarted':
+    case 'ResourceWaiting':
+    case 'InterventionWaiting':
+    case 'ApprovalWaiting':
+    case 'InputWaiting':
       return (
         <div className={css.spinnerWrapper}>
           <Spinner size={Spinner.SIZE_SMALL} />
@@ -53,17 +56,17 @@ export default function STOExecutionCardSummary(
         let message: JSX.Element | undefined = undefined
         if (!issueCounts || error) {
           if (error?.status === 404) {
-            message = <Text>{getString('stoSteps.noSecurityTests')}</Text>
+            message = <Text font={{ size: 'small' }}>{getString('stoSteps.noSecurityTests')}</Text>
           } else {
             message = (
-              <Text icon="error" intent="danger">
+              <Text icon="error" intent="danger" font={{ size: 'small' }}>
                 {getString('stoSteps.failedToGetIssueCounts')}
               </Text>
             )
           }
         } else if (!(issueCounts?.critical || issueCounts?.high || issueCounts?.medium || issueCounts?.low)) {
           message = (
-            <Text icon={'tick-circle'} iconProps={{ intent: 'success' }}>
+            <Text icon={'tick-circle'} iconProps={{ intent: 'success' }} font={{ size: 'small' }}>
               {getString('stoSteps.noSecurityIssues')}
             </Text>
           )
@@ -87,10 +90,13 @@ export default function STOExecutionCardSummary(
       }
     case 'Failed':
     case 'Errored':
+    case 'Expired':
+    case 'IgnoreFailed':
     case 'Aborted':
+    case 'Suspended':
       return (
         <div className={css.main}>
-          <Text>{getString('stoSteps.noSecurityTests')}</Text>
+          <Text font={{ size: 'small' }}>{getString('stoSteps.noSecurityTests')}</Text>
         </div>
       )
     default:

@@ -211,6 +211,10 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
     return !!isSvcEnvEntityEnabled
   }
 
+  const isStageCreationDisabled = (): boolean => {
+    return !template && shouldRenderDeploymentType() && isEmpty(selectedDeploymentType)
+  }
+
   return (
     <div className={stageCss.deployStage}>
       <DeployServiceErrors domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
@@ -246,7 +250,7 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                 errors.name = getString('validation.identifierDuplicate')
               }
               if (context && data) {
-                onChange?.(omit(values as unknown as DeploymentStageElementConfig, 'serviceType', 'deploymentType'))
+                onChange?.(omit(values, 'serviceType', 'deploymentType'))
               }
               return errors
             }}
@@ -312,7 +316,7 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                     <Card className={stageCss.sectionCard}>{whatToDeploy}</Card>
                   )}
 
-                  {shouldRenderDeploymentType() && (
+                  {shouldRenderDeploymentType() && !template && (
                     <>
                       <div className={cx({ [css.deploymentType]: !isEmpty(context) })}>
                         <SelectDeploymentType
@@ -320,6 +324,7 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                           selectedDeploymentType={selectedDeploymentType}
                           isReadonly={isReadonly}
                           handleDeploymentTypeChange={handleDeploymentTypeChange}
+                          shouldShowGitops={false}
                         />
                       </div>
                       {selectedDeploymentType === ServiceDeploymentType['Kubernetes'] && (
@@ -336,7 +341,7 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                     <Button
                       margin={{ top: 'medium' }}
                       type="submit"
-                      disabled={shouldRenderDeploymentType() && isEmpty(selectedDeploymentType)}
+                      disabled={isStageCreationDisabled()}
                       variation={ButtonVariation.PRIMARY}
                       text={getString('pipelineSteps.build.create.setupStage')}
                     />

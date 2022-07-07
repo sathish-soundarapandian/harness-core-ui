@@ -9,7 +9,7 @@ import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
 import type { ContinousVerificationData } from '@cv/components/PipelineSteps/ContinousVerification/types'
 import type { HealthSource, MonitoredServiceDTO } from 'services/cv'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 
 export const getNewSpecs = (
   monitoredServiceData: MonitoredServiceDTO | undefined,
@@ -24,7 +24,7 @@ export const getNewSpecs = (
 }
 
 export const isAnExpression = (value: string): boolean => {
-  return value.startsWith('<+') || (value.startsWith('<') && value !== RUNTIME_INPUT_VALUE)
+  return value?.startsWith('<+') || (value?.startsWith('<') && value !== RUNTIME_INPUT_VALUE)
 }
 
 export const getServiceIdFromStage = (stage: StageElementWrapper<DeploymentStageElementConfig>): string => {

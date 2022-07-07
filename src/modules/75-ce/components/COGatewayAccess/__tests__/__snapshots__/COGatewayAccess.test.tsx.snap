@@ -419,8 +419,9 @@ exports[`Testing COGatewayAccess DNS checkbox checks succesfully 1`] = `
                                                 >
                                                   <input
                                                     class="bp3-input"
+                                                    min="0"
                                                     style="margin-bottom: 0px;"
-                                                    type="text"
+                                                    type="number"
                                                     value="80"
                                                   />
                                                 </div>
@@ -525,8 +526,9 @@ exports[`Testing COGatewayAccess DNS checkbox checks succesfully 1`] = `
                                                 >
                                                   <input
                                                     class="bp3-input"
+                                                    min="0"
                                                     style="margin-bottom: 0px;"
-                                                    type="text"
+                                                    type="number"
                                                     value="80"
                                                   />
                                                 </div>
@@ -673,8 +675,9 @@ exports[`Testing COGatewayAccess DNS checkbox checks succesfully 1`] = `
                                                 >
                                                   <input
                                                     class="bp3-input"
+                                                    min="0"
                                                     style="margin-bottom: 0px;"
-                                                    type="text"
+                                                    type="number"
                                                     value="443"
                                                   />
                                                 </div>
@@ -779,8 +782,9 @@ exports[`Testing COGatewayAccess DNS checkbox checks succesfully 1`] = `
                                                 >
                                                   <input
                                                     class="bp3-input"
+                                                    min="0"
                                                     style="margin-bottom: 0px;"
-                                                    type="text"
+                                                    type="number"
                                                     value="443"
                                                   />
                                                 </div>

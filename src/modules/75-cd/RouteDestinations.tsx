@@ -33,7 +33,7 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import CDSideNav from '@cd/components/CDSideNav/CDSideNav'
 import CDHomePage from '@cd/pages/home/CDHomePage'
 import CDDashboardPage from '@cd/pages/dashboard/CDDashboardPage'
-import CDPipelineStudioWrapper from '@cd/pages/pipeline-studio/CDPipelineStudioWrapper'
+import CDPipelineStudio from '@cd/pages/pipeline-studio/CDPipelineStudio'
 import { ConnectorRouteDestinations } from '@connectors/RouteDestinations'
 import { DelegateRouteDestinations } from '@delegates/RouteDestinations'
 import { GitSyncRouteDestinations } from '@gitsync/RouteDestinations'
@@ -84,12 +84,12 @@ import { getBannerText } from './utils/renderMessageUtils'
 import ServiceStudio from './components/Services/ServiceStudio/ServiceStudio'
 
 RbacFactory.registerResourceCategory(ResourceCategory.GITOPS, {
-  icon: 'gitops-agent',
+  icon: 'gitops-blue-circle',
   label: 'cd.gitOps'
 })
 
 RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_AGENT, {
-  icon: 'gitops-agent',
+  icon: 'gitops-agents-blue-circle',
   label: 'common.agents',
   category: ResourceCategory.GITOPS,
   permissionLabels: {
@@ -100,7 +100,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_AGENT, {
 })
 
 RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_APP, {
-  icon: 'gitops-agent',
+  icon: 'gitops-applications-blue-circle',
   label: 'applications',
   category: ResourceCategory.GITOPS,
   permissionLabels: {
@@ -113,7 +113,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_APP, {
 })
 
 RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_CERT, {
-  icon: 'gitops-agent',
+  icon: 'gitops-repository-certificates-blue-circle',
   label: 'common.repositoryCertificates',
   category: ResourceCategory.GITOPS,
   permissionLabels: {
@@ -124,7 +124,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_CERT, {
 })
 
 RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_CLUSTER, {
-  icon: 'gitops-agent',
+  icon: 'gitops-clusters-blue-circle',
   label: 'common.clusters',
   category: ResourceCategory.GITOPS,
   permissionLabels: {
@@ -135,7 +135,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_CLUSTER, {
 })
 
 RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_GPGKEY, {
-  icon: 'gitops-agent',
+  icon: 'gitops-gnupg-key-blue-circle',
   label: 'common.gnupgKeys',
   category: ResourceCategory.GITOPS,
   permissionLabels: {
@@ -146,7 +146,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_GPGKEY, {
 })
 
 RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_REPOSITORY, {
-  icon: 'gitops-agent',
+  icon: 'gitops-repository-blue-circle',
   label: 'repositories',
   category: ResourceCategory.GITOPS,
   permissionLabels: {
@@ -354,7 +354,7 @@ export default (
 
     {
       PipelineRouteDestinations({
-        pipelineStudioComponent: CDPipelineStudioWrapper,
+        pipelineStudioComponent: CDPipelineStudio,
         pipelineStudioPageName: PAGE_NAME.CDPipelineStudio,
         pipelineDeploymentListComponent: CDPipelineDeploymentList,
         pipelineDeploymentListPageName: PAGE_NAME.CDPipelineDeploymentList,

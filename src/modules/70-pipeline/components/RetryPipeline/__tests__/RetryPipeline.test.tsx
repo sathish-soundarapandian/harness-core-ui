@@ -27,6 +27,8 @@ import {
 import RetryPipeline from '../RetryPipeline'
 import { mockInputsetYamlV2, mockPostRetryPipeline, mockRetryStages } from './mocks'
 
+jest.mock('@common/components/YAMLBuilder/YamlBuilder')
+
 const commonProps = {
   pipelineIdentifier: 'pid',
   executionIdentifier: 'executionId',

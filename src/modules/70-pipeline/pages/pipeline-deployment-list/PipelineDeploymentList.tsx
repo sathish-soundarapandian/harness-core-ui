@@ -11,11 +11,11 @@ import {
   Text,
   Icon,
   IconName,
-  OverlaySpinner,
   Container,
   Layout,
   ModalDialog,
-  ButtonVariation
+  ButtonVariation,
+  PageSpinner
 } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import routes from '@common/RouteDefinitions'
@@ -48,7 +48,7 @@ import type { StringsMap } from 'stringTypes'
 import pipelineIllustration from '@pipeline/pages/pipelines/images/deploypipeline-illustration.svg'
 import { ExecutionCompiledYaml } from '@pipeline/components/ExecutionCompiledYaml/ExecutionCompiledYaml'
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
-import { ExecutionCompareProvider } from '@pipeline/components/ExecutionCompareYamls/ExecutionCompareContext'
+import { ExecutionCompareProvider } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
 import ExecutionsList from './ExecutionsList/ExecutionsList'
 import ExecutionsPagination from './ExecutionsPagination/ExecutionsPagination'
 import { PipelineDeploymentListHeader } from './PipelineDeploymentListHeader/PipelineDeploymentListHeader'
@@ -66,23 +66,6 @@ export interface PipelineDeploymentListProps {
   showHealthAndExecution?: boolean
   isPipelineInvalid?: boolean
   isCDOverview?: boolean
-}
-
-const renderSpinner = ({
-  loading,
-  pollingRequest
-}: {
-  loading?: boolean
-  pollingRequest: boolean
-}): JSX.Element | null => {
-  if (loading && !pollingRequest) {
-    return (
-      <OverlaySpinner show={true} className={css.loading}>
-        <div />
-      </OverlaySpinner>
-    )
-  }
-  return null
 }
 
 const getHasFilterIdentifier = (filterIdentifier?: string): boolean =>
@@ -354,6 +337,13 @@ export function processQueryParams(params: StringQueryParams & GitQueryParams) {
     storeType: params.storeType
   }
 }
+function DeploymentPageSpinner() {
+  return (
+    <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
+      <PageSpinner />
+    </div>
+  )
+}
 
 export default function PipelineDeploymentList(props: PipelineDeploymentListProps): React.ReactElement {
   const { orgIdentifier, projectIdentifier, pipelineIdentifier, accountId } =
@@ -502,9 +492,9 @@ export default function PipelineDeploymentList(props: PipelineDeploymentListProp
     [projectIdentifier, orgIdentifier, history, accountId]
   )
 
-  const spinner = renderSpinner({ loading, pollingRequest })
+  const isInitialLoading = loading && !pollingRequest
 
-  if (isCDOverview && !spinner) {
+  if (isCDOverview && !isInitialLoading) {
     return (
       <NoDeploymentsCDOverview
         onRunPipeline={props.onRunPipeline}
@@ -519,7 +509,7 @@ export default function PipelineDeploymentList(props: PipelineDeploymentListProp
     )
   }
   return (
-    <GitSyncStoreProvider>
+    <GitSyncStoreProvider spinner={DeploymentPageSpinner}>
       <FilterContextProvider
         savedFilters={filters}
         isFetchingFilters={isFetchingFilters}
@@ -545,8 +535,8 @@ export default function PipelineDeploymentList(props: PipelineDeploymentListProp
                 <PipelineBuildExecutionsChart />
               </Container>
             )}
-            {spinner ? (
-              spinner
+            {isInitialLoading ? (
+              <DeploymentPageSpinner />
             ) : !pipelineExecutionSummary?.content?.length ? (
               <NoDeployments
                 onRunPipeline={props.onRunPipeline}

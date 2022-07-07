@@ -6,7 +6,7 @@
  */
 
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { getStageFromPipeline, getStagePathFromPipeline } from '../helpers'
 import {
   ActionResponse,

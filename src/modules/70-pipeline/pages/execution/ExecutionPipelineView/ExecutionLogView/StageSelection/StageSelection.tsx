@@ -8,7 +8,7 @@
 import React from 'react'
 import { Accordion, AccordionHandle } from '@harness/uicore'
 import { Spinner } from '@blueprintjs/core'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 
 import { useUpdateQueryParams } from '@common/hooks'
 import { processExecutionData } from '@pipeline/utils/executionUtils'
@@ -32,21 +32,29 @@ export function StageSelection(): React.ReactElement {
     pipelineExecutionDetail,
     selectedStageId,
     selectedStepId,
+    selectedStageExecutionId,
     queryParams,
     loading
   } = useExecutionContext()
 
   const accordionRef = React.useRef<AccordionHandle | null>(null)
   const containerRef = React.useRef<HTMLDivElement | null>(null)
+  const prevSelectedStageIdRef = React.useRef(selectedStageId)
+  const prevSelectedStageExecutionId = React.useRef(selectedStageExecutionId)
+  const hasUserClicked = React.useRef(false)
+
   const { updateQueryParams } = useUpdateQueryParams<ExecutionPageQueryParams>()
 
   React.useEffect(() => {
     let timer: number
 
     if (accordionRef.current && selectedStageId) {
-      accordionRef.current.open(selectedStageId)
+      const newIdentifier = isEmpty(selectedStageExecutionId)
+        ? selectedStageId
+        : [selectedStageId, selectedStageExecutionId].join('|')
+      accordionRef.current.open(newIdentifier)
       const scrollPanelIntoView = (): void => {
-        const panel = document.querySelector(`[data-testid="${selectedStageId}-panel"]`)
+        const panel = document.querySelector(`[data-testid="${newIdentifier}-panel"]`)
         if (panel && containerRef.current) {
           const rect = panel.getBoundingClientRect()
           containerRef.current.scrollTop += rect.top - SCROLL_OFFSET
@@ -65,7 +73,15 @@ export function StageSelection(): React.ReactElement {
         window.clearTimeout(timer)
       }
     }
-  }, [selectedStageId])
+  }, [selectedStageId, selectedStageExecutionId])
+
+  React.useEffect(() => {
+    if (!loading) {
+      // only update reference, after API is complete
+      prevSelectedStageIdRef.current = selectedStageId
+      prevSelectedStageExecutionId.current = selectedStageExecutionId
+    }
+  }, [selectedStageId, selectedStageExecutionId, loading])
 
   const tree = React.useMemo(
     () => processExecutionData(pipelineExecutionDetail?.executionGraph),
@@ -73,12 +89,24 @@ export function StageSelection(): React.ReactElement {
   )
 
   function handleStepSelect(stepId: string, retryStep?: string): void {
-    updateQueryParams({ step: stepId, stage: selectedStageId, retryStep })
+    updateQueryParams({ step: stepId, stage: selectedStageId, stageExecId: selectedStageExecutionId, retryStep })
   }
 
+  /**
+   * This function is called even during auto stage selection,
+   * we should call this only when user clicks it.
+   */
   function handleAccordionChange(stageId: string | string[]): void {
-    if (typeof stageId === 'string' && stageId && selectedStageId !== stageId) {
-      updateQueryParams({ stage: stageId })
+    if (hasUserClicked.current) {
+      const [stageNodeId, stageNodeExecId] = Array.isArray(stageId) ? stageId : (stageId || '').split('|')
+
+      if (typeof stageId === 'string' && stageId && stageNodeId) {
+        updateQueryParams({
+          stage: stageNodeId,
+          stageExecId: stageNodeExecId
+        })
+      }
+      hasUserClicked.current = false
     }
   }
 
@@ -86,7 +114,7 @@ export function StageSelection(): React.ReactElement {
   const stages = [...pipelineStagesMap.values()]
 
   return (
-    <div ref={containerRef} className={css.mainContainer}>
+    <div ref={containerRef} className={css.mainContainer} onClick={() => (hasUserClicked.current = true)}>
       <div className={css.statusHeader}>
         <div className={css.heatmap}>
           <StatusHeatMap
@@ -108,33 +136,42 @@ export function StageSelection(): React.ReactElement {
         summaryClassName={css.accordionSummary}
         detailsClassName={css.accordionDetails}
       >
-        {stageEntries.map(([identifier, stage]) => (
-          <Accordion.Panel
-            key={identifier}
-            id={identifier}
-            disabled={isExecutionSkipped(stage.status) || isExecutionNotStarted(stage.status)}
-            summary={
-              <div>
-                <StatusIcon className={css.icon} status={stage.status as ExecutionStatus} />
-                <span>{stage.name}</span>
-              </div>
-            }
-            details={
-              identifier === selectedStageId && !loading ? (
-                <StepsTree
-                  allNodeMap={allNodeMap}
-                  nodes={tree}
-                  selectedStepId={selectedStepId}
-                  onStepSelect={handleStepSelect}
-                  retryStep={queryParams.retryStep}
-                  isRoot
-                />
-              ) : (
-                <Spinner size={20} className={css.spinner} />
-              )
-            }
-          />
-        ))}
+        {stageEntries.map(([identifier, stage]) => {
+          const newIdentifier = stage?.strategyMetadata ? [stage.nodeUuid, stage.nodeExecutionId].join('|') : identifier
+          const shouldShowTree =
+            newIdentifier.includes(selectedStageExecutionId || selectedStageId) &&
+            (!loading ||
+              prevSelectedStageIdRef.current === stage.nodeUuid ||
+              prevSelectedStageExecutionId.current === stage.nodeExecutionId)
+
+          return (
+            <Accordion.Panel
+              key={newIdentifier}
+              id={newIdentifier}
+              disabled={isExecutionSkipped(stage.status) || isExecutionNotStarted(stage.status)}
+              summary={
+                <div>
+                  <StatusIcon className={css.icon} status={stage.status as ExecutionStatus} />
+                  <span>{stage.name}</span>
+                </div>
+              }
+              details={
+                shouldShowTree ? (
+                  <StepsTree
+                    allNodeMap={allNodeMap}
+                    nodes={tree}
+                    selectedStepId={selectedStepId}
+                    onStepSelect={handleStepSelect}
+                    retryStep={queryParams.retryStep}
+                    isRoot
+                  />
+                ) : (
+                  <Spinner size={20} className={css.spinner} />
+                )
+              }
+            />
+          )
+        })}
       </Accordion>
     </div>
   )

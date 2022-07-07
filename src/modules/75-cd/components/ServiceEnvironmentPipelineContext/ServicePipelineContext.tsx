@@ -7,11 +7,10 @@
 
 import React from 'react'
 import { cloneDeep, defaultTo, isEmpty, isEqual, merge, noop, set } from 'lodash-es'
-import { MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
+import { MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 import produce from 'immer'
 import {
   PipelineContext,
-  PipelineContextInterface,
   PipelineContextType
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
@@ -32,17 +31,14 @@ import {
   getStageFromPipeline as _getStageFromPipeline,
   getStagePathFromPipeline as _getStagePathFromPipeline
 } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
-import {
-  getServiceV2Promise,
-  GetServiceV2QueryParams,
-  NGServiceConfig,
-  PipelineInfoConfig,
-  ServiceResponseDTO,
-  StageElementConfig,
-  StageElementWrapperConfig
-} from 'services/cd-ng'
+import { getServiceV2Promise, GetServiceV2QueryParams, NGServiceConfig, ServiceResponseDTO } from 'services/cd-ng'
 import type { PipelineSelectionState } from '@pipeline/components/PipelineStudio/PipelineQueryParamState/usePipelineQueryParam'
-import type { GetPipelineQueryParams } from 'services/pipeline-ng'
+import type {
+  GetPipelineQueryParams,
+  StageElementConfig,
+  PipelineInfoConfig,
+  StageElementWrapperConfig
+} from 'services/pipeline-ng'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import {
@@ -71,7 +67,6 @@ export interface ServicePipelineProviderProps {
   contextType: PipelineContextType
   isReadOnly: boolean
   serviceIdentifier: string
-  getTemplate: PipelineContextInterface['getTemplate']
 }
 const getServiceByIdentifier = (
   queryParams: GetServiceV2QueryParams,
@@ -103,7 +98,6 @@ export function ServicePipelineProvider({
   onUpdatePipeline,
   isReadOnly,
   contextType,
-  getTemplate,
   children
 }: React.PropsWithChildren<ServicePipelineProviderProps>): React.ReactElement {
   const allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
@@ -139,7 +133,10 @@ export function ServicePipelineProvider({
     }
     const isUpdated = !isEqual(state.originalPipeline, pipeline)
     await dispatch(PipelineContextActions.success({ error: '', pipeline: pipeline as PipelineInfoConfig, isUpdated }))
-    onUpdatePipeline?.(pipeline as ServicePipelineConfig)
+
+    if (view === SelectedView.VISUAL) {
+      onUpdatePipeline?.(pipeline as ServicePipelineConfig)
+    }
   }
 
   const updateStage = React.useCallback(
@@ -294,8 +291,7 @@ export function ServicePipelineProvider({
         setSelectedSectionId: noop,
         setSelection,
         getStagePathFromPipeline,
-        setTemplateTypes: noop,
-        getTemplate
+        setTemplateTypes: noop
       }}
     >
       {children}

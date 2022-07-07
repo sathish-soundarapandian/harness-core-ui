@@ -151,7 +151,6 @@ function ContextMenu({
       <Menu.Item
         icon="duplicate"
         text={getString('projectCard.clone')}
-        disabled={isGitSyncEnabled}
         onClick={(e: React.MouseEvent) => {
           e.stopPropagation()
           openClonePipelineModal()

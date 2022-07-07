@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom'
 import { Container } from '@wings-software/uicore'
 import type { GetDataError } from 'restful-react'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useGetAppdynamicsMetricDataByPath } from 'services/cv'
+import { useGetAppdynamicsMetricDataByPath, useGetAppdynamicsMetricDataByPathV2 } from 'services/cv'
 import MetricLineChart from '@cv/pages/health-source/common/MetricLineChart/MetricLineChart'
 
 export default function MetricChart({
@@ -19,7 +19,8 @@ export default function MetricChart({
   baseFolder,
   tier,
   metricPath,
-  fullPath
+  fullPath,
+  completeMetricPath
 }: {
   connectorIdentifier: string
   appName: string
@@ -27,8 +28,15 @@ export default function MetricChart({
   tier: string
   metricPath: string
   fullPath?: string
+  completeMetricPath: string
 }): JSX.Element {
   const { data, refetch, loading, error } = useGetAppdynamicsMetricDataByPath({ lazy: true })
+  const {
+    data: v2Data,
+    refetch: v2Refetch,
+    loading: v2Loading,
+    error: v2Error
+  } = useGetAppdynamicsMetricDataByPathV2({ lazy: true })
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
 
   useEffect(() => {
@@ -54,7 +62,22 @@ export default function MetricChart({
     })
   }, [metricPath, fullPath])
 
-  const dataPoints = data?.data?.dataPoints
+  useEffect(() => {
+    if (completeMetricPath) {
+      v2Refetch({
+        queryParams: {
+          accountId,
+          orgIdentifier,
+          projectIdentifier,
+          connectorIdentifier,
+          appName,
+          completeMetricPath
+        }
+      })
+    }
+  }, [completeMetricPath])
+
+  const dataPoints = data ? data?.data?.dataPoints : v2Data?.data?.dataPoints
   const options: any[] = []
   dataPoints?.forEach((point: any) => {
     options.push([point?.timestamp * 1000, point?.value])
@@ -62,7 +85,11 @@ export default function MetricChart({
 
   return (
     <Container>
-      <MetricLineChart options={options} loading={loading} error={error as GetDataError<Error>} />
+      <MetricLineChart
+        options={options}
+        loading={loading || v2Loading}
+        error={(error || v2Error) as GetDataError<Error>}
+      />
     </Container>
   )
 }

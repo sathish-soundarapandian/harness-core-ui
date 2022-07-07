@@ -14,7 +14,8 @@ import produce from 'immer'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
-import { NGServiceConfig, PipelineInfoConfig, useGetEntityYamlSchema } from 'services/cd-ng'
+import { NGServiceConfig, useGetEntityYamlSchema } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import DeployServiceDefinition from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceDefinition/DeployServiceDefinition'
 import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
@@ -54,6 +55,7 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
     },
     updatePipeline,
     updatePipelineView,
+    setView,
     isReadonly
   } = usePipelineContext()
   const { isServiceCreateModalView } = useServiceContext()
@@ -90,7 +92,10 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
     (yamlChanged: boolean): void => {
       if (yamlChanged) {
         const newServiceData = getUpdatedPipelineYaml()
-        newServiceData && updatePipeline(newServiceData)
+        const errorMap = yamlHandler?.getYAMLValidationErrorMap?.()
+        if (!errorMap || errorMap.size === 0) {
+          newServiceData && updatePipeline(newServiceData)
+        }
       }
     },
     [getUpdatedPipelineYaml, updatePipeline]
@@ -102,6 +107,7 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
         const newServiceData = getUpdatedPipelineYaml()
         newServiceData && updatePipeline(newServiceData)
       }
+      setView(view)
       setSelectedView(view)
     },
     [yamlHandler?.getLatestYaml, serviceSchema]

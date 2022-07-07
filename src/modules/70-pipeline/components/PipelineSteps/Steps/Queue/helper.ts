@@ -12,9 +12,7 @@ import type { StringsMap } from 'stringTypes'
 
 export const SCOPE_KEYS = {
   PIPELINE: 'Pipeline',
-  STAGE: 'Stage',
-  STEP_GROUP: 'StepGroup',
-  PLAN: 'Plan'
+  STAGE: 'Stage'
 }
 
 export interface QueueData extends StepElementConfig {
@@ -43,7 +41,5 @@ export const getScopeOptions = (
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
 ) => [
   { label: getString('common.pipeline'), value: SCOPE_KEYS.PIPELINE },
-  { label: getString('common.stage'), value: SCOPE_KEYS.STAGE },
-  { label: getString('stepGroup'), value: SCOPE_KEYS.STEP_GROUP },
-  { label: getString('common.subscriptions.overview.plan'), value: SCOPE_KEYS.PLAN }
+  { label: getString('common.stage'), value: SCOPE_KEYS.STAGE }
 ]

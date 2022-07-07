@@ -28,7 +28,7 @@ import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
 import { getConnectorListV2Promise, getServiceNowTicketTypesPromise } from 'services/cd-ng'
 import { getConnectorName, getConnectorValue } from '@pipeline/components/PipelineSteps/Steps/StepsHelper'
-import { flatObject } from '../Common/ApprovalCommons'
+import { getSanitizedflatObjectForVariablesView } from '../Common/ApprovalCommons'
 import { PipelineStep } from '../../PipelineStep'
 import { StepType } from '../../PipelineStepInterface'
 
@@ -249,7 +249,7 @@ export class ServiceNowApproval extends PipelineStep<ServiceNowApprovalData> {
       const customStepPropsTyped = customStepProps as SnowApprovalVariableListModeProps
       return (
         <VariablesListTable
-          data={flatObject(customStepPropsTyped.variablesData)}
+          data={getSanitizedflatObjectForVariablesView(customStepPropsTyped.variablesData)}
           originalData={initialValues as Record<string, any>}
           metadataMap={customStepPropsTyped.metadataMap}
           className={pipelineVariablesCss.variablePaddingL3}

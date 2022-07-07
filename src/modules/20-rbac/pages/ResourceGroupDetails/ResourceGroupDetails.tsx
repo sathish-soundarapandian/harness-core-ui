@@ -187,12 +187,7 @@ const ResourceGroupDetails: React.FC = () => {
   useDocumentTitle([defaultTo(resourceGroup?.name, ''), getString('resourceGroups')])
 
   if (loading) return <Page.Spinner />
-  if (errorInGettingResourceGroup)
-    return (
-      <Page.Error
-        message={defaultTo((errorInGettingResourceGroup.data as Error)?.message, errorInGettingResourceGroup.message)}
-      />
-    )
+  if (errorInGettingResourceGroup) return <Page.Error message={getRBACErrorMessage(errorInGettingResourceGroup)} />
   if (!resourceGroup)
     return <Page.NoDataCard icon="resources-icon" message={getString('rbac.resourceGroup.noResourceGroupFound')} />
 

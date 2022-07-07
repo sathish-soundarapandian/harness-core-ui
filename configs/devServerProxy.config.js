@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-const baseUrl = process.env.BASE_URL ?? 'https://qa.harness.io/gateway'
+const baseUrl = process.env.BASE_URL ?? 'https://pr.harness.io/cds-38701'
 const targetLocalHost = (process.env.TARGET_LOCALHOST && JSON.parse(process.env.TARGET_LOCALHOST)) ?? false // set to false to target baseUrl environment instead of localhost
 
 console.log('\nProxy env vars')
@@ -119,5 +119,9 @@ module.exports = {
   '/auth': {
     pathRewrite: { '^/auth': '' },
     target: 'https://app.harness.io/auth'
+  },
+  '/ccmui': {
+    pathRewrite: { '^/ccmui': '' },
+    target: process.env.CCM_UI_URL || 'https://localhost:8183'
   }
 }

@@ -15,7 +15,7 @@ import { isArray, isEmpty, set } from 'lodash-es'
 
 import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import type { HttpHeaderConfig, StringNGVariable } from 'services/cd-ng'
+import type { HttpHeaderConfig, StringNGVariable } from 'services/pipeline-ng'
 
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'

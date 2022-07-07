@@ -48,7 +48,7 @@ export default function MergePRInputStep(props: MergePrInputStepProps): React.Re
               disabled: readonly
             }}
             label={getString('pipelineSteps.timeoutLabel')}
-            name={`${prefix}timeout`}
+            name={`${prefix}.timeout`}
             disabled={readonly}
           />
         </div>

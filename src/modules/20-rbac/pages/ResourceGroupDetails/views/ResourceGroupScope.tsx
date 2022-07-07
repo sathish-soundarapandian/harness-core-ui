@@ -37,6 +37,7 @@ const ResourceGroupScope: React.FC<ResourceGroupScopeProps> = ({ includedScopes,
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ResourceGroupDetailsPathProps & ModulePathParams>()
   const { getString } = useStrings()
   const { CUSTOM_RESOURCEGROUP_SCOPE } = useFeatureFlags()
+  const [isOpen, setIsOpen] = useState(false)
   const scope = getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
   const [selectedScope, setSelectedScope] = useState<SelectorScope>()
   const scopeGroup = groupBy(includedScopes, 'orgIdentifier')
@@ -129,8 +130,10 @@ const ResourceGroupScope: React.FC<ResourceGroupScopeProps> = ({ includedScopes,
             ((scope === Scope.ACCOUNT && Object.keys(scopeGroupKeys).length) ||
             (scope === Scope.ORG && includedProjectsLength(scopeGroup[orgIdentifier])) ? (
               <Collapse
-                collapsedIcon="chevron-right"
-                expandedIcon="chevron-up"
+                iconProps={{ size: 15, name: isOpen ? 'chevron-up' : 'chevron-right' }}
+                onToggleOpen={val => {
+                  setIsOpen(val)
+                }}
                 isRemovable={false}
                 collapseClassName={css.collapse}
                 heading={header}

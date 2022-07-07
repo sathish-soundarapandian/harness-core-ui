@@ -7,20 +7,32 @@
 
 import React, { useCallback, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, Tabs, Tab, Button, ButtonVariation, Layout, PageSpinner, useToaster } from '@harness/uicore'
-import { cloneDeep, defaultTo, isEmpty, omit } from 'lodash-es'
+import {
+  Container,
+  Tabs,
+  Tab,
+  Button,
+  ButtonVariation,
+  Layout,
+  PageSpinner,
+  useToaster,
+  VisualYamlSelectedView as SelectedView
+} from '@harness/uicore'
+import { cloneDeep, defaultTo, get, isEmpty, omit, set } from 'lodash-es'
+import produce from 'immer'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGServiceConfig, useCreateServiceV2, useUpdateServiceV2 } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useServiceContext } from '@cd/context/ServiceContext'
 import { useCache } from '@common/hooks/useCache'
 import ServiceConfiguration from './ServiceConfiguration/ServiceConfiguration'
-import { ServiceTabs } from '../utils/ServiceUtils'
+import { ServiceTabs, setNameIDDescription, ServicePipelineConfig } from '../utils/ServiceUtils'
 import css from '@cd/components/Services/ServiceStudio/ServiceStudio.module.scss'
 
 interface ServiceStudioDetailsProps {
@@ -34,7 +46,8 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
   const { tab } = useQueryParams<{ tab: string }>()
   const { updateQueryParams } = useUpdateQueryParams()
   const {
-    state: { isUpdated, pipelineView, isLoading },
+    state: { pipeline, isUpdated, pipelineView, isLoading },
+    view,
     updatePipelineView,
     fetchPipeline,
     isReadonly
@@ -78,11 +91,25 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
 
   const saveAndPublishService = async (): Promise<void> => {
     clear()
+
+    let updatedService
+    if (view === SelectedView.YAML) {
+      const stage = get(pipeline, 'stages[0].stage.spec.serviceConfig.serviceDefinition')
+
+      updatedService = produce(props.serviceData, draft => {
+        if (draft) {
+          setNameIDDescription(draft.service as PipelineInfoConfig, pipeline as ServicePipelineConfig)
+          set(draft, 'service.serviceDefinition', stage)
+        }
+      })
+    }
+    const finalServiceData = view === SelectedView.VISUAL ? props.serviceData : updatedService
+
     const body = {
-      ...omit(cloneDeep(props.serviceData.service), 'serviceDefinition', 'gitOpsEnabled'),
+      ...omit(cloneDeep(finalServiceData?.service), 'serviceDefinition', 'gitOpsEnabled'),
       projectIdentifier,
       orgIdentifier,
-      yaml: yamlStringify({ ...props.serviceData })
+      yaml: yamlStringify({ ...finalServiceData })
     }
 
     try {

@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
@@ -24,8 +31,7 @@ import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { StepElementConfig } from 'services/cd-ng'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
-import { clearRuntimeInput } from '@pipeline/components/PipelineStudio/StepUtil'
-
+import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import css from './ExecutionInputs.module.scss'
 
 export interface ExecutionInputsProps {

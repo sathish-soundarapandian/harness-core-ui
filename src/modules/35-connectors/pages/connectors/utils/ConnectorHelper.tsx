@@ -20,10 +20,11 @@ export const AuthTypes = {
   BEARER_TOKEN: 'Bearer Token(HTTP Header)'
 }
 
-export const GitAuthTypes = {
-  USER_PASSWORD: 'UsernamePassword',
-  USER_TOKEN: 'UsernameToken',
-  KERBEROS: 'Kerberos'
+export enum GitAuthTypes {
+  USER_PASSWORD = 'UsernamePassword',
+  USER_TOKEN = 'UsernameToken',
+  KERBEROS = 'Kerberos',
+  OAUTH = 'OAuth'
 }
 
 export const GitAPIAuthTypes = {

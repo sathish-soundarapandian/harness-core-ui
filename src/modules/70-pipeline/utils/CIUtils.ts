@@ -13,7 +13,7 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import { RegExAllowedInputExpression } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { ConnectorRefWidth } from './constants'
 

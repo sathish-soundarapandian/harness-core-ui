@@ -29,6 +29,8 @@ jest.mock('services/pipeline-ng', () => ({
   )
 }))
 
+const updateConnector = jest.fn()
+const createConnector = jest.fn()
 jest.mock('services/cd-ng', () => ({
   useProvisionResourcesForCI: jest.fn().mockImplementation(() =>
     Promise.resolve({
@@ -47,7 +49,9 @@ jest.mock('services/cd-ng', () => ({
   ),
   useGetListOfAllReposByRefConnector: jest.fn().mockImplementation(() => {
     return { data: { data: repos, status: 'SUCCESS' }, refetch: jest.fn(), error: null, loading: false }
-  })
+  }),
+  useUpdateConnector: jest.fn().mockImplementation(() => ({ mutate: updateConnector })),
+  useCreateConnector: jest.fn().mockImplementation(() => ({ mutate: createConnector }))
 }))
 
 const pathParams = { accountId: 'accountId', orgIdentifier: 'orgId', projectIdentifier: 'projectId' }

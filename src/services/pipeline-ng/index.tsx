@@ -25,6 +25,41 @@ export type AcrSpec = ArtifactTypeSpec & {
   tag?: string
 }
 
+export type AddRuleYaml = PatchInstruction & {
+  identifier: string
+  spec: AddRuleYamlSpec
+  type: 'AddRule'
+}
+
+export interface AddRuleYamlSpec {
+  clauses?: Clause[]
+  distribution?: DistributionYamlSpec
+  priority?: number
+  serve?: Serve
+}
+
+export type AddSegmentToVariationTargetMapYaml = PatchInstruction & {
+  identifier: string
+  spec: AddSegmentToVariationTargetMapYamlSpec
+  type: 'AddSegmentToVariationTargetMap'
+}
+
+export interface AddSegmentToVariationTargetMapYamlSpec {
+  segments: string[]
+  variation: string
+}
+
+export type AddTargetsToVariationTargetMapYaml = PatchInstruction & {
+  identifier: string
+  spec: AddTargetsToVariationTargetMapYamlSpec
+  type: 'AddTargetsToVariationTargetMap'
+}
+
+export interface AddTargetsToVariationTargetMapYamlSpec {
+  targets: string[]
+  variation: string
+}
+
 export interface AdviserIssuer {
   adviseType:
     | 'UNKNOWN'
@@ -49,7 +84,11 @@ export interface ApprovalInstanceResponse {
   id?: string
   lastModifiedAt?: number
   status: 'WAITING' | 'APPROVED' | 'REJECTED' | 'FAILED' | 'EXPIRED'
-  type: 'HarnessApproval' | 'JiraApproval' | 'ServiceNowApproval'
+  type: 'HarnessApproval' | 'JiraApproval' | 'CustomApproval' | 'ServiceNowApproval'
+}
+
+export type ApprovalStageConfig = StageInfoConfig & {
+  execution: ExecutionElementConfig
 }
 
 export interface ApproverInput {
@@ -57,9 +96,20 @@ export interface ApproverInput {
   value: string
 }
 
+export interface ApproverInputInfo {
+  defaultValue?: string
+  name?: string
+}
+
 export interface ApproverInputInfoDTO {
   defaultValue?: string
   name?: string
+}
+
+export interface Approvers {
+  disallowPipelineExecutor: boolean
+  minimumCount: number
+  userGroups?: string[]
 }
 
 export interface ApproversDTO {
@@ -135,6 +185,34 @@ export type AwsCodeCommitSpec = WebhookTriggerSpecV2 & {
   type?: 'Push'
 }
 
+export interface AzureRepoEventSpec {
+  projectName?: string
+}
+
+export type AzureRepoPRSpec = AzureRepoEventSpec & {
+  actions?: ('Create' | 'Update' | 'Merge')[]
+  autoAbortPreviousExecutions?: boolean
+  connectorRef?: string
+  headerConditions?: TriggerEventDataCondition[]
+  jexlCondition?: string
+  payloadConditions?: TriggerEventDataCondition[]
+  repoName?: string
+}
+
+export type AzureRepoPushSpec = AzureRepoEventSpec & {
+  autoAbortPreviousExecutions?: boolean
+  connectorRef?: string
+  headerConditions?: TriggerEventDataCondition[]
+  jexlCondition?: string
+  payloadConditions?: TriggerEventDataCondition[]
+  repoName?: string
+}
+
+export type AzureRepoSpec = WebhookTriggerSpecV2 & {
+  spec?: AzureRepoEventSpec
+  type?: 'PullRequest' | 'Push'
+}
+
 export interface BarrierExecutionInfo {
   identifier?: string
   name?: string
@@ -150,10 +228,19 @@ export interface BarrierInfo {
   timeoutIn?: number
 }
 
+export interface BarrierInfoConfig {
+  identifier: string
+  name: string
+}
+
 export interface BarrierSetupInfo {
   identifier?: string
   name?: string
   stages?: StageDetail[]
+}
+
+export type BarrierStepInfo = StepSpecType & {
+  barrierRef: string
 }
 
 export interface BitbucketEventSpec {
@@ -184,8 +271,21 @@ export type BitbucketSpec = WebhookTriggerSpecV2 & {
   type?: 'PullRequest' | 'Push'
 }
 
+export type BranchBuildSpec = BuildSpec & {
+  branch: string
+}
+
+export interface Build {
+  spec: BuildSpec
+  type: 'branch' | 'tag' | 'PR'
+}
+
 export interface BuildDetails {
   buildType?: string
+}
+
+export interface BuildSpec {
+  [key: string]: any
 }
 
 export interface BuildStore {
@@ -197,6 +297,10 @@ export interface BuildStoreTypeSpec {
   [key: string]: any
 }
 
+export interface CIProperties {
+  codebase?: CodeBase
+}
+
 export interface CcmConnectorFilter {
   awsAccountId?: string
   azureSubscriptionId?: string
@@ -204,6 +308,20 @@ export interface CcmConnectorFilter {
   featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
   gcpProjectId?: string
   k8sConnectorRef?: string
+}
+
+export interface Clause {
+  attribute: string
+  id: string
+  negate: boolean
+  op: string
+  values: string[]
+}
+
+export interface ClauseYamlSpec {
+  attribute?: string
+  op: string
+  values: string[]
 }
 
 export interface CloneConfig {
@@ -217,6 +335,23 @@ export interface ClonePipelineProperties {
   cloneConfig?: CloneConfig
   destinationConfig?: DestinationPipelineConfig
   sourceConfig?: SourceIdentifierConfig
+}
+
+export interface CodeBase {
+  build: Build
+  connectorRef: string
+  depth?: number
+  prCloneStrategy?: 'MergeCommit' | 'SourceBranch'
+  projectName?: string
+  repoName?: string
+  resources?: ContainerResource
+  sslVerify?: boolean
+}
+
+export interface Condition {
+  key: string
+  operator: 'equals' | 'not equals' | 'in' | 'not in'
+  value?: string
 }
 
 export interface ConditionDTO {
@@ -301,8 +436,21 @@ export interface ConnectorWrapperResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'IN_PROGRESS' | 'UNKNOWN'
 }
 
+export interface ContainerResource {
+  limits: Limits
+}
+
+export interface CriteriaSpec {
+  [key: string]: any
+}
+
 export interface CriteriaSpecDTO {
   [key: string]: any
+}
+
+export interface CriteriaSpecWrapper {
+  spec: CriteriaSpec
+  type: 'Jexl' | 'KeyValues'
 }
 
 export interface CriteriaSpecWrapperDTO {
@@ -312,6 +460,26 @@ export interface CriteriaSpecWrapperDTO {
 
 export type CronTriggerSpec = ScheduledTriggerSpec & {
   expression?: string
+}
+
+export type CustomApprovalStepInfo = StepSpecType & {
+  approvalCriteria: CriteriaSpecWrapper
+  delegateSelectors?: string[]
+  environmentVariables?: NGVariable[]
+  outputVariables?: NGVariable[]
+  rejectionCriteria?: CriteriaSpecWrapper
+  retryInterval: string
+  scriptTimeout: string
+  shell: 'Bash'
+  source: ShellScriptSourceWrapper
+}
+
+export type CustomPolicyStepSpec = PolicySpec & {
+  payload: string
+}
+
+export type CustomStageConfig = StageInfoConfig & {
+  execution: ExecutionElementConfig
 }
 
 export type CustomTriggerSpec = WebhookTriggerSpecV2 & {
@@ -344,6 +512,17 @@ export interface DestinationPipelineConfig {
   tags?: {
     [key: string]: string
   }
+}
+
+export interface Distribution {
+  bucketBy: string
+  variations: WeightedVariation[]
+}
+
+export interface DistributionYamlSpec {
+  bucketBy: string
+  clauses?: ClauseYamlSpec[]
+  variations?: VariationYamlSpec[]
 }
 
 export type DockerRegistrySpec = ArtifactTypeSpec & {
@@ -585,6 +764,7 @@ export interface Error {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -712,8 +892,14 @@ export interface Error {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
     | 'SPOTINST_NULL_ERROR'
   correlationId?: string
   detailedMessage?: string
@@ -731,6 +917,13 @@ export interface ErrorNodeSummary {
   childrenErrorNodes?: ErrorNodeSummary[]
   nodeInfo?: NodeInfo
   templateInfo?: TemplateInfo
+  templateResponse?: TemplateResponse
+}
+
+export interface ExcludeConfig {
+  exclude?: {
+    [key: string]: string
+  }
 }
 
 export interface ExecutableResponse {
@@ -740,6 +933,11 @@ export interface ExecutableResponse {
 export interface ExecutionDataResponse {
   executionId?: string
   executionYaml?: string
+}
+
+export interface ExecutionElementConfig {
+  rollbackSteps?: ExecutionWrapperConfig[]
+  steps: ExecutionWrapperConfig[]
 }
 
 export interface ExecutionErrorInfo {
@@ -787,7 +985,7 @@ export interface ExecutionInfo {
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
-    | 'Waiting'
+    | 'WAITING'
   uuid?: string
 }
 
@@ -855,7 +1053,7 @@ export interface ExecutionNode {
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
-    | 'Waiting'
+    | 'WAITING'
   stepDetails?: {
     [key: string]: {
       [key: string]: { [key: string]: any }
@@ -865,6 +1063,7 @@ export interface ExecutionNode {
     [key: string]: { [key: string]: any }
   }
   stepType?: string
+  strategyMetadata?: StrategyMetadata
   unitProgresses?: UnitProgress[]
   uuid?: string
 }
@@ -874,8 +1073,20 @@ export interface ExecutionNodeAdjacencyList {
   nextIds?: string[]
 }
 
+export interface ExecutionTarget {
+  connectorRef?: string
+  host?: string
+  workingDirectory?: string
+}
+
 export interface ExecutionTriggerInfo {
   [key: string]: any
+}
+
+export interface ExecutionWrapperConfig {
+  parallel?: ParallelStepElementConfig
+  step?: StepElementConfig
+  stepGroup?: StepGroupElementConfig
 }
 
 export interface Failure {
@@ -1069,6 +1280,7 @@ export interface Failure {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -1196,8 +1408,14 @@ export interface Failure {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
     | 'SPOTINST_NULL_ERROR'
   correlationId?: string
   errors?: ValidationError[]
@@ -1229,6 +1447,8 @@ export interface FailureStrategyConfig {
   onFailure: OnFailureConfig
 }
 
+export type FeatureFlagStageConfig = StageInfoConfig & {}
+
 export interface FilterDTO {
   filterProperties: FilterProperties
   filterVisibility?: 'EveryOne' | 'OnlyCreator'
@@ -1256,6 +1476,16 @@ export interface FilterProperties {
   tags?: {
     [key: string]: string
   }
+}
+
+export type FlagConfigurationStepInfo = StepSpecType & {
+  environment: string
+  feature: string
+  instructions: PatchInstruction[]
+}
+
+export interface FlowControlConfig {
+  barriers?: BarrierInfoConfig[]
 }
 
 export type GcrSpec = ArtifactTypeSpec & {
@@ -1314,6 +1544,16 @@ export interface GitlabEventSpec {
   [key: string]: any
 }
 
+export type GitlabIssueCommentSpec = GitlabEventSpec & {
+  actions?: 'Create'[]
+  autoAbortPreviousExecutions?: boolean
+  connectorRef?: string
+  headerConditions?: TriggerEventDataCondition[]
+  jexlCondition?: string
+  payloadConditions?: TriggerEventDataCondition[]
+  repoName?: string
+}
+
 export type GitlabPRSpec = GitlabEventSpec & {
   actions?: ('Open' | 'Close' | 'Reopen' | 'Merge' | 'Update' | 'Sync')[]
   autoAbortPreviousExecutions?: boolean
@@ -1335,7 +1575,7 @@ export type GitlabPushSpec = GitlabEventSpec & {
 
 export type GitlabSpec = WebhookTriggerSpecV2 & {
   spec?: GitlabEventSpec
-  type?: 'MergeRequest' | 'Push'
+  type?: 'MergeRequest' | 'Push' | 'IssueComment'
 }
 
 export interface GovernanceMetadata {
@@ -1391,7 +1631,7 @@ export interface GraphLayoutNode {
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
-    | 'Waiting'
+    | 'WAITING'
   stepDetails?: {
     [key: string]: {
       [key: string]: { [key: string]: any }
@@ -1427,6 +1667,18 @@ export type HarnessApprovalInstanceDetails = ApprovalInstanceDetailsDTO & {
   includePipelineExecutionHistory?: boolean
 }
 
+export type HarnessApprovalStepInfo = StepSpecType & {
+  approvalMessage?: string
+  approverInputs?: ApproverInputInfo[]
+  approvers: Approvers
+  includePipelineExecutionHistory: boolean
+}
+
+export interface HarnessForConfig {
+  iteration?: number
+  maxConcurrency?: number
+}
+
 export type HelmManifestSpec = ManifestTypeSpec & {
   chartName?: string
   chartVersion?: string
@@ -1436,6 +1688,21 @@ export type HelmManifestSpec = ManifestTypeSpec & {
 
 export type HttpBuildStoreTypeSpec = BuildStoreTypeSpec & {
   connectorRef?: string
+}
+
+export interface HttpHeaderConfig {
+  key?: string
+  value?: string
+}
+
+export type HttpStepInfo = StepSpecType & {
+  assertion?: string
+  delegateSelectors?: string[]
+  headers?: HttpHeaderConfig[]
+  method: string
+  outputVariables?: NGVariable[]
+  requestBody?: string
+  url: string
 }
 
 export type IgnoreFailureActionConfig = FailureStrategyActionConfig & {
@@ -1458,6 +1725,15 @@ export interface InputSetErrorWrapper {
   uuidToErrorResponseMap?: {
     [key: string]: InputSetErrorResponse
   }
+}
+
+export interface InputSetImportRequestDTO {
+  inputSetDescription?: string
+  inputSetName?: string
+}
+
+export interface InputSetImportResponseDTO {
+  identifier?: string
 }
 
 export interface InputSetResponse {
@@ -1529,6 +1805,11 @@ export interface InputSetTemplateWithReplacedExpressionsResponse {
   replacedExpressions?: string[]
 }
 
+export interface InputSetValidator {
+  parameters?: string
+  validatorType?: 'ALLOWED_VALUES' | 'REGEX'
+}
+
 export interface InterruptConfig {
   issuedBy: IssuedBy
   retryInterruptConfig?: RetryInterruptConfig
@@ -1567,8 +1848,8 @@ export interface IssuedBy {
   triggerIssuer?: TriggerIssuer
 }
 
-export type JexlCriteriaSpec = CriteriaSpecDTO & {
-  expression?: string
+export type JexlCriteriaSpec = CriteriaSpec & {
+  expression: string
 }
 
 export type JiraApprovalInstanceDetails = ApprovalInstanceDetailsDTO & {
@@ -1578,13 +1859,47 @@ export type JiraApprovalInstanceDetails = ApprovalInstanceDetailsDTO & {
   rejectionCriteria: CriteriaSpecWrapperDTO
 }
 
+export type JiraApprovalStepInfo = StepSpecType & {
+  approvalCriteria: CriteriaSpecWrapper
+  connectorRef: string
+  delegateSelectors?: string[]
+  issueKey: string
+  rejectionCriteria?: CriteriaSpecWrapper
+}
+
+export type JiraCreateStepInfo = StepSpecType & {
+  connectorRef: string
+  delegateSelectors?: string[]
+  fields?: JiraField[]
+  issueType: string
+  projectKey: string
+}
+
+export interface JiraField {
+  name?: string
+  value: string
+}
+
 export interface JiraIssueKeyNG {
   key: string
   url: string
 }
 
+export type JiraUpdateStepInfo = StepSpecType & {
+  connectorRef: string
+  delegateSelectors?: string[]
+  fields?: JiraField[]
+  issueKey: string
+  transitionTo?: TransitionTo
+}
+
 export interface JsonNode {
   [key: string]: any
+}
+
+export type KeyValuesCriteriaSpec = CriteriaSpec & {
+  conditions: Condition[]
+  matchAnyCondition?: boolean
 }
 
 export interface LandingDashboardRequestPMS {
@@ -1597,6 +1912,11 @@ export interface LastTriggerExecutionDetails {
   lastExecutionTime?: number
   message?: string
   planExecutionId?: string
+}
+
+export interface Limits {
+  cpu?: string
+  memory?: string
 }
 
 export type ManifestTriggerConfig = NGTriggerSpecV2 & {
@@ -1631,6 +1951,15 @@ export type MarkAsSuccessFailureActionConfig = FailureStrategyActionConfig & {
   type: 'MarkAsSuccess'
 }
 
+export type MatrixConfig = MatrixConfigInterface & {
+  exclude?: ParameterFieldListExcludeConfig
+  maxConcurrency?: number
+}
+
+export interface MatrixConfigInterface {
+  [key: string]: any
+}
+
 export interface MeanMedianInfo {
   duration?: number
   rate?: number
@@ -1651,6 +1980,10 @@ export interface MergeInputSetResponse {
 
 export interface MergeInputSetTemplateRequest {
   runtimeInputYaml?: string
+}
+
+export interface NGProperties {
+  ci?: CIProperties
 }
 
 export interface NGTag {
@@ -1722,6 +2055,14 @@ export interface NGTriggerSpecV2 {
   [key: string]: any
 }
 
+export interface NGVariable {
+  description?: string
+  metadata?: string
+  name?: string
+  required?: boolean
+  type?: 'String' | 'Number' | 'Secret'
+}
+
 export type NexusRegistrySpec = ArtifactTypeSpec & {
   connectorRef?: string
   eventConditions?: TriggerEventDataCondition[]
@@ -1758,6 +2099,13 @@ export interface NotificationRules {
   name?: string
   notificationMethod?: NotificationChannelWrapper
   pipelineEvents?: PipelineEvent[]
+}
+
+export type NumberNGVariable = NGVariable & {
+  default?: number
+  name?: string
+  type?: 'Number'
+  value: number
 }
 
 export interface OnFailureConfig {
@@ -1847,6 +2195,10 @@ export interface PMSPipelineSummaryResponse {
   version?: number
 }
 
+export type PRBuildSpec = BuildSpec & {
+  number: string
+}
+
 export interface Page {
   content?: { [key: string]: any }[]
   empty?: boolean
@@ -1928,6 +2280,64 @@ export interface Pageable {
   unpaged?: boolean
 }
 
+export type ParallelStageElementConfig = StageElementWrapperConfig[]
+
+export type ParallelStepElementConfig = ExecutionWrapperConfig[]
+
+export interface ParameterField {
+  defaultValue?: { [key: string]: any }
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: { [key: string]: any }
+}
+
+export interface ParameterFieldListExcludeConfig {
+  defaultValue?: ExcludeConfig[]
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: ExcludeConfig[]
+}
+
+export interface ParameterFieldString {
+  defaultValue?: string
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: string
+}
+
+export interface PatchInstruction {
+  type?:
+    | 'SetFeatureFlagState'
+    | 'SetOnVariation'
+    | 'SetOffVariation'
+    | 'SetDefaultVariations'
+    | 'AddRule'
+    | 'UpdateRule'
+    | 'AddTargetsToVariationTargetMap'
+    | 'RemoveTargetsToVariationTargetMap'
+    | 'AddSegmentToVariationTargetMap'
+    | 'RemoveSegmentsToVariationTargetMap'
+}
+
+export interface PipelineConfig {
+  pipeline?: PipelineInfoConfig
+}
+
 export interface PipelineCountInfo {
   failure?: number
   success?: number
@@ -1987,7 +2397,7 @@ export type PipelineExecutionFilterProperties = FilterProperties & {
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
-    | 'Waiting'
+    | 'WAITING'
   )[]
   timeRange?: TimeRange
 }
@@ -2058,7 +2468,7 @@ export interface PipelineExecutionSummary {
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
-    | 'Waiting'
+    | 'WAITING'
   storeType?: 'INLINE' | 'REMOTE'
   successfulStagesCount?: number
   tags?: NGTag[]
@@ -2089,6 +2499,26 @@ export interface PipelineHealthInfo {
 export interface PipelineImportRequest {
   pipelineDescription?: string
   pipelineName?: string
+}
+
+export interface PipelineInfoConfig {
+  allowStageExecutions?: boolean
+  delegateSelectors?: string[]
+  description?: string
+  flowControl?: FlowControlConfig
+  identifier: string
+  name: string
+  notificationRules?: NotificationRules[]
+  orgIdentifier?: string
+  projectIdentifier?: string
+  properties?: NGProperties
+  stages?: StageElementWrapperConfig[]
+  tags?: {
+    [key: string]: string
+  }
+  template?: TemplateLinkConfig
+  timeout?: string
+  variables?: NGVariable[]
 }
 
 export interface PipelineInputResponse {
@@ -2175,6 +2605,7 @@ export interface PmsAbstractStepNode {
   failureStrategies?: FailureStrategyConfig[]
   identifier: string
   name: string
+  strategy?: StrategyConfig
   timeout?: string
   when?: StepWhenCondition
 }
@@ -2201,6 +2632,17 @@ export type PmsPagerDutyChannel = PmsNotificationChannel & {
 export type PmsSlackChannel = PmsNotificationChannel & {
   userGroups?: string[]
   webhookUrl?: string
+}
+
+export interface PolicySpec {
+  type?: string
+}
+
+export type PolicyStepInfo = StepSpecType & {
+  metadata?: string
+  policySets: string[]
+  policySpec?: PolicySpec
+  type?: string
 }
 
 export interface PollingSubscriptionStatus {
@@ -2240,9 +2682,41 @@ export interface Principal {
   type: 'USER' | 'SYSTEM' | 'API_KEY' | 'SERVICE_ACCOUNT'
 }
 
+export type QueueStepInfo = StepSpecType & {
+  key: string
+  scope: 'Pipeline' | 'Stage'
+}
+
+export type RemoveSegmentToVariationTargetMapYaml = PatchInstruction & {
+  identifier: string
+  spec: RemoveSegmentToVariationTargetMapYamlSpec
+  type: 'RemoveSegmentToVariationTargetMap'
+}
+
+export interface RemoveSegmentToVariationTargetMapYamlSpec {
+  segments: string[]
+  variation: string
+}
+
+export type RemoveTargetsToVariationTargetMapYaml = PatchInstruction & {
+  identifier: string
+  spec: RemoveTargetsToVariationTargetMapYamlSpec
+  type: 'RemoveTargetsToVariationTargetMap'
+}
+
+export interface RemoveTargetsToVariationTargetMapYamlSpec {
+  targets: string[]
+  variation: string
+}
+
 export interface ResourceConstraintDetail {
+  accountId?: string
+  orgIdentifier?: string
   pipelineIdentifier?: string
+  pipelineName?: string
   planExecutionId?: string
+  projectIdentifier?: string
+  startTs?: number
   state?: 'BLOCKED' | 'ACTIVE' | 'FINISHED' | 'REJECTED'
 }
 
@@ -2250,6 +2724,14 @@ export interface ResourceConstraintExecutionInfo {
   capacity?: number
   name?: string
   resourceConstraints?: ResourceConstraintDetail[]
+}
+
+export type ResourceConstraintStepInfo = StepSpecType & {
+  acquireMode: 'ENSURE' | 'ACCUMULATE'
+  holdingScope: 'PLAN' | 'PIPELINE' | 'STAGE' | 'STEP_GROUP'
+  name: string
+  permits: number
+  resourceUnit: ParameterFieldString
 }
 
 export interface ResourceDTO {
@@ -2287,6 +2769,13 @@ export interface ResourceDTO {
     | 'MONITORED_SERVICE'
     | 'CHAOS_AGENT'
     | 'CHAOS_WORKFLOW'
+    | 'CHAOS_GITOPS'
+    | 'SERVICE_LEVEL_OBJECTIVE'
+    | 'PERSPECTIVE'
+    | 'PERSPECTIVE_BUDGET'
+    | 'PERSPECTIVE_REPORT'
+    | 'COST_CATEGORY'
+    | 'SMTP'
 }
 
 export interface ResourceScopeDTO {
@@ -2378,6 +2867,13 @@ export interface ResponseFilterDTO {
 export interface ResponseHarnessApprovalInstanceAuthorization {
   correlationId?: string
   data?: HarnessApprovalInstanceAuthorization
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseInputSetImportResponseDTO {
+  correlationId?: string
+  data?: InputSetImportResponseDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -2475,7 +2971,7 @@ export interface ResponseListGitlabPRAction {
 
 export interface ResponseListGitlabTriggerEvent {
   correlationId?: string
-  data?: ('MergeRequest' | 'Push')[]
+  data?: ('MergeRequest' | 'Push' | 'IssueComment')[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -2519,7 +3015,7 @@ export interface ResponseListWebhookAction {
 
 export interface ResponseListWebhookTriggerType {
   correlationId?: string
-  data?: ('Github' | 'Gitlab' | 'Bitbucket' | 'Custom' | 'AwsCodeCommit')[]
+  data?: ('AzureRepo' | 'Github' | 'Gitlab' | 'Bitbucket' | 'Custom' | 'AwsCodeCommit')[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -2751,6 +3247,7 @@ export interface ResponseMessage {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -2878,8 +3375,14 @@ export interface ResponseMessage {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
     | 'SPOTINST_NULL_ERROR'
   exception?: Throwable
   failureTypes?: (
@@ -2970,6 +3473,13 @@ export interface ResponsePagePMSPipelineSummaryResponse {
 export interface ResponsePagePipelineExecutionSummary {
   correlationId?: string
   data?: PagePipelineExecutionSummary
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePipelineConfig {
+  correlationId?: string
+  data?: PipelineConfig
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -3220,7 +3730,7 @@ export interface RetryStageInfo {
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
-    | 'Waiting'
+    | 'WAITING'
 }
 
 export interface RunStageRequestDTO {
@@ -3261,6 +3771,18 @@ export type ScmErrorMetadataDTO = ErrorMetadataDTO & {
   conflictCommitId?: string
 }
 
+export type SecretNGVariable = NGVariable & {
+  default?: string
+  name?: string
+  type?: 'Secret'
+  value: string
+}
+
+export interface Serve {
+  distribution?: Distribution
+  variation?: string
+}
+
 export interface ServiceExpressionProperties {
   expression?: string
   serviceName?: string
@@ -3273,10 +3795,108 @@ export type ServiceNowApprovalInstanceDetails = ApprovalInstanceDetailsDTO & {
   ticket: ServiceNowTicketKeyNG
 }
 
+export type ServiceNowApprovalStepInfo = StepSpecType & {
+  approvalCriteria: CriteriaSpecWrapper
+  connectorRef: string
+  delegateSelectors?: string[]
+  rejectionCriteria?: CriteriaSpecWrapper
+  ticketNumber: string
+  ticketType: string
+}
+
+export type ServiceNowCreateStepInfo = StepSpecType & {
+  connectorRef: string
+  delegateSelectors?: string[]
+  fields?: ServiceNowField[]
+  templateName?: string
+  ticketType: string
+  useServiceNowTemplate: boolean
+}
+
+export interface ServiceNowField {
+  name?: string
+  value: string
+}
+
 export interface ServiceNowTicketKeyNG {
   key: string
   ticketType: string
   url: string
+}
+
+export type ServiceNowUpdateStepInfo = StepSpecType & {
+  connectorRef: string
+  delegateSelectors?: string[]
+  fields?: ServiceNowField[]
+  templateName?: string
+  ticketNumber: string
+  ticketType: string
+  useServiceNowTemplate: boolean
+}
+
+export type SetDefaultVariationsYaml = PatchInstruction & {
+  identifier: string
+  spec: SetDefaultVariationsYamlSpec
+  type: 'SetDefaultVariations'
+}
+
+export interface SetDefaultVariationsYamlSpec {
+  off: string
+  on: string
+}
+
+export type SetFeatureFlagStateYaml = PatchInstruction & {
+  identifier: string
+  spec: SetFeatureFlagStateYamlSpec
+  type: 'SetFeatureFlagState'
+}
+
+export interface SetFeatureFlagStateYamlSpec {
+  state: string
+}
+
+export type SetOffVariationYaml = PatchInstruction & {
+  identifier: string
+  spec: SetOffVariationYamlSpec
+  type: 'SetOffVariation'
+}
+
+export interface SetOffVariationYamlSpec {
+  variation: string
+}
+
+export type SetOnVariationYaml = PatchInstruction & {
+  identifier: string
+  spec: SetOnVariationYamlSpec
+  type: 'SetOnVariation'
+}
+
+export interface SetOnVariationYamlSpec {
+  variation: string
+}
+
+export interface ShellScriptBaseSource {
+  type?: string
+}
+
+export type ShellScriptInlineSource = ShellScriptBaseSource & {
+  script?: string
+}
+
+export interface ShellScriptSourceWrapper {
+  spec: ShellScriptBaseSource
+  type: string
+}
+
+export type ShellScriptStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  environmentVariables?: NGVariable[]
+  executionTarget?: ExecutionTarget
+  metadata?: string
+  onDelegate: boolean
+  outputVariables?: NGVariable[]
+  shell: 'Bash'
+  source: ShellScriptSourceWrapper
 }
 
 export interface SkipInfo {
@@ -3310,6 +3930,28 @@ export interface StageDetail {
   name?: string
 }
 
+export interface StageElementConfig {
+  delegateSelectors?: string[]
+  description?: string
+  failureStrategies?: FailureStrategyConfig[]
+  identifier: string
+  name: string
+  spec?: StageInfoConfig
+  strategy?: StrategyConfig
+  tags?: {
+    [key: string]: string
+  }
+  template?: TemplateLinkConfig
+  type?: string
+  variables?: NGVariable[]
+  when?: StageWhenCondition
+}
+
+export interface StageElementWrapperConfig {
+  parallel?: ParallelStageElementConfig
+  stage?: StageElementConfig
+}
+
 export interface StageExecutionResponse {
   message?: string
   stageIdentifier?: string
@@ -3318,8 +3960,17 @@ export interface StageExecutionResponse {
   toBeBlocked?: boolean
 }
 
+export interface StageInfoConfig {
+  execution?: ExecutionElementConfig
+}
+
 export type StageRollbackFailureActionConfig = FailureStrategyActionConfig & {
   type: 'StageRollback'
+}
+
+export interface StageWhenCondition {
+  condition?: string
+  pipelineStatus: 'Success' | 'Failure' | 'All'
 }
 
 export interface StepCategory {
@@ -3344,6 +3995,7 @@ export interface StepData {
     | 'MULTIPLE_ORGANIZATIONS'
     | 'MULTIPLE_PROJECTS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
+    | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
     | 'SECRET_MANAGERS'
     | 'DEPLOYMENTS'
@@ -3362,6 +4014,7 @@ export interface StepData {
     | 'ACTIVE_COMMITTERS'
     | 'TEST_INTELLIGENCE'
     | 'TEMPLATE_SERVICE'
+    | 'SRM_SERVICES'
     | 'K8S_BG_SWAP_SERVICES'
     | 'K8S_BLUE_GREEN_DEPLOY'
     | 'K8S_APPLY'
@@ -3380,11 +4033,36 @@ export interface StepData {
     | 'DELETE_STACK'
     | 'ROLLBACK_STACK'
     | 'COMMAND'
+    | 'AZURE_SLOT_DEPLOYMENT'
+    | 'AZURE_TRAFFIC_SHIFT'
+    | 'AZURE_SWAP_SLOT'
+    | 'AZURE_WEBAPP_ROLLBACK'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
   name?: string
   type?: string
+}
+
+export interface StepElementConfig {
+  description?: string
+  failureStrategies?: FailureStrategyConfig[]
+  identifier: string
+  name: string
+  spec?: StepSpecType
+  strategy?: StrategyConfig
+  timeout?: string
+  type: string
+  when?: StepWhenCondition
+}
+
+export interface StepGroupElementConfig {
+  delegateSelectors?: string[]
+  failureStrategies?: FailureStrategyConfig[]
+  identifier: string
+  name?: string
+  steps: ExecutionWrapperConfig[]
+  when?: StepWhenCondition
 }
 
 export type StepGroupFailureActionConfig = FailureStrategyActionConfig & {
@@ -3402,18 +4080,39 @@ export interface StepPalleteModuleInfo {
   shouldShowCommonSteps?: boolean
 }
 
+export interface StepSpecType {
+  [key: string]: any
+}
+
 export interface StepWhenCondition {
   condition?: string
   stageStatus: 'Success' | 'Failure' | 'All'
+}
+
+export interface StrategyConfig {
+  for?: HarnessForConfig
+  matrix?: MatrixConfigInterface
+  parallelism?: number
 }
 
 export interface StrategyMetadata {
   [key: string]: any
 }
 
+export type StringNGVariable = NGVariable & {
+  default?: string
+  name?: string
+  type?: 'String'
+  value: string
+}
+
 export interface SuccessHealthInfo {
   percent?: number
   rate?: number
+}
+
+export type TagBuildSpec = BuildSpec & {
+  tag: string
 }
 
 export type TemplateFilterProperties = FilterProperties & {
@@ -3447,6 +4146,28 @@ export interface TemplateLinkConfig {
   templateInputs?: JsonNode
   templateRef: string
   versionLabel?: string
+}
+
+export interface TemplateResponse {
+  accountId: string
+  childType?: string
+  description?: string
+  entityValidityDetails?: EntityValidityDetails
+  gitDetails?: EntityGitDetails
+  identifier: string
+  lastUpdatedAt?: number
+  name: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  stableTemplate?: boolean
+  tags?: {
+    [key: string]: string
+  }
+  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService'
+  templateScope?: 'account' | 'org' | 'project' | 'unknown'
+  version?: number
+  versionLabel?: string
+  yaml?: string
 }
 
 export interface TemplateStageNode {
@@ -3490,6 +4211,11 @@ export interface TotalHealthInfo {
   rate?: number
 }
 
+export interface TransitionTo {
+  status: string
+  transitionName?: string
+}
+
 export interface TriggerEventDataCondition {
   key?: string
   operator?: 'In' | 'Equals' | 'NotEquals' | 'NotIn' | 'Regex' | 'EndsWith' | 'StartsWith' | 'Contains'
@@ -3509,6 +4235,19 @@ export interface TriggerStatus {
 
 export interface UnitProgress {
   [key: string]: any
+}
+
+export type UpdateRuleYaml = PatchInstruction & {
+  identifier: string
+  spec: UpdateRuleYamlSpec
+  type: 'UpdateRule'
+}
+
+export interface UpdateRuleYamlSpec {
+  bucketBy: string
+  ruleID: string
+  serve?: Serve
+  variations?: VariationYamlSpec[]
 }
 
 export interface UserOpaEvaluationContext {
@@ -3546,6 +4285,11 @@ export interface VariableResponseMapValue {
   yamlProperties?: YamlProperties
 }
 
+export interface VariationYamlSpec {
+  variation: string
+  weight: number
+}
+
 export interface WebhookAutoRegistrationStatus {
   detailedMessage?: string
   registrationResult?: 'SUCCESS' | 'FAILED' | 'ERROR' | 'TIMEOUT' | 'UNAVAILABLE'
@@ -3575,11 +4319,16 @@ export interface WebhookEventProcessingDetails {
 
 export type WebhookTriggerConfigV2 = NGTriggerSpecV2 & {
   spec?: WebhookTriggerSpecV2
-  type?: 'Github' | 'Gitlab' | 'Bitbucket' | 'Custom' | 'AwsCodeCommit'
+  type?: 'AzureRepo' | 'Github' | 'Gitlab' | 'Bitbucket' | 'Custom' | 'AwsCodeCommit'
 }
 
 export interface WebhookTriggerSpecV2 {
   [key: string]: any
+}
+
+export interface WeightedVariation {
+  variation: string
+  weight: number
 }
 
 export interface YamlDiffResponseDTO {
@@ -3603,6 +4352,7 @@ export interface YamlSchemaErrorDTO {
   fqn?: string
   hintMessage?: string
   message?: string
+  messageWithFQN?: string
   stageInfo?: NodeErrorInfo
   stepInfo?: NodeErrorInfo
 }
@@ -3646,7 +4396,7 @@ export interface ExecutionSummaryInfo {
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
-    | 'Waiting'
+    | 'WAITING'
   lastExecutionTs?: number
   numOfErrors?: number[]
 }
@@ -3685,7 +4435,7 @@ export type UpdateInputSetForPipelineBodyRequestBody = string
 export type WebhookEndpointBodyRequestBody = string
 
 export interface GetInitialStageYamlSnippetQueryParams {
-  approvalType: 'HarnessApproval' | 'JiraApproval' | 'ServiceNowApproval'
+  approvalType: 'HarnessApproval' | 'JiraApproval' | 'CustomApproval' | 'ServiceNowApproval'
   routingId?: string
 }
 
@@ -4710,6 +5460,103 @@ export const createInputSetForPipelinePromise = (
     UpdateInputSetForPipelineBodyRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/inputSets`, props, signal)
+
+export interface ImportInputSetQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  pipelineIdentifier: string
+  connectorRef?: string
+  repoName?: string
+  branch?: string
+  filePath?: string
+}
+
+export interface ImportInputSetPathParams {
+  inputSetIdentifier: string
+}
+
+export type ImportInputSetProps = Omit<
+  MutateProps<
+    ResponseInputSetImportResponseDTO,
+    Failure | Error,
+    ImportInputSetQueryParams,
+    InputSetImportRequestDTO,
+    ImportInputSetPathParams
+  >,
+  'path' | 'verb'
+> &
+  ImportInputSetPathParams
+
+/**
+ * Get Input Set YAML from Git Repository
+ */
+export const ImportInputSet = ({ inputSetIdentifier, ...props }: ImportInputSetProps) => (
+  <Mutate<
+    ResponseInputSetImportResponseDTO,
+    Failure | Error,
+    ImportInputSetQueryParams,
+    InputSetImportRequestDTO,
+    ImportInputSetPathParams
+  >
+    verb="POST"
+    path={`/inputSets/import/${inputSetIdentifier}`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseImportInputSetProps = Omit<
+  UseMutateProps<
+    ResponseInputSetImportResponseDTO,
+    Failure | Error,
+    ImportInputSetQueryParams,
+    InputSetImportRequestDTO,
+    ImportInputSetPathParams
+  >,
+  'path' | 'verb'
+> &
+  ImportInputSetPathParams
+
+/**
+ * Get Input Set YAML from Git Repository
+ */
+export const useImportInputSet = ({ inputSetIdentifier, ...props }: UseImportInputSetProps) =>
+  useMutate<
+    ResponseInputSetImportResponseDTO,
+    Failure | Error,
+    ImportInputSetQueryParams,
+    InputSetImportRequestDTO,
+    ImportInputSetPathParams
+  >('POST', (paramsInPath: ImportInputSetPathParams) => `/inputSets/import/${paramsInPath.inputSetIdentifier}`, {
+    base: getConfig('pipeline/api'),
+    pathParams: { inputSetIdentifier },
+    ...props
+  })
+
+/**
+ * Get Input Set YAML from Git Repository
+ */
+export const importInputSetPromise = (
+  {
+    inputSetIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponseInputSetImportResponseDTO,
+    Failure | Error,
+    ImportInputSetQueryParams,
+    InputSetImportRequestDTO,
+    ImportInputSetPathParams
+  > & { inputSetIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseInputSetImportResponseDTO,
+    Failure | Error,
+    ImportInputSetQueryParams,
+    InputSetImportRequestDTO,
+    ImportInputSetPathParams
+  >('POST', getConfig('pipeline/api'), `/inputSets/import/${inputSetIdentifier}`, props, signal)
 
 export interface GetMergeInputSetFromPipelineTemplateWithListInputQueryParams {
   accountIdentifier: string
@@ -8065,7 +8912,7 @@ export interface GetListOfExecutionsQueryParams {
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
-    | 'Waiting'
+    | 'WAITING'
   )[]
   myDeployments?: boolean
   branch?: string
@@ -8705,8 +9552,14 @@ export interface ImportPipelinePathParams {
 }
 
 export type ImportPipelineProps = Omit<
-  GetProps<ResponsePMSPipelineResponseDTO, Failure | Error, ImportPipelineQueryParams, ImportPipelinePathParams>,
-  'path'
+  MutateProps<
+    ResponsePipelineSaveResponse,
+    Failure | Error,
+    ImportPipelineQueryParams,
+    PipelineImportRequest,
+    ImportPipelinePathParams
+  >,
+  'path' | 'verb'
 > &
   ImportPipelinePathParams
 
@@ -8714,7 +9567,14 @@ export type ImportPipelineProps = Omit<
  * Get Pipeline YAML from Git Repository
  */
 export const ImportPipeline = ({ pipelineIdentifier, ...props }: ImportPipelineProps) => (
-  <Get<ResponsePMSPipelineResponseDTO, Failure | Error, ImportPipelineQueryParams, ImportPipelinePathParams>
+  <Mutate<
+    ResponsePipelineSaveResponse,
+    Failure | Error,
+    ImportPipelineQueryParams,
+    PipelineImportRequest,
+    ImportPipelinePathParams
+  >
+    verb="POST"
     path={`/pipelines/import/${pipelineIdentifier}`}
     base={getConfig('pipeline/api')}
     {...props}
@@ -8722,8 +9582,14 @@ export const ImportPipeline = ({ pipelineIdentifier, ...props }: ImportPipelineP
 )
 
 export type UseImportPipelineProps = Omit<
-  UseGetProps<ResponsePMSPipelineResponseDTO, Failure | Error, ImportPipelineQueryParams, ImportPipelinePathParams>,
-  'path'
+  UseMutateProps<
+    ResponsePipelineSaveResponse,
+    Failure | Error,
+    ImportPipelineQueryParams,
+    PipelineImportRequest,
+    ImportPipelinePathParams
+  >,
+  'path' | 'verb'
 > &
   ImportPipelinePathParams
 
@@ -8731,10 +9597,17 @@ export type UseImportPipelineProps = Omit<
  * Get Pipeline YAML from Git Repository
  */
 export const useImportPipeline = ({ pipelineIdentifier, ...props }: UseImportPipelineProps) =>
-  useGet<ResponsePMSPipelineResponseDTO, Failure | Error, ImportPipelineQueryParams, ImportPipelinePathParams>(
-    (paramsInPath: ImportPipelinePathParams) => `/pipelines/import/${paramsInPath.pipelineIdentifier}`,
-    { base: getConfig('pipeline/api'), pathParams: { pipelineIdentifier }, ...props }
-  )
+  useMutate<
+    ResponsePipelineSaveResponse,
+    Failure | Error,
+    ImportPipelineQueryParams,
+    PipelineImportRequest,
+    ImportPipelinePathParams
+  >('POST', (paramsInPath: ImportPipelinePathParams) => `/pipelines/import/${paramsInPath.pipelineIdentifier}`, {
+    base: getConfig('pipeline/api'),
+    pathParams: { pipelineIdentifier },
+    ...props
+  })
 
 /**
  * Get Pipeline YAML from Git Repository
@@ -8743,20 +9616,22 @@ export const importPipelinePromise = (
   {
     pipelineIdentifier,
     ...props
-  }: GetUsingFetchProps<
-    ResponsePMSPipelineResponseDTO,
+  }: MutateUsingFetchProps<
+    ResponsePipelineSaveResponse,
     Failure | Error,
     ImportPipelineQueryParams,
+    PipelineImportRequest,
     ImportPipelinePathParams
   > & { pipelineIdentifier: string },
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponsePMSPipelineResponseDTO, Failure | Error, ImportPipelineQueryParams, ImportPipelinePathParams>(
-    getConfig('pipeline/api'),
-    `/pipelines/import/${pipelineIdentifier}`,
-    props,
-    signal
-  )
+  mutateUsingFetch<
+    ResponsePipelineSaveResponse,
+    Failure | Error,
+    ImportPipelineQueryParams,
+    PipelineImportRequest,
+    ImportPipelinePathParams
+  >('POST', getConfig('pipeline/api'), `/pipelines/import/${pipelineIdentifier}`, props, signal)
 
 export interface GetPipelineListQueryParams {
   accountIdentifier: string
@@ -10728,7 +11603,7 @@ export const updateTriggerStatusPromise = (
   >('PUT', getConfig('pipeline/api'), `/triggers/${triggerIdentifier}/status`, props, signal)
 
 export interface GetActionsListQueryParams {
-  sourceRepo: 'GITHUB' | 'GITLAB' | 'BITBUCKET' | 'AWS_CODECOMMIT' | 'CUSTOM'
+  sourceRepo: 'AZURE_REPO' | 'GITHUB' | 'GITLAB' | 'BITBUCKET' | 'AWS_CODECOMMIT' | 'CUSTOM'
   event: string
 }
 
@@ -11393,6 +12268,7 @@ export const getWebhookTriggerTypesPromise = (
 export interface GetSchemaYamlQueryParams {
   entityType:
     | 'CreatePR'
+    | 'GITOPS_MERGE_PR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -11401,7 +12277,9 @@ export interface GetSchemaYamlQueryParams {
     | 'JiraUpdate'
     | 'JiraApproval'
     | 'HarnessApproval'
+    | 'CustomApproval'
     | 'Barrier'
+    | 'Queue'
     | 'FlagConfiguration'
     | 'ShellScript'
     | 'K8sCanaryDeploy'
@@ -11449,7 +12327,7 @@ export interface GetSchemaYamlQueryParams {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'Policy'
+    | 'POLICY_STEP'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -11472,6 +12350,11 @@ export interface GetSchemaYamlQueryParams {
     | 'RollbackStack'
     | 'Infrastructure'
     | 'Command'
+    | 'StrategyNode'
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -11523,6 +12406,50 @@ export const getSchemaYamlPromise = (
     signal
   )
 
+export type DummyApiForSwaggerSchemaCheckProps = Omit<
+  GetProps<ResponsePipelineConfig, Failure | Error, void, void>,
+  'path'
+>
+
+/**
+ * dummy api for checking pms schema
+ */
+export const DummyApiForSwaggerSchemaCheck = (props: DummyApiForSwaggerSchemaCheckProps) => (
+  <Get<ResponsePipelineConfig, Failure | Error, void, void>
+    path={`/yaml-schema/dummyApiForSwaggerSchemaCheck`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseDummyApiForSwaggerSchemaCheckProps = Omit<
+  UseGetProps<ResponsePipelineConfig, Failure | Error, void, void>,
+  'path'
+>
+
+/**
+ * dummy api for checking pms schema
+ */
+export const useDummyApiForSwaggerSchemaCheck = (props: UseDummyApiForSwaggerSchemaCheckProps) =>
+  useGet<ResponsePipelineConfig, Failure | Error, void, void>(`/yaml-schema/dummyApiForSwaggerSchemaCheck`, {
+    base: getConfig('pipeline/api'),
+    ...props
+  })
+
+/**
+ * dummy api for checking pms schema
+ */
+export const dummyApiForSwaggerSchemaCheckPromise = (
+  props: GetUsingFetchProps<ResponsePipelineConfig, Failure | Error, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePipelineConfig, Failure | Error, void, void>(
+    getConfig('pipeline/api'),
+    `/yaml-schema/dummyApiForSwaggerSchemaCheck`,
+    props,
+    signal
+  )
+
 export interface GetStepYamlSchemaQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -11530,6 +12457,7 @@ export interface GetStepYamlSchemaQueryParams {
   yamlGroup?: string
   entityType?:
     | 'CreatePR'
+    | 'GITOPS_MERGE_PR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
@@ -11538,7 +12466,9 @@ export interface GetStepYamlSchemaQueryParams {
     | 'JiraUpdate'
     | 'JiraApproval'
     | 'HarnessApproval'
+    | 'CustomApproval'
     | 'Barrier'
+    | 'Queue'
     | 'FlagConfiguration'
     | 'ShellScript'
     | 'K8sCanaryDeploy'
@@ -11586,7 +12516,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'Policy'
+    | 'POLICY_STEP'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -11609,6 +12539,11 @@ export interface GetStepYamlSchemaQueryParams {
     | 'RollbackStack'
     | 'Infrastructure'
     | 'Command'
+    | 'StrategyNode'
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 

@@ -53,7 +53,8 @@ import {
   FieldType,
   ServiceNowCreateFieldType,
   ServiceNowFieldNGWithValue,
-  ServiceNowStaticFields
+  ServiceNowStaticFields,
+  TICKET_TYPE_CHANGE_TASK
 } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/types'
 import {
   convertTemplateFieldsForDisplay,
@@ -147,6 +148,13 @@ function FormContent({
   }, [serviceNowTicketTypesResponse?.data])
   useEffect(() => {
     if (
+      ticketValueType === MultiTypeInputType.FIXED &&
+      ticketTypeKeyFixedValue?.toString() === TICKET_TYPE_CHANGE_TASK
+    ) {
+      formik.setFieldValue('spec.fieldType', FieldType.ConfigureFields)
+      formik.setFieldValue('spec.useServiceNowTemplate', false)
+      setIsTemplateSectionAvailable(false)
+    } else if (
       connectorRefFixedValue &&
       connectorValueType === MultiTypeInputType.FIXED &&
       ticketTypeKeyFixedValue &&

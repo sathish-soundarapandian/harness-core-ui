@@ -1,9 +1,9 @@
 import {
+  accountConnectorTestConnection,
   accountResourceConnectors,
   ceAWSConnectionData,
   ceConnectorOverviewSave,
-  connectorsCatalogueAPI,
-  testConnection
+  connectorsCatalogueAPI
 } from '../../support/35-connectors/constants'
 import { pageHeaderClassName } from '../../support/70-pipeline/constants'
 
@@ -30,7 +30,9 @@ describe('CE AWS Connector', () => {
     cy.intercept('GET', ceAWSConnectionData, { fixture: '/ng/api/connectors/CEConnectors/connectionData.json' }).as(
       'connectionDetails'
     )
-    cy.intercept('POST', testConnection, { fixture: '/ng/api/connectors/testConnection.json' }).as('testConnection')
+    cy.intercept('POST', accountConnectorTestConnection, { fixture: '/ng/api/connectors/testConnection.json' }).as(
+      'testConnection'
+    )
 
     cy.visitPageAssertion(pageHeaderClassName)
     cy.wait('@connectorsCatalogue')
@@ -39,12 +41,11 @@ describe('CE AWS Connector', () => {
     cy.contains('span', 'Create a Connector').should('be.visible')
     cy.contains('span', 'Create a Connector').click()
 
-    cy.contains('span', 'Cloud Costs').should('be.visible')
     cy.get('[data-cy="Cloud Costs_AWS"]').click()
     cy.contains('span', 'AWS Connector').should('be.visible')
 
     // Overview step
-    cy.contains('p', 'Overview').should('be.visible')
+    cy.get('[data-cy="aws-overview"]').should('be.visible')
     cy.fillName('testConnector')
     cy.fillField('awsAccountId', '448640225317')
     cy.get('span[data-testid="description-edit"]').should('be.visible')

@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import { Card } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import { Container, FormInput, MultiTypeInputType, useToaster } from '@harness/uicore'
@@ -8,20 +15,20 @@ import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useStrings } from 'framework/strings'
 import { useGetAllMonitoredServicesWithTimeSeriesHealthSources } from 'services/cv'
 import type { VerifyStepMonitoredService } from '@cv/components/PipelineSteps/ContinousVerification/types'
+import { monitoredServiceRefPath } from '@cv/components/PipelineSteps/ContinousVerification/constants'
 import { getMultiTypeInputProps } from '../../../ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/VerificationJobFields/VerificationJobFields.utils'
 import { MONITORED_SERVICE_TYPE } from '../../../ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/SelectMonitoredServiceType.constants'
 import css from '../../ContinousVerificationInputSetStep.module.scss'
 
 interface ConfiguredRunTimeMonitoredServiceProps {
   prefix: string
-  monitoredServiceRefPath: string
   monitoredService?: VerifyStepMonitoredService
   expressions: string[]
   allowableTypes: MultiTypeInputType[]
 }
 
 export default function ConfiguredRunTimeMonitoredService(props: ConfiguredRunTimeMonitoredServiceProps): JSX.Element {
-  const { prefix, monitoredServiceRefPath, expressions, allowableTypes, monitoredService } = props
+  const { prefix, expressions, allowableTypes, monitoredService } = props
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<

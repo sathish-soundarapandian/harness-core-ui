@@ -1,9 +1,9 @@
 import {
+  accountConnectorTestConnection,
   accountResourceConnectors,
   ceConnectorOverviewSave,
   connectorsCatalogueAPI,
-  getGcpPermissions,
-  testConnection
+  getGcpPermissions
 } from '../../support/35-connectors/constants'
 import { featureFlagsCall, pageHeaderClassName } from '../../support/70-pipeline/constants'
 
@@ -55,7 +55,9 @@ describe('CE GCP Connector', () => {
     cy.intercept('GET', getGcpPermissions, { fixture: 'ng/api/connectors/CEConnectors/getGcpPermission.json' }).as(
       'getGcpPermission'
     )
-    cy.intercept('POST', testConnection, { fixture: '/ng/api/connectors/testConnection.json' }).as('testConnection')
+    cy.intercept('POST', accountConnectorTestConnection, { fixture: '/ng/api/connectors/testConnection.json' }).as(
+      'testConnection'
+    )
 
     cy.visitPageAssertion(pageHeaderClassName)
     cy.wait('@connectorsCatalogue')
@@ -64,12 +66,11 @@ describe('CE GCP Connector', () => {
     cy.contains('span', 'Create a Connector').should('be.visible')
     cy.contains('span', 'Create a Connector').click()
 
-    cy.contains('span', 'Cloud Costs').should('be.visible')
     cy.get('[data-cy="Cloud Costs_GCP"]').click()
     cy.contains('span', 'GCP Connector').should('be.visible')
 
     // Overview step
-    cy.contains('p', 'Overview').should('be.visible')
+    cy.get('[data-cy="gcp-overview"]').should('be.visible')
     cy.fillName('testConnector')
     cy.fillField('projectId', 'durable-circle-282815')
     cy.get('span[data-testid="description-edit"]').should('be.visible')

@@ -49,15 +49,19 @@ export default function DeploymentExecutionsChart(props: any) {
         failureData.push(defaultTo(val.deployments?.failure, 0))
         custom.push(val)
       })
+
+      const successCount = successData.reduce((sum, i) => sum + i, 0)
+      const failureCount = failureData.reduce((sum, i) => sum + i, 0)
+
       return [
         {
-          name: 'Failed',
+          name: `Failed (${failureCount})`,
           data: failureData,
-          color: '#EE5F54',
+          color: 'var(--red-400)',
           custom
         },
         {
-          name: 'Success',
+          name: `Success (${successCount})`,
           data: successData,
           color: '#5FB34E',
           custom

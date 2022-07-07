@@ -6,7 +6,8 @@
  */
 
 import { defaultTo, set } from 'lodash-es'
-import type { PipelineInfoConfig, ServiceDefinition } from 'services/cd-ng'
+import type { ServiceDefinition } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 
 export type ServicePipelineConfig = PipelineInfoConfig & { gitOpsEnabled: boolean }
 

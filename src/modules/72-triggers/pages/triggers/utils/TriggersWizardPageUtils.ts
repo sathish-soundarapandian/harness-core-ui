@@ -7,10 +7,10 @@
 
 import { isNull, isUndefined, omitBy, isEmpty, get, set, flatten, cloneDeep } from 'lodash-es'
 import { string, array, object, ObjectSchema } from 'yup'
-import type { PipelineInfoConfig, ConnectorResponse, ManifestConfigWrapper, NGVariable } from 'services/cd-ng'
+import type { ConnectorResponse, ManifestConfigWrapper } from 'services/cd-ng'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import type { NGTriggerSourceV2 } from 'services/pipeline-ng'
+import type { NGTriggerSourceV2, PipelineInfoConfig, NGVariable } from 'services/pipeline-ng'
 import { connectorUrlType } from '@connectors/constants'
 import type { PanelInterface } from '@common/components/Wizard/Wizard'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
@@ -43,7 +43,9 @@ export const eventTypes = {
   TAG: 'Tag',
   PULL_REQUEST: 'PullRequest',
   MERGE_REQUEST: 'MergeRequest',
-  ISSUE_COMMENT: 'IssueComment'
+  ISSUE_COMMENT: 'IssueComment',
+  PR_COMMENT: 'PRComment',
+  MR_COMMENT: 'MRComment'
 }
 
 export const getArtifactId = (isManifest?: boolean, selectedArtifactId?: string) => {
@@ -1958,11 +1960,17 @@ export const getErrorMessage = (error: any): string =>
 export enum TriggerGitEvent {
   PULL_REQUEST = 'PullRequest',
   ISSUE_COMMENT = 'IssueComment',
-  PUSH = 'Push'
+  PUSH = 'Push',
+  MR_COMMENT = 'MRComment',
+  PR_COMMENT = 'PRComment'
 }
 
 export const TriggerGitEventTypes: Readonly<string[]> = [
   TriggerGitEvent.PULL_REQUEST,
   TriggerGitEvent.ISSUE_COMMENT,
-  TriggerGitEvent.PUSH
+  TriggerGitEvent.PUSH,
+  TriggerGitEvent.MR_COMMENT,
+  TriggerGitEvent.PR_COMMENT
 ]
+
+export const isHarnessExpression = (str = ''): boolean => str.startsWith('<+') && str.endsWith('>')

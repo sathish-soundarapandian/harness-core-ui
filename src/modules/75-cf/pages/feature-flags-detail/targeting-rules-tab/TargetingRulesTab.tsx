@@ -32,6 +32,7 @@ import DefaultRules from './components/default-rules/DefaultRules'
 import useTargetingRulesFormValidation from './hooks/useTargetingRulesFormValidation'
 import useTargetingRulesFormData from './hooks/useTargetingRulesFormData'
 import css from './TargetingRulesTab.module.scss'
+
 export interface TargetingRulesTabProps {
   featureFlagData: Feature
   refetchFlag: () => Promise<unknown>
@@ -87,7 +88,7 @@ const TargetingRulesTab = ({
     refetchFlag
   })
 
-  const { featureEnabled } = useFeatureEnabled()
+  const { featureEnabled, canEdit, canToggle } = useFeatureEnabled()
   const disabled = patchFeatureLoading || refetchFlagLoading || targetsLoading || segmentsLoading || !featureEnabled
 
   const handleRefetchSegments = async (searchTerm: string): Promise<void> =>
@@ -199,7 +200,7 @@ const TargetingRulesTab = ({
             >
               <Card elevation={0}>
                 <FlagToggleSwitch
-                  disabled={disabled}
+                  disabled={disabled || !canToggle}
                   currentState={formikProps.values.state}
                   currentEnvironmentState={featureFlagData.envProperties?.state}
                   handleToggle={() =>
@@ -221,7 +222,7 @@ const TargetingRulesTab = ({
                     targets={targets}
                     segments={segments}
                     featureFlagVariations={featureFlagData.variations}
-                    disabled={disabled}
+                    disabled={disabled || !canEdit}
                     refetchSegments={handleRefetchSegments}
                     refetchTargets={handleRefetchTargets}
                     addVariation={newVariation =>
@@ -250,6 +251,7 @@ const TargetingRulesTab = ({
                   featureFlagVariations={featureFlagData.variations}
                   titleStringId="cf.featureFlags.rules.whenFlagDisabled"
                   inputName="offVariation"
+                  disabled={disabled || !canEdit}
                 />
               </Card>
             </Layout.Vertical>

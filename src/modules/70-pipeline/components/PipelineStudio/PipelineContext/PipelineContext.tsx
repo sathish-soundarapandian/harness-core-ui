@@ -12,13 +12,15 @@ import { parse } from 'yaml'
 import { IconName, MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
 import merge from 'lodash-es/merge'
 import type { GetDataError } from 'restful-react'
-import type { PipelineInfoConfig, StageElementConfig, StageElementWrapperConfig } from 'services/cd-ng'
 import type { PermissionCheck } from 'services/rbac'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
 import SessionToken from 'framework/utils/SessionToken'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import {
+  PipelineInfoConfig,
+  StageElementConfig,
+  StageElementWrapperConfig,
   createPipelinePromise,
   CreatePipelineQueryParams,
   createPipelineV2Promise,
@@ -45,7 +47,7 @@ import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { PipelineStageWrapper } from '@pipeline/utils/pipelineTypes'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { GetTemplateProps, GetTemplateResponse, getTemplateTypesByRef } from '@pipeline/utils/templateUtils'
+import { getTemplateTypesByRef } from '@pipeline/utils/templateUtils'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import {
   ActionReturnType,
@@ -263,7 +265,6 @@ export interface PipelineContextInterface {
   setSelectedSectionId: (selectedSectionId: string | undefined) => void
   setSelection: (selectionState: PipelineSelectionState) => void
   getStagePathFromPipeline(stageId: string, prefix?: string, pipeline?: PipelineInfoConfig): string
-  getTemplate: (data: GetTemplateProps) => Promise<GetTemplateResponse>
 }
 
 interface PipelinePayload {
@@ -852,8 +853,7 @@ export const PipelineContext = React.createContext<PipelineContextInterface>({
   setSelectedStepId: (_selectedStepId: string | undefined) => undefined,
   setSelectedSectionId: (_selectedSectionId: string | undefined) => undefined,
   setSelection: (_selectedState: PipelineSelectionState | undefined) => undefined,
-  getStagePathFromPipeline: () => '',
-  getTemplate: () => new Promise<GetTemplateResponse>(() => undefined)
+  getStagePathFromPipeline: () => ''
 })
 
 export interface PipelineProviderProps {
@@ -863,7 +863,6 @@ export interface PipelineProviderProps {
   stagesMap: StagesMap
   runPipeline: (identifier: string) => void
   renderPipelineStage: PipelineContextInterface['renderPipelineStage']
-  getTemplate: PipelineContextInterface['getTemplate']
 }
 
 export function PipelineProvider({
@@ -873,8 +872,7 @@ export function PipelineProvider({
   renderPipelineStage,
   stepsFactory,
   stagesMap,
-  runPipeline,
-  getTemplate
+  runPipeline
 }: React.PropsWithChildren<PipelineProviderProps>): React.ReactElement {
   const contextType = PipelineContextType.Pipeline
   const allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
@@ -1154,8 +1152,7 @@ export function PipelineProvider({
         setSelectedSectionId,
         setSelection,
         getStagePathFromPipeline,
-        setTemplateTypes,
-        getTemplate
+        setTemplateTypes
       }}
     >
       {children}

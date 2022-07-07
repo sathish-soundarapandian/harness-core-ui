@@ -73,7 +73,9 @@ describe('Pipeline Variables', () => {
 
     cy.get('input[name="variables[0].value"]').fillField('variables[0].value', 'test1')
 
-    cy.get('div[data-testid="pipeline.variables-panel"]').get('.MultiTypeInput--FIXED').click()
+    cy.get('div[data-testid="pipeline.variables-panel"]').within(() => {
+      cy.get('.MultiTypeInput--FIXED').click()
+    })
     cy.findByText('Runtime input').click({ force: true })
 
     cy.get('.bp3-menu>li>a').eq(1).click({ force: true })
@@ -105,7 +107,9 @@ describe('Pipeline Variables', () => {
 
     cy.get('input[name="variables[0].value"]').fillField('variables[0].value', 'test1')
 
-    cy.get('div[data-testid="pipeline.variables-panel"]').get('.MultiTypeInput--FIXED').click()
+    cy.get('div[data-testid="pipeline.variables-panel"]').within(() => {
+      cy.get('.MultiTypeInput--FIXED').click()
+    })
     cy.findByText('Runtime input').click({ force: true })
 
     cy.get('.bp3-menu>li>a').eq(1).click({ force: true })

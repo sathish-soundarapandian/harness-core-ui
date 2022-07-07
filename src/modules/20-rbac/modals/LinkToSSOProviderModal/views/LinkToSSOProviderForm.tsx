@@ -120,7 +120,7 @@ const LinkToSSOProviderForm: React.FC<LinkToSSOProviderModalData> = props => {
           {getString('rbac.userDetails.linkToSSOProviderModal.linkLabel')}
         </Text>
         {error ? (
-          <PageError message={(error.data as any)?.message || error.message} onClick={refetch as any} />
+          <PageError message={getRBACErrorMessage(error as any)} onClick={refetch as any} />
         ) : (
           <Formik<LinkToSSOProviderFormData>
             formName="linkToSSOProviderForm"

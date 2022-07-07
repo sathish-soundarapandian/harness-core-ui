@@ -56,7 +56,10 @@ export default function InfrastructureDefinition() {
         canEscapeKeyClose
         canOutsideClickClose
         enforceFocus={false}
-        onClose={hideModal}
+        onClose={() => {
+          setInfrastructureToEdit('')
+          hideModal()
+        }}
         title={getString('cd.infrastructure.createNew')}
         className={cx('padded-dialog', css.dialogStyles)}
       >

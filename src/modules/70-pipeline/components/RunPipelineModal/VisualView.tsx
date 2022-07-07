@@ -12,7 +12,7 @@ import { isEmpty } from 'lodash-es'
 
 import { useStrings } from 'framework/strings'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import SelectExistingInputsOrProvideNew from './SelectExistingOrProvide'
 import { InputSetSelector } from '../InputSetSelector/InputSetSelector'
 import type { InputSetValue } from '../InputSetSelector/utils'

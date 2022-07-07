@@ -14,7 +14,7 @@ import { useStrings } from 'framework/strings'
 import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
 import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
-import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
+import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import { PipelineGraphType, NodeType, BaseReactComponentProps } from '../../types'
 import SVGMarker from '../SVGMarker'
 import { getPositionOfAddIcon } from '../utils'
@@ -36,9 +36,10 @@ export function DiamondNodeWidget(props: any): JSX.Element {
     ExecutionPipelineNodeType.DIAMOND
   )
   const isTemplateNode = props?.data?.isTemplateNode
+  const showMarkers = defaultTo(props?.showMarkers, true)
   return (
     <div
-      className={cssDefault.defaultNode}
+      className={cx(cssDefault.defaultNode, 'diamond-node')}
       onClick={event => {
         event.stopPropagation()
         if (props?.onClick) {
@@ -49,8 +50,10 @@ export function DiamondNodeWidget(props: any): JSX.Element {
           type: Event.ClickNode,
           target: event.target,
           data: {
-            entityType: DiagramType.Default,
-            ...props
+            ...props,
+            entityType: DiagramType.DiamondNode,
+            identifier: props?.identifier,
+            id: props.id
           }
         })
       }}
@@ -58,11 +61,17 @@ export function DiamondNodeWidget(props: any): JSX.Element {
     >
       <div
         className={cx(
-          'diamond-node',
           cssDefault.defaultCard,
           css.diamond,
-          { [cssDefault.selected]: isSelected },
-          { [css.top]: props.data.graphType === PipelineGraphType.STAGE_GRAPH }
+
+          {
+            [cssDefault.selected]: isSelected,
+            [cssDefault.failed]: stepStatus === ExecutionStatusEnum.Failed,
+            [cssDefault.runningNode]: stepStatus === ExecutionStatusEnum.Running,
+            [cssDefault.skipped]: stepStatus === ExecutionStatusEnum.Skipped,
+            [cssDefault.notStarted]: stepStatus === ExecutionStatusEnum.NotStarted
+          },
+          { [css.top]: props?.data?.graphType === PipelineGraphType.STAGE_GRAPH }
         )}
         draggable={true}
         onDragStart={event => {
@@ -83,7 +92,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
           id={props.id}
           data-nodeid={props.id}
           className={css.horizontalBar}
-          style={{ height: props.data.graphType === PipelineGraphType.STAGE_GRAPH ? 40 : 64 }}
+          style={{ height: props.data?.graphType === PipelineGraphType.STAGE_GRAPH ? 40 : 64 }}
           onMouseEnter={event => {
             event.stopPropagation()
 
@@ -102,20 +111,24 @@ export function DiamondNodeWidget(props: any): JSX.Element {
             })
           }}
         >
-          <div
-            className={cx(cssDefault.markerStart, cssDefault.diamondStageLeft, {
-              [cssDefault.diamondStep]: props.data.graphType === PipelineGraphType.STEP_GRAPH
-            })}
-          >
-            <SVGMarker />
-          </div>
-          <div
-            className={cx(cssDefault.markerEnd, cssDefault.diamondStageRight, {
-              [cssDefault.diamondStep]: props.data.graphType === PipelineGraphType.STEP_GRAPH
-            })}
-          >
-            <SVGMarker />
-          </div>
+          {showMarkers && (
+            <>
+              <div
+                className={cx(cssDefault.markerStart, cssDefault.diamondStageLeft, {
+                  [cssDefault.diamondStep]: props.data?.graphType === PipelineGraphType.STEP_GRAPH
+                })}
+              >
+                <SVGMarker />
+              </div>
+              <div
+                className={cx(cssDefault.markerEnd, cssDefault.diamondStageRight, {
+                  [cssDefault.diamondStep]: props.data?.graphType === PipelineGraphType.STEP_GRAPH
+                })}
+              >
+                <SVGMarker />
+              </div>
+            </>
+          )}
         </div>
         <div className="execution-running-animation" />
         {props?.data?.isInComplete && (
@@ -160,7 +173,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
             </Text>
           </div>
         )}
-        {props.conditionalExecutionEnabled && (
+        {props.data?.conditionalExecutionEnabled && (
           <div className={css.conditional}>
             <Text
               tooltip={getString('pipeline.conditionalExecution.title')}
@@ -169,6 +182,23 @@ export function DiamondNodeWidget(props: any): JSX.Element {
               }}
             >
               <Icon size={26} name={'conditional-skip-new'} color="white" />
+            </Text>
+          </div>
+        )}
+        {props.data?.loopingStrategyEnabled && (
+          <div className={css.loopingStrategy}>
+            <Text
+              tooltip={getString('pipeline.loopingStrategy.title')}
+              tooltipProps={{
+                isDark: true
+              }}
+            >
+              <Icon
+                size={18}
+                name={'looping'}
+                inverse={isSelected}
+                color={isSelected ? Color.WHITE : Color.PRIMARY_7}
+              />
             </Text>
           </div>
         )}
@@ -212,7 +242,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
           </Text>
         </div>
       )}
-      {!props.isParallelNode && (
+      {!props.isParallelNode && !props.readonly && (
         <AddLinkNode<PipelineStepNodeProps>
           nextNode={props?.nextNode}
           parentIdentifier={props?.parentIdentifier}
@@ -229,17 +259,18 @@ export function DiamondNodeWidget(props: any): JSX.Element {
               [cssDefault.show]: showAddLink
             },
             {
-              [cssDefault.stepAddIcon]: props.data.graphType === PipelineGraphType.STEP_GRAPH
+              [cssDefault.stepAddIcon]: props.data?.graphType === PipelineGraphType.STEP_GRAPH
             },
             {
-              [cssDefault.stageAddIcon]: props.data.graphType === PipelineGraphType.STAGE_GRAPH
+              [cssDefault.stageAddIcon]: props.data?.graphType === PipelineGraphType.STAGE_GRAPH
             }
           )}
           setShowAddLink={setShowAddLink}
         />
       )}
       {(props?.nextNode?.nodeType === NodeType.StepGroupNode || (!props?.nextNode && props?.parentIdentifier)) &&
-        !props.isParallelNode && (
+        !props.isParallelNode &&
+        !props.readonly && (
           <AddLinkNode<PipelineStepNodeProps>
             nextNode={props?.nextNode}
             parentIdentifier={props?.parentIdentifier}
@@ -254,10 +285,10 @@ export function DiamondNodeWidget(props: any): JSX.Element {
             className={cx(
               cssDefault.addNodeIcon,
               {
-                [cssDefault.stepAddIcon]: props.data.graphType === PipelineGraphType.STEP_GRAPH
+                [cssDefault.stepAddIcon]: props.data?.graphType === PipelineGraphType.STEP_GRAPH
               },
               {
-                [cssDefault.stageAddIcon]: props.data.graphType === PipelineGraphType.STAGE_GRAPH
+                [cssDefault.stageAddIcon]: props.data?.graphType === PipelineGraphType.STAGE_GRAPH
               }
             )}
             setShowAddLink={setShowAddLink}

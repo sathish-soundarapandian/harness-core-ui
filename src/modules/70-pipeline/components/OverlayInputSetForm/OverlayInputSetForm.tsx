@@ -26,7 +26,7 @@ import {
 import { useParams } from 'react-router-dom'
 import { parse } from 'yaml'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 
 import {
   OverlayInputSetResponse,

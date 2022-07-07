@@ -23,13 +23,12 @@ import { useStrings } from 'framework/strings'
 import { PipelineProvider } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { PipelineStudio } from '@pipeline/components/PipelineStudio/PipelineStudio'
 
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { TrialType } from '@pipeline/components/TrialModalTemplate/trialModalUtils'
 import { FeatureFlag } from '@common/featureFlags'
 import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
-import { useTemplateSelector } from '@templates-library/hooks/useTemplateSelector'
 import css from './CIPipelineStudio.module.scss'
 
 const CIPipelineStudio: React.FC = (): JSX.Element => {
@@ -37,7 +36,6 @@ const CIPipelineStudio: React.FC = (): JSX.Element => {
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { getString } = useStrings()
   const history = useHistory()
-  const { getTemplate } = useTemplateSelector()
 
   const getTrialPipelineCreateForm = (
     onSubmit: (values: PipelineInfoConfig) => void,
@@ -97,7 +95,6 @@ const CIPipelineStudio: React.FC = (): JSX.Element => {
       }
       stepsFactory={factory}
       runPipeline={handleRunPipeline}
-      getTemplate={getTemplate}
     >
       <PipelineStudio
         className={css.container}

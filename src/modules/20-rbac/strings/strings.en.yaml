@@ -241,8 +241,8 @@ scopeItems:
   specificOrgsAndProjects: Specified Organizations (and their Projects)
   specificProjects: Specified Projects
   allProjects: All Projects
-  noOrgs: No Specific Organizations
-  noProjects: No Specific Projects
+  noOrgs: No Organization or their Projects have been selected
+  noProjects: No Projects selected
 resourceScope:
   label: Resource Scope
   select: Select Resource Scope

@@ -7,17 +7,23 @@
 
 import React from 'react'
 import { Container } from '@wings-software/uicore'
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import type { EventListProps } from '@et/ErrorTrackingApp'
 import { ErrorTracking } from '@et/ErrorTrackingApp'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import routes from '@common/RouteDefinitions'
 
 export default function ExecutionErrorTrackingView(): React.ReactElement | null {
   const context = useExecutionContext()
   const params = useParams<PipelineType<ExecutionPathProps>>()
+  const history = useHistory()
   const pipelineExecutionDetail = context?.pipelineExecutionDetail
+
+  const handleBackAction = (): void => {
+    return history.push(routes.toExecutionErrorTrackingView(params) + '/events')
+  }
 
   if (
     !pipelineExecutionDetail ||
@@ -40,7 +46,12 @@ export default function ExecutionErrorTrackingView(): React.ReactElement | null 
         environmentId={'_INTERNAL_ET_CI'}
         versionId={pipelineExecutionDetail.pipelineExecutionSummary.runSequence.toString()}
         fromDateTime={Math.floor(pipelineExecutionDetail.pipelineExecutionSummary.startTs / 1000)}
-        toDateTime={Math.floor(Date.now() / 1000)}
+        toDateTime={Math.floor(
+          pipelineExecutionDetail.pipelineExecutionSummary.endTs
+            ? pipelineExecutionDetail.pipelineExecutionSummary.endTs / 1000 + 60 * 30
+            : Date.now() / 1000
+        )}
+        handleBackAction={history.location.pathname.endsWith('/arc') ? handleBackAction : undefined}
       />
     </Container>
   )

@@ -54,13 +54,12 @@ import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { getDelegateStatusSelectOptions } from './utils/DelegateHelper'
 import DelegateListingItem, { DelegateListingHeader } from './DelegateListingItem'
 
 import css from './DelegatesPage.module.scss'
 
 const POLLING_INTERVAL = 10000
-
-const statusTypes = ['ENABLED', 'WAITING_FOR_APPROVAL', 'DISABLED', 'DELETED']
 
 const fullSizeContentStyle: React.CSSProperties = {
   width: '100%',
@@ -87,9 +86,9 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false)
   const filterRef = React.useRef<FilterRef<FilterDTO> | null>(null)
 
-  const [troubleshoterOpen, setOpenTroubleshoter] = useState<{ isConnected: boolean | undefined } | undefined>(
-    undefined
-  )
+  const [troubleshoterOpen, setOpenTroubleshoter] = useState<
+    { isConnected: boolean | undefined; delegateType: string | undefined } | undefined
+  >(undefined)
 
   const queryParams: GetDelegateGroupsNGV2WithFilterQueryParams = useMemo(
     () =>
@@ -130,20 +129,6 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
     setFilters(fetchedFilterResponse?.data?.content || [])
     setIsRefreshingFilters(isFetchingFilters)
   }, [fetchedFilterResponse])
-
-  const getStatusSelectOptions = (values?: any[]): SelectOption[] => {
-    const labelMap = {
-      ENABLED: getString('enabledLabel'),
-      DISABLED: getString('delegates.delGroupStatus.DISABLED'),
-      WAITING_FOR_APPROVAL: getString('delegates.delGroupStatus.WAITING_FOR_APPROVAL'),
-      DELETED: getString('deleted')
-    }
-    return values
-      ? values.map(item => {
-          return { label: get(labelMap, item, ''), value: item }
-        })
-      : []
-  }
 
   const refetchDelegates = useCallback(
     async (params: GetDelegateGroupsNGV2WithFilterQueryParams, filter?): Promise<void> => {
@@ -282,7 +267,7 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
         <FormInput.Text name={'description'} label={getString('description')} key={'description'} />
         <FormInput.Text name={'hostName'} label={getString('delegate.hostName')} key={'hostName'} />
         <FormInput.Select
-          items={getStatusSelectOptions(statusTypes)}
+          items={getDelegateStatusSelectOptions(getString)}
           name={'status'}
           label={getString('status')}
           key={'status'}
@@ -490,7 +475,10 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
         style={{ width: '680px', height: '100%' }}
         onClose={() => setOpenTroubleshoter(undefined)}
       >
-        <DelegateInstallationError showDelegateInstalledMessage={false} />
+        <DelegateInstallationError
+          showDelegateInstalledMessage={false}
+          delegateType={troubleshoterOpen?.delegateType}
+        />
       </Dialog>
       {!hideHeader && (
         <Layout.Horizontal className={css.header}>
@@ -549,7 +537,12 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
                   <DelegateListingItem
                     key={delegate.delegateGroupIdentifier}
                     delegate={delegate}
-                    setOpenTroubleshoter={setOpenTroubleshoter}
+                    setOpenTroubleshoter={() =>
+                      setOpenTroubleshoter({
+                        isConnected: troubleshoterOpen?.isConnected,
+                        delegateType: delegate?.delegateType
+                      })
+                    }
                   />
                 ))}
               </Container>

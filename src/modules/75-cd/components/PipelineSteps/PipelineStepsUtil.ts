@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import isEmpty from 'lodash/isEmpty'
 import { get } from 'lodash-es'
@@ -16,6 +16,7 @@ import {
   getVariablesValidationField
 } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/validation'
 import { isServerlessDeploymentType, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import type { GetExecutionStrategyYamlQueryParams } from 'services/cd-ng'
 
 const namespaceRegex = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/
@@ -30,7 +31,9 @@ export enum InfraDeploymentType {
   ServerlessGoogleFunctions = 'ServerlessGoogleFunctions',
   ServerlessAzureFunctions = 'ServerlessAzureFunctions',
   AmazonSAM = 'AwsSAM',
-  AzureFunctions = 'AzureFunctions'
+  AzureFunctions = 'AzureFunctions',
+  SshWinRmAzure = 'SshWinRmAzure',
+  AzureWebApps = 'AzureWebApps'
 }
 
 export const deploymentTypeToInfraTypeMap = {
@@ -110,25 +113,64 @@ export function getEnvironmentRefSchema(
   return Yup.string().trim().required(getString('cd.pipelineSteps.environmentTab.environmentIsRequired'))
 }
 
-export function getNonGitOpsEnvironmentRefSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
-  return Yup.object().shape({
-    environment: Yup.object().shape({
-      environmentRef: Yup.string().required(getString('cd.pipelineSteps.environmentTab.environmentIsRequired'))
-    }),
-    infrastructureRef: Yup.string().required(getString('cd.pipelineSteps.environmentTab.infrastructureIsRequired'))
-  })
-}
-
-export function getGitOpsEnvironmentRefSchema(): Yup.ObjectSchema {
-  return Yup.object()
-}
-
 export function getServiceDeploymentTypeSchema(
   getString: UseStringsReturn['getString']
 ): Yup.StringSchema<string | undefined> {
   return Yup.string()
     .oneOf(Object.values(ServiceDeploymentType))
     .required(getString('cd.pipelineSteps.serviceTab.deploymentTypeRequired'))
+}
+
+export function getEnvironmentTabSchema(getString: UseStringsReturn['getString']): Yup.MixedSchema {
+  return Yup.mixed()
+    .required()
+    .test({
+      test(valueObj: DeployStageConfig): boolean | Yup.ValidationError {
+        if (!valueObj.gitOpsEnabled) {
+          if (valueObj.environment?.environmentRef === undefined) {
+            return this.createError({
+              path: 'environment.environmentRef',
+              message: getString('cd.pipelineSteps.environmentTab.environmentIsRequired')
+            })
+          }
+
+          if (
+            valueObj.environment?.environmentRef !== RUNTIME_INPUT_VALUE &&
+            valueObj.infrastructureRef === undefined
+          ) {
+            return this.createError({
+              path: 'infrastructureRef',
+              message: getString('cd.pipelineSteps.environmentTab.infrastructureIsRequired')
+            })
+          }
+        } else {
+          if (
+            valueObj.environmentOrEnvGroupRef !== RUNTIME_INPUT_VALUE &&
+            (valueObj.environmentOrEnvGroupRef as SelectOption)?.value === undefined
+          ) {
+            return this.createError({
+              path: 'environmentOrEnvGroupRef',
+              message: getString('cd.pipelineSteps.environmentTab.environmentOrEnvGroupIsRequired')
+            })
+          }
+
+          if (valueObj.isEnvGroup && valueObj.environmentInEnvGroupRef?.length === 0) {
+            return this.createError({
+              path: 'environmentInEnvGroupRef',
+              message: getString('cd.pipelineSteps.environmentTab.environmentInEnvGroupIsRequired')
+            })
+          }
+
+          if (valueObj.clusterRef?.length === 0 && valueObj.environmentOrEnvGroupRef !== RUNTIME_INPUT_VALUE) {
+            return this.createError({
+              path: 'clusterRef',
+              message: getString('cd.pipelineSteps.environmentTab.clusterIsRequired')
+            })
+          }
+        }
+        return true
+      }
+    })
 }
 
 export function getInfraDeploymentTypeSchema(
@@ -151,9 +193,11 @@ export const getInfrastructureDefinitionValidationSchema = (
       return Yup.object().shape({
         credentialsRef: getSshKeyRefSchema(getString)
       })
-    } else {
-      return getValidationSchema(getString)
     }
+    if (deploymentType === ServiceDeploymentType.winrm) {
+      return Yup.object().shape({})
+    }
+    return getValidationSchema(getString)
   } else {
     return Yup.object().shape({
       connectorRef: getConnectorSchema(getString),

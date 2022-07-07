@@ -73,6 +73,11 @@ interface FieldRenderProps {
 
 const qaLocation = 'https://qa.harness.io'
 
+enum ErrorTrackingStatus {
+  ON = 'on',
+  OFF = 'off'
+}
+
 const BuildTool = {
   BAZEL: 'Bazel',
   MAVEN: 'Maven',
@@ -81,6 +86,35 @@ const BuildTool = {
   NUNITCONSOLE: 'Nunitconsole'
 }
 
+const ET_COMMANDS_START = '#ET-SETUP-BEGIN'
+const ET_COMMANDS_END = '#ET-SETUP-END'
+const ET_COMMANDS =
+  ET_COMMANDS_START +
+  '\n' +
+  'PROJ_DIR=$PWD\n' +
+  'cd /opt\n' +
+  'arch=`uname -m`\n' +
+  'if [ $arch = "x86_64" ]; then\n' +
+  '  wget -qO- https://get.et.harness.io/releases/latest/nix/harness-et-agent.tar.gz | tar -xz\n' +
+  'elif [ $arch = "aarch64" ]; then\n' +
+  '  wget -qO- https://get.et.harness.io/releases/latest/arm/harness-et-agent.tar.gz | tar -xz\n' +
+  'fi\n' +
+  'export ET_COLLECTOR_URL=https://app.harness.io/gratis/et-collector\n' +
+  'export ET_APPLICATION_NAME=$HARNESS_PIPELINE_ID\n' +
+  'export ET_ENV_ID=_INTERNAL_ET_CI\n' +
+  'export ET_DEPLOYMENT_NAME=$HARNESS_BUILD_ID\n' +
+  'export ET_ACCOUNT_ID=$HARNESS_ACCOUNT_ID\n' +
+  'export ET_ORG_ID=$HARNESS_ORG_ID\n' +
+  'export ET_PROJECT_ID=$HARNESS_PROJECT_ID\n' +
+  '#export ET_SHUTDOWN_GRACETIME=30000\n' +
+  'export JAVA_TOOL_OPTIONS="-agentpath:/opt/harness/lib/libETAgent.so"\n' +
+  'cd $PROJ_DIR\n' +
+  ET_COMMANDS_END
+
+interface RadioButtonOption {
+  label: string
+  value: string
+}
 const getJavaBuildToolOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
   { label: getString('ci.runTestsStep.bazel'), value: BuildTool.BAZEL },
   { label: getString('ci.runTestsStep.maven'), value: BuildTool.MAVEN },
@@ -99,6 +133,11 @@ export const getFrameworkVersionOptions = (getString: UseStringsReturn['getStrin
 export const getCSharpBuildToolOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
   { label: getString('ci.runTestsStep.dotnet'), value: BuildTool.DOTNET },
   { label: getString('ci.runTestsStep.nUnitConsole'), value: BuildTool.NUNITCONSOLE }
+]
+
+export const getErrorTrackingOptions = (getString: UseStringsReturn['getString']): Array<RadioButtonOption> => [
+  { label: getString('yes'), value: ErrorTrackingStatus.ON },
+  { label: getString('no'), value: ErrorTrackingStatus.OFF }
 ]
 
 const enum Language {
@@ -136,6 +175,37 @@ const getArgsPlaceholder = (buildTool?: string): string => {
   return ''
 }
 
+const getUpdatedPreCommand = (preCommand: string, isErrorTrackingOn: boolean): string => {
+  let updatedCommand = preCommand
+  if (
+    isErrorTrackingOn &&
+    (!preCommand || (preCommand.indexOf(ET_COMMANDS_START) < 0 && preCommand.indexOf(ET_COMMANDS_END) < 0))
+  ) {
+    updatedCommand = ET_COMMANDS + '\n' + (preCommand ? preCommand : '')
+  } else if (
+    !isErrorTrackingOn &&
+    preCommand.indexOf(ET_COMMANDS_START) >= 0 &&
+    preCommand.indexOf(ET_COMMANDS_END) >= 0
+  ) {
+    updatedCommand = ''
+    const startIndex = preCommand.indexOf(ET_COMMANDS_START)
+    let endIndex = preCommand.indexOf(ET_COMMANDS_END)
+    if (startIndex >= 0 && endIndex >= 0) {
+      if (startIndex > 0) {
+        updatedCommand = preCommand.substring(0, startIndex)
+      }
+      endIndex += ET_COMMANDS_END.length
+      if (endIndex < preCommand.length && preCommand.charAt(endIndex) === '\n') {
+        endIndex++
+      }
+      if (endIndex < preCommand.length - 1) {
+        updatedCommand = updatedCommand + preCommand.substring(endIndex)
+      }
+    }
+  }
+  return updatedCommand
+}
+
 export const RunTestsStepBase = (
   { initialValues, onUpdate, isNewStep = true, readonly, stepViewType, onChange }: RunTestsStepProps,
   formikRef: StepFormikFowardRef<RunTestsStepData>
@@ -145,7 +215,7 @@ export const RunTestsStepBase = (
       selectionState: { selectedStageId }
     }
   } = usePipelineContext()
-  const { TI_DOTNET } = useFeatureFlags()
+  const { TI_DOTNET, ERROR_TRACKING_ENABLED } = useFeatureFlags()
   // temporary enable in QA for docs
   const isQAEnvironment = window.location.origin === qaLocation
   const [mavenSetupQuestionAnswer, setMavenSetupQuestionAnswer] = React.useState('yes')
@@ -405,6 +475,12 @@ export const RunTestsStepBase = (
         setFormikRef?.(formikRef, formik)
         const selectedLanguageValue = (formik.values?.spec?.language as any)?.value
         const buildTool = (formik.values?.spec?.buildTool as any)?.value
+        const isErrorTrackingCurrentlyOn =
+          selectedLanguageValue === Language.Java &&
+          formik?.values?.spec?.preCommand &&
+          formik.values.spec.preCommand.indexOf(ET_COMMANDS_START) >= 0 &&
+          formik.values.spec.preCommand.indexOf(ET_COMMANDS_END) >= 0
+
         return (
           <FormikForm>
             <CIStep
@@ -451,6 +527,25 @@ export const RunTestsStepBase = (
                 allowableTypes: [MultiTypeInputType.FIXED]
               })}
             </Container>
+            {ERROR_TRACKING_ENABLED && selectedLanguageValue === Language.Java && (
+              <>
+                <Text tooltipProps={{ dataTooltipId: 'runTestErrorTracking' }} font={{ size: 'small' }}>
+                  {getString('ci.runTestsErrorTrackingSetupText')}
+                </Text>
+                <RadioButtonGroup
+                  name="error-tracking-setup"
+                  inline={true}
+                  selectedValue={isErrorTrackingCurrentlyOn ? ErrorTrackingStatus.ON : ErrorTrackingStatus.OFF}
+                  onChange={(e: FormEvent<HTMLInputElement>) => {
+                    const preCommand = formik?.values?.spec?.preCommand as string
+                    const turnErrorTrackingOn = e.currentTarget.value === ErrorTrackingStatus.ON
+                    formik?.setFieldValue('spec.preCommand', getUpdatedPreCommand(preCommand, turnErrorTrackingOn))
+                  }}
+                  options={getErrorTrackingOptions(getString)}
+                  margin={{ bottom: 'small' }}
+                />
+              </>
+            )}
             {selectedLanguageValue === Language.Csharp && (
               <>
                 <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>

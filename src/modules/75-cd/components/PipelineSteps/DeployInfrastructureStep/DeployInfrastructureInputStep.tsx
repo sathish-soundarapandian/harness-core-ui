@@ -5,227 +5,138 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import {
-  Button,
-  ButtonSize,
-  ButtonVariation,
-  getMultiTypeFromValue,
-  Dialog,
-  Layout,
-  MultiTypeInputType,
-  SelectOption
-} from '@harness/uicore'
-import { useModalHook } from '@harness/use-modal'
-import { isEmpty } from 'lodash-es'
-import { useParams } from 'react-router-dom'
-import { connect, FormikProps } from 'formik'
-import {
-  DeploymentStageConfig,
-  EnvironmentResponseDTO,
-  NGEnvironmentConfig,
-  useGetEnvironmentAccessList
-} from 'services/cd-ng'
+import React, { useState } from 'react'
+import { Container, Layout, RUNTIME_INPUT_VALUE, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
+import { connect } from 'formik'
+import { get } from 'lodash-es'
+
 import { useStrings } from 'framework/strings'
-import type { PipelineType } from '@common/interfaces/RouteInterfaces'
-import { useToaster } from '@common/exports'
-import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { useDeepCompareEffect } from '@common/hooks'
+import { CustomVariableInputSet } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'
 
-import { usePermission } from '@rbac/hooks/usePermission'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-
-import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
-import AddEditEnvironmentModal from './AddEditEnvironmentModal'
+import DeployInfrastructures from './DeployInfrastructures/DeployInfrastructures'
+import DeployEnvironment from './DeployEnvironment/DeployEnvironment'
+import DeployEnvironmentGroup from './DeployEnvironmentGroup/DeployEnvironmentGroup'
 import type { DeployInfrastructureProps } from './utils'
-import type { DeployInfrastructureStepConfig } from './DeployInfrastructureStep'
 
 import css from './DeployInfrastructureStep.module.scss'
-
-export interface DeployInfrastructureData extends Omit<DeploymentStageConfig, 'environmentRef'> {
-  environmentRef?: string
-}
-
-interface DeployInfrastructureState {
-  isEdit: boolean
-  isEnvironment: boolean
-  formik?: FormikProps<DeployInfrastructureData>
-  data?: EnvironmentResponseDTO
-}
-
-function isEditEnvironment(data: DeployInfrastructureStepConfig): boolean {
-  if (
-    getMultiTypeFromValue(data.environment?.environmentRef) !== MultiTypeInputType.RUNTIME &&
-    !isEmpty(data.environment?.environmentRef)
-  ) {
-    return true
-  } else {
-    return false
-  }
-}
 
 function DeployInfrastructureInputStepInternal({
   inputSetData,
   initialValues,
-  formik,
-  allowableTypes
+  allowableTypes,
+  formik
 }: DeployInfrastructureProps & { formik?: any }) {
   const { getString } = useStrings()
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<
-    PipelineType<{
-      orgIdentifier: string
-      projectIdentifier: string
-      pipelineIdentifier: string
-      accountId: string
-    }>
-  >()
+  const [isInfrastructureDefinitionRuntime, setIsInfrastructureDefinitionRuntime] = useState(false)
 
-  const { showError } = useToaster()
-  const { getRBACErrorMessage } = useRBACError()
-  const [state, setState] = React.useState<DeployInfrastructureState>({
-    isEdit: false,
-    isEnvironment: false,
-    data: { name: '', identifier: '' }
-  })
-  const { expressions } = useVariablesExpression()
-  const {
-    data: environmentsResponse,
-    error,
-    refetch
-  } = useGetEnvironmentAccessList({
-    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier },
-    lazy: true
-  })
-  const [environments, setEnvironments] = React.useState<SelectOption[]>([])
-
-  React.useEffect(() => {
-    refetch()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const [showModal, hideModal] = useModalHook(
-    () => (
-      <Dialog
-        isOpen={true}
-        enforceFocus={false}
-        canEscapeKeyClose
-        canOutsideClickClose
-        onClose={onClose}
-        isCloseButtonShown
-        title={state.isEdit ? getString('editEnvironment') : getString('newEnvironment')}
-        className={'padded-dialog'}
-      >
-        <AddEditEnvironmentModal
-          data={{} as NGEnvironmentConfig}
-          // TODO: Put back commented out code after testing
-          // data={{
-          //   name: defaultTo(state.data?.name, ''),
-          //   identifier: defaultTo(state.data?.identifier, ''),
-          //   orgIdentifier,
-          //   projectIdentifier,
-          //   ...state.data
-          // }}
-          isEdit={state.isEdit}
-          onCreateOrUpdate={values => {
-            refetch()
-            formik?.setFieldValue(
-              `${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}environmentRef`,
-              values.identifier
-            )
-            onClose.call(null)
-          }}
-          closeModal={onClose}
-        />
-      </Dialog>
-    ),
-    [state]
-  )
-  const onClose = React.useCallback(() => {
-    setState({ isEdit: false, isEnvironment: false })
-    hideModal()
-  }, [hideModal])
-
-  React.useEffect(() => {
-    if (environmentsResponse?.data?.length) {
-      setEnvironments(
-        environmentsResponse.data.map(env => ({
-          label: env.environment?.name || env.environment?.identifier || '',
-          value: env.environment?.identifier || ''
-        }))
-      )
+  useDeepCompareEffect(() => {
+    if ((inputSetData?.template?.environment?.infrastructureDefinitions as unknown as string) === RUNTIME_INPUT_VALUE) {
+      setIsInfrastructureDefinitionRuntime(true)
     }
-  }, [environmentsResponse, environmentsResponse?.data?.length])
-  const [canEdit] = usePermission({
-    resource: {
-      resourceType: ResourceType.ENVIRONMENT,
-      resourceIdentifier: environments[0]?.value as string
-    },
-    permissions: [PermissionIdentifier.EDIT_ENVIRONMENT],
-    options: {
-      skipCondition: ({ resourceIdentifier }) => !resourceIdentifier
-    }
-  })
+  }, [inputSetData?.template?.environment?.infrastructureDefinitions])
 
-  const [canCreate] = usePermission({
-    resource: {
-      resourceType: ResourceType.ENVIRONMENT
-    },
-    permissions: [PermissionIdentifier.EDIT_ENVIRONMENT]
-  })
-  if (error?.message) {
-    showError(getRBACErrorMessage(error), undefined, 'cd.env.list.error')
-  }
   return (
     <>
-      {getMultiTypeFromValue(inputSetData?.template?.environment?.environmentRef) === MultiTypeInputType.RUNTIME && (
-        <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
-          <ExperimentalInput
-            label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironment')}
-            tooltipProps={{ dataTooltipId: 'specifyYourEnvironment' }}
-            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}environmentRef`}
-            placeholder={getString('cd.pipelineSteps.environmentTab.selectEnvironment')}
-            selectItems={environments}
-            useValue
-            multiTypeInputProps={{
-              allowableTypes,
-              selectProps: {
-                addClearBtn: !inputSetData?.readonly,
-                items: environments
-              },
-              expressions
-            }}
-            disabled={inputSetData?.readonly}
-            className={css.inputWidth}
-            formik={formik}
+      {inputSetData?.template?.environmentGroup?.envGroupRef && (
+        <Container margin={{ bottom: 'medium' }}>
+          <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>
+            {getString('common.environmentGroup.label')}
+          </Text>
+          <DeployEnvironmentGroup
+            initialValues={initialValues}
+            allowableTypes={allowableTypes}
+            path={inputSetData?.path}
+            serviceRef={initialValues.service?.serviceRef}
           />
-          {getMultiTypeFromValue(initialValues?.environment?.environmentRef) === MultiTypeInputType.FIXED && (
-            <Button
-              size={ButtonSize.SMALL}
-              variation={ButtonVariation.LINK}
-              disabled={inputSetData?.readonly || (isEditEnvironment(initialValues) ? !canEdit : !canCreate)}
-              onClick={() => {
-                const isEdit = isEditEnvironment(initialValues)
-                if (isEdit) {
-                  setState({
-                    isEdit,
-                    isEnvironment: false,
-                    data: environmentsResponse?.data?.filter(
-                      env => env.environment?.identifier === initialValues.environment?.environmentRef
-                    )?.[0]?.environment as EnvironmentResponseDTO
-                  })
-                }
-                showModal()
-              }}
-              text={
-                isEditEnvironment(initialValues)
-                  ? getString('editEnvironment')
-                  : getString('cd.pipelineSteps.environmentTab.plusNewEnvironment')
-              }
-            />
-          )}
-        </Layout.Horizontal>
+        </Container>
       )}
+      {inputSetData?.template?.environment?.environmentRef && (
+        <Container margin={{ bottom: 'medium' }}>
+          <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>
+            {getString('environment')}
+          </Text>
+          <DeployEnvironment
+            initialValues={initialValues}
+            allowableTypes={allowableTypes}
+            path={inputSetData?.path}
+            serviceRef={initialValues.service?.serviceRef}
+          />
+        </Container>
+      )}
+      {inputSetData?.template?.environment?.environmentInputs?.variables && (
+        <>
+          <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>
+            {getString('environmentVariables')}
+          </Text>
+          <div className={css.sectionContent}>
+            <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
+              <CustomVariableInputSet
+                allowableTypes={allowableTypes}
+                // TODO: Change after type is created
+                initialValues={initialValues.environment?.environmentInputs as any}
+                template={inputSetData.template.environment.environmentInputs as any}
+                path={`${inputSetData.path}.environmentInputs`}
+                className={css.fullWidth}
+              />
+            </Layout.Horizontal>
+          </div>
+        </>
+      )}
+
+      {inputSetData?.template?.environment?.serviceOverrideInputs?.variables && (
+        <>
+          <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>
+            {getString('common.serviceOverrides')}
+          </Text>
+          <div className={css.sectionContent}>
+            <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
+              <CustomVariableInputSet
+                allowableTypes={allowableTypes}
+                // TODO: Change after type is created
+                initialValues={initialValues.environment?.serviceOverrideInputs as any}
+                template={inputSetData.template.environment.serviceOverrideInputs as any}
+                path={`${inputSetData.path}.serviceOverrideInputs`}
+                className={css.fullWidth}
+              />
+            </Layout.Horizontal>
+          </div>
+        </>
+      )}
+
+      {isInfrastructureDefinitionRuntime &&
+        initialValues.environment?.environmentRef !== RUNTIME_INPUT_VALUE &&
+        inputSetData?.template?.environment?.infrastructureDefinitions && (
+          <>
+            <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>
+              {getString('infrastructureText')}
+            </Text>
+            <DeployInfrastructures
+              initialValues={initialValues}
+              allowableTypes={allowableTypes}
+              environmentRef={initialValues.environment?.environmentRef}
+              path={inputSetData?.path}
+            />
+          </>
+        )}
+
+      {isInfrastructureDefinitionRuntime &&
+        initialValues.environment?.environmentRef === RUNTIME_INPUT_VALUE &&
+        get(formik.values, `${inputSetData?.path}.environmentRef`) &&
+        inputSetData?.template?.environment?.infrastructureDefinitions && (
+          <>
+            <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>
+              {getString('infrastructureText')}
+            </Text>
+            <DeployInfrastructures
+              initialValues={initialValues}
+              allowableTypes={allowableTypes}
+              environmentRef={get(formik.values, `${inputSetData.path}.environmentRef`)}
+              path={inputSetData?.path}
+            />
+          </>
+        )}
     </>
   )
 }

@@ -6,11 +6,11 @@
  */
 
 import React from 'react'
-import { defaultTo, isEqual, isEqualWith, isNil, omit } from 'lodash-es'
+import { defaultTo, isEqual, omit } from 'lodash-es'
 import { parse } from 'yaml'
 import { ButtonVariation, Tag } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
-import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
+import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -28,20 +28,9 @@ import { usePipelineSchema } from '../PipelineSchema/PipelineSchemaContext'
 import css from './PipelineYamlView.module.scss'
 
 export const POLL_INTERVAL = 1 /* sec */ * 1000 /* ms */
-export const YamlBuilderMemo = React.memo(YAMLBuilder, (prevProps, nextProps) => {
-  if (isNil(prevProps.schema) && !isNil(nextProps.schema)) {
-    return false
-  }
-  return isEqualWith(nextProps, prevProps, (_arg1, _arg2, key) => {
-    if (['existingJSON', 'onExpressionTrigger', 'schema', 'onEnableEditMode'].indexOf(key as string) > -1) {
-      return true
-    }
-  })
-})
 
 let Interval: number | undefined
 const defaultFileName = 'Pipeline.yaml'
-
 function PipelineYamlView(): React.ReactElement {
   const {
     state: {

@@ -50,7 +50,7 @@ export default function CreatePRInputStep(props: CreatePrInputStepProps): React.
               disabled: readonly
             }}
             label={getString('pipelineSteps.timeoutLabel')}
-            name={`${prefix}timeout`}
+            name={`${prefix}.timeout`}
             disabled={readonly}
           />
         </div>

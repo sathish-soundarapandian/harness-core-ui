@@ -160,6 +160,8 @@ describe('FeatureFlagsPage', () => {
       error: undefined
     }
 
+    const refetchFlags = jest.fn()
+
     const renderComponent = (props: Partial<RenderColumnFlagProps> = {}): RenderResult =>
       render(
         <TestWrapper
@@ -172,6 +174,7 @@ describe('FeatureFlagsPage', () => {
             toggleFeatureFlag={toggleFeatureFlag}
             cell={cellMock}
             governance={mockGovernance}
+            refetchFlags={refetchFlags}
             {...props}
           />
         </TestWrapper>

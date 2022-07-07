@@ -89,11 +89,6 @@ describe('Resource Scope Form ', () => {
       fireEvent.click(includeCurrentScope)
     })
 
-    const addOrgs = getByText(container, 'rbac.resourceScope.selectOrgsandProjects')
-    act(() => {
-      fireEvent.click(addOrgs)
-    })
-
     const selectOrg = getByText(container, 'Select')
     act(() => {
       fireEvent.click(selectOrg)

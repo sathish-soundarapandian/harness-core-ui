@@ -19,9 +19,9 @@ import { PipelineContextType } from '@pipeline/components/PipelineStudio/Pipelin
 import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { sanitize } from '@common/utils/JSONUtils'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
-import type { NGServiceConfig, PipelineInfoConfig } from 'services/cd-ng'
+import type { NGServiceConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useServiceContext } from '@cd/context/ServiceContext'
-import { useTemplateSelector } from '@templates-library/hooks/useTemplateSelector'
 import {
   initialServiceState,
   DefaultNewStageName,
@@ -39,8 +39,7 @@ interface ServiceConfigurationWrapperProps {
 function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
-  const { serviceResponse, isServiceCreateModalView, selectedDeploymentType } = useServiceContext()
-  const { getTemplate } = useTemplateSelector()
+  const { serviceResponse, isServiceCreateModalView, selectedDeploymentType, gitOpsEnabled } = useServiceContext()
 
   const [isEdit] = usePermission({
     resource: {
@@ -61,6 +60,7 @@ function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): R
     if (isServiceCreateModalView) {
       return produce(newServiceState, draft => {
         set(draft, 'service.serviceDefinition.type', selectedDeploymentType)
+        set(draft, 'service.gitOpsEnabled', gitOpsEnabled)
       })
     } else {
       if (!isEmpty(serviceYaml?.service?.serviceDefinition)) {
@@ -103,6 +103,7 @@ function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): R
       if (!isEmpty(currentService?.service?.serviceDefinition)) {
         set(draft, 'stages[0].stage.name', DefaultNewStageName)
         set(draft, 'stages[0].stage.identifier', DefaultNewStageId)
+        set(draft, 'gitOpsEnabled', currentService.service?.gitOpsEnabled)
         set(
           draft,
           'stages[0].stage.spec.serviceConfig.serviceDefinition',
@@ -134,7 +135,6 @@ function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): R
       serviceIdentifier={serviceId}
       contextType={PipelineContextType.Pipeline}
       isReadOnly={!isEdit}
-      getTemplate={getTemplate}
     >
       <ServiceStudioDetails serviceData={currentService} {...props} />
     </ServicePipelineProvider>

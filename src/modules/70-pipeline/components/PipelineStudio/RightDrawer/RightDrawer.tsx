@@ -37,6 +37,7 @@ import type { StringsMap } from 'stringTypes'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import type { TemplateSummaryResponse } from 'services/template-ng'
+import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerData, DrawerSizes, DrawerTypes, PipelineViewData } from '../PipelineContext/PipelineActions'
 import { StepCommandsWithRef as StepCommands, StepFormikRef } from '../StepCommands/StepCommands'
@@ -166,6 +167,14 @@ const processNodeImpl = (
     }
     if ((item as StepElementConfig)?.spec?.commandOptions && item.tab !== TabTypes.Advanced) {
       set(node, 'spec.commandOptions', (item as StepElementConfig)?.spec?.commandOptions)
+    }
+
+    if (item.tab === TabTypes.Advanced) {
+      if (isEmpty(item.strategy)) {
+        delete (node as any).strategy
+      } else {
+        set(node, 'strategy', item.strategy)
+      }
     }
 
     // Delete values if they were already added and now removed
@@ -408,9 +417,9 @@ export function RightDrawer(): React.ReactElement {
     updatePipelineView,
     getStageFromPipeline,
     stepsFactory,
-    setSelectedStepId,
-    getTemplate
+    setSelectedStepId
   } = usePipelineContext()
+  const { getTemplate } = useTemplateSelector()
   const { type, data, ...restDrawerProps } = drawerData
   const { trackEvent } = useTelemetry()
 
@@ -672,7 +681,7 @@ export function RightDrawer(): React.ReactElement {
         get(templateTypes, (data?.stepConfig?.node as TemplateStepNode).template.templateRef)
       const { template, isCopied } = await getTemplate({
         templateType: 'Step',
-        selectedChildType: stepType,
+        allChildTypes: [stepType],
         selectedTemplate
       })
       const node = drawerData.data?.stepConfig?.node as StepOrStepGroupOrTemplateStepData

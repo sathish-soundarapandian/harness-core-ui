@@ -7,18 +7,26 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { ResponseJsonNode, useGetSchemaYaml } from 'services/pipeline-ng'
+import {
+  ResponseJsonNode,
+  ResponseYamlSchemaResponse,
+  useGetSchemaYaml,
+  useGetStepYamlSchema
+} from 'services/pipeline-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useToaster } from '@common/exports'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 export interface PipelineSchemaData {
   pipelineSchema: ResponseJsonNode | null
+  loopingStrategySchema: ResponseYamlSchemaResponse | null
 }
 
 const PipelineSchemaContext = React.createContext<PipelineSchemaData>({
-  pipelineSchema: null
+  pipelineSchema: null,
+  loopingStrategySchema: null
 })
 
 export function usePipelineSchema(): PipelineSchemaData {
@@ -30,6 +38,7 @@ export function PipelineSchemaContextProvider(props: React.PropsWithChildren<unk
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
+  const { PIPELINE_MATRIX } = useFeatureFlags()
   const { data: pipelineSchema, error } = useGetSchemaYaml({
     queryParams: {
       entityType: 'Pipelines',
@@ -39,8 +48,23 @@ export function PipelineSchemaContextProvider(props: React.PropsWithChildren<unk
       scope: getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
     }
   })
+  const { data: loopingStrategySchema } = useGetStepYamlSchema({
+    queryParams: {
+      entityType: 'StrategyNode',
+      projectIdentifier: projectIdentifier,
+      orgIdentifier: orgIdentifier,
+      accountIdentifier: accountId,
+      scope: getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier }),
+      yamlGroup: 'STEP'
+    },
+    lazy: !PIPELINE_MATRIX
+  })
   if (error?.message) {
     showError(getRBACErrorMessage(error), undefined, 'pipeline.get.yaml.error')
   }
-  return <PipelineSchemaContext.Provider value={{ pipelineSchema }}>{props.children}</PipelineSchemaContext.Provider>
+  return (
+    <PipelineSchemaContext.Provider value={{ pipelineSchema, loopingStrategySchema }}>
+      {props.children}
+    </PipelineSchemaContext.Provider>
+  )
 }

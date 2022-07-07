@@ -9,7 +9,7 @@ import React from 'react'
 import { render, act, fireEvent, waitFor, RenderResult } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cdngServices from 'services/cd-ng'
-import { ExecutionCompareProvider } from '@pipeline/components/ExecutionCompareYamls/ExecutionCompareContext'
+import { ExecutionCompareProvider } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
 import { PipelineExecutions } from '../PipelineExecutions/PipelineExecutions'
 
 jest.mock('highcharts-react-official', () => () => <></>)

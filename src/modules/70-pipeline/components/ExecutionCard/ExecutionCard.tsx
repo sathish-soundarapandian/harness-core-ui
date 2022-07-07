@@ -37,7 +37,7 @@ import type { ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactor
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import MiniExecutionGraph from './MiniExecutionGraph/MiniExecutionGraph'
-import { useExecutionCompareContext } from '../ExecutionCompareYamls/ExecutionCompareContext'
+import { useExecutionCompareContext } from '../ExecutionCompareYaml/ExecutionCompareContext'
 import css from './ExecutionCard.module.scss'
 
 export interface ExecutionCardProps {
@@ -289,7 +289,7 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
                   isPipelineInvalid={isPipelineInvalid}
                   canEdit={canEdit}
                   onViewCompiledYaml={onViewCompiledYaml}
-                  onCompareYamls={() => addToCompare(pipelineExecution)}
+                  onCompareYaml={() => addToCompare(pipelineExecution)}
                   source={source}
                   canExecute={canExecute}
                   canRetry={pipelineExecution.canRetry}

@@ -211,7 +211,7 @@ export function ServiceOverrides(): React.ReactElement {
       <Card className={css.serviceOverridesContainer}>
         <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
           <Text color={Color.GREY_700} margin={{ bottom: 'small' }} font={{ weight: 'bold' }}>
-            {getString('cd.serviceOverrides.label')}
+            {getString('common.serviceOverrides')}
           </Text>
           <RbacButton
             size={ButtonSize.SMALL}
@@ -281,6 +281,7 @@ export function ServiceOverrides(): React.ReactElement {
                               name={`serviceOverrides[${serviceOverrideIndex}]variables[${index}].value`}
                               label=""
                               disabled={true}
+                              defaultValue={variable.value}
                             />
                           ) : (
                             <FormInput.MultiTextInput

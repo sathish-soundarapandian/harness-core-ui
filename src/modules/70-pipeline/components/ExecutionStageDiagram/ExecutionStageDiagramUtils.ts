@@ -23,7 +23,6 @@ import {
   statusToStatusMapping
 } from '@pipeline/components/PipelineSteps/AdvancedSteps/ConditionalExecutionPanel/ConditionalExecutionPanelUtils'
 import type { NodeRunInfo } from 'services/pipeline-ng'
-import { BARRIER_WITH_OPEN_LINKS } from '@pipeline/utils/executionUtils'
 import type {
   ExecutionPipeline,
   ExecutionPipelineGroupInfo,
@@ -36,6 +35,7 @@ import { ExecutionPipelineNodeType } from './ExecutionPipelineModel'
 import { StepType } from '../PipelineSteps/PipelineStepInterface'
 import css from './ExecutionStageDiagram.module.scss'
 
+const BARRIER_WITH_OPEN_LINKS = 'barrier-open-with-links'
 export const containGroup = <T>(nodes: Array<ExecutionPipelineNode<T>>): boolean => {
   let contain = false
   nodes.forEach(node => {

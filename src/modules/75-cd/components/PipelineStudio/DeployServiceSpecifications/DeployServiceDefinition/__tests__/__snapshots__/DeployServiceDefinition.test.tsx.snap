@@ -686,7 +686,7 @@ exports[`DeployServiceDefinition Changing the deployment type when the stage con
                     <input
                       disabled=""
                       type="checkbox"
-                      value="winrm"
+                      value="WinRm"
                     />
                   </label>
                 </div>
@@ -797,10 +797,6 @@ exports[`DeployServiceDefinition Changing the deployment type when the stage con
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="bp3-card bp3-elevation-0 Card--card sectionCard"
-    >
       <label
         class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
       >
@@ -811,7 +807,7 @@ exports[`DeployServiceDefinition Changing the deployment type when the stage con
         <span
           class="bp3-control-indicator"
         />
-        Gitops
+        common.gitOps
       </label>
     </div>
     <div
@@ -1507,7 +1503,7 @@ exports[`DeployServiceDefinition checking on the gitops with other stage data sh
                     <input
                       disabled=""
                       type="checkbox"
-                      value="winrm"
+                      value="WinRm"
                     />
                   </label>
                 </div>
@@ -1618,10 +1614,6 @@ exports[`DeployServiceDefinition checking on the gitops with other stage data sh
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="bp3-card bp3-elevation-0 Card--card sectionCard"
-    >
       <label
         class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
       >
@@ -1632,7 +1624,7 @@ exports[`DeployServiceDefinition checking on the gitops with other stage data sh
         <span
           class="bp3-control-indicator"
         />
-        Gitops
+        common.gitOps
       </label>
     </div>
     <div
@@ -2328,7 +2320,7 @@ exports[`DeployServiceDefinition should render DeployServiceDefinition and switc
                     <input
                       disabled=""
                       type="checkbox"
-                      value="winrm"
+                      value="WinRm"
                     />
                   </label>
                 </div>
@@ -2439,10 +2431,6 @@ exports[`DeployServiceDefinition should render DeployServiceDefinition and switc
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="bp3-card bp3-elevation-0 Card--card sectionCard"
-    >
       <label
         class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
       >
@@ -2453,7 +2441,7 @@ exports[`DeployServiceDefinition should render DeployServiceDefinition and switc
         <span
           class="bp3-control-indicator"
         />
-        Gitops
+        common.gitOps
       </label>
     </div>
     <div

@@ -24,8 +24,8 @@ export interface ServiceContextValues {
 
 export const ServiceContext = React.createContext<ServiceContextValues>({
   serviceResponse: {},
-  onCloseModal: () => noop,
-  onServiceCreate: () => noop,
+  onCloseModal: noop,
+  onServiceCreate: noop,
   isServiceEntityModalView: false,
   isServiceEntityPage: false,
   isServiceCreateModalView: false,

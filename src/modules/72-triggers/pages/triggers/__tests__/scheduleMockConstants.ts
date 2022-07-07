@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { TriggerOverviewPanelPropsInterface } from '../views/TriggerOverviewPanel'
 import { scheduleTabsId } from '../views/subviews/ScheduleUtils'
 

@@ -22,4 +22,5 @@ export type SelectHealthSourceServicesProps = {
   hideSLIAndHealthScore?: boolean
   isTemplate?: boolean
   showOnlySLI?: boolean
+  expressions?: string[]
 }

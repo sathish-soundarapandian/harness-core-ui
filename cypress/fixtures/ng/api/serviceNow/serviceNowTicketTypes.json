@@ -1,0 +1,11 @@
+{
+  "status": "SUCCESS",
+  "data": [
+    { "key": "INCIDENT", "name": "Incident" },
+    { "key": "PROBLEM", "name": "Problem" },
+    { "key": "CHANGE_REQUEST", "name": "Change" },
+    { "key": "CHANGE_TASK", "name": "Change Task" }
+  ],
+  "metaData": null,
+  "correlationId": "009c9194-ce48-4a7e-b152-661fe341c632"
+}

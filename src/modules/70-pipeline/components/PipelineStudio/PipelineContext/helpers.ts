@@ -6,7 +6,7 @@
  */
 
 import type { PipelineStageWrapper } from '@pipeline/utils/pipelineTypes'
-import type { PipelineInfoConfig, StageElementConfig, StageElementWrapperConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig, StageElementConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 
 export function getStageFromPipeline<T extends StageElementConfig = StageElementConfig>(
   stageId: string,

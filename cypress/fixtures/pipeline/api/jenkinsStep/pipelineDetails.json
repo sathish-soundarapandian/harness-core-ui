@@ -1,0 +1,10 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "yamlPipeline": "pipeline:\n    name: testPipeline_Cypress\n    identifier: testPipeline_Cypress\n    projectIdentifier: defaultproject\n    orgIdentifier: default\n    tags: {}\n    stages:\n        - stage:\n              name: Jenkins\n              identifier: Jenkins\n              description: \"\"\n              type: Approval\n              spec:\n                  execution:\n                      steps:\n                          - step:\n                                type: JenkinsBuild\n                                name: jenkinsStep\n                                identifier: ss\n                                spec:\n                                    connectorRef: testConnector\n                                    jobParameter: []\n                                    delegateSelectors: []\n                                    unstableStatusAsSuccess: false\n                                    captureEnvironmentVariable: false\n                                    jobName: automationNew\n                                timeout: 10m\n                  serviceDependencies: []\n              tags: {}\n",
+    "entityValidityDetails": { "valid": true, "invalidYaml": null },
+    "modules": ["pms"]
+  },
+  "metaData": null,
+  "correlationId": "e80ffac6-5db2-42d6-be8f-faab92c4b61d"
+}

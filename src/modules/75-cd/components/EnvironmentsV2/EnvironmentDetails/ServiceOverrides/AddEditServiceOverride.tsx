@@ -5,10 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
-import { defaultTo, get } from 'lodash-es'
+import { defaultTo, get, isEqual } from 'lodash-es'
 import { parse } from 'yaml'
 
 import {
@@ -23,7 +23,8 @@ import {
   Container,
   VisualYamlToggle,
   VisualYamlSelectedView as SelectedView,
-  useToaster
+  useToaster,
+  getMultiTypeFromValue
 } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
@@ -125,7 +126,7 @@ export default function AddEditServiceOverride({
 
         setServicesOptions([serviceAvailable])
         formikRef.current?.setFieldValue('serviceRef', serviceAvailable.value)
-        handleServiceChange(serviceAvailable)
+        handleServiceChange(serviceAvailable, Boolean(selectedVariable.variable.value))
       } else {
         setServicesOptions(
           defaultTo(
@@ -149,7 +150,7 @@ export default function AddEditServiceOverride({
     }
   }, [selectedVariable?.serviceRef])
 
-  const handleServiceChange = (item: SelectOption) => {
+  const handleServiceChange = (item: SelectOption, isEdit: boolean) => {
     const serviceSelected = services?.data?.content?.find(serviceObj => serviceObj.service?.identifier === item.value)
 
     if (serviceSelected) {
@@ -159,15 +160,24 @@ export default function AddEditServiceOverride({
       ) as NGServiceConfig
       const serviceVars = defaultTo(parsedServiceYaml?.service?.serviceDefinition?.spec?.variables, [])
       setServiceVariables(serviceVars)
-      setVariablesOptions(
-        defaultTo(
-          serviceVars?.map(variable => ({
-            label: defaultTo(variable.name, ''),
-            value: defaultTo((variable as AllNGVariables).name, '')
-          })),
-          []
+      if (isEdit) {
+        setVariablesOptions([
+          {
+            label: defaultTo(selectedVariable?.variable?.name, ''),
+            value: defaultTo(selectedVariable?.variable?.name, '')
+          }
+        ])
+      } else {
+        setVariablesOptions(
+          defaultTo(
+            serviceVars?.map(variable => ({
+              label: defaultTo(variable.name, ''),
+              value: defaultTo(variable.name, '')
+            })),
+            []
+          )
         )
-      )
+      }
     }
   }
 
@@ -287,6 +297,30 @@ export default function AddEditServiceOverride({
     }
   }
 
+  const existingJSON = useMemo(() => {
+    return {
+      serviceOverrides: {
+        environmentRef: environmentIdentifier,
+        serviceRef: formikRef.current?.values.serviceRef,
+        variables: formVariableOverrideObject(
+          serviceOverrides?.data?.content?.filter(
+            serviceOverride => serviceOverride.serviceRef === formikRef.current?.values.serviceRef
+          )?.[0],
+          formikRef.current?.values.variableOverride
+        )
+      }
+    }
+  }, [formikRef.current, environmentIdentifier, serviceOverrides?.data?.content])
+
+  const handleYamlChange = useCallback((): void => {
+    const parsedYaml = parse(defaultTo(yamlHandler?.getLatestYaml(), '{}'))
+    if (isEqual(existingJSON, parsedYaml)) {
+      setIsModified(false)
+    } else {
+      setIsModified(true)
+    }
+  }, [yamlHandler])
+
   return (
     <Formik<AddEditServiceOverrideFormProps>
       formName={'addEditServiceOverrideForm'}
@@ -331,7 +365,7 @@ export default function AddEditServiceOverride({
                   items={servicesOptions}
                   label={getString('service')}
                   placeholder={getString('common.selectName', { name: getString('service') })}
-                  onChange={handleServiceChange}
+                  onChange={item => handleServiceChange(item, false)}
                 />
                 <Text>{getString('cd.overrideType')}</Text>
                 <Button
@@ -358,8 +392,12 @@ export default function AddEditServiceOverride({
                   label={getString('typeLabel')}
                   placeholder={getString('common.selectName', { name: getString('service') })}
                 />
-                {formikProps?.values?.variableOverride?.type === VariableType.Secret ? (
-                  <MultiTypeSecretInput name={`value`} label={getString('cd.overrideValue')} />
+                {formikProps.values.variableOverride?.type === VariableType.Secret ? (
+                  <MultiTypeSecretInput
+                    name={`variableOverride.value`}
+                    label={getString('cd.overrideValue')}
+                    isMultiType
+                  />
                 ) : (
                   <FormInput.MultiTextInput
                     className="variableInput"
@@ -368,8 +406,9 @@ export default function AddEditServiceOverride({
                     multiTextInputProps={{
                       defaultValueToReset: '',
                       textProps: {
-                        type: formikProps?.values?.variableOverride?.type === VariableType.Number ? 'number' : 'text'
-                      }
+                        type: formikProps.values.variableOverride?.type === VariableType.Number ? 'number' : 'text'
+                      },
+                      multitypeInputValue: getMultiTypeFromValue(formikProps.values.variableOverride?.value)
                     }}
                   />
                 )}
@@ -377,20 +416,10 @@ export default function AddEditServiceOverride({
             ) : (
               <YAMLBuilder
                 {...yamlBuilderReadOnlyModeProps}
-                existingJSON={{
-                  serviceOverrides: {
-                    environmentRef: environmentIdentifier,
-                    serviceRef: formikProps.values.serviceRef,
-                    variables: formVariableOverrideObject(
-                      serviceOverrides?.data?.content?.filter(
-                        serviceOverride => serviceOverride.serviceRef === formikProps.values.serviceRef
-                      )?.[0],
-                      formikProps.values.variableOverride
-                    )
-                  }
-                }}
+                existingJSON={existingJSON}
                 bind={setYamlHandler}
                 showSnippetSection={false}
+                onChange={handleYamlChange}
               />
             )}
 

@@ -8,7 +8,9 @@ serviceDependenciesText: Service Dependencies
 stepLabel: '{{name}} (Id: {{identifier}})'
 numOfStage: 1 stage
 numOfStages: '{{n}} stages'
-enableVerificationOptions: Enable verification options
+enableVerificationTitle: Add Continuous Verification
+enableVerificationOptions: Enable Continuous Verification
+enableVerificationHelpText: Apply verification step to a deployment to detect regressions or anomalies, and to rollback failed deployments.
 openInPipelineStudio: Open in Pipeline Studio
 closeStepConfig: Step Config
 stepConfigHasChanges: Form has some unsaved changes, Do you want to apply the changes?
@@ -55,6 +57,7 @@ poweredByHarness: powered by Harness
 linuxOnly: Supported on Linux only
 outOf: Out Of
 clickToExpandErrorDetails: Click to expand error details
+totalCount: 'Total: {{ count }}'
 approvalStage:
   settingUpStage: Getting stage data
 filters:
@@ -116,6 +119,15 @@ queueStep:
   scopeRequired: Scope is required
   scopePlaceholder: Select Scope
   scope: Scope (to release constraint)
+  queuedExecutions: Queued Executions
+  queuedByResourceKey: 'Queued by Resource Key:'
+jenkinsStep:
+  validations:
+    jobName: Jobname is a required field
+  jobNamePlaceholder: Select Job Name
+  jobParameter: Job Parameters
+  unstableStatusAsSuccess: Treat unstable Jenkins status as success
+  captureEnvironmentVariable: Capture environment variables from Jenkins build
 jiraApprovalStep:
   connectToJira: Connect to Jira
   connectorRef: Jira Connector
@@ -140,8 +152,6 @@ jiraApprovalStep:
     wasRejected: 'Rejection Criteria was met for Jira Ticket:'
     wasExpired: 'Jira approval expired for Ticket:'
     jiraTicket: 'JIRA Ticket Pending Approval:'
-    allConditionsMsg: 'If all of the following conditions are met:'
-    anyConditionsMsg: 'If any of the following conditions is met:'
     conditions:
       equals: '{{ key }} equals'
       not_equals: '{{ key }} does not equals'
@@ -243,12 +253,35 @@ serviceNowUpdateStep:
   fieldType:
     applyFromTemplate: Apply from template
     updateFields: Update Fields
+commonApprovalStep:
+  execution:
+    allConditionsMsg: 'If all of the following conditions are met:'
+    anyConditionsMsg: 'If any of the following conditions is met:'
+customApprovalStep:
+  scriptTimeout: Script Timeout
+  retryInterval: Retry interval
+  execution:
+    wasApproved: 'Approval Criteria was met for Custom Shell Script Approval'
+    wasRejected: 'Rejection Criteria was met for Custom Shell Script Approval'
+    wasExpired: 'Custom Shell Script Approval expired'
+    customApprovalTicket: 'Custom Shell Script Approval Pending Approval'
+    conditions:
+      equals: '{{ key }} equals'
+      not_equals: '{{ key }} does not equals'
+      in: '{{ key }} is in'
+      not_in: '{{ key }} is not in'
+  validation:
+    outputVariable: Output Variable(s) is required
+    minimumRetryIntervalIs10Secs: Minimum Retry interval is 10 seconds
+    minimumScriptTimeoutIs10Secs: Minimum Script timeout is 10 seconds
+    atLeastOneOutputVariableIsRequired: At least one output field must be set
 manifestType:
   attachPath: + Attach {{manifestPath}}
   manifestTyperequired: Manifest Type is required
   gitConnectorLabel: 'Git'
   bitBucketLabel: 'Bitbucket'
   InheritFromManifest: 'Inherit From Manifest'
+  customRemote: 'Custom Remote'
   httpHelmRepoConnectorLabel: 'HTTP Helm'
   manifestIdentifier: Manifest Name
   manifestPlaceholder: Enter Manifest Name
@@ -299,6 +332,9 @@ manifestType:
   serverlessConfigFilePath: Serverless Config File Path
   serverlessConfigFilePathPlaceholder: Enter Serverless Config File Path
   valuesYamlPath: Values.yaml
+  customRemoteExtractionScript: Custom Remote Manifest Extraction Script
+  customRemoteExtractedFileLocation: Extracted Manifest File Location
+  customRemoteExtractedFileLocationPlaceholder: Enter Extracted Manifest File Location
   paramsYamlPath: Openshift Parameters
   http:
     chartName: 'Chart Name'
@@ -374,6 +410,21 @@ failureStrategies:
     gitBranchRequired: Git Branch is required
     gitTagRequired: Git Tag is required
     gitPRRequired: Git Pull Request is required
+loopingStrategy:
+  title: Looping Strategy
+  subTitle: 'Select 1 of the {{maxCount}} looping execution strategy below.'
+  warningText: All the configuration will be lost
+  learnMore: Learn more about Looping strategies
+  deleteModal:
+    title: Are you sure, you want to remove the looping strategy?
+    content: '{{$.pipeline.loopingStrategy.warningText}}'
+  toggleTypeModal:
+    title: Are you sure, you want to switch the looping strategy?
+    content: '{{$.pipeline.loopingStrategy.warningText}}'
+  helperText:
+    matrix: Matrix gives the ability to execute the same set of tasks multiple times for a bunch of different configurations.
+    for: Placeholder for helper text of for loop.
+    parallelism: Placeholder for helper text of parallelism
 selectOrCreatePipeline:
   pipelineNameRequired: Please select a pipeline
   setupHeader: Create or Select a Pipeline
@@ -397,7 +448,7 @@ execution:
   currentExecution: Current Execution
   timePrefix: 'Execution Time: '
   compareAction: Compare
-  compareExecutionsTitle: Select executions to compare the compiled YAML’s
+  compareExecutionsTitle: Select executions to compare the compiled YAML
   ignoreFailedWarningText: A failed step was ignored because the step’s Failure Strategy is Ignore Failure. The step’s failure did not impact the Pipeline’s success.
   iotab:
     noInputText: No input found for current step
@@ -421,7 +472,7 @@ execution:
     abortStage: Abort Stage
     downloadLogs: Download logs
     viewCompiledYaml: View Compiled YAML
-    compareYamls: Compare YAML’s
+    compareYaml: Compare YAML
   layouts:
     bottom: Align to bottom
     right: Align to right
@@ -698,10 +749,13 @@ artifactsSelection:
   artifactTyperequired: Artifact Type is required
   loadingTags: Loading Tags...
   loadingArtifactPaths: Loading Artifact Paths...
-  artifactNamePlaceholder: Enter Artifact Path
+  artifactPathPlaceholder: Enter Artifact Path
   artifactDirectory: Artifact Directory
   artifactDirectoryPlaceholder: Enter Artifact Directory
   versionPlaceholder: Enter Version
+  filePathRegexLabel: File Path Regex
+  filePathRegexPlaceholder: Enter File Path Regex
+  amazonS3Title: Amazon S3
   existingDocker:
     sidecarId: Sidecar Identifier
     sidecarIdPlaceholder: Enter Artifact Identifier
@@ -718,8 +772,7 @@ artifactsSelection:
     repositoryUrl: Repository URL is required
     artifactDirectory: Artifact Directory is required
     artifactPathFilter: Artifact Path Filter is required
-    artifactPathAndArtifactPathFilter: Artifact Path and Artifact Path Filter, both can not be empty
-    manifestRequiredForStage: 'Please provide manifest for stage: {{ stageName }}'
+    filePathRegex: File Path Regex is required
   errors:
     noRepositories: No repositories found with given connector
 overrideSets:
@@ -848,7 +901,8 @@ stepDescription:
   RestoreCacheGCS: Restore saved files and directories between builds using Google Cloud Storage (GCS).
   SaveCacheS3: Preserve files and directories between builds using AWS S3.
   RestoreCacheS3: Restore saved files and directories between builds using AWS S3.
-  DockerHub: Build a Docker image and push it to a Docker registry.
+  DockerHub: Build a Docker image from a Dockerfile and push it to a Docker registry.
+  Jenkins: Jenkins Description.
   GCS: Upload artifacts to Google Cloud Storage (GCS).
   S3: Upload artifacts to AWS S3.
   JFrogArtifactory: Upload artifacts to JFrog Artifactory.
@@ -872,6 +926,9 @@ stepDescription:
   ServerlessLambdaRollback: Deploy the previous successful version as a new version.
   createPR: Create PR
   mergePR: Merge PR
+  AzureSlotDeployment: Select the Web App and source and target deployment slots for the deployment.
+  CustomApproval: Custom Approval
+  AzureTrafficShift: Shift network traffic to the new Web App version in the deployment slot.
 executionStrategy:
   executionStrategies: Execution Strategies
   useStrategy: Use Strategy
@@ -1043,6 +1100,7 @@ serviceDeploymentTypes:
   serverlessGoogleFunctions: Serverless Google Functions
   awsSAM: AWS SAM
   azureFunctions: Azure Functions
+  azureWebApps: Azure Web Apps
 noArtifactPaths: No artifact paths found with given Artifact Directory
 stageDataDeleteWarningTitle: Discard Stage Data
 serviceDataDeleteWarningTitle: Discard Service Data
@@ -1113,3 +1171,12 @@ OverviewEmptyStates:
   createPipelineInfo: A Harness Pipeline is a series of stages that performs operations like building and deploying software.
   runPipelineHeaderMsg: You haven’t tried running your pipelines yet.
   runPipelineInfo: Click the button below to select a pipeline and get your deployments started.
+importSuccessMessage: '{{resourceType}} has been imported successfully'
+MatrixNode:
+  maxConcurrency: 'Max Concurrency:'
+traffic: Traffic
+viewPipeline: View Pipeline
+codeSource: 'Code Source'
+recentTenExecutions: 'Recent 10 Executions'
+lastExecution: 'Last Execution'
+lastModified: 'Last Modified'

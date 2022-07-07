@@ -7,25 +7,36 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
+import { defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
 import { parse } from 'yaml'
 import { connect, FormikProps } from 'formik'
+import { Spinner } from '@blueprintjs/core'
+import produce from 'immer'
 
 import {
   ButtonSize,
   ButtonVariation,
+  Container,
   Dialog,
   FormInput,
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
+  RUNTIME_INPUT_VALUE,
   SelectOption,
   useToaster
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 
 import { useStrings } from 'framework/strings'
-import { EnvironmentResponse, EnvironmentResponseDTO, useGetEnvironmentListV2 } from 'services/cd-ng'
+import {
+  EnvironmentResponse,
+  EnvironmentResponseDTO,
+  EnvironmentYamlV2,
+  useGetEnvironmentInputs,
+  useGetEnvironmentListV2,
+  useGetServiceOverrideInputs
+} from 'services/cd-ng'
 
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 
@@ -36,20 +47,31 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
+import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
+import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
+import { useRunPipelineFormContext } from '@pipeline/context/RunPipelineFormContext'
 import AddEditEnvironmentModal from '../AddEditEnvironmentModal'
 import { isEditEnvironment } from '../utils'
-import type { DeployInfrastructureStepConfig } from '../DeployInfrastructureStep'
 
 import css from '../DeployInfrastructureStep.module.scss'
 
 interface DeployEnvironmentProps {
-  initialValues: DeployInfrastructureStepConfig
-  formik?: FormikProps<DeployInfrastructureStepConfig>
+  initialValues: DeployStageConfig
+  formik?: FormikProps<DeployStageConfig>
   readonly?: boolean
   allowableTypes: MultiTypeInputType[]
+  serviceRef?: string
+  path?: string
 }
 
-function DeployEnvironment({ initialValues, readonly, formik, allowableTypes }: DeployEnvironmentProps) {
+function DeployEnvironment({
+  initialValues,
+  readonly,
+  formik,
+  allowableTypes,
+  serviceRef,
+  path
+}: DeployEnvironmentProps) {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
   const { showError } = useToaster()
@@ -70,12 +92,132 @@ function DeployEnvironment({ initialValues, readonly, formik, allowableTypes }: 
     }
   })
 
+  const {
+    data: environmentInputsResponse,
+    loading: environmentInputsLoading,
+    refetch: refetchEnvironmentInputs
+  } = useGetEnvironmentInputs({
+    lazy: true
+  })
+
+  const {
+    data: serviceOverrideInputsResponse,
+    loading: serviceOverrideInputsLoading,
+    refetch: refetchServiceOverrideInputs
+  } = useGetServiceOverrideInputs({
+    lazy: true
+  })
+
   const [environments, setEnvironments] = useState<EnvironmentResponseDTO[]>()
   const [selectedEnvironment, setSelectedEnvironment] = useState<EnvironmentResponseDTO>()
   const [environmentsSelectOptions, setEnvironmentsSelectOptions] = useState<SelectOption[]>()
   const [environmentRefType, setEnvironmentRefType] = useState<MultiTypeInputType>(
     getMultiTypeFromValue(initialValues.environment?.environmentRef)
   )
+  const { template, updateTemplate } = useRunPipelineFormContext()
+
+  useEffect(() => {
+    if (
+      !environmentInputsLoading &&
+      !serviceOverrideInputsLoading &&
+      (environmentInputsResponse?.data?.inputSetTemplateYaml ||
+        serviceOverrideInputsResponse?.data?.inputSetTemplateYaml)
+    ) {
+      const parsedEnvironmentYaml = parse(defaultTo(environmentInputsResponse?.data?.inputSetTemplateYaml, '{}'))
+      const parsedServiceOverridesYaml = parse(
+        defaultTo(serviceOverrideInputsResponse?.data?.inputSetTemplateYaml, '{}')
+      )
+
+      if (path) {
+        const values = { ...formik?.values }
+        set(
+          values,
+          `${path}.environmentInputs`,
+          parsedEnvironmentYaml.environmentInputs
+            ? {
+                ...clearRuntimeInput(parsedEnvironmentYaml.environmentInputs)
+              }
+            : undefined
+        )
+        set(
+          values,
+          `${path}.serviceOverrideInputs`,
+          parsedServiceOverridesYaml.serviceOverrideInputs
+            ? {
+                ...clearRuntimeInput(parsedServiceOverridesYaml.serviceOverrideInputs)
+              }
+            : undefined
+        )
+        formik?.setValues({ ...values })
+
+        updateTemplate(
+          {
+            environmentRef: RUNTIME_INPUT_VALUE,
+            ...(parsedEnvironmentYaml?.environmentInputs && {
+              environmentInputs: parsedEnvironmentYaml?.environmentInputs
+            }),
+            ...(parsedServiceOverridesYaml?.serviceOverrideInputs && {
+              serviceOverrideInputs: parsedServiceOverridesYaml?.serviceOverrideInputs
+            })
+          },
+          path
+        )
+      } else {
+        formik?.setValues({
+          ...formik.values,
+          environment: {
+            ...formik.values.environment,
+            ...parsedEnvironmentYaml,
+            ...parsedServiceOverridesYaml
+          }
+        } as DeployStageConfig)
+      }
+    } else if (
+      !environmentInputsLoading &&
+      !serviceOverrideInputsLoading &&
+      !environmentInputsResponse?.data?.inputSetTemplateYaml &&
+      !serviceOverrideInputsResponse?.data?.inputSetTemplateYaml &&
+      path
+    ) {
+      const updatedTemplate = produce(get(template, path), (draft: EnvironmentYamlV2) => {
+        if (draft) {
+          delete draft.environmentInputs
+          delete draft.serviceOverrideInputs
+        }
+      })
+      const environmentValues = get(formik?.values, `${path}`)
+      if (environmentValues) {
+        delete environmentValues.environmentInputs
+        delete environmentValues.serviceOverrideInputs
+        formik?.setFieldValue(path, {
+          ...environmentValues
+        })
+        updateTemplate(updatedTemplate, path)
+      }
+    }
+  }, [environmentInputsLoading, serviceOverrideInputsLoading])
+
+  useEffect(() => {
+    if (selectedEnvironment?.identifier) {
+      const queryParams = {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        environmentIdentifier: selectedEnvironment?.identifier
+      }
+      refetchEnvironmentInputs({
+        queryParams
+      })
+      if (!isNil(serviceRef) && !isEmpty(serviceRef)) {
+        refetchServiceOverrideInputs({
+          queryParams: {
+            ...queryParams,
+            serviceIdentifier: serviceRef
+          }
+        })
+      }
+    }
+  }, [selectedEnvironment])
 
   useEffect(() => {
     if (!environmentsLoading && !get(environmentsResponse, 'data.empty')) {
@@ -182,7 +324,7 @@ function DeployEnvironment({ initialValues, readonly, formik, allowableTypes }: 
       <FormInput.MultiTypeInput
         label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironment')}
         tooltipProps={{ dataTooltipId: 'specifyYourEnvironment' }}
-        name="environment.environmentRef"
+        name={path ? `${path}.environmentRef` : 'environment.environmentRef'}
         useValue
         disabled={readonly || (environmentRefType === MultiTypeInputType.FIXED && environmentsLoading)}
         placeholder={
@@ -204,7 +346,12 @@ function DeployEnvironment({ initialValues, readonly, formik, allowableTypes }: 
         }}
         selectItems={defaultTo(environmentsSelectOptions, [])}
       />
-      {environmentRefType === MultiTypeInputType.FIXED && (
+      {(environmentInputsLoading || serviceOverrideInputsLoading) && (
+        <Container margin={{ top: 'xlarge' }}>
+          <Spinner size={20} />
+        </Container>
+      )}
+      {!path && environmentRefType === MultiTypeInputType.FIXED && (
         <RbacButton
           margin={{ top: 'xlarge' }}
           size={ButtonSize.SMALL}

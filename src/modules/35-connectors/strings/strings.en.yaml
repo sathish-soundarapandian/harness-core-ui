@@ -182,6 +182,7 @@ testConnectionStep:
 validation:
   serviceNowUrl: 'ServiceNow URL is required.'
   personalAccessToken: Personal Access Token is required
+  connectorIsRequired: Connector is required.
 httpHelm:
   httpHelmRepoUrl: 'Helm Repo URL'
 ociHelm:
@@ -296,6 +297,9 @@ jenkins:
   bearerTokenRequired: Bearer token is required
   usernamePasswordAPIToken: 'Username and Password/APIToken'
   passwordAPIToken: 'Password/APIToken'
+  jenkinsConnectorLabel: 'Jenkins Connector'
+  jobNameLabel: 'Job Name'
+  jobParameterLabel: 'Job Parameter (Optional)'
   jenkins: 'Jenkins'
   jenkinsUrlRequired: 'Jenkins Registry URL is required'
   jenkinsUrl: 'Jenkins Registry URL'
@@ -363,7 +367,6 @@ customHealth:
   valueRequired: Value is required.
   keyRequired: Key is required.
 cdng:
-  jobName: Job Name
   continousVerificationType: Continous Verification Type
   monitoredServiceType: Monitored Service Type
   artifactTag: Artifact Tag
@@ -406,6 +409,11 @@ cdng:
     monitoringServiceRequired: Monitored Service is required
     healthSourceRequired: At least one health source is required
     timeoutValidation: Timeout should be at least 40 minutes
+    applicationNameValidation: Application Name is required.
+    tierNameValidation: Tier Name is required.
+    completeMetricPathValidation: Complete Metric Path is required.
+    serviceInstanceMetricPathValidation: Service Instance Metric Path is required.
+    serviceInstanceFieldNameValidation: Service Instance Field Name is required.
   verificationSensitivityLabel:
     high: High
     medium: Medium
@@ -783,13 +791,17 @@ ceGcp:
   overview:
     heading: '{{ $.overview }}'
     projectIdLabel: 'Specify Project Id'
+    alreadyExist: 'CCM Connector already exists for this GCP Project'
+    alreadyExistInfo: 'The GCP project {{projectId}} already has a Connector “{{existingConnectorName}}” linked to it. The Connector has permission for {{featureText}}'
   billingExport:
     heading: 'Setup Billing Export'
+    subHeading: 'The following {{ reportCount }} billing exports are connected with your Harness Account.'
     description: 'Cloud Billing export to BigQuery enables you to export detailed Google Cloud billing data (such as usage and cost estimate data) automatically throughout the day to a BigQuery dataset that you specify.'
     followInstruction: 'Please follow the instructions to provide create a Billing export for the specified Project Id'
     launchTemplate: 'Launch GCP console'
     datasetIdLabel: 'Dataset Name'
     tableIdLabel: 'Table Name'
+    setupNew: 'Setup new billing export'
   billingExtention:
     heading: 'How to create GCP Billing Export and find DataSet Name?'
     prerequisite: 'Pre-Requisite:A project where the Cloud Billing data will be stored with billing enabled on the project.'
@@ -806,6 +818,11 @@ ceGcp:
     otherLinks: 'Other Links:'
     link1: 'https://cloud.google.com/billing/docs/how-to/export-data-bigquery-setup'
     link2: 'Harness Docs (https://ngdocs.harness.io/article/kxnsritjls)'
+  existingCurTable:
+    projectId: 'Project ID'
+    searchPlaceholder: 'Search Project ID'
+    nextStepHint1: 'If the GCP Project Id you entered is covered by any of the above, click “Continue >” to proceed.'
+    nextStepHint2: '{{ $.connectors.ceAws.curExising.nextStepHint2 }}'
   chooseRequirements:
     name: '{{ $.connectors.ceAws.steps.req }}'
     heading: '{{ $.connectors.ceAws.steps.req }}'
@@ -843,7 +860,12 @@ ceGcp:
     optimization:
       step1: 'Navigate to IAM & Admin  in the GCP console'
       step2: 'Search for the service account: {{serviceAccount}}'
-      step3: 'Click on Edit Principal and add Editor role available in the Basic category'
+      step3: 'Click on Edit Principal and add Editor {{otherRole}} role available in the Basic category'
+    inventory:
+      computeEngine: 'Compute Engine'
+      step1: 'apis in your gcp project'
+      step2: 'and Compute Viewer role'
+      completePermissionStep: 'Click on Edit Principal and add Compute Viewer role available in the Basic category'
   testConnection:
     heading: '{{ $.common.labelTestConnection }}'
     step1: 'Verifying GCP connector setup'
@@ -863,3 +885,11 @@ policyEvaluations:
   failedToSave: Connector cannot be saved due to the policy evaluation failures
   warning: Connector saved with policy warnings
 sameCredentialsAsAbove: Same credentials as above
+linkToGitProvider: 'Link to {{gitProvider}}'
+relinkToGitProvider: 'Re-link to {{gitProvider}}'
+oAuth:
+  inProgress: OAuth in progress...
+  failed: Error while authorizing user via OAuth. Please try using an access token instead.
+  configured: OAuth configured successfully
+  reConfigured: OAuth re-configured successfully
+  accessRevoked: Access revoked. Please reconfigure the connection.

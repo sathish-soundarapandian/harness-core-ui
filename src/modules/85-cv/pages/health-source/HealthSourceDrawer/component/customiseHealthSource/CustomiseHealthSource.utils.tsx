@@ -64,14 +64,20 @@ export const LoadSourceByType = ({
       if (data?.product?.value === DatadogProduct.CLOUD_METRICS) {
         return <DatadogMetricsHealthSource data={data} onSubmit={onSubmit} />
       } else {
-        return <DatadogLogsHealthSource data={data} onSubmit={onSubmit} />
+        return (
+          <DatadogLogsHealthSource data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
+        )
       }
     case HealthSourceTypes.DatadogMetrics:
       return <DatadogMetricsHealthSource data={data} onSubmit={onSubmit} />
     case HealthSourceTypes.DatadogLog:
-      return <DatadogLogsHealthSource data={data} onSubmit={onSubmit} />
+      return (
+        <DatadogLogsHealthSource data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
+      )
     case HealthSourceTypes.Prometheus:
-      return <PrometheusHealthSource data={data} onSubmit={onSubmit} />
+      return (
+        <PrometheusHealthSource data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
+      )
     case Connectors.NEW_RELIC:
       return <NewrelicMonitoredSourceContainer data={data} onSubmit={onSubmit} />
     case Connectors.DYNATRACE:

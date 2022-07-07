@@ -32,6 +32,7 @@ const CreateGithubConnector = (props: CreateConnectorModalProps): JSX.Element =>
     'isEditMode',
     'connectorInfo',
     'gitDetails',
+    'status',
     'setIsEditMode',
     'accountId',
     'orgIdentifier',

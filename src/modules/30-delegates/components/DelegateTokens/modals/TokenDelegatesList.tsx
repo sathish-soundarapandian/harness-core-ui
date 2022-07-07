@@ -10,12 +10,16 @@ import { useParams } from 'react-router-dom'
 import { Layout, Text, Dialog, ExpandingSearchInput, Button } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { DelegateGroupDetails, useGetDelegatesByToken, GetDelegatesByTokenQueryParams } from 'services/portal'
 
 import { delegateTypeToIcon } from '@common/utils/delegateUtils'
 import { PageSpinner } from '@common/components'
 import DelegateInstallationError from '@delegates/components/CreateDelegate/components/DelegateInstallationError/DelegateInstallationError'
 
+import {
+  GetDelegateGroupsUsingTokenQueryParams,
+  useGetDelegateGroupsUsingToken,
+  DelegateGroupDetails
+} from 'services/cd-ng'
 import css from '../DelegateTokens.module.scss'
 
 interface DelegateItemParams {
@@ -75,13 +79,13 @@ const DelegateTokensList: FC<DelegateTokensListParams> = ({ tokenName }) => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<Record<string, string>>()
   const [searchTerm, setSearchTerm] = useState('')
 
-  const { data, loading } = useGetDelegatesByToken({
+  const { data, loading } = useGetDelegateGroupsUsingToken({
     queryParams: {
-      accountId,
+      accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
       delegateTokenName: tokenName
-    } as GetDelegatesByTokenQueryParams
+    } as GetDelegateGroupsUsingTokenQueryParams
   })
 
   const delegates = data?.resource?.delegateGroupDetails || []

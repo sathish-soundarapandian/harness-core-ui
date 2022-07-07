@@ -18,6 +18,7 @@ const contextValue: ExecutionContextParams = {
   pipelineExecutionDetail: {},
   selectedStageId: '',
   selectedStepId: '',
+  selectedStageExecutionId: '',
   loading: false,
   isDataLoadedForSelectedStage: false,
   queryParams: {},
@@ -26,6 +27,7 @@ const contextValue: ExecutionContextParams = {
   addNewNodeToMap: noop,
   setSelectedStepId: noop,
   setSelectedStageId: noop,
+  setSelectedStageExecutionId: noop,
   pipelineStagesMap: new Map([
     ['stage1', { nodeIdentifier: 'stage1', name: 'Stage 1', status: 'Success' }],
     ['stage2', { nodeIdentifier: 'stage2', name: 'Stage 2', status: 'Success' }],

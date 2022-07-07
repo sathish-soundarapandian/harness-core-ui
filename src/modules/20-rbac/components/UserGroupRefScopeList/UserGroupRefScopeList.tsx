@@ -7,15 +7,18 @@
 
 import React from 'react'
 import type { Column, CellProps, Renderer } from 'react-table'
+import { useParams } from 'react-router-dom'
 import { Color, FontVariation } from '@harness/design-system'
 import { Text, TableV2, Card } from '@wings-software/uicore'
 import { PageError } from '@harness/uicore'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { useGetInheritingChildScopeList, ScopeName } from 'services/cd-ng'
 import type { PrincipalScope } from '@common/interfaces/SecretsInterface'
 import { PageSpinner } from '@common/components'
 import type { Scope } from 'services/rbac/'
 import { getUserGroupQueryParams } from '@rbac/utils/utils'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import css from './UserGroupRefScopeList.module.scss'
 
 interface UserGroupScope extends Scope {
@@ -24,9 +27,6 @@ interface UserGroupScope extends Scope {
 }
 
 interface UserGroupScopeListProps {
-  accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
   userGroupIdentifier: string
   parentScope: PrincipalScope
 }
@@ -61,14 +61,10 @@ const RenderScopeDescription: Renderer<CellProps<UserGroupScope>> = ({ row }) =>
   )
 }
 
-const UserGroupRefScopeList: React.FC<UserGroupScopeListProps> = ({
-  accountId,
-  orgIdentifier,
-  projectIdentifier,
-  userGroupIdentifier,
-  parentScope
-}) => {
+const UserGroupRefScopeList: React.FC<UserGroupScopeListProps> = ({ userGroupIdentifier, parentScope }) => {
   const { getString } = useStrings()
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const { getRBACErrorMessage } = useRBACError()
   const { data, loading, error, refetch } = useGetInheritingChildScopeList({
     identifier: userGroupIdentifier,
     queryParams: {
@@ -100,7 +96,7 @@ const UserGroupRefScopeList: React.FC<UserGroupScopeListProps> = ({
   }
 
   if (error) {
-    return <PageError message={error.message} onClick={refetch as any} />
+    return <PageError message={getRBACErrorMessage(error)} onClick={refetch as any} />
   }
 
   return scopeListResponse && scopeListResponse?.length ? (

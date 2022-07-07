@@ -1,0 +1,106 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Queue Step View Test snapshot test 1`] = `
+<div>
+  <div
+    class="tabs"
+  >
+    <div
+      class="bp3-tabs Tabs--main Tabs--horizontal"
+    >
+      <div
+        class="bp3-tab-list"
+        role="tablist"
+      >
+        <div
+          class="bp3-tab-indicator-wrapper"
+          style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
+        >
+          <div
+            class="bp3-tab-indicator"
+          />
+        </div>
+        <div
+          aria-controls="bp3-tab-panel_step-details_QUEUED_EXECUTIONS"
+          aria-disabled="false"
+          aria-expanded="true"
+          aria-selected="true"
+          class="bp3-tab"
+          data-tab-id="QUEUED_EXECUTIONS"
+          id="bp3-tab-title_step-details_QUEUED_EXECUTIONS"
+          role="tab"
+          tabindex="0"
+        >
+          pipeline.queueStep.queuedExecutions
+        </div>
+        <div
+          aria-controls="bp3-tab-panel_step-details_STEP_DETAILS"
+          aria-disabled="false"
+          aria-expanded="false"
+          aria-selected="false"
+          class="bp3-tab"
+          data-tab-id="STEP_DETAILS"
+          id="bp3-tab-title_step-details_STEP_DETAILS"
+          role="tab"
+          tabindex="0"
+        >
+          details
+        </div>
+        <div
+          aria-controls="bp3-tab-panel_step-details_INPUT"
+          aria-disabled="false"
+          aria-expanded="false"
+          aria-selected="false"
+          class="bp3-tab"
+          data-tab-id="INPUT"
+          id="bp3-tab-title_step-details_INPUT"
+          role="tab"
+          tabindex="0"
+        >
+          common.input
+        </div>
+        <div
+          aria-controls="bp3-tab-panel_step-details_OUTPUT"
+          aria-disabled="false"
+          aria-expanded="false"
+          aria-selected="false"
+          class="bp3-tab"
+          data-tab-id="OUTPUT"
+          id="bp3-tab-title_step-details_OUTPUT"
+          role="tab"
+          tabindex="0"
+        >
+          outputLabel
+        </div>
+      </div>
+      <div
+        aria-hidden="false"
+        aria-labelledby="bp3-tab-title_step-details_QUEUED_EXECUTIONS"
+        class="bp3-tab-panel"
+        id="bp3-tab-panel_step-details_QUEUED_EXECUTIONS"
+        role="tabpanel"
+      >
+        <div
+          class="detailsTab"
+        >
+          <div
+            class="header"
+          >
+            <span
+              class="headerLabel"
+            >
+              pipeline.queueStep.queuedByResourceKey
+            </span>
+             
+          </div>
+          <section
+            class="contentSection"
+          >
+            No Executions
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -12,8 +12,8 @@ import { TestWrapper } from '@common/utils/testUtils'
 import TokenDelegatesList from '../modals/TokenDelegatesList'
 import { delegateGroupsMock } from '../../../pages/delegates/__tests__/DelegateGroupsMock'
 
-jest.mock('services/portal', () => ({
-  useGetDelegatesByToken: jest.fn().mockImplementation(() => ({
+jest.mock('services/cd-ng', () => ({
+  useGetDelegateGroupsUsingToken: jest.fn().mockImplementation(() => ({
     data: {
       resource: {
         delegateGroupDetails: delegateGroupsMock

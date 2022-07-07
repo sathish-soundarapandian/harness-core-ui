@@ -28,7 +28,7 @@ import css from './GitSyncForm.module.scss'
 
 export interface GitSyncFormFields {
   identifier?: string
-  connectorRef?: ConnectorSelectedValue
+  connectorRef?: ConnectorSelectedValue | string
   repo?: string
   branch?: string
   filePath?: string
@@ -81,6 +81,11 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
     setErrorResponse([])
   }, [formikProps.values.connectorRef])
 
+  const formikConnectorRef =
+    typeof formikProps.values.connectorRef === 'string'
+      ? formikProps.values.connectorRef
+      : formikProps.values.connectorRef?.value
+
   return (
     <Container padding={{ top: 'large' }} className={css.gitSyncForm}>
       <Layout.Horizontal>
@@ -114,7 +119,7 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
 
           <RepositorySelect
             formikProps={formikProps}
-            connectorRef={formikProps.values.connectorRef?.value || connectorRef}
+            connectorRef={formikConnectorRef || connectorRef}
             onChange={() => {
               if (errorResponse?.length === 0) {
                 formikProps.setFieldValue?.('branch', '')
@@ -125,7 +130,7 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
             setErrorResponse={setErrorResponse}
           />
           <RepoBranchSelectV2
-            connectorIdentifierRef={formikProps.values.connectorRef?.value || connectorRef}
+            connectorIdentifierRef={formikConnectorRef || connectorRef}
             repoName={formikProps?.values?.repo}
             onChange={(selected: SelectOption) => {
               // This is to handle auto fill after default selection, without it form validation will fail

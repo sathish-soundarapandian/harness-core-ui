@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { defaultTo, find, identity } from 'lodash-es'
+import { defaultTo, find, identity, isEmpty } from 'lodash-es'
 
 import { useParams } from 'react-router-dom'
 import { ButtonVariation, Text } from '@harness/uicore'
@@ -31,11 +31,18 @@ import type { StoreType } from '@common/constants/GitSyncTypes'
 import css from './ExecutionStageDetailsHeader.module.scss'
 
 export function ExecutionStageDetailsHeader(): React.ReactElement {
-  const { selectedStageId, pipelineStagesMap, refetch, pipelineExecutionDetail, allNodeMap } = useExecutionContext()
+  const { selectedStageId, pipelineStagesMap, refetch, pipelineExecutionDetail, allNodeMap, selectedStageExecutionId } =
+    useExecutionContext()
   const { orgIdentifier, projectIdentifier, executionIdentifier, accountId, pipelineIdentifier, module, source } =
     useParams<PipelineType<ExecutionPathProps>>()
+
   const { isGitSyncEnabled } = useAppStore()
-  const stage = pipelineStagesMap.get(selectedStageId)
+  const getNodeId =
+    selectedStageExecutionId !== selectedStageId && !isEmpty(selectedStageExecutionId)
+      ? selectedStageExecutionId
+      : selectedStageId
+
+  const stage = pipelineStagesMap.get(getNodeId)
   const stageDetail = factory.getStageDetails(stage?.nodeType as StageType)
   const shouldShowError = isExecutionFailed(stage?.status)
   const responseMessages = defaultTo(
@@ -65,7 +72,7 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
     },
     [orgIdentifier, projectIdentifier, accountId, pipelineIdentifier]
   )
-  const stageNode = find(allNodeMap, node => node.setupId === selectedStageId)
+  const stageNode = find(allNodeMap, node => node.setupId === getNodeId)
 
   const times = (
     <div className={css.times}>

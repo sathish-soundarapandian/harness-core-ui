@@ -68,7 +68,7 @@ describe('DeployServiceDefinition', () => {
   })
   test('Checking on the gitops without manifest data (no dialogue expected)', async () => {
     const { getByText } = renderFunction(pipelineMockData)
-    const gitOpsElement = getByText('Gitops') as HTMLElement
+    const gitOpsElement = getByText('common.gitOps') as HTMLElement
     expect(gitOpsElement).toBeTruthy()
     fireEvent.click(gitOpsElement)
     await waitFor(() => expect(pipelineMockData.updatePipeline).toHaveBeenCalled(), { timeout: 3000 })
@@ -85,7 +85,7 @@ describe('DeployServiceDefinition', () => {
     const pipelineMockDataWithManifest = getContextValue(mockStageReturnWithManifest)
     const { container, getByText } = renderFunction(pipelineMockDataWithManifest)
     expect(container).toMatchSnapshot()
-    const gitOpsElement = getByText('Gitops') as HTMLElement
+    const gitOpsElement = getByText('common.gitOps') as HTMLElement
     expect(gitOpsElement).toBeTruthy()
     fireEvent.click(gitOpsElement)
     const form = findDialogContainer() as HTMLElement

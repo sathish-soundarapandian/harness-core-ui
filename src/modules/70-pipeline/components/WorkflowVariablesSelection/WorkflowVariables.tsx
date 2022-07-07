@@ -19,7 +19,7 @@ import type {
 } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableEditable'
 
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import type { StageElementConfig, StageElementWrapperConfig } from 'services/cd-ng'
+import type { StageElementConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import type { AbstractStepFactory } from '../AbstractSteps/AbstractStepFactory'
 import { getFlattenedStages, getStageIndexFromPipeline } from '../PipelineStudio/StageBuilder/StageBuilderUtil'
 import { StepViewType } from '../AbstractSteps/Step'

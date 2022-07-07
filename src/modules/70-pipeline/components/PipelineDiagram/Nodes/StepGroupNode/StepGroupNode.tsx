@@ -17,6 +17,7 @@ import StepGroupGraph from '../StepGroupGraph/StepGroupGraph'
 import { NodeType } from '../../types'
 import SVGMarker from '../SVGMarker'
 import { getPositionOfAddIcon } from '../utils'
+import { NodeDimensionProvider } from '../NodeDimensionStore'
 import css from './StepGroupNode.module.scss'
 import defaultCss from '../DefaultNode/DefaultNode.module.scss'
 
@@ -34,6 +35,7 @@ export function StepGroupNode(props: any): JSX.Element {
     const stepType = get(step, 'step.type')
     return stepType === 'STEP_GROUP'
   })
+
   const isNestedStepGroup = Boolean(get(props, 'data.step.data.isNestedGroup'))
 
   React.useEffect(() => {
@@ -171,13 +173,15 @@ export function StepGroupNode(props: any): JSX.Element {
               </Layout.Horizontal>
             </div>
             <div className={css.stepGroupBody}>
-              <StepGroupGraph
-                {...props}
-                data={stepsData}
-                isNodeCollapsed={isNodeCollapsed}
-                parentIdentifier={props?.identifier}
-                hideLinks={props?.identifier === STATIC_SERVICE_GROUP_NAME}
-              />
+              <NodeDimensionProvider>
+                <StepGroupGraph
+                  {...props}
+                  data={stepsData}
+                  isNodeCollapsed={isNodeCollapsed}
+                  parentIdentifier={props?.identifier}
+                  hideLinks={props?.identifier === STATIC_SERVICE_GROUP_NAME}
+                />
+              </NodeDimensionProvider>
             </div>
             {!props.readonly && props?.identifier !== STATIC_SERVICE_GROUP_NAME && (
               <Button

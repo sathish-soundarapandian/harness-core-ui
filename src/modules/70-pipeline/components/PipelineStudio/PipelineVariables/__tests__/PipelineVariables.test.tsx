@@ -20,7 +20,7 @@ import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mo
 import { Scope } from '@common/interfaces/SecretsInterface'
 import * as PipelineCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/PipelineCard'
 import * as StageCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/StageCard'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useCreateVariablesV2 } from 'services/pipeline-ng'
 import { useGetYamlWithTemplateRefsResolved } from 'services/template-ng'
 

@@ -58,7 +58,15 @@ const styles: React.CSSProperties = {
 
 export default function ExecutionGraphView(): React.ReactElement {
   const { replaceQueryParams } = useUpdateQueryParams<ExecutionPageQueryParams>()
-  const { allNodeMap, pipelineStagesMap, selectedStageId, queryParams, setSelectedStepId } = useExecutionContext()
+  const {
+    allNodeMap,
+    pipelineStagesMap,
+    selectedStageId,
+    selectedStageExecutionId,
+    queryParams,
+    setSelectedStepId,
+    setSelectedStageExecutionId
+  } = useExecutionContext()
 
   function handleStepSelection(step?: string): void {
     if (!step) {
@@ -80,6 +88,7 @@ export default function ExecutionGraphView(): React.ReactElement {
       const params = {
         ...queryParams,
         stage: selectedStageId,
+        ...(selectedStageExecutionId && { stageExecId: selectedStageExecutionId }),
         step
       }
 
@@ -87,8 +96,12 @@ export default function ExecutionGraphView(): React.ReactElement {
     }
   }
 
-  function handleStageSelection(stage: string): void {
+  function handleStageSelection(stage: string, stageExecId?: string): void {
     const selectedStage = pipelineStagesMap.get(stage)
+
+    if (!stageExecId) {
+      setSelectedStageExecutionId('')
+    }
 
     if (isExecutionNotStarted(selectedStage?.status) || isExecutionSkipped(selectedStage?.status)) {
       return
@@ -96,7 +109,8 @@ export default function ExecutionGraphView(): React.ReactElement {
 
     const params = {
       ...queryParams,
-      stage
+      stage,
+      stageExecId
     }
 
     delete params.step
@@ -161,8 +175,7 @@ export default function ExecutionGraphView(): React.ReactElement {
   if (layoutState === ExecutionLayoutState.RIGHT) {
     Object.assign(stageGraphPaneStyles, {
       position: 'sticky',
-      top: 'var(--execution-stage-details-height)',
-      heigth: 'min-content'
+      top: 'var(--execution-stage-details-height)'
     })
   } else if (layoutState === ExecutionLayoutState.BOTTOM) {
     stageGraphPaneStyles = {

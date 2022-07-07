@@ -13,6 +13,15 @@ interface EmailProps {
   emailSeparator?: string
 }
 
+export interface NameIdDescriptionTagsType {
+  identifier: string
+  name: string
+  description?: string
+  tags?: {
+    [key: string]: string
+  }
+}
+
 export function NameSchemaWithoutHook(
   getString: UseStringsReturn['getString'],
   config?: { requiredErrorMsg?: string }

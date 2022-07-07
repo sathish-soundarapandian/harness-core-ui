@@ -25,9 +25,7 @@ import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { StageType } from '@pipeline/utils/stageHelpers'
-
 import DeployServiceErrors from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceErrors'
-
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 
 export default function DeployEnvSpecifications(props: PropsWithChildren<unknown>): JSX.Element {
@@ -118,6 +116,10 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
             onUpdate={val => updateEnvStep(val)}
             factory={factory}
             stepViewType={StepViewType.Edit}
+            customStepProps={{
+              getString: getString,
+              serviceRef: stage?.stage?.spec?.service?.serviceRef
+            }}
           />
         </Card>
         <Container margin={{ top: 'xxlarge' }}>{props.children}</Container>

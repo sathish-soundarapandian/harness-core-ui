@@ -87,7 +87,7 @@ export default function ManifestSelection({
 
   useDeepCompareEffect(() => {
     refetchConnectorList()
-  }, [stage, listOfManifests])
+  }, [listOfManifests])
 
   const isGitOpsEnabled = useMemo(() => {
     if (isReadonlyServiceMode) {

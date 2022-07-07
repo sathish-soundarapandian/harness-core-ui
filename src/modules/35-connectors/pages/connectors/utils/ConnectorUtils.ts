@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { pick, isString } from 'lodash-es'
+import { pick, isString, get } from 'lodash-es'
 import type { IconName, StepProps } from '@wings-software/uicore'
 import { Connectors, EntityTypes } from '@connectors/constants'
 import type {
@@ -180,6 +180,9 @@ export const useGetHelpPanel = (refernceId: string, width: number) => {
 }
 const getGitAuthSpec = (formData: FormData) => {
   const { authType = '' } = formData
+  const oAuthAccessTokenRef = formData.oAuthAccessTokenRef || get(formData, 'spec.authentication.spec.spec.tokenRef')
+  const oAuthRefreshTokenRef =
+    formData.oAuthRefreshTokenRef || get(formData, 'spec.authentication.spec.spec.refreshTokenRef')
   switch (authType) {
     case GitAuthTypes.USER_PASSWORD:
       return {
@@ -197,6 +200,26 @@ const getGitAuthSpec = (formData: FormData) => {
       return {
         kerberosKeyRef: formData.kerberosKey.referenceString
       }
+    case GitAuthTypes.OAUTH:
+      return {
+        tokenRef: oAuthAccessTokenRef,
+        ...(oAuthRefreshTokenRef && {
+          refreshTokenRef: oAuthRefreshTokenRef
+        })
+      }
+    default:
+      return {}
+  }
+}
+
+const getGitApiAccessSpec = (formData: FormData): Record<string, any> => {
+  const { authType = '' } = formData
+  switch (authType) {
+    case GitAuthTypes.OAUTH:
+      return getGitAuthSpec(formData)
+    case GitAuthTypes.USER_PASSWORD:
+    case GitAuthTypes.USER_TOKEN:
+    case GitAuthTypes.KERBEROS:
     default:
       return {}
   }
@@ -227,13 +250,18 @@ export const buildGithubPayload = (formData: FormData) => {
                 spec: getGitAuthSpec(formData)
               }
       },
-      apiAccess: { type: formData.apiAuthType, spec: {} }
+      apiAccess: {
+        type: formData.authType === GitAuthTypes.OAUTH ? GitAuthTypes.OAUTH : formData.apiAuthType,
+        spec: {}
+      }
     }
   }
 
   if (formData.enableAPIAccess) {
     savedData.spec.apiAccess.spec =
-      formData.apiAuthType === GitAPIAuthTypes.TOKEN
+      formData.authType === GitAuthTypes.OAUTH
+        ? getGitApiAccessSpec(formData)
+        : formData.apiAuthType === GitAPIAuthTypes.TOKEN
         ? {
             tokenRef: formData.apiAccessToken.referenceString
           }
@@ -2127,6 +2155,8 @@ export const getUrlValueByType = (type: ConnectorInfoDTO['type'], connector: Con
       return connector.spec.credential.spec?.masterUrl
     case Connectors.DOCKER:
       return connector.spec.dockerRegistryUrl
+    case Connectors.JENKINS:
+      return connector.spec.jenkinsUrl
     case Connectors.NEXUS:
       return connector.spec.nexusServerUrl
 

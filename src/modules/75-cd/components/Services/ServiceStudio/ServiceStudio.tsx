@@ -16,6 +16,7 @@ import { ServiceContextProvider } from '@cd/context/ServiceContext'
 import ServiceDetailsSummary from '@cd/components/ServiceDetails/ServiceDetailsContent/ServiceDetailsSummary'
 import EntitySetupUsage from '@common/pages/entityUsage/EntityUsage'
 import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { EntityType } from '@common/pages/entityUsage/EntityConstants'
 import ServiceConfigurationWrapper from './ServiceConfigWrapper/ServiceConfigWrapper'
 
 function ServiceStudio(): React.ReactElement | null {
@@ -49,7 +50,7 @@ function ServiceStudio(): React.ReactElement | null {
       >
         <ServiceConfigurationWrapper
           summaryPanel={<ServiceDetailsSummary />}
-          refercedByPanel={<EntitySetupUsage entityType="Service" entityIdentifier={serviceId} />}
+          refercedByPanel={<EntitySetupUsage entityType={EntityType.Service} entityIdentifier={serviceId} />}
         />
       </ServiceContextProvider>
     </Layout.Vertical>

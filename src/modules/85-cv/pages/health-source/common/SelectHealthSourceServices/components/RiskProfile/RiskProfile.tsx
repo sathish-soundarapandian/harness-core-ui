@@ -7,7 +7,7 @@
 
 import React, { useEffect, useMemo } from 'react'
 import { Classes } from '@blueprintjs/core'
-import { Container, FormInput, SelectOption, Text } from '@wings-software/uicore'
+import { Container, FormInput, Label, MultiTypeInputType, SelectOption, Text } from '@wings-software/uicore'
 import { useToaster } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import type { useGetMetricPacks, useGetLabelNames } from 'services/cv'
@@ -23,10 +23,20 @@ interface RiskProfileProps {
   continuousVerificationEnabled?: boolean
   serviceInstance?: string
   riskCategory?: string
+  isTemplate?: boolean
+  expressions?: string[]
 }
 
 export function RiskProfile(props: RiskProfileProps): JSX.Element {
-  const { metricPackResponse, labelNamesResponse, continuousVerificationEnabled, serviceInstance, riskCategory } = props
+  const {
+    metricPackResponse,
+    labelNamesResponse,
+    continuousVerificationEnabled,
+    serviceInstance,
+    riskCategory,
+    isTemplate,
+    expressions
+  } = props
   const { error, loading, data } = metricPackResponse
   const { getString } = useStrings()
   const { showError, clear } = useToaster()
@@ -70,6 +80,16 @@ export function RiskProfile(props: RiskProfileProps): JSX.Element {
         key={riskCategory}
       />
     )
+  } else if (isTemplate && !metricPackOptions?.length) {
+    metricPackContent = (
+      <FormInput.MultiTextInput
+        label={getString('cv.monitoringSources.riskCategoryLabel')}
+        name={FieldNames.RISK_CATEGORY}
+        key={riskCategory}
+        multiTextInputProps={{ allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME] }}
+        placeholder={getString('cv.monitoringSources.riskCategoryTemplateNote')}
+      />
+    )
   }
 
   return (
@@ -87,12 +107,29 @@ export function RiskProfile(props: RiskProfileProps): JSX.Element {
         />
       </Container>
       {continuousVerificationEnabled ? (
-        <FormInput.Select
-          name={FieldNames.SERVICE_INSTANCE}
-          label={<ServiceInstanceLabel />}
-          items={transformedLabelNames}
-          value={serviceInstance ? { label: serviceInstance, value: serviceInstance } : undefined}
-        />
+        isTemplate ? (
+          <>
+            <Label>
+              <ServiceInstanceLabel />
+            </Label>
+            <FormInput.MultiTypeInput
+              label=""
+              name={FieldNames.SERVICE_INSTANCE}
+              selectItems={transformedLabelNames}
+              multiTypeInputProps={{
+                expressions,
+                value: serviceInstance ? { label: serviceInstance, value: serviceInstance } : undefined
+              }}
+            />
+          </>
+        ) : (
+          <FormInput.Select
+            name={FieldNames.SERVICE_INSTANCE}
+            label={<ServiceInstanceLabel />}
+            items={transformedLabelNames}
+            value={serviceInstance ? { label: serviceInstance, value: serviceInstance } : undefined}
+          />
+        )
       ) : null}
     </Container>
   )

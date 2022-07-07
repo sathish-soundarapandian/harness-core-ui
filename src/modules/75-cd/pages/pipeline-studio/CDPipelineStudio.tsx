@@ -23,12 +23,11 @@ import { PipelineProvider } from '@pipeline/components/PipelineStudio/PipelineCo
 import { PipelineStudio } from '@pipeline/components/PipelineStudio/PipelineStudio'
 import { getCDTrialDialog } from '@cd/modals/CDTrial/useCDTrialModal'
 import { TrialType } from '@pipeline/components/TrialModalTemplate/trialModalUtils'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { FeatureFlag } from '@common/featureFlags'
 import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
-import { useTemplateSelector } from '@templates-library/hooks/useTemplateSelector'
 import css from './CDPipelineStudio.module.scss'
 
 const CDPipelineStudio: React.FC = (): JSX.Element => {
@@ -77,7 +76,6 @@ const CDPipelineStudio: React.FC = (): JSX.Element => {
   const isSTOEnabled = useFeatureFlag(FeatureFlag.SECURITY_STAGE)
   const isCustomStageEnabled = useFeatureFlag(FeatureFlag.NG_CUSTOM_STAGE)
   const { getString } = useStrings()
-  const { getTemplate } = useTemplateSelector()
 
   return (
     <PipelineProvider
@@ -98,7 +96,6 @@ const CDPipelineStudio: React.FC = (): JSX.Element => {
       }
       stepsFactory={factory}
       runPipeline={handleRunPipeline}
-      getTemplate={getTemplate}
     >
       <PipelineStudio
         className={css.container}

@@ -21,6 +21,7 @@ export default function SelectHealthSourceServices({
   hideCV,
   hideSLIAndHealthScore,
   isTemplate,
+  expressions,
   showOnlySLI = false
 }: SelectHealthSourceServicesProps): JSX.Element {
   const { getString } = useStrings()
@@ -47,7 +48,7 @@ export default function SelectHealthSourceServices({
             name={HealthSourceServices.CONTINUOUS_VERIFICATION}
           />
         ) : null}
-        {isTemplate && values.continuousVerification && (
+        {isTemplate && values.continuousVerification && Boolean(labelNamesResponse) === false && (
           <FormInput.MultiTextInput
             name={'serviceInstanceMetricPath'}
             label="ServiceInstanceLabel"
@@ -59,6 +60,8 @@ export default function SelectHealthSourceServices({
       </Container>
       {(continuousVerification || healthScore) && (
         <RiskProfile
+          isTemplate={isTemplate}
+          expressions={expressions}
           metricPackResponse={metricPackResponse}
           labelNamesResponse={labelNamesResponse}
           continuousVerificationEnabled={continuousVerification && !hideServiceIdentifier}

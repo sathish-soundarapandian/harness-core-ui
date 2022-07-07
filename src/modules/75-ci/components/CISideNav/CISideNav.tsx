@@ -96,11 +96,25 @@ export default function CISideNav(): React.ReactElement {
     }
   }, [fetchPipelinesData])
 
+  useEffect(() => {
+    if (showGetStartedTabInMainMenu) {
+      history.replace(
+        routes.toGetStartedWithCI({
+          projectIdentifier,
+          orgIdentifier,
+          accountId,
+          module
+        })
+      )
+    }
+  }, [showGetStartedTabInMainMenu, history, module, accountId, orgIdentifier, projectIdentifier])
+
   return (
     <Layout.Vertical spacing="small">
       <ProjectSelector
         moduleFilter={ModuleName.CI}
         onSelect={data => {
+          setShowGetStartedTabInMainMenu(false)
           updateAppStore({ selectedProject: data })
           if (connectorId) {
             history.push(
@@ -166,14 +180,24 @@ export default function CISideNav(): React.ReactElement {
               })
             )
           } else if (projectIdentifier && !pipelineIdentifier) {
-            // changing project
-            history.push(
-              compile(routeMatch.path)({
-                ...routeMatch.params,
-                projectIdentifier: data.identifier,
-                orgIdentifier: data.orgIdentifier
-              })
-            )
+            if (!showGetStartedTabInMainMenu) {
+              history.push(
+                compile(routeMatch.path)({
+                  ...routeMatch.params,
+                  projectIdentifier: data.identifier,
+                  orgIdentifier: data.orgIdentifier
+                })
+              )
+            } else {
+              history.push(
+                routes.toDeployments({
+                  projectIdentifier: data.identifier,
+                  orgIdentifier: data.orgIdentifier as string,
+                  accountId,
+                  module
+                })
+              )
+            }
           } else {
             // when it's on trial page, forward to pipeline
             if (experience) {
@@ -209,9 +233,13 @@ export default function CISideNav(): React.ReactElement {
           {!showGetStartedTabInMainMenu && CI_OVERVIEW_PAGE && (
             <SidebarLink label={getString('overview')} to={routes.toProjectOverview({ ...params, module })} />
           )}
-          <SidebarLink label="Builds" to={routes.toDeployments({ ...params, module })} />
-          <SidebarLink label="Pipelines" to={routes.toPipelines({ ...params, module })} />
-          <ProjectSetupMenu module={module} />
+          {!(fetchingPipelines || showGetStartedTabInMainMenu) && (
+            <>
+              <SidebarLink label={getString('buildsText')} to={routes.toDeployments({ ...params, module })} />
+              <SidebarLink label={getString('pipelines')} to={routes.toPipelines({ ...params, module })} />
+              <ProjectSetupMenu module={module} />
+            </>
+          )}
         </React.Fragment>
       ) : null}
     </Layout.Vertical>

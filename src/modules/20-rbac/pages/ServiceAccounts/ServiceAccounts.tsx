@@ -19,6 +19,7 @@ import ServiceAccountsListView from '@rbac/pages/ServiceAccounts/views/ServiceAc
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import ServiceAccountsEmptyState from './service-accounts-empty-state.png'
 import css from './ServiceAccounts.module.scss'
 
@@ -43,6 +44,7 @@ const ServiceAccountsPage: React.FC = () => {
 
   const { openServiceAccountModal } = useServiceAccountModal({ onSuccess: () => refetch() })
   const { openRoleAssignmentModal } = useRoleAssignmentModal({ onSuccess: refetch })
+  const { getRBACErrorMessage } = useRBACError()
 
   return (
     <>
@@ -81,7 +83,7 @@ const ServiceAccountsPage: React.FC = () => {
 
       <Page.Body
         loading={loading}
-        error={(error as any)?.data?.message || error?.message}
+        error={error ? getRBACErrorMessage(error) : ''}
         retryOnError={() => refetch()}
         noData={{
           when: () => !data?.data?.content?.length,

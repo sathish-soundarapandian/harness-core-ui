@@ -45,7 +45,6 @@ const usePatchFeatureFlag = ({
   const { projectIdentifier, orgIdentifier, accountId: accountIdentifier } = useParams<Record<string, string>>()
   const { activeEnvironment: environmentIdentifier } = useActiveEnvironment()
   const { handleError: handleGovernanceError, isGovernanceError } = useGovernance()
-
   const { handleResponseError } = useResponseError()
 
   const { getString } = useStrings()
@@ -166,14 +165,14 @@ const usePatchFeatureFlag = ({
     }
 
     // submit request
-    patch.feature.onPatchAvailable(async formData => {
-      saveWithGit(
+    patch.feature.onPatchAvailable(async patchInstructions => {
+      saveWithGit({
         featureFlagName,
         featureFlagIdentifier,
-        AUTO_COMMIT_MESSAGES.UPDATED_FLAG_TARGETING,
-        formData,
-        handleSave
-      )
+        autoCommitMessage: AUTO_COMMIT_MESSAGES.UPDATED_FLAG_TARGETING,
+        patchInstructions,
+        onSave: handleSave
+      })
     })
   }
   return {

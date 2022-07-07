@@ -13,14 +13,38 @@ import type { AllNGVariables, Pipeline } from '@pipeline/utils/types'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import type { FeaturesProps } from 'framework/featureStore/featureStoreUtil'
 import type { UseStringsReturn } from 'framework/strings'
-import type { PipelineInfoConfig, StageElementWrapperConfig } from 'services/cd-ng'
-import type { InputSetErrorResponse } from 'services/pipeline-ng'
+import type {
+  InputSetErrorResponse,
+  PipelineInfoConfig,
+  StageElementConfig,
+  StageElementWrapperConfig
+} from 'services/pipeline-ng'
+import {
+  INPUT_EXPRESSION_REGEX_STRING,
+  isExecionInput
+} from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 
 export interface MergeStageProps {
   stage: StageElementWrapperConfig
   inputSetPortion: Pipeline
   allValues: Pipeline
   shouldUseDefaultValues: boolean
+}
+
+/**
+ * Loops over the pipeline and clears all the runtime inputs i.e. <+input>
+ * expect for execution time inputs i.e. <+input>.executionInput()
+ */
+export function clearRuntimeInput<T = PipelineInfoConfig>(template: T, shouldAlsoClearRuntimeInputs?: boolean): T {
+  const INPUT_EXPRESSION_REGEX = new RegExp(`"${INPUT_EXPRESSION_REGEX_STRING}"`, 'g')
+  return JSON.parse(
+    JSON.stringify(template || {}).replace(
+      new RegExp(`"${INPUT_EXPRESSION_REGEX.source.slice(1).slice(0, -1)}"`, 'g'),
+      value => {
+        return isExecionInput(value) && !shouldAlsoClearRuntimeInputs ? value : '""'
+      }
+    )
+  )
 }
 
 function mergeStage(props: MergeStageProps): StageElementWrapperConfig {
@@ -30,15 +54,27 @@ function mergeStage(props: MergeStageProps): StageElementWrapperConfig {
   const matchedStageInAllValues = getStageFromPipeline(stageIdToBeMatched, allValues.pipeline)
 
   if (matchedStageInInputSet.stage) {
+    const variables = stage.stage?.template
+      ? (stage.stage.template.templateInputs as StageElementConfig).variables
+      : stage?.stage?.variables
+    const inputSetVariables = matchedStageInInputSet.stage?.stage?.template
+      ? (matchedStageInInputSet.stage.stage.template.templateInputs as StageElementConfig).variables
+      : matchedStageInInputSet.stage?.stage?.variables
     let updatedStageVars = []
-    if (stage?.stage?.variables && matchedStageInInputSet?.stage?.stage?.variables) {
+    if (variables && inputSetVariables) {
       updatedStageVars = getMergedVariables({
-        variables: defaultTo(stage?.stage?.variables, []) as AllNGVariables[],
-        inputSetVariables: defaultTo(matchedStageInInputSet.stage.stage?.variables, []) as AllNGVariables[],
+        variables: defaultTo(variables, []) as AllNGVariables[],
+        inputSetVariables: defaultTo(inputSetVariables, []) as AllNGVariables[],
         allVariables: defaultTo(matchedStageInAllValues.stage?.stage?.variables, []) as AllNGVariables[],
         shouldUseDefaultValues
       })
-      matchedStageInInputSet.stage.stage.variables = updatedStageVars
+      set(
+        matchedStageInInputSet,
+        matchedStageInInputSet.stage.stage?.template
+          ? 'stage.stage.template.templateInputs.variables'
+          : 'stage.stage.variables',
+        updatedStageVars
+      )
     }
     return matchedStageInInputSet.stage
   }
@@ -111,10 +147,7 @@ export const mergeTemplateWithInputSetData = (props: MergeTemplateWithInputSetDa
             (inputSetPortion.pipeline?.template?.templateInputs as PipelineInfoConfig)?.variables,
             []
           ) as AllNGVariables[],
-          allVariables: defaultTo(
-            (allValues.pipeline?.template?.templateInputs as PipelineInfoConfig)?.variables,
-            []
-          ) as AllNGVariables[],
+          allVariables: defaultTo(allValues.pipeline?.variables, []) as AllNGVariables[],
           shouldUseDefaultValues
         })
       )

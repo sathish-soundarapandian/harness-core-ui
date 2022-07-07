@@ -6,8 +6,7 @@
  */
 
 import React from 'react'
-import { render, waitFor, queryByText, fireEvent } from '@testing-library/react'
-import { Formik } from '@wings-software/uicore'
+import { render, waitFor, queryByText, fireEvent, act, findByText } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { useGetListOfBranchesByRefConnectorV2 } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
@@ -38,6 +37,8 @@ const pathParams = {
   pipelineIdentifier: '-1'
 }
 
+const setErrorResponse = jest.fn()
+const branchChangehandler = jest.fn()
 const fetchBranches = jest.fn(() => Promise.resolve(mockBranches))
 
 jest.mock('services/cd-ng', () => ({
@@ -49,6 +50,9 @@ jest.mock('services/cd-ng', () => ({
 describe('RepoBranchSelectV2 test', () => {
   afterEach(() => {
     fetchBranches.mockReset()
+    ;(useGetListOfBranchesByRefConnectorV2 as jest.Mock).mockImplementation(() => {
+      return { data: mockBranches, refetch: fetchBranches, error: null, loading: false }
+    })
   })
 
   test('default rendering RepoBranchSelectV2', async () => {
@@ -66,9 +70,7 @@ describe('RepoBranchSelectV2 test', () => {
   test('rendering RepoBranchSelectV2 as disabled and no label as used in saveToGitForm for target branch selection', async () => {
     const { container } = render(
       <TestWrapper path={testPath} pathParams={pathParams}>
-        <Formik onSubmit={jest.fn()} formName={''} initialValues={undefined}>
-          <RepoBranchSelectV2 connectorIdentifierRef="connectorId" repoName="repoName" disabled={true} noLabel={true} />
-        </Formik>
+        <RepoBranchSelectV2 connectorIdentifierRef="connectorId" repoName="repoName" disabled={true} noLabel={true} />
       </TestWrapper>
     )
 
@@ -79,9 +81,7 @@ describe('RepoBranchSelectV2 test', () => {
   test('Branch list api called only if connectorRef and repoName are provided and field is not disabled', () => {
     render(
       <TestWrapper path={testPath} pathParams={pathParams}>
-        <Formik onSubmit={jest.fn()} formName={''} initialValues={undefined}>
-          <RepoBranchSelectV2 connectorIdentifierRef="connectorId" repoName="repoName" disabled={true} />
-        </Formik>
+        <RepoBranchSelectV2 connectorIdentifierRef="connectorId" repoName="repoName" disabled={true} />
       </TestWrapper>
     )
 
@@ -89,9 +89,7 @@ describe('RepoBranchSelectV2 test', () => {
 
     render(
       <TestWrapper path={testPath} pathParams={pathParams}>
-        <Formik onSubmit={jest.fn()} formName={''} initialValues={undefined}>
-          <RepoBranchSelectV2 repoName="repoName" disabled={false} />
-        </Formik>
+        <RepoBranchSelectV2 repoName="repoName" disabled={false} />
       </TestWrapper>
     )
 
@@ -99,9 +97,7 @@ describe('RepoBranchSelectV2 test', () => {
 
     render(
       <TestWrapper path={testPath} pathParams={pathParams}>
-        <Formik onSubmit={jest.fn()} formName={''} initialValues={undefined}>
-          <RepoBranchSelectV2 connectorIdentifierRef="connectorId" disabled={false} />
-        </Formik>
+        <RepoBranchSelectV2 connectorIdentifierRef="connectorId" disabled={false} />
       </TestWrapper>
     )
 
@@ -109,9 +105,7 @@ describe('RepoBranchSelectV2 test', () => {
 
     render(
       <TestWrapper path={testPath} pathParams={pathParams}>
-        <Formik onSubmit={jest.fn()} formName={''} initialValues={undefined}>
-          <RepoBranchSelectV2 connectorIdentifierRef="connectorId" repoName="repoName" disabled={false} />
-        </Formik>
+        <RepoBranchSelectV2 connectorIdentifierRef="connectorId" repoName="repoName" disabled={false} />
       </TestWrapper>
     )
 
@@ -132,9 +126,7 @@ describe('RepoBranchSelectV2 test', () => {
 
     const { container, getByText } = render(
       <TestWrapper path={testPath} pathParams={pathParams}>
-        <Formik onSubmit={jest.fn()} formName={''} initialValues={undefined}>
-          <RepoBranchSelectV2 connectorIdentifierRef="connectorId" repoName="repoName" disabled={false} />
-        </Formik>
+        <RepoBranchSelectV2 connectorIdentifierRef="connectorId" repoName="repoName" disabled={false} />
       </TestWrapper>
     )
 
@@ -147,5 +139,119 @@ describe('RepoBranchSelectV2 test', () => {
     fireEvent.click(refreshButton)
 
     expect(fetchBranches).toBeCalledTimes(2)
+  })
+
+  test('Changing branch will call onchange handler with the selected value and defaultSelected boolean', async () => {
+    const { container, getByText } = render(
+      <TestWrapper path={testPath} pathParams={pathParams}>
+        <RepoBranchSelectV2
+          connectorIdentifierRef="connectorId"
+          repoName="repoName"
+          disabled={false}
+          onChange={branchChangehandler}
+        />
+      </TestWrapper>
+    )
+
+    // test defaultSelected = true
+    expect(branchChangehandler).toHaveBeenLastCalledWith({ label: 'main', value: 'main' }, true)
+
+    const dropdown = container.querySelector('[data-icon="chevron-down"]')?.parentElement as HTMLInputElement
+
+    act(() => {
+      fireEvent.click(dropdown)
+    })
+
+    await waitFor(() => {
+      expect(getByText('main')).toBeInTheDocument()
+      expect(getByText('main-demo')).toBeInTheDocument()
+      expect(getByText('main-patch')).toBeInTheDocument()
+      expect(getByText('main-patch2')).toBeInTheDocument()
+    })
+
+    const item = await findByText(document.body, 'main-patch')
+
+    act(() => {
+      fireEvent.click(item)
+    })
+
+    // test defaultSelected = false
+    await waitFor(() => {
+      expect(branchChangehandler).toHaveBeenLastCalledWith({ label: 'main-patch', value: 'main-patch' }, false)
+    })
+  })
+
+  describe('error experience', () => {
+    test('refetch button', () => {
+      const responseMessages = [
+        {
+          code: 'INVALID_REQUEST',
+          level: 'ERROR',
+          message: 'Invalid request.',
+          exception: null,
+          failureTypes: []
+        }
+      ]
+      ;(useGetListOfBranchesByRefConnectorV2 as jest.Mock).mockImplementation(() => ({
+        data: [],
+        refetch: fetchBranches,
+        error: {
+          data: {
+            responseMessages
+          }
+        },
+        loading: false
+      }))
+
+      const { getByText } = render(
+        <TestWrapper path={testPath} pathParams={pathParams}>
+          <RepoBranchSelectV2
+            connectorIdentifierRef="connectorId"
+            repoName="repoName"
+            disabled={false}
+            setErrorResponse={setErrorResponse}
+          />
+        </TestWrapper>
+      )
+
+      expect(setErrorResponse).toBeCalledTimes(1)
+      expect(getByText('refresh')).toBeInTheDocument()
+    })
+
+    test('error modal', () => {
+      const responseMessages = [
+        {
+          code: 'INVALID_REQUEST',
+          level: 'ERROR',
+          message: 'Invalid request.',
+          exception: null,
+          failureTypes: []
+        }
+      ]
+      ;(useGetListOfBranchesByRefConnectorV2 as jest.Mock).mockImplementation(() => ({
+        data: [],
+        refetch: fetchBranches,
+        error: {
+          data: {
+            responseMessages
+          }
+        },
+        loading: false
+      }))
+
+      const { getByText } = render(
+        <TestWrapper path={testPath} pathParams={pathParams}>
+          <RepoBranchSelectV2
+            connectorIdentifierRef="connectorId"
+            repoName="repoName"
+            disabled={false}
+            showErrorInModal
+          />
+        </TestWrapper>
+      )
+
+      expect(getByText('common.gitSync.branchFetchFailed')).toBeInTheDocument()
+      expect(getByText('Invalid request.')).toBeInTheDocument()
+    })
   })
 })

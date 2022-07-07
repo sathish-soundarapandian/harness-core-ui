@@ -92,11 +92,13 @@ const UnLinkedClstrsList = ({
 const SelectAllCheckBox = ({
   selectedClusters,
   unlinkedClusters,
-  setSelectedClusters
+  setSelectedClusters,
+  setLinkAll
 }: {
   selectedClusters: Cluster[]
   unlinkedClusters: Cluster[]
   setSelectedClusters: (arr: Cluster[]) => void
+  setLinkAll: (linkAll: boolean) => void
 }): React.ReactElement => {
   return (
     <Layout.Horizontal color={Color.GREY_700} className={css.listFooter}>
@@ -105,8 +107,10 @@ const SelectAllCheckBox = ({
         onClick={ev => {
           if (ev.currentTarget.checked) {
             setSelectedClusters(unlinkedClusters)
+            setLinkAll(true)
           } else {
             setSelectedClusters([])
+            setLinkAll(false)
           }
         }}
         className={css.checkBox}
@@ -175,7 +179,7 @@ const AddCluster = (props: AddClusterProps): React.ReactElement => {
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
   const [searching, setSearching] = useState(false)
-
+  const [linkAllClusters, setLinkAllClusters] = useState(false)
   const [submitting, setSubmitting] = React.useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
@@ -228,7 +232,9 @@ const AddCluster = (props: AddClusterProps): React.ReactElement => {
     // istanbul ignore else
     if (error) {
       /* istanbul ignore next */
-      showError((error as any)?.message)
+      setSearching(false)
+
+      showError(error)
     }
   }, [error])
 
@@ -244,7 +250,11 @@ const AddCluster = (props: AddClusterProps): React.ReactElement => {
         })),
         orgIdentifier,
         projectIdentifier,
-        accountId
+        accountId,
+        linkAllClusters
+      }
+      if (linkAllClusters) {
+        delete payload['clusters']
       }
       createCluster(payload, { queryParams: { accountIdentifier: accountId } })
         .then(() => {
@@ -256,7 +266,7 @@ const AddCluster = (props: AddClusterProps): React.ReactElement => {
         ///* istanbul ignore next */
         .catch(err => {
           /* istanbul ignore next */
-          showError(err?.message)
+          showError(err?.data?.message)
           /* istanbul ignore next */
           setSubmitting(false)
         })
@@ -294,7 +304,7 @@ const AddCluster = (props: AddClusterProps): React.ReactElement => {
         <Layout.Vertical>
           <Layout.Horizontal className={css.contentContainer} height={'339px'}>
             <div className={css.clusterList}>
-              {(fetching || submitting) && !searchTerm ? <PageSpinner /> : null}
+              {(fetching || submitting) && !searchTerm && !error ? <PageSpinner /> : null}
               {searching ? <Spinner /> : null}
               {!searching ? (
                 <>
@@ -309,6 +319,7 @@ const AddCluster = (props: AddClusterProps): React.ReactElement => {
                     unlinkedClusters={unlinkedClusters}
                     selectedClusters={selectedClusters}
                     setSelectedClusters={setSelectedClusters}
+                    setLinkAll={setLinkAllClusters}
                   />
                 </>
               ) : null}

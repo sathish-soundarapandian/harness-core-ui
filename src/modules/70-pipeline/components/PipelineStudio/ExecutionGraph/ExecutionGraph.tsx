@@ -801,30 +801,31 @@ function ExecutionGraphRef<T extends StageElementConfig>(
         return
       }
       // event.stopPropagation()
-      if (event.node?.identifier && event?.node?.data) {
-        if (event?.node?.data?.stepGroup && event?.destination?.parentIdentifier) {
-          showError(getString('stepGroupInAnotherStepGroup'), undefined, 'pipeline.setgroup.error')
-        } else {
-          const stepDetails = omit(event.node.data, [
-            'conditionalExecutionEnabled',
-            'graphType',
-            'isInComplete',
-            'isTemplateNode'
-          ])
-          const isRemove = removeStepOrGroup(state, event, undefined, newPipelineStudioEnabled)
-          if (isRemove) {
-            addStepOrGroup(
-              { ...event, node: { ...event?.destination } },
-              state.stepsData,
-              stepDetails,
-              false,
-              state.isRollback,
-              newPipelineStudioEnabled
-            )
-            updateStageWithNewData(state)
-          }
-        }
+      // if (event.node?.identifier && event?.node?.data) {
+      //   if (event?.node?.data?.stepGroup && event?.destination?.parentIdentifier) {
+      //     showError(getString('stepGroupInAnotherStepGroup'), undefined, 'pipeline.setgroup.error')
+      //   } else {
+      const stepDetails = omit(event.node.data, [
+        'conditionalExecutionEnabled',
+        'graphType',
+        'isInComplete',
+        'isTemplateNode'
+      ])
+      const isRemove = removeStepOrGroup(state, event, undefined, newPipelineStudioEnabled)
+      if (isRemove) {
+        addStepOrGroup(
+          { ...event, node: { ...event?.destination } },
+          state.stepsData,
+          stepDetails,
+          false,
+          state.isRollback,
+          newPipelineStudioEnabled
+        )
+        updateStageWithNewData(state)
       }
+      // }
+      // }
+      // }
     }
   }
 

@@ -56,7 +56,7 @@ interface AppProps {
 const Harness = (window.Harness = window.Harness || {})
 const PREVIEW_TOOLTIP_DATASET_KEY = 'previewTooltipDataset'
 
-const getRequestOptions = (): Partial<RequestInit> => {
+export const getRequestOptions = (): Partial<RequestInit> => {
   const token = SessionToken.getToken()
   const headers: RequestInit['headers'] = {}
 

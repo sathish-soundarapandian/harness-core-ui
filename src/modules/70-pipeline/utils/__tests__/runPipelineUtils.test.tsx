@@ -7,8 +7,11 @@
 
 import type { AllNGVariables, Pipeline } from '@pipeline/utils/types'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
-import { clearRuntimeInput } from '@pipeline/components/PipelineStudio/StepUtil'
-import { getFeaturePropsForRunPipelineButton, mergeTemplateWithInputSetData } from '../runPipelineUtils'
+import {
+  clearRuntimeInput,
+  getFeaturePropsForRunPipelineButton,
+  mergeTemplateWithInputSetData
+} from '../runPipelineUtils'
 import pipelineTemplate from './mockJson/pipelineTemplate.json'
 import pipelineInputSetPortion from './mockJson/pipelineInputSetPortion.json'
 
@@ -385,5 +388,84 @@ describe('getFeaturePropsForRunPipelineButton tests', () => {
         featureNames: []
       }
     })
+  })
+})
+describe('clearRuntimeInput tests', () => {
+  test('clearRuntimeInput clears all inputs except execution ones', () => {
+    expect(
+      clearRuntimeInput({
+        variables: [
+          { name: 'var1', type: 'String', value: '<+input>' },
+          { name: 'var2', type: 'String', value: '<+input>.allowedValues(1,2)' },
+          { name: 'var3', type: 'String', value: '<+input>.allowedValues(1,2).executionInput()' },
+          { name: 'var4', type: 'String', value: '<+input>.executionInput().allowedValues(1,2)' },
+          {
+            name: 'var5',
+            type: 'String',
+            value: '<+input>.allowedValues(jexl(${env.type} == “prod” ? aws1, aws2 : aws3, aws4))'
+          },
+          { name: 'var6', type: 'String', value: '<+input>.default(myDefaultValue)' },
+          { name: 'var7', type: 'String', value: '<+input>' },
+          { name: 'var8', type: 'String', value: '<+input>.executionInput()' },
+          { name: 'var9', type: 'String', value: '<+input>' },
+          { name: 'var10', type: 'String', value: '<+input>' }
+        ]
+      } as any)
+    ).toMatchInlineSnapshot(`
+      Object {
+        "variables": Array [
+          Object {
+            "name": "var1",
+            "type": "String",
+            "value": "",
+          },
+          Object {
+            "name": "var2",
+            "type": "String",
+            "value": "",
+          },
+          Object {
+            "name": "var3",
+            "type": "String",
+            "value": "<+input>.allowedValues(1,2).executionInput()",
+          },
+          Object {
+            "name": "var4",
+            "type": "String",
+            "value": "<+input>.executionInput().allowedValues(1,2)",
+          },
+          Object {
+            "name": "var5",
+            "type": "String",
+            "value": "",
+          },
+          Object {
+            "name": "var6",
+            "type": "String",
+            "value": "",
+          },
+          Object {
+            "name": "var7",
+            "type": "String",
+            "value": "",
+          },
+          Object {
+            "name": "var8",
+            "type": "String",
+            "value": "<+input>.executionInput()",
+          },
+          Object {
+            "name": "var9",
+            "type": "String",
+            "value": "",
+          },
+          Object {
+            "name": "var10",
+            "type": "String",
+            "value": "",
+          },
+        ],
+      }
+    `)
   })
 })

@@ -164,7 +164,7 @@ export const useRunPipelineModal = (
       fetchExecutionData()
     }
     showRunPipelineModal()
-  }, [showRunPipelineModal])
+  }, [showRunPipelineModal, planExecutionId, fetchExecutionData])
 
   return {
     openRunPipelineModal: () => open(),

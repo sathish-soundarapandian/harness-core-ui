@@ -8,14 +8,14 @@
 import type { MultiTypeInputType, SelectOption } from '@wings-software/uicore'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type {
+  HarnessStoreFile,
   ManifestConfig,
   ManifestConfigWrapper,
   PageConnectorResponse,
-  PipelineInfoConfig,
-  StageElementConfig,
   ServiceDefinition
 } from 'services/cd-ng'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
+import type { PipelineInfoConfig, StageElementConfig } from 'services/pipeline-ng'
 
 export type ManifestTypes =
   | 'K8sManifest'
@@ -40,8 +40,15 @@ export type ManifestStores =
   | 'Gcs'
   | 'InheritFromManifest'
   | 'Inline'
-export type HelmVersionOptions = 'V2' | 'V3'
+  | 'Harness'
+  | 'CustomRemote'
+
+export type ManifestStoreTypeWithoutConnector = 'InheritFromManifest' | 'Harness' | 'Inline' | 'CustomRemote'
+
 export type HelmOCIVersionOptions = 'V380'
+export type HelmVersionOptions = 'V2' | 'V3'
+export type ManifestStoreWithoutConnector = Exclude<ManifestStores, ManifestStoreTypeWithoutConnector>
+
 export interface ManifestSelectionProps {
   isPropagating?: boolean
   deploymentType: ServiceDefinition['type']
@@ -184,8 +191,25 @@ export interface InheritFromManifestDataType {
   identifier: string
   paths: any
 }
-
 export interface InlineDataType {
   identifier: string
   content: string
+}
+export interface HarnessFileStoreDataType {
+  identifier: string
+  files: string[]
+  valuesPaths: any
+}
+export interface HarnessFileStoreFormData {
+  identifier: string
+  files: HarnessStoreFile[]
+  valuesPaths: HarnessStoreFile[]
+}
+export interface CustomManifestManifestDataType {
+  identifier: string
+  extractionScript: string
+  valuesPaths: Array<any> | string
+  skipResourceVersioning: boolean
+  filePath: string
+  delegateSelectors: Array<string> | string
 }

@@ -17,6 +17,7 @@ import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import routes from '@common/RouteDefinitions'
 import { setPageNumber } from '@common/utils/utils'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
@@ -58,6 +59,8 @@ const ResourceGroupsList: React.FC = () => {
       )
     }
   })
+
+  const { getRBACErrorMessage } = useRBACError()
 
   return (
     <>
@@ -103,7 +106,7 @@ const ResourceGroupsList: React.FC = () => {
           </Layout.Horizontal>
         }
       />
-      <PageBody loading={loading} retryOnError={() => refetch()} error={(error?.data as Error)?.message}>
+      <PageBody loading={loading} retryOnError={() => refetch()} error={error ? getRBACErrorMessage(error) : ''}>
         <ResourceGroupListView
           data={data?.data}
           reload={refetch}

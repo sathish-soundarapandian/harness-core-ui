@@ -21,7 +21,8 @@ import {
   SplitButton,
   ButtonSize,
   ButtonVariation,
-  SplitButtonOption
+  SplitButtonOption,
+  Text
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 
@@ -43,11 +44,11 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
 import CreateEnvironmentGroupModal from '@cd/components/EnvironmentGroups/CreateEnvironmentGroupModal'
 
-import type { DeployInfrastructureStepConfig } from '../DeployInfrastructureStep'
+import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import AddEditEnvironmentModal from '../AddEditEnvironmentModal'
 import { isEditEnvironmentOrEnvGroup } from '../utils'
-import DeployClusters from '../DeployClusters/DeployClusters'
 import DeployEnvironmentInEnvGroup from '../DeployEnvironmentInEnvGroup/DeployEnvironmentInEnvGroup'
+import DeployClusters from '../DeployClusters/DeployClusters'
 
 import css from '../DeployInfrastructureStep.module.scss'
 
@@ -60,9 +61,9 @@ function DeployEnvironmentOrEnvGroup({
   formik,
   allowableTypes
 }: {
-  initialValues: DeployInfrastructureStepConfig
+  initialValues: DeployStageConfig
   readonly: boolean
-  formik?: FormikProps<DeployInfrastructureStepConfig>
+  formik?: FormikProps<DeployStageConfig>
   allowableTypes: MultiTypeInputType[]
 }): JSX.Element {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
@@ -88,7 +89,6 @@ function DeployEnvironmentOrEnvGroup({
   const [environments, setEnvironments] = useState<EnvironmentResponseDTO[]>()
   const [selectedEnvironment, setSelectedEnvironment] = useState<EnvironmentResponseDTO>()
   const [environmentsSelectOptions, setEnvironmentsSelectOptions] = useState<SelectOption[]>()
-  // TODO: handle for both
   const [environmentOrEnvGroupRefType, setEnvironmentOrEnvGroupRefType] = useState<MultiTypeInputType>(
     getMultiTypeFromValue(initialValues.environmentOrEnvGroupRef)
   )
@@ -284,7 +284,11 @@ function DeployEnvironmentOrEnvGroup({
     }
     setEnvironmentGroups(newEnvironmentGroupsList)
     setSelectedEnvironmentGroup(newEnvironmentGroupsList?.find(envGroup => envGroup.identifier === values?.identifier))
-    formik?.setFieldValue('environmentOrEnvGroupRef', { label: values.name, value: values.identifier })
+    formik?.setValues({
+      ...formik?.values,
+      isEnvGroup: true,
+      environmentOrEnvGroupRef: { label: defaultTo(values.name, ''), value: defaultTo(values.identifier, '') }
+    })
     hideEnvironmentGroupModal()
   }
 
@@ -312,125 +316,146 @@ function DeployEnvironmentOrEnvGroup({
   }, [environmentGroups, updateEnvironmentGroupsList])
 
   return (
-    <Layout.Horizontal
-      className={css.formRow}
-      spacing="medium"
-      flex={{ alignItems: flexStart, justifyContent: flexStart }}
-    >
-      <FormInput.SelectWithSubmenuTypeInput
-        label={getString('cd.pipelineSteps.environmentTab.specifyEnvironmentOrGroup')}
-        name="environmentOrEnvGroupRef"
-        disabled={environmentsLoading || environmentGroupsLoading}
-        selectItems={
-          environmentsLoading || environmentGroupsLoading
-            ? [{ value: '', label: 'Loading...', submenuItems: [] }]
-            : [
-                {
-                  label: getString('environment'),
-                  value: getString('environment'),
-                  submenuItems: defaultTo(environmentsSelectOptions, []),
-                  hasSubItems: true
-                },
-                {
-                  label: getString('common.environmentGroup.label'),
-                  value: getString('common.environmentGroup.label'),
-                  submenuItems: defaultTo(environmentGroupsSelectOptions, []),
-                  hasSubItems: true
+    <Layout.Vertical>
+      <Layout.Horizontal
+        className={css.formRow}
+        spacing="medium"
+        flex={{ alignItems: flexStart, justifyContent: flexStart }}
+        margin={{ ...(environmentOrEnvGroupRefType === MultiTypeInputType.RUNTIME && { bottom: 'large' }) }}
+      >
+        <FormInput.SelectWithSubmenuTypeInput
+          label={getString('cd.pipelineSteps.environmentTab.specifyEnvironmentOrGroup')}
+          name="environmentOrEnvGroupRef"
+          disabled={environmentsLoading || environmentGroupsLoading}
+          selectItems={
+            environmentsLoading || environmentGroupsLoading
+              ? [{ value: '', label: 'Loading...', submenuItems: [] }]
+              : [
+                  {
+                    label: getString('environment'),
+                    value: getString('environment'),
+                    submenuItems: defaultTo(environmentsSelectOptions, []),
+                    hasSubItems: true
+                  },
+                  {
+                    label: getString('common.environmentGroup.label'),
+                    value: getString('common.environmentGroup.label'),
+                    submenuItems: defaultTo(environmentGroupsSelectOptions, []),
+                    hasSubItems: true
+                  }
+                ]
+          }
+          selectWithSubmenuTypeInputProps={{
+            onTypeChange: setEnvironmentOrEnvGroupRefType,
+            width: 280,
+            allowableTypes,
+            selectWithSubmenuProps: {
+              addClearBtn: !readonly,
+              items:
+                environmentsLoading || environmentGroupsLoading
+                  ? [{ value: '', label: 'Loading...', submenuItems: [] }]
+                  : [
+                      {
+                        label: getString('environment'),
+                        value: getString('environment'),
+                        submenuItems: defaultTo(environmentsSelectOptions, []),
+                        hasSubItems: true
+                      },
+                      {
+                        label: getString('common.environmentGroup.label'),
+                        value: getString('common.environmentGroup.label'),
+                        submenuItems: defaultTo(environmentGroupsSelectOptions, []),
+                        hasSubItems: true
+                      }
+                    ],
+              onChange: (primaryOption?: SelectOption, secondaryOption?: SelectOption) => {
+                if (primaryOption?.value === getString('environment')) {
+                  formik?.setValues({
+                    ...formik.values,
+                    isEnvGroup: false,
+                    environmentOrEnvGroupRef: secondaryOption,
+                    clusterRef: []
+                  })
+                  setSelectedEnvironment(
+                    environments?.find(environment => environment.identifier === secondaryOption?.value)
+                  )
+                  setSelectedEnvironmentGroup(undefined)
+                } else if (primaryOption?.value === getString('common.environmentGroup.label')) {
+                  formik?.setValues({
+                    ...formik.values,
+                    isEnvGroup: true,
+                    environmentOrEnvGroupRef: secondaryOption,
+                    environmentInEnvGroupRef: [],
+                    clusterRef: []
+                  })
+                  setSelectedEnvironment(undefined)
+                  setSelectedEnvironmentGroup(
+                    environmentGroups?.find(environmentGroup => environmentGroup.identifier === secondaryOption?.value)
+                  )
+                } else {
+                  formik?.setFieldValue('environmentOrEnvGroupRef', primaryOption)
+                  setSelectedEnvironment(undefined)
+                  setSelectedEnvironmentGroup(undefined)
                 }
-              ]
-        }
-        selectWithSubmenuTypeInputProps={{
-          onTypeChange: setEnvironmentOrEnvGroupRefType,
-          width: 280,
-          allowableTypes,
-          selectWithSubmenuProps: {
-            addClearBtn: !readonly,
-            items:
-              environmentsLoading || environmentGroupsLoading
-                ? [{ value: '', label: 'Loading...', submenuItems: [] }]
-                : [
-                    {
-                      label: getString('environment'),
-                      value: getString('environment'),
-                      submenuItems: defaultTo(environmentsSelectOptions, []),
-                      hasSubItems: true
-                    },
-                    {
-                      label: getString('common.environmentGroup.label'),
-                      value: getString('common.environmentGroup.label'),
-                      submenuItems: defaultTo(environmentGroupsSelectOptions, []),
-                      hasSubItems: true
-                    }
-                  ],
-            onChange: (primaryOption?: SelectOption, secondaryOption?: SelectOption) => {
-              if (primaryOption?.value === getString('environment')) {
-                formik?.setValues({
-                  ...formik.values,
-                  isEnvGroup: false,
-                  environmentOrEnvGroupRef: secondaryOption,
-                  clusterRef: []
-                })
-                setSelectedEnvironment(
-                  environments?.find(environment => environment.identifier === secondaryOption?.value)
-                )
-                setSelectedEnvironmentGroup(undefined)
-              } else if (primaryOption?.value === getString('common.environmentGroup.label')) {
-                formik?.setValues({
-                  ...formik.values,
-                  isEnvGroup: true,
-                  environmentOrEnvGroupRef: secondaryOption,
-                  environmentInEnvGroupRef: '',
-                  clusterRef: []
-                })
-                setSelectedEnvironment(undefined)
-                setSelectedEnvironmentGroup(
-                  environmentGroups?.find(environmentGroup => environmentGroup.identifier === secondaryOption?.value)
-                )
-              } else {
-                formik?.setFieldValue('environmentOrEnvGroupRef', primaryOption)
-                setSelectedEnvironment(undefined)
-                setSelectedEnvironmentGroup(undefined)
               }
             }
-          }
-        }}
-      />
-      {environmentOrEnvGroupRefType === MultiTypeInputType.FIXED && (
-        <SplitButton
-          margin={{ top: 'xlarge' }}
-          size={ButtonSize.SMALL}
-          variation={ButtonVariation.LINK}
-          text={
-            isEditEnvironmentOrEnvGroup(selectedEnvironmentGroup)
-              ? getString('common.editName', { name: getString('common.environmentGroup.label') })
-              : isEditEnvironmentOrEnvGroup(selectedEnvironment)
-              ? getString('editEnvironment')
-              : getString('cd.pipelineSteps.environmentTab.plusNewEnvironment')
-          }
-          id={isEditEnvironmentOrEnvGroup(selectedEnvironment) ? 'edit-environment' : 'add-new-environment'}
-          onClick={
-            isEditEnvironmentOrEnvGroup(selectedEnvironmentGroup) ? showEnvironmentGroupModal : showEnvironmentModal
-          }
-        >
-          <SplitButtonOption text={getString('common.environmentGroup.new')} onClick={showEnvironmentGroupModal} />
-        </SplitButton>
-      )}
-      {Boolean(formik?.values?.environmentOrEnvGroupRef && Boolean(formik?.values.isEnvGroup)) &&
-        selectedEnvironmentGroup &&
-        environmentOrEnvGroupRefType === MultiTypeInputType.FIXED && (
-          <DeployEnvironmentInEnvGroup
-            selectedEnvironmentGroup={selectedEnvironmentGroup}
-            setSelectedEnvironment={setSelectedEnvironment}
-            allowableTypes={allowableTypes}
-            readonly={readonly}
+          }}
+        />
+        {environmentOrEnvGroupRefType === MultiTypeInputType.FIXED && (
+          <SplitButton
+            margin={{ top: 'xlarge' }}
+            size={ButtonSize.SMALL}
+            variation={ButtonVariation.LINK}
+            text={
+              isEditEnvironmentOrEnvGroup(selectedEnvironmentGroup)
+                ? getString('common.editName', { name: getString('common.environmentGroup.label') })
+                : isEditEnvironmentOrEnvGroup(selectedEnvironment)
+                ? getString('editEnvironment')
+                : getString('cd.pipelineSteps.environmentTab.plusNewEnvironment')
+            }
+            id={isEditEnvironmentOrEnvGroup(selectedEnvironment) ? 'edit-environment' : 'add-new-environment'}
+            onClick={
+              isEditEnvironmentOrEnvGroup(selectedEnvironmentGroup) ? showEnvironmentGroupModal : showEnvironmentModal
+            }
+          >
+            <SplitButtonOption text={getString('common.environmentGroup.new')} onClick={showEnvironmentGroupModal} />
+          </SplitButton>
+        )}
+        {Boolean(formik?.values?.environmentOrEnvGroupRef && Boolean(formik?.values.isEnvGroup)) &&
+          selectedEnvironmentGroup &&
+          environmentOrEnvGroupRefType === MultiTypeInputType.FIXED && (
+            <DeployEnvironmentInEnvGroup
+              selectedEnvironmentGroup={selectedEnvironmentGroup}
+              readonly={readonly}
+              allowableTypes={allowableTypes}
+            />
+          )}
+        {Boolean((formik?.values?.environmentOrEnvGroupRef as SelectOption)?.value) &&
+          Boolean(!formik?.values.isEnvGroup) &&
+          environmentOrEnvGroupRefType === MultiTypeInputType.FIXED &&
+          selectedEnvironment?.identifier && (
+            <DeployClusters environmentIdentifier={selectedEnvironment?.identifier} allowableTypes={allowableTypes} />
+          )}
+      </Layout.Horizontal>
+      {environmentOrEnvGroupRefType === MultiTypeInputType.RUNTIME && (
+        <Layout.Vertical>
+          <Text>{getString('cd.pipelineSteps.environmentTab.environmentOrEnvGroupAsRuntime')}</Text>
+          <FormInput.RadioGroup
+            name="environmentOrEnvGroupAsRuntime"
+            items={[
+              {
+                label: getString('environment'),
+                value: getString('environment')
+              },
+              {
+                label: getString('common.environmentGroup.label'),
+                value: getString('common.environmentGroup.label')
+              }
+            ]}
           />
-        )}
-      {Boolean((formik?.values?.environmentOrEnvGroupRef as SelectOption)?.value) &&
-        environmentOrEnvGroupRefType === MultiTypeInputType.FIXED &&
-        selectedEnvironment?.identifier && (
-          <DeployClusters environmentIdentifier={selectedEnvironment?.identifier} allowableTypes={allowableTypes} />
-        )}
-    </Layout.Horizontal>
+        </Layout.Vertical>
+      )}
+    </Layout.Vertical>
   )
 }
 

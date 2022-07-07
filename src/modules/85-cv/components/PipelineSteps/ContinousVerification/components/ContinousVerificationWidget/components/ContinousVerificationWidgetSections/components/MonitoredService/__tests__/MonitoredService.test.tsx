@@ -6,7 +6,7 @@
  */
 
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { getServiceIdentifierFromStage } from '../MonitoredService.utils'
 import { mockedPipeline, mockedSelectedDerivedStage } from './MonitoredService.mock'
 

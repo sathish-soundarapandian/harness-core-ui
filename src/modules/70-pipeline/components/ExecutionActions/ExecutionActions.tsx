@@ -33,7 +33,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { ExecutionPathProps, GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import RetryPipeline from '../RetryPipeline/RetryPipeline'
 import { useRunPipelineModal } from '../RunPipelineModal/useRunPipelineModal'
-import { useExecutionCompareContext } from '../ExecutionCompareYamls/ExecutionCompareContext'
+import { useExecutionCompareContext } from '../ExecutionCompareYaml/ExecutionCompareContext'
 import css from './ExecutionActions.module.scss'
 
 const commonButtonProps: ButtonProps = {
@@ -68,7 +68,7 @@ export interface ExecutionActionsProps {
   isPipelineInvalid?: boolean
   source: ExecutionPathProps['source']
   onViewCompiledYaml?: () => void
-  onCompareYamls?: () => void
+  onCompareYaml?: () => void
 }
 function getValidExecutionActions(canExecute: boolean, executionStatus?: ExecutionStatus) {
   return {
@@ -143,7 +143,7 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
     showEditButton = true,
     isPipelineInvalid,
     onViewCompiledYaml,
-    onCompareYamls
+    onCompareYaml
   } = props
   const {
     orgIdentifier,
@@ -387,10 +387,10 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
             {onViewCompiledYaml && (
               <MenuItem text={getString('pipeline.execution.actions.viewCompiledYaml')} onClick={onViewCompiledYaml} />
             )}
-            {onCompareYamls && (
+            {onCompareYaml && (
               <MenuItem
-                text={getString('pipeline.execution.actions.compareYamls')}
-                onClick={onCompareYamls}
+                text={getString('pipeline.execution.actions.compareYaml')}
+                onClick={onCompareYaml}
                 disabled={isCompareMode}
               />
             )}

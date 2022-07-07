@@ -7,8 +7,11 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly choosePipelineSetupHeader: string
   readonly cloneForm: string
-  readonly error: string
+  readonly container: string
   readonly form: string
+  readonly inlineRemoteSelect: string
+  readonly inputWithSpinner: string
 }
 export default styles

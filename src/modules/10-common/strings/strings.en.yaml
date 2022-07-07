@@ -33,6 +33,7 @@ pipeline: Pipeline
 templateStartLabel: Start with Template
 duplicateId: 'Duplicate Identifier'
 createPipeline: Create a Pipeline
+importFromGit: Import From Git
 production: Production
 addVariable: Add Variable
 advanced: '{{ $.advancedTitle }}'
@@ -64,6 +65,7 @@ remove: Remove
 member: Member
 showMore: Show More
 showLess: Show Less
+hideAll: Hide All
 moreInfo: More Info
 moreOptions: More options
 viewText: View
@@ -146,6 +148,7 @@ datePickerShortcuts:
   LastMonth: Last Month
   Last2Months: Last 2 Months
 validation:
+  connectorRef: Connector is a required field
   namePatternIsNotValid: 'Name can only contain alphanumerics, _ and -'
   provisionerIdentifierPatternIsNotValid: 'Provisioner Identifier should not contain special characters and spaces'
   provisionerIdentifierIsRequired: 'Provisioner Identifier is required'
@@ -771,6 +774,7 @@ upgrade: Upgrade
 contactSupport: Contact Support
 or: Or
 startFreePlan: Start {{module}} Free Plan
+scriptRequired: Script is a required field
 exploreAllPlans: Explore all plans
 duration:
   month: 'Last month'
@@ -786,7 +790,7 @@ smtp:
   smtpConnectivity: SMTP Connectivity Test
   port: Port
   enableSSL: Enable SSL
-  startTSL: Start TSL
+  startTLS: Start TLS
   fromAddress: From Address
   testConnection: Test Connection
   portRequired: Port is required
@@ -902,6 +906,10 @@ download: Download
 gitOps: GitOps
 showHarnessManagedError: Harness Managed Resource cannot be edited
 contentRequired: Content is required
+oAuthLabel: OAuth
+import: Import
+importEntityFromGit: Import {{resourceType}} From Git
+serviceOverrides: Service Overrides
 
 # Chaos Module
 chaosText: Chaos

@@ -23,7 +23,7 @@ import * as Yup from 'yup'
 import { isEmpty, unset } from 'lodash-es'
 import { Page } from '@common/exports'
 import { useStrings } from 'framework/strings'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import {
   FormMultiTypeDurationField,

@@ -11,9 +11,9 @@
 }
 
 .reconcileDialog {
-  width: 1200px;
+  width: calc(100vw - 100px);
   overflow: hidden;
   padding: 0px;
   position: relative;
-  min-height: 500px;
+  height: calc(100vh - 100px);
 }

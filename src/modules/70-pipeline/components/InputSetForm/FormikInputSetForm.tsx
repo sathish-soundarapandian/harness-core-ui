@@ -22,11 +22,11 @@ import { parse } from 'yaml'
 import cx from 'classnames'
 import type { FormikErrors, FormikProps } from 'formik'
 import type {
+  PipelineInfoConfig,
   ResponsePMSPipelineResponseDTO,
   EntityGitDetails,
   ResponseInputSetTemplateWithReplacedExpressionsResponse
 } from 'services/pipeline-ng'
-import type { PipelineInfoConfig } from 'services/cd-ng'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import type { InputSetGitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { NameIdDescriptionTags } from '@common/components'
@@ -47,11 +47,11 @@ import {
   getPipelineWithoutCodebaseInputs
 } from '@pipeline/utils/CIUtils'
 import { mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
+import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { getYamlFileName } from '@pipeline/utils/yamlUtils'
 import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetForm'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import { factory } from '../PipelineSteps/Steps/__tests__/StepTestUtil'
-import { YamlBuilderMemo } from '../PipelineStudio/PipelineYamlView/PipelineYamlView'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
 import { StepViewType } from '../AbstractSteps/Step'
 import css from './InputSetForm.module.scss'

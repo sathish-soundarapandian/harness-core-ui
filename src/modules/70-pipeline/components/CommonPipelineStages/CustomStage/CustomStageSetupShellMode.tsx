@@ -8,6 +8,7 @@
 import React, { useRef } from 'react'
 import cx from 'classnames'
 import { Button, Icon, Layout, Tab, Tabs } from '@wings-software/uicore'
+import { capitalize as _capitalize } from 'lodash-es'
 import { Expander } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -17,6 +18,7 @@ import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemp
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
+import { useQueryParams } from '@common/hooks'
 import ApprovalAdvancedSpecifications from '../ApprovalStage/ApprovalStageAdvanced'
 import { ApprovalStageOverview } from '../ApprovalStage/ApprovalStageOverview'
 import { ApprovalStageExecution } from '../ApprovalStage/ApprovalStageExecution'
@@ -38,8 +40,18 @@ export function CustomStageSetupShellMode(): React.ReactElement {
     getStageFromPipeline,
     updatePipeline
   } = pipelineContext
+  const query = useQueryParams()
 
   const { stage: selectedStage } = getStageFromPipeline<StageElementConfig>(selectedStageId)
+
+  React.useEffect(() => {
+    const sectionId = (query as any).sectionId || ''
+    if (sectionId?.length && tabHeadings.includes(_capitalize(sectionId))) {
+      setSelectedTabId(_capitalize(sectionId))
+    } else {
+      setSelectedTabId(tabHeadings[1])
+    }
+  }, [])
 
   React.useEffect(() => {
     if (selectedStepId) {

@@ -29,17 +29,7 @@ import { useStrings } from 'framework/strings'
 
 import type { GitQueryParams, ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import {
-  NGServiceConfig,
-  ServiceConfig,
-  ServiceDefinition,
-  ServiceResponseDTO,
-  StageElementConfig,
-  StageElementWrapperConfig,
-  TemplateLinkConfig,
-  useGetServiceList,
-  useGetServiceV2
-} from 'services/cd-ng'
+import { ServiceConfig, ServiceDefinition, TemplateLinkConfig, useGetServiceList } from 'services/cd-ng'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import {
@@ -54,11 +44,7 @@ import PropagateWidget, {
 } from '@cd/components/PipelineStudio/DeployServiceSpecifications/PropagateWidget/PropagateWidget'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
-import {
-  DeployTabs,
-  getServiceEntityServiceRef,
-  isNewServiceEnvEntity
-} from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
+import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import SelectDeploymentType from '@cd/components/PipelineStudio/DeployServiceSpecifications/SelectDeploymentType'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
@@ -69,6 +55,7 @@ import {
   ServiceDeploymentType,
   StageType
 } from '@pipeline/utils/stageHelpers'
+import type { StageElementConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import {
   getIdentifierFromValue,
@@ -77,16 +64,19 @@ import {
 } from '@common/components/EntityReference/EntityReference'
 import { useGetTemplate } from 'services/template-ng'
 import { Page } from '@common/exports'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { yamlParse } from '@common/utils/YamlHelperMethods'
 import type { DeployServiceData } from '@cd/components/PipelineSteps/DeployServiceStep/DeployServiceInterface'
-import { useCache } from '@common/hooks/useCache'
-import { FeatureFlag } from '@common/featureFlags'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 
-export default function DeployServiceSpecifications(props: React.PropsWithChildren<unknown>): JSX.Element {
+export interface DeployServiceSpecificationsProps {
+  setDefaultServiceSchema: () => Promise<void>
+  children: React.ReactNode
+}
+
+export default function DeployServiceSpecifications({
+  setDefaultServiceSchema,
+  children
+}: DeployServiceSpecificationsProps): JSX.Element {
   const { getString } = useStrings()
-  const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
   const queryParams = useParams<ProjectPathProps & ServicePathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
@@ -105,7 +95,6 @@ export default function DeployServiceSpecifications(props: React.PropsWithChildr
   } = context
 
   const scrollRef = React.useRef<HTMLDivElement | null>(null)
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceUpdateStage = useCallback(
     debounce(
@@ -132,13 +121,11 @@ export default function DeployServiceSpecifications(props: React.PropsWithChildr
   const [previousStageList, setPreviousStageList] = useState<SelectOption[]>([])
   const [currStageData, setCurrStageData] = useState<DeploymentStageElementConfig | undefined>()
   const [templateToFetch, setTemplateToFetch] = useState<TemplateLinkConfig>()
-  const [isReadonlyView, setIsReadOnlyView] = useState(false)
 
   const { index: stageIndex } = getStageIndexFromPipeline(pipeline, selectedStageId || '')
   const { stages } = getFlattenedStages(pipeline)
   const { submitFormsForTab } = useContext(StageErrorContext)
   const { errorMap } = useValidationErrors()
-  const { setCache } = useCache()
 
   const memoizedQueryParam = useMemo(
     () => ({
@@ -148,90 +135,38 @@ export default function DeployServiceSpecifications(props: React.PropsWithChildr
     }),
     [queryParams]
   )
-  const { data: selectedServiceResponse, refetch: refetchServiceData } = useGetServiceV2({
-    serviceIdentifier: '',
-    queryParams: memoizedQueryParam,
-    lazy: true
+  const { data: serviceResponse } = useGetServiceList({
+    queryParams: memoizedQueryParam
   })
 
   useEffect(() => {
-    //When service.serviceRef is present refetch serviceAPI to populate deployment type and service definition
-    if (getServiceEntityServiceRef(stage?.stage)) {
-      const stageServiceRef = (stage?.stage?.spec as any)?.service?.serviceRef
-      refetchServiceData({
-        pathParams: {
-          serviceIdentifier: stageServiceRef
-        },
-        queryParams: memoizedQueryParam
-      })
-    } else {
-      if (
-        !stage?.stage?.spec?.serviceConfig?.serviceDefinition &&
-        !stage?.stage?.spec?.serviceConfig?.useFromStage?.stage &&
-        stage?.stage?.type === StageType.DEPLOY &&
-        !isSvcEnvEntityEnabled
-      ) {
-        setDefaultServiceSchema()
-      } else if (
-        scope !== Scope.PROJECT &&
-        stage?.stage?.spec?.serviceConfig &&
-        isEmpty(stage?.stage?.spec?.serviceConfig?.serviceRef)
-      ) {
-        const stageData = produce(stage, draft => {
-          if (draft) {
-            set(draft, 'stage.spec.serviceConfig.serviceRef', RUNTIME_INPUT_VALUE)
-          }
-        })
-        if (stageData?.stage) {
-          debounceUpdateStage(stageData?.stage)
+    if (
+      !stage?.stage?.spec?.serviceConfig?.serviceDefinition &&
+      !stage?.stage?.spec?.serviceConfig?.useFromStage?.stage &&
+      stage?.stage?.type === StageType.DEPLOY
+    ) {
+      setDefaultServiceSchema()
+    } else if (
+      scope !== Scope.PROJECT &&
+      stage?.stage?.spec?.serviceConfig &&
+      isEmpty(stage?.stage?.spec?.serviceConfig?.serviceRef)
+    ) {
+      const stageData = produce(stage, draft => {
+        if (draft) {
+          set(draft, 'stage.spec.serviceConfig.serviceRef', RUNTIME_INPUT_VALUE)
         }
+      })
+      if (stageData?.stage) {
+        debounceUpdateStage(stageData?.stage)
       }
     }
   }, [])
-
-  //This is to refetch the service API and update stage on change of service from service select
-  useEffect(() => {
-    const serviceData = selectedServiceResponse?.data?.service as ServiceResponseDTO
-    if (!isEmpty(serviceData?.yaml)) {
-      const parsedYaml = yamlParse<NGServiceConfig>(defaultTo(serviceData.yaml, ''))
-      const serviceInfo = parsedYaml.service?.serviceDefinition
-      if (serviceInfo) {
-        const stageData = produce(stage, draft => {
-          if (draft) {
-            set(draft, 'stage.spec.deploymentType', serviceInfo?.type)
-            set(draft, 'stage.spec.service.serviceRef', parsedYaml.service?.identifier)
-          }
-        })
-        if (stageData?.stage) {
-          debounceUpdateStage(stageData?.stage)
-        }
-        //setting service data in cache to reuse it in manifests, artifacts, variables
-        const serviceCacheId = `${pipeline.identifier}-${selectedStageId}-service`
-        setCache(serviceCacheId, serviceInfo)
-
-        setSelectedDeploymentType(serviceInfo.type as ServiceDeploymentType)
-        setIsReadOnlyView(true)
-      }
-    } else {
-      //If old service entity is selected back, the readonly view should be false and deployment type should be unselected
-      setIsReadOnlyView(false)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedServiceResponse])
 
   useEffect(() => {
     if (errorMap.size > 0) {
       submitFormsForTab(DeployTabs.SERVICE)
     }
   }, [errorMap])
-
-  const { data: serviceResponse } = useGetServiceList({
-    queryParams: {
-      accountIdentifier: queryParams.accountId,
-      orgIdentifier: queryParams.orgIdentifier,
-      projectIdentifier: queryParams.projectIdentifier
-    }
-  })
 
   useEffect(() => {
     const serviceIdNameMapping: { [key: string]: string } = {}
@@ -249,17 +184,6 @@ export default function DeployServiceSpecifications(props: React.PropsWithChildr
       const currentStageType = stage?.stage?.type
       stages.forEach((item, index) => {
         if (index < stageIndex) {
-          //If the new stage or stage template has new service entity(stage.spec.service.serviceRef), propogate from stage is not allowed.
-          if (isSvcEnvEntityEnabled) {
-            /* istanbul ignore else */
-            if (
-              (item.stage?.spec as any)?.service?.serviceRef ||
-              (item.stage?.template && !stage?.stage?.spec?.serviceConfig?.useFromStage?.stage)
-            ) {
-              return
-            }
-          }
-
           if (item.stage?.template) {
             const stageType = get(templateTypes, item.stage.template.templateRef)
             if (currentStageType === stageType) {
@@ -344,26 +268,6 @@ export default function DeployServiceSpecifications(props: React.PropsWithChildr
     }
   }, [selectedPropagatedState])
 
-  const setDefaultServiceSchema = (): Promise<void> => {
-    const stageData = produce(stage, draft => {
-      if (draft) {
-        set(draft, 'stage.spec', {
-          ...stage?.stage?.spec,
-          serviceConfig: {
-            serviceRef: scope === Scope.PROJECT ? '' : RUNTIME_INPUT_VALUE,
-            serviceDefinition: {
-              spec: {
-                variables: []
-              }
-            }
-          }
-        })
-      }
-    })
-
-    return debounceUpdateStage(stageData?.stage)
-  }
-
   const setStageOverrideSchema = (): Promise<void> => {
     const stageData = produce(stage, draft => {
       if (draft) {
@@ -373,7 +277,6 @@ export default function DeployServiceSpecifications(props: React.PropsWithChildr
             ...stage?.stage?.spec?.serviceConfig,
             stageOverrides: {
               artifacts: {
-                // primary: null,
                 sidecars: []
               },
               manifests: [],
@@ -422,17 +325,8 @@ export default function DeployServiceSpecifications(props: React.PropsWithChildr
         }
       })
       await debounceUpdateStage(stageData?.stage)
-
-      if (isSvcEnvEntityEnabled && value.serviceRef) {
-        refetchServiceData({
-          pathParams: {
-            serviceIdentifier: value.serviceRef
-          },
-          queryParams: memoizedQueryParam
-        })
-      }
     },
-    [debounceUpdateStage, memoizedQueryParam, refetchServiceData, stage]
+    [debounceUpdateStage, memoizedQueryParam, stage]
   )
 
   const handleDeploymentTypeChange = useCallback(
@@ -527,50 +421,29 @@ export default function DeployServiceSpecifications(props: React.PropsWithChildr
     }
   })
 
-  /*************************************Service Entity Related code********************************************************/
-  const getServiceEntityBasedServiceRef = React.useCallback(() => {
+  const getBasedServiceRef = React.useCallback(() => {
     const stageObj = get(stage, 'stage.spec', {})
     if (stageObj.serviceConfig) {
       return get(stage, 'stage.spec.serviceConfig.serviceRef', '')
-    } else if (stageObj.service) {
-      return get(stage, 'stage.spec.service.serviceRef', '')
     }
     return ''
   }, [stage])
 
-  const getServiceEntityBasedService = React.useCallback(() => {
+  const getService = React.useCallback(() => {
     const stageObj = get(stage, 'stage.spec', {})
     if (stageObj.serviceConfig) {
       return get(stage, 'stage.spec.serviceConfig.service', {})
-    } else if (stageObj.service) {
-      return get(stage, 'stage.spec.service.service', {})
     }
     return ''
   }, [stage])
 
   const getDeployServiceWidgetInitValues = React.useCallback((): DeployServiceData => {
-    const initValues: DeployServiceData = {
-      service: getServiceEntityBasedService(),
-      isNewServiceEntity: isNewServiceEnvEntity(isSvcEnvEntityEnabled, stage?.stage as DeploymentStageElementConfig),
-      serviceRef:
-        scope === Scope.PROJECT
-          ? getServiceEntityBasedServiceRef()
-          : getServiceEntityBasedServiceRef() || RUNTIME_INPUT_VALUE
+    return {
+      service: getService(),
+      serviceRef: scope === Scope.PROJECT ? getBasedServiceRef() : getBasedServiceRef() || RUNTIME_INPUT_VALUE
     }
-    if (isNewServiceEnvEntity(isSvcEnvEntityEnabled, stage?.stage as DeploymentStageElementConfig)) {
-      initValues.deploymentType = (stage?.stage?.spec as any).deploymentType
-    }
-    return initValues
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  const shouldRenderDeployServiceStep = (): boolean => {
-    if (!isNewServiceEnvEntity(isSvcEnvEntityEnabled, stage?.stage as DeploymentStageElementConfig)) {
-      return true
-    }
-    return false
-  }
-  /*************************************Service Entity Related code********************************************************/
 
   return (
     <div className={stageCss.deployStage} ref={scrollRef}>
@@ -626,35 +499,32 @@ export default function DeployServiceSpecifications(props: React.PropsWithChildr
                 />
               </Card>
             </>
-
-            {(isReadonlyView || shouldRenderDeployServiceStep()) && (
-              <>
-                <div className={stageCss.tabHeading} id="serviceDefinition">
-                  {getString('pipelineSteps.deploy.serviceSpecifications.serviceDefinition')}
-                </div>
-                <SelectDeploymentType
-                  selectedDeploymentType={selectedDeploymentType}
-                  viewContext="setup"
-                  isReadonly={isReadonly || isReadonlyView}
-                  handleDeploymentTypeChange={handleDeploymentTypeChange}
+            <>
+              <div className={stageCss.tabHeading} id="serviceDefinition">
+                {getString('pipelineSteps.deploy.serviceSpecifications.serviceDefinition')}
+              </div>
+              <SelectDeploymentType
+                selectedDeploymentType={selectedDeploymentType}
+                viewContext="setup"
+                isReadonly={isReadonly}
+                handleDeploymentTypeChange={handleDeploymentTypeChange}
+                shouldShowGitops={false}
+              />
+              <Layout.Horizontal>
+                <StepWidget<K8SDirectServiceStep>
+                  factory={factory}
+                  readonly={isReadonly}
+                  initialValues={{
+                    stageIndex,
+                    setupModeType,
+                    deploymentType: selectedDeploymentType as ServiceDefinition['type']
+                  }}
+                  allowableTypes={allowableTypes}
+                  type={getStepTypeByDeploymentType(defaultTo(selectedDeploymentType, ''))}
+                  stepViewType={StepViewType.Edit}
                 />
-                <Layout.Horizontal>
-                  <StepWidget<K8SDirectServiceStep>
-                    factory={factory}
-                    readonly={isReadonly || isReadonlyView}
-                    initialValues={{
-                      stageIndex,
-                      setupModeType,
-                      deploymentType: selectedDeploymentType as ServiceDefinition['type'],
-                      isReadonlyServiceMode: isReadonlyView
-                    }}
-                    allowableTypes={allowableTypes}
-                    type={getStepTypeByDeploymentType(defaultTo(selectedDeploymentType, ''))}
-                    stepViewType={StepViewType.Edit}
-                  />
-                </Layout.Horizontal>
-              </>
-            )}
+              </Layout.Horizontal>
+            </>
           </>
         ) : (
           checkedItems.overrideSetCheckbox &&
@@ -686,7 +556,7 @@ export default function DeployServiceSpecifications(props: React.PropsWithChildr
           ))
         )}
         {((setupModeType === setupMode.PROPAGATE && selectedPropagatedState?.value) ||
-          setupModeType === setupMode.DIFFERENT) && <Container margin={{ top: 'xxlarge' }}>{props.children}</Container>}
+          setupModeType === setupMode.DIFFERENT) && <Container margin={{ top: 'xxlarge' }}>{children}</Container>}
       </div>
     </div>
   )

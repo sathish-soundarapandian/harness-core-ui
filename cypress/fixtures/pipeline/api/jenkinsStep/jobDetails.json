@@ -1,0 +1,27 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "jobDetails": [
+      {
+        "jobName": "alex-pipeline-test",
+        "url": "https://jenkins.dev.harness.io/job/alex-pipeline-test/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "automationNew",
+        "url": "https://jenkins.dev.harness.io/job/automationNew/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "AutomationQA",
+        "url": "https://jenkins.dev.harness.io/job/AutomationQA/",
+        "parameters": [],
+        "folder": false
+      }
+    ]
+  },
+  "metaData": null,
+  "correlationId": "3a799b6f-0333-4284-a0a4-ba0367e74325"
+}

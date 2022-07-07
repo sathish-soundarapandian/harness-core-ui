@@ -12,7 +12,6 @@ import merge from 'lodash-es/merge'
 import {
   findAllByKey,
   PipelineContext,
-  PipelineContextInterface,
   PipelineContextType
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { getTemplateTypesByRef } from '@pipeline/utils/templateUtils'
@@ -31,14 +30,18 @@ import {
   getStageFromPipeline as _getStageFromPipeline,
   getStagePathFromPipeline as _getStagePathFromPipeline
 } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
-import type { PipelineInfoConfig, StageElementConfig, StageElementWrapperConfig } from 'services/cd-ng'
+import type {
+  PipelineInfoConfig,
+  StageElementConfig,
+  StageElementWrapperConfig,
+  GetPipelineQueryParams
+} from 'services/pipeline-ng'
 import { PipelineStages, PipelineStagesProps } from '@pipeline/components/PipelineStages/PipelineStages'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { PipelineSelectionState } from '@pipeline/components/PipelineStudio/PipelineQueryParamState/usePipelineQueryParam'
-import type { GetPipelineQueryParams } from 'services/pipeline-ng'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 
 export interface TemplatePipelineProviderProps {
@@ -47,7 +50,6 @@ export interface TemplatePipelineProviderProps {
   onUpdatePipeline: (pipeline: PipelineInfoConfig) => void
   contextType: PipelineContextType
   isReadOnly: boolean
-  getTemplate: PipelineContextInterface['getTemplate']
 }
 
 export function TemplatePipelineProvider({
@@ -56,7 +58,6 @@ export function TemplatePipelineProvider({
   onUpdatePipeline,
   isReadOnly,
   contextType,
-  getTemplate,
   children
 }: React.PropsWithChildren<TemplatePipelineProviderProps>): React.ReactElement {
   const allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
@@ -246,8 +247,7 @@ export function TemplatePipelineProvider({
         setSelectedSectionId: noop,
         setSelection,
         getStagePathFromPipeline,
-        setTemplateTypes: noop,
-        getTemplate: getTemplate
+        setTemplateTypes: noop
       }}
     >
       {children}

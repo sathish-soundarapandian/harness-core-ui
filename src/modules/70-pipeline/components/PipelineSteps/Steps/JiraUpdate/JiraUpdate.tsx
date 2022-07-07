@@ -16,7 +16,7 @@ import { getDurationValidationSchema } from '@common/components/MultiTypeDuratio
 import type { StringsMap } from 'stringTypes'
 import { PipelineStep } from '../../PipelineStep'
 import { StepType } from '../../PipelineStepInterface'
-import { flatObject } from '../Common/ApprovalCommons'
+import { getSanitizedflatObjectForVariablesView } from '../Common/ApprovalCommons'
 import type { JiraUpdateData, JiraUpdateVariableListModeProps } from './types'
 import { processFormData, processInitialValues } from './helper'
 import JiraUpdateStepModeWithRef from './JiraUpdateStepMode'
@@ -138,7 +138,7 @@ export class JiraUpdate extends PipelineStep<JiraUpdateData> {
       const customStepPropsTyped = customStepProps as JiraUpdateVariableListModeProps
       return (
         <VariablesListTable
-          data={flatObject(customStepPropsTyped.variablesData)}
+          data={getSanitizedflatObjectForVariablesView(customStepPropsTyped.variablesData)}
           originalData={initialValues as Record<string, any>}
           metadataMap={customStepPropsTyped.metadataMap}
           className={pipelineVariablesCss.variablePaddingL3}

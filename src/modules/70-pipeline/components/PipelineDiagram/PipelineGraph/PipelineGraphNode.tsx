@@ -8,6 +8,7 @@
 import React, { useRef, useState, useLayoutEffect, ForwardedRef } from 'react'
 import { defaultTo, throttle } from 'lodash-es'
 import classNames from 'classnames'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import GroupNode from '../Nodes/GroupNode/GroupNode'
 import type {
   NodeCollapsibleProps,
@@ -24,7 +25,7 @@ import { getRelativeBounds } from './PipelineGraphUtils'
 import { isFirstNodeAGroupNode, isNodeParallel, shouldAttachRef, shouldRenderGroupNode, showChildNode } from './utils'
 import css from './PipelineGraph.module.scss'
 
-const IS_RENDER_OPTIMIZATION_ENABLED = true
+let IS_RENDER_OPTIMIZATION_ENABLED = false
 export interface PipelineGraphRecursiveProps {
   nodes?: PipelineGraphState[]
   getNode: GetNodeMethod
@@ -106,7 +107,6 @@ export function PipelineGraphRecursive({
       {EndNode && showEndNode && startEndNodeNeeded && (
         <EndNode id={uniqueNodeIds?.endNode as string} className={classNames(css.graphNode)} />
       )}
-      <div></div>
     </div>
   )
 }
@@ -363,6 +363,8 @@ function PipelineGraphNodeObserved(
   const [visible, setVisible] = useState(true)
   const updateVisibleState = React.useCallback(throttle(setVisible, 200), [])
   const [elementRect, setElementRect] = useState<DOMRect | null>(null)
+  const { PIPELINE_MATRIX } = useFeatureFlags()
+  IS_RENDER_OPTIMIZATION_ENABLED = !PIPELINE_MATRIX
   React.useEffect(() => {
     let observer: IntersectionObserver
     if (ref && props?.parentSelector && IS_RENDER_OPTIMIZATION_ENABLED) {

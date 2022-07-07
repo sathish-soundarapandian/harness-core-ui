@@ -256,7 +256,7 @@ const UserGroupTable: React.FC<UserGroupTableProps> = ({ user }) => {
 
       <Layout.Vertical padding={{ bottom: 'medium' }}>
         {error ? (
-          <PageError message={(error?.data as Error)?.message || error?.message} onClick={() => refetch()} />
+          <PageError message={getRBACErrorMessage(error)} onClick={() => refetch()} />
         ) : loading ? (
           <ContainerSpinner />
         ) : userGroupData?.data?.length ? (

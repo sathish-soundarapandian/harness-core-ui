@@ -22,8 +22,8 @@ describe('Test Get Started With CI', () => {
         <GetStartedWithCI />
       </TestWrapper>
     )
-    expect(getByText('ci.getStartedWithCI.configInfra')).toBeTruthy()
-    const createPipelineBtn = getByText('common.createPipeline')
+    expect(getByText('ci.getStartedWithCI.firstPipeline')).toBeTruthy()
+    const createPipelineBtn = getByText('getStarted')
     expect(createPipelineBtn).toBeInTheDocument()
   })
 })

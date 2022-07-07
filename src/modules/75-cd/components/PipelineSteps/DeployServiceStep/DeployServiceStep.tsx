@@ -17,10 +17,12 @@ import { ModuleName } from 'framework/types/ModuleName'
 import { Step, StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
-import type { DeployServiceData } from './DeployServiceInterface'
+import type { DeployServiceCustomStepPropType, DeployServiceData } from './DeployServiceInterface'
 import { ServiceRegex } from './DeployServiceUtils'
 import { DeployServiceInputStepFormik } from './DeployServiceInputStep'
+import { DeployServiceEntityInputStepFormik } from './DeployServiceEntityInputStep'
 import DeployServiceWidget from './DeployServiceWidget'
+import DeployServiceEntityWidget from './DeployServiceEntityWidget/DeployServiceEntityWidget'
 
 const logger = loggerFor(ModuleName.CD)
 
@@ -77,9 +79,28 @@ export class DeployServiceStep extends Step<DeployServiceData> {
       resolve([])
     })
   }
-  renderStep(props: StepProps<DeployServiceData>): JSX.Element {
-    const { initialValues, onUpdate, stepViewType, inputSetData, readonly = false, allowableTypes } = props
+  renderStep(props: StepProps<DeployServiceData, DeployServiceCustomStepPropType>): JSX.Element {
+    const {
+      initialValues,
+      onUpdate,
+      stepViewType,
+      inputSetData,
+      readonly = false,
+      allowableTypes,
+      customStepProps
+    } = props
     if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+      if (customStepProps?.isNewServiceEntity) {
+        return (
+          <DeployServiceEntityInputStepFormik
+            initialValues={initialValues}
+            readonly={readonly}
+            inputSetData={inputSetData}
+            allowableTypes={allowableTypes}
+            customStepProps={customStepProps}
+          />
+        )
+      }
       return (
         <DeployServiceInputStepFormik
           initialValues={initialValues}
@@ -87,6 +108,18 @@ export class DeployServiceStep extends Step<DeployServiceData> {
           onUpdate={onUpdate}
           stepViewType={stepViewType}
           inputSetData={inputSetData}
+          allowableTypes={allowableTypes}
+          customStepProps={customStepProps as DeployServiceCustomStepPropType}
+        />
+      )
+    }
+    if (initialValues.isNewServiceEntity) {
+      return (
+        <DeployServiceEntityWidget
+          readonly={readonly}
+          initialValues={initialValues}
+          onUpdate={onUpdate}
+          stepViewType={stepViewType}
           allowableTypes={allowableTypes}
         />
       )

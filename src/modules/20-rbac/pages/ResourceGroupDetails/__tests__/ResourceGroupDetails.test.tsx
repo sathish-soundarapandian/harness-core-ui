@@ -179,11 +179,6 @@ describe('Resource Groups Page', () => {
       fireEvent.click(includeCurrentScope)
     })
 
-    const addOrgs = getByText(form!, 'rbac.resourceScope.selectOrgsandProjects')
-    act(() => {
-      fireEvent.click(addOrgs)
-    })
-
     const selectOrg = getByText(form!, 'Select')
     await act(async () => {
       fireEvent.click(selectOrg)
