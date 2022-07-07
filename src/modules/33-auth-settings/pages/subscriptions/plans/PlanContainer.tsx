@@ -191,8 +191,10 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
       history.push(routes.toSubscriptions({ accountId, moduleCard: module, tab: SubscriptionTabNames.PLANS }))
     }
   })
-  const isSelfService = licenseInformation?.[moduleType]?.selfService === true
-  const isSelfServiceEnabled = useFeatureFlag(FeatureFlag.SELF_SERVICE_ENABLED) && isSelfService
+  // const isSelfService = licenseInformation?.[moduleType]?.selfService === true
+  // const isSelfServiceEnabled = useFeatureFlag(FeatureFlag.SELF_SERVICE_ENABLED) && isSelfService
+
+  const isSelfServiceEnabled = useFeatureFlag(FeatureFlag.SELF_SERVICE_ENABLED)
 
   useEffect(() => {
     handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, module, updatedLicenseInfo)
