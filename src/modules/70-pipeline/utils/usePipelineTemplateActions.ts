@@ -26,6 +26,16 @@ export function usePipelineTemplateActions(): TemplateActionsReturnType {
     getTemplate
   } = usePipelineContext()
 
+  const copyPipelineMetaData = useCallback(
+    (processNode: PipelineInfoConfig) => {
+      processNode.description = pipeline.description
+      processNode.tags = pipeline.tags
+      processNode.projectIdentifier = pipeline.projectIdentifier
+      processNode.orgIdentifier = pipeline.orgIdentifier
+    },
+    [pipeline]
+  )
+
   const addOrUpdateTemplate = useCallback(
     async (selectedTemplate?: TemplateSummaryResponse) => {
       const { template, isCopied } = await getTemplate({
@@ -38,6 +48,7 @@ export function usePipelineTemplateActions(): TemplateActionsReturnType {
             draft.identifier = defaultTo(pipeline?.identifier, '')
           })
         : createTemplate(pipeline, template)
+      copyPipelineMetaData(processNode)
       await updatePipeline(processNode)
     },
     [pipeline.template, getTemplate, updatePipeline]
@@ -49,6 +60,7 @@ export function usePipelineTemplateActions(): TemplateActionsReturnType {
       draft.name = defaultTo(node?.name, '')
       draft.identifier = defaultTo(node?.identifier, '')
     })
+    copyPipelineMetaData(processNode)
     await updatePipeline(processNode)
   }, [pipeline, updatePipeline])
 
