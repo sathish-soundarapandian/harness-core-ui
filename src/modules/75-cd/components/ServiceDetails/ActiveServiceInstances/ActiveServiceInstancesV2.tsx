@@ -7,27 +7,30 @@
 
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Card, Layout, Tab, Tabs } from '@wings-software/uicore'
+import { Card, Layout, Tab, Tabs, Text } from '@wings-software/uicore'
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { ActiveServiceInstancesHeader } from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstancesHeader'
 import {
   GetEnvArtifactDetailsByServiceIdQueryParams,
   GetEnvBuildInstanceCountQueryParams,
-  useGetEnvArtifactDetailsByServiceId,
-  useGetEnvBuildInstanceCount
+  useGetActiveServiceInstances,
+  useGetEnvArtifactDetailsByServiceId
 } from 'services/cd-ng'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
-import { ActiveServiceInstancesContent } from './ActiveServiceInstancesContent'
+import { ActiveServiceInstancesHeader } from './ActiveServiceInstancesHeader'
+import { ActiveServiceInstancesContentV2, TableType } from './ActiveServiceInstancesContentV2'
 import { Deployments } from '../DeploymentView/DeploymentView'
-import css from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstances.module.scss'
+import InstancesDetailsDialog from './InstancesDetails/InstancesDetailsDialog'
+import css from './ActiveServiceInstancesV2.module.scss'
 
 export enum ServiceDetailTabs {
   ACTIVE = 'Active Service Instances',
   DEPLOYMENT = 'Deployments'
 }
 
-export const ActiveServiceInstances: React.FC = () => {
+export const ActiveServiceInstancesV2: React.FC = () => {
   const { getString } = useStrings()
+  const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState<boolean>(false)
 
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const queryParams: GetEnvBuildInstanceCountQueryParams = {
@@ -42,7 +45,7 @@ export const ActiveServiceInstances: React.FC = () => {
     data: activeInstanceData,
     error: activeInstanceError,
     refetch: activeInstanceRefetch
-  } = useGetEnvBuildInstanceCount({ queryParams })
+  } = useGetActiveServiceInstances({ queryParams })
 
   const queryParamsDeployments: GetEnvArtifactDetailsByServiceIdQueryParams = {
     accountIdentifier: accountId,
@@ -59,7 +62,7 @@ export const ActiveServiceInstances: React.FC = () => {
     return Boolean(
       activeInstanceData &&
         deploymentData &&
-        !(activeInstanceData?.data?.envBuildIdAndInstanceCountInfoList || []).length &&
+        !(activeInstanceData?.data?.instanceGroupedByArtifactList || []).length &&
         (deploymentData?.data?.environmentInfoByServiceId || []).length
     )
   }
@@ -78,6 +81,24 @@ export const ActiveServiceInstances: React.FC = () => {
     setDefaultTab(data as ServiceDetailTabs)
   }
 
+  const moreDetails = (
+    <>
+      <Text
+        className={css.moreDetails}
+        font={{ size: 'small', weight: 'semi-bold' }}
+        color={Color.PRIMARY_7}
+        onClick={() => setIsDetailsDialogOpen(true)}
+      >
+        {getString('cd.serviceDashboard.moreDetails')}
+      </Text>
+      <InstancesDetailsDialog
+        data={activeInstanceData?.data?.instanceGroupedByArtifactList}
+        isOpen={isDetailsDialogOpen}
+        setIsOpen={setIsDetailsDialogOpen}
+      />
+    </>
+  )
+
   return (
     <Card className={css.activeServiceInstances}>
       <Layout.Vertical className={css.tabsStyle}>
@@ -88,9 +109,11 @@ export const ActiveServiceInstances: React.FC = () => {
             panel={
               <>
                 <ActiveServiceInstancesHeader />
-                <ActiveServiceInstancesContent
+                {moreDetails}
+                <ActiveServiceInstancesContentV2
+                  tableType={TableType.PREVIEW}
                   loading={activeInstanceLoading}
-                  data={activeInstanceData?.data?.envBuildIdAndInstanceCountInfoList}
+                  data={activeInstanceData?.data?.instanceGroupedByArtifactList}
                   error={activeInstanceError}
                   refetch={activeInstanceRefetch}
                 />

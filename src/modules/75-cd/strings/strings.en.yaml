@@ -272,6 +272,7 @@ serviceList:
 artifactRepoTooltip: Enter the name of the repository where the artifact source is located.
 serverlessDeployCommandOptions: Serverless Deploy Command Options
 artifactVersion: ARTIFACT VERSION
+pipelineExecution: Pipeline Execution
 useConnectorCredentials: 'Use Connector Credentials'
 configurationVariable: Configuration Variable
 overrideValue: Override Value
