@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cdngServices from 'services/cd-ng'
 import dataMock from '../DeploymentView/dataMock.json'
@@ -76,6 +76,7 @@ describe('ActiveServiceInstancesContent', () => {
     )
     expect(getByText('Retry')).toBeTruthy()
     expect(container).toMatchSnapshot()
+    fireEvent.click(getByText('Retry'))
   })
 
   test('should render loading', () => {
