@@ -169,6 +169,7 @@ describe('ActiveServiceInstancesContent', () => {
     )
     expect(getByText('Retry')).toBeTruthy()
     expect(container).toMatchSnapshot()
+    fireEvent.click(getByText('Retry'))
   })
 
   test('should render loading', () => {

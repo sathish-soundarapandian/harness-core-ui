@@ -41,10 +41,7 @@ interface TableRowData {
 
 const getFullTableData = (instanceGroupedByArtifact?: InstanceGroupedByArtifact[]): TableRowData[] => {
   const tableData: TableRowData[] = []
-  if (!instanceGroupedByArtifact) {
-    return tableData
-  }
-  instanceGroupedByArtifact.forEach(artifact => {
+  instanceGroupedByArtifact?.forEach(artifact => {
     if (artifact.artifactVersion && artifact.instanceGroupedByEnvironmentList) {
       const artifactVersion = artifact.artifactVersion
       artifact.instanceGroupedByEnvironmentList.forEach((env, envIndex) => {
@@ -71,10 +68,7 @@ const getFullTableData = (instanceGroupedByArtifact?: InstanceGroupedByArtifact[
 
 const getPreviewTableData = (instanceGroupedByArtifact?: InstanceGroupedByArtifact[]): TableRowData[] => {
   const tableData: TableRowData[] = []
-  if (!instanceGroupedByArtifact) {
-    return tableData
-  }
-  instanceGroupedByArtifact.forEach(artifact => {
+  instanceGroupedByArtifact?.forEach(artifact => {
     artifact.instanceGroupedByEnvironmentList?.forEach((env, envIndex) => {
       let totalInstancesPerEnv = 0
       env.instanceGroupedByInfraList?.forEach(infra => {
@@ -96,9 +90,6 @@ const getPreviewTableData = (instanceGroupedByArtifact?: InstanceGroupedByArtifa
 
 const getSummaryTableData = (instanceGroupedByArtifact?: InstanceGroupedByArtifact[]): TableRowData[] => {
   const tableData: TableRowData[] = []
-  if (!instanceGroupedByArtifact) {
-    return tableData
-  }
   let artifactVersion: string | undefined
   let envName: string | undefined
   let infraName: string | undefined
@@ -106,7 +97,7 @@ const getSummaryTableData = (instanceGroupedByArtifact?: InstanceGroupedByArtifa
   let totalInfras = 0
   let totalInstances = 0
   let lastDeployedAt = '0'
-  instanceGroupedByArtifact.forEach(artifact => {
+  instanceGroupedByArtifact?.forEach(artifact => {
     artifactVersion ??= artifact.artifactVersion
     artifact.instanceGroupedByEnvironmentList?.forEach(env => {
       totalEnvs++
