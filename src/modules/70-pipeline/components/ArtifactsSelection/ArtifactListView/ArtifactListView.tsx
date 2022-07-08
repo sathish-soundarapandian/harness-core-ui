@@ -81,7 +81,8 @@ function ArtifactListView({
   removePrimary,
   removeSidecar,
   addNewArtifact,
-  isAdditionAllowed
+  isAdditionAllowed,
+  isSidecarAllowed
 }: ArtifactListViewProps): React.ReactElement {
   const { getString } = useStrings()
   const { color: primaryConnectorColor } = getStatus(
@@ -269,7 +270,7 @@ function ArtifactListView({
             text={getString('pipelineSteps.serviceTab.artifactList.addPrimary')}
           />
         )}
-        {isAdditionAllowed && (
+        {isAdditionAllowed && isSidecarAllowed && (
           <Button
             className={css.addArtifact}
             id="add-artifact"

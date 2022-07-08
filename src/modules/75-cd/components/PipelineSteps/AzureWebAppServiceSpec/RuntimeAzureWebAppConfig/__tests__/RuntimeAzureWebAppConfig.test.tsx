@@ -13,8 +13,8 @@ import type { ServiceSpec, StoreConfigWrapper } from 'services/cd-ng'
 import { AzureWebAppConfigBaseFactory } from '@cd/factory/AzureWebAppConfigFactory/AzureWebAppConfigFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { template, startupScript, applicationSettings, connectionStrings } from './mocks'
-import { AzureWebAppConfig } from '../AzureWebAppConfig'
-import { AzureWebAppConfigType } from '../../K8sServiceSpecInterface'
+import { AzureWebAppConfig } from '../RuntimeAzureWebAppConfig'
+import { AzureWebAppConfigType } from '../../AzureWebAppServiceSpecInterface.types'
 
 describe('Azure Web App config tests', () => {
   test('Should match snapshot for startup script', () => {

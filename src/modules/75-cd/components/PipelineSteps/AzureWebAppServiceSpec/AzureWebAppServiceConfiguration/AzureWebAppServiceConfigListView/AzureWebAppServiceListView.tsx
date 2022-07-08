@@ -37,7 +37,7 @@ import {
   buildGitPayload
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { getConnectorNameFromValue, getStatus } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
-import { AzureWebAppServiceConfigWizard } from '@cd/components/PipelineSteps/AzureWebAppServiceConfig/AzureWebAppServiceConfigListView/AzureWebAppServiceWizard/AzureWebAppServiceConfigWizard'
+import { AzureWebAppServiceConfigWizard } from '@cd/components/PipelineSteps/AzureWebAppServiceSpec/AzureWebAppServiceConfiguration/AzureWebAppServiceConfigListView/AzureWebAppServiceWizard/AzureWebAppServiceConfigWizard'
 import { ServiceConfigActions } from '@common/constants/TrackingConstants'
 import AzureWebAppServiceStepTwo from './AzureWebAppServiceWizard/AzureWebAppServiceStepTwo'
 import {

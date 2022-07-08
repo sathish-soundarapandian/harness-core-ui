@@ -15,9 +15,9 @@ import type { GitQueryParams, InputSetPathProps, PipelineType } from '@common/in
 import { useQueryParams } from '@common/hooks'
 import type { StoreConfigWrapper } from 'services/cd-ng'
 import { Connectors } from '@connectors/constants'
-import { AzureWebAppConfigProps, AzureWebAppConfigType } from '../K8sServiceSpecInterface'
-import { isRuntimeMode } from '../K8sServiceSpecHelper'
-import css from './AzureWebAppConfig.module.scss'
+import { isRuntimeMode } from '../../K8sServiceSpec/K8sServiceSpecHelper'
+import { AzureWebAppConfigProps, AzureWebAppConfigType } from '../AzureWebAppServiceSpecInterface.types'
+import css from './RuntimeAzureWebAppConfig.module.scss'
 
 const AzureWebAppConfigInputField = (props: AzureWebAppConfigProps): React.ReactElement | null => {
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<

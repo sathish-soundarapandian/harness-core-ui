@@ -6,40 +6,28 @@
  */
 
 import React from 'react'
-import { MultiTypeInputType, NestedAccordionPanel, Text } from '@harness/uicore'
+import { NestedAccordionPanel, Text } from '@harness/uicore'
 import cx from 'classnames'
 import { FontVariation, Color } from '@harness/design-system'
 import { isEmpty, omit } from 'lodash-es'
 
 import { useStrings } from 'framework/strings'
-import type { ServiceSpec } from 'services/cd-ng'
-import type { VariableMergeServiceResponse, YamlProperties } from 'services/pipeline-ng'
+import type { YamlProperties } from 'services/pipeline-ng'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import VariableAccordionSummary from '@pipeline/components/PipelineStudio/PipelineVariables/VariableAccordionSummary'
-import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import type {
   CustomVariablesData,
   CustomVariableEditableExtraProps
 } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableEditable'
 import type { AllNGVariables } from '@pipeline/utils/types'
+import type { AzureWebAppServiceSpecVariablesFormProps } from './AzureWebAppServiceSpecInterface.types'
 
-import css from './K8sServiceSpec.module.scss'
+//todo: css
+import css from '../K8sServiceSpec/K8sServiceSpec.module.scss'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
-export interface K8sServiceSpecVariablesFormProps {
-  initialValues: ServiceSpec
-  stepsFactory: AbstractStepFactory
-  stageIdentifier: string
-  serviceIdentifier?: string
-  onUpdate?(data: ServiceSpec): void
-  metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-  variablesData: ServiceSpec
-  readonly?: boolean
-  path?: string
-  allowableTypes: MultiTypeInputType[]
-}
 
 export interface VariableRowProps {
   data?: YamlProperties | undefined
@@ -47,14 +35,17 @@ export interface VariableRowProps {
   value: string
 }
 
-export function K8sServiceSpecVariablesForm(props: K8sServiceSpecVariablesFormProps): React.ReactElement {
+export function AzureWebAppServiceSpecVariablesForm(
+  props: AzureWebAppServiceSpecVariablesFormProps
+): React.ReactElement {
   const { initialValues, stepsFactory, onUpdate, variablesData, metadataMap, readonly, path, allowableTypes } = props
-  const { manifests, artifacts, variables } = initialValues
+  const { artifacts, variables, startupScript, applicationSettings, connectionStrings } = initialValues
   const { getString } = useStrings()
 
   const primaryArtifactVariables = variablesData?.artifacts?.primary?.spec
-  const sidecarArtifactVariables = variablesData?.artifacts?.sidecars
-  const manifestsVariables = variablesData?.manifests
+  const startupScriptVariables = variablesData?.startupScript
+  const applicationSettingsVariables = variablesData?.applicationSettings
+  const connectionStringsVariables = variablesData?.connectionStrings
 
   return (
     <React.Fragment>
@@ -98,70 +89,94 @@ export function K8sServiceSpecVariablesForm(props: K8sServiceSpecVariablesFormPr
                     />
                   }
                 />
-
-                {!!sidecarArtifactVariables?.length && (
-                  <>
-                    <NestedAccordionPanel
-                      isDefaultOpen
-                      addDomId
-                      noAutoScroll
-                      id={`${path}..Artifacts.Sidecars`}
-                      summary={
-                        <VariableAccordionSummary>
-                          <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.BLACK}>
-                            {getString('common.sidecarArtifactsText')}
-                          </Text>
-                        </VariableAccordionSummary>
-                      }
-                      summaryClassName={cx(css.variableBorderBottom, pipelineVariableCss.accordianSummaryL3)}
-                      details={
-                        Array.isArray(sidecarArtifactVariables) &&
-                        sidecarArtifactVariables.map(({ sidecar }, index) => {
-                          return (
-                            <VariablesListTable
-                              className={pipelineVariableCss.variablePaddingL3}
-                              key={index}
-                              data={sidecar?.spec}
-                              originalData={initialValues?.artifacts?.sidecars?.[index]?.sidecar?.spec}
-                              metadataMap={metadataMap}
-                            />
-                          )
-                        })
-                      }
-                    />
-                  </>
-                )}
               </>
             )
           }
         />
       ) : null}
-      {manifests && typeof manifestsVariables !== 'string' && !isEmpty(omit(manifestsVariables, 'uuid')) ? (
+      {startupScript && typeof startupScriptVariables !== 'string' && !isEmpty(omit(startupScriptVariables, 'uuid')) ? (
         <NestedAccordionPanel
           isDefaultOpen
           noAutoScroll
           addDomId
-          id={`${path}.Manifests`}
+          id={`${path}.StartupScript`}
           summary={
             <VariableAccordionSummary>
               <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.BLACK}>
-                {getString('manifests')}
+                {getString('pipeline.startupScript.name')}
               </Text>
             </VariableAccordionSummary>
           }
           summaryClassName={cx(css.variableBorderBottom, pipelineVariableCss.accordianSummaryL3)}
           details={
-            !!manifestsVariables?.length && (
+            !!startupScriptVariables && (
               <>
-                {manifestsVariables?.map(({ manifest }, index) => (
-                  <VariablesListTable
-                    key={index}
-                    className={cx(css.manifestVariablesTable, pipelineVariableCss.variablePaddingL3)}
-                    data={manifest?.spec?.store?.spec}
-                    originalData={initialValues?.manifests?.[index]?.manifest?.spec?.store?.spec}
-                    metadataMap={metadataMap}
-                  />
-                ))}
+                <VariablesListTable
+                  className={cx(css.manifestVariablesTable, pipelineVariableCss.variablePaddingL3)}
+                  data={startupScriptVariables?.spec}
+                  originalData={initialValues?.startupScript?.spec}
+                  metadataMap={metadataMap}
+                />
+              </>
+            )
+          }
+        />
+      ) : null}
+      {applicationSettings &&
+      typeof applicationSettingsVariables !== 'string' &&
+      !isEmpty(omit(applicationSettingsVariables, 'uuid')) ? (
+        <NestedAccordionPanel
+          isDefaultOpen
+          noAutoScroll
+          addDomId
+          id={`${path}.ApplicationSettings`}
+          summary={
+            <VariableAccordionSummary>
+              <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.BLACK}>
+                {getString('pipeline.appServiceConfig.applicationSettings.name')}
+              </Text>
+            </VariableAccordionSummary>
+          }
+          summaryClassName={cx(css.variableBorderBottom, pipelineVariableCss.accordianSummaryL3)}
+          details={
+            !!applicationSettingsVariables && (
+              <>
+                <VariablesListTable
+                  className={cx(css.manifestVariablesTable, pipelineVariableCss.variablePaddingL3)}
+                  data={applicationSettingsVariables?.spec}
+                  originalData={initialValues?.applicationSettings?.spec}
+                  metadataMap={metadataMap}
+                />
+              </>
+            )
+          }
+        />
+      ) : null}
+      {connectionStrings &&
+      typeof connectionStringsVariables !== 'string' &&
+      !isEmpty(omit(connectionStringsVariables, 'uuid')) ? (
+        <NestedAccordionPanel
+          isDefaultOpen
+          noAutoScroll
+          addDomId
+          id={`${path}.ConnectionStrings`}
+          summary={
+            <VariableAccordionSummary>
+              <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.BLACK}>
+                {getString('pipeline.appServiceConfig.connectionStrings.name')}
+              </Text>
+            </VariableAccordionSummary>
+          }
+          summaryClassName={cx(css.variableBorderBottom, pipelineVariableCss.accordianSummaryL3)}
+          details={
+            !!connectionStringsVariables && (
+              <>
+                <VariablesListTable
+                  className={cx(css.manifestVariablesTable, pipelineVariableCss.variablePaddingL3)}
+                  data={connectionStringsVariables?.spec}
+                  originalData={initialValues?.connectionStrings?.spec}
+                  metadataMap={metadataMap}
+                />
               </>
             )
           }
