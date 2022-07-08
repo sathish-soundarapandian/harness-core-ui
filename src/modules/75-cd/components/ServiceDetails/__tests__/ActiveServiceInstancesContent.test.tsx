@@ -6,10 +6,9 @@
  */
 
 import React from 'react'
-import { act, render, fireEvent } from '@testing-library/react'
-import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
+import { render } from '@testing-library/react'
+import { TestWrapper } from '@common/utils/testUtils'
 import * as cdngServices from 'services/cd-ng'
-import * as useFeatureFlagMock from '@common/hooks/useFeatureFlag'
 import dataMock from '../DeploymentView/dataMock.json'
 import { ActiveServiceInstances } from '../ActiveServiceInstances/ActiveServiceInstances'
 
@@ -32,7 +31,6 @@ const noData = {
   status: 'SUCCESS',
   data: {}
 }
-jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true) // FeatureFlag.SERVICE_DASHBOARD_V2
 jest.spyOn(cdngServices, 'useGetActiveServiceInstanceSummary').mockImplementation(() => {
   return {
     loading: false,
@@ -107,56 +105,6 @@ describe('ActiveServiceInstancesContent', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
-  })
-})
-
-describe('ActiveInstance Details Dialog', () => {
-  test('Open details dialog', async () => {
-    jest.spyOn(cdngServices, 'useGetEnvBuildInstanceCount').mockImplementation(() => {
-      return { loading: false, error: false, data: mockData, refetch: jest.fn() } as any
-    })
-    const { getByText } = render(
-      <TestWrapper>
-        <ActiveServiceInstances />
-      </TestWrapper>
-    )
-
-    const moreDetailsButton = getByText('cd.serviceDashboard.moreDetails')
-    await act(async () => {
-      fireEvent.click(moreDetailsButton!)
-    })
-
-    const popup = findDialogContainer()
-    expect(popup).toBeTruthy()
-    expect(popup).toMatchSnapshot()
-  })
-
-  test('Expand all sections in dialog', async () => {
-    jest.spyOn(cdngServices, 'useGetEnvBuildInstanceCount').mockImplementation(() => {
-      return { loading: false, error: false, data: mockData, refetch: jest.fn() } as any
-    })
-    const { getByText } = render(
-      <TestWrapper>
-        <ActiveServiceInstances />
-      </TestWrapper>
-    )
-
-    const moreDetailsButton = getByText('cd.serviceDashboard.moreDetails')
-    await act(async () => {
-      fireEvent.click(moreDetailsButton!)
-    })
-
-    const popup = findDialogContainer()
-    expect(popup).toBeTruthy()
-
-    const expandButtons = document.querySelectorAll('.bp3-icon')
-    await act(async () => {
-      expandButtons.forEach(expandButton => {
-        fireEvent.click(expandButton)
-      })
-    })
-
-    expect(popup).toMatchSnapshot()
   })
 })
 
