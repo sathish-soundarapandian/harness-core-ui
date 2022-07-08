@@ -10,23 +10,25 @@ import { Card, HarnessDocTooltip } from '@wings-software/uicore'
 import cx from 'classnames'
 import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/WorkflowVariables'
 import ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ArtifactsSelection'
-import ManifestSelection from '@pipeline/components/ManifestSelection/ManifestSelection'
 import { getSelectedDeploymentType, isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
+import StartupScriptSelection from '@cd/components/PipelineSteps/AzureWebAppServiceSpec/AzureWebAppStartupScriptSelection/StartupScriptSelection'
 import { useStrings } from 'framework/strings'
 import type { ServiceDefinition } from 'services/cd-ng'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import VariableListReadOnlyView from '@pipeline/components/WorkflowVariablesSelection/VariableListReadOnlyView'
-import { setupMode } from '../K8sServiceSpecHelper'
-import type { KubernetesServiceInputFormProps } from '../K8sServiceSpecInterface'
-import css from '../K8sServiceSpec.module.scss'
+import { setupMode } from '../K8sServiceSpec/K8sServiceSpecHelper'
+import type { AzureWebAppServiceSpecFormProps } from './AzureWebAppServiceSpecInterface.types'
+import AzureWebAppConfigSelection from './AzureWebAppServiceConfiguration/AzureWebAppServiceConfigSelection'
+//todo: css
+import css from '../K8sServiceSpec/K8sServiceSpec.module.scss'
 
-const getManifestsHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
+const getStartupScriptHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
   if (isServerlessDeploymentType(selectedDeploymentType)) {
-    return 'serverlessDeploymentTypeManifests'
+    return 'serverlessDeploymentTypeStartupScript'
   }
-  return 'deploymentTypeManifests'
+  return 'deploymentTypeStartupScript'
 }
 
 const getArtifactsHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
@@ -36,7 +38,14 @@ const getArtifactsHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['
   return 'deploymentTypeArtifacts'
 }
 
-const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
+const getAppConfigHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
+  if (isServerlessDeploymentType(selectedDeploymentType)) {
+    return 'serverlessDeploymentTypeApplicationConfig'
+  }
+  return 'deploymentTypeApplicationConfig'
+}
+
+const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> = ({
   initialValues: { stageIndex = 0, setupModeType, deploymentType, isReadonlyServiceMode },
   factory,
   readonly
@@ -58,21 +67,34 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
     <div className={css.serviceDefinition}>
       {!!selectedDeploymentType && (
         <>
-            <Card
-              className={css.sectionCard}
-              id={getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')}
+          <Card className={css.sectionCard} id={getString('pipeline.startupScript.name')}>
+            <div
+              className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+              data-tooltip-id={getStartupScriptHeaderTooltipId(selectedDeploymentType)}
             >
-              <div
-                className={cx(css.tabSubHeading, 'ng-tooltip-native')}
-                data-tooltip-id={getManifestsHeaderTooltipId(selectedDeploymentType)}
-              >
-                {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')}
-                <HarnessDocTooltip
-                  tooltipId={getManifestsHeaderTooltipId(selectedDeploymentType)}
-                  useStandAlone={true}
-                />
-              </div>
-            <ManifestSelection
+              {getString('pipeline.startupScript.name')}
+              <HarnessDocTooltip
+                tooltipId={getStartupScriptHeaderTooltipId(selectedDeploymentType)}
+                useStandAlone={true}
+              />
+            </div>
+            <StartupScriptSelection
+              isPropagating={isPropagating}
+              deploymentType={selectedDeploymentType}
+              isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+              readonly={!!readonly}
+            />
+          </Card>
+
+          <Card className={css.sectionCard} id={getString('pipeline.appServiceConfig.title')}>
+            <div
+              className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+              data-tooltip-id={getAppConfigHeaderTooltipId(selectedDeploymentType)}
+            >
+              {getString('pipeline.appServiceConfig.title')}
+              <HarnessDocTooltip tooltipId={getAppConfigHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
+            </div>
+            <AzureWebAppConfigSelection
               isPropagating={isPropagating}
               deploymentType={selectedDeploymentType}
               isReadonlyServiceMode={isReadonlyServiceMode as boolean}
@@ -124,4 +146,4 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
   )
 }
 
-export default KubernetesServiceSpecEditable
+export default AzureWebAppServiceSpecEditable

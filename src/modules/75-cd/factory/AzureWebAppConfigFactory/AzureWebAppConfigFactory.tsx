@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { GitAzureWebAppConfig } from '@cd/components/PipelineSteps/K8sServiceSpec/AzureWebAppConfig/GitAzureWebAppConfig/GitAzureWebAppConfig'
+import { GitAzureWebAppConfig } from '@cd/components/PipelineSteps/AzureWebAppServiceSpec/RuntimeAzureWebAppConfig/RuntimeGitAzureWebAppConfig/RuntimeGitAzureWebAppConfig'
 import type { AzureWebAppConfigBase } from './AzureWebAppConfigBase'
 
 export class AzureWebAppConfigBaseFactory {

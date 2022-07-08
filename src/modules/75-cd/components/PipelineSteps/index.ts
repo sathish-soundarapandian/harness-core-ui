@@ -52,6 +52,7 @@ import { CommandScriptsStep } from './CommandScripts/CommandScriptsStep'
 import { AzureSlotDeployment } from './AzureSlotDeployment/AzureSlotDeployment'
 import { AzureTrafficShift } from './AzureTrafficShift/AzureTrafficShift'
 import { AzureSwapSlot } from './AzureWebAppSwapSlot/AzureWebAppSwapSlot'
+import { AzureWebAppServiceSpec } from './AzureWebAppServiceSpec/AzureWebAppServiceSpec'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new HttpStep())
@@ -77,6 +78,7 @@ factory.registerStep(new DeployInfrastructureStep())
 factory.registerStep(new DeployServiceStep())
 factory.registerStep(new KubernetesServiceSpec())
 factory.registerStep(new ServerlessAwsLambdaServiceSpec())
+factory.registerStep(new AzureWebAppServiceSpec())
 factory.registerStep(new HelmDeploy())
 factory.registerStep(new HelmRollback())
 factory.registerStep(new TerraformRollback())

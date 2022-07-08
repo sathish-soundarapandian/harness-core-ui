@@ -39,8 +39,8 @@ import { useQueryParams } from '@common/hooks'
 
 import { StartupScriptActions } from '@common/constants/TrackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
-import { getStatus, getConnectorNameFromValue } from '../PipelineStudio/StageBuilder/StageBuilderUtil'
-import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
+import { getStatus, getConnectorNameFromValue } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import ConnectorField from './StartupScriptConnectorField'
 import StartupScriptWizardStepTwo from './StartupScriptWizardStepTwo'
 import {

@@ -427,6 +427,9 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
   if (isServerlessDeploymentType(deploymentType)) {
     return StepType.ServerlessAwsLambda
   }
+  if (deploymentType === ServiceDeploymentType.AzureWebApps) {
+    return StepType.AzureWebAppServiceSpec
+  }
   return StepType.K8sServiceSpec
 }
 export const STATIC_SERVICE_GROUP_NAME = 'static_service_group'

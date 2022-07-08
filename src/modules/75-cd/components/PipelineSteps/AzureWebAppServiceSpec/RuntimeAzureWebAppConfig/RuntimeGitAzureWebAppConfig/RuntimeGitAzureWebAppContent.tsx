@@ -15,9 +15,9 @@ import type { GitConfigDTO, Scope } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ManifestToConnectorMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { isFieldRuntime } from '../../K8sServiceSpecHelper'
-import { shouldDisplayRepositoryName } from '../../ManifestSource/ManifestSourceUtils'
-import css from '../AzureWebAppConfig.module.scss'
+import { isFieldRuntime } from '../../../K8sServiceSpec/K8sServiceSpecHelper'
+import { shouldDisplayRepositoryName } from '../../../K8sServiceSpec/ManifestSource/ManifestSourceUtils'
+import css from '../RuntimeAzureWebAppConfig.module.scss'
 
 const GitAzureWebAppConfigContent = ({
   template,

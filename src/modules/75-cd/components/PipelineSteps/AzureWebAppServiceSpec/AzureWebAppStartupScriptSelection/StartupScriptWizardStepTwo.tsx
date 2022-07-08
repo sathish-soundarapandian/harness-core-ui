@@ -28,6 +28,7 @@ import { Connectors } from '@connectors/constants'
 
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
+import { GitRepoName } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import {
   ConnectorTypes,
   gitFetchTypeList,
@@ -35,8 +36,6 @@ import {
   StartupScriptDataType,
   StartupScriptWizardStepTwoProps
 } from './StartupScriptInterface.types'
-import { GitRepoName } from '../ManifestSelection/Manifesthelper'
-
 import css from './StartupScriptSelection.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 

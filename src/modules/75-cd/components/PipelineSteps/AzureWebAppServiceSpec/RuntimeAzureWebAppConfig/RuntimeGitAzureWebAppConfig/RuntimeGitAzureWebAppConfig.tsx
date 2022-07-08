@@ -11,7 +11,7 @@ import {
   AzureWebAppConfigRenderProps
 } from '@cd/factory/AzureWebAppConfigFactory/AzureWebAppConfigBase'
 import { Connectors } from '@connectors/constants'
-import GitAzureWebAppConfigContent from './GitAzureWebAppContent'
+import GitAzureWebAppConfigContent from './RuntimeGitAzureWebAppContent'
 
 export class GitAzureWebAppConfig extends AzureWebAppConfigBase<AzureWebAppConfigRenderProps> {
   protected azureWebAppConfigType = Connectors.GIT
