@@ -100,12 +100,6 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
     setSubscriptions(subscriptionValues as SelectOption[])
   }, [subscriptionsData])
 
-  useEffect(() => {
-    formikRef?.current?.setFieldValue('subscriptionId', getSubscription(initialValues))
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [subscriptions])
-
   const {
     data: resourceGroupData,
     refetch: refetchResourceGroups,
@@ -177,8 +171,9 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
     return values?.subscriptionId
   }
   useEffect(() => {
-    formikRef?.current?.setFieldValue('subscriptionId', getSubscription(initialValues))
-
+    if (getMultiTypeFromValue(formikRef?.current?.values.subscriptionId) === MultiTypeInputType.FIXED) {
+      formikRef?.current?.setFieldValue('subscriptionId', getSubscription(initialValues))
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subscriptions])
   const getInitialValues = (): AzureWebAppInfrastructureUI => {
@@ -408,15 +403,8 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                     showDefaultField={false}
                     showAdvanced={true}
                     onChange={
-                      /* istanbul ignore next */ (value, type) => {
+                      /* istanbul ignore next */ value => {
                         formik.setFieldValue('connectorRef', value)
-                        if (type !== MultiTypeInputType.FIXED) {
-                          formik.setFieldValue('subscriptionId', '')
-                          formik.setFieldValue('resourceGroup', '')
-                          formik.setFieldValue('webApp', '')
-                          formik.setFieldValue('deploymentSlot', '')
-                          formik.setFieldValue('targetSlot', '')
-                        }
                       }
                     }
                     isReadonly={readonly}
@@ -436,13 +424,15 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                       : getString('cd.steps.azureInfraStep.subscriptionPlaceholder')
                   }
                   multiTypeInputProps={{
-                    onChange: /* istanbul ignore next */ type => {
-                      if (type !== MultiTypeInputType.FIXED) {
-                        formik.setFieldValue('resourceGroup', '')
-                        formik.setFieldValue('webApp', '')
-                        formik.setFieldValue('deploymentSlot', '')
-                        formik.setFieldValue('targetSlot', '')
-                      }
+                    onChange: /* istanbul ignore next */ () => {
+                      formik.setFieldValue('resourceGroup', '')
+                      formik.setFieldValue('webApp', '')
+                      formik.setFieldValue('deploymentSlot', '')
+                      formik.setFieldValue('targetSlot', '')
+
+                      setResourceGroups([])
+                      setWebApps([])
+                      setDeploymentSlots([])
                     },
                     expressions,
                     disabled: readonly,
@@ -457,22 +447,6 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                             connectorRef: connectorValue
                           }
                         })
-
-                        getMultiTypeFromValue(getValue(formik?.values?.resourceGroup)) === MultiTypeInputType.FIXED &&
-                          formik.setFieldValue('resourceGroup', '')
-                        getMultiTypeFromValue(getValue(formik?.values?.webApp)) === MultiTypeInputType.FIXED &&
-                          formik.setFieldValue('webApp', '')
-                        getMultiTypeFromValue(getValue(formik?.values?.deploymentSlot)) === MultiTypeInputType.FIXED &&
-                          formik.setFieldValue('deploymentSlot', '')
-                        getMultiTypeFromValue(getValue(formik?.values?.targetSlot)) === MultiTypeInputType.FIXED &&
-                          formik.setFieldValue('targetSlot', '')
-                        setResourceGroups([])
-                        setWebApps([])
-                        setDeploymentSlots([])
-                      } else {
-                        setResourceGroups([])
-                        setWebApps([])
-                        setDeploymentSlots([])
                       }
                     },
                     selectProps: {
@@ -525,12 +499,13 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                       : getString('cd.steps.azureInfraStep.resourceGroupPlaceholder')
                   }
                   multiTypeInputProps={{
-                    onChange: /* istanbul ignore next */ type => {
-                      if (type !== MultiTypeInputType.FIXED) {
-                        formik.setFieldValue('webApp', '')
-                        formik.setFieldValue('deploymentSlot', '')
-                        formik.setFieldValue('targetSlot', '')
-                      }
+                    onChange: /* istanbul ignore next */ () => {
+                      formik.setFieldValue('webApp', '')
+                      formik.setFieldValue('deploymentSlot', '')
+                      formik.setFieldValue('targetSlot', '')
+
+                      setWebApps([])
+                      setDeploymentSlots([])
                     },
                     expressions,
                     disabled: readonly,
@@ -547,18 +522,6 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                             subscriptionId: getValue(formik.values?.subscriptionId)
                           }
                         })
-
-                        getMultiTypeFromValue(getValue(formik?.values?.webApp)) === MultiTypeInputType.FIXED &&
-                          formik.setFieldValue('webApp', '')
-                        getMultiTypeFromValue(getValue(formik?.values?.deploymentSlot)) === MultiTypeInputType.FIXED &&
-                          formik.setFieldValue('deploymentSlot', '')
-                        getMultiTypeFromValue(getValue(formik?.values?.targetSlot)) === MultiTypeInputType.FIXED &&
-                          formik.setFieldValue('targetSlot', '')
-                        setWebApps([])
-                        setDeploymentSlots([])
-                      } else {
-                        setWebApps([])
-                        setDeploymentSlots([])
                       }
                     },
                     selectProps: {
@@ -615,11 +578,10 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                       : getString('cd.steps.azureWebAppInfra.webAppPlaceholder')
                   }
                   multiTypeInputProps={{
-                    onChange: /* istanbul ignore next */ type => {
-                      if (type !== MultiTypeInputType.FIXED) {
-                        formik.setFieldValue('deploymentSlot', '')
-                        formik.setFieldValue('targetSlot', '')
-                      }
+                    onChange: /* istanbul ignore next */ () => {
+                      formik.setFieldValue('deploymentSlot', '')
+                      formik.setFieldValue('targetSlot', '')
+                      setDeploymentSlots([])
                     },
                     expressions,
                     disabled: readonly,
@@ -637,14 +599,6 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                             resourceGroup: getValue(formik.values?.resourceGroup)
                           }
                         })
-
-                        getMultiTypeFromValue(getValue(formik?.values?.deploymentSlot)) === MultiTypeInputType.FIXED &&
-                          formik.setFieldValue('deploymentSlot', '')
-                        getMultiTypeFromValue(getValue(formik?.values?.targetSlot)) === MultiTypeInputType.FIXED &&
-                          formik.setFieldValue('targetSlot', '')
-                        setDeploymentSlots([])
-                      } else {
-                        setDeploymentSlots([])
                       }
                     },
                     selectProps: {
