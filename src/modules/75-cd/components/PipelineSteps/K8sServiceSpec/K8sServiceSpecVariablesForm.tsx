@@ -55,7 +55,6 @@ export function K8sServiceSpecVariablesForm(props: K8sServiceSpecVariablesFormPr
   const primaryArtifactVariables = variablesData?.artifacts?.primary?.spec
   const sidecarArtifactVariables = variablesData?.artifacts?.sidecars
   const manifestsVariables = variablesData?.manifests
-
   return (
     <React.Fragment>
       {artifacts && !isEmpty(omit(variablesData?.artifacts, 'uuid')) ? (

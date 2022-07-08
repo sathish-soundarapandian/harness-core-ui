@@ -58,20 +58,17 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
     <div className={css.serviceDefinition}>
       {!!selectedDeploymentType && (
         <>
-            <Card
-              className={css.sectionCard}
-              id={getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')}
+          <Card
+            className={css.sectionCard}
+            id={getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')}
+          >
+            <div
+              className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+              data-tooltip-id={getManifestsHeaderTooltipId(selectedDeploymentType)}
             >
-              <div
-                className={cx(css.tabSubHeading, 'ng-tooltip-native')}
-                data-tooltip-id={getManifestsHeaderTooltipId(selectedDeploymentType)}
-              >
-                {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')}
-                <HarnessDocTooltip
-                  tooltipId={getManifestsHeaderTooltipId(selectedDeploymentType)}
-                  useStandAlone={true}
-                />
-              </div>
+              {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')}
+              <HarnessDocTooltip tooltipId={getManifestsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
+            </div>
             <ManifestSelection
               isPropagating={isPropagating}
               deploymentType={selectedDeploymentType}
