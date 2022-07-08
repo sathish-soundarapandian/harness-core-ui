@@ -83,7 +83,7 @@ export default function StartupScriptSelection({
 
   useDeepCompareEffect(() => {
     refetchConnectorList()
-  }, [startupScript])
+  }, [stage, startupScript])
 
   const getConnectorList = (): Array<{ scope: Scope; identifier: string }> => {
     return !isEmpty(startupScript)
